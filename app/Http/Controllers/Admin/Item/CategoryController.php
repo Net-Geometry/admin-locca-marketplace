@@ -6,6 +6,7 @@ use App\CentralLogics\Helpers;
 use App\Contracts\Repositories\CategoryRepositoryInterface;
 use App\Exports\CategoryExport;
 use App\Http\Controllers\BaseController;
+use App\Http\Requests\Admin\CategoryAddRequest;
 use App\Models\Category;
 use App\Models\Translation;
 use App\Services\CategoryService;
@@ -46,46 +47,38 @@ class CategoryController extends BaseController
         return view($this->categoryService->getViewByPosition($request['position']), compact('categories'));
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(CategoryAddRequest $request): RedirectResponse
     {
-        $request->validate([
-            'name' => 'required|max:100',
-            'name.0' => 'required',
-        ], [
-            'name.required' => translate('messages.Name is required!'),
-            'name.0.required' => translate('default_name_is_required'),
+        $category = $this->categoryRepository->add([
+            'name' => $request->name[array_search('default', $request->lang)],
+            'image' => $this->upload('category/', 'png', $request->file('image')),
+            'parent_id' => $request->parent_id == null ? 0 : $request->parent_id,
+            'position' => $request->position,
+            'module_id' => isset($request->parent_id) ? Category::where('id', $request->parent_id)->value('module_id') : Config::get('module.current_module_id')
         ]);
 
-        $category = new Category();
-        $category->name = $request->name[array_search('default', $request->lang)];
-        $category->image = Helpers::upload('category/', 'png', $request->file('image'));
-        $category->parent_id = $request->parent_id == null ? 0 : $request->parent_id;
-        $category->position = $request->position;
-        $category->module_id = isset($request->parent_id) ? Category::where('id', $request->parent_id)->first('module_id')->module_id : Config::get('module.current_module_id');
-        $category->save();
         $default_lang = str_replace('_', '-', app()->getLocale());
         $data = [];
         foreach ($request->lang as $index => $key) {
             if ($default_lang == $key && !($request->name[$index])) {
                 if ($key != 'default') {
-                    array_push($data, array(
+                    $data[] = array(
                         'translationable_type' => 'App\Models\Category',
                         'translationable_id' => $category->id,
                         'locale' => $key,
                         'key' => 'name',
                         'value' => $category->name,
-                    ));
+                    );
                 }
             } else {
-
                 if ($request->name[$index] && $key != 'default') {
-                    array_push($data, array(
+                    $data[] = array(
                         'translationable_type' => 'App\Models\Category',
                         'translationable_id' => $category->id,
                         'locale' => $key,
                         'key' => 'name',
                         'value' => $request->name[$index],
-                    ));
+                    );
                 }
             }
         }

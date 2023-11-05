@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Contracts\Repositories\CategoryRepositoryInterface;
 use App\Models\Category;
+use App\Traits\FileManagerTrait;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -11,6 +12,7 @@ use Illuminate\Support\Facades\Config;
 
 class CategoryRepository implements CategoryRepositoryInterface
 {
+    use FileManagerTrait;
 
     public function __construct(protected Category $category)
     {
@@ -18,7 +20,7 @@ class CategoryRepository implements CategoryRepositoryInterface
 
     public function add(array $data): string|object
     {
-        // TODO: Implement add() method.
+        return $this->category->create($data);
     }
 
     public function getFirstWhere(array $params, array $relations = []): ?Model
