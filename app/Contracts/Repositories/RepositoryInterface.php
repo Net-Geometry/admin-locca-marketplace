@@ -22,6 +22,7 @@ interface RepositoryInterface
     public function getFirstWhere(array $params, array $relations = []): ?Model;
 
     /**
+     * @param array $orderBy
      * @param array $relations
      * @param int|string $dataLimit If you need all data without pagination, you need to set dataLimit = 'all'
      * @param int|null $offset

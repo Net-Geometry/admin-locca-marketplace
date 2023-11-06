@@ -113,7 +113,6 @@ class CategoryController extends BaseController
         return response()->json($data);
     }
 
-
     public function updatePriority(Request $request): RedirectResponse
     {
         $this->categoryRepo->update(id: $request['id'], data: ['priority' => $request['priority']]);
