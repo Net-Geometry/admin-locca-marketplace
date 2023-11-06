@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\ViewPaths\Admin\Category;
 use App\Http\Controllers\Admin\Item\CategoryController;
 use Illuminate\Support\Facades\Route;
 
@@ -8,13 +9,13 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
     Route::group(['prefix' => 'category', 'as' => 'category.'], function () {
         Route::get('get-all', 'CategoryController@get_all')->name('get-all');
         Route::group(['middleware' => ['module:category']], function () {
-            Route::get('', [CategoryController::class,'index'])->name('add');
+            Route::get('', [CategoryController::class, 'index'])->name('add');
             Route::get('edit/{id}', 'CategoryController@edit')->name('edit');
             Route::post('update/{id}', 'CategoryController@update')->name('update');
             Route::get('update-priority/{category}', 'CategoryController@update_priority')->name('priority');
-            Route::post('store', 'CategoryController@store')->name('store');
-            Route::get('status/{id}/{status}', 'CategoryController@status')->name('status');
-            Route::get('featured/{id}/{featured}', 'CategoryController@featured')->name('featured');
+            Route::post(Category::ADD['uri'], [CategoryController::class, 'add'])->name('store');
+            Route::get('status/{id}/{status}', [CategoryController::class,'updateStatus'])->name('status');
+            Route::get('featured/{id}/{featured}',  [CategoryController::class,'updateFeatured'])->name('featured');
             Route::delete('delete/{id}', 'CategoryController@delete')->name('delete');
             Route::get('export-categories', 'CategoryController@export_categories')->name('export-categories');
 

@@ -24,7 +24,7 @@ enum Category
     ];
     const UPDATE = [
         'uri' => 'update/{id}',
-        'view' => 'admin-views.category.category-edit'
+        'view' => 'admin-views.category.edit'
     ];
     const DELETE = [
         'uri' => 'delete',

@@ -33,6 +33,11 @@ class CategoryRepository implements CategoryRepositoryInterface
         return $this->category->where($params)->first();
     }
 
+    public function getFirstWithoutGlobalscopeWhere(array $params, array $relations = []): ?Model
+    {
+        return $this->category->withoutGlobalScope('translate')->where($params)->first();
+    }
+
     public function getList(array $orderBy = [], array $relations = [], int|string $dataLimit = DEFAULT_DATA_LIMIT, int $offset = null): Collection|LengthAwarePaginator
     {
         // TODO: Implement getList() method.
@@ -51,9 +56,15 @@ class CategoryRepository implements CategoryRepositoryInterface
             })->latest()->paginate($dataLimit);
     }
 
-    public function update(string $id, array $data): bool
+
+    public function update(string $id, array $data): string|object
     {
-        // TODO: Implement update() method.
+        $category = $this->category->find($id);
+        foreach ($data as $key => $column) {
+            $category[$key] = $column;
+        }
+        $category->save();
+        return $category;
     }
 
     public function delete(string $id): bool

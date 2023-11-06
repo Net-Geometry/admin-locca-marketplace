@@ -5,11 +5,11 @@ namespace App\Http\Controllers\Admin\Item;
 use App\CentralLogics\Helpers;
 use App\Contracts\Repositories\CategoryRepositoryInterface;
 use App\Contracts\Repositories\TranslationRepositoryInterface;
+use App\Enums\ViewPaths\Admin\Category as CategoryViewPath;
 use App\Exports\CategoryExport;
 use App\Http\Controllers\BaseController;
-use App\Http\Requests\Admin\CategoryAddRequest;
+use App\Http\Requests\Admin\CategoryUpdateRequest;
 use App\Models\Category;
-use App\Models\Translation;
 use App\Services\CategoryService;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Database\Eloquent\Collection;
@@ -18,7 +18,6 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 use Illuminate\View\View;
 use Maatwebsite\Excel\Facades\Excel;
 use Rap2hpoutre\FastExcel\FastExcel;
@@ -49,7 +48,7 @@ class CategoryController extends BaseController
         return view($this->categoryService->getViewByPosition($request['position']), compact('categories'));
     }
 
-    public function store(CategoryAddRequest $request): RedirectResponse
+    public function add(CategoryUpdateRequest $request): RedirectResponse
     {
         $parentCategory = $this->categoryRepo->getFirstWhere(params: ['id' => $request['parent_id']]);
         $category = $this->categoryRepo->add(
@@ -63,70 +62,31 @@ class CategoryController extends BaseController
         return back();
     }
 
-    public function edit($id)
+    public function getUpdateView(string|int $id): View
     {
-        $category = Category::withoutGlobalScope('translate')->findOrFail($id);
-        return view('admin-views.category.edit', compact('category'));
+        $category = $this->categoryRepo->getFirstWithoutGlobalscopeWhere(params: ['id' => $id]);
+        return view(CategoryViewPath::UPDATE['view'], compact('category'));
     }
 
-    public function status(Request $request)
+    public function updateStatus(Request $request): RedirectResponse
     {
-        $category = Category::find($request->id);
-        $category->status = $request->status;
-        $category->save();
+        $this->categoryRepo->update(id: $request['id'], data: ['status' => $request['status']]);
         Toastr::success(translate('messages.category_status_updated'));
         return back();
     }
 
-    public function featured(Request $request)
+    public function updateFeatured(Request $request): RedirectResponse
     {
-        $category = Category::find($request->id);
-        $category->featured = $request->featured;
-        $category->save();
+        $this->categoryRepo->update(id: $request['id'], data: ['featured' => $request['featured']]);
         Toastr::success(translate('messages.category_featured_updated'));
         return back();
     }
 
-    public function update(Request $request, $id)
+    public function update(CategoryUpdateRequest $request, string|int $id): RedirectResponse
     {
-        $request->validate([
-            'name' => 'required|max:100',
-            'name.0' => 'required',
-        ], [
-            'name.0.required' => translate('default_name_is_required'),
-        ]);
-
-        $category = Category::find($id);
-        $slug = Str::slug($request->name[array_search('default', $request->lang)]);
-        $category->slug = $category->slug ? $category->slug : "{$slug}{$category->id}";
-        $category->name = $request->name[array_search('default', $request->lang)];
-        $category->image = $request->has('image') ? Helpers::update('category/', $category->image, 'png', $request->file('image')) : $category->image;
-        $category->save();
-        $default_lang = str_replace('_', '-', app()->getLocale());
-        foreach ($request->lang as $index => $key) {
-            if ($default_lang == $key && !($request->name[$index])) {
-                if ($key != 'default') {
-                    Translation::updateOrInsert(
-                        ['translationable_type' => 'App\Models\Category',
-                            'translationable_id' => $category->id,
-                            'locale' => $key,
-                            'key' => 'name'],
-                        ['value' => $category->name]
-                    );
-                }
-            } else {
-
-                if ($request->name[$index] && $key != 'default') {
-                    Translation::updateOrInsert(
-                        ['translationable_type' => 'App\Models\Category',
-                            'translationable_id' => $category->id,
-                            'locale' => $key,
-                            'key' => 'name'],
-                        ['value' => $request->name[$index]]
-                    );
-                }
-            }
-        }
+        $mainCategory = $this->categoryRepo->getFirstWhere(params: ['id' => $id]);
+        $category = $this->categoryRepo->update(id: $id, data: $this->categoryService->getUpdateData(request: $request, object: $mainCategory));
+        $this->translationRepo->updateByModel(request: $request, model: $category, modelPath: 'App\Models\Category');
         Toastr::success(translate('messages.category_updated_successfully'));
         return back();
     }

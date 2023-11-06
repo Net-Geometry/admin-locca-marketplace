@@ -49,6 +49,36 @@ class TranslationRepository implements TranslationRepositoryInterface
         return true;
     }
 
+    public function updateByModel(Request $request, object $model, string $modelPath): bool
+    {
+        $default_lang = str_replace('_', '-', app()->getLocale());
+        foreach ($request->lang as $index => $key) {
+            if ($default_lang == $key && !($request->name[$index])) {
+                if ($key != 'default') {
+                    Translation::updateOrInsert(
+                        ['translationable_type' => $modelPath,
+                            'translationable_id' => $model->id,
+                            'locale' => $key,
+                            'key' => 'name'],
+                        ['value' => $model->name]
+                    );
+                }
+            } else {
+
+                if ($request->name[$index] && $key != 'default') {
+                    Translation::updateOrInsert(
+                        ['translationable_type' => $modelPath,
+                            'translationable_id' => $model->id,
+                            'locale' => $key,
+                            'key' => 'name'],
+                        ['value' => $request->name[$index]]
+                    );
+                }
+            }
+        }
+        return true;
+    }
+
     public function add(array $data): string|object
     {
 
