@@ -62,7 +62,7 @@ class CategoryRepository implements CategoryRepositoryInterface
 
     public function getList(array $orderBy = [], array $relations = [], int|string $dataLimit = DEFAULT_DATA_LIMIT, int $offset = null): Collection|LengthAwarePaginator
     {
-        // TODO: Implement getList() method.
+        return $this->category->get();
     }
 
     public function getBulkExportList(Request $request): Collection
