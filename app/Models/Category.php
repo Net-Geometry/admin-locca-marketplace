@@ -21,6 +21,7 @@ use Illuminate\Support\Str;
  * @property int $module_id
  * @property int $products_count
  * @property int $childes_count
+ * @property mixed $translations
  *
  * @package App\Models
  */

@@ -5,6 +5,12 @@ namespace App\Http\Requests\Admin;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * @property int parent_id
+ * @property array name
+ * @property array lang
+ * @property int position
+ */
 class CategoryAddRequest extends FormRequest
 {
     /**

@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Contracts\Repositories\CategoryRepositoryInterface;
+use App\Http\Requests\Admin\CategoryBulkExportRequest;
 use App\Models\Category;
 use App\Traits\FileManagerTrait;
 use Illuminate\Database\Eloquent\Collection;
@@ -55,7 +56,7 @@ class CategoryRepository implements CategoryRepositoryInterface
         return $this->category->where($params)->first();
     }
 
-    public function getFirstWithoutGlobalscopeWhere(array $params, array $relations = []): ?Model
+    public function getFirstWithoutGlobalScopeWhere(array $params, array $relations = []): ?Model
     {
         return $this->category->withoutGlobalScope('translate')->where($params)->first();
     }
@@ -65,12 +66,12 @@ class CategoryRepository implements CategoryRepositoryInterface
         return $this->category->get();
     }
 
-    public function getBulkExportList(Request $request): Collection
+    public function getBulkExportList(CategoryBulkExportRequest $request): Collection
     {
         return $this->category->when($request['type'] == 'date_wise', function ($query) use ($request) {
-            $query->whereBetween('created_at', [$request['from_date'] . ' 00:00:00', $request['to_date'] . ' 23:59:59']);
-        })->when($request['type'] == 'id_wise', function ($query) use ($request) {
-            $query->whereBetween('id', [$request['start_id'], $request['end_id']]);
+            $query->whereBetween('created_at', [$request->from_date . ' 00:00:00', $request->to_date . ' 23:59:59']);
+        })->when($request->type == 'id_wise', function ($query) use ($request) {
+            $query->whereBetween('id', [$request->start_id, $request->end_id]);
         })->module(Config::get('module.current_module_id'))->get();
     }
 
@@ -102,7 +103,7 @@ class CategoryRepository implements CategoryRepositoryInterface
             })->latest()->paginate($dataLimit);
     }
 
-    public function getListOfNames(Request $request, int|string $dataLimit = DEFAULT_DATA_LIMIT): Collection|LengthAwarePaginator
+    public function getNameList(Request $request, int|string $dataLimit = DEFAULT_DATA_LIMIT): Collection|LengthAwarePaginator
     {
         return $this->category->where('name', 'like', '%' . $request->searchValue . '%')
             ->when($request->module_id, function ($query) use ($request) {

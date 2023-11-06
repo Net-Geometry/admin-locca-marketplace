@@ -2,9 +2,18 @@
 
 namespace App\Http\Requests\Admin;
 
+use Carbon\Carbon;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
+
+/**
+ * @property Carbon from_date
+ * @property Carbon to_date
+ * @property string type
+ * @property int|string start_id
+ * @property int|string end_id
+ */
 class CategoryBulkExportRequest extends FormRequest
 {
     /**

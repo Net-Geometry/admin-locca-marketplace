@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\CentralLogics\Helpers;
 use App\Enums\ViewPaths\Admin\Category as CategoryViewPath;
+use App\Http\Requests\Admin\CategoryAddRequest;
+use App\Http\Requests\Admin\CategoryUpdateRequest;
 use App\Traits\FileManagerTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
@@ -22,7 +24,7 @@ class CategoryService
         };
     }
 
-    public function getAddData(Request $request, string|int $parentModuleId): array
+    public function getAddData(CategoryAddRequest $request, string|int $parentModuleId): array
     {
         return [
             'name' => $request->name[array_search('default', $request->lang)],
@@ -33,11 +35,11 @@ class CategoryService
         ];
     }
 
-    public function getUpdateData(Request $request, object $object): array
+    public function getUpdateData(CategoryUpdateRequest $request, object $object): array
     {
         $slug = Str::slug($request->name[array_search('default', $request->lang)]);
         return [
-            'slug' => $object->slug ? $object->slug : "{$slug}{$object->id}",
+            'slug' => $object->slug ?? "{$slug}{$object->id}",
             'name' => $request->name[array_search('default', $request->lang)],
             'image' => $request->has('image') ? Helpers::update('category/', $object->image, 'png', $request->file('image')) : $object->image,
         ];
@@ -47,7 +49,7 @@ class CategoryService
     {
         try {
             $collections = (new FastExcel)->import($request->file('products_file'));
-        } catch (\Exception $exception) {
+        } catch (\Exception) {
             return ['flag' => 'wrong_format'];
         }
         $module_id = Config::get('module.current_module_id');
@@ -79,7 +81,7 @@ class CategoryService
     public function processExportData(object $collection): array
     {
         $data = [];
-        foreach($collection as $key=>$item){
+        foreach($collection as $item){
             $data[] = [
                 'Id'=>$item->id,
                 'Name'=>$item->name,

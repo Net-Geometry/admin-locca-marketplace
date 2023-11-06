@@ -43,10 +43,6 @@ class CategoryController extends BaseController
     {
     }
 
-    /**
-     * @param Request|null $request
-     * @return View|Collection|LengthAwarePaginator|null
-     */
     public function index(?Request $request): View|Collection|LengthAwarePaginator|null
     {
         return $this->getCategoryView($request);
@@ -91,7 +87,7 @@ class CategoryController extends BaseController
      */
     public function getUpdateView(string|int $id): View
     {
-        $category = $this->categoryRepo->getFirstWithoutGlobalscopeWhere(params: ['id' => $id]);
+        $category = $this->categoryRepo->getFirstWithoutGlobalScopeWhere(params: ['id' => $id]);
         return view(CategoryViewPath::UPDATE['view'], compact('category'));
     }
 
@@ -149,9 +145,9 @@ class CategoryController extends BaseController
      * @param Request $request
      * @return JsonResponse
      */
-    public function getListOfNames(Request $request): JsonResponse
+    public function getNameList(Request $request): JsonResponse
     {
-        $data = $this->categoryRepo->getListOfNames(request: $request, dataLimit: 8);
+        $data = $this->categoryRepo->getNameList(request: $request, dataLimit: 8);
         $data[] = (object)['id' => 'all', 'text' => 'All'];
         return response()->json($data);
     }

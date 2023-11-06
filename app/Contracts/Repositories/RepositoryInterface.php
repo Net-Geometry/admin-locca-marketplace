@@ -45,9 +45,9 @@ interface RepositoryInterface
     /**
      * @param string $id
      * @param array $data Data value must be in key and value pair structure, ex: params = ['name'=>'John Doe']
-     * @return bool
+     * @return bool|string|object
      */
-    public function update(string $id, array $data): bool;
+    public function update(string $id, array $data): bool|string|object;
 
     /**
      * @param string $id
