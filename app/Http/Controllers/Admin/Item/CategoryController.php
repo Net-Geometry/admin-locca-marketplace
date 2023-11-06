@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\Item;
 
 use App\CentralLogics\Helpers;
 use App\Contracts\Repositories\CategoryRepositoryInterface;
+use App\Contracts\Repositories\TranslationRepositoryInterface;
 use App\Exports\CategoryExport;
 use App\Http\Controllers\BaseController;
 use App\Http\Requests\Admin\CategoryAddRequest;
@@ -25,8 +26,9 @@ use Rap2hpoutre\FastExcel\FastExcel;
 class CategoryController extends BaseController
 {
     public function __construct(
-        protected CategoryRepositoryInterface $categoryRepository,
-        protected CategoryService             $categoryService
+        protected CategoryRepositoryInterface    $categoryRepo,
+        protected CategoryService                $categoryService,
+        protected TranslationRepositoryInterface $translationRepo
     )
     {
     }
@@ -38,7 +40,7 @@ class CategoryController extends BaseController
 
     private function getCategoryView(Request $request): View
     {
-        $categories = $this->categoryRepository->getListWhere(
+        $categories = $this->categoryRepo->getListWhere(
             searchValue: $request['search'],
             filters: ['position' => $request['position']],
             relations: ['module'],
@@ -49,43 +51,14 @@ class CategoryController extends BaseController
 
     public function store(CategoryAddRequest $request): RedirectResponse
     {
-        $category = $this->categoryRepository->add([
-            'name' => $request->name[array_search('default', $request->lang)],
-            'image' => $this->upload('category/', 'png', $request->file('image')),
-            'parent_id' => $request->parent_id == null ? 0 : $request->parent_id,
-            'position' => $request->position,
-            'module_id' => isset($request->parent_id) ? Category::where('id', $request->parent_id)->value('module_id') : Config::get('module.current_module_id')
-        ]);
-
-        $default_lang = str_replace('_', '-', app()->getLocale());
-        $data = [];
-        foreach ($request->lang as $index => $key) {
-            if ($default_lang == $key && !($request->name[$index])) {
-                if ($key != 'default') {
-                    $data[] = array(
-                        'translationable_type' => 'App\Models\Category',
-                        'translationable_id' => $category->id,
-                        'locale' => $key,
-                        'key' => 'name',
-                        'value' => $category->name,
-                    );
-                }
-            } else {
-                if ($request->name[$index] && $key != 'default') {
-                    $data[] = array(
-                        'translationable_type' => 'App\Models\Category',
-                        'translationable_id' => $category->id,
-                        'locale' => $key,
-                        'key' => 'name',
-                        'value' => $request->name[$index],
-                    );
-                }
-            }
-        }
-        if (count($data)) {
-            Translation::insert($data);
-        }
-
+        $parentCategory = $this->categoryRepo->getFirstWhere(params: ['id' => $request['parent_id']]);
+        $category = $this->categoryRepo->add(
+            data: $this->categoryService->getAddData(
+                request: $request,
+                parentModuleId: $parentCategory->module_id
+            )
+        );
+        $this->translationRepo->addByModel(request: $request, model: $category, modelPath: 'App\Models\Category');
         Toastr::success(translate('messages.category_added_successfully'));
         return back();
     }

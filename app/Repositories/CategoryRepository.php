@@ -20,12 +20,17 @@ class CategoryRepository implements CategoryRepositoryInterface
 
     public function add(array $data): string|object
     {
-        return $this->category->create($data);
+        $category = $this->category->newInstance();
+        foreach ($data as $key => $column) {
+            $category[$key] = $column;
+        }
+        $category->save();
+        return $category;
     }
 
     public function getFirstWhere(array $params, array $relations = []): ?Model
     {
-        // TODO: Implement getFirstWhere() method.
+        return $this->category->where($params)->first();
     }
 
     public function getList(array $orderBy = [], array $relations = [], int|string $dataLimit = DEFAULT_DATA_LIMIT, int $offset = null): Collection|LengthAwarePaginator

@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Contracts\Repositories\CategoryRepositoryInterface;
+use App\Contracts\Repositories\TranslationRepositoryInterface;
 use App\Repositories\CategoryRepository;
+use App\Repositories\TranslationRepository;
 use Illuminate\Support\ServiceProvider;
 
 class InterfaceServiceProvider extends ServiceProvider
@@ -21,6 +23,13 @@ class InterfaceServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $this->app->bind(CategoryRepositoryInterface::class, CategoryRepository::class);
+        $array = [
+            ['key' => CategoryRepositoryInterface::class, 'value' => CategoryRepository::class],
+            ['key' => TranslationRepositoryInterface::class, 'value' => TranslationRepository::class],
+        ];
+        foreach ($array as $item) {
+            $this->app->bind($item['key'], $item['value']);
+        }
+
     }
 }
