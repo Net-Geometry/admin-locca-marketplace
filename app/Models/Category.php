@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Str;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Support\Str;
 
 /**
  * Class Category
@@ -53,21 +55,20 @@ class Category extends Model
         'childes_count' => 'integer',
     ];
 
-    public function translations()
+    public function translations(): MorphMany
     {
         return $this->morphMany(Translation::class, 'translationable');
     }
 
-    public function module()
+    public function module(): BelongsTo
     {
         return $this->belongsTo(Module::class);
     }
 
-    public function products()
+    public function products(): HasMany
     {
         return $this->hasMany(Item::class);
     }
-
 
     public function scopeModule($query, $module_id)
     {
@@ -89,7 +90,7 @@ class Category extends Model
         return $this->hasMany(Category::class, 'parent_id');
     }
 
-    public function parent()
+    public function parent(): BelongsTo
     {
         return $this->belongsTo(Category::class, 'parent_id');
     }
@@ -106,21 +107,22 @@ class Category extends Model
     private function generateSlug($name): string
     {
         $slug = Str::slug($name);
-        if ($max_slug = static::where('slug', 'like',"{$slug}%")->latest('id')->value('slug')) {
+        if ($max_slug = static::where('slug', 'like', "{$slug}%")->latest('id')->value('slug')) {
 
-            if($max_slug == $slug) return "{$slug}-2";
+            if ($max_slug == $slug) return "{$slug}-2";
 
-            $max_slug = explode('-',$max_slug);
+            $max_slug = explode('-', $max_slug);
             $count = array_pop($max_slug);
             if (isset($count) && is_numeric($count)) {
-                $max_slug[]= ++$count;
+                $max_slug[] = ++$count;
                 return implode('-', $max_slug);
             }
         }
         return $slug;
     }
 
-    public function getNameAttribute($value){
+    public function getNameAttribute($value): string
+    {
         if (count($this->translations) > 0) {
             foreach ($this->translations as $translation) {
                 if ($translation['key'] == 'name') {
@@ -132,13 +134,13 @@ class Category extends Model
         return $value;
     }
 
-    protected static function booted()
+    protected static function booted(): Builder|null
     {
         static::addGlobalScope('translate', function (Builder $builder) {
             $builder->with(['translations' => function ($query) {
                 return $query->where('locale', app()->getLocale());
             }]);
         });
+        return null;
     }
-
 }
