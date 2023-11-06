@@ -319,7 +319,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::get('export', 'AddOnController@export')->name('export');
         });
 
-        Route::group(['prefix' => 'category', 'as' => 'category.'], function () {
+       /* Route::group(['prefix' => 'category', 'as' => 'category.'], function () {
             Route::get('get-all', 'CategoryController@get_all')->name('get-all');
             Route::group(['middleware' => ['module:category']], function () {
                 Route::get('add', 'CategoryController@index')->name('add');
@@ -342,7 +342,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                 Route::get('bulk-export', 'CategoryController@bulk_export_index')->name('bulk-export-index');
                 Route::post('bulk-export', 'CategoryController@bulk_export_data')->name('bulk-export');
             });
-        });
+        });*/
         Route::group(['prefix' => 'common-condition', 'as' => 'common-condition.'], function () {
             Route::get('get-all', 'CommonConditionController@get_all')->name('get-all');
             Route::get('add', 'CommonConditionController@index')->name('add');

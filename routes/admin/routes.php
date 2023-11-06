@@ -20,7 +20,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::get('export-categories', [CategoryController::class, 'exportData'])->name('export-categories');
 
             //Import and export
-            Route::get('bulk-import', [CategoryController::class, 'getBulkImportView'])->name('bulk-import');
+            Route::get(Category::BULK_IMPORT['uri'], [CategoryController::class, 'getBulkImportView'])->name('bulk-import');
             Route::post('bulk-import', [CategoryController::class, 'importBulkData']);
             Route::post('bulk-update', [CategoryController::class, 'updateBulkData'])->name('bulk-update');
             Route::get('bulk-export', [CategoryController::class, 'getBulkExportView'])->name('bulk-export-index');
