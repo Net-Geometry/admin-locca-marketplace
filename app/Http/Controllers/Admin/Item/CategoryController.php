@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\Item;
 
 use App\Contracts\Repositories\CategoryRepositoryInterface;
 use App\Contracts\Repositories\TranslationRepositoryInterface;
+use App\Enums\ExportFileNames\Admin\Category;
 use App\Enums\ViewPaths\Admin\Category as CategoryViewPath;
 use App\Exports\CategoryExport;
 use App\Http\Controllers\BaseController;
@@ -255,7 +256,7 @@ class CategoryController extends BaseController
     public function exportBulkData(CategoryBulkExportRequest $request): StreamedResponse|string
     {
         $categories = $this->categoryRepo->getBulkExportList(request: $request);
-        return (new FastExcel($this->categoryService->processExportData(collection: $this->exportGenerator(data: $categories))))->download('Categories.xlsx');
+        return (new FastExcel($this->categoryService->processExportData(collection: $this->exportGenerator(data: $categories))))->download(Category::EXPORT_XLSX);
     }
 
     /**
@@ -272,8 +273,8 @@ class CategoryController extends BaseController
         ];
 
         if ($request['type'] == 'csv') {
-            return Excel::download(new CategoryExport($data), 'Categories.csv');
+            return Excel::download(new CategoryExport($data), Category::EXPORT_CSV);
         }
-        return Excel::download(new CategoryExport($data), 'Categories.xlsx');
+        return Excel::download(new CategoryExport($data), Category::EXPORT_XLSX);
     }
 }
