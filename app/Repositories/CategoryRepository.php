@@ -5,11 +5,12 @@ namespace App\Repositories;
 use App\Contracts\Repositories\CategoryRepositoryInterface;
 use App\Models\Category;
 use App\Traits\FileManagerTrait;
-use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 
 class CategoryRepository implements CategoryRepositoryInterface
 {
@@ -29,6 +30,26 @@ class CategoryRepository implements CategoryRepositoryInterface
         return $category;
     }
 
+    public function addByChunk(array $data): void
+    {
+        $chunkSize = 100;
+        $chunk_categories = array_chunk($data, $chunkSize);
+
+        foreach ($chunk_categories as $key => $chunk_category) {
+            DB::table('categories')->insert($chunk_category);
+        }
+    }
+
+    public function updateByChunk(array $data): void
+    {
+        $chunkSize = 100;
+        $chunk_categories = array_chunk($data, $chunkSize);
+
+        foreach ($chunk_categories as $key => $chunk_category) {
+            DB::table('categories')->upsert($chunk_category, ['id', 'module_id'], ['name', 'image', 'parent_id', 'position', 'priority', 'status']);
+        }
+    }
+
     public function getFirstWhere(array $params, array $relations = []): ?Model
     {
         return $this->category->where($params)->first();
@@ -44,6 +65,30 @@ class CategoryRepository implements CategoryRepositoryInterface
         // TODO: Implement getList() method.
     }
 
+    public function getBulkExportList(Request $request): Collection
+    {
+        return $this->category->when($request['type'] == 'date_wise', function ($query) use ($request) {
+            $query->whereBetween('created_at', [$request['from_date'] . ' 00:00:00', $request['to_date'] . ' 23:59:59']);
+        })->when($request['type'] == 'id_wise', function ($query) use ($request) {
+            $query->whereBetween('id', [$request['start_id'], $request['end_id']]);
+        })->module(Config::get('module.current_module_id'))->get();
+    }
+
+    public function getExportList(Request $request): Collection
+    {
+        $key = explode(' ', $request['search']);
+        return $this->category->with('module')->where(['position' => 0])->module(Config::get('module.current_module_id'))
+            ->when(isset($key), function ($q) use ($key) {
+                $q->where(function ($q) use ($key) {
+                    foreach ($key as $value) {
+                        $q->orWhere('name', 'like', "%{$value}%");
+                    }
+                });
+            })
+            ->latest()
+            ->get();
+    }
+
     public function getListWhere(string $searchValue = null, array $filters = [], array $relations = [], int|string $dataLimit = DEFAULT_DATA_LIMIT, int $offset = null): Collection|LengthAwarePaginator
     {
         $key = explode(' ', $searchValue);
@@ -55,6 +100,21 @@ class CategoryRepository implements CategoryRepositoryInterface
                     }
                 });
             })->latest()->paginate($dataLimit);
+    }
+
+    public function getListOfNames(Request $request, int|string $dataLimit = DEFAULT_DATA_LIMIT): Collection|LengthAwarePaginator
+    {
+        return $this->category->where('name', 'like', '%' . $request->searchValue . '%')
+            ->when($request->module_id, function ($query) use ($request) {
+                $query->where('module_id', $request->module_id);
+            })->limit($dataLimit)->get()
+            ->map(function ($category) {
+                $data = $category->position == 0 ? translate('messages.main') : translate('messages.sub');
+                return [
+                    'id' => $category->id,
+                    'text' => $category->name . ' (' . $data . ')',
+                ];
+            });
     }
 
 

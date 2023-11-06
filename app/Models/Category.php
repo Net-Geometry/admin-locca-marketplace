@@ -2,14 +2,45 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
+/**
+ * Class Category
+ *
+ * @property int $parent_id
+ * @property int $position
+ * @property int $priority
+ * @property int $status
+ * @property int $featured
+ * @property int $module_id
+ * @property int $products_count
+ * @property int $childes_count
+ *
+ * @package App\Models
+ */
 class Category extends Model
 {
     use HasFactory;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'parent_id',
+        'position',
+        'priority',
+        'status',
+        'featured',
+        'module_id',
+        'products_count',
+        'childes_count',
+    ];
 
     protected $casts = [
         'parent_id' => 'integer',
@@ -53,7 +84,7 @@ class Category extends Model
         return $query->where('featured', '=', 1);
     }
 
-    public function childes()
+    public function childes(): HasMany
     {
         return $this->hasMany(Category::class, 'parent_id');
     }
@@ -71,7 +102,8 @@ class Category extends Model
             $category->save();
         });
     }
-    private function generateSlug($name)
+
+    private function generateSlug($name): string
     {
         $slug = Str::slug($name);
         if ($max_slug = static::where('slug', 'like',"{$slug}%")->latest('id')->value('slug')) {

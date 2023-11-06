@@ -8,6 +8,7 @@ use App\Traits\FileManagerTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
+use Rap2hpoutre\FastExcel\FastExcel;
 
 class CategoryService
 {
@@ -40,5 +41,55 @@ class CategoryService
             'name' => $request->name[array_search('default', $request->lang)],
             'image' => $request->has('image') ? Helpers::update('category/', $object->image, 'png', $request->file('image')) : $object->image,
         ];
+    }
+
+    public function getImportData(Request $request, bool $toAdd = true): array
+    {
+        try {
+            $collections = (new FastExcel)->import($request->file('products_file'));
+        } catch (\Exception $exception) {
+            return ['flag' => 'wrong_format'];
+        }
+        $module_id = Config::get('module.current_module_id');
+
+        $data = [];
+        foreach ($collections as $collection) {
+            if ($collection['Name'] === "") {
+                return ['flag' => 'required_fields'];
+            }
+            $parent_id = is_numeric($collection['ParentId']) ? $collection['ParentId'] : 0;
+            $array = [
+                'name' => $collection['Name'],
+                'image' => $collection['Image'],
+                'parent_id' => $parent_id,
+                'module_id' => $module_id,
+                'position' => $collection['Position'],
+                'priority' => is_numeric($collection['Priority']) ? $collection['Priority'] : 0,
+                'status' => $collection['Status'] == 'active' ? 1 : 0,
+                'created_at' => now(),
+                'updated_at' => now()
+            ];
+
+            $data[] = !$toAdd ? ($array['id'] = $collection['Id']) : $array;
+        }
+
+        return $data;
+    }
+
+    public function processExportData(object $collection): array
+    {
+        $data = [];
+        foreach($collection as $key=>$item){
+            $data[] = [
+                'Id'=>$item->id,
+                'Name'=>$item->name,
+                'Image'=>$item->image,
+                'ParentId'=>$item->parent_id,
+                'Position'=>$item->position,
+                'Priority'=>$item->priority,
+                'Status'=>$item->status == 1 ? 'active' : 'inactive',
+            ];
+        }
+        return $data;
     }
 }

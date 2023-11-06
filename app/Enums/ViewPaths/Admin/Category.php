@@ -34,4 +34,15 @@ enum Category
         'uri' => 'status',
         'view' => ''
     ];
+
+    const BULK_IMPORT = [
+        'uri' => 'bulk-import',
+        'view' => 'admin-views.category.bulk-import'
+    ];
+
+    const BULK_EXPORT = [
+        'uri' => 'bulk-export',
+        'view' => 'admin-views.category.bulk-export'
+    ];
+
 }
