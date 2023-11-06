@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Contracts\Repositories\CategoryRepositoryInterface;
 use App\Models\Category;
 use App\Traits\FileManagerTrait;
+use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -69,6 +70,13 @@ class CategoryRepository implements CategoryRepositoryInterface
 
     public function delete(string $id): bool
     {
-        // TODO: Implement delete() method.
+        $category = $this->category->find($id);
+        if ($category->childes->count() == 0) {
+            $category->translations()->delete();
+            $category->delete();
+        } else {
+            return false;
+        }
+        return true;
     }
 }

@@ -91,12 +91,9 @@ class CategoryController extends BaseController
         return back();
     }
 
-    public function delete(Request $request)
+    public function delete(Request $request): RedirectResponse
     {
-        $category = Category::findOrFail($request->id);
-        if ($category->childes->count() == 0) {
-            $category->translations()->delete();
-            $category->delete();
+        if ($this->categoryRepo->delete(id: $request['id'])) {
             Toastr::success('Category removed!');
         } else {
             Toastr::warning(translate('messages.remove_sub_categories_first'));
