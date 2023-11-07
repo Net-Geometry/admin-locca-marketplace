@@ -19,7 +19,7 @@ enum Category
         'view' => 'admin-views.category.view'
     ];
     const ADD = [
-        'uri' => 'add-new',
+        'uri' => 'add/{position?}',
         'view' => 'admin-views.brand.add-new'
     ];
     const UPDATE = [
@@ -27,17 +27,37 @@ enum Category
         'view' => 'admin-views.category.edit'
     ];
     const DELETE = [
-        'uri' => 'delete',
+        'uri' => 'delete/{id}',
         'view' => ''
     ];
+    const PRIORITY = [
+        'uri' => 'update-priority/{category}',
+        'view' => ''
+    ];
+
     const STATUS = [
-        'uri' => 'status',
+        'uri' => 'status/{id}/{status}',
+        'view' => ''
+    ];
+
+    const FEATURED = [
+        'uri' => 'featured/{id}/{featured}',
+        'view' => ''
+    ];
+
+    const EXPORT = [
+        'uri' => 'export-categories',
         'view' => ''
     ];
 
     const BULK_IMPORT = [
         'uri' => 'bulk-import',
         'view' => 'admin-views.category.bulk-import'
+    ];
+
+    const BULK_UPDATE = [
+        'uri' => 'bulk-update',
+        'view' => ''
     ];
 
     const BULK_EXPORT = [
