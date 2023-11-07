@@ -18,6 +18,12 @@ enum Category
         'uri' => 'view',
         'view' => 'admin-views.category.view'
     ];
+
+    const NAME_LIST = [
+        'uri' => 'get-all',
+        'view' => ''
+    ];
+
     const ADD = [
         'uri' => 'add/{position?}',
         'view' => 'admin-views.brand.add-new'

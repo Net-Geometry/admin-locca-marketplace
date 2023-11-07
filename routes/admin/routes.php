@@ -7,9 +7,9 @@ use Illuminate\Support\Facades\Route;
 Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
     Route::group(['middleware' => ['admin', 'current-module']], function () {
         Route::group(['prefix' => 'category', 'as' => 'category.'], function () {
-            Route::get('get-all', [CategoryController::class, 'getNameList'])->name('get-all');
+            Route::get(Category::NAME_LIST[URI], [CategoryController::class, 'getNameList'])->name('get-all');
             Route::group(['middleware' => ['module:category']], function () {
-                Route::get('add/{position}', [CategoryController::class, 'index'])->name('add');
+                Route::get(Category::ADD[URI], [CategoryController::class, 'index'])->name('add');
                 Route::get(Category::UPDATE[URI], [CategoryController::class, 'getUpdateView'])->name('edit');
                 Route::post(Category::UPDATE[URI], [CategoryController::class, 'update'])->name('update');
                 Route::get(Category::PRIORITY[URI], [CategoryController::class, 'updatePriority'])->name('priority');

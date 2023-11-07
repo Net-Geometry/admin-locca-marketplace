@@ -4,9 +4,9 @@ namespace App\Services;
 
 use App\CentralLogics\Helpers;
 use App\Enums\ViewPaths\Admin\Category as CategoryViewPath;
-use App\Http\Requests\Admin\CategoryAddRequest;
 use App\Http\Requests\Admin\CategoryUpdateRequest;
 use App\Traits\FileManagerTrait;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
@@ -49,7 +49,7 @@ class CategoryService
     {
         try {
             $collections = (new FastExcel)->import($request->file('products_file'));
-        } catch (\Exception) {
+        } catch (Exception) {
             return ['flag' => 'wrong_format'];
         }
         $module_id = Config::get('module.current_module_id');
