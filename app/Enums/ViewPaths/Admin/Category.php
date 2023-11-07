@@ -26,16 +26,19 @@ enum Category
 
     const ADD = [
         'uri' => 'add/{position?}',
-        'view' => 'admin-views.brand.add-new'
+        'view' => 'admin-views.category.index'
     ];
+
     const UPDATE = [
         'uri' => 'update/{id}',
         'view' => 'admin-views.category.edit'
     ];
+
     const DELETE = [
         'uri' => 'delete/{id}',
         'view' => ''
     ];
+
     const PRIORITY = [
         'uri' => 'update-priority/{category}',
         'view' => ''

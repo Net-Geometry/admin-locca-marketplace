@@ -1,6 +1,8 @@
 <?php
 
 use App\Enums\ViewPaths\Admin\Category;
+use App\Enums\ViewPaths\Admin\Attribute;
+use App\Http\Controllers\Admin\Item\AttributeController;
 use App\Http\Controllers\Admin\Item\CategoryController;
 use Illuminate\Support\Facades\Route;
 
@@ -26,6 +28,15 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                 Route::get(Category::BULK_EXPORT[URI], [CategoryController::class, 'getBulkExportView'])->name('bulk-export-index');
                 Route::post(Category::BULK_EXPORT[URI], [CategoryController::class, 'exportBulkData'])->name('bulk-export');
             });
+        });
+
+        Route::group(['prefix' => 'attribute', 'as' => 'attribute.', 'middleware' => ['module:attribute']], function () {
+            Route::get(Attribute::INDEX[URI], [AttributeController::class, 'index'])->name('add-new');
+            Route::post(Attribute::ADD[URI], [AttributeController::class, 'add'])->name('store');
+            Route::get(Attribute::UPDATE[URI], [AttributeController::class, 'getUpdateView'])->name('edit');
+            Route::post(Attribute::UPDATE[URI], [AttributeController::class, 'update'])->name('update');
+            Route::delete(Attribute::DELETE[URI], [AttributeController::class, 'delete'])->name('delete');
+            Route::get(Attribute::EXPORT[URI], [AttributeController::class, 'exportData'])->name('export-attributes');
         });
     });
 });

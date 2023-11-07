@@ -330,45 +330,39 @@
                     <!-- Category -->
                     @if (\App\CentralLogics\Helpers::module_permission_check('category'))
                     <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/category*') ? 'active' : '' }}">
-                        <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:" title="{{ translate('messages.categories') }}">
-                            <i class="tio-category nav-icon"></i>
-                            <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('messages.categories') }}</span>
-                        </a>
-                        <ul class="js-navbar-vertical-aside-submenu nav nav-sub"  style="display:{{ Request::is('admin/category*') ? 'block' : 'none' }}">
-                            <li class="nav-item {{ Request::is('admin/category/add') ? 'active' : '' }}">
-                                <a class="nav-link " href="{{ route('admin.category.add') }}" title="{{ translate('messages.category') }}">
-                                    <span class="tio-circle nav-indicator-icon"></span>
-                                    <span class="text-truncate">{{ translate('messages.category') }}</span>
-                                </a>
-                            </li>
+                            <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:" title="{{ translate('messages.categories') }}">
+                                <i class="tio-category nav-icon"></i>
+                                <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('messages.categories') }}</span>
+                            </a>
+                            <ul class="js-navbar-vertical-aside-submenu nav nav-sub"  style="display:{{ Request::is('admin/category*') ? 'block' : 'none' }}">
+                                <li class="nav-item {{ Request::is('admin/category/add/0') ? 'active' : '' }}">
+                                    <a class="nav-link " href="{{ route('admin.category.add',['position'=>0]) }}" title="{{ translate('messages.category') }}">
+                                        <span class="tio-circle nav-indicator-icon"></span>
+                                        <span class="text-truncate">{{ translate('messages.category') }}</span>
+                                    </a>
+                                </li>
 
-                            <li class="nav-item {{ Request::is('admin/category/add-sub-category') ? 'active' : '' }}">
-                                <a class="nav-link " href="{{ route('admin.category.add-sub-category') }}" title="{{ translate('messages.sub_category') }}">
-                                    <span class="tio-circle nav-indicator-icon"></span>
-                                    <span class="text-truncate">{{ translate('messages.sub_category') }}</span>
-                                </a>
-                            </li>
+                                <li class="nav-item {{ Request::is('admin/category/add/1') ? 'active' : '' }}">
+                                    <a class="nav-link " href="{{ route('admin.category.add',['position'=>1]) }}" title="{{ translate('messages.sub_category') }}">
+                                        <span class="tio-circle nav-indicator-icon"></span>
+                                        <span class="text-truncate">{{ translate('messages.sub_category') }}</span>
+                                    </a>
+                                </li>
 
-                            {{-- <li class="nav-item {{Request::is('admin/category/add-sub-sub-category')?'active':''}}">
-                            <a class="nav-link " href="{{route('admin.category.add-sub-sub-category')}}" title="add new sub sub category">
-                                <span class="tio-circle nav-indicator-icon"></span>
-                                <span class="text-truncate">Sub-Sub-Category</span>
-                            </a>
-                        </li> --}}
-                        <li class="nav-item {{ Request::is('admin/category/bulk-import') ? 'active' : '' }}">
-                            <a class="nav-link " href="{{ route('admin.category.bulk-import') }}" title="{{ translate('messages.bulk_import') }}">
-                                <span class="tio-circle nav-indicator-icon"></span>
-                                <span class="text-truncate text-capitalize">{{ translate('messages.bulk_import') }}</span>
-                            </a>
+                                <li class="nav-item {{ Request::is('admin/category/bulk-import') ? 'active' : '' }}">
+                                    <a class="nav-link " href="{{ route('admin.category.bulk-import') }}" title="{{ translate('messages.bulk_import') }}">
+                                        <span class="tio-circle nav-indicator-icon"></span>
+                                        <span class="text-truncate text-capitalize">{{ translate('messages.bulk_import') }}</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item {{ Request::is('admin/category/bulk-export') ? 'active' : '' }}">
+                                    <a class="nav-link " href="{{ route('admin.category.bulk-export-index') }}" title="{{ translate('messages.bulk_export') }}">
+                                        <span class="tio-circle nav-indicator-icon"></span>
+                                        <span class="text-truncate text-capitalize">{{ translate('messages.bulk_export') }}</span>
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
-                        <li class="nav-item {{ Request::is('admin/category/bulk-export') ? 'active' : '' }}">
-                            <a class="nav-link " href="{{ route('admin.category.bulk-export-index') }}" title="{{ translate('messages.bulk_export') }}">
-                                <span class="tio-circle nav-indicator-icon"></span>
-                                <span class="text-truncate text-capitalize">{{ translate('messages.bulk_export') }}</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
                 @endif
                 <!-- End Category -->
 
