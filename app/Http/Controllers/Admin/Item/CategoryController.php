@@ -65,7 +65,7 @@ class CategoryController extends BaseController
                 parentCategory: $parentCategory
             )
         );
-        $this->translationRepo->addByModel(request: $request, model: $category, modelPath: 'App\Models\Category');
+        $this->translationRepo->addByModel(request: $request, model: $category, modelPath: 'App\Models\Category', attribute: 'name');
         Toastr::success(translate('messages.category_added_successfully'));
         return back();
     }
@@ -94,7 +94,7 @@ class CategoryController extends BaseController
     {
         $mainCategory = $this->categoryRepo->getFirstWhere(params: ['id' => $id]);
         $category = $this->categoryRepo->update(id: $id, data: $this->categoryService->getUpdateData(request: $request, object: $mainCategory));
-        $this->translationRepo->updateByModel(request: $request, model: $category, modelPath: 'App\Models\Category');
+        $this->translationRepo->updateByModel(request: $request, model: $category, modelPath: 'App\Models\Category', attribute: 'name');
         Toastr::success(translate('messages.category_updated_successfully'));
         return back();
     }

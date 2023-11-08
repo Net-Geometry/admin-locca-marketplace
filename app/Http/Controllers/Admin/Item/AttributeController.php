@@ -46,7 +46,7 @@ class AttributeController extends Controller
     {
         $attribute = $this->attributeRepo->add(data: $this->attributeService->getAddData(request: $request));
 
-        $this->translationRepo->addByModel(request: $request, model: $attribute, modelPath: 'App\Models\Attribute');
+        $this->translationRepo->addByModel(request: $request, model: $attribute, modelPath: 'App\Models\Attribute', attribute: 'name');
 
         Toastr::success(translate('messages.attribute_added_successfully'));
         return back();
@@ -58,11 +58,11 @@ class AttributeController extends Controller
         return view(AttributeViewPath::UPDATE[VIEW], compact('attribute'));
     }
 
-    public function update(Request $request, $id): RedirectResponse
+    public function update(AttributeAddRequest $request, $id): RedirectResponse
     {
         $attribute = $this->attributeRepo->update(id: $id ,data: $this->attributeService->getAddData(request: $request));
 
-        $this->translationRepo->updateByModel(request: $request, model: $attribute, modelPath: 'App\Models\Attribute');
+        $this->translationRepo->updateByModel(request: $request, model: $attribute, modelPath: 'App\Models\Attribute', attribute: 'name');
 
         Toastr::success(translate('messages.attribute_updated_successfully'));
         return back();

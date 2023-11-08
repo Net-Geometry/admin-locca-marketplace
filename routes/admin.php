@@ -35,9 +35,9 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
         Route::resource('module', 'ModuleController')->middleware('module:module')->except('show');
         Route::get('module/{id}', 'ModuleController@show')->name('show');
 
-        Route::resource('unit', 'UnitController')->middleware('module:unit');
-        Route::post('unit/search', 'UnitController@search')->middleware('module:unit')->name('unit.search');
-        Route::get('unit/export/{type}', 'UnitController@export')->middleware('module:unit')->name('unit.export');
+//        Route::resource('unit', 'UnitController')->middleware('module:unit');
+//        Route::post('unit/search', 'UnitController@search')->middleware('module:unit')->name('unit.search');
+//        Route::get('unit/export/{type}', 'UnitController@export')->middleware('module:unit')->name('unit.export');
 
         Route::group(['prefix' => 'parcel', 'as' => 'parcel.', 'middleware' => ['module:parcel']], function () {
             Route::get('category/status/{id}/{status}', 'ParcelCategoryController@status')->name('category.status');

@@ -2,8 +2,10 @@
 
 use App\Enums\ViewPaths\Admin\Category;
 use App\Enums\ViewPaths\Admin\Attribute;
+use App\Enums\ViewPaths\Admin\Unit;
 use App\Http\Controllers\Admin\Item\AttributeController;
 use App\Http\Controllers\Admin\Item\CategoryController;
+use App\Http\Controllers\Admin\Item\UnitController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
@@ -37,6 +39,16 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::post(Attribute::UPDATE[URI], [AttributeController::class, 'update'])->name('update');
             Route::delete(Attribute::DELETE[URI], [AttributeController::class, 'delete'])->name('delete');
             Route::get(Attribute::EXPORT[URI], [AttributeController::class, 'exportData'])->name('export-attributes');
+        });
+
+        Route::group(['prefix' => 'unit', 'as' => 'unit.', 'middleware' => ['module:unit']], function () {
+            Route::get(Unit::INDEX[URI], [UnitController::class, 'index'])->name('index');
+            Route::post(Unit::ADD[URI], [UnitController::class, 'add'])->name('store');
+            Route::get(Unit::UPDATE[URI], [UnitController::class, 'getUpdateView'])->name('edit');
+            Route::put(Unit::UPDATE[URI], [UnitController::class, 'update'])->name('update');
+            Route::post(Unit::SEARCH[URI], [UnitController::class, 'search'])->name('search');
+            Route::delete(Unit::DELETE[URI], [UnitController::class, 'delete'])->name('destroy');
+            Route::get(Unit::EXPORT[URI], [UnitController::class, 'exportData'])->name('export');
         });
     });
 });
