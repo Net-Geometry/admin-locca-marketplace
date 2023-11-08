@@ -4,9 +4,9 @@ namespace App\Services;
 
 use App\CentralLogics\Helpers;
 use App\Enums\ViewPaths\Admin\Category as CategoryViewPath;
-use App\Http\Requests\Admin\CategoryAddRequest;
 use App\Http\Requests\Admin\CategoryUpdateRequest;
 use App\Traits\FileManagerTrait;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
@@ -24,14 +24,14 @@ class CategoryService
         };
     }
 
-    public function getAddData(CategoryAddRequest $request, string|int $parentModuleId): array
+    public function getAddData($request, string|null $parentCategory): array
     {
         return [
             'name' => $request->name[array_search('default', $request->lang)],
             'image' => $this->upload('category/', 'png', $request->file('image')),
             'parent_id' => $request->parent_id == null ? 0 : $request->parent_id,
             'position' => $request->position,
-            'module_id' => isset($request->parent_id) ? $parentModuleId : Config::get('module.current_module_id')
+            'module_id' => isset($request->parent_id) ? $parentCategory['module_id'] : Config::get('module.current_module_id')
         ];
     }
 
@@ -49,7 +49,7 @@ class CategoryService
     {
         try {
             $collections = (new FastExcel)->import($request->file('products_file'));
-        } catch (\Exception) {
+        } catch (Exception) {
             return ['flag' => 'wrong_format'];
         }
         $module_id = Config::get('module.current_module_id');
@@ -72,7 +72,11 @@ class CategoryService
                 'updated_at' => now()
             ];
 
-            $data[] = !$toAdd ? ($array['id'] = $collection['Id']) : $array;
+            if(!$toAdd){
+                $array['id'] = $collection['Id'];
+            }
+
+            $data[] = $array;
         }
 
         return $data;

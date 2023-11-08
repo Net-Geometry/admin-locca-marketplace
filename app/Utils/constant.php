@@ -1,3 +1,4 @@
 <?php
-
-define("DEFAULT_DATA_LIMIT", config('default_pagination'));
+const DEFAULT_DATA_LIMIT= 25;
+const URI = 'uri';
+const VIEW = 'view';

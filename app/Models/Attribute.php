@@ -5,16 +5,24 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Attribute extends Model
 {
     use HasFactory;
 
-    public function translations()
+    /**
+     * @return MorphMany
+     */
+    public function translations(): MorphMany
     {
         return $this->morphMany(Translation::class, 'translationable');
     }
 
+    /**
+     * @param $value
+     * @return mixed
+     */
     public function getNameAttribute($value){
         if (count($this->translations) > 0) {
             foreach ($this->translations as $translation) {
@@ -27,7 +35,10 @@ class Attribute extends Model
         return $value;
     }
 
-    protected static function booted()
+    /**
+     * @return void
+     */
+    protected static function booted(): void
     {
         static::addGlobalScope('translate', function (Builder $builder) {
             $builder->with(['translations' => function($query){

@@ -18,26 +18,55 @@ enum Category
         'uri' => 'view',
         'view' => 'admin-views.category.view'
     ];
-    const ADD = [
-        'uri' => 'add-new',
-        'view' => 'admin-views.brand.add-new'
+
+    const NAME_LIST = [
+        'uri' => 'get-all',
+        'view' => ''
     ];
+
+    const ADD = [
+        'uri' => 'add/{position?}',
+        'view' => 'admin-views.category.index'
+    ];
+
     const UPDATE = [
         'uri' => 'update/{id}',
         'view' => 'admin-views.category.edit'
     ];
+
     const DELETE = [
-        'uri' => 'delete',
+        'uri' => 'delete/{id}',
         'view' => ''
     ];
+
+    const PRIORITY = [
+        'uri' => 'update-priority/{category}',
+        'view' => ''
+    ];
+
     const STATUS = [
-        'uri' => 'status',
+        'uri' => 'status/{id}/{status}',
+        'view' => ''
+    ];
+
+    const FEATURED = [
+        'uri' => 'featured/{id}/{featured}',
+        'view' => ''
+    ];
+
+    const EXPORT = [
+        'uri' => 'export-categories',
         'view' => ''
     ];
 
     const BULK_IMPORT = [
         'uri' => 'bulk-import',
         'view' => 'admin-views.category.bulk-import'
+    ];
+
+    const BULK_UPDATE = [
+        'uri' => 'bulk-update',
+        'view' => ''
     ];
 
     const BULK_EXPORT = [

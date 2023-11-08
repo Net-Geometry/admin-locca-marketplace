@@ -16,29 +16,29 @@ class TranslationRepository implements TranslationRepositoryInterface
     {
     }
 
-    public function addByModel(Request $request, object $model, string $modelPath): bool
+    public function addByModel(Request $request, object $model, string $modelPath, string $attribute): bool
     {
         $default_lang = str_replace('_', '-', app()->getLocale());
         $data = [];
         foreach ($request->lang as $index => $key) {
-            if ($default_lang == $key && !($request->name[$index])) {
+            if ($default_lang == $key && !($request[$attribute][$index])) {
                 if ($key != 'default') {
                     $data[] = array(
                         'translationable_type' => $modelPath,
                         'translationable_id' => $model->id,
                         'locale' => $key,
-                        'key' => 'name',
-                        'value' => $model->name,
+                        'key' => $attribute,
+                        'value' => $model[$attribute],
                     );
                 }
             } else {
-                if ($request->name[$index] && $key != 'default') {
+                if ($request[$attribute][$index] && $key != 'default') {
                     $data[] = array(
                         'translationable_type' => $modelPath,
                         'translationable_id' => $model->id,
                         'locale' => $key,
-                        'key' => 'name',
-                        'value' => $request->name[$index],
+                        'key' => $attribute,
+                        'value' => $request[$attribute][$index],
                     );
                 }
             }
@@ -49,29 +49,29 @@ class TranslationRepository implements TranslationRepositoryInterface
         return true;
     }
 
-    public function updateByModel(Request $request, object $model, string $modelPath): bool
+    public function updateByModel(Request $request, object $model, string $modelPath, string $attribute): bool
     {
         $default_lang = str_replace('_', '-', app()->getLocale());
         foreach ($request->lang as $index => $key) {
-            if ($default_lang == $key && !($request->name[$index])) {
+            if ($default_lang == $key && !($request[$attribute][$index])) {
                 if ($key != 'default') {
                     Translation::updateOrInsert(
                         ['translationable_type' => $modelPath,
                             'translationable_id' => $model->id,
                             'locale' => $key,
-                            'key' => 'name'],
-                        ['value' => $model->name]
+                            'key' => $attribute],
+                        ['value' => $model[$attribute]]
                     );
                 }
             } else {
 
-                if ($request->name[$index] && $key != 'default') {
+                if ($request[$attribute][$index] && $key != 'default') {
                     Translation::updateOrInsert(
                         ['translationable_type' => $modelPath,
                             'translationable_id' => $model->id,
                             'locale' => $key,
-                            'key' => 'name'],
-                        ['value' => $request->name[$index]]
+                            'key' => $attribute],
+                        ['value' => $request[$attribute][$index]]
                     );
                 }
             }

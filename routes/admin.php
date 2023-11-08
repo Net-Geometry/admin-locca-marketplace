@@ -35,9 +35,9 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
         Route::resource('module', 'ModuleController')->middleware('module:module')->except('show');
         Route::get('module/{id}', 'ModuleController@show')->name('show');
 
-        Route::resource('unit', 'UnitController')->middleware('module:unit');
-        Route::post('unit/search', 'UnitController@search')->middleware('module:unit')->name('unit.search');
-        Route::get('unit/export/{type}', 'UnitController@export')->middleware('module:unit')->name('unit.export');
+//        Route::resource('unit', 'UnitController')->middleware('module:unit');
+//        Route::post('unit/search', 'UnitController@search')->middleware('module:unit')->name('unit.search');
+//        Route::get('unit/export/{type}', 'UnitController@export')->middleware('module:unit')->name('unit.export');
 
         Route::group(['prefix' => 'parcel', 'as' => 'parcel.', 'middleware' => ['module:parcel']], function () {
             Route::get('category/status/{id}/{status}', 'ParcelCategoryController@status')->name('category.status');
@@ -186,21 +186,21 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             // Route::post('search', 'CouponController@search')->name('search');
         });
 
-        Route::group(['prefix' => 'attribute', 'as' => 'attribute.', 'middleware' => ['module:attribute']], function () {
-            Route::get('add-new', 'AttributeController@index')->name('add-new');
-            Route::post('store', 'AttributeController@store')->name('store');
-            Route::get('edit/{id}', 'AttributeController@edit')->name('edit');
-            Route::post('update/{id}', 'AttributeController@update')->name('update');
-            Route::delete('delete/{id}', 'AttributeController@delete')->name('delete');
-            // Route::post('search', 'AttributeController@search')->name('search');
-            Route::get('export-attributes', 'AttributeController@export_attributes')->name('export-attributes');
-
-            //Import and export
-            Route::get('bulk-import', 'AttributeController@bulk_import_index')->name('bulk-import');
-            Route::post('bulk-import', 'AttributeController@bulk_import_data');
-            Route::get('bulk-export', 'AttributeController@bulk_export_index')->name('bulk-export-index');
-            Route::post('bulk-export', 'AttributeController@bulk_export_data')->name('bulk-export');
-        });
+//        Route::group(['prefix' => 'attribute', 'as' => 'attribute.', 'middleware' => ['module:attribute']], function () {
+//            Route::get('add-new', 'AttributeController@index')->name('add-new');
+//            Route::post('store', 'AttributeController@store')->name('store');
+//            Route::get('edit/{id}', 'AttributeController@edit')->name('edit');
+//            Route::post('update/{id}', 'AttributeController@update')->name('update');
+//            Route::delete('delete/{id}', 'AttributeController@delete')->name('delete');
+//            // Route::post('search', 'AttributeController@search')->name('search');
+//            Route::get('export-attributes', 'AttributeController@export_attributes')->name('export-attributes');
+//
+//            //Import and export
+//            Route::get('bulk-import', 'AttributeController@bulk_import_index')->name('bulk-import');
+//            Route::post('bulk-import', 'AttributeController@bulk_import_data');
+//            Route::get('bulk-export', 'AttributeController@bulk_export_index')->name('bulk-export-index');
+//            Route::post('bulk-export', 'AttributeController@bulk_export_data')->name('bulk-export');
+//        });
 
         Route::group(['prefix' => 'flash-sale', 'as' => 'flash-sale.'], function () {
             Route::get('add-new', 'FlashSaleController@index')->name('add-new');

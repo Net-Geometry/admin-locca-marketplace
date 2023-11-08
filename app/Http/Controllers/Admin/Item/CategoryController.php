@@ -8,6 +8,7 @@ use App\Enums\ExportFileNames\Admin\Category;
 use App\Enums\ViewPaths\Admin\Category as CategoryViewPath;
 use App\Exports\CategoryExport;
 use App\Http\Controllers\BaseController;
+use App\Http\Requests\Admin\CategoryAddRequest;
 use App\Http\Requests\Admin\CategoryBulkExportRequest;
 use App\Http\Requests\Admin\CategoryBulkImportRequest;
 use App\Http\Requests\Admin\CategoryUpdateRequest;
@@ -23,10 +24,6 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 use Maatwebsite\Excel\Facades\Excel;
-use OpenSpout\Common\Exception\InvalidArgumentException;
-use OpenSpout\Common\Exception\IOException;
-use OpenSpout\Common\Exception\UnsupportedTypeException;
-use OpenSpout\Writer\Exception\WriterNotOpenedException;
 use Rap2hpoutre\FastExcel\FastExcel;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -48,10 +45,6 @@ class CategoryController extends BaseController
         return $this->getCategoryView($request);
     }
 
-    /**
-     * @param Request $request
-     * @return View
-     */
     private function getCategoryView(Request $request): View
     {
         $categories = $this->categoryRepo->getListWhere(
@@ -63,38 +56,26 @@ class CategoryController extends BaseController
         return view($this->categoryService->getViewByPosition($request['position']), compact('categories'));
     }
 
-    /**
-     * @param CategoryUpdateRequest $request
-     * @return RedirectResponse
-     */
-    public function add(CategoryUpdateRequest $request): RedirectResponse
+    public function add(CategoryAddRequest $request): RedirectResponse
     {
         $parentCategory = $this->categoryRepo->getFirstWhere(params: ['id' => $request['parent_id']]);
         $category = $this->categoryRepo->add(
             data: $this->categoryService->getAddData(
                 request: $request,
-                parentModuleId: $parentCategory['module_id']
+                parentCategory: $parentCategory
             )
         );
-        $this->translationRepo->addByModel(request: $request, model: $category, modelPath: 'App\Models\Category');
+        $this->translationRepo->addByModel(request: $request, model: $category, modelPath: 'App\Models\Category', attribute: 'name');
         Toastr::success(translate('messages.category_added_successfully'));
         return back();
     }
 
-    /**
-     * @param string|int $id
-     * @return View
-     */
     public function getUpdateView(string|int $id): View
     {
         $category = $this->categoryRepo->getFirstWithoutGlobalScopeWhere(params: ['id' => $id]);
         return view(CategoryViewPath::UPDATE['view'], compact('category'));
     }
 
-    /**
-     * @param Request $request
-     * @return RedirectResponse
-     */
     public function updateStatus(Request $request): RedirectResponse
     {
         $this->categoryRepo->update(id: $request['id'], data: ['status' => $request['status']]);
@@ -102,10 +83,6 @@ class CategoryController extends BaseController
         return back();
     }
 
-    /**
-     * @param Request $request
-     * @return RedirectResponse
-     */
     public function updateFeatured(Request $request): RedirectResponse
     {
         $this->categoryRepo->update(id: $request['id'], data: ['featured' => $request['featured']]);
@@ -113,24 +90,15 @@ class CategoryController extends BaseController
         return back();
     }
 
-    /**
-     * @param CategoryUpdateRequest $request
-     * @param string|int $id
-     * @return RedirectResponse
-     */
     public function update(CategoryUpdateRequest $request, string|int $id): RedirectResponse
     {
         $mainCategory = $this->categoryRepo->getFirstWhere(params: ['id' => $id]);
         $category = $this->categoryRepo->update(id: $id, data: $this->categoryService->getUpdateData(request: $request, object: $mainCategory));
-        $this->translationRepo->updateByModel(request: $request, model: $category, modelPath: 'App\Models\Category');
+        $this->translationRepo->updateByModel(request: $request, model: $category, modelPath: 'App\Models\Category', attribute: 'name');
         Toastr::success(translate('messages.category_updated_successfully'));
         return back();
     }
 
-    /**
-     * @param Request $request
-     * @return RedirectResponse
-     */
     public function delete(Request $request): RedirectResponse
     {
         if ($this->categoryRepo->delete(id: $request['id'])) {
@@ -141,10 +109,6 @@ class CategoryController extends BaseController
         return back();
     }
 
-    /**
-     * @param Request $request
-     * @return JsonResponse
-     */
     public function getNameList(Request $request): JsonResponse
     {
         $data = $this->categoryRepo->getNameList(request: $request, dataLimit: 8);
@@ -152,29 +116,18 @@ class CategoryController extends BaseController
         return response()->json($data);
     }
 
-    /**
-     * @param Request $request
-     * @return RedirectResponse
-     */
     public function updatePriority(Request $request): RedirectResponse
     {
-        $this->categoryRepo->update(id: $request['id'], data: ['priority' => $request['priority']]);
+        $this->categoryRepo->update(id: $request['category'], data: ['priority' => $request['priority']]);
         Toastr::success(translate('messages.category_priority_updated successfully'));
         return back();
     }
 
-    /**
-     * @return View
-     */
     public function getBulkImportView(): View
     {
         return view(CategoryViewPath::BULK_IMPORT['view']);
     }
 
-    /**
-     * @param CategoryBulkImportRequest $request
-     * @return RedirectResponse
-     */
     public function importBulkData(CategoryBulkImportRequest $request): RedirectResponse
     {
         $data = $this->categoryService->getImportData(request: $request);
@@ -203,10 +156,6 @@ class CategoryController extends BaseController
         return back();
     }
 
-    /**
-     * @param CategoryBulkImportRequest $request
-     * @return RedirectResponse
-     */
     public function updateBulkData(CategoryBulkImportRequest $request): RedirectResponse
     {
         $data = $this->categoryService->getImportData(request: $request, toAdd: false);
@@ -231,34 +180,21 @@ class CategoryController extends BaseController
             return back();
         }
 
-        Toastr::success(translate('messages.category_imported_successfully', ['count' => count($data)]));
+        Toastr::success(translate('messages.category_updated_successfully', ['count' => count($data)]));
         return back();
     }
 
-    /**
-     * @return View
-     */
     public function getBulkExportView(): View
     {
         return view(CategoryViewPath::BULK_EXPORT['view']);
     }
 
-    /**
-     * @throws WriterNotOpenedException
-     * @throws IOException
-     * @throws UnsupportedTypeException
-     * @throws InvalidArgumentException
-     */
     public function exportBulkData(CategoryBulkExportRequest $request): StreamedResponse|string
     {
         $categories = $this->categoryRepo->getBulkExportList(request: $request);
         return (new FastExcel($this->categoryService->processExportData(collection: $this->exportGenerator(data: $categories))))->download(Category::EXPORT_XLSX);
     }
 
-    /**
-     * @param Request $request
-     * @return BinaryFileResponse
-     */
     public function exportData(Request $request): BinaryFileResponse
     {
         $categories = $this->categoryRepo->getExportList(request: $request);
