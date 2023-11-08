@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
 
-    Route::get('zone/get-coordinates/{id}', 'ZoneController@get_coordinates')->name('zone.get-coordinates');
+//    Route::get('zone/get-coordinates/{id}', 'ZoneController@get_coordinates')->name('zone.get-coordinates');
 
     Route::group(['middleware' => ['admin', 'current-module']], function () {
         Route::get('get-all-stores', 'VendorController@get_all_stores')->name('get_all_stores');
@@ -402,25 +402,25 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::get('/{status}', 'OrderController@list')->name('refund_attr');
         });
 
-        Route::group(['prefix' => 'zone', 'as' => 'zone.', 'middleware' => ['module:zone']], function () {
-            Route::get('/', 'ZoneController@index')->name('home');
-            Route::post('store', 'ZoneController@store')->name('store');
-            Route::get('edit/{id}', 'ZoneController@edit')->name('edit');
-            Route::post('update/{id}', 'ZoneController@update')->name('update');
-            Route::get('module-setup/{id}', 'ZoneController@module_setup')->name('module-setup');
-            Route::get('module-setup', 'ZoneController@go_module_setup')->name('go-module-setup');
-            Route::get('instruction', 'ZoneController@instruction')->name('instruction');
-            Route::post('module-update/{id}', 'ZoneController@module_update')->name('module-update');
-            Route::delete('delete/{zone}', 'ZoneController@destroy')->name('delete');
-            Route::get('status/{id}/{status}', 'ZoneController@status')->name('status');
-            Route::get('digital-payment/{id}/{digital_payment}', 'ZoneController@digital_payment')->name('digital-payment');
-            Route::get('cash-on-delivery/{id}/{cash_on_delivery}', 'ZoneController@cash_on_delivery')->name('cash-on-delivery');
-            Route::get('offline-payment/{id}/{offline_payment}', 'ZoneController@offline_payment')->name('offline-payment');
-            Route::post('search', 'ZoneController@search')->name('search');
-            Route::get('export/{type}', 'ZoneController@export')->name('export');
-            Route::get('zone-filter/{id}', 'ZoneController@zone_filter')->name('zonefilter');
-            Route::get('get-all-zone-cordinates/{id?}', 'ZoneController@get_all_zone_cordinates')->name('zoneCoordinates');
-        });
+//        Route::group(['prefix' => 'zone', 'as' => 'zone.', 'middleware' => ['module:zone']], function () {
+//            Route::get('/', 'ZoneController@index')->name('home');
+//            Route::post('store', 'ZoneController@store')->name('store');
+//            Route::get('edit/{id}', 'ZoneController@edit')->name('edit');
+//            Route::post('update/{id}', 'ZoneController@update')->name('update');
+//            Route::get('module-setup/{id}', 'ZoneController@module_setup')->name('module-setup');
+//            Route::get('module-setup', 'ZoneController@go_module_setup')->name('go-module-setup');
+//            Route::get('instruction', 'ZoneController@instruction')->name('instruction');
+//            Route::post('module-update/{id}', 'ZoneController@module_update')->name('module-update');
+//            Route::delete('delete/{zone}', 'ZoneController@destroy')->name('delete');
+//            Route::get('status/{id}/{status}', 'ZoneController@status')->name('status');
+//            Route::get('digital-payment/{id}/{digital_payment}', 'ZoneController@digital_payment')->name('digital-payment');
+//            Route::get('cash-on-delivery/{id}/{cash_on_delivery}', 'ZoneController@cash_on_delivery')->name('cash-on-delivery');
+//            Route::get('offline-payment/{id}/{offline_payment}', 'ZoneController@offline_payment')->name('offline-payment');
+//            Route::post('search', 'ZoneController@search')->name('search');
+//            Route::get('export/{type}', 'ZoneController@export')->name('export');
+//            Route::get('zone-filter/{id}', 'ZoneController@zone_filter')->name('zonefilter');
+//            Route::get('get-all-zone-cordinates/{id?}', 'ZoneController@get_all_zone_cordinates')->name('zoneCoordinates');
+//        });
 
         Route::group(['prefix' => 'notification', 'as' => 'notification.', 'middleware' => ['module:notification']], function () {
             Route::get('add-new', 'NotificationController@index')->name('add-new');
@@ -610,20 +610,20 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::resource('module', 'ModuleController')->middleware('module:module');
 
             //zone
-            Route::group(['prefix' => 'zone', 'as' => 'zone.', 'middleware' => ['module:zone']], function () {
-                Route::get('/', 'ZoneController@index')->name('home');
-                Route::post('store', 'ZoneController@store')->name('store');
-                Route::get('edit/{id}', 'ZoneController@edit')->name('edit');
-                Route::post('update/{id}', 'ZoneController@update')->name('update');
-                Route::get('module-setup/{id}', 'ZoneController@module_setup')->name('module-setup');
-                Route::post('module-update/{id}', 'ZoneController@module_update')->name('module-update');
-                Route::delete('delete/{zone}', 'ZoneController@destroy')->name('delete');
-                Route::get('status/{id}/{status}', 'ZoneController@status')->name('status');
-                Route::post('search', 'ZoneController@search')->name('search');
-                Route::get('export/{type}', 'ZoneController@export')->name('export');
-                Route::get('zone-filter/{id}', 'ZoneController@zone_filter')->name('zonefilter');
-                Route::get('get-all-zone-cordinates/{id?}', 'ZoneController@get_all_zone_cordinates')->name('zoneCoordinates');
-            });
+//            Route::group(['prefix' => 'zone', 'as' => 'zone.', 'middleware' => ['module:zone']], function () {
+//                Route::get('/', 'ZoneController@index')->name('home');
+//                Route::post('store', 'ZoneController@store')->name('store');
+//                Route::get('edit/{id}', 'ZoneController@edit')->name('edit');
+//                Route::post('update/{id}', 'ZoneController@update')->name('update');
+//                Route::get('module-setup/{id}', 'ZoneController@module_setup')->name('module-setup');
+//                Route::post('module-update/{id}', 'ZoneController@module_update')->name('module-update');
+//                Route::delete('delete/{zone}', 'ZoneController@destroy')->name('delete');
+//                Route::get('status/{id}/{status}', 'ZoneController@status')->name('status');
+//                Route::post('search', 'ZoneController@search')->name('search');
+//                Route::get('export/{type}', 'ZoneController@export')->name('export');
+//                Route::get('zone-filter/{id}', 'ZoneController@zone_filter')->name('zonefilter');
+//                Route::get('get-all-zone-cordinates/{id?}', 'ZoneController@get_all_zone_cordinates')->name('zoneCoordinates');
+//            });
         });
 
         Route::group(['prefix' => 'delivery-man', 'as' => 'delivery-man.'], function () {

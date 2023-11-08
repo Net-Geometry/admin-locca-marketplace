@@ -4,13 +4,19 @@ use App\Enums\ViewPaths\Admin\Addon;
 use App\Enums\ViewPaths\Admin\Category;
 use App\Enums\ViewPaths\Admin\Attribute;
 use App\Enums\ViewPaths\Admin\Unit;
+use App\Enums\ViewPaths\Admin\Zone;
 use App\Http\Controllers\Admin\Item\AddonController;
 use App\Http\Controllers\Admin\Item\AttributeController;
 use App\Http\Controllers\Admin\Item\CategoryController;
 use App\Http\Controllers\Admin\Item\UnitController;
+use App\Http\Controllers\Admin\Zone\ZoneController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
+
+    Route::get('zone/get-coordinates/{id}', [ZoneController::class, 'get_coordinates'])->name('zone.get-coordinates');
+    Route::get('get-all-zone-cordinates/{id?}', [ZoneController::class, 'get_all_zone_cordinates'])->name('zone.zoneCoordinates');
+
     Route::group(['middleware' => ['admin', 'current-module']], function () {
         Route::group(['prefix' => 'category', 'as' => 'category.'], function () {
             Route::get(Category::NAME_LIST[URI], [CategoryController::class, 'getNameList'])->name('get-all');
@@ -67,6 +73,27 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::post(Addon::BULK_UPDATE[URI], [AddonController::class, 'updateBulkData'])->name('bulk-update');
             Route::get(Addon::BULK_EXPORT[URI], [AddonController::class, 'getBulkExportView'])->name('bulk-export-index');
             Route::post(Addon::BULK_EXPORT[URI], [AddonController::class, 'exportBulkData'])->name('bulk-export');
+        });
+
+        Route::group(['prefix' => 'business-settings', 'as' => 'business-settings.'], function () {
+            Route::group(['prefix' => 'zone', 'as' => 'zone.', 'middleware' => ['module:zone']], function () {
+                Route::get(Zone::INDEX[URI], [ZoneController::class, 'index'])->name('home');
+                Route::post(Zone::ADD[URI], [ZoneController::class, 'add'])->name('store');
+                Route::get(Zone::UPDATE[URI], [ZoneController::class, 'getUpdateView'])->name('edit');
+                Route::post(Zone::UPDATE[URI], [ZoneController::class, 'update'])->name('update');
+                Route::delete(Zone::DELETE[URI], [ZoneController::class, 'delete'])->name('delete');
+                Route::get(Zone::EXPORT[URI], [ZoneController::class, 'exportList'])->name('export');
+                Route::get(Zone::STATUS[URI], [ZoneController::class, 'statusUpdate'])->name('status');
+                Route::get(Zone::ZONE_FILTER[URI], [ZoneController::class, 'zoneFilter'])->name('zone-filter');
+                Route::get(Zone::MODULE_SETUP[URI], [ZoneController::class, 'getModuleSetupView'])->name('module-setup');
+                Route::get(Zone::MODULE_SETUP[URI], [ZoneController::class, 'getLatestModuleSetupView'])->name('go-module-setup');
+                Route::post(Zone::MODULE_UPDATE[URI], [ZoneController::class, 'moduleSetupUpdate'])->name('module-update');
+
+                Route::get(Zone::INSTRUCTION[URI], [ZoneController::class, 'instruction'])->name('instruction');
+                Route::get(Zone::DIGITAL_PAYMENT[URI], [ZoneController::class, 'digitalPaymentUpdate'])->name('digital-payment');
+                Route::get(Zone::CASH_ON_DELIVERY[URI], [ZoneController::class, 'cashOnDeliveryUpdate'])->name('cash-on-delivery');
+                Route::get(Zone::OFFLINE_PAYMENT[URI], [ZoneController::class, 'offlinePaymentUpdate'])->name('offline-payment');
+            });
         });
     });
 });

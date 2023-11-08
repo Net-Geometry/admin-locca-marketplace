@@ -50,7 +50,7 @@ class AddOn extends Model
      * @param $query
      * @return mixed
      */
-    public function scopeActive($query)
+    public function scopeActive($query): mixed
     {
         return $query->where('status', 1);
     }

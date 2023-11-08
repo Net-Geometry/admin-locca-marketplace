@@ -209,13 +209,13 @@
                                     </a>
                                     <div class="dropdown-divider"></div> --}}
                                     <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
-                                    <a id="export-excel" class="dropdown-item" href="{{route('admin.zone.export', ['type'=>'excel',request()->getQueryString()])}}">
+                                    <a id="export-excel" class="dropdown-item" href="{{route('admin.business-settings.zone.export', ['type'=>'excel',request()->getQueryString()])}}">
                                         <img class="avatar avatar-xss avatar-4by3 mr-2"
                                             src="{{ asset('public/assets/admin') }}/svg/components/excel.svg"
                                             alt="Image Description">
                                         {{ translate('messages.excel') }}
                                     </a>
-                                    <a id="export-csv" class="dropdown-item" href="{{route('admin.zone.export', ['type'=>'csv',request()->getQueryString()])}}">
+                                    <a id="export-csv" class="dropdown-item" href="{{route('admin.business-settings.zone.export', ['type'=>'csv',request()->getQueryString()])}}">
                                         <img class="avatar avatar-xss avatar-4by3 mr-2"
                                             src="{{ asset('public/assets/admin') }}/svg/components/placeholder-csv-format.svg"
                                             alt="Image Description">
@@ -283,7 +283,7 @@
                                                 <span class="toggle-switch-indicator"></span>
                                             </span>
                                         </label>
-                                        <form action="{{route('admin.zone.status',[$zone['id'],$zone->status?0:1])}}" method="get" id="status-{{$zone['id']}}">
+                                        <form action="{{route('admin.business-settings.zone.status',[$zone['id'],$zone->status?0:1])}}" method="get" id="status-{{$zone['id']}}">
                                         </form>--}}
                                         <label class="toggle-switch toggle-switch-sm" for="status-{{$zone['id']}}">
                                             <input type="checkbox" class="toggle-switch-input" onclick="toogleStatusModal(event,'status-{{$zone['id']}}','zone-status-on.png','zone-status-off.png','{{translate('Want_to_activate_this_Zone?')}}','{{translate('Want_to_deactivate_this_Zone?')}}',`<p>{{translate('If_you_activate_this_zone,_Customers_can_see_all_stores_&_products_available_under_this_Zone_from_the_Customer_App_&_Website.')}}</p>`,`<p>{{translate('If_you_deactivate_this_zone,_Customers_Will_NOT_see_all_stores_&_products_available_under_this_Zone_from_the_Customer_App_&_Website.')}}</p>`)" id="status-{{$zone['id']}}" {{$zone->status?'checked':''}}>
@@ -291,7 +291,7 @@
                                                 <span class="toggle-switch-indicator"></span>
                                             </span>
                                         </label>
-                                        <form action="{{route('admin.zone.status',[$zone['id'],$zone->status?0:1])}}" method="get" id="status-{{$zone['id']}}_form">
+                                        <form action="{{route('admin.business-settings.zone.status',[$zone['id'],$zone->status?0:1])}}" method="get" id="status-{{$zone['id']}}_form">
                                         </form>
                                     </td>
                                     @if ($digital_payment && $digital_payment['status']==1)
@@ -302,7 +302,7 @@
                                                 <span class="toggle-switch-indicator"></span>
                                             </span>
                                         </label>
-                                        <form action="{{route('admin.zone.digital-payment',[$zone['id'],$zone->digital_payment?0:1])}}" method="get" id="digital_payment-{{$zone['id']}}">
+                                        <form action="{{route('admin.business-settings.zone.digital-payment',[$zone['id'],$zone->digital_payment?0:1])}}" method="get" id="digital_payment-{{$zone['id']}}">
                                         </form>
                                     </td>
                                     @endif
@@ -314,7 +314,7 @@
                                                 <span class="toggle-switch-indicator"></span>
                                             </span>
                                         </label>
-                                        <form action="{{route('admin.zone.cash-on-delivery',[$zone['id'],$zone->cash_on_delivery?0:1])}}" method="get" id="cash_on_delivery-{{$zone['id']}}">
+                                        <form action="{{route('admin.business-settings.zone.cash-on-delivery',[$zone['id'],$zone->cash_on_delivery?0:1])}}" method="get" id="cash_on_delivery-{{$zone['id']}}">
                                         </form>
                                     </td>
                                     @endif
@@ -326,7 +326,7 @@
                                                 <span class="toggle-switch-indicator"></span>
                                             </span>
                                         </label>
-                                        <form action="{{route('admin.zone.offline-payment',[$zone['id'],$zone->offline_payment?0:1])}}" method="get" id="offline_payment-{{$zone['id']}}">
+                                        <form action="{{route('admin.business-settings.zone.offline-payment',[$zone['id'],$zone->offline_payment?0:1])}}" method="get" id="offline_payment-{{$zone['id']}}">
                                         </form>
                                     </td>
                                     @endif
@@ -354,7 +354,7 @@
                                             <a class="btn action-btn btn--danger btn-outline-danger" href="javascript:"
                                             onclick="status_form_alert('zone-{{$zone['id']}}','{{ translate('Want_to_Delete_this_Zone?') }}','{{ translate('If_yes,_all_its_modules,_stores,_and_products_will_be_DELETED_FOREVER.') }}',event)" title="{{translate('messages.delete_zone')}}"><i class="tio-delete-outlined"></i>
                                             </a>
-                                            <form action="{{route('admin.zone.delete',[$zone['id']])}}" method="post" id="zone-{{$zone['id']}}">
+                                            <form action="{{route('admin.business-settings.zone.delete',[$zone['id']])}}" method="post" id="zone-{{$zone['id']}}">
                                                 @csrf @method('delete')
                                             </form>
                                         </div>
@@ -398,12 +398,12 @@
                 <img src="{{asset('/public/assets/admin/img/zone-settings-popup-arrow.gif')}}" alt="admin/img" class="w-100">
                 <div class="mt-3 d-flex flex-wrap align-items-center justify-content-between">
                     <label class="form-check form--check m-0">
-                        <input type="checkbox" class="form-check-input rounded" onclick="location.href='{{route('admin.zone.instruction')}}'">
+                        <input type="checkbox" class="form-check-input rounded" onclick="location.href='{{route('admin.business-settings.zone.instruction')}}'">
                         <span class="form-check-label">{{translate("Don't show this anymore")}}</span>
                     </label>
                     <div class="btn--container justify-content-end">
                         <button id="reset_btn" type="reset" class="btn btn--reset" data-dismiss="modal">{{translate("I will do it later")}}</button>
-                        <a id="module-setup-modal-button" onclick="location.href='{{route('admin.zone.go-module-setup')}}'" class="btn btn--primary">{{translate('Go_to_zone_Settings')}}</a>
+                        <a id="module-setup-modal-button" onclick="location.href='{{route('admin.business-settings.zone.go-module-setup')}}'" class="btn btn--primary">{{translate('Go_to_zone_Settings')}}</a>
                     </div>
                 </div>
             </div>
@@ -700,34 +700,7 @@ $(".popover-wrapper").click(function(){
         });
 
     </script>
-    <script>
-        // $('#search-form').on('submit', function () {
-        //     var formData = new FormData(this);
-        //     $.ajaxSetup({
-        //         headers: {
-        //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        //         }
-        //     });
-        //     $.post({
-        //         url: '{{route('admin.zone.search')}}',
-        //         data: formData,
-        //         cache: false,
-        //         contentType: false,
-        //         processData: false,
-        //         beforeSend: function () {
-        //             $('#loading').show();
-        //         },
-        //         success: function (data) {
-        //             $('#set-rows').html(data.view);
-        //             $('#itemCount').html(data.total);
-        //             $('.page-area').hide();
-        //         },
-        //         complete: function () {
-        //             $('#loading').hide();
-        //         },
-        //     });
-        // });
-    </script>
+
     <script>
         $('#zone_form').on('submit', function () {
             var formData = new FormData(this);
@@ -737,7 +710,7 @@ $(".popover-wrapper").click(function(){
                 }
             });
             $.post({
-                url: '{{route('admin.zone.store')}}',
+                url: '{{route('admin.business-settings.zone.store')}}',
                 data: formData,
                 cache: false,
                 contentType: false,

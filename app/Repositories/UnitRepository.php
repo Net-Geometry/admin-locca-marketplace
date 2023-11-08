@@ -6,7 +6,6 @@ use App\Contracts\Repositories\UnitRepositoryInterface;
 use App\Models\Unit;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class UnitRepository implements UnitRepositoryInterface
