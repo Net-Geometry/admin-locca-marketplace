@@ -2,8 +2,13 @@
 
 namespace App\Models;
 
-use App\Models\Vendor;
 use App\Scopes\ZoneScope;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
@@ -11,6 +16,9 @@ use Illuminate\Database\Eloquent\Builder;
 class Store extends Model
 {
 
+    /**
+     * @var string[]
+     */
     protected $casts = [
         'minimum_order' => 'float',
         'comission' => 'float',
@@ -46,6 +54,9 @@ class Store extends Model
         'announcement'=>'integer'
     ];
 
+    /**
+     * @var string[]
+     */
     protected $appends = ['gst_status','gst_code'];
 
     /**
@@ -57,11 +68,18 @@ class Store extends Model
         'gst'
     ];
 
-    public function translations()
+    /**
+     * @return MorphMany
+     */
+    public function translations(): MorphMany
     {
         return $this->morphMany(Translation::class, 'translationable');
     }
 
+    /**
+     * @param $value
+     * @return mixed
+     */
     public function getNameAttribute($value){
         if (count($this->translations) > 0) {
             foreach ($this->translations as $translation) {
@@ -74,7 +92,12 @@ class Store extends Model
         return $value;
     }
 
-    public function getAddressAttribute($value){
+    /**
+     * @param $value
+     * @return mixed
+     */
+    public function getAddressAttribute($value): mixed
+    {
         if (count($this->translations) > 0) {
             foreach ($this->translations as $translation) {
                 if ($translation['key'] == 'address') {
@@ -86,75 +109,124 @@ class Store extends Model
         return $value;
     }
 
-    public function vendor()
+    /**
+     * @return BelongsTo
+     */
+    public function vendor(): BelongsTo
     {
         return $this->belongsTo(Vendor::class);
     }
 
-    public function module()
+    /**
+     * @return BelongsTo
+     */
+    public function module(): BelongsTo
     {
         return $this->belongsTo(Module::class);
     }
 
-    public function items()
+    /**
+     * @return HasMany
+     */
+    public function items(): HasMany
     {
         return $this->hasMany(Item::class);
     }
-    public function items_for_reorder()
+
+    /**
+     * @return HasMany
+     */
+    public function items_for_reorder(): HasMany
     {
         return $this->items()->orderby('avg_rating','desc')->orderby('recommended','desc');
     }
 
-    public function activeCoupons()
+    /**
+     * @return HasMany
+     */
+    public function activeCoupons(): HasMany
     {
         return $this->hasMany(Coupon::class)->where('status', '=', 1)->whereDate('expire_date', '>=', date('Y-m-d'))->whereDate('start_date', '<=', date('Y-m-d'));
     }
 
-    public function schedules()
+    /**
+     * @return HasMany
+     */
+    public function schedules(): HasMany
     {
         return $this->hasMany(StoreSchedule::class)->orderBy('opening_time');
     }
 
-    public function deliverymen()
+    /**
+     * @return HasMany
+     */
+    public function deliverymen(): HasMany
     {
         return $this->hasMany(DeliveryMan::class);
     }
 
-    public function orders()
+    /**
+     * @return HasMany
+     */
+    public function orders(): HasMany
     {
         return $this->hasMany(Order::class);
     }
 
-    public function discount()
+    /**
+     * @return HasOne
+     */
+    public function discount(): HasOne
     {
         return $this->hasOne(Discount::class);
     }
 
-    public function zone()
+    /**
+     * @return BelongsTo
+     */
+    public function zone(): BelongsTo
     {
         return $this->belongsTo(Zone::class);
     }
 
-    public function campaigns()
+    /**
+     * @return BelongsToMany
+     */
+    public function campaigns(): BelongsToMany
     {
         return $this->belongsToMany(Campaign::class);
     }
 
-    public function itemCampaigns()
+    /**
+     * @return HasMany
+     */
+    public function itemCampaigns(): HasMany
     {
         return $this->hasMany(ItemCampaign::class);
     }
 
-    public function reviews()
+    /**
+     * @return HasManyThrough
+     */
+    public function reviews(): HasManyThrough
     {
         return $this->hasManyThrough(Review::class, Item::class);
     }
 
-    public function getScheduleOrderAttribute($value)
+    /**
+     * @param $value
+     * @return bool
+     */
+    public function getScheduleOrderAttribute($value): bool
     {
         return (boolean)(\App\CentralLogics\Helpers::schedule_order()?$value:0);
     }
-    public function getRatingAttribute($value)
+
+    /**
+     * @param $value
+     * @return array
+     */
+    public function getRatingAttribute($value): array
     {
         $ratings = json_decode($value, true);
         $rating5 = $ratings?$ratings[5]:0;
@@ -165,58 +237,102 @@ class Store extends Model
         return [$rating5, $rating4, $rating3, $rating2, $rating1];
     }
 
-    public function getGstStatusAttribute()
+    /**
+     * @return bool
+     */
+    public function getGstStatusAttribute(): bool
     {
         return (boolean)($this->gst?json_decode($this->gst, true)['status']:0);
     }
 
-    public function getGstCodeAttribute()
+    /**
+     * @return string
+     */
+    public function getGstCodeAttribute(): string
     {
         return (string)($this->gst?json_decode($this->gst, true)['code']:'');
     }
 
-    public function scopeModule($query, $module_id)
+    /**
+     * @param $query
+     * @param $module_id
+     * @return mixed
+     */
+    public function scopeModule($query, $module_id): mixed
     {
         return $query->where('module_id', $module_id);
     }
 
-    public function scopeDelivery($query)
+    /**
+     * @param $query
+     * @return void
+     */
+    public function scopeDelivery($query): void
     {
         $query->where('delivery',1);
     }
 
-    public function scopeTakeaway($query)
+    /**
+     * @param $query
+     * @return void
+     */
+    public function scopeTakeaway($query): void
     {
         $query->where('take_away',1);
     }
 
-    public function scopeActive($query)
+    /**
+     * @param $query
+     * @return mixed
+     */
+    public function scopeActive($query): mixed
     {
         return $query->where('status', 1);
     }
 
-    public function scopeFeatured($query)
+    /**
+     * @param $query
+     * @return mixed
+     */
+    public function scopeFeatured($query): mixed
     {
         return $query->where('featured', '=', 1);
     }
 
-    public function scopeOpened($query)
+    /**
+     * @param $query
+     * @return mixed
+     */
+    public function scopeOpened($query): mixed
     {
         return $query->where('active', 1);
     }
 
 
-    public function scopeWithOpen($query,$longitude,$latitude)
+    /**
+     * @param $query
+     * @param $longitude
+     * @param $latitude
+     * @return void
+     */
+    public function scopeWithOpen($query, $longitude, $latitude): void
     {
         $query->selectRaw('*, IF(((select count(*) from `store_schedule` where `stores`.`id` = `store_schedule`.`store_id` and `store_schedule`.`day` = '.now()->dayOfWeek.' and `store_schedule`.`opening_time` < "'.now()->format('H:i:s').'" and `store_schedule`.`closing_time` >"'.now()->format('H:i:s').'") > 0), true, false) as open,ST_Distance_Sphere(point(longitude, latitude),point('.$longitude.', '.$latitude.')) as distance');
     }
 
-    public function scopeWeekday($query)
+    /**
+     * @param $query
+     * @return mixed
+     */
+    public function scopeWeekday($query): mixed
     {
         return $query->where('off_day', 'not like', "%".now()->dayOfWeek."%");
     }
 
-    protected static function booted()
+    /**
+     * @return void
+     */
+    protected static function booted(): void
     {
         static::addGlobalScope(new ZoneScope);
 
@@ -227,7 +343,12 @@ class Store extends Model
         });
     }
 
-    public function scopeType($query, $type)
+    /**
+     * @param $query
+     * @param $type
+     * @return mixed
+     */
+    public function scopeType($query, $type): mixed
     {
         if($type == 'veg')
         {
@@ -242,7 +363,11 @@ class Store extends Model
 
     }
 
-    private function generateSlug($name)
+    /**
+     * @param $name
+     * @return string
+     */
+    private function generateSlug($name): string
     {
         $slug = Str::slug($name);
         if ($max_slug = static::where('slug', 'like',"{$slug}%")->latest('id')->value('slug')) {
@@ -260,7 +385,10 @@ class Store extends Model
     }
 
 
-    protected static function boot()
+    /**
+     * @return void
+     */
+    protected static function boot(): void
     {
         parent::boot();
         static::created(function ($store) {
@@ -270,7 +398,10 @@ class Store extends Model
     }
 
 
-    public function Store_config()
+    /**
+     * @return HasOne
+     */
+    public function Store_config(): HasOne
     {
         return $this->hasOne(StoreConfig::class);
     }

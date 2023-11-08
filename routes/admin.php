@@ -302,22 +302,22 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             return to_route('admin.system-addon.index');
         })->name('addon.index');
 
-        Route::group(['prefix' => 'addon', 'as' => 'addon.', 'middleware' => ['module:addon']], function () {
-            Route::get('add-new', 'AddOnController@index')->name('add-new');
-            Route::post('store', 'AddOnController@store')->name('store');
-            Route::get('edit/{id}', 'AddOnController@edit')->name('edit');
-            Route::post('update/{id}', 'AddOnController@update')->name('update');
-            Route::delete('delete/{id}', 'AddOnController@delete')->name('delete');
-            Route::get('status/{addon}/{status}', 'AddOnController@status')->name('status');
-            // Route::post('search', 'AddOnController@search')->name('search');
-            //Import and export
-            Route::get('bulk-import', 'AddOnController@bulk_import_index')->name('bulk-import');
-            Route::post('bulk-import', 'AddOnController@bulk_import_data');
-            Route::get('bulk-export', 'AddOnController@bulk_export_index')->name('bulk-export-index');
-            Route::post('bulk-export', 'AddOnController@bulk_export_data')->name('bulk-export');
-
-            Route::get('export', 'AddOnController@export')->name('export');
-        });
+//        Route::group(['prefix' => 'addon', 'as' => 'addon.', 'middleware' => ['module:addon']], function () {
+//            Route::get('add-new', 'AddOnController@index')->name('add-new');
+//            Route::post('store', 'AddOnController@store')->name('store');
+//            Route::get('edit/{id}', 'AddOnController@edit')->name('edit');
+//            Route::post('update/{id}', 'AddOnController@update')->name('update');
+//            Route::delete('delete/{id}', 'AddOnController@delete')->name('delete');
+//            Route::get('status/{addon}/{status}', 'AddOnController@status')->name('status');
+//            // Route::post('search', 'AddOnController@search')->name('search');
+//            //Import and export
+//            Route::get('bulk-import', 'AddOnController@bulk_import_index')->name('bulk-import');
+//            Route::post('bulk-import', 'AddOnController@bulk_import_data');
+//            Route::get('bulk-export', 'AddOnController@bulk_export_index')->name('bulk-export-index');
+//            Route::post('bulk-export', 'AddOnController@bulk_export_data')->name('bulk-export');
+//
+//            Route::get('export', 'AddOnController@export')->name('export');
+//        });
 
        /* Route::group(['prefix' => 'category', 'as' => 'category.'], function () {
             Route::get('get-all', 'CategoryController@get_all')->name('get-all');

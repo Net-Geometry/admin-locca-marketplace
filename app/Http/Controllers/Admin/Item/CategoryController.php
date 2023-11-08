@@ -195,7 +195,7 @@ class CategoryController extends BaseController
         return (new FastExcel($this->categoryService->processExportData(collection: $this->exportGenerator(data: $categories))))->download(Category::EXPORT_XLSX);
     }
 
-    public function exportData(Request $request): BinaryFileResponse
+    public function exportList(Request $request): BinaryFileResponse
     {
         $categories = $this->categoryRepo->getExportList(request: $request);
 

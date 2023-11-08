@@ -1,8 +1,10 @@
 <?php
 
+use App\Enums\ViewPaths\Admin\Addon;
 use App\Enums\ViewPaths\Admin\Category;
 use App\Enums\ViewPaths\Admin\Attribute;
 use App\Enums\ViewPaths\Admin\Unit;
+use App\Http\Controllers\Admin\Item\AddonController;
 use App\Http\Controllers\Admin\Item\AttributeController;
 use App\Http\Controllers\Admin\Item\CategoryController;
 use App\Http\Controllers\Admin\Item\UnitController;
@@ -21,7 +23,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                 Route::get(Category::STATUS[URI], [CategoryController::class, 'updateStatus'])->name('status');
                 Route::get(Category::FEATURED[URI], [CategoryController::class, 'updateFeatured'])->name('featured');
                 Route::delete(Category::DELETE[URI], [CategoryController::class, 'delete'])->name('delete');
-                Route::get(Category::EXPORT[URI], [CategoryController::class, 'exportData'])->name('export-categories');
+                Route::get(Category::EXPORT[URI], [CategoryController::class, 'exportList'])->name('export-categories');
 
                 //Import and export
                 Route::get(Category::BULK_IMPORT[URI], [CategoryController::class, 'getBulkImportView'])->name('bulk-import');
@@ -38,7 +40,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::get(Attribute::UPDATE[URI], [AttributeController::class, 'getUpdateView'])->name('edit');
             Route::post(Attribute::UPDATE[URI], [AttributeController::class, 'update'])->name('update');
             Route::delete(Attribute::DELETE[URI], [AttributeController::class, 'delete'])->name('delete');
-            Route::get(Attribute::EXPORT[URI], [AttributeController::class, 'exportData'])->name('export-attributes');
+            Route::get(Attribute::EXPORT[URI], [AttributeController::class, 'exportList'])->name('export-attributes');
         });
 
         Route::group(['prefix' => 'unit', 'as' => 'unit.', 'middleware' => ['module:unit']], function () {
@@ -48,7 +50,23 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::put(Unit::UPDATE[URI], [UnitController::class, 'update'])->name('update');
             Route::post(Unit::SEARCH[URI], [UnitController::class, 'search'])->name('search');
             Route::delete(Unit::DELETE[URI], [UnitController::class, 'delete'])->name('destroy');
-            Route::get(Unit::EXPORT[URI], [UnitController::class, 'exportData'])->name('export');
+            Route::get(Unit::EXPORT[URI], [UnitController::class, 'exportList'])->name('export');
+        });
+
+        Route::group(['prefix' => 'addon', 'as' => 'addon.', 'middleware' => ['module:addon']], function () {
+            Route::get(Addon::INDEX[URI], [AddonController::class, 'index'])->name('add-new');
+            Route::post(Addon::ADD[URI], [AddonController::class, 'add'])->name('store');
+            Route::get(Addon::UPDATE[URI], [AddonController::class, 'getUpdateView'])->name('edit');
+            Route::post(Addon::UPDATE[URI], [AddonController::class, 'update'])->name('update');
+            Route::delete(Addon::DELETE[URI], [AddonController::class, 'delete'])->name('delete');
+            Route::get(Addon::EXPORT[URI], [AddonController::class, 'exportList'])->name('export');
+            Route::get(Addon::UPDATE_STATUS[URI], [AddonController::class, 'updateStatus'])->name('status');
+
+            Route::get(Addon::BULK_IMPORT[URI], [AddonController::class, 'getBulkImportView'])->name('bulk-import');
+            Route::post(Addon::BULK_IMPORT[URI], [AddonController::class, 'importBulkData']);
+            Route::post(Addon::BULK_UPDATE[URI], [AddonController::class, 'updateBulkData'])->name('bulk-update');
+            Route::get(Addon::BULK_EXPORT[URI], [AddonController::class, 'getBulkExportView'])->name('bulk-export-index');
+            Route::post(Addon::BULK_EXPORT[URI], [AddonController::class, 'exportBulkData'])->name('bulk-export');
         });
     });
 });
