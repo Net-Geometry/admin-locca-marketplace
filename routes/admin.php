@@ -124,17 +124,17 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::post('bulk-export', 'ItemController@bulk_export_data')->name('bulk-export');
         });
 
-        Route::group(['prefix' => 'banner', 'as' => 'banner.', 'middleware' => ['module:banner']], function () {
-            Route::get('add-new', 'BannerController@index')->name('add-new');
-            Route::post('store', 'BannerController@store')->name('store');
-            Route::get('edit/{banner}', 'BannerController@edit')->name('edit');
-            Route::post('update/{banner}', 'BannerController@update')->name('update');
-            Route::get('status/{id}/{status}', 'BannerController@status')->name('status');
-            Route::get('featured/{id}/{status}', 'BannerController@featured')->name('featured');
-            Route::delete('delete/{banner}', 'BannerController@delete')->name('delete');
-            Route::post('search', 'BannerController@search')->name('search');
-            Route::get('promotional', 'BannerController@other_index')->name('promotional');
-        });
+//        Route::group(['prefix' => 'banner', 'as' => 'banner.', 'middleware' => ['module:banner']], function () {
+//            Route::get('add-new', 'BannerController@index')->name('add-new');
+//            Route::post('store', 'BannerController@store')->name('store');
+//            Route::get('edit/{banner}', 'BannerController@edit')->name('edit');
+//            Route::post('update/{banner}', 'BannerController@update')->name('update');
+//            Route::get('status/{id}/{status}', 'BannerController@status')->name('status');
+//            Route::get('featured/{id}/{status}', 'BannerController@featured')->name('featured');
+//            Route::delete('delete/{banner}', 'BannerController@delete')->name('delete');
+//            Route::post('search', 'BannerController@search')->name('search');
+//            Route::get('promotional', 'BannerController@other_index')->name('promotional');
+//        });
         Route::group(['prefix' => 'promotional-banner', 'as' => 'promotional-banner.', 'middleware' => ['module:banner']], function () {
             Route::get('add-new', 'OtherBannerController@promotional_index')->name('add-new');
             Route::get('add-video', 'OtherBannerController@promotional_video')->name('add-video');

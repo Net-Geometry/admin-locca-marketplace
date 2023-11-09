@@ -2,20 +2,9 @@
 
 namespace App\Providers;
 
-use App\Contracts\Repositories\AddonRepositoryInterface;
-use App\Contracts\Repositories\AttributeRepositoryInterface;
-use App\Contracts\Repositories\CategoryRepositoryInterface;
-use App\Contracts\Repositories\StoreRepositoryInterface;
-use App\Contracts\Repositories\TranslationRepositoryInterface;
-use App\Contracts\Repositories\UnitRepositoryInterface;
-use App\Contracts\Repositories\ZoneRepositoryInterface;
-use App\Repositories\AddonRepository;
-use App\Repositories\AttributeRepository;
-use App\Repositories\CategoryRepository;
-use App\Repositories\StoreRepository;
-use App\Repositories\TranslationRepository;
-use App\Repositories\UnitRepository;
-use App\Repositories\ZoneRepository;
+use App\Contracts\ControllerInterface;
+use App\Http\Controllers\BaseController;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\ServiceProvider;
 
 class InterfaceServiceProvider extends ServiceProvider
@@ -25,7 +14,25 @@ class InterfaceServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->bindInterfaceWithRepository();
+    }
+
+    private function bindInterfaceWithRepository(): void
+    {
+        $this->app->bind(ControllerInterface::class, BaseController::class);
+        $repositoriesPath = app_path('Repositories');
+        $contractsPath = app_path('Contracts/Repositories');
+        $repositoryFiles = File::files($repositoriesPath);
+        foreach ($repositoryFiles as $file) {
+            $filename = pathinfo($file, PATHINFO_FILENAME);
+            $interfaceName = $filename . 'Interface';
+            $interfacePath = $contractsPath . DIRECTORY_SEPARATOR . $interfaceName . '.php';
+            if (File::exists($interfacePath)) {
+                $interface = 'App\Contracts\Repositories\\' . $interfaceName;
+                $repository = 'App\Repositories\\' . $filename;
+                $this->app->bind($interface, $repository);
+            }
+        }
     }
 
     /**
@@ -33,18 +40,6 @@ class InterfaceServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $array = [
-            ['key' => CategoryRepositoryInterface::class, 'value' => CategoryRepository::class],
-            ['key' => TranslationRepositoryInterface::class, 'value' => TranslationRepository::class],
-            ['key' => AttributeRepositoryInterface::class, 'value' => AttributeRepository::class],
-            ['key' => UnitRepositoryInterface::class, 'value' => UnitRepository::class],
-            ['key' => AddonRepositoryInterface::class, 'value' => AddonRepository::class],
-            ['key' => StoreRepositoryInterface::class, 'value' => StoreRepository::class],
-            ['key' => ZoneRepositoryInterface::class, 'value' => ZoneRepository::class],
-        ];
-        foreach ($array as $item) {
-            $this->app->bind($item['key'], $item['value']);
-        }
-
+        //
     }
 }

@@ -82,7 +82,7 @@ class CategoryService
         return $data;
     }
 
-    public function processExportData(object $collection): array
+    public function getExportData(object $collection): array
     {
         $data = [];
         foreach($collection as $item){

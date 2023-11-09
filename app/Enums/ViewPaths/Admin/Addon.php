@@ -5,47 +5,47 @@ namespace App\Enums\ViewPaths\Admin;
 enum Addon
 {
     const INDEX = [
-        'uri' => '/',
-        'view' => 'admin-views.addon.index'
+        URI => '/',
+        VIEW => 'admin-views.addon.index'
     ];
 
     const ADD = [
-        'uri' => 'store',
-        'view' => 'admin-views.addon.index'
+        URI => 'store',
+        VIEW => 'admin-views.addon.index'
     ];
 
     const UPDATE = [
-        'uri' => 'edit/{id}',
-        'view' => 'admin-views.addon.edit'
+        URI => 'edit/{id}',
+        VIEW => 'admin-views.addon.edit'
     ];
 
     const DELETE = [
-        'uri' => 'delete/{id}',
-        'view' => ''
+        URI => 'delete/{id}',
+        VIEW => ''
     ];
 
     const EXPORT = [
-        'uri' => 'export',
-        'view' => ''
+        URI => 'export',
+        VIEW => ''
     ];
 
     const UPDATE_STATUS = [
-        'uri' => 'status/{id}/{status}',
-        'view' => ''
+        URI => 'status/{id}/{status}',
+        VIEW => ''
     ];
 
     const BULK_IMPORT = [
-        'uri' => 'bulk-import',
-        'view' => 'admin-views.addon.bulk-import'
+        URI => 'bulk-import',
+        VIEW => 'admin-views.addon.bulk-import'
     ];
 
     const BULK_UPDATE = [
-        'uri' => 'bulk-update',
-        'view' => 'admin-views.addon.bulk-import'
+        URI => 'bulk-update',
+        VIEW => 'admin-views.addon.bulk-import'
     ];
 
     const BULK_EXPORT = [
-        'uri' => 'bulk-export',
-        'view' => 'admin-views.addon.bulk-export'
+        URI => 'bulk-export',
+        VIEW => 'admin-views.addon.bulk-export'
     ];
 }

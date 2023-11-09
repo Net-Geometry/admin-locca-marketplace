@@ -1,10 +1,12 @@
 <?php
 
 use App\Enums\ViewPaths\Admin\Addon;
+use App\Enums\ViewPaths\Admin\Banner;
 use App\Enums\ViewPaths\Admin\Category;
 use App\Enums\ViewPaths\Admin\Attribute;
 use App\Enums\ViewPaths\Admin\Unit;
 use App\Enums\ViewPaths\Admin\Zone;
+use App\Http\Controllers\Admin\Banner\BannerController;
 use App\Http\Controllers\Admin\Item\AddonController;
 use App\Http\Controllers\Admin\Item\AttributeController;
 use App\Http\Controllers\Admin\Item\CategoryController;
@@ -74,6 +76,17 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::post(Addon::BULK_UPDATE[URI], [AddonController::class, 'updateBulkData'])->name('bulk-update');
             Route::get(Addon::BULK_EXPORT[URI], [AddonController::class, 'getBulkExportView'])->name('bulk-export-index');
             Route::post(Addon::BULK_EXPORT[URI], [AddonController::class, 'exportBulkData'])->name('bulk-export');
+        });
+
+        Route::group(['prefix' => 'banner', 'as' => 'banner.', 'middleware' => ['module:banner']], function () {
+            Route::get(Banner::INDEX[URI], [BannerController::class,'index'])->name('add-new');
+            Route::post(Banner::ADD[URI], [BannerController::class,'add'])->name('store');
+            Route::get(Banner::UPDATE[URI], [BannerController::class,'getUpdateView'])->name('edit');
+            Route::post(Banner::UPDATE[URI], [BannerController::class,'update'])->name('update');
+            Route::delete(Banner::DELETE[URI], [BannerController::class,'delete'])->name('delete');
+            Route::get(Banner::UPDATE_STATUS[URI], [BannerController::class,'updateStatus'])->name('status');
+            Route::get(Banner::UPDATE_FEATURED[URI], [BannerController::class,'updateFeatured'])->name('featured');
+            Route::post(Banner::SEARCH[URI], [BannerController::class,'getSearchList'])->name('search');
         });
 
         Route::group(['prefix' => 'business-settings', 'as' => 'business-settings.'], function () {

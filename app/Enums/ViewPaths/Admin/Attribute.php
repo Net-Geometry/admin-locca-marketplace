@@ -5,27 +5,27 @@ namespace App\Enums\ViewPaths\Admin;
 enum Attribute
 {
     const INDEX = [
-        'uri' => '/',
-        'view' => 'admin-views.attribute.index'
+        URI => '/',
+        VIEW => 'admin-views.attribute.index'
     ];
 
     const ADD = [
-        'uri' => 'store',
-        'view' => 'admin-views.attribute.index'
+        URI => 'store',
+        VIEW => 'admin-views.attribute.index'
     ];
 
     const UPDATE = [
-        'uri' => 'edit/{id}',
-        'view' => 'admin-views.attribute.edit'
+        URI => 'edit/{id}',
+        VIEW => 'admin-views.attribute.edit'
     ];
 
     const DELETE = [
-        'uri' => 'delete/{id}',
-        'view' => ''
+        URI => 'delete/{id}',
+        VIEW => ''
     ];
 
     const EXPORT = [
-        'uri' => 'export-attributes',
-        'view' => ''
+        URI => 'export-attributes',
+        VIEW => ''
     ];
 }

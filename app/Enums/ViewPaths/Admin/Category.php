@@ -5,73 +5,73 @@ namespace App\Enums\ViewPaths\Admin;
 enum Category
 {
     const INDEX = [
-        'uri' => 'view',
-        'view' => 'admin-views.category.index'
+        URI => 'view',
+        VIEW => 'admin-views.category.index'
     ];
 
     const SUB_CATEGORY_INDEX = [
-        'uri' => 'view',
-        'view' => 'admin-views.category.sub-index'
+        URI => 'view',
+        VIEW => 'admin-views.category.sub-index'
     ];
 
     const LIST = [
-        'uri' => 'view',
-        'view' => 'admin-views.category.view'
+        URI => 'view',
+        VIEW => 'admin-views.category.view'
     ];
 
     const NAME_LIST = [
-        'uri' => 'get-all',
-        'view' => ''
+        URI => 'get-all',
+        VIEW => ''
     ];
 
     const ADD = [
-        'uri' => 'add/{position?}',
-        'view' => 'admin-views.category.index'
+        URI => 'add/{position?}',
+        VIEW => 'admin-views.category.index'
     ];
 
     const UPDATE = [
-        'uri' => 'update/{id}',
-        'view' => 'admin-views.category.edit'
+        URI => 'update/{id}',
+        VIEW => 'admin-views.category.edit'
     ];
 
     const DELETE = [
-        'uri' => 'delete/{id}',
-        'view' => ''
+        URI => 'delete/{id}',
+        VIEW => ''
     ];
 
     const PRIORITY = [
-        'uri' => 'update-priority/{category}',
-        'view' => ''
+        URI => 'update-priority/{category}',
+        VIEW => ''
     ];
 
     const STATUS = [
-        'uri' => 'status/{id}/{status}',
-        'view' => ''
+        URI => 'status/{id}/{status}',
+        VIEW => ''
     ];
 
     const FEATURED = [
-        'uri' => 'featured/{id}/{featured}',
-        'view' => ''
+        URI => 'featured/{id}/{featured}',
+        VIEW => ''
     ];
 
     const EXPORT = [
-        'uri' => 'export-categories',
-        'view' => ''
+        URI => 'export-categories',
+        VIEW => ''
     ];
 
     const BULK_IMPORT = [
-        'uri' => 'bulk-import',
-        'view' => 'admin-views.category.bulk-import'
+        URI => 'bulk-import',
+        VIEW => 'admin-views.category.bulk-import'
     ];
 
     const BULK_UPDATE = [
-        'uri' => 'bulk-update',
-        'view' => ''
+        URI => 'bulk-update',
+        VIEW => ''
     ];
 
     const BULK_EXPORT = [
-        'uri' => 'bulk-export',
-        'view' => 'admin-views.category.bulk-export'
+        URI => 'bulk-export',
+        VIEW => 'admin-views.category.bulk-export'
     ];
 
 }

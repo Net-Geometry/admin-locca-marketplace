@@ -57,7 +57,7 @@ class ZoneController extends BaseController
         return back();
     }
 
-    public function getUpdateView(string|int $id): View
+    public function getUpdateView(string|int $id): View|RedirectResponse
     {
         if(env('APP_MODE')=='demo' && $id == 1)
         {
@@ -164,7 +164,7 @@ class ZoneController extends BaseController
         return view(ZoneViewPath::INDEX[VIEW], compact('zones'));
     }
 
-    public function updateStatus(Request $request)
+    public function updateStatus(Request $request): RedirectResponse
     {
         if(env('APP_MODE')=='demo' && $request['id'] == 1)
         {
