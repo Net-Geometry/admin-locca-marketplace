@@ -166,6 +166,7 @@ class ZoneController extends Controller
                 return back();
             }
         }
+
         $zone=Zone::findOrFail($id);
         $zone->cash_on_delivery = $request->cash_on_delivery?1:0;
         $zone->digital_payment = $request->digital_payment?1:0;
@@ -174,7 +175,7 @@ class ZoneController extends Controller
         $zone->increased_delivery_fee = $request->increased_delivery_fee ?? 0;
         $zone->increased_delivery_fee_status = $request->increased_delivery_fee_status ?? 0;
         $zone->increase_delivery_charge_message = $request->increase_delivery_charge_message ?? null;
-        
+
         $zone->modules()->sync($request->module_data);
         $zone->save();
         Toastr::success(translate('messages.zone_module_updated_successfully'));

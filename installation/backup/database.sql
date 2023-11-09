@@ -1549,7 +1549,7 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (121, '2023_08_28_114316_create_flash_sales_table', 44),
 (122, '2023_08_28_134428_create_flash_sale_items_table', 44),
 (123, '2023_09_07_131829_create_carts_table', 44),
-(124, '2023_09_20_122921_create_store_configs_table', 44),
+(124, '2023_09_20_122921_create_storeConfigs_table', 44),
 (125, '2023_09_23_184806_add_flash_sale_cols_to_orders_table', 44),
 (126, '2023_10_08_103818_add_increased_delivery_fee_in_zones_table', 44);
 
@@ -2374,10 +2374,10 @@ INSERT INTO `stores` (`id`, `name`, `phone`, `email`, `logo`, `latitude`, `longi
 -- --------------------------------------------------------
 
 --
--- Table structure for table `store_configs`
+-- Table structure for table `storeConfigs`
 --
 
-CREATE TABLE `store_configs` (
+CREATE TABLE `storeConfigs` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `store_id` bigint(20) UNSIGNED NOT NULL,
   `is_recommended` tinyint(1) NOT NULL DEFAULT 0,
@@ -3328,9 +3328,9 @@ ALTER TABLE `stores`
   ADD KEY `stores_module_id_foreign` (`module_id`);
 
 --
--- Indexes for table `store_configs`
+-- Indexes for table `storeConfigs`
 --
-ALTER TABLE `store_configs`
+ALTER TABLE `storeConfigs`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -3899,9 +3899,9 @@ ALTER TABLE `stores`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT for table `store_configs`
+-- AUTO_INCREMENT for table `storeConfigs`
 --
-ALTER TABLE `store_configs`
+ALTER TABLE `storeConfigs`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --

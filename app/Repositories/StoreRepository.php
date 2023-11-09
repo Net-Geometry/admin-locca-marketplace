@@ -2,69 +2,64 @@
 
 namespace App\Repositories;
 
-use App\Contracts\Repositories\UnitRepositoryInterface;
-use App\Models\Unit;
+use App\Contracts\Repositories\StoreRepositoryInterface;
+use App\Models\Store;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 
-class UnitRepository implements UnitRepositoryInterface
+class StoreRepository implements StoreRepositoryInterface
 {
-    public function __construct(protected Unit $unit)
+    public function __construct(protected Store $store)
     {
     }
 
     public function add(array $data): string|object
     {
-        $unit = $this->unit->newInstance();
+        $store = $this->store->newInstance();
         foreach ($data as $key => $column) {
-            $unit[$key] = $column;
+            $store[$key] = $column;
         }
-        $unit->save();
-        return $unit;
+        $store->save();
+        return $store;
     }
 
     public function getFirstWhere(array $params, array $relations = []): ?Model
     {
-        return $this->unit->where($params)->first();
+        return $this->store->where($params)->first();
     }
 
     public function getList(array $orderBy = [], array $relations = [], int|string $dataLimit = DEFAULT_DATA_LIMIT, int $offset = null): Collection|LengthAwarePaginator
     {
-        return $this->unit->paginate($dataLimit);
+        return $this->store->paginate($dataLimit);
     }
 
     public function getListWhere(string $searchValue = null, array $filters = [], array $relations = [], int|string $dataLimit = DEFAULT_DATA_LIMIT, int $offset = null): Collection|LengthAwarePaginator
     {
         $key = explode(' ', $searchValue);
-        return $this->unit->where(function ($q) use ($key) {
+        return $this->store->where(function ($q) use ($key) {
             foreach ($key as $value) {
-                $q->orWhere('unit', 'like', "%{$value}%");
+                $q->orWhere('name', 'like', "%{$value}%");
             }
         })->limit($dataLimit)->get();
     }
 
     public function update(string $id, array $data): bool|string|object
     {
-        $unit = $this->unit->find($id);
+        $store = $this->store->find($id);
         foreach ($data as $key => $column) {
-            $unit[$key] = $column;
+            $store[$key] = $column;
         }
-        $unit->save();
-        return $unit;
+        $store->save();
+        return $store;
     }
 
     public function delete(string $id): bool
     {
-        $unit = $this->unit->find($id);
-        $unit->translations()->delete();
-        $unit->delete();
+        $store = $this->store->find($id);
+        $store->translations()->delete();
+        $store->delete();
 
         return true;
-    }
-
-    public function getFirstWithoutGlobalScopeWhere(array $params, array $relations = []): ?Model
-    {
-        return $this->unit->withoutGlobalScope('translate')->where($params)->first();
     }
 }

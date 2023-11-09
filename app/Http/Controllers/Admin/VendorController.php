@@ -1663,8 +1663,8 @@ class VendorController extends Controller
 
     public function recommended_store(){
         $key = explode(' ', request()->search);
-        $stores=Store::withcount(['orders' ,'items'])->with('Store_config')->where('module_id',Config::get('module.current_module_id'))
-        ->wherehas('Store_config', function ($q){
+        $stores=Store::withcount(['orders' ,'items'])->with('storeConfig')->where('module_id',Config::get('module.current_module_id'))
+        ->wherehas('storeConfig', function ($q){
             $q->where('is_recommended_deleted',0);
         })
 

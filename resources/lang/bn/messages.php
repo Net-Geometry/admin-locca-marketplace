@@ -2469,7 +2469,7 @@
   'deliverymen_list' => 'ডেলিভারিম্যান লিস্ট',
   'marketing_section' => 'মার্কেটিং সেকশন',
   'Item Campaigns' => 'আইটেম ক্যাম্পেইন',
-  'store_config' => 'স্টোর কনফিগ',
+  'storeConfig' => 'স্টোর কনফিগ',
   'my_shop' => 'আমার শপ',
   'bank_info' => 'ব্যাংক ইনফো',
   'my_wallet' => 'আমার ওয়ালেট',

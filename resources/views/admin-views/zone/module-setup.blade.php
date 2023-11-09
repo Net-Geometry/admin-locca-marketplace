@@ -20,7 +20,7 @@
             </h1>
         </div>
         <!-- End Page Header -->
-        <form action="{{ route('admin.zone.module-update', $zone->id) }}" method="post" id="zone_form" class="shadow--card">
+        <form action="{{ route('admin.business-settings.zone.module-update', $zone->id) }}" method="post" id="zone_form" class="shadow--card">
             @csrf
             <div class="row g-2">
                 <div class="col-12">

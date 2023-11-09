@@ -147,7 +147,7 @@
 
                                     <td class="text-center">
                                         <label class="toggle-switch toggle-switch-sm" for="publishCheckbox{{$store->id}}">
-                                            <input type="checkbox" onclick="location.href='{{route('admin.store.recommended_store_status',[$store['id'],$store->Store_config->is_recommended?0:1])}}'"class="toggle-switch-input" id="publishCheckbox{{$store->id}}" {{$store->Store_config->is_recommended?'checked':''}}>
+                                            <input type="checkbox" onclick="location.href='{{route('admin.store.recommended_store_status',[$store['id'],$store->storeConfig->is_recommended?0:1])}}'"class="toggle-switch-input" id="publishCheckbox{{$store->id}}" {{$store->storeConfig->is_recommended?'checked':''}}>
                                             <span class="toggle-switch-label mx-auto">
                                                 <span class="toggle-switch-indicator"></span>
                                             </span>

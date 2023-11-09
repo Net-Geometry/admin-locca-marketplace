@@ -6,6 +6,7 @@ use App\Contracts\Repositories\UnitRepositoryInterface;
 use App\Contracts\Repositories\TranslationRepositoryInterface;
 use App\Enums\ExportFileNames\Admin\Unit;
 use App\Enums\ViewPaths\Admin\Unit as UnitViewPath;
+use App\Http\Controllers\BaseController;
 use App\Http\Requests\Admin\UnitAddRequest;
 use App\Http\Requests\Admin\UnitUpdateRequest;
 use App\Services\UnitService;
@@ -20,7 +21,7 @@ use Illuminate\View\View;
 use Rap2hpoutre\FastExcel\FastExcel;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
-class UnitController extends Controller
+class UnitController extends BaseController
 {
     public function __construct(
         protected UnitRepositoryInterface $unitRepo,
@@ -30,12 +31,12 @@ class UnitController extends Controller
     {
     }
 
-    function index(): View|Collection|LengthAwarePaginator|null
+    public function index(?Request $request): View|Collection|LengthAwarePaginator|null
     {
-        return $this->getIndexView();
+        return $this->getListView();
     }
 
-    private function getIndexView(): View
+    private function getListView(): View
     {
         $units = $this->unitRepo->getList(
             dataLimit: config('default_pagination')
@@ -76,7 +77,7 @@ class UnitController extends Controller
         return back();
     }
 
-    public function exportData(string $type): StreamedResponse|string
+    public function exportList(string $type): StreamedResponse|string
     {
         $collection = $this->unitRepo->getList();
 

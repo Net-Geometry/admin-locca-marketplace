@@ -449,11 +449,11 @@
 
                     @if(\App\CentralLogics\Helpers::employee_module_permission_check('store_setup'))
                     <li class="nav-item {{Request::is('store-panel/business-settings/store-setup')?'active':''}}">
-                        <a class="nav-link " href="{{route('vendor.business-settings.store-setup')}}" title="{{translate('messages.store_config')}}"
+                        <a class="nav-link " href="{{route('vendor.business-settings.store-setup')}}" title="{{translate('messages.storeConfig')}}"
                         >
                             <span class="tio-settings nav-icon"></span>
                             <span
-                                class="text-truncate">{{translate('messages.store_config')}}</span>
+                                class="text-truncate">{{translate('messages.storeConfig')}}</span>
                         </a>
                     </li>
                     @endif

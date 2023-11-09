@@ -21,7 +21,7 @@
                     <span class="toggle-switch-indicator"></span>
                 </span>
             </label>
-            <form action="{{route('admin.zone.status',[$zone['id'],$zone->status?0:1])}}" method="get" id="status-{{$zone['id']}}">
+            <form action="{{route('admin.business-settings.zone.status',[$zone['id'],$zone->status?0:1])}}" method="get" id="status-{{$zone['id']}}">
             </form>--}}
             <label class="toggle-switch toggle-switch-sm" for="status-{{$zone['id']}}">
                 <input type="checkbox" class="toggle-switch-input" onclick="toogleStatusModal(event,'status-{{$zone['id']}}','zone-status-on.png','zone-status-off.png','{{translate('Want_to_activate_this_Zone?')}}','{{translate('Want_to_deactivate_this_Zone?')}}',`<p>{{translate('If_you_activate_this_zone,_Customers_can_see_all_stores_&_products_available_under_this_Zone_from_the_Customer_App_&_Website.')}}</p>`,`<p>{{translate('If_you_deactivate_this_zone,_Customers_Will_NOT_see_all_stores_&_products_available_under_this_Zone_from_the_Customer_App_&_Website.')}}</p>`)" id="status-{{$zone['id']}}" {{$zone->status?'checked':''}}>
@@ -29,7 +29,7 @@
                     <span class="toggle-switch-indicator"></span>
                 </span>
             </label>
-            <form action="{{route('admin.zone.status',[$zone['id'],$zone->status?0:1])}}" method="get" id="status-{{$zone['id']}}_form">
+            <form action="{{route('admin.business-settings.zone.status',[$zone['id'],$zone->status?0:1])}}" method="get" id="status-{{$zone['id']}}_form">
             </form>
         </td>
         @if ($digital_payment && $digital_payment['status']==1)
@@ -40,7 +40,7 @@
                     <span class="toggle-switch-indicator"></span>
                 </span>
             </label>
-            <form action="{{route('admin.zone.digital-payment',[$zone['id'],$zone->digital_payment?0:1])}}" method="get" id="digital_payment-{{$zone['id']}}">
+            <form action="{{route('admin.business-settings.zone.digital-payment',[$zone['id'],$zone->digital_payment?0:1])}}" method="get" id="digital_payment-{{$zone['id']}}">
             </form>
         </td>
         @endif
@@ -52,7 +52,7 @@
                     <span class="toggle-switch-indicator"></span>
                 </span>
             </label>
-            <form action="{{route('admin.zone.cash-on-delivery',[$zone['id'],$zone->cash_on_delivery?0:1])}}" method="get" id="cash_on_delivery-{{$zone['id']}}">
+            <form action="{{route('admin.business-settings.zone.cash-on-delivery',[$zone['id'],$zone->cash_on_delivery?0:1])}}" method="get" id="cash_on_delivery-{{$zone['id']}}">
             </form>
         </td>
         @endif
@@ -77,7 +77,7 @@
                 <a class="btn action-btn btn--danger btn-outline-danger" href="javascript:"
                 onclick="status_form_alert('zone-{{$zone['id']}}','{{ translate('Want_to_Delete_this_Zone?') }}','{{ translate('If_yes,_all_its_modules,_stores,_and_products_will_be_DELETED_FOREVER.') }}',event)" title="{{translate('messages.delete_zone')}}"><i class="tio-delete-outlined"></i>
                 </a>
-                <form action="{{route('admin.zone.delete',[$zone['id']])}}" method="post" id="zone-{{$zone['id']}}">
+                <form action="{{route('admin.business-settings.zone.delete',[$zone['id']])}}" method="post" id="zone-{{$zone['id']}}">
                     @csrf @method('delete')
                 </form>
             </div>

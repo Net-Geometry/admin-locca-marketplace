@@ -526,7 +526,7 @@ class StoreLogic
                 $shuffle= DataSetting::where(['key' => 'shuffle_recommended_store' , 'type' => config('module.current_module_data')['id']])?->first()?->value;
             }
             $paginator = Store::withOpen($longitude??0,$latitude??0)
-            ->wherehas('Store_config', function ($q){
+            ->wherehas('storeConfig', function ($q){
                 $q->where(['is_recommended_deleted'=> 0 , 'is_recommended' => 1]);
             })
             ->when(config('module.current_module_data'), function($query)use($zone_id){

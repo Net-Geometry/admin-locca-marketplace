@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\Item;
 use App\Contracts\Repositories\AttributeRepositoryInterface;
 use App\Contracts\Repositories\TranslationRepositoryInterface;
 use App\Enums\ViewPaths\Admin\Attribute as AttributeViewPath;
+use App\Http\Controllers\BaseController;
 use App\Http\Requests\Admin\AttributeAddRequest;
 use App\Services\AttributeService;
 use Illuminate\Database\Eloquent\Collection;
@@ -18,7 +19,7 @@ use Illuminate\View\View;
 use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
-class AttributeController extends Controller
+class AttributeController extends BaseController
 {
     public function __construct(
         protected AttributeRepositoryInterface $attributeRepo,
@@ -28,12 +29,12 @@ class AttributeController extends Controller
     {
     }
 
-    function index(Request $request): View|Collection|LengthAwarePaginator|null
+    public function index(?Request $request): View|Collection|LengthAwarePaginator|null
     {
-        return $this->getIndexView($request);
+        return $this->getListView($request);
     }
 
-    private function getIndexView(Request $request): View
+    private function getListView(Request $request): View
     {
         $attributes = $this->attributeRepo->getListWhere(
             searchValue: $request['search'],
@@ -75,7 +76,7 @@ class AttributeController extends Controller
         return back();
     }
 
-    public function exportData(Request $request): BinaryFileResponse
+    public function exportList(Request $request): BinaryFileResponse
     {
         $attributes = $this->attributeRepo->getExportList(request: $request);
 
