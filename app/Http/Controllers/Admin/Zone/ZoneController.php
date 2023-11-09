@@ -143,13 +143,11 @@ class ZoneController extends BaseController
 
     public function updateModuleSetup(ZoneModuleUpdateRequest $request, $id): RedirectResponse
     {
-        foreach($request->module_data as $data){
-            if(isset($data['maximum_shipping_charge']) && ((int)$data['maximum_shipping_charge'] < (int)$data['minimum_shipping_charge'])){
-                Toastr::error(translate('Maximum delivery charge must be greater than minimum delivery charge.'));
-                return back();
-            }
+        $data = $this->zoneService->checkModuleDeliveryCharge(moduleData: $request->module_data);
+        if (array_key_exists('flag', $data) && $data['flag'] == 'max_delivery_charge') {
+            Toastr::error(translate('Maximum delivery charge must be greater than minimum delivery charge.'));
+            return back();
         }
-
         $this->zoneRepo->zoneModuleSetupUpdate(id: $id ,data: $this->zoneService->getZoneModuleSetupData(request: $request),moduleData: $request->module_data);
 
         Toastr::success(translate('messages.zone_module_updated_successfully'));

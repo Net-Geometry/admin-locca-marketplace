@@ -64,4 +64,14 @@ class ZoneService
         return $data;
     }
 
+    public function checkModuleDeliveryCharge(array $moduleData): array
+    {
+        foreach($moduleData as $data){
+            if(isset($data['maximum_shipping_charge']) && ((int)$data['maximum_shipping_charge'] < (int)$data['minimum_shipping_charge'])){
+                return ['flag' => 'max_delivery_charge'];
+            }
+        }
+        return [];
+    }
+
 }
