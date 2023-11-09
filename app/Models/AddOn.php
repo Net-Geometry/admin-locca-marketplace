@@ -8,9 +8,33 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Support\Carbon;
 
+/**
+ * Class AddOn
+ *
+ * @property int $id
+ * @property string $name
+ * @property float $price
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property int $store_id
+ * @property bool $status
+ */
 class AddOn extends Model
 {
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'name',
+        'price',
+        'store_id',
+        'status',
+    ];
+
     /**
      * @var string[]
      */

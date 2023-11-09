@@ -2472,7 +2472,7 @@
   'deliverymen_list' => 'Deliverymen list',
   'marketing_section' => 'Marketing section',
   'Item Campaigns' => 'Item Campaigns',
-  'store_config' => 'Store config',
+  'storeConfig' => 'Store config',
   'my_shop' => 'My shop',
   'bank_info' => 'Bank info',
   'my_wallet' => 'My wallet',

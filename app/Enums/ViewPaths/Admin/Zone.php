@@ -29,8 +29,13 @@ enum Zone
         'view' => ''
     ];
 
-    const MODULE_SETUP = [
+    const LATEST_MODULE_SETUP = [
         'uri' => 'module-setup/{id?}',
+        'view' => 'admin-views.zone.module-setup'
+    ];
+
+    const MODULE_SETUP = [
+        'uri' => 'module-setup',
         'view' => 'admin-views.zone.module-setup'
     ];
 
@@ -66,6 +71,16 @@ enum Zone
 
     const MODULE_UPDATE = [
         'uri' => 'module-update/{id}',
+        'view' => ''
+    ];
+
+    const GET_COORDINATES = [
+        'uri' => 'zone/get-coordinates/{id}',
+        'view' => ''
+    ];
+
+    const GET_ALL_ZONE_COORDINATES = [
+        'uri' => 'get-all-zone-cordinates/{id?}',
         'view' => ''
     ];
 }

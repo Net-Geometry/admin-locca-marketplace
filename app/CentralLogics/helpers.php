@@ -693,7 +693,7 @@ class Helpers
         $storage = [];
         if ($multi_data == true) {
             foreach ($data as $item) {
-                $item->load('Store_config');
+                $item->load('storeConfig');
                 $ratings = StoreLogic::calculate_store_rating($item['rating']);
                 unset($item['rating']);
                 $item['avg_rating'] = $ratings['rating'];
@@ -702,21 +702,21 @@ class Helpers
                 $item['total_items'] = $item['items']->count();
                 $item['total_campaigns'] = $item['campaigns']->count();
                 $item['is_recommended'] = false;
-                if($item->Store_config && $item->Store_config->is_recommended_deleted == 0 ){
-                    $item['is_recommended'] = $item->Store_config->is_recommended;
+                if($item->storeConfig && $item->storeConfig->is_recommended_deleted == 0 ){
+                    $item['is_recommended'] = $item->storeConfig->is_recommended;
                 }
                 $item['total_campaigns'] = $item['campaigns']->count();
-                unset($item['Store_config']);
+                unset($item['storeConfig']);
                 unset($item['campaigns']);
                 unset($item['pivot']);
                 array_push($storage, $item);
             }
             $data = $storage;
         } else {
-            $data->load('Store_config');
+            $data->load('storeConfig');
             $data['is_recommended'] = false;
-            if($data->Store_config && $data->Store_config->is_recommended_deleted == 0 ){
-                $data['is_recommended'] = $data->Store_config->is_recommended;
+            if($data->storeConfig && $data->storeConfig->is_recommended_deleted == 0 ){
+                $data['is_recommended'] = $data->storeConfig->is_recommended;
             }
             $ratings = StoreLogic::calculate_store_rating($data['rating']);
             unset($data['rating']);
@@ -726,7 +726,7 @@ class Helpers
             $data['total_items'] = $data['items']->count();
             $data['total_campaigns'] = $data['campaigns']->count();
             unset($data['campaigns']);
-            unset($data['Store_config']);
+            unset($data['storeConfig']);
             unset($data['pivot']);
         }
 

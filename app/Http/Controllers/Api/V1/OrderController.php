@@ -1695,7 +1695,7 @@ class OrderController extends Controller
         })
         ->where('module_id' , $request->header('moduleId'))
         ->withcount('items')
-        ->with(['items_for_reorder'])
+        ->with(['itemsForReorder'])
         ->Active()
         ->whereIn('zone_id', $zone_id)
         ->take(20)
@@ -1703,8 +1703,8 @@ class OrderController extends Controller
         ->orderBy('open', 'desc')
         ->get()
 		->map(function ($data) {
-			$data->items = $data->items_for_reorder->take(5);
-            unset($data->items_for_reorder);
+			$data->items = $data->itemsForReorder->take(5);
+            unset($data->itemsForReorder);
 			return $data;
 		});
 

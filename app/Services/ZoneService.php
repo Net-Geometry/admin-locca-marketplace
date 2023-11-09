@@ -44,15 +44,22 @@ class ZoneService
         ];
     }
 
-    public function processExportData(Object $collection): array
+    public function formatCoordinates(array $coordinates): array
     {
         $data = [];
-        foreach($collection as $key=>$item){
-            $data[] = [
-                'SL'=>$key+1,
-                translate('messages.id') => $item['id'],
-                translate('messages.unit') => $item['unit'],
-            ];
+        foreach ($coordinates as $coordinate) {
+            $data[] = (object)['lat' => $coordinate[1], 'lng' => $coordinate[0]];
+        }
+        return $data;
+    }
+
+    public function formatZoneCoordinates(object $zones): array
+    {
+        $data = [];
+        foreach($zones as $zone)
+        {
+            $area = json_decode($zone->coordinates[0]->toJson(),true);
+            $data[] = self::formatCoordinates(coordinates: $area['coordinates']);
         }
         return $data;
     }

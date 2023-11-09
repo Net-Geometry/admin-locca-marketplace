@@ -9,12 +9,120 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 
+/**
+ * Class Store
+ *
+ * @property int $id
+ * @property string $name
+ * @property string $phone
+ * @property string|null $email
+ * @property string|null $logo
+ * @property string|null $latitude
+ * @property string|null $longitude
+ * @property string|null $address
+ * @property string|null $footer_text
+ * @property float $minimum_order
+ * @property float|null $comission
+ * @property bool $schedule_order
+ * @property bool $status
+ * @property int $vendor_id
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property bool $free_delivery
+ * @property string|null $rating
+ * @property string|null $cover_photo
+ * @property bool $delivery
+ * @property bool $take_away
+ * @property bool $item_section
+ * @property float $tax
+ * @property int|null $zone_id
+ * @property bool $reviews_section
+ * @property bool $active
+ * @property string $off_day
+ * @property string|null $gst
+ * @property bool $self_delivery_system
+ * @property bool $pos_system
+ * @property float $minimum_shipping_charge
+ * @property string|null $delivery_time
+ * @property bool $veg
+ * @property bool $non_veg
+ * @property int $order_count
+ * @property int $total_order
+ * @property int $module_id
+ * @property int $order_place_to_schedule_interval
+ * @property bool $featured
+ * @property float $per_km_shipping_charge
+ * @property bool $prescription_order
+ * @property string|null $slug
+ * @property float|null $maximum_shipping_charge
+ * @property bool $cutlery
+ * @property string|null $meta_title
+ * @property string|null $meta_description
+ * @property string|null $meta_image
+ * @property bool $announcement
+ * @property string|null $announcement_message
+ */
+
 class Store extends Model
 {
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'name',
+        'phone',
+        'email',
+        'logo',
+        'latitude',
+        'longitude',
+        'address',
+        'footer_text',
+        'minimum_order',
+        'comission',
+        'schedule_order',
+        'status',
+        'vendor_id',
+        'free_delivery',
+        'rating',
+        'cover_photo',
+        'delivery',
+        'take_away',
+        'item_section',
+        'tax',
+        'zone_id',
+        'reviews_section',
+        'active',
+        'off_day',
+        'gst',
+        'self_delivery_system',
+        'pos_system',
+        'minimum_shipping_charge',
+        'delivery_time',
+        'veg',
+        'non_veg',
+        'order_count',
+        'total_order',
+        'module_id',
+        'order_place_to_schedule_interval',
+        'featured',
+        'per_km_shipping_charge',
+        'prescription_order',
+        'slug',
+        'maximum_shipping_charge',
+        'cutlery',
+        'meta_title',
+        'meta_description',
+        'meta_image',
+        'announcement',
+        'announcement_message',
+    ];
 
     /**
      * @var string[]
@@ -136,7 +244,7 @@ class Store extends Model
     /**
      * @return HasMany
      */
-    public function items_for_reorder(): HasMany
+    public function itemsForReorder(): HasMany
     {
         return $this->items()->orderby('avg_rating','desc')->orderby('recommended','desc');
     }
@@ -401,7 +509,7 @@ class Store extends Model
     /**
      * @return HasOne
      */
-    public function Store_config(): HasOne
+    public function storeConfig(): HasOne
     {
         return $this->hasOne(StoreConfig::class);
     }

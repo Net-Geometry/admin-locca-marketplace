@@ -13,6 +13,7 @@ use App\Http\Requests\Admin\ZoneModuleUpdateRequest;
 use App\Http\Requests\Admin\ZoneUpdateRequest;
 use App\Services\ZoneService;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Brian2694\Toastr\Facades\Toastr;
@@ -140,7 +141,7 @@ class ZoneController extends BaseController
         return view(ZoneViewPath::MODULE_SETUP[VIEW], compact('zone'));
     }
 
-    public function moduleSetupUpdate(ZoneModuleUpdateRequest $request, $id): RedirectResponse
+    public function updateModuleSetup(ZoneModuleUpdateRequest $request, $id): RedirectResponse
     {
         foreach($request->module_data as $data){
             if(isset($data['maximum_shipping_charge']) && ((int)$data['maximum_shipping_charge'] < (int)$data['minimum_shipping_charge'])){
@@ -155,7 +156,7 @@ class ZoneController extends BaseController
         return redirect()->route('admin.business-settings.zone.home');
     }
 
-    public function instruction(): View
+    public function getInstruction(): View
     {
         session()->put('zone-instruction', 1);
         $zones = $this->zoneRepo->getWithCountLatest(
@@ -165,7 +166,7 @@ class ZoneController extends BaseController
         return view(ZoneViewPath::INDEX[VIEW], compact('zones'));
     }
 
-    public function statusUpdate(Request $request)
+    public function updateStatus(Request $request)
     {
         if(env('APP_MODE')=='demo' && $request['id'] == 1)
         {
@@ -177,24 +178,47 @@ class ZoneController extends BaseController
         return back();
     }
 
-    public function digitalPaymentUpdate(Request $request): RedirectResponse
+    public function updateDigitalPayment(Request $request): RedirectResponse
     {
         $this->zoneRepo->update(id: $request['id'] ,data: ['digital_payment' => $request['digital_payment']]);
         Toastr::success(translate('messages.zone_digital_payment_status_updated'));
         return back();
     }
 
-    public function cashOnDeliveryUpdate(Request $request): RedirectResponse
+    public function updateCashOnDelivery(Request $request): RedirectResponse
     {
         $this->zoneRepo->update(id: $request['id'] ,data: ['cash_on_delivery' => $request['cash_on_delivery']]);
         Toastr::success(translate('messages.zone_cash_on_delivery_status_updated'));
         return back();
     }
 
-    public function offlinePaymentUpdate(Request $request): RedirectResponse
+    public function updateOfflinePayment(Request $request): RedirectResponse
     {
         $this->zoneRepo->update(id: $request['id'] ,data: ['offline_payment' => $request['offline_payment']]);
         Toastr::success(translate('messages.zone_offline_payment_status_updated'));
         return back();
     }
+
+    public function getCoordinates($id): JsonResponse
+    {
+        $zone = $this->zoneRepo->getWithCoordinateWhere(
+            params: ['id'=> $id]
+        );
+        $area = json_decode($zone['coordinates'][0]->toJson(),true);
+        $data = $this->zoneService->formatCoordinates(coordinates: $area['coordinates']);
+        $center = (object)['lat'=>(float)trim(explode(' ',$zone['center'])[1], 'POINT()'), 'lng'=>(float)trim(explode(' ',$zone['center'])[0], 'POINT()')];
+        return response()->json(['coordinates'=>$data, 'center'=>$center]);
+    }
+
+    public function getAllZoneCoordinates($id = 0): JsonResponse
+    {
+        $zones = $this->zoneRepo->getActiveListExcept(
+            params: ['id'=> $id]
+        );
+
+        $data = $this->zoneService->formatZoneCoordinates(zones: $zones);
+
+        return response()->json($data,200);
+    }
+
 }

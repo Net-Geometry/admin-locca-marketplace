@@ -14,8 +14,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
 
-    Route::get('zone/get-coordinates/{id}', [ZoneController::class, 'get_coordinates'])->name('zone.get-coordinates');
-    Route::get('get-all-zone-cordinates/{id?}', [ZoneController::class, 'get_all_zone_cordinates'])->name('zone.zoneCoordinates');
+    Route::get(Zone::GET_COORDINATES[URI], [ZoneController::class, 'getCoordinates'])->name('zone.get-coordinates');
+    Route::get(Zone::GET_ALL_ZONE_COORDINATES[URI], [ZoneController::class, 'getAllZoneCoordinates'])->name('zone.zoneCoordinates');
 
     Route::group(['middleware' => ['admin', 'current-module']], function () {
         Route::group(['prefix' => 'category', 'as' => 'category.'], function () {
@@ -68,6 +68,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::get(Addon::EXPORT[URI], [AddonController::class, 'exportList'])->name('export');
             Route::get(Addon::UPDATE_STATUS[URI], [AddonController::class, 'updateStatus'])->name('status');
 
+            //Import and export
             Route::get(Addon::BULK_IMPORT[URI], [AddonController::class, 'getBulkImportView'])->name('bulk-import');
             Route::post(Addon::BULK_IMPORT[URI], [AddonController::class, 'importBulkData']);
             Route::post(Addon::BULK_UPDATE[URI], [AddonController::class, 'updateBulkData'])->name('bulk-update');
@@ -83,16 +84,15 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                 Route::post(Zone::UPDATE[URI], [ZoneController::class, 'update'])->name('update');
                 Route::delete(Zone::DELETE[URI], [ZoneController::class, 'delete'])->name('delete');
                 Route::get(Zone::EXPORT[URI], [ZoneController::class, 'exportList'])->name('export');
-                Route::get(Zone::STATUS[URI], [ZoneController::class, 'statusUpdate'])->name('status');
+                Route::get(Zone::STATUS[URI], [ZoneController::class, 'updateStatus'])->name('status');
                 Route::get(Zone::ZONE_FILTER[URI], [ZoneController::class, 'zoneFilter'])->name('zone-filter');
+                Route::get(Zone::LATEST_MODULE_SETUP[URI], [ZoneController::class, 'getLatestModuleSetupView'])->name('go-module-setup');
                 Route::get(Zone::MODULE_SETUP[URI], [ZoneController::class, 'getModuleSetupView'])->name('module-setup');
-                Route::get(Zone::MODULE_SETUP[URI], [ZoneController::class, 'getLatestModuleSetupView'])->name('go-module-setup');
-                Route::post(Zone::MODULE_UPDATE[URI], [ZoneController::class, 'moduleSetupUpdate'])->name('module-update');
-
-                Route::get(Zone::INSTRUCTION[URI], [ZoneController::class, 'instruction'])->name('instruction');
-                Route::get(Zone::DIGITAL_PAYMENT[URI], [ZoneController::class, 'digitalPaymentUpdate'])->name('digital-payment');
-                Route::get(Zone::CASH_ON_DELIVERY[URI], [ZoneController::class, 'cashOnDeliveryUpdate'])->name('cash-on-delivery');
-                Route::get(Zone::OFFLINE_PAYMENT[URI], [ZoneController::class, 'offlinePaymentUpdate'])->name('offline-payment');
+                Route::post(Zone::MODULE_UPDATE[URI], [ZoneController::class, 'updateModuleSetup'])->name('module-update');
+                Route::get(Zone::INSTRUCTION[URI], [ZoneController::class, 'getInstruction'])->name('instruction');
+                Route::get(Zone::DIGITAL_PAYMENT[URI], [ZoneController::class, 'updateDigitalPayment'])->name('digital-payment');
+                Route::get(Zone::CASH_ON_DELIVERY[URI], [ZoneController::class, 'updateCashOnDelivery'])->name('cash-on-delivery');
+                Route::get(Zone::OFFLINE_PAYMENT[URI], [ZoneController::class, 'updateOfflinePayment'])->name('offline-payment');
             });
         });
     });

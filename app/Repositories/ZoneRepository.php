@@ -82,7 +82,7 @@ class ZoneRepository implements ZoneRepositoryInterface
 
     public function getWithCoordinateWhere(array $params): ?Model
     {
-        return $this->zone->selectRaw("*,ST_AsText(ST_Centroid(`coordinates`)) as center")->where($params)->first();
+        return $this->zone->withoutGlobalScopes()->selectRaw("*,ST_AsText(ST_Centroid(`coordinates`)) as center")->where($params)->first();
     }
 
     public function getExportList(Request $request): Collection
@@ -118,5 +118,10 @@ class ZoneRepository implements ZoneRepositoryInterface
     public function getWithCountLatest(array $relations = [], int|string $dataLimit = DEFAULT_DATA_LIMIT, int $offset = null): Collection|LengthAwarePaginator
     {
         return $this->zone->withCount($relations)->latest()->paginate($dataLimit);
+    }
+
+    public function getActiveListExcept(array $params): Collection
+    {
+        return $this->zone->whereNot($params)->active()->get();
     }
 }
