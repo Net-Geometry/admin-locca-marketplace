@@ -1,6 +1,6 @@
 <?php
 
-use App\Model\BusinessSetting;
+use App\Models\BusinessSetting;
 
 
 if (!function_exists('getWebConfig')) {

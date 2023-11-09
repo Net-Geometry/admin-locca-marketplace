@@ -4,13 +4,17 @@ use App\Enums\ViewPaths\Admin\Addon;
 use App\Enums\ViewPaths\Admin\Banner;
 use App\Enums\ViewPaths\Admin\Category;
 use App\Enums\ViewPaths\Admin\Attribute;
+use App\Enums\ViewPaths\Admin\Coupon;
+use App\Enums\ViewPaths\Admin\Notification;
 use App\Enums\ViewPaths\Admin\Unit;
 use App\Enums\ViewPaths\Admin\Zone;
 use App\Http\Controllers\Admin\Banner\BannerController;
+use App\Http\Controllers\Admin\Coupon\CouponController;
 use App\Http\Controllers\Admin\Item\AddonController;
 use App\Http\Controllers\Admin\Item\AttributeController;
 use App\Http\Controllers\Admin\Item\CategoryController;
 use App\Http\Controllers\Admin\Item\UnitController;
+use App\Http\Controllers\Admin\Notification\NotificationController;
 use App\Http\Controllers\Admin\Zone\ZoneController;
 use Illuminate\Support\Facades\Route;
 
@@ -87,6 +91,26 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::get(Banner::UPDATE_STATUS[URI], [BannerController::class,'updateStatus'])->name('status');
             Route::get(Banner::UPDATE_FEATURED[URI], [BannerController::class,'updateFeatured'])->name('featured');
             Route::post(Banner::SEARCH[URI], [BannerController::class,'getSearchList'])->name('search');
+        });
+
+        Route::group(['prefix' => 'coupon', 'as' => 'coupon.', 'middleware' => ['module:coupon']], function () {
+            Route::get(Coupon::INDEX[URI], [CouponController::class, 'index'])->name('add-new');
+            Route::post(Coupon::ADD[URI], [CouponController::class, 'add'])->name('store');
+            Route::get(Coupon::UPDATE[URI], [CouponController::class, 'getUpdateView'])->name('edit');
+            Route::post(Coupon::UPDATE[URI], [CouponController::class, 'update'])->name('update');
+            Route::get(Coupon::STATUS[URI], [CouponController::class,'updateStatus'])->name('status');
+            Route::delete(Coupon::DELETE[URI], [CouponController::class, 'delete'])->name('delete');
+            Route::get(Coupon::EXPORT[URI], [CouponController::class, 'exportList'])->name('coupon_export');
+        });
+
+        Route::group(['prefix' => 'notification', 'as' => 'notification.', 'middleware' => ['module:notification']], function () {
+            Route::get(Notification::INDEX[URI], [NotificationController::class, 'index'])->name('add-new');
+            Route::post(Notification::ADD[URI], [NotificationController::class, 'add'])->name('store');
+            Route::get(Notification::UPDATE[URI], [NotificationController::class, 'getUpdateView'])->name('edit');
+            Route::post(Notification::UPDATE[URI], [NotificationController::class, 'update'])->name('update');
+            Route::get(Notification::STATUS[URI], [NotificationController::class,'updateStatus'])->name('status');
+            Route::delete(Notification::DELETE[URI], [NotificationController::class, 'delete'])->name('delete');
+            Route::get(Notification::EXPORT[URI], [NotificationController::class, 'exportList'])->name('export');
         });
 
         Route::group(['prefix' => 'business-settings', 'as' => 'business-settings.'], function () {

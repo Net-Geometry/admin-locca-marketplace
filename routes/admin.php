@@ -175,16 +175,16 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
 
         });
 
-        Route::group(['prefix' => 'coupon', 'as' => 'coupon.', 'middleware' => ['module:coupon']], function () {
-            Route::get('add-new', 'CouponController@add_new')->name('add-new');
-            Route::post('store', 'CouponController@store')->name('store');
-            Route::get('update/{id}', 'CouponController@edit')->name('update');
-            Route::post('update/{id}', 'CouponController@update');
-            Route::get('status/{id}/{status}', 'CouponController@status')->name('status');
-            Route::delete('delete/{id}', 'CouponController@delete')->name('delete');
-            Route::get('coupon-export', 'CouponController@coupon_export')->name('coupon_export');
-            // Route::post('search', 'CouponController@search')->name('search');
-        });
+//        Route::group(['prefix' => 'coupon', 'as' => 'coupon.', 'middleware' => ['module:coupon']], function () {
+//            Route::get('add-new', 'CouponController@add_new')->name('add-new');
+//            Route::post('store', 'CouponController@store')->name('store');
+//            Route::get('update/{id}', 'CouponController@edit')->name('update');
+//            Route::post('update/{id}', 'CouponController@update');
+//            Route::get('status/{id}/{status}', 'CouponController@status')->name('status');
+//            Route::delete('delete/{id}', 'CouponController@delete')->name('delete');
+//            Route::get('coupon-export', 'CouponController@coupon_export')->name('coupon_export');
+//            // Route::post('search', 'CouponController@search')->name('search');
+//        });
 
 //        Route::group(['prefix' => 'attribute', 'as' => 'attribute.', 'middleware' => ['module:attribute']], function () {
 //            Route::get('add-new', 'AttributeController@index')->name('add-new');
@@ -422,15 +422,15 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
 //            Route::get('get-all-zone-cordinates/{id?}', 'ZoneController@get_all_zone_cordinates')->name('zoneCoordinates');
 //        });
 
-        Route::group(['prefix' => 'notification', 'as' => 'notification.', 'middleware' => ['module:notification']], function () {
-            Route::get('add-new', 'NotificationController@index')->name('add-new');
-            Route::post('store', 'NotificationController@store')->name('store');
-            Route::get('edit/{id}', 'NotificationController@edit')->name('edit');
-            Route::post('update/{id}', 'NotificationController@update')->name('update');
-            Route::get('status/{id}/{status}', 'NotificationController@status')->name('status');
-            Route::delete('delete/{id}', 'NotificationController@delete')->name('delete');
-            Route::get('export', 'NotificationController@export')->name('export');
-        });
+//        Route::group(['prefix' => 'notification', 'as' => 'notification.', 'middleware' => ['module:notification']], function () {
+//            Route::get('add-new', 'NotificationController@index')->name('add-new');
+//            Route::post('store', 'NotificationController@store')->name('store');
+//            Route::get('edit/{id}', 'NotificationController@edit')->name('edit');
+//            Route::post('update/{id}', 'NotificationController@update')->name('update');
+//            Route::get('status/{id}/{status}', 'NotificationController@status')->name('status');
+//            Route::delete('delete/{id}', 'NotificationController@delete')->name('delete');
+//            Route::get('export', 'NotificationController@export')->name('export');
+//        });
 
         Route::group(['prefix' => 'business-settings', 'as' => 'business-settings.', 'middleware' => ['module:settings', 'actch']], function () {
             Route::get('business-setup/{tab?}', 'BusinessSettingsController@business_index')->name('business-setup');
