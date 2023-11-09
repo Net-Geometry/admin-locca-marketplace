@@ -4,6 +4,7 @@ use App\Enums\ViewPaths\Admin\Addon;
 use App\Enums\ViewPaths\Admin\Banner;
 use App\Enums\ViewPaths\Admin\Category;
 use App\Enums\ViewPaths\Admin\Attribute;
+use App\Enums\ViewPaths\Admin\CommonCondition;
 use App\Enums\ViewPaths\Admin\Coupon;
 use App\Enums\ViewPaths\Admin\Notification;
 use App\Enums\ViewPaths\Admin\Unit;
@@ -13,6 +14,7 @@ use App\Http\Controllers\Admin\Coupon\CouponController;
 use App\Http\Controllers\Admin\Item\AddonController;
 use App\Http\Controllers\Admin\Item\AttributeController;
 use App\Http\Controllers\Admin\Item\CategoryController;
+use App\Http\Controllers\Admin\Item\CommonConditionController;
 use App\Http\Controllers\Admin\Item\UnitController;
 use App\Http\Controllers\Admin\Notification\NotificationController;
 use App\Http\Controllers\Admin\Zone\ZoneController;
@@ -111,6 +113,16 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::get(Notification::STATUS[URI], [NotificationController::class,'updateStatus'])->name('status');
             Route::delete(Notification::DELETE[URI], [NotificationController::class, 'delete'])->name('delete');
             Route::get(Notification::EXPORT[URI], [NotificationController::class, 'exportList'])->name('export');
+        });
+
+        Route::group(['prefix' => 'common-condition', 'as' => 'common-condition.'], function () {
+            Route::get(CommonCondition::DROPDOWN[URI], [CommonConditionController::class, 'getDropdownList'])->name('get-all');
+            Route::get(CommonCondition::INDEX[URI], [CommonConditionController::class, 'index'])->name('add');
+            Route::post(CommonCondition::ADD[URI], [CommonConditionController::class, 'add'])->name('store');
+            Route::get(CommonCondition::UPDATE[URI], [CommonConditionController::class, 'getUpdateView'])->name('edit');
+            Route::post(CommonCondition::UPDATE[URI], [CommonConditionController::class, 'update'])->name('update');
+            Route::delete(CommonCondition::DELETE[URI], [CommonConditionController::class, 'delete'])->name('delete');
+            Route::get(CommonCondition::STATUS[URI], [CommonConditionController::class,'updateStatus'])->name('status');
         });
 
         Route::group(['prefix' => 'business-settings', 'as' => 'business-settings.'], function () {

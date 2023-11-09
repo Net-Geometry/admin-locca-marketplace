@@ -343,15 +343,15 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                 Route::post('bulk-export', 'CategoryController@bulk_export_data')->name('bulk-export');
             });
         });*/
-        Route::group(['prefix' => 'common-condition', 'as' => 'common-condition.'], function () {
-            Route::get('get-all', 'CommonConditionController@get_all')->name('get-all');
-            Route::get('add', 'CommonConditionController@index')->name('add');
-            Route::post('store', 'CommonConditionController@store')->name('store');
-            Route::get('edit/{id}', 'CommonConditionController@edit')->name('edit');
-            Route::post('update/{id}', 'CommonConditionController@update')->name('update');
-            Route::get('status/{id}/{status}', 'CommonConditionController@status')->name('status');
-            Route::delete('delete/{id}', 'CommonConditionController@delete')->name('delete');
-        });
+//        Route::group(['prefix' => 'common-condition', 'as' => 'common-condition.'], function () {
+//            Route::get('get-all', 'CommonConditionController@get_all')->name('get-all');
+//            Route::get('add', 'CommonConditionController@index')->name('add');
+//            Route::post('store', 'CommonConditionController@store')->name('store');
+//            Route::get('edit/{id}', 'CommonConditionController@edit')->name('edit');
+//            Route::post('update/{id}', 'CommonConditionController@update')->name('update');
+//            Route::get('status/{id}/{status}', 'CommonConditionController@status')->name('status');
+//            Route::delete('delete/{id}', 'CommonConditionController@delete')->name('delete');
+//        });
         Route::get('order/generate-invoice/{id}', 'OrderController@generate_invoice')->name('order.generate-invoice');
         Route::get('order/print-invoice/{id}', 'OrderController@print_invoice')->name('order.print-invoice');
         Route::get('order/status', 'OrderController@status')->name('order.status');
