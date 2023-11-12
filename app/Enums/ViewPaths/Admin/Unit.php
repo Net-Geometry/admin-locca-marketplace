@@ -5,32 +5,32 @@ namespace App\Enums\ViewPaths\Admin;
 enum Unit
 {
     const INDEX = [
-        'uri' => '/',
-        'view' => 'admin-views.unit.index'
+        URI => '/',
+        VIEW => 'admin-views.unit.index'
     ];
 
     const ADD = [
-        'uri' => 'store',
-        'view' => 'admin-views.unit.index'
+        URI => 'store',
+        VIEW => 'admin-views.unit.index'
     ];
 
     const UPDATE = [
-        'uri' => 'edit/{id}',
-        'view' => 'admin-views.unit.edit'
+        URI => 'edit/{id}',
+        VIEW => 'admin-views.unit.edit'
     ];
 
     const SEARCH = [
-        'uri' => 'unit/search',
-        'view' => 'admin-views.unit.partials._table'
+        URI => 'unit/search',
+        VIEW => 'admin-views.unit.partials._table'
     ];
 
     const DELETE = [
-        'uri' => 'delete/{id}',
-        'view' => ''
+        URI => 'delete/{id}',
+        VIEW => ''
     ];
 
     const EXPORT = [
-        'uri' => 'unit/export/{type}',
-        'view' => ''
+        URI => 'unit/export/{type}',
+        VIEW => ''
     ];
 }

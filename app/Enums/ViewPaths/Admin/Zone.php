@@ -5,82 +5,82 @@ namespace App\Enums\ViewPaths\Admin;
 enum Zone
 {
     const INDEX = [
-        'uri' => '/',
-        'view' => 'admin-views.zone.index'
+        URI => '/',
+        VIEW => 'admin-views.zone.index'
     ];
 
     const ADD = [
-        'uri' => 'store',
-        'view' => 'admin-views.zone.index'
+        URI => 'store',
+        VIEW => 'admin-views.zone.index'
     ];
 
     const UPDATE = [
-        'uri' => 'edit/{id}',
-        'view' => 'admin-views.zone.edit'
+        URI => 'edit/{id}',
+        VIEW => 'admin-views.zone.edit'
     ];
 
     const DELETE = [
-        'uri' => 'delete/{id}',
-        'view' => ''
+        URI => 'delete/{id}',
+        VIEW => ''
     ];
 
     const EXPORT = [
-        'uri' => 'export/{type}',
-        'view' => ''
+        URI => 'export/{type}',
+        VIEW => ''
     ];
 
     const LATEST_MODULE_SETUP = [
-        'uri' => 'module-setup/{id?}',
-        'view' => 'admin-views.zone.module-setup'
+        URI => 'module-setup/{id?}',
+        VIEW => 'admin-views.zone.module-setup'
     ];
 
     const MODULE_SETUP = [
-        'uri' => 'module-setup',
-        'view' => 'admin-views.zone.module-setup'
+        URI => 'module-setup',
+        VIEW => 'admin-views.zone.module-setup'
     ];
 
     const STATUS = [
-        'uri' => 'status/{id}/{status}',
-        'view' => ''
+        URI => 'status/{id}/{status}',
+        VIEW => ''
     ];
 
     const DIGITAL_PAYMENT = [
-        'uri' => 'digital-payment/{id}/{digital_payment}',
-        'view' => ''
+        URI => 'digital-payment/{id}/{digital_payment}',
+        VIEW => ''
     ];
 
     const CASH_ON_DELIVERY = [
-        'uri' => 'cash-on-delivery/{id}/{cash_on_delivery}',
-        'view' => ''
+        URI => 'cash-on-delivery/{id}/{cash_on_delivery}',
+        VIEW => ''
     ];
 
     const OFFLINE_PAYMENT = [
-        'uri' => 'offline-payment/{id}/{offline_payment}',
-        'view' => ''
+        URI => 'offline-payment/{id}/{offline_payment}',
+        VIEW => ''
     ];
 
     const INSTRUCTION = [
-        'uri' => 'instruction',
-        'view' => ''
+        URI => 'instruction',
+        VIEW => ''
     ];
 
     const ZONE_FILTER = [
-        'uri' => 'zone-filter/{id}',
-        'view' => ''
+        URI => 'zone-filter/{id}',
+        VIEW => ''
     ];
 
     const MODULE_UPDATE = [
-        'uri' => 'module-update/{id}',
-        'view' => ''
+        URI => 'module-update/{id}',
+        VIEW => ''
     ];
 
     const GET_COORDINATES = [
-        'uri' => 'zone/get-coordinates/{id}',
-        'view' => ''
+        URI => 'zone/get-coordinates/{id}',
+        VIEW => ''
     ];
 
     const GET_ALL_ZONE_COORDINATES = [
-        'uri' => 'get-all-zone-cordinates/{id?}',
-        'view' => ''
+        URI => 'get-all-zone-cordinates/{id?}',
+        VIEW => ''
     ];
 }

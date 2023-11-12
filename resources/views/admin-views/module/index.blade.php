@@ -32,7 +32,7 @@
             <div class="card-header border-0 py-2">
                 <div class="search--button-wrapper justify-content-end">
                     <form class="search-form">
-                    
+
                         <!-- Search -->
                         <div class="input-group input--group">
                             <input id="datatableSearch" name="search" type="search" class="form-control" placeholder="{{translate('ex_:_Search_Module_by_Name')}}" aria-label="{{translate('messages.search_here')}}" value="{{request()->query('search')}}">
@@ -86,7 +86,7 @@
                             </a> --}}
                         </div>
                     </div>
-                    <a href="{{ route('admin.module.create') }}" class="btn btn--primary">+ {{translate('Add New Module')}}</a>
+                    <a href="{{ route('admin.business-settings.module.create') }}" class="btn btn--primary">+ {{translate('Add New Module')}}</a>
                     <!-- End Unfold -->
                 </div>
                 <!-- End Row -->

@@ -28,12 +28,12 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
         Route::get('maintenance-mode', 'SystemController@maintenance_mode')->name('maintenance-mode');
         Route::get('landing-page', 'SystemController@landing_page')->name('landing-page');
 
-        Route::get('module/status/{id}/{status}', 'ModuleController@status')->middleware('module:module')->name('module.status');
-        Route::get('module/type', 'ModuleController@type')->middleware('module:module')->name('module.type');
-        Route::post('module/search', 'ModuleController@search')->middleware('module:module')->name('module.search');
-        Route::get('module/export', 'ModuleController@export')->middleware('module:module')->name('module.export');
-        Route::resource('module', 'ModuleController')->middleware('module:module')->except('show');
-        Route::get('module/{id}', 'ModuleController@show')->name('show');
+//        Route::get('module/status/{id}/{status}', 'ModuleController@status')->middleware('module:module')->name('module.status');
+//        Route::get('module/type', 'ModuleController@type')->middleware('module:module')->name('module.type');
+//        Route::post('module/search', 'ModuleController@search')->middleware('module:module')->name('module.search');
+//        Route::get('module/export', 'ModuleController@export')->middleware('module:module')->name('module.export');
+//        Route::resource('module', 'ModuleController')->middleware('module:module')->except('show');
+//        Route::get('module/{id}', 'ModuleController@show')->name('show');
 
 //        Route::resource('unit', 'UnitController')->middleware('module:unit');
 //        Route::post('unit/search', 'UnitController@search')->middleware('module:unit')->name('unit.search');
@@ -57,14 +57,14 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::post('business-overview', 'DashboardController@business_overview')->name('business-overview');
         });
 
-        Route::group(['prefix' => 'custom-role', 'as' => 'custom-role.', 'middleware' => ['module:custom_role']], function () {
-            Route::get('create', 'CustomRoleController@create')->name('create');
-            Route::post('create', 'CustomRoleController@store');
-            Route::get('edit/{id}', 'CustomRoleController@edit')->name('edit');
-            Route::post('update/{id}', 'CustomRoleController@update')->name('update');
-            Route::delete('delete/{id}', 'CustomRoleController@distroy')->name('delete');
-            Route::post('search', 'CustomRoleController@search')->name('search');
-        });
+//        Route::group(['prefix' => 'custom-role', 'as' => 'custom-role.', 'middleware' => ['module:custom_role']], function () {
+//            Route::get('create', 'CustomRoleController@create')->name('create');
+//            Route::post('create', 'CustomRoleController@store');
+//            Route::get('edit/{id}', 'CustomRoleController@edit')->name('edit');
+//            Route::post('update/{id}', 'CustomRoleController@update')->name('update');
+//            Route::delete('delete/{id}', 'CustomRoleController@distroy')->name('delete');
+//            Route::post('search', 'CustomRoleController@search')->name('search');
+//        });
 
         Route::group(['prefix' => 'employee', 'as' => 'employee.', 'middleware' => ['module:employee']], function () {
             Route::get('add-new', 'EmployeeController@add_new')->name('add-new');
@@ -124,17 +124,17 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::post('bulk-export', 'ItemController@bulk_export_data')->name('bulk-export');
         });
 
-        Route::group(['prefix' => 'banner', 'as' => 'banner.', 'middleware' => ['module:banner']], function () {
-            Route::get('add-new', 'BannerController@index')->name('add-new');
-            Route::post('store', 'BannerController@store')->name('store');
-            Route::get('edit/{banner}', 'BannerController@edit')->name('edit');
-            Route::post('update/{banner}', 'BannerController@update')->name('update');
-            Route::get('status/{id}/{status}', 'BannerController@status')->name('status');
-            Route::get('featured/{id}/{status}', 'BannerController@featured')->name('featured');
-            Route::delete('delete/{banner}', 'BannerController@delete')->name('delete');
-            Route::post('search', 'BannerController@search')->name('search');
-            Route::get('promotional', 'BannerController@other_index')->name('promotional');
-        });
+//        Route::group(['prefix' => 'banner', 'as' => 'banner.', 'middleware' => ['module:banner']], function () {
+//            Route::get('add-new', 'BannerController@index')->name('add-new');
+//            Route::post('store', 'BannerController@store')->name('store');
+//            Route::get('edit/{banner}', 'BannerController@edit')->name('edit');
+//            Route::post('update/{banner}', 'BannerController@update')->name('update');
+//            Route::get('status/{id}/{status}', 'BannerController@status')->name('status');
+//            Route::get('featured/{id}/{status}', 'BannerController@featured')->name('featured');
+//            Route::delete('delete/{banner}', 'BannerController@delete')->name('delete');
+//            Route::post('search', 'BannerController@search')->name('search');
+//            Route::get('promotional', 'BannerController@other_index')->name('promotional');
+//        });
         Route::group(['prefix' => 'promotional-banner', 'as' => 'promotional-banner.', 'middleware' => ['module:banner']], function () {
             Route::get('add-new', 'OtherBannerController@promotional_index')->name('add-new');
             Route::get('add-video', 'OtherBannerController@promotional_video')->name('add-video');
@@ -175,16 +175,16 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
 
         });
 
-        Route::group(['prefix' => 'coupon', 'as' => 'coupon.', 'middleware' => ['module:coupon']], function () {
-            Route::get('add-new', 'CouponController@add_new')->name('add-new');
-            Route::post('store', 'CouponController@store')->name('store');
-            Route::get('update/{id}', 'CouponController@edit')->name('update');
-            Route::post('update/{id}', 'CouponController@update');
-            Route::get('status/{id}/{status}', 'CouponController@status')->name('status');
-            Route::delete('delete/{id}', 'CouponController@delete')->name('delete');
-            Route::get('coupon-export', 'CouponController@coupon_export')->name('coupon_export');
-            // Route::post('search', 'CouponController@search')->name('search');
-        });
+//        Route::group(['prefix' => 'coupon', 'as' => 'coupon.', 'middleware' => ['module:coupon']], function () {
+//            Route::get('add-new', 'CouponController@add_new')->name('add-new');
+//            Route::post('store', 'CouponController@store')->name('store');
+//            Route::get('update/{id}', 'CouponController@edit')->name('update');
+//            Route::post('update/{id}', 'CouponController@update');
+//            Route::get('status/{id}/{status}', 'CouponController@status')->name('status');
+//            Route::delete('delete/{id}', 'CouponController@delete')->name('delete');
+//            Route::get('coupon-export', 'CouponController@coupon_export')->name('coupon_export');
+//            // Route::post('search', 'CouponController@search')->name('search');
+//        });
 
 //        Route::group(['prefix' => 'attribute', 'as' => 'attribute.', 'middleware' => ['module:attribute']], function () {
 //            Route::get('add-new', 'AttributeController@index')->name('add-new');
@@ -343,15 +343,15 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                 Route::post('bulk-export', 'CategoryController@bulk_export_data')->name('bulk-export');
             });
         });*/
-        Route::group(['prefix' => 'common-condition', 'as' => 'common-condition.'], function () {
-            Route::get('get-all', 'CommonConditionController@get_all')->name('get-all');
-            Route::get('add', 'CommonConditionController@index')->name('add');
-            Route::post('store', 'CommonConditionController@store')->name('store');
-            Route::get('edit/{id}', 'CommonConditionController@edit')->name('edit');
-            Route::post('update/{id}', 'CommonConditionController@update')->name('update');
-            Route::get('status/{id}/{status}', 'CommonConditionController@status')->name('status');
-            Route::delete('delete/{id}', 'CommonConditionController@delete')->name('delete');
-        });
+//        Route::group(['prefix' => 'common-condition', 'as' => 'common-condition.'], function () {
+//            Route::get('get-all', 'CommonConditionController@get_all')->name('get-all');
+//            Route::get('add', 'CommonConditionController@index')->name('add');
+//            Route::post('store', 'CommonConditionController@store')->name('store');
+//            Route::get('edit/{id}', 'CommonConditionController@edit')->name('edit');
+//            Route::post('update/{id}', 'CommonConditionController@update')->name('update');
+//            Route::get('status/{id}/{status}', 'CommonConditionController@status')->name('status');
+//            Route::delete('delete/{id}', 'CommonConditionController@delete')->name('delete');
+//        });
         Route::get('order/generate-invoice/{id}', 'OrderController@generate_invoice')->name('order.generate-invoice');
         Route::get('order/print-invoice/{id}', 'OrderController@print_invoice')->name('order.print-invoice');
         Route::get('order/status', 'OrderController@status')->name('order.status');
@@ -422,15 +422,15 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
 //            Route::get('get-all-zone-cordinates/{id?}', 'ZoneController@get_all_zone_cordinates')->name('zoneCoordinates');
 //        });
 
-        Route::group(['prefix' => 'notification', 'as' => 'notification.', 'middleware' => ['module:notification']], function () {
-            Route::get('add-new', 'NotificationController@index')->name('add-new');
-            Route::post('store', 'NotificationController@store')->name('store');
-            Route::get('edit/{id}', 'NotificationController@edit')->name('edit');
-            Route::post('update/{id}', 'NotificationController@update')->name('update');
-            Route::get('status/{id}/{status}', 'NotificationController@status')->name('status');
-            Route::delete('delete/{id}', 'NotificationController@delete')->name('delete');
-            Route::get('export', 'NotificationController@export')->name('export');
-        });
+//        Route::group(['prefix' => 'notification', 'as' => 'notification.', 'middleware' => ['module:notification']], function () {
+//            Route::get('add-new', 'NotificationController@index')->name('add-new');
+//            Route::post('store', 'NotificationController@store')->name('store');
+//            Route::get('edit/{id}', 'NotificationController@edit')->name('edit');
+//            Route::post('update/{id}', 'NotificationController@update')->name('update');
+//            Route::get('status/{id}/{status}', 'NotificationController@status')->name('status');
+//            Route::delete('delete/{id}', 'NotificationController@delete')->name('delete');
+//            Route::get('export', 'NotificationController@export')->name('export');
+//        });
 
         Route::group(['prefix' => 'business-settings', 'as' => 'business-settings.', 'middleware' => ['module:settings', 'actch']], function () {
             Route::get('business-setup/{tab?}', 'BusinessSettingsController@business_index')->name('business-setup');
@@ -603,11 +603,11 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
         });
         Route::group(['prefix' => 'business-settings', 'as' => 'business-settings.'], function () {
             //module
-            Route::get('module/status/{id}/{status}', 'ModuleController@status')->middleware('module:module')->name('module.status');
-            Route::get('module/type', 'ModuleController@type')->middleware('module:module')->name('module.type');
-            Route::post('module/search', 'ModuleController@search')->middleware('module:module')->name('module.search');
-            Route::get('module/export', 'ModuleController@export')->middleware('module:module')->name('module.export');
-            Route::resource('module', 'ModuleController')->middleware('module:module');
+//            Route::get('module/status/{id}/{status}', 'ModuleController@status')->middleware('module:module')->name('module.status');
+//            Route::get('module/type', 'ModuleController@type')->middleware('module:module')->name('module.type');
+//            Route::post('module/search', 'ModuleController@search')->middleware('module:module')->name('module.search');
+//            Route::get('module/export', 'ModuleController@export')->middleware('module:module')->name('module.export');
+//            Route::resource('module', 'ModuleController')->middleware('module:module');
 
             //zone
 //            Route::group(['prefix' => 'zone', 'as' => 'zone.', 'middleware' => ['module:zone']], function () {
@@ -887,14 +887,14 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                 Route::post('contact-search', 'ContactController@search')->name('contact-search');
             });
 
-            Route::group(['prefix' => 'custom-role', 'as' => 'custom-role.', 'middleware' => ['module:custom_role']], function () {
-                Route::get('create', 'CustomRoleController@create')->name('create');
-                Route::post('create', 'CustomRoleController@store');
-                Route::get('edit/{id}', 'CustomRoleController@edit')->name('edit');
-                Route::post('update/{id}', 'CustomRoleController@update')->name('update');
-                Route::delete('delete/{id}', 'CustomRoleController@distroy')->name('delete');
-                Route::post('search', 'CustomRoleController@search')->name('search');
-            });
+            // Route::group(['prefix' => 'custom-role', 'as' => 'custom-role.', 'middleware' => ['module:custom_role']], function () {
+            //     Route::get('create', 'CustomRoleController@create')->name('create');
+            //     Route::post('create', 'CustomRoleController@store');
+            //     Route::get('edit/{id}', 'CustomRoleController@edit')->name('edit');
+            //     Route::post('update/{id}', 'CustomRoleController@update')->name('update');
+            //     Route::delete('delete/{id}', 'CustomRoleController@distroy')->name('delete');
+            //     Route::post('search', 'CustomRoleController@search')->name('search');
+            // });
 
             Route::group(['prefix' => 'employee', 'as' => 'employee.', 'middleware' => ['module:employee']], function () {
                 Route::get('add-new', 'EmployeeController@add_new')->name('add-new');

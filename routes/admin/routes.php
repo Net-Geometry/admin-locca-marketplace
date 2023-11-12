@@ -1,14 +1,26 @@
 <?php
 
 use App\Enums\ViewPaths\Admin\Addon;
+use App\Enums\ViewPaths\Admin\Banner;
 use App\Enums\ViewPaths\Admin\Category;
 use App\Enums\ViewPaths\Admin\Attribute;
+use App\Enums\ViewPaths\Admin\CommonCondition;
+use App\Enums\ViewPaths\Admin\Coupon;
+use App\Enums\ViewPaths\Admin\CustomRole;
+use App\Enums\ViewPaths\Admin\Module;
+use App\Enums\ViewPaths\Admin\Notification;
 use App\Enums\ViewPaths\Admin\Unit;
 use App\Enums\ViewPaths\Admin\Zone;
+use App\Http\Controllers\Admin\Banner\BannerController;
+use App\Http\Controllers\Admin\Coupon\CouponController;
+use App\Http\Controllers\Admin\Employee\CustomRoleController;
 use App\Http\Controllers\Admin\Item\AddonController;
 use App\Http\Controllers\Admin\Item\AttributeController;
 use App\Http\Controllers\Admin\Item\CategoryController;
+use App\Http\Controllers\Admin\Item\CommonConditionController;
 use App\Http\Controllers\Admin\Item\UnitController;
+use App\Http\Controllers\Admin\Module\ModuleController;
+use App\Http\Controllers\Admin\Notification\NotificationController;
 use App\Http\Controllers\Admin\Zone\ZoneController;
 use Illuminate\Support\Facades\Route;
 
@@ -76,6 +88,47 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::post(Addon::BULK_EXPORT[URI], [AddonController::class, 'exportBulkData'])->name('bulk-export');
         });
 
+        Route::group(['prefix' => 'banner', 'as' => 'banner.', 'middleware' => ['module:banner']], function () {
+            Route::get(Banner::INDEX[URI], [BannerController::class,'index'])->name('add-new');
+            Route::post(Banner::ADD[URI], [BannerController::class,'add'])->name('store');
+            Route::get(Banner::UPDATE[URI], [BannerController::class,'getUpdateView'])->name('edit');
+            Route::post(Banner::UPDATE[URI], [BannerController::class,'update'])->name('update');
+            Route::delete(Banner::DELETE[URI], [BannerController::class,'delete'])->name('delete');
+            Route::get(Banner::UPDATE_STATUS[URI], [BannerController::class,'updateStatus'])->name('status');
+            Route::get(Banner::UPDATE_FEATURED[URI], [BannerController::class,'updateFeatured'])->name('featured');
+            Route::post(Banner::SEARCH[URI], [BannerController::class,'getSearchList'])->name('search');
+        });
+
+        Route::group(['prefix' => 'coupon', 'as' => 'coupon.', 'middleware' => ['module:coupon']], function () {
+            Route::get(Coupon::INDEX[URI], [CouponController::class, 'index'])->name('add-new');
+            Route::post(Coupon::ADD[URI], [CouponController::class, 'add'])->name('store');
+            Route::get(Coupon::UPDATE[URI], [CouponController::class, 'getUpdateView'])->name('edit');
+            Route::post(Coupon::UPDATE[URI], [CouponController::class, 'update'])->name('update');
+            Route::get(Coupon::STATUS[URI], [CouponController::class,'updateStatus'])->name('status');
+            Route::delete(Coupon::DELETE[URI], [CouponController::class, 'delete'])->name('delete');
+            Route::get(Coupon::EXPORT[URI], [CouponController::class, 'exportList'])->name('coupon_export');
+        });
+
+        Route::group(['prefix' => 'notification', 'as' => 'notification.', 'middleware' => ['module:notification']], function () {
+            Route::get(Notification::INDEX[URI], [NotificationController::class, 'index'])->name('add-new');
+            Route::post(Notification::ADD[URI], [NotificationController::class, 'add'])->name('store');
+            Route::get(Notification::UPDATE[URI], [NotificationController::class, 'getUpdateView'])->name('edit');
+            Route::post(Notification::UPDATE[URI], [NotificationController::class, 'update'])->name('update');
+            Route::get(Notification::STATUS[URI], [NotificationController::class,'updateStatus'])->name('status');
+            Route::delete(Notification::DELETE[URI], [NotificationController::class, 'delete'])->name('delete');
+            Route::get(Notification::EXPORT[URI], [NotificationController::class, 'exportList'])->name('export');
+        });
+
+        Route::group(['prefix' => 'common-condition', 'as' => 'common-condition.'], function () {
+            Route::get(CommonCondition::DROPDOWN[URI], [CommonConditionController::class, 'getDropdownList'])->name('get-all');
+            Route::get(CommonCondition::INDEX[URI], [CommonConditionController::class, 'index'])->name('add');
+            Route::post(CommonCondition::ADD[URI], [CommonConditionController::class, 'add'])->name('store');
+            Route::get(CommonCondition::UPDATE[URI], [CommonConditionController::class, 'getUpdateView'])->name('edit');
+            Route::post(CommonCondition::UPDATE[URI], [CommonConditionController::class, 'update'])->name('update');
+            Route::delete(CommonCondition::DELETE[URI], [CommonConditionController::class, 'delete'])->name('delete');
+            Route::get(CommonCondition::STATUS[URI], [CommonConditionController::class,'updateStatus'])->name('status');
+        });
+
         Route::group(['prefix' => 'business-settings', 'as' => 'business-settings.'], function () {
             Route::group(['prefix' => 'zone', 'as' => 'zone.', 'middleware' => ['module:zone']], function () {
                 Route::get(Zone::INDEX[URI], [ZoneController::class, 'index'])->name('home');
@@ -93,6 +146,30 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                 Route::get(Zone::DIGITAL_PAYMENT[URI], [ZoneController::class, 'updateDigitalPayment'])->name('digital-payment');
                 Route::get(Zone::CASH_ON_DELIVERY[URI], [ZoneController::class, 'updateCashOnDelivery'])->name('cash-on-delivery');
                 Route::get(Zone::OFFLINE_PAYMENT[URI], [ZoneController::class, 'updateOfflinePayment'])->name('offline-payment');
+            });
+
+            Route::group(['prefix' => 'module', 'as' => 'module.', 'middleware' => ['module:module']], function () {
+                Route::get(Module::INDEX[URI], [ModuleController::class, 'index'])->name('index');
+                Route::get(Module::ADD[URI], [ModuleController::class, 'getAddView'])->name('create');
+                Route::post(Module::ADD[URI], [ModuleController::class, 'add'])->name('store');
+                Route::get(Module::UPDATE[URI], [ModuleController::class, 'getUpdateView'])->name('edit');
+                Route::put(Module::UPDATE[URI], [ModuleController::class, 'update'])->name('update');
+                Route::get(Module::STATUS[URI], [ModuleController::class, 'updateStatus'])->name('status');
+                Route::get(Module::TYPE[URI], [ModuleController::class, 'getType'])->name('type');
+                Route::post(Module::SEARCH[URI], [ModuleController::class, 'search'])->name('search');
+                Route::get(Module::EXPORT[URI], [ModuleController::class, 'exportList'])->name('export');
+                Route::get(Module::SHOW[URI], [ModuleController::class, 'show'])->name('show');
+            });
+        });
+
+        Route::group(['prefix' => 'users', 'as' => 'users.'], function () {
+            Route::group(['prefix' => 'custom-role', 'as' => 'custom-role.', 'middleware' => ['module:custom_role']], function () {
+                Route::get(CustomRole::INDEX[URI], [CustomRoleController::class, 'index']);
+                Route::post(CustomRole::ADD[URI], [CustomRoleController::class, 'add'])->name('create');
+                Route::get(CustomRole::UPDATE[URI], [CustomRoleController::class, 'getUpdateView'])->name('edit');
+                Route::post(CustomRole::UPDATE[URI], [CustomRoleController::class, 'update'])->name('update');
+                Route::delete(CustomRole::DELETE[URI], [CustomRoleController::class, 'delete'])->name('delete');
+                Route::post(CustomRole::SEARCH[URI], [CustomRoleController::class, 'search'])->name('search');
             });
         });
     });

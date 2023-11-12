@@ -192,7 +192,7 @@ class CategoryController extends BaseController
     public function exportBulkData(CategoryBulkExportRequest $request): StreamedResponse|string
     {
         $categories = $this->categoryRepo->getBulkExportList(request: $request);
-        return (new FastExcel($this->categoryService->processExportData(collection: $this->exportGenerator(data: $categories))))->download(Category::EXPORT_XLSX);
+        return (new FastExcel($this->categoryService->getExportData(collection: $this->exportGenerator(data: $categories))))->download(Category::EXPORT_XLSX);
     }
 
     public function exportList(Request $request): BinaryFileResponse

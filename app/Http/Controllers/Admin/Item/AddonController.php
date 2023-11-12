@@ -203,6 +203,6 @@ class AddonController extends BaseController
     public function exportBulkData(AddonBulkExportRequest $request): StreamedResponse|string
     {
         $categories = $this->addonRepo->getBulkExportList(request: $request);
-        return (new FastExcel($this->addonService->processBulkExportData(collection: $this->exportGenerator(data: $categories))))->download(Addon::EXPORT_XLSX);
+        return (new FastExcel($this->addonService->getBulkExportData(collection: $this->exportGenerator(data: $categories))))->download(Addon::EXPORT_XLSX);
     }
 }

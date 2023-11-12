@@ -54,7 +54,7 @@ class AddonService
         return $data;
     }
 
-    public function processBulkExportData(object $collection): array
+    public function getBulkExportData(object $collection): array
     {
         $data = [];
         foreach($collection as $key=>$item){
