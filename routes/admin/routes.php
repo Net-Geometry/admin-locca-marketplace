@@ -6,6 +6,7 @@ use App\Enums\ViewPaths\Admin\Category;
 use App\Enums\ViewPaths\Admin\Attribute;
 use App\Enums\ViewPaths\Admin\CommonCondition;
 use App\Enums\ViewPaths\Admin\Coupon;
+use App\Enums\ViewPaths\Admin\Module;
 use App\Enums\ViewPaths\Admin\Notification;
 use App\Enums\ViewPaths\Admin\Unit;
 use App\Enums\ViewPaths\Admin\Zone;
@@ -16,6 +17,7 @@ use App\Http\Controllers\Admin\Item\AttributeController;
 use App\Http\Controllers\Admin\Item\CategoryController;
 use App\Http\Controllers\Admin\Item\CommonConditionController;
 use App\Http\Controllers\Admin\Item\UnitController;
+use App\Http\Controllers\Admin\Module\ModuleController;
 use App\Http\Controllers\Admin\Notification\NotificationController;
 use App\Http\Controllers\Admin\Zone\ZoneController;
 use Illuminate\Support\Facades\Route;
@@ -142,6 +144,19 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                 Route::get(Zone::DIGITAL_PAYMENT[URI], [ZoneController::class, 'updateDigitalPayment'])->name('digital-payment');
                 Route::get(Zone::CASH_ON_DELIVERY[URI], [ZoneController::class, 'updateCashOnDelivery'])->name('cash-on-delivery');
                 Route::get(Zone::OFFLINE_PAYMENT[URI], [ZoneController::class, 'updateOfflinePayment'])->name('offline-payment');
+            });
+
+            Route::group(['prefix' => 'module', 'as' => 'module.', 'middleware' => ['module:module']], function () {
+                Route::get(Module::INDEX[URI], [ModuleController::class, 'index'])->name('index');
+                Route::get(Module::ADD[URI], [ModuleController::class, 'getAddView'])->name('create');
+                Route::post(Module::ADD[URI], [ModuleController::class, 'add'])->name('store');
+                Route::get(Module::UPDATE[URI], [ModuleController::class, 'getUpdateView'])->name('edit');
+                Route::put(Module::UPDATE[URI], [ModuleController::class, 'update'])->name('update');
+                Route::get(Module::STATUS[URI], [ModuleController::class, 'updateStatus'])->name('status');
+                Route::get(Module::TYPE[URI], [ModuleController::class, 'getType'])->name('type');
+                Route::post(Module::SEARCH[URI], [ModuleController::class, 'search'])->name('search');
+                Route::get(Module::EXPORT[URI], [ModuleController::class, 'exportList'])->name('export');
+                Route::get(Module::SHOW[URI], [ModuleController::class, 'show'])->name('show');
             });
         });
     });

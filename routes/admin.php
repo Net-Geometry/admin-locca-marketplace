@@ -28,12 +28,12 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
         Route::get('maintenance-mode', 'SystemController@maintenance_mode')->name('maintenance-mode');
         Route::get('landing-page', 'SystemController@landing_page')->name('landing-page');
 
-        Route::get('module/status/{id}/{status}', 'ModuleController@status')->middleware('module:module')->name('module.status');
-        Route::get('module/type', 'ModuleController@type')->middleware('module:module')->name('module.type');
-        Route::post('module/search', 'ModuleController@search')->middleware('module:module')->name('module.search');
-        Route::get('module/export', 'ModuleController@export')->middleware('module:module')->name('module.export');
-        Route::resource('module', 'ModuleController')->middleware('module:module')->except('show');
-        Route::get('module/{id}', 'ModuleController@show')->name('show');
+//        Route::get('module/status/{id}/{status}', 'ModuleController@status')->middleware('module:module')->name('module.status');
+//        Route::get('module/type', 'ModuleController@type')->middleware('module:module')->name('module.type');
+//        Route::post('module/search', 'ModuleController@search')->middleware('module:module')->name('module.search');
+//        Route::get('module/export', 'ModuleController@export')->middleware('module:module')->name('module.export');
+//        Route::resource('module', 'ModuleController')->middleware('module:module')->except('show');
+//        Route::get('module/{id}', 'ModuleController@show')->name('show');
 
 //        Route::resource('unit', 'UnitController')->middleware('module:unit');
 //        Route::post('unit/search', 'UnitController@search')->middleware('module:unit')->name('unit.search');
@@ -603,11 +603,11 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
         });
         Route::group(['prefix' => 'business-settings', 'as' => 'business-settings.'], function () {
             //module
-            Route::get('module/status/{id}/{status}', 'ModuleController@status')->middleware('module:module')->name('module.status');
-            Route::get('module/type', 'ModuleController@type')->middleware('module:module')->name('module.type');
-            Route::post('module/search', 'ModuleController@search')->middleware('module:module')->name('module.search');
-            Route::get('module/export', 'ModuleController@export')->middleware('module:module')->name('module.export');
-            Route::resource('module', 'ModuleController')->middleware('module:module');
+//            Route::get('module/status/{id}/{status}', 'ModuleController@status')->middleware('module:module')->name('module.status');
+//            Route::get('module/type', 'ModuleController@type')->middleware('module:module')->name('module.type');
+//            Route::post('module/search', 'ModuleController@search')->middleware('module:module')->name('module.search');
+//            Route::get('module/export', 'ModuleController@export')->middleware('module:module')->name('module.export');
+//            Route::resource('module', 'ModuleController')->middleware('module:module');
 
             //zone
 //            Route::group(['prefix' => 'zone', 'as' => 'zone.', 'middleware' => ['module:zone']], function () {
