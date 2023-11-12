@@ -57,14 +57,14 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::post('business-overview', 'DashboardController@business_overview')->name('business-overview');
         });
 
-        Route::group(['prefix' => 'custom-role', 'as' => 'custom-role.', 'middleware' => ['module:custom_role']], function () {
-            Route::get('create', 'CustomRoleController@create')->name('create');
-            Route::post('create', 'CustomRoleController@store');
-            Route::get('edit/{id}', 'CustomRoleController@edit')->name('edit');
-            Route::post('update/{id}', 'CustomRoleController@update')->name('update');
-            Route::delete('delete/{id}', 'CustomRoleController@distroy')->name('delete');
-            Route::post('search', 'CustomRoleController@search')->name('search');
-        });
+//        Route::group(['prefix' => 'custom-role', 'as' => 'custom-role.', 'middleware' => ['module:custom_role']], function () {
+//            Route::get('create', 'CustomRoleController@create')->name('create');
+//            Route::post('create', 'CustomRoleController@store');
+//            Route::get('edit/{id}', 'CustomRoleController@edit')->name('edit');
+//            Route::post('update/{id}', 'CustomRoleController@update')->name('update');
+//            Route::delete('delete/{id}', 'CustomRoleController@distroy')->name('delete');
+//            Route::post('search', 'CustomRoleController@search')->name('search');
+//        });
 
         Route::group(['prefix' => 'employee', 'as' => 'employee.', 'middleware' => ['module:employee']], function () {
             Route::get('add-new', 'EmployeeController@add_new')->name('add-new');
@@ -887,14 +887,14 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                 Route::post('contact-search', 'ContactController@search')->name('contact-search');
             });
 
-            Route::group(['prefix' => 'custom-role', 'as' => 'custom-role.', 'middleware' => ['module:custom_role']], function () {
-                Route::get('create', 'CustomRoleController@create')->name('create');
-                Route::post('create', 'CustomRoleController@store');
-                Route::get('edit/{id}', 'CustomRoleController@edit')->name('edit');
-                Route::post('update/{id}', 'CustomRoleController@update')->name('update');
-                Route::delete('delete/{id}', 'CustomRoleController@distroy')->name('delete');
-                Route::post('search', 'CustomRoleController@search')->name('search');
-            });
+            // Route::group(['prefix' => 'custom-role', 'as' => 'custom-role.', 'middleware' => ['module:custom_role']], function () {
+            //     Route::get('create', 'CustomRoleController@create')->name('create');
+            //     Route::post('create', 'CustomRoleController@store');
+            //     Route::get('edit/{id}', 'CustomRoleController@edit')->name('edit');
+            //     Route::post('update/{id}', 'CustomRoleController@update')->name('update');
+            //     Route::delete('delete/{id}', 'CustomRoleController@distroy')->name('delete');
+            //     Route::post('search', 'CustomRoleController@search')->name('search');
+            // });
 
             Route::group(['prefix' => 'employee', 'as' => 'employee.', 'middleware' => ['module:employee']], function () {
                 Route::get('add-new', 'EmployeeController@add_new')->name('add-new');

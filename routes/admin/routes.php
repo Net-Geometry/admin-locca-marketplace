@@ -6,12 +6,14 @@ use App\Enums\ViewPaths\Admin\Category;
 use App\Enums\ViewPaths\Admin\Attribute;
 use App\Enums\ViewPaths\Admin\CommonCondition;
 use App\Enums\ViewPaths\Admin\Coupon;
+use App\Enums\ViewPaths\Admin\CustomRole;
 use App\Enums\ViewPaths\Admin\Module;
 use App\Enums\ViewPaths\Admin\Notification;
 use App\Enums\ViewPaths\Admin\Unit;
 use App\Enums\ViewPaths\Admin\Zone;
 use App\Http\Controllers\Admin\Banner\BannerController;
 use App\Http\Controllers\Admin\Coupon\CouponController;
+use App\Http\Controllers\Admin\Employee\CustomRoleController;
 use App\Http\Controllers\Admin\Item\AddonController;
 use App\Http\Controllers\Admin\Item\AttributeController;
 use App\Http\Controllers\Admin\Item\CategoryController;
@@ -157,6 +159,17 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                 Route::post(Module::SEARCH[URI], [ModuleController::class, 'search'])->name('search');
                 Route::get(Module::EXPORT[URI], [ModuleController::class, 'exportList'])->name('export');
                 Route::get(Module::SHOW[URI], [ModuleController::class, 'show'])->name('show');
+            });
+        });
+
+        Route::group(['prefix' => 'users', 'as' => 'users.'], function () {
+            Route::group(['prefix' => 'custom-role', 'as' => 'custom-role.', 'middleware' => ['module:custom_role']], function () {
+                Route::get(CustomRole::INDEX[URI], [CustomRoleController::class, 'index']);
+                Route::post(CustomRole::ADD[URI], [CustomRoleController::class, 'add'])->name('create');
+                Route::get(CustomRole::UPDATE[URI], [CustomRoleController::class, 'getUpdateView'])->name('edit');
+                Route::post(CustomRole::UPDATE[URI], [CustomRoleController::class, 'update'])->name('update');
+                Route::delete(CustomRole::DELETE[URI], [CustomRoleController::class, 'delete'])->name('delete');
+                Route::post(CustomRole::SEARCH[URI], [CustomRoleController::class, 'search'])->name('search');
             });
         });
     });
