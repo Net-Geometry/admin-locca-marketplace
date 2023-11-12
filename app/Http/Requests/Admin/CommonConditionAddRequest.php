@@ -9,11 +9,11 @@ use Illuminate\Support\Carbon;
 /**
  * @property array name
  * @property array lang
- * @property int $id
- * @property string|null $slug
- * @property bool $status
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
+ * @property int id
+ * @property string|null slug
+ * @property bool status
+ * @property Carbon|null created_at
+ * @property Carbon|null updated_at
  */
 class CommonConditionAddRequest extends FormRequest
 {

@@ -7,13 +7,19 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Carbon;
 
 /**
- * @property array name
  * @property array lang
- * @property int $id
- * @property string|null $slug
- * @property bool $status
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
+ * @property int id
+ * @property array module_name
+ * @property string module_type
+ * @property string|null thumbnail
+ * @property bool status
+ * @property int stores_count
+ * @property Carbon|null created_at
+ * @property Carbon|null updated_at
+ * @property string|null icon
+ * @property int theme_id
+ * @property array description
+ * @property bool all_zone_service
  */
 class ModuleUpdateRequest extends FormRequest
 {

@@ -9,19 +9,19 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Carbon;
 
 /**
- * @property int $id
- * @property array $title
- * @property string $type
- * @property string|null $image
- * @property bool $status
- * @property string $data
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property int $zone_id
- * @property int $module_id
- * @property bool $featured
- * @property string|null $default_link
- * @property string $created_by
+ * @property int id
+ * @property array title
+ * @property string type
+ * @property string|null image
+ * @property bool status
+ * @property string data
+ * @property Carbon|null created_at
+ * @property Carbon|null updated_at
+ * @property int zone_id
+ * @property int module_id
+ * @property bool featured
+ * @property string|null default_link
+ * @property string created_by
  * @property array lang
  */
 class BannerAddRequest extends FormRequest

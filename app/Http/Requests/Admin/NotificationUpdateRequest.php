@@ -7,15 +7,15 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Carbon;
 
 /**
- * @property int $id
- * @property string $title
- * @property string $description
- * @property string|null $image
- * @property bool $status
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property string|null $tergat
- * @property int|null $zone_id
+ * @property int id
+ * @property string title
+ * @property string description
+ * @property string|null image
+ * @property bool status
+ * @property Carbon|null created_at
+ * @property Carbon|null updated_at
+ * @property string|null tergat
+ * @property int|null zone_id
  */
 class NotificationUpdateRequest extends FormRequest
 {

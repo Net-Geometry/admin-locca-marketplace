@@ -7,27 +7,27 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Carbon;
 
 /**
- * @property int $id
- * @property array $title
- * @property string $code
- * @property Carbon|null $start_date
- * @property Carbon|null $expire_date
- * @property float $min_purchase
- * @property float $max_discount
- * @property float $discount
- * @property string $discount_type
- * @property string $coupon_type
- * @property int|null $limit
- * @property bool $status
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property string|null $data
- * @property int $total_uses
- * @property int $module_id
- * @property string $created_by
- * @property string $customer_id
- * @property string|null $slug
- * @property int|null $store_id
+ * @property int id
+ * @property array title
+ * @property string code
+ * @property Carbon|null start_date
+ * @property Carbon|null expire_date
+ * @property float min_purchase
+ * @property float max_discount
+ * @property float discount
+ * @property string discount_type
+ * @property string coupon_type
+ * @property int|null limit
+ * @property bool status
+ * @property Carbon|null created_at
+ * @property Carbon|null updated_at
+ * @property string|null data
+ * @property int total_uses
+ * @property int module_id
+ * @property string created_by
+ * @property string customer_id
+ * @property string|null slug
+ * @property int|null store_id
  * @property array lang
  */
 class CouponAddRequest extends FormRequest
