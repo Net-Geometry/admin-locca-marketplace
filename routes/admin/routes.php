@@ -7,6 +7,7 @@ use App\Enums\ViewPaths\Admin\Attribute;
 use App\Enums\ViewPaths\Admin\CommonCondition;
 use App\Enums\ViewPaths\Admin\Coupon;
 use App\Enums\ViewPaths\Admin\CustomRole;
+use App\Enums\ViewPaths\Admin\Employee;
 use App\Enums\ViewPaths\Admin\Module;
 use App\Enums\ViewPaths\Admin\Notification;
 use App\Enums\ViewPaths\Admin\Unit;
@@ -14,6 +15,7 @@ use App\Enums\ViewPaths\Admin\Zone;
 use App\Http\Controllers\Admin\Banner\BannerController;
 use App\Http\Controllers\Admin\Coupon\CouponController;
 use App\Http\Controllers\Admin\Employee\CustomRoleController;
+use App\Http\Controllers\Admin\Employee\EmployeeController;
 use App\Http\Controllers\Admin\Item\AddonController;
 use App\Http\Controllers\Admin\Item\AttributeController;
 use App\Http\Controllers\Admin\Item\CategoryController;
@@ -164,12 +166,21 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
 
         Route::group(['prefix' => 'users', 'as' => 'users.'], function () {
             Route::group(['prefix' => 'custom-role', 'as' => 'custom-role.', 'middleware' => ['module:custom_role']], function () {
-                Route::get(CustomRole::INDEX[URI], [CustomRoleController::class, 'index']);
+                Route::get(CustomRole::INDEX[URI], [CustomRoleController::class, 'index'])->name('create');
                 Route::post(CustomRole::ADD[URI], [CustomRoleController::class, 'add'])->name('create');
-                Route::get(CustomRole::UPDATE[URI], [CustomRoleController::class, 'getUpdateView'])->name('edit');
+                Route::get(CustomRole::EDIT[URI], [CustomRoleController::class, 'getUpdateView'])->name('edit');
                 Route::post(CustomRole::UPDATE[URI], [CustomRoleController::class, 'update'])->name('update');
                 Route::delete(CustomRole::DELETE[URI], [CustomRoleController::class, 'delete'])->name('delete');
                 Route::post(CustomRole::SEARCH[URI], [CustomRoleController::class, 'search'])->name('search');
+            });
+
+            Route::group(['prefix' => 'employee', 'as' => 'employee.', 'middleware' => ['module:employee']], function () {
+                Route::get(Employee::INDEX[URI], [EmployeeController::class, 'index'])->name('create');
+                Route::post(Employee::ADD[URI], [EmployeeController::class, 'add'])->name('create');
+                Route::get(Employee::UPDATE[URI], [EmployeeController::class, 'getUpdateView'])->name('edit');
+                Route::post(Employee::UPDATE[URI], [EmployeeController::class, 'update'])->name('update');
+                Route::delete(Employee::DELETE[URI], [EmployeeController::class, 'delete'])->name('delete');
+                Route::post(Employee::SEARCH[URI], [EmployeeController::class, 'search'])->name('search');
             });
         });
     });

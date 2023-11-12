@@ -2,59 +2,59 @@
 
 namespace App\Repositories;
 
-use App\Contracts\Repositories\CustomRoleRepositoryInterface;
-use App\Models\AdminRole;
+use App\Contracts\Repositories\EmployeeRepositoryInterface;
+use App\Models\Admin;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 
-class CustomRoleRepository implements CustomRoleRepositoryInterface
+class EmployeeRepository implements EmployeeRepositoryInterface
 {
-    public function __construct(protected AdminRole $role)
+    public function __construct(protected Admin $employee)
     {
     }
 
     public function add(array $data): string|object
     {
-        $role = $this->role->newInstance();
+        $employee = $this->employee->newInstance();
         foreach ($data as $key => $column) {
-            $role[$key] = $column;
+            $employee[$key] = $column;
         }
-        $role->save();
-        return $role;
+        $employee->save();
+        return $employee;
     }
 
     public function getFirstWhere(array $params, array $relations = []): ?Model
     {
-        return $this->role->where($params)->first();
+        return $this->employee->where($params)->first();
     }
 
     public function getList(array $orderBy = [], array $relations = [], int|string $dataLimit = DEFAULT_DATA_LIMIT, int $offset = null): Collection|LengthAwarePaginator
     {
-        return $this->role->whereNotIn('id', [1])->get();
+        return $this->employee->get();
     }
 
     public function getListWhere(string $searchValue = null, array $filters = [], array $relations = [], int|string $dataLimit = DEFAULT_DATA_LIMIT, int $offset = null): Collection|LengthAwarePaginator
     {
-        return $this->role->whereNotIn('id',[1])->latest()->paginate($dataLimit);
+        return $this->employee->whereNotIn('id',[1])->latest()->paginate($dataLimit);
     }
 
     public function update(string $id, array $data): bool|string|object
     {
-        $role = $this->role->find($id);
+        $employee = $this->employee->find($id);
         foreach ($data as $key => $column) {
-            $role[$key] = $column;
+            $employee[$key] = $column;
         }
-        $role->save();
-        return $role;
+        $employee->save();
+        return $employee;
     }
 
     public function delete(string $id): bool
     {
-        $role = $this->role->find($id);
-        $role->translations()->delete();
-        $role->delete();
+        $employee = $this->employee->find($id);
+        $employee->translations()->delete();
+        $employee->delete();
 
         return true;
     }
@@ -62,7 +62,7 @@ class CustomRoleRepository implements CustomRoleRepositoryInterface
     public function getSearchList(Request $request): Collection
     {
         $key = explode(' ', $request['search']);
-        return $this->role->where('id','!=','1')
+        return $this->employee->where('id','!=','1')
             ->where(function ($q) use ($key) {
                 foreach ($key as $value) {
                     $q->orWhere('name', 'like', "%{$value}%");
@@ -72,6 +72,6 @@ class CustomRoleRepository implements CustomRoleRepositoryInterface
 
     public function getFirstWithoutGlobalScopeWhere(array $params, array $relations = []): ?Model
     {
-        return $this->role->withoutGlobalScope('translate')->where($params)->first(['id','name','modules']);
+        return $this->employee->withoutGlobalScope('translate')->where($params)->first(['id','name','modules']);
     }
 }
