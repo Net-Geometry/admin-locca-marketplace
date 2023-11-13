@@ -15,17 +15,17 @@ enum Notification
     ];
 
     const UPDATE = [
-        URI => 'edit/{id}',
+        URI => 'edit',
         VIEW => 'admin-views.notification.edit'
     ];
 
     const DELETE = [
-        URI => 'delete/{id}',
+        URI => 'delete',
         VIEW => ''
     ];
 
     const STATUS = [
-        URI => 'status/{id}/{status}',
+        URI => 'status',
         VIEW => ''
     ];
 

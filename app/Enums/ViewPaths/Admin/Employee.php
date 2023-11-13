@@ -15,16 +15,22 @@ enum Employee
     ];
 
     const UPDATE = [
-        URI => 'edit/{id}',
+        URI => 'edit',
         VIEW => 'admin-views.employee.edit'
     ];
 
     const DELETE = [
-        URI => 'delete/{id}',
+        URI => 'delete',
         VIEW => ''
     ];
+
     const SEARCH = [
         URI => 'search',
         VIEW => 'admin-views.employee.partials._table'
+    ];
+
+    const EXPORT = [
+        URI => 'export',
+        VIEW => ''
     ];
 }

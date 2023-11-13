@@ -82,8 +82,8 @@ class ModuleController extends BaseController
             Toastr::warning(translate('messages.you_can_not_edit_this_module_please_add_a_new_module_to_edit'));
             return back();
         }
-
-        $module = $this->moduleRepo->update(id: $id ,data: $this->moduleService->getUpdateData(request: $request));
+        $module = $this->moduleRepo->getFirstWithoutGlobalScopeWhere(params: ['id' => $id]);
+        $module = $this->moduleRepo->update(id: $id ,data: $this->moduleService->getUpdateData(request: $request,module: $module));
 
         $this->translationRepo->updateByModel(request: $request, model: $module, modelPath: 'App\Models\Module', attribute: 'module_name');
 

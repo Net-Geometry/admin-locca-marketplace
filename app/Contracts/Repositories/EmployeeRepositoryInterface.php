@@ -20,4 +20,17 @@ interface EmployeeRepositoryInterface extends RepositoryInterface
      * @return Model|null
      */
     public function getFirstWithoutGlobalScopeWhere(array $params, array $relations = []): ?Model;
+
+    /**
+     * @param array $params
+     * @param array $relations
+     * @return Model|null
+     */
+    public function getFirstWhereExceptAdmin(array $params, array $relations = []): ?Model;
+
+    /**
+     * @param Request $request
+     * @return Collection
+     */
+    public function getExportList(Request $request): Collection;
 }

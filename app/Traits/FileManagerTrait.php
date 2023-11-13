@@ -21,4 +21,15 @@ trait FileManagerTrait
 
         return $imageName;
     }
+
+    public static function updateAndUpload(string $dir, $old_image, string $format, $image = null): mixed
+    {
+        if ($image == null) {
+            return $old_image;
+        }
+        if (Storage::disk('public')->exists($dir . $old_image)) {
+            Storage::disk('public')->delete($dir . $old_image);
+        }
+        return self::upload($dir, $format, $image);
+    }
 }

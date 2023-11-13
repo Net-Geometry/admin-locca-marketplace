@@ -4,28 +4,23 @@ namespace App\Enums\ViewPaths\Admin;
 
 enum CustomRole
 {
-    const INDEX = [
-        URI => '/',
+    const ADD = [
+        URI => 'create',
         VIEW => 'admin-views.custom-role.create'
     ];
 
-    const ADD = [
-        URI => 'create',
-        VIEW => 'admin-views.custom-role.index'
-    ];
-
     const EDIT = [
-        URI => 'edit/{id}',
+        URI => 'edit',
         VIEW => 'admin-views.custom-role.edit'
     ];
 
     const UPDATE = [
-        URI => 'update/{id}',
+        URI => 'update',
         VIEW => 'admin-views.custom-role.edit'
     ];
 
     const DELETE = [
-        URI => 'delete/{id}',
+        URI => 'delete',
         VIEW => ''
     ];
     const SEARCH = [

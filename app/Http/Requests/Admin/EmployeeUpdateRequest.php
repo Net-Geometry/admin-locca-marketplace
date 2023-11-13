@@ -5,14 +5,22 @@ namespace App\Http\Requests\Admin;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Carbon;
+use Illuminate\Validation\Rules\Password;
 
 /**
  * @property int id
- * @property string name
- * @property string|null modules
- * @property bool status
+ * @property string|null f_name
+ * @property string|null l_name
+ * @property string|null phone
+ * @property string email
+ * @property string|null image
+ * @property string|null password
+ * @property string|null remember_token
  * @property Carbon|null created_at
  * @property Carbon|null updated_at
+ * @property int|null role_id
+ * @property int|null zone_id
+ * @property bool is_logged_in
  */
 class EmployeeUpdateRequest extends FormRequest
 {
@@ -32,18 +40,20 @@ class EmployeeUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|max:191|unique:admin_roles,name,'.$this->id,
-            'modules'=>'required|array|min:1',
-            'name.0'=>'required',
+            'f_name' => 'required|max:100',
+            'l_name' => 'nullable|max:100',
+            'role_id' => 'required|not_in:1',
+            'email' => 'required|unique:admins,email,'.$this->id,
+            'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10|max:20|unique:admins,phone,'.$this->id,
+            'password' => ['nullable', Password::min(8)->mixedCase()->letters()->numbers()->symbols()->uncompromised()],
         ];
     }
 
     public function messages(): array
     {
         return [
-            'name.0.required'=>translate('default_data_is_required'),
-            'name.required'=>translate('messages.Role name is required!'),
-            'modules.required'=>translate('messages.Please select atleast one module')
+            'f_name.required' => translate('messages.first_name_is_required'),
+            'role_id.not_in' => translate('messages.unauthorized'),
         ];
     }
 }

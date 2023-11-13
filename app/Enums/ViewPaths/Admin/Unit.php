@@ -15,22 +15,22 @@ enum Unit
     ];
 
     const UPDATE = [
-        URI => 'edit/{id}',
+        URI => 'edit',
         VIEW => 'admin-views.unit.edit'
     ];
 
     const SEARCH = [
-        URI => 'unit/search',
+        URI => 'search',
         VIEW => 'admin-views.unit.partials._table'
     ];
 
     const DELETE = [
-        URI => 'delete/{id}',
+        URI => 'delete',
         VIEW => ''
     ];
 
     const EXPORT = [
-        URI => 'unit/export/{type}',
+        URI => 'export',
         VIEW => ''
     ];
 }

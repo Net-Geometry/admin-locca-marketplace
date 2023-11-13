@@ -37,7 +37,19 @@ class EmployeeRepository implements EmployeeRepositoryInterface
 
     public function getListWhere(string $searchValue = null, array $filters = [], array $relations = [], int|string $dataLimit = DEFAULT_DATA_LIMIT, int $offset = null): Collection|LengthAwarePaginator
     {
-        return $this->employee->whereNotIn('id',[1])->latest()->paginate($dataLimit);
+        $key = explode(' ', $searchValue);
+
+        return $this->employee->zone()->where('role_id', '!=','1')
+            ->when(isset($key), function ($query) use ($key) {
+                $query->where(function ($query) use ($key) {
+                    foreach ($key as $value) {
+                        $query->orWhere('f_name', 'like', "%{$value}%");
+                        $query->orWhere('l_name', 'like', "%{$value}%");
+                        $query->orWhere('phone', 'like', "%{$value}%");
+                        $query->orWhere('email', 'like', "%{$value}%");
+                    }
+                });
+            })->latest()->paginate($dataLimit);
     }
 
     public function update(string $id, array $data): bool|string|object
@@ -52,8 +64,7 @@ class EmployeeRepository implements EmployeeRepositoryInterface
 
     public function delete(string $id): bool
     {
-        $employee = $this->employee->find($id);
-        $employee->translations()->delete();
+        $employee = $this->employee->zone()->where('role_id', '!=','1')->find($id);
         $employee->delete();
 
         return true;
@@ -62,16 +73,38 @@ class EmployeeRepository implements EmployeeRepositoryInterface
     public function getSearchList(Request $request): Collection
     {
         $key = explode(' ', $request['search']);
-        return $this->employee->where('id','!=','1')
+        return $this->employee->zone()->where('role_id', '!=','1')
             ->where(function ($q) use ($key) {
                 foreach ($key as $value) {
-                    $q->orWhere('name', 'like', "%{$value}%");
+                    $q->orWhere('f_name', 'like', "%{$value}%");
+                    $q->orWhere('l_name', 'like', "%{$value}%");
+                    $q->orWhere('phone', 'like', "%{$value}%");
+                    $q->orWhere('email', 'like', "%{$value}%");
                 }
-            })->latest()->limit(50)->get();
+            })->limit(50)->get();
     }
 
     public function getFirstWithoutGlobalScopeWhere(array $params, array $relations = []): ?Model
     {
         return $this->employee->withoutGlobalScope('translate')->where($params)->first(['id','name','modules']);
+    }
+
+    public function getFirstWhereExceptAdmin(array $params, array $relations = []): ?Model
+    {
+        return $this->employee->zone()->where('role_id', '!=','1')->where($params)->first();
+    }
+
+    public function getExportList(Request $request): Collection
+    {
+        $key = explode(' ', $request['search']);
+        return $this->employee->zone()->where('role_id', '!=','1')
+            ->where(function ($q) use ($key) {
+                foreach ($key as $value) {
+                    $q->orWhere('f_name', 'like', "%{$value}%");
+                    $q->orWhere('l_name', 'like', "%{$value}%");
+                    $q->orWhere('phone', 'like', "%{$value}%");
+                    $q->orWhere('email', 'like', "%{$value}%");
+                }
+            })->latest()->get();
     }
 }

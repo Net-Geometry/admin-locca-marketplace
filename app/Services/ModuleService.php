@@ -2,29 +2,29 @@
 
 namespace App\Services;
 
-use App\CentralLogics\Helpers;
-use Composer\DependencyResolver\Request;
+use App\Traits\FileManagerTrait;
 
 class ModuleService
 {
+    use FileManagerTrait;
 
     public function getAddData(Object $request): array
     {
         return [
             'module_name' => $request->module_name[array_search('default', $request->lang)],
-            'icon' => Helpers::upload('module/', 'png', $request->file('icon')),
-            'thumbnail' => Helpers::upload('module/', 'png', $request->file('thumbnail')),
+            'icon' => $this->upload('module/', 'png', $request->file('icon')),
+            'thumbnail' => $this->upload('module/', 'png', $request->file('thumbnail')),
             'module_type' => $request->module_type,
             'theme_id' => 1,
             'description' => $request->description[array_search('default', $request->lang)],
         ];
     }
-    public function getUpdateData(Object $request): array
+    public function getUpdateData(Object $request, object $module): array
     {
         return [
             'module_name' => $request->module_name[array_search('default', $request->lang)],
-            'icon' => Helpers::upload('module/', 'png', $request->file('icon')),
-            'thumbnail' => Helpers::upload('module/', 'png', $request->file('thumbnail')),
+            'icon' => $request->has('icon') ? $this->updateAndUpload('module/', $module->icon, 'png', $request->file('icon')) : $module->icon,
+            'thumbnail' => $request->has('thumbnail') ? $this->updateAndUpload('module/', $module->thumbnail, 'png', $request->file('thumbnail')) : $module->thumbnail,
             'theme_id' => 1,
             'description' => $request->description[array_search('default', $request->lang)],
             'all_zone_service' => false,

@@ -58,7 +58,9 @@ class CommonConditionController extends BaseController
 
     public function update(CommonConditionAddRequest $request, $id): RedirectResponse
     {
-        $condition = $this->conditionRepo->update(id: $id ,data: $this->conditionService->getAddData(request: $request));
+        $condition = $this->conditionRepo->getFirstWithoutGlobalScopeWhere(params: ['id' => $id]);
+
+        $condition = $this->conditionRepo->update(id: $id ,data: $this->conditionService->getUpdateData(request: $request,condition: $condition));
 
         $this->translationRepo->updateByModel(request: $request, model: $condition, modelPath: 'App\Models\CommonCondition', attribute: 'name');
 

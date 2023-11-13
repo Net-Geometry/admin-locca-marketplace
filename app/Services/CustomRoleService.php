@@ -19,4 +19,13 @@ class CustomRoleService
         ];
     }
 
+    public function roleCheck(string|int $role): array
+    {
+        if($role == 1)
+        {
+            return ['flag' => 'unauthorized'];
+        }
+        return ['flag' => 'authorized'];
+    }
+
 }
