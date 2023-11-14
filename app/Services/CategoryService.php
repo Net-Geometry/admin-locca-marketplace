@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\CentralLogics\Helpers;
 use App\Enums\ViewPaths\Admin\Category as CategoryViewPath;
 use App\Http\Requests\Admin\CategoryUpdateRequest;
 use App\Traits\FileManagerTrait;
@@ -41,7 +40,7 @@ class CategoryService
         return [
             'slug' => $object->slug ?? "{$slug}{$object->id}",
             'name' => $request->name[array_search('default', $request->lang)],
-            'image' => $request->has('image') ? Helpers::update('category/', $object->image, 'png', $request->file('image')) : $object->image,
+            'image' => $request->has('image') ? $this->updateAndUpload('category/', $object->image, 'png', $request->file('image')) : $object->image,
         ];
     }
 

@@ -60,7 +60,9 @@ class BannerController extends BaseController
 
     public function update(BannerUpdateRequest $request, $id): JsonResponse
     {
-        $banner = $this->bannerRepo->update(id: $id ,data: $this->bannerService->getAddData(request: $request));
+        $banner = $this->bannerRepo->getFirstWithoutGlobalScopeWhere(params: ['id' => $id]);
+
+        $banner = $this->bannerRepo->update(id: $id ,data: $this->bannerService->getUpdateData(request: $request,banner: $banner));
 
         $this->translationRepo->updateByModel(request: $request, model: $banner, modelPath: 'App\Models\Banner', attribute: 'title');
 

@@ -7,6 +7,7 @@ use App\Enums\ViewPaths\Admin\Attribute;
 use App\Enums\ViewPaths\Admin\CommonCondition;
 use App\Enums\ViewPaths\Admin\Coupon;
 use App\Enums\ViewPaths\Admin\CustomRole;
+use App\Enums\ViewPaths\Admin\Employee;
 use App\Enums\ViewPaths\Admin\Module;
 use App\Enums\ViewPaths\Admin\Notification;
 use App\Enums\ViewPaths\Admin\Unit;
@@ -14,6 +15,7 @@ use App\Enums\ViewPaths\Admin\Zone;
 use App\Http\Controllers\Admin\Banner\BannerController;
 use App\Http\Controllers\Admin\Coupon\CouponController;
 use App\Http\Controllers\Admin\Employee\CustomRoleController;
+use App\Http\Controllers\Admin\Employee\EmployeeController;
 use App\Http\Controllers\Admin\Item\AddonController;
 use App\Http\Controllers\Admin\Item\AttributeController;
 use App\Http\Controllers\Admin\Item\CategoryController;
@@ -26,21 +28,21 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
 
-    Route::get(Zone::GET_COORDINATES[URI], [ZoneController::class, 'getCoordinates'])->name('zone.get-coordinates');
-    Route::get(Zone::GET_ALL_ZONE_COORDINATES[URI], [ZoneController::class, 'getAllZoneCoordinates'])->name('zone.zoneCoordinates');
+    Route::get(Zone::GET_COORDINATES[URI].'/{id}', [ZoneController::class, 'getCoordinates'])->name('zone.get-coordinates');
+    Route::get(Zone::GET_ALL_ZONE_COORDINATES[URI].'/{id?}', [ZoneController::class, 'getAllZoneCoordinates'])->name('zone.zoneCoordinates');
 
     Route::group(['middleware' => ['admin', 'current-module']], function () {
         Route::group(['prefix' => 'category', 'as' => 'category.'], function () {
             Route::get(Category::NAME_LIST[URI], [CategoryController::class, 'getNameList'])->name('get-all');
             Route::group(['middleware' => ['module:category']], function () {
                 Route::get(Category::ADD[URI], [CategoryController::class, 'index'])->name('add');
-                Route::get(Category::UPDATE[URI], [CategoryController::class, 'getUpdateView'])->name('edit');
-                Route::post(Category::UPDATE[URI], [CategoryController::class, 'update'])->name('update');
-                Route::get(Category::PRIORITY[URI], [CategoryController::class, 'updatePriority'])->name('priority');
-                Route::post(Category::ADD[URI], [CategoryController::class, 'add'])->name('store');
-                Route::get(Category::STATUS[URI], [CategoryController::class, 'updateStatus'])->name('status');
-                Route::get(Category::FEATURED[URI], [CategoryController::class, 'updateFeatured'])->name('featured');
-                Route::delete(Category::DELETE[URI], [CategoryController::class, 'delete'])->name('delete');
+                Route::get(Category::UPDATE[URI].'/{id}', [CategoryController::class, 'getUpdateView'])->name('edit');
+                Route::post(Category::UPDATE[URI].'/{id}', [CategoryController::class, 'update'])->name('update');
+                Route::get(Category::PRIORITY[URI].'/{category}', [CategoryController::class, 'updatePriority'])->name('priority');
+                Route::post(Category::ADD[URI].'/{position?}', [CategoryController::class, 'add'])->name('store');
+                Route::get(Category::STATUS[URI].'/{id}/{status}', [CategoryController::class, 'updateStatus'])->name('status');
+                Route::get(Category::FEATURED[URI].'/{id}/{featured}', [CategoryController::class, 'updateFeatured'])->name('featured');
+                Route::delete(Category::DELETE[URI].'/{id}', [CategoryController::class, 'delete'])->name('delete');
                 Route::get(Category::EXPORT[URI], [CategoryController::class, 'exportList'])->name('export-categories');
 
                 //Import and export
@@ -55,30 +57,30 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
         Route::group(['prefix' => 'attribute', 'as' => 'attribute.', 'middleware' => ['module:attribute']], function () {
             Route::get(Attribute::INDEX[URI], [AttributeController::class, 'index'])->name('add-new');
             Route::post(Attribute::ADD[URI], [AttributeController::class, 'add'])->name('store');
-            Route::get(Attribute::UPDATE[URI], [AttributeController::class, 'getUpdateView'])->name('edit');
-            Route::post(Attribute::UPDATE[URI], [AttributeController::class, 'update'])->name('update');
-            Route::delete(Attribute::DELETE[URI], [AttributeController::class, 'delete'])->name('delete');
+            Route::get(Attribute::UPDATE[URI].'/{id}', [AttributeController::class, 'getUpdateView'])->name('edit');
+            Route::post(Attribute::UPDATE[URI].'/{id}', [AttributeController::class, 'update'])->name('update');
+            Route::delete(Attribute::DELETE[URI].'/{id}', [AttributeController::class, 'delete'])->name('delete');
             Route::get(Attribute::EXPORT[URI], [AttributeController::class, 'exportList'])->name('export-attributes');
         });
 
         Route::group(['prefix' => 'unit', 'as' => 'unit.', 'middleware' => ['module:unit']], function () {
             Route::get(Unit::INDEX[URI], [UnitController::class, 'index'])->name('index');
             Route::post(Unit::ADD[URI], [UnitController::class, 'add'])->name('store');
-            Route::get(Unit::UPDATE[URI], [UnitController::class, 'getUpdateView'])->name('edit');
-            Route::put(Unit::UPDATE[URI], [UnitController::class, 'update'])->name('update');
+            Route::get(Unit::UPDATE[URI].'/{id}', [UnitController::class, 'getUpdateView'])->name('edit');
+            Route::put(Unit::UPDATE[URI].'/{id}', [UnitController::class, 'update'])->name('update');
             Route::post(Unit::SEARCH[URI], [UnitController::class, 'search'])->name('search');
-            Route::delete(Unit::DELETE[URI], [UnitController::class, 'delete'])->name('destroy');
-            Route::get(Unit::EXPORT[URI], [UnitController::class, 'exportList'])->name('export');
+            Route::delete(Unit::DELETE[URI].'/{id}', [UnitController::class, 'delete'])->name('destroy');
+            Route::get(Unit::EXPORT[URI].'/{type}', [UnitController::class, 'exportList'])->name('export');
         });
 
         Route::group(['prefix' => 'addon', 'as' => 'addon.', 'middleware' => ['module:addon']], function () {
             Route::get(Addon::INDEX[URI], [AddonController::class, 'index'])->name('add-new');
             Route::post(Addon::ADD[URI], [AddonController::class, 'add'])->name('store');
-            Route::get(Addon::UPDATE[URI], [AddonController::class, 'getUpdateView'])->name('edit');
-            Route::post(Addon::UPDATE[URI], [AddonController::class, 'update'])->name('update');
-            Route::delete(Addon::DELETE[URI], [AddonController::class, 'delete'])->name('delete');
+            Route::get(Addon::UPDATE[URI].'/{id}', [AddonController::class, 'getUpdateView'])->name('edit');
+            Route::post(Addon::UPDATE[URI].'/{id}', [AddonController::class, 'update'])->name('update');
+            Route::delete(Addon::DELETE[URI].'/{id}', [AddonController::class, 'delete'])->name('delete');
             Route::get(Addon::EXPORT[URI], [AddonController::class, 'exportList'])->name('export');
-            Route::get(Addon::UPDATE_STATUS[URI], [AddonController::class, 'updateStatus'])->name('status');
+            Route::get(Addon::UPDATE_STATUS[URI].'/{id}/{status}', [AddonController::class, 'updateStatus'])->name('status');
 
             //Import and export
             Route::get(Addon::BULK_IMPORT[URI], [AddonController::class, 'getBulkImportView'])->name('bulk-import');
@@ -91,31 +93,31 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
         Route::group(['prefix' => 'banner', 'as' => 'banner.', 'middleware' => ['module:banner']], function () {
             Route::get(Banner::INDEX[URI], [BannerController::class,'index'])->name('add-new');
             Route::post(Banner::ADD[URI], [BannerController::class,'add'])->name('store');
-            Route::get(Banner::UPDATE[URI], [BannerController::class,'getUpdateView'])->name('edit');
-            Route::post(Banner::UPDATE[URI], [BannerController::class,'update'])->name('update');
-            Route::delete(Banner::DELETE[URI], [BannerController::class,'delete'])->name('delete');
-            Route::get(Banner::UPDATE_STATUS[URI], [BannerController::class,'updateStatus'])->name('status');
-            Route::get(Banner::UPDATE_FEATURED[URI], [BannerController::class,'updateFeatured'])->name('featured');
+            Route::get(Banner::UPDATE[URI].'/{id}', [BannerController::class,'getUpdateView'])->name('edit');
+            Route::post(Banner::UPDATE[URI].'/{id}', [BannerController::class,'update'])->name('update');
+            Route::delete(Banner::DELETE[URI].'/{id}', [BannerController::class,'delete'])->name('delete');
+            Route::get(Banner::UPDATE_STATUS[URI].'/{id}/{status}', [BannerController::class,'updateStatus'])->name('status');
+            Route::get(Banner::UPDATE_FEATURED[URI].'/{id}/{status}', [BannerController::class,'updateFeatured'])->name('featured');
             Route::post(Banner::SEARCH[URI], [BannerController::class,'getSearchList'])->name('search');
         });
 
         Route::group(['prefix' => 'coupon', 'as' => 'coupon.', 'middleware' => ['module:coupon']], function () {
             Route::get(Coupon::INDEX[URI], [CouponController::class, 'index'])->name('add-new');
             Route::post(Coupon::ADD[URI], [CouponController::class, 'add'])->name('store');
-            Route::get(Coupon::UPDATE[URI], [CouponController::class, 'getUpdateView'])->name('edit');
-            Route::post(Coupon::UPDATE[URI], [CouponController::class, 'update'])->name('update');
-            Route::get(Coupon::STATUS[URI], [CouponController::class,'updateStatus'])->name('status');
-            Route::delete(Coupon::DELETE[URI], [CouponController::class, 'delete'])->name('delete');
+            Route::get(Coupon::UPDATE[URI].'/{id}', [CouponController::class, 'getUpdateView'])->name('edit');
+            Route::post(Coupon::UPDATE[URI].'/{id}', [CouponController::class, 'update'])->name('update');
+            Route::delete(Coupon::DELETE[URI].'/{id}', [CouponController::class, 'delete'])->name('delete');
+            Route::get(Coupon::STATUS[URI].'/{id}/{status}', [CouponController::class,'updateStatus'])->name('status');
             Route::get(Coupon::EXPORT[URI], [CouponController::class, 'exportList'])->name('coupon_export');
         });
 
         Route::group(['prefix' => 'notification', 'as' => 'notification.', 'middleware' => ['module:notification']], function () {
             Route::get(Notification::INDEX[URI], [NotificationController::class, 'index'])->name('add-new');
             Route::post(Notification::ADD[URI], [NotificationController::class, 'add'])->name('store');
-            Route::get(Notification::UPDATE[URI], [NotificationController::class, 'getUpdateView'])->name('edit');
-            Route::post(Notification::UPDATE[URI], [NotificationController::class, 'update'])->name('update');
-            Route::get(Notification::STATUS[URI], [NotificationController::class,'updateStatus'])->name('status');
-            Route::delete(Notification::DELETE[URI], [NotificationController::class, 'delete'])->name('delete');
+            Route::get(Notification::UPDATE[URI].'/{id}', [NotificationController::class, 'getUpdateView'])->name('edit');
+            Route::post(Notification::UPDATE[URI].'/{id}', [NotificationController::class, 'update'])->name('update');
+            Route::delete(Notification::DELETE[URI].'/{id}', [NotificationController::class, 'delete'])->name('delete');
+            Route::get(Notification::STATUS[URI].'/{id}/{status}', [NotificationController::class,'updateStatus'])->name('status');
             Route::get(Notification::EXPORT[URI], [NotificationController::class, 'exportList'])->name('export');
         });
 
@@ -123,53 +125,64 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::get(CommonCondition::DROPDOWN[URI], [CommonConditionController::class, 'getDropdownList'])->name('get-all');
             Route::get(CommonCondition::INDEX[URI], [CommonConditionController::class, 'index'])->name('add');
             Route::post(CommonCondition::ADD[URI], [CommonConditionController::class, 'add'])->name('store');
-            Route::get(CommonCondition::UPDATE[URI], [CommonConditionController::class, 'getUpdateView'])->name('edit');
-            Route::post(CommonCondition::UPDATE[URI], [CommonConditionController::class, 'update'])->name('update');
-            Route::delete(CommonCondition::DELETE[URI], [CommonConditionController::class, 'delete'])->name('delete');
-            Route::get(CommonCondition::STATUS[URI], [CommonConditionController::class,'updateStatus'])->name('status');
+            Route::get(CommonCondition::UPDATE[URI].'/{id}', [CommonConditionController::class, 'getUpdateView'])->name('edit');
+            Route::post(CommonCondition::UPDATE[URI].'/{id}', [CommonConditionController::class, 'update'])->name('update');
+            Route::delete(CommonCondition::DELETE[URI].'/{id}', [CommonConditionController::class, 'delete'])->name('delete');
+            Route::get(CommonCondition::STATUS[URI].'/{id}/{status}', [CommonConditionController::class,'updateStatus'])->name('status');
         });
 
         Route::group(['prefix' => 'business-settings', 'as' => 'business-settings.'], function () {
             Route::group(['prefix' => 'zone', 'as' => 'zone.', 'middleware' => ['module:zone']], function () {
                 Route::get(Zone::INDEX[URI], [ZoneController::class, 'index'])->name('home');
                 Route::post(Zone::ADD[URI], [ZoneController::class, 'add'])->name('store');
-                Route::get(Zone::UPDATE[URI], [ZoneController::class, 'getUpdateView'])->name('edit');
-                Route::post(Zone::UPDATE[URI], [ZoneController::class, 'update'])->name('update');
-                Route::delete(Zone::DELETE[URI], [ZoneController::class, 'delete'])->name('delete');
-                Route::get(Zone::EXPORT[URI], [ZoneController::class, 'exportList'])->name('export');
-                Route::get(Zone::STATUS[URI], [ZoneController::class, 'updateStatus'])->name('status');
-                Route::get(Zone::ZONE_FILTER[URI], [ZoneController::class, 'zoneFilter'])->name('zone-filter');
-                Route::get(Zone::LATEST_MODULE_SETUP[URI], [ZoneController::class, 'getLatestModuleSetupView'])->name('go-module-setup');
+                Route::get(Zone::UPDATE[URI].'/{id}', [ZoneController::class, 'getUpdateView'])->name('edit');
+                Route::post(Zone::UPDATE[URI].'/{id}', [ZoneController::class, 'update'])->name('update');
+                Route::delete(Zone::DELETE[URI].'/{id}', [ZoneController::class, 'delete'])->name('delete');
+                Route::get(Zone::EXPORT[URI].'/{type}', [ZoneController::class, 'exportList'])->name('export');
+                Route::get(Zone::STATUS[URI].'/{id}/{status}', [ZoneController::class, 'updateStatus'])->name('status');
+                Route::get(Zone::ZONE_FILTER[URI].'/{id}', [ZoneController::class, 'zoneFilter'])->name('zone-filter');
+                Route::get(Zone::LATEST_MODULE_SETUP[URI].'/{id?}', [ZoneController::class, 'getLatestModuleSetupView'])->name('go-module-setup');
                 Route::get(Zone::MODULE_SETUP[URI], [ZoneController::class, 'getModuleSetupView'])->name('module-setup');
-                Route::post(Zone::MODULE_UPDATE[URI], [ZoneController::class, 'updateModuleSetup'])->name('module-update');
+                Route::post(Zone::MODULE_UPDATE[URI].'/{id}', [ZoneController::class, 'updateModuleSetup'])->name('module-update');
                 Route::get(Zone::INSTRUCTION[URI], [ZoneController::class, 'getInstruction'])->name('instruction');
-                Route::get(Zone::DIGITAL_PAYMENT[URI], [ZoneController::class, 'updateDigitalPayment'])->name('digital-payment');
-                Route::get(Zone::CASH_ON_DELIVERY[URI], [ZoneController::class, 'updateCashOnDelivery'])->name('cash-on-delivery');
-                Route::get(Zone::OFFLINE_PAYMENT[URI], [ZoneController::class, 'updateOfflinePayment'])->name('offline-payment');
+                Route::get(Zone::DIGITAL_PAYMENT[URI].'/{id}/{digital_payment}', [ZoneController::class, 'updateDigitalPayment'])->name('digital-payment');
+                Route::get(Zone::CASH_ON_DELIVERY[URI].'/{id}/{cash_on_delivery}', [ZoneController::class, 'updateCashOnDelivery'])->name('cash-on-delivery');
+                Route::get(Zone::OFFLINE_PAYMENT[URI].'/{id}/{offline_payment}', [ZoneController::class, 'updateOfflinePayment'])->name('offline-payment');
             });
 
             Route::group(['prefix' => 'module', 'as' => 'module.', 'middleware' => ['module:module']], function () {
                 Route::get(Module::INDEX[URI], [ModuleController::class, 'index'])->name('index');
                 Route::get(Module::ADD[URI], [ModuleController::class, 'getAddView'])->name('create');
                 Route::post(Module::ADD[URI], [ModuleController::class, 'add'])->name('store');
-                Route::get(Module::UPDATE[URI], [ModuleController::class, 'getUpdateView'])->name('edit');
-                Route::put(Module::UPDATE[URI], [ModuleController::class, 'update'])->name('update');
-                Route::get(Module::STATUS[URI], [ModuleController::class, 'updateStatus'])->name('status');
+                Route::get(Module::UPDATE[URI].'/{id}', [ModuleController::class, 'getUpdateView'])->name('edit');
+                Route::put(Module::UPDATE[URI].'/{id}', [ModuleController::class, 'update'])->name('update');
+                Route::get(Module::STATUS[URI].'/{id}/{status}', [ModuleController::class, 'updateStatus'])->name('status');
                 Route::get(Module::TYPE[URI], [ModuleController::class, 'getType'])->name('type');
                 Route::post(Module::SEARCH[URI], [ModuleController::class, 'search'])->name('search');
                 Route::get(Module::EXPORT[URI], [ModuleController::class, 'exportList'])->name('export');
-                Route::get(Module::SHOW[URI], [ModuleController::class, 'show'])->name('show');
+                Route::get(Module::SHOW[URI].'/{id}', [ModuleController::class, 'show'])->name('show');
             });
         });
 
         Route::group(['prefix' => 'users', 'as' => 'users.'], function () {
             Route::group(['prefix' => 'custom-role', 'as' => 'custom-role.', 'middleware' => ['module:custom_role']], function () {
-                Route::get(CustomRole::INDEX[URI], [CustomRoleController::class, 'index']);
+                Route::get(CustomRole::ADD[URI], [CustomRoleController::class, 'index'])->name('create');
                 Route::post(CustomRole::ADD[URI], [CustomRoleController::class, 'add'])->name('create');
-                Route::get(CustomRole::UPDATE[URI], [CustomRoleController::class, 'getUpdateView'])->name('edit');
-                Route::post(CustomRole::UPDATE[URI], [CustomRoleController::class, 'update'])->name('update');
-                Route::delete(CustomRole::DELETE[URI], [CustomRoleController::class, 'delete'])->name('delete');
+                Route::get(CustomRole::EDIT[URI].'/{id}', [CustomRoleController::class, 'getUpdateView'])->name('edit');
+                Route::post(CustomRole::UPDATE[URI].'/{id}', [CustomRoleController::class, 'update'])->name('update');
+                Route::delete(CustomRole::DELETE[URI].'/{id}', [CustomRoleController::class, 'delete'])->name('delete');
                 Route::post(CustomRole::SEARCH[URI], [CustomRoleController::class, 'search'])->name('search');
+            });
+
+            Route::group(['prefix' => 'employee', 'as' => 'employee.', 'middleware' => ['module:employee']], function () {
+                Route::get(Employee::INDEX[URI], [EmployeeController::class, 'index'])->name('list');
+                Route::get(Employee::ADD[URI], [EmployeeController::class, 'getAddView'])->name('add-new');
+                Route::post(Employee::ADD[URI], [EmployeeController::class, 'add'])->name('add-new');
+                Route::get(Employee::UPDATE[URI].'/{id}', [EmployeeController::class, 'getUpdateView'])->name('edit');
+                Route::post(Employee::UPDATE[URI].'/{id}', [EmployeeController::class, 'update'])->name('update');
+                Route::delete(Employee::DELETE[URI].'/{id}', [EmployeeController::class, 'delete'])->name('delete');
+                Route::post(Employee::SEARCH[URI], [EmployeeController::class, 'getSearchList'])->name('search');
+                Route::get(Employee::EXPORT[URI], [EmployeeController::class, 'exportList'])->name('export');
             });
         });
     });

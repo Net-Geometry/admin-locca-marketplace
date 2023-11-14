@@ -15,22 +15,22 @@ enum Banner
     ];
 
     const UPDATE = [
-        URI => 'edit/{id}',
+        URI => 'edit',
         VIEW => 'admin-views.banner.edit'
     ];
 
     const DELETE = [
-        URI => 'delete/{id}',
+        URI => 'delete',
         VIEW => ''
     ];
 
     const UPDATE_STATUS = [
-        URI => 'status/{id}/{status}',
+        URI => 'status',
         VIEW => ''
     ];
 
     const UPDATE_FEATURED = [
-        URI => 'featured/{id}/{status}',
+        URI => 'featured',
         VIEW => ''
     ];
 

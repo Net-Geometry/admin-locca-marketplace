@@ -11,7 +11,7 @@ class ZoneService
 
     public function getAddData(Object $request, int|string $zoneId): array
     {
-        $value = $request->coordinates;
+        $value = $request['coordinates'];
 
         foreach(explode('),(',trim($value,'()')) as $index=>$single_array){
             if($index == 0)

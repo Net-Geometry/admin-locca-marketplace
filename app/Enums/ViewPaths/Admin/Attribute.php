@@ -15,17 +15,16 @@ enum Attribute
     ];
 
     const UPDATE = [
-        URI => 'edit/{id}',
+        URI => 'edit',
         VIEW => 'admin-views.attribute.edit'
     ];
 
     const DELETE = [
-        URI => 'delete/{id}',
+        URI => 'delete',
         VIEW => ''
     ];
-
     const EXPORT = [
-        URI => 'export-attributes',
+        URI => 'export',
         VIEW => ''
     ];
 }

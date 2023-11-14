@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use Composer\DependencyResolver\Request;
+use Illuminate\Support\Str;
 
 class CommonConditionService
 {
@@ -10,6 +11,14 @@ class CommonConditionService
     public function getAddData(Object $request): array
     {
         return [
+            'name' => $request->name[array_search('default', $request->lang)],
+        ];
+    }
+    public function getUpdateData(Object $request, object $condition): array
+    {
+        $slug = Str::slug($request->name[array_search('default', $request->lang)]);
+        return [
+            'slug' => $condition->slug? $condition->slug :"{$slug}{$condition->id}",
             'name' => $request->name[array_search('default', $request->lang)],
         ];
     }

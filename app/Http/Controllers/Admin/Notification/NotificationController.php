@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Admin\Notification;
 
-use App\CentralLogics\Helpers;
 use App\Contracts\Repositories\NotificationRepositoryInterface;
 use App\Enums\ExportFileNames\Admin\Notification;
 use App\Enums\ViewPaths\Admin\Notification as NotificationViewPath;
@@ -11,6 +10,7 @@ use App\Http\Controllers\BaseController;
 use App\Http\Requests\Admin\NotificationAddRequest;
 use App\Http\Requests\Admin\NotificationUpdateRequest;
 use App\Services\NotificationService;
+use App\Traits\NotificationTrait;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
@@ -24,6 +24,7 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class NotificationController extends BaseController
 {
+    use NotificationTrait;
     public function __construct(
         protected NotificationRepositoryInterface $notificationRepo,
         protected NotificationService $notificationService,
@@ -54,7 +55,7 @@ class NotificationController extends BaseController
         $notification->image = $notification->image ? url('/').'/storage/app/public/notification/'.$notification->image: null;
 
         try {
-            Helpers::send_push_notif_to_topic($notification, $topic, 'general');
+            $this->send_push_notif_to_topic($notification, $topic, 'general');
         } catch (Exception) {
             Toastr::warning(translate('messages.push_notification_failed'));
         }
@@ -70,14 +71,15 @@ class NotificationController extends BaseController
 
     public function update(NotificationUpdateRequest $request, $id): RedirectResponse
     {
-        $notification = $this->notificationRepo->update(id: $id ,data: $this->notificationService->getAddData(request: $request));
+        $notification = $this->notificationRepo->getFirstWhere(params: ['id' => $id]);
+        $notification = $this->notificationRepo->update(id: $id ,data: $this->notificationService->getUpdateData(request: $request,notification: $notification));
 
         $topic = $this->notificationService->getTopic(request: $request);
 
         $notification->image = $notification->image ? url('/').'/storage/app/public/notification/'.$notification->image: null;
 
         try {
-            Helpers::send_push_notif_to_topic($notification, $topic, 'general');
+            $this->send_push_notif_to_topic($notification, $topic, 'general');
         } catch (Exception) {
             Toastr::warning(translate('messages.push_notification_failed'));
         }

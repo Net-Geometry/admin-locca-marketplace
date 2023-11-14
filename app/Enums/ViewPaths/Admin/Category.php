@@ -25,32 +25,32 @@ enum Category
     ];
 
     const ADD = [
-        URI => 'add/{position?}',
+        URI => 'add',
         VIEW => 'admin-views.category.index'
     ];
 
     const UPDATE = [
-        URI => 'update/{id}',
+        URI => 'update',
         VIEW => 'admin-views.category.edit'
     ];
 
     const DELETE = [
-        URI => 'delete/{id}',
+        URI => 'delete',
         VIEW => ''
     ];
 
     const PRIORITY = [
-        URI => 'update-priority/{category}',
+        URI => 'update-priority',
         VIEW => ''
     ];
 
     const STATUS = [
-        URI => 'status/{id}/{status}',
+        URI => 'status',
         VIEW => ''
     ];
 
     const FEATURED = [
-        URI => 'featured/{id}/{featured}',
+        URI => 'featured',
         VIEW => ''
     ];
 

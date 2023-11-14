@@ -15,22 +15,22 @@ enum Zone
     ];
 
     const UPDATE = [
-        URI => 'edit/{id}',
+        URI => 'edit',
         VIEW => 'admin-views.zone.edit'
     ];
 
     const DELETE = [
-        URI => 'delete/{id}',
+        URI => 'delete',
         VIEW => ''
     ];
 
     const EXPORT = [
-        URI => 'export/{type}',
+        URI => 'export',
         VIEW => ''
     ];
 
     const LATEST_MODULE_SETUP = [
-        URI => 'module-setup/{id?}',
+        URI => 'module-setup',
         VIEW => 'admin-views.zone.module-setup'
     ];
 
@@ -40,22 +40,22 @@ enum Zone
     ];
 
     const STATUS = [
-        URI => 'status/{id}/{status}',
+        URI => 'status',
         VIEW => ''
     ];
 
     const DIGITAL_PAYMENT = [
-        URI => 'digital-payment/{id}/{digital_payment}',
+        URI => 'digital-payment',
         VIEW => ''
     ];
 
     const CASH_ON_DELIVERY = [
-        URI => 'cash-on-delivery/{id}/{cash_on_delivery}',
+        URI => 'cash-on-delivery',
         VIEW => ''
     ];
 
     const OFFLINE_PAYMENT = [
-        URI => 'offline-payment/{id}/{offline_payment}',
+        URI => 'offline-payment',
         VIEW => ''
     ];
 
@@ -65,22 +65,22 @@ enum Zone
     ];
 
     const ZONE_FILTER = [
-        URI => 'zone-filter/{id}',
+        URI => 'zone-filter',
         VIEW => ''
     ];
 
     const MODULE_UPDATE = [
-        URI => 'module-update/{id}',
+        URI => 'module-update',
         VIEW => ''
     ];
 
     const GET_COORDINATES = [
-        URI => 'zone/get-coordinates/{id}',
+        URI => 'zone/get-coordinates',
         VIEW => ''
     ];
 
     const GET_ALL_ZONE_COORDINATES = [
-        URI => 'get-all-zone-cordinates/{id?}',
+        URI => 'get-all-zone-coordinates',
         VIEW => ''
     ];
 }

@@ -15,12 +15,12 @@ enum Addon
     ];
 
     const UPDATE = [
-        URI => 'edit/{id}',
+        URI => 'edit',
         VIEW => 'admin-views.addon.edit'
     ];
 
     const DELETE = [
-        URI => 'delete/{id}',
+        URI => 'delete',
         VIEW => ''
     ];
 
@@ -30,7 +30,7 @@ enum Addon
     ];
 
     const UPDATE_STATUS = [
-        URI => 'status/{id}/{status}',
+        URI => 'status',
         VIEW => ''
     ];
 

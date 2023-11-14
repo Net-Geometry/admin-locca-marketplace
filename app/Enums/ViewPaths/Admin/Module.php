@@ -5,7 +5,7 @@ namespace App\Enums\ViewPaths\Admin;
 enum Module
 {
     const SHOW = [
-        URI => 'show/{id}',
+        URI => 'show',
         VIEW => ''
     ];
 
@@ -25,17 +25,12 @@ enum Module
     ];
 
     const UPDATE = [
-        URI => 'edit/{id}',
+        URI => 'edit',
         VIEW => 'admin-views.module.edit'
     ];
 
-    const DELETE = [
-        URI => 'delete/{id}',
-        VIEW => ''
-    ];
-
     const STATUS = [
-        URI => 'status/{id}/{status}',
+        URI => 'status',
         VIEW => ''
     ];
 

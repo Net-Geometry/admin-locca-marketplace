@@ -37,7 +37,7 @@ class CustomRoleController extends BaseController
         $rl = $this->roleRepo->getListWhere(
             dataLimit: config('default_pagination')
         );
-        return view(CustomRoleViewPath::INDEX[VIEW], compact('rl'));
+        return view(CustomRoleViewPath::ADD[VIEW], compact('rl'));
     }
 
     public function add(CustomRoleAddRequest $request): RedirectResponse
@@ -52,8 +52,9 @@ class CustomRoleController extends BaseController
 
     public function getUpdateView(string|int $id): View
     {
-        if($id == 1)
-        {
+        $data = $this->roleService->roleCheck(role: $id);
+
+        if (array_key_exists('flag', $data) && $data['flag'] == 'unauthorized') {
             return view('errors.404');
         }
         $role = $this->roleRepo->getFirstWithoutGlobalScopeWhere(params: ['id' => $id]);
@@ -62,8 +63,9 @@ class CustomRoleController extends BaseController
 
     public function update(CustomRoleUpdateRequest $request, $id): RedirectResponse|View
     {
-        if($id == 1)
-        {
+        $data = $this->roleService->roleCheck(role: $id);
+
+        if (array_key_exists('flag', $data) && $data['flag'] == 'unauthorized') {
             return view('errors.404');
         }
 
@@ -72,13 +74,14 @@ class CustomRoleController extends BaseController
         $this->translationRepo->updateByModel(request: $request, model: $role, modelPath: 'App\Models\AdminRole', attribute: 'name');
 
         Toastr::success(translate('messages.role_updated_successfully'));
-        return back();
+        return redirect()->route('admin.users.custom-role.create');
     }
 
     public function delete($id): RedirectResponse|View
     {
-        if($id == 1)
-        {
+        $data = $this->roleService->roleCheck(role: $id);
+
+        if (array_key_exists('flag', $data) && $data['flag'] == 'unauthorized') {
             return view('errors.404');
         }
         $this->roleRepo->delete(id: $id);

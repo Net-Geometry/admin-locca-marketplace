@@ -66,15 +66,15 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
 //            Route::post('search', 'CustomRoleController@search')->name('search');
 //        });
 
-        Route::group(['prefix' => 'employee', 'as' => 'employee.', 'middleware' => ['module:employee']], function () {
-            Route::get('add-new', 'EmployeeController@add_new')->name('add-new');
-            Route::post('add-new', 'EmployeeController@store');
-            Route::get('list', 'EmployeeController@list')->name('list');
-            Route::get('update/{id}', 'EmployeeController@edit')->name('edit');
-            Route::post('update/{id}', 'EmployeeController@update')->name('update');
-            Route::delete('delete/{id}', 'EmployeeController@distroy')->name('delete');
-            Route::post('search', 'EmployeeController@search')->name('search');
-        });
+        // Route::group(['prefix' => 'employee', 'as' => 'employee.', 'middleware' => ['module:employee']], function () {
+        //     Route::get('add-new', 'EmployeeController@add_new')->name('add-new');
+        //     Route::post('add-new', 'EmployeeController@store');
+        //     Route::get('list', 'EmployeeController@list')->name('list');
+        //     Route::get('update/{id}', 'EmployeeController@edit')->name('edit');
+        //     Route::post('update/{id}', 'EmployeeController@update')->name('update');
+        //     Route::delete('delete/{id}', 'EmployeeController@distroy')->name('delete');
+        //     Route::post('search', 'EmployeeController@search')->name('search');
+        // });
         Route::post('item/variant-price', 'ItemController@variant_price')->name('item.variant-price');
 
         Route::group(['prefix' => 'item', 'as' => 'item.', 'middleware' => ['module:item']], function () {
@@ -896,16 +896,16 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             //     Route::post('search', 'CustomRoleController@search')->name('search');
             // });
 
-            Route::group(['prefix' => 'employee', 'as' => 'employee.', 'middleware' => ['module:employee']], function () {
-                Route::get('add-new', 'EmployeeController@add_new')->name('add-new');
-                Route::post('add-new', 'EmployeeController@store');
-                Route::get('list', 'EmployeeController@list')->name('list');
-                Route::get('update/{id}', 'EmployeeController@edit')->name('edit');
-                Route::post('update/{id}', 'EmployeeController@update')->name('update');
-                Route::delete('delete/{id}', 'EmployeeController@distroy')->name('delete');
-                Route::post('search', 'EmployeeController@search')->name('search');
-                Route::get('export', 'EmployeeController@export')->name('export');
-            });
+            // Route::group(['prefix' => 'employee', 'as' => 'employee.', 'middleware' => ['module:employee']], function () {
+            //     Route::get('add-new', 'EmployeeController@add_new')->name('add-new');
+            //     Route::post('add-new', 'EmployeeController@store');
+            //     Route::get('list', 'EmployeeController@list')->name('list');
+            //     Route::get('update/{id}', 'EmployeeController@edit')->name('edit');
+            //     Route::post('update/{id}', 'EmployeeController@update')->name('update');
+            //     Route::delete('delete/{id}', 'EmployeeController@distroy')->name('delete');
+            //     Route::post('search', 'EmployeeController@search')->name('search');
+            //     Route::get('export', 'EmployeeController@export')->name('export');
+            // });
         });
         Route::group(['prefix' => 'transactions', 'as' => 'transactions.'], function () {
             Route::get('/', 'DashboardController@transaction_dashboard')->name('dashboard');
