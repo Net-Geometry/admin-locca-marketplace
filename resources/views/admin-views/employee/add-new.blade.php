@@ -50,7 +50,6 @@
                                         @if(!isset(auth('admin')->user()->zone_id))
                                         <option value="" {{!isset($e->zone_id)?'selected':''}}>{{translate('messages.all')}}</option>
                                         @endif
-                                        @php($zones=\App\Models\Zone::all())
                                         @foreach($zones as $zone)
                                             <option value="{{$zone['id']}}">{{$zone['name']}}</option>
                                         @endforeach
@@ -62,8 +61,8 @@
                                     <label class="input-label qcont" for="role_id">{{translate('messages.Role')}}</label>
                                     <select class="form-control js-select2-custom w-100" name="role_id" id="role_id" required>
                                         <option value="" selected disabled>{{translate('messages.select_Role')}}</option>
-                                        @foreach($rls as $r)
-                                            <option value="{{$r->id}}">{{$r->name}}</option>
+                                        @foreach($roles as $role)
+                                            <option value="{{$role->id}}">{{$role->name}}</option>
                                         @endforeach
                                     </select>
                                 </div>

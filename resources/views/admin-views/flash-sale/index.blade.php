@@ -21,7 +21,7 @@
         </div>
         @php($language=\App\Models\BusinessSetting::where('key','language')->first())
         @php($language = $language->value ?? null)
-        @php($default_lang = str_replace('_', '-', app()->getLocale()))
+        @php($defaultLang = str_replace('_', '-', app()->getLocale()))
         <!-- End Page Header -->
         <div class="row g-3">
             <div class="col-12">
@@ -302,7 +302,7 @@
                 let lang = form_id.substring(0, form_id.length - 5);
                 console.log(lang);
                 $("#"+lang+"-form").removeClass('d-none');
-                if(lang == '{{$default_lang}}')
+                if(lang == '{{$defaultLang}}')
                 {
                     $("#from_part_2").removeClass('d-none');
                 }

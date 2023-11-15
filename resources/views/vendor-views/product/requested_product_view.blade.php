@@ -40,7 +40,7 @@
                     </div>
                     <div class="w-70 flex-grow">
                         @php($language = \App\Models\BusinessSetting::where('key', 'language')->first()?->value ?? null)
-                        @php($default_lang = str_replace('_', '-', app()->getLocale()))
+                        @php($defaultLang = str_replace('_', '-', app()->getLocale()))
                         <div class="d-flex flex-wrap gap-2 justify-content-between">
                             @if ($language)
                             <ul class="nav nav-tabs border-0 mb-3">

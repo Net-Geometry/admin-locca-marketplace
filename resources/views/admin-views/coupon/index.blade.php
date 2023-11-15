@@ -15,9 +15,6 @@
                 </span>
             </h1>
         </div>
-        @php($language=\App\Models\BusinessSetting::where('key','language')->first())
-        @php($language = $language->value ?? null)
-        @php($default_lang = str_replace('_', '-', app()->getLocale()))
         <!-- End Page Header -->
         <div class="row g-2">
             <div class="col-lg-12">
@@ -34,7 +31,7 @@
                                             href="#"
                                             id="default-link">{{translate('messages.default')}}</a>
                                         </li>
-                                        @foreach (json_decode($language) as $lang)
+                                        @foreach ($language as $lang)
                                             <li class="nav-item">
                                                 <a class="nav-link lang_link"
                                                     href="#"
@@ -55,7 +52,7 @@
                                         </div>
                                         <input type="hidden" name="lang[]" value="default">
                                     </div>
-                                        @foreach (json_decode($language) as $lang)
+                                        @foreach ($language as $lang)
                                             <div class="d-none lang_form"
                                                 id="{{ $lang }}-form">
                                                 <div class="form-group">
@@ -108,7 +105,7 @@
                                         <select name="zone_ids[]" id="choice_zones"
                                             class="form-control js-select2-custom"
                                             multiple="multiple" data-placeholder="{{translate('messages.select_zone')}}">
-                                        @foreach(\App\Models\Zone::all() as $zone)
+                                        @foreach($zones as $zone)
                                             <option value="{{$zone->id}}">{{$zone->name}}</option>
                                         @endforeach
                                         </select>
@@ -494,7 +491,7 @@
             let lang = form_id.substring(0, form_id.length - 5);
             console.log(lang);
             $("#"+lang+"-form").removeClass('d-none');
-            if(lang == '{{$default_lang}}')
+            if(lang == '{{$defaultLang}}')
             {
                 $("#from_part_2").removeClass('d-none');
             }

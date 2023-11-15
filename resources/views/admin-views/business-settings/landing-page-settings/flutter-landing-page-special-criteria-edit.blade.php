@@ -30,7 +30,7 @@
     </div>
     @php($language=\App\Models\BusinessSetting::where('key','language')->first())
     @php($language = $language->value ?? null)
-    @php($default_lang = str_replace('_', '-', app()->getLocale()))
+    @php($defaultLang = str_replace('_', '-', app()->getLocale()))
     @if($language)
         <ul class="nav nav-tabs mb-4 border-0">
             <li class="nav-item">
@@ -128,7 +128,7 @@
                         </div>
                     </form>
                 </div>
-        
+
                 <form  id="fixed_header_image_form" action="{{ route('admin.remove_image') }}" method="post">
                     @csrf
                     <input type="hidden" name="id" value="{{  $criteria?->id}}" >
@@ -136,7 +136,7 @@
                     <input type="hidden" name="model_name" value="FlutterSpecialCriteria" >
                     <input type="hidden" name="image_path" value="special_criteria" >
                     <input type="hidden" name="field_name" value="image" >
-                </form> 
+                </form>
             <!--  Special Criteria Section View -->
             <div class="modal fade" id="criteria-section">
                 <div class="modal-dialog modal-lg warning-modal">
@@ -171,7 +171,7 @@
 
         $("#"+lang+"-form").removeClass('d-none');
         $("#"+lang+"-form1").removeClass('d-none');
-        if(lang == '{{$default_lang}}')
+        if(lang == '{{$defaultLang}}')
         {
             $(".from_part_2").removeClass('d-none');
         }

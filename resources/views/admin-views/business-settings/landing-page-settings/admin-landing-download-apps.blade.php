@@ -27,10 +27,10 @@
             @include('admin-views.business-settings.landing-page-settings.top-menu-links.admin-landing-page-links')
         </div>
     </div>
-    
+
     @php($language=\App\Models\BusinessSetting::where('key','language')->first())
     @php($language = $language->value ?? null)
-    @php($default_lang = str_replace('_', '-', app()->getLocale()))
+    @php($defaultLang = str_replace('_', '-', app()->getLocale()))
     @if($language)
         <ul class="nav nav-tabs mb-4 border-0">
             <li class="nav-item">
@@ -157,22 +157,22 @@
                                     if(isset($download_user_app_title->translations)&&count($download_user_app_title->translations)){
                                             $download_user_app_title_translate = [];
                                             foreach($download_user_app_title->translations as $t)
-                                            {   
+                                            {
                                                 if($t->locale == $lang && $t->key=='download_user_app_title'){
                                                     $download_user_app_title_translate[$lang]['value'] = $t->value;
                                                 }
                                             }
-                                    
+
                                         }
                                     if(isset($download_user_app_sub_title->translations)&&count($download_user_app_sub_title->translations)){
                                             $download_user_app_sub_title_translate = [];
                                             foreach($download_user_app_sub_title->translations as $t)
-                                            {   
+                                            {
                                                 if($t->locale == $lang && $t->key=='download_user_app_sub_title'){
                                                     $download_user_app_sub_title_translate[$lang]['value'] = $t->value;
                                                 }
                                             }
-                                    
+
                                         }
                                         ?>
                                     <div class="col-md-12 d-none lang_form" id="{{$lang}}-form1">
@@ -314,7 +314,7 @@
                 <input type="hidden" name="model_name" value="DataSetting" >
                 <input type="hidden" name="image_path" value="download_user_app_image" >
                 <input type="hidden" name="field_name" value="value" >
-            </form> 
+            </form>
             <!-- Module Setup Section View -->
             <div class="modal fade" id="download_apps_section">
                 <div class="modal-dialog modal-lg warning-modal">
@@ -349,7 +349,7 @@
 
         $("#"+lang+"-form").removeClass('d-none');
         $("#"+lang+"-form1").removeClass('d-none');
-        if(lang == '{{$default_lang}}')
+        if(lang == '{{$defaultLang}}')
         {
             $(".from_part_2").removeClass('d-none');
         }

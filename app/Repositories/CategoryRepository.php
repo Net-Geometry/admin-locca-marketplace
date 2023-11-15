@@ -53,7 +53,7 @@ class CategoryRepository implements CategoryRepositoryInterface
 
     public function getFirstWhere(array $params, array $relations = []): ?Model
     {
-        return $this->category->where($params)->first();
+        return $this->category->with($relations)->where($params)->first();
     }
 
     public function getFirstWithoutGlobalScopeWhere(array $params, array $relations = []): ?Model
@@ -116,6 +116,19 @@ class CategoryRepository implements CategoryRepositoryInterface
                     'text' => $category->name . ' (' . $data . ')',
                 ];
             });
+    }
+
+    public function getMainList(string $searchValue = null, array $filters = [], array $relations = [], int|string $dataLimit = DEFAULT_DATA_LIMIT, int $offset = null): Collection|LengthAwarePaginator
+    {
+        $key = explode(' ', $searchValue);
+        return $this->category->with($relations)->where($filters)->module(Config::get('module.current_module_id'))
+            ->when(isset($key), function ($query) use ($key) {
+                $query->where(function ($query) use ($key) {
+                    foreach ($key as $value) {
+                        $query->orWhere('name', 'like', "%{$value}%");
+                    }
+                });
+            })->latest()->get();
     }
 
 

@@ -24,18 +24,15 @@
             <div class="card-body">
                 <form action="{{route('admin.common-condition.store')}}" method="post">
                 @csrf
-                @php($language=\App\Models\BusinessSetting::where('key','language')->first())
-                @php($language = $language->value ?? null)
-                @php($default_lang = str_replace('_', '-', app()->getLocale()))
                 @if($language)
-                    @php($default_lang = json_decode($language)[0])
+                    @php($defaultLang = $language[0])
                     <ul class="nav nav-tabs mb-4">
                         <li class="nav-item">
                             <a class="nav-link lang_link active"
                             href="#"
                             id="default-link">{{translate('messages.default')}}</a>
                         </li>
-                        @foreach (json_decode($language) as $lang)
+                        @foreach ($language as $lang)
                             <li class="nav-item">
                                 <a class="nav-link lang_link"
                                     href="#"
@@ -48,7 +45,7 @@
                         <input type="text" name="name[]" class="form-control" placeholder="{{translate('messages.new_condition')}}" maxlength="191" oninvalid="document.getElementById('en-link').click()">
                     </div>
                     <input type="hidden" name="lang[]" value="default">
-                    @foreach(json_decode($language) as $lang)
+                    @foreach($language as $lang)
                         <div class="form-group d-none lang_form" id="{{$lang}}-form">
                             <label class="input-label" for="exampleFormControlInput1">{{translate('messages.name')}} ({{strtoupper($lang)}})</label>
                             <input type="text" name="name[]" class="form-control" placeholder="{{translate('messages.new_condition')}}" maxlength="191" oninvalid="document.getElementById('en-link').click()">
@@ -190,7 +187,7 @@
             let lang = form_id.substring(0, form_id.length - 5);
             console.log(lang);
             $("#"+lang+"-form").removeClass('d-none');
-            if(lang == '{{$default_lang}}')
+            if(lang == '{{$defaultLang}}')
             {
                 $(".from_part_2").removeClass('d-none');
             }

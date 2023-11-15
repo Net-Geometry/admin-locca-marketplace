@@ -12,7 +12,7 @@ if (!function_exists('getWebConfig')) {
         if (in_array($name, $check) && session()->has($name)) {
             $config = session($name);
         } else {
-            $data = BusinessSetting::where(['type' => $name])->first();
+            $data = BusinessSetting::where(['key' => $name])->first();
             if (isset($data)) {
                 $config = json_decode($data['value'], true);
                 if (is_null($config)) {

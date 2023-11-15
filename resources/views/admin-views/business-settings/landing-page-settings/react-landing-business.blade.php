@@ -27,10 +27,10 @@
             @include('admin-views.business-settings.landing-page-settings.top-menu-links.react-landing-page-links')
         </div>
     </div>
-    
+
     @php($language=\App\Models\BusinessSetting::where('key','language')->first())
     @php($language = $language->value ?? null)
-    @php($default_lang = str_replace('_', '-', app()->getLocale()))
+    @php($defaultLang = str_replace('_', '-', app()->getLocale()))
     @if($language)
         <ul class="nav nav-tabs mb-4 border-0">
             <li class="nav-item">
@@ -94,22 +94,22 @@
                                     if(isset($business_title->translations)&&count($business_title->translations)){
                                             $business_title_translate = [];
                                             foreach($business_title->translations as $t)
-                                            {   
+                                            {
                                                 if($t->locale == $lang && $t->key=='business_title'){
                                                     $business_title_translate[$lang]['value'] = $t->value;
                                                 }
                                             }
-                                    
+
                                         }
                                     if(isset($business_sub_title->translations)&&count($business_sub_title->translations)){
                                             $business_sub_title_translate = [];
                                             foreach($business_sub_title->translations as $t)
-                                            {   
+                                            {
                                                 if($t->locale == $lang && $t->key=='business_sub_title'){
                                                     $business_sub_title_translate[$lang]['value'] = $t->value;
                                                 }
                                             }
-                                    
+
                                         }
                                         ?>
                                     <div class="col-md-12 d-none lang_form" id="{{$lang}}-form1">
@@ -299,7 +299,7 @@
                 <input type="hidden" name="model_name" value="DataSetting" >
                 <input type="hidden" name="image_path" value="business_image" >
                 <input type="hidden" name="field_name" value="value" >
-            </form> 
+            </form>
             <!-- Module Setup Section View -->
             <div class="modal fade" id="business_section">
                 <div class="modal-dialog modal-lg warning-modal">
@@ -313,7 +313,7 @@
                     </div>
                 </div>
             </div>
-        
+
             <!-- App Store Modal -->
             <div class="modal fade" id="user-app">
                 <div class="modal-dialog status-warning-modal">
@@ -349,7 +349,7 @@
                                 </div> -->
                                 <div class="btn--container justify-content-center">
                                     <button type="submit" class="btn btn--primary min-w-120" data-dismiss="modal">{{translate('Ok')}}</button>
-                                    <button id="reset_btn" type="reset" class="btn btn--cancel min-w-120" data-dismiss="modal">                
+                                    <button id="reset_btn" type="reset" class="btn btn--cancel min-w-120" data-dismiss="modal">
                                         {{translate("Cancel")}}
                                     </button>
                                 </div>
@@ -358,7 +358,7 @@
                     </div>
                 </div>
             </div>
-        
+
             <!-- App Store Modal -->
             <div class="modal fade" id="deliveryman-app">
                 <div class="modal-dialog status-warning-modal">
@@ -394,7 +394,7 @@
                                 </div> -->
                                 <div class="btn--container justify-content-center">
                                     <button type="submit" class="btn btn--primary min-w-120" data-dismiss="modal">{{translate('Ok')}}</button>
-                                    <button id="reset_btn" type="reset" class="btn btn--cancel min-w-120" data-dismiss="modal">                
+                                    <button id="reset_btn" type="reset" class="btn btn--cancel min-w-120" data-dismiss="modal">
                                         {{translate("Cancel")}}
                                     </button>
                                 </div>
@@ -403,7 +403,7 @@
                     </div>
                 </div>
             </div>
-        
+
             <!-- Play Store Modal -->
             <div class="modal fade" id="seller-app">
                 <div class="modal-dialog status-warning-modal">
@@ -439,7 +439,7 @@
                                 </div> -->
                                 <div class="btn--container justify-content-center">
                                     <button type="submit" class="btn btn--primary min-w-120" data-dismiss="modal">{{translate('Ok')}}</button>
-                                    <button id="reset_btn" type="reset" class="btn btn--cancel min-w-120" data-dismiss="modal">                
+                                    <button id="reset_btn" type="reset" class="btn btn--cancel min-w-120" data-dismiss="modal">
                                         {{translate("Cancel")}}
                                     </button>
                                 </div>
@@ -469,7 +469,7 @@
 
         $("#"+lang+"-form").removeClass('d-none');
         $("#"+lang+"-form1").removeClass('d-none');
-        if(lang == '{{$default_lang}}')
+        if(lang == '{{$defaultLang}}')
         {
             $(".from_part_2").removeClass('d-none');
         }

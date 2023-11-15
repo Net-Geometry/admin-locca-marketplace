@@ -40,7 +40,7 @@
     @php($fixed_link = isset($fixed_link->value)?json_decode($fixed_link->value, true):null)
     @php($language=\App\Models\BusinessSetting::where('key','language')->first())
     @php($language = $language->value ?? null)
-    @php($default_lang = str_replace('_', '-', app()->getLocale()))
+    @php($defaultLang = str_replace('_', '-', app()->getLocale()))
     @if($language)
         <ul class="nav nav-tabs mb-4 border-0">
             <li class="nav-item">
@@ -189,92 +189,92 @@
                     if(isset($fixed_header_title->translations)&&count($fixed_header_title->translations)){
                             $fixed_header_title_translate = [];
                             foreach($fixed_header_title->translations as $t)
-                            {   
+                            {
                                 if($t->locale == $lang && $t->key=='fixed_header_title'){
                                     $fixed_header_title_translate[$lang]['value'] = $t->value;
                                 }
                             }
-                    
+
                         }
                     if(isset($fixed_header_sub_title->translations)&&count($fixed_header_sub_title->translations)){
                             $fixed_header_sub_title_translate = [];
                             foreach($fixed_header_sub_title->translations as $t)
-                            {   
+                            {
                                 if($t->locale == $lang && $t->key=='fixed_header_sub_title'){
                                     $fixed_header_sub_title_translate[$lang]['value'] = $t->value;
                                 }
                             }
-                    
+
                         }
                     if(isset($fixed_module_title->translations)&&count($fixed_module_title->translations)){
                             $fixed_module_title_translate = [];
                             foreach($fixed_module_title->translations as $t)
-                            {   
+                            {
                                 if($t->locale == $lang && $t->key=='fixed_module_title'){
                                     $fixed_module_title_translate[$lang]['value'] = $t->value;
                                 }
                             }
-                    
+
                         }
                     if(isset($fixed_module_sub_title->translations)&&count($fixed_module_sub_title->translations)){
                             $fixed_module_sub_title_translate = [];
                             foreach($fixed_module_sub_title->translations as $t)
-                            {   
+                            {
                                 if($t->locale == $lang && $t->key=='fixed_module_sub_title'){
                                     $fixed_module_sub_title_translate[$lang]['value'] = $t->value;
                                 }
                             }
-                    
+
                         }
                     if(isset($fixed_referal_title->translations)&&count($fixed_referal_title->translations)){
                             $fixed_referal_title_translate = [];
                             foreach($fixed_referal_title->translations as $t)
-                            {   
+                            {
                                 if($t->locale == $lang && $t->key=='fixed_referal_title'){
                                     $fixed_referal_title_translate[$lang]['value'] = $t->value;
                                 }
                             }
-                    
+
                         }
                     if(isset($fixed_referal_sub_title->translations)&&count($fixed_referal_sub_title->translations)){
                             $fixed_referal_sub_title_translate = [];
                             foreach($fixed_referal_sub_title->translations as $t)
-                            {   
+                            {
                                 if($t->locale == $lang && $t->key=='fixed_referal_sub_title'){
                                     $fixed_referal_sub_title_translate[$lang]['value'] = $t->value;
                                 }
                             }
-                    
+
                         }
                     if(isset($fixed_newsletter_title->translations)&&count($fixed_newsletter_title->translations)){
                             $fixed_newsletter_title_translate = [];
                             foreach($fixed_newsletter_title->translations as $t)
-                            {   
+                            {
                                 if($t->locale == $lang && $t->key=='fixed_newsletter_title'){
                                     $fixed_newsletter_title_translate[$lang]['value'] = $t->value;
                                 }
                             }
-                    
+
                         }
                     if(isset($fixed_newsletter_sub_title->translations)&&count($fixed_newsletter_sub_title->translations)){
                             $fixed_newsletter_sub_title_translate = [];
                             foreach($fixed_newsletter_sub_title->translations as $t)
-                            {   
+                            {
                                 if($t->locale == $lang && $t->key=='fixed_newsletter_sub_title'){
                                     $fixed_newsletter_sub_title_translate[$lang]['value'] = $t->value;
                                 }
                             }
-                    
+
                         }
                     if(isset($fixed_footer_article_title->translations)&&count($fixed_footer_article_title->translations)){
                         $fixed_footer_article_title_translate = [];
                         foreach($fixed_footer_article_title->translations as $t)
-                        {   
+                        {
                             if($t->locale == $lang && $t->key=='fixed_footer_article_title'){
                                 $fixed_footer_article_title_translate[$lang]['value'] = $t->value;
                             }
                         }
-                
+
                     }
                     ?>
                         <div class="d-none lang_form" id="{{$lang}}-form">
@@ -585,7 +585,7 @@
         let lang = form_id.substring(0, form_id.length - 5);
         console.log(lang);
         $("#"+lang+"-form").removeClass('d-none');
-        if(lang == '{{$default_lang}}')
+        if(lang == '{{$defaultLang}}')
         {
             $(".from_part_2").removeClass('d-none');
         }

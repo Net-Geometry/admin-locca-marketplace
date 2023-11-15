@@ -46,7 +46,7 @@
             @csrf
             @php($language = \App\Models\BusinessSetting::where('key', 'language')->first())
             @php($language = $language->value ?? null)
-            @php($default_lang = str_replace('_', '-', app()->getLocale()))
+            @php($defaultLang = str_replace('_', '-', app()->getLocale()))
             <div class="row g-2">
                 <div class="col-md-6">
                     <div class="card h-100">
@@ -1028,7 +1028,7 @@
             let lang = form_id.substring(0, form_id.length - 5);
             console.log(lang);
             $("#" + lang + "-form").removeClass('d-none');
-            if (lang == '{{ $default_lang }}') {
+            if (lang == '{{ $defaultLang }}') {
                 $("#from_part_2").removeClass('d-none');
             } else {
                 $("#from_part_2").addClass('d-none');

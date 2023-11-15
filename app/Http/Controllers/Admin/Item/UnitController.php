@@ -40,15 +40,15 @@ class UnitController extends BaseController
         $units = $this->unitRepo->getList(
             dataLimit: config('default_pagination')
         );
-        return view(UnitViewPath::INDEX[VIEW], compact('units'));
+        $language = getWebConfig('language');
+        $defaultLang = str_replace('_', '-', app()->getLocale());
+        return view(UnitViewPath::INDEX[VIEW], compact('units','language','defaultLang'));
     }
 
     public function add(UnitAddRequest $request): RedirectResponse
     {
         $unit = $this->unitRepo->add(data: $this->unitService->getAddData(request: $request));
-
         $this->translationRepo->addByModel(request: $request, model: $unit, modelPath: 'App\Models\Unit', attribute: 'unit');
-
         Toastr::success(translate('messages.unit_added_successfully'));
         return back();
     }
@@ -56,15 +56,15 @@ class UnitController extends BaseController
     public function getUpdateView(string|int $id): View
     {
         $unit = $this->unitRepo->getFirstWithoutGlobalScopeWhere(params: ['id' => $id]);
-        return view(UnitViewPath::UPDATE[VIEW], compact('unit'));
+        $language = getWebConfig('language');
+        $defaultLang = str_replace('_', '-', app()->getLocale());
+        return view(UnitViewPath::UPDATE[VIEW], compact('unit','language','defaultLang'));
     }
 
     public function update(UnitUpdateRequest $request, $id): RedirectResponse
     {
         $unit = $this->unitRepo->update(id: $id ,data: $this->unitService->getAddData(request: $request));
-
         $this->translationRepo->updateByModel(request: $request, model: $unit, modelPath: 'App\Models\Unit', attribute: 'unit');
-
         Toastr::success(translate('messages.unit_updated_successfully'));
         return back();
     }
@@ -89,7 +89,6 @@ class UnitController extends BaseController
 
     public function search(Request $request): JsonResponse
     {
-
         $units = $this->unitRepo->getListWhere(
             searchValue: $request['search'],
             dataLimit: 50

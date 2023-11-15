@@ -49,9 +49,7 @@ class ModuleController extends BaseController
     public function add(ModuleAddRequest $request): RedirectResponse
     {
         $module = $this->moduleRepo->add(data: $this->moduleService->getAddData(request: $request));
-
         $this->translationRepo->addByModel(request: $request, model: $module, modelPath: 'App\Models\Module', attribute: 'module_name');
-
         $this->translationRepo->addByModel(request: $request, model: $module, modelPath: 'App\Models\Module', attribute: 'description');
 
         Toastr::success(translate('messages.module_created_successfully'));
@@ -60,10 +58,12 @@ class ModuleController extends BaseController
 
     public function getAddView(): View
     {
-        return view(ModuleViewPath::ADD[VIEW]);
+        $language = getWebConfig('language');
+        $defaultLang = str_replace('_', '-', app()->getLocale());
+        return view(ModuleViewPath::ADD[VIEW], compact('language','defaultLang'));
     }
 
-    public function getUpdateView(string|int $id): View
+    public function getUpdateView(string|int $id): View|RedirectResponse
     {
         if(env('APP_MODE')=='demo' && in_array($id, [1,2,3,4,5]))
         {
@@ -72,7 +72,9 @@ class ModuleController extends BaseController
         }
 
         $module = $this->moduleRepo->getFirstWithoutGlobalScopeWhere(params: ['id' => $id]);
-        return view(ModuleViewPath::UPDATE[VIEW], compact('module'));
+        $language = getWebConfig('language');
+        $defaultLang = str_replace('_', '-', app()->getLocale());
+        return view(ModuleViewPath::UPDATE[VIEW], compact('module','language','defaultLang'));
     }
 
     public function update(ModuleUpdateRequest $request, $id): RedirectResponse
@@ -84,9 +86,7 @@ class ModuleController extends BaseController
         }
         $module = $this->moduleRepo->getFirstWithoutGlobalScopeWhere(params: ['id' => $id]);
         $module = $this->moduleRepo->update(id: $id ,data: $this->moduleService->getUpdateData(request: $request,module: $module));
-
         $this->translationRepo->updateByModel(request: $request, model: $module, modelPath: 'App\Models\Module', attribute: 'module_name');
-
         $this->translationRepo->updateByModel(request: $request, model: $module, modelPath: 'App\Models\Module', attribute: 'description');
 
         Toastr::success(translate('messages.module_updated_successfully'));

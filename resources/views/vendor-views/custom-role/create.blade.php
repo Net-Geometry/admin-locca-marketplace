@@ -20,7 +20,7 @@
     <!-- Page Heading -->
     @php($language=\App\Models\BusinessSetting::where('key','language')->first())
     @php($language = $language->value ?? null)
-    @php($default_lang = str_replace('_', '-', app()->getLocale()))
+    @php($defaultLang = str_replace('_', '-', app()->getLocale()))
     <!-- Content Row -->
     <div class="card">
         <div class="card-header">

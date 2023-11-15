@@ -43,7 +43,9 @@ class ZoneController extends BaseController
             searchValue: $request['search'],
             dataLimit: config('default_pagination')
         );
-        return view(ZoneViewPath::INDEX[VIEW], compact('zones'));
+        $language = getWebConfig('language');
+        $defaultLang = str_replace('_', '-', app()->getLocale());
+        return view(ZoneViewPath::INDEX[VIEW], compact('zones','language','defaultLang'));
     }
 
     public function add(ZoneAddRequest $request): RedirectResponse
@@ -70,8 +72,10 @@ class ZoneController extends BaseController
         );
 
         $area = json_decode($zone->coordinates[0]->toJson(),true);
+        $language = getWebConfig('language');
+        $defaultLang = str_replace('_', '-', app()->getLocale());
 
-        return view(ZoneViewPath::UPDATE[VIEW], compact(['zone','area']));
+        return view(ZoneViewPath::UPDATE[VIEW], compact(['zone','area','language','defaultLang']));
     }
 
     public function update(ZoneUpdateRequest $request, $id): RedirectResponse

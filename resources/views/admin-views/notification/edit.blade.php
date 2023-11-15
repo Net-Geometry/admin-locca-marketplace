@@ -38,8 +38,8 @@
                                         <label class="input-label" for="exampleFormControlInput1">{{translate('messages.zone')}}</label>
                                         <select name="zone" id="zone" class="form-control js-select2-custom" >
                                             <option value="all" {{isset($notification->zone_id)?'':'selected'}}>{{translate('messages.all_zone')}}</option>
-                                            @foreach(\App\Models\Zone::orderBy('name')->get() as $z)
-                                                <option value="{{$z['id']}}"  {{$notification->zone_id==$z['id']?'selected':''}}>{{$z['name']}}</option>
+                                            @foreach($zones as $zone)
+                                                <option value="{{$zone['id']}}"  {{$notification->zone_id==$zone['id']?'selected':''}}>{{$zone['name']}}</option>
                                             @endforeach
                                         </select>
                                     </div>

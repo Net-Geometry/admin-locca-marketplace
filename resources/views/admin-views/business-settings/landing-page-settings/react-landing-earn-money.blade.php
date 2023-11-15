@@ -39,7 +39,7 @@
     @php($earning_dm_button_url=\App\Models\DataSetting::withoutGlobalScope('translate')->where('type','react_landing_page')->where('key','earning_dm_button_url')->first())
     @php($language=\App\Models\BusinessSetting::where('key','language')->first())
     @php($language = $language->value ?? null)
-    @php($default_lang = str_replace('_', '-', app()->getLocale()))
+    @php($defaultLang = str_replace('_', '-', app()->getLocale()))
     @if($language)
         <ul class="nav nav-tabs mb-4 border-0">
             <li class="nav-item">
@@ -96,22 +96,22 @@
                                 if(isset($earning_title->translations)&&count($earning_title->translations)){
                                         $earning_title_translate = [];
                                         foreach($earning_title->translations as $t)
-                                        {   
+                                        {
                                             if($t->locale == $lang && $t->key=='earning_title'){
                                                 $earning_title_translate[$lang]['value'] = $t->value;
                                             }
                                         }
-                                
+
                                     }
                                 if(isset($earning_sub_title->translations)&&count($earning_sub_title->translations)){
                                         $earning_sub_title_translate = [];
                                         foreach($earning_sub_title->translations as $t)
-                                        {   
+                                        {
                                             if($t->locale == $lang && $t->key=='earning_sub_title'){
                                                 $earning_sub_title_translate[$lang]['value'] = $t->value;
                                             }
                                         }
-                                
+
                                     }
                                     ?>
                                     <div class="row g-3 d-none lang_form" id="{{$lang}}-form">
@@ -188,22 +188,22 @@
                                 if(isset($earning_seller_title->translations)&&count($earning_seller_title->translations)){
                                         $earning_seller_title_translate = [];
                                         foreach($earning_seller_title->translations as $t)
-                                        {   
+                                        {
                                             if($t->locale == $lang && $t->key=='earning_seller_title'){
                                                 $earning_seller_title_translate[$lang]['value'] = $t->value;
                                             }
                                         }
-                                
+
                                     }
                                 if(isset($earning_seller_sub_title->translations)&&count($earning_seller_sub_title->translations)){
                                         $earning_seller_sub_title_translate = [];
                                         foreach($earning_seller_sub_title->translations as $t)
-                                        {   
+                                        {
                                             if($t->locale == $lang && $t->key=='earning_seller_sub_title'){
                                                 $earning_seller_sub_title_translate[$lang]['value'] = $t->value;
                                             }
                                         }
-                                
+
                                     }
                                     ?>
                                     <div class="row g-3 d-none lang_form" id="{{$lang}}-form1">
@@ -261,12 +261,12 @@
                                             if(isset($earning_seller_button_name->translations)&&count($earning_seller_button_name->translations)){
                                                     $earning_seller_button_name_translate = [];
                                                     foreach($earning_seller_button_name->translations as $t)
-                                                    {   
+                                                    {
                                                         if($t->locale == $lang && $t->key=='earning_seller_button_name'){
                                                             $earning_seller_button_name_translate[$lang]['value'] = $t->value;
                                                         }
                                                     }
-                                            
+
                                                 }
                                                 ?>
                                                 <div class="form-group d-none lang_form" id="{{$lang}}-form2">
@@ -291,7 +291,7 @@
                                         @endif
                                         </div>
                                         <div class="col-md-6">
-    
+
                                             <div class="form-group mb-md-0">
                                                 <label class="form-label text-capitalize">
                                                     {{translate('Redirect Link')}}
@@ -352,22 +352,22 @@
                                 if(isset($earning_dm_title->translations)&&count($earning_dm_title->translations)){
                                         $earning_dm_title_translate = [];
                                         foreach($earning_dm_title->translations as $t)
-                                        {   
+                                        {
                                             if($t->locale == $lang && $t->key=='earning_dm_title'){
                                                 $earning_dm_title_translate[$lang]['value'] = $t->value;
                                             }
                                         }
-                                
+
                                     }
                                 if(isset($earning_dm_sub_title->translations)&&count($earning_dm_sub_title->translations)){
                                         $earning_dm_sub_title_translate = [];
                                         foreach($earning_dm_sub_title->translations as $t)
-                                        {   
+                                        {
                                             if($t->locale == $lang && $t->key=='earning_dm_sub_title'){
                                                 $earning_dm_sub_title_translate[$lang]['value'] = $t->value;
                                             }
                                         }
-                                
+
                                     }
                                     ?>
                                     <div class="row g-3 d-none lang_form" id="{{$lang}}-form3">
@@ -425,12 +425,12 @@
                                             if(isset($earning_dm_button_name->translations)&&count($earning_dm_button_name->translations)){
                                                     $earning_dm_button_name_translate = [];
                                                     foreach($earning_dm_button_name->translations as $t)
-                                                    {   
+                                                    {
                                                         if($t->locale == $lang && $t->key=='earning_dm_button_name'){
                                                             $earning_dm_button_name_translate[$lang]['value'] = $t->value;
                                                         }
                                                     }
-                                            
+
                                                 }
                                                 ?>
                                                 <div class="form-group d-none lang_form" id="{{$lang}}-form4">
@@ -455,7 +455,7 @@
                                         @endif
                                         </div>
                                         <div class="col-md-6">
-    
+
                                             <div class="form-group mb-md-0">
                                                 <label class="form-label text-capitalize">
                                                     {{translate('Redirect Link')}}
@@ -477,7 +477,7 @@
                     </div>
                 </div>
             </form>
-        
+
             <!-- Feature Modal -->
             <div class="modal fade" id="feature-modal">
                 <div class="modal-dialog status-warning-modal">
@@ -513,7 +513,7 @@
                                 </div> -->
                                 <div class="btn--container justify-content-center">
                                     <button type="submit" class="btn btn--primary min-w-120" data-dismiss="modal">{{translate('Ok')}}</button>
-                                    <button id="reset_btn" type="reset" class="btn btn--cancel min-w-120" data-dismiss="modal">                
+                                    <button id="reset_btn" type="reset" class="btn btn--cancel min-w-120" data-dismiss="modal">
                                         {{translate("Cancel")}}
                                     </button>
                                 </div>
@@ -522,7 +522,7 @@
                     </div>
                 </div>
             </div>
-        
+
             <!-- Module Setup Section View -->
             <div class="modal fade" id="admin-earn-money">
                 <div class="modal-dialog modal-lg warning-modal">
@@ -561,7 +561,7 @@
                         </div>
                     </div>
                 </div>
-            </div>         
+            </div>
         </div>
     </div>
 </div>
@@ -584,7 +584,7 @@
         $("#"+lang+"-form2").removeClass('d-none');
         $("#"+lang+"-form3").removeClass('d-none');
         $("#"+lang+"-form4").removeClass('d-none');
-        if(lang == '{{$default_lang}}')
+        if(lang == '{{$defaultLang}}')
         {
             $(".from_part_2").removeClass('d-none');
         }

@@ -40,9 +40,6 @@
         <div class="card-body">
             <form action="{{route('admin.business-settings.module.store')}}" method="post" enctype="multipart/form-data">
                 @csrf
-                @php($language=\App\Models\BusinessSetting::where('key','language')->first())
-                @php($language = $language->value ?? null)
-                @php($default_lang = str_replace('_', '-', app()->getLocale()))
                 @if($language)
                 <ul class="nav nav-tabs mb-4 border-0">
                     <li class="nav-item">
@@ -50,7 +47,7 @@
                         href="#"
                         id="default-link">{{translate('messages.default')}}</a>
                     </li>
-                    @foreach (json_decode($language) as $lang)
+                    @foreach ($language as $lang)
                         <li class="nav-item">
                             <a class="nav-link lang_link"
                                 href="#"
@@ -76,7 +73,7 @@
                 </div>
 
                 <input type="hidden" name="lang[]" value="default">
-                @foreach(json_decode($language) as $lang)
+                @foreach($language as $lang)
                 <div class="d-none lang_form p-1 mb-2" id="{{$lang}}-form">
                     <div class="form-group">
                         <label class="input-label text-capitalize d-flex" for="exampleFormControlInput1">{{translate('Business_Module_name')}} ({{strtoupper($lang)}})</label>
@@ -231,7 +228,7 @@
         let lang = form_id.substring(0, form_id.length - 5);
         console.log(lang);
         $("#" + lang + "-form").removeClass('d-none');
-        if (lang == '{{$default_lang}}') {
+        if (lang == '{{$defaultLang}}') {
             $(".from_part_2").removeClass('d-none');
         } else {
             $(".from_part_2").addClass('d-none');

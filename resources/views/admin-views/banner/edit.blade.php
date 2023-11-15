@@ -26,9 +26,6 @@
                             @csrf
                             <div class="row g-3">
                                 <div class="col-lg-6">
-                                    @php($language=\App\Models\BusinessSetting::where('key','language')->first())
-                                    @php($language = $language->value ?? null)
-                                    @php($default_lang = str_replace('_', '-', app()->getLocale()))
                                     @if($language)
                                         <ul class="nav nav-tabs mb-4">
                                             <li class="nav-item">
@@ -36,7 +33,7 @@
                                                 href="#"
                                                 id="default-link">{{translate('messages.default')}}</a>
                                             </li>
-                                            @foreach (json_decode($language) as $lang)
+                                            @foreach ($language as $lang)
                                                 <li class="nav-item">
                                                     <a class="nav-link lang_link"
                                                         href="#"
@@ -51,7 +48,7 @@
                                             </div>
                                             <input type="hidden" name="lang[]" value="default">
                                         </div>
-                                        @foreach(json_decode($language) as $lang)
+                                        @foreach($language as $lang)
                                             <?php
                                                 if(count($banner['translations'])){
                                                     $translate = [];
@@ -81,18 +78,9 @@
                                     </div>
                                     @endif
                                     <div class="form-group">
-                                        <label class="input-label">{{translate('messages.module')}}</label>
-                                        <select name="module_id" class="form-control js-select2-custom"  title="{{translate('messages.select_module')}}" id="module_select" disabled>
-                                            @foreach(\App\Models\Module::notParcel()->get() as $module)
-                                                <option value="{{$module->id}}" {{$module->id==$banner->module_id?'selected':''}}>{{$module->module_name}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
                                         <label class="input-label" for="title">{{translate('messages.zone')}}</label>
                                         <select name="zone_id" id="zone" class="form-control js-select2-custom">
                                             <option  disabled selected>---{{translate('messages.select')}}---</option>
-                                            @php($zones=\App\Models\Zone::all())
                                             @foreach($zones as $zone)
                                                 @if(isset(auth('admin')->user()->zone_id))
                                                     @if(auth('admin')->user()->zone_id == $zone->id)

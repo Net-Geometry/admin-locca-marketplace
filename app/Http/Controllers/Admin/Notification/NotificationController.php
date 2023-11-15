@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\Notification;
 
 use App\Contracts\Repositories\NotificationRepositoryInterface;
+use App\Contracts\Repositories\ZoneRepositoryInterface;
 use App\Enums\ExportFileNames\Admin\Notification;
 use App\Enums\ViewPaths\Admin\Notification as NotificationViewPath;
 use App\Exports\PushNotificationExport;
@@ -28,6 +29,7 @@ class NotificationController extends BaseController
     public function __construct(
         protected NotificationRepositoryInterface $notificationRepo,
         protected NotificationService $notificationService,
+        protected ZoneRepositoryInterface $zoneRepo
     )
     {
     }
@@ -43,15 +45,14 @@ class NotificationController extends BaseController
             searchValue: $request['search'],
             dataLimit: config('default_pagination'),
         );
-        return view(NotificationViewPath::INDEX[VIEW], compact('notifications'));
+        $zones = $this->zoneRepo->getList();
+        return view(NotificationViewPath::INDEX[VIEW], compact('notifications','zones'));
     }
 
     public function add(NotificationAddRequest $request): JsonResponse
     {
         $notification = $this->notificationRepo->add(data: $this->notificationService->getAddData(request: $request));
-
         $topic = $this->notificationService->getTopic(request: $request);
-
         $notification->image = $notification->image ? url('/').'/storage/app/public/notification/'.$notification->image: null;
 
         try {
@@ -66,7 +67,8 @@ class NotificationController extends BaseController
     public function getUpdateView(string|int $id): View
     {
         $notification = $this->notificationRepo->getFirstWhere(params: ['id' => $id]);
-        return view(NotificationViewPath::UPDATE[VIEW], compact('notification'));
+        $zones = $this->zoneRepo->getList();
+        return view(NotificationViewPath::UPDATE[VIEW], compact('notification','zones'));
     }
 
     public function update(NotificationUpdateRequest $request, $id): RedirectResponse

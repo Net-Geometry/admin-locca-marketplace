@@ -25,9 +25,6 @@
                 <div class="card-body">
                     <form action="{{route('admin.users.custom-role.update',[$role['id']])}}" method="post">
                         @csrf
-                        @php($language=\App\Models\BusinessSetting::where('key','language')->first())
-                        @php($language = $language->value ?? null)
-                        @php($default_lang = str_replace('_', '-', app()->getLocale()))
                         @if($language)
                             <ul class="nav nav-tabs mb-4">
                                 <li class="nav-item">
@@ -35,7 +32,7 @@
                                     href="#"
                                     id="default-link">{{translate('messages.default')}}</a>
                                 </li>
-                                @foreach (json_decode($language) as $lang)
+                                @foreach ($language as $lang)
                                     <li class="nav-item">
                                         <a class="nav-link lang_link"
                                             href="#"
@@ -50,7 +47,7 @@
                                 </div>
                                 <input type="hidden" name="lang[]" value="default">
                             </div>
-                            @foreach(json_decode($language) as $lang)
+                            @foreach($language as $lang)
                                 <?php
                                     if(count($role['translations'])){
                                         $translate = [];
@@ -79,11 +76,6 @@
                             <input type="hidden" name="lang[]" value="default">
                         </div>
                         @endif
-                        {{-- <div class="form-group">
-                            <label class="input-label qcont" for="name">{{translate('messages.role_name')}}</label>
-                            <input type="text" name="name" class="form-control" id="name" value="{{$role['name']}}"
-                                   placeholder="{{translate('role_name_example')}}" required>
-                        </div> --}}
 
                         <div class="d-flex flex-wrap select--all-checkes">
                             <h5 class="input-label m-0 text-capitalize">{{translate('messages.module_permission')}} : </h5>
@@ -145,13 +137,7 @@
                                     <label class="form-check-label qcont text-dark" for="coupon">{{translate('messages.coupon')}}</label>
                                 </div>
                             </div>
-                            {{-- <div class="check-item">
-                                <div class="form-group form-check form--check">
-                                    <input type="checkbox" name="modules[]" value="custom_role" class="form-check-input"
-                                           id="custom_role"  {{in_array('custom_role',(array)json_decode($role['modules']))?'checked':''}}>
-                                    <label class="form-check-label qcont text-dark" for="custom_role">{{translate('messages.custom_role')}}</label>
-                                </div>
-                            </div> --}}
+
                             <div class="check-item">
                                 <div class="form-group form-check form--check">
                                     <input type="checkbox" name="modules[]" value="customer_management" class="form-check-input"

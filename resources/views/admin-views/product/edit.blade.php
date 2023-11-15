@@ -56,7 +56,7 @@
 
             @php($language = \App\Models\BusinessSetting::where('key', 'language')->first())
             @php($language = $language->value ?? null)
-            @php($default_lang = str_replace('_', '-', app()->getLocale()))
+            @php($defaultLang = str_replace('_', '-', app()->getLocale()))
             <div class="row g-2">
                 <div class="col-md-6">
                     <div class="card h-100">

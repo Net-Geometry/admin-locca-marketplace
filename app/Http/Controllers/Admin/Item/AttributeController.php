@@ -39,15 +39,15 @@ class AttributeController extends BaseController
             searchValue: $request['search'],
             dataLimit: config('default_pagination')
         );
-        return view(AttributeViewPath::INDEX[VIEW], compact('attributes'));
+        $language = getWebConfig('language');
+        $defaultLang = str_replace('_', '-', app()->getLocale());
+        return view(AttributeViewPath::INDEX[VIEW], compact('attributes','language','defaultLang'));
     }
 
     public function add(AttributeAddRequest $request): RedirectResponse
     {
         $attribute = $this->attributeRepo->add(data: $this->attributeService->getAddData(request: $request));
-
         $this->translationRepo->addByModel(request: $request, model: $attribute, modelPath: 'App\Models\Attribute', attribute: 'name');
-
         Toastr::success(translate('messages.attribute_added_successfully'));
         return back();
     }
@@ -55,15 +55,15 @@ class AttributeController extends BaseController
     public function getUpdateView(string|int $id): View
     {
         $attribute = $this->attributeRepo->getFirstWithoutGlobalScopeWhere(params: ['id' => $id]);
-        return view(AttributeViewPath::UPDATE[VIEW], compact('attribute'));
+        $language = getWebConfig('language');
+        $defaultLang = str_replace('_', '-', app()->getLocale());
+        return view(AttributeViewPath::UPDATE[VIEW], compact('attribute','language','defaultLang'));
     }
 
     public function update(AttributeAddRequest $request, $id): RedirectResponse
     {
         $attribute = $this->attributeRepo->update(id: $id ,data: $this->attributeService->getAddData(request: $request));
-
         $this->translationRepo->updateByModel(request: $request, model: $attribute, modelPath: 'App\Models\Attribute', attribute: 'name');
-
         Toastr::success(translate('messages.attribute_updated_successfully'));
         return back();
     }
@@ -78,7 +78,6 @@ class AttributeController extends BaseController
     public function exportList(Request $request): BinaryFileResponse
     {
         $attributes = $this->attributeRepo->getExportList(request: $request);
-
         $data=[
             'data' =>$attributes,
             'search' =>$request['search'] ?? null,

@@ -27,7 +27,7 @@
                 @csrf
                 @php($language=\App\Models\BusinessSetting::where('key','language')->first())
                 @php($language = $language->value ?? null)
-                @php($default_lang = str_replace('_', '-', app()->getLocale()))
+                @php($defaultLang = str_replace('_', '-', app()->getLocale()))
                 @if($language)
                 <div class="col-12">
                     <ul class="nav nav-tabs mb-3 border-0">

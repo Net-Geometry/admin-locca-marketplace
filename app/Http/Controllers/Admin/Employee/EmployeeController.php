@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\Employee;
 
 use App\Contracts\Repositories\CustomRoleRepositoryInterface;
 use App\Contracts\Repositories\EmployeeRepositoryInterface;
+use App\Contracts\Repositories\ZoneRepositoryInterface;
 use App\Enums\ExportFileNames\Admin\Employee;
 use App\Enums\ViewPaths\Admin\Employee as EmployeeViewPath;
 use App\Exports\EmployeeListExport;
@@ -27,6 +28,7 @@ class EmployeeController extends BaseController
         protected EmployeeRepositoryInterface $employeeRepo,
         protected CustomRoleRepositoryInterface $roleRepo,
         protected EmployeeService $employeeService,
+        protected ZoneRepositoryInterface $zoneRepo,
     )
     {
     }
@@ -38,13 +40,14 @@ class EmployeeController extends BaseController
 
     public function getAddView(): View
     {
-        $rls = $this->roleRepo->getList();
-        return view(EmployeeViewPath::ADD[VIEW], compact('rls'));
+        $roles = $this->roleRepo->getList();
+        $zones = $this->zoneRepo->getList();
+        return view(EmployeeViewPath::ADD[VIEW], compact('roles','zones'));
     }
     private function getListView(Request $request): View
     {
-        $em = $this->employeeRepo->getListWhere(searchValue: $request['search'],dataLimit: config('default_pagination'));
-        return view(EmployeeViewPath::INDEX[VIEW], compact('em'));
+        $employees = $this->employeeRepo->getListWhere(searchValue: $request['search'],dataLimit: config('default_pagination'));
+        return view(EmployeeViewPath::INDEX[VIEW], compact('employees'));
     }
 
     public function add(EmployeeAddRequest $request): RedirectResponse
@@ -57,12 +60,13 @@ class EmployeeController extends BaseController
 
     public function getUpdateView(string|int $id): RedirectResponse|View
     {
-        $e = $this->employeeRepo->getFirstWhereExceptAdmin(params: ['id' => $id]);
-        $rls = $this->roleRepo->getList();
-        $data = $this->employeeService->adminCheck(employee: $e);
+        $employee = $this->employeeRepo->getFirstWhereExceptAdmin(params: ['id' => $id]);
+        $roles = $this->roleRepo->getList();
+        $data = $this->employeeService->adminCheck(employee: $employee);
+        $zones = $this->zoneRepo->getList();
 
         if (array_key_exists('flag', $data) && $data['flag'] == 'unauthorized') {
-            return view(EmployeeViewPath::UPDATE[VIEW], compact('rls', 'e'));
+            return view(EmployeeViewPath::UPDATE[VIEW], compact('roles', 'employee','zones'));
         }
 
         Toastr::warning(translate('messages.access_denied'));

@@ -15,9 +15,9 @@
                     <span>
                         {{ translate('messages.Email Templates') }}
                     </span>
-                </h1> 
-                @include('admin-views.business-settings.email-format-setting.partials.email-template-options')   
-            </div>            
+                </h1>
+                @include('admin-views.business-settings.email-format-setting.partials.email-template-options')
+            </div>
             @include('admin-views.business-settings.email-format-setting.partials.dm-email-template-setting-links')
         </div>
 
@@ -40,7 +40,7 @@
                                     <span class="toggle-switch-indicator"></span>
                                 </span>
                             </label>
-                        </div> 
+                        </div>
                         <form action="{{route('admin.business-settings.email-status',['dm','forgot-password',$mail_status == '1'?0:1])}}" method="get" id="mail-status_form">
                         </form>
                     </div>
@@ -67,7 +67,7 @@
                                         @php($data=\App\Models\EmailTemplate::withoutGlobalScope('translate')->where('type','dm')->where('email_type', 'forget_password')->first())
                                         @php($language=\App\Models\BusinessSetting::where('key','language')->first())
                                         @php($language = $language->value ?? null)
-                                        @php($default_lang = str_replace('_', '-', app()->getLocale()))
+                                        @php($defaultLang = str_replace('_', '-', app()->getLocale()))
                                         @if($language)
                                             <ul class="nav nav-tabs m-0 border-0">
                                                 <li class="nav-item">
@@ -175,13 +175,13 @@
                                                         </span> --}}
                                                     </label>
                                                     <textarea class="ckeditor form-control" name="body[]">
-                                                        Hi Sabrina, 
+                                                        Hi Sabrina,
                                                     </textarea>
                                                 </div>
                                             </div>
                                             <input type="hidden" name="lang[]" value="default">
                                         @endif
-                                        
+
                                     </div>
                                     <br>
                                     <div>
@@ -345,8 +345,8 @@
                         </div>
                     </div>
                 </form>
-                
-                
+
+
                 <!-- Update Status Modal -->
                 <div class="modal fade" id="place-order-status-modal">
                     <div class="modal-dialog status-warning-modal">
@@ -382,7 +382,7 @@
                                     </div> -->
                                     <div class="btn--container justify-content-center">
                                         <button type="submit" class="btn btn--primary min-w-120" data-dismiss="modal">{{translate('Ok')}}</button>
-                                        <button id="reset_btn" type="reset" class="btn btn--cancel min-w-120" data-dismiss="modal">                
+                                        <button id="reset_btn" type="reset" class="btn btn--cancel min-w-120" data-dismiss="modal">
                                             {{translate("Cancel")}}
                                         </button>
                                     </div>
@@ -391,11 +391,11 @@
                         </div>
                     </div>
                 </div>
-                
+
             </div>
         </div>
 
-        
+
         <!-- Instructions Modal -->
 @include('admin-views.business-settings.email-format-setting.partials.email-template-instructions')
 
@@ -411,17 +411,17 @@
             $(".lang_link").removeClass('active');
             $(".lang_form").addClass('d-none');
             $(this).addClass('active');
-    
+
             let form_id = this.id;
             let lang = form_id.substring(0, form_id.length - 5);
-    
+
             console.log(lang);
-    
+
             $("#"+lang+"-form").removeClass('d-none');
             $("#"+lang+"-form1").removeClass('d-none');
             $("#"+lang+"-form2").removeClass('d-none');
             $("#"+lang+"-form3").removeClass('d-none');
-            if(lang == '{{$default_lang}}')
+            if(lang == '{{$defaultLang}}')
             {
                 $(".from_part_2").removeClass('d-none');
             }

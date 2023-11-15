@@ -22,20 +22,17 @@
         <!-- End Page Header -->
         <div class="card">
             <div class="card-body">
-                <form action="{{isset($category)?route('admin.category.update',[$category['id']]):route('admin.category.store')}}" method="post">
+                <form action="{{route('admin.category.store')}}" method="post">
                 @csrf
-                @php($language=\App\Models\BusinessSetting::where('key','language')->first())
-                @php($language = $language->value ?? null)
-                @php($default_lang = str_replace('_', '-', app()->getLocale()))
                 @if($language)
-                    @php($default_lang = json_decode($language)[0])
+                    @php($defaultLang = $language[0])
                     <ul class="nav nav-tabs mb-4">
                         <li class="nav-item">
                             <a class="nav-link lang_link active"
                             href="#"
                             id="default-link">{{translate('messages.default')}}</a>
                         </li>
-                        @foreach (json_decode($language) as $lang)
+                        @foreach ($language as $lang)
                             <li class="nav-item">
                                 <a class="nav-link lang_link"
                                     href="#"
@@ -48,7 +45,7 @@
                         <input type="text" name="name[]" class="form-control" placeholder="{{translate('messages.new_sub_category')}}" maxlength="191" oninvalid="document.getElementById('en-link').click()">
                     </div>
                     <input type="hidden" name="lang[]" value="default">
-                    @foreach(json_decode($language) as $lang)
+                    @foreach($language as $lang)
                         <div class="form-group d-none lang_form" id="{{$lang}}-form">
                             <label class="input-label" for="exampleFormControlInput1">{{translate('messages.name')}} ({{strtoupper($lang)}})</label>
                             <input type="text" name="name[]" class="form-control" placeholder="{{translate('messages.new_sub_category')}}" maxlength="191" oninvalid="document.getElementById('en-link').click()">
@@ -68,8 +65,8 @@
                             <span class="input-label-secondary">*</span></label>
                         <select id="exampleFormControlSelect1" name="parent_id" class="form-control js-select2-custom" required>
                             <option value="" selected disabled>{{translate('Select Main Category')}}</option>
-                            @foreach(\App\Models\Category::with('module')->where(['position'=>0])->module(Config::get('module.current_module_id'))->get() as $cat)
-                                <option value="{{$cat['id']}}" {{isset($category)?($category['parent_id']==$cat['id']?'selected':''):''}} >{{$cat['name']}} ({{Str::limit($cat->module->module_name, 15, '...')}})</option>
+                            @foreach($mainCategories as $category)
+                                <option value="{{$category['id']}}" >{{$category['name']}} ({{Str::limit($category->module->module_name, 15, '...')}})</option>
                             @endforeach
                         </select>
                     </div>
@@ -78,7 +75,7 @@
 
                     <div class="btn--container justify-content-end mt-3">
                         <button type="reset" id="reset_btn" class="btn btn--reset">{{translate('messages.reset')}}</button>
-                        <button type="submit" class="btn btn--primary">{{isset($category)?translate('messages.update'):translate('messages.add')}}</button>
+                        <button type="submit" class="btn btn--primary">{{translate('messages.add')}}</button>
                     </div>
 
                 </form>
@@ -97,54 +94,6 @@
                         </div>
                         <!-- End Search -->
                     </form>
-                    <!-- Unfold -->
-                    {{-- <div class="hs-unfold mr-2">
-                        <a class="js-hs-unfold-invoker btn btn-sm btn-white dropdown-toggle min-height-40" href="javascript:;"
-                            data-hs-unfold-options='{
-                                    "target": "#usersExportDropdown",
-                                    "type": "css-animation"
-                                }'>
-                            <i class="tio-download-to mr-1"></i> {{ translate('messages.export') }}
-                        </a>
-
-                        <div id="usersExportDropdown"
-                            class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
-                            <span class="dropdown-header">{{ translate('messages.options') }}</span>
-                            <a id="export-copy" class="dropdown-item" href="javascript:;">
-                                <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                    src="{{ asset('public/assets/admin') }}/svg/illustrations/copy.svg"
-                                    alt="Image Description">
-                                {{ translate('messages.copy') }}
-                            </a>
-                            <a id="export-print" class="dropdown-item" href="javascript:;">
-                                <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                    src="{{ asset('public/assets/admin') }}/svg/illustrations/print.svg"
-                                    alt="Image Description">
-                                {{ translate('messages.print') }}
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
-                            <a id="export-excel" class="dropdown-item" href="javascript:;">
-                                <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                    src="{{ asset('public/assets/admin') }}/svg/components/excel.svg"
-                                    alt="Image Description">
-                                {{ translate('messages.excel') }}
-                            </a>
-                            <a id="export-csv" class="dropdown-item" href="javascript:;">
-                                <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                    src="{{ asset('public/assets/admin') }}/svg/components/placeholder-csv-format.svg"
-                                    alt="Image Description">
-                                .{{ translate('messages.csv') }}
-                            </a>
-                            <a id="export-pdf" class="dropdown-item" href="javascript:;">
-                                <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                    src="{{ asset('public/assets/admin') }}/svg/components/pdf.svg"
-                                    alt="Image Description">
-                                {{ translate('messages.pdf') }}
-                            </a>
-                        </div>
-                    </div> --}}
-                    <!-- End Unfold -->
                 </div>
             </div>
             <div class="card-body p-0">
@@ -274,7 +223,7 @@
             let lang = form_id.substring(0, form_id.length - 5);
             console.log(lang);
             $("#"+lang+"-form").removeClass('d-none');
-            if(lang == '{{$default_lang}}')
+            if(lang == '{{$defaultLang}}')
             {
                 $(".from_part_2").removeClass('d-none');
             }

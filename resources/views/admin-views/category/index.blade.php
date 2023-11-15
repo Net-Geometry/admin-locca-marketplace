@@ -25,9 +25,6 @@
             <div class="card-body">
                 <form action="{{isset($category)?route('admin.category.update',[$category['id']]):route('admin.category.store')}}" method="post" enctype="multipart/form-data">
                     @csrf
-                    @php($language=\App\Models\BusinessSetting::where('key','language')->first())
-                    @php($language = $language->value ?? null)
-                    @php($default_lang = str_replace('_', '-', app()->getLocale()))
                     @if($language)
                         <ul class="nav nav-tabs mb-4">
                             <li class="nav-item">
@@ -35,7 +32,7 @@
                                 href="#"
                                 id="default-link">{{translate('messages.default')}}</a>
                             </li>
-                            @foreach (json_decode($language) as $lang)
+                            @foreach ($language as $lang)
                                 <li class="nav-item">
                                     <a class="nav-link lang_link"
                                         href="#"
@@ -52,7 +49,7 @@
                                 <input type="text" name="name[]" class="form-control" placeholder="{{translate('messages.new_category')}}" maxlength="191" oninvalid="document.getElementById('en-link').click()">
                             </div>
                             <input type="hidden" name="lang[]" value="default">
-                                @foreach(json_decode($language) as $lang)
+                                @foreach($language as $lang)
                                     <div class="form-group d-none lang_form" id="{{$lang}}-form">
                                         <label class="input-label" for="exampleFormControlInput1">{{translate('messages.name')}} ({{strtoupper($lang)}})</label>
                                         <input type="text" name="name[]" class="form-control" placeholder="{{translate('messages.new_category')}}" maxlength="191" oninvalid="document.getElementById('en-link').click()">
@@ -66,16 +63,6 @@
                                 </div>
                                 <input type="hidden" name="lang[]" value="default">
                             @endif
-                            {{-- <div class="form-group mb-0 pt-md-4">
-                                <label class="input-label">{{translate('messages.module')}}</label>
-                                <select name="module_id" id="module_id" required class="form-control js-select2-custom"  data-placeholder="{{translate('messages.select_module')}}">
-                                        <option value="" selected disabled>{{translate('messages.select_module')}}</option>
-                                    @foreach(\App\Models\Module::notParcel()->get() as $module)
-                                        <option value="{{$module->id}}" >{{$module->module_name}}</option>
-                                    @endforeach
-                                </select>
-                                <small class="text-danger">{{translate('messages.module_change_warning')}}</small>
-                            </div> --}}
                             <input name="position" value="0" class="initial-hidden">
                         </div>
                         <div class="col-md-12">
@@ -112,17 +99,6 @@
             <div class="card-header py-2 border-0">
                 <div class="search--button-wrapper">
                     <h5 class="card-title">{{translate('messages.category_list')}}<span class="badge badge-soft-dark ml-2" id="itemCount">{{$categories->total()}}</span></h5>
-                    {{-- <div class="min--240">
-                        <select name="module_id" class="form-control js-select2-custom" onchange="set_filter('{{url()->full()}}',this.value,'module_id')" title="{{translate('messages.select_modules')}}">
-                            <option value="" {{!request('module_id') ? 'selected':''}}>{{translate('messages.all_modules')}}</option>
-                            @foreach (\App\Models\Module::notParcel()->get() as $module)
-                                <option
-                                    value="{{$module->id}}" {{request('module_id') == $module->id?'selected':''}}>
-                                    {{$module['module_name']}}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div> --}}
 
                     <form class="search-form">
 
@@ -305,7 +281,7 @@
             let lang = form_id.substring(0, form_id.length - 5);
             console.log(lang);
             $("#"+lang+"-form").removeClass('d-none');
-            if(lang == '{{$default_lang}}')
+            if(lang == '{{$defaultLang}}')
             {
                 $(".from_part_2").removeClass('d-none');
             }

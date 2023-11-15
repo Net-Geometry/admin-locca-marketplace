@@ -25,9 +25,6 @@
                 <form action="{{route('admin.common-condition.update',[$condition['id']])}}" method="post" enctype="multipart/form-data">
                     @csrf
                     <div class="row">
-                        @php($language=\App\Models\BusinessSetting::where('key','language')->first())
-                        @php($language = $language->value ?? null)
-                        @php($default_lang = str_replace('_', '-', app()->getLocale()))
                         <div class="col-12">
                             @if($language)
                                 <ul class="nav nav-tabs mb-4">
@@ -36,7 +33,7 @@
                                         href="#"
                                         id="default-link">{{translate('messages.default')}}</a>
                                     </li>
-                                    @foreach (json_decode($language) as $lang)
+                                    @foreach ($language as $lang)
                                         <li class="nav-item">
                                             <a class="nav-link lang_link"
                                                 href="#"
@@ -53,7 +50,7 @@
                                     <input type="text" name="name[]" class="form-control" placeholder="{{translate('messages.new_condition')}}" maxlength="191" value="{{$condition?->getRawOriginal('name')}}" oninvalid="document.getElementById('en-link').click()">
                                 </div>
                                 <input type="hidden" name="lang[]" value="default">
-                                @foreach(json_decode($language) as $lang)
+                                @foreach($language as $lang)
                                     <?php
                                         if(count($condition['translations'])){
                                             $translate = [];
@@ -121,7 +118,7 @@
             let lang = form_id.substring(0, form_id.length - 5);
             console.log(lang);
             $("#"+lang+"-form").removeClass('d-none');
-            if(lang == '{{$default_lang}}')
+            if(lang == '{{$defaultLang}}')
             {
                 $(".from_part_2").removeClass('d-none');
             }

@@ -32,10 +32,10 @@
     @php($header_sub_title=\App\Models\DataSetting::withoutGlobalScope('translate')->where('type','react_landing_page')->where('key','header_sub_title')->first())
     @php($header_tag_line=\App\Models\DataSetting::withoutGlobalScope('translate')->where('type','react_landing_page')->where('key','header_tag_line')->first())
     @php($header_icon=\App\Models\DataSetting::withoutGlobalScope('translate')->where('type','react_landing_page')->where('key','header_icon')->first())
-    @php($header_banner=\App\Models\DataSetting::withoutGlobalScope('translate')->where('type','react_landing_page')->where('key','header_banner')->first()) 
+    @php($header_banner=\App\Models\DataSetting::withoutGlobalScope('translate')->where('type','react_landing_page')->where('key','header_banner')->first())
     @php($language=\App\Models\BusinessSetting::where('key','language')->first())
     @php($language = $language->value ?? null)
-    @php($default_lang = str_replace('_', '-', app()->getLocale()))
+    @php($defaultLang = str_replace('_', '-', app()->getLocale()))
     @if($language)
         <ul class="nav nav-tabs mb-4 border-0">
             <li class="nav-item">
@@ -103,34 +103,34 @@
                                     if(isset($header_title->translations)&&count($header_title->translations)){
                                             $header_title_translate = [];
                                             foreach($header_title->translations as $t)
-                                            {   
+                                            {
                                                 if($t->locale == $lang && $t->key=='header_title'){
                                                     $header_title_translate[$lang]['value'] = $t->value;
                                                 }
                                             }
-                                    
+
                                         }
                                     if(isset($header_sub_title->translations)&&count($header_sub_title->translations)){
                                             $header_sub_title_translate = [];
                                             foreach($header_sub_title->translations as $t)
-                                            {   
+                                            {
                                                 if($t->locale == $lang && $t->key=='header_sub_title'){
                                                     $header_sub_title_translate[$lang]['value'] = $t->value;
                                                 }
                                             }
-                                    
+
                                         }
                                     if(isset($header_tag_line->translations)&&count($header_tag_line->translations)){
                                             $header_tag_line_translate = [];
                                             foreach($header_tag_line->translations as $t)
-                                            {   
+                                            {
                                                 if($t->locale == $lang && $t->key=='header_tag_line'){
                                                     $header_tag_line_translate[$lang]['value'] = $t->value;
                                                 }
                                             }
-                                    
+
                                         }
-                                        
+
                                         ?>
                                         <div class="col-12 d-none lang_form" id="{{$lang}}-form">
                                             <div class="mb-2">
@@ -232,9 +232,9 @@
                 <input type="hidden" name="model_name" value="DataSetting" >
                 <input type="hidden" name="image_path" value="header_banner" >
                 <input type="hidden" name="field_name" value="value" >
-            </form>  
-        
-            
+            </form>
+
+
             <div class="modal fade" id="header-section">
                 <div class="modal-dialog modal-lg warning-modal">
                     <div class="modal-content">
@@ -266,7 +266,7 @@
         console.log(lang);
         $("#"+lang+"-form").removeClass('d-none');
         $("#"+lang+"-form1").removeClass('d-none');
-        if(lang == '{{$default_lang}}')
+        if(lang == '{{$defaultLang}}')
         {
             $(".from_part_2").removeClass('d-none');
         }

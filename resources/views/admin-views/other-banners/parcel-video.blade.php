@@ -31,7 +31,7 @@
     @php($banner_image = \App\Models\ModuleWiseBanner::withoutGlobalScope('translate')->where('module_id',Config::get('module.current_module_id'))->where('type','video_banner_content')->where('key', 'banner_image')->first())
         @php($language = \App\Models\BusinessSetting::where('key', 'language')->first())
         @php($language = $language->value ?? null)
-        @php($default_lang = str_replace('_', '-', app()->getLocale()))
+        @php($defaultLang = str_replace('_', '-', app()->getLocale()))
         @if ($language)
             <ul class="nav nav-tabs mb-4 border-0">
                 <li class="nav-item">
@@ -457,7 +457,7 @@
 
             $("#" + lang + "-form").removeClass('d-none');
             $("#" + lang + "-form1").removeClass('d-none');
-            if (lang == '{{ $default_lang }}') {
+            if (lang == '{{ $defaultLang }}') {
                 $(".from_part_2").removeClass('d-none');
             }
             if (lang == 'default') {

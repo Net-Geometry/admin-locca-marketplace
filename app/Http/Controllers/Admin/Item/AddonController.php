@@ -58,16 +58,16 @@ class AddonController extends BaseController
             dataLimit: config('default_pagination')
         );
         $store =$store_id !='all'? $this->storeRepo->getFirstWhere(params: ['id' => $store_id]):null;
+        $language = getWebConfig('language');
+        $defaultLang = str_replace('_', '-', app()->getLocale());
 
-        return view(AddonViewPath::INDEX[VIEW], compact('addons','store'));
+        return view(AddonViewPath::INDEX[VIEW], compact('addons','store','language','defaultLang'));
     }
 
     public function add(AddonAddRequest $request): RedirectResponse
     {
         $addon = $this->addonRepo->add(data: $this->addonService->getAddData(request: $request));
-
         $this->translationRepo->addByModel(request: $request, model: $addon, modelPath: 'App\Models\AddOn', attribute: 'name');
-
         Toastr::success(translate('messages.addon_added_successfully'));
         return back();
     }
@@ -75,15 +75,15 @@ class AddonController extends BaseController
     public function getUpdateView(string|int $id): View
     {
         $addon = $this->addonRepo->getFirstWithoutGlobalScopeWhere(params: ['id' => $id]);
-        return view(AddonViewPath::UPDATE[VIEW], compact('addon'));
+        $language = getWebConfig('language');
+        $defaultLang = str_replace('_', '-', app()->getLocale());
+        return view(AddonViewPath::UPDATE[VIEW], compact('addon','language','defaultLang'));
     }
 
     public function update(AddonUpdateRequest $request, $id): RedirectResponse
     {
         $addon = $this->addonRepo->update(id: $id ,data: $this->addonService->getAddData(request: $request));
-
         $this->translationRepo->updateByModel(request: $request, model: $addon, modelPath: 'App\Models\AddOn', attribute: 'name');
-
         Toastr::success(translate('messages.addon_updated_successfully'));
         return back();
     }
@@ -105,15 +105,12 @@ class AddonController extends BaseController
     public function exportList(Request $request): BinaryFileResponse
     {
         $store_id = $request->query('store_id', 'all');
-
         $addons = $this->addonRepo->getExportList(
             moduleId: Config::get('module.current_module_id'),
             searchValue: $request['search'],
             storeId: $store_id
         );
-
         $store =$store_id !='all'? $this->storeRepo->getFirstWhere(params: ['id' => $store_id]):null;
-
         $data=[
             'data' =>$addons,
             'search' =>$request['search'] ?? null,

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\Banner;
 
 use App\Contracts\Repositories\BannerRepositoryInterface;
 use App\Contracts\Repositories\TranslationRepositoryInterface;
+use App\Contracts\Repositories\ZoneRepositoryInterface;
 use App\Enums\ViewPaths\Admin\Banner as BannerViewPath;
 use App\Http\Controllers\BaseController;
 use App\Http\Requests\Admin\BannerAddRequest;
@@ -23,7 +24,8 @@ class BannerController extends BaseController
     public function __construct(
         protected BannerRepositoryInterface $bannerRepo,
         protected BannerService $bannerService,
-        protected TranslationRepositoryInterface $translationRepo
+        protected TranslationRepositoryInterface $translationRepo,
+        protected ZoneRepositoryInterface $zoneRepo
     )
     {
     }
@@ -40,13 +42,15 @@ class BannerController extends BaseController
             relations: ['module'],
             dataLimit: config('default_pagination')
         );
-        return view(BannerViewPath::INDEX[VIEW], compact('banners'));
+        $language = getWebConfig('language');
+        $defaultLang = str_replace('_', '-', app()->getLocale());
+        $zones = $this->zoneRepo->getList();
+        return view(BannerViewPath::INDEX[VIEW], compact('banners','language','defaultLang','zones'));
     }
 
     public function add(BannerAddRequest $request): JsonResponse
     {
         $banner = $this->bannerRepo->add(data: $this->bannerService->getAddData(request: $request));
-
         $this->translationRepo->addByModel(request: $request, model: $banner, modelPath: 'App\Models\Banner', attribute: 'title');
 
         return response()->json([], 200);
@@ -55,15 +59,16 @@ class BannerController extends BaseController
     public function getUpdateView(string|int $id): View
     {
         $banner = $this->bannerRepo->getFirstWithoutGlobalScopeWhere(params: ['id' => $id]);
-        return view(BannerViewPath::UPDATE[VIEW], compact('banner'));
+        $language = getWebConfig('language');
+        $defaultLang = str_replace('_', '-', app()->getLocale());
+        $zones = $this->zoneRepo->getList();
+        return view(BannerViewPath::UPDATE[VIEW], compact('banner','language','defaultLang','zones'));
     }
 
     public function update(BannerUpdateRequest $request, $id): JsonResponse
     {
         $banner = $this->bannerRepo->getFirstWithoutGlobalScopeWhere(params: ['id' => $id]);
-
         $banner = $this->bannerRepo->update(id: $id ,data: $this->bannerService->getUpdateData(request: $request,banner: $banner));
-
         $this->translationRepo->updateByModel(request: $request, model: $banner, modelPath: 'App\Models\Banner', attribute: 'title');
 
         return response()->json([], 200);
@@ -79,7 +84,6 @@ class BannerController extends BaseController
 
     public function getSearchList(Request $request): JsonResponse
     {
-
         $banners = $this->bannerRepo->getSearchedList(
             searchValue: $request['search'],
             dataLimit: 50

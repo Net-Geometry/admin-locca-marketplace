@@ -28,7 +28,7 @@
 
                     @php($language=\App\Models\BusinessSetting::where('key','language')->first())
                     @php($language = $language->value ?? null)
-                    @php($default_lang = str_replace('_', '-', app()->getLocale()))
+                    @php($defaultLang = str_replace('_', '-', app()->getLocale()))
                     @if ($language)
                     <ul class="nav nav-tabs mb-4 border-0">
                         <li class="nav-item">
@@ -52,7 +52,7 @@
                             <input type="text" id="about_title" name="about_title[]" class="form-control"
                               value="{{ $about_title?->getRawOriginal('value') ?? '' }}" >
                         </div>
-    
+
                         <div class="form-group">
                             <label for="about_us">{{ translate('messages.about_us_description') }}({{ translate('messages.Default') }})</label>
                             <textarea class="ckeditor form-control" name="about_us[]">{!! $about_us?->getRawOriginal('value') ?? '' !!}</textarea>
@@ -90,7 +90,7 @@
                                     <input type="text" id="about_title" name="about_title[]" class="form-control"
                                     value="{{ $translate[$lang]['about_title'] ?? null }}" >
                                 </div>
-    
+
                                 <div class="form-group">
                                     <label for="about_us">{{ translate('messages.about_us_description') }}({{ $lang }})</label>
                                     <textarea class="ckeditor form-control" name="about_us[]">{!!  $translate[$lang]['about_us'] ?? null !!}</textarea>
