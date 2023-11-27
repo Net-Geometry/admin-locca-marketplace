@@ -17,6 +17,10 @@ use Illuminate\Http\Request;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\View\View;
+use OpenSpout\Common\Exception\InvalidArgumentException;
+use OpenSpout\Common\Exception\IOException;
+use OpenSpout\Common\Exception\UnsupportedTypeException;
+use OpenSpout\Writer\Exception\WriterNotOpenedException;
 use Rap2hpoutre\FastExcel\FastExcel;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -76,6 +80,12 @@ class UnitController extends BaseController
         return back();
     }
 
+    /**
+     * @throws WriterNotOpenedException
+     * @throws IOException
+     * @throws UnsupportedTypeException
+     * @throws InvalidArgumentException
+     */
     public function exportList(string $type): StreamedResponse|string
     {
         $collection = $this->unitRepo->getList();

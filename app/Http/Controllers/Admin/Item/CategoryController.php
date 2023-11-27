@@ -24,6 +24,10 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 use Maatwebsite\Excel\Facades\Excel;
+use OpenSpout\Common\Exception\InvalidArgumentException;
+use OpenSpout\Common\Exception\IOException;
+use OpenSpout\Common\Exception\UnsupportedTypeException;
+use OpenSpout\Writer\Exception\WriterNotOpenedException;
 use Rap2hpoutre\FastExcel\FastExcel;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -199,6 +203,12 @@ class CategoryController extends BaseController
         return view(CategoryViewPath::BULK_EXPORT['view']);
     }
 
+    /**
+     * @throws IOException
+     * @throws WriterNotOpenedException
+     * @throws UnsupportedTypeException
+     * @throws InvalidArgumentException
+     */
     public function exportBulkData(CategoryBulkExportRequest $request): StreamedResponse|string
     {
         $categories = $this->categoryRepo->getBulkExportList(request: $request);

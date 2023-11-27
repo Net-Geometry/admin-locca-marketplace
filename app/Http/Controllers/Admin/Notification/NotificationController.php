@@ -61,7 +61,7 @@ class NotificationController extends BaseController
             Toastr::warning(translate('messages.push_notification_failed'));
         }
 
-        return response()->json([], 200);
+        return response()->json();
     }
 
     public function getUpdateView(string|int $id): View

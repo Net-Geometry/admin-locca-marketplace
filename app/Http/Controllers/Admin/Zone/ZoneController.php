@@ -71,7 +71,7 @@ class ZoneController extends BaseController
             params: ['id'=> $id]
         );
 
-        $area = json_decode($zone->coordinates[0]->toJson(),true);
+        $area = json_decode($zone['coordinates'][0]->toJson(),true);
         $language = getWebConfig('language');
         $defaultLang = str_replace('_', '-', app()->getLocale());
 
@@ -220,7 +220,7 @@ class ZoneController extends BaseController
 
         $data = $this->zoneService->formatZoneCoordinates(zones: $zones);
 
-        return response()->json($data,200);
+        return response()->json($data);
     }
 
 }

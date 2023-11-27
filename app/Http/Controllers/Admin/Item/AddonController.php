@@ -25,6 +25,10 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 use Maatwebsite\Excel\Facades\Excel;
+use OpenSpout\Common\Exception\InvalidArgumentException;
+use OpenSpout\Common\Exception\IOException;
+use OpenSpout\Common\Exception\UnsupportedTypeException;
+use OpenSpout\Writer\Exception\WriterNotOpenedException;
 use Rap2hpoutre\FastExcel\FastExcel;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -164,7 +168,7 @@ class AddonController extends BaseController
     {
         $data = $this->addonService->getImportData(request: $request, toAdd: false);
 
-        if (array_key_exists('flag', $data) && $data['flag'] == 'wrong_format') {
+        if (array_key_exists('flag', $data) && 'wrong_format' == $data['flag']) {
             Toastr::error(translate('messages.you_have_uploaded_a_wrong_format_file'));
             return back();
         }
@@ -197,6 +201,12 @@ class AddonController extends BaseController
         return view(AddonViewPath::BULK_EXPORT['view']);
     }
 
+    /**
+     * @throws WriterNotOpenedException
+     * @throws IOException
+     * @throws UnsupportedTypeException
+     * @throws InvalidArgumentException
+     */
     public function exportBulkData(AddonBulkExportRequest $request): StreamedResponse|string
     {
         $categories = $this->addonRepo->getBulkExportList(request: $request);

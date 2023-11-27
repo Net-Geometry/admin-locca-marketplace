@@ -53,7 +53,7 @@ class BannerController extends BaseController
         $banner = $this->bannerRepo->add(data: $this->bannerService->getAddData(request: $request));
         $this->translationRepo->addByModel(request: $request, model: $banner, modelPath: 'App\Models\Banner', attribute: 'title');
 
-        return response()->json([], 200);
+        return response()->json();
     }
 
     public function getUpdateView(string|int $id): View
@@ -71,7 +71,7 @@ class BannerController extends BaseController
         $banner = $this->bannerRepo->update(id: $id ,data: $this->bannerService->getUpdateData(request: $request,banner: $banner));
         $this->translationRepo->updateByModel(request: $request, model: $banner, modelPath: 'App\Models\Banner', attribute: 'title');
 
-        return response()->json([], 200);
+        return response()->json();
     }
 
     public function delete(Request $request): RedirectResponse

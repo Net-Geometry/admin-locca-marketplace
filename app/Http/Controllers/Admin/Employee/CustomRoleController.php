@@ -29,10 +29,10 @@ class CustomRoleController extends BaseController
 
     public function index(?Request $request): View|Collection|LengthAwarePaginator|null
     {
-        return $this->getAddView($request);
+        return $this->getAddView();
     }
 
-    private function getAddView(Request $request): View
+    private function getAddView(): View
     {
         $roles = $this->roleRepo->getListWhere(
             dataLimit: config('default_pagination')
