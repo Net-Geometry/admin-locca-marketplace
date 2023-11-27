@@ -22,9 +22,6 @@
             </div>
         </div>
 
-        @php($language=\App\Models\BusinessSetting::where('key','language')->first())
-        @php($language = $language->value ?? null)
-        @php($defaultLang = str_replace('_', '-', app()->getLocale()))
         <!-- End Page Header -->
         <div class="row g-2">
             <div class="col-lg-12">
@@ -41,7 +38,7 @@
                                             href="#"
                                             id="default-link">{{translate('messages.default')}}</a>
                                         </li>
-                                        @foreach (json_decode($language) as $lang)
+                                        @foreach ($language as $lang)
                                             <li class="nav-item">
                                                 <a class="nav-link lang_link"
                                                     href="#"
@@ -78,7 +75,7 @@
                                         </div>
                                         <input type="hidden" name="lang[]" value="default">
                                     </div>
-                                        @foreach (json_decode($language) as $lang)
+                                        @foreach ($language as $lang)
                                             <div class="d-none lang_form"
                                                 id="{{ $lang }}-form">
                                                 <div class="row">

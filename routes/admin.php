@@ -844,15 +844,15 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                     Route::post('add-fund', 'CustomerWalletController@add_fund');
                     Route::get('report', 'CustomerWalletController@report')->name('report');
                     Route::get('export', 'CustomerWalletController@export')->name('export');
-                    Route::group(['prefix' => 'bonus', 'as' => 'bonus.'], function () {
-                        Route::get('add-new', 'WalletBonusController@add_new')->name('add-new');
-                        Route::post('store', 'WalletBonusController@store')->name('store');
-                        Route::get('update/{id}', 'WalletBonusController@edit')->name('update');
-                        Route::post('update/{id}', 'WalletBonusController@update');
-                        Route::get('status/{id}/{status}', 'WalletBonusController@status')->name('status');
-                        Route::delete('delete/{id}', 'WalletBonusController@delete')->name('delete');
-                        Route::post('search', 'WalletBonusController@search')->name('search');
-                    });
+                    // Route::group(['prefix' => 'bonus', 'as' => 'bonus.'], function () {
+                    //     Route::get('add-new', 'WalletBonusController@add_new')->name('add-new');
+                    //     Route::post('store', 'WalletBonusController@store')->name('store');
+                    //     Route::get('update/{id}', 'WalletBonusController@edit')->name('update');
+                    //     Route::post('update/{id}', 'WalletBonusController@update');
+                    //     Route::get('status/{id}/{status}', 'WalletBonusController@status')->name('status');
+                    //     Route::delete('delete/{id}', 'WalletBonusController@delete')->name('delete');
+                    //     Route::post('search', 'WalletBonusController@search')->name('search');
+                    // });
                 });
 
                 Route::group(['middleware' => ['module:customer_management']], function () {

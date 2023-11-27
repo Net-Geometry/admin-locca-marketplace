@@ -11,9 +11,11 @@ use App\Enums\ViewPaths\Admin\Employee;
 use App\Enums\ViewPaths\Admin\Module;
 use App\Enums\ViewPaths\Admin\Notification;
 use App\Enums\ViewPaths\Admin\Unit;
+use App\Enums\ViewPaths\Admin\WalletBonus;
 use App\Enums\ViewPaths\Admin\Zone;
 use App\Http\Controllers\Admin\Banner\BannerController;
 use App\Http\Controllers\Admin\Coupon\CouponController;
+use App\Http\Controllers\Admin\Customer\WalletBonusController;
 use App\Http\Controllers\Admin\Employee\CustomRoleController;
 use App\Http\Controllers\Admin\Employee\EmployeeController;
 use App\Http\Controllers\Admin\Item\AddonController;
@@ -183,6 +185,20 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                 Route::delete(Employee::DELETE[URI].'/{id}', [EmployeeController::class, 'delete'])->name('delete');
                 Route::post(Employee::SEARCH[URI], [EmployeeController::class, 'getSearchList'])->name('search');
                 Route::get(Employee::EXPORT[URI], [EmployeeController::class, 'exportList'])->name('export');
+            });
+
+            Route::group(['prefix' => 'customer', 'as' => 'customer.'], function () {
+                Route::group(['prefix' => 'wallet', 'as' => 'wallet.', 'middleware' => ['module:customer_management']], function () {
+                    Route::group(['prefix' => 'bonus', 'as' => 'bonus.'], function () {
+                        Route::get(WalletBonus::INDEX[URI], [WalletBonusController::class,'index'])->name('add-new');
+                        Route::post(WalletBonus::ADD[URI], [WalletBonusController::class,'add'])->name('store');
+                        Route::get(WalletBonus::UPDATE[URI].'/{id}', [WalletBonusController::class,'getUpdateView'])->name('edit');
+                        Route::post(WalletBonus::UPDATE[URI].'/{id}', [WalletBonusController::class,'update'])->name('update');
+                        Route::delete(WalletBonus::DELETE[URI].'/{id}', [WalletBonusController::class,'delete'])->name('delete');
+                        Route::get(WalletBonus::UPDATE_STATUS[URI].'/{id}/{status}', [WalletBonusController::class,'updateStatus'])->name('status');
+                        Route::post(WalletBonus::SEARCH[URI], [WalletBonusController::class,'getSearchList'])->name('search');
+                    });
+                });
             });
         });
     });

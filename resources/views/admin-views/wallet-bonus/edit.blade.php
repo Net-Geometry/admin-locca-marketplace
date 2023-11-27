@@ -22,9 +22,6 @@
                     @csrf
                     <div class="row g-3">
                         <div class="col-12">
-                            @php($language=\App\Models\BusinessSetting::where('key','language')->first())
-                            @php($language = $language->value ?? null)
-                            @php($defaultLang = str_replace('_', '-', app()->getLocale()))
                             @if($language)
                                         <ul class="nav nav-tabs mb-4">
                                             <li class="nav-item">
@@ -32,7 +29,7 @@
                                                 href="#"
                                                 id="default-link">{{translate('messages.default')}}</a>
                                             </li>
-                                            @foreach (json_decode($language) as $lang)
+                                            @foreach ($language as $lang)
                                                 <li class="nav-item">
                                                     <a class="nav-link lang_link"
                                                         href="#"
@@ -57,7 +54,7 @@
                                             </div>
                                             <input type="hidden" name="lang[]" value="default">
                                         </div>
-                                        @foreach(json_decode($language) as $lang)
+                                        @foreach($language as $lang)
                                             <?php
                                                 if(count($bonus['translations'])){
                                                     $translate = [];
