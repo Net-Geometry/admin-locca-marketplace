@@ -42,13 +42,14 @@ class WalletBonusController extends BaseController
         return view(WalletBonusViewPath::INDEX[VIEW], compact('bonuses','language','defaultLang'));
     }
 
-    public function add(WalletBonusAddRequest $request): JsonResponse
+    public function add(WalletBonusAddRequest $request): RedirectResponse
     {
         $bonus = $this->bonusRepo->add(data: $this->bonusService->getAddData(request: $request));
         $this->translationRepo->addByModel(request: $request, model: $bonus, modelPath: 'App\Models\WalletBonus', attribute: 'title');
         $this->translationRepo->addByModel(request: $request, model: $bonus, modelPath: 'App\Models\WalletBonus', attribute: 'description');
 
-        return response()->json();
+        Toastr::success(translate('messages.bonus_added_successfully'));
+        return back();
     }
 
     public function getUpdateView(string|int $id): View
@@ -59,13 +60,14 @@ class WalletBonusController extends BaseController
         return view(WalletBonusViewPath::UPDATE[VIEW], compact('bonus','language','defaultLang'));
     }
 
-    public function update(WalletBonusUpdateRequest $request, $id): JsonResponse
+    public function update(WalletBonusUpdateRequest $request, $id): RedirectResponse
     {
         $bonus = $this->bonusRepo->update(id: $id ,data: $this->bonusService->getUpdateData(request: $request));
         $this->translationRepo->updateByModel(request: $request, model: $bonus, modelPath: 'App\Models\WalletBonus', attribute: 'title');
         $this->translationRepo->updateByModel(request: $request, model: $bonus, modelPath: 'App\Models\WalletBonus', attribute: 'description');
 
-        return response()->json();
+        Toastr::success(translate('messages.bonus_updated_successfully'));
+        return back();
     }
 
     public function delete(Request $request): RedirectResponse

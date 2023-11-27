@@ -24,9 +24,6 @@
             <div class="card-body">
                 <form action="{{route('admin.users.delivery-man.vehicle.store')}}" method="post" enctype="multipart/form-data" id="vehicle-form">
                     @csrf
-                    @php($language=\App\Models\BusinessSetting::where('key','language')->first())
-                    @php($language = $language->value ?? null)
-                    @php($defaultLang = str_replace('_', '-', app()->getLocale()))
                     @if($language)
                         <ul class="nav nav-tabs mb-4">
                             <li class="nav-item">
@@ -34,7 +31,7 @@
                                 href="#"
                                 id="default-link">{{translate('messages.default')}}</a>
                             </li>
-                            @foreach (json_decode($language) as $lang)
+                            @foreach ($language as $lang)
                                 <li class="nav-item">
                                     <a class="nav-link lang_link"
                                         href="#"
@@ -53,7 +50,7 @@
                                         <input type="text" name="type[]" class="form-control h--45px" placeholder="{{translate('messages.ex_:_bike')}}" maxlength="191" required oninvalid="document.getElementById('en-link').click()">
                                     </div>
                                     <input type="hidden" name="lang[]" value="default">
-                                        @foreach(json_decode($language) as $lang)
+                                        @foreach($language as $lang)
                                             <div class="form-group d-none lang_form" id="{{$lang}}-form">
                                                 <label class="input-label text-capitalize" for="title">{{translate('messages.Vehicle_type')}} ({{strtoupper($lang)}})</label>
                                                 <input type="text" name="type[]" class="form-control h--45px" placeholder="{{translate('messages.ex_:_bike')}}" maxlength="191" oninvalid="document.getElementById('en-link').click()">

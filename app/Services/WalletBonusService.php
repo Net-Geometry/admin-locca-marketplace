@@ -1,9 +1,6 @@
 <?php
 
 namespace App\Services;
-
-use Illuminate\Support\Facades\Config;
-
 class WalletBonusService
 {
     public function getAddData(Object $request): array

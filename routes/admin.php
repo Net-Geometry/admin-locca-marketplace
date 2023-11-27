@@ -822,17 +822,17 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                     Route::get('{user_id}/message/list', 'DeliveryManController@conversation_list')->name('message-list');
                     Route::get('messages/details', 'DeliveryManController@get_conversation_list')->name('message-list-search');
 
-                    Route::group(['prefix' => 'vehicle', 'as' => 'vehicle.'], function () {
-                        Route::get('list', 'DmVehicleController@list')->name('list');
-                        Route::get('add', 'DmVehicleController@create')->name('create');
-                        Route::get('status/{vehicle}/{status}', 'DmVehicleController@status')->name('status');
-                        Route::get('edit/{id}', 'DmVehicleController@edit')->name('edit');
-                        Route::post('store', 'DmVehicleController@store')->name('store');
-                        Route::post('update/{vehicle}', 'DmVehicleController@update')->name('update');
-                        Route::delete('delete', 'DmVehicleController@destroy')->name('delete');
-                        Route::get('view/{vehicle}', 'DmVehicleController@view')->name('view');
+                    // Route::group(['prefix' => 'vehicle', 'as' => 'vehicle.'], function () {
+                    //     Route::get('list', 'DmVehicleController@list')->name('list');
+                    //     Route::get('add', 'DmVehicleController@create')->name('create');
+                    //     Route::get('status/{vehicle}/{status}', 'DmVehicleController@status')->name('status');
+                    //     Route::get('edit/{id}', 'DmVehicleController@edit')->name('edit');
+                    //     Route::post('store', 'DmVehicleController@store')->name('store');
+                    //     Route::post('update/{vehicle}', 'DmVehicleController@update')->name('update');
+                    //     Route::delete('delete', 'DmVehicleController@destroy')->name('delete');
+                    //     Route::get('view/{vehicle}', 'DmVehicleController@view')->name('view');
 
-                    });
+                    // });
                 });
             });
             // Subscribed customer Routes
