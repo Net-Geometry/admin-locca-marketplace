@@ -7,6 +7,7 @@ use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Carbon;
+use Illuminate\Validation\ValidationException;
 
 /**
  * @property int id
@@ -60,6 +61,6 @@ class DmVehicleUpdateRequest extends FormRequest
     public function failedValidation(Validator $validator): void
     {
         $response = response()->json(['errors' => Helpers::error_processor($validator)]);
-        throw new \Illuminate\Validation\ValidationException($validator, $response);
+        throw new ValidationException($validator, $response);
     }
 }
