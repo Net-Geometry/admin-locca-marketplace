@@ -7,6 +7,7 @@ use App\Models\DeliveryMan;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Storage;
 
 class DeliveryManRepository implements DeliveryManRepositoryInterface
 {
@@ -49,7 +50,13 @@ class DeliveryManRepository implements DeliveryManRepositoryInterface
                     }
                 });
             })
-            ->latest()->paginate($dataLimit);
+            ->latest()
+            ->when($dataLimit == 'all' , function ($query) use ($dataLimit){
+                $query->get();
+            })
+            ->when($dataLimit != 'all' , function ($query) use ($dataLimit){
+                $query->paginate($dataLimit);
+            });
     }
 
     public function update(string $id, array $data): bool|string|object
@@ -65,7 +72,19 @@ class DeliveryManRepository implements DeliveryManRepositoryInterface
     public function delete(string $id): bool
     {
         $dm = $this->dm->find($id);
-        $dm->translations()->delete();
+        if (Storage::disk('public')->exists('delivery-man/' . $dm['image'])) {
+            Storage::disk('public')->delete('delivery-man/' . $dm['image']);
+        }
+
+        foreach (json_decode($dm['identity_image'], true) as $img) {
+            if (Storage::disk('public')->exists('delivery-man/' . $img)) {
+                Storage::disk('public')->delete('delivery-man/' . $img);
+            }
+        }
+
+        if($dm->userinfo){
+            $dm->userinfo->delete();
+        }
         $dm->delete();
 
         return true;
@@ -94,7 +113,14 @@ class DeliveryManRepository implements DeliveryManRepositoryInterface
                     }
                 });
             })
-            ->latest()->paginate($dataLimit);
+            ->latest()
+            ->when($dataLimit == 'all' , function ($query) use ($dataLimit){
+                $query->get();
+            })
+            ->when($dataLimit != 'all' , function ($query) use ($dataLimit){
+                $query->paginate($dataLimit);
+            });
+
     }
 
 }

@@ -207,6 +207,23 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             // delivery man routes
             Route::group(['prefix' => 'delivery-man', 'as' => 'delivery-man.'], function () {
                 Route::group(['middleware' => ['module:deliveryman']], function () {
+
+                    Route::get('add', 'DeliveryManController@index')->name('add');
+                    Route::post('store', 'DeliveryManController@store')->name('store');
+                    Route::get('list', 'DeliveryManController@list')->name('list');
+                    Route::get('new', 'DeliveryManController@new_delivery_man')->name('new');
+                    Route::get('deny', 'DeliveryManController@deny_delivery_man')->name('deny');
+                    Route::get('preview/{id}/{tab?}', 'DeliveryManController@preview')->name('preview');
+                    Route::get('status/{id}/{status}', 'DeliveryManController@status')->name('status');
+                    Route::get('earning/{id}/{status}', 'DeliveryManController@earning')->name('earning');
+                    Route::get('update-application/{id}/{status}', 'DeliveryManController@update_application')->name('application');
+                    Route::get('edit/{id}', 'DeliveryManController@edit')->name('edit');
+                    Route::post('update/{id}', 'DeliveryManController@update')->name('update');
+                    Route::delete('delete/{id}', 'DeliveryManController@delete')->name('delete');
+                    Route::post('search', 'DeliveryManController@search')->name('search');
+                    Route::post('active-search', 'DeliveryManController@active_search')->name('active-search');
+                    Route::get('export', 'DeliveryManController@export')->name('export');
+
                     Route::group(['prefix' => 'vehicle', 'as' => 'vehicle.'], function () {
                         Route::get(DmVehicle::INDEX[URI], [DmVehicleController::class,'index'])->name('list');
                         Route::get(DmVehicle::ADD[URI], [DmVehicleController::class,'getAddView'])->name('create');

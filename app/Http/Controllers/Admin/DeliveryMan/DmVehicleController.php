@@ -115,7 +115,7 @@ class DmVehicleController extends BaseController
     public function getDetailsView(string|int $id, Request $request, DeliveryManRepositoryInterface $deliveryManRepo): View
     {
         $vehicle = $this->vehicleRepo->getFirstWithoutGlobalScopeWhere(params: ['id' => $id]);
-        $deliveryMen = $deliveryManRepo->getZoneWiseListWhere(
+        $deliveryMen = $deliveryManRepo->getListWhere(
             searchValue: $request['search'],
             filters: ['vehicle_id'=>$vehicle['id']],
             relations: ['vehicle'],
