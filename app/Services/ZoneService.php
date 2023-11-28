@@ -16,12 +16,12 @@ class ZoneService
         foreach(explode('),(',trim($value,'()')) as $index=>$single_array){
             if($index == 0)
             {
-                $lastcord = explode(',',$single_array);
+                $lastCord = explode(',',$single_array);
             }
             $coords = explode(',',$single_array);
             $polygon[] = new Point($coords[0], $coords[1]);
         }
-        $polygon[] = new Point($lastcord[0], $lastcord[1]);
+        $polygon[] = new Point($lastCord[0], $lastCord[1]);
         return [
             'name' => $request->name[array_search('default', $request->lang)],
             'coordinates' => new Polygon([new LineString($polygon)]),

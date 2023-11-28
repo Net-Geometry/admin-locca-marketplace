@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Admin\DeliveryMan;
 
+use App\Contracts\Repositories\DeliveryManRepositoryInterface;
 use App\Contracts\Repositories\DmVehicleRepositoryInterface;
 use App\Contracts\Repositories\TranslationRepositoryInterface;
 use App\Enums\ViewPaths\Admin\DmVehicle as DmVehicleViewPath;
 use App\Http\Controllers\BaseController;
 use App\Http\Requests\Admin\DmVehicleAddRequest;
 use App\Http\Requests\Admin\DmVehicleUpdateRequest;
-use App\Models\DeliveryMan;
 use App\Services\DmVehicleService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
@@ -53,6 +53,17 @@ class DmVehicleController extends BaseController
 
     public function add(DmVehicleAddRequest $request): JsonResponse
     {
+        $temp = $this->vehicleRepo->getExistFirst(
+            params: [
+                'starting_coverage_area' => $request['starting_coverage_area'],
+                'maximum_coverage_area' => $request['maximum_coverage_area']
+            ]
+        );
+        if (isset($temp)) {
+            return response()->json(['errors' => [
+                ['code' => 'Vehicle_overlapped', 'message' => translate('messages.Coverage_area_overlapped')]
+            ]]);
+        }
         $vehicle = $this->vehicleRepo->add(data: $this->vehicleService->getAddData(request: $request));
         $this->translationRepo->addByModel(request: $request, model: $vehicle, modelPath: 'App\Models\DMVehicle', attribute: 'type');
 
@@ -69,6 +80,18 @@ class DmVehicleController extends BaseController
 
     public function update(DmVehicleUpdateRequest $request, $id): JsonResponse
     {
+        $temp = $this->vehicleRepo->getExistFirst(
+            params: [
+                'starting_coverage_area' => $request['starting_coverage_area'],
+                'maximum_coverage_area' => $request['maximum_coverage_area']
+            ],
+            id: $id
+        );
+        if (isset($temp)) {
+            return response()->json(['errors' => [
+                ['code' => 'Vehicle_overlapped', 'message' => translate('messages.Coverage_area_overlapped')]
+            ]]);
+        }
         $vehicle = $this->vehicleRepo->update(id: $id ,data: $this->vehicleService->getUpdateData(request: $request));
         $this->translationRepo->updateByModel(request: $request, model: $vehicle, modelPath: 'App\Models\DMVehicle', attribute: 'type');
 
@@ -89,20 +112,15 @@ class DmVehicleController extends BaseController
         return back();
     }
 
-    public function getDetailsView(string|int $id, Request $request): View
+    public function getDetailsView(string|int $id, Request $request, DeliveryManRepositoryInterface $deliveryManRepo): View
     {
         $vehicle = $this->vehicleRepo->getFirstWithoutGlobalScopeWhere(params: ['id' => $id]);
-        $key = explode(' ', $request['search']);
-        $delivery_men = DeliveryMan::when(isset($key),function($query)use($key){
-            $query->where(function($query)use($key){
-                foreach ($key as $value) {
-                    $query->orWhere('f_name', 'like', "%{$value}%")->orWhere('l_name', 'like', "%{$value}%");
-                }
-            });
-        })
-            ->with('vehicle')
-            ->where('vehicle_id',$vehicle->id)
-            ->latest()->paginate(config('default_pagination'));
-        return view(DmVehicleViewPath::VIEW[VIEW], compact('vehicle','delivery_men') );
+        $deliveryMen = $deliveryManRepo->getZoneWiseListWhere(
+            searchValue: $request['search'],
+            filters: ['vehicle_id'=>$vehicle['id']],
+            relations: ['vehicle'],
+            dataLimit: config('default_pagination')
+        );
+        return view(DmVehicleViewPath::VIEW[VIEW], compact('vehicle','deliveryMen') );
     }
 }

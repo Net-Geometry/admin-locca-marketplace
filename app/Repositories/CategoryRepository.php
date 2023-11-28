@@ -34,20 +34,20 @@ class CategoryRepository implements CategoryRepositoryInterface
     public function addByChunk(array $data): void
     {
         $chunkSize = 100;
-        $chunk_categories = array_chunk($data, $chunkSize);
+        $chunkCategories = array_chunk($data, $chunkSize);
 
-        foreach ($chunk_categories as $key => $chunk_category) {
-            DB::table('categories')->insert($chunk_category);
+        foreach ($chunkCategories as $key => $chunkCategory) {
+            DB::table('categories')->insert($chunkCategory);
         }
     }
 
     public function updateByChunk(array $data): void
     {
         $chunkSize = 100;
-        $chunk_categories = array_chunk($data, $chunkSize);
+        $chunkCategories = array_chunk($data, $chunkSize);
 
-        foreach ($chunk_categories as $key => $chunk_category) {
-            DB::table('categories')->upsert($chunk_category, ['id', 'module_id'], ['name', 'image', 'parent_id', 'position', 'priority', 'status']);
+        foreach ($chunkCategories as $key => $chunkCategory) {
+            DB::table('categories')->upsert($chunkCategory, ['id', 'module_id'], ['name', 'image', 'parent_id', 'position', 'priority', 'status']);
         }
     }
 

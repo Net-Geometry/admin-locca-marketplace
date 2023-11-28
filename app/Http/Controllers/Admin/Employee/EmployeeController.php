@@ -92,10 +92,10 @@ class EmployeeController extends BaseController
 
     public function search(Request $request): JsonResponse
     {
-        $rl=$this->employeeRepo->getSearchList($request);
+        $employees=$this->employeeRepo->getSearchList($request);
         return response()->json([
-            'view'=>view(EmployeeViewPath::SEARCH[VIEW],compact('rl'))->render(),
-            'count'=>$rl->count()
+            'view'=>view(EmployeeViewPath::SEARCH[VIEW],compact('employees'))->render(),
+            'count'=>$employees->count()
         ]);
     }
 

@@ -42,7 +42,7 @@ class DmVehicleUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'type' => 'required|max:254|unique:d_m_vehicles,type,'.$this->vehicle->id,
+            'type' => 'required|max:254|unique:d_m_vehicles,type,'.$this->id,
             'extra_charges' => 'required||numeric|between:0,999999999999.99',
             'starting_coverage_area' => 'required||numeric|between:0,999999999999.99',
             'maximum_coverage_area' => 'required||numeric|between:.01,999999999999.99|gt:starting_coverage_area',

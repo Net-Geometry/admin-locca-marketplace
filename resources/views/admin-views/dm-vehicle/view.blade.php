@@ -34,7 +34,7 @@
                     <div class="card-header py-2">
                         <div class="search--button-wrapper">
                             <h5 class="card-title">{{ translate('messages.deliveryman') }}<span
-                                    class="badge badge-soft-dark ml-2" id="itemCount">{{ $delivery_men->total() }}</span>
+                                    class="badge badge-soft-dark ml-2" id="itemCount">{{ $deliveryMen->total() }}</span>
                             </h5>
                             {{-- <form>
                                 <!-- Search -->
@@ -87,9 +87,9 @@
                             </thead>
 
                             <tbody id="set-rows">
-                                @foreach($delivery_men as $key=>$dm)
+                                @foreach($deliveryMen as $key=>$dm)
                                     <tr>
-                                        <td>{{$key+$delivery_men->firstItem()}}</td>
+                                        <td>{{$key+$deliveryMen->firstItem()}}</td>
                                         <td>
                                             <a class="table-rest-info" href="{{route('admin.delivery-man.preview',[$dm['id']])}}">
                                                 <img onerror="this.src='{{asset('public/assets/admin/img/160x160/img1.jpg')}}'"
@@ -153,7 +153,7 @@
                             </tbody>
                         </table>
 
-                        @if (count($delivery_men) === 0)
+                        @if (count($deliveryMen) === 0)
                             <div class="empty--data">
                                 <img src="{{asset('/public/assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                                 <h5>
@@ -164,7 +164,7 @@
                         <div class="page-area px-4 pb-3">
                             <div class="d-flex align-items-center justify-content-end">
                                 <div>
-                                    {!! $delivery_men->appends(request()->all())->links() !!}
+                                    {!! $deliveryMen->appends(request()->all())->links() !!}
                                 </div>
                             </div>
                         </div>

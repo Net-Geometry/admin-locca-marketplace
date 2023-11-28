@@ -53,15 +53,15 @@ class AddonController extends BaseController
 
     public function getListView(Request $request): View|Collection|LengthAwarePaginator|null
     {
-        $store_id = $request->query('store_id', 'all');
+        $storeId = $request->query('store_id', 'all');
 
         $addons = $this->addonRepo->getStoreWiseList(
             moduleId: Config::get('module.current_module_id'),
             searchValue: $request['search'],
-            storeId: $store_id,
+            storeId: $storeId,
             dataLimit: config('default_pagination')
         );
-        $store =$store_id !='all'? $this->storeRepo->getFirstWhere(params: ['id' => $store_id]):null;
+        $store =$storeId !='all'? $this->storeRepo->getFirstWhere(params: ['id' => $storeId]):null;
         $language = getWebConfig('language');
         $defaultLang = str_replace('_', '-', app()->getLocale());
 
@@ -108,13 +108,13 @@ class AddonController extends BaseController
 
     public function exportList(Request $request): BinaryFileResponse
     {
-        $store_id = $request->query('store_id', 'all');
+        $storeId = $request->query('store_id', 'all');
         $addons = $this->addonRepo->getExportList(
             moduleId: Config::get('module.current_module_id'),
             searchValue: $request['search'],
-            storeId: $store_id
+            storeId: $storeId
         );
-        $store =$store_id !='all'? $this->storeRepo->getFirstWhere(params: ['id' => $store_id]):null;
+        $store =$storeId !='all'? $this->storeRepo->getFirstWhere(params: ['id' => $storeId]):null;
         $data=[
             'data' =>$addons,
             'search' =>$request['search'] ?? null,

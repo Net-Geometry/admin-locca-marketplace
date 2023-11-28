@@ -215,7 +215,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                         Route::post(DmVehicle::UPDATE[URI].'/{id}', [DmVehicleController::class,'update'])->name('update');
                         Route::delete(DmVehicle::DELETE[URI].'/{id}', [DmVehicleController::class,'delete'])->name('delete');
                         Route::get(DmVehicle::UPDATE_STATUS[URI].'/{id}/{status}', [DmVehicleController::class,'updateStatus'])->name('status');
-                        Route::post(DmVehicle::VIEW[URI].'/{id}', [DmVehicleController::class,'getDetailsView'])->name('view');
+                        Route::get(DmVehicle::VIEW[URI].'/{id}', [DmVehicleController::class,'getDetailsView'])->name('view');
                     });
                 });
             });

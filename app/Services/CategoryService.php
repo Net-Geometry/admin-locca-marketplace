@@ -51,19 +51,19 @@ class CategoryService
         } catch (Exception) {
             return ['flag' => 'wrong_format'];
         }
-        $module_id = Config::get('module.current_module_id');
+        $moduleId = Config::get('module.current_module_id');
 
         $data = [];
         foreach ($collections as $collection) {
             if ($collection['Name'] === "") {
                 return ['flag' => 'required_fields'];
             }
-            $parent_id = is_numeric($collection['ParentId']) ? $collection['ParentId'] : 0;
+            $parentId = is_numeric($collection['ParentId']) ? $collection['ParentId'] : 0;
             $array = [
                 'name' => $collection['Name'],
                 'image' => $collection['Image'],
-                'parent_id' => $parent_id,
-                'module_id' => $module_id,
+                'parent_id' => $parentId,
+                'module_id' => $moduleId,
                 'position' => $collection['Position'],
                 'priority' => is_numeric($collection['Priority']) ? $collection['Priority'] : 0,
                 'status' => $collection['Status'] == 'active' ? 1 : 0,

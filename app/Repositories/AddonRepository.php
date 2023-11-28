@@ -113,19 +113,19 @@ class AddonRepository implements AddonRepositoryInterface
     public function addByChunk(array $data): void
     {
         $chunkSize = 100;
-        $chunk_addons= array_chunk($data,$chunkSize);
+        $chunkAddons= array_chunk($data,$chunkSize);
 
-        foreach($chunk_addons as $key=> $chunk_addon){
-            DB::table('add_ons')->insert($chunk_addon);
+        foreach($chunkAddons as $key=> $chunkAddon){
+            DB::table('add_ons')->insert($chunkAddon);
         }
     }
     public function updateByChunk(array $data): void
     {
         $chunkSize = 100;
-        $chunk_addons= array_chunk($data,$chunkSize);
+        $chunkAddons= array_chunk($data,$chunkSize);
 
-        foreach($chunk_addons as $key=> $chunk_addon){
-            DB::table('add_ons')->upsert($chunk_addon,['id'],['name','price','store_id','status']);
+        foreach($chunkAddons as $key=> $chunkAddon){
+            DB::table('add_ons')->upsert($chunkAddon,['id'],['name','price','store_id','status']);
         }
     }
 
