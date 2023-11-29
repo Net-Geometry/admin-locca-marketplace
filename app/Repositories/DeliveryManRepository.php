@@ -13,38 +13,38 @@ use Illuminate\Support\Facades\Storage;
 
 class DeliveryManRepository implements DeliveryManRepositoryInterface
 {
-    public function __construct(protected DeliveryMan $dm)
+    public function __construct(protected DeliveryMan $deliveryMan)
     {
     }
 
     public function add(array $data): string|object
     {
-        $dm = $this->dm->newInstance();
+        $deliveryMan = $this->deliveryMan->newInstance();
         foreach ($data as $key => $column) {
-            $dm[$key] = $column;
+            $deliveryMan[$key] = $column;
         }
-        $dm->save();
-        return $dm;
+        $deliveryMan->save();
+        return $deliveryMan;
     }
 
     public function getFirstWhere(array $params, array $relations = []): ?Model
     {
-        return $this->dm->with($relations)->where($params)->first();
+        return $this->deliveryMan->with($relations)->where($params)->first();
     }
 
     public function getList(array $orderBy = [], array $relations = [], int|string $dataLimit = DEFAULT_DATA_LIMIT, int $offset = null): Collection|LengthAwarePaginator
     {
-        return $this->dm->paginate($dataLimit);
+        return $this->deliveryMan->paginate($dataLimit);
     }
 
     public function getListWhere(string $searchValue = null, array $filters = [], array $relations = [], int|string $dataLimit = DEFAULT_DATA_LIMIT, int $offset = null): Collection|LengthAwarePaginator
     {
         $key = explode(' ', $searchValue);
-        $data = $this->dm->with($relations)->where($filters)
-            ->when(isset($key), function($q) use($key){
-                $q->where(function ($q) use ($key) {
+        $data = $this->deliveryMan->with($relations)->where($filters)
+            ->when(isset($key), function($query) use($key){
+                $query->where(function ($query) use ($key) {
                     foreach ($key as $value) {
-                        $q->orWhere('f_name', 'like', "%{$value}%")
+                        $query->orWhere('f_name', 'like', "%{$value}%")
                             ->orWhere('l_name', 'like', "%{$value}%")
                             ->orWhere('email', 'like', "%{$value}%")
                             ->orWhere('phone', 'like', "%{$value}%")
@@ -62,51 +62,51 @@ class DeliveryManRepository implements DeliveryManRepositoryInterface
 
     public function update(string $id, array $data): bool|string|object
     {
-        $dm = $this->dm->find($id);
+        $deliveryMan = $this->deliveryMan->find($id);
         foreach ($data as $key => $column) {
-            $dm[$key] = $column;
+            $deliveryMan[$key] = $column;
         }
-        $dm->save();
-        return $dm;
+        $deliveryMan->save();
+        return $deliveryMan;
     }
 
     public function delete(string $id): bool
     {
-        $dm = $this->dm->find($id);
-        if (Storage::disk('public')->exists('delivery-man/' . $dm['image'])) {
-            Storage::disk('public')->delete('delivery-man/' . $dm['image']);
+        $deliveryMan = $this->deliveryMan->find($id);
+        if (Storage::disk('public')->exists('delivery-man/' . $deliveryMan['image'])) {
+            Storage::disk('public')->delete('delivery-man/' . $deliveryMan['image']);
         }
 
-        foreach (json_decode($dm['identity_image'], true) as $img) {
+        foreach (json_decode($deliveryMan['identity_image'], true) as $img) {
             if (Storage::disk('public')->exists('delivery-man/' . $img)) {
                 Storage::disk('public')->delete('delivery-man/' . $img);
             }
         }
 
-        if($dm->userinfo){
-            $dm->userinfo->delete();
+        if($deliveryMan->userinfo){
+            $deliveryMan->userinfo->delete();
         }
-        $dm->delete();
+        $deliveryMan->delete();
 
         return true;
     }
 
     public function getFirstWithoutGlobalScopeWhere(array $params, array $relations = []): ?Model
     {
-        return $this->dm->withoutGlobalScope('translate')->where($params)->first();
+        return $this->deliveryMan->withoutGlobalScope('translate')->where($params)->first();
     }
 
     public function getZoneWiseListWhere(string $zoneId = 'all',string $searchValue = null, array $filters = [], array $relations = [], int|string $dataLimit = DEFAULT_DATA_LIMIT, int $offset = null): Collection|LengthAwarePaginator
     {
         $key = explode(' ', $searchValue);
-        $data = $this->dm->with($relations)->where($filters)
+        $data = $this->deliveryMan->with($relations)->where($filters)
             ->when(is_numeric($zoneId), function($query) use($zoneId){
                 return $query->where('zone_id', $zoneId);
             })
-            ->when(isset($key), function($q) use($key){
-                $q->where(function ($q) use ($key) {
+            ->when(isset($key), function($query) use($key){
+                $query->where(function ($query) use ($key) {
                     foreach ($key as $value) {
-                        $q->orWhere('f_name', 'like', "%{$value}%")
+                        $query->orWhere('f_name', 'like', "%{$value}%")
                             ->orWhere('l_name', 'like', "%{$value}%")
                             ->orWhere('email', 'like', "%{$value}%")
                             ->orWhere('phone', 'like', "%{$value}%")
@@ -126,15 +126,15 @@ class DeliveryManRepository implements DeliveryManRepositoryInterface
     {
         $key = explode(' ', $request->q);
         $zoneIds = isset($request->zone_ids)?(count($request->zone_ids)>0?$request->zone_ids:[]):0;
-        return $this->dm->when($zoneIds, function($query) use($zoneIds){
+        return $this->deliveryMan->when($zoneIds, function($query) use($zoneIds){
             return $query->whereIn('zone_id', $zoneIds);
         })
             ->when($request->earning, function($query){
                 return $query->earning();
             })
-            ->where(function ($q) use ($key) {
+            ->where(function ($query) use ($key) {
                 foreach ($key as $value) {
-                    $q->orWhere('f_name', 'like', "%{$value}%")
+                    $query->orWhere('f_name', 'like', "%{$value}%")
                         ->orWhere('l_name', 'like', "%{$value}%")
                         ->orWhere('email', 'like', "%{$value}%")
                         ->orWhere('phone', 'like', "%{$value}%")
