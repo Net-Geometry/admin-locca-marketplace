@@ -7,13 +7,19 @@ use App\Enums\ViewPaths\Admin\Attribute;
 use App\Enums\ViewPaths\Admin\CommonCondition;
 use App\Enums\ViewPaths\Admin\Coupon;
 use App\Enums\ViewPaths\Admin\CustomRole;
+use App\Enums\ViewPaths\Admin\DeliveryMan;
+use App\Enums\ViewPaths\Admin\DmVehicle;
 use App\Enums\ViewPaths\Admin\Employee;
 use App\Enums\ViewPaths\Admin\Module;
 use App\Enums\ViewPaths\Admin\Notification;
 use App\Enums\ViewPaths\Admin\Unit;
+use App\Enums\ViewPaths\Admin\WalletBonus;
 use App\Enums\ViewPaths\Admin\Zone;
 use App\Http\Controllers\Admin\Banner\BannerController;
 use App\Http\Controllers\Admin\Coupon\CouponController;
+use App\Http\Controllers\Admin\Customer\WalletBonusController;
+use App\Http\Controllers\Admin\DeliveryMan\DeliveryManController;
+use App\Http\Controllers\Admin\DeliveryMan\DmVehicleController;
 use App\Http\Controllers\Admin\Employee\CustomRoleController;
 use App\Http\Controllers\Admin\Employee\EmployeeController;
 use App\Http\Controllers\Admin\Item\AddonController;
@@ -183,6 +189,69 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                 Route::delete(Employee::DELETE[URI].'/{id}', [EmployeeController::class, 'delete'])->name('delete');
                 Route::post(Employee::SEARCH[URI], [EmployeeController::class, 'getSearchList'])->name('search');
                 Route::get(Employee::EXPORT[URI], [EmployeeController::class, 'exportList'])->name('export');
+            });
+
+            // customer routes
+            Route::group(['prefix' => 'customer', 'as' => 'customer.'], function () {
+                Route::group(['prefix' => 'wallet', 'as' => 'wallet.', 'middleware' => ['module:customer_management']], function () {
+                    Route::group(['prefix' => 'bonus', 'as' => 'bonus.'], function () {
+                        Route::get(WalletBonus::INDEX[URI], [WalletBonusController::class,'index'])->name('add-new');
+                        Route::post(WalletBonus::ADD[URI], [WalletBonusController::class,'add'])->name('store');
+                        Route::get(WalletBonus::UPDATE[URI].'/{id}', [WalletBonusController::class,'getUpdateView'])->name('edit');
+                        Route::post(WalletBonus::UPDATE[URI].'/{id}', [WalletBonusController::class,'update'])->name('update');
+                        Route::delete(WalletBonus::DELETE[URI].'/{id}', [WalletBonusController::class,'delete'])->name('delete');
+                        Route::get(WalletBonus::UPDATE_STATUS[URI].'/{id}/{status}', [WalletBonusController::class,'updateStatus'])->name('status');
+                        Route::post(WalletBonus::SEARCH[URI], [WalletBonusController::class,'getSearchList'])->name('search');
+                    });
+                });
+            });
+
+            // delivery man routes
+            Route::group(['prefix' => 'delivery-man', 'as' => 'delivery-man.'], function () {
+                Route::get(DeliveryMan::DROPDOWN_LIST[URI], [DeliveryManController::class, 'getDropdownList'])->name('get-deliverymen');
+                Route::get(DeliveryMan::ACCOUNT_DATA[URI].'/{id}', [DeliveryManController::class, 'getAccountData'])->name('store-filter');
+
+                Route::group(['middleware' => ['module:deliveryman']], function () {
+                    Route::get(DeliveryMan::ADD[URI], [DeliveryManController::class, 'getAddView'])->name('add');
+                    Route::post(DeliveryMan::ADD[URI], [DeliveryManController::class, 'add'])->name('store');
+                    Route::get(DeliveryMan::LIST[URI], [DeliveryManController::class, 'index'])->name('list');
+                    Route::get(DeliveryMan::NEW[URI], [DeliveryManController::class, 'getNewDeliveryManView'])->name('new');
+                    Route::get(DeliveryMan::DENY[URI], [DeliveryManController::class, 'getDeniedDeliveryManView'])->name('deny');
+                    Route::get(DeliveryMan::PREVIEW[URI].'/{id}/{tab?}', [DeliveryManController::class, 'getPreview'])->name('preview');
+                    Route::get(DeliveryMan::STATUS[URI].'/{id}/{status}', [DeliveryManController::class, 'updateStatus'])->name('status');
+                    Route::get(DeliveryMan::EARNING[URI].'/{id}/{status}', [DeliveryManController::class, 'updateEarning'])->name('earning');
+                    Route::get(DeliveryMan::UPDATE_APPLICATION[URI].'/{id}/{status}', [DeliveryManController::class, 'updateApplication'])->name('application');
+                    Route::get(DeliveryMan::UPDATE[URI].'/{id}', [DeliveryManController::class, 'getUpdateView'])->name('edit');
+                    Route::post(DeliveryMan::UPDATE[URI].'/{id}', [DeliveryManController::class, 'update'])->name('update');
+                    Route::delete(DeliveryMan::DELETE[URI].'/{id}', [DeliveryManController::class, 'delete'])->name('delete');
+                    Route::post(DeliveryMan::SEARCH[URI], [DeliveryManController::class, 'getSearchList'])->name('search');
+                    Route::post(DeliveryMan::ACTIVE_SEARCH[URI], [DeliveryManController::class, 'getActiveSearchList'])->name('active-search');
+                    Route::get(DeliveryMan::EXPORT[URI], [DeliveryManController::class, 'exportList'])->name('export');
+                    Route::get(DeliveryMan::EARNING_EXPORT[URI], [DeliveryManController::class, 'getEarningListExport'])->name('earning-export');
+                    Route::get(DeliveryMan::REVIEW_EXPORT[URI], [DeliveryManController::class, 'getReviewExportList'])->name('review-export');
+
+                    Route::group(['prefix' => 'reviews', 'as' => 'reviews.'], function () {
+                        Route::get(DeliveryMan::REVIEW_LIST[URI], [DeliveryManController::class, 'getReviewListView'])->name('list');
+                        Route::post(DeliveryMan::REVIEW_SEARCH_LIST[URI], [DeliveryManController::class, 'getReviewSearchList'])->name('search');
+                        Route::get(DeliveryMan::REVIEW_STATUS[URI].'/{id}/{status}', [DeliveryManController::class, 'updateReviewStatus'])->name('status');
+                        Route::get(DeliveryMan::EXPORT[URI], [DeliveryManController::class, 'getAllReviewExportList'])->name('export');
+                    });
+
+                    // message
+                    Route::get(DeliveryMan::CONVERSATION_VIEW[URI].'/{conversation_id}/{user_id}', [DeliveryManController::class, 'getConversationView'])->name('message-view');
+                    Route::get(DeliveryMan::CONVERSATION_DETAILS[URI], [DeliveryManController::class, 'getConversationList'])->name('message-list-search');
+
+                    Route::group(['prefix' => 'vehicle', 'as' => 'vehicle.'], function () {
+                        Route::get(DmVehicle::INDEX[URI], [DmVehicleController::class,'index'])->name('list');
+                        Route::get(DmVehicle::ADD[URI], [DmVehicleController::class,'getAddView'])->name('create');
+                        Route::post(DmVehicle::ADD[URI], [DmVehicleController::class,'add'])->name('store');
+                        Route::get(DmVehicle::UPDATE[URI].'/{id}', [DmVehicleController::class,'getUpdateView'])->name('edit');
+                        Route::post(DmVehicle::UPDATE[URI].'/{id}', [DmVehicleController::class,'update'])->name('update');
+                        Route::delete(DmVehicle::DELETE[URI].'/{id}', [DmVehicleController::class,'delete'])->name('delete');
+                        Route::get(DmVehicle::UPDATE_STATUS[URI].'/{id}/{status}', [DmVehicleController::class,'updateStatus'])->name('status');
+                        Route::get(DmVehicle::VIEW[URI].'/{id}', [DmVehicleController::class,'getDetailsView'])->name('view');
+                    });
+                });
             });
         });
     });

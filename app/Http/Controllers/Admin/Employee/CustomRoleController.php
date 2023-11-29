@@ -29,23 +29,23 @@ class CustomRoleController extends BaseController
 
     public function index(?Request $request): View|Collection|LengthAwarePaginator|null
     {
-        return $this->getAddView($request);
+        return $this->getAddView();
     }
 
-    private function getAddView(Request $request): View
+    private function getAddView(): View
     {
-        $rl = $this->roleRepo->getListWhere(
+        $roles = $this->roleRepo->getListWhere(
             dataLimit: config('default_pagination')
         );
-        return view(CustomRoleViewPath::ADD[VIEW], compact('rl'));
+        $language = getWebConfig('language');
+        $defaultLang = str_replace('_', '-', app()->getLocale());
+        return view(CustomRoleViewPath::ADD[VIEW], compact('roles','language','defaultLang'));
     }
 
     public function add(CustomRoleAddRequest $request): RedirectResponse
     {
         $role = $this->roleRepo->add(data: $this->roleService->getAddData(request: $request));
-
         $this->translationRepo->addByModel(request: $request, model: $role, modelPath: 'App\Models\AdminRole', attribute: 'name');
-
         Toastr::success(translate('messages.role_added_successfully'));
         return back();
     }
@@ -58,7 +58,9 @@ class CustomRoleController extends BaseController
             return view('errors.404');
         }
         $role = $this->roleRepo->getFirstWithoutGlobalScopeWhere(params: ['id' => $id]);
-        return view(CustomRoleViewPath::UPDATE[VIEW], compact('role'));
+        $language = getWebConfig('language');
+        $defaultLang = str_replace('_', '-', app()->getLocale());
+        return view(CustomRoleViewPath::UPDATE[VIEW], compact('role','language','defaultLang'));
     }
 
     public function update(CustomRoleUpdateRequest $request, $id): RedirectResponse|View
@@ -70,9 +72,7 @@ class CustomRoleController extends BaseController
         }
 
         $role = $this->roleRepo->update(id: $id ,data: $this->roleService->getAddData(request: $request));
-
         $this->translationRepo->updateByModel(request: $request, model: $role, modelPath: 'App\Models\AdminRole', attribute: 'name');
-
         Toastr::success(translate('messages.role_updated_successfully'));
         return redirect()->route('admin.users.custom-role.create');
     }
@@ -91,10 +91,10 @@ class CustomRoleController extends BaseController
 
     public function search(Request $request): JsonResponse
     {
-        $rl=$this->roleRepo->getSearchList($request);
+        $role=$this->roleRepo->getSearchList($request);
         return response()->json([
-            'view'=>view(CustomRoleViewPath::SEARCH[VIEW],compact('rl'))->render(),
-            'count'=>$rl->count()
+            'view'=>view(CustomRoleViewPath::SEARCH[VIEW],compact('role'))->render(),
+            'count'=>$role->count()
         ]);
     }
 }

@@ -34,26 +34,26 @@ class CategoryRepository implements CategoryRepositoryInterface
     public function addByChunk(array $data): void
     {
         $chunkSize = 100;
-        $chunk_categories = array_chunk($data, $chunkSize);
+        $chunkCategories = array_chunk($data, $chunkSize);
 
-        foreach ($chunk_categories as $key => $chunk_category) {
-            DB::table('categories')->insert($chunk_category);
+        foreach ($chunkCategories as $key => $chunkCategory) {
+            DB::table('categories')->insert($chunkCategory);
         }
     }
 
     public function updateByChunk(array $data): void
     {
         $chunkSize = 100;
-        $chunk_categories = array_chunk($data, $chunkSize);
+        $chunkCategories = array_chunk($data, $chunkSize);
 
-        foreach ($chunk_categories as $key => $chunk_category) {
-            DB::table('categories')->upsert($chunk_category, ['id', 'module_id'], ['name', 'image', 'parent_id', 'position', 'priority', 'status']);
+        foreach ($chunkCategories as $key => $chunkCategory) {
+            DB::table('categories')->upsert($chunkCategory, ['id', 'module_id'], ['name', 'image', 'parent_id', 'position', 'priority', 'status']);
         }
     }
 
     public function getFirstWhere(array $params, array $relations = []): ?Model
     {
-        return $this->category->where($params)->first();
+        return $this->category->with($relations)->where($params)->first();
     }
 
     public function getFirstWithoutGlobalScopeWhere(array $params, array $relations = []): ?Model
@@ -116,6 +116,19 @@ class CategoryRepository implements CategoryRepositoryInterface
                     'text' => $category->name . ' (' . $data . ')',
                 ];
             });
+    }
+
+    public function getMainList(string $searchValue = null, array $filters = [], array $relations = [], int|string $dataLimit = DEFAULT_DATA_LIMIT, int $offset = null): Collection|LengthAwarePaginator
+    {
+        $key = explode(' ', $searchValue);
+        return $this->category->with($relations)->where($filters)->module(Config::get('module.current_module_id'))
+            ->when(isset($key), function ($query) use ($key) {
+                $query->where(function ($query) use ($key) {
+                    foreach ($key as $value) {
+                        $query->orWhere('name', 'like', "%{$value}%");
+                    }
+                });
+            })->latest()->get();
     }
 
 

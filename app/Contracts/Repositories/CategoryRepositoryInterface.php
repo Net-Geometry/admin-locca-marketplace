@@ -47,4 +47,14 @@ interface CategoryRepositoryInterface extends RepositoryInterface
      * @return Collection|LengthAwarePaginator
      */
     public function getNameList(Request $request, int|string $dataLimit = DEFAULT_DATA_LIMIT): Collection|LengthAwarePaginator;
+
+    /**
+     * @param string|null $searchValue
+     * @param array $filters
+     * @param array $relations
+     * @param int|string $dataLimit
+     * @param int|null $offset
+     * @return Collection|LengthAwarePaginator
+     */
+    public function getMainList(string $searchValue = null, array $filters = [], array $relations = [], int|string $dataLimit = DEFAULT_DATA_LIMIT, int $offset = null): Collection|LengthAwarePaginator;
 }

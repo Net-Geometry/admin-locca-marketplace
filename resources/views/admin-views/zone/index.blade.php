@@ -57,18 +57,15 @@
                         </div>
                         <div class="col-md-6 col-xl-7 zone-setup">
                             <div class="pl-xl-5 pl-xxl-0">
-                                @php($language=\App\Models\BusinessSetting::where('key','language')->first())
-                                @php($language = $language->value ?? null)
-                                @php($default_lang = str_replace('_', '-', app()->getLocale()))
                                 @if($language)
-                                    @php($default_lang = json_decode($language)[0])
+                                    @php($defaultLang = $language[0])
                                     <ul class="nav nav-tabs mb-4">
                                         <li class="nav-item">
                                             <a class="nav-link lang_link active"
                                             href="#"
                                             id="default-link">{{translate('messages.default')}}</a>
                                         </li>
-                                        @foreach (json_decode($language) as $lang)
+                                        @foreach ($language as $lang)
                                             <li class="nav-item">
                                                 <a class="nav-link lang_link"
                                                     href="#"
@@ -88,7 +85,7 @@
                                         <input type="text" name="name[]" class="form-control" placeholder="{{translate('messages.Write_a_New_Business_Zone_Name')}}" maxlength="191" oninvalid="document.getElementById('en-link').click()">
                                     </div>
                                     <input type="hidden" name="lang[]" value="default">
-                                    @foreach(json_decode($language) as $lang)
+                                    @foreach($language as $lang)
                                         <div class="form-group d-none lang_form" id="{{$lang}}-form">
                                             <label class="input-label" for="exampleFormControlInput1">{{ translate('messages.business_Zone_name')}} ({{strtoupper($lang)}})</label>
                                             <input type="text" name="name[]" class="form-control" placeholder="{{translate('messages.Write_a_New_Business_Zone_Name')}}" maxlength="191" oninvalid="document.getElementById('en-link').click()">
@@ -756,7 +753,7 @@ $(".popover-wrapper").click(function(){
                 let lang = form_id.substring(0, form_id.length - 5);
                 console.log(lang);
                 $("#"+lang+"-form").removeClass('d-none');
-                if(lang == '{{$default_lang}}')
+                if(lang == '{{$defaultLang}}')
                 {
                     $(".from_part_2").removeClass('d-none');
                 }

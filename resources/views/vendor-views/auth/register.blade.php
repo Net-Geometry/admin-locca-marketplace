@@ -48,7 +48,7 @@
             </div>
             @php($language=\App\Models\BusinessSetting::where('key','language')->first())
             @php($language = $language->value ?? null)
-            @php($default_lang = 'en')
+            @php($defaultLang = 'en')
             <!-- End Page Header -->
             <form class="js-validate" action="{{ route('restaurant.store') }}" method="post" enctype="multipart/form-data" id="form-id">
                 @csrf
@@ -712,7 +712,7 @@
                 let lang = form_id.substring(0, form_id.length - 5);
                 console.log(lang);
                 $("#"+lang+"-form").removeClass('d-none');
-                if(lang == '{{$default_lang}}')
+                if(lang == '{{$defaultLang}}')
                 {
                     $(".from_part_2").removeClass('d-none');
                 }

@@ -55,7 +55,7 @@
 
                 @php($language=\App\Models\BusinessSetting::where('key','language')->first())
                 @php($language = $language->value ?? null)
-                @php($default_lang = str_replace('_', '-', app()->getLocale()))
+                @php($defaultLang = str_replace('_', '-', app()->getLocale()))
                 <div class="row g-2">
                     @if($language)
                     <div class="col-12">

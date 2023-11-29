@@ -18,7 +18,7 @@
             </h1>
         </div>
         <!-- End Page Header -->
-        <form action="{{route('admin.users.delivery-man.update',[$delivery_man['id']])}}" method="post" class="js-validate"
+        <form action="{{route('admin.users.delivery-man.update',[$deliveryMan['id']])}}" method="post" class="js-validate"
                 enctype="multipart/form-data">
             @csrf
             <div class="card">
@@ -37,7 +37,7 @@
                                 <div class="col-sm-6">
                                     <div class="form-group mb-0">
                                         <label class="input-label" for="exampleFormControlInput1">{{translate('messages.first_name')}}</label>
-                                        <input type="text" value="{{$delivery_man['f_name']}}" name="f_name"
+                                        <input type="text" value="{{$deliveryMan['f_name']}}" name="f_name"
                                                 class="form-control" placeholder="{{translate('messages.first_name')}}"
                                                 required>
                                     </div>
@@ -45,7 +45,7 @@
                                 <div class="col-sm-6">
                                     <div class="form-group mb-0">
                                         <label class="input-label" for="exampleFormControlInput1">{{translate('messages.last_name')}}</label>
-                                        <input type="text" value="{{$delivery_man['l_name']}}" name="l_name"
+                                        <input type="text" value="{{$deliveryMan['l_name']}}" name="l_name"
                                                 class="form-control" placeholder="{{translate('messages.last_name')}}"
                                                 required>
                                     </div>
@@ -53,7 +53,7 @@
                                 <div class="col-sm-6">
                                     <div class="form-group mb-0">
                                         <label class="input-label" for="exampleFormControlInput1">{{translate('messages.email')}}</label>
-                                        <input type="email" value="{{$delivery_man['email']}}" name="email" class="form-control"
+                                        <input type="email" value="{{$deliveryMan['email']}}" name="email" class="form-control"
                                                 placeholder="{{ translate('messages.Ex:') }} ex@example.com"
                                                 required>
                                     </div>
@@ -62,8 +62,8 @@
                                     <div class="form-group mb-0">
                                         <label class="input-label" for="exampleFormControlInput1">{{translate('messages.deliveryman_type')}}</label>
                                         <select name="earning" class="form-control" required>
-                                            <option value="1" {{$delivery_man->earning?'selected':''}}>{{translate('messages.freelancer')}}</option>
-                                            <option value="0" {{$delivery_man->earning?'':'selected'}}>{{translate('messages.salary_based')}}</option>
+                                            <option value="1" {{$deliveryMan->earning?'selected':''}}>{{translate('messages.freelancer')}}</option>
+                                            <option value="0" {{$deliveryMan->earning?'':'selected'}}>{{translate('messages.salary_based')}}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -74,10 +74,10 @@
                                         @foreach(\App\Models\Zone::all() as $zone)
                                             @if(isset(auth('admin')->user()->zone_id))
                                                 @if(auth('admin')->user()->zone_id == $zone->id)
-                                                    <option value="{{$zone->id}}" {{$zone->id == $delivery_man->zone_id?'selected':''}}>{{$zone->name}}</option>
+                                                    <option value="{{$zone->id}}" {{$zone->id == $deliveryMan->zone_id?'selected':''}}>{{$zone->name}}</option>
                                                 @endif
                                             @else
-                                            <option value="{{$zone->id}}" {{$zone->id == $delivery_man->zone_id?'selected':''}}>{{$zone->name}}</option>
+                                            <option value="{{$zone->id}}" {{$zone->id == $deliveryMan->zone_id?'selected':''}}>{{$zone->name}}</option>
                                             @endif
                                         @endforeach
                                         </select>
@@ -89,7 +89,7 @@
                                         <select name="vehicle_id" class="form-control js-select2-custom h--45px">
                                             <option value="" readonly="true" hidden="true">{{ translate('messages.select_vehicle') }}</option>
                                         @foreach(\App\Models\DMVehicle::where('status',1)->get(['id','type']) as $v)
-                                            <option value="{{$v->id}}" {{$v->id == $delivery_man->vehicle_id?'selected':''}}>{{$v->type}}</option>
+                                            <option value="{{$v->id}}" {{$v->id == $deliveryMan->vehicle_id?'selected':''}}>{{$v->type}}</option>
                                         @endforeach
                                         </select>
                                     </div>
@@ -101,7 +101,7 @@
                                 <label>{{translate('messages.deliveryman_image')}} <small class="text-danger">* ( {{translate('messages.ratio')}} 1:1 )</small></label>
                                 <center class="py-3 my-auto">
                                     <img class="img--100 rounded" id="viewer"
-                                            src="{{asset('storage/app/public/delivery-man').'/'.$delivery_man['image']}}"
+                                            src="{{asset('storage/app/public/delivery-man').'/'.$deliveryMan['image']}}"
                                             onerror='this.src="{{asset('/public/assets/admin/img/admin.png')}}"'
                                             alt="delivery-man image"/>
                                 </center>
@@ -119,17 +119,17 @@
                                         <label class="input-label" for="exampleFormControlInput1">{{translate('messages.identity_type')}}</label>
                                         <select name="identity_type" class="form-control">
                                             <option
-                                                value="passport" {{$delivery_man['identity_type']=='passport'?'selected':''}}>
+                                                value="passport" {{$deliveryMan['identity_type']=='passport'?'selected':''}}>
                                                 {{translate('messages.passport')}}
                                             </option>
                                             <option
-                                                value="driving_license" {{$delivery_man['identity_type']=='driving_license'?'selected':''}}>
+                                                value="driving_license" {{$deliveryMan['identity_type']=='driving_license'?'selected':''}}>
                                                 {{translate('messages.driving_license')}}
                                             </option>
-                                            <option value="nid" {{$delivery_man['identity_type']=='nid'?'selected':''}}>{{translate('messages.nid')}}
+                                            <option value="nid" {{$deliveryMan['identity_type']=='nid'?'selected':''}}>{{translate('messages.nid')}}
                                             </option>
                                             <option
-                                                value="store_id" {{$delivery_man['identity_type']=='store_id'?'selected':''}}>
+                                                value="store_id" {{$deliveryMan['identity_type']=='store_id'?'selected':''}}>
                                                 {{translate('messages.store_id')}}
                                             </option>
                                         </select>
@@ -138,7 +138,7 @@
                                 <div class="col-sm-6 col-lg-12">
                                     <div class="form-group mb-0">
                                         <label class="input-label" for="exampleFormControlInput1">{{translate('messages.identity_number')}}</label>
-                                        <input type="text" name="identity_number" value="{{$delivery_man['identity_number']}}"
+                                        <input type="text" name="identity_number" value="{{$deliveryMan['identity_number']}}"
                                                 class="form-control"
                                                 placeholder="{{ translate('messages.Ex:') }} DH-23434-LS"
                                                 required>
@@ -155,7 +155,7 @@
                                                 <label class="input-label" for="exampleFormControlInput1">{{translate('messages.identity_images')}} : </label>
                                             </div>
                                         </div>
-                                        @foreach(json_decode($delivery_man['identity_image'],true) as $img)
+                                        @foreach(json_decode($deliveryMan['identity_image'],true) as $img)
                                         <div class="col-6 spartan_item_wrapper size--sm">
                                             <img class="rounded border" src="{{asset('storage/app/public/delivery-man').'/'.$img}}">
                                         </div>
@@ -189,7 +189,7 @@
                         <div class="col-sm-4">
                             <div class="form-group mb-0">
                                 <label class="input-label" for="exampleFormControlInput1">{{translate('messages.phone')}}</label>
-                                <input type="text" id="phone" name="phone" value="{{$delivery_man['phone']}}" class="form-control"
+                                <input type="text" id="phone" name="phone" value="{{$deliveryMan['phone']}}" class="form-control"
                                         placeholder="{{ translate('messages.Ex:') }} 017********"
                                         required>
                             </div>
@@ -354,7 +354,7 @@
     </script>
     <script>
         $('#reset_btn').click(function(){
-            $('#viewer').attr('src','{{asset('storage/app/public/delivery-man')}}/{{$delivery_man['image']}}');
+            $('#viewer').attr('src','{{asset('storage/app/public/delivery-man')}}/{{$deliveryMan['image']}}');
             $("#coba").empty().spartanMultiImagePicker({
                 fieldName: 'identity_image[]',
                 maxCount: 5,

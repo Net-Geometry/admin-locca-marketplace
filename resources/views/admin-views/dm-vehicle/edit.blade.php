@@ -24,9 +24,6 @@
             <div class="card-body">
                 <form method="post" enctype="multipart/form-data" id="vehicle-form">
                     @csrf
-                    @php($language=\App\Models\BusinessSetting::where('key','language')->first())
-                    @php($language = $language->value ?? null)
-                    @php($default_lang = str_replace('_', '-', app()->getLocale()))
                     @if($language)
                         <ul class="nav nav-tabs mb-4">
                             <li class="nav-item">
@@ -34,7 +31,7 @@
                                 href="#"
                                 id="default-link">{{translate('messages.default')}}</a>
                             </li>
-                            @foreach (json_decode($language) as $lang)
+                            @foreach ($language as $lang)
                                 <li class="nav-item">
                                     <a class="nav-link lang_link"
                                         href="#"
@@ -53,7 +50,7 @@
                                         <input type="text" name="type[]" class="form-control h--45px" placeholder="{{translate('messages.ex_:_bike')}}" maxlength="191" value="{{$vehicle?->getRawOriginal('type')}}" required oninvalid="document.getElementById('en-link').click()">
                                     </div>
                                     <input type="hidden" name="lang[]" value="default">
-                                        @foreach(json_decode($language) as $lang)
+                                        @foreach($language as $lang)
                                         <?php
                                             if(count($vehicle['translations'])){
                                                 $translate = [];
@@ -199,7 +196,7 @@
             let lang = form_id.substring(0, form_id.length - 5);
             console.log(lang);
             $("#"+lang+"-form").removeClass('d-none');
-            if(lang == '{{$default_lang}}')
+            if(lang == '{{$defaultLang}}')
             {
                 $(".from_part_2").removeClass('d-none');
             }

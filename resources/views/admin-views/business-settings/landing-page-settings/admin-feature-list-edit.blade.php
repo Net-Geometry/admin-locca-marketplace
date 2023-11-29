@@ -33,7 +33,7 @@
     @php($feature_short_description=$feature_short_description?$feature_short_description:'')
     @php($language=\App\Models\BusinessSetting::where('key','language')->first())
     @php($language = $language->value ?? null)
-    @php($default_lang = str_replace('_', '-', app()->getLocale()))
+    @php($defaultLang = str_replace('_', '-', app()->getLocale()))
     @if($language)
         <ul class="nav nav-tabs mb-4 border-0">
             <li class="nav-item">
@@ -165,7 +165,7 @@
                         </div>
                     </div>
                 </div>
-            </form>      
+            </form>
             <form  id="feature_image_form" action="{{ route('admin.remove_image') }}" method="post">
                 @csrf
                 <input type="hidden" name="id" value="{{  $feature?->id}}" >
@@ -173,7 +173,7 @@
                 <input type="hidden" name="model_name" value="AdminFeature" >
                 <input type="hidden" name="image_path" value="admin_feature" >
                 <input type="hidden" name="field_name" value="image" >
-            </form>  
+            </form>
             <!-- Criteria Modal -->
             <div class="modal fade" id="feature-modal">
                 <div class="modal-dialog status-warning-modal">
@@ -209,7 +209,7 @@
                                 </div> -->
                                 <div class="btn--container justify-content-center">
                                     <button type="submit" class="btn btn--primary min-w-120" data-dismiss="modal">{{translate('Ok')}}</button>
-                                    <button id="reset_btn" type="reset" class="btn btn--cancel min-w-120" data-dismiss="modal">                
+                                    <button id="reset_btn" type="reset" class="btn btn--cancel min-w-120" data-dismiss="modal">
                                         {{translate("Cancel")}}
                                     </button>
                                 </div>
@@ -218,7 +218,7 @@
                     </div>
                 </div>
             </div>
-        
+
             <!-- Module Setup Section View -->
             <div class="modal fade" id="admin-feature-sectin-view">
                 <div class="modal-dialog modal-lg warning-modal">
@@ -232,7 +232,7 @@
                     </div>
                 </div>
             </div>
-            
+
         </div>
     </div>
 </div>
@@ -301,7 +301,7 @@
 
         $("#"+lang+"-form").removeClass('d-none');
         $("#"+lang+"-form1").removeClass('d-none');
-        if(lang == '{{$default_lang}}')
+        if(lang == '{{$defaultLang}}')
         {
             $(".from_part_2").removeClass('d-none');
         }

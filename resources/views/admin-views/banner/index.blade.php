@@ -29,9 +29,6 @@
                         >
                             @csrf
                             <div class="row g-3">
-                                @php($language=\App\Models\BusinessSetting::where('key','language')->first())
-                                @php($language = $language->value ?? null)
-                                @php($default_lang = str_replace('_', '-', app()->getLocale()))
                                 <div class="col-lg-6">
                                     @if ($language)
                                     <ul class="nav nav-tabs mb-3 border-0">
@@ -40,7 +37,7 @@
                                             href="#"
                                             id="default-link">{{translate('messages.default')}}</a>
                                         </li>
-                                        @foreach (json_decode($language) as $lang)
+                                        @foreach ($language as $lang)
                                             <li class="nav-item">
                                                 <a class="nav-link lang_link"
                                                     href="#"
@@ -61,7 +58,7 @@
                                         </div>
                                         <input type="hidden" name="lang[]" value="default">
                                     </div>
-                                        @foreach (json_decode($language) as $lang)
+                                        @foreach ($language as $lang)
                                             <div class="d-none lang_form"
                                                 id="{{ $lang }}-form">
                                                 <div class="form-group">
@@ -91,7 +88,6 @@
                                         <label class="input-label" for="title">{{translate('messages.zone')}}</label>
                                         <select name="zone_id" id="zone" class="form-control js-select2-custom">
                                             <option disabled selected>---{{translate('messages.select')}}---</option>
-                                            @php($zones=\App\Models\Zone::active()->get())
                                             @foreach($zones as $zone)
                                                 @if(isset(auth('admin')->user()->zone_id))
                                                     @if(auth('admin')->user()->zone_id == $zone->id)
@@ -513,7 +509,7 @@
                     let lang = form_id.substring(0, form_id.length - 5);
                     console.log(lang);
                     $("#"+lang+"-form").removeClass('d-none');
-                    if(lang == '{{$default_lang}}')
+                    if(lang == '{{$defaultLang}}')
                     {
                         $("#from_part_2").removeClass('d-none');
                     }

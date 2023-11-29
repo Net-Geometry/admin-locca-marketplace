@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\Coupon;
 
 use App\Contracts\Repositories\CouponRepositoryInterface;
 use App\Contracts\Repositories\TranslationRepositoryInterface;
+use App\Contracts\Repositories\ZoneRepositoryInterface;
 use App\Enums\ExportFileNames\Admin\Coupon;
 use App\Enums\ViewPaths\Admin\Coupon as CouponViewPath;
 use App\Exports\CouponExport;
@@ -26,7 +27,8 @@ class CouponController extends BaseController
     public function __construct(
         protected CouponRepositoryInterface $couponRepo,
         protected CouponService $couponService,
-        protected TranslationRepositoryInterface $translationRepo
+        protected TranslationRepositoryInterface $translationRepo,
+        protected ZoneRepositoryInterface $zoneRepo
     )
     {
     }
@@ -44,15 +46,16 @@ class CouponController extends BaseController
             relations: ['module'],
             dataLimit: config('default_pagination'),
         );
-        return view(CouponViewPath::INDEX[VIEW], compact('coupons'));
+        $language = getWebConfig('language');
+        $defaultLang = str_replace('_', '-', app()->getLocale());
+        $zones = $this->zoneRepo->getList();
+        return view(CouponViewPath::INDEX[VIEW], compact('coupons','language','defaultLang','zones'));
     }
 
     public function add(CouponAddRequest $request): RedirectResponse
     {
         $coupon = $this->couponRepo->add(data: $this->couponService->getAddData(request: $request,moduleId: Config::get('module.current_module_id')));
-
         $this->translationRepo->addByModel(request: $request, model: $coupon, modelPath: 'App\Models\Coupon', attribute: 'title');
-
         Toastr::success(translate('messages.coupon_added_successfully'));
         return back();
     }
@@ -60,15 +63,16 @@ class CouponController extends BaseController
     public function getUpdateView(string|int $id): View
     {
         $coupon = $this->couponRepo->getFirstWithoutGlobalScopeWhere(params: ['id' => $id]);
-        return view(CouponViewPath::UPDATE[VIEW], compact('coupon'));
+        $language = getWebConfig('language');
+        $defaultLang = str_replace('_', '-', app()->getLocale());
+        $zones = $this->zoneRepo->getList();
+        return view(CouponViewPath::UPDATE[VIEW], compact('coupon','language','defaultLang','zones'));
     }
 
     public function update(CouponUpdateRequest $request, $id): RedirectResponse
     {
         $coupon = $this->couponRepo->update(id: $id ,data: $this->couponService->getAddData(request: $request, moduleId: Config::get('module.current_module_id')));
-
         $this->translationRepo->updateByModel(request: $request, model: $coupon, modelPath: 'App\Models\Coupon', attribute: 'title');
-
         Toastr::success(translate('messages.coupon_updated_successfully'));
         return back();
     }

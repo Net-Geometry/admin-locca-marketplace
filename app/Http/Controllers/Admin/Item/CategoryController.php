@@ -24,6 +24,10 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 use Maatwebsite\Excel\Facades\Excel;
+use OpenSpout\Common\Exception\InvalidArgumentException;
+use OpenSpout\Common\Exception\IOException;
+use OpenSpout\Common\Exception\UnsupportedTypeException;
+use OpenSpout\Writer\Exception\WriterNotOpenedException;
 use Rap2hpoutre\FastExcel\FastExcel;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -53,7 +57,15 @@ class CategoryController extends BaseController
             relations: ['module'],
             dataLimit: config('default_pagination')
         );
-        return view($this->categoryService->getViewByPosition($request['position']), compact('categories'));
+
+        $mainCategories = $this->categoryRepo->getMainList(
+            filters: ['position' => 0],
+            relations: ['module'],
+        );
+
+        $language = getWebConfig('language');
+        $defaultLang = str_replace('_', '-', app()->getLocale());
+        return view($this->categoryService->getViewByPosition($request['position']), compact('categories','language','defaultLang','mainCategories'));
     }
 
     public function add(CategoryAddRequest $request): RedirectResponse
@@ -73,7 +85,9 @@ class CategoryController extends BaseController
     public function getUpdateView(string|int $id): View
     {
         $category = $this->categoryRepo->getFirstWithoutGlobalScopeWhere(params: ['id' => $id]);
-        return view(CategoryViewPath::UPDATE['view'], compact('category'));
+        $language = getWebConfig('language');
+        $defaultLang = str_replace('_', '-', app()->getLocale());
+        return view(CategoryViewPath::UPDATE['view'], compact('category','language','defaultLang'));
     }
 
     public function updateStatus(Request $request): RedirectResponse
@@ -189,6 +203,12 @@ class CategoryController extends BaseController
         return view(CategoryViewPath::BULK_EXPORT['view']);
     }
 
+    /**
+     * @throws IOException
+     * @throws WriterNotOpenedException
+     * @throws UnsupportedTypeException
+     * @throws InvalidArgumentException
+     */
     public function exportBulkData(CategoryBulkExportRequest $request): StreamedResponse|string
     {
         $categories = $this->categoryRepo->getBulkExportList(request: $request);
@@ -198,7 +218,6 @@ class CategoryController extends BaseController
     public function exportList(Request $request): BinaryFileResponse
     {
         $categories = $this->categoryRepo->getExportList(request: $request);
-
         $data = [
             'data' => $categories,
             'search' => $request['search'] ?? null,

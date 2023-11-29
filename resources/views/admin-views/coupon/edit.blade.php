@@ -22,70 +22,57 @@
                     @csrf
                     <div class="row g-3">
                         <div class="col-12">
-                            @php($language=\App\Models\BusinessSetting::where('key','language')->first())
-                                    @php($language = $language->value ?? null)
-                                    @php($default_lang = str_replace('_', '-', app()->getLocale()))
-                                    @if($language)
-                                        <ul class="nav nav-tabs mb-4">
-                                            <li class="nav-item">
-                                                <a class="nav-link lang_link active"
+                            @if($language)
+                                <ul class="nav nav-tabs mb-4">
+                                    <li class="nav-item">
+                                        <a class="nav-link lang_link active"
+                                        href="#"
+                                        id="default-link">{{translate('messages.default')}}</a>
+                                    </li>
+                                    @foreach ($language as $lang)
+                                        <li class="nav-item">
+                                            <a class="nav-link lang_link"
                                                 href="#"
-                                                id="default-link">{{translate('messages.default')}}</a>
-                                            </li>
-                                            @foreach (json_decode($language) as $lang)
-                                                <li class="nav-item">
-                                                    <a class="nav-link lang_link"
-                                                        href="#"
-                                                        id="{{ $lang }}-link">{{ \App\CentralLogics\Helpers::get_language_name($lang) . '(' . strtoupper($lang) . ')' }}</a>
-                                                </li>
-                                            @endforeach
-                                        </ul>
-                                        <div class="lang_form" id="default-form">
-                                            <div class="form-group">
-                                                <label class="input-label" for="default_title">{{translate('messages.title')}} ({{translate('messages.default')}})</label>
-                                                <input type="text" name="title[]" id="default_title" class="form-control" placeholder="{{translate('messages.new_coupon')}}" value="{{$coupon?->getRawOriginal('title')}}" oninvalid="document.getElementById('en-link').click()">
-                                            </div>
-                                            <input type="hidden" name="lang[]" value="default">
-                                        </div>
-                                        @foreach(json_decode($language) as $lang)
-                                            <?php
-                                                if(count($coupon['translations'])){
-                                                    $translate = [];
-                                                    foreach($coupon['translations'] as $t)
-                                                    {
-                                                        if($t->locale == $lang && $t->key=="title"){
-                                                            $translate[$lang]['title'] = $t->value;
-                                                        }
-                                                    }
-                                                }
-                                            ?>
-                                            <div class="d-none lang_form" id="{{$lang}}-form">
-                                                <div class="form-group">
-                                                    <label class="input-label" for="{{$lang}}_title">{{translate('messages.title')}} ({{strtoupper($lang)}})</label>
-                                                    <input type="text" name="title[]" id="{{$lang}}_title" class="form-control" placeholder="{{translate('messages.new_coupon')}}" value="{{$translate[$lang]['title']??''}}" oninvalid="document.getElementById('en-link').click()">
-                                                </div>
-                                                <input type="hidden" name="lang[]" value="{{$lang}}">
-                                            </div>
-                                        @endforeach
-                                    @else
-                                    <div id="default-form">
-                                        <div class="form-group">
-                                            <label class="input-label" for="exampleFormControlInput1">{{translate('messages.title')}} ({{ translate('messages.default') }})</label>
-                                            <input type="text" name="title[]" class="form-control" placeholder="{{translate('messages.new_coupon')}}" value="{{$coupon['title']}}" maxlength="100">
-                                        </div>
-                                        <input type="hidden" name="lang[]" value="default">
-                                    </div>
-                                    @endif
-                        </div>
-                        <div class="col-md-4 col-lg-3 col-sm-6">
-                            <div class="form-group m-0">
-                                <label class="input-label">{{translate('messages.module')}}</label>
-                                <select name="module_id" required class="form-control js-select2-custom"  data-placeholder="{{translate('messages.select_module')}}" id="module_select" disabled>
-                                    @foreach(\App\Models\Module::notParcel()->get() as $module)
-                                        <option value="{{$module->id}}" {{$module->id==$coupon->module_id?'selected':''}}>{{$module->module_name}}</option>
+                                                id="{{ $lang }}-link">{{ \App\CentralLogics\Helpers::get_language_name($lang) . '(' . strtoupper($lang) . ')' }}</a>
+                                        </li>
                                     @endforeach
-                                </select>
+                                </ul>
+                                <div class="lang_form" id="default-form">
+                                    <div class="form-group">
+                                        <label class="input-label" for="default_title">{{translate('messages.title')}} ({{translate('messages.default')}})</label>
+                                        <input type="text" name="title[]" id="default_title" class="form-control" placeholder="{{translate('messages.new_coupon')}}" value="{{$coupon?->getRawOriginal('title')}}" oninvalid="document.getElementById('en-link').click()">
+                                    </div>
+                                    <input type="hidden" name="lang[]" value="default">
+                                </div>
+                                @foreach($language as $lang)
+                                    <?php
+                                        if(count($coupon['translations'])){
+                                            $translate = [];
+                                            foreach($coupon['translations'] as $t)
+                                            {
+                                                if($t->locale == $lang && $t->key=="title"){
+                                                    $translate[$lang]['title'] = $t->value;
+                                                }
+                                            }
+                                        }
+                                    ?>
+                                    <div class="d-none lang_form" id="{{$lang}}-form">
+                                        <div class="form-group">
+                                            <label class="input-label" for="{{$lang}}_title">{{translate('messages.title')}} ({{strtoupper($lang)}})</label>
+                                            <input type="text" name="title[]" id="{{$lang}}_title" class="form-control" placeholder="{{translate('messages.new_coupon')}}" value="{{$translate[$lang]['title']??''}}" oninvalid="document.getElementById('en-link').click()">
+                                        </div>
+                                        <input type="hidden" name="lang[]" value="{{$lang}}">
+                                    </div>
+                                @endforeach
+                            @else
+                            <div id="default-form">
+                                <div class="form-group">
+                                    <label class="input-label" for="exampleFormControlInput1">{{translate('messages.title')}} ({{ translate('messages.default') }})</label>
+                                    <input type="text" name="title[]" class="form-control" placeholder="{{translate('messages.new_coupon')}}" value="{{$coupon['title']}}" maxlength="100">
+                                </div>
+                                <input type="hidden" name="lang[]" value="default">
                             </div>
+                            @endif
                         </div>
                         <div class="col-md-4 col-lg-3 col-sm-6">
                             <div class="form-group m-0">
@@ -121,7 +108,7 @@
                                 <select name="zone_ids[]" id="choice_zones"
                                     class="form-control js-select2-custom"
                                     multiple="multiple" placeholder="{{translate('messages.select_zone')}}">
-                                @foreach(\App\Models\Zone::all() as $zone)
+                                @foreach($zones as $zone)
                                     <option value="{{$zone->id}}" {{($coupon->coupon_type=='zone_wise'&&json_decode($coupon->data))?(in_array($zone->id, json_decode($coupon->data))?'selected':''):''}}>{{$zone->name}}</option>
                                 @endforeach
                                 </select>

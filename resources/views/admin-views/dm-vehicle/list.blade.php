@@ -100,7 +100,7 @@
                                             <a class="btn btn-sm btn--danger btn-outline-danger action-btn" href="javascript:"
                                                 onclick="form_alert('vehicle-{{$vehicle['id']}}','{{translate('messages.Want_to_delete_this_item')}}')" title="{{translate('messages.delete_vehicle')}}"><i class="tio-delete-outlined"></i>
                                             </a>
-                                            <form action="{{route('admin.users.delivery-man.vehicle.delete',['vehicle' =>$vehicle['id']])}}"
+                                            <form action="{{route('admin.users.delivery-man.vehicle.delete',['id' =>$vehicle['id']])}}"
                                                         method="post" id="vehicle-{{$vehicle['id']}}">
                                                 @csrf @method('delete')
                                             </form>

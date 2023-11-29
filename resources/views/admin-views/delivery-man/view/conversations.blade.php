@@ -14,20 +14,20 @@
                 <span class="page-header-icon">
                     <img src="{{asset('public/assets/admin/img/delivery-man.png')}}" class="w--26" alt="">
                 </span>
-                <span>{{$dm['f_name'].' '.$dm['l_name']}}</span>
+                <span>{{$deliveryMan['f_name'].' '.$deliveryMan['l_name']}}</span>
             </h1>
             <div class="row">
                 <div class="js-nav-scroller hs-nav-scroller-horizontal mt-2">
                     <!-- Nav -->
                     <ul class="nav nav-tabs nav--tabs border-0">
                         <li class="nav-item">
-                            <a class="nav-link" href="{{route('admin.users.delivery-man.preview', ['id'=>$dm->id, 'tab'=> 'info'])}}"  aria-disabled="true">{{translate('messages.info')}}</a>
+                            <a class="nav-link" href="{{route('admin.users.delivery-man.preview', ['id'=>$deliveryMan->id, 'tab'=> 'info'])}}"  aria-disabled="true">{{translate('messages.info')}}</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{route('admin.users.delivery-man.preview', ['id'=>$dm->id, 'tab'=> 'transaction'])}}"  aria-disabled="true">{{translate('messages.transaction')}}</a>
+                            <a class="nav-link" href="{{route('admin.users.delivery-man.preview', ['id'=>$deliveryMan->id, 'tab'=> 'transaction'])}}"  aria-disabled="true">{{translate('messages.transaction')}}</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active" href="{{route('admin.users.delivery-man.preview', ['id'=>$dm->id, 'tab'=> 'conversation'])}}"  aria-disabled="true">{{translate('messages.conversations')}}</a>
+                            <a class="nav-link active" href="{{route('admin.users.delivery-man.preview', ['id'=>$deliveryMan->id, 'tab'=> 'conversation'])}}"  aria-disabled="true">{{translate('messages.conversations')}}</a>
                         </li>
                     </ul>
                     <!-- End Nav -->
@@ -84,7 +84,7 @@
     function viewConvs(url, id_to_active, conv_id, sender_id) {
         $('.customer-list').removeClass('conv-active');
         $('#' + id_to_active).addClass('conv-active');
-        let new_url= "{{route('admin.users.delivery-man.preview', ['id'=>$dm->id, 'tab'=> 'conversation'])}}" + '?conversation=' + conv_id+ '&user=' + sender_id;
+        let new_url= "{{route('admin.users.delivery-man.preview', ['id'=>$deliveryMan->id, 'tab'=> 'conversation'])}}" + '?conversation=' + conv_id+ '&user=' + sender_id;
             $.get({
                 url: url,
                 success: function(data) {
@@ -106,7 +106,7 @@
 
     function loadMoreData(page) {
         $.ajax({
-                url: "{{ route('admin.delivery-man.message-list-search') }}" + '?page=' + page,
+                url: "{{ route('admin.users.delivery-man.message-list-search') }}" + '?page=' + page,
                 type: "get",
                 data:{"user_id":user_id},
                 beforeSend: function() {
@@ -126,7 +126,7 @@
 
     function fetch_data(page, query) {
             $.ajax({
-                url: "{{ route('admin.delivery-man.message-list-search') }}" + '?page=' + page + "&key=" + query,
+                url: "{{ route('admin.users.delivery-man.message-list-search') }}" + '?page=' + page + "&key=" + query,
                 type: "get",
                 data:{"user_id":user_id},
                 success: function(data) {

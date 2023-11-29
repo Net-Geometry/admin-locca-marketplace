@@ -21,7 +21,7 @@
     </div>
     @php($language=\App\Models\BusinessSetting::where('key','language')->first())
     @php($language = $language->value ?? null)
-    @php($default_lang = str_replace('_', '-', app()->getLocale()))
+    @php($defaultLang = str_replace('_', '-', app()->getLocale()))
     <div class="tab-content">
         <div class="tab-pane fade show active">
             <div class="card mb-3">
@@ -82,7 +82,7 @@
                                     }
                                     ?>
                                     <div class="row d-none lang_form" id="{{$lang}}-form1">
-    
+
                                         <div class="col-12">
                                             <div class="form-group">
                                                 <label class="form-label">{{translate('Title')}} ({{strtoupper($lang)}})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_100_characters') }}">
@@ -102,9 +102,9 @@
                                     </div>
                                     <input type="hidden" name="lang[]" value="{{$lang}}">
                                     @endforeach
-                                
+
                                 </div>
-                 
+
                                 @else
                                 <div class="col-sm-6">
                                     <label class="form-label">{{translate('Title')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_100_characters') }}">
@@ -154,7 +154,7 @@
 
         $("#"+lang+"-form").removeClass('d-none');
         $("#"+lang+"-form1").removeClass('d-none');
-        if(lang == '{{$default_lang}}')
+        if(lang == '{{$defaultLang}}')
         {
             $(".from_part_2").removeClass('d-none');
         }

@@ -37,15 +37,15 @@ class CommonConditionController extends BaseController
             searchValue: $request['search'],
             dataLimit: config('default_pagination')
         );
-        return view(CommonConditionViewPath::INDEX[VIEW], compact('conditions'));
+        $language = getWebConfig('language');
+        $defaultLang = str_replace('_', '-', app()->getLocale());
+        return view(CommonConditionViewPath::INDEX[VIEW], compact('conditions','language','defaultLang'));
     }
 
     public function add(CommonConditionAddRequest $request): RedirectResponse
     {
         $condition = $this->conditionRepo->add(data: $this->conditionService->getAddData(request: $request));
-
         $this->translationRepo->addByModel(request: $request, model: $condition, modelPath: 'App\Models\CommonCondition', attribute: 'name');
-
         Toastr::success(translate('messages.condition_added_successfully'));
         return back();
     }
@@ -53,17 +53,16 @@ class CommonConditionController extends BaseController
     public function getUpdateView(string|int $id): View
     {
         $condition = $this->conditionRepo->getFirstWithoutGlobalScopeWhere(params: ['id' => $id]);
-        return view(CommonConditionViewPath::UPDATE[VIEW], compact('condition'));
+        $language = getWebConfig('language');
+        $defaultLang = str_replace('_', '-', app()->getLocale());
+        return view(CommonConditionViewPath::UPDATE[VIEW], compact('condition','language','defaultLang'));
     }
 
     public function update(CommonConditionAddRequest $request, $id): RedirectResponse
     {
         $condition = $this->conditionRepo->getFirstWithoutGlobalScopeWhere(params: ['id' => $id]);
-
         $condition = $this->conditionRepo->update(id: $id ,data: $this->conditionService->getUpdateData(request: $request,condition: $condition));
-
         $this->translationRepo->updateByModel(request: $request, model: $condition, modelPath: 'App\Models\CommonCondition', attribute: 'name');
-
         Toastr::success(translate('messages.condition_updated_successfully'));
         return back();
     }

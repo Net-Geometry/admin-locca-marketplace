@@ -32,7 +32,7 @@
     @php($contact_us_image=\App\Models\DataSetting::withoutGlobalScope('translate')->where('type','admin_landing_page')->where('key','contact_us_image')->first())
     @php($language=\App\Models\BusinessSetting::where('key','language')->first())
     @php($language = $language->value ?? null)
-    @php($default_lang = str_replace('_', '-', app()->getLocale()))
+    @php($defaultLang = str_replace('_', '-', app()->getLocale()))
     @if($language)
         <ul class="nav nav-tabs mb-4 border-0">
             <li class="nav-item">
@@ -88,22 +88,22 @@
                                     if(isset($contact_us_title->translations)&&count($contact_us_title->translations)){
                                             $contact_us_title_translate = [];
                                             foreach($contact_us_title->translations as $t)
-                                            {   
+                                            {
                                                 if($t->locale == $lang && $t->key=='contact_us_title'){
                                                     $contact_us_title_translate[$lang]['value'] = $t->value;
                                                 }
                                             }
-                                    
+
                                         }
                                     if(isset($contact_us_sub_title->translations)&&count($contact_us_sub_title->translations)){
                                             $contact_us_sub_title_translate = [];
                                             foreach($contact_us_sub_title->translations as $t)
-                                            {   
+                                            {
                                                 if($t->locale == $lang && $t->key=='contact_us_sub_title'){
                                                     $contact_us_sub_title_translate[$lang]['value'] = $t->value;
                                                 }
                                             }
-                                    
+
                                         }
                                         ?>
                                     <div class="col-md-12 d-none lang_form" id="{{$lang}}-form1">
@@ -268,8 +268,8 @@
                 <input type="hidden" name="model_name" value="DataSetting" >
                 <input type="hidden" name="image_path" value="contact_us_image" >
                 <input type="hidden" name="field_name" value="value" >
-            </form> 
-            <!-- Module Setup Section View -->  
+            </form>
+            <!-- Module Setup Section View -->
             <div class="modal fade" id="section-view">
                 <div class="modal-dialog modal-lg warning-modal">
                     <div class="modal-content">
@@ -303,7 +303,7 @@
 
         $("#"+lang+"-form").removeClass('d-none');
         $("#"+lang+"-form1").removeClass('d-none');
-        if(lang == '{{$default_lang}}')
+        if(lang == '{{$defaultLang}}')
         {
             $(".from_part_2").removeClass('d-none');
         }

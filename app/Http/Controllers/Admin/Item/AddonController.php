@@ -25,6 +25,10 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 use Maatwebsite\Excel\Facades\Excel;
+use OpenSpout\Common\Exception\InvalidArgumentException;
+use OpenSpout\Common\Exception\IOException;
+use OpenSpout\Common\Exception\UnsupportedTypeException;
+use OpenSpout\Writer\Exception\WriterNotOpenedException;
 use Rap2hpoutre\FastExcel\FastExcel;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -49,25 +53,25 @@ class AddonController extends BaseController
 
     public function getListView(Request $request): View|Collection|LengthAwarePaginator|null
     {
-        $store_id = $request->query('store_id', 'all');
+        $storeId = $request->query('store_id', 'all');
 
         $addons = $this->addonRepo->getStoreWiseList(
             moduleId: Config::get('module.current_module_id'),
             searchValue: $request['search'],
-            storeId: $store_id,
+            storeId: $storeId,
             dataLimit: config('default_pagination')
         );
-        $store =$store_id !='all'? $this->storeRepo->getFirstWhere(params: ['id' => $store_id]):null;
+        $store =$storeId !='all'? $this->storeRepo->getFirstWhere(params: ['id' => $storeId]):null;
+        $language = getWebConfig('language');
+        $defaultLang = str_replace('_', '-', app()->getLocale());
 
-        return view(AddonViewPath::INDEX[VIEW], compact('addons','store'));
+        return view(AddonViewPath::INDEX[VIEW], compact('addons','store','language','defaultLang'));
     }
 
     public function add(AddonAddRequest $request): RedirectResponse
     {
         $addon = $this->addonRepo->add(data: $this->addonService->getAddData(request: $request));
-
         $this->translationRepo->addByModel(request: $request, model: $addon, modelPath: 'App\Models\AddOn', attribute: 'name');
-
         Toastr::success(translate('messages.addon_added_successfully'));
         return back();
     }
@@ -75,15 +79,15 @@ class AddonController extends BaseController
     public function getUpdateView(string|int $id): View
     {
         $addon = $this->addonRepo->getFirstWithoutGlobalScopeWhere(params: ['id' => $id]);
-        return view(AddonViewPath::UPDATE[VIEW], compact('addon'));
+        $language = getWebConfig('language');
+        $defaultLang = str_replace('_', '-', app()->getLocale());
+        return view(AddonViewPath::UPDATE[VIEW], compact('addon','language','defaultLang'));
     }
 
     public function update(AddonUpdateRequest $request, $id): RedirectResponse
     {
         $addon = $this->addonRepo->update(id: $id ,data: $this->addonService->getAddData(request: $request));
-
         $this->translationRepo->updateByModel(request: $request, model: $addon, modelPath: 'App\Models\AddOn', attribute: 'name');
-
         Toastr::success(translate('messages.addon_updated_successfully'));
         return back();
     }
@@ -104,16 +108,13 @@ class AddonController extends BaseController
 
     public function exportList(Request $request): BinaryFileResponse
     {
-        $store_id = $request->query('store_id', 'all');
-
+        $storeId = $request->query('store_id', 'all');
         $addons = $this->addonRepo->getExportList(
             moduleId: Config::get('module.current_module_id'),
             searchValue: $request['search'],
-            storeId: $store_id
+            storeId: $storeId
         );
-
-        $store =$store_id !='all'? $this->storeRepo->getFirstWhere(params: ['id' => $store_id]):null;
-
+        $store =$storeId !='all'? $this->storeRepo->getFirstWhere(params: ['id' => $storeId]):null;
         $data=[
             'data' =>$addons,
             'search' =>$request['search'] ?? null,
@@ -167,7 +168,7 @@ class AddonController extends BaseController
     {
         $data = $this->addonService->getImportData(request: $request, toAdd: false);
 
-        if (array_key_exists('flag', $data) && $data['flag'] == 'wrong_format') {
+        if (array_key_exists('flag', $data) && 'wrong_format' == $data['flag']) {
             Toastr::error(translate('messages.you_have_uploaded_a_wrong_format_file'));
             return back();
         }
@@ -200,6 +201,12 @@ class AddonController extends BaseController
         return view(AddonViewPath::BULK_EXPORT['view']);
     }
 
+    /**
+     * @throws WriterNotOpenedException
+     * @throws IOException
+     * @throws UnsupportedTypeException
+     * @throws InvalidArgumentException
+     */
     public function exportBulkData(AddonBulkExportRequest $request): StreamedResponse|string
     {
         $categories = $this->addonRepo->getBulkExportList(request: $request);

@@ -24,7 +24,7 @@
             <div class="card-header py-2 border-0">
                 <div class="search--button-wrapper">
                     <h5 class="card-title">
-                        {{translate('messages.deliveryman_list')}}<span class="badge badge-soft-dark ml-2" id="itemCount">{{$delivery_men->total()}}</span>
+                        {{translate('messages.deliveryman_list')}}<span class="badge badge-soft-dark ml-2" id="itemCount">{{$deliveryMen->total()}}</span>
                     </h5>
                     @if(!isset(auth('admin')->user()->zone_id))
                     <div class="col-sm-auto min--240">
@@ -125,9 +125,9 @@
                     </thead>
 
                     <tbody id="set-rows">
-                    @foreach($delivery_men as $key=>$dm)
+                    @foreach($deliveryMen as $key=>$dm)
                         <tr>
-                            <td>{{$key+$delivery_men->firstItem()}}</td>
+                            <td>{{$key+$deliveryMen->firstItem()}}</td>
                             <td>
                                 <a class="table-rest-info" href="{{route('admin.users.delivery-man.preview',[$dm['id']])}}">
                                     <img onerror="this.src='{{asset('public/assets/admin/img/160x160/img1.jpg')}}'"
@@ -194,13 +194,13 @@
                     @endforeach
                     </tbody>
                 </table>
-                @if(count($delivery_men) !== 0)
+                @if(count($deliveryMen) !== 0)
                 <hr>
                 @endif
                 <div class="page-area">
-                    {!! $delivery_men->links() !!}
+                    {!! $deliveryMen->links() !!}
                 </div>
-                @if(count($delivery_men) === 0)
+                @if(count($deliveryMen) === 0)
                 <div class="empty--data">
                     <img src="{{asset('/public/assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                     <h5>

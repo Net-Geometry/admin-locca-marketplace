@@ -19,9 +19,6 @@
                 </span>
             </h1>
         </div>
-        @php($language=\App\Models\BusinessSetting::where('key','language')->first())
-        @php($language = $language->value ?? null)
-        @php($default_lang = str_replace('_', '-', app()->getLocale()))
         <!-- End Page Header -->
         <div class="row g-3">
             <div class="col-12">
@@ -36,7 +33,7 @@
                                             href="#"
                                             id="default-link">{{translate('messages.default')}}</a>
                                         </li>
-                                        @foreach (json_decode($language) as $lang)
+                                        @foreach ($language as $lang)
                                             <li class="nav-item">
                                                 <a class="nav-link lang_link"
                                                     href="#"
@@ -57,7 +54,7 @@
                                         </div>
                                         <input type="hidden" name="lang[]" value="default">
                                     </div>
-                                        @foreach (json_decode($language) as $lang)
+                                        @foreach ($language as $lang)
                                             <div class="d-none lang_form"
                                                 id="{{ $lang }}-form">
                                                 <div class="form-group">
@@ -122,20 +119,6 @@
 
                                 <div id="usersExportDropdown"
                                     class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
-                                    {{-- <span class="dropdown-header">{{ translate('messages.options') }}</span>
-                                    <a id="export-copy" class="dropdown-item" href="javascript:;">
-                                        <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                            src="{{ asset('public/assets/admin') }}/svg/illustrations/copy.svg"
-                                            alt="Image Description">
-                                        {{ translate('messages.copy') }}
-                                    </a>
-                                    <a id="export-print" class="dropdown-item" href="javascript:;">
-                                        <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                            src="{{ asset('public/assets/admin') }}/svg/illustrations/print.svg"
-                                            alt="Image Description">
-                                        {{ translate('messages.print') }}
-                                    </a>
-                                    <div class="dropdown-divider"></div> --}}
                                     <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
                                     <a id="export-excel" class="dropdown-item" href="{{route('admin.unit.export', ['type'=>'excel'])}}">
                                         <img class="avatar avatar-xss avatar-4by3 mr-2"
@@ -149,12 +132,6 @@
                                             alt="Image Description">
                                         .{{ translate('messages.csv') }}
                                     </a>
-                                    {{-- <a id="export-pdf" class="dropdown-item" href="javascript:;">
-                                        <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                            src="{{ asset('public/assets/admin') }}/svg/components/pdf.svg"
-                                            alt="Image Description">
-                                        {{ translate('messages.pdf') }}
-                                    </a> --}}
                                 </div>
                             </div>
                             <!-- End Unfold -->
@@ -295,7 +272,7 @@
             let lang = form_id.substring(0, form_id.length - 5);
             console.log(lang);
             $("#"+lang+"-form").removeClass('d-none');
-            if(lang == '{{$default_lang}}')
+            if(lang == '{{$defaultLang}}')
             {
                 $("#from_part_2").removeClass('d-none');
             }

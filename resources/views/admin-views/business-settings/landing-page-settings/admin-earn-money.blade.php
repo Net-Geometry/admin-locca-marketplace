@@ -33,7 +33,7 @@
     @php($earning_delivery_image=\App\Models\DataSetting::withoutGlobalScope('translate')->where('type','admin_landing_page')->where('key','earning_delivery_image')->first())
     @php($language=\App\Models\BusinessSetting::where('key','language')->first())
     @php($language = $language->value ?? null)
-    @php($default_lang = str_replace('_', '-', app()->getLocale()))
+    @php($defaultLang = str_replace('_', '-', app()->getLocale()))
     @if($language)
         <ul class="nav nav-tabs mb-4 border-0">
             <li class="nav-item">
@@ -96,22 +96,22 @@
                                 if(isset($earning_title->translations)&&count($earning_title->translations)){
                                         $earning_title_translate = [];
                                         foreach($earning_title->translations as $t)
-                                        {   
+                                        {
                                             if($t->locale == $lang && $t->key=='earning_title'){
                                                 $earning_title_translate[$lang]['value'] = $t->value;
                                             }
                                         }
-                                
+
                                     }
                                 if(isset($earning_sub_title->translations)&&count($earning_sub_title->translations)){
                                         $earning_sub_title_translate = [];
                                         foreach($earning_sub_title->translations as $t)
-                                        {   
+                                        {
                                             if($t->locale == $lang && $t->key=='earning_sub_title'){
                                                 $earning_sub_title_translate[$lang]['value'] = $t->value;
                                             }
                                         }
-                                
+
                                     }
                                     ?>
                                     <div class="row g-3 d-none lang_form" id="{{$lang}}-form">
@@ -272,7 +272,7 @@
                 <input type="hidden" name="model_name" value="DataSetting" >
                 <input type="hidden" name="image_path" value="earning" >
                 <input type="hidden" name="field_name" value="value" >
-            </form> 
+            </form>
             <form action="{{ route('admin.business-settings.admin-landing-page-settings', 'earning-dm-link') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @php($dm_app_links = \App\Models\DataSetting::where(['key'=>'dm_app_earning_links','type'=>'admin_landing_page'])->first())
@@ -375,8 +375,8 @@
                 <input type="hidden" name="model_name" value="DataSetting" >
                 <input type="hidden" name="image_path" value="earning" >
                 <input type="hidden" name="field_name" value="value" >
-            </form> 
-        
+            </form>
+
             <!-- Feature Modal -->
             <div class="modal fade" id="feature-modal">
                 <div class="modal-dialog status-warning-modal">
@@ -412,7 +412,7 @@
                                 </div> -->
                                 <div class="btn--container justify-content-center">
                                     <button type="submit" class="btn btn--primary min-w-120" data-dismiss="modal">{{translate('Ok')}}</button>
-                                    <button id="reset_btn" type="reset" class="btn btn--cancel min-w-120" data-dismiss="modal">                
+                                    <button id="reset_btn" type="reset" class="btn btn--cancel min-w-120" data-dismiss="modal">
                                         {{translate("Cancel")}}
                                     </button>
                                 </div>
@@ -421,7 +421,7 @@
                     </div>
                 </div>
             </div>
-        
+
             <!-- Module Setup Section View -->
             <div class="modal fade" id="admin-earn-money">
                 <div class="modal-dialog modal-lg warning-modal">
@@ -460,7 +460,7 @@
                         </div>
                     </div>
                 </div>
-            </div>         
+            </div>
         </div>
     </div>
 </div>
@@ -479,7 +479,7 @@
         let lang = form_id.substring(0, form_id.length - 5);
         console.log(lang);
         $("#"+lang+"-form").removeClass('d-none');
-        if(lang == '{{$default_lang}}')
+        if(lang == '{{$defaultLang}}')
         {
             $(".from_part_2").removeClass('d-none');
         }

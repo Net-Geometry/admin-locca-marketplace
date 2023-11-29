@@ -18,10 +18,10 @@ class TranslationRepository implements TranslationRepositoryInterface
 
     public function addByModel(Request $request, object $model, string $modelPath, string $attribute): bool
     {
-        $default_lang = str_replace('_', '-', app()->getLocale());
+        $defaultLang = str_replace('_', '-', app()->getLocale());
         $data = [];
         foreach ($request->lang as $index => $key) {
-            if ($default_lang == $key && !($request[$attribute][$index])) {
+            if ($defaultLang == $key && !($request[$attribute][$index])) {
                 if ($key != 'default') {
                     $data[] = array(
                         'translationable_type' => $modelPath,
@@ -51,9 +51,9 @@ class TranslationRepository implements TranslationRepositoryInterface
 
     public function updateByModel(Request $request, object $model, string $modelPath, string $attribute): bool
     {
-        $default_lang = str_replace('_', '-', app()->getLocale());
+        $defaultLang = str_replace('_', '-', app()->getLocale());
         foreach ($request->lang as $index => $key) {
-            if ($default_lang == $key && !($request[$attribute][$index])) {
+            if ($defaultLang == $key && !($request[$attribute][$index])) {
                 if ($key != 'default') {
                     Translation::updateOrInsert(
                         ['translationable_type' => $modelPath,

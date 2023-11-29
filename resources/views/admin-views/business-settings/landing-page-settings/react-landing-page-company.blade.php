@@ -27,16 +27,16 @@
             @include('admin-views.business-settings.landing-page-settings.top-menu-links.react-landing-page-links')
         </div>
     </div>
-    
+
     @php($company_title=\App\Models\DataSetting::withoutGlobalScope('translate')->where('type','react_landing_page')->where('key','company_title')->first())
     @php($company_sub_title=\App\Models\DataSetting::withoutGlobalScope('translate')->where('type','react_landing_page')->where('key','company_sub_title')->first())
     @php($company_description=\App\Models\DataSetting::withoutGlobalScope('translate')->where('type','react_landing_page')->where('key','company_description')->first())
     @php($company_button_name=\App\Models\DataSetting::withoutGlobalScope('translate')->where('type','react_landing_page')->where('key','company_button_name')->first())
     @php($company_button_url=\App\Models\DataSetting::withoutGlobalScope('translate')->where('type','react_landing_page')->where('key','company_button_url')->first())
-    
+
     @php($language=\App\Models\BusinessSetting::where('key','language')->first())
     @php($language = $language->value ?? null)
-    @php($default_lang = str_replace('_', '-', app()->getLocale()))
+    @php($defaultLang = str_replace('_', '-', app()->getLocale()))
     @if($language)
         <ul class="nav nav-tabs mb-4 border-0">
             <li class="nav-item">
@@ -106,32 +106,32 @@
                                     if(isset($company_title->translations)&&count($company_title->translations)){
                                             $company_title_translate = [];
                                             foreach($company_title->translations as $t)
-                                            {   
+                                            {
                                                 if($t->locale == $lang && $t->key=='company_title'){
                                                     $company_title_translate[$lang]['value'] = $t->value;
                                                 }
                                             }
-                                    
+
                                         }
                                     if(isset($company_sub_title->translations)&&count($company_sub_title->translations)){
                                             $company_sub_title_translate = [];
                                             foreach($company_sub_title->translations as $t)
-                                            {   
+                                            {
                                                 if($t->locale == $lang && $t->key=='company_sub_title'){
                                                     $company_sub_title_translate[$lang]['value'] = $t->value;
                                                 }
                                             }
-                                    
+
                                         }
                                     if(isset($company_description->translations)&&count($company_description->translations)){
                                             $company_description_translate = [];
                                             foreach($company_description->translations as $t)
-                                            {   
+                                            {
                                                 if($t->locale == $lang && $t->key=='company_description'){
                                                     $company_description_translate[$lang]['value'] = $t->value;
                                                 }
                                             }
-                                    
+
                                         }
                                         ?>
                                         <div class="col-12 d-none lang_form" id="{{$lang}}-form">
@@ -202,12 +202,12 @@
                                     if(isset($company_button_name->translations)&&count($company_button_name->translations)){
                                             $company_button_name_translate = [];
                                             foreach($company_button_name->translations as $t)
-                                            {   
+                                            {
                                                 if($t->locale == $lang && $t->key=='company_button_name'){
                                                     $company_button_name_translate[$lang]['value'] = $t->value;
                                                 }
                                             }
-                                    
+
                                         }
                                         ?>
                                         <div class="form-group d-none lang_form" id="{{$lang}}-form1">
@@ -249,8 +249,8 @@
                     <button type="submit" onclick="" class="btn btn--primary mb-2">{{translate('Save Information')}}</button>
                 </div>
             </form>
-        
-            
+
+
             <div class="modal fade" id="header-section">
                 <div class="modal-dialog modal-lg warning-modal">
                     <div class="modal-content">
@@ -282,7 +282,7 @@
         console.log(lang);
         $("#"+lang+"-form").removeClass('d-none');
         $("#"+lang+"-form1").removeClass('d-none');
-        if(lang == '{{$default_lang}}')
+        if(lang == '{{$defaultLang}}')
         {
             $(".from_part_2").removeClass('d-none');
         }

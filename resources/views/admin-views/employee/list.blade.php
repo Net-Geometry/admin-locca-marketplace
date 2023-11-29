@@ -29,7 +29,7 @@
             <div class="card">
                 <div class="card-header py-2 border-0">
                     <div class="search--button-wrapper">
-                        <h5 class="card-title">{{translate('messages.Employee_table')}} <span class="badge badge-soft-dark ml-2" id="itemCount">{{$em->total()}}</span></h5>
+                        <h5 class="card-title">{{translate('messages.Employee_table')}} <span class="badge badge-soft-dark ml-2" id="itemCount">{{$employees->total()}}</span></h5>
                         <form class="search-form min--200">
                             {{-- @csrf --}}
                             <!-- Search -->
@@ -109,27 +109,27 @@
                             </tr>
                             </thead>
                             <tbody id="set-rows">
-                            @foreach($em as $k=>$e)
+                            @foreach($employees as $k=>$employee)
                                 <tr>
-                                    <th scope="row">{{$k+$em->firstItem()}}</th>
-                                    <td class="text-capitalize">{{$e['f_name']}} {{$e['l_name']}}</td>
+                                    <th scope="row">{{$k+$employees->firstItem()}}</th>
+                                    <td class="text-capitalize">{{$employee['f_name']}} {{$employee['l_name']}}</td>
                                     <td >
-                                      {{$e['email']}}
+                                      {{$employee['email']}}
                                     </td>
-                                    <td>{{$e['phone']}}</td>
-                                    <td>{{$e->role?$e->role['name']:translate('messages.role_deleted')}}</td>
+                                    <td>{{$employee['phone']}}</td>
+                                    <td>{{$employee->role?$employee->role['name']:translate('messages.role_deleted')}}</td>
                                     <td>
-                                        @if (auth('admin')->id()  != $e['id'])
+                                        @if (auth('admin')->id()  != $employee['id'])
                                         <div class="btn--container justify-content-center">
                                             <a class="btn action-btn btn--primary btn-outline-primary"
-                                                href="{{route('admin.users.employee.edit',[$e['id']])}}" title="{{translate('messages.edit_Employee')}}"><i class="tio-edit"></i>
+                                                href="{{route('admin.users.employee.edit',[$employee['id']])}}" title="{{translate('messages.edit_Employee')}}"><i class="tio-edit"></i>
                                             </a>
                                             <a class="btn action-btn btn--danger btn-outline-danger" href="javascript:"
-                                                onclick="form_alert('employee-{{$e['id']}}','{{translate('messages.Want_to_delete_this_role')}}')" title="{{translate('messages.delete_Employee')}}"><i class="tio-delete-outlined"></i>
+                                                onclick="form_alert('employee-{{$employee['id']}}','{{translate('messages.Want_to_delete_this_role')}}')" title="{{translate('messages.delete_Employee')}}"><i class="tio-delete-outlined"></i>
                                             </a>
                                         </div>
-                                        <form action="{{route('admin.users.employee.delete',[$e['id']])}}"
-                                                method="post" id="employee-{{$e['id']}}">
+                                        <form action="{{route('admin.users.employee.delete',[$employee['id']])}}"
+                                                method="post" id="employee-{{$employee['id']}}">
                                             @csrf @method('delete')
                                         </form>
                                         @endif
@@ -140,13 +140,13 @@
                         </table>
                     </div>
                 </div>
-                @if(count($em) !== 0)
+                @if(count($employees) !== 0)
                 <hr>
                 @endif
                 <div class="page-area">
-                    {!! $em->links() !!}
+                    {!! $employees->links() !!}
                 </div>
-                @if(count($em) === 0)
+                @if(count($employees) === 0)
                 <div class="empty--data">
                     <img src="{{asset('/public/assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                     <h5>

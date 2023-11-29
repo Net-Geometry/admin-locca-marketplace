@@ -17,7 +17,7 @@
 <div class="card-body">
     <div class="row g-2">
         @foreach($top_deliveryman as $key=>$item)
-            <div class="col-md-4 col-6" onclick="location.href='{{route('admin.delivery-man.preview',[$item['id']])}}'">
+            <div class="col-md-4 col-6" onclick="location.href='{{route('admin.users.delivery-man.preview',[$item['id']])}}'">
                 <div class="grid-card style-2 position-relative">
                     <label class="label_1">{{ translate('messages.orders') }} : {{$item['order_count']}}</label>
                     <center class="mt-6">

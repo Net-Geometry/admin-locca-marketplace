@@ -56,7 +56,7 @@
                     </div>
                     @php($language=\App\Models\BusinessSetting::where('key','language')->first())
                     @php($language = $language->value ?? null)
-                    @php($default_lang = str_replace('_', '-', app()->getLocale()))
+                    @php($defaultLang = str_replace('_', '-', app()->getLocale()))
                     @if($language)
                     <ul class="nav nav-tabs nav--tabs mt-3 mb-3 ">
                         <li class="nav-item">
@@ -194,7 +194,7 @@
                                             @php($reason=  \App\Models\RefundReason::withoutGlobalScope('translate')->with('translations')->find($reason->id))
                                             @php($language=\App\Models\BusinessSetting::where('key','language')->first())
                                         @php($language = $language->value ?? null)
-                                        @php($default_lang = str_replace('_', '-', app()->getLocale()))
+                                        @php($defaultLang = str_replace('_', '-', app()->getLocale()))
                                         <ul class="nav nav-tabs nav--tabs mb-3 border-0">
                                             <li class="nav-item">
                                                 <a class="nav-link lang_link add_active active"
@@ -341,7 +341,7 @@
         @foreach ( $reasons as $reason )
         $("#"+lang+"-form_{{ $reason->id }}").removeClass('d-none');
         @endforeach
-        if(lang == '{{$default_lang}}')
+        if(lang == '{{$defaultLang}}')
         {
             $(".from_part_2").removeClass('d-none');
         }

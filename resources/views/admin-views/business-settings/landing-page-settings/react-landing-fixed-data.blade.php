@@ -33,7 +33,7 @@
     @php($fixed_promotional_banner=\App\Models\DataSetting::withoutGlobalScope('translate')->where('type','react_landing_page')->where('key','fixed_promotional_banner')->first())
     @php($language=\App\Models\BusinessSetting::where('key','language')->first())
     @php($language = $language->value ?? null)
-    @php($default_lang = str_replace('_', '-', app()->getLocale()))
+    @php($defaultLang = str_replace('_', '-', app()->getLocale()))
     @if($language)
         <ul class="nav nav-tabs mb-4 border-0">
             <li class="nav-item">
@@ -101,7 +101,7 @@
                 <input type="hidden" name="model_name" value="DataSetting" >
                 <input type="hidden" name="image_path" value="promotional_banner" >
                 <input type="hidden" name="field_name" value="value" >
-            </form> 
+            </form>
             <form action="{{ route('admin.business-settings.react-landing-page-settings', 'fixed-newsletter') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <h5 class="card-title mb-3">
@@ -140,22 +140,22 @@
                                 if(isset($fixed_newsletter_title->translations)&&count($fixed_newsletter_title->translations)){
                                         $fixed_newsletter_title_translate = [];
                                         foreach($fixed_newsletter_title->translations as $t)
-                                        {   
+                                        {
                                             if($t->locale == $lang && $t->key=='fixed_newsletter_title'){
                                                 $fixed_newsletter_title_translate[$lang]['value'] = $t->value;
                                             }
                                         }
-                                
+
                                     }
                                 if(isset($fixed_newsletter_sub_title->translations)&&count($fixed_newsletter_sub_title->translations)){
                                         $fixed_newsletter_sub_title_translate = [];
                                         foreach($fixed_newsletter_sub_title->translations as $t)
-                                        {   
+                                        {
                                             if($t->locale == $lang && $t->key=='fixed_newsletter_sub_title'){
                                                 $fixed_newsletter_sub_title_translate[$lang]['value'] = $t->value;
                                             }
                                         }
-                                
+
                                     }
                                     ?>
                                     <div class="row g-3 d-none lang_form" id="{{$lang}}-form">
@@ -226,12 +226,12 @@
                                 if(isset($fixed_footer_description->translations)&&count($fixed_footer_description->translations)){
                                         $fixed_footer_description_translate = [];
                                         foreach($fixed_footer_description->translations as $t)
-                                        {   
+                                        {
                                             if($t->locale == $lang && $t->key=='fixed_footer_description'){
                                                 $fixed_footer_description_translate[$lang]['value'] = $t->value;
                                             }
                                         }
-                                
+
                                     }
                                     ?>
                                     <div class="row g-3 d-none lang_form" id="{{$lang}}-form1">
@@ -262,7 +262,7 @@
                     </div>
                 </div>
             </form>
-        
+
             <!-- Feature Modal -->
             <div class="modal fade" id="feature-modal">
                 <div class="modal-dialog status-warning-modal">
@@ -298,7 +298,7 @@
                                 </div> -->
                                 <div class="btn--container justify-content-center">
                                     <button type="submit" class="btn btn--primary min-w-120" data-dismiss="modal">{{translate('Ok')}}</button>
-                                    <button id="reset_btn" type="reset" class="btn btn--cancel min-w-120" data-dismiss="modal">                
+                                    <button id="reset_btn" type="reset" class="btn btn--cancel min-w-120" data-dismiss="modal">
                                         {{translate("Cancel")}}
                                     </button>
                                 </div>
@@ -307,7 +307,7 @@
                     </div>
                 </div>
             </div>
-        
+
             <!-- Module Setup Section View -->
             <div class="modal fade" id="admin-earn-money">
                 <div class="modal-dialog modal-lg warning-modal">
@@ -346,7 +346,7 @@
                         </div>
                     </div>
                 </div>
-            </div>         
+            </div>
         </div>
     </div>
 </div>
@@ -369,7 +369,7 @@
         $("#"+lang+"-form2").removeClass('d-none');
         $("#"+lang+"-form3").removeClass('d-none');
         $("#"+lang+"-form4").removeClass('d-none');
-        if(lang == '{{$default_lang}}')
+        if(lang == '{{$defaultLang}}')
         {
             $(".from_part_2").removeClass('d-none');
         }

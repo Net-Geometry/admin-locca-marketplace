@@ -65,15 +65,15 @@
                     <div class="tab-pane fade show active" id="push-notify">
                         @php($language=\App\Models\BusinessSetting::where('key','language')->first())
                         @php($language = $language->value ?? null)
-                        @php($default_lang = 'en')
+                        @php($defaultLang = 'en')
                         <div class="row justify-content-between">
                             <div class="col-sm-auto mb-5">
                                 @if($language)
-                                    @php($default_lang = json_decode($language)[0])
+                                    @php($defaultLang = json_decode($language)[0])
                                     <ul class="nav nav-tabs border-0">
                                         @foreach(json_decode($language) as $lang)
                                             <li class="nav-item">
-                                                <a class="nav-link lang_link {{$lang == $default_lang? 'active':''}}" href="#" id="{{$lang}}-link">{{\App\CentralLogics\Helpers::get_language_name($lang).'('.strtoupper($lang).')'}}</a>
+                                                <a class="nav-link lang_link {{$lang == $defaultLang? 'active':''}}" href="#" id="{{$lang}}-link">{{\App\CentralLogics\Helpers::get_language_name($lang).'('.strtoupper($lang).')'}}</a>
                                             </li>
                                         @endforeach
                                     </ul>
@@ -96,10 +96,10 @@
                             @csrf
 
                             @if($language)
-                            @php($default_lang = json_decode($language)[0])
+                            @php($defaultLang = json_decode($language)[0])
                             @foreach(json_decode($language) as $lang_key => $lang)
 
-                                <div class="{{$lang != $default_lang ? 'd-none':''}} lang_form" id="{{$lang}}-form">
+                                <div class="{{$lang != $defaultLang ? 'd-none':''}} lang_form" id="{{$lang}}-form">
                                     <div class="row">
                                         @php($opm=\App\Models\NotificationMessage::with('translations')->where('module_type',$mod_type)->where('key','order_pending_message')->first())
                                         @php($data=$opm?$opm:null)
@@ -885,7 +885,7 @@
         let lang = form_id.substring(0, form_id.length - 5);
         console.log(lang);
         $("#"+lang+"-form").removeClass('d-none');
-        if(lang == '{{$default_lang}}')
+        if(lang == '{{$defaultLang}}')
         {
             $("#from_part_2").removeClass('d-none');
         }
