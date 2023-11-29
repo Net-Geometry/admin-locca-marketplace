@@ -56,7 +56,7 @@ class NotificationController extends BaseController
         $notification->image = $notification->image ? url('/').'/storage/app/public/notification/'.$notification->image: null;
 
         try {
-            $this->send_push_notif_to_topic($notification, $topic, 'general');
+            $this->sendPushNotificationToTopic($notification, $topic, 'general');
         } catch (Exception) {
             Toastr::warning(translate('messages.push_notification_failed'));
         }
@@ -81,7 +81,7 @@ class NotificationController extends BaseController
         $notification->image = $notification->image ? url('/').'/storage/app/public/notification/'.$notification->image: null;
 
         try {
-            $this->send_push_notif_to_topic($notification, $topic, 'general');
+            $this->sendPushNotificationToTopic($notification, $topic, 'general');
         } catch (Exception) {
             Toastr::warning(translate('messages.push_notification_failed'));
         }

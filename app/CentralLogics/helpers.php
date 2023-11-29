@@ -3097,7 +3097,7 @@ class Helpers
 
     public static function get_mail_status($name)
     {
-        $status = BusinessSetting::where('key', $name)->first()?->value ?? 0;
+        $status = BusinessSetting::where('key', $name)->first()->value ?? 0;
         return $status;
     }
 

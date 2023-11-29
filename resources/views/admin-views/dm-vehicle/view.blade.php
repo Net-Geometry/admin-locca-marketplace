@@ -91,7 +91,7 @@
                                     <tr>
                                         <td>{{$key+$deliveryMen->firstItem()}}</td>
                                         <td>
-                                            <a class="table-rest-info" href="{{route('admin.delivery-man.preview',[$dm['id']])}}">
+                                            <a class="table-rest-info" href="{{route('admin.users.delivery-man.preview',[$dm['id']])}}">
                                                 <img onerror="this.src='{{asset('public/assets/admin/img/160x160/img1.jpg')}}'"
                                                         src="{{asset('storage/app/public/delivery-man')}}/{{$dm['image']}}" alt="{{$dm['f_name']}} {{$dm['l_name']}}">
                                                 <div class="info">

@@ -6,7 +6,9 @@ use App\Contracts\Repositories\DeliveryManRepositoryInterface;
 use App\Models\DeliveryMan;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class DeliveryManRepository implements DeliveryManRepositoryInterface
@@ -27,7 +29,7 @@ class DeliveryManRepository implements DeliveryManRepositoryInterface
 
     public function getFirstWhere(array $params, array $relations = []): ?Model
     {
-        return $this->dm->where($params)->first();
+        return $this->dm->with($relations)->where($params)->first();
     }
 
     public function getList(array $orderBy = [], array $relations = [], int|string $dataLimit = DEFAULT_DATA_LIMIT, int $offset = null): Collection|LengthAwarePaginator
@@ -38,7 +40,7 @@ class DeliveryManRepository implements DeliveryManRepositoryInterface
     public function getListWhere(string $searchValue = null, array $filters = [], array $relations = [], int|string $dataLimit = DEFAULT_DATA_LIMIT, int $offset = null): Collection|LengthAwarePaginator
     {
         $key = explode(' ', $searchValue);
-        return $this->dm->with($relations)->where($filters)
+        $data = $this->dm->with($relations)->where($filters)
             ->when(isset($key), function($q) use($key){
                 $q->where(function ($q) use ($key) {
                     foreach ($key as $value) {
@@ -50,13 +52,12 @@ class DeliveryManRepository implements DeliveryManRepositoryInterface
                     }
                 });
             })
-            ->latest()
-            ->when($dataLimit == 'all' , function ($query) use ($dataLimit){
-                $query->get();
-            })
-            ->when($dataLimit != 'all' , function ($query) use ($dataLimit){
-                $query->paginate($dataLimit);
-            });
+            ->latest();
+
+            if($dataLimit == 'all'){
+                return $data->get();
+            }
+            return $data->paginate($dataLimit);
     }
 
     public function update(string $id, array $data): bool|string|object
@@ -98,7 +99,7 @@ class DeliveryManRepository implements DeliveryManRepositoryInterface
     public function getZoneWiseListWhere(string $zoneId = 'all',string $searchValue = null, array $filters = [], array $relations = [], int|string $dataLimit = DEFAULT_DATA_LIMIT, int $offset = null): Collection|LengthAwarePaginator
     {
         $key = explode(' ', $searchValue);
-        return $this->dm->with($relations)->where($filters)
+        $data = $this->dm->with($relations)->where($filters)
             ->when(is_numeric($zoneId), function($query) use($zoneId){
                 return $query->where('zone_id', $zoneId);
             })
@@ -113,14 +114,33 @@ class DeliveryManRepository implements DeliveryManRepositoryInterface
                     }
                 });
             })
-            ->latest()
-            ->when($dataLimit == 'all' , function ($query) use ($dataLimit){
-                $query->get();
-            })
-            ->when($dataLimit != 'all' , function ($query) use ($dataLimit){
-                $query->paginate($dataLimit);
-            });
+            ->latest();
+            if($dataLimit == 'all'){
+                return $data->get();
+            }
+            return $data->paginate($dataLimit);
 
+    }
+
+    public function getDropdownList(Request $request): Collection
+    {
+        $key = explode(' ', $request->q);
+        $zoneIds = isset($request->zone_ids)?(count($request->zone_ids)>0?$request->zone_ids:[]):0;
+        return $this->dm->when($zoneIds, function($query) use($zoneIds){
+            return $query->whereIn('zone_id', $zoneIds);
+        })
+            ->when($request->earning, function($query){
+                return $query->earning();
+            })
+            ->where(function ($q) use ($key) {
+                foreach ($key as $value) {
+                    $q->orWhere('f_name', 'like', "%{$value}%")
+                        ->orWhere('l_name', 'like', "%{$value}%")
+                        ->orWhere('email', 'like', "%{$value}%")
+                        ->orWhere('phone', 'like', "%{$value}%")
+                        ->orWhere('identity_number', 'like', "%{$value}%");
+                }
+            })->active()->limit(8)->get(['id',DB::raw('CONCAT(f_name, " ", l_name) as text')]);
     }
 
 }

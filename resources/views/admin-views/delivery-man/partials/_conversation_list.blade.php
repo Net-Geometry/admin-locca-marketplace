@@ -2,7 +2,7 @@
 @php($user= $conv->sender_type == 'delivery_man' ? $conv->receiver :  $conv->sender)
 @if (isset($user))
     @php($unchecked=($conv->last_message->sender_id == $user->id) ? $conv->unread_message_count : 0)
-    <input type="hidden" id="deliver_man" value="{{ $dm->id }}">
+    <input type="hidden" id="deliver_man" value="{{ $deliveryMan->id }}">
     <div
         class="chat-user-info d-flex border-bottom p-3 align-items-center customer-list {{$unchecked!=0?'conv-active':''}}"
         onclick="viewConvs('{{route('admin.users.delivery-man.message-view',['conversation_id'=>$conv->id,'user_id'=>$user->id])}}','customer-{{$user->id}}','{{ $conv->id }}','{{ $user->id }}')"

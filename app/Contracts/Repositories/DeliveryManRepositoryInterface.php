@@ -4,6 +4,7 @@ namespace App\Contracts\Repositories;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 /**
@@ -28,4 +29,10 @@ interface DeliveryManRepositoryInterface extends RepositoryInterface
      * @return Collection|LengthAwarePaginator
      */
     public function getZoneWiseListWhere(string $zoneId = 'all', string $searchValue = null, array $filters = [], array $relations = [], int|string $dataLimit = DEFAULT_DATA_LIMIT, int $offset = null): Collection|LengthAwarePaginator;
+
+    /**
+     * @param Request $request
+     * @return Collection
+     */
+    public function getDropdownList(Request $request): Collection;
 }
