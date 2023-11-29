@@ -38,10 +38,10 @@ class DmVehicleRepository implements DmVehicleRepositoryInterface
     {
         $key = explode(' ', $searchValue);
         return $this->vehicle->with($relations)->where($filters)
-            ->when(isset($key), function($q) use($key){
-                $q->where(function ($q) use ($key) {
+            ->when(isset($key), function($query) use($key){
+                $query->where(function ($query) use ($key) {
                     foreach ($key as $value) {
-                        $q->where('type', 'like', "%{$value}%");
+                        $query->where('type', 'like', "%{$value}%");
                     }
                 });
             })
@@ -75,9 +75,9 @@ class DmVehicleRepository implements DmVehicleRepositoryInterface
     public function getSearchedList(string $searchValue = null, int|string $dataLimit = DEFAULT_DATA_LIMIT): Collection
     {
         $key = explode(' ', $searchValue);
-        return $this->vehicle->where(function ($q) use ($key) {
+        return $this->vehicle->where(function ($query) use ($key) {
             foreach ($key as $value) {
-                $q->orWhere('title', 'like', "%{$value}%");
+                $query->orWhere('title', 'like', "%{$value}%");
             }
         })->limit($dataLimit)->get();
     }

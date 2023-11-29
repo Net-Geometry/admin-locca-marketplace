@@ -66,9 +66,9 @@ class WalletBonusRepository implements WalletBonusRepositoryInterface
     public function getSearchedList(string $searchValue = null, int|string $dataLimit = DEFAULT_DATA_LIMIT): Collection
     {
         $key = explode(' ', $searchValue);
-        return $this->bonus->where(function ($q) use ($key) {
+        return $this->bonus->where(function ($query) use ($key) {
             foreach ($key as $value) {
-                $q->orWhere('title', 'like', "%{$value}%");
+                $query->orWhere('title', 'like', "%{$value}%");
             }
         })->limit($dataLimit)->get();
     }

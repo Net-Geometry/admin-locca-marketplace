@@ -8,5 +8,9 @@ use Illuminate\Http\Request;
 
 interface OrderTransactionRepositoryInterface extends RepositoryInterface
 {
+    /**
+     * @param Request $request
+     * @return Collection
+     */
     public function getDmEarningList(Request $request): Collection;
 }

@@ -37,9 +37,9 @@ class UserInfoRepository implements UserInfoRepositoryInterface
     public function getListWhere(string $searchValue = null, array $filters = [], array $relations = [], int|string $dataLimit = DEFAULT_DATA_LIMIT, int $offset = null): Collection|LengthAwarePaginator
     {
         $key = explode(' ', $searchValue);
-        return $this->userInfo->where(function ($q) use ($key) {
+        return $this->userInfo->where(function ($query) use ($key) {
             foreach ($key as $value) {
-                $q->orWhere('name', 'like', "%{$value}%");
+                $query->orWhere('name', 'like', "%{$value}%");
             }
         })->limit($dataLimit)->get();
     }
