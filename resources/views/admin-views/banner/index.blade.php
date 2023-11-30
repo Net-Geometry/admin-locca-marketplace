@@ -409,7 +409,7 @@
             else if(order_type=='store_wise')
             {
                 $('#store_wise').show();
-                $('#item_wise').hide();5
+                $('#item_wise').hide();
                 $('#default').hide();
             }
             else if(order_type=='default')

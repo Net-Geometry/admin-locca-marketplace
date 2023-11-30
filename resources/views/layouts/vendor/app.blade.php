@@ -20,7 +20,7 @@
     <link rel="shortcut icon" href="">
     <link rel="icon" type="image/x-icon" href="{{asset('storage/app/public/business/'.$logo??'')}}">
     <!-- Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&amp;display=swap" rel="stylesheet">
+    <link href="{{asset('public/assets/admin/css/fonts.css')}}" rel="stylesheet">
     <!-- CSS Implementing Plugins -->
     <link rel="stylesheet" href="{{asset('public/assets/admin')}}/css/vendor.min.css">
     <link rel="stylesheet" href="{{asset('public/assets/admin')}}/vendor/icon-set/style.css">
@@ -159,7 +159,7 @@
 
 <!-- ========== END SECONDARY CONTENTS ========== -->
 <script src="{{asset('public/assets/admin')}}/js/custom.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.3.2/firebase.js"></script>
+<script src="{{asset('public/assets/admin')}}/js/firebase.min.js"></script>
 <!-- JS Implementing Plugins -->
 
 @stack('script')

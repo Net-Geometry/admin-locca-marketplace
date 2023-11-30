@@ -89,16 +89,5 @@
 @endsection
 
 @push('script_2')
-<script>
-    $(document).on('ready', function (){
-        $('.id_wise').hide();
-        $('.date_wise').hide();
-        $('#type').on('change', function()
-        {
-            $('.id_wise').hide();
-            $('.date_wise').hide();
-            $('.'+$(this).val()).show();
-        })
-    });
-</script>
+<script src="{{asset('public/assets/admin')}}/js/view-pages/addon-import-export.js"></script>
 @endpush

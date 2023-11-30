@@ -125,6 +125,8 @@
 
 @push('script_2')
     <script>
+        "use strict";
+
         $(".lang_link").click(function (e) {
             e.preventDefault();
             $(".lang_link").removeClass('active');
@@ -141,8 +143,7 @@
                 $(".from_part_2").addClass('d-none');
             }
         });
-    </script>
-    <script>
+
         $('.js-data-example-ajax').select2({
             ajax: {
                 url: '{{url('/')}}/admin/store/get-stores',
