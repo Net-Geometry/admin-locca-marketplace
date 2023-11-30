@@ -9,9 +9,8 @@
 @section('content')
 <div class="content container-fluid">
 
-    <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-2">
-        <!-- <h4 class=" mb-0 text-black-50">{{translate('messages.account_transaction')}}</h4> -->
+        {{translate('messages.account_transaction')}}
     </div>
     <div class="card">
         <div class="card-header">
@@ -79,29 +78,9 @@
 @endsection
 
 @push('script_2')
+<script src="{{asset('public/assets/admin')}}/js/view-pages/account-index.js"></script>
 <script>
-    $(document).on('ready', function () {
-        // INITIALIZATION OF SELECT2
-        // =======================================================
-        $('.js-select2-custom').each(function () {
-            var select2 = $.HSCore.components.HSSelect2.init($(this));
-        });
-
-        $('#type').on('change', function() {
-            if($('#type').val() == 'store')
-            {
-                $('#store').removeAttr("disabled");
-                $('#deliveryman').val("").trigger( "change" );
-                $('#deliveryman').attr("disabled","true");
-            }
-            else if($('#type').val() == 'deliveryman')
-            {
-                $('#deliveryman').removeAttr("disabled");
-                $('#store').val("").trigger( "change" );
-                $('#store').attr("disabled","true");
-            }
-        });
-    });
+    "use strict";
     $('#store').select2({
         ajax: {
             url: '{{url('/')}}/admin/store/get-stores',
@@ -126,7 +105,6 @@
             }
         }
     });
-
     $('#deliveryman').select2({
         ajax: {
             url: '{{url('/')}}/admin/delivery-man/get-deliverymen',
@@ -151,8 +129,6 @@
             }
         }
     });
-</script>
-<script>
     $('#add_transaction').on('submit', function (e) {
         e.preventDefault();
         var formData = new FormData(this);

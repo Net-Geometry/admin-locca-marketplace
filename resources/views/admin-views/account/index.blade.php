@@ -8,7 +8,6 @@
 
 @section('content')
 <div class="content container-fluid">
-    <!-- Page Heading -->
     <div class="page-header">
         <h1 class="page-header-title">
             <span class="page-header-icon">
@@ -19,7 +18,6 @@
             </span>
         </h1>
     </div>
-    <!-- Page Heading -->
     <div class="card">
         <div class="card-body">
             <form action="{{route('admin.transactions.account-transaction.store')}}" method='post' id="add_transaction">
@@ -37,7 +35,7 @@
                     <div class="col-lg-4 col-sm-6">
                         <div class="form-group mb-0">
                             <label class="form-label" for="store">{{translate('messages.store')}}<span class="input-label-secondary"></span></label>
-                            <select id="store" name="store_id" data-placeholder="{{translate('messages.select_store')}}" onchange="getAccountData('{{url('/')}}/admin/store/get-account-data/',this.value,'store')" class="form-control" title="Select Restaurant" disabled>
+                            <select id="store" name="store_id" data-placeholder="{{translate('messages.select_store')}}" class="form-control" title="Select Restaurant" disabled>
 
                             </select>
                         </div>
@@ -45,7 +43,7 @@
                     <div class="col-lg-4 col-sm-6">
                         <div class="form-group mb-0">
                             <label class="form-label" for="deliveryman">{{translate('messages.deliveryman')}}<span class="input-label-secondary"></span></label>
-                            <select id="deliveryman" name="deliveryman_id" data-placeholder="{{translate('messages.select_deliveryman')}}" onchange="getAccountData('{{url('/')}}/admin/delivery-man/get-account-data/',this.value,'deliveryman')" class="form-control" title="Select deliveryman">
+                            <select id="deliveryman" name="deliveryman_id" data-placeholder="{{translate('messages.select_deliveryman')}}" class="form-control" title="Select deliveryman">
 
                             </select>
                         </div>
@@ -94,16 +92,12 @@
                         </h5>
 
                         <form class="search-form">
-                        {{-- @csrf --}}
-                            <!-- Search -->
                             <div class="input-group input--group">
                                 <input id="datatableSearch" name="search" type="search" class="form-control h--40px" placeholder="{{translate('Search By Referance  or Name')}}" value="{{ request()?->search ?? null}}" aria-label="{{translate('messages.search_here')}}">
                                 <button type="submit" class="btn btn--secondary h--40px"><i class="tio-search"></i></button>
                             </div>
-                            <!-- End Search -->
                         </form>
 
-                        <!-- Unfold -->
                         <div class="hs-unfold mr-2">
                             <a class="js-hs-unfold-invoker btn btn-sm btn-white dropdown-toggle min-height-40" href="javascript:;"
                                 data-hs-unfold-options='{
@@ -115,20 +109,6 @@
 
                             <div id="usersExportDropdown"
                                 class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
-                                {{-- <span class="dropdown-header">{{ translate('messages.options') }}</span>
-                                <a id="export-copy" class="dropdown-item" href="javascript:;">
-                                    <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                        src="{{ asset('public/assets/admin') }}/svg/illustrations/copy.svg"
-                                        alt="Image Description">
-                                    {{ translate('messages.copy') }}
-                                </a>
-                                <a id="export-print" class="dropdown-item" href="javascript:;">
-                                    <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                        src="{{ asset('public/assets/admin') }}/svg/illustrations/print.svg"
-                                        alt="Image Description">
-                                    {{ translate('messages.print') }}
-                                </a>
-                                <div class="dropdown-divider"></div> --}}
                                 <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
                                 <a id="export-excel" class="dropdown-item" href="{{route('admin.transactions.account-transaction.export', ['type'=>'excel',request()->getQueryString()])}}">
                                     <img class="avatar avatar-xss avatar-4by3 mr-2"
@@ -142,15 +122,8 @@
                                         alt="Image Description">
                                     .{{ translate('messages.csv') }}
                                 </a>
-                                {{-- <a id="export-pdf" class="dropdown-item" href="javascript:;">
-                                    <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                        src="{{ asset('public/assets/admin') }}/svg/components/pdf.svg"
-                                        alt="Image Description">
-                                    {{ translate('messages.pdf') }}
-                                </a> --}}
                             </div>
                         </div>
-                        <!-- End Unfold -->
                     </div>
                 </div>
                 <div class="card-body p-0">
@@ -171,7 +144,7 @@
                             <tbody id="set-rows">
                             @foreach($account_transaction as $k=>$at)
                                 <tr>
-                                    <td scope="row">{{$k+$account_transaction->firstItem()}}</td>
+                                    <td>{{$k+$account_transaction->firstItem()}}</td>
                                     <td>
                                         @if($at->store)
                                         <a href="{{route('admin.store.view',[$at->store['id'],'module_id'=>$at->store['module_id']])}}">{{ Str::limit($at->store->name, 20, '...') }}</a>
@@ -223,29 +196,10 @@
 @endsection
 
 @push('script_2')
+<script src="{{asset('public/assets/admin')}}/js/view-pages/account-index.js"></script>
 <script>
-    $(document).on('ready', function () {
-        // INITIALIZATION OF SELECT2
-        // =======================================================
-        $('.js-select2-custom').each(function () {
-            var select2 = $.HSCore.components.HSSelect2.init($(this));
-        });
+    "use strict";
 
-        $('#type').on('change', function() {
-            if($('#type').val() == 'store')
-            {
-                $('#store').removeAttr("disabled");
-                $('#deliveryman').val("").trigger( "change" );
-                $('#deliveryman').attr("disabled","true");
-            }
-            else if($('#type').val() == 'deliveryman')
-            {
-                $('#deliveryman').removeAttr("disabled");
-                $('#store').val("").trigger( "change" );
-                $('#store').attr("disabled","true");
-            }
-        });
-    });
     $('#store').select2({
         ajax: {
             url: '{{url('/')}}/admin/store/get-stores',
@@ -273,7 +227,7 @@
 
     $('#deliveryman').select2({
         ajax: {
-            url: '{{url('/')}}/admin/delivery-man/get-deliverymen',
+            url: '{{url('/')}}/admin/users/delivery-man/get-deliverymen',
             data: function (params) {
                 return {
                     q: params.term, // search term
@@ -296,18 +250,26 @@
         }
     });
 
-    function getAccountData(route, data_id, type)
-    {
+    $('#store').on('change', function() {
         $.get({
-                url: route+data_id,
-                dataType: 'json',
-                success: function (data) {
-                    $('#account_info').html('({{translate('messages.cash_in_hand')}}: '+data.cash_in_hand+' {{translate('messages.total_earning')}}: '+data.earning_balance+')');
-                },
-            });
-    }
-</script>
-<script>
+            url: '{{url('/')}}/admin/store/get-account-data/'+this.value,
+            dataType: 'json',
+            success: function (data) {
+                $('#account_info').html('({{translate('messages.cash_in_hand')}}: '+data.cash_in_hand+' {{translate('messages.total_earning')}}: '+data.earning_balance+')');
+            },
+        });
+    })
+
+    $('#deliveryman').on('change', function() {
+        $.get({
+            url: '{{url('/')}}/admin/users/delivery-man/get-account-data/'+this.value,
+            dataType: 'json',
+            success: function (data) {
+                $('#account_info').html('({{translate('messages.cash_in_hand')}}: '+data.cash_in_hand+' {{translate('messages.total_earning')}}: '+data.earning_balance+')');
+            },
+        });
+    })
+
     $('#add_transaction').on('submit', function (e) {
         e.preventDefault();
         var formData = new FormData(this);
@@ -343,12 +305,7 @@
         });
     });
 
-    $('#reset_btn').click(function(){
-            $('#store').val(null).trigger('change');
-            $('#deliveryman').val(null).trigger('change');
-        })
-
-        $('#search-form').on('submit', function () {
+    $('#search-form').on('submit', function () {
             var formData = new FormData(this);
             $.ajaxSetup({
                 headers: {

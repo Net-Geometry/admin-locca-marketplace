@@ -209,54 +209,28 @@
 @endsection
 
 @push('script_2')
-
+    <script src="{{asset('public/assets/admin')}}/js/view-pages/attribute-index.js"></script>
     <script>
-        $(document).on('ready', function () {
-            // INITIALIZATION OF DATATABLES
-            // =======================================================
-            var datatable = $.HSCore.components.HSDatatables.init($('#columnSearchDatatable'));
+        "use strict";
 
-            $('#column1_search').on('keyup', function () {
-                datatable
-                    .columns(1)
-                    .search(this.value)
-                    .draw();
-            });
+        $(".lang_link").click(function(e){
+            e.preventDefault();
+            $(".lang_link").removeClass('active');
+            $(".lang_form").addClass('d-none');
+            $(this).addClass('active');
 
-
-            $('#column3_search').on('change', function () {
-                datatable
-                    .columns(2)
-                    .search(this.value)
-                    .draw();
-            });
-
-
-            // INITIALIZATION OF SELECT2
-            // =======================================================
-            $('.js-select2-custom').each(function () {
-                var select2 = $.HSCore.components.HSSelect2.init($(this));
-            });
-        });
-
-            $(".lang_link").click(function(e){
-                e.preventDefault();
-                $(".lang_link").removeClass('active');
-                $(".lang_form").addClass('d-none');
-                $(this).addClass('active');
-
-                let form_id = this.id;
-                let lang = form_id.substring(0, form_id.length - 5);
-                console.log(lang);
-                $("#"+lang+"-form").removeClass('d-none');
-                if(lang == '{{$defaultLang}}')
-                {
-                    $("#from_part_2").removeClass('d-none');
-                }
-                else
-                {
-                    $("#from_part_2").addClass('d-none');
-                }
-            })
-        </script>
+            let form_id = this.id;
+            let lang = form_id.substring(0, form_id.length - 5);
+            console.log(lang);
+            $("#"+lang+"-form").removeClass('d-none');
+            if(lang == '{{$defaultLang}}')
+            {
+                $("#from_part_2").removeClass('d-none');
+            }
+            else
+            {
+                $("#from_part_2").addClass('d-none');
+            }
+        })
+    </script>
 @endpush

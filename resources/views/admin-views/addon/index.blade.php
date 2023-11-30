@@ -49,8 +49,7 @@
                                            for="exampleFormControlInput1">{{translate('messages.name')}}
                                         ({{translate('messages.default')}})</label>
                                     <input type="text" name="name[]" class="form-control"
-                                           placeholder="{{translate('messages.new_addon')}}" maxlength="191"
-                                           oninvalid="document.getElementById('en-link').click()">
+                                           placeholder="{{translate('messages.new_addon')}}" maxlength="191">
                                 </div>
                                 <input type="hidden" name="lang[]" value="default">
                                 @foreach($language as $lang)
@@ -59,8 +58,7 @@
                                                for="exampleFormControlInput1">{{translate('messages.name')}}
                                             ({{strtoupper($lang)}})</label>
                                         <input type="text" name="name[]" class="form-control"
-                                               placeholder="{{translate('messages.new_addon')}}" maxlength="191"
-                                               oninvalid="document.getElementById('en-link').click()">
+                                               placeholder="{{translate('messages.new_addon')}}" maxlength="191">
                                     </div>
                                     <input type="hidden" name="lang[]" value="{{$lang}}">
                                 @endforeach
@@ -81,8 +79,7 @@
                                        for="exampleFormControlSelect1">{{translate('messages.store')}}<span
                                         class="input-label-secondary"></span></label>
                                 <select name="store_id" id="store_id" class="js-data-example-ajax form-control"
-                                        data-placeholder="{{translate('messages.select_store')}}"
-                                        oninvalid="this.setCustomValidity('{{translate('messages.please_select_store')}}')">
+                                        data-placeholder="{{translate('messages.select_store')}}">
 
                                 </select>
                             </div>
