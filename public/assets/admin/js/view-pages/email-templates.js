@@ -1,0 +1,92 @@
+
+
+"use strict";
+
+var editor = CKEDITOR.replace('ckeditor');
+
+editor.on( 'change', function( evt ) {
+    $('#mail-body').empty().html(evt.editor.getData());
+});
+
+$('input[data-id="mail-title"]').on('keyup', function() {
+    var dataId = $(this).data('id');
+    var value = $(this).val();
+    $('#'+dataId).text(value);
+});
+$('input[data-id="mail-button"]').on('keyup', function() {
+    var dataId = $(this).data('id');
+    var value = $(this).val();
+    $('#'+dataId).text(value);
+});
+$('input[data-id="mail-footer"]').on('keyup', function() {
+    var dataId = $(this).data('id');
+    var value = $(this).val();
+    $('#'+dataId).text(value);
+});
+$('input[data-id="mail-copyright"]').on('keyup', function() {
+    var dataId = $(this).data('id');
+    var value = $(this).val();
+    $('#'+dataId).text(value);
+});
+
+function readURL(input, viewer) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            $('#' + viewer).attr('src', e.target.result);
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+$("#mail-logo").change(function() {
+    readURL(this, 'logoViewer');
+});
+
+$("#mail-banner").change(function() {
+    readURL(this, 'bannerViewer');
+});
+
+$("#mail-icon").change(function() {
+    readURL(this, 'iconViewer');
+});
+
+$(".lang_link").click(function(e){
+    e.preventDefault();
+    $(".lang_link").removeClass('active');
+    $(".lang_form").addClass('d-none');
+    $(this).addClass('active');
+
+    let form_id = this.id;
+    let lang = form_id.substring(0, form_id.length - 5);
+
+    console.log(lang);
+
+    $("#"+lang+"-form").removeClass('d-none');
+    $("#"+lang+"-form1").removeClass('d-none');
+    $("#"+lang+"-form2").removeClass('d-none');
+    $("#"+lang+"-form3").removeClass('d-none');
+    if(lang == 'default')
+    {
+        $(".default-form").removeClass('d-none');
+    }
+    else
+    {
+        $(".from_part_2").addClass('d-none');
+    }
+});
+
+$('.checkMailElement').on('change', function() {
+    var id = $(this).data('id');
+    checkMailElement(id);
+});
+
+// The checkMailElement function remains unchanged
+function checkMailElement(id) {
+    console.log(id);
+    if ($('.' + id).is(':checked')) {
+        $('#' + id).show();
+    } else {
+        $('#' + id).hide();
+    }
+}
