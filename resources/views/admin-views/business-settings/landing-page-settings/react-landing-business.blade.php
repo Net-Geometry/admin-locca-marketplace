@@ -182,9 +182,7 @@
                                                 <div class="d-flex justify-content-between align-items-center mb-2">
                                                     <label class="form-label text-capitalize m-0">
                                                         {{translate('Download Link')}}
-                                                               {{-- <span class="input-label-secondary text--title" data-toggle="tooltip" data-placement="right" data-original-title="Lorem ipsum">
-                                                            <i class="tio-info-outined"></i>
-                                                        </span> --}}
+
                                                     </label>
                                                     <label class="toggle-switch toggle-switch-sm m-0">
                                                         <input type="checkbox" name="seller_playstore_url_status" onclick="toogleModal(event,'play-store-seller-status','play-store-on.png','play-store-off.png','{{translate('Playstore Button Enabled for Seller')}}','{{translate('Playstore Button Disabled for Seller')}}',`<p>{{translate('Playstore button is enabled now everyone can use or see the button')}}</p>`,`<p>{{translate('Playstore button is disabled now no one can use or see the button')}}</p>`)" id="play-store-seller-status" class="status toggle-switch-input" value="1" {{(isset($download_app_links) && $download_app_links['seller_playstore_url_status'])?'checked':''}}>
@@ -207,9 +205,7 @@
                                                 <div class="d-flex justify-content-between align-items-center mb-2">
                                                     <label class="form-label text-capitalize m-0">
                                                         {{translate('Download Link')}}
-                                                               {{-- <span class="input-label-secondary text--title" data-toggle="tooltip" data-placement="right" data-original-title="Lorem ipsum">
-                                                            <i class="tio-info-outined"></i>
-                                                        </span> --}}
+
                                                     </label>
                                                     <label class="toggle-switch toggle-switch-sm m-0">
                                                         <input type="checkbox" name="seller_appstore_url_status" onclick="toogleModal(event,'apple-seller-status','apple-on.png','apple-off.png','{{translate('App Store Button Enabled for Seller')}}','{{translate('App Store Button Disabled for Seller')}}',`<p>{{translate('App Store button is enabled now everyone can use or see the button')}}</p>`,`<p>{{translate('App Store button is disabled now no one can use or see the button')}}</p>`)" id="apple-seller-status" class="status toggle-switch-input" value="1" {{(isset($download_app_links) && $download_app_links['seller_appstore_url_status'])?'checked':''}}>
@@ -242,9 +238,7 @@
                                                 <div class="d-flex justify-content-between align-items-center mb-2">
                                                     <label class="form-label text-capitalize m-0">
                                                         {{translate('Download Link')}}
-                                                               {{-- <span class="input-label-secondary text--title" data-toggle="tooltip" data-placement="right" data-original-title="Lorem ipsum">
-                                                            <i class="tio-info-outined"></i>
-                                                        </span> --}}
+
                                                     </label>
                                                     <label class="toggle-switch toggle-switch-sm m-0">
                                                         <input type="checkbox" name="dm_playstore_url_status" onclick="toogleModal(event,'play-store-dm-status','play-store-on.png','play-store-off.png','{{translate('Playstore Button Enabled for Delivery Man')}}','{{translate('Playstore Button Disabled for Delivery Man')}}',`<p>{{translate('Playstore button is enabled now everyone can use or see the button')}}</p>`,`<p>{{translate('Playstore button is disabled now no one can use or see the button')}}</p>`)" id="play-store-dm-status" class="status toggle-switch-input" value="1" {{(isset($download_app_links) && $download_app_links['dm_playstore_url_status'])?'checked':''}}>
@@ -267,9 +261,7 @@
                                                 <div class="d-flex justify-content-between align-items-center mb-2">
                                                     <label class="form-label text-capitalize m-0">
                                                         {{translate('Download Link')}}
-                                                               {{-- <span class="input-label-secondary text--title" data-toggle="tooltip" data-placement="right" data-original-title="Lorem ipsum">
-                                                            <i class="tio-info-outined"></i>
-                                                        </span> --}}
+
                                                     </label>
                                                     <label class="toggle-switch toggle-switch-sm m-0">
                                                         <input type="checkbox" name="dm_appstore_url_status" onclick="toogleModal(event,'apple-dm-status','apple-on.png','apple-off.png','{{translate('App Store Button Enabled for Delivery Man')}}','{{translate('App Store Button Disabled for Delivery Man')}}',`<p>{{translate('App Store button is enabled now everyone can use or see the button')}}</p>`,`<p>{{translate('App Store button is disabled now no one can use or see the button')}}</p>`)" id="apple-dm-status" class="status toggle-switch-input" value="1" {{(isset($download_app_links) && $download_app_links['dm_appstore_url_status'])?'checked':''}}>

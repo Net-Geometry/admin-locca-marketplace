@@ -54,7 +54,7 @@
                     </div>
                 </div>
                 @php($data=\App\Models\EmailTemplate::where('type','admin')->where('email_type', 'campaign_request')->first())
-                @php($template=$template?$template:($data?$data->email_template:1))
+                @php($template= $template ?? $data?->email_template ?? 1)
                 <form action="{{ route('admin.business-settings.email-setup', ['admin','campaign-request']) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="card border-0">
@@ -372,7 +372,7 @@
 
 @push('script_2')
     <!-- Email Template-->
-    <script src="{{asset('public/assets/admin')}}/ckeditor/ckeditor.js"></script>
-    <script src="{{asset('public/assets/admin')}}/js/view-pages/email-templates.js"></script>
+    <script src="{{asset('public/assets/admin/ckeditor/ckeditor.js')}}"></script>
+    <script src="{{asset('public/assets/admin/js/view-pages/email-templates.js')}}"></script>
     <!-- Email Template End-->
 @endpush
