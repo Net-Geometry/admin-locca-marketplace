@@ -394,6 +394,7 @@
 
 @stack('script_2')
 
+<script src="{{asset('public/assets/admin')}}/js/view-pages/common.js"></script>
 <script>
     @php($modules = \App\Models\Module::Active()->get())
     var tour = new Tour({
@@ -1009,21 +1010,21 @@
 
     }
 
-    function toogleStatusModal(e, toggle_id, on_image, off_image, on_title, off_title, on_message, off_message) {
-        e.preventDefault();
-        if ($('#'+toggle_id).is(':checked')) {
-            $('#toggle-status-title').empty().append(on_title);
-            $('#toggle-status-message').empty().append(on_message);
-            $('#toggle-status-image').attr('src', "{{asset('/public/assets/admin/img/modal')}}/"+on_image);
-            $('#toggle-status-ok-button').attr('toggle-ok-button', toggle_id);
-        } else {
-            $('#toggle-status-title').empty().append(off_title);
-            $('#toggle-status-message').empty().append(off_message);
-            $('#toggle-status-image').attr('src', "{{asset('/public/assets/admin/img/modal')}}/"+off_image);
-            $('#toggle-status-ok-button').attr('toggle-ok-button', toggle_id);
-        }
-        $('#toggle-status-modal').modal('show');
-    }
+    // function toogleStatusModal(e, toggle_id, on_image, off_image, on_title, off_title, on_message, off_message) {
+    //     e.preventDefault();
+    //     if ($('#'+toggle_id).is(':checked')) {
+    //         $('#toggle-status-title').empty().append(on_title);
+    //         $('#toggle-status-message').empty().append(on_message);
+    //         $('#toggle-status-image').attr('src', "{{asset('/public/assets/admin/img/modal')}}/"+on_image);
+    //         $('#toggle-status-ok-button').attr('toggle-ok-button', toggle_id);
+    //     } else {
+    //         $('#toggle-status-title').empty().append(off_title);
+    //         $('#toggle-status-message').empty().append(off_message);
+    //         $('#toggle-status-image').attr('src', "{{asset('/public/assets/admin/img/modal')}}/"+off_image);
+    //         $('#toggle-status-ok-button').attr('toggle-ok-button', toggle_id);
+    //     }
+    //     $('#toggle-status-modal').modal('show');
+    // }
 
     function confirmStatusToggle() {
         var toggle_id = $('#toggle-status-ok-button').attr('toggle-ok-button');
@@ -1038,14 +1039,14 @@
 
     }
 
-    function checkMailElement(id) {
-        console.log(id);
-        if ($('.'+id).is(':checked')) {
-            $('#'+id).show();
-        } else {
-            $('#'+id).hide();
-        }
-    }
+    // function checkMailElement(id) {
+    //     console.log(id);
+    //     if ($('.'+id).is(':checked')) {
+    //         $('#'+id).show();
+    //     } else {
+    //         $('#'+id).hide();
+    //     }
+    // }
 </script>
 
 <script>
