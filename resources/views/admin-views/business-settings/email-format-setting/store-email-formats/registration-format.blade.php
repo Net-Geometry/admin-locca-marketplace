@@ -150,9 +150,7 @@
                                                     <div class="form-group mb-0">
                                                         <label class="form-label">
                                                             {{ translate('Mail Body Message') }}({{strtoupper($lang)}})
-                                                            <span class="input-label-secondary text--title" data-toggle="tooltip" data-placement="right" data-original-title="Lorem ipsum">
-                                                                <i class="tio-info-outined"></i>
-                                                            </span>
+
                                                         </label>
                                                         <textarea class="ckeditor form-control" name="body[]">
                                                            {!! $translate[$lang]['body']??'' !!}
@@ -175,7 +173,7 @@
                                                         </span>
                                                     </label>
                                                     <textarea class="ckeditor form-control" name="body[]">
-                                                        Hi Sabrina,
+                                                      {{ translate('Hi_Sabrina') }},
                                                     </textarea>
                                                 </div>
                                             </div>

@@ -117,9 +117,7 @@
                                                 <div class="form-group mb-0">
                                                     <label class="form-label">
                                                         {{ translate('Mail Body Message') }}({{ translate('messages.default') }})
-                                                               {{-- <span class="input-label-secondary text--title" data-toggle="tooltip" data-placement="right" data-original-title="Lorem ipsum">
-                                                            <i class="tio-info-outined"></i>
-                                                        </span> --}}
+
                                                     </label>
                                                     <textarea class="form-control" id="ckeditor" data-id="mail-body" name="body[]">
                                                         {!! $data?->getRawOriginal('body') !!}
@@ -150,9 +148,7 @@
                                                     <div class="form-group mb-0">
                                                         <label class="form-label">
                                                             {{ translate('Mail Body Message') }}({{strtoupper($lang)}})
-                                                            <span class="input-label-secondary text--title" data-toggle="tooltip" data-placement="right" data-original-title="Lorem ipsum">
-                                                                <i class="tio-info-outined"></i>
-                                                            </span>
+
                                                         </label>
                                                         <textarea class="ckeditor form-control" name="body[]">
                                                            {!! $translate[$lang]['body']??'' !!}
@@ -170,12 +166,10 @@
                                                 <div class="form-group mb-0">
                                                     <label class="form-label">
                                                         {{ translate('Mail Body Message') }}
-                                                               {{-- <span class="input-label-secondary text--title" data-toggle="tooltip" data-placement="right" data-original-title="Lorem ipsum">
-                                                            <i class="tio-info-outined"></i>
-                                                        </span> --}}
+
                                                     </label>
                                                     <textarea class="ckeditor form-control" name="body[]">
-                                                        Hi Sabrina,
+                                                      {{ translate('Hi_Sabrina') }},
                                                     </textarea>
                                                 </div>
                                             </div>
@@ -196,9 +190,7 @@
                                                         <div class="form-group m-0 lang_form default-form">
                                                             <label class="form-label text-capitalize">
                                                                 {{translate('Button Name')}}({{ translate('messages.default') }})
-                                                                <span class="input-label-secondary text--title" data-toggle="tooltip" data-placement="right" data-original-title="Lorem ipsum">
-                                                                    <i class="tio-info-outined"></i>
-                                                                </span>
+
                                                             </label>
                                                             <input type="text" data-id="mail-button" name="button_name[]"  placeholder="{{translate('Ex: Order now')}}" class="form-control h--45px" value="{{ $data?->getRawOriginal('button_name') }}">
                                                         </div>
@@ -217,9 +209,7 @@
                                                         <div class="form-group m-0 d-none lang_form" id="{{$lang}}-form1">
                                                             <label class="form-label text-capitalize">
                                                                 {{translate('Button Name')}}({{strtoupper($lang)}})
-                                                                <span class="input-label-secondary text--title" data-toggle="tooltip" data-placement="right" data-original-title="Lorem ipsum">
-                                                                    <i class="tio-info-outined"></i>
-                                                                </span>
+
                                                             </label>
                                                             <input type="text" name="button_name[]"  placeholder="{{translate('Ex: Order now')}}" class="form-control h--45px" value="{{ $translate[$lang]['button_name']??'' }}">
                                                         </div>
@@ -228,9 +218,7 @@
                                                 <div class="form-group m-0">
                                                     <label class="form-label text-capitalize">
                                                         {{translate('Button Name')}}
-                                                               {{-- <span class="input-label-secondary text--title" data-toggle="tooltip" data-placement="right" data-original-title="Lorem ipsum">
-                                                            <i class="tio-info-outined"></i>
-                                                        </span> --}}
+
                                                     </label>
                                                     <input type="text" placeholder="{{translate('Ex: Order now')}}" class="form-control h--45px" name="button_name[]" value="">
                                                 </div>
@@ -240,9 +228,7 @@
                                                     <div class="form-group m-0">
                                                         <label class="form-label">
                                                             {{translate('Redirect Link')}}
-                                                            <span class="input-label-secondary text--title" data-toggle="tooltip" data-placement="right" data-original-title="Lorem ipsum">
-                                                                <i class="tio-info-outined"></i>
-                                                            </span>
+
                                                         </label>
                                                         <input type="text" name="button_url" placeholder="{{ translate('Please_contact_us_for_any_queries;_we’re_always_happy_to_help.') }}"class="form-control" value="{{ $data['button_url']??'' }}">
                                                     </div>
@@ -287,9 +273,7 @@
                                                 <div class="form-group">
                                                     <label class="form-label">
                                                         {{translate('Section Text')}}
-                                                               {{-- <span class="input-label-secondary text--title" data-toggle="tooltip" data-placement="right" data-original-title="Lorem ipsum">
-                                                            <i class="tio-info-outined"></i>
-                                                        </span> --}}
+
                                                     </label>
                                                     <input type="text" placeholder="{{ translate('Please_contact_us_for_any_queries;_we’re_always_happy_to_help.') }}"class="form-control" name="footer_text[]" value="">
                                                 </div>
@@ -393,9 +377,7 @@
                                                 <div class="form-group">
                                                     <label class="form-label">
                                                         {{translate('Copyright Content')}}
-                                                               {{-- <span class="input-label-secondary text--title" data-toggle="tooltip" data-placement="right" data-original-title="Lorem ipsum">
-                                                            <i class="tio-info-outined"></i>
-                                                        </span> --}}
+
                                                     </label>
                                                     <input type="text" placeholder="{{ translate('Ex:_Copyright_2023_6amMart._All_right_reserved') }}" class="form-control" name="copyright_text[]" value="">
                                                 </div>
