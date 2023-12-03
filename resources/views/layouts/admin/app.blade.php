@@ -1,12 +1,6 @@
 <!DOCTYPE html>
 <?php
     $site_direction = session()->get('site_direction');
-    // if (env('APP_MODE') == 'demo') {
-    //     $site_direction = session()->get('site_direction');
-    // }else{
-    //     $site_direction = \App\Models\BusinessSetting::where('key', 'site_direction')->first();
-    //     $site_direction = $site_direction->value ?? 'ltr';
-    // }
 
 ?>
 <html dir="{{ $site_direction }}" lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="{{ $site_direction === 'rtl'?'active':'' }}">
@@ -195,25 +189,7 @@
         </div>
     </div>
 
-    <!-- Modal -->
 
-{{--<nav class="floating-menu">
-    <ul class="main-menu">
-        @foreach (\App\Models\Module::notParcel()->get() as $module)
-        <li>
-            <a class="p-2 navbar-dropdown-account-wrapper" href="javascript:;" onclick="set_filter('{{url()->full()}}',{{$module->id}},'module_id')" title="{{$module->module_name}}">
-                <img class="avatar avatar-sm avatar-circle" src="{{asset('storage/app/public/module')}}/{{$module['thumbnail']}}" alt="{{$module->module_name}}" width="20">
-            </a>
-        </li>
-        @endforeach
-        <li>
-            <a class="p-2 navbar-dropdown-account-wrapper" href="javascript:;" onclick="set_filter('{{url()->full()}}','','module_id')" title="{{$module->module_name}}">
-                <img class="avatar avatar-sm avatar-circle" src="{{asset('storage/app/public/business/'.$logo??'')}}" alt="{{translate('messages.all_module')}}" width="20">
-            </a>
-        </li>
-    </ul>
-    <div class="menu-bg"></div>
-</nav>--}}
 <!-- ========== END MAIN CONTENT ========== -->
 
 <!-- ========== END SECONDARY CONTENTS ========== -->
@@ -608,7 +584,17 @@
         nurl.searchParams.set('customer_id', id);
         location.href = nurl;
     }
+    function set_status_filter(url, id) {
+        var nurl = new URL(url);
+        nurl.searchParams.set('status', id);
+        location.href = nurl;
+    }
 
+    function set_payment_method_filter(url, id) {
+        var nurl = new URL(url);
+        nurl.searchParams.set('payment_method_id', id);
+        location.href = nurl;
+    }
 
     function set_filter(url, id, filter_by) {
         var nurl = new URL(url);
@@ -975,6 +961,28 @@
                 // $('#additional_charge').val(null);
                 $('#additional_charge_name').removeAttr('required');
                 $('#additional_charge').removeAttr('required');
+            }
+        }
+        if(toggle_id == 'cash_in_hand_overflow'){
+            if ($("#cash_in_hand_overflow").is(':checked')) {
+                $('#cash_in_hand_overflow_store_amount').removeAttr('readonly');
+                $('#cash_in_hand_overflow_store_amount').attr('required', true);
+                $('#min_amount_to_pay_store').removeAttr('readonly');
+                $('#min_amount_to_pay_store').attr('required', true);
+                $('#min_amount_to_pay_dm').removeAttr('readonly');
+                $('#min_amount_to_pay_dm').attr('required', true);
+                $('#dm_max_cash_in_hand').removeAttr('readonly');
+                $('#dm_max_cash_in_hand').attr('required', true);
+
+            } else {
+                $('#cash_in_hand_overflow_store_amount').attr('readonly', true);
+                $('#cash_in_hand_overflow_store_amount').removeAttr('required');
+                $('#min_amount_to_pay_store').attr('readonly', true);
+                $('#min_amount_to_pay_store').removeAttr('required');
+                $('#min_amount_to_pay_dm').attr('readonly', true);
+                $('#min_amount_to_pay_dm').removeAttr('required');
+                $('#dm_max_cash_in_hand').attr('readonly', true);
+                $('#dm_max_cash_in_hand').removeAttr('required');
             }
         }
 

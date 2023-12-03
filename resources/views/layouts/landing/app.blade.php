@@ -3,13 +3,6 @@
 <!DOCTYPE html>
 <?php
     $landing_site_direction = session()->get('landing_site_direction');
-    // if (env('APP_MODE') == 'demo') {
-    //     $landing_site_direction = session()->get('landing_site_direction');
-    // }else{
-    //     $landing_site_direction = \App\Models\BusinessSetting::where('key', 'landing_site_direction')->first();
-    //     $landing_site_direction = $landing_site_direction->value ?? 'ltr';
-    // }
-
 ?>
 <html dir="{{ $landing_site_direction }}" lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
@@ -92,7 +85,7 @@
                         <span></span>
                         <span></span>
                     </div>
-                    @php( $local = session()->has('landing_local')?session('landing_local'):'en')
+                    @php( $local = session()->has('landing_local')?session('landing_local'):null)
                     @php($lang = \App\Models\BusinessSetting::where('key', 'system_language')->first())
                     @if ($lang)
                         <div class="dropdown--btn-hover position-relative">
@@ -103,7 +96,9 @@
                                 @foreach(json_decode($lang['value'],true) as $data)
                                 @if($data['code']==$local)
                                             <span class="me-1">{{$data['code']}}</span>
-                                        @endif
+                                    @elseif(!$local &&  $data['default'] == true)
+                                            <span class="me-1">{{$data['code']}}</span>
+                                    @endif
                                     @endforeach
                             </a>
                             <ul class="dropdown-list py-0" style="min-width:120px; top:100%">

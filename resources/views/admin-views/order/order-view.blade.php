@@ -1394,6 +1394,15 @@
                                         <a class="deco-none info d-flex"
                                             href="tel:{{ $receiver_details['contact_person_number'] }}">
                                             {{ $receiver_details['contact_person_number'] }}</a>
+
+                                            <span class="name">{{ translate('Floor')  }}</span> <span
+                                            class="info">{{ $receiver_details['floor']  ?? translate('messages.N/A') }}</span>
+                                            <span class="name">{{ translate('House')  }}</span> <span
+                                            class="info">{{ $receiver_details['house'] ?? translate('messages.N/A') }}</span>
+                                            <span class="name">{{ translate('Road') }}</span> <span
+                                                class="info">{{  $receiver_details['road'] ?? translate('messages.N/A') }}</span>
+                                        <hr class="w-100">
+
                                         @if (isset($receiver_details['address']))
                                             @if (isset($receiver_details['latitude']) && isset($receiver_details['longitude']))
                                                 <a class="mt-2 d-flex" target="_blank"
