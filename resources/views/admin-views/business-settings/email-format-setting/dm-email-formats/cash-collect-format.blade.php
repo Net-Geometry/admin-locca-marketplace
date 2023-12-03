@@ -190,9 +190,7 @@
                                                         <div class="form-group m-0 lang_form default-form">
                                                             <label class="form-label text-capitalize">
                                                                 {{translate('Button Name')}}({{ translate('messages.default') }})
-                                                                <span class="input-label-secondary text--title" data-toggle="tooltip" data-placement="right" data-original-title="Lorem ipsum">
-                                                                    <i class="tio-info-outined"></i>
-                                                                </span>
+
                                                             </label>
                                                             <input type="text" data-id="mail-button" name="button_name[]"  placeholder="{{translate('Ex: Order now')}}" class="form-control h--45px" value="{{ $data?->getRawOriginal('button_name') }}">
                                                         </div>
@@ -211,9 +209,7 @@
                                                         <div class="form-group m-0 d-none lang_form" id="{{$lang}}-form1">
                                                             <label class="form-label text-capitalize">
                                                                 {{translate('Button Name')}}({{strtoupper($lang)}})
-                                                                <span class="input-label-secondary text--title" data-toggle="tooltip" data-placement="right" data-original-title="Lorem ipsum">
-                                                                    <i class="tio-info-outined"></i>
-                                                                </span>
+
                                                             </label>
                                                             <input type="text" name="button_name[]"  placeholder="{{translate('Ex: Order now')}}" class="form-control h--45px" value="{{ $translate[$lang]['button_name']??'' }}">
                                                         </div>
