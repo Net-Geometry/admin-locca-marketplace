@@ -125,7 +125,11 @@
                                                 <div class="form-group mb-0">
                                                     <label class="form-label">
                                                         {{ translate('Mail Body Message') }}({{ translate('messages.default') }})
+                                                        <span class="input-label-secondary text--title" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_mail_body_message_within_75_words')}}">
+                                                            <i class="tio-info-outined"></i>
+                                                        </span>
                                                     </label>
+
                                                     <textarea class="form-control" id="ckeditor" data-id="mail-body" name="body[]">
                                                         {!! $data?->getRawOriginal('body') !!}
                                                     </textarea>
@@ -155,7 +159,7 @@
                                                     <div class="form-group mb-0">
                                                         <label class="form-label">
                                                             {{ translate('Mail Body Message') }}({{strtoupper($lang)}})
-                                                            <span class="input-label-secondary text--title" data-toggle="tooltip" data-placement="right" data-original-title="Lorem ipsum">
+                                                            <span class="input-label-secondary text--title" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_mail_body_message_within_75_words')}}">
                                                                 <i class="tio-info-outined"></i>
                                                             </span>
                                                         </label>
@@ -177,7 +181,7 @@
                                                         {{ translate('Mail Body Message') }}
                                                     </label>
                                                     <textarea class="ckeditor form-control" name="body[]">
-                                                        Hi Sabrina,
+                                                      {{ translate('Hi_Sabrina') }},
                                                     </textarea>
                                                 </div>
                                             </div>
@@ -198,7 +202,7 @@
                                                         <div class="form-group m-0 lang_form default-form">
                                                             <label class="form-label text-capitalize">
                                                                 {{translate('Button Name')}}({{ translate('messages.default') }})
-                                                                <span class="input-label-secondary text--title" data-toggle="tooltip" data-placement="right" data-original-title="Lorem ipsum">
+                                                                <span class="input-label-secondary text--title" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_button_name_within_15_characters.') }}">
                                                                     <i class="tio-info-outined"></i>
                                                                 </span>
                                                             </label>
@@ -219,7 +223,7 @@
                                                         <div class="form-group m-0 d-none lang_form" id="{{$lang}}-form1">
                                                             <label class="form-label text-capitalize">
                                                                 {{translate('Button Name')}}({{strtoupper($lang)}})
-                                                                <span class="input-label-secondary text--title" data-toggle="tooltip" data-placement="right" data-original-title="Lorem ipsum">
+                                                                <span class="input-label-secondary text--title" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_button_name_within_15_characters.') }}">
                                                                     <i class="tio-info-outined"></i>
                                                                 </span>
                                                             </label>
@@ -239,7 +243,7 @@
                                                     <div class="form-group m-0">
                                                         <label class="form-label">
                                                             {{translate('Redirect Link')}}
-                                                            <span class="input-label-secondary text--title" data-toggle="tooltip" data-placement="right" data-original-title="Lorem ipsum">
+                                                            <span class="input-label-secondary text--title" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Link_to_your_preferred_destination_that_will_work_when_someone_clicks_on_the_Button_Name._Add_the_link_where_the_button_will_redirect_users.') }}">
                                                                 <i class="tio-info-outined"></i>
                                                             </span>
                                                         </label>
@@ -300,74 +304,10 @@
                                                     <input type="text" placeholder="{{ translate('Please_contact_us_for_any_queries;_we’re_always_happy_to_help.') }}" class="form-control" name="footer_text[]" value="">
                                                 </div>
                                                 @endif
-                                            <div class="form-group">
-                                                <label class="form-label">
-                                                    {{translate('Page Links')}}
-                                                </label>
-                                                <ul class="page-links-checkgrp">
-                                                    <li>
-                                                        <label class="form-check form--check">
-                                                            <input class="form-check-input privacy-check checkMailElement"  data-id="privacy-check" type="checkbox" name="privacy" value ="1" {{ (isset($data['privacy']) && $data['privacy'] == 1)?'checked':'' }}>
-                                                            <span class="form-check-label">{{translate('Privacy Policy')}}</span>
-                                                        </label>
-                                                    </li>
-                                                    <li>
-                                                        <label class="form-check form--check">
-                                                            <input class="form-check-input refund-check checkMailElement" data-id="refund-check"  type="checkbox" name="refund" value ="1" {{ (isset($data['refund']) && $data['refund'] == 1)?'checked':'' }}>
-                                                            <span class="form-check-label">{{translate('Refund Policy')}}</span>
-                                                        </label>
-                                                    </li>
-                                                    <li>
-                                                        <label class="form-check form--check">
-                                                            <input class="form-check-input cancelation-check checkMailElement" data-id="cancelation-check"  type="checkbox" name="cancelation" value ="1" {{ (isset($data['cancelation']) && $data['cancelation'] == 1)?'checked':'' }}>
-                                                            <span class="form-check-label">{{translate('Cancelation Policy')}}</span>
-                                                        </label>
-                                                    </li>
-                                                    <li>
-                                                        <label class="form-check form--check">
-                                                            <input class="form-check-input contact-check checkMailElement" data-id="contact-check" type="checkbox" name="contact" value ="1" {{ (isset($data['contact']) && $data['contact'] == 1)?'checked':'' }}>
-                                                            <span class="form-check-label">{{translate('Contact Us')}}</span>
-                                                        </label>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="form-label">
-                                                    {{translate('Social Media Links')}}
-                                                </label>
-                                                <ul class="page-links-checkgrp">
-                                                    <li>
-                                                        <label class="form-check form--check">
-                                                            <input class="form-check-input facebook-check checkMailElement" type="checkbox" data-id="facebook-check" name="facebook" value="1" {{ (isset($data['facebook']) && $data['facebook'] == 1)?'checked':'' }}>
-                                                            <span class="form-check-label">{{translate('Facebook')}}</span>
-                                                        </label>
-                                                    </li>
-                                                    <li>
-                                                        <label class="form-check form--check">
-                                                            <input class="form-check-input instagram-check checkMailElement" type="checkbox" data-id="instagram-check"  name="instagram" value="1" {{ (isset($data['instagram']) && $data['instagram'] == 1)?'checked':'' }}>
-                                                            <span class="form-check-label">{{translate('Instagram')}}</span>
-                                                        </label>
-                                                    </li>
-                                                    <li>
-                                                        <label class="form-check form--check">
-                                                            <input class="form-check-input twitter-check checkMailElement" type="checkbox" data-id="twitter-check" name="twitter" value="1" {{ (isset($data['twitter']) && $data['twitter'] == 1)?'checked':'' }}>
-                                                            <span class="form-check-label">{{translate('Twitter')}}</span>
-                                                        </label>
-                                                    </li>
-                                                    <li>
-                                                        <label class="form-check form--check">
-                                                            <input class="form-check-input linkedin-check checkMailElement" type="checkbox" data-id="linkedin-check"  name="linkedin" value="1" {{ (isset($data['linkedin']) && $data['linkedin'] == 1)?'checked':'' }}>
-                                                            <span class="form-check-label">{{translate('LinkedIn')}}</span>
-                                                        </label>
-                                                    </li>
-                                                    <li>
-                                                        <label class="form-check form--check">
-                                                            <input class="form-check-input pinterest-check checkMailElement" type="checkbox" data-id="pinterest-check"  name="pinterest" value="1" {{ (isset($data['pinterest']) && $data['pinterest'] == 1)?'checked':'' }}>
-                                                            <span class="form-check-label">{{translate('Pinterest')}}</span>
-                                                        </label>
-                                                    </li>
-                                                </ul>
-                                            </div>
+
+                                                @include('admin-views.business-settings.email-format-setting.partials.social-media-and-footer-section')
+
+
                                             <div class="form-group mb-0">
                                                 @if ($language)
                                                         <div class="form-group lang_form default-form">

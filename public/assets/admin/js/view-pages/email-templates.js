@@ -76,17 +76,13 @@ $(".lang_link").click(function(e){
     }
 });
 
-$('.checkMailElement').on('change', function() {
+$('.check-mail-element').on('change', function() {
     var id = $(this).data('id');
-    checkMailElement(id);
+        console.log(id);
+        if ($('.' + id).is(':checked')) {
+            $('#' + id).show();
+        } else {
+            $('#' + id).hide();
+        }
 });
 
-// The checkMailElement function remains unchanged
-function checkMailElement(id) {
-    console.log(id);
-    if ($('.' + id).is(':checked')) {
-        $('#' + id).show();
-    } else {
-        $('#' + id).hide();
-    }
-}

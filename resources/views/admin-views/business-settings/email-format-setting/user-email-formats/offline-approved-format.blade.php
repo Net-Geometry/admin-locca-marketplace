@@ -171,7 +171,7 @@
 
                                                     </label>
                                                     <textarea class="ckeditor form-control" name="body[]">
-                                                        Hi Sabrina,
+                                                      {{ translate('Hi_Sabrina') }},
                                                     </textarea>
                                                 </div>
                                             </div>
