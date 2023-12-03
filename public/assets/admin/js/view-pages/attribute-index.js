@@ -1,3 +1,4 @@
+"use strict";
 $(document).on('ready', function () {
     // INITIALIZATION OF DATATABLES
     // =======================================================

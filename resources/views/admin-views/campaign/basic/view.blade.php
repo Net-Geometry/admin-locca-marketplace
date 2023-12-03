@@ -59,18 +59,6 @@
             <div class="card-header py-2 border-0">
                 <div class="search--button-wrapper">
                     <span class="card-title"></span>
-                    <form action="javascript:" id="search-form" class="search-form">
-                        <!-- Search -->
-                        {{-- <div class="input-group input--group">
-                            <input id="datatableSearch_" type="search" name="search" class="form-control"
-                                    placeholder="{{ translate('messages.Ex:_store') }}" aria-label="Search" required>
-                            <button type="submit" class="btn btn--secondary">
-                                <i class="tio-search"></i>
-                            </button>
-
-                        </div> --}}
-                        <!-- End Search -->
-                    </form>
                 </div>
             </div>
             <!-- Table -->
@@ -141,13 +129,13 @@
                             <td>
                                 @if ($store->pivot && $store->pivot->campaign_status == 'pending')
                                 <div class="btn--container justify-content-center">
-                                    <a class="btn btn-sm btn--primary btn-outline-primary action-btn"
-                                        onclick="status_change_alert('{{ route('admin.campaign.store_confirmation', [$campaign->id, $store->id, 'confirmed']) }}', '{{ translate('messages.you_want_to_confirm_this_store') }}', event)"
+                                    <a class="btn btn-sm btn--primary btn-outline-primary action-btn status-change-alert"
+                                        data-url="{{ route('admin.campaign.store_confirmation', [$campaign->id, $store->id, 'confirmed']) }}" data-message="{{ translate('messages.you_want_to_confirm_this_store') }}"
                                         class="toggle-switch-input" data-toggle="tooltip" data-placement="top" title="{{translate('Approve')}}">
                                         <i class="tio-done font-weight-bold"></i>
                                     </a>
-                                    <a class="btn btn-sm btn--danger btn-outline-danger action-btn" href="javascript:"
-                                        onclick="status_change_alert('{{ route('admin.campaign.store_confirmation', [$campaign->id, $store->id, 'rejected']) }}', '{{ translate('messages.you_want_to_reject_this_store') }}', event)" data-toggle="tooltip" data-placement="top" title="{{translate('Deny')}}">
+                                    <a class="btn btn-sm btn--danger btn-outline-danger action-btn status-change-alert" href="javascript:"
+                                        data-url="{{ route('admin.campaign.store_confirmation', [$campaign->id, $store->id, 'rejected']) }}" data-message="{{ translate('messages.you_want_to_reject_this_store') }}" data-toggle="tooltip" data-placement="top" title="{{translate('Deny')}}">
                                         <i class="tio-clear font-weight-bold"></i>
                                     </a>
                                     <div></div>
@@ -155,8 +143,8 @@
                                 @elseif ($store->pivot && $store->pivot->campaign_status == 'rejected')
 
                                 <div class="btn--container justify-content-center">
-                                    <a class="btn btn-sm btn--primary btn-outline-primary action-btn"
-                                        onclick="status_change_alert('{{ route('admin.campaign.store_confirmation', [$campaign->id, $store->id, 'confirmed']) }}', '{{ translate('messages.you_want_to_confirm_this_store') }}', event)"
+                                    <a class="btn btn-sm btn--primary btn-outline-primary action-btn status-change-alert"
+                                        data-url="{{ route('admin.campaign.store_confirmation', [$campaign->id, $store->id, 'confirmed']) }}" data-message="{{ translate('messages.you_want_to_confirm_this_store') }}"
                                         class="toggle-switch-input" data-toggle="tooltip" data-placement="top" title="{{translate('Approve')}}">
                                         <i class="tio-done font-weight-bold"></i>
                                     </a>
@@ -164,8 +152,8 @@
                                 </div>
                                 @else
                                 <div class="btn--container justify-content-center">
-                                    <a class="btn btn--danger btn-outline-danger action-btn" href="javascript:"
-                                        onclick="form_alert('campaign-{{$store->id}}','{{translate('messages.want_to_remove_store')}}')" title="{{translate('messages.delete_campaign')}}"><i class="tio-delete-outlined"></i>
+                                    <a class="btn btn--danger btn-outline-danger action-btn form-alert" href="javascript:"
+                                        data-id="campaign-{{$store->id}}" data-message="{{translate('messages.want_to_remove_store')}}" title="{{translate('messages.delete_campaign')}}"><i class="tio-delete-outlined"></i>
                                     </a>
 
                                     <form action="{{route('admin.campaign.remove-store',[$campaign->id, $store['id']])}}"
@@ -199,6 +187,11 @@
 
 @push('script_2')
     <script>
+        $('.status-change-alert').on('click', function (event){
+            let url = $(this).data('url');
+            let message = $(this).data('message');
+            status_change_alert(url, message, event);
+        })
         function status_change_alert(url, message, e) {
             e.preventDefault();
             Swal.fire({
@@ -217,74 +210,5 @@
                 }
             })
         }
-        $(document).on('ready', function () {
-            // INITIALIZATION OF DATATABLES
-            // =======================================================
-            var datatable = $.HSCore.components.HSDatatables.init($('#columnSearchDatatable'));
-
-            $('#column1_search').on('keyup', function () {
-                datatable
-                    .columns(1)
-                    .search(this.value)
-                    .draw();
-            });
-
-            $('#column2_search').on('keyup', function () {
-                datatable
-                    .columns(2)
-                    .search(this.value)
-                    .draw();
-            });
-
-            $('#column3_search').on('keyup', function () {
-                datatable
-                    .columns(3)
-                    .search(this.value)
-                    .draw();
-            });
-
-            $('#column4_search').on('keyup', function () {
-                datatable
-                    .columns(4)
-                    .search(this.value)
-                    .draw();
-            });
-
-
-            // INITIALIZATION OF SELECT2
-            // =======================================================
-            $('.js-select2-custom').each(function () {
-                var select2 = $.HSCore.components.HSSelect2.init($(this));
-            });
-        });
-    </script>
-
-    <script>
-
-        $('#search-form').on('submit', function () {
-            var formData = new FormData(this);
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $.post({
-                url: "{{route('admin.store.search')}}",
-                data: formData,
-                cache: false,
-                contentType: false,
-                processData: false,
-                beforeSend: function () {
-                    $('#loading').show();
-                },
-                success: function (data) {
-                    $('#set-rows').html(data.view);
-                    $('.page-area').hide();
-                },
-                complete: function () {
-                    $('#loading').hide();
-                },
-            });
-        });
     </script>
 @endpush

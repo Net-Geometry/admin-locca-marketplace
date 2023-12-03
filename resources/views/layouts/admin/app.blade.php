@@ -544,7 +544,9 @@
         })
     }
 
-    function form_alert(id, message) {
+    $('.form-alert').on('click',function (){
+        let id = $(this).data('id')
+        let message = $(this).data('message')
         Swal.fire({
             title: '{{ translate('messages.Are you sure?') }}',
             text: message,
@@ -560,7 +562,25 @@
                 $('#'+id).submit()
             }
         })
-    }
+    })
+
+    {{--function form_alert(id, message) {--}}
+    {{--    Swal.fire({--}}
+    {{--        title: '{{ translate('messages.Are you sure?') }}',--}}
+    {{--        text: message,--}}
+    {{--        type: 'warning',--}}
+    {{--        showCancelButton: true,--}}
+    {{--        cancelButtonColor: 'default',--}}
+    {{--        confirmButtonColor: '#FC6A57',--}}
+    {{--        cancelButtonText: '{{ translate('messages.no') }}',--}}
+    {{--        confirmButtonText: '{{ translate('messages.Yes') }}',--}}
+    {{--        reverseButtons: true--}}
+    {{--    }).then((result) => {--}}
+    {{--        if (result.value) {--}}
+    {{--            $('#'+id).submit()--}}
+    {{--        }--}}
+    {{--    })--}}
+    {{--}--}}
     function form_alert_title(id,title, message) {
         Swal.fire({
             title: title,
@@ -585,11 +605,20 @@
         location.href = nurl;
     }
 
+    $(".store-filter").on("change", function () {
+        const id = $(this).val();
+        const url = $(this).data('url');
+        var nurl = new URL(url);
+        nurl.searchParams.set('store_id', id);
+        location.href = nurl;
+    });
+
     function set_store_filter(url, id) {
         var nurl = new URL(url);
         nurl.searchParams.set('store_id', id);
         location.href = nurl;
     }
+
     function set_category_filter(url, id) {
         var nurl = new URL(url);
         nurl.searchParams.set('category_id', id);

@@ -44,7 +44,7 @@
                                         <div class="lang_form" id="default-form">
                                             <div class="form-group">
                                                 <label class="input-label" for="default_title">{{translate('messages.title')}} ({{translate('messages.default')}})</label>
-                                                <input type="text" name="title[]" id="default_title" class="form-control" placeholder="{{translate('messages.new_banner')}}" value="{{$banner?->getRawOriginal('title')}}" oninvalid="document.getElementById('en-link').click()">
+                                                <input type="text" name="title[]" id="default_title" class="form-control" placeholder="{{translate('messages.new_banner')}}" value="{{$banner?->getRawOriginal('title')}}">
                                             </div>
                                             <input type="hidden" name="lang[]" value="default">
                                         </div>
@@ -63,7 +63,7 @@
                                             <div class="d-none lang_form" id="{{$lang}}-form">
                                                 <div class="form-group">
                                                     <label class="input-label" for="{{$lang}}_title">{{translate('messages.title')}} ({{strtoupper($lang)}})</label>
-                                                    <input type="text" name="title[]" id="{{$lang}}_title" class="form-control" placeholder="{{translate('messages.new_banner')}}" value="{{$translate[$lang]['title']??''}}" oninvalid="document.getElementById('en-link').click()">
+                                                    <input type="text" name="title[]" id="{{$lang}}_title" class="form-control" placeholder="{{translate('messages.new_banner')}}" value="{{$translate[$lang]['title']??''}}">
                                                 </div>
                                                 <input type="hidden" name="lang[]" value="{{$lang}}">
                                             </div>
@@ -94,7 +94,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label class="input-label" for="exampleFormControlInput1">{{translate('messages.banner_type')}}</label>
-                                        <select name="banner_type" id="banner_type" class="form-control" onchange="banner_type_change(this.value)">
+                                        <select name="banner_type" id="banner_type" class="form-control">
                                             <option value="store_wise" {{$banner->type == 'store_wise'? 'selected':'' }}>{{translate('messages.store_wise')}}</option>
                                             <option value="item_wise" {{$banner->type == 'item_wise'? 'selected':'' }}>{{translate('messages.item_wise')}}</option>
                                             <option value="default" {{$banner->type == 'default'? 'selected':'' }}>{{translate('messages.default')}}</option>
@@ -157,32 +157,10 @@
 @endsection
 
 @push('script_2')
+    <script src="{{asset('public/assets/admin')}}/js/view-pages/banner-edit.js"></script>
     <script>
-        function getRequest(route, id) {
-            $.get({
-                url: route,
-                dataType: 'json',
-                success: function (data) {
-                    $('#' + id).empty().append(data.options);
-                },
-            });
-        }
-        function readURL(input) {
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
+        "use strict";
 
-                reader.onload = function (e) {
-                    $('#viewer').attr('src', e.target.result);
-                }
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-
-        $("#customFileEg1").change(function () {
-            readURL(this);
-        });
-    </script>
-    <script>
         var zone_id = {{$banner->zone_id}};
 
         var module_id = {{$banner->module_id}};
@@ -205,15 +183,6 @@
             });
         }
         $(document).on('ready', function () {
-
-
-            $('#module_select').on('change', function(){
-                if($(this).val())
-                {
-                    module_id = $(this).val();
-                    get_items();
-                }
-            });
             banner_type_change('{{$banner->type}}');
 
             $('#zone').on('change', function(){
@@ -262,31 +231,7 @@
             });
         });
 
-        function banner_type_change(order_type) {
-            if(order_type=='item_wise')
-            {
-                $('#store_wise').hide();
-                $('#item_wise').show();
-                $('#default').hide();
-            }
-            else if(order_type=='store_wise')
-            {
-                $('#store_wise').show();
-                $('#item_wise').hide();
-                $('#default').hide();
-            }
-            else if(order_type=='default')
-            {
-                $('#default').show();
-                $('#store_wise').hide();
-                $('#item_wise').hide();
-            }
-            else{
-                $('#item_wise').hide();
-                $('#store_wise').hide();
-                $('#default').hide();
-            }
-        }
+
         @if($banner->type == 'item_wise')
         getRequest('{{url('/')}}/admin/item/get-items?module_id={{$banner->module_id}}&zone_id={{$banner->zone_id}}&data[]={{$banner->data}}','choice_item');
         @endif
@@ -325,37 +270,4 @@
             });
         });
     </script>
-        <script>
-            $(".lang_link").click(function(e){
-                e.preventDefault();
-                $(".lang_link").removeClass('active');
-                $(".lang_form").addClass('d-none');
-                $(this).addClass('active');
-
-                let form_id = this.id;
-                let lang = form_id.substring(0, form_id.length - 5);
-                console.log(lang);
-                $("#"+lang+"-form").removeClass('d-none');
-                if(lang == 'en')
-                {
-                    $("#from_part_2").removeClass('d-none');
-                }
-                else
-                {
-                    $("#from_part_2").addClass('d-none');
-                }
-            })
-        </script>
-            <script>
-                $('#reset_btn').click(function(){
-                    // $('#module_select').val("{{$banner->module_id}}");
-                    // $('#zone').val("{{$banner->zone_id}}").trigger('change');
-                    // $('#viewer').attr('src','{{asset('storage/app/public/banner')}}/{{$banner['image']}}');
-                    // $('#banner_type').val("{{$banner->type}}").trigger('change');
-                    // $('#store_id').val("{{$banner->zone_id}}").trigger('change');
-                    // $('#item_id').val("{{$banner->zone_id}}").trigger('change');
-                    location.reload(true);
-                })
-
-            </script>
 @endpush

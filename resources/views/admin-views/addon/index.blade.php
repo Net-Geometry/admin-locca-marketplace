@@ -113,9 +113,9 @@
                     </h5>
                     <div class="min--220">
                         <select name="store_id" id="store"
-                                onchange="set_store_filter('{{route('admin.addon.add-new')}}',this.value)"
+                                data-url="{{route('admin.addon.add-new')}}"
                                 data-placeholder="{{translate('messages.select_store')}}"
-                                class="js-data-example-ajax form-control" title="Select Restaurant">
+                                class="js-data-example-ajax form-control store-filter" title="Select Restaurant">
                             @if(isset($store))
                                 <option value="{{$store->id}}" selected>{{$store->name}}</option>
                             @else
@@ -337,71 +337,9 @@
 @endsection
 
 @push('script_2')
+    <script src="{{asset('public/assets/admin')}}/js/view-pages/addon-index.js"></script>
     <script>
-        $(document).on('ready', function () {
-            // INITIALIZATION OF DATATABLES
-            // =======================================================
-            var datatable = $.HSCore.components.HSDatatables.init($('#datatable'), {
-                select: {
-                    style: 'multi',
-                    classMap: {
-                        checkAll: '#datatableCheckAll',
-                        counter: '#datatableCounter',
-                        counterInfo: '#datatableCounterInfo'
-                    }
-                },
-                language: {
-                    zeroRecords: '<div class="text-center p-4">' +
-                        '<img class="mb-3 w-7rem" src="{{asset('public/assets/admin/svg/illustrations/sorry.svg')}}" alt="Image Description">' +
-
-                        '</div>'
-                }
-            });
-
-            $('#datatableSearch').on('mouseup', function (e) {
-                var $input = $(this),
-                    oldValue = $input.val();
-
-                if (oldValue == "") return;
-
-                setTimeout(function () {
-                    var newValue = $input.val();
-
-                    if (newValue == "") {
-                        // Gotcha
-                        datatable.search('').draw();
-                    }
-                }, 1);
-            });
-
-            $('#toggleColumn_index').change(function (e) {
-                datatable.columns(0).visible(e.target.checked)
-            })
-            $('#toggleColumn_name').change(function (e) {
-                datatable.columns(1).visible(e.target.checked)
-            })
-
-            $('#toggleColumn_vendor').change(function (e) {
-                datatable.columns(3).visible(e.target.checked)
-            })
-
-            $('#toggleColumn_status').change(function (e) {
-                datatable.columns(4).visible(e.target.checked)
-            })
-            $('#toggleColumn_price').change(function (e) {
-                datatable.columns(2).visible(e.target.checked)
-            })
-            $('#toggleColumn_action').change(function (e) {
-                datatable.columns(5).visible(e.target.checked)
-            })
-
-
-            // INITIALIZATION OF SELECT2
-            // =======================================================
-            $('.js-select2-custom').each(function () {
-                var select2 = $.HSCore.components.HSSelect2.init($(this));
-            });
-        });
+        "use strict";
 
         $('#store').select2({
             ajax: {
@@ -457,29 +395,5 @@
                 }
             }
         });
-
-
-    </script>
-    <script>
-        $(".lang_link").click(function (e) {
-            e.preventDefault();
-            $(".lang_link").removeClass('active');
-            $(".lang_form").addClass('d-none');
-            $(this).addClass('active');
-
-            let form_id = this.id;
-            let lang = form_id.substring(0, form_id.length - 5);
-            console.log(lang);
-            $("#" + lang + "-form").removeClass('d-none');
-            if (lang == '{{$defaultLang}}') {
-                $(".from_part_2").removeClass('d-none');
-            } else {
-                $(".from_part_2").addClass('d-none');
-            }
-        });
-
-        $('#reset_btn').click(function () {
-            $('#store_id').val(null).trigger('change');
-        })
     </script>
 @endpush
