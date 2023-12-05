@@ -6,9 +6,9 @@
 @section('content')
     <?php
     use Illuminate\Support\Facades\File;
-    
+
     $filePath = resource_path('views/layouts/landing/custom/index.blade.php');
-    
+
     $custom_file = File::exists($filePath);
     ?>
     <div class="content container-fluid">
@@ -31,7 +31,7 @@
         <div class="card mb-3">
             <div class="card-body">
                 <div
-                    class="maintainance-mode-toggle-bar d-flex flex-wrap justify-content-between border rounded align-items-center p-2">
+                    class="maintenance-mode-toggle-bar d-flex flex-wrap justify-content-between border rounded align-items-center p-2">
                     <h5 class="text-capitalize m-0">
                         {{ translate('admin_default_landing_page') }}
                         <i class="tio-info-outined" data-toggle="tooltip"
@@ -171,7 +171,7 @@
                                 </div>
 
                             </div>
-                            @if ($custom_file)    
+                            @if ($custom_file)
                             <div class="row g-1 g-sm-2 mt-2">
                                 <div class="col-6 col-md-4 col-xxl-3">
                                     <div class="card theme-card">
@@ -180,7 +180,7 @@
                                                 index.blade.php
                                             </h3>
 
-                                            
+
                                             <a class="btn action-btn btn--danger btn-outline-danger border-0" href="javascript:"
                                             onclick="form_alert('index_page','{{ translate('Want to delete this index_page ?') }}')" title="{{translate('messages.delete_index_page')}}"><i class="tio-delete-outlined"></i>
                                         </a>

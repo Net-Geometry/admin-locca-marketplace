@@ -21,7 +21,7 @@
         <div class="card mb-3">
             <div class="card-body">
                 <div
-                    class="maintainance-mode-toggle-bar d-flex flex-wrap justify-content-between border border-info rounded align-items-center p-2">
+                    class="maintenance-mode-toggle-bar d-flex flex-wrap justify-content-between border border-info rounded align-items-center p-2">
                     @php($config = \App\CentralLogics\Helpers::get_business_settings('maintenance_mode'))
                     <h5 class="text-capitalize m-0 text--primary">
                         <i class="tio-settings-outlined"></i>
@@ -36,7 +36,7 @@
                     </label>
                 </div>
                 <div class="mt-2">
-                    {{ translate('messages.maintainance_txt') }}
+                    {{ translate('messages.maintenance_txt') }}
                 </div>
             </div>
         </div>
@@ -1321,7 +1321,7 @@
 
         function maintenance_mode() {
             @if (env('APP_MODE') == 'demo')
-                toastr.warning('Sorry! You can not enable maintainance mode in demo!');
+                toastr.warning('Sorry! You can not enable maintenance mode in demo!');
             @else
                 Swal.fire({
                     title: '{{ translate('messages.Are you sure?') }}',

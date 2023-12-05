@@ -26,7 +26,7 @@
                 <div class="card mb-3">
                     @php($mail_status=\App\Models\BusinessSetting::where('key','refund_request_mail_status_admin')->first()?->value ??   '0')
                     <div class="card-body">
-                        <div class="maintainance-mode-toggle-bar d-flex flex-wrap justify-content-between border rounded align-items-center p-2">
+                        <div class="maintenance-mode-toggle-bar d-flex flex-wrap justify-content-between border rounded align-items-center p-2">
                             <h5 class="text-capitalize m-0 text--primary pl-2">
                                 {{translate('Receive_Mail_on_‘Refund_Request’?')}}
                         <span class="form-label-secondary text--primary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('If_a_customer_requests_a_refund,_the_admin_will_receive_an_automated_email_on_the_customer`s_Refund_Request.') }}">

@@ -21,7 +21,7 @@
         <div class="card mb-3">
             <div class="card-body">
                 <div
-                    class="maintainance-mode-toggle-bar d-flex flex-wrap justify-content-between border border-primary rounded align-items-center p-2">
+                    class="maintenance-mode-toggle-bar d-flex flex-wrap justify-content-between border border-primary rounded align-items-center p-2">
                     @php($config = $refund_active_status->value ?? null)
                     <h5 class="text-capitalize m-0 text--info text--primary">
                         <i class="tio-settings-outlined"></i>

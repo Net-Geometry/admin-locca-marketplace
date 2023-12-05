@@ -26,7 +26,7 @@
                 <div class="card mb-3">
                     @php($mail_status=\App\Models\BusinessSetting::where('key','dm_registration_mail_status_admin')->first()?->value ??  '0')
                     <div class="card-body">
-                        <div class="maintainance-mode-toggle-bar d-flex flex-wrap justify-content-between border rounded align-items-center p-2">
+                        <div class="maintenance-mode-toggle-bar d-flex flex-wrap justify-content-between border rounded align-items-center p-2">
                             <h5 class="text-capitalize m-0 text--primary pl-2">
                                 {{translate('Receive_Mail_On_‘New_Deliveryman_Registration’?')}}
                         <span class="form-label-secondary text--primary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('If_Deliveryman_registers_from_the_customer_App_or_Website_or_Deliveryman_App,_Admin_receive_an_automated_email.') }}">

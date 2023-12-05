@@ -1262,7 +1262,7 @@
   'landing_page' => 'Landing page',
   'don’t_forget_to_click_the_‘Save Information’_button_below_to_save_changes.' => 'Don’t forget to click the ‘Save Information’ button below to save changes.',
   'maintenance_mode' => 'Maintenance mode',
-  'maintainance_txt' => 'Maintainance txt',
+  'maintenance_txt' => 'maintenance txt',
   'Company Information' => 'Company Information',
   'company_name' => 'Company name',
   'new_company' => 'New company',
