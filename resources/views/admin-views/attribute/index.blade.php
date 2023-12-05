@@ -49,8 +49,7 @@
                                             </label>
                                             <input type="text" name="name[]" id="default_title"
                                                 class="form-control" placeholder="{{ translate('messages.ex_:_new_attribute') }}"
-
-                                                oninvalid="document.getElementById('en-link').click()">
+                                            >
                                         </div>
                                         <input type="hidden" name="lang[]" value="default">
                                     </div>
@@ -63,8 +62,7 @@
                                                         ({{ strtoupper($lang) }})
                                                     </label>
                                                     <input type="text" name="name[]" id="{{ $lang }}_title"
-                                                        class="form-control" placeholder="{{ translate('messages.ex_:_new_attribute') }}"
-                                                        oninvalid="document.getElementById('en-link').click()">
+                                                        class="form-control" placeholder="{{ translate('messages.ex_:_new_attribute') }}">
                                                 </div>
                                                 <input type="hidden" name="lang[]" value="{{ $lang }}">
                                             </div>
@@ -173,8 +171,7 @@
                                         <div class="btn--container justify-content-center">
                                             <a class="btn action-btn btn--primary btn-outline-primary" href="{{route('admin.attribute.edit',[$attribute['id']])}}" title="{{translate('messages.edit')}}"><i class="tio-edit"></i>
                                             </a>
-                                            <a class="btn action-btn btn--danger btn-outline-danger" href="javascript:" onclick="form_alert('attribute-{{$attribute['id']}}','{{ translate('Want to delete this attribute ?') }}')" title="{{translate('messages.delete')}}"><i class="tio-delete-outlined"></i>
-                                            </a>
+                                            <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:" data-id="attribute-{{$attribute['id']}}" data-message="{{ translate('Want to delete this attribute ?') }}" title="{{translate('messages.delete')}}"><i class="tio-delete-outlined"></i></a>
                                             <form action="{{route('admin.attribute.delete',[$attribute['id']])}}"
                                                     method="post" id="attribute-{{$attribute['id']}}">
                                                 @csrf @method('delete')
@@ -223,14 +220,6 @@
             let lang = form_id.substring(0, form_id.length - 5);
             console.log(lang);
             $("#"+lang+"-form").removeClass('d-none');
-            if(lang == '{{$defaultLang}}')
-            {
-                $("#from_part_2").removeClass('d-none');
-            }
-            else
-            {
-                $("#from_part_2").addClass('d-none');
-            }
         })
     </script>
 @endpush

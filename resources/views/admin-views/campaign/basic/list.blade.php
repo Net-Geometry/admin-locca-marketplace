@@ -113,7 +113,7 @@
                             </td>
                             <td>
                                 <label class="toggle-switch toggle-switch-sm" for="stocksCheckbox{{$campaign->id}}">
-                                    <input type="checkbox" onclick="location.href='{{route('admin.campaign.status',['basic',$campaign['id'],$campaign->status?0:1])}}'"class="toggle-switch-input" id="stocksCheckbox{{$campaign->id}}" {{$campaign->status?'checked':''}}>
+                                    <input type="checkbox" onclick="location.href='{{route('admin.campaign.status',['basic',$campaign['id'],$campaign->status?0:1])}}'" class="toggle-switch-input" id="stocksCheckbox{{$campaign->id}}" {{$campaign->status?'checked':''}}>
                                     <span class="toggle-switch-label">
                                         <span class="toggle-switch-indicator"></span>
                                     </span>
@@ -124,8 +124,8 @@
                                     <a class="btn action-btn btn-outline-primary btn--primary"
                                         href="{{route('admin.campaign.edit',['basic',$campaign['id']])}}" title="{{translate('messages.edit_campaign')}}"><i class="tio-edit"></i>
                                     </a>
-                                    <a class="btn action-btn btn-outline-danger btn--danger" href="javascript:"
-                                        onclick="form_alert('campaign-{{$campaign['id']}}','{{translate('messages.Want_to_delete_this_item')}}')" title="{{translate('messages.delete_campaign')}}"><i class="tio-delete-outlined"></i>
+                                    <a class="btn action-btn btn-outline-danger btn--danger form-alert" href="javascript:" data-id="{{$campaign['id']}}" data-message="{{translate('messages.Want_to_delete_this_item')}}"
+                                         title="{{translate('messages.delete_campaign')}}"><i class="tio-delete-outlined"></i>
                                     </a>
                                     <form action="{{route('admin.campaign.delete',[$campaign['id']])}}"
                                                     method="post" id="campaign-{{$campaign['id']}}">
@@ -160,74 +160,5 @@
 @endsection
 
 @push('script_2')
-    <script>
-        $(document).on('ready', function () {
-            // INITIALIZATION OF DATATABLES
-            // =======================================================
-            var datatable = $.HSCore.components.HSDatatables.init($('#columnSearchDatatable'));
 
-            $('#column1_search').on('keyup', function () {
-                datatable
-                    .search(this.value)
-                    .draw();
-            });
-
-            $('#column2_search').on('keyup', function () {
-                datatable
-                    .columns(2)
-                    .search(this.value)
-                    .draw();
-            });
-
-            $('#column3_search').on('change', function () {
-                datatable
-                    .columns(3)
-                    .search(this.value)
-                    .draw();
-            });
-
-            $('#column4_search').on('keyup', function () {
-                datatable
-                    .columns(4)
-                    .search(this.value)
-                    .draw();
-            });
-
-
-            // INITIALIZATION OF SELECT2
-            // =======================================================
-            $('.js-select2-custom').each(function () {
-                var select2 = $.HSCore.components.HSSelect2.init($(this));
-            });
-        });
-    </script>
-    <script>
-        // $('#search-form').on('submit', function (e) {
-        //     e.preventDefault();
-        //     var formData = new FormData(this);
-        //     $.ajaxSetup({
-        //         headers: {
-        //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        //         }
-        //     });
-        //     $.post({
-        //         url: '{{route('admin.campaign.searchBasic')}}',
-        //         data: formData,
-        //         cache: false,
-        //         contentType: false,
-        //         processData: false,
-        //         beforeSend: function () {
-        //             $('#loading').show();
-        //         },
-        //         success: function (data) {
-        //             $('.page-area').hide();
-        //             $('#set-rows').html(data.view);
-        //             $('#itemCount').html(data.count);
-        //         },
-        //         complete: function () {
-        //             $('#loading').hide();
-        //         },
-        //     });
-        // });
-    </script>
 @endpush

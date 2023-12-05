@@ -67,8 +67,7 @@
                                     </label>
                                     <input type="text" name="title[]" id="default_title"
                                         class="form-control" placeholder="{{ translate('messages.new_item') }}"
-
-                                        oninvalid="document.getElementById('en-link').click()">
+                                    >
                                 </div>
                                 <input type="hidden" name="lang[]" value="default">
                                 <div class="form-group mb-0">
@@ -86,8 +85,7 @@
                                                 ({{ strtoupper($lang) }})
                                             </label>
                                             <input type="text" name="title[]" id="{{ $lang }}_title"
-                                                class="form-control" placeholder="{{ translate('messages.new_item') }}"
-                                                oninvalid="document.getElementById('en-link').click()">
+                                                class="form-control" placeholder="{{ translate('messages.new_item') }}">
                                         </div>
                                         <input type="hidden" name="lang[]" value="{{ $lang }}">
                                         <div class="form-group mb-0">
@@ -156,18 +154,6 @@
                         </div>
                         <div class="card-body">
                             <div class="row g-2">
-                                {{-- <div class="col-md-3 col-sm-6">
-                                    <div class="form-group mb-0">
-                                        <label class="input-label">{{translate('messages.module')}}</label>
-                                        <select name="module_id" required class="form-control js-select2-custom"  data-placeholder="{{translate('messages.select_module')}}" onchange="modulChange(this.value)">
-                                                <option value="" selected disabled>{{translate('messages.select_module')}}</option>
-                                            @foreach(\App\Models\Module::notParcel()->get() as $module)
-                                                <option value="{{$module->id}}" >{{$module->module_name}}</option>
-                                            @endforeach
-                                        </select>
-                                        <small class="text-danger">{{translate('messages.module_change_warning')}}</small>
-                                    </div>
-                                </div> --}}
                                 <div class="col-md-3 col-sm-6">
                                     <div class="form-group mb-0">
                                         <label class="input-label" for="exampleFormControlSelect1">{{translate('messages.store')}}<span
