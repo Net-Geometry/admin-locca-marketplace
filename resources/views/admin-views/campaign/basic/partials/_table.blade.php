@@ -13,7 +13,7 @@
     </td>
     <td>
         <label class="toggle-switch toggle-switch-sm" for="stocksCheckbox{{$campaign->id}}">
-            <input type="checkbox" onclick="location.href='{{route('admin.campaign.status',['basic',$campaign['id'],$campaign->status?0:1])}}'"class="toggle-switch-input" id="stocksCheckbox{{$campaign->id}}" {{$campaign->status?'checked':''}}>
+            <input type="checkbox" onclick="location.href='{{route('admin.campaign.status',['basic',$campaign['id'],$campaign->status?0:1])}}'" class="toggle-switch-input" id="stocksCheckbox{{$campaign->id}}" {{$campaign->status?'checked':''}}>
             <span class="toggle-switch-label">
                 <span class="toggle-switch-indicator"></span>
             </span>

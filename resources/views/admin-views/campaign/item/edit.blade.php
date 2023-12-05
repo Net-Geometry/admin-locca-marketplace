@@ -916,36 +916,6 @@
         $('#option_price_view_'+data).append(add_new_row_view);
 
     }
-    // function apendPriceView(data)
-    // {
-    // countRow = 1 + $('#option_price_view_'+data).children('.add_new_view_row_class').length;
-    //     var apend_Price_View = `
-    //     <div class="row  border mt-3 p-3 ml-1 mr-1 ">
-    //         <div class="col-8">
-    //             <label for="">{{translate('price')}}</label>
-    //             <input class="form-control" type="text" name="options[`+count+`][values][`+countRow+`][optionPrice]" id="">
-    //         </div>
-    //     </div>`;
-    //     $('#option_price_view_'+data).append(apend_Price_View);
-
-    // }
-    // function choice_option_type(optionValue,data){
-    //     var text = ["field","textarea"];
-    //     var select = ["dropdown","checkbox","custom checkbox","radio button","custom radio button","multiple select"];
-    //     var date = ["date","date & time","time"];
-
-    //     if(jQuery.inArray( optionValue, text )>-1 || jQuery.inArray( optionValue, date )>-1){
-    //         $("#option_price_view_"+data).empty();
-    //         apendPriceView(data);
-    //         $('#add_new_button_'+data).hide();
-    //     }else if(jQuery.inArray( optionValue, select ) > -1)
-    //     {
-    //         $("#option_price_view_"+data).empty();
-    //         add_new_row_button(data);
-    //         $('#add_new_button_'+data).show();
-    //     }
-
-    // }
 
 
 </script>
