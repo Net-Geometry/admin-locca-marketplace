@@ -53,6 +53,10 @@ class Banner extends Model
      */
     protected $casts = [
         'data' => 'integer',
+        'status' => 'boolean',
+        'zone_id' => 'integer',
+        'module_id' => 'integer',
+        'featured' => 'boolean',
     ];
 
     /**
