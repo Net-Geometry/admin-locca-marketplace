@@ -153,11 +153,14 @@ class ZoneController extends Controller
     {
 
         $request->validate([
-            'cash_on_delivery' => 'required_without:digital_payment',
-            'digital_payment' => 'required_without:cash_on_delivery',
+            'cash_on_delivery' => 'required_without_all:digital_payment,offline_payment',
+            'digital_payment' => 'required_without_all:cash_on_delivery,offline_payment',
+            'offline_payment' => 'required_without_all:cash_on_delivery,digital_payment',
             'increased_delivery_fee' => 'nullable|numeric|between:0,999.99|required_if:increased_delivery_fee_status,1',
+            'module_data' => 'required'
         ], [
-            'increased_delivery_fee.required_if' => translate('messages.increased_delivery_fee_is_required')
+            'increased_delivery_fee.required_if' => translate('messages.increased_delivery_fee_is_required'),
+            'module_data.required' => translate('messages.business_module_data_is_required'),
         ]);
 
         foreach($request->module_data as $data){
@@ -166,7 +169,6 @@ class ZoneController extends Controller
                 return back();
             }
         }
-
         $zone=Zone::findOrFail($id);
         $zone->cash_on_delivery = $request->cash_on_delivery?1:0;
         $zone->digital_payment = $request->digital_payment?1:0;
