@@ -38,7 +38,7 @@ class UpdateController extends Controller
         Helpers::setEnvironmentValue('BUYER_USERNAME', $request['username']);
         Helpers::setEnvironmentValue('PURCHASE_CODE', $request['purchase_key']);
         Helpers::setEnvironmentValue('APP_MODE', 'live');
-        Helpers::setEnvironmentValue('SOFTWARE_VERSION', '2.4.0');
+        Helpers::setEnvironmentValue('SOFTWARE_VERSION', '2.5.0');
         Helpers::setEnvironmentValue('REACT_APP_KEY', '45370351');
         Helpers::setEnvironmentValue('APP_NAME', '6amMart' . time());
 
@@ -120,20 +120,20 @@ class UpdateController extends Controller
             }
 
 
-                if (!Schema::hasTable('payment_requests')) {
-                    $sql = file_get_contents('database/partial/payment_requests.sql');
+            if (!Schema::hasTable('payment_requests')) {
+                $sql = file_get_contents('database/partial/payment_requests.sql');
                 DB::unprepared($sql);
-                }
+            }
 
 
-                $storesToUpdate = Store::whereNull('slug')->get(['id','name','slug']);
-                foreach ($storesToUpdate as $store) {
-                    $slug = Str::slug($store->name);
-                    $store->slug = $store->slug? $store->slug :"{$slug}{$store->id}";
-                    $store->save();
-                }
+            $storesToUpdate = Store::whereNull('slug')->get(['id','name','slug']);
+            foreach ($storesToUpdate as $store) {
+                $slug = Str::slug($store->name);
+                $store->slug = $store->slug? $store->slug :"{$slug}{$store->id}";
+                $store->save();
+            }
 
-            } catch (\Exception $exception) {
+        } catch (\Exception $exception) {
             Toastr::error('Database import failed! try again');
             return back();
         }
@@ -143,6 +143,7 @@ class UpdateController extends Controller
             Helpers::insert_business_settings_key('landing_page','1');
             Helpers::insert_business_settings_key('landing_integration_type','none');
         }
+        Helpers::insert_business_settings_key("dm_max_cash_in_hand" , "5000");
 
         $data = DataSetting::where('type', 'login_admin')->pluck('value')->first();
         return redirect('/login/'.$data);
@@ -151,32 +152,32 @@ class UpdateController extends Controller
     private function set_data(){
         try{
             $gateway= ['ssl_commerz_payment',
-            'razor_pay',
-            'paypal',
-            'stripe',
-            'senang_pay',
-            'paystack',
-            'flutterwave',
-            'mercadopago',
-            'paymob_accept',
-            'liqpay',
-            'paytm',
-            'bkash',
-            'paytabs' ];
+                'razor_pay',
+                'paypal',
+                'stripe',
+                'senang_pay',
+                'paystack',
+                'flutterwave',
+                'mercadopago',
+                'paymob_accept',
+                'liqpay',
+                'paytm',
+                'bkash',
+                'paytabs' ];
 
             $data= BusinessSetting::whereIn('key',$gateway)->pluck('value','key')->toArray();
 
 
             foreach($data as $key => $value){
 
-            $gateway=$key;
-            if($key == 'ssl_commerz_payment' ){
-                $gateway='ssl_commerz';
-            }
+                $gateway=$key;
+                if($key == 'ssl_commerz_payment' ){
+                    $gateway='ssl_commerz';
+                }
 
-            $decoded_value= json_decode($value , true);
-            $data= ['gateway' => $gateway ,
-                'mode' =>  isset($decoded_value['status']) == 1  ?  'live': 'test'
+                $decoded_value= json_decode($value , true);
+                $data= ['gateway' => $gateway ,
+                    'mode' =>  isset($decoded_value['status']) == 1  ?  'live': 'test'
                 ];
 
                 if ($gateway == 'ssl_commerz') {
@@ -270,131 +271,131 @@ class UpdateController extends Controller
                     ];
                 }
 
-            $credentials= json_encode(array_merge($data, $additional_data));
+                $credentials= json_encode(array_merge($data, $additional_data));
 
-            $payment_additional_data=['gateway_title' => ucfirst(str_replace('_',' ',$gateway)),
-                                    'gateway_image' => null];
+                $payment_additional_data=['gateway_title' => ucfirst(str_replace('_',' ',$gateway)),
+                    'gateway_image' => null];
 
-            DB::table('addon_settings')->updateOrInsert(['key_name' => $gateway, 'settings_type' => 'payment_config'], [
-            'key_name' => $gateway,
-            'live_values' => $credentials,
-            'test_values' => $credentials,
-            'settings_type' => 'payment_config',
-            'mode' => isset($decoded_value['status']) == 1  ?  'live': 'test',
-            'is_active' => isset($decoded_value['status']) == 1  ?  1: 0 ,
-            'additional_data' => json_encode($payment_additional_data),
-            ]);
+                DB::table('addon_settings')->updateOrInsert(['key_name' => $gateway, 'settings_type' => 'payment_config'], [
+                    'key_name' => $gateway,
+                    'live_values' => $credentials,
+                    'test_values' => $credentials,
+                    'settings_type' => 'payment_config',
+                    'mode' => isset($decoded_value['status']) == 1  ?  'live': 'test',
+                    'is_active' => isset($decoded_value['status']) == 1  ?  1: 0 ,
+                    'additional_data' => json_encode($payment_additional_data),
+                ]);
             }
         } catch (\Exception $exception) {
             Toastr::error('Database import failed! try again');
             return true;
-            }
+        }
         return true;
     }
 
     private function set_sms_data(){
         try{
             $sms_gateway= ['twilio_sms',
-            'nexmo_sms',
-            'msg91_sms',
-            '2factor_sms'];
+                'nexmo_sms',
+                'msg91_sms',
+                '2factor_sms'];
 
             $data= BusinessSetting::whereIn('key',$sms_gateway)->pluck('value','key')->toArray();
             foreach($data as $key => $value){
-                    $decoded_value= json_decode($value , true);
+                $decoded_value= json_decode($value , true);
 
-                    if ($key == 'twilio_sms') {
-                        $sms_gateway='twilio';
-                        $additional_data = [
-                            'status' => data_get($decoded_value,'status',null),
-                            'sid' => data_get($decoded_value,'sid',null),
-                            'messaging_service_sid' =>  data_get($decoded_value,'messaging_service_id',null),
-                            'token' => data_get($decoded_value,'token',null),
-                            'from' =>data_get($decoded_value,'from',null),
-                            'otp_template' => data_get($decoded_value,'otp_template',null),
-                        ];
-                    } elseif ($key == 'nexmo_sms') {
-                        $sms_gateway='nexmo';
-                        $additional_data = [
-                            'status' => data_get($decoded_value,'status',null),
-                            'api_key' => data_get($decoded_value,'api_key',null),
-                            'api_secret' =>  data_get($decoded_value,'api_secret',null),
-                            'token' => data_get($decoded_value,'token',null),
-                            'from' =>  data_get($decoded_value,'from',null),
-                            'otp_template' =>  data_get($decoded_value,'otp_template',null),
-                        ];
-                    } elseif ($key == '2factor_sms') {
-                        $sms_gateway='2factor';
-                        $additional_data = [
-                            'status' => data_get($decoded_value,'status',null),
-                            'api_key' => data_get($decoded_value,'api_key',null),
-                        ];
-                    } elseif ($key == 'msg91_sms') {
-                        $sms_gateway='msg91';
-                        $additional_data = [
-                            'status' => data_get($decoded_value,'status',null),
-                            'template_id' =>  data_get($decoded_value,'template_id',null),
-                            'auth_key' =>  data_get($decoded_value,'authkey',null),
-                        ];
-                    }
-                    $data= ['gateway' => $sms_gateway ,
+                if ($key == 'twilio_sms') {
+                    $sms_gateway='twilio';
+                    $additional_data = [
+                        'status' => data_get($decoded_value,'status',null),
+                        'sid' => data_get($decoded_value,'sid',null),
+                        'messaging_service_sid' =>  data_get($decoded_value,'messaging_service_id',null),
+                        'token' => data_get($decoded_value,'token',null),
+                        'from' =>data_get($decoded_value,'from',null),
+                        'otp_template' => data_get($decoded_value,'otp_template',null),
+                    ];
+                } elseif ($key == 'nexmo_sms') {
+                    $sms_gateway='nexmo';
+                    $additional_data = [
+                        'status' => data_get($decoded_value,'status',null),
+                        'api_key' => data_get($decoded_value,'api_key',null),
+                        'api_secret' =>  data_get($decoded_value,'api_secret',null),
+                        'token' => data_get($decoded_value,'token',null),
+                        'from' =>  data_get($decoded_value,'from',null),
+                        'otp_template' =>  data_get($decoded_value,'otp_template',null),
+                    ];
+                } elseif ($key == '2factor_sms') {
+                    $sms_gateway='2factor';
+                    $additional_data = [
+                        'status' => data_get($decoded_value,'status',null),
+                        'api_key' => data_get($decoded_value,'api_key',null),
+                    ];
+                } elseif ($key == 'msg91_sms') {
+                    $sms_gateway='msg91';
+                    $additional_data = [
+                        'status' => data_get($decoded_value,'status',null),
+                        'template_id' =>  data_get($decoded_value,'template_id',null),
+                        'auth_key' =>  data_get($decoded_value,'authkey',null),
+                    ];
+                }
+                $data= ['gateway' => $sms_gateway ,
                     'mode' =>  isset($decoded_value['status']) == 1  ?  'live': 'test'
                 ];
-                    $credentials= json_encode(array_merge($data, $additional_data));
+                $credentials= json_encode(array_merge($data, $additional_data));
 
-                    DB::table('addon_settings')->updateOrInsert(['key_name' => $sms_gateway, 'settings_type' => 'sms_config'], [
-                        'key_name' => $sms_gateway,
-                        'live_values' => $credentials,
-                        'test_values' => $credentials,
-                        'settings_type' => 'sms_config',
-                        'mode' => isset($decoded_value['status']) == 1  ?  'live': 'test',
-                        'is_active' => isset($decoded_value['status']) == 1  ?  1: 0 ,
-                    ]);
-                }
-            } catch (\Exception $exception) {
-                Toastr::error('Database import failed! try again');
-                return true;
-                }
+                DB::table('addon_settings')->updateOrInsert(['key_name' => $sms_gateway, 'settings_type' => 'sms_config'], [
+                    'key_name' => $sms_gateway,
+                    'live_values' => $credentials,
+                    'test_values' => $credentials,
+                    'settings_type' => 'sms_config',
+                    'mode' => isset($decoded_value['status']) == 1  ?  'live': 'test',
+                    'is_active' => isset($decoded_value['status']) == 1  ?  1: 0 ,
+                ]);
+            }
+        } catch (\Exception $exception) {
+            Toastr::error('Database import failed! try again');
             return true;
-       }
-
-
-private function update_table(){
-
-
-    $gateways = [
-        'viva_wallet' => [
-            'status' => 0,
-            'client_id' => null,
-            'client_secret' => null,
-            'source_code' => null,
-        ],
-        'paradox' => [
-            'status' => 0,
-            'api_key' => null,
-            'sender_id' => null,
-        ],
-    ];
-
-
-    foreach ($gateways as $key => $conf) {
-        $data = [
-            'gateway' => $key,
-            'mode' => 'test',
-        ];
-        $credentials = json_encode(array_merge($data, $conf));
-
-        $settings = $key == 'paradox' ? 'sms_config' : 'payment_config';
-
-        DB::table('addon_settings')->updateOrInsert(['key_name' => $key, 'settings_type' => $settings], [
-            'key_name' => $key,
-            'live_values' => $credentials,
-            'test_values' => $credentials,
-            'settings_type' => $settings,
-            'mode' => 'test',
-            'is_active' => 0,
-        ]);
+        }
+        return true;
     }
-}
+
+
+    private function update_table(){
+
+
+        $gateways = [
+            'viva_wallet' => [
+                'status' => 0,
+                'client_id' => null,
+                'client_secret' => null,
+                'source_code' => null,
+            ],
+            'paradox' => [
+                'status' => 0,
+                'api_key' => null,
+                'sender_id' => null,
+            ],
+        ];
+
+
+        foreach ($gateways as $key => $conf) {
+            $data = [
+                'gateway' => $key,
+                'mode' => 'test',
+            ];
+            $credentials = json_encode(array_merge($data, $conf));
+
+            $settings = $key == 'paradox' ? 'sms_config' : 'payment_config';
+
+            DB::table('addon_settings')->updateOrInsert(['key_name' => $key, 'settings_type' => $settings], [
+                'key_name' => $key,
+                'live_values' => $credentials,
+                'test_values' => $credentials,
+                'settings_type' => $settings,
+                'mode' => 'test',
+                'is_active' => 0,
+            ]);
+        }
+    }
 
 }
