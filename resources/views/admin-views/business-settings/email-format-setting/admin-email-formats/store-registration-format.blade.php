@@ -27,7 +27,7 @@
                     @php($mail_status=\App\Models\BusinessSetting::where('key','store_registration_mail_status_admin')->first()?->value ?? '0')
 
                     <div class="card-body">
-                        <div class="maintainance-mode-toggle-bar d-flex flex-wrap justify-content-between border rounded align-items-center p-2">
+                        <div class="maintenancemode-toggle-bar d-flex flex-wrap justify-content-between border rounded align-items-center p-2">
                             <h5 class="text-capitalize m-0 text--primary pl-2">
                                 {{translate('Receive_Mail_On_‘New_Store_Registration’?')}}
                         <span class="form-label-secondary text--primary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('If_a_store_registers_from_the_customer_website_or_app_or_store_app,_admin_will_receive_an_automated_email.') }}">

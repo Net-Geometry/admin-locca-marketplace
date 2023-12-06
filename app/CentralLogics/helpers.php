@@ -85,7 +85,7 @@ class Helpers
     }
 
     public static function cart_product_data_formatting($data, $selected_variation, $selected_addons,
-    $selected_addon_quantity,$trans = false, $local = 'en')
+                                                        $selected_addon_quantity,$trans = false, $local = 'en')
     {
         $variations = [];
         $categories = [];
@@ -166,7 +166,7 @@ class Helpers
         $running_flash_sale = FlashSaleItem::Active()->whereHas('flashSale', function ($query) {
             $query->Active()->Running();
         })
-        ->where(['item_id' => $data['id']])->first();
+            ->where(['item_id' => $data['id']])->first();
         $data['flash_sale'] =(int) (($running_flash_sale) ? 1 :0);
         $data['stock'] = ($running_flash_sale && ($running_flash_sale->available_stock > 0)) ? $running_flash_sale->available_stock : $data['stock'];
         $data['discount'] = ($running_flash_sale && ($running_flash_sale->available_stock > 0)) ? $running_flash_sale->discount : $data['discount'];
@@ -241,7 +241,7 @@ class Helpers
                 $running_flash_sale = FlashSaleItem::Active()->whereHas('flashSale', function ($query) {
                     $query->Active()->Running();
                 })
-                ->where(['item_id' => $item['id']])->first();
+                    ->where(['item_id' => $item['id']])->first();
                 $item['flash_sale'] =(int) ((($running_flash_sale && ($running_flash_sale->available_stock > 0)) ? 1 :0));
                 $item['stock'] = ($running_flash_sale && ($running_flash_sale->available_stock > 0)) ? $running_flash_sale->available_stock : $item['stock'];
                 $item['discount'] = ($running_flash_sale && ($running_flash_sale->available_stock > 0)) ? $running_flash_sale->discount : $item['discount'];
@@ -314,7 +314,7 @@ class Helpers
             $running_flash_sale = FlashSaleItem::Active()->whereHas('flashSale', function ($query) {
                 $query->Active()->Running();
             })
-            ->where(['item_id' => $data['id']])->first();
+                ->where(['item_id' => $data['id']])->first();
             $data['flash_sale'] =(int) (($running_flash_sale) ? 1 :0);
             $data['stock'] = ($running_flash_sale && ($running_flash_sale->available_stock > 0)) ? $running_flash_sale->available_stock : $data['stock'];
             $data['discount'] = ($running_flash_sale && ($running_flash_sale->available_stock > 0)) ? $running_flash_sale->discount : $data['discount'];
@@ -389,7 +389,7 @@ class Helpers
                 $running_flash_sale = FlashSaleItem::Active()->whereHas('flashSale', function ($query) {
                     $query->Active()->Running();
                 })
-                ->where(['item_id' => $data['id']])->first();
+                    ->where(['item_id' => $data['id']])->first();
                 $data['flash_sale'] =(int) (($running_flash_sale) ? 1 :0);
                 $data['stock'] = ($running_flash_sale && ($running_flash_sale->available_stock > 0)) ? $running_flash_sale->available_stock : $data['stock'];
                 $data['discount'] = ($running_flash_sale && ($running_flash_sale->available_stock > 0)) ? $running_flash_sale->discount : $data['discount'];
@@ -491,7 +491,7 @@ class Helpers
             $running_flash_sale = FlashSaleItem::Active()->whereHas('flashSale', function ($query) {
                 $query->Active()->Running();
             })
-            ->where(['item_id' => $data['id']])->first();
+                ->where(['item_id' => $data['id']])->first();
             $data['flash_sale'] =(int) (($running_flash_sale) ? 1 :0);
             $data['stock'] = ($running_flash_sale && ($running_flash_sale->available_stock > 0)) ? $running_flash_sale->available_stock : $data['stock'];
             $data['discount'] = ($running_flash_sale && ($running_flash_sale->available_stock > 0)) ? $running_flash_sale->discount : $data['discount'];
@@ -699,13 +699,14 @@ class Helpers
                 $item['avg_rating'] = $ratings['rating'];
                 $item['rating_count'] = $ratings['total'];
                 $item['positive_rating'] = $ratings['positive_rating'];
-                $item['total_items'] = $item['items']->count();
-                $item['total_campaigns'] = $item['campaigns']->count();
+                $item['total_items'] = $item['items_count'];
+                $item['total_campaigns'] = $item['campaigns_count'];
                 $item['is_recommended'] = false;
                 if($item->storeConfig && $item->storeConfig->is_recommended_deleted == 0 ){
                     $item['is_recommended'] = $item->storeConfig->is_recommended;
                 }
-                $item['total_campaigns'] = $item['campaigns']->count();
+                unset($item['items_count']);
+                unset($item['campaigns_count']);
                 unset($item['storeConfig']);
                 unset($item['campaigns']);
                 unset($item['pivot']);
@@ -723,8 +724,10 @@ class Helpers
             $data['avg_rating'] = $ratings['rating'];
             $data['rating_count'] = $ratings['total'];
             $data['positive_rating'] = $ratings['positive_rating'];
-            $data['total_items'] = $data['items']->count();
-            $data['total_campaigns'] = $data['campaigns']->count();
+            $data['total_items'] = $data['items_count'];
+            $data['total_campaigns'] = $data['campaigns_count'];
+            unset($data['items_count']);
+            unset($data['campaigns_count']);
             unset($data['campaigns']);
             unset($data['storeConfig']);
             unset($data['pivot']);
@@ -795,9 +798,7 @@ class Helpers
                 $item['details_count'] = (int)$item->details->count();
                 $item['min_delivery_time'] =  $item->store ? (int)explode('-',$item->store?->delivery_time)[0] ?? 0:0;
                 $item['max_delivery_time'] =  $item->store ? (int)explode('-',$item->store?->delivery_time)[1] ?? 0:0;
-                // if($item['prescription_order'] && $item['order_attachment']){
-                //     $item['order_attachment'] = json_decode($item['order_attachment'], true);
-                // }
+
                 unset($item['details']);
                 array_push($storage, $item);
             }
@@ -832,9 +833,7 @@ class Helpers
             }
             $data['delivery_address'] = $data->delivery_address ? json_decode($data->delivery_address, true) : null;
             $data['details_count'] = (int)$data->details->count();
-            // if($data['prescription_order'] && $data['order_attachment']){
-            //     $data['order_attachment'] = json_decode($data['order_attachment'], true);
-            // }
+
             unset($data['details']);
         }
         return $data;
@@ -937,11 +936,7 @@ class Helpers
         return $currency;
     }
 
-    // public static function currency_symbol()
-    // {
-    //     $currency_symbol = Currency::where(['currency_code' => Helpers::currency_code()])->first()->currency_symbol;
-    //     return $currency_symbol;
-    // }
+
 
     public static function currency_symbol()
     {
@@ -953,12 +948,7 @@ class Helpers
         return $currency_symbol;
     }
 
-    // public static function format_currency($value)
-    // {
-    //     $currency_symbol_position = BusinessSetting::where(['key' => 'currency_symbol_position'])->first()->value;
 
-    //     return $currency_symbol_position == 'right' ? number_format($value, config('round_up_to_digit')) . ' ' . self::currency_symbol() : self::currency_symbol() . ' ' . number_format($value, config('round_up_to_digit'));
-    // }
 
     public static function format_currency($value)
     {
@@ -1215,7 +1205,7 @@ class Helpers
         $running_flash_sale = FlashSaleItem::Active()->whereHas('flashSale', function ($query) {
             $query->Active()->Running();
         })
-        ->where(['item_id' => $product->id])->first();
+            ->where(['item_id' => $product->id])->first();
 
         if($running_flash_sale){
             if ($running_flash_sale['discount_type'] == 'percent') {
@@ -1276,28 +1266,13 @@ class Helpers
     public static function get_food_price_range($product, $discount = false)
     {
         $lowest_price = $product->price;
-        // $highest_price = $product->price;
-        // if ($product->variations && is_array(json_decode($product['variations'], true))) {
-        //     foreach (json_decode($product->variations) as $key => $variation) {
-        //         if ($lowest_price > $variation->price) {
-        //             $lowest_price = round($variation->price, 2);
-        //         }
-        //         if ($highest_price < $variation->price) {
-        //             $highest_price = round($variation->price, 2);
-        //         }
-        //     }
-        // }
+
 
         if ($discount) {
             $lowest_price -= self::product_discount_calculate($product, $lowest_price, $product->store)['discount_amount'];
-            // $highest_price -= self::product_discount_calculate($product, $highest_price, $product->store);
+
         }
         $lowest_price = self::format_currency($lowest_price);
-        // $highest_price = self::format_currency($highest_price);
-
-        // if ($lowest_price == $highest_price) {
-        //     return $lowest_price;
-        // }
         return $lowest_price;
     }
 
@@ -1457,7 +1432,7 @@ class Helpers
             }else{
 
                 $value = self::order_status_update_message($status,$order->module->module_type,$order->customer?
-                $order->customer->current_language_key:'en');
+                    $order->customer->current_language_key:'en');
                 $value = self::text_variable_data_format(value:$value,store_name:$order->store?->name,order_id:$order->id,user_name:"{$order->customer?->f_name} {$order->customer?->l_name}",delivery_man_name:"{$order->delivery_man?->f_name} {$order->delivery_man?->l_name}");
                 $user_fcm = $order?->customer?->cm_firebase_token;
             }
@@ -1659,14 +1634,14 @@ class Helpers
                 if ($order->store->self_delivery_system) {
                     self::send_push_notif_to_topic($data, "restaurant_dm_" . $order->store_id, 'order_request');
                 } else
-                 {if($order->zone){
+                {if($order->zone){
                     if($order->dm_vehicle_id){
 
                         $topic = 'delivery_man_'.$order->zone_id.'_'.$order->dm_vehicle_id;
                         self::send_push_notif_to_topic($data, $topic, 'order_request');
                     }
                     self::send_push_notif_to_topic($data, $order->zone->deliveryman_wise_topic, 'order_request');
-                 }
+                }
                 }
             }
 
@@ -1689,7 +1664,7 @@ class Helpers
             $mail_status = Helpers::get_mail_status('place_order_mail_status_user');
             try {
                 if ($order->order_status == 'confirmed' && $order->payment_method != 'cash_on_delivery' && config('mail.status') && $mail_status == '1' && $order->is_guest == 0) {
-                        Mail::to($order->customer->email)->send(new PlaceOrder($order->id));
+                    Mail::to($order->customer->email)->send(new PlaceOrder($order->id));
                 }
                 $order_verification_mail_status = Helpers::get_mail_status('order_verification_mail_status_user');
                 if ($order->order_status == 'pending' && config('order_delivery_verification') == 1 && $order_verification_mail_status == '1' && $order->is_guest == 0) {
@@ -2283,10 +2258,10 @@ class Helpers
         foreach($collection as $key=>$item){
             $data[] = [
                 'SL'=>$key+1,
-                 translate('messages.amount') => $item->amount,
-                 translate('messages.store') => isset($item->vendor) ? $item->vendor->stores[0]->name : '',
-                 translate('messages.request_time') => date('Y-m-d '.config('timeformat'),strtotime($item->created_at)),
-                 translate('messages.status') => isset($status[$item->approved])?translate("messages.".$status[$item->approved]):"",
+                translate('messages.amount') => $item->amount,
+                translate('messages.store') => isset($item->vendor) ? $item->vendor->stores[0]->name : '',
+                translate('messages.request_time') => date('Y-m-d '.config('timeformat'),strtotime($item->created_at)),
+                translate('messages.status') => isset($status[$item->approved])?translate("messages.".$status[$item->approved]):"",
             ];
         }
         return $data;
@@ -2297,11 +2272,11 @@ class Helpers
         foreach($collection as $key=>$item){
             $data[] = [
                 'SL'=>$key+1,
-                 translate('messages.collect_from') => $item->store ? $item->store?->name : ($item->deliveryman ? $item->deliveryman->f_name . ' ' . $item->deliveryman->l_name : translate('messages.not_found')),
-                 translate('messages.type') => $item->from_type,
-                 translate('messages.received_at') => $item->created_at->format('Y-m-d '.config('timeformat')),
-                 translate('messages.amount') => $item->amount,
-                 translate('messages.reference') => $item->ref,
+                translate('messages.collect_from') => $item->store ? $item->store?->name : ($item->deliveryman ? $item->deliveryman->f_name . ' ' . $item->deliveryman->l_name : translate('messages.not_found')),
+                translate('messages.type') => $item->from_type,
+                translate('messages.received_at') => $item->created_at->format('Y-m-d '.config('timeformat')),
+                translate('messages.amount') => $item->amount,
+                translate('messages.reference') => $item->ref,
             ];
         }
         return $data;
@@ -2313,10 +2288,10 @@ class Helpers
             $data[] = [
                 'SL'=>$key+1,
                 translate('messages.name') => isset($item->delivery_man) ? $item->delivery_man->f_name.' '.$item->delivery_man->l_name : translate('messages.not_found'),
-                 translate('messages.received_at') => $item->created_at->format('Y-m-d '.config('timeformat')),
-                 translate('messages.amount') => $item->amount,
-                 translate('messages.method') => $item->method,
-                 translate('messages.reference') => $item->ref,
+                translate('messages.received_at') => $item->created_at->format('Y-m-d '.config('timeformat')),
+                translate('messages.amount') => $item->amount,
+                translate('messages.method') => $item->method,
+                translate('messages.reference') => $item->ref,
             ];
         }
         return $data;
@@ -2373,11 +2348,11 @@ class Helpers
         foreach($collection as $key=>$item){
             $data[] = [
                 'SL'=>$key+1,
-                 translate('messages.id') => $item['id'],
-                 translate('messages.name') => $item['name'],
-                 translate('messages.type') => $item->category?$item->category->name:'',
-                 translate('messages.price') => $item['price'],
-                 translate('messages.status') => $item['status'],
+                translate('messages.id') => $item['id'],
+                translate('messages.name') => $item['name'],
+                translate('messages.type') => $item->category?$item->category->name:'',
+                translate('messages.price') => $item['price'],
+                translate('messages.status') => $item['status'],
             ];
         }
         return $data;
@@ -2430,8 +2405,8 @@ class Helpers
         foreach($collection as $key=>$item){
             $data[] = [
                 'SL'=>$key+1,
-                 translate('messages.id') => $item['id'],
-                 translate('messages.unit') => $item['unit'],
+                translate('messages.id') => $item['id'],
+                translate('messages.unit') => $item['unit'],
             ];
         }
         return $data;
@@ -2442,12 +2417,12 @@ class Helpers
         foreach($collection as $key=>$item){
             $data[] = [
                 'SL'=>$key+1,
-                 translate('messages.id') => $item['id'],
-                 translate('messages.name') => $item->f_name.' '.$item->l_name,
-                 translate('messages.phone') => $item['phone'],
-                 translate('messages.email') => $item['email'],
-                 translate('messages.total_order') => $item['order_count'],
-                 translate('messages.status') => $item['status'],
+                translate('messages.id') => $item['id'],
+                translate('messages.name') => $item->f_name.' '.$item->l_name,
+                translate('messages.phone') => $item['phone'],
+                translate('messages.email') => $item['email'],
+                translate('messages.total_order') => $item['order_count'],
+                translate('messages.status') => $item['status'],
             ];
         }
         return $data;
@@ -2458,25 +2433,25 @@ class Helpers
         foreach($collection as $key=>$item){
             $data[] = [
                 'SL'=>$key+1,
-                 translate('messages.order_id') => $item['order_id'],
-                 translate('messages.store')=>$item->order->store?$item->order->store->name:translate('messages.invalid'),
-                 translate('messages.customer_name')=>$item->order->customer?$item->order->customer['f_name'].' '.$item->order->customer['l_name']:translate('messages.invalid_customer_data'),
-                 translate('total_item_amount')=>\App\CentralLogics\Helpers::format_currency($item->order['order_amount'] - $item->order['dm_tips']-$item->order['delivery_charge'] - $item['tax'] + $item->order['coupon_discount_amount'] + $item->order['store_discount_amount']),
-                 translate('item_discount')=>\App\CentralLogics\Helpers::format_currency($item->order->details->sum('discount_on_item')),
-                 translate('coupon_discount')=>\App\CentralLogics\Helpers::format_currency($item->order['coupon_discount_amount']),
-                 translate('discounted_amount')=>\App\CentralLogics\Helpers::format_currency($item->order['coupon_discount_amount'] + $item->order['store_discount_amount']),
-                 translate('messages.tax')=>\App\CentralLogics\Helpers::format_currency($item->order['total_tax_amount']),
-                 translate('messages.delivery_charge')=>\App\CentralLogics\Helpers::format_currency($item['delivery_charge']),
-                 translate('messages.total_order_amount') => \App\CentralLogics\Helpers::format_currency($item['order_amount']),
-                 translate('messages.admin_discount') => \App\CentralLogics\Helpers::format_currency($item['admin_expense']),
-                 translate('messages.store_discount') => \App\CentralLogics\Helpers::format_currency($item->order['store_discount_amount']),
-                 translate('messages.admin_commission') => \App\CentralLogics\Helpers::format_currency(($item->admin_commission + $item->admin_expense) - $item->delivery_fee_comission),
-                 translate('Comission on delivery fee') => \App\CentralLogics\Helpers::format_currency($item['delivery_fee_comission']),
-                 translate('admin_net_income') => \App\CentralLogics\Helpers::format_currency($item['admin_commission']),
-                 translate('store_net_income') => \App\CentralLogics\Helpers::format_currency($item['store_amount'] - $item['tax']),
-                 translate('messages.amount_received_by') => $item['received_by'],
-                 translate('messages.payment_method')=>translate(str_replace('_', ' ', $item->order['payment_method'])),
-                 translate('messages.payment_status') => $item->status ? translate("messages.refunded") : translate("messages.completed"),
+                translate('messages.order_id') => $item['order_id'],
+                translate('messages.store')=>$item->order->store?$item->order->store->name:translate('messages.invalid'),
+                translate('messages.customer_name')=>$item->order->customer?$item->order->customer['f_name'].' '.$item->order->customer['l_name']:translate('messages.invalid_customer_data'),
+                translate('total_item_amount')=>\App\CentralLogics\Helpers::format_currency($item->order['order_amount'] - $item->order['dm_tips']-$item->order['delivery_charge'] - $item['tax'] + $item->order['coupon_discount_amount'] + $item->order['store_discount_amount']),
+                translate('item_discount')=>\App\CentralLogics\Helpers::format_currency($item->order->details->sum('discount_on_item')),
+                translate('coupon_discount')=>\App\CentralLogics\Helpers::format_currency($item->order['coupon_discount_amount']),
+                translate('discounted_amount')=>\App\CentralLogics\Helpers::format_currency($item->order['coupon_discount_amount'] + $item->order['store_discount_amount']),
+                translate('messages.tax')=>\App\CentralLogics\Helpers::format_currency($item->order['total_tax_amount']),
+                translate('messages.delivery_charge')=>\App\CentralLogics\Helpers::format_currency($item['delivery_charge']),
+                translate('messages.total_order_amount') => \App\CentralLogics\Helpers::format_currency($item['order_amount']),
+                translate('messages.admin_discount') => \App\CentralLogics\Helpers::format_currency($item['admin_expense']),
+                translate('messages.store_discount') => \App\CentralLogics\Helpers::format_currency($item->order['store_discount_amount']),
+                translate('messages.admin_commission') => \App\CentralLogics\Helpers::format_currency(($item->admin_commission + $item->admin_expense) - $item->delivery_fee_comission),
+                translate('Comission on delivery fee') => \App\CentralLogics\Helpers::format_currency($item['delivery_fee_comission']),
+                translate('admin_net_income') => \App\CentralLogics\Helpers::format_currency($item['admin_commission']),
+                translate('store_net_income') => \App\CentralLogics\Helpers::format_currency($item['store_amount'] - $item['tax']),
+                translate('messages.amount_received_by') => $item['received_by'],
+                translate('messages.payment_method')=>translate(str_replace('_', ' ', $item->order['payment_method'])),
+                translate('messages.payment_status') => $item->status ? translate("messages.refunded") : translate("messages.completed"),
             ];
         }
         return $data;
@@ -2487,8 +2462,8 @@ class Helpers
         $data = [];
         foreach($collection as $key=>$item){
             if(isset($item->order->customer)){
-                            $customer_name= $item->order->customer->f_name.' '.$item->order->customer->l_name;
-                                }
+                $customer_name= $item->order->customer->f_name.' '.$item->order->customer->l_name;
+            }
             $data[] = [
                 'SL'=>$key+1,
                 translate('messages.order_id') => $item['order_id'],
@@ -2507,16 +2482,16 @@ class Helpers
         foreach($collection as $key=>$item){
             $data[] = [
                 'SL'=>$key+1,
-                 translate('messages.id') => $item['id'],
-                 translate('messages.name') => $item['name'],
-                 translate('messages.module') =>$item->module ? $item->module->module_name : '',
-                 translate('messages.store') => $item->store ? $item->store?->name : '',
-                 translate('messages.order') => $item->orders_count,
-                 translate('messages.price') => \App\CentralLogics\Helpers::format_currency($item->price),
-                 translate('messages.total_amount_sold') => \App\CentralLogics\Helpers::format_currency($item->orders_sum_price),
-                 translate('messages.total_discount_given') => \App\CentralLogics\Helpers::format_currency($item->orders_sum_discount_on_item),
-                 translate('messages.average_sale_value') => $item->orders_count>0? \App\CentralLogics\Helpers::format_currency(($item->orders_sum_price-$item->orders_sum_discount_on_item)/$item->orders_count):0 ,
-                 translate('messages.average_ratings') => round($item->avg_rating,1),
+                translate('messages.id') => $item['id'],
+                translate('messages.name') => $item['name'],
+                translate('messages.module') =>$item->module ? $item->module->module_name : '',
+                translate('messages.store') => $item->store ? $item->store?->name : '',
+                translate('messages.order') => $item->orders_count,
+                translate('messages.price') => \App\CentralLogics\Helpers::format_currency($item->price),
+                translate('messages.total_amount_sold') => \App\CentralLogics\Helpers::format_currency($item->orders_sum_price),
+                translate('messages.total_discount_given') => \App\CentralLogics\Helpers::format_currency($item->orders_sum_discount_on_item),
+                translate('messages.average_sale_value') => $item->orders_count>0? \App\CentralLogics\Helpers::format_currency(($item->orders_sum_price-$item->orders_sum_discount_on_item)/$item->orders_count):0 ,
+                translate('messages.average_ratings') => round($item->avg_rating,1),
             ];
         }
         return $data;
@@ -2527,11 +2502,11 @@ class Helpers
         foreach($collection as $key=>$item){
             $data[] = [
                 'SL'=>$key+1,
-                 translate('messages.id') => $item['id'],
-                 translate('messages.name') => $item['name'],
-                 translate('messages.store') => $item->store?$item->store?->name : '',
-                 translate('messages.zone') => ($item->store && $item->store?->zone) ? $item->store?->zone->name:'',
-                 translate('messages.stock') => $item['stock'],
+                translate('messages.id') => $item['id'],
+                translate('messages.name') => $item['name'],
+                translate('messages.store') => $item->store?$item->store?->name : '',
+                translate('messages.zone') => ($item->store && $item->store?->zone) ? $item->store?->zone->name:'',
+                translate('messages.stock') => $item['stock'],
             ];
         }
         return $data;
@@ -2542,13 +2517,13 @@ class Helpers
         foreach($collection as $key=>$item){
             $data[] = [
                 'SL'=>$key+1,
-                 translate('messages.id') => $item['id'],
-                 translate('messages.name') => $item->f_name.' '.$item->l_name,
-                 translate('messages.phone') => $item['phone'],
-                 translate('messages.zone') => $item->zone?$item->zone->name:'',
-                 translate('messages.total_order') => $item['order_count'],
-                 translate('messages.currently_assigned_orders') => (int) $item['current_orders'],
-                 translate('messages.status') => $item['status'],
+                translate('messages.id') => $item['id'],
+                translate('messages.name') => $item->f_name.' '.$item->l_name,
+                translate('messages.phone') => $item['phone'],
+                translate('messages.zone') => $item->zone?$item->zone->name:'',
+                translate('messages.total_order') => $item['order_count'],
+                translate('messages.currently_assigned_orders') => (int) $item['current_orders'],
+                translate('messages.status') => $item['status'],
             ];
         }
         return $data;
@@ -2609,15 +2584,15 @@ class Helpers
         //         $result = $value['price'];
         //     }
         // }
-            foreach($product as $product_variation){
-                foreach($product_variation['values'] as $option){
-                    foreach($match as $variation){
-                        if($product_variation['name'] == $variation['name'] && isset($variation['values']) && in_array($option['label'], $variation['values']['label'])){
-                            $result += $option['optionPrice'];
-                        }
+        foreach($product as $product_variation){
+            foreach($product_variation['values'] as $option){
+                foreach($match as $variation){
+                    if($product_variation['name'] == $variation['name'] && isset($variation['values']) && in_array($option['label'], $variation['values']['label'])){
+                        $result += $option['optionPrice'];
                     }
                 }
             }
+        }
 
         return $result;
     }
@@ -2801,166 +2776,7 @@ class Helpers
 
         return "en";
     }
-    // function getLanguageCode(string $country_code): string
-    // {
-    //     $locales = array('af-ZA',
-    //         'am-ET',
-    //         'ar-AE',
-    //         'ar-BH',
-    //         'ar-DZ',
-    //         'ar-EG',
-    //         'ar-IQ',
-    //         'ar-JO',
-    //         'ar-KW',
-    //         'ar-LB',
-    //         'ar-LY',
-    //         'ar-MA',
-    //         'ar-OM',
-    //         'ar-QA',
-    //         'ar-SA',
-    //         'ar-SY',
-    //         'ar-TN',
-    //         'ar-YE',
-    //         'az-Cyrl-AZ',
-    //         'az-Latn-AZ',
-    //         'be-BY',
-    //         'bg-BG',
-    //         'bn-BD',
-    //         'bs-Cyrl-BA',
-    //         'bs-Latn-BA',
-    //         'cs-CZ',
-    //         'da-DK',
-    //         'de-AT',
-    //         'de-CH',
-    //         'de-DE',
-    //         'de-LI',
-    //         'de-LU',
-    //         'dv-MV',
-    //         'el-GR',
-    //         'en-AU',
-    //         'en-BZ',
-    //         'en-CA',
-    //         'en-GB',
-    //         'en-IE',
-    //         'en-JM',
-    //         'en-MY',
-    //         'en-NZ',
-    //         'en-SG',
-    //         'en-TT',
-    //         'en-US',
-    //         'en-ZA',
-    //         'en-ZW',
-    //         'es-AR',
-    //         'es-BO',
-    //         'es-CL',
-    //         'es-CO',
-    //         'es-CR',
-    //         'es-DO',
-    //         'es-EC',
-    //         'es-ES',
-    //         'es-GT',
-    //         'es-HN',
-    //         'es-MX',
-    //         'es-NI',
-    //         'es-PA',
-    //         'es-PE',
-    //         'es-PR',
-    //         'es-PY',
-    //         'es-SV',
-    //         'es-US',
-    //         'es-UY',
-    //         'es-VE',
-    //         'et-EE',
-    //         'fa-IR',
-    //         'fi-FI',
-    //         'fil-PH',
-    //         'fo-FO',
-    //         'fr-BE',
-    //         'fr-CA',
-    //         'fr-CH',
-    //         'fr-FR',
-    //         'fr-LU',
-    //         'fr-MC',
-    //         'he-IL',
-    //         'hi-IN',
-    //         'hr-BA',
-    //         'hr-HR',
-    //         'hu-HU',
-    //         'hy-AM',
-    //         'id-ID',
-    //         'ig-NG',
-    //         'is-IS',
-    //         'it-CH',
-    //         'it-IT',
-    //         'ja-JP',
-    //         'ka-GE',
-    //         'kk-KZ',
-    //         'kl-GL',
-    //         'km-KH',
-    //         'ko-KR',
-    //         'ky-KG',
-    //         'lb-LU',
-    //         'lo-LA',
-    //         'lt-LT',
-    //         'lv-LV',
-    //         'mi-NZ',
-    //         'mk-MK',
-    //         'mn-MN',
-    //         'ms-BN',
-    //         'ms-MY',
-    //         'mt-MT',
-    //         'nb-NO',
-    //         'ne-NP',
-    //         'nl-BE',
-    //         'nl-NL',
-    //         'pl-PL',
-    //         'prs-AF',
-    //         'ps-AF',
-    //         'pt-BR',
-    //         'pt-PT',
-    //         'ro-RO',
-    //         'ru-RU',
-    //         'rw-RW',
-    //         'sv-SE',
-    //         'si-LK',
-    //         'sk-SK',
-    //         'sl-SI',
-    //         'sq-AL',
-    //         'sr-Cyrl-BA',
-    //         'sr-Cyrl-CS',
-    //         'sr-Cyrl-ME',
-    //         'sr-Cyrl-RS',
-    //         'sr-Latn-BA',
-    //         'sr-Latn-CS',
-    //         'sr-Latn-ME',
-    //         'sr-Latn-RS',
-    //         'sw-KE',
-    //         'tg-Cyrl-TJ',
-    //         'th-TH',
-    //         'tk-TM',
-    //         'tr-TR',
-    //         'uk-UA',
-    //         'ur-PK',
-    //         'uz-Cyrl-UZ',
-    //         'uz-Latn-UZ',
-    //         'vi-VN',
-    //         'wo-SN',
-    //         'yo-NG',
-    //         'zh-CN',
-    //         'zh-HK',
-    //         'zh-MO',
-    //         'zh-SG',
-    //         'zh-TW');
 
-    //     foreach ($locales as $locale) {
-    //         $locale_region = explode('-',$locale);
-    //         if (strtoupper($country_code) == $locale_region[1]) {
-    //             return $locale_region[0];
-    //         }
-    //     }
-
-    //     return "en";
-    // }
 
     public static function pagination_limit()
     {
@@ -3097,7 +2913,7 @@ class Helpers
 
     public static function get_mail_status($name)
     {
-        $status = BusinessSetting::where('key', $name)->first()->value ?? 0;
+        $status = BusinessSetting::where('key', $name)->first()?->value ?? 0;
         return $status;
     }
 
@@ -3218,28 +3034,28 @@ class Helpers
         foreach($collection as $key=>$item){
             $data[] = [
                 'SL'=>$key+1,
-                 translate('messages.id') => $item['id'],
-                 translate('messages.vendor_id') => $item['vendor_id'],
-                 translate('messages.delivery_man_id') => $item['delivery_man_id'],
-                 translate('messages.order_id') => $item['order_id'],
-                 translate('messages.order_amount') => $item['order_amount'],
-                 translate('messages.store_amount') => $item['store_amount']-$item['tax'],
-                 translate('messages.admin_commission') => $item['admin_commission'],
-                 translate('messages.received_by') => $item['received_by'],
-                 translate('messages.status') => $item['status'],
-                 translate('messages.created_at') => $item['created_at'],
-                 translate('messages.updated_at') => $item['updated_at'],
-                 translate('messages.delivery_charge') => $item['delivery_charge'],
-                 translate('messages.original_delivery_charge') => $item['original_delivery_charge'],
-                 translate('messages.tax') => $item['tax'],
-                 translate('messages.zone_id') => $item['zone_id'],
-                 translate('messages.module_id') => $item['module_id'],
-                 translate('messages.parcel_catgory_id') => $item['parcel_catgory_id'],
-                 translate('messages.dm_tips') => $item['dm_tips'],
-                 translate('messages.delivery_fee_comission') => $item['delivery_fee_comission'],
-                 translate('messages.admin_expense') => $item['admin_expense'],
-                 translate('messages.store_expense') => $item['store_expense'],
-                 translate('messages.discount_amount_by_store') => $item['discount_amount_by_store'],
+                translate('messages.id') => $item['id'],
+                translate('messages.vendor_id') => $item['vendor_id'],
+                translate('messages.delivery_man_id') => $item['delivery_man_id'],
+                translate('messages.order_id') => $item['order_id'],
+                translate('messages.order_amount') => $item['order_amount'],
+                translate('messages.store_amount') => $item['store_amount']-$item['tax'],
+                translate('messages.admin_commission') => $item['admin_commission'],
+                translate('messages.received_by') => $item['received_by'],
+                translate('messages.status') => $item['status'],
+                translate('messages.created_at') => $item['created_at'],
+                translate('messages.updated_at') => $item['updated_at'],
+                translate('messages.delivery_charge') => $item['delivery_charge'],
+                translate('messages.original_delivery_charge') => $item['original_delivery_charge'],
+                translate('messages.tax') => $item['tax'],
+                translate('messages.zone_id') => $item['zone_id'],
+                translate('messages.module_id') => $item['module_id'],
+                translate('messages.parcel_catgory_id') => $item['parcel_catgory_id'],
+                translate('messages.dm_tips') => $item['dm_tips'],
+                translate('messages.delivery_fee_comission') => $item['delivery_fee_comission'],
+                translate('messages.admin_expense') => $item['admin_expense'],
+                translate('messages.store_expense') => $item['store_expense'],
+                translate('messages.discount_amount_by_store') => $item['discount_amount_by_store'],
             ];
         }
         return $data;
@@ -3281,11 +3097,11 @@ class Helpers
             foreach((array)json_decode($choice_options) as $key => $choice){
                 $data[$choice->title] =$choice->options;
             }
-                return str_ireplace(['\'', '"', '{','}', '[',']', ';', '<', '>', '?'], ' ',json_encode($data));
-            } catch (\Exception $ex) {
-                info(["line___{$ex->getLine()}",$ex->getMessage()]);
-                return 0;
-            }
+            return str_ireplace(['\'', '"', '{','}', '[',']', ';', '<', '>', '?'], ' ',json_encode($data));
+        } catch (\Exception $ex) {
+            info(["line___{$ex->getLine()}",$ex->getMessage()]);
+            return 0;
+        }
     }
 
     public static function get_module_name($id){
@@ -3300,111 +3116,124 @@ class Helpers
                 foreach($choice['values'] as $k => $v){
                     $data2[$k] =  $v['label'];
                     // if(!next($choice['values'] )) {
-                        //     $data2[$k] =  $v['label'].";";
-                        // }
-                    }
-                    $data[$choice['name']] = $data2;
+                    //     $data2[$k] =  $v['label'].";";
+                    // }
                 }
-                return str_ireplace(['\'', '"', '{','}', '[',']', '<', '>', '?'], ' ',json_encode($data));
-            } catch (\Exception $ex) {
-                info(["line___{$ex->getLine()}",$ex->getMessage()]);
-                return 0;
+                $data[$choice['name']] = $data2;
             }
-
+            return str_ireplace(['\'', '"', '{','}', '[',']', '<', '>', '?'], ' ',json_encode($data));
+        } catch (\Exception $ex) {
+            info(["line___{$ex->getLine()}",$ex->getMessage()]);
+            return 0;
         }
 
-        public static function get_customer_name($id){
-            $user = User::where('id',$id)->first();
+    }
 
-            return $user->f_name.' '.$user->l_name;
+    public static function get_customer_name($id){
+        $user = User::where('id',$id)->first();
+
+        return $user->f_name.' '.$user->l_name;
+    }
+    public static function get_addon_data($id){
+        try{
+            $data=[];
+            $addon= AddOn::whereIn('id',json_decode($id, true))->get(['name','price'])->toArray();
+            foreach($addon as $key => $value){
+                $data[$key]= $value['name'] .' - ' .\App\CentralLogics\Helpers::format_currency($value['price']);
+            }
+            return str_ireplace(['\'', '"', '{','}', '[',']', '<', '>', '?'], ' ',json_encode($data, JSON_UNESCAPED_UNICODE));
+        } catch (\Exception $ex) {
+            info(["line___{$ex->getLine()}",$ex->getMessage()]);
+            return 0;
         }
-        public static function get_addon_data($id){
-            try{
-                $data=[];
-                $addon= AddOn::whereIn('id',json_decode($id, true))->get(['name','price'])->toArray();
-                    foreach($addon as $key => $value){
-                        $data[$key]= $value['name'] .' - ' .\App\CentralLogics\Helpers::format_currency($value['price']);
+    }
+
+
+
+    public static function add_or_update_translations($request, $key_data,$name_field ,$model_name, $data_id,$data_value ){
+        try{
+            $model = 'App\\Models\\'.$model_name;
+            $default_lang = str_replace('_', '-', app()->getLocale());
+            foreach ($request->lang as $index => $key) {
+                if ($default_lang == $key && !($request->{$name_field}[$index])) {
+                    if ($key != 'default') {
+                        Translation::updateorcreate(
+                            [
+                                'translationable_type' =>  $model,
+                                'translationable_id' => $data_id,
+                                'locale' => $key,
+                                'key' => $key_data
+                            ],
+                            ['value' => $data_value]
+                        );
                     }
-                return str_ireplace(['\'', '"', '{','}', '[',']', '<', '>', '?'], ' ',json_encode($data, JSON_UNESCAPED_UNICODE));
-            } catch (\Exception $ex) {
-                info(["line___{$ex->getLine()}",$ex->getMessage()]);
-                return 0;
-            }
-        }
-
-
-
-        public static function add_or_update_translations($request, $key_data,$name_field ,$model_name, $data_id,$data_value ){
-            try{
-                $model = 'App\\Models\\'.$model_name;
-                $default_lang = str_replace('_', '-', app()->getLocale());
-                foreach ($request->lang as $index => $key) {
-                    if ($default_lang == $key && !($request->{$name_field}[$index])) {
-                        if ($key != 'default') {
-                            Translation::updateorcreate(
-                                [
-                                    'translationable_type' =>  $model,
-                                    'translationable_id' => $data_id,
-                                    'locale' => $key,
-                                    'key' => $key_data
-                                ],
-                                ['value' => $data_value]
-                            );
-                        }
-                    } else {
-                        if ($request->{$name_field}[$index] && $key != 'default') {
-                            Translation::updateorcreate(
-                                [
-                                    'translationable_type' => $model,
-                                    'translationable_id' => $data_id,
-                                    'locale' => $key,
-                                    'key' => $key_data
-                                ],
-                                ['value' => $request->{$name_field}[$index]]
-                            );
-                        }
+                } else {
+                    if ($request->{$name_field}[$index] && $key != 'default') {
+                        Translation::updateorcreate(
+                            [
+                                'translationable_type' => $model,
+                                'translationable_id' => $data_id,
+                                'locale' => $key,
+                                'key' => $key_data
+                            ],
+                            ['value' => $request->{$name_field}[$index]]
+                        );
                     }
                 }
-                return true;
+            }
+            return true;
         } catch(\Exception $e){
             info(["line___{$e->getLine()}",$e->getMessage()]);
             return false;
         }
     }
 
-        public static function offline_payment_formater($user_data){
-            $userInputs = [];
+    public static function offline_payment_formater($user_data){
+        $userInputs = [];
 
-            $user_inputes=  json_decode($user_data->payment_info, true);
-            $method_name= $user_inputes['method_name'];
-            $method_id= $user_inputes['method_id'];
+        $user_inputes=  json_decode($user_data->payment_info, true);
+        $method_name= $user_inputes['method_name'];
+        $method_id= $user_inputes['method_id'];
 
-            foreach ($user_inputes as $key => $value) {
-                if(!in_array($key,['method_name','method_id'])){
-                    $userInput = [
+        foreach ($user_inputes as $key => $value) {
+            if(!in_array($key,['method_name','method_id'])){
+                $userInput = [
                     'user_input' => $key,
                     'user_data' => $value,
-                    ];
-                    $userInputs[] = $userInput;
-                }
+                ];
+                $userInputs[] = $userInput;
             }
+        }
 
-            $data = [
+        $data = [
             'status' => $user_data->status,
             'method_id' => $method_id,
             'method_name' => $method_name,
             'customer_note' => $user_data->customer_note,
             'admin_note' => $user_data->note,
-            ];
+        ];
 
-            $result = [
+        $result = [
             'input' => $userInputs,
             'data' => $data,
             'method_fields' =>json_decode($user_data->method_fields ,true),
-            ];
+        ];
 
-            return $result;
-        }
-
+        return $result;
     }
+
+    public static function time_date_format($data){
+        $time=config('timeformat') ?? 'H:i';
+        return  Carbon::parse($data)->locale(app()->getLocale())->translatedFormat('d M Y ' . $time);
+    }
+    public static function date_format($data){
+        return  Carbon::parse($data)->locale(app()->getLocale())->translatedFormat('d M Y');
+    }
+    public static function time_format($data){
+        $time=config('timeformat') ?? 'H:i';
+        return  Carbon::parse($data)->locale(app()->getLocale())->translatedFormat($time);
+    }
+
+}
+
 

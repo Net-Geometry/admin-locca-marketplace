@@ -742,9 +742,9 @@ aside .nav-link {
 }
 
 .navbar-vertical-aside-mini-mode
-    .navbar-vertical:not([class*="container"])
-    .navbar-nav
-    .nav-link {
+.navbar-vertical:not([class*="container"])
+.navbar-nav
+.nav-link {
     -webkit-padding-start: 1.75rem !important;
     padding-inline-start: 1.75rem !important;
 }
@@ -1085,10 +1085,10 @@ aside .nav-link {
 }
 
 .navbar-vertical
-    .navbar-nav.nav-tabs
-    .navbar-vertical-aside-has-menu
-    li.active
-    > .nav-link {
+.navbar-nav.nav-tabs
+.navbar-vertical-aside-has-menu
+li.active
+> .nav-link {
     -webkit-padding-end: 28px;
     padding-inline-end: 28px;
     -webkit-padding-start: 52px;
@@ -1436,11 +1436,11 @@ aside .nav-link {
 }
 
 .top--resturant
-    li
-    .top--resturant-item
-    .top--resturant-item-content
-    .info
-    span {
+li
+.top--resturant-item
+.top--resturant-item-content
+.info
+span {
     font-size: 14px;
 }
 
@@ -2542,9 +2542,9 @@ textarea.form-control[readonly] {
 }
 
 .toggle-switch-sm
-    .toggle-switch-input:checked
-    + .toggle-switch-label
-    .toggle-switch-indicator {
+.toggle-switch-input:checked
++ .toggle-switch-label
+.toggle-switch-indicator {
     transform: translate3d(100%, 50%, 0) !important;
 }
 
@@ -2667,9 +2667,9 @@ textarea.form-control[readonly] {
 }
 
 .switch--custom-label
-    .toggle-switch-input:checked
-    + .toggle-switch-label
-    .toggle-switch-indicator {
+.toggle-switch-input:checked
++ .toggle-switch-label
+.toggle-switch-indicator {
     transform: translate3d(18px, 50%, 0);
 }
 
@@ -2800,7 +2800,7 @@ a.badge-soft-primary:hover {
 .form--check .form-check-input[checked="checked"],
 .form--check .form-check-input[type="checkbox"]:checked {
     background: url("./images/check-mark.png") #f4f5f7 no-repeat center
-        center/contain;
+    center/contain;
     box-shadow: 0 0 0 3px #f4f5f7, 0 0 0 4px #c4c8d4;
 }
 
@@ -4093,7 +4093,7 @@ td .amount--input {
 
 .badge--cancel {
     color: #ff6d6d;
-    background: gba(255, 109, 109, 0.05);
+    background: rgba(255, 109, 109, 0.05);
 }
 
 .action-btn i {
@@ -4522,10 +4522,10 @@ td .amount--input {
 }
 
 .select2
-    .select2-container
-    .select2-container--default
-    .select2-container--above
-    .select2-container--focus {
+.select2-container
+.select2-container--default
+.select2-container--above
+.select2-container--focus {
     width: 100% !important;
 }
 
@@ -7605,7 +7605,7 @@ ul.delivery--information-single li:not(:last-child) {
 
 .__nav-module-checkboxes .form-check-input:checked ~ .form-check-label::before {
     background: url("./images/check-mark-2.png") #009faa no-repeat center
-        center/15px;
+    center/15px;
 }
 
 .__nav-module-checkboxes .form-check {
@@ -8249,8 +8249,8 @@ ul.delivery--information-single li:not(:last-child) {
 }
 
 .__user-dashboard-card
-    .__user-dashboard-card-thumbs
-    .more-icon:not(:first-child) {
+.__user-dashboard-card-thumbs
+.more-icon:not(:first-child) {
     -webkit-margin-start: -10px;
     margin-inline-start: -10px;
 }
@@ -9807,7 +9807,7 @@ body > .initial-38-1 {
 .card-header-shadow {
     border: none;
     box-shadow: 0px 0px 2px rgba(145, 158, 171, 0.2),
-        0px 6px 12px -4px rgba(145, 158, 171, 0.05);
+    0px 6px 12px -4px rgba(145, 158, 171, 0.05);
 }
 
 .digital_payment_methods strong {
@@ -10037,8 +10037,8 @@ body > .initial-38-1 {
 }
 
 .emojionearea
-    .emojionearea-picker.emojionearea-picker-position-top
-    .emojionearea-wrapper:after {
+.emojionearea-picker.emojionearea-picker-position-top
+.emojionearea-wrapper:after {
     right: 137px !important;
 }
 
@@ -10554,8 +10554,8 @@ body > .initial-38-1 {
     }
 }
 .select2-container--default
-    .select2-selection--multiple
-    .select2-selection__choice,
+.select2-selection--multiple
+.select2-selection__choice,
 .bootstrap-tagsinput .tag {
     background: rgba(0, 159, 170, 0.15) !important;
     border-radius: 5px !important;
@@ -10821,8 +10821,8 @@ body > .initial-38-1 {
 .max-w-595{
     max-width: 595px !important;
 }.text-underline{
-    text-decoration: underline;
-}
+     text-decoration: underline;
+ }
 .reject-info {
     position: absolute;
     bottom: 0;
@@ -10934,10 +10934,10 @@ body > .initial-38-1 {
 }
 
 .fs-13{
- font-size: 13px;
+    font-size: 13px;
 }
 .fs-10{
- font-size: 10px;
+    font-size: 10px;
 }
 
 .select-product-item {
@@ -10967,10 +10967,10 @@ body > .initial-38-1 {
     min-width: 720px;
 }
 #search-form .col-11 {
-width: 0 !important;
-max-width: auto !important;
-flex: unset !important;
-flex-grow: 1 !important;
+    width: 0 !important;
+    max-width: auto !important;
+    flex: unset !important;
+    flex-grow: 1 !important;
 }
 
 #search-form .col-1 {
@@ -10986,3 +10986,184 @@ flex-grow: 1 !important;
     word-break: break-all !important;
     word-wrap: break-word !important;
 } */
+
+/* Disburstment CSS */
+.disbursement-report {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+@media screen and (max-width: 767px) {
+    .disbursement-report {
+        justify-content: space-evenly;
+    }
+}
+.disbursement-report .rebursement-item {
+    width: calc(33% - 12px);
+    border-radius: 5px;
+    background: #FFF;
+    box-shadow: 6px 6px 12px -3px rgba(51, 66, 87, 0.05);
+}
+.disbursement-report .rebursement-item .icon {
+    width: 65px;
+    height: 65px;
+}
+.disbursement-report .rebursement-item .subtitle {
+    font-weight: 400;
+}
+@media screen and (max-width: 767px) {
+    .disbursement-report .rebursement-item {
+        width: calc(50% - 8px);
+        border: 1px solid #f0f0f0;
+    }
+    .disbursement-report .rebursement-item .icon {
+        width: 50px;
+        height: 50px;
+    }
+}
+@media screen and (max-width: 424px) {
+    .disbursement-report .rebursement-item {
+        width: 100%;
+    }
+}
+
+@media screen and (min-width: 1200px) {
+    .btn-xl-inline-block {
+        width: 120px;
+    }
+}
+
+.form-check-input {
+    cursor: pointer;
+}
+
+.mb-14 {
+    margin-bottom: 24px;
+}
+
+.payment-modal-close {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    padding: 10px;
+    cursor: pointer;
+}
+.payment-modal-close i::before {
+    font-size: 30px;
+}
+
+.mx-450 {
+    max-width: 450px;
+}
+
+.mx-260 {
+    max-width: 260px;
+}
+
+@media screen and (min-width: 576px) and (max-width: 992px) {
+    .modal-dialog {
+        max-width: 720px;
+    }
+}
+.payment-info-modal-info {
+    row-gap: 40px;
+    -moz-column-gap: 24px;
+    column-gap: 24px;
+}
+.payment-info-modal-info .item {
+    width: 280px;
+    flex-grow: 1;
+}
+.payment-info-modal-info .item h5 {
+    font-size: 18px;
+}
+.payment-info-modal-info .item .item-list {
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    row-gap: 6px;
+}
+.payment-info-modal-info .item .item-list li {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    max-width: 360px;
+}
+.payment-info-modal-info .item .item-list li strong {
+    margin-left: auto;
+    color: var(--title-clr);
+    font-weight: 600;
+    padding-left: 10px;
+}
+@media screen and (min-width: 576px) {
+    .payment-info-modal-info .item .item-list li strong {
+        width: 120px;
+    }
+}
+@media screen and (min-width: 1200px) {
+    .payment-info-modal-info .item .item-list li strong {
+        width: 215px;
+    }
+}
+.payment-info-modal-info .item .item-list li .name {
+    padding-right: 10px;
+}
+@media screen and (min-width: 576px) {
+    .payment-info-modal-info .item .item-list li .name {
+        width: 130px;
+    }
+}
+@media screen and (min-width: 576px) {
+    .payment-info-modal-info .item.w-100 .item-list li {
+        width: 50%;
+    }
+    .payment-info-modal-info .item.w-100 .item-list li:nth-child(even) {
+        margin-inline: auto;
+    }
+}
+.btn.text-title {
+    color: var(--title-clr) !important;
+}/*# sourceMappingURL=style.css.map */
+
+.__alert-2 {
+    border-radius: 4px;
+    background: #FFF1F1 !important;
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    white-space: initial;
+    word-wrap: break-word;
+    position: fixed;
+    top: 4px;
+    left: 292px;
+    width: calc(100vw - 518px);
+    z-index: 99;
+}
+
+
+@media screen and (max-width: 991px) {
+
+    .__alert-2  {
+        left: 10vw;
+        width: 80vw;
+        bottom: 20px;
+        top: unset;
+    }
+}
+.__alert-2 .cont {
+    width: 0;
+    flex-grow: 1;
+    font-size: 12px;
+}
+.input--group .copy-btn {
+    position: absolute;
+    height: calc(100% - 10px)
+;
+    padding-block: 0;
+    font-size: 12px;
+    top: 5px;
+    right: 5px;
+    z-index: 1;
+}
+

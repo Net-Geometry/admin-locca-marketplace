@@ -75,26 +75,28 @@
             </div>
         </div>
 
+
+
+
+        @if ($wr->method)
         <div class="col-md-4">
-            <div class="card min-height-260">
+            <div class="card min-height-260px">
                 <div class="card-header">
-                    <h3 class="h3 mb-0 text-capitalize">{{translate('messages.my_bank_info')}} </h3>
+                    <h3 class="h3 mb-0 text-capitalize">{{ translate($wr->method->method_name) }} </h3>
                     <i class="tio tio-dollar-outlined"></i>
                 </div>
                 <div class="card-body">
                     <div class="col-md-8 mt-2">
-                        <h4 class="d-flex __gap-5px"><span>{{translate('messages.bank_name')}}</span>
-                            <span>:</span><span> {{$wr->vendor && $wr->vendor->bank_name ? $wr->vendor->bank_name : 'No Data found'}}</span></h4>
-                        <h6 class="text-capitalize d-flex __gap-5px"><span>{{translate('messages.branch')}}</span>
-                            <span>:</span> <span>{{$wr->vendor && $wr->vendor->branch ? $wr->vendor->branch : 'No Data found'}}</span></h6>
-                        <h6 class="d-flex __gap-5px"><span>{{translate('messages.holder_name')}}</span>
-                            <span>:</span><span> {{$wr->vendor && $wr->vendor->holder_name ? $wr->vendor->holder_name : 'No Data found'}}</span></h6>
-                        <h6 class="d-flex __gap-5px"><span>{{translate('messages.account_no')}}</span>
-                            <span>:</span><span> {{$wr->vendor && $wr->vendor->account_no ? $wr->vendor->account_no : 'No Data found'}}</span></h6>
+                    @forelse(json_decode($wr->withdrawal_method_fields, true) as $key=> $item)
+                    <h5 class="text-capitalize "> {{  translate($key) }}: {{$item}}</h5>
+                    @empty
+                    <h5 class="text-capitalize"> {{translate('messages.No_Data_found')}}</h5>
+                    @endforelse
                     </div>
                 </div>
             </div>
         </div>
+        @endif
         @if($wr->vendor && $wr->vendor->stores[0])
             <div class="col-md-4">
                 <div class="card min-height-260">

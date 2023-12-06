@@ -31,7 +31,7 @@
         <div class="card mb-3">
             <div class="card-body">
                 <div
-                    class="maintainance-mode-toggle-bar d-flex flex-wrap justify-content-between border rounded align-items-center p-2">
+                    class="maintenance-mode-toggle-bar d-flex flex-wrap justify-content-between border rounded align-items-center p-2">
                     <h5 class="text-capitalize m-0">
                         {{ translate('admin_default_landing_page') }}
                         <i class="tio-info-outined" data-toggle="tooltip"

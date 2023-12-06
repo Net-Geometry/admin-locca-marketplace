@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Oct 17, 2023 at 09:36 AM
+-- Generation Time: Nov 27, 2023 at 12:04 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -36,7 +36,9 @@ CREATE TABLE `account_transactions` (
   `method` varchar(255) NOT NULL,
   `ref` varchar(255) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `type` varchar(20) NOT NULL DEFAULT 'collected',
+  `created_by` varchar(20) NOT NULL DEFAULT 'admin'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -987,6 +989,59 @@ CREATE TABLE `delivery_men` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `disbursements`
+--
+
+CREATE TABLE `disbursements` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `description` text DEFAULT NULL,
+  `total_amount` double(23,3) NOT NULL DEFAULT 0.000,
+  `status` varchar(255) NOT NULL DEFAULT 'pending',
+  `created_for` varchar(255) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `disbursement_details`
+--
+
+CREATE TABLE `disbursement_details` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `disbursement_id` bigint(20) UNSIGNED NOT NULL,
+  `store_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `delivery_man_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `disbursement_amount` double(23,3) NOT NULL DEFAULT 0.000,
+  `payment_method` bigint(20) UNSIGNED NOT NULL,
+  `status` varchar(255) NOT NULL DEFAULT 'pending',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `disbursement_withdrawal_methods`
+--
+
+CREATE TABLE `disbursement_withdrawal_methods` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `store_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `delivery_man_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `withdrawal_method_id` bigint(20) UNSIGNED NOT NULL,
+  `method_name` varchar(255) NOT NULL,
+  `method_fields` text NOT NULL,
+  `is_default` tinyint(4) NOT NULL DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `discounts`
 --
 
@@ -1549,9 +1604,16 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (121, '2023_08_28_114316_create_flash_sales_table', 44),
 (122, '2023_08_28_134428_create_flash_sale_items_table', 44),
 (123, '2023_09_07_131829_create_carts_table', 44),
-(124, '2023_09_20_122921_create_storeConfigs_table', 44),
+(124, '2023_09_20_122921_create_store_configs_table', 44),
 (125, '2023_09_23_184806_add_flash_sale_cols_to_orders_table', 44),
-(126, '2023_10_08_103818_add_increased_delivery_fee_in_zones_table', 44);
+(126, '2023_10_08_103818_add_increased_delivery_fee_in_zones_table', 44),
+(127, '2023_11_21_123038_create_withdrawal_methods_table', 45),
+(128, '2023_11_21_123229_create_disbursement_withdrawal_methods_table', 45),
+(129, '2023_11_21_123320_create_disbursements_table', 45),
+(130, '2023_11_21_123742_add_cols_to_withdraw_requests_table', 45),
+(131, '2023_11_21_124049_create_disbursement_details_table', 45),
+(132, '2023_11_21_160728_add_created_by_col_to_account_transactions_table', 45),
+(133, '2023_11_23_093859_create_parcel_delivery_instructions_table', 45);
 
 -- --------------------------------------------------------
 
@@ -2095,6 +2157,20 @@ CREATE TABLE `parcel_categories` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `parcel_delivery_instructions`
+--
+
+CREATE TABLE `parcel_delivery_instructions` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `instruction` varchar(255) NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT 1,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `password_resets`
 --
 
@@ -2374,10 +2450,10 @@ INSERT INTO `stores` (`id`, `name`, `phone`, `email`, `logo`, `latitude`, `longi
 -- --------------------------------------------------------
 
 --
--- Table structure for table `storeConfigs`
+-- Table structure for table `store_configs`
 --
 
-CREATE TABLE `storeConfigs` (
+CREATE TABLE `store_configs` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `store_id` bigint(20) UNSIGNED NOT NULL,
   `is_recommended` tinyint(1) NOT NULL DEFAULT 0,
@@ -2783,18 +2859,38 @@ CREATE TABLE `wishlists` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `withdrawal_methods`
+--
+
+CREATE TABLE `withdrawal_methods` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `method_name` varchar(255) NOT NULL,
+  `method_fields` text NOT NULL,
+  `is_default` tinyint(4) NOT NULL DEFAULT 0,
+  `is_active` tinyint(4) NOT NULL DEFAULT 1,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `withdraw_requests`
 --
 
 CREATE TABLE `withdraw_requests` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `vendor_id` bigint(20) UNSIGNED NOT NULL,
+  `vendor_id` bigint(20) UNSIGNED DEFAULT NULL,
   `admin_id` bigint(20) UNSIGNED DEFAULT NULL,
   `transaction_note` varchar(255) DEFAULT NULL,
   `amount` decimal(23,3) NOT NULL DEFAULT 0.000,
   `approved` tinyint(1) NOT NULL DEFAULT 0,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `delivery_man_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `withdrawal_method_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `withdrawal_method_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`withdrawal_method_fields`)),
+  `type` varchar(20) NOT NULL DEFAULT 'manual'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -2995,6 +3091,24 @@ ALTER TABLE `delivery_man_wallets`
 ALTER TABLE `delivery_men`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `delivery_men_phone_unique` (`phone`);
+
+--
+-- Indexes for table `disbursements`
+--
+ALTER TABLE `disbursements`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `disbursement_details`
+--
+ALTER TABLE `disbursement_details`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `disbursement_withdrawal_methods`
+--
+ALTER TABLE `disbursement_withdrawal_methods`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `discounts`
@@ -3258,6 +3372,12 @@ ALTER TABLE `parcel_categories`
   ADD KEY `parcel_categories_module_id_foreign` (`module_id`);
 
 --
+-- Indexes for table `parcel_delivery_instructions`
+--
+ALTER TABLE `parcel_delivery_instructions`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `password_resets`
 --
 ALTER TABLE `password_resets`
@@ -3328,9 +3448,9 @@ ALTER TABLE `stores`
   ADD KEY `stores_module_id_foreign` (`module_id`);
 
 --
--- Indexes for table `storeConfigs`
+-- Indexes for table `store_configs`
 --
-ALTER TABLE `storeConfigs`
+ALTER TABLE `store_configs`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -3441,6 +3561,12 @@ ALTER TABLE `websockets_statistics_entries`
 -- Indexes for table `wishlists`
 --
 ALTER TABLE `wishlists`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `withdrawal_methods`
+--
+ALTER TABLE `withdrawal_methods`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -3611,6 +3737,24 @@ ALTER TABLE `delivery_men`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `disbursements`
+--
+ALTER TABLE `disbursements`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `disbursement_details`
+--
+ALTER TABLE `disbursement_details`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `disbursement_withdrawal_methods`
+--
+ALTER TABLE `disbursement_withdrawal_methods`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `discounts`
 --
 ALTER TABLE `discounts`
@@ -3722,7 +3866,7 @@ ALTER TABLE `messages`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=127;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=134;
 
 --
 -- AUTO_INCREMENT for table `modules`
@@ -3839,6 +3983,12 @@ ALTER TABLE `parcel_categories`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `parcel_delivery_instructions`
+--
+ALTER TABLE `parcel_delivery_instructions`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `pharmacy_item_details`
 --
 ALTER TABLE `pharmacy_item_details`
@@ -3899,9 +4049,9 @@ ALTER TABLE `stores`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT for table `storeConfigs`
+-- AUTO_INCREMENT for table `store_configs`
 --
-ALTER TABLE `storeConfigs`
+ALTER TABLE `store_configs`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
@@ -4004,6 +4154,12 @@ ALTER TABLE `websockets_statistics_entries`
 -- AUTO_INCREMENT for table `wishlists`
 --
 ALTER TABLE `wishlists`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `withdrawal_methods`
+--
+ALTER TABLE `withdrawal_methods`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --

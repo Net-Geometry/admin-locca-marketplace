@@ -27,7 +27,7 @@
                     @php($mail_status=\App\Models\BusinessSetting::where('key','order_verification_mail_status_user')->first())
                     @php($mail_status = $mail_status ? $mail_status->value : '0')
                     <div class="card-body">
-                        <div class="maintainance-mode-toggle-bar d-flex flex-wrap justify-content-between border rounded align-items-center p-2">
+                        <div class="maintenance-mode-toggle-bar d-flex flex-wrap justify-content-between border rounded align-items-center p-2">
                             <h5 class="text-capitalize m-0 text--primary pl-2">
                                 {{translate('Send_Mail_On_‘Delivery_Verification’?')}}
                         <span class="form-label-secondary text--primary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Customers_will_receive_a_Delivery_Verification_code_via_email_during_delivery._The_Customer_then_gives_the_code_to_the_Deliveryman_to_confirm_delivery.') }}">

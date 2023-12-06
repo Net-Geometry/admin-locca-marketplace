@@ -27,7 +27,7 @@
                     @php($mail_status=\App\Models\BusinessSetting::where('key','forget_password_mail_status_user')->first())
                     @php($mail_status = $mail_status ? $mail_status->value : '0')
                     <div class="card-body">
-                        <div class="maintainance-mode-toggle-bar d-flex flex-wrap justify-content-between border rounded align-items-center p-2">
+                        <div class="maintenance-mode-toggle-bar d-flex flex-wrap justify-content-between border rounded align-items-center p-2">
                             <h5 class="text-capitalize m-0 text--primary pl-2">
                                 {{translate('Send_Mail_On_‘Forgot_Password’?')}}
                         <span class="form-label-secondary text--primary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('If_a_Customer_clicks_on_‘Forgot_Password’_during_login,_an_automated_email_will_be_sent_with_a_Reset_Password_Link.') }}">

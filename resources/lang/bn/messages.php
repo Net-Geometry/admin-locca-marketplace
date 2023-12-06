@@ -1259,7 +1259,7 @@
   'landing_page' => 'ল্যান্ডিং পেইজ',
   'donât_forget_to_click_the_âSave Informationâ_button_below_to_save_changes.' => 'পরিবর্তন সেভ করতে নীচের সেভ ইনফরমেশন বাটনটি ক্লিক করতে ভুলবেন না।',
   'maintenance_mode' => 'মেইন্টেন্স মোড',
-  'maintainance_txt' => 'মেইন্টেন্স টেক্সট',
+  'maintenance_txt' => 'মেইন্টেন্স টেক্সট',
   'Company Information' => 'কোম্পানির ইনফরমেশন',
   'company_name' => 'কোম্পানির নাম',
   'new_company' => 'নতুন কোম্পানি',
