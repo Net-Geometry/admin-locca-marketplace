@@ -47,7 +47,7 @@
                         <div class="lang_form" id="default-form">
                             <div class="form-group">
                                 <label class="input-label" for="default_title">{{translate('messages.title')}} ({{translate('messages.default')}})</label>
-                                <input type="text" name="title[]" id="default_title" class="form-control" placeholder="{{translate('messages.new_campaign')}}" value="{{$campaign?->getRawOriginal('title')}}" oninvalid="document.getElementById('en-link').click()">
+                                <input type="text" name="title[]" id="default_title" class="form-control" placeholder="{{translate('messages.new_campaign')}}" value="{{$campaign?->getRawOriginal('title')}}">
                             </div>
                             <input type="hidden" name="lang[]" value="default">
                             <div class="form-group">
@@ -73,7 +73,7 @@
                             <div class="d-none lang_form" id="{{$lang}}-form">
                                 <div class="form-group">
                                     <label class="input-label" for="{{$lang}}_title">{{translate('messages.title')}} ({{strtoupper($lang)}})</label>
-                                    <input type="text" name="title[]" id="{{$lang}}_title" class="form-control" placeholder="{{translate('messages.new_campaign')}}" value="{{$translate[$lang]['title']??''}}" oninvalid="document.getElementById('en-link').click()">
+                                    <input type="text" name="title[]" id="{{$lang}}_title" class="form-control" placeholder="{{translate('messages.new_campaign')}}" value="{{$translate[$lang]['title']??''}}">
                                 </div>
                                 <input type="hidden" name="lang[]" value="{{$lang}}">
                                 <div class="form-group">
@@ -163,43 +163,13 @@
 @endsection
 
 @push('script_2')
+    <script src="{{asset('public/assets/admin')}}/js/view-pages/basic-campaign-edit.js"></script>
     <script>
-        $("#date_from").on("change", function () {
-            $('#date_to').attr('min',$(this).val());
-        });
-
-        $("#date_to").on("change", function () {
-            $('#date_from').attr('max',$(this).val());
-        });
+        "use strict";
         $(document).ready(function(){
             $('#date_from').attr('max','{{$campaign->end_date->format("Y-m-d")}}');
             $('#date_to').attr('min','{{$campaign->start_date->format("Y-m-d")}}');
         });
-        function readURL(input) {
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
-
-                reader.onload = function (e) {
-                    $('#viewer').attr('src', e.target.result);
-                }
-
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-
-        $("#customFileEg1").change(function () {
-            readURL(this);
-        });
-
-        function show_item(type) {
-            if (type === 'product') {
-                $("#type-product").show();
-                $("#type-category").hide();
-            } else {
-                $("#type-product").hide();
-                $("#type-category").show();
-            }
-        }
 
         $('#campaign-form').on('submit', function (e) {
             e.preventDefault();
@@ -235,31 +205,9 @@
                 }
             });
         });
-    </script>
-    <script>
-        $(".lang_link").click(function(e){
-            e.preventDefault();
-            $(".lang_link").removeClass('active');
-            $(".lang_form").addClass('d-none');
-            $(this).addClass('active');
 
-            let form_id = this.id;
-            let lang = form_id.substring(0, form_id.length - 5);
-            console.log(lang);
-            $("#"+lang+"-form").removeClass('d-none');
-            if(lang == 'en')
-            {
-                $("#from_part_2").removeClass('d-none');
-            }
-            else
-            {
-                $("#from_part_2").addClass('d-none');
-            }
+        $('#reset_btn').click(function(){
+            $('#viewer').attr('src','{{asset('storage/app/public/campaign')}}/{{$campaign->image}}');
         })
     </script>
-        <script>
-            $('#reset_btn').click(function(){
-                $('#viewer').attr('src','{{asset('storage/app/public/campaign')}}/{{$campaign->image}}');
-            })
-        </script>
 @endpush

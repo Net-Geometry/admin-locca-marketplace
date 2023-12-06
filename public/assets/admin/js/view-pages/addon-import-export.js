@@ -1,3 +1,4 @@
+"use strict";
 $(document).on('ready', function (){
     $('.id_wise').hide();
     $('.date_wise').hide();

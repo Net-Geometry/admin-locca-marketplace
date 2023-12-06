@@ -42,7 +42,7 @@
                             <div class="lang_form" id="default-form">
                                 <div class="form-group">
                                     <label class="input-label" for="default_title">{{translate('messages.name')}} ({{translate('messages.default')}})</label>
-                                    <input type="text" name="name[]" id="default_title" class="form-control" placeholder="{{translate('messages.updated_attribute')}}" value="{{$attribute?->getRawOriginal('name')}}" oninvalid="document.getElementById('en-link').click()">
+                                    <input type="text" name="name[]" id="default_title" class="form-control" placeholder="{{translate('messages.updated_attribute')}}" value="{{$attribute?->getRawOriginal('name')}}">
                                 </div>
                                 <input type="hidden" name="lang[]" value="default">
                             </div>
@@ -61,7 +61,7 @@
                                 <div class="d-none lang_form" id="{{$lang}}-form">
                                     <div class="form-group">
                                         <label class="input-label" for="{{$lang}}_title">{{translate('messages.name')}} ({{strtoupper($lang)}})</label>
-                                        <input type="text" name="name[]" id="{{$lang}}_title" class="form-control" placeholder="{{translate('messages.updated_attribute')}}" value="{{$translate[$lang]['name']??''}}" oninvalid="document.getElementById('en-link').click()">
+                                        <input type="text" name="name[]" id="{{$lang}}_title" class="form-control" placeholder="{{translate('messages.updated_attribute')}}" value="{{$translate[$lang]['name']??''}}">
                                     </div>
                                     <input type="hidden" name="lang[]" value="{{$lang}}">
                                 </div>
@@ -89,6 +89,8 @@
 
 @push('script_2')
 <script>
+    "use strict";
+
     $(".lang_link").click(function(e){
         e.preventDefault();
         $(".lang_link").removeClass('active');
@@ -99,14 +101,6 @@
         let lang = form_id.substring(0, form_id.length - 5);
         console.log(lang);
         $("#"+lang+"-form").removeClass('d-none');
-        if(lang == 'en')
-        {
-            $("#from_part_2").removeClass('d-none');
-        }
-        else
-        {
-            $("#from_part_2").addClass('d-none');
-        }
     })
 </script>
 @endpush
