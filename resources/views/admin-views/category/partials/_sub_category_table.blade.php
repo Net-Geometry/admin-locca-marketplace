@@ -42,8 +42,8 @@
                 <a class="btn action-btn btn--primary btn-outline-primary"
                     href="{{route('admin.category.edit',[$category['id']])}}" title="{{translate('messages.edit_category')}}"><i class="tio-edit"></i>
                 </a>
-                <a class="btn action-btn btn--danger btn-outline-danger" href="javascript:"
-                onclick="form_alert('category-{{$category['id']}}','{{ translate('messages.Want to delete this category') }}')" title="{{translate('messages.delete_category')}}"><i class="tio-delete-outlined"></i>
+                <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:"
+                   data-id="category-{{$category['id']}}" data-message="{{ translate('Want to delete this category') }}" title="{{translate('messages.delete_category')}}"><i class="tio-delete-outlined"></i>
                 </a>
                 <form action="{{route('admin.category.delete',[$category['id']])}}" method="post" id="category-{{$category['id']}}">
                     @csrf @method('delete')

@@ -3347,4 +3347,5 @@
   'Select Restaurant' => 'Select Restaurant',
   'addon_update' => 'Addon update',
   'Store_Campaign_Request' => 'Store Campaign Request',
+  'category_updated_successfully' => 'Category updated successfully',
 );

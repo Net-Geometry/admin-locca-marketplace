@@ -84,7 +84,7 @@
                         </div>
                         <div class="btn--container justify-content-end mt-3">
                             <button id="reset_btn" type="reset" class="btn btn--reset">{{translate('messages.reset')}}</button>
-                            <button type="submit" name="button" value="update" class="btn btn--warning submit_btn" onclick="changeFormAction('update')">{{translate('messages.update')}}</button>
+                            <button type="submit" name="button" value="update" class="btn btn--warning submit_btn">{{translate('messages.update')}}</button>
                             <button type="submit" name="button" value="import" class="btn btn--primary submit_btn">{{translate('messages.Import')}}</button>
                         </div>
                     </div>
@@ -94,21 +94,11 @@
 @endsection
 
 @push('script_2')
+    <script src="{{asset('public/assets/admin')}}/js/view-pages/category-import-export.js"></script>
 <script>
-    $('#reset_btn').click(function(){
-        $('#bulk__import').val(null);
-    })
-</script>
-    <script>
+    "use strict";
 
-$(document).on("click", ".submit_btn", function(e){
-    e.preventDefault();
-        var data = $(this).val();
-        myFunction(data)
-});
-
-
-function myFunction(data) {
+    function myFunction(data) {
     Swal.fire({
     title: '{{ translate('Are you sure?') }}' ,
     text: "{{ translate('You_want_to_') }}" +data,
@@ -129,9 +119,12 @@ function myFunction(data) {
         // }
     })
 }
-    </script>
 
-<script>
+    $('.submit_btn').on('click', function (){
+        let buttonValue = $(this).val();
+        changeFormAction(buttonValue);
+    })
+
     function changeFormAction(buttonValue) {
         var form = document.getElementById('import_form');
         if (buttonValue === 'update') {
