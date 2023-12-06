@@ -97,7 +97,7 @@
                                             <h4 class="m-0">{{translate('messages.variations')}}</h4>
                                         </th>
                                         <th class="px-4 border-0 w--120px">
-                                            <h4 class="m-0">Addons</h4>
+                                            <h4 class="m-0">{{ translate('Addons') }}</h4>
                                         </th>
                                     </tr>
                                 </thead>

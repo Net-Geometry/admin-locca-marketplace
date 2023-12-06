@@ -187,6 +187,7 @@
 
 @push('script_2')
     <script>
+        "use strict";
         $('.status-change-alert').on('click', function (event){
             let url = $(this).data('url');
             let message = $(this).data('message');

@@ -395,11 +395,15 @@
 @push('script_2')
     <script src="{{asset('public/assets/admin')}}/js/tags-input.min.js"></script>
     <script>
+        "use strict";
+        let module_data = "";
+        let module_type = "";
+        let element = "";
+        let countRow = 0;
         $(document).ready(function () {
             $('#food_variation_section').hide();
         });
-    </script>
-    <script>
+
         $('#choice_attributes').on('change', function () {
             $('#customer_choice_options').html(null);
             $.each($("#choice_attributes option:selected"), function () {
@@ -735,7 +739,7 @@
                             <div class="col-lg-3 col-md-6">
                                 <label for="">{{ translate('name') }}</label>
                                 <input required name=options[` + count +
-                `][name] class="form-control" type="text" data-count="`+
+                `][name] class="form-control new_option_name" type="text" data-count="`+
                 count +`">
                             </div>
 
@@ -880,7 +884,7 @@
         deleteRow(e);
     });
 
-    $(document).on('keyup', '.deleteRow', function () {
+    $(document).on('keyup', '.new_option_name', function () {
         let data = $(this).data('count');
         let value = $(this).val();
         new_option_name(value, data);
