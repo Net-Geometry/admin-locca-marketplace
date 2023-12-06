@@ -369,6 +369,9 @@
 </script>
 
 @stack('script_2')
+<script>
+    var baseUrl = '{{ url('/') }}';
+</script>
 
 <script src="{{asset('public/assets/admin')}}/js/view-pages/common.js"></script>
 <script>
@@ -500,9 +503,9 @@
     function emailModalClose() {
         $('#email-modal').hide();
     }
-    function emailModalShow() {
-        $('#email-modal').show();
-    }
+    // function emailModalShow() {
+    //     $('#email-modal').show();
+    // }
     function route_alert(route, message, title="{{translate('messages.are_you_sure')}}") {
         Swal.fire({
             title: title,

@@ -85,4 +85,13 @@ $('.check-mail-element').on('change', function() {
             $('#' + id).hide();
         }
 });
+document.getElementById('see-how-it-works').addEventListener('click', function() {
+    $('#email-modal').show();
+});
 
+
+document.getElementById('mail-route-selector').addEventListener('change', function() {
+    var value = this.value;
+    var url = baseUrl + '/admin/business-settings/email-setup/' + value + '/' + (value === 'admin' ? 'forgot-password' : 'registration');
+    location.href = url;
+});
