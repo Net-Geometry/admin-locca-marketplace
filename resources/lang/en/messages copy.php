@@ -1512,7 +1512,7 @@
   'ex_cash' => 'Ex : Cash',
   'ex_collect_cash' => 'Ex : Collect Cash',
   'Ex_:_Footer_Text' => 'Ex : Footer Text',
-  'maintainance_txt' => '*By turning the ‘Maintenance Mode’ ON, all your apps and customer website will be disabled temporarily. Only the Admin Panel, Admin Landing Page & Store Panel will be functional. ',
+  'maintenance_txt' => '*By turning the ‘Maintenance Mode’ ON, all your apps and customer website will be disabled temporarily. Only the Admin Panel, Admin Landing Page & Store Panel will be functional. ',
   'edit_info' => 'Edit info',
   'total_stores' => 'Total stores',
   'active_stores' => 'Active stores',

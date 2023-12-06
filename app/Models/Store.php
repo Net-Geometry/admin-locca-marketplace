@@ -322,6 +322,14 @@ class Store extends Model
     }
 
     /**
+     * @return HasOne
+     */
+    public function disbursement_method(): HasOne
+    {
+        return $this->hasOne(DisbursementWithdrawalMethod::class)->where('is_default',1);
+    }
+
+       /**
      * @param $value
      * @return bool
      */

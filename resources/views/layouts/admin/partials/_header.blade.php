@@ -120,7 +120,7 @@
                     <li class="nav-item max-sm-m-0">
                         <div class="hs-unfold">
                             <div>
-                                @php( $local = session()->has('local')?session('local'):'en')
+                                @php( $local = session()->has('local')?session('local'): null)
                                 @php($lang = \App\Models\BusinessSetting::where('key', 'system_language')->first())
                                 @if ($lang)
                                 <div
@@ -128,13 +128,11 @@
                                     <a class="topbar-link dropdown-toggle d-flex align-items-center title-color"
                                     href="#" data-toggle="dropdown">
                                     @foreach(json_decode($lang['value'],true) as $data)
-                                    @if($data['code']==$local)
-                                    <i class="tio-globe"></i>
-                                                {{-- <img
-                                                     width="20"
-                                                     src="{{asset('public/assets/admin')}}/img/flags/{{$data['code']}}.png"
-                                                     alt="Eng"> --}}
-                                                {{$data['code']}}
+                                            @if($data['code']==$local)
+                                            <i class="tio-globe"></i> {{$data['code']}}
+
+                                            @elseif(!$local &&  $data['default'] == true)
+                                            <i class="tio-globe"></i> {{$data['code']}}
                                             @endif
                                         @endforeach
                                     </a>
@@ -144,11 +142,6 @@
                                                 <li>
                                                     <a class="dropdown-item py-1"
                                                        href="{{route('admin.lang',[$data['code']])}}">
-                                                        {{-- <img
-
-                                                            width="20"
-                                                            src="{{asset('public/assets/admin')}}/img/flags/{{$data['code']}}.png"
-                                                            alt="{{$data['code']}}"/> --}}
                                                         <span class="text-capitalize">{{$data['code']}}</span>
                                                     </a>
                                                 </li>

@@ -26,7 +26,7 @@
                     @php($mail_status=\App\Models\BusinessSetting::where('key','login_mail_status_admin')->first())
                     @php($mail_status = $mail_status ? json_decode($mail_status->value,true) : '')
                     <div class="card-body">
-                        <div class="maintainance-mode-toggle-bar d-flex flex-wrap justify-content-between border rounded align-items-center p-2">
+                        <div class="maintenance-mode-toggle-bar d-flex flex-wrap justify-content-between border rounded align-items-center p-2">
                             <h5 class="text-capitalize m-0 text--primary pl-2">
                                 {{translate('Receive_Login_Notification_via_Mail?')}}
                         <span class="form-label-secondary text--primary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('If_a_user_login_from_their_respective_system,_the_Admin_gets_notified_via_email.') }}">
