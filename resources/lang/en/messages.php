@@ -3373,4 +3373,9 @@
   'generated_link' => 'Generated link',
   349857 => '349857',
   'If_enabled,_customers_will_receive_a_confirmation_email_that_their_registration_was_successfull.' => 'If enabled  customers will receive a confirmation email that their registration was successfull.',
+  'Are_you_sure_you_want_to_remove_this_image_?' => 'Are you sure you want to remove this image ?',
+  'By Turning ON' => 'By Turning ON',
+  'seller_links_updated' => 'Seller links updated',
+  'delivery_man_links_updated' => 'Delivery man links updated',
+  'Want_to_disable_the_App_Store_button_for_Store_App' => 'Want to disable the App Store button for Store App',
 );

@@ -925,21 +925,21 @@
 </script>
 
 <script>
-    function toogleModal(e, toggle_id, on_image, off_image, on_title, off_title, on_message, off_message) {
-        e.preventDefault();
-        if ($('#'+toggle_id).is(':checked')) {
-            $('#toggle-title').empty().append(on_title);
-            $('#toggle-message').empty().append(on_message);
-            $('#toggle-image').attr('src', "{{asset('/public/assets/admin/img/modal')}}/"+on_image);
-            $('#toggle-ok-button').attr('toggle-ok-button', toggle_id);
-        } else {
-            $('#toggle-title').empty().append(off_title);
-            $('#toggle-message').empty().append(off_message);
-            $('#toggle-image').attr('src', "{{asset('/public/assets/admin/img/modal')}}/"+off_image);
-            $('#toggle-ok-button').attr('toggle-ok-button', toggle_id);
-        }
-        $('#toggle-modal').modal('show');
-    }
+    // function toogleModal(e, toggle_id, on_image, off_image, on_title, off_title, on_message, off_message) {
+    //     e.preventDefault();
+    //     if ($('#'+toggle_id).is(':checked')) {
+    //         $('#toggle-title').empty().append(on_title);
+    //         $('#toggle-message').empty().append(on_message);
+    //         $('#toggle-image').attr('src', "{{asset('/public/assets/admin/img/modal')}}/"+on_image);
+    //         $('#toggle-ok-button').attr('toggle-ok-button', toggle_id);
+    //     } else {
+    //         $('#toggle-title').empty().append(off_title);
+    //         $('#toggle-message').empty().append(off_message);
+    //         $('#toggle-image').attr('src', "{{asset('/public/assets/admin/img/modal')}}/"+off_image);
+    //         $('#toggle-ok-button').attr('toggle-ok-button', toggle_id);
+    //     }
+    //     $('#toggle-modal').modal('show');
+    // }
 
     function confirmToggle() {
         var toggle_id = $('#toggle-ok-button').attr('toggle-ok-button');
@@ -1042,14 +1042,6 @@
 
     }
 
-    // function checkMailElement(id) {
-    //     console.log(id);
-    //     if ($('.'+id).is(':checked')) {
-    //         $('#'+id).show();
-    //     } else {
-    //         $('#'+id).hide();
-    //     }
-    // }
 </script>
 
 <script>
