@@ -17,7 +17,7 @@ $company_name = App\Models\BusinessSetting::where('key', 'business_name')->first
                 <a href="#" class="email-template-table-td-span-h-ref">{{ translate('generated_link') }}</a>
             </span>
             <span class="border-top"></span>
-            <span class="d-block" class="email-template-table-td-span-3  mail-footer">{{ $data['footer_text'] ?? translate('Please_contact_us_for_any_queries,_we’re_always_happy_to_help.') }}</span>
+            <span class="d-block" id="mail-footer" class="email-template-table-td-span-3  mail-footer">{{ $data['footer_text'] ?? translate('Please_contact_us_for_any_queries,_we’re_always_happy_to_help.') }}</span>
             <span class="d-block">{{ translate('Thanks_&_Regards') }},</span>
             <span class="d-block" class="email-template-table-td-span-4">{{ $company_name }}</span>
             @php($store_logo = \App\Models\BusinessSetting::where(['key' => 'logo'])->first()->value)
