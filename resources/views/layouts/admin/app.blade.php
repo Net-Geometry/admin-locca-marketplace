@@ -635,14 +635,6 @@
         tour.next();
     }
 
-    function change_mail_route(value) {
-        if(value == 'admin'){
-            var url= '{{url('/')}}/admin/business-settings/email-setup/'+value+'/forgot-password';
-        }else{
-            var url= '{{url('/')}}/admin/business-settings/email-setup/'+value+'/registration';
-        }
-        location.href = url;
-    }
 
     function set_mail_filter(url, id, filter_by) {
         Swal.fire({

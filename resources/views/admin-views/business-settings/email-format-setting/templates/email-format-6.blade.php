@@ -14,22 +14,22 @@ $company_name = App\Models\BusinessSetting::where('key', 'business_name')->first
                 <table class="bg-section p-10 w-100 text-center">
                     <thead>
                         <tr>
-                            <th>SL</th>
-                            <th>Transaction ID</th>
-                            <th>Time</th>
-                            <th>Amount</th>
+                            <th>{{ translate('SL') }}</th>
+                            <th>{{ translate('Transaction_ID') }}</th>
+                            <th>{{ translate('Time') }}</th>
+                            <th>{{ translate('Amount') }}</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>1</td>
-                            <td>23984357sd834</td>
-                            <td>23 Jul, 2023 3:34 am</td>
-                            <td>$500</td>
+                            <td>{{ translate('1') }}</td>
+                            <td>{{ translate('23984357sd834') }}</td>
+                            <td>{{ translate('23 Jul, 2023 3:34 am') }}</td>
+                            <td>{{ translate('$500') }}</td>
                         </tr>
                     </tbody>
                 </table>
-                <span class="d-block text-center" style="margin-top: 16px">
+                <span class="d-block text-center" class="email-template-06-span">
                     <a href="" class="cmn-btn" id="mail-button">{{ $data['button_name']??'View Request' }}</a>
                 </span>
                 <hr>
@@ -52,20 +52,20 @@ $company_name = App\Models\BusinessSetting::where('key', 'business_name')->first
                 <a href="#" id="cancelation-check" style="{{ (isset($data['cancelation']) && $data['cancelation'] == 1)?'':'display:none;' }}"><span class="dot"></span>{{ translate('Cancelation_Policy') }}</a>
                 <a href="#" id="contact-check" style="{{ (isset($data['contact']) && $data['contact'] == 1)?'':'display:none;' }}"><span class="dot"></span>{{ translate('Contact_us') }}</a>
             </span>
-                <span class="social" style="text-align:center">
-                    <a href="" id="facebook-check" style="margin: 0 5px;text-decoration:none;{{ (isset($data['facebook']) && $data['facebook'] == 1)?'':'display:none;' }}">
+                <span class="social email-template-social-span">
+                    <a href="" id="facebook-check" class="email-template-social-media" style="{{ (isset($data['facebook']) && $data['facebook'] == 1)?'':'display:none;' }}">
                         <img src="{{asset('/public/assets/admin/img/img/facebook.png')}}" alt="">
                     </a>
-                    <a href="" id="instagram-check" style="margin: 0 5px;text-decoration:none;{{ (isset($data['instagram']) && $data['instagram'] == 1)?'':'display:none;' }}">
+                    <a href="" id="instagram-check" class="email-template-social-media" style="{{ (isset($data['instagram']) && $data['instagram'] == 1)?'':'display:none;' }}">
                         <img src="{{asset('/public/assets/admin/img/img/instagram.png')}}" alt="">
                     </a>
-                    <a href="" id="twitter-check" style="margin: 0 5px;text-decoration:none;{{ (isset($data['twitter']) && $data['twitter'] == 1)?'':'display:none;' }}">
+                    <a href="" id="twitter-check" class="email-template-social-media" style="{{ (isset($data['twitter']) && $data['twitter'] == 1)?'':'display:none;' }}">
                         <img src="{{asset('/public/assets/admin/img/img/twitter.png')}}" alt="">
                     </a>
-                    <a href="" id="linkedin-check" style="margin: 0 5px;text-decoration:none;{{ (isset($data['linkedin']) && $data['linkedin'] == 1)?'':'display:none;' }}">
+                    <a href="" id="linkedin-check" class="email-template-social-media" style="{{ (isset($data['linkedin']) && $data['linkedin'] == 1)?'':'display:none;' }}">
                         <img src="{{asset('/public/assets/admin/img/img/linkedin.png')}}" alt="">
                     </a>
-                    <a href="" id="pinterest-check" style="margin: 0 5px;text-decoration:none;{{ (isset($data['pinterest']) && $data['pinterest'] == 1)?'':'display:none;' }}">
+                    <a href="" id="pinterest-check" class="email-template-social-media" style="{{ (isset($data['pinterest']) && $data['pinterest'] == 1)?'':'display:none;' }}">
                         <img src="{{asset('/public/assets/admin/img/img/pinterest.png')}}" alt="">
                     </a>
                 </span>
