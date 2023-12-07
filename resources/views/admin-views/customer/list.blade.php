@@ -243,9 +243,8 @@
                                     </td>
                                     <td>
                                         <label class="toggle-switch toggle-switch-sm ml-xl-4" for="stocksCheckbox{{ $customer->id }}">
-                                            <input type="checkbox"
-                                                onclick="status_change_alert('{{ route('admin.users.customer.status', [$customer->id, $customer->status ? 0 : 1]) }}', '{{ $customer->status? translate('messages.you_want_to_block_this_customer'): translate('messages.you_want_to_unblock_this_customer') }}', event)"
-                                                class="toggle-switch-input" id="stocksCheckbox{{ $customer->id }}"
+                                            <input type="checkbox" data-url="{{ route('admin.users.customer.status', [$customer->id, $customer->status ? 0 : 1]) }}" data-message="{{ $customer->status? translate('messages.you_want_to_block_this_customer'): translate('messages.you_want_to_unblock_this_customer') }}"
+                                                class="toggle-switch-input status_change_alert" id="stocksCheckbox{{ $customer->id }}"
                                                 {{ $customer->status ? 'checked' : '' }}>
                                             <span class="toggle-switch-label">
                                                 <span class="toggle-switch-indicator"></span>
@@ -288,7 +287,16 @@
 @endsection
 
 @push('script_2')
+    <script src="{{asset('public/assets/admin')}}/js/view-pages/customer-list.js"></script>
     <script>
+        "use strict";
+
+        $('.status_change_alert').on('click', function (event) {
+            let url = $(this).data('url');
+            let message = $(this).data('message');
+            status_change_alert(url, message, event)
+        })
+
         function status_change_alert(url, message, e) {
             e.preventDefault();
             Swal.fire({
@@ -307,128 +315,7 @@
                 }
             })
         }
-        $(document).on('ready', function() {
-            // INITIALIZATION OF NAV SCROLLER
-            // =======================================================
-            $('.js-nav-scroller').each(function() {
-                new HsNavScroller($(this)).init()
-            });
 
-            // INITIALIZATION OF SELECT2
-            // =======================================================
-            $('.js-select2-custom').each(function() {
-                var select2 = $.HSCore.components.HSSelect2.init($(this));
-            });
-
-
-            // INITIALIZATION OF DATATABLES
-            // =======================================================
-            var datatable = $.HSCore.components.HSDatatables.init($('#datatable'), {
-                dom: 'Bfrtip',
-                buttons: [{
-                        extend: 'copy',
-                        className: 'd-none'
-                    },
-                    // {
-                    //     extend: 'excel',
-                    //     className: 'd-none'
-                    // },
-                    // {
-                    //     extend: 'csv',
-                    //     className: 'd-none'
-                    // },
-                    // {
-                    //     extend: 'pdf',
-                    //     className: 'd-none'
-                    // },
-                    {
-                        extend: 'print',
-                        className: 'd-none'
-                    },
-                ],
-                select: {
-                    style: 'multi',
-                    selector: 'td:first-child input[type="checkbox"]',
-                    classMap: {
-                        checkAll: '#datatableCheckAll',
-                        counter: '#datatableCounter',
-                        counterInfo: '#datatableCounterInfo'
-                    }
-                },
-                language: {
-                    zeroRecords: '<div class="text-center p-4">' +
-                        '<img class="w-7rem mb-3" src="{{ asset('public/assets/admin') }}/svg/illustrations/sorry.svg" alt="Image Description">' +
-
-                        '</div>'
-                }
-            });
-
-            $('#export-copy').click(function() {
-                datatable.button('.buttons-copy').trigger()
-            });
-
-            $('#export-excel').click(function() {
-                datatable.button('.buttons-excel').trigger()
-            });
-
-            $('#export-csv').click(function() {
-                datatable.button('.buttons-csv').trigger()
-            });
-
-            $('#export-pdf').click(function() {
-                datatable.button('.buttons-pdf').trigger()
-            });
-
-            $('#export-print').click(function() {
-                datatable.button('.buttons-print').trigger()
-            });
-
-            $('#datatableSearch').on('mouseup', function(e) {
-                var $input = $(this),
-                    oldValue = $input.val();
-
-                if (oldValue == "") return;
-
-                setTimeout(function() {
-                    var newValue = $input.val();
-
-                    if (newValue == "") {
-                        // Gotcha
-                        datatable.search('').draw();
-                    }
-                }, 1);
-            });
-
-            $('#toggleColumn_name').change(function(e) {
-                datatable.columns(1).visible(e.target.checked)
-            })
-
-            $('#toggleColumn_email').change(function(e) {
-                datatable.columns(2).visible(e.target.checked)
-            })
-
-            $('#toggleColumn_total_order').change(function(e) {
-                datatable.columns(3).visible(e.target.checked)
-            })
-
-
-            $('#toggleColumn_status').change(function(e) {
-                datatable.columns(4).visible(e.target.checked)
-            })
-
-            $('#toggleColumn_actions').change(function(e) {
-                datatable.columns(5).visible(e.target.checked)
-            })
-
-            // INITIALIZATION OF TAGIFY
-            // =======================================================
-            $('.js-tagify').each(function() {
-                var tagify = $.HSCore.components.HSTagify.init($(this));
-            });
-        });
-    </script>
-
-    <script>
         $('#search-form').on('submit', function() {
             var formData = new FormData(this);
             $.ajaxSetup({

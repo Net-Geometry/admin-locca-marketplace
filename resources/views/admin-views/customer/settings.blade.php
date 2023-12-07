@@ -35,8 +35,8 @@
                                             class="toggle-switch toggle-switch-sm d-flex justify-content-between border border-secondary rounded px-4 form-control"
                                             for="customer_wallet">
                                             <span class="pr-2">{{ translate('messages.customer_wallet') }} :</span>
-                                            <input type="checkbox" class="toggle-switch-input"
-                                                onclick="section_visibility('customer_wallet')" name="customer_wallet"
+                                            <input type="checkbox" class="toggle-switch-input section_visibility"
+                                                data-id="customer_wallet" name="customer_wallet"
                                                 id="customer_wallet" value="1" data-section="wallet-section"
                                                 {{ isset($data['wallet_status']) && $data['wallet_status'] == 1 ? 'checked' : '' }}>
                                             <span class="toggle-switch-label text">
@@ -52,8 +52,8 @@
                                             class="toggle-switch toggle-switch-sm d-flex justify-content-between border border-secondary rounded px-4 form-control"
                                             for="customer_loyalty_point">
                                             <span class="pr-2">{{ translate('messages.customer_loyalty_point') }} :</span>
-                                            <input type="checkbox" class="toggle-switch-input"
-                                                onclick="section_visibility('customer_loyalty_point')" name="customer_loyalty_point"
+                                            <input type="checkbox" class="toggle-switch-input section_visibility"
+                                                data-id="customer_loyalty_point" name="customer_loyalty_point"
                                                 id="customer_loyalty_point" data-section="loyalty-point-section" value="1"
                                                 {{ isset($data['loyalty_point_status']) && $data['loyalty_point_status'] == 1 ? 'checked' : '' }}>
                                             <span class="toggle-switch-label text">
@@ -68,8 +68,8 @@
                                             class="toggle-switch toggle-switch-sm d-flex justify-content-between border border-secondary rounded px-4 form-control">
                                             <span
                                                 class="pr-2">{{ translate('messages.customer_referrer_earning') }} :</span>
-                                            <input type="checkbox" class="toggle-switch-input"
-                                                onclick="section_visibility('ref_earning_status')"
+                                            <input type="checkbox" class="toggle-switch-input section_visibility"
+                                                data-id="ref_earning_status"
                                                 name="ref_earning_status" id="ref_earning_status"
                                                 data-section="referrer-earning" value="1"
                                                 {{ isset($data['ref_earning_status']) && $data['ref_earning_status'] == 1 ? 'checked' : '' }}>
@@ -238,6 +238,10 @@
     </script>
 
     <script>
+        $('.section_visibility').on('click', function (){
+            let id = $(this).data('id');
+            section_visibility(id);
+        })
         function section_visibility(id) {
             console.log($('#' + id).data('section'));
             if ($('#' + id).is(':checked')) {

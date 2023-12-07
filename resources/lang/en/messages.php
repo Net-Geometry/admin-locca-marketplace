@@ -3348,4 +3348,12 @@
   'addon_update' => 'Addon update',
   'Store_Campaign_Request' => 'Store Campaign Request',
   'category_updated_successfully' => 'Category updated successfully',
+  'admin_employee' => 'Admin employee',
+  'disbursement_method' => 'Disbursement method',
+  'disbursement_report' => 'Disbursement report',
+  'thursday' => 'Thursday',
+  'edit_store_info' => 'Edit store info',
+  'contact_number' => 'Contact number',
+  'upload_logo' => 'Upload logo',
+  'disbursement' => 'Disbursement',
 );
