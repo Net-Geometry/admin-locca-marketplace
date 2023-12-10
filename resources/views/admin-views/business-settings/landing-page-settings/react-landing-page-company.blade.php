@@ -66,38 +66,31 @@
                 </h5>
                 <div class="card">
                     <div class="card-body">
-                        {{-- <div class="d-flex justify-content-end">
-                            <div class="text--primary-2 py-1 d-flex flex-wrap align-items-center py-1" type="button" data-toggle="modal" data-target="#header-section">
-                                <strong class="mr-2">{{translate('See_the_changes_here.')}}</strong>
-                                <div>
-                                    <i class="tio-intersect"></i>
-                                </div>
-                            </div>
-                        </div> --}}
+
                         <div class="row g-4">
                             <div class="col-md-6">
                                 <div class="row g-3">
                                     @if ($language)
                                     <div class="col-12 lang_form default-form">
                                         <div class="mb-2">
-                                            <label class="form-label">{{translate('Title')}}({{ translate('messages.default') }})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_20_characters') }}">
+                                            <label for="company_title" class="form-label">{{translate('Title')}}({{ translate('messages.default') }})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_20_characters') }}">
                                                 <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
                                             </span></label>
-                                    <input type="text"  maxlength="20" name="company_title[]" value="{{ $company_title?->getRawOriginal('value')??'' }}" class="form-control" placeholder="{{translate('messages.title_here...')}}">
+                                    <input id="company_title" type="text"  maxlength="20" name="company_title[]" value="{{ $company_title?->getRawOriginal('value')??'' }}" class="form-control" placeholder="{{translate('messages.title_here...')}}">
                                         </div>
                                         <div class="mb-2">
-                                            <label class="form-label">{{translate('Sub Title')}}({{ translate('messages.default') }})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_40_characters') }}">
+                                            <label for="company_sub_title" class="form-label">{{translate('Sub Title')}}({{ translate('messages.default') }})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_40_characters') }}">
                                                 <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
                                             </span></label>
-                                    <input type="text"  maxlength="40" name="company_sub_title[]" value="{{ $company_sub_title?->getRawOriginal('value')??'' }}" class="form-control" placeholder="{{translate('messages.sub_title_here...')}}">
+                                    <input id="company_sub_title" type="text"  maxlength="40" name="company_sub_title[]" value="{{ $company_sub_title?->getRawOriginal('value')??'' }}" class="form-control" placeholder="{{translate('messages.sub_title_here...')}}">
                                         </div>
                                         <div class="mb-2">
-                                            <label class="form-label">
+                                            <label for="company_description" class="form-label">
                                                 {{translate('Short Description')}}({{ translate('messages.default') }})
                                                 <span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_240_characters') }}">
                                                     <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
                                                 </span></label>
-                                            <textarea maxlength="240" name="company_description[]" class="form-control h--90px">{{ $company_description['value']??'' }}</textarea>
+                                            <textarea id="company_description" maxlength="240" name="company_description[]" class="form-control h--90px">{{ $company_description['value']??'' }}</textarea>
                                         </div>
                                     </div>
                                 <input type="hidden" name="lang[]" value="default">
@@ -136,25 +129,25 @@
                                         ?>
                                         <div class="col-12 d-none lang_form" id="{{$lang}}-form">
                                             <div class="mb-2">
-                                                <label class="form-label">{{translate('Title')}}({{strtoupper($lang)}})
+                                                <label for="company_title{{$lang}}" class="form-label">{{translate('Title')}}({{strtoupper($lang)}})
                                                     <span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_20_characters') }}">
                                                         <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
                                                     </span></label>
-                                            <input type="text"  maxlength="20" name="company_title[]" value="{{ $company_title_translate[$lang]['value']??'' }}" class="form-control" placeholder="{{translate('messages.title_here...')}}">
+                                            <input id="company_title{{$lang}}" type="text"  maxlength="20" name="company_title[]" value="{{ $company_title_translate[$lang]['value']??'' }}" class="form-control" placeholder="{{translate('messages.title_here...')}}">
                                             </div>
                                             <div class="mb-2">
-                                                <label class="form-label">{{translate('Sub Title')}}({{strtoupper($lang)}})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_40_characters') }}">
+                                                <label for="company_sub_title{{$lang}}" class="form-label">{{translate('Sub Title')}}({{strtoupper($lang)}})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_40_characters') }}">
                                                     <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
                                                 </span></label>
-                                        <input type="text"  maxlength="40" name="company_sub_title[]" value="{{ $company_sub_title_translate[$lang]['value']??'' }}" class="form-control" placeholder="{{translate('messages.sub_title_here...')}}">
+                                        <input id="company_sub_title{{$lang}}" type="text"  maxlength="40" name="company_sub_title[]" value="{{ $company_sub_title_translate[$lang]['value']??'' }}" class="form-control" placeholder="{{translate('messages.sub_title_here...')}}">
                                             </div>
                                             <div class="mb-2">
-                                                <label class="form-label">
+                                                <label for="company_description{{$lang}}" class="form-label">
                                                     {{translate('Short Description')}}({{strtoupper($lang)}})
                                                     <span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_240_characters') }}">
                                                         <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
                                                     </span></label>
-                                                <textarea maxlength="240" name="company_description[]" class="form-control h--90px">{{ $company_description_translate[$lang]['value']??'' }}</textarea>
+                                                <textarea id="company_description{{$lang}}" maxlength="240" name="company_description[]" class="form-control h--90px">{{ $company_description_translate[$lang]['value']??'' }}</textarea>
                                             </div>
                                         </div>
                                         <input type="hidden" name="lang[]" value="{{$lang}}">
@@ -162,18 +155,18 @@
                                 @else
                                 <div class="col-12">
                                     <div class="mb-2">
-                                        <label class="form-label">{{translate('Title')}}</label>
-                                        <input type="text" name="company_title[]" class="form-control" placeholder="{{translate('messages.title_here...')}}">
+                                        <label for="company_title" class="form-label">{{translate('Title')}}</label>
+                                        <input id="company_title" type="text" name="company_title[]" class="form-control" placeholder="{{translate('messages.title_here...')}}">
                                     </div>
                                     <div class="mb-2">
-                                        <label class="form-label">{{translate('Sub Title')}}</label>
-                                        <input type="text" name="company_sub_title[]" class="form-control" placeholder="{{translate('messages.sub_title_here...')}}">
+                                        <label for="company_sub_title" class="form-label">{{translate('Sub Title')}}</label>
+                                        <input id="company_sub_title" type="text" name="company_sub_title[]" class="form-control" placeholder="{{translate('messages.sub_title_here...')}}">
                                     </div>
                                     <div class="mb-2">
-                                        <label class="form-label">
+                                        <label for="company_description" class="form-label">
                                             {{translate('Short Description')}}
                                         </label>
-                                        <textarea name="company_description[]" class="form-control h--90px"></textarea>
+                                        <textarea id="company_description" name="company_description[]" class="form-control h--90px"></textarea>
                                     </div>
                                 </div>
                                     <input type="hidden" name="lang[]" value="default">
@@ -190,12 +183,12 @@
                                 <div class="__bg-F8F9FC-card">
                                     @if ($language)
                                         <div class="form-group lang_form default-form">
-                                            <label class="form-label text-capitalize">
+                                            <label for="company_button_name" class="form-label text-capitalize">
                                                 {{translate('Button Name')}}({{ translate('messages.default') }})
                                                 <span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_20_characters') }}">
                                                 <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
                                             </span></label>
-                                    <input type="text" maxlength="20" name="company_button_name[]" value="{{ $company_button_name?->getRawOriginal('value')??'' }}"  placeholder="{{translate('Ex: Order now')}}" class="form-control h--45px" value="">
+                                    <input id="company_button_name" type="text" maxlength="20" name="company_button_name[]" value="{{ $company_button_name?->getRawOriginal('value')??'' }}"  placeholder="{{translate('Ex: Order now')}}" class="form-control h--45px" >
                                         </div>
                                     @foreach(json_decode($language) as $lang)
                                     <?php
@@ -211,33 +204,33 @@
                                         }
                                         ?>
                                         <div class="form-group d-none lang_form" id="{{$lang}}-form1">
-                                            <label class="form-label text-capitalize">
+                                            <label for="company_button_name{{$lang}}" class="form-label text-capitalize">
                                                 {{translate('Button Name')}}({{strtoupper($lang)}})
                                                 <span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_20_characters') }}">
                                                 <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
                                             </span></label>
-                                    <input type="text" maxlength="20" name="company_button_name[]" value="{{ $company_button_name_translate[$lang]['value']??'' }}"  placeholder="{{translate('Ex: Order now')}}" class="form-control h--45px" value="">
+                                    <input id="company_button_name{{$lang}}" type="text" maxlength="20" name="company_button_name[]" value="{{ $company_button_name_translate[$lang]['value']??'' }}"  placeholder="{{translate('Ex: Order now')}}" class="form-control h--45px" >
                                         </div>
                                     @endforeach
                                 @else
                                 <div class="form-group">
-                                    <label class="form-label text-capitalize">
+                                    <label for="company_button_name" class="form-label text-capitalize">
                                         {{translate('Button Name')}}
                                         <span class="input-label-secondary text--title" data-toggle="tooltip" data-placement="right" data-original-title="Lorem ipsum">
                                             <i class="tio-info-outined"></i>
                                         </span>
                                     </label>
-                                    <input type="text" placeholder="{{translate('Ex: Order now')}}" class="form-control h--45px" name="company_button_name[]" value="">
+                                    <input id="company_button_name" type="text" placeholder="{{translate('Ex: Order now')}}" class="form-control h--45px" name="company_button_name[]" >
                                 </div>
                                 @endif
                                     <div class="form-group mb-md-0">
-                                        <label class="form-label text-capitalize">
+                                        <label for="company_button_url" class="form-label text-capitalize">
                                             {{translate('Redirect Link')}}
                                             <span class="input-label-secondary text--title" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('The_button_will_direct_users_to_the_link_contained_within_this_box.') }}">
                                                 <i class="tio-info-outined"></i>
                                             </span>
                                         </label>
-                                        <input type="text" placeholder="{{translate('Ex: https://www.apple.com/app-store/')}}" class="form-control h--45px" name="company_button_url" value="{{ $company_button_url['value']??'' }}">
+                                        <input type="text" id="company_button_url" placeholder="{{translate('Ex: https://www.apple.com/app-store/')}}" class="form-control h--45px" name="company_button_url" value="{{ $company_button_url['value']??'' }}">
                                     </div>
                                 </div>
                             </div>
@@ -250,50 +243,10 @@
                 </div>
             </form>
 
-
-            <div class="modal fade" id="header-section">
-                <div class="modal-dialog modal-lg warning-modal">
-                    <div class="modal-content">
-                        <div class="modal-body">
-                            <div class="mb-3">
-                                <h3 class="modal-title mb-3">{{translate('Header Section')}}</h3>
-                            </div>
-                            <img src="{{asset('/public/assets/admin/img/zone-instruction.png')}}" alt="admin/img" class="w-100">
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </div>
 <!-- How it Works -->
 @include('admin-views.business-settings.landing-page-settings.partial.how-it-work-react')
 @endsection
-@push('script_2')
-<script>
-    $(".lang_link").click(function(e){
-        e.preventDefault();
-        $(".lang_link").removeClass('active');
-        $(".lang_form").addClass('d-none');
-        $(this).addClass('active');
 
-        let form_id = this.id;
-        let lang = form_id.substring(0, form_id.length - 5);
-        console.log(lang);
-        $("#"+lang+"-form").removeClass('d-none');
-        $("#"+lang+"-form1").removeClass('d-none');
-        if(lang == '{{$defaultLang}}')
-        {
-            $(".from_part_2").removeClass('d-none');
-        }
-        if(lang == 'default')
-        {
-            $(".default-form").removeClass('d-none');
-        }
-        else
-        {
-            $(".from_part_2").addClass('d-none');
-        }
-    });
-</script>
-@endpush

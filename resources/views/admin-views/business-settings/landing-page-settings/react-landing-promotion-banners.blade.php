@@ -36,14 +36,7 @@
                 </h5>
                 <div class="card mb-3">
                     <div class="card-body">
-                        {{-- <div class="d-flex justify-content-end">
-                            <div class="text--primary-2 py-1 d-flex flex-wrap align-items-center" type="button" data-toggle="modal" data-target="#testimonials-section">
-                                <strong class="mr-2">{{translate('See_the_changes_here.')}}</strong>
-                                <div>
-                                    <i class="tio-intersect"></i>
-                                </div>
-                            </div>
-                        </div> --}}
+
                         <div class="row g-3">
                             <div class="col-12">
                                 <div>
@@ -52,12 +45,7 @@
                                             <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
                                         </span>
                                     </label>
-                                    {{-- <label class="m-0 max-w-640">
-                                        <div class="img">
-                                            <img src="{{asset('/public/assets/admin/img/upload-4.png')}}" class="vertical-img w-100 mw-100" alt="">
-                                        </div>
-                                        <input type="file" name="image"  hidden>
-                                    </label> --}}
+
                                     <label class="upload-img-3 d-block max-w-640">
                                         <div class="img">
                                             <img src="" onerror="this.src='{{asset("/public/assets/admin/img/upload-4.png")}}'" class="vertical-img w-100 mw-100" alt="">
@@ -65,18 +53,15 @@
                                         <input type="file"  name="image" hidden="">
                                     </label>
                                 </div>
-                                {{-- <div>
-                                    <label class="form-label d-block mb-2">
-                                        {{translate('Reviewer Image *')}}  <span class="text--primary">(1:1)</span>
-                                    </label>
-                                </div> --}}
+
                             </div>
                         </div>
                         <div class="btn--container justify-content-end mt-3">
                             <button type="reset" class="btn btn--reset">{{translate('Reset')}}</button>
                             <button type="submit" onclick="" class="btn btn--primary mb-2">{{translate('Add')}}</button>
                         </div>
-                        
+
+                    </div>
                     </div>
                 </form>
                 @php($banners = \App\Models\DataSetting::where(['key'=>'promotion_banner','type'=>'react_landing_page'])->first())
@@ -102,8 +87,10 @@
                                         </td>
                                         <td>
                                             <div class="btn--container justify-content-center">
-                                                <a class="btn action-btn btn--danger btn-outline-danger" href="javascript:"
-                                                    onclick="form_alert('promotion-{{$key}}','{{translate('messages.Want_to_delete_this_item')}}')" title="{{translate('messages.delete')}}"><i class="tio-delete-outlined"></i>
+                                                <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:"
+                                                   data-id="promotion-{{$key}}"
+                                                   data-message="{{translate('messages.Want_to_delete_this_banner')}}"
+                                                  title="{{translate('messages.delete')}}"><i class="tio-delete-outlined"></i>
                                                 </a>
                                             </div>
                                                 <form action="{{route('admin.business-settings.react-landing-page-settings-delete',['tab'=>'promotion_banner', 'key'=>$key])}}"
@@ -115,7 +102,7 @@
                                     @endforeach
                                 </tbody>
                             </table>
-                
+
                         </div>
                         <!-- End Table -->
                     </div>
@@ -128,26 +115,12 @@
                     </div>
                     @endif
                 </div>
-        
-        
-            <!--  Special review Section View -->
-            <div class="modal fade" id="testimonials-section">
-                <div class="modal-dialog modal-lg warning-modal">
-                    <div class="modal-content">
-                        <div class="modal-body">
-                            <div class="mb-3">
-                                <h3 class="modal-title mb-3">{{translate('Special review')}}</h3>
-                            </div>
-                            <img src="{{asset('/public/assets/admin/img/zone-instruction.png')}}" alt="admin/img" class="w-100">
-                        </div>
-                    </div>
-                </div>
-            </div>
+
+
         </div>
     </div>
-</div>
+
     <!-- How it Works -->
     @include('admin-views.business-settings.landing-page-settings.partial.how-it-work-react')
 @endsection
-@push('script_2')
-@endpush
+

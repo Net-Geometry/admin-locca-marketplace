@@ -152,7 +152,7 @@
                                 <div class="d-flex gap-40px">
                                     <div>
                                         <label class="form-label d-block mb-2">
-                                            {{translate('Reviewer Image *')}}  <span class="text--primary">(1:1)</span>
+                                            {{translate('Reviewer Image *')}}  <span class="text--primary">{{ translate('(1:1)') }}</span>
                                         </label>
                                         <label class="upload-img-3 m-0 d-block">
                                             <div class="img">

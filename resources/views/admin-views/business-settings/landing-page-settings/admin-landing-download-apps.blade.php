@@ -228,7 +228,7 @@
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label d-block mb-2">
-                                    {{ translate('messages.Banner') }}  <span class="text--primary">(size: 1:1)</span>
+                                    {{ translate('messages.Banner') }}  <span class="text--primary">{{ translate('(size: 1:1)') }}</span>
                                 </label>
                                 <label class="upload-img-3 m-0">
                                     <div class="position-relative">
