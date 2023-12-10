@@ -41,12 +41,10 @@
                 @else
                 <div class="col-md-12">
                     <div class="btn--container justify-content-end">
-                        <a class="btn btn--primary text-capitalize font-weight-bold"
-                        onclick="request_alert('{{route('admin.users.delivery-man.application',[$deliveryMan['id'],'approved'])}}','{{translate('messages.you_want_to_approve_this_application')}}')"
+                        <a class="btn btn--primary text-capitalize font-weight-bold request-alert" data-url="{{route('admin.users.delivery-man.application',[$deliveryMan['id'],'approved'])}}" data-message="{{translate('messages.you_want_to_approve_this_application')}}"
                             href="javascript:"><i class="tio-checkmark-circle-outlined font-weight-bold pr-1"></i> {{translate('messages.approve')}}</a>
                         @if($deliveryMan->application_status !='denied')
-                        <a class="btn btn--danger text-capitalize font-weight-bold"
-                        onclick="request_alert('{{route('admin.users.delivery-man.application',[$deliveryMan['id'],'denied'])}}','{{translate('messages.you_want_to_deny_this_application')}}')"
+                        <a class="btn btn--danger text-capitalize font-weight-bold request-alert" data-url="{{route('admin.users.delivery-man.application',[$deliveryMan['id'],'denied'])}}" data-message="{{translate('messages.you_want_to_deny_this_application')}}"
                             href="javascript:"><i class="tio-clear-circle-outlined font-weight-bold pr-1"></i> {{translate('messages.deny')}}</a>
                         @endif
                     </div>
@@ -207,7 +205,7 @@
                         @endif
                     </h4>
                     @if($deliveryMan->application_status=='approved')
-                    <a  href="javascript:"  onclick="request_alert('{{route('admin.users.delivery-man.status',[$deliveryMan['id'],$deliveryMan->status?0:1])}}','{{$deliveryMan->status?translate('messages.you_want_to_suspend_this_deliveryman'):translate('messages.you_want_to_unsuspend_this_deliveryman')}}')" class="btn font-medium {{$deliveryMan->status?'btn--danger':'btn-success'}}">
+                    <a  href="javascript:" class="btn font-medium request-alert {{$deliveryMan->status?'btn--danger':'btn-success'}}" data-url="{{route('admin.users.delivery-man.status',[$deliveryMan['id'],$deliveryMan->status?0:1])}}" data-message="{{$deliveryMan->status?translate('messages.you_want_to_suspend_this_deliveryman'):translate('messages.you_want_to_unsuspend_this_deliveryman')}}">
                             {{$deliveryMan->status?translate('messages.suspend_this_delivery_man'):translate('messages.unsuspend_this_delivery_man')}}
                     </a>
                     @endif
@@ -219,11 +217,9 @@
                                 {{translate('messages.type')}} ({{$deliveryMan->earning?translate('messages.freelancer'):translate('messages.salary_based')}})
                             </button>
                             <div class="dropdown-menu text-capitalize" aria-labelledby="dropdownMenuButton">
-                                <a class="dropdown-item {{$deliveryMan->earning?'active':''}}"
-                                onclick="request_alert('{{route('admin.users.delivery-man.earning',[$deliveryMan['id'],1])}}','{{translate('messages.want_to_enable_earnings')}}')"
+                                <a class="dropdown-item {{$deliveryMan->earning?'active':''}} request-alert" data-url="{{route('admin.users.delivery-man.earning',[$deliveryMan['id'],1])}}" data-message="{{translate('messages.want_to_enable_earnings')}}"
                                     href="javascript:">{{translate('messages.freelancer')}}</a>
-                                <a class="dropdown-item {{$deliveryMan->earning?'':'active'}}"
-                                onclick="request_alert('{{route('admin.users.delivery-man.earning',[$deliveryMan['id'],0])}}','{{translate('messages.want_to_disable_earnings')}}')"
+                                <a class="dropdown-item {{$deliveryMan->earning?'':'active'}} request-alert" data-url="{{route('admin.users.delivery-man.earning',[$deliveryMan['id'],0])}}" data-message="{{translate('messages.want_to_disable_earnings')}}"
                                     href="javascript:">{{translate('messages.salary_based')}}</a>
                             </div>
                         </div>
@@ -501,12 +497,6 @@
                                     alt="Image Description">
                                 .{{ translate('messages.csv') }}
                             </a>
-                            {{-- <a id="export-pdf" class="dropdown-item" href="javascript:;">
-                                <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                    src="{{ asset('public/assets/admin') }}/svg/components/pdf.svg"
-                                    alt="Image Description">
-                                {{ translate('messages.pdf') }}
-                            </a> --}}
                         </div>
                     </div>
                     <!-- End Unfold -->
@@ -614,6 +604,12 @@
 
 @push('script_2')
 <script>
+    "use strict";
+    $('.request-alert').on('click', function(){
+        let url = $(this).data('url');
+        let message = $(this).data('message');
+        request_alert(url, message);
+    })
     function request_alert(url, message) {
         Swal.fire({
             title: '{{translate('messages.are_you_sure')}}',

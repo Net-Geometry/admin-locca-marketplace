@@ -3,7 +3,12 @@
 @section('title',translate('messages.Delivery Man Preview'))
 
 @push('css_or_js')
-
+    <style>
+        #dm-conversation-list {
+            overflow-y: scroll;
+            height: 600px
+        }
+    </style>
 @endpush
 
 @section('content')
@@ -60,7 +65,7 @@
                             </div>
                         </div>
                         <!-- Body -->
-                        <div class="card-body p-0 initial-19" style="overflow-y: scroll;height: 600px"  id="dm-conversation-list">
+                        <div class="card-body p-0 initial-19"  id="dm-conversation-list">
                             <div class="border-bottom"></div>
                             @include('admin-views.delivery-man.partials._conversation_list')
                         </div>
@@ -84,6 +89,15 @@
 
 @push('script_2')
 <script>
+    "use strict";
+
+    $('.view-conv').on('click', function (){
+        let url = $(this).data('url');
+        let id_to_active = $(this).data('active-id');
+        let conv_id = $(this).data('conv-id');
+        let sender_id = $(this).data('sender-id');
+        viewConvs(url, id_to_active, conv_id, sender_id);
+    })
     function viewConvs(url, id_to_active, conv_id, sender_id) {
         $('.customer-list').removeClass('conv-active');
         $('#' + id_to_active).addClass('conv-active');
@@ -97,8 +111,8 @@
             });
     }
 
-    var page = 1;
-    var user_id =  $('#deliver_man').val();
+    let page = 1;
+    let user_id =  $('#deliver_man').val();
     $('#dm-conversation-list').scroll(function() {
         if ($('#dm-conversation-list').scrollTop() + $('#dm-conversation-list').height() >= $('#dm-conversation-list')
             .height()) {
@@ -140,7 +154,7 @@
         };
 
         $(document).on('keyup', '#serach', function() {
-            var query = $('#serach').val();
+            let query = $('#serach').val();
             fetch_data(page, query);
         });
 </script>

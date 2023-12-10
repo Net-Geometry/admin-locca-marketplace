@@ -205,21 +205,23 @@
     </div>
 @endsection
 @push('script_2')
+    <script src="{{asset('public/assets/admin')}}/js/view-pages/customer-wallet-settings.js"></script>
     <script>
+        "use strict";
         $(document).on('ready', function() {
             @if (isset($data['wallet_status']) && $data['wallet_status'] != 1)
-                $('.wallet-section').hide();
+            $('.wallet-section').hide();
             @endif
             @if (isset($data['loyalty_point_status']) && $data['loyalty_point_status'] != 1)
-                $('.loyalty-point-section').hide();
+            $('.loyalty-point-section').hide();
             @endif
             @if (isset($data['ref_earning_status']) && $data['ref_earning_status'] != 1)
-                $('.referrer-earning').hide();
+            $('.referrer-earning').hide();
             @endif
 
             // INITIALIZATION OF DATATABLES
             // =======================================================
-            var datatable = $.HSCore.components.HSDatatables.init($('#columnSearchDatatable'));
+            let datatable = $.HSCore.components.HSDatatables.init($('#columnSearchDatatable'));
             $('#column1_search').on('keyup', function() {
                 datatable
                     .columns(1)
@@ -235,27 +237,10 @@
                     .draw();
             });
         });
-    </script>
-
-    <script>
-        $('.section_visibility').on('click', function (){
-            let id = $(this).data('id');
-            section_visibility(id);
-        })
-        function section_visibility(id) {
-            console.log($('#' + id).data('section'));
-            if ($('#' + id).is(':checked')) {
-                console.log('checked');
-                $('.' + $('#' + id).data('section')).show();
-            } else {
-                console.log('unchecked');
-                $('.' + $('#' + id).data('section')).hide();
-            }
-        }
         $('#add_fund').on('submit', function(e) {
 
             e.preventDefault();
-            var formData = new FormData(this);
+            let formData = new FormData(this);
 
             Swal.fire({
                 title: '{{ translate('messages.are_you_sure') }}',
@@ -284,7 +269,7 @@
                         processData: false,
                         success: function(data) {
                             if (data.errors) {
-                                for (var i = 0; i < data.errors.length; i++) {
+                                for (let i = 0; i < data.errors.length; i++) {
                                     toastr.error(data.errors[i].message, {
                                         CloseButton: true,
                                         ProgressBar: true
@@ -302,10 +287,5 @@
                 }
             })
         })
-    </script>
-        <script>
-            $('#reset_btn').click(function(){
-                location.reload(true);
-            })
         </script>
 @endpush

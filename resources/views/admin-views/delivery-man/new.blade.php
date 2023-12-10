@@ -14,8 +14,8 @@
             <div class="page-header-select-wrapper">
                 @if(!isset(auth('admin')->user()->zone_id))
                 <div class="col-sm-auto min--240">
-                    <select name="zone_id" class="form-control js-select2-custom"
-                            onchange="set_zone_filter('{{ url()->full() }}', this.value)">
+                    <select name="zone_id" class="form-control js-select2-custom zone-filter"
+                            data-url="{{ url()->full() }}">
                         <option value="all">{{ translate('messages.All_Zones') }}</option>
                         @foreach(\App\Models\Zone::orderBy('name')->get() as $z)
                             <option
@@ -143,14 +143,12 @@
                                 @else
                                 <div class="col-md-12">
                                     <div class="btn--container justify-content-end">
-                                        <a class="btn action-btn btn--primary btn-outline-primary" data-toggle="tooltip" data-placement="top"
-                                        data-original-title="{{ translate('messages.approve') }}"
-                                        onclick="request_alert('{{route('admin.users.delivery-man.application',[$dm['id'],'approved'])}}','{{translate('messages.you_want_to_approve_this_application')}}')"
+                                        <a class="btn action-btn btn--primary btn-outline-primary request-alert" data-toggle="tooltip" data-placement="top"
+                                        data-original-title="{{ translate('messages.approve') }}" data-url="{{route('admin.users.delivery-man.application',[$dm['id'],'approved'])}}" data-message="{{translate('messages.you_want_to_approve_this_application')}}"
                                             href="javascript:"><i class="tio-done font-weight-bold"></i> </a>
                                         @if($dm->application_status !='denied')
-                                        <a class="btn action-btn btn--danger btn-outline-danger " data-toggle="tooltip" data-placement="top"
-                                        data-original-title="{{ translate('messages.deny') }}"
-                                        onclick="request_alert('{{route('admin.users.delivery-man.application',[$dm['id'],'denied'])}}','{{translate('messages.you_want_to_deny_this_application')}}')"
+                                        <a class="btn action-btn btn--danger btn-outline-danger request-alert" data-toggle="tooltip" data-placement="top"
+                                        data-original-title="{{ translate('messages.deny') }}" data-url="{{route('admin.users.delivery-man.application',[$dm['id'],'denied'])}}" data-message="{{translate('messages.you_want_to_deny_this_application')}}"
                                             href="javascript:"><i class="tio-clear font-weight-bold"></i></a>
                                         @endif
                                     </div>
@@ -185,50 +183,9 @@
 @endsection
 
 @push('script_2')
+    <script src="{{asset('public/assets/admin')}}/js/view-pages/deliveryman-new-denied-list.js"></script>
     <script>
-        $(document).on('ready', function () {
-            // INITIALIZATION OF DATATABLES
-            // =======================================================
-            var datatable = $.HSCore.components.HSDatatables.init($('#columnSearchDatatable'));
-
-            $('#column1_search').on('keyup', function () {
-                datatable
-                    .columns(1)
-                    .search(this.value)
-                    .draw();
-            });
-
-            $('#column2_search').on('keyup', function () {
-                datatable
-                    .columns(2)
-                    .search(this.value)
-                    .draw();
-            });
-
-            $('#column3_search').on('keyup', function () {
-                datatable
-                    .columns(3)
-                    .search(this.value)
-                    .draw();
-            });
-
-            $('#column4_search').on('keyup', function () {
-                datatable
-                    .columns(4)
-                    .search(this.value)
-                    .draw();
-            });
-
-
-            // INITIALIZATION OF SELECT2
-            // =======================================================
-            $('.js-select2-custom').each(function () {
-                var select2 = $.HSCore.components.HSSelect2.init($(this));
-            });
-        });
-    </script>
-
-    <script>
+        "use strict";
         function request_alert(url, message) {
             Swal.fire({
                 title: '{{translate('messages.are_you_sure')}}',
@@ -248,8 +205,9 @@
         }
 
         $('#search-form').on('submit', function () {
-            var formData = new FormData(this);
+            let formData = new FormData(this);
             set_filter('{!! url()->full() !!}',formData.get('search'),'search_by')
         });
     </script>
 @endpush
+

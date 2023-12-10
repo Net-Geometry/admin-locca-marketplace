@@ -121,28 +121,15 @@
                 @endif
             </div>
             <!-- End Table -->
-            <!-- Footer -->
-            {{-- <div class="card-footer">
-                <!-- Pagination -->
-                <div class="row justify-content-center justify-content-sm-between align-items-sm-center">
-                    <div class="col-sm-auto">
-                        <div class="d-flex justify-content-center justify-content-sm-end">
-                            <!-- Pagination -->
-                            $customer->links() !!}
-                        </div>
-                    </div>
-                </div>
-                <!-- End Pagination -->
-            </div> --}}
-            <!-- End Footer -->
         </div>
         <!-- End Card -->
     </div>
 @endsection
 @push('script_2')
     <script type="text/javascript">
+        "use strict";
         $('#search-form').on('submit', function() {
-            var formData = new FormData(this);
+            let formData = new FormData(this);
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

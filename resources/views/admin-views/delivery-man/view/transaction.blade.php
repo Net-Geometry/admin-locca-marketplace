@@ -42,7 +42,7 @@
                 <div class="search--button-wrapper">
                     <h4 class="card-title">{{ translate('messages.order_transactions')}}</h4>
                     <div class="min--260">
-                        <input type="date" class="form-control" placeholder="{{ translate('mm/dd/yyyy') }}" onchange="set_filter('{{route('admin.users.delivery-man.preview',['id'=>$deliveryMan->id, 'tab'=> 'transaction'])}}',this.value, 'date')" value="{{$date}}">
+                        <input type="date" class="form-control set-filter" placeholder="{{ translate('mm/dd/yyyy') }}" data-url="{{route('admin.users.delivery-man.preview',['id'=>$deliveryMan->id, 'tab'=> 'transaction'])}}" data-filter="date" value="{{$date}}">
                     </div>
                 </div>
                 <!-- Unfold -->
@@ -70,12 +70,6 @@
                                 alt="Image Description">
                             .{{ translate('messages.csv') }}
                         </a>
-                        {{-- <a id="export-pdf" class="dropdown-item" href="javascript:;">
-                            <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                src="{{ asset('public/assets/admin') }}/svg/components/pdf.svg"
-                                alt="Image Description">
-                            {{ translate('messages.pdf') }}
-                        </a> --}}
                     </div>
                 </div>
                 <!-- End Unfold -->
@@ -122,23 +116,5 @@
 @endsection
 
 @push('script_2')
-<script>
-    function request_alert(url, message) {
-        Swal.fire({
-            title: '{{ translate('Are you sure?') }}' ,
-            text: message,
-            type: 'warning',
-            showCancelButton: true,
-            cancelButtonColor: 'default',
-            confirmButtonColor: '#FC6A57',
-            cancelButtonText: '{{translate('messages.no')}}',
-            confirmButtonText: '{{translate('messages.yes')}}',
-            reverseButtons: true
-        }).then((result) => {
-            if (result.value) {
-                location.href = url;
-            }
-        })
-    }
-</script>
+
 @endpush
