@@ -106,6 +106,7 @@
         let lang = form_id.substring(0, form_id.length - 5);
         $("#" + lang + "-form").removeClass('d-none');
         $("#" + lang + "-form1").removeClass('d-none');
+        $("#" + lang + "-form2").removeClass('d-none');
         if (lang === 'default') {
             $(".default-form").removeClass('d-none');
         }

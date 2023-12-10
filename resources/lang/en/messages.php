@@ -3394,4 +3394,11 @@
   'criteria_deleted_successfully' => 'Criteria deleted successfully',
   'criteria_updated_successfully' => 'Criteria updated successfully',
   'By Turning ON Promotional Banner Section' => 'By Turning ON Promotional Banner Section',
+  'want_to_enable_the_app_store_button_for_user_app?' => 'Want to enable the app store button for user app ',
+  'want_to_disable_the_app_store_button_for_user_app?' => 'Want to disable the app store button for user app ',
+  'if_enabled,_the_user_app_download_button_will_be_visible_on_the_landing_page.' => 'If enabled  the user app download button will be visible on the landing page.',
+  'if_disabled,_this_button_will_be_hidden_from_the_landing_page.' => 'If disabled  this button will be hidden from the landing page.',
+  'download_app_section_updated' => 'Download app section updated',
+  'want_to_enable' => 'Want to enable',
+  'want_to_disable' => 'Want to disable',
 );
