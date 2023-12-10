@@ -36,12 +36,12 @@
                 @csrf
                 <div class="row">
                     <div class="col-sm-4">
-                        <label class="form-label d-block text-center">{{ translate('Primary Color 1') }}</label>
-                        <input name="header-bg" type="color" class="form-control form-control-color" value="{{ isset($backgroundChange['primary_1_hex']) ? $backgroundChange['primary_1_hex'] : '#EF7822' }}" required>
+                        <label for="header-bg" class="form-label d-block text-center">{{ translate('Primary Color 1') }}</label>
+                        <input id="header-bg" name="header-bg" type="color" class="form-control form-control-color" value="{{  $backgroundChange['primary_1_hex'] ?? '#EF7822' }}" required>
                     </div>
                     <div class="col-sm-6">
-                        <label class="form-label d-block text-center">{{ translate('Primary Color 2') }}</label>
-                        <input name="footer-bg" type="color" class="form-control form-control-color" value="{{ isset($backgroundChange['primary_2_hex']) ? $backgroundChange['primary_2_hex'] :'#333E4F'}}" required>
+                        <label for="footer-bg" class="form-label d-block text-center">{{ translate('Primary Color 2') }}</label>
+                        <input id="footer-bg" name="footer-bg" type="color" class="form-control form-control-color" value="{{ $backgroundChange['primary_2_hex'] ?? '#333E4F'}}" required>
                     </div>
 
                 </div>
@@ -55,5 +55,3 @@
     <!-- How it Works -->
     @include('admin-views.business-settings.landing-page-settings.partial.how-it-work')
 @endsection
-@push('script_2')
-@endpush

@@ -57,6 +57,7 @@
             @endforeach
         </ul>
     @endif
+
     <div class="tab-content">
         <div class="tab-pane fade show active">
             <form action="{{ route('admin.business-settings.admin-landing-page-settings', 'fixed-data') }}" method="POST">
@@ -70,16 +71,16 @@
                         <div class="card-body">
                             <div class="row g-3">
                                 <div class="col-sm-6">
-                                    <label class="form-label">{{translate('Title')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_50_characters') }}">
+                                    <label for="fixed_header_title" class="form-label">{{translate('Title')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_50_characters') }}">
                                                 <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
                                             </span></label>
-                                    <input type="text"  maxlength="50" name="fixed_header_title[]" value="{{$fixed_header_title?->getRawOriginal('value')}}" class="form-control" placeholder="{{translate('Ex_:_Manage_your_daily_life_on_one_platform')}}">
+                                    <input id="fixed_header_title" type="text"  maxlength="50" name="fixed_header_title[]" value="{{$fixed_header_title?->getRawOriginal('value')}}" class="form-control" placeholder="{{translate('Ex_:_Manage_your_daily_life_on_one_platform')}}">
                                 </div>
                                 <div class="col-sm-6">
-                                    <label class="form-label">{{translate('Sub Title')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_sub_title_within_100_characters') }}">
+                                    <label for="fixed_header_sub_title" class="form-label">{{translate('Sub Title')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_sub_title_within_100_characters') }}">
                                                 <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
                                             </span></label>
-                                    <input type="text"  maxlength="100" name="fixed_header_sub_title[]" value="{{$fixed_header_sub_title?->getRawOriginal('value')}}" class="form-control" placeholder="{{translate('Ex_:_More_than_just_a_reliable_eCommerce_platform')}}">
+                                    <input id="fixed_header_sub_title" type="text"  maxlength="100" name="fixed_header_sub_title[]" value="{{$fixed_header_sub_title?->getRawOriginal('value')}}" class="form-control" placeholder="{{translate('Ex_:_More_than_just_a_reliable_eCommerce_platform')}}">
                                 </div>
                             </div>
                         </div>
@@ -91,16 +92,16 @@
                         <div class="card-body">
                             <div class="row g-3">
                                 <div class="col-sm-6">
-                                    <label class="form-label">{{translate('Title')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_50_characters') }}">
+                                    <label for="fixed_module_title" class="form-label">{{translate('Title')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_50_characters') }}">
                                                 <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
                                             </span></label>
-                                    <input type="text"  maxlength="50" name="fixed_module_title[]" value="{{$fixed_module_title?->getRawOriginal('value')}}" class="form-control" placeholder="{{translate('Ex_:_Your_eCommerce_venture_starts_here')}}">
+                                    <input id="fixed_module_title" type="text"  maxlength="50" name="fixed_module_title[]" value="{{$fixed_module_title?->getRawOriginal('value')}}" class="form-control" placeholder="{{translate('Ex_:_Your_eCommerce_venture_starts_here')}}">
                                 </div>
                                 <div class="col-sm-6">
-                                    <label class="form-label">{{translate('Sub Title')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_sub_title_within_100_characters') }}">
+                                    <label for="fixed_module_sub_title" class="form-label">{{translate('Sub Title')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_sub_title_within_100_characters') }}">
                                                 <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
                                             </span></label>
-                                    <input type="text"  maxlength="100" name="fixed_module_sub_title[]" value="{{$fixed_module_sub_title?->getRawOriginal('value')}}" class="form-control" placeholder="{{translate('Ex_:_Enjoy_all_services_in_one_platform')}}">
+                                    <input id="fixed_module_sub_title" type="text"  maxlength="100" name="fixed_module_sub_title[]" value="{{$fixed_module_sub_title?->getRawOriginal('value')}}" class="form-control" placeholder="{{translate('Ex_:_Enjoy_all_services_in_one_platform')}}">
                                 </div>
                             </div>
                             <div class="alert alert-warning d-flex mt-4 mb-0">
@@ -118,30 +119,19 @@
                     </h5>
                     <div class="card">
                         <div class="card-body">
-                            {{-- <div class="d-flex justify-content-end">
-                                <div class="blinkings d-block">
-                                    <i class="tio-info-outined"></i>
-                                    <div class="business-notes">
-                                        <h6><img src="{{asset('public/assets/admin/img/notes.png')}}" alt=""> {{translate('Note')}}</h6>
-                                        <div>
-                                            {{translate('To Change the illustrations & primary colour please change primary colour according to the ')}}
-                                        </div>
-                                        <a href="#" class="text-underline text-info">documentation</a>
-                                    </div>
-                                </div>
-                            </div> --}}
+
                             <div class="row g-3">
                                 <div class="col-sm-6">
-                                    <label class="form-label">{{translate('Title')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_40_characters') }}">
+                                    <label for="fixed_referal_title" class="form-label">{{translate('Title')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_40_characters') }}">
                                                 <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
                                             </span></label>
-                                    <input type="text"  maxlength="40" name="fixed_referal_title[]" value="{{$fixed_referal_title?->getRawOriginal('value')}}" class="form-control" placeholder="{{translate('Ex_:_Earn_Point')}}">
+                                    <input id="fixed_referal_title" type="text"  maxlength="40" name="fixed_referal_title[]" value="{{$fixed_referal_title?->getRawOriginal('value')}}" class="form-control" placeholder="{{translate('Ex_:_Earn_Point')}}">
                                 </div>
                                 <div class="col-sm-6">
-                                    <label class="form-label">{{translate('Sub Title')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_sub_title_within_80_characters') }}">
+                                    <label for="fixed_referal_sub_title" class="form-label">{{translate('Sub Title')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_sub_title_within_80_characters') }}">
                                                 <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
                                             </span></label>
-                                    <input type="text"  maxlength="80" name="fixed_referal_sub_title[]" value="{{$fixed_referal_sub_title?->getRawOriginal('value')}}" class="form-control" placeholder="{{translate('Ex_:_By_referring_your_friend')}}">
+                                    <input  id="fixed_referal_sub_title" type="text"  maxlength="80" name="fixed_referal_sub_title[]" value="{{$fixed_referal_sub_title?->getRawOriginal('value')}}" class="form-control" placeholder="{{translate('Ex_:_By_referring_your_friend')}}">
                                 </div>
                             </div>
                         </div>
@@ -153,16 +143,16 @@
                         <div class="card-body">
                             <div class="row g-3">
                                 <div class="col-sm-6">
-                                    <label class="form-label">{{translate('Title')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_40_characters') }}">
+                                    <label for="fixed_newsletter_title" class="form-label">{{translate('Title')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_40_characters') }}">
                                                 <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
                                             </span></label>
-                                    <input type="text"  maxlength="40" name="fixed_newsletter_title[]" value="{{$fixed_newsletter_title?->getRawOriginal('value')}}" class="form-control" placeholder="{{translate('Ex_:_Sign_Up_to_Our_Newsletter')}}">
+                                    <input id="fixed_newsletter_title" type="text"  maxlength="40" name="fixed_newsletter_title[]" value="{{$fixed_newsletter_title?->getRawOriginal('value')}}" class="form-control" placeholder="{{translate('Ex_:_Sign_Up_to_Our_Newsletter')}}">
                                 </div>
                                 <div class="col-sm-6">
-                                    <label class="form-label">{{translate('Sub Title')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_sub_title_within_80_characters') }}">
+                                    <label for="fixed_newsletter_sub_title" class="form-label">{{translate('Sub Title')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_sub_title_within_80_characters') }}">
                                                 <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
                                             </span></label>
-                                    <input type="text"  maxlength="80" name="fixed_newsletter_sub_title[]" value="{{$fixed_newsletter_sub_title?->getRawOriginal('value')}}" class="form-control" placeholder="{{translate('Ex_:_Receive_Latest_News,_Updates_and_Many_Other_News_Every_Week')}}">
+                                    <input id="fixed_newsletter_sub_title" type="text"  maxlength="80" name="fixed_newsletter_sub_title[]" value="{{$fixed_newsletter_sub_title?->getRawOriginal('value')}}" class="form-control" placeholder="{{translate('Ex_:_Receive_Latest_News,_Updates_and_Many_Other_News_Every_Week')}}">
                                 </div>
                             </div>
                         </div>
@@ -174,10 +164,10 @@
                         <div class="card-body">
                             <div class="row g-3">
                                 <div class="col-12">
-                                    <label class="form-label">{{translate('Title')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_180_characters') }}">
+                                    <label for="fixed_footer_article_title" class="form-label">{{translate('Title')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_180_characters') }}">
                                                 <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
                                             </span></label>
-                                    <input type="text"  maxlength="180" name="fixed_footer_article_title[]" value="{{$fixed_footer_article_title?->getRawOriginal('value')}}" class="form-control" placeholder="{{translate('Ex_:_6amMart_is_a_complete_package!__It`s_time_to_empower_your_multivendor_online_business_with__powerful_features!')}}">
+                                    <input id="fixed_footer_article_title" type="text"  maxlength="180" name="fixed_footer_article_title[]" value="{{$fixed_footer_article_title?->getRawOriginal('value')}}" class="form-control" placeholder="{{translate('Ex_:_6amMart_is_a_complete_package!__It`s_time_to_empower_your_multivendor_online_business_with__powerful_features!')}}">
                                 </div>
                             </div>
                         </div>
@@ -285,16 +275,16 @@
                                 <div class="card-body">
                                     <div class="row g-3">
                                         <div class="col-sm-6">
-                                            <label class="form-label">{{translate('Title')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_50_characters') }}">
+                                            <label for="fixed_header_title{{$lang}}" class="form-label">{{translate('Title')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_50_characters') }}">
                                                 <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
                                             </span></label>
-                                            <input type="text"  maxlength="50" name="fixed_header_title[]" value="{{$fixed_header_title_translate[$lang]['value']??''}}" class="form-control" placeholder="{{translate('Ex_:_Manage_your_daily_life_on_one_platform')}}">
+                                            <input id="fixed_header_title{{$lang}}" type="text"  maxlength="50" name="fixed_header_title[]" value="{{$fixed_header_title_translate[$lang]['value']??''}}" class="form-control" placeholder="{{translate('Ex_:_Manage_your_daily_life_on_one_platform')}}">
                                         </div>
                                         <div class="col-sm-6">
-                                            <label class="form-label">{{translate('Sub Title')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_sub_title_within_100_characters') }}">
+                                            <label for="fixed_header_sub_title{{$lang}}" class="form-label">{{translate('Sub Title')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_sub_title_within_100_characters') }}">
                                                 <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
                                             </span></label>
-                                            <input type="text"  maxlength="100" name="fixed_header_sub_title[]" value="{{$fixed_header_sub_title_translate[$lang]['value']??''}}" class="form-control" placeholder="{{translate('Ex_:_More_than_just_a_reliable_eCommerce_platform')}}">
+                                            <input id="fixed_header_sub_title{{$lang}}" type="text"  maxlength="100" name="fixed_header_sub_title[]" value="{{$fixed_header_sub_title_translate[$lang]['value']??''}}" class="form-control" placeholder="{{translate('Ex_:_More_than_just_a_reliable_eCommerce_platform')}}">
                                         </div>
                                     </div>
                                 </div>
@@ -306,16 +296,16 @@
                                 <div class="card-body">
                                     <div class="row g-3">
                                         <div class="col-sm-6">
-                                            <label class="form-label">{{translate('Title')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_50_characters') }}">
+                                            <label for="fixed_module_title{{$lang}}" class="form-label">{{translate('Title')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_50_characters') }}">
                                                 <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
                                             </span></label>
-                                            <input type="text"  maxlength="50" name="fixed_module_title[]" value="{{$fixed_module_title_translate[$lang]['value']??''}}" class="form-control" placeholder="{{translate('Ex_:_Your_eCommerce_venture_starts_here')}}">
+                                            <input  id="fixed_module_title{{$lang}}" type="text"  maxlength="50" name="fixed_module_title[]" value="{{$fixed_module_title_translate[$lang]['value']??''}}" class="form-control" placeholder="{{translate('Ex_:_Your_eCommerce_venture_starts_here')}}">
                                         </div>
                                         <div class="col-sm-6">
-                                            <label class="form-label">{{translate('Sub Title')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_sub_title_within_100_characters') }}">
+                                            <label for="fixed_module_sub_title{{$lang}}" class="form-label">{{translate('Sub Title')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_sub_title_within_100_characters') }}">
                                                 <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
                                             </span></label>
-                                            <input type="text"  maxlength="100" name="fixed_module_sub_title[]" value="{{$fixed_module_sub_title_translate[$lang]['value']??''}}" class="form-control" placeholder="{{translate('Ex_:_Enjoy_all_services_in_one_platform')}}">
+                                            <input id="fixed_module_sub_title{{$lang}}" type="text"  maxlength="100" name="fixed_module_sub_title[]" value="{{$fixed_module_sub_title_translate[$lang]['value']??''}}" class="form-control" placeholder="{{translate('Ex_:_Enjoy_all_services_in_one_platform')}}">
                                         </div>
                                     </div>
                                     <div class="alert alert-warning d-flex mt-4 mb-0">
@@ -333,30 +323,19 @@
                             </h5>
                             <div class="card">
                                 <div class="card-body">
-                                    {{-- <div class="d-flex justify-content-end">
-                                        <div class="blinkings d-block">
-                                            <i class="tio-info-outined"></i>
-                                            <div class="business-notes">
-                                                <h6><img src="{{asset('public/assets/admin/img/notes.png')}}" alt=""> {{translate('Note')}}</h6>
-                                                <div>
-                                                    {{translate('To Change the illustrations & primary colour please change primary colour according to the ')}}
-                                                </div>
-                                                <a href="#" class="text-underline text-info">documentation</a>
-                                            </div>
-                                        </div>
-                                    </div> --}}
+
                                     <div class="row g-3">
                                         <div class="col-sm-6">
-                                            <label class="form-label">{{translate('Title')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_40_characters') }}">
+                                            <label for="fixed_referal_title{{$lang}}"  class="form-label">{{translate('Title')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_40_characters') }}">
                                                 <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
                                             </span></label>
-                                            <input type="text"  maxlength="40" name="fixed_referal_title[]" value="{{$fixed_referal_title_translate[$lang]['value']??''}}" class="form-control" placeholder="{{translate('Ex_:_Earn_Point')}}">
+                                            <input id="fixed_referal_title{{$lang}}"  type="text"  maxlength="40" name="fixed_referal_title[]" value="{{$fixed_referal_title_translate[$lang]['value']??''}}" class="form-control" placeholder="{{translate('Ex_:_Earn_Point')}}">
                                         </div>
                                         <div class="col-sm-6">
-                                            <label class="form-label">{{translate('Sub Title')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_sub_title_within_80_characters') }}">
+                                            <label for="fixed_referal_sub_title{{$lang}}"  class="form-label">{{translate('Sub Title')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_sub_title_within_80_characters') }}">
                                                 <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
                                             </span></label>
-                                            <input type="text"  maxlength="80" name="fixed_referal_sub_title[]" value="{{$fixed_referal_sub_title_translate[$lang]['value']??''}}" class="form-control" placeholder="{{translate('Ex_:_By_referring_your_friend')}}">
+                                            <input id="fixed_referal_sub_title{{$lang}}"  type="text"  maxlength="80" name="fixed_referal_sub_title[]" value="{{$fixed_referal_sub_title_translate[$lang]['value']??''}}" class="form-control" placeholder="{{translate('Ex_:_By_referring_your_friend')}}">
                                         </div>
                                     </div>
                                 </div>
@@ -368,16 +347,16 @@
                                 <div class="card-body">
                                     <div class="row g-3">
                                         <div class="col-sm-6">
-                                            <label class="form-label">{{translate('Title')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_40_characters') }}">
+                                            <label for="fixed_newsletter_title{{$lang}}" class="form-label">{{translate('Title')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_40_characters') }}">
                                                         <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
                                                     </span></label>
-                                            <input type="text"  maxlength="40" name="fixed_newsletter_title[]" value="{{$fixed_newsletter_title_translate[$lang]['value']??''}}" class="form-control" placeholder="{{translate('Ex_:_Sign_Up_to_Our_Newsletter')}}">
+                                            <input id="fixed_newsletter_title{{$lang}}" type="text"  maxlength="40" name="fixed_newsletter_title[]" value="{{$fixed_newsletter_title_translate[$lang]['value']??''}}" class="form-control" placeholder="{{translate('Ex_:_Sign_Up_to_Our_Newsletter')}}">
                                         </div>
                                         <div class="col-sm-6">
-                                            <label class="form-label">{{translate('Sub Title')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_sub_title_within_80_characters') }}">
+                                            <label for="fixed_newsletter_sub_title{{$lang}}" class="form-label">{{translate('Sub Title')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_sub_title_within_80_characters') }}">
                                                         <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
                                                     </span></label>
-                                            <input type="text"  maxlength="80" name="fixed_newsletter_sub_title[]" value="{{$fixed_newsletter_sub_title_translate[$lang]['value']??''}}" class="form-control" placeholder="{{translate('Ex_:_Receive_Latest_News,_Updates_and_Many_Other_News_Every_Week')}}">
+                                            <input id="fixed_newsletter_sub_title{{$lang}}" type="text"  maxlength="80" name="fixed_newsletter_sub_title[]" value="{{$fixed_newsletter_sub_title_translate[$lang]['value']??''}}" class="form-control" placeholder="{{translate('Ex_:_Receive_Latest_News,_Updates_and_Many_Other_News_Every_Week')}}">
                                         </div>
                                     </div>
                                 </div>
@@ -389,10 +368,10 @@
                                 <div class="card-body">
                                     <div class="row g-3">
                                         <div class="col-12">
-                                            <label class="form-label">{{translate('Title')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_180_characters') }}">
+                                            <label for="fixed_footer_article_title{{$lang}}" class="form-label">{{translate('Title')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_180_characters') }}">
                                                         <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
                                                     </span></label>
-                                            <input type="text"  maxlength="180" name="fixed_footer_article_title[]" value="{{$fixed_footer_article_title_translate[$lang]['value']??''}}" class="form-control" placeholder="{{translate('Ex_:_6amMart_is_a_complete_package!__It`s_time_to_empower_your_multivendor_online_business_with__powerful_features!')}}">
+                                            <input id="fixed_footer_article_title{{$lang}}" type="text"  maxlength="180" name="fixed_footer_article_title[]" value="{{$fixed_footer_article_title_translate[$lang]['value']??''}}" class="form-control" placeholder="{{translate('Ex_:_6amMart_is_a_complete_package!__It`s_time_to_empower_your_multivendor_online_business_with__powerful_features!')}}">
                                         </div>
                                     </div>
                                 </div>
@@ -409,16 +388,16 @@
                             <div class="card-body">
                                 <div class="row g-3">
                                     <div class="col-sm-6">
-                                        <label class="form-label">{{translate('Title')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_50_characters') }}">
+                                        <label for="fixed_header_title" class="form-label">{{translate('Title')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_50_characters') }}">
                                                 <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
                                             </span></label>
-                                        <input type="text"  maxlength="50" name="fixed_header_title[]" class="form-control" placeholder="{{translate('Ex_:_Manage_your_daily_life_on_one_platform')}}">
+                                        <input  id="fixed_header_title" type="text"  maxlength="50" name="fixed_header_title[]" class="form-control" placeholder="{{translate('Ex_:_Manage_your_daily_life_on_one_platform')}}">
                                     </div>
                                     <div class="col-sm-6">
-                                        <label class="form-label">{{translate('Sub Title')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_sub_title_within_50_characters') }}">
+                                        <label for="fixed_header_sub_title" class="form-label">{{translate('Sub Title')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_sub_title_within_50_characters') }}">
                                                 <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
                                             </span></label>
-                                        <input type="text"  maxlength="50" name="fixed_header_sub_title[]" class="form-control" placeholder="{{translate('Ex_:_More_than_just_a_reliable_eCommerce_platform')}}">
+                                        <input id="fixed_header_sub_title" type="text"  maxlength="50" name="fixed_header_sub_title[]" class="form-control" placeholder="{{translate('Ex_:_More_than_just_a_reliable_eCommerce_platform')}}">
                                     </div>
                                 </div>
                             </div>
@@ -430,16 +409,16 @@
                             <div class="card-body">
                                 <div class="row g-3">
                                     <div class="col-sm-6">
-                                        <label class="form-label">{{translate('Title')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_50_characters') }}">
+                                        <label for="fixed_module_title" class="form-label">{{translate('Title')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_50_characters') }}">
                                                 <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
                                             </span></label>
-                                        <input type="text"  maxlength="50" name="fixed_module_title[]" class="form-control" placeholder="{{translate('Ex_:_Your_eCommerce_venture_starts_here')}}">
+                                        <input id="fixed_module_title" type="text"  maxlength="50" name="fixed_module_title[]" class="form-control" placeholder="{{translate('Ex_:_Your_eCommerce_venture_starts_here')}}">
                                     </div>
                                     <div class="col-sm-6">
-                                        <label class="form-label">{{translate('Sub Title')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_sub_title_within_50_characters') }}">
+                                        <label for="fixed_module_sub_title" class="form-label">{{translate('Sub Title')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_sub_title_within_50_characters') }}">
                                                 <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
                                             </span></label>
-                                        <input type="text"  maxlength="50" name="fixed_module_sub_title[]" class="form-control" placeholder="{{translate('Ex_:_Enjoy_all_services_in_one_platform')}}">
+                                        <input type="text"  id="fixed_module_sub_title" maxlength="50" name="fixed_module_sub_title[]" class="form-control" placeholder="{{translate('Ex_:_Enjoy_all_services_in_one_platform')}}">
                                     </div>
                                 </div>
                                 <div class="alert alert-warning d-flex mt-4 mb-0">
@@ -455,32 +434,22 @@
                         <h5 class="card-title mb-3 mt-3">
                             <span class="card-header-icon mr-2"><i class="tio-calendar"></i></span> <span>{{translate('Referral & Earning')}}</span>
                         </h5>
+
                         <div class="card">
                             <div class="card-body">
-                                {{-- <div class="d-flex justify-content-end">
-                                    <div class="blinkings d-block">
-                                        <i class="tio-info-outined"></i>
-                                        <div class="business-notes">
-                                            <h6><img src="{{asset('public/assets/admin/img/notes.png')}}" alt=""> {{translate('Note')}}</h6>
-                                            <div>
-                                                {{translate('To Change the illustrations & primary colour please change primary colour according to the ')}}
-                                            </div>
-                                            <a href="#" class="text-underline text-info">documentation</a>
-                                        </div>
-                                    </div>
-                                </div> --}}
+
                                 <div class="row g-3">
                                     <div class="col-sm-6">
-                                        <label class="form-label">{{translate('Title')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_50_characters') }}">
+                                        <label for="fixed_ref_title" class="form-label">{{translate('Title')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_50_characters') }}">
                                                 <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
                                             </span></label>
-                                        <input type="text"  maxlength="50" name="fixed_referal_title[]" class="form-control" placeholder="{{translate('Ex_:_Earn_Point')}}">
+                                        <input id="fixed_ref_title" type="text"  maxlength="50" name="fixed_referal_title[]" class="form-control" placeholder="{{translate('Ex_:_Earn_Point')}}">
                                     </div>
                                     <div class="col-sm-6">
-                                        <label class="form-label">{{translate('Sub Title')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_sub_title_within_50_characters') }}">
+                                        <label for="fixed_ref_sub_title" class="form-label">{{translate('Sub Title')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_sub_title_within_50_characters') }}">
                                                 <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
                                             </span></label>
-                                        <input type="text"  maxlength="50" name="fixed_referal_sub_title[]" class="form-control" placeholder="{{translate('Ex_:_By_referring_your_friend')}}">
+                                        <input id="fixed_ref_sub_title" type="text"  maxlength="50" name="fixed_referal_sub_title[]" class="form-control" placeholder="{{translate('Ex_:_By_referring_your_friend')}}">
                                     </div>
                                 </div>
                             </div>
@@ -492,16 +461,16 @@
                             <div class="card-body">
                                 <div class="row g-3">
                                     <div class="col-sm-6">
-                                        <label class="form-label">{{translate('Title')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_50_characters') }}">
+                                        <label for="fixed_newsletter_title" class="form-label">{{translate('Title')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_50_characters') }}">
                                                     <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
                                                 </span></label>
-                                        <input type="text"  maxlength="50" name="fixed_newsletter_title[]" class="form-control" placeholder="{{translate('Ex_:_Sign_Up_to_Our_Newsletter')}}">
+                                        <input id="fixed_newsletter_title" type="text"  maxlength="50" name="fixed_newsletter_title[]" class="form-control" placeholder="{{translate('Ex_:_Sign_Up_to_Our_Newsletter')}}">
                                     </div>
                                     <div class="col-sm-6">
-                                        <label class="form-label">{{translate('Sub Title')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_sub_title_within_50_characters') }}">
+                                        <label for="fixed_newsletter_sub_title" class="form-label">{{translate('Sub Title')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_sub_title_within_50_characters') }}">
                                                     <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
                                                 </span></label>
-                                        <input type="text"  maxlength="50" name="fixed_newsletter_sub_title[]"  class="form-control" placeholder="{{translate('Ex_:_Receive_Latest_News,_Updates_and_Many_Other_News_Every_Week')}}">
+                                        <input id="fixed_newsletter_sub_title" type="text"  maxlength="50" name="fixed_newsletter_sub_title[]"  class="form-control" placeholder="{{translate('Ex_:_Receive_Latest_News,_Updates_and_Many_Other_News_Every_Week')}}">
                                     </div>
                                 </div>
                             </div>
@@ -513,10 +482,10 @@
                             <div class="card-body">
                                 <div class="row g-3">
                                     <div class="col-12">
-                                        <label class="form-label">{{translate('Title')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_50_characters') }}">
+                                        <label for="fixed_footer_article_title" class="form-label">{{translate('Title')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_50_characters') }}">
                                                     <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
                                                 </span></label>
-                                        <input type="text"  maxlength="50" name="fixed_footer_article_title[]"  class="form-control" placeholder="{{translate('Ex_:_6amMart_is_a_complete_package!__It`s_time_to_empower_your_multivendor_online_business_with__powerful_features!')}}">
+                                        <input id="fixed_footer_article_title" type="text"  maxlength="50" name="fixed_footer_article_title[]"  class="form-control" placeholder="{{translate('Ex_:_6amMart_is_a_complete_package!__It`s_time_to_empower_your_multivendor_online_business_with__powerful_features!')}}">
                                     </div>
                                 </div>
                             </div>
@@ -532,20 +501,30 @@
                     <div class="__bg-F8F9FC-card">
                         <div class="form-group mb-md-0">
                             <div class="d-flex justify-content-between align-items-center mb-2">
-                                <label class="form-label text-capitalize m-0">
+                                <label for="web_app_url" class="form-label text-capitalize m-0">
                                     {{translate('Web Link')}}
-                                    {{-- <span class="input-label-secondary text--title" data-toggle="tooltip" data-placement="right" data-original-title="Lorem ipsum">
-                                        <i class="tio-info-outined"></i>
-                                    </span> --}}
+
                                 </label>
                                 <label class="toggle-switch toggle-switch-sm m-0">
-                                    <input type="checkbox" name="web_app_url_status" onclick="toogleModal(event,'apple-dm-status','apple-on.png','apple-off.png','{{translate('Browse Web Button Enabled for Landing Page')}}','{{translate('Browse Web Button Disabled for Landing Page')}}',`<p>{{translate('Browse Web button is enabled now everyone can use or see the button')}}</p>`,`<p>{{translate('Browse Web button is disabled now no one can use or see the button')}}</p>`)" id="apple-dm-status" class="status toggle-switch-input" value="1" {{(isset($fixed_link) && $fixed_link['web_app_url_status'])?'checked':''}}>
+                                    <input type="checkbox" name="web_app_url_status"
+                                           data-id="apple-dm-status"
+                                           data-type="toggle"
+                                           data-image-on="{{ asset('/public/assets/admin/img/modal/apple-on.png') }}"
+                                           data-image-off="{{ asset('/public/assets/admin/img/modal/apple-off.png') }}"
+                                           data-title-on="{{ translate('Browse Web Button Enabled for Landing Page') }}"
+                                           data-title-off="{{ translate('Browse Web Button Disabled for Landing Page') }}"
+                                           data-text-on="<p>{{ translate('Browse Web button is enabled now everyone can use or see the button') }}</p>"
+                                           data-text-off="<p>{{ translate('Browse Web button is disabled now no one can use or see the button') }}</p>"
+                                           class="status toggle-switch-input dynamic-checkbox-toggle"
+
+
+                                           value="1" {{(isset($fixed_link) && $fixed_link['web_app_url_status'])?'checked':''}}>
                                     <span class="toggle-switch-label text mb-0">
                                         <span class="toggle-switch-indicator"></span>
                                     </span>
                                 </label>
                             </div>
-                            <input type="text" placeholder="{{translate('Ex: https://6ammart-web.6amtech.com/')}}" class="form-control h--45px" name="web_app_url" value="{{isset($fixed_link['web_app_url']) ? $fixed_link['web_app_url']:''}}">
+                            <input id="web_app_url" type="text" placeholder="{{translate('Ex: https://6ammart-web.6amtech.com/')}}" class="form-control h--45px" name="web_app_url" value="{{ $fixed_link['web_app_url'] ?? ''}}">
                         </div>
                     </div>
                 </div>
@@ -573,26 +552,3 @@
     <!-- How it Works -->
     @include('admin-views.business-settings.landing-page-settings.partial.how-it-work')
 @endsection
-@push('script_2')
-<script>
-    $(".lang_link").click(function(e){
-        e.preventDefault();
-        $(".lang_link").removeClass('active');
-        $(".lang_form").addClass('d-none');
-        $(this).addClass('active');
-
-        let form_id = this.id;
-        let lang = form_id.substring(0, form_id.length - 5);
-        console.log(lang);
-        $("#"+lang+"-form").removeClass('d-none');
-        if(lang == '{{$defaultLang}}')
-        {
-            $(".from_part_2").removeClass('d-none');
-        }
-        else
-        {
-            $(".from_part_2").addClass('d-none');
-        }
-    });
-</script>
-@endpush

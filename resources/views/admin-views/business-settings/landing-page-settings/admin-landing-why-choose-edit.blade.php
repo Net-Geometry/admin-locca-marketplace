@@ -55,25 +55,18 @@
                 </h5>
                 <div class="card mb-3">
                     <div class="card-body">
-                            {{-- <div class="d-flex justify-content-end">
-                                <div class="text--primary-2 py-1 d-flex flex-wrap align-items-center" type="button" data-toggle="modal" data-target="#criteria-section">
-                                    <strong class="mr-2">{{translate('See_the_changes_here.')}}</strong>
-                                    <div>
-                                        <i class="tio-intersect"></i>
-                                    </div>
-                                </div>
-                            </div> --}}
+
                             <div class="row g-3">
                                 @if ($language)
                                 <div class="col-sm-6 lang_form default-form">
-                                    <label class="form-label">{{translate('Title')}} ({{ translate('messages.default') }})<span
+                                    <label for="title" class="form-label">{{translate('Title')}} ({{ translate('messages.default') }})<span
                                                         class="form-label-secondary" data-toggle="tooltip"
                                                         data-placement="right"
                                                         data-original-title="{{ translate('Write_the_title_within_40_characters') }}">
                                                         <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
                                                             alt="">
                                                     </span></label>
-                                                <input type="text" maxlength="40" name="title[]" value="{{ $criteria['title']??'' }}" class="form-control" placeholder="{{translate('messages.title_here...')}}">
+                                                <input id="title" type="text" maxlength="40" name="title[]" value="{{ $criteria['title']??'' }}" class="form-control" placeholder="{{translate('messages.title_here...')}}">
                                 </div>
                                 <input type="hidden" name="lang[]" value="default">
                                     @foreach(json_decode($language) as $lang)
@@ -89,21 +82,21 @@
                                     }
                                 ?>
                                     <div class="col-sm-6 d-none lang_form" id="{{$lang}}-form1">
-                                        <label class="form-label">{{translate('Title')}} ({{strtoupper($lang)}})</label>
-                                        <input type="text" name="title[]" value="{{ $translate[$lang]['title']??'' }}" class="form-control" placeholder="{{translate('messages.title_here...')}}">
+                                        <label for="title{{$lang}}" class="form-label">{{translate('Title')}} ({{strtoupper($lang)}})</label>
+                                        <input id="title{{$lang}}" type="text" name="title[]" value="{{ $translate[$lang]['title']??'' }}" class="form-control" placeholder="{{translate('messages.title_here...')}}">
                                     </div>
                                         <input type="hidden" name="lang[]" value="{{$lang}}">
                                     @endforeach
                                 @else
                                 <div class="col-sm-6">
-                                    <label class="form-label">{{translate('Title')}}<span
+                                    <label for="title" class="form-label">{{translate('Title')}}<span
                                                         class="form-label-secondary" data-toggle="tooltip"
                                                         data-placement="right"
                                                         data-original-title="{{ translate('Write_the_title_within_40_characters') }}">
                                                         <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
                                                             alt="">
                                                     </span></label>
-                                                <input type="text" maxlength="40" name="title[]" class="form-control" placeholder="{{translate('messages.title_here...')}}">
+                                                <input id="title" type="text" maxlength="40" name="title[]" class="form-control" placeholder="{{translate('messages.title_here...')}}">
                                 </div>
                                     <input type="hidden" name="lang[]" value="default">
                                 @endif
@@ -121,9 +114,11 @@
                                         </div>
                                           <input type="file"  name="image" hidden>
                                             @if (isset($criteria['image']))
-                                                <span id="fixed_header_image" class="remove_image_button"
-                                                    onclick="toogleStatusModal(event,'fixed_header_image','mail-success','mail-warning','{{translate('Important!')}}','{{translate('Warning!')}}',`<p>{{translate('Are_you_sure_you_want_to_remove_this_image')}}</p>`,`<p>{{translate('Are_you_sure_you_want_to_remove_this_image.')}}</p>`)"
-                                                    > <i class="tio-clear"></i></span>
+                                                <span id="fixed_header_image" class="remove_image_button remove-image"
+                                                      data-id="fixed_header_image"
+                                                      data-title="{{translate('Warning!')}}"
+                                                      data-text="<p>{{translate('Are_you_sure_you_want_to_remove_this_image_?')}}</p>"
+                                                > <i class="tio-clear"></i></span>
                                                 @endif
                                             </div>
                                     </label>
@@ -134,56 +129,20 @@
                                 <button type="submit" onclick="" class="btn btn--primary mb-2">{{translate('messages.Update')}}</button>
                             </div>
                         </div>
+                        </div>
                     </form>
                 </div>
 
-
-            <!--  Special Criteria Section View -->
-            <div class="modal fade" id="criteria-section">
-                <div class="modal-dialog modal-lg warning-modal">
-                    <div class="modal-content">
-                        <div class="modal-body">
-                            <div class="mb-3">
-                                <h3 class="modal-title mb-3">{{translate(' Special Criteria')}}</h3>
-                            </div>
-                            <img src="{{asset('/public/assets/admin/img/zone-instruction.png')}}" alt="admin/img" class="w-100">
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
-</div>
+<form  id="fixed_header_image_form" action="{{ route('admin.remove_image') }}" method="post">
+    @csrf
+    <input type="hidden" name="id" value="{{  $criteria?->id}}" >
+    <input type="hidden" name="model_name" value="AdminSpecialCriteria" >
+    <input type="hidden" name="image_path" value="special_criteria" >
+    <input type="hidden" name="field_name" value="image" >
+</form>
     <!-- How it Works -->
     @include('admin-views.business-settings.landing-page-settings.partial.how-it-work')
 @endsection
-@push('script_2')
-<script>
-    $(".lang_link").click(function(e){
-        e.preventDefault();
-        $(".lang_link").removeClass('active');
-        $(".lang_form").addClass('d-none');
-        $(this).addClass('active');
 
-        let form_id = this.id;
-        let lang = form_id.substring(0, form_id.length - 5);
-
-        console.log(lang);
-
-        $("#"+lang+"-form").removeClass('d-none');
-        $("#"+lang+"-form1").removeClass('d-none');
-        if(lang == '{{$defaultLang}}')
-        {
-            $(".from_part_2").removeClass('d-none');
-        }
-        if(lang == 'default')
-        {
-            $(".default-form").removeClass('d-none');
-        }
-        else
-        {
-            $(".from_part_2").addClass('d-none');
-        }
-    });
-</script>
-@endpush

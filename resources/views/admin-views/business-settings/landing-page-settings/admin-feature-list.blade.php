@@ -133,23 +133,23 @@
                             @else
                                 <div class="row g-3">
                                     <div class="col-sm-6">
-                                        <label class="form-label">{{ translate('Title') }}<span
+                                        <label for="feature_title" class="form-label">{{ translate('Title') }}<span
                                                 class="form-label-secondary" data-toggle="tooltip" data-placement="right"
                                                 data-original-title="{{ translate('Write_the_title_within_80_characters') }}">
                                                 <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
                                                     alt="">
                                             </span></label>
-                                        <input type="text" maxlength="80" name="feature_title[]" class="form-control"
+                                        <input id="feature_title" type="text" maxlength="80" name="feature_title[]" class="form-control"
                                             placeholder="{{ translate('Ex_:_Remarkable_Features_that_You_Can_Count') }}">
                                     </div>
                                     <div class="col-sm-6">
-                                        <label class="form-label">{{ translate('Short Description') }}<span
+                                        <label for="feature_short_description" class="form-label">{{ translate('Short Description') }}<span
                                                 class="form-label-secondary" data-toggle="tooltip" data-placement="right"
                                                 data-original-title="{{ translate('Write_the_title_within_240_characters') }}">
                                                 <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
                                                     alt="">
                                             </span></label>
-                                        <input type="text" maxlength="240" name="feature_short_description[]"
+                                        <input id="feature_short_description" type="text" maxlength="240" name="feature_short_description[]"
                                             class="form-control"
                                             placeholder="{{ translate('Ex_:_Jam-packed_with_outstanding_features…') }}">
                                     </div>
@@ -174,7 +174,7 @@
                                     <div class="col-md-6 lang_form default-form">
                                         <div class="row g-3">
                                             <div class="col-12">
-                                                <label class="form-label">{{ translate('Title') }}
+                                                <label for="title" class="form-label">{{ translate('Title') }}
                                                     ({{ translate('messages.default') }})<span
                                                         class="form-label-secondary" data-toggle="tooltip"
                                                         data-placement="right"
@@ -182,11 +182,11 @@
                                                         <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
                                                             alt="">
                                                     </span></label>
-                                                <input type="text" maxlength="20" name="title[]" class="form-control"
+                                                <input id="title" type="text" maxlength="20" name="title[]" class="form-control"
                                                     placeholder="{{ translate('Ex_:_Shopping') }}">
                                             </div>
                                             <div class="col-12">
-                                                <label class="form-label">{{ translate('Sub Title') }}
+                                                <label for="sub_title" class="form-label">{{ translate('Sub Title') }}
                                                     ({{ translate('messages.default') }})<span
                                                         class="form-label-secondary" data-toggle="tooltip"
                                                         data-placement="right"
@@ -194,7 +194,7 @@
                                                         <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
                                                             alt="">
                                                     </span></label>
-                                                <input type="text" maxlength="80" name="sub_title[]"
+                                                <input id="sub_title" type="text" maxlength="80" name="sub_title[]"
                                                     class="form-control"
                                                     placeholder="{{ translate('Ex_:_Best_shopping_experience') }}">
                                             </div>
@@ -205,7 +205,7 @@
                                         <div class="col-md-6 d-none lang_form" id="{{ $lang }}-form1">
                                             <div class="row g-3">
                                                 <div class="col-12">
-                                                    <label class="form-label">{{ translate('Title') }}
+                                                    <label for="title{{ $lang }}" class="form-label">{{ translate('Title') }}
                                                         ({{ strtoupper($lang) }})<span
                                                         class="form-label-secondary" data-toggle="tooltip"
                                                         data-placement="right"
@@ -213,11 +213,11 @@
                                                         <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
                                                             alt="">
                                                     </span></label>
-                                                <input type="text" maxlength="20" name="title[]" class="form-control"
+                                                <input id="title{{ $lang }}" type="text" maxlength="20" name="title[]" class="form-control"
                                                         placeholder="{{ translate('Ex_:_Shopping') }}">
                                                 </div>
                                                 <div class="col-12">
-                                                    <label class="form-label">{{ translate('Sub Title') }}
+                                                    <label for="sub_title{{ $lang }}" class="form-label">{{ translate('Sub Title') }}
                                                         ({{ strtoupper($lang) }})<span
                                                         class="form-label-secondary" data-toggle="tooltip"
                                                         data-placement="right"
@@ -225,7 +225,7 @@
                                                         <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
                                                             alt="">
                                                     </span></label>
-                                                <input type="text" maxlength="80" name="sub_title[]" class="form-control"
+                                                <input id="sub_title{{ $lang }}" type="text" maxlength="80" name="sub_title[]" class="form-control"
                                                         placeholder="{{ translate('Ex_:_Best_shopping_experience') }}">
                                                 </div>
                                             </div>
@@ -236,25 +236,25 @@
                                     <div class="col-md-6">
                                         <div class="row g-3">
                                             <div class="col-12">
-                                                <label class="form-label">{{ translate('Title') }}<span
+                                                <label for="title" class="form-label">{{ translate('Title') }}<span
                                                         class="form-label-secondary" data-toggle="tooltip"
                                                         data-placement="right"
                                                         data-original-title="{{ translate('Write_the_title_within_50_characters') }}">
                                                         <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
                                                             alt="">
                                                     </span></label>
-                                                <input type="text" maxlength="50" name="title[]" class="form-control"
+                                                <input id="title" type="text" maxlength="50" name="title[]" class="form-control"
                                                     placeholder="{{ translate('Ex_:_Shopping') }}">
                                             </div>
                                             <div class="col-12">
-                                                <label class="form-label">{{ translate('Sub Title') }}<span
+                                                <label for="sub_title" class="form-label">{{ translate('Sub Title') }}<span
                                                         class="form-label-secondary" data-toggle="tooltip"
                                                         data-placement="right"
                                                         data-original-title="{{ translate('Write_the_title_within_50_characters') }}">
                                                         <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
                                                             alt="">
                                                     </span></label>
-                                                <input type="text" maxlength="50" name="sub_title[]"
+                                                <input id="sub_title" type="text" maxlength="50" name="sub_title[]"
                                                     class="form-control"
                                                     placeholder="{{ translate('Ex_:_Best_shopping_experience') }}">
                                             </div>
@@ -265,7 +265,7 @@
 
                                 <div class="col-md-6">
                                     <label class="form-label d-block mb-2">
-                                        {{ translate('messages.Image') }} <span class="text--primary">(size: 1:1)</span>
+                                        {{ translate('messages.Image') }} <span class="text--primary">{{translate('(size:_1:1)')}}</span>
                                     </label>
                                     <label class="upload-img-3 m-0">
                                         <div class="img">
@@ -327,8 +327,8 @@
                                             <td>
                                                 <span class="d-block font-size-sm text-body">
                                                     {{ $feature->sub_title }}
-                        </div>
-                        </td>
+
+                                            </td>
                         <td>
                             <img src="{{ asset('storage/app/public/admin_feature') }}/{{ $feature->image }}"
                                 onerror="this.src='{{ asset('/public/assets/admin/img/upload-3.png') }}'"
@@ -336,9 +336,20 @@
                         </td>
                         <td>
                             <label class="toggle-switch toggle-switch-sm">
-                                <input type="checkbox" class="toggle-switch-input"
-                                    onclick="toogleStatusModal(event,'status-{{ $feature->id }}','feature-list-on.png','feature-list-off.png','{{ translate('By Turning ON ') }} <strong>{{ translate('Feature List Section') }}','{{ translate('By Turning OFF ') }} <strong>{{ translate('Feature List Section') }}',`<p>{{ translate('Feature list is enabled. You can now access its features and functionality') }}</p>`,`<p>{{ translate('Feature list will be disabled. You can enable it in the settings to access its features and functionality') }}</p>`)"
-                                    id="status-{{ $feature->id }}" {{ $feature->status ? 'checked' : '' }}>
+                                <input type="checkbox"
+
+                                    data-id="status-{{ $feature->id }}"
+                                    data-type="toggle"
+                                    data-image-on="{{ asset('/public/assets/admin/img/modal/feature-list-on.png') }}"
+                                    data-image-off="{{ asset('/public/assets/admin/img/modal/feature-list-off.png') }}"
+                                    data-title-on="{{ translate('By Turning ON ') }} <strong>{{ translate('Feature List Section') }}"
+                                    data-title-off="{{ translate('By Turning OFF ') }} <strong>{{ translate('Feature List Section') }}"
+                                    data-text-on="<p>{{ translate('Feature list is enabled. You can now access its features and functionality') }}</p>"
+                                    data-text-off="<p>{{ translate('Feature list will be disabled. You can enable it in the settings to access its features and functionality') }}</p>"
+                                    class="status toggle-switch-input dynamic-checkbox"
+
+
+                                    {{ $feature->status ? 'checked' : '' }}>
                                 <span class="toggle-switch-label">
                                     <span class="toggle-switch-indicator"></span>
                                 </span>
@@ -355,8 +366,11 @@
                                     href="{{ route('admin.business-settings.feature-edit', [$feature['id']]) }}">
                                     <i class="tio-edit"></i>
                                 </a>
-                                <a class="btn action-btn btn--danger btn-outline-danger" href="javascript:"
-                                    onclick="form_alert('banner-{{ $feature['id'] }}','{{ translate('Want to delete this banner ?') }}')"
+                                <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:"
+
+                                   data-id="banner-{{ $feature['id'] }}"
+                                   data-message="{{ translate('Want to delete this banner ?') }}"
+
                                     title="{{ translate('messages.delete_banner') }}"><i
                                         class="tio-delete-outlined"></i>
                                 </a>
@@ -388,6 +402,6 @@
         </div>
     </div>
     </div>
-
+    @include('admin-views.business-settings.landing-page-settings.partial.how-it-work')
 @endsection
 
