@@ -265,41 +265,5 @@
 @endsection
 
 @push('script_2')
-<script>
-    $('#select-all').on('change', function(){
-        if(this.checked === true) {
-            $('.check--item-wrapper .check-item .form-check-input').attr('checked', true)
-        } else {
-            $('.check--item-wrapper .check-item .form-check-input').attr('checked', false)
-        }
-    })
-    $('.check--item-wrapper .check-item .form-check-input').on('change', function(){
-        if(this.checked === true) {
-            $(this).attr('checked', true)
-        } else {
-            $(this).attr('checked', false)
-        }
-    })
-</script>
-<script>
-    $(".lang_link").click(function(e){
-        e.preventDefault();
-        $(".lang_link").removeClass('active');
-        $(".lang_form").addClass('d-none');
-        $(this).addClass('active');
-
-        let form_id = this.id;
-        let lang = form_id.substring(0, form_id.length - 5);
-        console.log(lang);
-        $("#"+lang+"-form").removeClass('d-none');
-        if(lang == 'en')
-        {
-            $("#from_part_2").removeClass('d-none');
-        }
-        else
-        {
-            $("#from_part_2").addClass('d-none');
-        }
-    })
-</script>
+    <script src="{{asset('public/assets/admin')}}/js/view-pages/custom-role-index.js"></script>
 @endpush

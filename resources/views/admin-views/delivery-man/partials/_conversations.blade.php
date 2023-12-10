@@ -58,6 +58,7 @@
 </div>
 
 <script>
+    "use strict";
     $(document).ready(function () {
         $('.scroll-down').animate({
             scrollTop: $('#scroll-here').offset().top

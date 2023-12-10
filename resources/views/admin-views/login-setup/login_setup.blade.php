@@ -18,12 +18,6 @@
                     {{translate('messages.login_page_setup')}}
                 </span>
             </h1>
-            {{-- <div class="text--primary-2 d-flex flex-wrap align-items-center" type="button" data-toggle="modal" data-target="#how-it-works">
-                <strong class="mr-2">{{translate('See_how_it_works!')}}</strong>
-                <div class="blinkings">
-                    <i class="tio-info-outined"></i>
-                </div>
-            </div> --}}
         </div>
         <!-- End Page Header -->
 
@@ -38,8 +32,6 @@
                     <div class="row g-3">
                         <div class="col-md-12">
                             <h5 class="card-title mb-3">
-                                {{-- <img src="{{asset('/public/assets/admin/img/andriod.png')}}" class="mr-2" alt=""> --}}
-                                {{-- {{ translate('For_admin') }} --}}
                             </h5>
                             <input type="text" hidden  name="type" value="admin">
                             <div class="__bg-F8F9FC-card">
@@ -78,8 +70,6 @@
                     <div class="row g-3">
                         <div class="col-md-12">
                             <h5 class="card-title mb-3">
-                                {{-- <img src="{{asset('/public/assets/admin/img/andriod.png')}}" class="mr-2" alt=""> --}}
-                                {{-- {{ translate('For_admin_employee') }} --}}
                             </h5>
                             <input type="text" hidden  name="type" value="admin_employee">
 
@@ -119,8 +109,6 @@
                     <div class="row g-3">
                         <div class="col-md-12">
                             <h5 class="card-title mb-3">
-                                {{-- <img src="{{asset('/public/assets/admin/img/andriod.png')}}" class="mr-2" alt=""> --}}
-                                {{-- {{ translate('For_stores') }} --}}
                             </h5>
                             <input type="text" hidden  name="type" value="store">
 
@@ -159,8 +147,6 @@
                     <div class="row g-3">
                         <div class="col-md-12">
                             <h5 class="card-title mb-3">
-                                {{-- <img src="{{asset('/public/assets/admin/img/andriod.png')}}" class="mr-2" alt=""> --}}
-                                {{-- {{ translate('For_store_employee') }} --}}
                             </h5>
                             <input type="text" hidden  name="type" value="store_employee">
 
@@ -194,54 +180,6 @@
 
 
     </div>
-
-    {{-- <div class="modal fade" id="how-it-works">
-        <div class="modal-dialog status-warning-modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">
-                        <span aria-hidden="true" class="tio-clear"></span>
-                    </button>
-                </div>
-                <div class="modal-body pb-5 pt-0">
-                    <div class="single-item-slider owl-carousel">
-                        <div class="item">
-                            <div class="mb-20">
-                                <div class="text-center">
-                                    <img src="{{asset('/public/assets/admin/img/app.png')}}" alt="" class="mb-20">
-                                    <h5 class="modal-title">{{translate('What is App Version ?')}}</h5>
-                                </div>
-                                <ul>
-                                    <li>
-                                        {{ translate('This_version_is_not_the_version_of_your_play_store_or_app_store_version.') }}
-                                    </li>
-                                    <li>
-                                        {{ translate('App_version_means_the_APP_VERSION_variable_value_exist_in_the_app_constant.dirt_file') }}
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="mb-20">
-                                <div class="text-center">
-                                    <img src="{{asset('/public/assets/admin/img/app.png')}}" alt="" class="mb-20">
-                                    <h5 class="modal-title">{{translate('App Download Link')}}</h5>
-                                </div>
-                                <ul>
-                                    <li>
-                                        {{ translate('App_download_link_represents_the_link_from_where_the_user_will_update_the_app_after_clicking_update_app_button_from_their_app') }}
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="d-flex justify-content-center">
-                        <div class="slide-counter"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> --}}
 
 @endsection
 

@@ -59,11 +59,6 @@
 
                             <div class="pl-2 d-flex gap-2 align-items-center mb-3">
                                 <strong class="">{{$contact->subject}}</strong>
-                                {{-- @if($contact->seen==1)
-                                    <label class="badge badge-soft-info mb-0">{{translate('messages.Seen')}}</label>
-                                @else
-                                    <label class="badge badge-soft-info mb-0">{{translate('messages.Not_Seen_Yet')}}</label>
-                                @endif --}}
                             </div>
                             <table class="table table-user-information table-borderless mb-0">
                                 <tbody>
@@ -86,17 +81,6 @@
                             </h5>
                         </div>
                         <div class="card-body d-flex flex-column gap-2">
-                            {{-- <div class="mb-3">
-                                <h5 class="px-2 py-1 badge-soft-info rounded mb-3 d-flex">{{translate($contact->name)}}</h5>
-                                <div class="flex-start mb-1">
-                                    <strong class="">{{translate('Subject')}}: </strong>
-                                    <div><strong>{{$contact->subject}}</strong></div>
-                                </div>
-                                <div class="flex-start">
-                                    <strong class="">{{translate('Message')}}: </strong>
-                                    <div>{{$contact->message}}</div>
-                                </div>
-                            </div> --}}
                             <ul class="list-group mb-3">
                                 <h5 class="px-2 py-1 badge-soft-info rounded mb-3 d-flex">{{$contact->name}}</h5>
                                 <li class="list-group-item"><strong>{{translate('messages.Subject')}}: </strong> <strong>{{$contact->subject}}</strong></li>

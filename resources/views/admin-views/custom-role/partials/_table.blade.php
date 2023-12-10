@@ -15,8 +15,8 @@
                 <a class="btn action-btn btn--primary btn-outline-primary"
                     href="{{route('admin.users.custom-role.edit',[$role['id']])}}" title="{{translate('messages.edit_role')}}"><i class="tio-edit"></i>
                 </a>
-                <a class="btn action-btn btn--danger btn-outline-danger" href="javascript:"
-                    onclick="form_alert('role-{{$role['id']}}','{{translate('messages.Want_to_delete_this_role')}}')" title="{{translate('messages.delete_role')}}"><i class="tio-delete-outlined"></i>
+                <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:" data-id="role-{{$role['id']}}" data-message="{{translate('messages.Want_to_delete_this_role')}}"
+                   title="{{translate('messages.delete_role')}}"><i class="tio-delete-outlined"></i>
                 </a>
             </div>
             <form action="{{route('admin.users.custom-role.delete',[$role['id']])}}"

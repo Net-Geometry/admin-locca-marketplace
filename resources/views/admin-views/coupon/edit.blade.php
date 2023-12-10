@@ -77,7 +77,7 @@
                         <div class="col-md-4 col-lg-3 col-sm-6">
                             <div class="form-group m-0">
                                 <label class="input-label" for="exampleFormControlInput1">{{translate('messages.coupon_type')}}</label>
-                                <select name="coupon_type" class="form-control" onchange="coupon_type_change(this.value)">
+                                <select name="coupon_type" id="coupon_type" class="form-control">
                                     <option value="store_wise" {{$coupon['coupon_type']=='store_wise'?'selected':''}}>{{translate('messages.store_wise')}}</option>
                                     <option value="zone_wise" {{$coupon['coupon_type']=='zone_wise'?'selected':''}}>{{translate('messages.zone_wise')}}</option>
                                     <option value="free_delivery" {{$coupon['coupon_type']=='free_delivery'?'selected':''}}>{{translate('messages.free_delivery')}}</option>
@@ -207,63 +207,42 @@
 @endsection
 
 @push('script_2')
+    <script src="{{asset('public/assets/admin')}}/js/view-pages/coupon-edit.js"></script>
     <script>
+        "use strict";
         coupon_type_change('{{$coupon->coupon_type}}');
-        $("#date_from").on("change", function () {
-            $('#date_to').attr('min',$(this).val());
-        });
 
-        $("#date_to").on("change", function () {
-            $('#date_from').attr('max',$(this).val());
-        });
         $(document).on('ready', function () {
-            $('#discount_type').on('change', function() {
-                if($('#discount_type').val() == 'amount')
-                {
-                    $('#max_discount').attr("readonly","true");
-                    $('#max_discount').val(0);
-                }
-                else
-                {
-                    $('#max_discount').removeAttr("readonly");
-                }
-            });
+            let module_id = 0;
             $('#date_from').attr('max','{{date("Y-m-d",strtotime($coupon["expire_date"]))}}');
             $('#date_to').attr('min','{{date("Y-m-d",strtotime($coupon["start_date"]))}}');
 
-            var module_id = 0;
-            $('#module_select').on('change', function(){
-                if($(this).val())
-                {
-                    module_id = $(this).val();
-                }
-            });
 
             $('.js-data-example-ajax').select2({
-            ajax: {
-                url: '{{url('/')}}/admin/store/get-stores',
-                data: function (params) {
-                    return {
-                        q: params.term, // search term
-                        page: params.page,
-                        module_id: module_id
-                    };
-                },
-                processResults: function (data) {
-                    return {
-                    results: data
-                    };
-                },
-                __port: function (params, success, failure) {
-                    var $request = $.ajax(params);
+                ajax: {
+                    url: '{{url('/')}}/admin/store/get-stores',
+                    data: function (params) {
+                        return {
+                            q: params.term, // search term
+                            page: params.page,
+                            module_id: module_id
+                        };
+                    },
+                    processResults: function (data) {
+                        return {
+                        results: data
+                        };
+                    },
+                    __port: function (params, success, failure) {
+                        let $request = $.ajax(params);
 
-                    $request.then(success);
-                    $request.fail(failure);
+                        $request.then(success);
+                        $request.fail(failure);
 
-                    return $request;
+                        return $request;
+                    }
                 }
-            }
-        });
+            });
             // INITIALIZATION OF FLATPICKR
             // =======================================================
             $('.js-flatpickr').each(function () {
@@ -271,76 +250,7 @@
             });
         });
 
-        function coupon_type_change(coupon_type) {
-           if(coupon_type=='zone_wise')
-            {
-                $('#store_wise').hide();
-                $('#zone_wise').show();
-                $('#customer_wise').hide();
-            }
-            else if(coupon_type=='store_wise')
-            {
-                $('#store_wise').show();
-                $('#zone_wise').hide();
-                $('#customer_wise').show();
-            }
-            else if(coupon_type=='first_order')
-            {
-                $('#zone_wise').hide();
-                $('#store_wise').hide();
-                $('#customer_wise').hide();
-                $('#coupon_limit').val(1);
-                $('#coupon_limit').attr("readonly","true");
-            }
-            else{
-                $('#zone_wise').hide();
-                $('#store_wise').hide();
-                $('#customer_wise').show();
-                $('#coupon_limit').val('');
-                $('#coupon_limit').removeAttr("readonly");
-            }
 
-            if(coupon_type=='free_delivery')
-            {
-                $('#discount_type').attr("disabled","true");
-                $('#discount_type').val("").trigger( "change" );
-                $('#max_discount').val(0);
-                $('#max_discount').attr("readonly","true");
-                $('#discount').val(0);
-                $('#discount').attr("readonly","true");
-            }
-            else{
-                $('#max_discount').removeAttr("readonly");
-                $('#discount_type').removeAttr("disabled");
-                $('#discount').removeAttr("readonly");
-            }
-        }
-    </script>
-    <script>
-        $(".lang_link").click(function(e){
-            e.preventDefault();
-            $(".lang_link").removeClass('active');
-            $(".lang_form").addClass('d-none');
-            $(this).addClass('active');
-
-            let form_id = this.id;
-            let lang = form_id.substring(0, form_id.length - 5);
-            console.log(lang);
-            $("#"+lang+"-form").removeClass('d-none');
-            if(lang == 'en')
-            {
-                $("#from_part_2").removeClass('d-none');
-            }
-            else
-            {
-                $("#from_part_2").addClass('d-none');
-            }
-        })
-    </script>
-    <script>
-        $('#reset_btn').click(function(){
-            location.reload(true);
-        })
 
     </script>
 @endpush

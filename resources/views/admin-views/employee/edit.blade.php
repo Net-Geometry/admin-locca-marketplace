@@ -169,55 +169,10 @@
 @endsection
 
 @push('script_2')
+    <script src="{{asset('public/assets/admin')}}/js/view-pages/employee.js"></script>
 <script>
-    $(document).on('ready', function () {
-      // INITIALIZATION OF SHOW PASSWORD
-      // =======================================================
-      $('.js-toggle-password').each(function () {
-        new HSTogglePassword(this).init()
-      });
+    "use strict";
 
-
-      // INITIALIZATION OF FORM VALIDATION
-      // =======================================================
-      $('.js-validate').each(function() {
-        $.HSCore.components.HSValidation.init($(this), {
-          rules: {
-            confirmPassword: {
-              equalTo: '#signupSrPassword'
-            }
-          }
-        });
-      });
-    });
-  </script>
-    <script>
-        function readURL(input) {
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
-
-                reader.onload = function (e) {
-                    $('#viewer').attr('src', e.target.result);
-                }
-
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-
-        $("#customFileUpload").change(function () {
-            readURL(this);
-        });
-
-
-        $(".js-example-theme-single").select2({
-            theme: "classic"
-        });
-
-        $(".js-example-responsive").select2({
-            width: 'resolve'
-        });
-    </script>
-    <script>
         $('#reset_btn').click(function(){
             $('#viewer').attr('src', "{{asset('storage/app/public/admin')}}/{{$employee['image']}}') }}");
             $('#customFileUpload').val(null);

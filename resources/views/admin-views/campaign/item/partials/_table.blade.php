@@ -27,7 +27,7 @@
                     href="{{route('admin.campaign.edit',['item',$campaign['id']])}}" title="{{translate('messages.edit_campaign')}}"><i class="tio-edit"></i>
                 </a>
                 <a class="btn action-btn btn--danger btn-outline-danger" href="javascript:"
-                    onclick="form_alert('campaign-{{$campaign['id']}}','Want to delete this item ?')" title="{{translate('messages.delete_campaign')}}"><i class="tio-delete-outlined"></i>
+                   data-id="campaign-{{$campaign['id']}}" data-message="{{ translate('Want to delete this item ?') }}" title="{{translate('messages.delete_campaign')}}"><i class="tio-delete-outlined"></i>
                 </a>
                 <form action="{{route('admin.campaign.delete-item',[$campaign['id']])}}"
                             method="post" id="campaign-{{$campaign['id']}}">

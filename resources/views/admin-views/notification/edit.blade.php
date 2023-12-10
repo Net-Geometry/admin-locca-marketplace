@@ -94,24 +94,9 @@
 @endsection
 
 @push('script_2')
+    <script src="{{asset('public/assets/admin')}}/js/view-pages/notification.js"></script>
     <script>
-        function readURL(input) {
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
-
-                reader.onload = function (e) {
-                    $('#viewer').attr('src', e.target.result);
-                }
-
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-
-        $("#customFileEg1").change(function () {
-            readURL(this);
-        });
-    </script>
-        <script>
+        "use strict";
             $('#reset_btn').click(function(){
                 $('#zone').val("{{$notification->zone_id}}").trigger('change');
                 $('#viewer').attr('src', "{{asset('storage/app/public/notification')}}/{{$notification['image']}}");
