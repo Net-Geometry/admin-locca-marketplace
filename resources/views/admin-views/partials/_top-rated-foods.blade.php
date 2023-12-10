@@ -15,7 +15,6 @@
     @else
         @php($zone_name = translate('messages.all'))
     @endif
-    {{--<label class="badge badge-soft-primary">{{translate('messages.zone')}} : {{$zone_name}}</label>--}}
     <a href="{{ route('admin.item.list') }}" class="fz-12px font-medium text-006AE5">{{translate('view_all')}}</a>
 </div>
 <!-- End Header -->

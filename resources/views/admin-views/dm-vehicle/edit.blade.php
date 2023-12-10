@@ -101,25 +101,6 @@
 
                             </div>
                         </div>
-                        {{-- <div class="col-sm-6">
-                            <div class="form-group m-0 h-100 d-flex flex-column">
-                                <label class="d-block text-center mb-0">
-                                    {{translate('messages.vehicle_image')}}
-                                    <small class="text-danger">* ( {{translate('messages.ratio')}} 300x100 )</small>
-                                </label>
-                                <center class="mt-auto mb-auto">
-                                    <img class="initial-12" id="viewer"
-                                         src="{{asset('public/assets/admin/img/900x400/img1.jpg')}}" alt="vehicle image"/>
-                                </center>
-                                <div class="form-group">
-                                    <div class="custom-file">
-                                        <input type="file" name="image" id="customFileEg1" class="custom-file-input"
-                                            accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*" required>
-                                        <label class="custom-file-label" for="customFileEg1">{{translate('messages.choose_file')}}</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> --}}
                     </div>
 
                     <div class="btn--container justify-content-end">
@@ -134,24 +115,12 @@
 @endsection
 
 @push('script_2')
+    <script src="{{asset('public/assets/admin')}}/js/view-pages/dm-vehichle.js"></script>
     <script>
-        function readURL(input) {
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
-                reader.onload = function (e) {
-                    $('#viewer').attr('src', e.target.result);
-                }
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-
-        $("#customFileEg1").change(function () {
-            readURL(this);
-        });
-
+        "use strict";
         $('#vehicle-form').on('submit', function (e) {
             e.preventDefault();
-            var formData = new FormData(this);
+            let formData = new FormData(this);
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -165,7 +134,7 @@
                 processData: false,
                 success: function (data) {
                     if (data.errors) {
-                        for (var i = 0; i < data.errors.length; i++) {
+                        for (let i = 0; i < data.errors.length; i++) {
                             toastr.error(data.errors[i].message, {
                                 CloseButton: true,
                                 ProgressBar: true
@@ -184,33 +153,9 @@
             });
         });
 
+        $('#reset_btn').click(function(){
+            $('#choice_item').val(null).trigger('change');
+            $('#viewer').attr('src','{{asset('public/assets/admin/img/900x400/img1.jpg')}}');
+        })
     </script>
-    <script>
-        $(".lang_link").click(function(e){
-            e.preventDefault();
-            $(".lang_link").removeClass('active');
-            $(".lang_form").addClass('d-none');
-            $(this).addClass('active');
-
-            let form_id = this.id;
-            let lang = form_id.substring(0, form_id.length - 5);
-            console.log(lang);
-            $("#"+lang+"-form").removeClass('d-none');
-            if(lang == '{{$defaultLang}}')
-            {
-                $(".from_part_2").removeClass('d-none');
-            }
-            else
-            {
-                $(".from_part_2").addClass('d-none');
-            }
-        });
-    </script>
-
-        <script>
-            $('#reset_btn').click(function(){
-                $('#choice_item').val(null).trigger('change');
-                $('#viewer').attr('src','{{asset('public/assets/admin/img/900x400/img1.jpg')}}');
-            })
-        </script>
 @endpush

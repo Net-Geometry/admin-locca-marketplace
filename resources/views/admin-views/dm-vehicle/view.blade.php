@@ -36,33 +36,6 @@
                             <h5 class="card-title">{{ translate('messages.deliveryman') }}<span
                                     class="badge badge-soft-dark ml-2" id="itemCount">{{ $deliveryMen->total() }}</span>
                             </h5>
-                            {{-- <form>
-                                <!-- Search -->
-                                <div class="input--group input-group input-group-merge input-group-flush">
-                                    <input id="datatableSearch_" type="search" name="search" class="form-control"
-                                        placeholder="{{ translate('Search by name...') }}" aria-label="Search">
-                                    <button type="submit" class="btn btn--secondary">
-                                        <i class="tio-search"></i>
-                                    </button>
-                                </div>
-                                <!-- End Search -->
-                            </form> --}}
-
-                            {{-- <div class="hs-unfold ml-3">
-                                <div class="select-item">
-                                    <select name="zone_id" class="form-control js-select2-custom"
-                                        onchange="set_zone_filter('{{ url()->full() }}',this.value)">
-                                        <option selected disabled>{{ translate('messages.select_zone') }}</option>
-                                        <option value="all">{{ translate('messages.all_zones') }}</option>
-                                        @foreach (\App\Models\Zone::orderBy('name')->get() as $z)
-                                            <option value="{{ $z['id'] }}"
-                                                {{ isset($zone) && $zone->id == $z['id'] ? 'selected' : '' }}>
-                                                {{ $z['name'] }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div> --}}
                         </div>
                     </div>
                     <!-- End Header -->
@@ -186,28 +159,12 @@
 
 @push('script_2')
     <script>
-                function status_change_alert(url, message, e) {
-            e.preventDefault();
-            Swal.fire({
-                title: '{{ translate('Are you sure?') }}' ,
-                text: message,
-                type: 'warning',
-                showCancelButton: true,
-                cancelButtonColor: 'default',
-                confirmButtonColor: '#FC6A57',
-                cancelButtonText: '{{translate('messages.no')}}',
-                confirmButtonText: '{{translate('messages.yes')}}',
-                reverseButtons: true
-            }).then((result) => {
-                if (result.value) {
-                    location.href=url;
-                }
-            })
-        }
+        "use strict";
+
         $(document).on('ready', function () {
             // INITIALIZATION OF DATATABLES
             // =======================================================
-            var datatable = $.HSCore.components.HSDatatables.init($('#columnSearchDatatable'));
+            let datatable = $.HSCore.components.HSDatatables.init($('#columnSearchDatatable'));
 
             $('#column1_search').on('keyup', function () {
                 datatable
@@ -241,7 +198,7 @@
             // INITIALIZATION OF SELECT2
             // =======================================================
             $('.js-select2-custom').each(function () {
-                var select2 = $.HSCore.components.HSSelect2.init($(this));
+                let select2 = $.HSCore.components.HSSelect2.init($(this));
             });
         });
     </script>

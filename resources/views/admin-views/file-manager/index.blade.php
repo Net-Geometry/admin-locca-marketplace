@@ -21,12 +21,6 @@
                 <i class="tio-add-circle"></i>
                 <span class="text">{{translate('messages.add_new')}}</span>
             </button>
-            {{-- <div class="text--primary-2 d-flex flex-wrap align-items-center" type="button" data-toggle="modal" data-target="#how-it-works">
-                <strong class="mr-2">{{translate('See_how_it_works!')}}</strong>
-                <div class="blinkings">
-                    <i class="tio-info-outined"></i>
-                </div>
-            </div> --}}
         </div>
     </div>
 
@@ -62,13 +56,13 @@
                                     <a href="#" title="{{translate('View Image')}}" data-toggle="tooltip" data-placement="left">
                                         <img src="{{asset('/public/assets/admin/img/download/view.png')}}" data-toggle="modal" data-target="#imagemodal{{$key}}" alt="">
                                     </a>
-                                    <a href="#" title="{{translate('Copy Link')}}" data-toggle="tooltip" data-placement="left" onclick="copy_test('{{$file['db_path']}}')">
+                                    <a href="#" title="{{translate('Copy Link')}}" class="copy-test" data-toggle="tooltip" data-placement="left" data-file-path="{{$file['db_path']}}">
                                         <img src="{{asset('/public/assets/admin/img/download/link.png')}}" alt="">
-                                    </button>
+                                    </a>
                                     <a title="{{translate('Download')}}" data-toggle="tooltip" data-placement="left" href="{{route('admin.business-settings.file-manager.download', base64_encode($file['path']))}}">
                                         <img src="{{asset('/public/assets/admin/img/download/download.png')}}" alt="">
                                     </a>
-                                    <form action="{{route('admin.business-settings.file-manager.destroy',base64_encode($file['path']))}}" method="post" onsubmit="form_submit_warrning(event)">
+                                    <form action="{{route('admin.business-settings.file-manager.destroy',base64_encode($file['path']))}}" method="post"  class="form-submit-warning">
                                         @csrf
                                         @method('delete')
                                         <button type="submit" title="{{translate('Delete')}}" data-toggle="tooltip" data-placement="left"><i class="tio-delete"></i></button>
@@ -82,9 +76,9 @@
                                         <div class="modal-header p-1">
                                             <div class="gallery-modal-header w-100">
                                                 <span>{{$file['name']}}</span>
-                                                <a href="#" class="d-block ml-auto" onclick="copy_test('{{$file['db_path']}}')">
+                                                <a href="#" class="d-block ml-auto copy-test" data-file-path="{{$file['db_path']}}">
                                                     {{translate('Copy Path')}} <i class="tio-link"></i>
-                                                </button>
+                                                </a>
                                                 <a class="d-block" href="{{route('admin.business-settings.file-manager.download', base64_encode($file['path']))}}">
                                                     {{translate('Download')}} <i class="tio-download-to"></i>
                                                 </a>
@@ -165,46 +159,9 @@
 @endsection
 
 @push('script_2')
+    <script src="{{asset('public/assets/admin')}}/js/view-pages/file-manager.js"></script>
 <script>
-    function readURL(input) {
-        $('#files').html("");
-        for( var i = 0; i<input.files.length; i++)
-        {
-            if (input.files && input.files[i]) {
-                var reader = new FileReader();
-                reader.onload = function (e) {
-                    $('#files').append('<div class="col-md-2 col-sm-4 m-1"><img class="initial--7" id="viewer" src="'+e.target.result+'"/></div>');
-                }
-                reader.readAsDataURL(input.files[i]);
-            }
-        }
-
-    }
-
-    $("#customFileUpload").change(function () {
-        readURL(this);
-    });
-
-    $('#customZipFileUpload').change(function(e){
-        var fileName = e.target.files[0].name;
-        $('#zipFileLabel').html(fileName);
-    });
-
-    // $(".image_link").on("click", function(e) {
-    //     e.preventDefault();
-    //     $('#imagepreview').attr('src', $(this).data('src')); // here asign the image to the modal when the user click the enlarge link
-    //     $('#imagemodal').modal('show'); // imagemodal is the id attribute assigned to the bootstrap modal, then i use the show function
-    // });
-
-    function copy_test(copyText) {
-        /* Copy the text inside the text field */
-        navigator.clipboard.writeText(copyText);
-
-        toastr.success('File path copied successfully!', {
-            CloseButton: true,
-            ProgressBar: true
-        });
-    }
+    "use strict";
 
     function form_submit_warrning(e) {
         e.preventDefault();

@@ -524,7 +524,7 @@
 
             $('#deliveryman').select2({
                 ajax: {
-                    url: '{{url('/')}}/admin/delivery-man/get-deliverymen',
+                    url: '{{url('/')}}/admin/users/delivery-man/get-deliverymen',
                     data: function (params) {
                         return {
                             q: params.term, // search term

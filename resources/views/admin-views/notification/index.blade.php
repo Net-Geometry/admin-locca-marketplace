@@ -195,7 +195,7 @@
                                     </td>
                                     <td>
                                         <label class="toggle-switch toggle-switch-sm" for="stocksCheckbox{{$notification->id}}">
-                                            <input type="checkbox" onclick="location.href='{{route('admin.notification.status',[$notification['id'],$notification->status?0:1])}}'"class="toggle-switch-input" id="stocksCheckbox{{$notification->id}}" {{$notification->status?'checked':''}} hidden>
+                                            <input type="checkbox" onclick="location.href='{{route('admin.notification.status',[$notification['id'],$notification->status?0:1])}}'" class="toggle-switch-input" id="stocksCheckbox{{$notification->id}}" {{$notification->status?'checked':''}} hidden>
                                             <span class="toggle-switch-label mx-auto">
                                                 <span class="toggle-switch-indicator"></span>
                                             </span>
@@ -206,8 +206,8 @@
                                             <a class="btn action-btn btn--primary btn-outline-primary"
                                             href="{{route('admin.notification.edit',[$notification['id']])}}" title="{{translate('messages.edit_notification')}}"><i class="tio-edit"></i>
                                             </a>
-                                            <a class="btn action-btn btn--danger btn-outline-danger" href="javascript:"
-                                                onclick="form_alert('notification-{{$notification['id']}}','{{ translate('Want to delete this notification ?') }}')" title="{{translate('messages.delete_notification')}}"><i class="tio-delete-outlined"></i>
+                                            <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:"
+                                               data-id="notification-{{$notification['id']}}" data-message="{{ translate('Want to delete this notification ?') }}" title="{{translate('messages.delete_notification')}}"><i class="tio-delete-outlined"></i>
                                             </a>
                                             <form action="{{route('admin.notification.delete',[$notification['id']])}}" method="post" id="notification-{{$notification['id']}}">
                                                 @csrf @method('delete')
@@ -242,53 +242,9 @@
 @endsection
 
 @push('script_2')
+    <script src="{{asset('public/assets/admin')}}/js/view-pages/notification.js"></script>
     <script>
-        $(document).on('ready', function () {
-            // INITIALIZATION OF DATATABLES
-            // =======================================================
-            var datatable = $.HSCore.components.HSDatatables.init($('#columnSearchDatatable'));
-
-            $('#column1_search').on('keyup', function () {
-                datatable
-                    .columns(1)
-                    .search(this.value)
-                    .draw();
-            });
-
-
-            $('#column3_search').on('change', function () {
-                datatable
-                    .columns(2)
-                    .search(this.value)
-                    .draw();
-            });
-
-
-            // INITIALIZATION OF SELECT2
-            // =======================================================
-            $('.js-select2-custom').each(function () {
-                var select2 = $.HSCore.components.HSSelect2.init($(this));
-            });
-        });
-    </script>
-
-    <script>
-        function readURL(input) {
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
-
-                reader.onload = function (e) {
-                    $('#viewer').attr('src', e.target.result);
-                }
-
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-
-        $("#customFileEg1").change(function () {
-            readURL(this);
-        });
-
+        "use strict";
         $('#notification').on('submit', function (e) {
 
             e.preventDefault();
@@ -339,8 +295,7 @@
                 }
             })
         })
-    </script>
-        <script>
+
             $('#reset_btn').click(function(){
                 $('#zone').val('all').trigger('change');
                 $('#viewer').attr('src','{{asset('public/assets/admin/img/900x400/img1.jpg')}}');

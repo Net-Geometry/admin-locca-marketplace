@@ -28,7 +28,7 @@
                     <div class="col-sm-6">
                         <div class="form-group mb-0">
                             <label class="form-label" for="deliveryman">{{translate('messages.deliveryman')}}<span class="input-label-secondary"></span></label>
-                            <select id="deliveryman" name="deliveryman_id" data-placeholder="{{translate('messages.select_deliveryman')}}" onchange="getAccountData('{{url('/')}}/admin/delivery-man/get-account-data/',this.value,'deliveryman')" class="form-control" title="Select deliveryman">
+                            <select id="deliveryman" name="deliveryman_id" data-placeholder="{{translate('messages.select_deliveryman')}}" data-url="{{url('/')}}/admin/users/delivery-man/get-account-data/" data-type="deliveryman" class="form-control account-data" title="Select deliveryman">
 
                             </select>
                         </div>
@@ -100,20 +100,6 @@
 
                             <div id="usersExportDropdown"
                                 class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
-                                {{-- <span class="dropdown-header">{{ translate('messages.options') }}</span>
-                                <a id="export-copy" class="dropdown-item" href="javascript:;">
-                                    <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                        src="{{ asset('public/assets/admin') }}/svg/illustrations/copy.svg"
-                                        alt="Image Description">
-                                    {{ translate('messages.copy') }}
-                                </a>
-                                <a id="export-print" class="dropdown-item" href="javascript:;">
-                                    <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                        src="{{ asset('public/assets/admin') }}/svg/illustrations/print.svg"
-                                        alt="Image Description">
-                                    {{ translate('messages.print') }}
-                                </a>
-                                <div class="dropdown-divider"></div> --}}
                                 <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
                                 <a id="export-excel" class="dropdown-item" href="{{route('admin.transactions.export-deliveryman-earning', ['type'=>'excel',request()->getQueryString()])}}">
                                     <img class="avatar avatar-xss avatar-4by3 mr-2"
@@ -127,12 +113,6 @@
                                         alt="Image Description">
                                     .{{ translate('messages.csv') }}
                                 </a>
-                                {{-- <a id="export-pdf" class="dropdown-item" href="javascript:;">
-                                    <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                        src="{{ asset('public/assets/admin') }}/svg/components/pdf.svg"
-                                        alt="Image Description">
-                                    {{ translate('messages.pdf') }}
-                                </a> --}}
                             </div>
                         </div>
                         <!-- End Unfold -->
@@ -155,7 +135,7 @@
                             <tbody id="set-rows">
                             @foreach($provide_dm_earning as $k=>$at)
                                 <tr>
-                                    <td scope="row">{{$k+$provide_dm_earning->firstItem()}}</td>
+                                    <td>{{$k+$provide_dm_earning->firstItem()}}</td>
                                     <td>@if($at->delivery_man)<a href="{{route('admin.users.delivery-man.preview', $at->delivery_man_id)}}">{{$at->delivery_man->f_name.' '.$at->delivery_man->l_name}}</a> @else <label class="text-capitalize text-danger">{{translate('messages.deliveryman_deleted')}}</label> @endif </td>
                                     <td>{{$at->created_at->format('Y-m-d '.config('timeformat'))}}</td>
                                     <td>{{$at['amount']}}</td>
@@ -194,33 +174,13 @@
 @endsection
 
 @push('script_2')
+    <script src="{{asset('public/assets/admin')}}/js/view-pages/deliveryman-earning-provide.js"></script>
 <script>
-    $(document).on('ready', function () {
-        // INITIALIZATION OF SELECT2
-        // =======================================================
-        $('.js-select2-custom').each(function () {
-            var select2 = $.HSCore.components.HSSelect2.init($(this));
-        });
-
-        $('#type').on('change', function() {
-            if($('#type').val() == 'store')
-            {
-                $('#restaurant').removeAttr("disabled");
-                $('#deliveryman').val("").trigger( "change" );
-                $('#deliveryman').attr("disabled","true");
-            }
-            else if($('#type').val() == 'deliveryman')
-            {
-                $('#deliveryman').removeAttr("disabled");
-                $('#restaurant').val("").trigger( "change" );
-                $('#restaurant').attr("disabled","true");
-            }
-        });
-    });
+    "use strict";
 
     $('#deliveryman').select2({
         ajax: {
-            url: '{{url('/')}}/admin/delivery-man/get-deliverymen',
+            url: '{{url('/')}}/admin/users/delivery-man/get-deliverymen',
             data: function (params) {
                 return {
                     q: params.term, // search term
@@ -254,73 +214,5 @@
                 },
             });
     }
-</script>
-<script>
-    $('#search-form').on('submit', function () {
-        var formData = new FormData(this);
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-        $.post({
-            url: '{{route('admin.transactions.search-deliveryman-earning')}}',
-            data: formData,
-            cache: false,
-            contentType: false,
-            processData: false,
-            beforeSend: function () {
-                $('#loading').show();
-            },
-            success: function (data) {
-                $('#set-rows').html(data.view);
-                $('#itemCount').html(data.total);
-                $('.page-area').hide();
-            },
-            complete: function () {
-                $('#loading').hide();
-            },
-        });
-    });
-
-    $('#add_transaction').on('submit', function (e) {
-        e.preventDefault();
-        var formData = new FormData(this);
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-        $.post({
-            url: '{{route('admin.transactions.provide-deliveryman-earnings.store')}}',
-            data: formData,
-            cache: false,
-            contentType: false,
-            processData: false,
-            success: function (data) {
-                if (data.errors) {
-                    for (var i = 0; i < data.errors.length; i++) {
-                        toastr.error(data.errors[i].message, {
-                            CloseButton: true,
-                            ProgressBar: true
-                        });
-                    }
-                } else {
-                    toastr.success('{{translate('messages.transaction_saved')}}', {
-                        CloseButton: true,
-                        ProgressBar: true
-                    });
-                    setTimeout(function () {
-                        location.href = '{{route('admin.transactions.provide-deliveryman-earnings.index')}}';
-                    }, 2000);
-                }
-            }
-        });
-    });
-
-
-    $('#reset_btn').click(function(){
-            $('#deliveryman').val(null).trigger('change');
-        })
 </script>
 @endpush

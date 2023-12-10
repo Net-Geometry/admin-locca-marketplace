@@ -31,7 +31,6 @@
                     <div class="search--button-wrapper">
                         <h5 class="card-title">{{translate('messages.Employee_table')}} <span class="badge badge-soft-dark ml-2" id="itemCount">{{$employees->total()}}</span></h5>
                         <form class="search-form min--200">
-                            {{-- @csrf --}}
                             <!-- Search -->
                             <div class="input-group input--group">
                                 <input id="datatableSearch_" type="search" name="search"  value="{{ request()->get('search') }}" class="form-control" placeholder="{{translate('messages.ex_:_search_name')}}" aria-label="Search">
@@ -51,20 +50,6 @@
 
                         <div id="usersExportDropdown"
                             class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
-                            {{-- <span class="dropdown-header">{{ translate('messages.options') }}</span>
-                            <a id="export-copy" class="dropdown-item" href="javascript:;">
-                                <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                    src="{{ asset('public/assets/admin') }}/svg/illustrations/copy.svg"
-                                    alt="Image Description">
-                                {{ translate('messages.copy') }}
-                            </a>
-                            <a id="export-print" class="dropdown-item" href="javascript:;">
-                                <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                    src="{{ asset('public/assets/admin') }}/svg/illustrations/print.svg"
-                                    alt="Image Description">
-                                {{ translate('messages.print') }}
-                            </a>
-                            <div class="dropdown-divider"></div> --}}
                             <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
                             <a id="export-excel" class="dropdown-item" href="{{route('admin.users.employee.export', ['type'=>'excel',request()->getQueryString()])}}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
@@ -78,12 +63,6 @@
                                     alt="Image Description">
                                 .{{ translate('messages.csv') }}
                             </a>
-                            {{-- <a id="export-pdf" class="dropdown-item" href="javascript:;">
-                                <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                    src="{{ asset('public/assets/admin') }}/svg/components/pdf.svg"
-                                    alt="Image Description">
-                                {{ translate('messages.pdf') }}
-                            </a> --}}
                         </div>
                     </div>
                     <!-- End Unfold -->
@@ -124,8 +103,7 @@
                                             <a class="btn action-btn btn--primary btn-outline-primary"
                                                 href="{{route('admin.users.employee.edit',[$employee['id']])}}" title="{{translate('messages.edit_Employee')}}"><i class="tio-edit"></i>
                                             </a>
-                                            <a class="btn action-btn btn--danger btn-outline-danger" href="javascript:"
-                                                onclick="form_alert('employee-{{$employee['id']}}','{{translate('messages.Want_to_delete_this_role')}}')" title="{{translate('messages.delete_Employee')}}"><i class="tio-delete-outlined"></i>
+                                            <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:" data-id="employee-{{$employee['id']}}" data-message="{{translate('messages.Want_to_delete_this_role')}}" title="{{translate('messages.delete_Employee')}}"><i class="tio-delete-outlined"></i>
                                             </a>
                                         </div>
                                         <form action="{{route('admin.users.employee.delete',[$employee['id']])}}"
@@ -161,37 +139,5 @@
 @endsection
 
 @push('script_2')
-    <script>
-        // Call the dataTables jQuery plugin
-        $(document).ready(function () {
-            $('#dataTable').DataTable();
-        });
-        $('#search-form').on('submit', function (e) {
-            e.preventDefault();
-            var formData = new FormData(this);
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $.post({
-                url: '{{route('admin.users.employee.search')}}',
-                data: formData,
-                cache: false,
-                contentType: false,
-                processData: false,
-                beforeSend: function () {
-                    $('#loading').show();
-                },
-                success: function (data) {
-                    $('#set-rows').html(data.view);
-                    $('#itemCount').html(data.count);
-                    $('.page-area').hide();
-                },
-                complete: function () {
-                    $('#loading').hide();
-                },
-            });
-        });
-    </script>
+
 @endpush

@@ -86,7 +86,7 @@
                                     </td>
                                     <td>
                                         <label class="toggle-switch toggle-switch-sm" for="stocksCheckbox{{$vehicle->id}}">
-                                            <input type="checkbox" onclick="location.href='{{route('admin.users.delivery-man.vehicle.status',[$vehicle['id'],$vehicle->status?0:1])}}'"class="toggle-switch-input" id="stocksCheckbox{{$vehicle->id}}" {{$vehicle->status?'checked':''}}>
+                                            <input type="checkbox" onclick="location.href='{{route('admin.users.delivery-man.vehicle.status',[$vehicle['id'],$vehicle->status?0:1])}}'" class="toggle-switch-input" id="stocksCheckbox{{$vehicle->id}}" {{$vehicle->status?'checked':''}}>
                                             <span class="toggle-switch-label">
                                                 <span class="toggle-switch-indicator"></span>
                                             </span>
@@ -97,8 +97,8 @@
                                             <a class="btn btn-sm btn--primary btn-outline-primary action-btn"
                                                 href="{{route('admin.users.delivery-man.vehicle.edit',[$vehicle['id']])}}" title="{{translate('messages.edit_vehicle')}}"><i class="tio-edit"></i>
                                             </a>
-                                            <a class="btn btn-sm btn--danger btn-outline-danger action-btn" href="javascript:"
-                                                onclick="form_alert('vehicle-{{$vehicle['id']}}','{{translate('messages.Want_to_delete_this_item')}}')" title="{{translate('messages.delete_vehicle')}}"><i class="tio-delete-outlined"></i>
+                                            <a class="btn btn-sm btn--danger btn-outline-danger action-btn form-alert" href="javascript:"
+                                                data-id="vehicle-{{$vehicle['id']}}" data-message="{{translate('messages.Want_to_delete_this_item')}}" title="{{translate('messages.delete_vehicle')}}"><i class="tio-delete-outlined"></i>
                                             </a>
                                             <form action="{{route('admin.users.delivery-man.vehicle.delete',['id' =>$vehicle['id']])}}"
                                                         method="post" id="vehicle-{{$vehicle['id']}}">
@@ -137,6 +137,7 @@
 
 @push('script_2')
     <script>
+        "use strict";
         $(document).on('ready', function () {
             // INITIALIZATION OF DATATABLES
             // =======================================================
