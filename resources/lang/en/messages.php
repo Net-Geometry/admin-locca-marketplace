@@ -3396,4 +3396,9 @@
   'account_name' => 'Account name',
   'image_uploaded_successfully' => 'Image uploaded successfully',
   'image_deleted_successfully' => 'Image deleted successfully',
+  'message' => 'Message',
+  'message_description' => 'Message description',
+  'select_a_vehicle' => 'Select a vehicle',
+  'select_dm_type' => 'Select dm type',
+  'Withdraw_Able_Balance' => 'Withdraw Able Balance',
 );

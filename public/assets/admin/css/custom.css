@@ -143,3 +143,10 @@
 ol.breadcrumb {
     padding: 1px;
 }
+
+
+/* view inline css */
+#dm-conversation-list {
+    overflow-y: scroll;
+    height: 600px
+}
