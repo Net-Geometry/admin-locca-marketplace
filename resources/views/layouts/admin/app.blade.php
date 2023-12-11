@@ -1051,6 +1051,16 @@
             ProgressBar: true
         });
     }
+
+    $(document).on('click', '.call-demo', function () {
+        @if(env('APP_MODE') =='demo')
+            toastr.info('{{ translate('Update option is disabled for demo!') }}', {
+                CloseButton: true,
+                ProgressBar: true
+            });
+        @endif
+    });
+
 </script>
 
 <script>

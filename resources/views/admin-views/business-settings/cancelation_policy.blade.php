@@ -13,7 +13,7 @@
             <h1 class="d-flex flex-wrap justify-content-between page-header-title">
                 <span class="page-header-icon">
                     <img src="{{asset('public/assets/admin/img/privacy-policy.png')}}" class="w--26" alt="">
-                    {{translate('messages.Cancelation Policy')}}
+                    {{translate('messages.Cancellation Policy')}}
                 </span>
             </h1>
             <h5 class="d-flex flex-wrap justify-content-end">
@@ -92,25 +92,23 @@
 @endsection
 
 @push('script_2')
-<script src="//cdn.ckeditor.com/4.14.1/standard/ckeditor.js"></script>
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('.ckeditor').ckeditor();
-    });
-
+    <script src="{{asset('public/assets/admin/ckeditor/ckeditor.js')}}"></script>
+    <script type="text/javascript">
+        "use strict";
 
     $(document).ready(function () {
                 $('body').on('change','#data_status', function(){
+                    let status;
                 if(this.checked){
-                var status = 1;
+                 status = 1;
                 }else{
-                var status = 0;
+                 status = 0;
                 }
-            url= '{{ url('admin/business-settings/pages/cancellation-policy') }}/'+status;
+
             $.ajax({
-                url: url,
+                url: '{{ url('admin/business-settings/pages/cancellation-policy') }}/'+status,
                 method: 'get',
-                success: function(result) {
+                success: function() {
                     toastr.success('{{ translate('messages.status updated!') }}', {
                     CloseButton: true,
                     ProgressBar: true
@@ -121,15 +119,5 @@
             });
         });
 </script>
-<script>
-    $(".lang_link").click(function(e){
-        e.preventDefault();
-        $(".lang_link").removeClass('active');
-        $(".lang_form").addClass('d-none');
-        $(this).addClass('active');
-        let form_id = this.id;
-        let lang = form_id.substring(0, form_id.length - 5);
-        $("#"+lang+"-form").removeClass('d-none');
-    });
-</script>
+
 @endpush

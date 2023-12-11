@@ -76,7 +76,7 @@
                             </h5>
                             <div class="__bg-F8F9FC-card">
                                 <div class="form-group">
-                                    <label  class="form-label">
+                                    <label  for="app_minimum_version_android" class="form-label">
                                         {{translate('Minimum_User_App_Version')}} ({{translate('messages.android')}})
                                         <span class="input-label-secondary text--title" data-toggle="tooltip"
                                         data-placement="right"
@@ -84,11 +84,11 @@
                                             <i class="tio-info-outined"></i>
                                         </span>
                                     </label>
-                                    <input type="number" placeholder="{{translate('messages.app_minimum_version')}}" class="form-control" step="0.001" name="app_minimum_version_android"
+                                    <input id="app_minimum_version_android" type="number" placeholder="{{translate('messages.app_minimum_version')}}" class="form-control" step="0.001" name="app_minimum_version_android"
                                         value="{{env('APP_MODE')!='demo'?$app_minimum_version_android??'':''}}">
                                 </div>
                                 <div class="form-group mb-md-0">
-                                    <label class="form-label">
+                                    <label for="app_url_android" class="form-label">
                                         {{translate('Download_URL_for_User_App')}} ({{translate('messages.android')}})
                                         <span class="input-label-secondary text--title" data-toggle="tooltip"
                                         data-placement="right"
@@ -96,7 +96,7 @@
                                             <i class="tio-info-outined"></i>
                                         </span>
                                     </label>
-                                    <input type="text" placeholder="{{translate('messages.app_url')}}" class="form-control" name="app_url_android"
+                                    <input id="app_url_android" type="text" placeholder="{{translate('messages.app_url')}}" class="form-control" name="app_url_android"
                                         value="{{env('APP_MODE')!='demo'?$app_url_android??'':''}}">
                                 </div>
                             </div>
@@ -108,18 +108,18 @@
                             </h5>
                             <div class="__bg-F8F9FC-card">
                                 <div class="form-group">
-                                    <label  class="form-label">{{translate('Minimum_User_App_Version')}} ({{translate('messages.ios')}})
+                                    <label  for="app_minimum_version_ios" class="form-label">{{translate('Minimum_User_App_Version')}} ({{translate('messages.ios')}})
                                         <span class="input-label-secondary text--title" data-toggle="tooltip"
                                         data-placement="right"
                                         data-original-title="{{ translate('The_minimum_user_app_version_required_for_the_app_functionality.') }}">
                                             <i class="tio-info-outined"></i>
                                         </span>
                                     </label>
-                                    <input type="number" placeholder="{{translate('messages.app_minimum_version')}}" class="form-control" step="0.001" name="app_minimum_version_ios"
+                                    <input id="app_minimum_version_ios" type="number" placeholder="{{translate('messages.app_minimum_version')}}" class="form-control" step="0.001" name="app_minimum_version_ios"
                                         value="{{env('APP_MODE')!='demo'?$app_minimum_version_ios??'':''}}">
                                 </div>
                                 <div class="form-group mb-md-0">
-                                    <label class="form-label">
+                                    <label for="app_url_ios" class="form-label">
                                         {{translate('Download_URL_for_User_App')}} ({{translate('messages.ios')}})
                                         <span class="input-label-secondary text--title" data-toggle="tooltip"
                                         data-placement="right"
@@ -127,7 +127,7 @@
                                             <i class="tio-info-outined"></i>
                                         </span>
                                     </label>
-                                    <input type="text" placeholder="{{translate('messages.app_url')}}" class="form-control" name="app_url_ios"
+                                    <input id="app_url_ios" type="text" placeholder="{{translate('messages.app_url')}}" class="form-control" name="app_url_ios"
                                         value="{{env('APP_MODE')!='demo'?$app_url_ios??'':''}}">
                                 </div>
                             </div>
@@ -135,7 +135,7 @@
                     </div>
                     <div class="btn--container justify-content-end mt-3">
                         <button type="reset" class="btn btn--reset">{{translate('messages.reset')}}</button>
-                        <button type="{{env('APP_MODE')!='demo'?'submit':'button'}}" onclick="{{env('APP_MODE')!='demo'?'':'call_demo()'}}" class="btn btn--primary mb-2">{{translate('messages.submit')}}</button>
+                        <button type="{{env('APP_MODE')!='demo'?'submit':'button'}}"  class="btn btn--primary mb-2 call-demo">{{translate('messages.submit')}}</button>
                     </div>
                 </div>
             </div>
@@ -159,18 +159,18 @@
                             </h5>
                             <div class="__bg-F8F9FC-card">
                                 <div class="form-group">
-                                    <label  class="form-label text-capitalize">{{translate('Minimum_Store_App_Version_for_store')}} ({{translate('messages.android')}})
+                                    <label  for="app_minimum_version_android_store" class="form-label text-capitalize">{{translate('Minimum_Store_App_Version_for_store')}} ({{translate('messages.android')}})
                                         <span class="input-label-secondary text--title" data-toggle="tooltip"
                                         data-placement="right"
                                         data-original-title="{{ translate('The_minimum_store_app_version_required_for_the_app_functionality.') }}">
                                         <i class="tio-info-outined"></i>
                                     </span>
                                     </label>
-                                    <input type="number" placeholder="{{translate('messages.app_minimum_version')}}" class="form-control h--45px" name="app_minimum_version_android_store"
+                                    <input id="app_minimum_version_android_store" type="number" placeholder="{{translate('messages.app_minimum_version')}}" class="form-control h--45px" name="app_minimum_version_android_store"
                                         step="0.001"   min="0" value="{{env('APP_MODE')!='demo'?$app_minimum_version_android_store??'':''}}">
                                 </div>
                                 <div class="form-group mb-md-0">
-                                    <label class="form-label text-capitalize">
+                                    <label for="app_url_android_store" class="form-label text-capitalize">
                                         {{translate('Download_URL_for_Store_App_for_store')}} ({{translate('messages.android')}})
                                         <span class="input-label-secondary text--title" data-toggle="tooltip"
                                         data-placement="right"
@@ -178,7 +178,7 @@
                                             <i class="tio-info-outined"></i>
                                         </span>
                                     </label>
-                                    <input type="text" placeholder="{{translate('messages.Download_Url')}}" class="form-control h--45px" name="app_url_android_store"
+                                    <input id="app_url_android_store" type="text" placeholder="{{translate('messages.Download_Url')}}" class="form-control h--45px" name="app_url_android_store"
                                         value="{{env('APP_MODE')!='demo'?$app_url_android_store??'':''}}">
                                 </div>
                             </div>
@@ -190,18 +190,18 @@
                             </h5>
                             <div class="__bg-F8F9FC-card">
                                 <div class="form-group">
-                                    <label  class="form-label text-capitalize">{{translate('Minimum_Store_App_Version')}} ({{translate('messages.ios')}})
+                                    <label for="app_minimum_version_ios_store" class="form-label text-capitalize">{{translate('Minimum_Store_App_Version')}} ({{translate('messages.ios')}})
                                         <span class="input-label-secondary text--title" data-toggle="tooltip"
                                         data-placement="right"
                                         data-original-title="{{ translate('The_minimum_store_app_version_required_for_the_app_functionality.') }}">
                                         <i class="tio-info-outined"></i>
                                     </span>
                                     </label>
-                                    <input type="number" placeholder="{{translate('messages.app_minimum_version')}}" class="form-control h--45px" name="app_minimum_version_ios_store"
+                                    <input id="app_minimum_version_ios_store" type="number" placeholder="{{translate('messages.app_minimum_version')}}" class="form-control h--45px" name="app_minimum_version_ios_store"
                                     step="0.001"  min="0" value="{{env('APP_MODE')!='demo'?$app_minimum_version_ios_store??'':''}}">
                                 </div>
                                 <div class="form-group mb-md-0">
-                                    <label class="form-label text-capitalize">
+                                    <label for="app_url_ios_store" class="form-label text-capitalize">
                                         {{translate('Download_URL_for_Store_App')}} ({{translate('messages.ios')}})
                                         <span class="input-label-secondary text--title" data-toggle="tooltip"
                                         data-placement="right"
@@ -209,7 +209,7 @@
                                             <i class="tio-info-outined"></i>
                                         </span>
                                     </label>
-                                    <input type="text" placeholder="{{translate('messages.Download_Url')}}" class="form-control h--45px" name="app_url_ios_store"
+                                    <input id="app_url_ios_store" type="text" placeholder="{{translate('messages.Download_Url')}}" class="form-control h--45px" name="app_url_ios_store"
                                     value="{{env('APP_MODE')!='demo'?$app_url_ios_store??'':''}}">
                                 </div>
                             </div>
@@ -217,7 +217,7 @@
                     </div>
                     <div class="btn--container justify-content-end mt-3">
                         <button type="reset" class="btn btn--reset">{{translate('messages.reset')}}</button>
-                        <button type="{{env('APP_MODE')!='demo'?'submit':'button'}}" onclick="{{env('APP_MODE')!='demo'?'':'call_demo()'}}" class="btn btn--primary mb-2">{{translate('messages.submit')}}</button>
+                        <button type="{{env('APP_MODE')!='demo'?'submit':'button'}}"  class="btn btn--primary mb-2 call-demo"  >{{translate('messages.submit')}}</button>
                     </div>
                 </div>
             </div>
@@ -241,18 +241,18 @@
                             </h5>
                             <div class="__bg-F8F9FC-card">
                                 <div class="form-group">
-                                    <label  class="form-label text-capitalize">{{translate('Minimum_Deliveryman_App_Version')}} ({{translate('messages.android')}})
+                                    <label for="app_minimum_version_android_deliveryman" class="form-label text-capitalize">{{translate('Minimum_Deliveryman_App_Version')}} ({{translate('messages.android')}})
                                         <span class="input-label-secondary text--title" data-toggle="tooltip"
                                         data-placement="right"
                                         data-original-title="{{ translate('The_minimum_deliveryman_app_version_required_for_the_app_functionality.') }}">
                                         <i class="tio-info-outined"></i>
                                     </span>
                                     </label>
-                                    <input type="number" placeholder="{{translate('messages.app_minimum_version')}}" class="form-control h--45px" name="app_minimum_version_android_deliveryman"
+                                    <input type="number" id="app_minimum_version_android_deliveryman" placeholder="{{translate('messages.app_minimum_version')}}" class="form-control h--45px" name="app_minimum_version_android_deliveryman"
                                         step="0.001"   min="0" value="{{env('APP_MODE')!='demo'?$app_minimum_version_android_deliveryman??'':''}}">
                                 </div>
                                 <div class="form-group mb-md-0">
-                                    <label class="form-label text-capitalize">
+                                    <label for="app_url_android_deliveryman"  class="form-label text-capitalize">
                                         {{translate('Download_URL_for_Deliveryman_App')}} ({{translate('messages.android')}})
                                         <span class="input-label-secondary text--title" data-toggle="tooltip"
                                         data-placement="right"
@@ -260,7 +260,7 @@
                                             <i class="tio-info-outined"></i>
                                         </span>
                                     </label>
-                                    <input type="text" placeholder="{{translate('messages.Download_Url')}}" class="form-control h--45px" name="app_url_android_deliveryman"
+                                    <input type="text" id="app_url_android_deliveryman" placeholder="{{translate('messages.Download_Url')}}" class="form-control h--45px" name="app_url_android_deliveryman"
                                     value="{{env('APP_MODE')!='demo'?$app_url_android_deliveryman??'':''}}">
                                 </div>
                             </div>
@@ -272,18 +272,18 @@
                             </h5>
                             <div class="__bg-F8F9FC-card">
                                 <div class="form-group">
-                                    <label  class="form-label text-capitalize">{{translate('Minimum_Deliveryman_App_Version')}} ({{translate('messages.ios')}})
+                                    <label  for="app_minimum_version_ios_deliveryman" class="form-label text-capitalize">{{translate('Minimum_Deliveryman_App_Version')}} ({{translate('messages.ios')}})
                                         <span class="input-label-secondary text--title" data-toggle="tooltip"
                                         data-placement="right"
                                         data-original-title="{{ translate('The_minimum_deliveryman_app_version_required_for_the_app_functionality.') }}">
                                         <i class="tio-info-outined"></i>
                                     </span>
                                     </label>
-                                    <input type="number" placeholder="{{translate('messages.app_minimum_version')}}" class="form-control h--45px" name="app_minimum_version_ios_deliveryman"
+                                    <input id="app_minimum_version_ios_deliveryman" type="number" placeholder="{{translate('messages.app_minimum_version')}}" class="form-control h--45px" name="app_minimum_version_ios_deliveryman"
                                     step="0.001"  min="0" value="{{env('APP_MODE')!='demo'?$app_minimum_version_ios_deliveryman??'':''}}">
                                 </div>
                                 <div class="form-group mb-md-0">
-                                    <label class="form-label text-capitalize">
+                                    <label for="app_url_ios_deliveryman" class="form-label text-capitalize">
                                         {{translate('Download_URL_for_Deliveryman_App')}} ({{translate('messages.ios')}})
                                         <span class="input-label-secondary text--title" data-toggle="tooltip"
                                         data-placement="right"
@@ -291,7 +291,7 @@
                                             <i class="tio-info-outined"></i>
                                         </span>
                                     </label>
-                                    <input type="text" placeholder="{{translate('messages.Download_Url')}}" class="form-control h--45px" name="app_url_ios_deliveryman"
+                                    <input id="app_url_ios_deliveryman" type="text" placeholder="{{translate('messages.Download_Url')}}" class="form-control h--45px" name="app_url_ios_deliveryman"
                                     value="{{env('APP_MODE')!='demo'?$app_url_ios_deliveryman??'':''}}">
                                 </div>
                             </div>
@@ -299,7 +299,7 @@
                     </div>
                     <div class="btn--container justify-content-end mt-3">
                         <button type="reset" class="btn btn--reset">{{translate('messages.reset')}}</button>
-                        <button type="{{env('APP_MODE')!='demo'?'submit':'button'}}" onclick="{{env('APP_MODE')!='demo'?'':'call_demo()'}}" class="btn btn--primary mb-2">{{translate('messages.submit')}}</button>
+                        <button type="{{env('APP_MODE')!='demo'?'submit':'button'}}"  class="btn btn--primary mb-2 call-demo">{{translate('messages.submit')}}</button>
                     </div>
                 </div>
             </div>
@@ -307,55 +307,5 @@
 
     </div>
 
-    <div class="modal fade" id="how-it-works">
-        <div class="modal-dialog status-warning-modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">
-                        <span aria-hidden="true" class="tio-clear"></span>
-                    </button>
-                </div>
-                <div class="modal-body pb-5 pt-0">
-                    <div class="single-item-slider owl-carousel">
-                        <div class="item">
-                            <div class="mb-20">
-                                <div class="text-center">
-                                    <img src="{{asset('/public/assets/admin/img/app.png')}}" alt="" class="mb-20">
-                                    <h5 class="modal-title">{{translate('What_is_App_Version?')}}</h5>
-                                </div>
-                                <ul>
-                                    <li>
-                                        {{ translate('This_app_version_defines_the_Store,_Deliveryman,_and_User_app_version_of_6amMart.') }}
-                                    </li>
-                                    <li>
-                                        {{ translate('It_doesn’t_represent_the_Play_Store_or_App_Store_version.') }}
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="mb-20">
-                                <div class="text-center">
-                                    <img src="{{asset('/public/assets/admin/img/app.png')}}" alt="" class="mb-20">
-                                    <h5 class="modal-title">{{translate('App Download Link')}}</h5>
-                                </div>
-                                <ul>
-                                    <li>
-                                       {{ translate('The_app_download_link_is_the_URL_from_which_users_can_update_the_app_by_clicking_the_`Update_App`_button_from_their_app.') }}
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="d-flex justify-content-center">
-                        <div class="slide-counter"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+
 @endsection
-
-@push('script_2')
-
-@endpush

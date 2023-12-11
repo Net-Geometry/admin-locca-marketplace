@@ -18,6 +18,7 @@
             @include('admin-views.business-settings.partials.nav-menu')
         </div>
         <!-- End Page Header -->
+
         <div class="card mb-3">
             <div class="card-body">
                 <div
@@ -28,7 +29,7 @@
                         {{ translate('messages.maintenance_mode') }}
                     </h5>
                     <label class="toggle-switch toggle-switch-sm">
-                        <input type="checkbox" class="status toggle-switch-input" onclick="maintenance_mode()"
+                        <input type="checkbox" class="status toggle-switch-input maintenance-mode"
                             {{ isset($config) && $config ? 'checked' : '' }}>
                         <span class="toggle-switch-label text mb-0">
                             <span class="toggle-switch-indicator"></span>
@@ -56,8 +57,8 @@
                                 <div class="col-sm-6 col-md-4 col-xl-3">
                                     <div class="form-group mb-0">
                                         <label class="form-label"
-                                            for="exampleFormControlInput1">{{ translate('messages.company_name') }}</label>
-                                        <input type="text" name="store_name" value="{{ $name->value ?? '' }}"
+                                            for="store_name">{{ translate('messages.company_name') }}</label>
+                                        <input id="store_name" type="text" name="store_name" value="{{ $name->value ?? '' }}"
                                             class="form-control" placeholder="{{ translate('messages.new_company') }}"
                                             required>
                                     </div>
@@ -66,8 +67,8 @@
                                 @php($email = \App\Models\BusinessSetting::where('key', 'email_address')->first())
                                     <div class="form-group mb-0">
                                         <label class="form-label"
-                                            for="exampleFormControlInput1">{{ translate('messages.email') }}</label>
-                                        <input type="email" value="{{ $email->value ?? '' }}" name="email"
+                                            for="email">{{ translate('messages.email') }}</label>
+                                        <input id="email" type="email" value="{{ $email->value ?? '' }}" name="email"
                                             class="form-control" placeholder="{{ translate('messages.Ex_:_ex@example.com') }}" required>
                                     </div>
                                 </div>
@@ -75,8 +76,8 @@
                                 @php($phone = \App\Models\BusinessSetting::where('key', 'phone')->first())
                                     <div class="form-group mb-0">
                                         <label class="form-label"
-                                            for="exampleFormControlInput1">{{ translate('messages.phone') }}</label>
-                                        <input type="tel" value="{{ $phone->value ?? '' }}" name="phone"
+                                            for="phone">{{ translate('messages.phone') }}</label>
+                                        <input type="tel"  value="{{ $phone->value ?? '' }}"  id="phone"  name="phone"
                                             class="form-control" placeholder="{{ translate('messages.Ex: +3264124565') }}" required>
                                     </div>
                                 </div>
@@ -345,7 +346,7 @@
                                             @php($address = \App\Models\BusinessSetting::where('key', 'address')->first())
                                             <div class="form-group mb-0">
                                                 <label class="form-label"
-                                                    for="exampleFormControlInput1">{{ translate('messages.address') }}</label>
+                                                    for="address">{{ translate('messages.address') }}</label>
                                                 <textarea type="text" id="address" name="address" class="form-control h--90px" placeholder="{{ translate('messages.Ex: address') }}" rows="1" required>{{ $address->value ?? '' }}</textarea>
                                             </div>
                                         </div>
@@ -418,6 +419,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="mt-md-4">
+
                                         <input id="pac-input" class="controls rounded" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('messages.search_your_location_here') }}" type="text" placeholder="{{ translate('messages.search_here') }}" />
                                         <div id="location_map_canvas" class="overflow-hidden rounded height-285px"></div>
                                     </div>
@@ -434,166 +436,14 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="row g-3">
-                                {{-- <div class="col-sm-6 col-md-4 col-xl-3">
-                                    <div class="form-group mb-0">
-                                        <label class="form-label"
-                                            for="exampleFormControlInput1">{{ translate('messages.language') }} </label>
-                                        <select name="language[]" id="language" data-maximum-selection-length="3"
-                                            class="form-control js-select2-custom" required multiple=true
-                                            data-toggle="tooltip" data-placement="right"
-                                            data-original-title="{{ translate('messages.add_language_warrning') }}">
-                                            <option value="en">English(default)</option>
-                                            <option value="af">Afrikaans</option>
-                                            <option value="sq">Albanian - shqip</option>
-                                            <option value="am">Amharic - አማርኛ</option>
-                                            <option value="ar">Arabic - العربية</option>
-                                            <option value="an">Aragonese - aragonés</option>
-                                            <option value="hy">Armenian - հայերեն</option>
-                                            <option value="ast">Asturian - asturianu</option>
-                                            <option value="az">Azerbaijani - azərbaycan dili</option>
-                                            <option value="eu">Basque - euskara</option>
-                                            <option value="be">Belarusian - беларуская</option>
-                                            <option value="bn">Bengali - বাংলা</option>
-                                            <option value="bs">Bosnian - bosanski</option>
-                                            <option value="br">Breton - brezhoneg</option>
-                                            <option value="bg">Bulgarian - български</option>
-                                            <option value="ca">Catalan - català</option>
-                                            <option value="ckb">Central Kurdish - کوردی (دەستنوسی عەرەبی)</option>
-                                            <option value="zh">Chinese - 中文</option>
-                                            <option value="zh-HK">Chinese (Hong Kong) - 中文（香港）</option>
-                                            <option value="zh-CN">Chinese (Simplified) - 中文（简体）</option>
-                                            <option value="zh-TW">Chinese (Traditional) - 中文（繁體）</option>
-                                            <option value="co">Corsican</option>
-                                            <option value="hr">Croatian - hrvatski</option>
-                                            <option value="cs">Czech - čeština</option>
-                                            <option value="da">Danish - dansk</option>
-                                            <option value="nl">Dutch - Nederlands</option>
-                                            <option value="en-AU">English (Australia)</option>
-                                            <option value="en-CA">English (Canada)</option>
-                                            <option value="en-IN">English (India)</option>
-                                            <option value="en-NZ">English (New Zealand)</option>
-                                            <option value="en-ZA">English (South Africa)</option>
-                                            <option value="en-GB">English (United Kingdom)</option>
-                                            <option value="en-US">English (United States)</option>
-                                            <option value="eo">Esperanto - esperanto</option>
-                                            <option value="et">Estonian - eesti</option>
-                                            <option value="fo">Faroese - føroyskt</option>
-                                            <option value="fil">Filipino</option>
-                                            <option value="fi">Finnish - suomi</option>
-                                            <option value="fr">French - français</option>
-                                            <option value="fr-CA">French (Canada) - français (Canada)</option>
-                                            <option value="fr-FR">French (France) - français (France)</option>
-                                            <option value="fr-CH">French (Switzerland) - français (Suisse)</option>
-                                            <option value="gl">Galician - galego</option>
-                                            <option value="ka">Georgian - ქართული</option>
-                                            <option value="de">German - Deutsch</option>
-                                            <option value="de-AT">German (Austria) - Deutsch (Österreich)</option>
-                                            <option value="de-DE">German (Germany) - Deutsch (Deutschland)</option>
-                                            <option value="de-LI">German (Liechtenstein) - Deutsch (Liechtenstein) </option>
-                                            <option value="de-CH">German (Switzerland) - Deutsch (Schweiz)</option>
-                                            <option value="el">Greek - Ελληνικά</option>
-                                            <option value="gn">Guarani</option>
-                                            <option value="gu">Gujarati - ગુજરાતી</option>
-                                            <option value="ha">Hausa</option>
-                                            <option value="haw">Hawaiian - ʻŌlelo Hawaiʻi</option>
-                                            <option value="he">Hebrew - עברית</option>
-                                            <option value="hi">Hindi - हिन्दी</option>
-                                            <option value="hu">Hungarian - magyar</option>
-                                            <option value="is">Icelandic - íslenska</option>
-                                            <option value="id">Indonesian - Indonesia</option>
-                                            <option value="ia">Interlingua</option>
-                                            <option value="ga">Irish - Gaeilge</option>
-                                            <option value="it">Italian - italiano</option>
-                                            <option value="it-IT">Italian (Italy) - italiano (Italia)</option>
-                                            <option value="it-CH">Italian (Switzerland) - italiano (Svizzera)</option>
-                                            <option value="ja">Japanese - 日本語</option>
-                                            <option value="kn">Kannada - ಕನ್ನಡ</option>
-                                            <option value="kk">Kazakh - қазақ тілі</option>
-                                            <option value="km">Khmer - ខ្មែរ</option>
-                                            <option value="ko">Korean - 한국어</option>
-                                            <option value="ku">Kurdish - Kurdî</option>
-                                            <option value="ky">Kyrgyz - кыргызча</option>
-                                            <option value="lo">Lao - ລາວ</option>
-                                            <option value="la">Latin</option>
-                                            <option value="lv">Latvian - latviešu</option>
-                                            <option value="ln">Lingala - lingála</option>
-                                            <option value="lt">Lithuanian - lietuvių</option>
-                                            <option value="mk">Macedonian - македонски</option>
-                                            <option value="ms">Malay - Bahasa Melayu</option>
-                                            <option value="ml">Malayalam - മലയാളം</option>
-                                            <option value="mt">Maltese - Malti</option>
-                                            <option value="mr">Marathi - मराठी</option>
-                                            <option value="mn">Mongolian - монгол</option>
-                                            <option value="ne">Nepali - नेपाली</option>
-                                            <option value="no">Norwegian - norsk</option>
-                                            <option value="nb">Norwegian Bokmål - norsk bokmål</option>
-                                            <option value="nn">Norwegian Nynorsk - nynorsk</option>
-                                            <option value="oc">Occitan</option>
-                                            <option value="or">Oriya - ଓଡ଼ିଆ</option>
-                                            <option value="om">Oromo - Oromoo</option>
-                                            <option value="ps">Pashto - پښتو</option>
-                                            <option value="fa">Persian - فارسی</option>
-                                            <option value="pl">Polish - polski</option>
-                                            <option value="pt">Portuguese - português</option>
-                                            <option value="pt-BR">Portuguese (Brazil) - português (Brasil)</option>
-                                            <option value="pt-PT">Portuguese (Portugal) - português (Portugal)</option>
-                                            <option value="pa">Punjabi - ਪੰਜਾਬੀ</option>
-                                            <option value="qu">Quechua</option>
-                                            <option value="ro">Romanian - română</option>
-                                            <option value="mo">Romanian (Moldova) - română (Moldova)</option>
-                                            <option value="rm">Romansh - rumantsch</option>
-                                            <option value="ru">Russian - русский</option>
-                                            <option value="gd">Scottish Gaelic</option>
-                                            <option value="sr">Serbian - српски</option>
-                                            <option value="sh">Serbo-Croatian - Srpskohrvatski</option>
-                                            <option value="sn">Shona - chiShona</option>
-                                            <option value="sd">Sindhi</option>
-                                            <option value="si">Sinhala - සිංහල</option>
-                                            <option value="sk">Slovak - slovenčina</option>
-                                            <option value="sl">Slovenian - slovenščina</option>
-                                            <option value="so">Somali - Soomaali</option>
-                                            <option value="st">Southern Sotho</option>
-                                            <option value="es">Spanish - español</option>
-                                            <option value="es-AR">Spanish (Argentina) - español (Argentina)</option>
-                                            <option value="es-419">Spanish (Latin America) - español (Latinoamérica) </option>
-                                            <option value="es-MX">Spanish (Mexico) - español (México)</option>
-                                            <option value="es-ES">Spanish (Spain) - español (España)</option>
-                                            <option value="es-US">Spanish (United States) - español (Estados Unidos) </option>
-                                            <option value="su">Sundanese</option>
-                                            <option value="sw">Swahili - Kiswahili</option>
-                                            <option value="sv">Swedish - svenska</option>
-                                            <option value="tg">Tajik - тоҷикӣ</option>
-                                            <option value="ta">Tamil - தமிழ்</option>
-                                            <option value="tt">Tatar</option>
-                                            <option value="te">Telugu - తెలుగు</option>
-                                            <option value="th">Thai - ไทย</option>
-                                            <option value="ti">Tigrinya - ትግርኛ</option>
-                                            <option value="to">Tongan - lea fakatonga</option>
-                                            <option value="tr">Turkish - Türkçe</option>
-                                            <option value="tk">Turkmen</option>
-                                            <option value="tw">Twi</option>
-                                            <option value="uk">Ukrainian - українська</option>
-                                            <option value="ur">Urdu - اردو</option>
-                                            <option value="ug">Uyghur</option>
-                                            <option value="uz">Uzbek - o‘zbek</option>
-                                            <option value="vi">Vietnamese - Tiếng Việt</option>
-                                            <option value="wa">Walloon - wa</option>
-                                            <option value="cy">Welsh - Cymraeg</option>
-                                            <option value="fy">Western Frisian</option>
-                                            <option value="xh">Xhosa</option>
-                                            <option value="yi">Yiddish</option>
-                                            <option value="yo">Yoruba - Èdè Yorùbá</option>
-                                            <option value="zu">Zulu - isiZulu</option>
-                                        </select>
-                                    </div>
-                                </div> --}}
+
                                 <div class="col-sm-6 col-md-4 col-xl-3">
                                     @php($tz = \App\Models\BusinessSetting::where('key', 'timezone')->first())
                                     @php($tz = $tz ? $tz->value : 0)
                                     <div class="form-group mb-0">
-                                        <label
+                                        <label for="timezone"
                                             class="form-label text-capitalize">{{ translate('messages.time_zone') }}</label>
-                                        <select name="timezone" class="form-control js-select2-custom">
+                                        <select id="timezone" name="timezone" class="form-control js-select2-custom">
                                             <option value="UTC" {{ $tz ? ($tz == '' ? 'selected' : '') : '' }}>UTC </option>
                                             <option value="Etc/GMT+12"
                                                 {{ $tz ? ($tz == 'Etc/GMT+12' ? 'selected' : '') : '' }}>(GMT-12:00)International Date Line West</option>
@@ -831,9 +681,9 @@
                                     @php($tf = \App\Models\BusinessSetting::where('key', 'timeformat')->first())
                                     @php($tf = $tf ? $tf->value : '24')
                                     <div class="form-group mb-0">
-                                        <label
+                                        <label for="time_format"
                                             class="form-label text-capitalize">{{ translate('messages.time_format') }}</label>
-                                        <select name="time_format" class="form-control">
+                                        <select id="time_format" name="time_format" class="form-control">
                                             <option value="12" {{ $tf == '12' ? 'selected' : '' }}>
                                                 {{ translate('messages.12_hour') }} </option>
                                             <option value="24" {{ $tf == '24' ? 'selected' : '' }}>
@@ -845,7 +695,7 @@
                                     @php($currency_code = \App\Models\BusinessSetting::where('key', 'currency')->first())
                                     <div class="form-group mb-0">
                                         <label class="form-label"
-                                            for="exampleFormControlInput1">{{ translate('Currency Symbol') }}</label>
+                                            for="currency">{{ translate('Currency Symbol') }}</label>
                                         <select name="currency" class="form-control js-select2-custom">
                                             @foreach (\App\Models\Currency::orderBy('currency_code')->get() as $currency)<option value="{{ $currency['currency_code'] }}"
                                                     {{ $currency_code ? ($currency_code->value == $currency['currency_code'] ? 'selected' : '') : '' }}>
@@ -896,12 +746,12 @@
                                     @php($footer_text = \App\Models\BusinessSetting::where('key', 'footer_text')->first())
                                     <div class="form-group mb-0">
                                         <label class="form-label"
-                                            for="exampleFormControlInput1">{{ translate('Copyright Text') }}
+                                            for="footer_text">{{ translate('Copyright Text') }}
                                             <span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('messages.make_visitors_aware_of_your_business‘s_rights_&_legal_information.') }}">
                                                 <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
                                             </span>
                                         </label>
-                                        <textarea type="text" value="" name="footer_text" class="form-control h--45"
+                                        <textarea type="text" id="footer_text" name="footer_text" class="form-control h--45"
                                             placeholder="{{ translate('messages.Ex_:_Copyright_Text') }}" required>{{ $footer_text->value ?? '' }}</textarea>
                                     </div>
                                 </div>
@@ -909,12 +759,12 @@
                                     @php($cookies_text = \App\Models\BusinessSetting::where('key', 'cookies_text')->first())
                                     <div class="form-group mb-0">
                                         <label class="form-label"
-                                            for="exampleFormControlInput1">{{ translate('Cookies Text') }}
+                                            for="cookies_text">{{ translate('Cookies Text') }}
                                             <span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('messages.make_visitors_aware_of_your_business‘s_rights_&_legal_information.') }}">
                                                 <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
                                             </span>
                                         </label>
-                                        <textarea type="text" value="" name="cookies_text" class="form-control h--45"
+                                        <textarea type="text"  id="cookies_text" name="cookies_text" class="form-control h--45"
                                             placeholder="{{ translate('messages.Ex_:_Cookies_Text') }}" required>{{ $cookies_text->value ?? '' }}</textarea>
                                     </div>
                                 </div>
@@ -966,7 +816,7 @@
                                     <div class="form-group mb-0">
                                         <label class="input-label text-capitalize d-flex alig-items-center"><span
                                                 class="line--limit-1">{{ translate('messages.Who_Will_Confirm_Order?') }}
-                                            <span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('messages.After_a_customer_order_placement,_Admin_can_define_who_will_confirm_the_order_first-_Deliveryman_or_Store?_For_example,_if_you_choose_‘Delivery_man’,_the_deliveryman_nearby_will_confirm_the_order_and_forward_it_to_the_related_store_to_process_the_order._It_works_vice-versa_if_you_choose_‘Store’.') }}" alt="">
+                                            <span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('messages.After_a_customer_order_placement,_Admin_can_define_who_will_confirm_the_order_first-_Deliveryman_or_Store?_For_example,_if_you_choose_‘Delivery_man’,_the_deliveryman_nearby_will_confirm_the_order_and_forward_it_to_the_related_store_to_process_the_order._It_works_vice-versa_if_you_choose_‘Store’.') }}">
                                                 <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
                                             </span>
                                             </span>
@@ -1001,7 +851,18 @@
                                             <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
                                         </span>
                                         </span>
-                                            <input type="checkbox" onclick="toogleModal(event,'tax_included','tax-on.png','tax-off.png','{{translate('messages.Want_to')}} <strong>{{translate('messages.‘Include_Tax_Amount?’')}}</strong>','{{translate('messages.Want_to_disable')}} <strong>{{translate('messages.Tax_Amount’?')}}</strong>',`<p>{{translate('messages.If_you_enable_it,_customers_will_see_the_product_Price_including_Tax,_during_checkout. ')}}</p>`,`<p>{{translate('messages.If_you_disable_it,_customers_will_see_the_product_or_service_price_without_Tax,_during_checkout.')}}</p>`)"  class="toggle-switch-input" value="1" name="tax_included" id="tax_included"
+                                            <input type="checkbox"
+
+                                                   data-id="tax_included"
+                                                   data-type="toggle"
+                                                   data-image-on="{{ asset('/public/assets/admin/img/modal/tax-on.png') }}"
+                                                   data-image-off="{{ asset('/public/assets/admin/img/modal/tax-off.png') }}"
+                                                   data-title-on="{{ translate('messages.Want_to') }} <strong>{{ translate('messages.‘Include_Tax_Amount?’') }}</strong>"
+                                                   data-title-off="{{ translate('messages.Want_to_disable') }} <strong>{{ translate('messages.Tax_Amount’?') }}</strong>"
+                                                   data-text-on="<p>{{ translate('messages.If_you_enable_it,_customers_will_see_the_product_Price_including_Tax,_during_checkout.') }}</p>"
+                                                   data-text-off="<p>{{ translate('messages.If_you_disable_it,_customers_will_see_the_product_or_service_price_without_Tax,_during_checkout.') }}</p>"
+                                                   class="status toggle-switch-input dynamic-checkbox-toggle"
+                                                   value="1" name="tax_included" id="tax_included"
                                             {{ $tax_included == 1 ? 'checked' : '' }}>
                                             <span class="toggle-switch-label text">
                                                 <span class="toggle-switch-indicator"></span>
@@ -1048,7 +909,17 @@
                                                         src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
                                                         alt="{{ translate('messages.veg_non_veg') }}"> * </span>
                                             </span>
-                                            <input type="checkbox" onclick="toogleModal(event,'vnv1','veg-on.png','veg-off.png','{{translate('messages.Want_to_enable_the')}} <strong>{{translate('messages.‘Veg/Non-Veg’_feature?')}}</strong>','{{translate('messages.Want_to_disable')}} <strong>{{translate('messages.the_Veg/Non-Veg_Feature?')}}</strong>',`<p>{{translate('messages.If_you_enable_this,_customers_can_filter_food_items_by_choosing_food_from_the_Veg/Non-Veg_feature.')}}</p>`,`<p>{{translate('messages.If_you_disable_this,_the_Veg/Non-Veg_feature_will_be_hidden_in_the_Customer_App_&_Website.')}}</p>`)" class="toggle-switch-input" value="1"
+                                            <input type="checkbox"
+                                                   data-id="vnv1"
+                                                   data-type="toggle"
+                                                   data-image-on="{{ asset('/public/assets/admin/img/modal/veg-on.png') }}"
+                                                   data-image-off="{{ asset('/public/assets/admin/img/modal/veg-off.png') }}"
+                                                   data-title-on="{{ translate('messages.Want_to_enable_the') }} <strong>{{ translate('messages.‘Veg/Non-Veg’_feature?') }}</strong>"
+                                                   data-title-off="{{ translate('messages.Want_to_disable') }} <strong>{{ translate('messages.the_Veg/Non-Veg_Feature?') }}</strong>"
+                                                   data-text-on="<p>{{ translate('messages.If_you_enable_this,_customers_can_filter_food_items_by_choosing_food_from_the_Veg/Non-Veg_feature.') }}</p>"
+                                                   data-text-off="<p>{{ translate('messages.If_you_disable_this,_the_Veg/Non-Veg_feature_will_be_hidden_in_the_Customer_App_&_Website.') }}</p>"
+                                                   class="status toggle-switch-input dynamic-checkbox-toggle"
+                                                value="1"
                                                 name="vnv" id="vnv1" {{ $vnv == 1 ? 'checked' : '' }}>
                                             <span class="toggle-switch-label text">
                                                 <span class="toggle-switch-indicator"></span>
@@ -1074,7 +945,17 @@
                                                         alt="{{ translate('messages.customer_varification_toggle') }}"> *
                                                 </span>
                                             </span>
-                                            <input type="checkbox" onclick="toogleModal(event,'aon1','order-notification-on.png','order-notification-off.png','{{translate('messages.Want_to_enable')}} <strong>{{translate('messages.Order_Notification_for_Admin?')}}</strong>','{{translate('messages.Want_to_disable')}} <strong>{{translate('messages.Order_Notification_for_Admin?')}}</strong>',`<p>{{translate('messages.If_you_enable_this,_the_Admin_will_receive_a_Notification_for_every_order_placed.')}}</p>`,`<p>{{translate('messages.If_you_disable_this,_the_Admin_will_NOT_receive_a_Notification_for_every_order_placed.')}}</p>`)" class="toggle-switch-input" value="1"
+                                            <input type="checkbox"
+                                                   data-id="aon1"
+                                                   data-type="toggle"
+                                                   data-image-on="{{ asset('/public/assets/admin/img/modal/order-notification-on.png') }}"
+                                                   data-image-off="{{ asset('/public/assets/admin/img/modal/order-notification-off.png') }}"
+                                                   data-title-on="{{ translate('messages.Want_to_enable') }} <strong>{{ translate('messages.Order_Notification_for_Admin?') }}</strong>"
+                                                   data-title-off="{{ translate('messages.Want_to_disable') }} <strong>{{ translate('messages.Order_Notification_for_Admin?') }}</strong>"
+                                                   data-text-on="<p>{{ translate('messages.If_you_enable_this,_the_Admin_will_receive_a_Notification_for_every_order_placed.') }}</p>"
+                                                   data-text-off="<p>{{ translate('messages.If_you_disable_this,_the_Admin_will_NOT_receive_a_Notification_for_every_order_placed.') }}</p>"
+                                                   class="status toggle-switch-input dynamic-checkbox-toggle"
+                                                    value="1"
                                                 name="admin_order_notification" id="aon1"
                                                 {{ $admin_order_notification == 1 ? 'checked' : '' }}>
                                             <span class="toggle-switch-label text">
@@ -1088,7 +969,7 @@
                                     <div class="form-group mb-0">
                                         <label class="input-label text-capitalize d-flex alig-items-center"><span
                                             class="line--limit-1">{{ translate('Order_Notification_Type') }}
-                                        <span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('For_Firebase,_a_single_real-time_notification_will_be_sent_upon_order_placement,_with_no_repetition._For_the_Manual_option,_notifications_will_appear_at_10-second_intervals_until_the_order_is_viewed.') }}" alt="">
+                                        <span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('For_Firebase,_a_single_real-time_notification_will_be_sent_upon_order_placement,_with_no_repetition._For_the_Manual_option,_notifications_will_appear_at_10-second_intervals_until_the_order_is_viewed.') }}" >
                                             <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
                                         </span>
                                         </span>
@@ -1124,7 +1005,17 @@
                                                         alt="{{ translate('messages.free_over_delivery_message') }}"></span>
                                                 *</small></span>
                                             <span class="toggle-switch toggle-switch-sm pr-sm-3">
-                                                <input type="checkbox" onclick="toogleModal(event,'free_delivery_over_status','free-delivery-on.png','free-delivery-off.png','<strong>{{translate('messages.Want_to_enable_Free_Delivery_on_Minimum_Orders?')}}</strong>','<strong>{{translate('messages.Want_to_disable_Free_Delivery_on_Minimum_Order?')}}</strong>',`<p>{{translate('messages.If_you_enable_this,_customers_can_get_FREE_Delivery_by_fulfilling_the_minimum_order_requirement.')}}</p>`,`<p>{{translate('messages.If_you_disable_this,_the_FREE_Delivery_option_will_be_hidden_from_the_Customer_App_or_Website.')}}</p>`)" class="status toggle-switch-input"
+                                                <input type="checkbox"
+                                                       data-id="free_delivery_over_status"
+                                                       data-type="toggle"
+                                                       data-image-on="{{ asset('/public/assets/admin/img/modal/free-delivery-on.png') }}"
+                                                       data-image-off="{{ asset('/public/assets/admin/img/modal/free-delivery-off.png') }}"
+                                                       data-title-on="<strong>{{ translate('messages.Want_to_enable_Free_Delivery_on_Minimum_Orders?') }}</strong>"
+                                                       data-title-off="<strong>{{ translate('messages.Want_to_disable_Free_Delivery_on_Minimum_Order?') }}</strong>"
+                                                       data-text-on="<p>{{ translate('messages.If_you_enable_this,_customers_can_get_FREE_Delivery_by_fulfilling_the_minimum_order_requirement.') }}</p>"
+                                                       data-text-off="<p>{{ translate('messages.If_you_disable_this,_the_FREE_Delivery_option_will_be_hidden_from_the_Customer_App_or_Website.') }}</p>"
+                                                       class="status toggle-switch-input dynamic-checkbox-toggle"
+
                                                     name="free_delivery_over_status" id="free_delivery_over_status"
                                                     value="1"
                                                     {{ isset($free_delivery_over_status->value) ? 'checked' : '' }}>
@@ -1133,7 +1024,7 @@
                                             </span>
                                         </label>
 
-                                        <input type="number" name="free_delivery_over" class="form-control"
+                                        <input type="number"  name="free_delivery_over" class="form-control"
                                             id="free_delivery_over"  placeholder="{{ translate('messages.Ex:_10') }}"
                                             value="{{ $free_delivery_over ? $free_delivery_over->value : 0 }}"
                                             min="0" step=".01" required
@@ -1157,7 +1048,17 @@
                                                         alt="{{ translate('messages.customer_varification_toggle') }}"> *
                                                 </span>
                                             </span>
-                                            <input type="checkbox" onclick="toogleModal(event,'partial_payment','schedule-on.png','schedule-off.png','{{translate('messages.Want_to_enable')}} <strong>{{translate('messages.partial_payment_?')}}</strong>','{{translate('messages.Want_to_disable')}} <strong>{{translate('messages.partial_payment_?')}}</strong>',`<p>{{translate('messages.If_you_enable_this,_customers_can_choose_partial_payment_during_checkout.')}}</p>`,`<p>{{translate('messages.If_you_disable_this,_the_partial_payment_feature_will_be_hidden.')}}</p>`)" class="toggle-switch-input" value="1"
+                                            <input type="checkbox"
+                                                   data-id="partial_payment"
+                                                   data-type="toggle"
+                                                   data-image-on="{{ asset('/public/assets/admin/img/modal/schedule-on.png') }}"
+                                                   data-image-off="{{ asset('/public/assets/admin/img/modal/schedule-off.png') }}"
+                                                   data-title-on="{{ translate('messages.Want_to_enable') }} <strong>{{ translate('messages.partial_payment_?') }}</strong>"
+                                                   data-title-off="{{ translate('messages.Want_to_disable') }} <strong>{{ translate('messages.partial_payment_?') }}</strong>"
+                                                   data-text-on="<p>{{ translate('messages.If_you_enable_this,_customers_can_choose_partial_payment_during_checkout.') }}</p>"
+                                                   data-text-off="<p>{{ translate('messages.If_you_disable_this,_the_partial_payment_feature_will_be_hidden.') }}</p>"
+                                                   class="status toggle-switch-input dynamic-checkbox-toggle"
+                                                   value="1"
                                                 name="partial_payment_status" id="partial_payment"
                                                 {{ $partial_payment == 1 ? 'checked' : '' }}>
                                             <span class="toggle-switch-label text">
@@ -1215,7 +1116,17 @@
                                                         alt="{{ translate('messages.customer_varification_toggle') }}"> *
                                                 </span>
                                             </span>
-                                            <input type="checkbox" onclick="toogleModal(event,'additional_charge_status','dm-tips-on.png','dm-tips-off.png','<strong>{{translate('messages.Want_to_enable_additional_charge?')}}</strong>','<strong>{{translate('messages.Want_to_disable_additional_charge?')}}</strong>',`<p>{{translate('messages.If_you_enable_this,_additional_charge_will_be_added_with_order_amount,_it_will_be_added_in_admin_wallet')}}</p>`,`<p>{{translate('messages.If_you_disable_this,_additional_charge_will_not_be_added_with_order_amount.')}}</p>`)" class="status toggle-switch-input" value="1"
+                                            <input type="checkbox"
+                                                   data-id="additional_charge_status"
+                                                   data-type="toggle"
+                                                   data-image-on="{{ asset('/public/assets/admin/img/modal/dm-tips-on.png') }}"
+                                                   data-image-off="{{ asset('/public/assets/admin/img/modal/dm-tips-off.png') }}"
+                                                   data-title-on="<strong>{{ translate('messages.Want_to_enable_additional_charge?') }}</strong>"
+                                                   data-title-off="<strong>{{ translate('messages.Want_to_disable_additional_charge?') }}</strong>"
+                                                   data-text-on="<p>{{ translate('messages.If_you_enable_this,_additional_charge_will_be_added_with_order_amount,_it_will_be_added_in_admin_wallet') }}</p>"
+                                                   data-text-off="<p>{{ translate('messages.If_you_disable_this,_additional_charge_will_not_be_added_with_order_amount.') }}</p>"
+                                                   class="status toggle-switch-input dynamic-checkbox-toggle"
+                                                   value="1"
                                                 name="additional_charge_status" id="additional_charge_status"
                                                 {{ $additional_charge_status == 1 ? 'checked' : '' }}>
                                             <span class="toggle-switch-label text">
@@ -1282,7 +1193,17 @@
                                                         alt="{{ translate('messages.customer_varification_toggle') }}"> *
                                                 </span>
                                             </span>
-                                            <input type="checkbox" onclick="toogleModal(event,'guest_checkout_status','dm-tips-on.png','dm-tips-off.png','<strong>{{translate('messages.Want_to_enable_guest_checkout?')}}</strong>','<strong>{{translate('messages.Want_to_disable_guest_checkout?')}}</strong>',`<p>{{translate('messages.If_you_enable_this,_guest_checkout_will_be_visible_when_customer_is_not_logged_in.')}}</p>`,`<p>{{translate('messages.If_you_disable_this,_guest_checkout_will_not_be_visible_when_customer_is_not_logged_in.')}}</p>`)" class="status toggle-switch-input" value="1"
+                                            <input type="checkbox"
+                                                   data-id="guest_checkout_status"
+                                                   data-type="toggle"
+                                                   data-image-on="{{ asset('/public/assets/admin/img/modal/dm-tips-on.png') }}"
+                                                   data-image-off="{{ asset('/public/assets/admin/img/modal/dm-tips-off.png') }}"
+                                                   data-title-on="<strong>{{ translate('messages.Want_to_enable_guest_checkout?') }}</strong>"
+                                                   data-title-off="<strong>{{ translate('messages.Want_to_disable_guest_checkout?') }}</strong>"
+                                                   data-text-on="<p>{{ translate('messages.If_you_enable_this,_guest_checkout_will_be_visible_when_customer_is_not_logged_in.') }}</p>"
+                                                   data-text-off="<p>{{ translate('messages.If_you_disable_this,_guest_checkout_will_not_be_visible_when_customer_is_not_logged_in.') }}</p>"
+                                                   class="status toggle-switch-input dynamic-checkbox-toggle"
+                                                   value="1"
                                                 name="guest_checkout_status" id="guest_checkout_status"
                                                 {{ $guest_checkout_status == 1 ? 'checked' : '' }}>
                                             <span class="toggle-switch-label text">
@@ -1314,51 +1235,55 @@
 
 @push('script_2')
     <script>
+        "use strict";
         @php($language = \App\Models\BusinessSetting::where('key', 'language')->first())
         @php($language = $language->value ?? null)
         let language = <?php echo $language; ?>;
         $('[id=language]').val(language);
 
-        function maintenance_mode() {
+
+        $(document).on('click', '.maintenance-mode', function () {
             @if (env('APP_MODE') == 'demo')
-                toastr.warning('Sorry! You can not enable maintenance mode in demo!');
+            toastr.warning('Sorry! You can not enable maintenance mode in demo!');
             @else
-                Swal.fire({
-                    title: '{{ translate('messages.Are you sure?') }}',
-                    text: '{{ translate('messages.all_your_apps_and_customer_website_will_be_disabled_until_you_‘Turn_Off’ _maintenance_mode.') }}',
-                    type: 'warning',
-                    showCancelButton: true,
-                    cancelButtonColor: 'default',
-                    confirmButtonColor: '#00868F',
-                    cancelButtonText: '{{ translate('messages.no') }}',
-                    confirmButtonText: '{{ translate('messages.yes') }}',
-                    reverseButtons: true
-                }).then((result) => {
-                    if (result.value) {
-                        $.get({
-                            url: '{{ route('admin.maintenance-mode') }}',
-                            contentType: false,
-                            processData: false,
-                            beforeSend: function() {
-                                $('#loading').show();
-                            },
-                            success: function(data) {
-                                toastr.success(data.message);
-                            },
-                            complete: function() {
-                                $('#loading').hide();
-                            },
-                        });
-                    } else {
-                        location.reload();
-                    }
-                })
+            Swal.fire({
+                title: '{{ translate('messages.Are you sure?') }}',
+                text: '{{ translate('messages.all_your_apps_and_customer_website_will_be_disabled_until_you_‘Turn_Off’ _maintenance_mode.') }}',
+                type: 'warning',
+                showCancelButton: true,
+                cancelButtonColor: 'default',
+                confirmButtonColor: '#00868F',
+                cancelButtonText: '{{ translate('messages.no') }}',
+                confirmButtonText: '{{ translate('messages.yes') }}',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.value) {
+                    $.get({
+                        url: '{{ route('admin.maintenance-mode') }}',
+                        contentType: false,
+                        processData: false,
+                        beforeSend: function() {
+                            $('#loading').show();
+                        },
+                        success: function(data) {
+                            toastr.success(data.message);
+                        },
+                        complete: function() {
+                            $('#loading').hide();
+                        },
+                    });
+                } else {
+                    location.reload();
+                }
+            })
             @endif
-        };
+
+        });
+
 
         function readURL(input, viewer) {
             if (input.files && input.files[0]) {
-                var reader = new FileReader();
+                let reader = new FileReader();
                 reader.onload = function(e) {
                     $('#' + viewer).attr('src', e.target.result);
                 }
@@ -1378,8 +1303,9 @@
         src="https://maps.googleapis.com/maps/api/js?key={{ \App\Models\BusinessSetting::where('key', 'map_api_key')->first()->value }}&libraries=places&v=3.45.8">
     </script>
     <script>
+        "use strict";
         function initAutocomplete() {
-            var myLatLng = {
+            let myLatLng = {
                 lat: {{ $default_location ? $default_location['lat'] : '-33.8688' }},
                 lng: {{ $default_location ? $default_location['lng'] : '151.2195' }}
             };
@@ -1392,17 +1318,17 @@
                 mapTypeId: "roadmap",
             });
 
-            var marker = new google.maps.Marker({
+            let marker = new google.maps.Marker({
                 position: myLatLng,
                 map: map,
             });
 
             marker.setMap(map);
-            var geocoder = geocoder = new google.maps.Geocoder();
+            let geocoder = geocoder = new google.maps.Geocoder();
             google.maps.event.addListener(map, 'click', function(mapsMouseEvent) {
                 var coordinates = JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2);
                 var coordinates = JSON.parse(coordinates);
-                var latlng = new google.maps.LatLng(coordinates['lat'], coordinates['lng']);
+                let latlng = new google.maps.LatLng(coordinates['lat'], coordinates['lng']);
                 marker.setPosition(latlng);
                 map.panTo(latlng);
 
@@ -1413,7 +1339,7 @@
                 geocoder.geocode({
                     'latLng': latlng
                 }, function(results, status) {
-                    if (status == google.maps.GeocoderStatus.OK) {
+                    if (status === google.maps.GeocoderStatus.OK) {
                         if (results[1]) {
                             document.getElementById('address').innerHtml = results[1].formatted_address;
                         }
@@ -1434,7 +1360,7 @@
             searchBox.addListener("places_changed", () => {
                 const places = searchBox.getPlaces();
 
-                if (places.length == 0) {
+                if (places.length === 0) {
                     return;
                 }
                 // Clear out the old markers.
@@ -1449,7 +1375,7 @@
                         console.log("Returned place contains no geometry");
                         return;
                     }
-                    var mrkr = new google.maps.Marker({
+                    let mrkr = new google.maps.Marker({
                         map,
                         title: place.name,
                         position: place.geometry.location,
@@ -1481,7 +1407,7 @@
         });
 
         $(document).on("keydown", "input", function(e) {
-            if (e.which == 13) e.preventDefault();
+            if (e.which === 13) e.preventDefault();
         });
     </script>
 @endpush

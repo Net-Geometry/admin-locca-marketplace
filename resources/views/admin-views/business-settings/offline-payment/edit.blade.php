@@ -16,10 +16,6 @@
         </div>
         <!-- End Page Title -->
 
-        <!-- Inlile Menu -->
-        {{-- @include('admin-views.business-settings.third-party-inline-menu') --}}
-        <!-- End Inlile Menu -->
-
         <form action="{{ route('admin.business-settings.offline.update') }}" method="POST">
             @csrf
             <div class="card mt-3">
@@ -28,14 +24,14 @@
                         <img width="20" src="{{asset('/public/assets/admin/img/payment-card.png')}}" alt="">
                         <h5 class="mb-0">{{ translate('payment_Information') }}</h5>
                     </div>
-                    <a href="javascript:" onclick="add_input_fields_group()" class="btn btn--primary"><i class="tio-add"></i> {{ translate('Add_New_Field') }} </a>
+                    <a href="javascript:"  class="btn btn--primary add-input-fields-group"><i class="tio-add"></i> {{ translate('Add_New_Field') }} </a>
                 </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-xl-4 col-sm-6">
                             <div class="form-group">
                                 <label for="method_name" class="title_color">{{ translate('payment_Method_Name') }}</label>
-                                <input type="text" class="form-control" placeholder="{{ translate('ex') }}: {{ translate('bkash') }}" name="method_name" required value="{{ $data->method_name }}">
+                                <input id="method_name" type="text" class="form-control" placeholder="{{ translate('ex') }}: {{ translate('bkash') }}" name="method_name" required value="{{ $data->method_name }}">
                             </div>
                         </div>
                     </div>
@@ -49,20 +45,20 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="input_name" class="title_color">{{ translate('Title') }}</label>
-                                        <input type="text" name="input_name[]" class="form-control" placeholder="{{ translate('ex') }}: {{ translate('Bank_Name') }}" required value="{{ ucwords(str_replace('_',' ',$item['input_name'])) }} ">
+                                        <input id="input_name" type="text" name="input_name[]" class="form-control" placeholder="{{ translate('ex') }}: {{ translate('Bank_Name') }}" required value="{{ ucwords(str_replace('_',' ',$item['input_name'])) }} ">
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="input_data" class="title_color">{{ translate('Data') }}</label>
-                                        <input type="text" name="input_data[]" class="form-control" placeholder="{{ translate('ex') }}: {{ translate('ABC_bank') }}" required value="{{ $item['input_data'] }}">
+                                        <input id="input_data" type="text" name="input_data[]" class="form-control" placeholder="{{ translate('ex') }}: {{ translate('ABC_bank') }}" required value="{{ $item['input_data'] }}">
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <div class="d-flex justify-content-end">
-                                            <a href="javascript:" class="btn action-btn btn--danger btn-outline-danger" title="Delete" onclick="remove_input_fields_group('{{ $aRandomNumber }}')">
-                                                 <i class="tio-delete-outlined"></i>
+                                            <a href="javascript:" class="btn action-btn btn--danger btn-outline-danger remove-input-fields-group" data-id="{{ $aRandomNumber }}" title="Delete" >
+                                            <i class="tio-delete-outlined"></i>
                                             </a>
                                         </div>
                                     </div>
@@ -79,7 +75,7 @@
                         <img width="20" src="{{asset('/public/assets/admin/img/payment-card-fill.png')}}" alt="">
                         <h5 class="mb-0">{{ translate('required_Information_from_Customer') }}</h5>
                     </div>
-                    <a href="javascript:" onclick="add_customer_input_fields_group()" class="btn btn--primary"><i class="tio-add"></i> {{ translate('Add_New_Field') }} </a>
+                    <a href="javascript:"  class="btn btn--primary add-customer-input-fields-group"><i class="tio-add"></i> {{ translate('Add_New_Field') }} </a>
                 </div>
                 <div class="card-body">
                     <div class="customer-input-fields-section" id="customer-input-fields-section">
@@ -88,14 +84,14 @@
                             <div class="row align-items-end" id="{{ $cRandomNumber }}">
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label class="title_color">{{ translate('input_field_Name') }}</label>
-                                        <input type="text" name="customer_input[]" class="form-control" placeholder="{{ translate('ex') }}: {{ translate('payment_By') }}" required value="{{ ucwords(str_replace('_',' ',$item['customer_input'])) }}">
+                                        <label for="customer_input" class="title_color">{{ translate('input_field_Name') }}</label>
+                                        <input id="customer_input" type="text" name="customer_input[]" class="form-control" placeholder="{{ translate('ex') }}: {{ translate('payment_By') }}" required value="{{ ucwords(str_replace('_',' ',$item['customer_input'])) }}">
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="customer_placeholder" class="title_color">{{ translate('place_Holder') }}</label>
-                                        <input type="text" name="customer_placeholder[]" class="form-control" placeholder="{{ translate('ex') }}: {{ translate('enter_name') }}" required value="{{ $item['customer_placeholder'] }}">
+                                        <input id="customer_placeholder" type="text" name="customer_placeholder[]" class="form-control" placeholder="{{ translate('ex') }}: {{ translate('enter_name') }}" required value="{{ $item['customer_placeholder'] }}">
                                     </div>
                                 </div>
                                 <div class="col-md-4">
@@ -108,7 +104,7 @@
                                                 </label>
                                             </div>
 
-                                            <a class="btn action-btn btn--danger btn-outline-danger" title="Delete"  onclick="remove_input_fields_group('{{ $cRandomNumber }}')">
+                                            <a class="btn action-btn btn--danger btn-outline-danger  remove-input-fields-group" data-id="{{ $cRandomNumber }}" title="Delete" >
                                                  <i class="tio-delete-outlined"></i>
                                             </a>
                                         </div>
@@ -129,15 +125,10 @@
 @endsection
 
 
-@push('script')
+@push('script_2')
 <script>
-    function remove_input_fields_group(id)
-    {
-        $('#'+id).remove();
-    }
-
-    function add_input_fields_group()
-    {
+    "use strict"
+    $(document).on('click', '.add-input-fields-group', function () {
         let id = Math.floor((Math.random() + 1 )* 9999);
         let new_field = `<div class="row align-items-end" id="`+id+`" style="display: none;">
                             <div class="col-md-4">
@@ -155,7 +146,7 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <div class="d-flex justify-content-end">
-                                        <a href="javascript:" class="btn action-btn btn--danger btn-outline-danger" title="Delete" onclick="remove_input_fields_group('`+id+`')">
+                                        <a href="javascript:" class="btn action-btn btn--danger btn-outline-danger remove-input-fields-group" data-id="`+id+`" title="Delete" >
                                              <i class="tio-delete-outlined"></i>
                                         </a>
                                     </div>
@@ -165,11 +156,10 @@
 
         $('#input-fields-section').append(new_field);
         $('#'+id).fadeIn();
-    }
+    });
 
+    $(document).on('click', '.add-customer-input-fields-group', function () {
 
-    function add_customer_input_fields_group()
-    {
         let id = Math.floor((Math.random() + 1 )* 9999);
         let new_field = `<div class="row align-items-end" id="`+id+`" style="display: none;">
                             <div class="col-md-4">
@@ -194,7 +184,7 @@
                                             </label>
                                         </div>
 
-                                        <a class="btn action-btn btn--danger btn-outline-danger" title="Delete"  onclick="remove_input_fields_group('`+id+`')">
+                                        <a class="btn action-btn btn--danger btn-outline-danger remove-input-fields-group" data-id="`+id+`" title="Delete" >
                                              <i class="tio-delete-outlined"></i>
                                         </a>
                                     </div>
@@ -204,6 +194,12 @@
 
         $('#customer-input-fields-section').append(new_field);
         $('#'+id).fadeIn();
-    }
+    });
+
+    $(document).on('click', '.remove-input-fields-group', function () {
+        $('#'+$(this).data('id')).remove();
+
+    });
+
 </script>
 @endpush

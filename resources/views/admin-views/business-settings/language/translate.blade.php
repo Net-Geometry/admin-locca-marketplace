@@ -2,9 +2,6 @@
 
 @section('title',translate('messages.language'))
 
-@push('css_or_js')
-
-@endpush
 
 @section('content')
     <div class="content container-fluid">
@@ -29,12 +26,12 @@
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <table class="table table-bordered" id="dataTable" >
                                 <thead>
                                 <tr>
                                     <th>{{translate('SL#')}}</th>
-                                    <th style="width: 400px">{{translate('Current_value')}}</th>
-                                    <th style="min-width: 300px">{{translate('translated_value')}}</th>
+                                    <th class="__width-400">{{translate('Current_value')}}</th>
+                                    <th class="__min-width">{{translate('translated_value')}}</th>
                                     <th>{{translate('auto_translate')}}</th>
                                     <th>{{translate('update')}}</th>
                                 </tr>
@@ -47,35 +44,31 @@
                                     <tr id="lang-{{$count}}">
                                         <td>{{ $count+$full_data->firstItem() -1}}</td>
                                         <td>
-                                            <input type="text" name="key[]"
+                                            <input id="key" type="text" name="key[]"
                                             value="{{$key}}" hidden>
-                                        <label>{{translate($key) }}</label>
+                                        <label for="key">{{translate($key) }}</label>
                                         </td>
                                         <td>
                                             <input type="text" class="form-control" name="value[]"
                                             id="value-{{$count}}"
-                                            {{-- value="{{$value}}"> --}}
                                             value="{{$full_data[$key]}}">
+                                            <label for="value-{{$count}}"></label>
                                         </td>
                                         @php($key=\App\CentralLogics\Helpers::remove_invalid_charcaters($key))
                                         <td class="__w-100px">
                                             <button type="button"
-                                                    onclick="auto_translate(`{{$key}}`,{{$count}})"
-                                                    class="btn btn-ghost-success btn-block"><i class="tio-globe"></i>
+                                                    data-key="{{$key}}" data-id="{{$count}}"
+                                                    class="btn btn-ghost-success btn-block auto-translate-btn" ><i class="tio-globe"></i>
                                             </button>
                                         </td>
                                         <td class="__w-100px">
                                             <button type="button"
-                                                    onclick="update_lang(`{{$key}}`,$('#value-{{$count}}').val())"
-                                                    class="btn btn--primary btn-block"><i class="tio-save-outlined"></i>
+                                                    data-key="{{$key}}"
+                                                    data-id="{{$count}}"
+                                                    class="btn btn--primary btn-block update-language-btn"><i class="tio-save-outlined"></i>
                                             </button>
                                         </td>
-{{--                                        <td class="__w-100px">--}}
-{{--                                            <button type="button"--}}
-{{--                                                    onclick="remove_key('{{$key}}',{{$count}})"--}}
-{{--                                                    class="btn btn-danger btn-block"><i class="tio-add-to-trash"></i>--}}
-{{--                                            </button>--}}
-{{--                                        </td>--}}
+
                                     </tr>
                                 @endforeach
                                 </tbody>
@@ -105,14 +98,43 @@
 @push('script_2')
     <!-- Page level custom scripts -->
     <script>
-        // Call the dataTables jQuery plugin
-        // $(document).ready(function () {
-        //     $('#dataTable').DataTable({
-        //         "pageLength": {{\App\CentralLogics\Helpers::pagination_limit()}}
-        //     });
-        // });
 
-        function update_lang(key, value) {
+        "use strict"
+
+        $(document).on('click', '.auto-translate-btn', function () {
+
+            let key = $(this).data('key');
+            let id = $(this).data('id');
+
+
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $.ajax({
+                url: "{{ route('admin.business-settings.language.auto-translate', [$lang]) }}",
+                method: 'POST',
+                data: {
+                    key: key
+                },
+                beforeSend: function () {
+                    $('#loading').show();
+                },
+                success: function (response) {
+                    toastr.success('{{ translate('Key translated successfully') }}');
+                    $('#value-' + id).val(response.translated_data);
+                },
+                complete: function () {
+                    $('#loading').hide();
+                },
+            });
+        });
+
+        $(document).on('click', '.update-language-btn', function () {
+            let key = $(this).data('key');
+            let id = $(this).data('id');
+            let value = $('#value-'+id).val() ;
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -135,59 +157,11 @@
                     $('#loading').hide();
                 },
             });
-        }
 
-        function remove_key(key, id) {
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
-                }
-            });
-            $.ajax({
-                url: "{{route('admin.business-settings.language.remove-key',[$lang])}}",
-                method: 'POST',
-                data: {
-                    key: key
-                },
-                beforeSend: function () {
-                    $('#loading').show();
-                },
-                success: function (response) {
-                    toastr.success('{{translate('Key removed successfully')}}');
-                    $('#lang-' + id).hide();
-                },
-                complete: function () {
-                    $('#loading').hide();
-                },
-            });
-        }
+        });
 
-        function auto_translate(key, id) {
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $.ajax({
-                url: "{{route('admin.business-settings.language.auto-translate',[$lang])}}",
-                method: 'POST',
-                data: {
-                    key: key
-                },
-                beforeSend: function () {
-                    $('#loading').show();
-                },
-                success: function (response) {
-                    toastr.success('{{translate('Key translated successfully')}}');
-                    console.log(response.translated_data)
-                    $('#value-'+id).val(response.translated_data);
-                    //$('#value-' + id).text(response.translated_data);
-                },
-                complete: function () {
-                    $('#loading').hide();
-                },
-            });
-        }
+
+
     </script>
 
 @endpush
