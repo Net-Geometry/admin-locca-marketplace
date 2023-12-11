@@ -1060,6 +1060,9 @@
             });
         @endif
     });
+    $(document).on('click', '.location-reload', function () {
+        location.reload();
+    });
 
 </script>
 
