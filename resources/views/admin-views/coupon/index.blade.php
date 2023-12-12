@@ -82,7 +82,7 @@
                                 <div class="col-md-4 col-lg-3 col-sm-6">
                                     <div class="form-group">
                                         <label class="input-label" for="exampleFormControlInput1">{{translate('messages.coupon_type')}}</label>
-                                        <select name="coupon_type" id="coupon_type" class="form-control" onchange="coupon_type_change(this.value)">
+                                        <select name="coupon_type" id="coupon_type" class="form-control">
                                             <option value="store_wise">{{translate('messages.store_wise')}}</option>
                                             <option value="zone_wise">{{translate('messages.zone_wise')}}</option>
                                             <option value="free_delivery">{{translate('messages.free_delivery')}}</option>
@@ -304,7 +304,7 @@
 
                                             <a class="btn action-btn btn--primary btn-outline-primary" href="{{route('admin.coupon.update',[$coupon['id']])}}"title="{{translate('messages.edit_coupon')}}"><i class="tio-edit"></i>
                                             </a>
-                                            <a class="btn action-btn btn--danger btn-outline-danger" href="javascript:" onclick="form_alert('coupon-{{$coupon['id']}}','{{ translate('Want to delete this coupon ?') }}')" title="{{translate('messages.delete_coupon')}}"><i class="tio-delete-outlined"></i>
+                                            <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:" data-id="coupon-{{$coupon['id']}}" data-message="{{ translate('Want to delete this coupon ?') }}" title="{{translate('messages.delete_coupon')}}"><i class="tio-delete-outlined"></i>
                                             </a>
                                             <form action="{{route('admin.coupon.delete',[$coupon['id']])}}"
                                             method="post" id="coupon-{{$coupon['id']}}">
@@ -341,38 +341,13 @@
 @endsection
 
 @push('script_2')
+<script src="{{asset('public/assets/admin')}}/js/view-pages/coupon-index.js"></script>
 <script>
-    $("#date_from").on("change", function () {
-        $('#date_to').attr('min',$(this).val());
-    });
-
-    $("#date_to").on("change", function () {
-        $('#date_from').attr('max',$(this).val());
-    });
+    "use strict";
 
     $(document).on('ready', function () {
-        $('#discount_type').on('change', function() {
-         if($('#discount_type').val() == 'amount')
-            {
-                $('#max_discount').attr("readonly","true");
-                $('#max_discount').val(0);
-            }
-            else
-            {
-                $('#max_discount').removeAttr("readonly");
-            }
-        });
 
-        $('#date_from').attr('min',(new Date()).toISOString().split('T')[0]);
-        $('#date_to').attr('min',(new Date()).toISOString().split('T')[0]);
-
-        var module_id = {{Config::get('module.current_module_id')}};
-        // $('#module_select').on('change', function(){
-        //     if($(this).val())
-        //     {
-        //         module_id = $(this).val();
-        //     }
-        // });
+        let module_id = {{Config::get('module.current_module_id')}};
 
         $('.js-data-example-ajax').select2({
             ajax: {
@@ -399,106 +374,8 @@
                 }
             }
         });
-            // INITIALIZATION OF DATATABLES
-            // =======================================================
-            var datatable = $.HSCore.components.HSDatatables.init($('#columnSearchDatatable'), {
-                select: {
-                    style: 'multi',
-                    classMap: {
-                        checkAll: '#datatableCheckAll',
-                        counter: '#datatableCounter',
-                        counterInfo: '#datatableCounterInfo'
-                    }
-                },
-                language: {
-                    zeroRecords: '<div class="text-center p-4">' +
-                    '<img class="w-7rem mb-3" src="{{asset('public/assets/admin/svg/illustrations/sorry.svg')}}" alt="Image Description">' +
 
-                    '</div>'
-                }
-            });
+    });
 
-            // INITIALIZATION OF SELECT2
-            // =======================================================
-            $('.js-select2-custom').each(function () {
-                var select2 = $.HSCore.components.HSSelect2.init($(this));
-            });
-        });
-        $('#zone_wise').hide();
-        function coupon_type_change(coupon_type) {
-           if(coupon_type=='zone_wise')
-            {
-                $('#store_wise').hide();
-                $('#zone_wise').show();
-                $('#customer_wise').hide();
-            }
-            else if(coupon_type=='store_wise')
-            {
-                $('#store_wise').show();
-                $('#zone_wise').hide();
-                $('#customer_wise').show();
-            }
-            else if(coupon_type=='first_order')
-            {
-                $('#zone_wise').hide();
-                $('#store_wise').hide();
-                $('#customer_wise').hide();
-                $('#coupon_limit').val(1);
-                // $('#coupon_limit').attr("readonly","true");
-            }
-            else{
-                $('#zone_wise').hide();
-                $('#store_wise').hide();
-                $('#customer_wise').show();
-                $('#coupon_limit').val('');
-                // $('#coupon_limit').removeAttr("readonly");
-            }
-
-            if(coupon_type=='free_delivery')
-            {
-                $('#discount_type').attr("disabled","true");
-                $('#discount_type').val("").trigger( "change" );
-                $('#max_discount').val(0);
-                $('#max_discount').attr("readonly","true");
-                $('#discount').val(0);
-                $('#discount').attr("readonly","true");
-            }
-            else{
-                $('#max_discount').removeAttr("readonly");
-                $('#discount_type').removeAttr("disabled");
-                $('#discount_type').attr("required","true");
-                $('#discount').removeAttr("readonly");
-            }
-        }
-    </script>
-    <script>
-        $('#reset_btn').click(function(){
-            $('#module_select').val(null).trigger('change');
-            $('#store_id').val(null).trigger('change');
-            $('#store_wise').show();
-            $('#zone_wise').hide();
-        })
-
-    </script>
-    <script>
-        $(".lang_link").click(function(e){
-            e.preventDefault();
-            $(".lang_link").removeClass('active');
-            $(".lang_form").addClass('d-none');
-            $(this).addClass('active');
-
-            let form_id = this.id;
-            let lang = form_id.substring(0, form_id.length - 5);
-            console.log(lang);
-            $("#"+lang+"-form").removeClass('d-none');
-            if(lang == '{{$defaultLang}}')
-            {
-                $("#from_part_2").removeClass('d-none');
-            }
-            else
-            {
-                $("#from_part_2").addClass('d-none');
-            }
-        })
     </script>
 @endpush

@@ -187,13 +187,11 @@
 
 @push('script_2')
     <script>
+        "use strict";
         $('.status-change-alert').on('click', function (event){
             let url = $(this).data('url');
             let message = $(this).data('message');
-            status_change_alert(url, message, event);
-        })
-        function status_change_alert(url, message, e) {
-            e.preventDefault();
+            event.preventDefault();
             Swal.fire({
                 title: '{{ translate('Are you sure?') }}' ,
                 text: message,
@@ -209,6 +207,6 @@
                     location.href=url;
                 }
             })
-        }
+        })
     </script>
 @endpush

@@ -821,7 +821,7 @@
     function dmConversationView() {
         var conversation_id = getUrlParameter('conversation');
         var user_id = getUrlParameter('user');
-        var url= '{{url('/')}}/admin/delivery-man/message/'+conversation_id+'/' + user_id;
+        var url= '{{url('/')}}/admin/users/delivery-man/message/'+conversation_id+'/' + user_id;
         $.ajax({
             url: url,
             success: function(data) {

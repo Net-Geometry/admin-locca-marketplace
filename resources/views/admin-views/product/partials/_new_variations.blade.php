@@ -8,8 +8,8 @@
                 <span class="form-check-label">{{ translate('Required') }}</span>
             </label>
             <div>
-                <button type="button" class="btn btn-danger btn-sm delete_input_button"
-                    onclick="removeOption(this)" title="{{ translate('Delete') }}">
+                <button type="button" class="btn btn-danger btn-sm delete_input_button removeOption"
+                    title="{{ translate('Delete') }}">
                     <i class="tio-add-to-trash"></i>
                 </button>
             </div>
@@ -17,8 +17,8 @@
         <div class="row g-2">
             <div class="col-xl-4 col-lg-6">
                 <label for="">{{ translate('name') }}</label>
-                <input required name="options[{{ $key }}][name]" required class="form-control"
-                    type="text" onkeyup="new_option_name(this.value,{{ $key }})"
+                <input required name="options[{{ $key }}][name]" class="form-control new_option_name"
+                    type="text" data-count="{{ $key }}"
                     value="{{ $item['name'] }}">
             </div>
 
@@ -29,19 +29,19 @@
                     </label>
                     <div class="resturant-type-group border">
                         <label class="form-check form--check mr-2 mr-md-4">
-                            <input class="form-check-input" type="radio" value="multi"
+                            <input class="form-check-input show_min_max" type="radio" value="multi"
                                 name="options[{{ $key }}][type]" id="type{{ $key }}"
                                 {{ $item['type'] == 'multi' ? 'checked' : '' }}
-                                onchange="show_min_max({{ $key }})">
+                                data-count="{{ $key }}">
                             <span class="form-check-label">
                                 {{ translate('Multiple') }}
                             </span>
                         </label>
 
                         <label class="form-check form--check mr-2 mr-md-4">
-                            <input class="form-check-input" type="radio" value="single"
+                            <input class="form-check-input hide_min_max" type="radio" value="single"
                                 {{ $item['type'] == 'single' ? 'checked' : '' }} name="options[{{ $key }}][type]"
-                                id="type{{ $key }}" onchange="hide_min_max({{ $key }})">
+                                id="type{{ $key }}" data-count="{{ $key }}">
                             <span class="form-check-label">
                                 {{ translate('Single') }}
                             </span>
@@ -89,7 +89,7 @@
                             <div class="col-sm-2 max-sm-absolute">
                                 <label class="d-none d-md-block">&nbsp;</label>
                                 <div class="mt-1">
-                                    <button type="button" class="btn btn-danger btn-sm" onclick="deleteRow(this)"
+                                    <button type="button" class="btn btn-danger btn-sm deleteRow"
                                         title="{{translate('Delete')}}">
                                         <i class="tio-add-to-trash"></i>
                                     </button>
@@ -102,7 +102,7 @@
             </div>
                 <div class="row mt-3 p-3 mr-1 d-flex" id="add_new_button_{{ $key }}">
                     <button type="button"
-                        class="btn btn--primary btn-outline-primary"onclick="add_new_row_button({{ $key }})">{{ translate('Add_New_Option') }}</button>
+                        class="btn btn--primary btn-outline-primary add_new_row_button" data-count="{{ $key }}">{{ translate('Add_New_Option') }}</button>
                 </div>
 
             </div>

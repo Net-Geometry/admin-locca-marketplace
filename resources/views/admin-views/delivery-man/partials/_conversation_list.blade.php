@@ -4,8 +4,8 @@
     @php($unchecked=($conv->last_message->sender_id == $user->id) ? $conv->unread_message_count : 0)
     <input type="hidden" id="deliver_man" value="{{ $deliveryMan->id }}">
     <div
-        class="chat-user-info d-flex border-bottom p-3 align-items-center customer-list {{$unchecked!=0?'conv-active':''}}"
-        onclick="viewConvs('{{route('admin.users.delivery-man.message-view',['conversation_id'=>$conv->id,'user_id'=>$user->id])}}','customer-{{$user->id}}','{{ $conv->id }}','{{ $user->id }}')"
+        class="chat-user-info d-flex border-bottom p-3 align-items-center customer-list view-conv {{$unchecked!=0?'conv-active':''}}"
+        data-url="{{route('admin.users.delivery-man.message-view',['conversation_id'=>$conv->id,'user_id'=>$user->id])}}" data-active-id="customer-{{$user->id}}" data-conv-id="{{ $conv->id }}" data-sender-id="{{ $user->id }}"
         id="customer-{{$user->id}}">
         <div class="chat-user-info-img d-none d-md-block">
             <img class="avatar-img"

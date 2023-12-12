@@ -232,23 +232,5 @@
 @endsection
 
 @push('script_2')
-    <script>
-        function request_alert(url, message) {
-            Swal.fire({
-                title: '{{ translate('Are_you_sure?') }}',
-                text: message,
-                type: 'warning',
-                showCancelButton: true,
-                cancelButtonColor: 'default',
-                confirmButtonColor: '#FC6A57',
-                cancelButtonText: '{{ translate('no') }}',
-                confirmButtonText: '{{ translate('yes') }}',
-                reverseButtons: true
-            }).then((result) => {
-                if (result.value) {
-                    location.href = url;
-                }
-            })
-        }
-    </script>
+
 @endpush

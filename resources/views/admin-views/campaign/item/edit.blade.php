@@ -3,6 +3,7 @@
 @section('title',translate('Update campaign'))
 
 @push('css_or_js')
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link href="{{asset('public/assets/admin/css/tags-input.min.css')}}" rel="stylesheet">
 @endpush
 
@@ -61,7 +62,7 @@
                             <div class="lang_form" id="default-form">
                                 <div class="form-group">
                                     <label class="input-label" for="default_title">{{translate('messages.title')}} ({{ translate('messages.default') }})</label>
-                                    <input type="text" name="title[]" id="default_title" class="form-control" placeholder="{{translate('messages.new_food')}}" value="{{$campaign?->getRawOriginal('title')}}" oninvalid="document.getElementById('en-link').click()">
+                                    <input type="text" name="title[]" id="default_title" class="form-control" placeholder="{{translate('messages.new_food')}}" value="{{$campaign?->getRawOriginal('title')}}">
                                 </div>
                                 <input type="hidden" name="lang[]" value="default">
                                 <div class="form-group pt-2 mb-0">
@@ -87,7 +88,7 @@
                                     <div class="d-none lang_form" id="{{$lang}}-form">
                                         <div class="form-group">
                                             <label class="input-label" for="{{$lang}}_title">{{translate('messages.title')}} ({{strtoupper($lang)}})</label>
-                                            <input type="text" name="title[]" id="{{$lang}}_title" class="form-control" placeholder="{{translate('messages.new_food')}}" value="{{$translate[$lang]['title']??''}}" oninvalid="document.getElementById('en-link').click()">
+                                            <input type="text" name="title[]" id="{{$lang}}_title" class="form-control" placeholder="{{translate('messages.new_food')}}" value="{{$translate[$lang]['title']??''}}">
                                         </div>
                                         <input type="hidden" name="lang[]" value="{{$lang}}">
                                         <div class="form-group pt-2 mb-0">
@@ -155,20 +156,9 @@
                             <div class="row g-2">
                                 <div class="col-md-3 col-sm-6">
                                     <div class="form-group mb-0">
-                                        <label class="input-label">{{translate('messages.module')}}</label>
-                                        <select name="module_id" class="form-control js-select2-custom"  data-placeholder="{{translate('messages.select_module')}}" onchange="modulChange(this.value)" disabled>
-                                                <option value="" selected disabled>{{translate('messages.select_module')}}</option>
-                                            @foreach(\App\Models\Module::notParcel()->get() as $module)
-                                                <option value="{{$module->id}}" {{$module->id == $campaign->module_id?'selected':''}}>{{$module->module_name}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-3 col-sm-6">
-                                    <div class="form-group mb-0">
                                         <label class="input-label" for="exampleFormControlSelect1">{{translate('messages.store')}}<span
                                                 class="input-label-secondary"></span></label>
-                                        <select name="store_id" class="js-data-example-ajax form-control" id="store_id" onchange="getStoreData('{{url('/')}}/admin/store/get-addons?data[]=0&store_id='+this.value,'add_on')"  data-toggle="tooltip" data-placement="right" data-original-title="{{translate('messages.select_store')}}" disabled>
+                                        <select name="store_id" class="js-data-example-ajax form-control" id="store_id"  data-toggle="tooltip" data-placement="right" data-original-title="{{translate('messages.select_store')}}" disabled>
                                             @if($campaign->store)
                                             <option value="{{$campaign->store->id}}" selected>{{$campaign->store->name}}</option>
                                             @else
@@ -206,7 +196,7 @@
                                     <div class="form-group mb-0">
                                         <label class="input-label" for="exampleFormControlSelect1">{{translate('messages.category')}}<span
                                                 class="input-label-secondary">*</span></label>
-                                        <select name="category_id" class="js-data-example-ajax form-control" id="category_id" onchange="categoryChange(this.value)">
+                                        <select name="category_id" class="js-data-example-ajax form-control" id="category_id">
                                             @if($category)
                                                 <option value="{{$category['id']}}" >{{$category['name']}}</option>
                                             @endif
@@ -416,7 +406,10 @@
 @endsection
 
 @push('script_2')
+    <script src="{{asset('public/assets/admin')}}/js/tags-input.min.js"></script>
     <script>
+        "use strict";
+        let element = "";
         function getStoreData(route, id) {
             $.get({
                 url: route,
@@ -460,10 +453,10 @@
             getStoreData('{{url('/')}}/admin/store/get-addons?data[]=0&store_id={{$campaign['store_id']}}','add_on');
             @endif
         });
-    </script>
-    <script src="{{asset('public/assets/admin')}}/js/tags-input.min.js"></script>
 
-    <script>
+
+
+
         $('#choice_attributes').on('change', function () {
             $('#customer_choice_options').html(null);
             $.each($("#choice_attributes option:selected"), function () {
@@ -473,7 +466,7 @@
 
         function add_more_customer_choice_option(i, name) {
             let n = name.split(' ').join('');
-            $('#customer_choice_options').append('<div class="row gy-1"><div class="col-sm-3"><input type="hidden" name="choice_no[]" value="' + i + '"><input type="text" class="form-control" name="choice[]" value="' + n + '" placeholder="Choice Title" readonly></div><div class="col-sm-9"><input type="text" class="form-control" name="choice_options_' + i + '[]" placeholder="{{translate('messages.enter_choice_values')}}" data-role="tagsinput" onchange="combination_update()"></div></div>');
+            $('#customer_choice_options').append('<div class="row gy-1"><div class="col-sm-3"><input type="hidden" name="choice_no[]" value="' + i + '"><input type="text" class="form-control" name="choice[]" value="' + n + '" placeholder="Choice Title" readonly></div><div class="col-sm-9"><input type="text" class="form-control combination_update" name="choice_options_' + i + '[]" placeholder="{{translate('messages.enter_choice_values')}}" data-role="tagsinput"></div></div>');
             $("input[data-role=tagsinput], select[multiple][data-role=tagsinput]").tagsinput();
         }
 
@@ -497,8 +490,11 @@
                 }
             });
         }
-    </script>
-    <script>
+
+        $(document).on('change', '.combination_update', function () {
+            combination_update();
+        });
+
         var module_id = {{$campaign->module_id}};
         var module_type = "{{$campaign->module->module_type}}";
         if (module_type == 'food') {
@@ -574,11 +570,10 @@
         }
 
 
-        function categoryChange(id)
-        {
-            parent_category_id = id;
+        $('#category_id').on('change', function () {
+            parent_category_id = $(this).val();
             console.log(parent_category_id);
-        }
+        });
         $('#store_id').select2({
             ajax: {
                 url: '{{url('/')}}/admin/store/get-stores',
@@ -658,8 +653,7 @@
                 }
             }
         });
-    </script>
-    <script>
+
         $("#date_from").on("change", function () {
             $('#date_to').attr('min',$(this).val());
         });
@@ -715,8 +709,7 @@
                 }
             });
         });
-    </script>
-    <script>
+
         $(".lang_link").click(function(e){
             e.preventDefault();
             $(".lang_link").removeClass('active');
@@ -736,15 +729,12 @@
                 $("#from_part_2").addClass('d-none');
             }
         })
-    </script>
-    <script>
+
             $('#reset_btn').click(function(){
                 location.reload(true);
             })
 
-        </script>
 
-        <script>
     function show_min_max(data){
         console.log(data);
         $('#min_max1_'+data).removeAttr("readonly");
@@ -762,6 +752,16 @@
         $('#min_max2_'+data).attr("required","false");
     }
 
+    $(document).on('change', '.show_min_max', function () {
+        let data = $(this).data('count');
+        show_min_max(data);
+    });
+
+    $(document).on('change', '.hide_min_max', function () {
+        let data = $(this).data('count');
+        hide_min_max(data);
+    });
+
 
 
     var count= {{isset($campaign->food_variations)?count(json_decode($campaign->food_variations,true)):0}};
@@ -769,184 +769,176 @@
     $(document).ready(function(){
         console.log(count);
 
-        $("#add_new_option_button").click(function(e){
-        count++;
-        var add_option_view = `
-        <div class="card view_new_option mb-2" >
-        <div class="card-header">
-            <label for="" id=new_option_name_`+count+`> {{  translate('add new variation')}}</label>
+        $("#add_new_option_button").click(function(e) {
+            count++;
+            var add_option_view = `
+                <div class="card view_new_option mb-2" >
+                    <div class="card-header">
+                        <label for="" id=new_option_name_` + count + `> {{ translate('add_new') }}</label>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-2">
+                            <div class="col-lg-3 col-md-6">
+                                <label for="">{{ translate('name') }}</label>
+                                <input required name=options[` + count +
+                `][name] class="form-control new_option_name" type="text" data-count="`+
+                count +`">
+                            </div>
+
+                            <div class="col-lg-3 col-md-6">
+                                <div class="form-group">
+                                    <label class="input-label text-capitalize d-flex alig-items-center"><span class="line--limit-1">{{ translate('messages.selcetion_type') }} </span>
+                                    </label>
+                                    <div class="resturant-type-group border">
+                                        <label class="form-check form--check mr-2 mr-md-4">
+                                            <input class="form-check-input show_min_max" data-count="`+count+`" type="radio" value="multi"
+                                            name="options[` + count + `][type]" id="type` + count + `" checked">
+                                            <span class="form-check-label">
+                                                {{ translate('Multiple') }}
+                </span>
+            </label>
+
+            <label class="form-check form--check mr-2 mr-md-4">
+                <input class="form-check-input hide_min_max" data-count="`+count+`" type="radio" value="single"
+                                            name="options[` + count + `][type]" id="type` + count + `">
+                                            <span class="form-check-label">
+                                                {{ translate('Single') }}
+                </span>
+            </label>
         </div>
-        <div class="card-body">
-            <div class="row g-2">
-                <div class="col-lg-3 col-md-6">
-                    <label for="">{{ translate('name')}}</label>
-                    <input required name=options[`+count+`][name] class="form-control" type="text" onkeyup="new_option_name(this.value,`+count+`)">
-                </div>
+    </div>
+</div>
+<div class="col-12 col-lg-6">
+    <div class="row g-2">
+        <div class="col-sm-6 col-md-4">
+            <label for="">{{ translate('Min') }}</label>
+                                        <input id="min_max1_` + count + `" required  name="options[` + count + `][min]" class="form-control" type="number" min="1">
+                                    </div>
+                                    <div class="col-sm-6 col-md-4">
+                                        <label for="">{{ translate('Max') }}</label>
+                                        <input id="min_max2_` + count + `"   required name="options[` + count + `][max]" class="form-control" type="number" min="1">
+                                    </div>
 
-                <div class="col-lg-3 col-md-6">
-                    <div class="form-group">
-                        <label class="input-label text-capitalize d-flex alig-items-center"><span class="line--limit-1">{{ translate('messages.selcetion_type') }} </span>
-                        </label>
-                        <div class="resturant-type-group border">
-                            <label class="form-check form--check mr-2 mr-md-4">
-                                <input class="form-check-input" type="radio" value="multi"
-                                name="options[`+count+`][type]" id="type`+count+`" checked onchange="show_min_max(`+count+`)"
-                                >
-                                <span class="form-check-label">
-                                    {{ translate('Multiple') }}
-                                </span>
-                            </label>
-
-                            <label class="form-check form--check mr-2 mr-md-4">
-                                <input class="form-check-input" type="radio" value="single"
-                                name="options[`+count+`][type]" id="type`+count+`" onchange="hide_min_max(`+count+`)"
-                                >
-                                <span class="form-check-label">
-                                    {{ translate('Single') }}
-                                </span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-lg-6">
-                    <div class="row g-2">
-                        <div class="col-sm-6 col-md-4">
-                            <label for="">{{  translate('Min')}}</label>
-                            <input id="min_max1_`+count+`" required  name="options[`+count+`][min]" class="form-control" type="number" min="1">
-                        </div>
-                        <div class="col-sm-6 col-md-4">
-                            <label for="">{{  translate('Max')}}</label>
-                            <input id="min_max2_`+count+`" required  name="options[`+count+`][max]" class="form-control" type="number" min="1">
-                        </div>
-
-                        <div class="col-md-4">
-                            <label class="d-md-block d-none">&nbsp;</label>
-                                <div class="d-flex align-items-center justify-content-between">
-                                <div>
-                                    <input id="options[`+count+`][required]" name="options[`+count+`][required]" type="checkbox">
-                                    <label for="options[`+count+`][required]" class="m-0">{{  translate('Required')}}</label>
-                                </div>
-                                <div>
-                                    <button type="button" class="btn btn-danger btn-sm delete_input_button" onclick="removeOption(this)"
-                                        title="{{  translate('Delete')}}">
-                                        <i class="tio-add-to-trash"></i>
-                                    </button>
+                                    <div class="col-md-4">
+                                        <label class="d-md-block d-none">&nbsp;</label>
+                                            <div class="d-flex align-items-center justify-content-between">
+                                            <div>
+                                                <input id="options[` + count + `][required]" name="options[` +
+                count + `][required]" type="checkbox">
+                                                <label for="options[` + count + `][required]" class="m-0">{{ translate('Required') }}</label>
+                                            </div>
+                                            <div>
+                                                <button type="button" class="btn btn-danger btn-sm delete_input_button"
+                                                    title="{{ translate('Delete') }}">
+                                                    <i class="tio-add-to-trash"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
 
-
-
-
-
-        <div id="option_price_` + count + `" >
-                <div class="border rounded p-3 pb-0 mt-3">
-                    <div  id="option_price_view_` + count + `">
-                        <div class="row g-3 add_new_view_row_class mb-3">
-                            <div class="col-md-4 col-sm-6">
-                                <label for="">{{ translate('Option_name') }}</label>
-                                <input class="form-control" required type="text" name="options[` + count +`][values][0][label]" id="">
-                            </div>
-                            <div class="col-md-4 col-sm-6">
-                                <label for="">{{ translate('Additional_price') }}</label>
-                                <input class="form-control" required type="number" min="0" step="0.01" name="options[` + count + `][values][0][optionPrice]" id="">
+                        <div id="option_price_` + count + `" >
+                            <div class="border rounded p-3 pb-0 mt-3">
+                                <div  id="option_price_view_` + count + `">
+                                    <div class="row g-3 add_new_view_row_class mb-3">
+                                        <div class="col-md-4 col-sm-6">
+                                            <label for="">{{ translate('Option_name') }}</label>
+                                            <input class="form-control" required type="text" name="options[` +
+                count +
+                `][values][0][label]" id="">
+                                        </div>
+                                        <div class="col-md-4 col-sm-6">
+                                            <label for="">{{ translate('Additional_price') }}</label>
+                                            <input class="form-control" required type="number" min="0" step="0.01" name="options[` +
+                count + `][values][0][optionPrice]" id="">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mt-3 p-3 mr-1 d-flex "  id="add_new_button_` + count +
+                `">
+                                    <button type="button" class="btn btn-outline-primary add_new_row_button" data-count="`+
+                count +`" >{{ translate('Add_New_Option') }}</button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="row mt-3 p-3 mr-1 d-flex "  id="add_new_button_` + count + `">
-                        <button type="button" class="btn btn-outline-primary" onclick="add_new_row_button(` +
-                count + `)" >{{ translate('Add_New_Option') }}</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>`;
+                </div>`;
 
-        $("#add_new_option").append(add_option_view);
-
+            $("#add_new_option").append(add_option_view);
         });
 
     });
 
-    function new_option_name(value,data)
-    {
-        $("#new_option_name_"+data).empty();
-        $("#new_option_name_"+data).text(value)
-        console.log(value);
-    }
-    function removeOption(e)
-    {
-        element = $(e);
-        element.parents('.view_new_option').remove();
-    }
-    function deleteRow(e)
-    {
-        element = $(e);
-        element.parents('.add_new_view_row_class').remove();
-    }
+        function new_option_name(value, data) {
+            $("#new_option_name_" + data).empty();
+            $("#new_option_name_" + data).text(value)
+            console.log(value);
+        }
+
+        function removeOption(e) {
+            element = $(e);
+            element.parents('.view_new_option').remove();
+        }
+
+        function deleteRow(e) {
+            element = $(e);
+            element.parents('.add_new_view_row_class').remove();
+        }
+
+        $(document).on('click', '.delete_input_button', function () {
+            let e = $(this);
+            removeOption(e);
+        });
 
 
+        $(document).on('click', '.deleteRow', function () {
+            let e = $(this);
+            deleteRow(e);
+        });
+
+        $(document).on('keyup', '.new_option_name', function () {
+            let data = $(this).data('count');
+            let value = $(this).val();
+            new_option_name(value, data);
+        });
+
+        let countRow = 0;
     function add_new_row_button(data)
     {
         count = data;
-        countRow = 1 + $('#option_price_view_'+data).children('.add_new_view_row_class').length;
+        countRow = 1 + $('#option_price_view_' + data).children('.add_new_view_row_class').length;
         var add_new_row_view = `
-        <div class="row add_new_view_row_class mb-3 position-relative pt-3 pt-md-0">
-                <div class="col-md-4 col-sm-5">
-                        <label for="">{{translate('Option_name')}}</label>
-                        <input class="form-control" required type="text" name="options[`+count+`][values][`+countRow+`][label]" id="">
-                    </div>
-                    <div class="col-md-4 col-sm-5">
-                        <label for="">{{translate('Additional_price')}}</label>
-                        <input class="form-control"  required type="number" min="0" step="0.01" name="options[`+count+`][values][`+countRow+`][optionPrice]" id="">
-                    </div>
-                    <div class="col-sm-2 max-sm-absolute">
-                        <label class="d-none d-md-block">&nbsp;</label>
-                        <div class="mt-1">
-                            <button type="button" class="btn btn-danger btn-sm" onclick="deleteRow(this)"
-                                title="{{translate('Delete')}}">
-                                <i class="tio-add-to-trash"></i>
-                            </button>
-                        </div>
+        <div class="row add_new_view_row_class mb-3 position-relative pt-3 pt-sm-0">
+            <div class="col-md-4 col-sm-5">
+                    <label for="">{{ translate('Option_name') }}</label>
+                    <input class="form-control" required type="text" name="options[` + count + `][values][` +
+            countRow + `][label]" id="">
                 </div>
-            </div>`;
-        $('#option_price_view_'+data).append(add_new_row_view);
+                <div class="col-md-4 col-sm-5">
+                    <label for="">{{ translate('Additional_price') }}</label>
+                    <input class="form-control"  required type="number" min="0" step="0.01" name="options[` +
+            count +
+            `][values][` + countRow + `][optionPrice]" id="">
+                </div>
+                <div class="col-sm-2 max-sm-absolute">
+                    <label class="d-none d-sm-block">&nbsp;</label>
+                    <div class="mt-1">
+                        <button type="button" class="btn btn-danger btn-sm deleteRow"
+                            title="{{ translate('Delete') }}">
+                            <i class="tio-add-to-trash"></i>
+                        </button>
+                    </div>
+            </div>
+        </div>`;
+        $('#option_price_view_' + data).append(add_new_row_view);
 
     }
-    // function apendPriceView(data)
-    // {
-    // countRow = 1 + $('#option_price_view_'+data).children('.add_new_view_row_class').length;
-    //     var apend_Price_View = `
-    //     <div class="row  border mt-3 p-3 ml-1 mr-1 ">
-    //         <div class="col-8">
-    //             <label for="">{{translate('price')}}</label>
-    //             <input class="form-control" type="text" name="options[`+count+`][values][`+countRow+`][optionPrice]" id="">
-    //         </div>
-    //     </div>`;
-    //     $('#option_price_view_'+data).append(apend_Price_View);
-
-    // }
-    // function choice_option_type(optionValue,data){
-    //     var text = ["field","textarea"];
-    //     var select = ["dropdown","checkbox","custom checkbox","radio button","custom radio button","multiple select"];
-    //     var date = ["date","date & time","time"];
-
-    //     if(jQuery.inArray( optionValue, text )>-1 || jQuery.inArray( optionValue, date )>-1){
-    //         $("#option_price_view_"+data).empty();
-    //         apendPriceView(data);
-    //         $('#add_new_button_'+data).hide();
-    //     }else if(jQuery.inArray( optionValue, select ) > -1)
-    //     {
-    //         $("#option_price_view_"+data).empty();
-    //         add_new_row_button(data);
-    //         $('#add_new_button_'+data).show();
-    //     }
-
-    // }
-
+        $(document).on('click', '.add_new_row_button', function () {
+            let data = $(this).data('count');
+            add_new_row_button(data);
+        });
 
 </script>
 @endpush

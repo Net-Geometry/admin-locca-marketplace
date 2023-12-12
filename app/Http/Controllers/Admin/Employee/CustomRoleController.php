@@ -91,10 +91,10 @@ class CustomRoleController extends BaseController
 
     public function search(Request $request): JsonResponse
     {
-        $role=$this->roleRepo->getSearchList($request);
+        $roles=$this->roleRepo->getSearchList($request);
         return response()->json([
-            'view'=>view(CustomRoleViewPath::SEARCH[VIEW],compact('role'))->render(),
-            'count'=>$role->count()
+            'view'=>view(CustomRoleViewPath::SEARCH[VIEW],compact('roles'))->render(),
+            'count'=>$roles->count()
         ]);
     }
 }

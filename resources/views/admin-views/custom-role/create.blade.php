@@ -42,13 +42,13 @@
                         </ul>
                             <div class="form-group lang_form" id="default-form">
                                 <label class="input-label" for="exampleFormControlInput1">{{translate('messages.role_name')}} ({{ translate('messages.default') }})</label>
-                                <input type="text" name="name[]" class="form-control" placeholder="{{translate('role_name_example')}}" maxlength="191" oninvalid="document.getElementById('en-link').click()">
+                                <input type="text" name="name[]" class="form-control" placeholder="{{translate('role_name_example')}}" maxlength="191">
                             </div>
                             <input type="hidden" name="lang[]" value="default">
                                 @foreach($language as $lang)
                                     <div class="form-group d-none lang_form" id="{{$lang}}-form">
                                         <label class="input-label" for="exampleFormControlInput1">{{translate('messages.role_name')}} ({{strtoupper($lang)}})</label>
-                                        <input type="text" name="name[]" class="form-control" placeholder="{{translate('role_name_example')}}" maxlength="191" oninvalid="document.getElementById('en-link').click()">
+                                        <input type="text" name="name[]" class="form-control" placeholder="{{translate('role_name_example')}}" maxlength="191">
                                     </div>
                                     <input type="hidden" name="lang[]" value="{{$lang}}">
                                 @endforeach
@@ -306,8 +306,8 @@
                                             <a class="btn action-btn btn--primary btn-outline-primary"
                                                 href="{{route('admin.users.custom-role.edit',[$role['id']])}}" title="{{translate('messages.edit_role')}}"><i class="tio-edit"></i>
                                             </a>
-                                            <a class="btn action-btn btn--danger btn-outline-danger" href="javascript:"
-                                                onclick="form_alert('role-{{$role['id']}}','{{translate('messages.Want_to_delete_this_role')}}')" title="{{translate('messages.delete_role')}}"><i class="tio-delete-outlined"></i>
+                                            <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:" data-id="role-{{$role['id']}}" data-message="{{translate('messages.Want_to_delete_this_role')}}"
+                                               title="{{translate('messages.delete_role')}}"><i class="tio-delete-outlined"></i>
                                             </a>
                                         </div>
                                         <form action="{{route('admin.users.custom-role.delete',[$role['id']])}}"
@@ -342,10 +342,12 @@
 @endsection
 
 @push('script_2')
+    <script src="{{asset('public/assets/admin')}}/js/view-pages/custom-role-index.js"></script>
     <script>
+        "use strict";
         $('#search-form').on('submit', function (e) {
             e.preventDefault();
-            var formData = new FormData(this);
+            let formData = new FormData(this);
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -370,48 +372,6 @@
                 },
             });
         });
-        $(document).ready(function() {
-            var datatable = $.HSCore.components.HSDatatables.init($('#columnSearchDatatable'));
-        });
-    </script>
-
-    <script>
-        $('#select-all').on('change', function(){
-            if(this.checked === true) {
-                $('.check--item-wrapper .check-item .form-check-input').attr('checked', true)
-            } else {
-                $('.check--item-wrapper .check-item .form-check-input').attr('checked', false)
-            }
-        })
-        $('.check--item-wrapper .check-item .form-check-input').on('change', function(){
-            if(this.checked === true) {
-                $(this).attr('checked', true)
-            } else {
-                $(this).attr('checked', false)
-            }
-        })
-    </script>
-
-<script>
-    $(".lang_link").click(function(e){
-        e.preventDefault();
-        $(".lang_link").removeClass('active');
-        $(".lang_form").addClass('d-none');
-        $(this).addClass('active');
-
-        let form_id = this.id;
-        let lang = form_id.substring(0, form_id.length - 5);
-        console.log(lang);
-        $("#"+lang+"-form").removeClass('d-none');
-        if(lang == '{{$defaultLang}}')
-        {
-            $(".from_part_2").removeClass('d-none');
-        }
-        else
-        {
-            $(".from_part_2").addClass('d-none');
-        }
-    });
 </script>
 
 @endpush

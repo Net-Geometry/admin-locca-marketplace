@@ -28,8 +28,8 @@
                     </h5>
                     @if(!isset(auth('admin')->user()->zone_id))
                     <div class="col-sm-auto min--240">
-                        <select name="zone_id" class="form-control js-select2-custom"
-                                onchange="set_zone_filter('{{route('admin.users.delivery-man.list')}}', this.value)">
+                        <select name="zone_id" class="form-control js-select2-custom zone-filter"
+                                data-url="{{route('admin.users.delivery-man.list')}}">
                             <option value="all">{{ translate('messages.All_Zones') }}</option>
                             @foreach(\App\Models\Zone::orderBy('name')->get() as $z)
                                 <option
@@ -63,20 +63,6 @@
 
                         <div id="usersExportDropdown"
                             class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
-                            {{-- <span class="dropdown-header">{{ translate('messages.options') }}</span>
-                            <a id="export-copy" class="dropdown-item" href="javascript:;">
-                                <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                    src="{{ asset('public/assets/admin') }}/svg/illustrations/copy.svg"
-                                    alt="Image Description">
-                                {{ translate('messages.copy') }}
-                            </a>
-                            <a id="export-print" class="dropdown-item" href="javascript:;">
-                                <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                    src="{{ asset('public/assets/admin') }}/svg/illustrations/print.svg"
-                                    alt="Image Description">
-                                {{ translate('messages.print') }}
-                            </a>
-                            <div class="dropdown-divider"></div> --}}
                             <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
                             <a id="export-excel" class="dropdown-item" href="{{route('admin.users.delivery-man.export', ['type'=>'excel',request()->getQueryString()])}}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
@@ -90,12 +76,6 @@
                                     alt="Image Description">
                                 .{{ translate('messages.csv') }}
                             </a>
-                            {{-- <a id="export-pdf" class="dropdown-item" href="javascript:;">
-                                <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                    src="{{ asset('public/assets/admin') }}/svg/components/pdf.svg"
-                                    alt="Image Description">
-                                {{ translate('messages.pdf') }}
-                            </a> --}}
                         </div>
                     </div>
                     <!-- End Unfold -->
@@ -183,7 +163,7 @@
                                         </a>
                                     <a class="btn action-btn btn--primary btn-outline-primary" href="{{route('admin.users.delivery-man.edit',[$dm['id']])}}" title="{{translate('messages.edit')}}"><i class="tio-edit"></i>
                                         </a>
-                                        <a class="btn action-btn btn--danger btn-outline-danger" href="javascript:" onclick="form_alert('delivery-man-{{$dm['id']}}','{{ translate('Want to remove this deliveryman ?') }}')" title="{{translate('messages.delete')}}"><i class="tio-delete-outlined"></i>
+                                        <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:" data-id="delivery-man-{{$dm['id']}}" data-message="{{ translate('Want to remove this deliveryman ?') }}" title="{{translate('messages.delete')}}"><i class="tio-delete-outlined"></i>
                                     </a>
                                     <form action="{{route('admin.users.delivery-man.delete',[$dm['id']])}}" method="post" id="delivery-man-{{$dm['id']}}">
                                         @csrf @method('delete')
@@ -218,10 +198,11 @@
 
 @push('script_2')
     <script>
+        "use strict";
         $(document).on('ready', function () {
             // INITIALIZATION OF DATATABLES
             // =======================================================
-            var datatable = $.HSCore.components.HSDatatables.init($('#columnSearchDatatable'));
+            let datatable = $.HSCore.components.HSDatatables.init($('#columnSearchDatatable'));
 
             $('#column1_search').on('keyup', function () {
                 datatable
@@ -255,15 +236,13 @@
             // INITIALIZATION OF SELECT2
             // =======================================================
             $('.js-select2-custom').each(function () {
-                var select2 = $.HSCore.components.HSSelect2.init($(this));
+                let select2 = $.HSCore.components.HSSelect2.init($(this));
             });
         });
-    </script>
 
-    <script>
         $('#search-form').on('submit', function (e) {
             e.preventDefault();
-            var formData = new FormData(this);
+            let formData = new FormData(this);
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
