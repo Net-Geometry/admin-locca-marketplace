@@ -2362,10 +2362,7 @@ class BusinessSettingsController extends Controller
         return back();
     }
 
-    public function location_index()
-    {
-        return view('admin-views.business-settings.location-index');
-    }
+
 
     public function location_setup(Request $request)
     {
