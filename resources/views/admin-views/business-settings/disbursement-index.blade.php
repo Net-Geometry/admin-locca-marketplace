@@ -40,7 +40,7 @@
                         <div class="row g-3 mb-2">
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label class="input-label text-capitalize d-flex alig-items-center"><span
+                                    <label class="input-label text-capitalize d-flex align-items-center"><span
                                             class="line--limit-1">{{ translate('Disbursement_Request_Type')}}</span>
                                         <span class="form-label-secondary"
                                               data-toggle="tooltip" data-placement="right"
@@ -48,7 +48,7 @@
                                                 src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
                                                 alt="{{ translate('messages.Disbursement_Request_Type') }}"></span>
                                     </label>
-                                    <div class="resturant-type-group border">
+                                    <div class="restaurant-type-group border">
                                         <label class="form-check form--check mr-2 mr-md-4">
                                             <input class="form-check-input" type="radio" value="manual"
                                                    name="disbursement_type" id="disbursement_type"
