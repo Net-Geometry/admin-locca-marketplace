@@ -40,7 +40,7 @@
                         <div class="row g-3 mb-2">
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label class="input-label text-capitalize d-flex alig-items-center"><span
+                                    <label class="input-label text-capitalize d-flex align-items-center"><span
                                             class="line--limit-1">{{ translate('Disbursement_Request_Type')}}</span>
                                         <span class="form-label-secondary"
                                               data-toggle="tooltip" data-placement="right"
@@ -48,7 +48,7 @@
                                                 src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
                                                 alt="{{ translate('messages.Disbursement_Request_Type') }}"></span>
                                     </label>
-                                    <div class="resturant-type-group border">
+                                    <div class="restaurant-type-group border">
                                         <label class="form-check form--check mr-2 mr-md-4">
                                             <input class="form-check-input" type="radio" value="manual"
                                                    name="disbursement_type" id="disbursement_type"
@@ -73,14 +73,14 @@
                                 @php($system_php_path = $system_php_path ? $system_php_path->value : '')
                                 <div class="form-group lang_form default-form">
                                     <div class="d-flex justify-content-between align-items-center mb-2">
-                                        <label class="form-label text-capitalize m-0">
+                                        <label for="system_php_path" class="form-label text-capitalize m-0">
                                             {{translate('System_PHP_Path')}}
                                             <span class="input-label-secondary text--title" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('Default_location_where_the_PHP_executable_is_installed_on_server.')}}">
                                                                     <i class="tio-info-outined"></i>
                                                                 </span>
                                         </label>
                                     </div>
-                                    <input type="text" placeholder="{{translate('Ex:_/usr/bin/php')}}" class="form-control h--45px" min="1" name="system_php_path" value="{{ $system_php_path }}" required>
+                                    <input id="system_php_path" type="text" placeholder="{{translate('Ex:_/usr/bin/php')}}" class="form-control h--45px" min="1" name="system_php_path" value="{{ $system_php_path }}" required>
                                 </div>
                             </div>
                             <div class="col-12 automated_disbursement_section {{ $disbursement_type == 'manual' ? 'd-none' : '' }} ">
@@ -94,14 +94,14 @@
                                                 <div class='{{ $store_disbursement_time_period=='weekly'?'col-6':'col-12' }}' id="store_time_period_section">
                                                     <div class="form-group lang_form default-form">
                                                         <div class="d-flex justify-content-between align-items-center mb-2">
-                                                            <label class="form-label text-capitalize m-0">
+                                                            <label for="store_disbursement_time_period" class="form-label text-capitalize m-0">
                                                                 {{translate('Create_Disbursements')}}
                                                                 <span class="input-label-secondary text--title" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('Choose_how_the_disbursement_request_will_be_generated:_Monthly,_Weekly_or_Daily.')}}">
                                                                     <i class="tio-info-outined"></i>
                                                                 </span>
                                                             </label>
                                                         </div>
-                                                        <select name="store_disbursement_time_period" id="store_disbursement_time_period" class="form-control" required>
+                                                        <select  name="store_disbursement_time_period" id="store_disbursement_time_period" class="form-control" required>
                                                             <option value="daily" {{ $store_disbursement_time_period=='daily'?'selected':'' }}>
                                                                 {{ translate('messages.daily') }}
                                                             </option>
@@ -119,14 +119,14 @@
                                                     @php($store_disbursement_week_start = $store_disbursement_week_start ? $store_disbursement_week_start->value : 'saturday')
                                                     <div class="form-group lang_form default-form">
                                                         <div class="d-flex justify-content-between align-items-center mb-2">
-                                                            <label class="form-label text-capitalize m-0">
+                                                            <label for="store_disbursement_week_start" class="form-label text-capitalize m-0">
                                                                 {{translate('Week_Start')}}
                                                                 <span class="input-label-secondary text--title" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('Choose_when_the_week_starts_for_the_new_disbursement_request._This_section_will_only_appear_when_weekly_disbursement_is_selected.')}}">
                                                                     <i class="tio-info-outined"></i>
                                                                 </span>
                                                             </label>
                                                         </div>
-                                                        <select name="store_disbursement_week_start" id="" class="form-control" required>
+                                                        <select name="store_disbursement_week_start" id="store_disbursement_week_start" class="form-control" required>
                                                             <option value="saturday" {{ $store_disbursement_week_start == 'saturday'?'selected':'' }}>
                                                                 {{ translate('messages.saturday') }}
                                                             </option>
@@ -156,14 +156,14 @@
                                                     @php($store_disbursement_create_time = $store_disbursement_create_time ? $store_disbursement_create_time->value : 1)
                                                     <div class="form-group lang_form default-form">
                                                         <div class="d-flex justify-content-between align-items-center mb-2">
-                                                            <label class="form-label text-capitalize m-0">
+                                                            <label for="store_disbursement_create_time" class="form-label text-capitalize m-0">
                                                                 {{translate('Create_Time')}}
                                                                 <span class="input-label-secondary text--title" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('Define_when_the_new_disbursement_request_will_be_generated_automatically.')}}">
                                                                     <i class="tio-info-outined"></i>
                                                                 </span>
                                                             </label>
                                                         </div>
-                                                        <input type="time" placeholder="{{translate('Ex:_7')}}" class="form-control h--45px" name="store_disbursement_create_time" value="{{ $store_disbursement_create_time }}" required>
+                                                        <input type="time" id="store_disbursement_create_time" placeholder="{{translate('Ex:_7')}}" class="form-control h--45px" name="store_disbursement_create_time" value="{{ $store_disbursement_create_time }}" required>
                                                     </div>
                                                 </div>
                                                 <div class='col-6'>
@@ -171,14 +171,14 @@
                                                     @php($store_disbursement_min_amount = $store_disbursement_min_amount ? $store_disbursement_min_amount->value : 'saturday')
                                                     <div class="form-group lang_form default-form">
                                                         <div class="d-flex justify-content-between align-items-center mb-2">
-                                                            <label class="form-label text-capitalize m-0">
+                                                            <label for="store_disbursement_min_amount" class="form-label text-capitalize m-0">
                                                                 {{translate('Minimum_Amount')}}
                                                                 <span class="input-label-secondary text--title" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('Enter_the_minimum_amount_to_be_eligible_for_generating_an_auto-disbursement_request.')}}">
                                                                     <i class="tio-info-outined"></i>
                                                                 </span>
                                                             </label>
                                                         </div>
-                                                        <input type="number" placeholder="{{translate('Ex:_100')}}" class="form-control h--45px" min="1" name="store_disbursement_min_amount" value="{{ $store_disbursement_min_amount }}" required>
+                                                        <input id="store_disbursement_min_amount" type="number" placeholder="{{translate('Ex:_100')}}" class="form-control h--45px" min="1" name="store_disbursement_min_amount" value="{{ $store_disbursement_min_amount }}" required>
                                                     </div>
                                                 </div>
                                             </div>
@@ -186,14 +186,14 @@
                                             @php($store_disbursement_waiting_time = $store_disbursement_waiting_time ? $store_disbursement_waiting_time->value : '')
                                             <div class="form-group lang_form default-form">
                                                 <div class="d-flex justify-content-between align-items-center mb-2">
-                                                    <label class="form-label text-capitalize m-0">
+                                                    <label for="store_disbursement_waiting_time" class="form-label text-capitalize m-0">
                                                         {{translate('Days_needed_to_complete_disbursement')}}
                                                         <span class="input-label-secondary text--title" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('Enter_the_number_of_days_in_which_the_disbursement_will_be_completed.')}}">
                                                                 <i class="tio-info-outined"></i>
                                                             </span>
                                                     </label>
                                                 </div>
-                                                <input type="number" placeholder="{{translate('Ex:_7')}}" min="1" class="form-control h--45px" name="store_disbursement_waiting_time" value="{{ $store_disbursement_waiting_time }}" required>
+                                                <input id="store_disbursement_waiting_time" type="number" placeholder="{{translate('Ex:_7')}}" min="1" class="form-control h--45px" name="store_disbursement_waiting_time" value="{{ $store_disbursement_waiting_time }}" required>
                                             </div>
                                         </div>
                                     </div>
@@ -206,7 +206,7 @@
                                                 <div class='{{ $dm_disbursement_time_period=='weekly'?'col-6':'col-12' }}' id="dm_time_period_section">
                                                     <div class="form-group lang_form default-form">
                                                         <div class="d-flex justify-content-between align-items-center mb-2">
-                                                            <label class="form-label text-capitalize m-0">
+                                                            <label for="dm_disbursement_time_period" class="form-label text-capitalize m-0">
                                                                 {{translate('Create_Disbursements')}}
                                                                 <span class="input-label-secondary text--title" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('Choose_how_the_disbursement_request_will_be_generated:_Monthly,_Weekly_or_Daily.')}}">
                                                                     <i class="tio-info-outined"></i>
@@ -231,14 +231,14 @@
                                                 <div class='col-6 {{ $dm_disbursement_time_period=='weekly'?'':'d-none' }}' id="dm_week_day_section">
                                                     <div class="form-group lang_form default-form">
                                                         <div class="d-flex justify-content-between align-items-center mb-2">
-                                                            <label class="form-label text-capitalize m-0">
+                                                            <label for="dm_disbursement_week_start" class="form-label text-capitalize m-0">
                                                                 {{translate('Week_Start')}}
                                                                 <span class="input-label-secondary text--title" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('Choose_when_the_week_starts_for_the_new_disbursement_request._This_section_will_only_appear_when_weekly_disbursement_is_selected.')}}">
                                                                     <i class="tio-info-outined"></i>
                                                                 </span>
                                                             </label>
                                                         </div>
-                                                        <select name="dm_disbursement_week_start" id="" class="form-control" required>
+                                                        <select name="dm_disbursement_week_start" id="dm_disbursement_week_start" class="form-control" required>
                                                             <option value="saturday" {{ $dm_disbursement_week_start == 'saturday'?'selected':'' }}>
                                                                 {{ translate('messages.saturday') }}
                                                             </option>
@@ -268,14 +268,14 @@
                                                     @php($dm_disbursement_create_time = $dm_disbursement_create_time ? $dm_disbursement_create_time->value : 1)
                                                     <div class="form-group lang_form default-form">
                                                         <div class="d-flex justify-content-between align-items-center mb-2">
-                                                            <label class="form-label text-capitalize m-0">
+                                                            <label for="dm_disbursement_create_time" class="form-label text-capitalize m-0">
                                                                 {{translate('Create_Time')}}
                                                                 <span class="input-label-secondary text--title" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('Define_when_the_new_disbursement_request_will_be_generated_automatically.')}}">
                                                                     <i class="tio-info-outined"></i>
                                                                 </span>
                                                             </label>
                                                         </div>
-                                                        <input type="time" placeholder="{{translate('Ex:_7')}}" class="form-control h--45px" name="dm_disbursement_create_time" value="{{ $dm_disbursement_create_time }}" required>
+                                                        <input  id="dm_disbursement_create_time" type="time" placeholder="{{translate('Ex:_7')}}" class="form-control h--45px" name="dm_disbursement_create_time" value="{{ $dm_disbursement_create_time }}" required>
                                                     </div>
                                                 </div>
                                                 <div class='col-6'>
@@ -283,14 +283,14 @@
                                                     @php($dm_disbursement_min_amount = $dm_disbursement_min_amount ? $dm_disbursement_min_amount->value : 'saturday')
                                                     <div class="form-group lang_form default-form">
                                                         <div class="d-flex justify-content-between align-items-center mb-2">
-                                                            <label class="form-label text-capitalize m-0">
+                                                            <label for="dm_disbursement_min_amount" class="form-label text-capitalize m-0">
                                                                 {{translate('Minimum_Amount')}}
                                                                 <span class="input-label-secondary text--title" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('Enter_the_minimum_amount_to_be_eligible_for_generating_an_auto-disbursement_request.')}}">
                                                                     <i class="tio-info-outined"></i>
                                                                 </span>
                                                             </label>
                                                         </div>
-                                                        <input type="number" placeholder="{{translate('Ex:_100')}}" class="form-control h--45px" min="1" name="dm_disbursement_min_amount" value="{{ $dm_disbursement_min_amount }}" required>
+                                                        <input id="dm_disbursement_min_amount" type="number" placeholder="{{translate('Ex:_100')}}" class="form-control h--45px" min="1" name="dm_disbursement_min_amount" value="{{ $dm_disbursement_min_amount }}" required>
                                                     </div>
                                                 </div>
                                             </div>
@@ -298,14 +298,14 @@
                                             @php($dm_disbursement_waiting_time = $dm_disbursement_waiting_time ? $dm_disbursement_waiting_time->value : '')
                                             <div class="form-group lang_form default-form">
                                                 <div class="d-flex justify-content-between align-items-center mb-2">
-                                                    <label class="form-label text-capitalize m-0">
+                                                    <label for="dm_disbursement_waiting_time" class="form-label text-capitalize m-0">
                                                         {{translate('Days_needed_to_complete_disbursement')}}
                                                         <span class="input-label-secondary text--title" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('Enter_the_number_of_days_in_which_the_disbursement_will_be_completed.')}}">
                                                                 <i class="tio-info-outined"></i>
                                                             </span>
                                                     </label>
                                                 </div>
-                                                <input type="number" min="1" placeholder="{{translate('Ex:_7')}}" class="form-control h--45px" name="dm_disbursement_waiting_time" value="{{ $dm_disbursement_waiting_time }}" required>
+                                                <input id="dm_disbursement_waiting_time" type="number" min="1" placeholder="{{translate('Ex:_7')}}" class="form-control h--45px" name="dm_disbursement_waiting_time" value="{{ $dm_disbursement_waiting_time }}" required>
                                             </div>
                                         </div>
                                     </div>
@@ -313,7 +313,7 @@
                             </div>
                         </div>
                         <div class="btn--container justify-content-end">
-                            <button type="reset" id="reset_btn" class="btn btn--reset">{{ translate('messages.reset') }}</button>
+                            <button type="reset" id="reset_btn" class="btn btn--reset location-reload">{{ translate('messages.reset') }}</button>
                             <button type="submit" id="submit" class="btn btn--primary">{{ translate('messages.save_information') }}</button>
                         </div>
                     </div>
@@ -336,19 +336,19 @@
                                 {{translate('In_some_server_configurations,_the_exec_function_in_PHP_may_not_be_enabled,_limiting_your_ability_to_create_cron_jobs_programmatically._A_cron_job_is_a_scheduled_task_that_automates_repetitive_processes_on_your_server._However,_if_the_exec_function_is_disabled,_you_can_manually_set_up_cron_jobs_using_the_following_commands')}}:
                             </span>
                     </div>
-                    <label class="form-label text-capitalize">
+                    <label for="storeDisbursementCommand" class="form-label text-capitalize">
                         {{translate('Store_Cron_Command')}}
                     </label>
                     <div class="input--group input-group mb-3">
                         <input type="text" value="{{ $store_disbursement_command }}" class="form-control" id="storeDisbursementCommand" readonly>
-                        <button class="btn btn-primary copy-btn" onclick="copyToClipboard('storeDisbursementCommand')">{{ translate('Copy') }}</button>
+                        <button class="btn btn-primary copy-btn copy-to-clipboard" data-id="storeDisbursementCommand">{{ translate('Copy') }}</button>
                     </div>
-                    <label class="form-label text-capitalize">
+                    <label for="dmDisbursementCommand" class="form-label text-capitalize">
                         {{translate('Delivery_Man_Cron_Command')}}
                     </label>
                     <div class="input--group input-group">
                         <input type="text" value="{{ $dm_disbursement_command }}" class="form-control"  id="dmDisbursementCommand" readonly>
-                        <button class="btn btn-primary copy-btn" onclick="copyToClipboard('dmDisbursementCommand')">{{ translate('Copy') }}</button>
+                        <button class="btn btn-primary copy-btn copy-to-clipboard" data-id="dmDisbursementCommand">{{ translate('Copy') }}</button>
                     </div>
                 </div>
             </div>
@@ -357,8 +357,10 @@
     </div>
 @endsection
 @push('script_2')
+    <script src="{{asset('public/assets/admin/js/view-pages/disbursement.js')}}"></script>
     @php($flag = session('disbursement_exec'))
     <script>
+        "use strict";
         $(document).on('ready', function() {
             @if ($disbursement_type == 'manual')
             $('.automated_disbursement_section').hide();
@@ -368,52 +370,6 @@
             $('#myModal').modal('show');
             @endif
         });
-    </script>
 
-    <script>
-        $('input[name="disbursement_type"]').on('change', function(){
-            if(this.value == 'manual'){
-                $('.automated_disbursement_section').hide();
-
-            }else{
-                $('.automated_disbursement_section').show();
-                $('.automated_disbursement_section').removeClass('d-none');
-            }
-        })
-        $('#store_disbursement_time_period').on('change', function(){
-            if(this.value == 'weekly'){
-                $('#store_time_period_section').removeClass('col-12');
-                $('#store_time_period_section').addClass('col-6');
-                $('#store_week_day_section').removeClass('d-none');
-            }else{
-                $('#store_week_day_section').addClass('d-none');
-                $('#store_time_period_section').removeClass('col-6');
-                $('#store_time_period_section').addClass('col-12');
-            }
-        })
-        $('#dm_disbursement_time_period').on('change', function(){
-            if(this.value == 'weekly'){
-                $('#dm_time_period_section').removeClass('col-12');
-                $('#dm_time_period_section').addClass('col-6');
-                $('#dm_week_day_section').removeClass('d-none');
-            }else{
-                $('#dm_week_day_section').addClass('d-none');
-                $('#dm_time_period_section').removeClass('col-6');
-                $('#dm_time_period_section').addClass('col-12');
-            }
-        })
-    </script>
-    <script>
-        $('#reset_btn').click(function(){
-            location.reload(true);
-        })
-    </script>
-    <script>
-        function copyToClipboard(elementId) {
-            var commandElement = document.getElementById(elementId);
-            // commandElement.select();
-            navigator.clipboard.writeText(commandElement.value);
-            toastr.success('Copied to clipboard!');
-        }
     </script>
 @endpush

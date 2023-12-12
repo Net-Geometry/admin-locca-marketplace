@@ -1212,39 +1212,39 @@ class BusinessSettingsController extends Controller
         return back();
     }
 
-    public function landing_page_settings($tab)
-    {
-        if ($tab == 'index') {
-            return view('admin-views.business-settings.landing-page-settings.index');
-        } else if ($tab == 'links') {
-            return view('admin-views.business-settings.landing-page-settings.links');
-        } else if ($tab == 'speciality') {
-            return view('admin-views.business-settings.landing-page-settings.speciality');
-        } else if ($tab == 'testimonial') {
-            return view('admin-views.business-settings.landing-page-settings.testimonial');
-        } else if ($tab == 'feature') {
-            return view('admin-views.business-settings.landing-page-settings.feature');
-        } else if ($tab == 'joinas') {
-            return view('admin-views.business-settings.landing-page-settings.join-as');
-        } else if ($tab == 'download-section') {
-            return view('admin-views.business-settings.landing-page-settings.download-app-section');
-        } else if ($tab == 'promotion-banner') {
-            return view('admin-views.business-settings.landing-page-settings.promotion-banner');
-        } else if ($tab == 'module-section') {
-            $module = Helpers::get_business_settings('module_section');
-            return view('admin-views.business-settings.landing-page-settings.module-section', compact('module'));
-        } else if ($tab == 'image') {
-            return view('admin-views.business-settings.landing-page-settings.image');
-        } else if ($tab == 'background-change') {
-            return view('admin-views.business-settings.landing-page-settings.backgroundChange');
-        } else if ($tab == 'web-app') {
-            return view('admin-views.business-settings.landing-page-settings.web-app');
-        } else if ($tab == 'react') {
-            return view('admin-views.business-settings.landing-page-settings.react');
-        } else if ($tab == 'react-feature') {
-            return view('admin-views.business-settings.landing-page-settings.react_feature');
-        }
-    }
+    // public function landing_page_settings($tab)
+    // {
+    //     if ($tab == 'index') {
+    //         return view('admin-views.business-settings.landing-page-settings.index');
+    //     } else if ($tab == 'links') {
+    //         return view('admin-views.business-settings.landing-page-settings.links');
+    //     } else if ($tab == 'speciality') {
+    //         return view('admin-views.business-settings.landing-page-settings.speciality');
+    //     } else if ($tab == 'testimonial') {
+    //         return view('admin-views.business-settings.landing-page-settings.testimonial');
+    //     } else if ($tab == 'feature') {
+    //         return view('admin-views.business-settings.landing-page-settings.feature');
+    //     } else if ($tab == 'joinas') {
+    //         return view('admin-views.business-settings.landing-page-settings.join-as');
+    //     } else if ($tab == 'download-section') {
+    //         return view('admin-views.business-settings.landing-page-settings.download-app-section');
+    //     } else if ($tab == 'promotion-banner') {
+    //         return view('admin-views.business-settings.landing-page-settings.promotion-banner');
+    //     } else if ($tab == 'module-section') {
+    //         $module = Helpers::get_business_settings('module_section');
+    //         return view('admin-views.business-settings.landing-page-settings.module-section', compact('module'));
+    //     } else if ($tab == 'image') {
+    //         return view('admin-views.business-settings.landing-page-settings.image');
+    //     } else if ($tab == 'background-change') {
+    //         return view('admin-views.business-settings.landing-page-settings.backgroundChange');
+    //     } else if ($tab == 'web-app') {
+    //         return view('admin-views.business-settings.landing-page-settings.web-app');
+    //     } else if ($tab == 'react') {
+    //         return view('admin-views.business-settings.landing-page-settings.react');
+    //     } else if ($tab == 'react-feature') {
+    //         return view('admin-views.business-settings.landing-page-settings.react_feature');
+    //     }
+    // }
 
     public function update_landing_page_settings(Request $request, $tab)
     {

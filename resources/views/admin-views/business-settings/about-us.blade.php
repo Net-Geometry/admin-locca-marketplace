@@ -55,7 +55,7 @@
 
                         <div class="form-group">
                             <label for="about_us">{{ translate('messages.about_us_description') }}({{ translate('messages.Default') }})</label>
-                            <textarea class="ckeditor form-control" name="about_us[]">{!! $about_us?->getRawOriginal('value') ?? '' !!}</textarea>
+                            <textarea id="about_us" class="ckeditor form-control" name="about_us[]">{!! $about_us?->getRawOriginal('value') ?? '' !!}</textarea>
                         </div>
                         <input type="hidden" name="lang[]" value="default">
                     </div>
@@ -92,8 +92,8 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="about_us">{{ translate('messages.about_us_description') }}({{ $lang }})</label>
-                                    <textarea class="ckeditor form-control" name="about_us[]">{!!  $translate[$lang]['about_us'] ?? null !!}</textarea>
+                                    <label for="about_us{{$lang}}">{{ translate('messages.about_us_description') }}({{ $lang }})</label>
+                                    <textarea id="about_us{{$lang}}" class="ckeditor form-control" name="about_us[]">{!!  $translate[$lang]['about_us'] ?? null !!}</textarea>
                                 </div>
                                 <input type="hidden" name="lang[]" value="{{$lang}}">
                             </div>
@@ -112,21 +112,5 @@
 @endsection
 
 @push('script_2')
-<script src="//cdn.ckeditor.com/4.14.1/standard/ckeditor.js"></script>
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('.ckeditor').ckeditor();
-    });
-</script>
-<script>
-    $(".lang_link").click(function(e){
-        e.preventDefault();
-        $(".lang_link").removeClass('active');
-        $(".lang_form").addClass('d-none');
-        $(this).addClass('active');
-        let form_id = this.id;
-        let lang = form_id.substring(0, form_id.length - 5);
-        $("#"+lang+"-form").removeClass('d-none');
-    });
-</script>
+    <script src="{{asset('public/assets/admin/ckeditor/ckeditor.js')}}"></script>
 @endpush

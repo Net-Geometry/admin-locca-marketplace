@@ -369,6 +369,9 @@
 </script>
 
 @stack('script_2')
+<script>
+    var baseUrl = '{{ url('/') }}';
+</script>
 
 <script src="{{asset('public/assets/admin')}}/js/view-pages/common.js"></script>
 <script>
@@ -509,6 +512,9 @@
         let title = $(this).data('title');
         route_alert(route, message,title);
     })
+    // function emailModalShow() {
+    //     $('#email-modal').show();
+    // }
     function route_alert(route, message, title="{{translate('messages.are_you_sure')}}") {
         Swal.fire({
             title: title,
@@ -656,14 +662,6 @@
         tour.next();
     }
 
-    function change_mail_route(value) {
-        if(value == 'admin'){
-            var url= '{{url('/')}}/admin/business-settings/email-setup/'+value+'/forgot-password';
-        }else{
-            var url= '{{url('/')}}/admin/business-settings/email-setup/'+value+'/registration';
-        }
-        location.href = url;
-    }
 
     function set_mail_filter(url, id, filter_by) {
         Swal.fire({
@@ -954,21 +952,21 @@
 </script>
 
 <script>
-    function toogleModal(e, toggle_id, on_image, off_image, on_title, off_title, on_message, off_message) {
-        e.preventDefault();
-        if ($('#'+toggle_id).is(':checked')) {
-            $('#toggle-title').empty().append(on_title);
-            $('#toggle-message').empty().append(on_message);
-            $('#toggle-image').attr('src', "{{asset('/public/assets/admin/img/modal')}}/"+on_image);
-            $('#toggle-ok-button').attr('toggle-ok-button', toggle_id);
-        } else {
-            $('#toggle-title').empty().append(off_title);
-            $('#toggle-message').empty().append(off_message);
-            $('#toggle-image').attr('src', "{{asset('/public/assets/admin/img/modal')}}/"+off_image);
-            $('#toggle-ok-button').attr('toggle-ok-button', toggle_id);
-        }
-        $('#toggle-modal').modal('show');
-    }
+    // function toogleModal(e, toggle_id, on_image, off_image, on_title, off_title, on_message, off_message) {
+    //     e.preventDefault();
+    //     if ($('#'+toggle_id).is(':checked')) {
+    //         $('#toggle-title').empty().append(on_title);
+    //         $('#toggle-message').empty().append(on_message);
+    //         $('#toggle-image').attr('src', "{{asset('/public/assets/admin/img/modal')}}/"+on_image);
+    //         $('#toggle-ok-button').attr('toggle-ok-button', toggle_id);
+    //     } else {
+    //         $('#toggle-title').empty().append(off_title);
+    //         $('#toggle-message').empty().append(off_message);
+    //         $('#toggle-image').attr('src', "{{asset('/public/assets/admin/img/modal')}}/"+off_image);
+    //         $('#toggle-ok-button').attr('toggle-ok-button', toggle_id);
+    //     }
+    //     $('#toggle-modal').modal('show');
+    // }
 
     function confirmToggle() {
         var toggle_id = $('#toggle-ok-button').attr('toggle-ok-button');
@@ -1071,14 +1069,6 @@
 
     }
 
-    // function checkMailElement(id) {
-    //     console.log(id);
-    //     if ($('.'+id).is(':checked')) {
-    //         $('#'+id).show();
-    //     } else {
-    //         $('#'+id).hide();
-    //     }
-    // }
 </script>
 
 <script>
@@ -1088,6 +1078,19 @@
             ProgressBar: true
         });
     }
+
+    $(document).on('click', '.call-demo', function () {
+        @if(env('APP_MODE') =='demo')
+            toastr.info('{{ translate('Update option is disabled for demo!') }}', {
+                CloseButton: true,
+                ProgressBar: true
+            });
+        @endif
+    });
+    $(document).on('click', '.location-reload', function () {
+        location.reload();
+    });
+
 </script>
 
 <script>

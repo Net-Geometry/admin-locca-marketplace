@@ -37,7 +37,20 @@
                                     <span class="d-flex align-items-center switch--label">
                                         <span class="form-label-secondary text-danger d-flex" data-toggle="tooltip" data-placement="right" data-original-title="Lorem ipsum dolor set amet"><img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="Veg/non-veg toggle"> * </span>
                                     </span>
-                                    <input class="toggle-switch-input" id="{{$socialLoginService['login_medium']}}_status" onclick="toogleModal(event,'{{$socialLoginService['login_medium']}}_status','{{$socialLoginService['login_medium']}}-on.png','{{$socialLoginService['login_medium']}}-off.png','{{translate('messages.'.$socialLoginService['login_medium'])}} {{translate('Login Turned ON ')}} ','{{translate('messages.'.$socialLoginService['login_medium'])}} {{translate('Login Turned OFF ')}}',`<p>{{translate('messages.'.$socialLoginService['login_medium'])}} {{translate('Login is now enabled. Customers will be able to sign up or log in using their social media accounts.')}}</p>`,`<p>{{translate('messages.'.$socialLoginService['login_medium'])}} {{translate('Login is now disabled. Customers will not be able to sign up or log in using their social media accounts. Please note that this may affect user experience and registration/login process.')}}</p>`)" type="checkbox" name="status" value="1" {{$socialLoginService['status']==1?'checked' :''}}>
+                                    <input id="{{$socialLoginService['login_medium']}}_status"
+
+                                           data-id="{{$socialLoginService['login_medium']}}_status"
+                                           data-type="toggle"
+                                           data-image-on="{{asset('/public/assets/admin/img/modal')}}/{{$socialLoginService['login_medium']}}-on.png"
+                                           data-image-off="{{asset('/public/assets/admin/img/modal')}}/{{$socialLoginService['login_medium']}}-off.png"
+                                           data-title-on="{{translate('messages.'.$socialLoginService['login_medium'])}} {{translate('Login Turned ON ')}}"
+                                           data-title-off="{{translate('messages.'.$socialLoginService['login_medium'])}} {{translate('Login Turned OFF ')}}"
+                                           data-text-on="<p>{{translate('messages.'.$socialLoginService['login_medium'])}} {{translate('Login is now enabled. Customers will be able to sign up or log in using their social media accounts.')}}</p>"
+                                           data-text-off="<p>{{translate('messages.'.$socialLoginService['login_medium'])}} {{translate('Login is now disabled. Customers will not be able to sign up or log in using their social media accounts. Please note that this may affect user experience and registration/login process.')}}</p>"
+                                           class="status toggle-switch-input dynamic-checkbox-toggle"
+
+
+                                           type="checkbox" name="status" value="1" {{$socialLoginService['status']==1?'checked' :''}}>
                                     <span class="toggle-switch-label text p-0">
                                         <span class="toggle-switch-indicator"></span>
                                     </span>
@@ -55,18 +68,18 @@
                                 <div class="form-group">
                                     <label class="form-label">{{translate('messages.callback_uri')}}</label>
                                     <div class="position-relative">
-                                        <span class="btn-right-fixed" onclick="copyToClipboard('#id_{{$socialLoginService['login_medium']}}')"><i class="tio-copy"></i></span>
+                                        <span class="btn-right-fixed copy-to-clipboard" data-id="#id_{{$socialLoginService['login_medium']}}"><i class="tio-copy"></i></span>
                                         <span class="form-control h-unset" id="id_{{$socialLoginService['login_medium']}}">{{ url('/') }}/customer/auth/login/{{$socialLoginService['login_medium']}}/callback</span>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="form-label">{{translate('messages.client_id')}}</label>
-                                    <input type="text" class="form-control" name="client_id" value="{{ $socialLoginService['client_id'] }}">
+                                    <label for="client_id" class="form-label">{{translate('messages.client_id')}}</label>
+                                    <input id="client_id" type="text" class="form-control" name="client_id" value="{{ $socialLoginService['client_id'] }}">
                                 </div>
                                 <div class="form-group">
-                                    <label
+                                    <label for="client_secret"
                                         class="form-label">{{translate('messages.client_secret')}}</label>
-                                    <input type="text" class="form-control" name="client_secret"
+                                    <input id="client_secret" type="text" class="form-control" name="client_secret"
                                             value="{{ $socialLoginService['client_secret'] }}">
                                 </div>
                                 <div class="btn--container justify-content-end">
@@ -96,7 +109,19 @@
                                         <span class="d-flex align-items-center switch--label">
                                             <span class="form-label-secondary text-danger d-flex" data-toggle="tooltip" data-placement="right" data-original-title="Lorem ipsum dolor set amet"><img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="Veg/non-veg toggle"> * </span>
                                         </span>
-                                        <input class="toggle-switch-input" id="{{$appleLoginService['login_medium']}}_status" onclick="toogleModal(event,'{{$appleLoginService['login_medium']}}_status','{{$appleLoginService['login_medium']}}-on.png','{{$appleLoginService['login_medium']}}-off.png','{{translate('messages.'.$appleLoginService['login_medium'])}} {{translate('Login Turned ON ')}} ','{{translate('messages.'.$appleLoginService['login_medium'])}} {{translate('Login Turned OFF ')}}',`<p>{{translate('messages.'.$appleLoginService['login_medium'])}} {{translate('Login is now enabled. Customers will be able to sign up or log in using their social media accounts.')}}</p>`,`<p>{{translate('messages.'.$appleLoginService['login_medium'])}} {{translate('Login is now disabled. Customers will not be able to sign up or log in using their social media accounts. Please note that this may affect user experience and registration/login process.')}}</p>`)" type="checkbox" name="status" value="1" {{$appleLoginService['status']==1?'checked' :''}}>
+                                        <input  id="{{$appleLoginService['login_medium']}}_status"
+                                               data-id="{{$appleLoginService['login_medium']}}_status"
+                                               data-type="toggle"
+                                               data-image-on="{{asset('/public/assets/admin/img/modal')}}/{{$appleLoginService['login_medium']}}-on.png"
+                                               data-image-off="{{asset('/public/assets/admin/img/modal')}}/{{$appleLoginService['login_medium']}}-off.png"
+                                               data-title-on="{{translate('messages.'.$appleLoginService['login_medium'])}} {{translate('Login Turned ON ')}}"
+                                               data-title-off="{{translate('messages.'.$appleLoginService['login_medium'])}} {{translate('Login Turned OFF ')}}"
+                                               data-text-on="<p>{{translate('messages.'.$appleLoginService['login_medium'])}} {{translate('Login is now enabled. Customers will be able to sign up or log in using their social media accounts.')}}</p>"
+                                               data-text-off="<p>{{translate('messages.'.$appleLoginService['login_medium'])}} {{translate('Login is now disabled. Customers will not be able to sign up or log in using their social media accounts. Please note that this may affect user experience and registration/login process.')}}</p>"
+                                               class="status toggle-switch-input dynamic-checkbox-toggle"
+
+
+                                               type="checkbox" name="status" value="1" {{$appleLoginService['status']==1?'checked' :''}}>
                                         <span class="toggle-switch-label text p-0">
                                             <span class="toggle-switch-indicator"></span>
                                         </span>
@@ -112,21 +137,21 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label
+                                        <label for="client_id"
                                             class="form-label">{{translate('messages.client_id')}}</label>
-                                        <input type="text" class="form-control" name="client_id"
+                                        <input id="client_id" type="text" class="form-control" name="client_id"
                                             value="{{ $appleLoginService['client_id'] }}">
                                     </div>
                                     <div class="form-group">
-                                        <label
+                                        <label for="team_id"
                                             class="form-label">{{translate('messages.team_id')}}</label>
-                                        <input type="text" class="form-control" name="team_id"
+                                        <input id="team_id" type="text" class="form-control" name="team_id"
                                             value="{{ $appleLoginService['team_id'] }}">
                                     </div>
                                     <div class="form-group">
-                                        <label
+                                        <label for="key_id"
                                             class="form-label">{{translate('messages.key_id')}}</label>
-                                        <input type="text" class="form-control" name="key_id"
+                                        <input id="key_id" type="text" class="form-control" name="key_id"
                                             value="{{ $appleLoginService['key_id'] }}">
                                     </div>
                                     <div class="form-group">
@@ -148,54 +173,6 @@
         </div>
     </div>
 
-
-        {{-- <div class="modal fade" id="status-popup">
-            <div class="modal-dialog status-warning-modal">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">
-                            <span aria-hidden="true" class="tio-clear"></span>
-                        </button>
-                    </div>
-                    <div class="modal-body pb-5 pt-0">
-                        <div class="max-349 mx-auto mb-20">
-                            <div>
-                                <div class="text-center">
-                                    <!-- facebook, pinterest, linkedin, instagram, apple image is in same folder -->
-                                    <img src="{{asset('/public/assets/admin/img/modal/facebook-off.png')}}" alt="" class="mb-20">
-                                    <h5 class="modal-title">{{translate('Facebook is Disabled!')}}</h5>
-                                </div>
-                                <div class="text-center">
-                                    <p>
-                                        {{translate('Customers will be able to select COD as a payment method during checkout. Please review your settings to ensure proper configuration and availability of COD as a payment option.')}}
-                                    </p>
-                                </div>
-                            </div>
-                            <!-- <div>
-                                <div class="text-center">
-                                    <img src="{{asset('/public/assets/admin/img/modal/facebook-on.png')}}" alt="" class="mb-20">
-                                    <h5 class="modal-title">{{translate('Facebook is Enabled')}}</h5>
-                                </div>
-                                <div class="text-center">
-                                    <p>
-                                        {{translate('Customers will be able to select COD as a payment method during checkout. Please review your settings to ensure proper configuration and availability of COD as a payment option.')}}
-                                    </p>
-                                </div>
-                            </div> -->
-                            <div class="btn--container justify-content-center">
-                                <button type="submit" class="btn btn--primary min-w-120" data-dismiss="modal">{{translate('Ok')}}</button>
-                                <button id="reset_btn" type="reset" class="btn btn--cancel min-w-120" data-dismiss="modal">                
-                                    {{translate("Cancel")}}
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> --}}
-        
-
-        {{-- Modal Starts--}}
         <!-- Google -->
         <div class="modal fade" id="google-modal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog status-warning-modal">
@@ -283,7 +260,7 @@
                         </div>
                         <ol>
                             <li>{{translate('Go to Apple Developer page')}} (<a href="https://developer.apple.com/account/resources/identifiers/list" target="_blank">{{translate('messages.click_here')}}</a>)</li>
-                            <li>{{translate('Here in top left corner you can see the')}} <b>{{ translate('Team ID') }}</b> {{ translate('[Apple_Deveveloper_Account_Name - Team_ID]')}}</li>
+                            <li>{{translate('Here in top left corner you can see the')}} <b>{{ translate('Team ID') }}</b> {{ translate('[Apple_Developer_Account_Name - Team_ID]')}}</li>
                             <li>{{translate('Click Plus icon -> select App IDs -> click on Continue')}}</li>
                             <li>{{translate('Put a description and also identifier (identifier that used for app) and this is the')}} <b>{{ translate('Client ID') }}</b> </li>
                             <li>{{translate('Click Continue and Download the file in device named AuthKey_ID.p8 (Store it safely and it is used for push notification)')}} </li>
@@ -320,35 +297,22 @@
         {{-- Modal Ends--}}
 
 
-        
+
 @endsection
 @push('script_2')
     <script>
-        function copyToClipboard(element) {
-            var $temp = $("<input>");
+        "use strict";
+        $(document).on('click', '.copy-to-clipboard', function () {
+            let id=  $(this).data('id');
+            let $temp = $("<input>");
             $("body").append($temp);
-            $temp.val($(element).text()).select();
+            $temp.val($(id).text()).select();
             document.execCommand("copy");
             $temp.remove();
-
             toastr.success("{{translate('Copied to the clipboard')}}");
-        }
-        function checkAppleFile() {
-            <?php
-            if (file_exists('AppleServiceId.p8')) {
-                $file = 1;
-            } else {
-                $file = 0;
-            }
-            ?>
-            var file = {{ $file }};
-            console.log(file);
-            if(file === 1){
-                toastr.success("{{translate('File Exists')}}");
-            }else{
-                toastr.error("{{translate('File not found')}}");
-            }
-        }
+
+        });
+
     </script>
 
 @endpush

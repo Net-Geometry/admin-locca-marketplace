@@ -56,32 +56,32 @@
                         @if ($language)
                             <div class="row g-3 lang_form" id="default-form">
                                 <div class="col-sm-6">
-                                    <label class="form-label">{{translate('Title')}} ({{ translate('messages.default') }})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_20_characters') }}">
+                                    <label for="title" class="form-label">{{translate('Title')}} ({{ translate('messages.default') }})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_20_characters') }}">
                                                 <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
                                             </span></label>
-                                        <input type="text"  maxlength="20" name="title[]" class="form-control" placeholder="{{translate('messages.title_here...')}}">
+                                        <input id="title" type="text"  maxlength="20" name="title[]" class="form-control" placeholder="{{translate('messages.title_here...')}}">
                                 </div>
                                 <div class="col-sm-6">
-                                    <label class="form-label">{{translate('Sub Title')}} ({{ translate('messages.default') }})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_80_characters') }}">
+                                    <label for="sub_title" class="form-label">{{translate('Sub Title')}} ({{ translate('messages.default') }})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_80_characters') }}">
                                                 <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
                                             </span></label>
-                                        <input type="text"  maxlength="80" name="sub_title[]" class="form-control" placeholder="{{translate('messages.sub_title_here...')}}">
+                                        <input id="sub_title" type="text"  maxlength="80" name="sub_title[]" class="form-control" placeholder="{{translate('messages.sub_title_here...')}}">
                                 </div>
                             </div>
                             <input type="hidden" name="lang[]" value="default">
                                 @foreach(json_decode($language) as $lang)
                                     <div class="row g-3 d-none lang_form" id="{{$lang}}-form">
                                         <div class="col-sm-6">
-                                            <label class="form-label">{{translate('Title')}} ({{strtoupper($lang)}})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_20_characters') }}">
+                                            <label for="title{{$lang}}" class="form-label">{{translate('Title')}} ({{strtoupper($lang)}})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_20_characters') }}">
                                                 <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
                                             </span></label>
-                                        <input type="text"  maxlength="20" name="title[]" class="form-control" placeholder="{{translate('messages.title_here...')}}">
+                                        <input id="title{{$lang}}" type="text"  maxlength="20" name="title[]" class="form-control" placeholder="{{translate('messages.title_here...')}}">
                                         </div>
                                         <div class="col-sm-6">
-                                            <label class="form-label">{{translate('Sub Title')}} ({{strtoupper($lang)}})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_80_characters') }}">
+                                            <label for="sub_title{{$lang}}" class="form-label">{{translate('Sub Title')}} ({{strtoupper($lang)}})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_80_characters') }}">
                                                 <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
                                             </span></label>
-                                        <input type="text"  maxlength="80" name="sub_title[]" class="form-control" placeholder="{{translate('messages.sub_title_here...')}}">
+                                        <input type="text"  id="sub_title{{$lang}}" maxlength="80" name="sub_title[]" class="form-control" placeholder="{{translate('messages.sub_title_here...')}}">
                                         </div>
                                     </div>
                                     <input type="hidden" name="lang[]" value="{{$lang}}">
@@ -89,12 +89,12 @@
                             @else
                                 <div class="row g-3">
                                     <div class="col-sm-6">
-                                        <label class="form-label">{{translate('Title')}}</label>
-                                        <input type="text" name="title[]" class="form-control" placeholder="{{translate('messages.title_here...')}}">
+                                        <label  for="title" class="form-label">{{translate('Title')}}</label>
+                                        <input id="title" type="text" name="title[]" class="form-control" placeholder="{{translate('messages.title_here...')}}">
                                     </div>
                                     <div class="col-sm-6">
-                                        <label class="form-label">{{translate('Sub Title')}}</label>
-                                        <input type="text" name="sub_title[]" class="form-control" placeholder="{{translate('messages.sub_title_here...')}}">
+                                        <label for="sub_title" class="form-label">{{translate('Sub Title')}}</label>
+                                        <input  id="sub_title" type="text" name="sub_title[]" class="form-control" placeholder="{{translate('messages.sub_title_here...')}}">
                                     </div>
                                 </div>
                                 <input type="hidden" name="lang[]" value="default">
@@ -126,44 +126,6 @@
                         <h5 class="card-title">{{translate('Promotional_Banner_List')}}
                             {{-- <span class="badge badge-secondary ml-1">5</span>  --}}
                         </h5>
-                        {{-- <form action="javascript:" id="search-form" class="search-form">
-                                        <!-- Search -->
-                            @csrf
-                            <div class="input-group input--group">
-                                <input id="datatableSearch_" type="search" name="search" class="form-control"
-                                        placeholder="{{translate('Search by ID or name')}}" aria-label="{{translate('messages.search')}}" required>
-                                <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
-
-                            </div>
-                            <!-- End Search -->
-                        </form> --}}
-                        <!-- Unfold -->
-                        {{-- <div class="hs-unfold mr-2">
-                            <a class="js-hs-unfold-invoker btn btn-sm btn-white dropdown-toggle min-height-40" href="javascript:;"
-                                data-hs-unfold-options='{
-                                        "target": "#usersExportDropdown",
-                                        "type": "css-animation"
-                                    }'>
-                                <i class="tio-download-to mr-1"></i> {{ translate('messages.export') }}
-                            </a>
-
-                            <div id="usersExportDropdown" class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
-                                <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
-                                <a id="export-excel" class="dropdown-item" href="{{route('admin.store.export', ['type'=>'excel',request()->getQueryString()])}}">
-                                    <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                        src="{{ asset('public/assets/admin') }}/svg/components/excel.svg"
-                                        alt="Image Description">
-                                    {{ translate('messages.excel') }}
-                                </a>
-                                <a id="export-csv" class="dropdown-item" href="{{route('admin.store.export', ['type'=>'csv',request()->getQueryString()])}}">
-                                    <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                        src="{{ asset('public/assets/admin') }}/svg/components/placeholder-csv-format.svg"
-                                        alt="Image Description">
-                                    .{{ translate('messages.csv') }}
-                                </a>
-                            </div>
-                        </div> --}}
-                        <!-- End Unfold -->
                     </div>
                 </div>
                 <div class="card-body p-0">
@@ -199,7 +161,7 @@
                                     <td>
                                         <span class="d-block font-size-sm text-body">
                                             {{ $banner->sub_title }}
-                                        </div>
+                                         </span>
                                     </td>
                                     <td>
                                         <img src="{{asset('storage/app/public/promotional_banner')}}/{{$banner->image}}"
@@ -207,7 +169,17 @@
                                     </td>
                                     <td>
                                         <label class="toggle-switch toggle-switch-sm">
-                                            <input type="checkbox" class="toggle-switch-input" onclick="toogleStatusModal(event,'status-{{$banner->id}}','promotional-on.png','promotional-off.png','{{translate('By Turning ONN Promotional Banner Section')}}','{{translate('By Turning OFF Promotional Banner Section')}}',`<p>{{translate('Promotional banner will be enabled. You will be able to see promotional activity')}}</p>`,`<p>{{translate('Promotional banner will be disabled. You will be unable to see promotional activity')}}</p>`)" id="status-{{$banner->id}}" {{$banner->status?'checked':''}}>
+                                            <input type="checkbox"
+                                                   data-id="status-{{$banner->id}}"
+                                                   data-type="status"
+                                                   data-image-on="{{ asset('/public/assets/admin/img/modal/promotional-on.png') }}"
+                                                   data-image-off="{{ asset('/public/assets/admin/img/modal/promotional-off.png') }}"
+                                                   data-title-on="{{ translate('By Turning ON Promotional Banner Section') }}"
+                                                   data-title-off="{{ translate('By Turning OFF Promotional Banner Section') }}"
+                                                   data-text-on="<p>{{ translate('Promotional banner will be enabled. You will be able to see promotional activity') }}</p>"
+                                                   data-text-off="<p>{{ translate('Promotional banner will be disabled. You will be unable to see promotional activity') }}</p>"
+                                                   class="status toggle-switch-input dynamic-checkbox"
+                                                   id="status-{{$banner->id}}" {{$banner->status?'checked':''}}>
                                             <span class="toggle-switch-label">
                                                 <span class="toggle-switch-indicator"></span>
                                             </span>
@@ -221,8 +193,10 @@
                                             <a class="btn action-btn btn--primary btn-outline-primary" href="{{route('admin.business-settings.promotional-edit',[$banner['id']])}}">
                                                 <i class="tio-edit"></i>
                                             </a>
-                                            <a class="btn action-btn btn--danger btn-outline-danger" href="javascript:"
-                                            onclick="form_alert('banner-{{$banner['id']}}','{{ translate('Want to delete this banner ?') }}')" title="{{translate('messages.delete_banner')}}"><i class="tio-delete-outlined"></i>
+                                            <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:"
+                                               data-id="banner-{{$banner['id']}}"
+                                               data-message="{{ translate('Want to delete this banner ?') }}"
+                                               title="{{translate('messages.delete_banner')}}"><i class="tio-delete-outlined"></i>
                                             </a>
                                             <form action="{{route('admin.business-settings.promotional-delete',[$banner['id']])}}" method="post" id="banner-{{$banner['id']}}">
                                                 @csrf @method('delete')
@@ -252,26 +226,3 @@
     <!-- How it Works -->
     @include('admin-views.business-settings.landing-page-settings.partial.how-it-work')
 @endsection
-@push('script_2')
-<script>
-    $(".lang_link").click(function(e){
-        e.preventDefault();
-        $(".lang_link").removeClass('active');
-        $(".lang_form").addClass('d-none');
-        $(this).addClass('active');
-
-        let form_id = this.id;
-        let lang = form_id.substring(0, form_id.length - 5);
-        console.log(lang);
-        $("#"+lang+"-form").removeClass('d-none');
-        if(lang == '{{$defaultLang}}')
-        {
-            $(".from_part_2").removeClass('d-none');
-        }
-        else
-        {
-            $(".from_part_2").addClass('d-none');
-        }
-    });
-</script>
-@endpush

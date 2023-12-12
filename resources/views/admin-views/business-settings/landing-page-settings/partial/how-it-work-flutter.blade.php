@@ -33,9 +33,6 @@
                             <p>
                                 {{translate('Visit landing page to see the changes you made in the settings option!')}}
                             </p>
-                            {{-- <div class="btn-wrap">
-                                <a href="{{ route('home') }}" class="btn btn--primary w-100">{{ translate('Visit_Now') }}</a>
-                            </div> --}}
                         </div>
                     </div>
                 </div>

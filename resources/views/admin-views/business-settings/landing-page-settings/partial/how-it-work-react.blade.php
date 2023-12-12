@@ -44,9 +44,9 @@
                             </p>
                             @php($react = \App\CentralLogics\Helpers::get_business_settings('react_setup'))
                             @if ($react)
-                                
+
                             <div class="btn-wrap">
-                                <a href="http://{{ $react['react_domain'] }}" class="btn btn--primary w-100" target="_blank">{{ translate('Visit_Now') }}</a>
+                                <a href="https://{{ $react['react_domain'] }}" class="btn btn--primary w-100" target="_blank">{{ translate('Visit_Now') }}</a>
                             </div>
                             @endif
                         </div>
