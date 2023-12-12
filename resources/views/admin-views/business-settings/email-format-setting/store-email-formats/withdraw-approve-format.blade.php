@@ -1,6 +1,9 @@
 @extends('layouts.admin.app')
 
 @section('title', translate('email_template'))
+@push('css_or_js')
+<link rel="stylesheet" href="{{asset('public/assets/admin/css/view-pages/email-templates.css')}}">
+@endpush
 
 
 @section('content')
@@ -25,7 +28,7 @@
             <div class="tab-pane fade show active">
                 <div class="card mb-3">
                     @php($mail_status=\App\Models\BusinessSetting::where('key','withdraw_approve_mail_status_store')->first()?->value ?? '0')
-                    
+
                     <div class="card-body">
                         <div class="maintenance-mode-toggle-bar d-flex flex-wrap justify-content-between border rounded align-items-center p-2">
                             <h5 class="text-capitalize m-0 text--primary pl-2">

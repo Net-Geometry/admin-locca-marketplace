@@ -40,22 +40,22 @@
                             <div class="col-md-6">
                                 <div class="row g-3">
                                     <div class="col-md-6">
-                                        <label class="form-label">{{translate('Reviewer Name')}}</label>
-                                        <input type="text" name="name" value="{{ $review->name }}" class="form-control" placeholder="{{translate('Ex:  John Doe')}}">
+                                        <label for="name" class="form-label">{{translate('Reviewer Name')}}</label>
+                                        <input id="name" type="text" name="name" value="{{ $review->name }}" class="form-control" placeholder="{{translate('Ex:  John Doe')}}">
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="form-label">{{translate('Designation')}}</label>
-                                        <input type="text" name="designation" value="{{ $review->designation }}" class="form-control" placeholder="{{translate('Ex:  CTO')}}">
+                                        <label for="designation" class="form-label">{{translate('Designation')}}</label>
+                                        <input id="designation" type="text" name="designation" value="{{ $review->designation }}" class="form-control" placeholder="{{translate('Ex:  CTO')}}">
                                     </div>
                                     <div class="col-md-12">
-                                        <label class="form-label">{{translate('messages.review')}}<span
+                                        <label for="review" class="form-label">{{translate('messages.review')}}<span
                                             class="form-label-secondary" data-toggle="tooltip"
                                             data-placement="right"
                                             data-original-title="{{ translate('Write_the_title_within_250_characters') }}">
                                             <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
                                                 alt="">
                                         </span></label>
-                                        <textarea name="review" maxlength="250" placeholder="{{translate('Very Good Company')}}" class="form-control h92px">{{ $review->review }}</textarea>
+                                        <textarea id="review" name="review" maxlength="250" placeholder="{{translate('Very Good Company')}}" class="form-control h92px">{{ $review->review }}</textarea>
                                     </div>
                                 </div>
                             </div>
@@ -63,7 +63,7 @@
                                 <div class="d-flex gap-40px">
                                     <div>
                                         <label class="form-label d-block mb-2">
-                                            {{translate('Reviewer Image *')}}  <span class="text--primary">(1:1)</span>
+                                            {{translate('Reviewer Image *')}}  <span class="text--primary">{{translate('(1:1)')}}</span>
                                         </label>
                                         <label class="upload-img-3 m-0 d-block">
                                             <div class="position-relative">
@@ -72,16 +72,18 @@
                                             </div>
                                             <input type="file"  name="reviewer_image" hidden="">
                                              @if (isset($review->reviewer_image))
-                                            <span id="reviewer_image" class="remove_image_button"
-                                                onclick="toogleStatusModal(event,'reviewer_image','mail-success','mail-warning','{{translate('Important!')}}','{{translate('Warning!')}}',`<p>{{translate('Are_you_sure_you_want_to_remove_this_image')}}</p>`,`<p>{{translate('Are_you_sure_you_want_to_remove_this_image.')}}</p>`)"
-                                                > <i class="tio-clear"></i></span>
+                                                    <span id="reviewer_image" class="remove_image_button remove-image"
+                                                          data-id="reviewer_image"
+                                                          data-title="{{translate('Warning!')}}"
+                                                          data-text="<p>{{translate('Are_you_sure_you_want_to_remove_this_image_?')}}</p>"
+                                                    > <i class="tio-clear"></i></span>
                                             @endif
                                         </div>
                                         </label>
                                     </div>
                                     <div class="d-flex flex-column">
                                         <label class="form-label d-block mb-2">
-                                            {{translate('Company Logo *')}}  <span class="text--primary">(3:1)</span>
+                                            {{translate('Company Logo *')}}  <span class="text--primary">{{translate('(3:1)')}}</span>
                                         </label>
                                         <label class="upload-img-4 m-0 d-block my-auto">
                                             <div class="position-relative">
@@ -90,9 +92,11 @@
                                             </div>
                                             <input type="file" id="image-upload-2" name="company_image" hidden="">
                                             @if (isset($review->company_image))
-                                            <span id="company_image" class="remove_image_button"
-                                                onclick="toogleStatusModal(event,'company_image','mail-success','mail-warning','{{translate('Important!')}}','{{translate('Warning!')}}',`<p>{{translate('Are_you_sure_you_want_to_remove_this_image')}}</p>`,`<p>{{translate('Are_you_sure_you_want_to_remove_this_image.')}}</p>`)"
-                                                > <i class="tio-clear"></i></span>
+                                                    <span id="company_image" class="remove_image_button remove-image"
+                                                          data-id="company_image"
+                                                          data-title="{{translate('Warning!')}}"
+                                                          data-text="<p>{{translate('Are_you_sure_you_want_to_remove_this_image_?')}}</p>"
+                                                    > <i class="tio-clear"></i></span>
                                             @endif
                                         </div>
                                         </label>
@@ -104,7 +108,7 @@
                             <button type="reset" class="btn btn--reset">{{translate('Reset')}}</button>
                             <button type="submit" onclick="" class="btn btn--primary mb-2">{{translate('messages.Update')}}</button>
                         </div>
-                        
+
                     </div>
                 </div>
             </form>
@@ -115,7 +119,7 @@
                 <input type="hidden" name="model_name" value="AdminTestimonial" >
                 <input type="hidden" name="image_path" value="reviewer_image" >
                 <input type="hidden" name="field_name" value="reviewer_image" >
-            </form> 
+            </form>
             <form  id="company_image_form" action="{{ route('admin.remove_image') }}" method="post">
                 @csrf
                 <input type="hidden" name="id" value="{{  $review?->id}}" >
@@ -123,9 +127,9 @@
                 <input type="hidden" name="model_name" value="AdminTestimonial" >
                 <input type="hidden" name="image_path" value="reviewer_company_image" >
                 <input type="hidden" name="field_name" value="company_image" >
-            </form> 
-        
-        
+            </form>
+
+
             <!--  Special review Section View -->
             <div class="modal fade" id="testimonials-section">
                 <div class="modal-dialog modal-lg warning-modal">
@@ -139,7 +143,7 @@
                     </div>
                 </div>
             </div>
-        
+
             <!-- Testimonial Modal -->
             <div class="modal fade" id="testimonials-status-modal">
                 <div class="modal-dialog status-warning-modal">
@@ -175,7 +179,7 @@
                                 </div> -->
                                 <div class="btn--container justify-content-center">
                                     <button type="submit" class="btn btn--primary min-w-120" data-dismiss="modal">{{translate('Ok')}}</button>
-                                    <button id="reset_btn" type="reset" class="btn btn--cancel min-w-120" data-dismiss="modal">                
+                                    <button id="reset_btn" type="reset" class="btn btn--cancel min-w-120" data-dismiss="modal">
                                         {{translate("Cancel")}}
                                     </button>
                                 </div>

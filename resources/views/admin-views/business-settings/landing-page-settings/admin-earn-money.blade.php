@@ -59,35 +59,27 @@
                 </h5>
                 <div class="card mb-3">
                     <div class="card-body">
-                        {{-- <div class="d-flex justify-content-end mb-2">
-                            <div class="text--primary-2 py-1 d-flex flex-wrap align-items-center" type="button" data-toggle="modal" data-target="#admin-earn-money">
-                                <strong class="mr-2">{{translate('See_the_changes_here.')}}</strong>
-                                <div>
-                                    <i class="tio-intersect"></i>
-                                </div>
-                            </div>
-                        </div> --}}
                         @if ($language)
                             <div class="row g-3 lang_form" id="default-form">
                                 <div class="col-sm-6">
-                                    <label class="form-label">{{translate('Title')}} ({{ translate('messages.default') }})<span
+                                    <label for="earning_title" class="form-label">{{translate('Title')}} ({{ translate('messages.default') }})<span
                                                         class="form-label-secondary" data-toggle="tooltip"
                                                         data-placement="right"
                                                         data-original-title="{{ translate('Write_the_title_within_40_characters') }}">
                                                         <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
                                                             alt="">
                                                     </span></label>
-                                                <input type="text" maxlength="40" name="earning_title[]" class="form-control" value="{{$earning_title?->getRawOriginal('value')}}" placeholder="{{translate('messages.title_here...')}}">
+                                                <input id="earning_title" type="text" maxlength="40" name="earning_title[]" class="form-control" value="{{$earning_title?->getRawOriginal('value')}}" placeholder="{{translate('messages.title_here...')}}">
                                 </div>
                                 <div class="col-sm-6">
-                                    <label class="form-label">{{translate('Sub Title')}} ({{ translate('messages.default') }})<span
+                                    <label for="sub-text" class="form-label">{{translate('Sub Title')}} ({{ translate('messages.default') }})<span
                                                         class="form-label-secondary" data-toggle="tooltip"
                                                         data-placement="right"
                                                         data-original-title="{{ translate('Write_the_title_within_80_characters') }}">
                                                         <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
                                                             alt="">
                                                     </span></label>
-                                                <input type="text" maxlength="80" name="earning_sub_title[]" class="form-control" value="{{$earning_sub_title?->getRawOriginal('value')}}" placeholder="{{translate('messages.sub_title_here...')}}">
+                                                <input id="sub-text" type="text" maxlength="80" name="earning_sub_title[]" class="form-control" value="{{$earning_sub_title?->getRawOriginal('value')}}" placeholder="{{translate('messages.sub_title_here...')}}">
                                 </div>
                             </div>
                             <input type="hidden" name="lang[]" value="default">
@@ -116,24 +108,24 @@
                                     ?>
                                     <div class="row g-3 d-none lang_form" id="{{$lang}}-form">
                                         <div class="col-sm-6">
-                                            <label class="form-label">{{translate('Title')}} ({{strtoupper($lang)}})<span
+                                            <label for="earning_title" class="form-label">{{translate('Title')}} ({{strtoupper($lang)}})<span
                                                         class="form-label-secondary" data-toggle="tooltip"
                                                         data-placement="right"
                                                         data-original-title="{{ translate('Write_the_title_within_40_characters') }}">
                                                         <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
                                                             alt="">
                                                     </span></label>
-                                                <input type="text" maxlength="40" name="earning_title[]" class="form-control" value="{{ $earning_title_translate[$lang]['value']?? '' }}" placeholder="{{translate('messages.title_here...')}}">
+                                                <input id="earning_title" type="text" maxlength="40" name="earning_title[]" class="form-control" value="{{ $earning_title_translate[$lang]['value']?? '' }}" placeholder="{{translate('messages.title_here...')}}">
                                         </div>
                                         <div class="col-sm-6">
-                                            <label class="form-label">{{translate('Sub Title')}} ({{strtoupper($lang)}})<span
+                                            <label for="sub-title" class="form-label">{{translate('Sub Title')}} ({{strtoupper($lang)}})<span
                                                         class="form-label-secondary" data-toggle="tooltip"
                                                         data-placement="right"
                                                         data-original-title="{{ translate('Write_the_title_within_80_characters') }}">
                                                         <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
                                                             alt="">
                                                     </span></label>
-                                                <input type="text" maxlength="80" name="earning_sub_title[]" class="form-control" value="{{ $earning_sub_title_translate[$lang]['value']?? '' }}" placeholder="{{translate('messages.sub_title_here...')}}">
+                                                <input id="sub-title" type="text" maxlength="80" name="earning_sub_title[]" class="form-control" value="{{ $earning_sub_title_translate[$lang]['value']?? '' }}" placeholder="{{translate('messages.sub_title_here...')}}">
                                         </div>
                                     </div>
                                     <input type="hidden" name="lang[]" value="{{$lang}}">
@@ -141,24 +133,24 @@
                             @else
                                 <div class="row g-3">
                                     <div class="col-sm-6">
-                                        <label class="form-label">{{translate('Title')}}<span
+                                        <label for="earning-title" class="form-label">{{translate('Title')}}<span
                                                         class="form-label-secondary" data-toggle="tooltip"
                                                         data-placement="right"
                                                         data-original-title="{{ translate('Write_the_title_within_40_characters') }}">
                                                         <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
                                                             alt="">
                                                     </span></label>
-                                                <input type="text" maxlength="40" name="earning_title[]" class="form-control" placeholder="{{translate('messages.title_here...')}}">
+                                                <input  id="earning-title" type="text" maxlength="40" name="earning_title[]" class="form-control" placeholder="{{translate('messages.title_here...')}}">
                                     </div>
                                     <div class="col-sm-6">
-                                        <label class="form-label">{{translate('Sub Title')}}<span
+                                        <label for="earning-sub-title" class="form-label">{{translate('Sub Title')}}<span
                                                         class="form-label-secondary" data-toggle="tooltip"
                                                         data-placement="right"
                                                         data-original-title="{{ translate('Write_the_title_within_80_characters') }}">
                                                         <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
                                                             alt="">
                                                     </span></label>
-                                                <input type="text" maxlength="80" name="earning_sub_title[]" class="form-control" placeholder="{{translate('messages.sub_title_here...')}}">
+                                                <input id="earning-sub-title" type="text" maxlength="80" name="earning_sub_title[]" class="form-control" placeholder="{{translate('messages.sub_title_here...')}}">
                                     </div>
                                 </div>
                                 <input type="hidden" name="lang[]" value="default">
@@ -180,14 +172,6 @@
                 </h5>
                 <div class="card">
                     <div class="card-body">
-                        {{-- <div class="d-flex justify-content-end">
-                            <div class="text--primary-2 py-1 d-flex flex-wrap align-items-center" type="button" data-toggle="modal" data-target="#section-1">
-                                <strong class="mr-2">{{translate('See_the_changes_here.')}}</strong>
-                                <div>
-                                    <i class="tio-intersect"></i>
-                                </div>
-                            </div>
-                        </div> --}}
                         <div class="row g-3">
                             <div class="col-md-7">
                                 <label class="form-label d-block mb-2">
@@ -198,10 +182,12 @@
                                     <div class="img">
                                         <img src="{{asset('storage/app/public/earning')}}/{{ $earning_seller_image['value']??'' }}" onerror='this.src="{{asset('/public/assets/admin/img/upload-4.png')}}"' class="vertical-img mw-100 vertical" alt="">
                                     </div>
-                                        <input type="file" name="earning_seller_image"  hidden>
-                                            @if (isset($earning_seller_image['value']))
-                                            <span id="earning_seller_img" class="remove_image_button"
-                                                onclick="toogleStatusModal(event,'earning_seller_img','mail-success','mail-warning','{{translate('Important!')}}','{{translate('Warning!')}}',`<p>{{translate('Are_you_sure_you_want_to_remove_this_image')}}</p>`,`<p>{{translate('Are_you_sure_you_want_to_remove_this_image.')}}</p>`)"
+                                    <input type="file" name="earning_seller_image"  hidden>
+                                    @if (isset($earning_seller_image['value']))
+                                            <span id="earning_seller_img" class="remove_image_button remove-image"
+                                            data-id="earning_seller_img"
+                                            data-title="{{translate('Warning!')}}"
+                                            data-text="<p>{{translate('Are_you_sure_you_want_to_remove_this_image_?')}}</p>"
                                                 > <i class="tio-clear"></i></span>
                                             @endif
                                         </div>
@@ -215,20 +201,29 @@
                                 <div class="__bg-F8F9FC-card">
                                     <div class="form-group mb-md-0">
                                         <div class="d-flex justify-content-between align-items-center mb-2">
-                                            <label class="form-label text-capitalize m-0">
+                                            <label  for="playstore_url" class="form-label text-capitalize m-0">
                                                 {{translate('Download Link')}}
                                                 <span class="input-label-secondary text--title" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('When_disabled,_the_Play_Store_download_button_will_be_hidden_from_the_landing_page') }}">
                                                     <i class="tio-info-outined"></i>
                                                 </span>
                                             </label>
-                                            <label class="toggle-switch toggle-switch-sm m-0">
-                                                <input type="checkbox" name="playstore_url_status" onclick="toogleModal(event,'play-store-seller-status','play-store-on.png','play-store-off.png','{{translate('Want_to_enable_the_Play_Store_button_for_Store_App?')}}','{{translate('Want_to_disable_the_Play_Store_button_for_Store_App?')}}',`<p>{{translate('If_enabled,_the_Store_app_download_button_will_be_visible_on_the_Landing_page.')}}</p>`,`<p>{{translate('If_disabled,_this_button_will_be_hidden_from_the_landing_page.')}}</p>`)" id="play-store-seller-status" class="status toggle-switch-input" value="1" {{(isset($seller_app_links) && $seller_app_links['playstore_url_status'])?'checked':''}}>
+                                            <label  class="toggle-switch toggle-switch-sm m-0">
+                                                <input type="checkbox" name="playstore_url_status"
+                                                       data-id="play-store-seller-status"
+                                                       data-type="toggle"
+                                                       data-image-on='{{asset('/public/assets/admin/img/modal')}}/play-store-on.png'
+                                                       data-image-off="{{asset('/public/assets/admin/img/modal')}}/play-store-off.png"
+                                                       data-title-on="{{translate('Want_to_enable_the_Play_Store_button_for_Store_App?')}}"
+                                                       data-title-off="{{translate('Want_to_disable_the_Play_Store_button_for_Store_App?')}}"
+                                                       data-text-on="<p>{{translate('If_enabled,_the_Store_app_download_button_will_be_visible_on_the_Landing_page.')}}</p>"
+                                                       data-text-off="<p>{{translate('If_disabled,_this_button_will_be_hidden_from_the_landing_page.')}}</p>"
+                                                       id="play-store-seller-status" class="status toggle-switch-input dynamic-checkbox-toggle" value="1" {{(isset($seller_app_links) && $seller_app_links['playstore_url_status'])?'checked':''}}>
                                                 <span class="toggle-switch-label text mb-0">
                                                     <span class="toggle-switch-indicator"></span>
                                                 </span>
                                             </label>
                                         </div>
-                                        <input type="text" placeholder="{{translate('Ex: https://play.google.com/store/apps')}}" class="form-control h--45px" name="playstore_url" value="{{isset($seller_app_links['playstore_url']) ? $seller_app_links['playstore_url']:''}}">
+                                        <input id="playstore_url" type="text" placeholder="{{translate('Ex: https://play.google.com/store/apps')}}" class="form-control h--45px" name="playstore_url" value="{{ $seller_app_links['playstore_url'] ?? ''}}">
                                     </div>
                                 </div>
                             </div>
@@ -240,20 +235,32 @@
                                 <div class="__bg-F8F9FC-card">
                                     <div class="form-group mb-md-0">
                                         <div class="d-flex justify-content-between align-items-center mb-2">
-                                            <label class="form-label text-capitalize m-0">
+                                            <label for="apple_store_url" class="form-label text-capitalize m-0">
                                                 {{translate('Download Link')}}
                                                 <span class="input-label-secondary text--title" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('When_disabled,_the_App_Store_download_button_will_be_hidden_from_the_landing_page') }}">
                                                     <i class="tio-info-outined"></i>
                                                 </span>
                                             </label>
                                             <label class="toggle-switch toggle-switch-sm m-0">
-                                                <input type="checkbox" name="apple_store_url_status" onclick="toogleModal(event,'apple-seller-status','apple-on.png','apple-off.png','{{translate('Want_to_enable_the_App_Store_button_for_Store_App?')}}','{{translate('Want_to_disable_the_App_Store_button_for_Store_App?')}}',`<p>{{translate('If_enabled,_the_Store_app_download_button_will_be_visible_on_the_Landing_page.')}}</p>`,`<p>{{translate('If_disabled,_this_button_will_be_hidden_from_the_landing_page.')}}</p>`)" id="apple-seller-status" class="status toggle-switch-input" value="1" {{(isset($seller_app_links) && $seller_app_links['apple_store_url_status'])?'checked':''}}>
+                                                <input type="checkbox" name="apple_store_url_status"
+
+                                                       data-id="apple-seller-status"
+                                                       data-type="toggle"
+                                                       data-image-on='{{asset('/public/assets/admin/img/modal')}}/apple-on.png'
+                                                       data-image-off="{{asset('/public/assets/admin/img/modal')}}/apple-off.png"
+                                                       data-title-on="{{translate('Want_to_enable_the_App_Store_button_for_Store_App?')}}"
+                                                       data-title-off="{{translate('Want_to_disable_the_App_Store_button_for_Store_App')}}"
+                                                       data-text-on="<p>{{translate('If_enabled,_the_Store_app_download_button_will_be_visible_on_the_Landing_page.')}}</p>"
+                                                       data-text-off="<p>{{translate('If_disabled,_this_button_will_be_hidden_from_the_landing_page.')}}</p>"
+                                                       id="apple-seller-status" class="status toggle-switch-input dynamic-checkbox-toggle"
+
+                                                       value="1" {{(isset($seller_app_links) && $seller_app_links['apple_store_url_status'])?'checked':''}}>
                                                 <span class="toggle-switch-label text mb-0">
                                                     <span class="toggle-switch-indicator"></span>
                                                 </span>
                                             </label>
                                         </div>
-                                        <input type="text" placeholder="{{translate('Ex: https://www.apple.com/app-store/')}}" class="form-control h--45px" name="apple_store_url" value="{{isset($seller_app_links['apple_store_url']) ? $seller_app_links['apple_store_url']:''}}">
+                                        <input type="text" id="apple_store_url" placeholder="{{translate('Ex: https://www.apple.com/app-store/')}}" class="form-control h--45px" name="apple_store_url" value="{{ $seller_app_links['apple_store_url'] ?? ''}}">
                                     </div>
                                 </div>
                             </div>
@@ -283,14 +290,7 @@
                 </h5>
                 <div class="card">
                     <div class="card-body">
-                        {{-- <div class="d-flex justify-content-end">
-                            <div class="text--primary-2 py-1 d-flex flex-wrap align-items-center" type="button" data-toggle="modal" data-target="#section-1">
-                                <strong class="mr-2">{{translate('See_the_changes_here.')}}</strong>
-                                <div>
-                                    <i class="tio-intersect"></i>
-                                </div>
-                            </div>
-                        </div> --}}
+
                         <div class="row g-3">
                             <div class="col-md-7">
                                 <label class="form-label d-block mb-2">
@@ -303,8 +303,10 @@
                                     </div>
                                         <input type="file" name="earning_delivery_image"  hidden>
                                             @if (isset($earning_delivery_image['value']))
-                                            <span id="earning_delivery_img" class="remove_image_button"
-                                                onclick="toogleStatusModal(event,'earning_delivery_img','mail-success','mail-warning','{{translate('Important!')}}','{{translate('Warning!')}}',`<p>{{translate('Are_you_sure_you_want_to_remove_this_image')}}</p>`,`<p>{{translate('Are_you_sure_you_want_to_remove_this_image.')}}</p>`)"
+                                            <span id="earning_delivery_img" class="remove_image_button  remove-image"
+                                                  data-id="earning_delivery_img"
+                                                  data-title="{{translate('Warning!')}}"
+                                                  data-text="<p>{{translate('Are_you_sure_you_want_to_remove_this_image_?')}}</p>"
                                                 > <i class="tio-clear"></i></span>
                                             @endif
                                         </div>
@@ -318,20 +320,33 @@
                                 <div class="__bg-F8F9FC-card">
                                     <div class="form-group mb-md-0">
                                         <div class="d-flex justify-content-between align-items-center mb-2">
-                                            <label class="form-label text-capitalize m-0">
+                                            <label  for="playstore_url_dm" class="form-label text-capitalize m-0">
                                                 {{translate('Download Link')}}
                                                 <span class="input-label-secondary text--title" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('When_disabled,_the_Play_Store_download_button_will_be_hidden_from_the_landing_page') }}">
                                                     <i class="tio-info-outined"></i>
                                                 </span>
                                             </label>
                                             <label class="toggle-switch toggle-switch-sm m-0">
-                                                <input type="checkbox" name="playstore_url_status" onclick="toogleModal(event,'play-store-dm-status','play-store-on.png','play-store-off.png','{{translate('Want_to_enable_the_Play_Store_button_for_Deliveryman_App?')}}','{{translate('Want_to_disable_the_Play_Store_button_for_Deliveryman_App?')}}',`<p>{{translate('If_enabled,_the_Deliveryman_app_download_button_will_be_visible_on_the_Landing_page.')}}</p>`,`<p>{{translate('If_disabled,_this_button_will_be_hidden_from_the_landing_page.')}}</p>`)" id="play-store-dm-status" class="status toggle-switch-input" value="1" {{(isset($dm_app_links) && $dm_app_links['playstore_url_status'])?'checked':''}}>
+                                                <input type="checkbox" name="playstore_url_status"
+                                                       data-id="play-store-dm-status"
+                                                       data-type="toggle"
+                                                       data-image-on="{{ asset('/public/assets/admin/img/modal/play-store-on.png') }}"
+                                                       data-image-off="{{ asset('/public/assets/admin/img/modal/play-store-off.png') }}"
+                                                       data-title-on="{{ translate('Want_to_enable_the_Play_Store_button_for_Deliveryman_App?') }}"
+                                                       data-title-off="{{ translate('Want_to_disable_the_Play_Store_button_for_Deliveryman_App?') }}"
+                                                       data-text-on="<p>{{ translate('If_enabled,_the_Deliveryman_app_download_button_will_be_visible_on_the_Landing_page.') }}</p>"
+                                                       data-text-off="<p>{{ translate('If_disabled,_this_button_will_be_hidden_from_the_landing_page.') }}</p>"
+                                                       id="play-store-dm-status"
+                                                       class="status toggle-switch-input dynamic-checkbox-toggle"
+
+
+                                                       value="1" {{(isset($dm_app_links) && $dm_app_links['playstore_url_status'])?'checked':''}}>
                                                 <span class="toggle-switch-label text mb-0">
                                                     <span class="toggle-switch-indicator"></span>
                                                 </span>
                                             </label>
                                         </div>
-                                        <input type="text" placeholder="{{translate('Ex: https://play.google.com/store/apps')}}" class="form-control h--45px" name="playstore_url" value="{{isset($dm_app_links['playstore_url']) ? $dm_app_links['playstore_url']:''}}">
+                                        <input id="playstore_url_dm" type="text" placeholder="{{translate('Ex: https://play.google.com/store/apps')}}" class="form-control h--45px" name="playstore_url" value="{{ $dm_app_links['playstore_url'] ?? ''}}">
                                     </div>
                                 </div>
                             </div>
@@ -343,20 +358,33 @@
                                 <div class="__bg-F8F9FC-card">
                                     <div class="form-group mb-md-0">
                                         <div class="d-flex justify-content-between align-items-center mb-2">
-                                            <label class="form-label text-capitalize m-0">
+                                            <label for="apple_store_url_dm" class="form-label text-capitalize m-0">
                                                 {{translate('Download Link')}}
                                                 <span class="input-label-secondary text--title" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('When_disabled,_the_App_Store_download_button_will_be_hidden_from_the_landing_page') }}">
                                                     <i class="tio-info-outined"></i>
                                                 </span>
                                             </label>
                                             <label class="toggle-switch toggle-switch-sm m-0">
-                                                <input type="checkbox" name="apple_store_url_status" onclick="toogleModal(event,'apple-dm-status','apple-on.png','apple-off.png','{{translate('Want_to_enable_the_App_Store_button_for_Deliveryman_App?')}}','{{translate('Want_to_disable_the_App_Store_button_for_Deliveryman_App?')}}',`<p>{{translate('If_enabled,_the_Deliveryman_app_download_button_will_be_visible_on_the_Landing_page.')}}</p>`,`<p>{{translate('If_disabled,_this_button_will_be_hidden_from_the_landing_page.')}}</p>`)" id="apple-dm-status" class="status toggle-switch-input" value="1" {{(isset($dm_app_links) && $dm_app_links['apple_store_url_status'])?'checked':''}}>
+                                                <input type="checkbox" name="apple_store_url_status"
+                                                       data-id="apple-dm-status"
+                                                       data-type="toggle"
+                                                       data-image-on="{{ asset('/public/assets/admin/img/modal/apple-on.png') }}"
+                                                       data-image-off="{{ asset('/public/assets/admin/img/modal/apple-off.png') }}"
+                                                       data-title-on="{{ translate('Want_to_enable_the_App_Store_button_for_Deliveryman_App?') }}"
+                                                       data-title-off="{{ translate('Want_to_disable_the_App_Store_button_for_Deliveryman_App?') }}"
+                                                       data-text-on="<p>{{ translate('If_enabled,_the_Deliveryman_app_download_button_will_be_visible_on_the_Landing_page.') }}</p>"
+                                                       data-text-off="<p>{{ translate('If_disabled,_this_button_will_be_hidden_from_the_landing_page.') }}</p>"
+                                                       id="apple-dm-status"
+                                                       class="status toggle-switch-input dynamic-checkbox-toggle"
+
+
+                                                       value="1" {{(isset($dm_app_links) && $dm_app_links['apple_store_url_status'])?'checked':''}}>
                                                 <span class="toggle-switch-label text mb-0">
                                                     <span class="toggle-switch-indicator"></span>
                                                 </span>
                                             </label>
                                         </div>
-                                        <input type="text" placeholder="{{translate('Ex: https://www.apple.com/app-store/')}}" class="form-control h--45px" name="apple_store_url" value="{{isset($dm_app_links['apple_store_url']) ? $dm_app_links['apple_store_url']:''}}">
+                                        <input id="apple_store_url_dm" type="text" placeholder="{{translate('Ex: https://www.apple.com/app-store/')}}" class="form-control h--45px" name="apple_store_url" value="{{ $dm_app_links['apple_store_url']?? ''}}">
                                     </div>
                                 </div>
                             </div>
@@ -371,122 +399,15 @@
              <form  id="earning_delivery_img_form" action="{{ route('admin.remove_image') }}" method="post">
                 @csrf
                 <input type="hidden" name="id" value="{{  $earning_delivery_image?->id}}" >
-                {{-- <input type="hidden" name="json" value="1" > --}}
                 <input type="hidden" name="model_name" value="DataSetting" >
                 <input type="hidden" name="image_path" value="earning" >
                 <input type="hidden" name="field_name" value="value" >
             </form>
 
-            <!-- Feature Modal -->
-            <div class="modal fade" id="feature-modal">
-                <div class="modal-dialog status-warning-modal">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal">
-                                <span aria-hidden="true" class="tio-clear"></span>
-                            </button>
-                        </div>
-                        <div class="modal-body pb-5 pt-0">
-                            <div class="max-349 mx-auto mb-20">
-                                <div>
-                                    <div class="text-center">
-                                        <img src="{{asset('/public/assets/admin/img/modal/feature-list-off.png')}}" alt="" class="mb-20">
-                                        <h5 class="modal-title">{{translate('By Turning OFF ')}} <strong>{{translate('Feature List Section')}}</strong></h5>
-                                    </div>
-                                    <div class="text-center">
-                                        <p>
-                                            {{translate('Feature list will be disabled. You can enable it in the settings to access its features and functionality')}}
-                                        </p>
-                                    </div>
-                                </div>
-                                <!-- <div>
-                                    <div class="text-center">
-                                        <img src="{{asset('/public/assets/admin/img/modal/feature-list-on.png')}}" alt="" class="mb-20">
-                                        <h5 class="modal-title">{{translate('By Turning ON ')}} <strong>{{translate('Feature List Section')}}</strong></h5>
-                                    </div>
-                                    <div class="text-center">
-                                        <p>
-                                            {{translate('Feature list is enabled. You can now access its features and functionality')}}
-                                        </p>
-                                    </div>
-                                </div> -->
-                                <div class="btn--container justify-content-center">
-                                    <button type="submit" class="btn btn--primary min-w-120" data-dismiss="modal">{{translate('Ok')}}</button>
-                                    <button id="reset_btn" type="reset" class="btn btn--cancel min-w-120" data-dismiss="modal">
-                                        {{translate("Cancel")}}
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Module Setup Section View -->
-            <div class="modal fade" id="admin-earn-money">
-                <div class="modal-dialog modal-lg warning-modal">
-                    <div class="modal-content">
-                        <div class="modal-body">
-                            <div class="mb-3">
-                                <h3 class="modal-title mb-3">{{translate('Admin Earn Money')}}</h3>
-                            </div>
-                            <img src="{{asset('/public/assets/admin/img/zone-instruction.png')}}" alt="admin/img" class="w-100">
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Module Setup Section View -->
-            <div class="modal fade" id="section-1">
-                <div class="modal-dialog modal-lg warning-modal">
-                    <div class="modal-content">
-                        <div class="modal-body">
-                            <div class="mb-3">
-                                <h3 class="modal-title mb-3">{{translate('Download Seller App Section')}}</h3>
-                            </div>
-                            <img src="{{asset('/public/assets/admin/img/zone-instruction.png')}}" alt="admin/img" class="w-100">
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Module Setup Section View -->
-            <div class="modal fade" id="section-2">
-                <div class="modal-dialog modal-lg warning-modal">
-                    <div class="modal-content">
-                        <div class="modal-body">
-                            <div class="mb-3">
-                                <h3 class="modal-title mb-3">{{translate('Download Delivery Man App Section ')}}</h3>
-                            </div>
-                            <img src="{{asset('/public/assets/admin/img/zone-instruction.png')}}" alt="admin/img" class="w-100">
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </div>
     <!-- How it Works -->
     @include('admin-views.business-settings.landing-page-settings.partial.how-it-work')
 @endsection
-@push('script_2')
-<script>
-    $(".lang_link").click(function(e){
-        e.preventDefault();
-        $(".lang_link").removeClass('active');
-        $(".lang_form").addClass('d-none');
-        $(this).addClass('active');
 
-        let form_id = this.id;
-        let lang = form_id.substring(0, form_id.length - 5);
-        console.log(lang);
-        $("#"+lang+"-form").removeClass('d-none');
-        if(lang == '{{$defaultLang}}')
-        {
-            $(".from_part_2").removeClass('d-none');
-        }
-        else
-        {
-            $(".from_part_2").addClass('d-none');
-        }
-    });
-</script>
-@endpush

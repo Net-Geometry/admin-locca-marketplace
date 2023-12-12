@@ -57,14 +57,14 @@
                         @if ($language)
                             <div class="row g-3 lang_form" id="default-form">
                                 <div class="col-sm-12">
-                                    <label class="form-label">{{translate('Title')}} ({{ translate('messages.default') }})<span
+                                    <label for="testimonial_title" class="form-label">{{translate('Title')}} ({{ translate('messages.default') }})<span
                                         class="form-label-secondary" data-toggle="tooltip"
                                         data-placement="right"
                                         data-original-title="{{ translate('Write_the_title_within_40_characters') }}">
                                         <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
                                             alt="">
                                     </span></label>
-                                <input type="text" maxlength="40" name="testimonial_title[]" class="form-control" value="{{$testimonial_title?->getRawOriginal('value')}}" placeholder="{{translate('messages.title_here...')}}">
+                                <input id="testimonial_title" type="text" maxlength="40" name="testimonial_title[]" class="form-control" value="{{$testimonial_title?->getRawOriginal('value')}}" placeholder="{{translate('messages.title_here...')}}">
                                 </div>
                             </div>
                             <input type="hidden" name="lang[]" value="default">
@@ -83,14 +83,14 @@
                                     ?>
                                     <div class="row g-3 d-none lang_form" id="{{$lang}}-form">
                                         <div class="col-sm-12">
-                                            <label class="form-label">{{translate('Title')}} ({{strtoupper($lang)}})<span
+                                            <label for="testimonial_title{{$lang}}" class="form-label">{{translate('Title')}} ({{strtoupper($lang)}})<span
                                                 class="form-label-secondary" data-toggle="tooltip"
                                                 data-placement="right"
                                                 data-original-title="{{ translate('Write_the_title_within_40_characters') }}">
                                                 <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
                                                     alt="">
                                             </span></label>
-                                        <input type="text" maxlength="40" name="testimonial_title[]" class="form-control" value="{{ $testimonial_title_translate[$lang]['value']?? '' }}" placeholder="{{translate('messages.title_here...')}}">
+                                        <input id="testimonial_title{{$lang}}" type="text" maxlength="40" name="testimonial_title[]" class="form-control" value="{{ $testimonial_title_translate[$lang]['value']?? '' }}" placeholder="{{translate('messages.title_here...')}}">
                                         </div>
                                     </div>
                                     <input type="hidden" name="lang[]" value="{{$lang}}">
@@ -98,14 +98,14 @@
                             @else
                                 <div class="row g-3">
                                     <div class="col-sm-12">
-                                        <label class="form-label">{{translate('Title')}}<span
+                                        <label for="testimonial_title" class="form-label">{{translate('Title')}}<span
                                             class="form-label-secondary" data-toggle="tooltip"
                                             data-placement="right"
                                             data-original-title="{{ translate('Write_the_title_within_40_characters') }}">
                                             <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
                                                 alt="">
                                         </span></label>
-                                    <input type="text" maxlength="40" name="testimonial_title[]" class="form-control" placeholder="{{translate('messages.title_here...')}}">
+                                    <input type="text" id="testimonial_title" maxlength="40" name="testimonial_title[]" class="form-control" placeholder="{{translate('messages.title_here...')}}">
                                     </div>
                                 </div>
                                 <input type="hidden" name="lang[]" value="default">
@@ -124,34 +124,27 @@
                 </h5>
                 <div class="card mb-3">
                     <div class="card-body">
-                        {{-- <div class="d-flex justify-content-end">
-                            <div class="text--primary-2 py-1 d-flex flex-wrap align-items-center" type="button" data-toggle="modal" data-target="#testimonials-section">
-                                <strong class="mr-2">{{translate('see_the_changes_here')}}</strong>
-                                <div>
-                                    <i class="tio-intersect"></i>
-                                </div>
-                            </div>
-                        </div> --}}
+
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <div class="row g-3">
                                     <div class="col-md-6">
-                                        <label class="form-label">{{translate('Reviewer Name')}}</label>
-                                        <input type="text" name="name" class="form-control" placeholder="{{translate('Ex:  John Doe')}}">
+                                        <label for="name" class="form-label">{{translate('Reviewer Name')}}</label>
+                                        <input id="name" type="text" name="name" class="form-control" placeholder="{{translate('Ex:  John Doe')}}">
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="form-label">{{translate('Designation')}}</label>
-                                        <input type="text" name="designation" class="form-control" placeholder="{{translate('Ex:  CTO')}}">
+                                        <label for="designation" class="form-label">{{translate('Designation')}}</label>
+                                        <input id="designation" type="text" name="designation" class="form-control" placeholder="{{translate('Ex:  CTO')}}">
                                     </div>
                                     <div class="col-md-12">
-                                        <label class="form-label">{{translate('messages.review')}}<span
+                                        <label for="review" class="form-label">{{translate('messages.review')}}<span
                                             class="form-label-secondary" data-toggle="tooltip"
                                             data-placement="right"
                                             data-original-title="{{ translate('Write_the_title_within_250_characters') }}">
                                             <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
                                                 alt="">
                                         </span></label>
-                                        <textarea name="review" maxlength="250" placeholder="{{translate('Very Good Company')}}" class="form-control h92px"></textarea>
+                                        <textarea id="review" name="review" maxlength="250" placeholder="{{translate('Very Good Company')}}" class="form-control h92px"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -159,7 +152,7 @@
                                 <div class="d-flex gap-40px">
                                     <div>
                                         <label class="form-label d-block mb-2">
-                                            {{translate('Reviewer Image *')}}  <span class="text--primary">(1:1)</span>
+                                            {{translate('Reviewer Image *')}}  <span class="text--primary">{{ translate('(1:1)') }}</span>
                                         </label>
                                         <label class="upload-img-3 m-0 d-block">
                                             <div class="img">
@@ -187,6 +180,7 @@
                             <button type="submit" onclick="" class="btn btn--primary mb-2">{{translate('Add')}}</button>
                         </div>
 
+                    </div>
                     </div>
                 </form>
                     @php($reviews=\App\Models\AdminTestimonial::all())
@@ -235,7 +229,18 @@
                                         </td>
                                         <td>
                                             <label class="toggle-switch toggle-switch-sm">
-                                                <input type="checkbox" class="toggle-switch-input" onclick="toogleStatusModal(event,'status-{{$review->id}}','this-review-on.png','this-review-off.png','{{translate('By Turning ON ')}} <strong>{{translate('This review')}}','{{translate('By Turning OFF ')}} <strong>{{translate('This review')}}',`<p>{{translate('This section will be enabled. You can see this section on your landing page.')}}</p>`,`<p>{{translate('This section  will be disabled. You can enable it in the settings')}}</p>`)" id="status-{{$review->id}}" {{$review->status?'checked':''}}>
+                                                <input type="checkbox"
+                                                       data-id="status-{{$review->id}}"
+                                                       data-type="status"
+                                                       data-image-on="{{ asset('/public/assets/admin/img/modal/testimonial-on.png') }}"
+                                                       data-image-off="{{ asset('/public/assets/admin/img/modal/testimonial-off.png') }}"
+                                                       data-title-on="{{ translate('By Turning ON ') }} <strong>{{ translate('This review') }}"
+                                                       data-title-off="{{ translate('By Turning OFF ') }} <strong>{{ translate('This review') }}"
+                                                       data-text-on="<p>{{ translate('This section will be enabled. You can see this section on your landing page.') }}</p>"
+                                                       data-text-off="<p>{{ translate('This section will be disabled. You can enable it in the settings.') }}</p>"
+                                                       class="status toggle-switch-input dynamic-checkbox"
+
+                                                       id="status-{{$review->id}}" {{$review->status?'checked':''}}>
                                                 <span class="toggle-switch-label">
                                                     <span class="toggle-switch-indicator"></span>
                                                 </span>
@@ -249,8 +254,9 @@
                                                 <a class="btn action-btn btn--primary btn-outline-primary" href="{{route('admin.business-settings.review-edit',[$review['id']])}}">
                                                     <i class="tio-edit"></i>
                                                 </a>
-                                                <a class="btn action-btn btn--danger btn-outline-danger" href="javascript:"
-                                                onclick="form_alert('review-{{$review['id']}}','{{ translate('Want to delete this review ?') }}')" title="{{translate('messages.delete_review')}}"><i class="tio-delete-outlined"></i>
+                                                <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:"
+                                                   data-id="review-{{$review['id']}}"
+                                                   data-message="{{ translate('Want to delete this review ?') }}"><i class="tio-delete-outlined"></i>
                                                 </a>
                                                 <form action="{{route('admin.business-settings.review-delete',[$review['id']])}}" method="post" id="review-{{$review['id']}}">
                                                     @csrf @method('delete')
@@ -276,97 +282,10 @@
                 </div>
 
 
-            <!--  Special review see_the_changes_here -->
-            <div class="modal fade" id="testimonials-section">
-                <div class="modal-dialog modal-lg warning-modal">
-                    <div class="modal-content">
-                        <div class="modal-body">
-                            <div class="mb-3">
-                                <h3 class="modal-title mb-3">{{translate(' Special review')}}</h3>
-                            </div>
-                            <img src="{{asset('/public/assets/admin/img/zone-instruction.png')}}" alt="admin/img" class="w-100">
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Testimonial Modal -->
-            <div class="modal fade" id="testimonials-status-modal">
-                <div class="modal-dialog status-warning-modal">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal">
-                                <span aria-hidden="true" class="tio-clear"></span>
-                            </button>
-                        </div>
-                        <div class="modal-body pb-5 pt-0">
-                            <div class="max-349 mx-auto mb-20">
-                                <div>
-                                    <div class="text-center">
-                                        <img src="{{asset('/public/assets/admin/img/modal/this-review-off.png')}}" alt="" class="mb-20">
-                                        <h5 class="modal-title">{{translate('By Turning OFF ')}} <strong>{{translate('This review')}}</strong></h5>
-                                    </div>
-                                    <div class="text-center">
-                                        <p>
-                                            {{translate('This section  will be disabled. You can enable it in the settings')}}
-                                        </p>
-                                    </div>
-                                </div>
-                                <!-- <div>
-                                    <div class="text-center">
-                                        <img src="{{asset('/public/assets/admin/img/modal/this-review-on.png')}}" alt="" class="mb-20">
-                                        <h5 class="modal-title">{{translate('By Turning ON ')}} <strong>{{translate('This review')}}</strong></h5>
-                                    </div>
-                                    <div class="text-center">
-                                        <p>
-                                            {{translate('This section will be enabled. You can see this section on your landing page.')}}
-                                        </p>
-                                    </div>
-                                </div> -->
-                                <div class="btn--container justify-content-center">
-                                    <button type="submit" class="btn btn--primary min-w-120" data-dismiss="modal">{{translate('Ok')}}</button>
-                                    <button id="reset_btn" type="reset" class="btn btn--cancel min-w-120" data-dismiss="modal">
-                                        {{translate("Cancel")}}
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
-</div>
+
     <!-- How it Works -->
     @include('admin-views.business-settings.landing-page-settings.partial.how-it-work')
 @endsection
-@push('script_2')
-<script>
-    $(".lang_link").click(function(e){
-        e.preventDefault();
-        $(".lang_link").removeClass('active');
-        $(".lang_form").addClass('d-none');
-        $(this).addClass('active');
-
-        let form_id = this.id;
-        let lang = form_id.substring(0, form_id.length - 5);
-
-        console.log(lang);
-
-        $("#"+lang+"-form").removeClass('d-none');
-        $("#"+lang+"-form1").removeClass('d-none');
-        if(lang == '{{$defaultLang}}')
-        {
-            $(".from_part_2").removeClass('d-none');
-        }
-        if(lang == 'default')
-        {
-            $(".default-form").removeClass('d-none');
-        }
-        else
-        {
-            $(".from_part_2").addClass('d-none');
-        }
-    });
-</script>
-@endpush

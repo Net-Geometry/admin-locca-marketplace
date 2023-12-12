@@ -2,8 +2,6 @@
 
 @section('title', translate('messages.delivery_man_settings'))
 
-@push('css_or_js')
-@endpush
 
 @section('content')
     <div class="content container-fluid">
@@ -46,7 +44,17 @@
                                                         src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
                                                         alt="{{ translate('messages.dm_tips_model_hint') }}"> * </span>
                                             </span>
-                                            <input type="checkbox" onclick="toogleModal(event,'dm_tips_status','dm-tips-on.png','dm-tips-off.png','{{translate('messages.Want_to_enable')}} <strong>{{translate('messages.Tips_for_Deliveryman_feature?')}}</strong>','{{translate('messages.Want_to_disable')}} <strong>{{translate('messages.Tips_for_Deliveryman_feature?')}}</strong>',`<p>{{translate('messages.If_you_enable_this,_Customers_can_give_tips_to_a_deliveryman_during_checkout.')}}</p>`,`<p>{{translate('messages.If_you_disable_this,_the_Tips_for_Deliveryman_feature_will_be_hidden_from_the_Customer_App_and_Website.')}}</p>`)" class="toggle-switch-input" value="1"
+                                            <input type="checkbox"
+                                                   data-id="dm_tips_status"
+                                                   data-type="toggle"
+                                                   data-image-on="{{ asset('/public/assets/admin/img/modal/dm-tips-on.png') }}"
+                                                   data-image-off="{{ asset('/public/assets/admin/img/modal/dm-tips-off.png') }}"
+                                                   data-title-on="{{ translate('messages.Want_to_enable') }} <strong>{{ translate('messages.Tips_for_Deliveryman_feature?') }}</strong>"
+                                                   data-title-off="{{ translate('messages.Want_to_disable') }} <strong>{{ translate('messages.Tips_for_Deliveryman_feature?') }}</strong>"
+                                                   data-text-on="<p>{{ translate('messages.If_you_enable_this,_Customers_can_give_tips_to_a_deliveryman_during_checkout.') }}</p>"
+                                                   data-text-off="<p>{{ translate('messages.If_you_disable_this,_the_Tips_for_Deliveryman_feature_will_be_hidden_from_the_Customer_App_and_Website.') }}</p>"
+                                                   class="status toggle-switch-input dynamic-checkbox-toggle"
+                                                    value="1"
                                                 name="dm_tips_status" id="dm_tips_status"
                                                 {{ $dm_tips_status == '1' ? 'checked' : '' }}>
                                             <span class="toggle-switch-label text">
@@ -70,10 +78,21 @@
                                                     data-toggle="tooltip" data-placement="right"
                                                     data-original-title="{{ translate('messages.With_this_feature,_Deliverymen_can_see_their_earnings_on_a_specific_order_while_accepting_it.') }}"><img
                                                         src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
-                                                        alt="{{ translate('messages.customer_varification_toggle') }}"> *
+                                                        alt="{{ translate('messages.customer_verification_toggle') }}"> *
                                                 </span>
                                             </span>
-                                            <input type="checkbox" onclick="toogleModal(event,'show_dm_earning','show-earning-in-apps-on.png','show-earning-in-apps-off.png','{{translate('messages.Want_to_enable')}} <strong>{{translate('messages.Show_Earnings_in_App?')}}</strong>','{{translate('messages.Want_to_disable')}} <strong>{{translate('messages.Show_Earnings_in_App?')}}</strong>',`<p>{{translate('messages.If_you_enable_this,_Deliverymen_can_see_their_earning_per_order_request_from_the_Order_Details_page_in_the_Deliveryman_App.')}}</p>`,`<p>{{translate('messages.If_you_disable_this,_the_feature_will_be_hidden_from_the_Deliveryman_App.')}}</p>`)"  class="toggle-switch-input" value="1"
+                                            <input type="checkbox"
+                                                   data-id="show_dm_earning"
+                                                   data-type="toggle"
+                                                   data-image-on="{{ asset('/public/assets/admin/img/modal/show-earning-in-apps-on.png') }}"
+                                                   data-image-off="{{ asset('/public/assets/admin/img/modal/show-earning-in-apps-off.png') }}"
+                                                   data-title-on="{{ translate('messages.Want_to_enable') }} <strong>{{ translate('messages.Show_Earnings_in_App?') }}</strong>"
+                                                   data-title-off="{{ translate('messages.Want_to_disable') }} <strong>{{ translate('messages.Show_Earnings_in_App?') }}</strong>"
+                                                   data-text-on="<p>{{ translate('messages.If_you_enable_this,_Deliverymen_can_see_their_earning_per_order_request_from_the_Order_Details_page_in_the_Deliveryman_App.') }}</p>"
+                                                   data-text-off="<p>{{ translate('messages.If_you_disable_this,_the_feature_will_be_hidden_from_the_Deliveryman_App.') }}</p>"
+                                                   class="status toggle-switch-input dynamic-checkbox-toggle"
+
+                                                   value="1"
                                                 name="show_dm_earning" id="show_dm_earning"
                                                 {{ $show_dm_earning == 1 ? 'checked' : '' }}>
                                             <span class="toggle-switch-label text">
@@ -100,7 +119,18 @@
                                                         src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
                                                         alt="{{ translate('messages.dm_self_registration') }}"> * </span>
                                             </span>
-                                            <input type="checkbox" onclick="toogleModal(event,'dm_self_registration1','dm-self-reg-on.png','dm-self-reg-off.png','{{translate('messages.Want_to_enable')}} <strong>{{translate('messages.Deliveryman_Self_Registration?')}}</strong>','{{translate('messages.Want_to_disable')}} <strong>{{translate('messages.Deliveryman_Self_Registration?')}}</strong>',`<p>{{translate('messages.If_you_enable_this,_users_can_register_as_Deliverymen_from_the_Customer_App,_Website_or_Deliveryman_App_or_Admin_Landing_Page.')}}</p>`,`<p>{{translate('messages.If_you_disable_this,_this_feature_will_be_hidden_from_the_Customer_App,_Website_or_Deliveryman_App_or_Admin_Landing_Page.')}}</p>`)" class="toggle-switch-input" value="1"
+                                            <input type="checkbox"
+                                                   data-id="dm_self_registration1"
+                                                   data-type="toggle"
+                                                   data-image-on="{{ asset('/public/assets/admin/img/modal/dm-self-reg-on.png') }}"
+                                                   data-image-off="{{ asset('/public/assets/admin/img/modal/dm-self-reg-off.png') }}"
+                                                   data-title-on="{{ translate('messages.Want_to_enable') }} <strong>{{ translate('messages.Deliveryman_Self_Registration?') }}</strong>"
+                                                   data-title-off="{{ translate('messages.Want_to_disable') }} <strong>{{ translate('messages.Deliveryman_Self_Registration?') }}</strong>"
+                                                   data-text-on="<p>{{ translate('messages.If_you_enable_this,_users_can_register_as_Deliverymen_from_the_Customer_App,_Website_or_Deliveryman_App_or_Admin_Landing_Page.') }}</p>"
+                                                   data-text-off="<p>{{ translate('messages.If_you_disable_this,_this_feature_will_be_hidden_from_the_Customer_App,_Website_or_Deliveryman_App_or_Admin_Landing_Page.') }}</p>"
+                                                   class="status toggle-switch-input dynamic-checkbox-toggle"
+
+                                                   value="1"
                                                 name="dm_self_registration" id="dm_self_registration1"
                                                 {{ $dm_self_registration == 1 ? 'checked' : '' }}>
                                             <span class="toggle-switch-label text">
@@ -133,7 +163,7 @@
                                     @php($canceled_by_deliveryman = \App\Models\BusinessSetting::where('key', 'canceled_by_deliveryman')->first())
                                     @php($canceled_by_deliveryman = $canceled_by_deliveryman ? $canceled_by_deliveryman->value : 0)
                                     <div class="form-group mb-0">
-                                        <label class="input-label text-capitalize d-flex alig-items-center"><span
+                                        <label class="input-label text-capitalize d-flex align-items-center"><span
                                                 class="line--limit-1">{{ translate('messages.Can_A_Deliveryman_Cancel_Order?') }}</span>
                                             <span class="form-label-secondary"
                                             data-toggle="tooltip" data-placement="right"
@@ -177,7 +207,17 @@
                                                         src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
                                                         alt="{{ translate('messages.dm_picture_upload_status') }}"> * </span>
                                             </span>
-                                            <input type="checkbox" onclick="toogleModal(event,'dm_picture_upload_status','dm-self-reg-on.png','dm-self-reg-off.png','{{translate('messages.Want_to_enable')}} <strong>{{translate('messages.picture_upload_before_complete?')}}</strong>','{{translate('messages.Want_to_disable')}} <strong>{{translate('messages.picture_upload_before_complete?')}}</strong>',`<p>{{translate('messages.If_you_enable_this,_delivery_man_can_upload_order_proof_before_order_delivery.')}}</p>`,`<p>{{translate('messages.If_you_disable_this,_this_feature_will_be_hidden_from_the_delivery_man_app.')}}</p>`)" class="toggle-switch-input" value="1"
+                                            <input type="checkbox"
+                                                   data-id="dm_picture_upload_status"
+                                                   data-type="toggle"
+                                                   data-image-on="{{ asset('/public/assets/admin/img/modal/dm-self-reg-on.png') }}"
+                                                   data-image-off="{{ asset('/public/assets/admin/img/modal/dm-self-reg-off.png') }}"
+                                                   data-title-on="{{ translate('messages.Want_to_enable') }} <strong>{{ translate('messages.picture_upload_before_complete?') }}</strong>"
+                                                   data-title-off="{{ translate('messages.Want_to_disable') }} <strong>{{ translate('messages.picture_upload_before_complete?') }}</strong>"
+                                                   data-text-on="<p>{{ translate('messages.If_you_enable_this,_delivery_man_can_upload_order_proof_before_order_delivery.') }}</p>"
+                                                   data-text-off="<p>{{ translate('messages.If_you_disable_this,_this_feature_will_be_hidden_from_the_delivery_man_app.') }}</p>"
+                                                   class="status toggle-switch-input dynamic-checkbox-toggle"
+                                                   value="1"
                                                 name="dm_picture_upload_status" id="dm_picture_upload_status"
                                                 {{ $dm_picture_upload_status == 1 ? 'checked' : '' }}>
                                             <span class="toggle-switch-label text">
@@ -208,7 +248,17 @@
                                                         alt="{{ translate('messages.cash_in_hand_overflow') }}"> *
                                                 </span>
                                             </span>
-                                            <input type="checkbox" onclick="toogleModal(event,'cash_in_hand_overflow','show-earning-in-apps-on.png','show-earning-in-apps-off.png','{{translate('Want_to_enable')}} <strong>{{translate('Cash_In_Hand_Overflow')}}</strong> ?','{{translate('Want_to_disable')}} <strong>{{translate('Cash_In_Hand_Overflow')}}</strong>  ?',`<p>{{translate('If_enabled,_delivery_men_have_to_provide_collected_cash_by_them_self')}}</p>`,`<p>{{translate('If_disabled,_delivery_men_do_not_have_to_provide_collected_cash_by_them_self')}}</p>`)" class="toggle-switch-input" value="1"
+                                            <input type="checkbox"
+                                                   data-id="cash_in_hand_overflow"
+                                                   data-type="toggle"
+                                                   data-image-on="{{ asset('/public/assets/admin/img/modal/show-earning-in-apps-on.png') }}"
+                                                   data-image-off="{{ asset('/public/assets/admin/img/modal/show-earning-in-apps-off.png') }}"
+                                                   data-title-on="{{ translate('Want_to_enable') }} <strong>{{ translate('Cash_In_Hand_Overflow') }}</strong>?"
+                                                   data-title-off="{{ translate('Want_to_disable') }} <strong>{{ translate('Cash_In_Hand_Overflow') }}</strong>?"
+                                                   data-text-on="<p>{{ translate('If_enabled,_delivery_men_have_to_provide_collected_cash_by_themselves.') }}</p>"
+                                                   data-text-off="<p>{{ translate('If_disabled,_delivery_men_do_not_have_to_provide_collected_cash_by_themselves.') }}</p>"
+                                                   class="status toggle-switch-input dynamic-checkbox-toggle"
+                                                   value="1"
                                                    name="cash_in_hand_overflow_delivery_man" id="cash_in_hand_overflow"
                                                 {{ $cash_in_hand_overflow == 1 ? 'checked' : '' }}>
                                             <span class="toggle-switch-label text">
@@ -257,13 +307,9 @@
                                     </div>
                                 </div>
 
-
-
-
-
                             </div>
                             <div class="btn--container justify-content-end">
-                                <button type="reset" id="reset_btn" class="btn btn--reset">{{ translate('messages.reset') }}</button>
+                                <button type="reset" id="reset_btn" class="btn btn--reset location-reload">{{ translate('messages.reset') }}</button>
                                 <button type="submit" id="submit" class="btn btn--primary">{{ translate('messages.save_information') }}</button>
                             </div>
                         </div>
@@ -273,104 +319,4 @@
         </form>
     </div>
 @endsection
-@push('script_2')
-    <script>
-        $(document).on('ready', function() {
-            @if (isset($data['wallet_status']) && $data['wallet_status'] != 1)
-                $('.wallet-section').hide();
-            @endif
-            @if (isset($data['loyalty_point_status']) && $data['loyalty_point_status'] != 1)
-                $('.loyalty-point-section').hide();
-            @endif
-            @if (isset($data['ref_earning_status']) && $data['ref_earning_status'] != 1)
-                $('.referrer-earning').hide();
-            @endif
 
-            // INITIALIZATION OF DATATABLES
-            // =======================================================
-            var datatable = $.HSCore.components.HSDatatables.init($('#columnSearchDatatable'));
-            $('#column1_search').on('keyup', function() {
-                datatable
-                    .columns(1)
-                    .search(this.value)
-                    .draw();
-            });
-
-
-            $('#column3_search').on('change', function() {
-                datatable
-                    .columns(2)
-                    .search(this.value)
-                    .draw();
-            });
-        });
-    </script>
-
-    <script>
-        function section_visibility(id) {
-            console.log($('#' + id).data('section'));
-            if ($('#' + id).is(':checked')) {
-                console.log('checked');
-                $('.' + $('#' + id).data('section')).show();
-            } else {
-                console.log('unchecked');
-                $('.' + $('#' + id).data('section')).hide();
-            }
-        }
-        $('#add_fund').on('submit', function(e) {
-
-            e.preventDefault();
-            var formData = new FormData(this);
-
-            Swal.fire({
-                title: '{{ translate('messages.are_you_sure') }}',
-                text: '{{ translate('messages.you_want_to_add_fund') }}' + $('#amount').val() +
-                    ' {{ \App\CentralLogics\Helpers::currency_code() . ' ' . translate('messages.to') }} ' + $(
-                        '#customer option:selected').text() + '{{ translate('messages.to_wallet') }}',
-                type: 'info',
-                showCancelButton: true,
-                cancelButtonColor: 'default',
-                confirmButtonColor: 'primary',
-                cancelButtonText: '{{ translate('messages.no') }}',
-                confirmButtonText: '{{ translate('messages.send') }}',
-                reverseButtons: true
-            }).then((result) => {
-                if (result.value) {
-                    $.ajaxSetup({
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        }
-                    });
-                    $.post({
-                        url: '{{ route('admin.customer.wallet.add-fund') }}',
-                        data: formData,
-                        cache: false,
-                        contentType: false,
-                        processData: false,
-                        success: function(data) {
-                            if (data.errors) {
-                                for (var i = 0; i < data.errors.length; i++) {
-                                    toastr.error(data.errors[i].message, {
-                                        CloseButton: true,
-                                        ProgressBar: true
-                                    });
-                                }
-                            } else {
-                                toastr.success(
-                                    '{{ translate('messages.fund_added_successfully') }}', {
-                                        CloseButton: true,
-                                        ProgressBar: true
-                                    });
-                            }
-                        }
-                    });
-                }
-            })
-        })
-    </script>
-        <script>
-            $('#reset_btn').click(function(){
-                location.reload(true);
-            })
-        </script>
-@endpush

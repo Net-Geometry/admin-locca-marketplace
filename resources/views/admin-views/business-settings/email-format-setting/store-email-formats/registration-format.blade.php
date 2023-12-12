@@ -1,6 +1,9 @@
 @extends('layouts.admin.app')
 
 @section('title', translate('email_template'))
+@push('css_or_js')
+<link rel="stylesheet" href="{{asset('public/assets/admin/css/view-pages/email-templates.css')}}">
+@endpush
 
 
 @section('content')

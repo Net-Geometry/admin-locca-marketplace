@@ -84,21 +84,31 @@
                                             <td>{{ $method->method_name }}</td>
                                             <td>
                                                 <div class="d-flex flex-column gap-1">
-                                                    @foreach ($method->method_fields as $key=>$item)
+                                                    @foreach ($method->method_fields as $item)
                                                         <div>{{ ucwords(str_replace('_',' ',$item['input_name'])) }} : {{ $item['input_data'] }}</div>
                                                     @endforeach
                                                 </div>
                                             </td>
                                             <td>
-                                                @foreach ($method->method_informations as $key=>$item)
+                                                @foreach ($method->method_informations as $info_key=>$item)
                                                     {{ ucwords(str_replace('_',' ',$item['customer_input'])) }}
-                                                    {{ count($method->method_informations) > ($key+1) ?'|':'' }}
+                                                    {{ count($method->method_informations) > ($info_key+1) ?'|':'' }}
                                                 @endforeach
                                             </td>
 
                                             <td>
                                                 <label class="toggle-switch toggle-switch-sm">
-                                                    <input type="checkbox" class="toggle-switch-input" onclick="toogleStatusModal(event,'status-{{$method->id}}','this-criteria-on.png','this-criteria-off.png','{{translate('Want_to_enable_this_offline_payment_method?')}}','{{translate('Want_to_disable_this_offline_payment_method?')}}',`<p>{{translate('It_will_be_available_on_the_user_views.')}}</p>`,`<p>{{translate('It_will_be_hidden_from_the_user_views.')}}</p>`)" id="status-{{$method->id}}" {{$method->status?'checked':''}}>
+                                                    <input type="checkbox"
+                                                           data-id="status-{{$method->id}}"
+                                                           data-type="status"
+                                                           data-image-on="{{asset('/public/assets/admin/img/modal/wallet-on.png')}}"
+                                                           data-image-off=" {{asset('/public/assets/admin/img/modal/wallet-off.png')}}"
+                                                           data-title-on="{{translate('Want_to_enable_this_offline_payment_method?')}}"
+                                                           data-title-off="{{translate('Want_to_disable_this_offline_payment_method?')}}"
+                                                           data-text-on="<p>{{translate('It_will_be_available_on_the_user_views.')}}</p>"
+                                                           data-text-off="<p>{{translate('It_will_be_hidden_from_the_user_views.')}}</p>"
+                                                           class="status toggle-switch-input dynamic-checkbox"
+                                                           id="status-{{$method->id}}" {{$method->status?'checked':''}}>
                                                     <span class="toggle-switch-label">
                                                         <span class="toggle-switch-indicator"></span>
                                                     </span>
@@ -112,7 +122,9 @@
                                                     <a class="btn action-btn btn--primary btn-outline-primary" title="Edit" href="{{route('admin.business-settings.offline.edit', ['id'=>$method->id])}}">
                                                         <i class="tio-edit"></i>
                                                     </a>
-                                                    <button class="btn action-btn btn--danger btn-outline-danger" title="Delete" onclick="form_alert('delete-method_name-{{ $method->id }}', '{{ translate('Want_to_delete_this_offline_payment_method') }} ?')">
+                                                    <button class="btn action-btn btn--danger btn-outline-danger form-alert" title="Delete"
+                                                            data-id="delete-method_name-{{ $method->id }}"
+                                                            data-message="{{ translate('Want_to_delete_this_offline_payment_method') }}">
                                                         <i class="tio-delete-outlined"></i>
                                                     </button>
 
@@ -157,35 +169,3 @@
     </div>
 @endsection
 
-@push('script')
-{{-- <script>
-    function method_status(id) {
-          $.ajaxSetup({
-              headers: {
-                  'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
-              }
-          });
-          $.ajax({
-              url: "{{route('admin.business-settings.offline.status')}}",
-              method: 'POST',
-              data: {
-                  id: id
-              },
-              success: function (data) {
-                  if(data.success_status == 1) {
-                      toastr.success(data.message);
-                      setTimeout(function(){
-                          location.reload();
-                      }, 1000);
-                  }
-                  else if(data.success_status == 0) {
-                      toastr.error(data.message);
-                      setTimeout(function(){
-                          location.reload();
-                      }, 1000);
-                  }
-              }
-          });
-      }
-</script> --}}
-@endpush

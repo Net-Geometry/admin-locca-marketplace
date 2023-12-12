@@ -76,7 +76,7 @@
                                         <label for="payment_note">{{translate('Payment_Note')}} </label>
                                         <div class="form-floating">
                                             <textarea class="form-control" name="payment_note" id="payment_note"
-                                                placeholder="{{ translate('Ex:ABC_Company') }}" value="" disabled></textarea>
+                                                placeholder="{{ translate('Ex:ABC_Company') }}"  disabled></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -92,11 +92,9 @@
                         </div>
                     </form>
                 </div>
-            {{-- </div>
-        </div> --}}
+
 
     <!-- End Main Content -->
-
     <!-- Section View Modal -->
     <div class="modal fade" id="sectionViewModal" tabindex="-1" aria-labelledby="sectionViewModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -168,212 +166,16 @@
 
 @endsection
 
+
 @push('script_2')
 
-    <script>
-        // Update the modal class based on the argument
-        function openModal(contentArgument) {
-            if (contentArgument === "bkashInfo") {
-                $("#sectionViewModal #offline_payment_top_part").addClass("active");
-                $("#sectionViewModal #offline_payment_bottom_part").removeClass("active");
-
-                var methodName = $('#method_name').val();
-
-                if (methodName !== '') {
-                    $('#payment_modal_method_name').text(methodName + ' ' + 'Info');
-                }
-
-                function extractPaymentData() {
-                var data = [];
-
-                    $('.field-row-payment').each(function(index) {
-                        console.log('modal')
-                        var title = $(this).find('input[name="input_name[]"]').val();
-                        var dataValue = $(this).find('input[name="input_data[]"]').val();
-                        data.push({ title: title, data: dataValue });
-                    });
-
-                    return data;
-                }
-
-                var extractedData = extractPaymentData();
-
-
-                function displayPaymentData() {
-                    var displayDiv = $('#displayDataDiv');
-                    var methodNameDisplay = $('#methodNameDisplay');
-                    methodNameDisplay.empty();
-                    displayDiv.empty();
-
-                    var paymentElement = $('<span>').text('Payment Method');
-                    var payementDataElement = $('<span>').html(methodName);
-
-                    var dataRow = $('<div>').addClass('d-flex gap-3 align-items-center mb-2');
-                    dataRow.append(paymentElement).append($('<span>').text(':')).append(payementDataElement);
-
-
-                    methodNameDisplay.append(dataRow);
-
-                    extractedData.forEach(function(item) {
-                        var titleElement = $('<span>').text(item.title);
-                        var dataElement = $('<span>').html(item.data);
-
-                        var dataRow = $('<div>').addClass('d-flex gap-3 align-items-center');
-
-                        if (item.title !== '') {
-                            dataRow.append(titleElement).append($('<span>').text(':')).append(dataElement);
-                            displayDiv.append(dataRow);
-                        }
-
-                    });
-                }
-                displayPaymentData();
-
-                //customer info
-                function extractCustomerData() {
-                    var data = [];
-
-                    $('.field-row-customer').each(function(index) {
-                        var fieldName = $(this).find('input[name="customer_input[' + index + ']"]').val();
-                        var placeholder = $(this).find('input[name="customer_placeholder[' + index + ']"]').val();
-                        var isRequired = $(this).find('input[name="is_required[' + index + ']"]').prop('checked');
-                        data.push({ fieldName: fieldName, placeholder: placeholder, isRequired: isRequired });
-                    });
-
-                    return data;
-                }
-
-                var extractedCustomerData = extractCustomerData();
-                $('#customer-info-display-div').empty();
-
-                // Loop through the extracted data and populate the display div
-                $.each(extractedCustomerData, function(index, item) {
-                    var isRequiredAttribute = item.isRequired ? 'required' : '';
-                    var displayHtml = `
-                        <input type="text" class="form-control mb-2" name="payment_by" readonly
-                        id="payment_by" placeholder="${item.placeholder}"  ${isRequiredAttribute}>
-                    `;
-                    $('#customer-info-display-div').append(displayHtml);
-                });
-
-            } else {
-                $("#sectionViewModal #offline_payment_top_part").removeClass("active");
-                $("#sectionViewModal #offline_payment_bottom_part").addClass("active");
-
-                var methodName = $('#method_name').val();
-
-                if (methodName !== '') {
-                    $('#payment_modal_method_name').text(methodName + ' ' + 'Info');
-                }
-
-                // $('.payment_modal_method_name').text(methodName);
-
-                function extractPaymentData() {
-                var data = [];
-
-                    $('.field-row-payment').each(function(index) {
-                        console.log('modal')
-                        var title = $(this).find('input[name="input_name[]"]').val();
-                        var dataValue = $(this).find('input[name="input_data[]"]').val();
-                        data.push({ title: title, data: dataValue });
-                    });
-
-                    return data;
-                }
-
-                var extractedData = extractPaymentData();
-
-
-                function displayPaymentData() {
-                    var displayDiv = $('#displayDataDiv');
-                    var methodNameDisplay = $('#methodNameDisplay');
-                    methodNameDisplay.empty();
-                    displayDiv.empty();
-
-                    var paymentElement = $('<span>').text('Payment Method');
-                    var payementDataElement = $('<span>').html(methodName);
-
-                    var dataRow = $('<div>').addClass('d-flex gap-3 align-items-center mb-2');
-                    dataRow.append(paymentElement).append($('<span>').text(':')).append(payementDataElement);
-
-
-                    methodNameDisplay.append(dataRow);
-
-                    extractedData.forEach(function(item) {
-                        var titleElement = $('<span>').text(item.title);
-                        var dataElement = $('<span>').html(item.data);
-
-                        var dataRow = $('<div>').addClass('d-flex gap-3 align-items-center');
-
-                        if (item.title !== '') {
-                            dataRow.append(titleElement).append($('<span>').text(':')).append(dataElement);
-                            displayDiv.append(dataRow);
-                        }
-
-                    });
-                }
-                displayPaymentData();
-
-                //customer info
-                function extractCustomerData() {
-                    var data = [];
-
-                    $('.field-row-customer').each(function(index) {
-                        var fieldName = $(this).find('input[name="customer_input[' + index + ']"]').val();
-                        var placeholder = $(this).find('input[name="customer_placeholder[' + index + ']"]').val();
-                        var isRequired = $(this).find('input[name="is_required[' + index + ']"]').prop('checked');
-                        data.push({ fieldName: fieldName, placeholder: placeholder, isRequired: isRequired });
-                    });
-
-                    return data;
-                }
-
-                var extractedCustomerData = extractCustomerData();
-                $('#customer-info-display-div').empty();
-
-                // Loop through the extracted data and populate the display div
-                $.each(extractedCustomerData, function(index, item) {
-                    var isRequiredAttribute = item.isRequired ? 'required' : '';
-                    var displayHtml = `
-                        <input type="text" class="form-control mb-2" name="payment_by" readonly
-                            id="payment_by" placeholder="${item.placeholder}"  ${isRequiredAttribute}>
-                    `;
-                    $('#customer-info-display-div').append(displayHtml);
-                });
-            }
-
-            // Open the modal
-            $("#sectionViewModal").modal("show");
-        }
-
-        $(document).ready(function() {
-            $("#bkashInfoModalButton").on('click', function() {
-                console.log("something");
-                var contentArgument = "bkashInfo";
-                openModal(contentArgument);
-            });
-            $("#paymentInfoModalButton").on('click', function() {
-                var contentArgument = "paymentInfo";
-                openModal(contentArgument);
-            });
-        });
-    </script>
-
+    <script src="{{asset('public/assets/admin/js/view-pages/offline-payment.js')}}"></script>
 
     <script>
-        function remove_field(fieldRowId) {
-            $( `#field-row-customer--${fieldRowId}` ).remove();
-            counter--;
-        }
-
-        function remove_field_payment(fieldRowId) {
-            $( `#field-row-payment--${fieldRowId}` ).remove();
-            counterPayment--;
-        }
-
+        "use strict";
         jQuery(document).ready(function ($) {
-            counter = 0;
-            counterPayment = 0;
+            let counter = 0;
+            let counterPayment = 0;
 
             $('#add-more-field-customer').on('click', function (event) {
                 if(counter < 14) {
@@ -405,7 +207,7 @@
                                                 {{translate('is_required_?')}}
                                             </label>
                                         </div>
-                                        <span class="btn action-btn btn--danger btn-outline-danger" onclick="remove_field(${counter})"  style="cursor: pointer;">
+                                        <span class="btn action-btn btn--danger btn-outline-danger remove-field"  data-id="${counter}" style="cursor: pointer;">
                                             <i class="tio-delete-outlined"></i>
                                         </span>
                                         </div>
@@ -449,7 +251,7 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                     <div class="d-flex justify-content-end">
-                                        <span class="btn action-btn btn--danger btn-outline-danger" onclick="remove_field_payment(${counterPayment})"  style="cursor: pointer;">
+                                        <span class="btn action-btn btn--danger btn-outline-danger remove-field-payment" data-id="${counterPayment}"  style="cursor: pointer;">
                                             <i class="tio-delete-outlined"></i>
                                         </span>
                                     </div>
@@ -470,7 +272,7 @@
                 }
             })
 
-            $('form').on('reset', function (event) {
+            $('form').on('reset', function () {
                 if(counter > 1) {
                     $('#custom-field-section-payment').html("");
                     $('#custom-field-section-customer').html("");
@@ -480,7 +282,21 @@
 
                 counter = 1;
             })
+
+            $(document).on('click', '.remove-field-payment', function () {
+                let fieldRowId=  $(this).data('id');
+                $( `#field-row-payment--${fieldRowId}` ).remove();
+                counterPayment--;
+
+            });
+            $(document).on('click', '.remove-field', function () {
+                let fieldRowId=  $(this).data('id');
+                $( `#field-row-customer--${fieldRowId}` ).remove();
+                counter--;
+
+            });
         });
+
     </script>
 
 
