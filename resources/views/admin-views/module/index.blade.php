@@ -51,20 +51,6 @@
 
                         <div id="usersExportDropdown"
                             class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
-                            {{-- <span class="dropdown-header">{{ translate('messages.options') }}</span>
-                            <a id="export-copy" class="dropdown-item" href="javascript:;">
-                                <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                    src="{{ asset('public/assets/admin') }}/svg/illustrations/copy.svg"
-                                    alt="Image Description">
-                                {{ translate('messages.copy') }}
-                            </a>
-                            <a id="export-print" class="dropdown-item" href="javascript:;">
-                                <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                    src="{{ asset('public/assets/admin') }}/svg/illustrations/print.svg"
-                                    alt="Image Description">
-                                {{ translate('messages.print') }}
-                            </a>
-                            <div class="dropdown-divider"></div> --}}
                             <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
                             <a id="export-excel" class="dropdown-item" href="{{route('admin.business-settings.module.export', ['type'=>'excel',request()->getQueryString()])}}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
@@ -78,12 +64,6 @@
                                     alt="Image Description">
                                 .{{ translate('messages.csv') }}
                             </a>
-                            {{-- <a id="export-pdf" class="dropdown-item" href="javascript:;">
-                                <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                    src="{{ asset('public/assets/admin') }}/svg/components/pdf.svg"
-                                    alt="Image Description">
-                                {{ translate('messages.pdf') }}
-                            </a> --}}
                         </div>
                     </div>
                     <a href="{{ route('admin.business-settings.module.create') }}" class="btn btn--primary">+ {{translate('Add New Module')}}</a>
@@ -130,8 +110,15 @@
                                 </td>
                                 <td>
                                     <label class="toggle-switch toggle-switch-sm" for="status-{{$module->id}}">
-                                    <input type="checkbox" class="toggle-switch-input" onclick="toogleStatusModal(event,'status-{{$module->id}}','module-on.png','module-off.png','{{translate('Want_to_activate_this')}} <strong>{{translate('Business_Module?')}}</strong>','{{translate('Want_to_deactivate_this')}} <strong>{{translate('Business_Module?')}}</strong>',`<p>{{translate('If_you_activate_this_business_module,_all_its_features_and_functionalities_will_be_available_and_accessible_to_all_users.')}}</p>`,`<p>{{translate('If_you_deactivate_this_business_module,_all_its_features_and_functionalities_will_be_disabled_and_hidden_from_users.')}}</p>`)"
-                                    {{-- onclick="location.href='{{route('admin.business-settings.module.status',[$module['id'],$module->status?0:1])}}'" --}}
+                                    <input type="checkbox" class="toggle-switch-input dynamic-checkbox"
+                                           data-id="status-{{$module->id}}"
+                                           data-type="status"
+                                           data-image-on='{{asset('/public/assets/admin/img/modal')}}/module-on.png'
+                                           data-image-off="{{asset('/public/assets/admin/img/modal')}}/module-off.png"
+                                           data-title-on="{{translate('Want_to_activate_this')}} <strong>{{translate('Business_Module?')}}</strong>','{{translate('Want_to_deactivate_this')}} <strong>{{translate('Business_Module?')}}</strong>"
+                                           data-title-off="<p>{{translate('If_you_activate_this_business_module,_all_its_features_and_functionalities_will_be_available_and_accessible_to_all_users.')}}</p>"
+                                           data-text-on="<p>{{translate('If_you_deactivate_this_business_module,_all_its_features_and_functionalities_will_be_disabled_and_hidden_from_users.')}}</p>"
+                                           data-text-off=""
                                     class="toggle-switch-input" id="status-{{$module->id}}" {{$module->status?'checked':''}}>
                                         <span class="toggle-switch-label">
                                             <span class="toggle-switch-indicator"></span>
@@ -190,16 +177,6 @@
                         </p>
                     </div>
                     <img src="{{asset('/public/assets/admin/img/zone-settings-popup-arrow.gif')}}" alt="admin/img" class="w-100">
-                    {{-- <div class="mt-3 d-flex flex-wrap align-items-center justify-content-between">
-                        <label class="form-check form--check m-0">
-                            <input type="checkbox" class="form-check-input rounded">
-                            <span class="form-check-label">{{translate("Don't show this anymore")}}</span>
-                        </label>
-                        <div class="btn--container justify-content-end">
-                            <button id="reset_btn" type="reset" class="btn btn--reset">{{translate("I will do it later")}}</button>
-                            <button type="submit" class="btn btn--primary">{{translate('Go to the Settings')}}</button>
-                        </div>
-                    </div> --}}
                 </div>
             </div>
         </div>
@@ -254,12 +231,8 @@
 @endsection
 
 @push('script_2')
-{{-- <script>
-    setTimeout(() => {
-        $('#warning-modal').modal('show')
-    }, 5000);
-</script> --}}
     <script>
+        "use strict";
         $(document).on('ready', function () {
             // INITIALIZATION OF DATATABLES
             // =======================================================
@@ -267,37 +240,35 @@
             // INITIALIZATION OF SELECT2
             // =======================================================
             $('.js-select2-custom').each(function () {
-                var select2 = $.HSCore.components.HSSelect2.init($(this));
+                let select2 = $.HSCore.components.HSSelect2.init($(this));
+            });
+        });
+        $('#search-form').on('submit', function (e) {
+            e.preventDefault();
+            let formData = new FormData(this);
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $.post({
+                url: '{{route('admin.business-settings.module.search')}}',
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false,
+                beforeSend: function () {
+                    $('#loading').show();
+                },
+                success: function (data) {
+                    $('.page-area').hide();
+                    $('#table-div').html(data.view);
+                    $('#itemCount').html(data.count);
+                },
+                complete: function () {
+                    $('#loading').hide();
+                },
             });
         });
     </script>
-        <script>
-            $('#search-form').on('submit', function (e) {
-                e.preventDefault();
-                var formData = new FormData(this);
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
-                $.post({
-                    url: '{{route('admin.business-settings.module.search')}}',
-                    data: formData,
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    beforeSend: function () {
-                        $('#loading').show();
-                    },
-                    success: function (data) {
-                        $('.page-area').hide();
-                        $('#table-div').html(data.view);
-                        $('#itemCount').html(data.count);
-                    },
-                    complete: function () {
-                        $('#loading').hide();
-                    },
-                });
-            });
-        </script>
 @endpush

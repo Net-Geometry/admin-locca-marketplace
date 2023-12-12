@@ -503,6 +503,12 @@
     function emailModalShow() {
         $('#email-modal').show();
     }
+    $('.route-alert').on('click',function (){
+        let route = $(this).data('url');
+        let message = $(this).data('message');
+        let title = $(this).data('title');
+        route_alert(route, message,title);
+    })
     function route_alert(route, message, title="{{translate('messages.are_you_sure')}}") {
         Swal.fire({
             title: title,

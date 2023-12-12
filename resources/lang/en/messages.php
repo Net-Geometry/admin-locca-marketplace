@@ -3401,4 +3401,7 @@
   'select_a_vehicle' => 'Select a vehicle',
   'select_dm_type' => 'Select dm type',
   'Withdraw_Able_Balance' => 'Withdraw Able Balance',
+  'delivery_setup' => 'Delivery setup',
+  'click_to_edit_this_item' => 'Click to edit this item',
+  'you_are_unassigned_from_a_order' => 'You are unassigned from a order',
 );

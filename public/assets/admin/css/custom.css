@@ -150,3 +150,15 @@ ol.breadcrumb {
     overflow-y: scroll;
     height: 600px
 }
+
+#conversation-list {
+    overflow-y: scroll;
+    height: 600px
+}
+
+.select2-container--open {
+    z-index: 99999999999999;
+}
+#offline_payment_cancelation_note {
+    z-index: 99999999999999;
+}

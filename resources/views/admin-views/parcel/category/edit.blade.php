@@ -50,12 +50,12 @@
                             <div class="lang_form" id="default-form">
                                 <div class="form-group">
                                     <label class="input-label" for="default_name">{{translate('messages.name')}} ({{ translate('messages.default') }})</label>
-                                    <input type="text" name="name[]" id="default_name" class="form-control" placeholder="{{translate('messages.new_food')}}" value="{{$parcel_category?->getRawOriginal('name')}}" oninvalid="document.getElementById('en-link').click()">
+                                    <input type="text" name="name[]" id="default_name" class="form-control" placeholder="{{translate('messages.new_food')}}" value="{{$parcel_category?->getRawOriginal('name')}}">
                                 </div>
                                 <input type="hidden" name="lang[]" value="default">
                                 <div class="form-group">
                                     <label class="input-label" for="exampleFormControlInput1">{{translate('messages.short_description')}} ({{ translate('messages.default') }})</label>
-                                    <textarea type="text" name="description[]" class="form-control ckeditor" oninvalid="document.getElementById('en-link').click()">{!! $parcel_category?->getRawOriginal('description') !!}</textarea>
+                                    <textarea type="text" name="description[]" class="form-control ckeditor">{!! $parcel_category?->getRawOriginal('description') !!}</textarea>
                                 </div>
                             </div>
                                 @foreach(json_decode($language) as $lang)
@@ -76,12 +76,12 @@
                                     <div class="d-none lang_form" id="{{$lang}}-form">
                                         <div class="form-group">
                                             <label class="input-label" for="{{$lang}}_name">{{translate('messages.name')}} ({{strtoupper($lang)}})</label>
-                                            <input type="text" name="name[]" id="{{$lang}}_name" class="form-control" placeholder="{{translate('messages.new_food')}}" value="{{$translate[$lang]['name']??''}}" oninvalid="document.getElementById('en-link').click()">
+                                            <input type="text" name="name[]" id="{{$lang}}_name" class="form-control" placeholder="{{translate('messages.new_food')}}" value="{{$translate[$lang]['name']??''}}">
                                         </div>
                                         <input type="hidden" name="lang[]" value="{{$lang}}">
                                         <div class="form-group">
                                             <label class="input-label" for="exampleFormControlInput1">{{translate('messages.short_description')}} ({{strtoupper($lang)}})</label>
-                                            <textarea type="text" name="description[]" class="form-control ckeditor" oninvalid="document.getElementById('en-link').click()">{!! $translate[$lang]['description']??'' !!}</textarea>
+                                            <textarea type="text" name="description[]" class="form-control ckeditor">{!! $translate[$lang]['description']??'' !!}</textarea>
                                         </div>
                                     </div>
                                 @endforeach
@@ -99,15 +99,6 @@
                                 </div>
                             @endif
                             @if($parcel_category->position == 0)
-                            {{-- <div class="form-group mb-0">
-                                <label class="input-label">{{translate('messages.module')}}</label>
-                                <select name="module_id" id="module_id" required class="form-control js-select2-custom"  data-placeholder="{{translate('messages.select_module')}}">
-                                        <option value="" selected disabled>{{translate('messages.select_module')}}</option>
-                                    @foreach(\App\Models\Module::parcel()->get() as $module)
-                                        <option value="{{$module->id}}" {{$parcel_category->module_id==$module->id?'selected':''}}>{{$module->module_name}}</option>
-                                    @endforeach
-                                </select>
-                            </div> --}}
                             @endif
                         </div>
                         <div class="col-lg-6">
@@ -157,9 +148,10 @@
 
 @push('script_2')
     <script>
+        "use strict";
         function readURL(input) {
             if (input.files && input.files[0]) {
-                var reader = new FileReader();
+                let reader = new FileReader();
 
                 reader.onload = function (e) {
                     $('#viewer').attr('src', e.target.result);
@@ -172,8 +164,7 @@
         $("#customFileEg1").change(function () {
             readURL(this);
         });
-    </script>
-    <script>
+
         $(".lang_link").click(function(e){
             e.preventDefault();
             $(".lang_link").removeClass('active');
@@ -184,17 +175,8 @@
             let lang = form_id.substring(0, form_id.length - 5);
             console.log(lang);
             $("#"+lang+"-form").removeClass('d-none');
-            if(lang == '{{$defaultLang}}')
-            {
-                $(".from_part_2").removeClass('d-none');
-            }
-            else
-            {
-                $(".from_part_2").addClass('d-none');
-            }
         });
-    </script>
-        <script>
+
             $('#reset_btn').click(function(){
                 $('#module_id').val("{{$parcel_category->module_id}}").trigger('change');
                 $('#viewer').attr('src', "{{asset('storage/app/public/parcel_category')}}/{{$parcel_category['image']}}");

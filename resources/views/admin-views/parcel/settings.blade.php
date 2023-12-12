@@ -179,14 +179,14 @@
                                     <td>
                                         <div class="btn--container justify-content-center">
                                             <a class="btn btn-sm btn--primary btn-outline-primary action-btn"
-                                               title="{{ translate('messages.edit') }}" onclick="edit_instruction('{{$instruction['id']}}')"
+                                               title="{{ translate('messages.edit') }}" data-id="{{$instruction['id']}}"
                                                data-toggle="modal"   data-target="#add_update_instruction_{{$instruction->id}}"
                                             ><i class="tio-edit"></i>
                                             </a>
 
 
-                                            <a class="btn btn-sm btn--danger btn-outline-danger action-btn" href="javascript:"
-                                               onclick="form_alert('instruction-{{$instruction['id']}}','{{ translate('Want to delete this instruction ?') }}')"
+                                            <a class="btn btn-sm btn--danger btn-outline-danger action-btn form-alert" href="javascript:"
+                                               data-id="instruction-{{$instruction['id']}}" data-message="{{ translate('Want to delete this instruction ?') }}"
                                                title="{{translate('messages.delete')}}">
                                                 <i class="tio-delete-outlined"></i>
                                             </a>
@@ -304,7 +304,11 @@
 
 @push('script_2')
     <script>
-
+        "use strict";
+        $('.module-change').on('click', function (){
+            let id = $(this).val();
+            edit_instruction()
+        })
         function edit_instruction(){
             $(".lang_link").removeClass('active');
             $(".add_active").addClass('active');
@@ -322,24 +326,12 @@
             let form_id = this.id;
             let lang = form_id.substring(0, form_id.length - 5);
 
-            console.log(lang);
-
-            // $("#"+lang+"-form").removeClass('d-none');
-
             @foreach ( $instructions as $instruction )
             $("#"+lang+"-form_{{ $instruction->id }}").removeClass('d-none');
             @endforeach
             if(lang == '{{$default_lang}}')
             {
                 $(".from_part_2").removeClass('d-none');
-            }
-            if(lang == 'default')
-            {
-                $(".default-form").removeClass('d-none');
-            }
-            else
-            {
-                $(".from_part_2").addClass('d-none');
             }
         });
 
@@ -351,10 +343,6 @@
             let form_id = this.id;
             let lang = form_id.substring(0, form_id.length - 6);
             $("#"+lang+"-form1").removeClass('d-none');
-            if(lang == 'default')
-            {
-                $(".default-form1").removeClass('d-none');
-            }
         })
     </script>
 

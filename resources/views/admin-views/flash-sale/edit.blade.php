@@ -47,7 +47,7 @@
                                                 <div class="lang_form" id="default-form">
                                                     <div class="form-group">
                                                         <label class="input-label" for="default_title">{{translate('messages.title')}} ({{translate('messages.default')}})</label>
-                                                        <input type="text" name="title[]" maxlength="100" id="default_title" class="form-control" placeholder="{{translate('messages.updated_flash_sale')}}" value="{{$flash_sale?->getRawOriginal('title')}}" oninvalid="document.getElementById('en-link').click()">
+                                                        <input type="text" name="title[]" maxlength="100" id="default_title" class="form-control" placeholder="{{translate('messages.updated_flash_sale')}}" value="{{$flash_sale?->getRawOriginal('title')}}">
                                                     </div>
                                                     <input type="hidden" name="lang[]" value="default">
                                                 </div>
@@ -66,7 +66,7 @@
                                                     <div class="d-none lang_form" id="{{$lang}}-form">
                                                         <div class="form-group">
                                                             <label class="input-label" for="{{$lang}}_title">{{translate('messages.title')}} ({{strtoupper($lang)}})</label>
-                                                            <input type="text" name="title[]" maxlength="100" id="{{$lang}}_title" class="form-control" placeholder="{{translate('messages.updated_flash_sale')}}" value="{{$translate[$lang]['title']??''}}" oninvalid="document.getElementById('en-link').click()">
+                                                            <input type="text" name="title[]" maxlength="100" id="{{$lang}}_title" class="form-control" placeholder="{{translate('messages.updated_flash_sale')}}" value="{{$translate[$lang]['title']??''}}">
                                                         </div>
                                                         <input type="hidden" name="lang[]" value="{{$lang}}">
                                                     </div>
@@ -131,6 +131,7 @@
 
 @push('script_2')
 <script>
+    "use strict";
         $(document).on('ready', function () {
             $('#from').attr('min',(new Date()).toISOString().split('T')[0]);
             $('#from').attr('max','{{$flash_sale->end_date}}');
@@ -151,16 +152,7 @@
 
         let form_id = this.id;
         let lang = form_id.substring(0, form_id.length - 5);
-        console.log(lang);
         $("#"+lang+"-form").removeClass('d-none');
-        if(lang == 'en')
-        {
-            $("#from_part_2").removeClass('d-none');
-        }
-        else
-        {
-            $("#from_part_2").addClass('d-none');
-        }
     })
 </script>
 @endpush

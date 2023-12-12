@@ -130,7 +130,7 @@
                                 </div>
                             </div>
                             <div class="btn--container justify-content-end mt-3">
-                                <button type="submit" onclick="" class="btn btn--primary mb-2">{{translate('Update')}}</button>
+                                <button type="submit" class="btn btn--primary mb-2">{{translate('Update')}}</button>
                             </div>
                         </form>
                     </div>
@@ -140,32 +140,5 @@
 </div>
 @endsection
 @push('script_2')
-<script>
-    $(".lang_link").click(function(e){
-        e.preventDefault();
-        $(".lang_link").removeClass('active');
-        $(".lang_form").addClass('d-none');
-        $(this).addClass('active');
-
-        let form_id = this.id;
-        let lang = form_id.substring(0, form_id.length - 5);
-
-        console.log(lang);
-
-        $("#"+lang+"-form").removeClass('d-none');
-        $("#"+lang+"-form1").removeClass('d-none');
-        if(lang == '{{$defaultLang}}')
-        {
-            $(".from_part_2").removeClass('d-none');
-        }
-        if(lang == 'default')
-        {
-            $(".default-form").removeClass('d-none');
-        }
-        else
-        {
-            $(".from_part_2").addClass('d-none');
-        }
-    });
-</script>
+    <script src="{{asset('public/assets/admin')}}/js/view-pages/other-banners.js"></script>
 @endpush
