@@ -189,66 +189,13 @@
 @endsection
 
 @push('script_2')
+    <script src="{{asset('public/assets/admin')}}/js/view-pages/wallet-bonus-edit.js"></script>
     <script>
+        "use strict";
         $(document).on('ready', function () {
-            $('#bonus_type').on('change', function() {
-                if($('#bonus_type').val() == 'amount')
-                {
-                    $('#maximum_bonus_amount').attr("readonly","true");
-                    $('#maximum_bonus_amount').val(null);
-                    $('#percentage').addClass('d-none');
-                    $('#cuttency_symbol').removeClass('d-none');
-                }
-                else
-                {
-                    $('#maximum_bonus_amount').removeAttr("readonly");
-                    $('#percentage').removeClass('d-none');
-                    $('#cuttency_symbol').addClass('d-none');
-                }
-            });
             $('#date_from').attr('min',(new Date()).toISOString().split('T')[0]);
             $('#date_from').attr('max','{{date("Y-m-d",strtotime($bonus["end_date"]))}}');
             $('#date_to').attr('min','{{date("Y-m-d",strtotime($bonus["start_date"]))}}');
-
-            // INITIALIZATION OF FLATPICKR
-            // =======================================================
-            $('.js-flatpickr').each(function () {
-                $.HSCore.components.HSFlatpickr.init($(this));
-            });
         });
-        $("#date_from").on("change", function () {
-            $('#date_to').attr('min',$(this).val());
-        });
-
-        $("#date_to").on("change", function () {
-            $('#date_from').attr('max',$(this).val());
-        });
-    </script>
-    <script>
-        $(".lang_link").click(function(e){
-            e.preventDefault();
-            $(".lang_link").removeClass('active');
-            $(".lang_form").addClass('d-none');
-            $(this).addClass('active');
-
-            let form_id = this.id;
-            let lang = form_id.substring(0, form_id.length - 5);
-            console.log(lang);
-            $("#"+lang+"-form").removeClass('d-none');
-            if(lang == 'en')
-            {
-                $("#from_part_2").removeClass('d-none');
-            }
-            else
-            {
-                $("#from_part_2").addClass('d-none');
-            }
-        })
-    </script>
-    <script>
-        $('#reset_btn').click(function(){
-            location.reload(true);
-        })
-
     </script>
 @endpush

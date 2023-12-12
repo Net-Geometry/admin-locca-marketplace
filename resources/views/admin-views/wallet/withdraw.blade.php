@@ -37,8 +37,8 @@
                     </form>
 
                     <div class="max-sm-flex-1">
-                        <select name="withdraw_status_filter" onchange="status_filter(this.value)"
-                                class="custom-select h--40px py-0">
+                        <select name="withdraw_status_filter"
+                                class="custom-select h--40px py-0 status-filter">
                             <option
                                 value="all" {{session()->has('withdraw_status_filter') && session('withdraw_status_filter') == 'all'?'selected':''}}>
                                 {{translate('messages.all')}}
@@ -70,20 +70,6 @@
 
                         <div id="usersExportDropdown"
                             class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
-                            {{-- <span class="dropdown-header">{{ translate('messages.options') }}</span>
-                            <a id="export-copy" class="dropdown-item" href="javascript:;">
-                                <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                    src="{{ asset('public/assets/admin') }}/svg/illustrations/copy.svg"
-                                    alt="Image Description">
-                                {{ translate('messages.copy') }}
-                            </a>
-                            <a id="export-print" class="dropdown-item" href="javascript:;">
-                                <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                    src="{{ asset('public/assets/admin') }}/svg/illustrations/print.svg"
-                                    alt="Image Description">
-                                {{ translate('messages.print') }}
-                            </a>
-                            <div class="dropdown-divider"></div> --}}
                             <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
                             <a id="export-excel" class="dropdown-item" href="{{route('admin.transactions.store.withdraw_export', ['type'=>'excel',request()->getQueryString()])}}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
@@ -97,12 +83,6 @@
                                     alt="Image Description">
                                 .{{ translate('messages.csv') }}
                             </a>
-                            {{-- <a id="export-pdf" class="dropdown-item" href="javascript:;">
-                                <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                    src="{{ asset('public/assets/admin') }}/svg/components/pdf.svg"
-                                    alt="Image Description">
-                                {{ translate('messages.pdf') }}
-                            </a> --}}
                         </div>
                     </div>
                     <!-- End Unfold -->
@@ -118,7 +98,6 @@
                         <tr>
                             <th class="border-0">{{translate('sl')}}</th>
                             <th class="border-0">{{translate('messages.amount')}}</th>
-                            {{-- <th>{{translate('messages.note')}}</th> --}}
                             <th class="border-0">{{ translate('messages.store') }}</th>
                             <th class="border-0">{{translate('messages.request_time')}}</th>
                             <th class="border-0">{{translate('messages.status')}}</th>
@@ -130,7 +109,6 @@
                             <tr>
                                 <td scope="row">{{$k+$withdraw_req->firstItem()}}</td>
                                 <td>{{$wr['amount']}}</td>
-                                {{-- <td>{{$wr->__action_note}}</td> --}}
                                 <td>
                                     @if($wr->vendor)
                                     <a class="deco-none"
@@ -157,13 +135,6 @@
                                     @else
                                     {{translate('messages.store_deleted') }}
                                     @endif
-                                    {{--<a class="btn action-btn btn--danger btn-outline-danger" href="javascript:"
-                                    onclick="form_alert('withdraw-{{$wr['id']}}','Want to delete this  ?')">{{translate('messages.Delete')}}</a>
-                                    <form action="{{route('vendor.withdraw.close',[$wr['id']])}}"
-                                            method="post" id="withdraw-{{$wr['id']}}">
-                                        @csrf @method('delete')
-                                    </form>--}}
-
                                 </td>
                             </tr>
                         @endforeach
@@ -191,7 +162,9 @@
 
 @push('script_2')
     <script>
-        function status_filter(type) {
+        "use strict";
+        $('.status-filter').on('change',function () {
+            let type = $(this).val();
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -213,10 +186,10 @@
                     $('#loading').hide()
                 }
             });
-        }
+        })
 
         $('#search-form').on('submit', function () {
-            var formData = new FormData(this);
+            let formData = new FormData(this);
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

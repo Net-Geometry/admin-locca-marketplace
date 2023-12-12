@@ -30,7 +30,7 @@
                         {{ translate('messages.Refund Request_Mode') }}
                     </h5>
                     <label class="toggle-switch toggle-switch-sm">
-                        <input type="checkbox" class="status toggle-switch-input" onclick="refund_mode()"
+                        <input type="checkbox" class="status toggle-switch-input refund_mode"
                             {{ isset($config) && $config ? 'checked' : '' }}>
                         <span class="toggle-switch-label text mb-0">
                             <span class="toggle-switch-indicator"></span>
@@ -119,8 +119,7 @@
                                         <td>
                                             <label class="toggle-switch toggle-switch-sm"
                                                 for="stocksCheckbox{{ $reason->id }}">
-                                                <input type="checkbox"
-                                                    onclick="location.href='{{ route('admin.refund.reason_status', [$reason['id'], $reason->status ? 0 : 1]) }}'"class="toggle-switch-input"
+                                                <input type="checkbox" data-url="{{ route('admin.refund.reason_status', [$reason['id'], $reason->status ? 0 : 1]) }}" class="toggle-switch-input redirect-url"
                                                     id="stocksCheckbox{{ $reason->id }}"
                                                     {{ $reason->status ? 'checked' : '' }}>
                                                 <span class="toggle-switch-label">
@@ -165,9 +164,10 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <a class="btn btn-sm btn--danger btn-outline-danger action-btn"
+                                                <a class="btn btn-sm btn--danger btn-outline-danger action-btn form-alert"
                                                     href="javascript:"
-                                                    onclick="form_alert('refund_reason-{{ $reason['id'] }}','{{ translate('Want to delete this refund reason ?') }}')"
+                                                    data-id="refund_reason-{{ $reason['id'] }}"
+                                                   data-message="{{ translate('Want to delete this refund reason ?') }}"
                                                     title="{{ translate('messages.delete') }}">
                                                     <i class="tio-delete-outlined"></i>
                                                 </a>
@@ -193,8 +193,8 @@
 @endsection
 @push('script_2')
     <script>
-        function refund_mode() {
-
+        "use strict";
+        $('.refund_mode').on('click', function (){
             Swal.fire({
                 title: '{{ translate('Are you sure?') }}' ,
                 text: 'Be careful before you turn on/off Refund Request mode',
@@ -226,15 +226,6 @@
                 }
             })
 
-        };
-    </script>
-    {{-- <script type="text/javascript">
-        $(function() {
-            $(".identifyingClass").click(function() {
-                var my_id_value = $(this).data('id');
-                $(".modal-body #hiddenValue").val(my_id_value);
-                $(".modal-body #hiddenValue").val(my_id_value);
-            })
         });
-    </script> --}}
+    </script>
 @endpush

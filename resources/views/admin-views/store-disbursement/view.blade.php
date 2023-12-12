@@ -41,8 +41,7 @@
                     <span>{{ translate('total_amount') }}</span> <span class="mx-2">:</span> <h3 class="m-0">{{\App\CentralLogics\Helpers::format_currency($disbursement['total_amount'])}}</h3>
                 </div>
                 <div class="w-16rem">
-                    <select name="module_id" class="form-control js-select2-custom"
-                            onchange="set_filter('{{ url()->full() }}',this.value,'module_id')"
+                    <select name="module_id" class="form-control js-select2-custom set-filter" data-url="{{ url()->full() }}" data-filter="module_id"
                             title="{{ translate('messages.select_modules') }}">
                         <option value="" {{ !request('module_id') ? 'selected' : '' }}>
                             {{ translate('messages.all_modules') }}</option>
@@ -54,11 +53,11 @@
                         @endforeach
                     </select>
                 </div>
-               
+
                 <div class="w-16rem">
-                    <select name="store_id" onchange="set_store_filter('{{ url()->full() }}',this.value)"
+                    <select name="store_id"
                             data-placeholder="{{ translate('messages.select_store') }}"
-                            class="js-data-example-ajax form-control">
+                            class="js-data-example-ajax form-control store-filter" data-url="{{ url()->full() }}">
                         @if (isset($store))
                             <option value="{{ $store->id }}" selected>{{ $store->name }}</option>
                         @else
@@ -68,9 +67,9 @@
 
                 </div>
                 <div class="w-16rem">
-                    <select name="payment_method_id" onchange="set_payment_method_filter('{{ url()->current() }}',this.value)"
+                    <select name="payment_method_id" data-url="{{ url()->current() }}"
                             data-placeholder="{{ translate('messages.select_payment_method') }}"
-                            class="js-select2-custom form-control">
+                            class="js-select2-custom form-control payment-method-filter">
 
                         <option value="all">{{ translate('messages.all_payment_methods') }}</option>
                         @foreach (\App\Models\WithdrawalMethod::ofStatus(1)->get() as $method)
@@ -344,18 +343,19 @@
 
 @push('script_2')
     <script>
+        "use strict";
         $(document).ready(function() {
-            var disbursement_id = sessionStorage.getItem('disbursement_id');
+            let disbursement_id = sessionStorage.getItem('disbursement_id');
             if(disbursement_id && (disbursement_id != {{$disbursement->id}})){
                 sessionStorage.removeItem('selectedValues');
                 sessionStorage.removeItem('selectedDmValues');
                 sessionStorage.removeItem('disbursement_id');
             }
-            var storedValues = sessionStorage.getItem('selectedValues');
+            let storedValues = sessionStorage.getItem('selectedValues');
             // Initialize as an array
-            var checkedValues = storedValues ? JSON.parse(storedValues) : [];
+            let checkedValues = storedValues ? JSON.parse(storedValues) : [];
 
-            var storeIds = {{ $store_ids }};
+            let storeIds = {{ $store_ids }};
 
             if (checkedValues.length > 0) {
                 $('#action-section').show();
@@ -370,7 +370,7 @@
             }
 
             $('.rest-check').each(function() {
-                var checkboxValue = parseInt($(this).val());
+                let checkboxValue = parseInt($(this).val());
                 if (checkedValues.includes(checkboxValue)) {
                     $(this).prop('checked', true);
                 }
@@ -398,14 +398,14 @@
                 } else {
                     $('#select-all').prop('checked', false);
                 }
-                var value = parseInt($(this).val());
+                let value = parseInt($(this).val());
                 console.log(value);
                 if (this.checked) {
                     // Add the value to the array when the checkbox is checked
                     checkedValues.push(value);
                 } else {
                     // Remove the value from the array when the checkbox is unchecked
-                    var index = checkedValues.indexOf(value);
+                    let index = checkedValues.indexOf(value);
                     if (index !== -1) {
                         checkedValues.splice(index, 1);
                     }
@@ -522,7 +522,7 @@
                         };
                     },
                     __port: function(params, success, failure) {
-                        var $request = $.ajax(params);
+                        let $request = $.ajax(params);
 
                         $request.then(success);
                         $request.fail(failure);
