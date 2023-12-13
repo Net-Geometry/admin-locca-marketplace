@@ -24,14 +24,14 @@
             </h1>
             <div class="d-flex align-items-end">
                 @if(Config::get('module.current_module_type') == 'food')
-                <div class="text--primary-2 py-1 d-flex flex-wrap align-items-center" type="button" onclick="foodModalShow()" >
+                <div class="text--primary-2 py-1 d-flex flex-wrap align-items-center foodModalShow" type="button" >
                     <strong class="mr-2">{{translate('See_how_it_works!')}}</strong>
                     <div>
                         <i class="tio-info-outined"></i>
                     </div>
                 </div>
                 @else
-                <div class="text--primary-2 py-1 d-flex flex-wrap align-items-center" type="button" onclick="attributeModalShow()" >
+                <div class="text--primary-2 py-1 d-flex flex-wrap align-items-center attributeModalShow" type="button" >
                     <strong class="mr-2">{{translate('See_how_it_works!')}}</strong>
                     <div>
                         <i class="tio-info-outined"></i>
@@ -166,8 +166,8 @@
                                                     onerror="this.src='{{ asset('public/assets/admin/img/upload.png') }}'"
                                                     alt="Product image">
                                                     @if (request()->product_gellary  == 1)
-                                                        <a href="#" onclick="function_remove_img({{ $key }},'{{ $photo }}')"
-                                                        class="spartan_remove_row"><i class="tio-add-to-trash"></i></a>
+                                                        <a href="#" data-key={{ $key }} data-photo="{{ $photo }}"
+                                                        class="spartan_remove_row function_remove_img"><i class="tio-add-to-trash"></i></a>
                                                     @else
                                                         <a href="{{ route('admin.item.remove-image', ['id' => $product['id'], 'name' => $photo ,'temp_product' => $temp_product]) }}"
                                                             class="spartan_remove_row"><i class="tio-add-to-trash"></i></a>
@@ -214,7 +214,6 @@
                                         <select name="store_id"
                                             data-placeholder="{{ translate('messages.select_store') }}"
                                             id="store_id" class="js-data-example-ajax form-control"
-                                            onchange="getStoreData('{{ url('/') }}/admin/store/get-addons?data[]=0&store_id=', this.value,'add_on')"
                                             title="{{ translate('messages.select_store') }}" {{ isset(request()->product_gellary) == false ?'required' : '' }}
                                             oninvalid="this.setCustomValidity('{{ translate('messages.please_select_store') }}')">
 
@@ -232,7 +231,7 @@
                                             for="category_id">{{ translate('messages.category') }}<span
                                                 class="input-label-secondary">*</span></label>
                                         <select name="category_id" class="js-data-example-ajax form-control"
-                                            id="category_id" onchange="categoryChange(this.value)">
+                                            id="category_id">
                                             @if ($category)
                                                 <option value="{{ $category['id'] }}">{{ $category['name'] }}</option>
                                             @endif
@@ -583,7 +582,7 @@
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-body">
-                <button type="button" class="close" data-dismiss="modal" onclick="foodModalClose()" aria-label="Close">
+                <button type="button" class="close foodModalClose" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>
                 <div class="embed-responsive embed-responsive-16by9">
@@ -598,7 +597,7 @@
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-body">
-                <button type="button" class="close" data-dismiss="modal" onclick="attributeModalClose()" aria-label="Close">
+                <button type="button" class="close attributeModalClose" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>
                 <div class="embed-responsive embed-responsive-16by9">
@@ -613,10 +612,18 @@
 
 
 @push('script_2')
+<script src="{{ asset('public/assets/admin') }}/js/tags-input.min.js"></script>
+<script src="{{ asset('public/assets/admin/js/spartan-multi-image-picker.js') }}"></script>
 <script>
-     var removedImageKeys = [];
+    "use strict";
+     let removedImageKeys = [];
+    let element = "";
+     $('.function_remove_img').on('change', function () {
+         let key = $(this).data('key');
+         let photo = $(this).data('photo');
+         function_remove_img(key,photo);
+     })
         function function_remove_img(key,photo) {
-            // var removedImageKeys[] = removedImageKeys;
         $('#product_images_' + key).addClass('d-none');
         removedImageKeys.push(photo);
         $('#removedImageKeysInput').val(removedImageKeys.join(','));
@@ -639,15 +646,24 @@
         $('#min_max1_' + data).attr("required", "false");
         $('#min_max2_' + data).attr("required", "false");
     }
-    var count = {{ isset($product->food_variations) ? count(json_decode($product->food_variations, true)) : 0 }};
+
+     $(document).on('change', '.show_min_max', function () {
+         let data = $(this).data('count');
+         show_min_max(data);
+     });
+
+     $(document).on('change', '.hide_min_max', function () {
+         let data = $(this).data('count');
+         hide_min_max(data);
+     });
+
+    let count = {{ isset($product->food_variations) ? count(json_decode($product->food_variations, true)) : 0 }};
 
     $(document).ready(function() {
-
-        // $('#organic').hide();
         $("#add_new_option_button").click(function(e) {
             $('#empty-variation').hide();
             count++;
-            var add_option_view = `
+            let add_option_view = `
                     <div class="__bg-F8F9FC-card view_new_option mb-2">
                         <div>
                             <div class="d-flex align-items-center justify-content-between mb-3">
@@ -656,7 +672,7 @@
                                     <span class="form-check-label">{{ translate('Required') }}</span>
                                 </label>
                                 <div>
-                                    <button type="button" class="btn btn-danger btn-sm delete_input_button" onclick="removeOption(this)"
+                                    <button type="button" class="btn btn-danger btn-sm delete_input_button"
                                         title="{{ translate('Delete') }}">
                                         <i class="tio-add-to-trash"></i>
                                     </button>
@@ -666,8 +682,8 @@
                                 <div class="col-xl-4 col-lg-6">
                                     <label for="">{{ translate('name') }}</label>
                                     <input required name=options[` + count +
-                `][name] class="form-control" type="text" onkeyup="new_option_name(this.value,` +
-                count + `)">
+                `][name] class="form-control new_option_name" type="text" data-count="`+
+                count +`">
                                 </div>
 
                                 <div class="col-xl-4 col-lg-6">
@@ -676,9 +692,9 @@
                                         </label>
                                         <div class="resturant-type-group px-0">
                                             <label class="form-check form--check mr-2 mr-md-4">
-                                                <input class="form-check-input" type="radio" value="multi"
+                                                <input class="form-check-input show_min_max" data-count="`+count+`" type="radio" value="multi"
                                                 name="options[` + count + `][type]" id="type` + count +
-                `" checked onchange="show_min_max(` + count + `)"
+                `" checked
                                                 >
                                                 <span class="form-check-label">
                                                     {{ translate('Multiple Selection') }}
@@ -686,9 +702,9 @@
                                             </label>
 
                                             <label class="form-check form--check mr-2 mr-md-4">
-                                                <input class="form-check-input" type="radio" value="single"
+                                                <input class="form-check-input hide_min_max" data-count="`+count+`" type="radio" value="single"
                                                 name="options[` + count + `][type]" id="type` + count +
-                `" onchange="hide_min_max(` + count + `)"
+                `"
                                                 >
                                                 <span class="form-check-label">
                                                     {{ translate('Single Selection') }}
@@ -730,8 +746,8 @@
                                     </div>
                                     <div class="row mt-3 p-3 mr-1 d-flex "  id="add_new_button_` + count +
                 `">
-                                        <button type="button" class="btn btn--primary btn-outline-primary" onclick="add_new_row_button(` +
-                count + `)" >{{ translate('Add_New_Option') }}</button>
+                                        <button type="button" class="btn btn--primary btn-outline-primary add_new_row_button" data-count="`+
+                count +`" >{{ translate('Add_New_Option') }}</button>
                                     </div>
                                 </div>
                             </div>
@@ -753,16 +769,26 @@
         element.parents('.view_new_option').remove();
     }
 
+    $(document).on('click', '.delete_input_button', function () {
+        let e = $(this);
+        removeOption(e);
+    });
+
     function deleteRow(e) {
         element = $(e);
         element.parents('.add_new_view_row_class').remove();
     }
 
+    $(document).on('click', '.deleteRow', function () {
+        let e = $(this);
+        deleteRow(e);
+    });
+    let countRow = 0;
 
     function add_new_row_button(data) {
         count = data;
         countRow = 1 + $('#option_price_view_' + data).children('.add_new_view_row_class').length;
-        var add_new_row_view = `
+        let add_new_row_view = `
             <div class="row add_new_view_row_class mb-3 position-relative pt-3 pt-sm-0">
                 <div class="col-md-4 col-sm-5">
                         <label for="">{{ translate('Option_name') }}</label>
@@ -778,7 +804,7 @@
                     <div class="col-sm-2 max-sm-absolute">
                         <label class="d-none d-sm-block">&nbsp;</label>
                         <div class="mt-1">
-                            <button type="button" class="btn btn-danger btn-sm" onclick="deleteRow(this)"
+                            <button type="button" class="btn btn-danger btn-sm deleteRow"
                                 title="{{ translate('Delete') }}">
                                 <i class="tio-add-to-trash"></i>
                             </button>
@@ -788,13 +814,28 @@
         $('#option_price_view_' + data).append(add_new_row_view);
 
     }
-</script>
-<script src="{{ asset('public/assets/admin') }}/js/tags-input.min.js"></script>
-<script>
+
+     $(document).on('click', '.add_new_row_button', function () {
+         let data = $(this).data('count');
+         add_new_row_button(data);
+     });
+
+     $(document).on('keyup', '.new_option_name', function () {
+         let data = $(this).data('count');
+         let value = $(this).val();
+         new_option_name(value, data);
+     });
+
+     $('#store_id').on('change', function () {
+         let route = '{{url('/')}}/admin/store/get-addons?data[]=0&store_id=';
+         let store_id = $(this).val();
+         let id = 'add_on';
+         getStoreData(route, store_id, id);
+     });
 
     function getStoreData(route, store_id, id) {
         $.get({
-            url: route + store_id,
+            url: route + id,
             dataType: 'json',
             success: function(data) {
                 $('#' + id).empty().append(data.options);
@@ -814,7 +855,7 @@
 
     function readURL(input) {
         if (input.files && input.files[0]) {
-            var reader = new FileReader();
+            let reader = new FileReader();
 
             reader.onload = function(e) {
                 $('#viewer').attr('src', e.target.result);
@@ -839,18 +880,16 @@
                 '{{ $product['store_id'] }}', 'add_on');
         @endif
     });
-</script>
 
-<script>
-    var module_id = {{ $product->module_id }};
-    var module_type = "{{ $product->module->module_type }}";
-    var parent_category_id = {{ $category ? $category->id : 0 }};
+    let module_id = {{ $product->module_id }};
+    let module_type = "{{ $product->module->module_type }}";
+    let parent_category_id = {{ $category ? $category->id : 0 }};
     <?php
     $module_data = config('module.' . $product->module->module_type);
     unset($module_data['description']);
     ?>
-    var module_data = {{ str_replace('"', '', json_encode($module_data)) }};
-    var stock = {{ $product->module->module_type == 'food' ? 'false' : 'true' }};
+    let module_data = {{ str_replace('"', '', json_encode($module_data)) }};
+    let stock = {{ $product->module->module_type == 'food' ? 'false' : 'true' }};
     input_field_visibility_update();
 
     function modulChange(id) {
@@ -920,29 +959,30 @@
         }
     }
 
-    function categoryChange(id) {
-        parent_category_id = id;
-        console.log(parent_category_id);
-    }
+     $('#category_id').on('change', function () {
+         parent_category_id = $(this).val();
+         console.log(parent_category_id);
+     });
 
-    function foodModalClose() {
-        $('#food-modal').hide();
+     $('.foodModalClose').on('click',function (){
+         $('#food-modal').hide();
+     })
 
-    }
-    function foodModalShow() {
-        $('#food-modal').show();
-    }
-    function attributeModalClose() {
-        $('#attribute-modal').hide();
+     $('.foodModalShow').on('click',function (){
+         $('#food-modal').show();
+     })
 
-    }
-    function attributeModalShow() {
-        $('#attribute-modal').show();
-    }
+     $('.attributeModalClose').on('click',function (){
+         $('#attribute-modal').hide();
+     })
+
+     $('.attributeModalShow').on('click',function (){
+         $('#attribute-modal').show();
+     })
 
     $(document).on('ready', function() {
         $('.js-select2-custom').each(function() {
-            var select2 = $.HSCore.components.HSSelect2.init($(this));
+            let select2 = $.HSCore.components.HSSelect2.init($(this));
         });
     });
 
@@ -961,7 +1001,7 @@
                     };
                 },
                 __port: function(params, success, failure) {
-                    var $request = $.ajax(params);
+                    let $request = $.ajax(params);
 
                     $request.then(success);
                     $request.fail(failure);
@@ -987,7 +1027,7 @@
                 };
             },
             __port: function(params, success, failure) {
-                var $request = $.ajax(params);
+                let $request = $.ajax(params);
 
                 $request.then(success);
                 $request.fail(failure);
@@ -1013,7 +1053,7 @@
                 };
             },
             __port: function(params, success, failure) {
-                var $request = $.ajax(params);
+                let $request = $.ajax(params);
 
                 $request.then(success);
                 $request.fail(failure);
@@ -1041,7 +1081,7 @@
                 };
             },
             __port: function(params, success, failure) {
-                var $request = $.ajax(params);
+                let $request = $.ajax(params);
 
                 $request.then(success);
                 $request.fail(failure);
@@ -1063,7 +1103,7 @@
         let n = name;
 
         $('#customer_choice_options').append(
-            `<div class="__choos-item"><div><input type="hidden" name="choice_no[]" value="${i}"><input type="text" class="form-control d-none" name="choice[]" value="${n}" placeholder="{{ translate('messages.choice_title') }}" readonly> <label class="form-label">${n}</label> </div><div><input type="text" class="form-control" name="choice_options_${i}[]" placeholder="{{ translate('messages.enter_choice_values') }}" data-role="tagsinput" onchange="combination_update()"></div></div>`
+            `<div class="__choos-item"><div><input type="hidden" name="choice_no[]" value="${i}"><input type="text" class="form-control d-none" name="choice[]" value="${n}" placeholder="{{ translate('messages.choice_title') }}" readonly> <label class="form-label">${n}</label> </div><div><input type="text" class="form-control combination_update" name="choice_options_${i}[]" placeholder="{{ translate('messages.enter_choice_values') }}" data-role="tagsinput"></div></div>`
         );
         $("input[data-role=tagsinput], select[multiple][data-role=tagsinput]").tagsinput();
     }
@@ -1105,13 +1145,14 @@
             }
         });
     }
-</script>
 
+     $(document).on('change', '.combination_update', function () {
+         combination_update();
+     });
 
-<script>
     $('#product_form').on('submit', function() {
         console.log('working');
-        var formData = new FormData(this);
+        let formData = new FormData(this);
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -1131,7 +1172,7 @@
                 console.log(data);
                 $('#loading').hide();
                 if (data.errors) {
-                    for (var i = 0; i < data.errors.length; i++) {
+                    for (let i = 0; i < data.errors.length; i++) {
                         toastr.error(data.errors[i].message, {
                             CloseButton: true,
                             ProgressBar: true
@@ -1157,36 +1198,17 @@
             }
         });
     });
-</script>
-<script>
-    $(".lang_link").click(function(e) {
-        e.preventDefault();
-        $(".lang_link").removeClass('active');
-        $(".lang_form").addClass('d-none');
-        $(this).addClass('active');
-
-        let form_id = this.id;
-        let lang = form_id.substring(0, form_id.length - 5);
-        console.log(lang);
-        $("#" + lang + "-form").removeClass('d-none');
-        if (lang == 'en') {
-            $("#from_part_2").removeClass('d-none');
-        } else {
-            $("#from_part_2").addClass('d-none');
-        }
-    })
 
     $('#reset_btn').click(function() {
         location.reload(true);
     })
-</script>
-<script>
+
     update_qty();
 
     function update_qty() {
-        var total_qty = 0;
-        var qty_elements = $('input[name^="stock_"]');
-        for (var i = 0; i < qty_elements.length; i++) {
+        let total_qty = 0;
+        let qty_elements = $('input[name^="stock_"]');
+        for (let i = 0; i < qty_elements.length; i++) {
             total_qty += parseInt(qty_elements.eq(i).val());
         }
         if (qty_elements.length > 0) {
@@ -1198,16 +1220,14 @@
         }
     }
     $('input[name^="stock_"]').on('keyup', function() {
-        var total_qty = 0;
-        var qty_elements = $('input[name^="stock_"]');
-        for (var i = 0; i < qty_elements.length; i++) {
+        let total_qty = 0;
+        let qty_elements = $('input[name^="stock_"]');
+        for (let i = 0; i < qty_elements.length; i++) {
             total_qty += parseInt(qty_elements.eq(i).val());
         }
         $('input[name="current_stock"]').val(total_qty);
     });
-</script>
-<script src="{{ asset('public/assets/admin/js/spartan-multi-image-picker.js') }}"></script>
-<script type="text/javascript">
+
     $(function() {
         $("#coba").spartanMultiImagePicker({
             fieldName: 'item_images[]',
@@ -1244,8 +1264,7 @@
             }
         });
     });
-</script>
-<script>
+
     $('#reset_btn').click(function() {
         $('#module_id').val(null).trigger('change');
         $('#store_id').val(null).trigger('change');

@@ -3517,4 +3517,13 @@
   'Add_Fields' => 'Add Fields',
   'Reached_maximum' => 'Reached maximum',
   'Is_required_?' => 'Is required  ',
+  'If_you_enable_it,_customers_will_see_the_product_Price_including_Tax,_during_checkout.' => 'If you enable it  customers will see the product Price including Tax  during checkout.',
+  'If_enabled,_stores_will_be_automatically_suspended_by_the_system_when_their_‘Cash_in_Hand’_limit_is_exceeded.' => 'If enabled  stores will be automatically suspended by the system when their ‘Cash in Hand’ limit is exceeded.',
+  'If_enabled,_stores_have_to_provide_collected_cash_by_them_self' => 'If enabled  stores have to provide collected cash by them self',
+  'If_disabled,_stores_do_not_have_to_provide_collected_cash_by_them_self' => 'If disabled  stores do not have to provide collected cash by them self',
+  'Maximum_Amount_to_Hold_Cash_in_Hand' => 'Maximum Amount to Hold Cash in Hand',
+  'Enter_the_maximum_cash_amount_stores_can_hold._If_this_number_exceeds,_stores_will_be_suspended_and_not_receive_any_orders.' => 'Enter the maximum cash amount stores can hold. If this number exceeds  stores will be suspended and not receive any orders.',
+  'Enter_the_minimum_cash_amount_stores_can_pay' => 'Enter the minimum cash amount stores can pay',
+  'attribute_choice_option_value_can_not_be_null' => 'Attribute choice option value can not be null',
+  'please_add_more_options_or_change_the_max_value_for' => 'Please add more options or change the max value for',
 );

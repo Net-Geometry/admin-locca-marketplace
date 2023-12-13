@@ -44,9 +44,9 @@ interface CategoryRepositoryInterface extends RepositoryInterface
     /**
      * @param Request $request
      * @param int|string $dataLimit
-     * @return Collection|LengthAwarePaginator
+     * @return \Illuminate\Support\Collection|LengthAwarePaginator
      */
-    public function getNameList(Request $request, int|string $dataLimit = DEFAULT_DATA_LIMIT): Collection|LengthAwarePaginator;
+    public function getNameList(Request $request, int|string $dataLimit = DEFAULT_DATA_LIMIT): \Illuminate\Support\Collection|LengthAwarePaginator;
 
     /**
      * @param string|null $searchValue
