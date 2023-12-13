@@ -95,7 +95,16 @@
                                                     </td>
                                                     <td>
                                                         <label class="toggle-switch toggle-switch-sm">
-                                                            <input type="checkbox" class="toggle-switch-input" onclick="toogleStatusModal(event,'status-{{$banner->id}}','promotional-on.png','promotional-off.png','{{translate('By Turning ONN Promotional Banner Section')}}','{{translate('By Turning OFF Promotional Banner Section')}}',`<p>{{translate('Promotional banner will be enabled. You will be able to see promotional activity')}}</p>`,`<p>{{translate('Promotional banner will be disabled. You will be unable to see promotional activity')}}</p>`)" id="status-{{$banner->id}}" {{$banner->status?'checked':''}}>
+                                                            <input type="checkbox" class="toggle-switch-input dynamic-checkbox"
+                                                                   data-id="status-{{$banner->id}}"
+                                                                   data-type="status"
+                                                                   data-image-on="{{asset('/public/assets/admin/img/modal')}}/promotional-on.png"
+                                                                   data-image-off="{{asset('/public/assets/admin/img/modal')}}/promotional-off.png"
+                                                                   data-title-on="{{translate('By Turning ONN Promotional Banner Section')}}"
+                                                                   data-title-off="{{translate('By Turning OFF Promotional Banner Section')}}"
+                                                                   data-text-on="<p>{{translate('Promotional banner will be enabled. You will be able to see promotional activity')}}</p>"
+                                                                   data-text-off="<p>{{translate('Promotional banner will be disabled. You will be unable to see promotional activity')}}</p>"
+                                                                   id="status-{{$banner->id}}" {{$banner->status?'checked':''}}>
                                                             <span class="toggle-switch-label">
                                                                 <span class="toggle-switch-indicator"></span>
                                                             </span>
@@ -109,8 +118,9 @@
                                                             <a class="btn action-btn btn--primary btn-outline-primary" href="{{route('admin.promotional-banner.edit',[$banner['id']])}}">
                                                                 <i class="tio-edit"></i>
                                                             </a>
-                                                            <a class="btn action-btn btn--danger btn-outline-danger" href="javascript:"
-                                                            onclick="form_alert('banner-{{$banner['id']}}','{{ translate('Want to delete this banner ?') }}')" title="{{translate('messages.delete_banner')}}"><i class="tio-delete-outlined"></i>
+                                                            <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:"
+                                                               data-id="banner-{{$banner['id']}}" data-message="{{ translate('Want to delete this banner ?') }}"
+                                                             title="{{translate('messages.delete_banner')}}"><i class="tio-delete-outlined"></i>
                                                             </a>
                                                             <form action="{{route('admin.promotional-banner.delete',[$banner['id']])}}" method="post" id="banner-{{$banner['id']}}">
                                                                 @csrf @method('delete')
@@ -143,34 +153,11 @@
 </div>
 @endsection
 @push('script_2')
+    <script src="{{asset('public/assets/admin')}}/js/view-pages/other-banners.js"></script>
         <script>
             $('#reset_btn').click(function(){
                 $('#viewer').attr('src','{{asset('/public/assets/admin/img/upload-placeholder.png')}}');
             })
-        </script>
-        <script>
-            $(document).ready(function() {
-                "use strict"
-                $(".__upload-img, .upload-img-4, .upload-img-2, .upload-img-5, .upload-img-1, .upload-img").each(function(){
-                    var targetedImage = $(this).find('.img');
-                    var targetedImageSrc = $(this).find('.img img');
-                    function proPicURL(input) {
-                        if (input.files && input.files[0]) {
-                            var uploadedFile = new FileReader();
-                            uploadedFile.onload = function (e) {
-                                targetedImageSrc.attr('src', e.target.result);
-                                targetedImage.addClass('image-loaded');
-                                targetedImage.hide();
-                                targetedImage.fadeIn(650);
-                            }
-                            uploadedFile.readAsDataURL(input.files[0]);
-                        }
-                    }
-                    $(this).find('input').on('change', function () {
-                        proPicURL(this);
-                    })
-                })
-            });
         </script>
 @endpush
 

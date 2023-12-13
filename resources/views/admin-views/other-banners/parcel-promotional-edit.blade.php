@@ -46,10 +46,10 @@
                                             </label>
                                             <div class="text-center mt-5">
                                                 <h3 class="form-label d-block mt-2">
-                                                {{translate('Banner_Image_Ratio_4:1')}}  
+                                                {{translate('Banner_Image_Ratio_4:1')}}
                                             </h3>
                                             <p>{{translate('image_format_:_jpg_,_png_,_jpeg_|_maximum_size:_2_MB')}}</p>
-        
+
                                             </div>
                                         </div>
                                     </div>
@@ -59,7 +59,7 @@
                                 </div>
                             </form>
                         </div>
-    
+
                 </div>
             </div>
         </div>
@@ -67,34 +67,11 @@
 </div>
 @endsection
 @push('script_2')
+    <script src="{{asset('public/assets/admin')}}/js/view-pages/other-banners.js"></script>
         <script>
             $('#reset_btn').click(function(){
                 $('#viewer').attr('src','{{asset('/public/assets/admin/img/upload-placeholder.png')}}');
             })
-        </script>
-        <script>
-            $(document).ready(function() {
-                "use strict"
-                $(".__upload-img, .upload-img-4, .upload-img-2, .upload-img-5, .upload-img-1, .upload-img").each(function(){
-                    var targetedImage = $(this).find('.img');
-                    var targetedImageSrc = $(this).find('.img img');
-                    function proPicURL(input) {
-                        if (input.files && input.files[0]) {
-                            var uploadedFile = new FileReader();
-                            uploadedFile.onload = function (e) {
-                                targetedImageSrc.attr('src', e.target.result);
-                                targetedImage.addClass('image-loaded');
-                                targetedImage.hide();
-                                targetedImage.fadeIn(650);
-                            }
-                            uploadedFile.readAsDataURL(input.files[0]);
-                        }
-                    }
-                    $(this).find('input').on('change', function () {
-                        proPicURL(this);
-                    })
-                })
-            });
         </script>
 @endpush
 

@@ -294,10 +294,10 @@
                             @if ($order?->offline_payments->status != 'denied')
                             <button type="button" class="btn btn--danger btn-outline-danger offline_payment_cancelation_note" data-toggle="modal" data-target="#offline_payment_cancelation_note" data-id="{{ $order['id'] }}" class="btn btn--reset">{{translate('Payment_Didn’t_Recerive')}}</button>
                             @elseif ($order?->offline_payments->status == 'denied')
-                                <button type="button" onclick="route_alert('{{ route('admin.order.offline_payment', [ 'id' => $order['id'], 'verify' => 'switched_to_cod', ]) }}','{{ translate('messages.Make_the_payment_verified_for_this_order') }}')" onclick="" class="btn btn--success mb-2">{{translate('Switched_to_COD')}}</button>
+                                <button type="button" data-url="{{ route('admin.order.offline_payment', [ 'id' => $order['id'], 'verify' => 'switched_to_cod', ]) }}" data-message="{{ translate('messages.Make_the_payment_verified_for_this_order') }}" class="btn btn--success mb-2 route-alert">{{translate('Switched_to_COD')}}</button>
                             @endif
 
-                            <button type="button" onclick="route_alert('{{ route('admin.order.offline_payment', [ 'id' => $order['id'], 'verify' => 'yes', ]) }}','{{ translate('messages.Make_the_payment_verified_for_this_order') }}')" onclick="" class="btn btn--primary mb-2">{{translate('Yes,_Payment_Received')}}</button>
+                            <button type="button" data-url="{{ route('admin.order.offline_payment', [ 'id' => $order['id'], 'verify' => 'yes', ]) }}" data-message="{{ translate('messages.Make_the_payment_verified_for_this_order') }}" class="btn btn--primary mb-2 route-alert">{{translate('Yes,_Payment_Received')}}</button>
                         </div>
                         @endif
                     </div>
@@ -355,30 +355,13 @@
 @endsection
 
 @push('script_2')
-    <!-- <script src="{{asset('public/assets/admin')}}/js/bootstrap-select.min.js"></script> -->
+    <script src="{{asset('public/assets/admin')}}/js/view-pages/offline-verification-list.js"></script>
     <script>
-
-$(document).on("click", ".offline_payment_cancelation_note", function () {
-    var myorderId = $(this).data('id');
-     $(".modal-body #myorderId").val(myorderId);
-});
-
-
-
+        "use strict";
         $(document).on('ready', function () {
-
-            // INITIALIZATION OF SELECT2
-            // =======================================================
-            $('.js-select2-custom').each(function () {
-                var select2 = $.HSCore.components.HSSelect2.init($(this));
-            });
-
-
-
-
             // INITIALIZATION OF DATATABLES
             // =======================================================
-            var datatable = $.HSCore.components.HSDatatables.init($('#datatable'), {
+            let datatable = $.HSCore.components.HSDatatables.init($('#datatable'), {
                 dom: 'Bfrtip',
                 buttons: [
                     {
@@ -425,79 +408,6 @@ $(document).on("click", ".offline_payment_cancelation_note", function () {
 
                         '</div>'
                 }
-            });
-
-            $('#export-copy').click(function () {
-                datatable.button('.buttons-copy').trigger()
-            });
-
-            $('#export-excel').click(function () {
-                datatable.button('.buttons-excel').trigger()
-            });
-
-            $('#export-csv').click(function () {
-                datatable.button('.buttons-csv').trigger()
-            });
-
-            // $('#export-pdf').click(function () {
-            //     datatable.button('.buttons-pdf').trigger()
-            // });
-
-            $('#export-print').click(function () {
-                datatable.button('.buttons-print').trigger()
-            });
-
-            $('#datatableSearch').on('mouseup', function (e) {
-                var $input = $(this),
-                    oldValue = $input.val();
-
-                if (oldValue == "") return;
-
-                setTimeout(function () {
-                    var newValue = $input.val();
-
-                    if (newValue == "") {
-                        // Gotcha
-                        datatable.search('').draw();
-                    }
-                }, 1);
-            });
-
-            $('#toggleColumn_order').change(function (e) {
-                datatable.columns(1).visible(e.target.checked)
-            })
-
-            $('#toggleColumn_date').change(function (e) {
-                datatable.columns(2).visible(e.target.checked)
-            })
-
-            $('#toggleColumn_customer').change(function (e) {
-                datatable.columns(3).visible(e.target.checked)
-            })
-
-            $('#toggleColumn_total').change(function (e) {
-                datatable.columns(5).visible(e.target.checked)
-            })
-            $('#toggleColumn_Payment_Method').change(function (e) {
-                datatable.columns(6).visible(e.target.checked)
-            })
-
-
-            $('#toggleColumn_actions').change(function (e) {
-                datatable.columns(7).visible(e.target.checked)
-            })
-            // INITIALIZATION OF TAGIFY
-            // =======================================================
-            $('.js-tagify').each(function () {
-                var tagify = $.HSCore.components.HSTagify.init($(this));
-            });
-
-            $("#date_from").on("change", function () {
-                $('#date_to').attr('min',$(this).val());
-            });
-
-            $("#date_to").on("change", function () {
-                $('#date_from').attr('max',$(this).val());
             });
         });
 

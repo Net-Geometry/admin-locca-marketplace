@@ -56,9 +56,6 @@
                                 <span id="datatableCounter">0</span>
                                 {{translate('messages.selected')}}
                                 </span>
-                            {{--<a class="btn btn-sm btn-outline-danger" href="javascript:;">
-                                <i class="tio-delete-outlined"></i> Delete
-                            </a>--}}
                         </div>
                     </div>
                     <!-- End Datatable Info -->
@@ -102,19 +99,12 @@
                                         alt="Image Description">
                                 .{{translate('messages.csv')}}
                             </a>
-                            <!-- <a id="export-pdf" class="dropdown-item" href="javascript:;">
-                                <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                        src="{{asset('public/assets/admin')}}/svg/components/pdf.svg"
-                                        alt="Image Description">
-                                {{translate('messages.pdf')}}
-                            </a> -->
                         </div>
                     </div>
                     <!-- End Unfold -->
                     @if(Request::is('admin/refund/*'))
                     <div class="select-item">
-                        <select name="slist" class="form-control js-select2-custom"
-                        onchange="window.location.href=this.options[this.selectedIndex].value;" >
+                        <select name="slist" class="form-control js-select2-custom refund-filter" >
                             <option {{($status=='requested')?'selected':''}} value="{{ route('admin.refund.refund_attr', ['requested']) }}">{{translate('messages.Refund Requests')}}</option>
                             <option {{($status=='refunded')?'selected':''}} value="{{ route('admin.refund.refund_attr', ['refunded']) }}">{{translate('messages.Refund')}}</option>
                             <option {{($status=='rejected')?'selected':''}} value="{{ route('admin.refund.refund_attr', ['rejected']) }}">{{translate('Rejected')}}</option>
@@ -123,8 +113,7 @@
                     @endif
                     <!-- Unfold -->
                     <div class="hs-unfold mr-2">
-                        <a class="js-hs-unfold-invoker btn btn-sm btn-white h--40px" href="javascript:;"
-                            onclick="$('#datatableFilterSidebar,.hs-unfold-overlay').show(500)">
+                        <a class="js-hs-unfold-invoker btn btn-sm btn-white h--40px filter-button-show" href="javascript:;">
                             <i class="tio-filter-list mr-1"></i> {{ translate('messages.filter') }} <span class="badge badge-success badge-pill ml-1" id="filter_count"></span>
                         </a>
                     </div>
@@ -199,21 +188,6 @@
                                         </label>
                                         <!-- End Checkbox Switch -->
                                     </div>
-
-                                    {{-- <div class="d-flex justify-content-between align-items-center mb-3">
-                                        <span class="mr-2 text-capitalize">{{translate('messages.payment_status')}}</span>
-
-                                        <!-- Checkbox Switch -->
-                                        <label class="toggle-switch toggle-switch-sm"
-                                                for="toggleColumn_payment_status">
-                                            <input type="checkbox" class="toggle-switch-input"
-                                                    id="toggleColumn_payment_status" checked>
-                                            <span class="toggle-switch-label">
-                                            <span class="toggle-switch-indicator"></span>
-                                            </span>
-                                        </label>
-                                        <!-- End Checkbox Switch -->
-                                    </div> --}}
 
                                     <div class="d-flex justify-content-between align-items-center mb-3">
                                         <span class="mr-2">{{translate('messages.total')}}</span>
@@ -467,8 +441,7 @@
                     <h4 class="card-header-title">{{translate('messages.order_filter')}}</h4>
 
                     <!-- Toggle Button -->
-                    <a class="js-hs-unfold-invoker_ btn btn-icon btn-xs btn-ghost-dark ml-2" href="javascript:;"
-                    onclick="$('#datatableFilterSidebar,.hs-unfold-overlay').hide(500)">
+                    <a class="js-hs-unfold-invoker_ btn btn-icon btn-xs btn-ghost-dark ml-2 filter-button-hide" href="javascript:;">
                         <i class="tio-clear tio-lg"></i>
                     </a>
                     <!-- End Toggle Button -->
@@ -537,10 +510,7 @@
                         <input type="checkbox" id="orderStatus5" name="orderStatus[]" class="custom-control-input" value="delivered" {{isset($orderstatus)?(in_array('delivered', $orderstatus)?'checked':''):''}}>
                         <label class="custom-control-label" for="orderStatus5">{{translate('messages.delivered')}}</label>
                     </div>
-                    {{-- <div class="custom-control custom-radio mb-2">
-                        <input type="checkbox" id="orderStatus6" name="orderStatus[]" class="custom-control-input" value="returned" {{isset($orderstatus)?(in_array('returned', $orderstatus)?'checked':''):''}}>
-                        <label class="custom-control-label" for="orderStatus6">{{translate('messages.returned')}}</label>
-                    </div> --}}
+
                     <div class="custom-control custom-radio mb-2">
                         <input type="checkbox" id="orderStatus7" name="orderStatus[]" class="custom-control-input" value="failed" {{isset($orderstatus)?(in_array('failed', $orderstatus)?'checked':''):''}}>
                         <label class="custom-control-label" for="orderStatus7">{{translate('messages.failed')}}</label>
@@ -617,30 +587,13 @@
 @endsection
 
 @push('script_2')
-    <!-- <script src="{{asset('public/assets/admin')}}/js/bootstrap-select.min.js"></script> -->
+    <script src="{{asset('public/assets/admin')}}/js/view-pages/order-list.js"></script>
     <script>
+        "use strict";
         $(document).on('ready', function () {
             @if($filter_count>0)
             $('#filter_count').html({{$filter_count}});
             @endif
-            // INITIALIZATION OF SELECT2
-            // =======================================================
-            $('.js-select2-custom').each(function () {
-                var select2 = $.HSCore.components.HSSelect2.init($(this));
-            });
-
-            var zone_id = [];
-            $('#zone_ids').on('change', function(){
-                if($(this).val())
-                {
-                    zone_id = $(this).val();
-                }
-                else
-                {
-                    zone_id = [];
-                }
-            });
-
 
             $('#vendor_ids').select2({
                 ajax: {
@@ -658,7 +611,7 @@
                         };
                     },
                     __port: function (params, success, failure) {
-                        var $request = $.ajax(params);
+                        let $request = $.ajax(params);
 
                         $request.then(success);
                         $request.fail(failure);
@@ -670,7 +623,7 @@
 
             // INITIALIZATION OF DATATABLES
             // =======================================================
-            var datatable = $.HSCore.components.HSDatatables.init($('#datatable'), {
+            let datatable = $.HSCore.components.HSDatatables.init($('#datatable'), {
                 dom: 'Bfrtip',
                 buttons: [
                     {
@@ -718,93 +671,13 @@
                         '</div>'
                 }
             });
-
-            $('#export-copy').click(function () {
-                datatable.button('.buttons-copy').trigger()
-            });
-
-            $('#export-excel').click(function () {
-                datatable.button('.buttons-excel').trigger()
-            });
-
-            $('#export-csv').click(function () {
-                datatable.button('.buttons-csv').trigger()
-            });
-
-            // $('#export-pdf').click(function () {
-            //     datatable.button('.buttons-pdf').trigger()
-            // });
-
-            $('#export-print').click(function () {
-                datatable.button('.buttons-print').trigger()
-            });
-
-            $('#datatableSearch').on('mouseup', function (e) {
-                var $input = $(this),
-                    oldValue = $input.val();
-
-                if (oldValue == "") return;
-
-                setTimeout(function () {
-                    var newValue = $input.val();
-
-                    if (newValue == "") {
-                        // Gotcha
-                        datatable.search('').draw();
-                    }
-                }, 1);
-            });
-
-            $('#toggleColumn_order').change(function (e) {
-                datatable.columns(1).visible(e.target.checked)
-            })
-
-            $('#toggleColumn_date').change(function (e) {
-                datatable.columns(2).visible(e.target.checked)
-            })
-
-            $('#toggleColumn_customer').change(function (e) {
-                datatable.columns(3).visible(e.target.checked)
-            })
-            $('#toggleColumn_store').change(function (e) {
-                datatable.columns(4).visible(e.target.checked)
-            })
-            $('#toggleColumn_total').change(function (e) {
-                datatable.columns(5).visible(e.target.checked)
-            })
-            $('#toggleColumn_order_status').change(function (e) {
-                datatable.columns(6).visible(e.target.checked)
-            })
-
-            // $('#toggleColumn_order_type').change(function (e) {
-            //     datatable.columns(7).visible(e.target.checked)
-            // })
-
-            $('#toggleColumn_actions').change(function (e) {
-                datatable.columns(7).visible(e.target.checked)
-            })
-            // INITIALIZATION OF TAGIFY
-            // =======================================================
-            $('.js-tagify').each(function () {
-                var tagify = $.HSCore.components.HSTagify.init($(this));
-            });
-
-            $("#date_from").on("change", function () {
-                $('#date_to').attr('min',$(this).val());
-            });
-
-            $("#date_to").on("change", function () {
-                $('#date_from').attr('max',$(this).val());
-            });
         });
 
         $('#reset').on('click', function(){
             // e.preventDefault();
             location.href = '{{url('/')}}/admin/order/filter/reset';
         });
-    </script>
 
-    <script>
         $('#search-form').on('submit', function (e) {
             $.ajaxSetup({
                 headers: {

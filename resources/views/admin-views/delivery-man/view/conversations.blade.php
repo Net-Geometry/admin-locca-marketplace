@@ -3,12 +3,7 @@
 @section('title',translate('messages.Delivery Man Preview'))
 
 @push('css_or_js')
-    <style>
-        #dm-conversation-list {
-            overflow-y: scroll;
-            height: 600px
-        }
-    </style>
+
 @endpush
 
 @section('content')

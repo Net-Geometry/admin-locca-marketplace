@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html  lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
-<meta charset="utf-8">
+    <meta charset="utf-8">
     <title>
         @yield('title')
     </title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="{{asset('public/assets/modules/payment/mercado_pogo/css/index.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('public/assets/admin/css/mercado.css')}}">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://sdk.mercadopago.com/js/v2"></script>
 </head>
@@ -15,7 +15,6 @@
 <main>
     <!-- Hidden input to store your integration public key -->
     <input type="hidden" id="mercado-pago-public-key" value="{{$config->public_key}}">
-
     <!-- Payment -->
     <section class="payment-form dark">
         <div class="container__payment">
@@ -92,11 +91,9 @@
 <script>
     const publicKey = document.getElementById("mercado-pago-public-key").value;
     const mercadopago = new MercadoPago(publicKey);
-
     loadCardForm();
     function loadCardForm() {
         const productCost = '{{$data->payment_amount}}';
-
         const cardForm = mercadopago.cardForm({
             amount: productCost,
             autoMount: true,
@@ -151,7 +148,6 @@
                 onSubmit: event => {
                     event.preventDefault();
                     document.getElementById("loading-message").style.display = "block";
-
                     const {
                         paymentMethodId,
                         issuerId,
@@ -162,7 +158,6 @@
                         identificationNumber,
                         identificationType,
                     } = cardForm.getCardFormData();
-
                     fetch("{{route('mercadopago.make_payment', ['payment_id' => $data->id])}}", {
                         method: "POST",
                         headers: {

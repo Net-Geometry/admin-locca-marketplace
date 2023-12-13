@@ -9,7 +9,6 @@
             margin-bottom: 10px;
         }
     </style>
-       {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" /> --}}
        <link rel="stylesheet" href="{{ asset('public/assets/admin/vendor/swiper/swiper-bundle.min.css')}}" />
 @endpush
 
@@ -18,9 +17,6 @@
         <!-- Page Header -->
         <div class="page-header d-flex justify-content-between">
             <h1 class="page-header-title">
-                {{-- <span class="page-header-icon">
-                    <img src="{{asset('public/assets/admin/img/business-setup.png')}}" class="w--22" alt="">
-                </span> --}}
                 <span>{{translate('system_addons')}}</span>
             </h1>
             <div class="cursor-pointer text-primary d-flex align-items-center gap-3 font-weight-bolder"  data-toggle="modal" data-target="#settingModal">
@@ -82,8 +78,8 @@
                             <!-- Drag & Drop Upload -->
                             <div class="uploadDnD">
                                 <div class="form-group inputDnD">
-                                    <input type="file" name="file_upload" class="form-control-file text--primary font-weight-bold"
-                                    id="inputFile" onchange="readUrl(this)" accept=".zip" data-title="Drag & drop file or Browse file">
+                                    <input type="file" name="file_upload" class="form-control-file text--primary font-weight-bold read-file"
+                                    id="inputFile" accept=".zip" data-title="Drag & drop file or Browse file">
                                 </div>
                             </div>
 
@@ -102,16 +98,7 @@
                                 </div>
                             </div>
                         </div>
-                        {{-- <div class="col-sm-6 col-lg-5 col-xl-4 col-xxl-9">
-                            <div class="pl-sm-5">
-                                <h5 class="mb-3 d-flex">Instructions</h5>
-                                <ul class="pl-3 d-flex flex-column gap-2 instructions-list">
-                                    <li>Maximum file size 50 MB</li>
-                                    <li>Have to upload zip file</li>
-                                    <li>Have to upload zip file</li>
-                                </ul>
-                            </div>
-                        </div> --}}
+
                         @php($condition_one=str_replace('MB','',ini_get('upload_max_filesize'))>=20 && str_replace('MB','',ini_get('upload_max_filesize'))>=20)
                         @php($condition_two=str_replace('MB','',ini_get('post_max_size'))>=20 && str_replace('MB','',ini_get('post_max_size'))>=20)
                         <div class="col-sm-6 col-lg-5 col-xl-4 col-xxl-9">
@@ -133,28 +120,15 @@
                             </div>
                         </div>
                         <div class="col-12">
-                            @if($condition_one && $condition_two)
-                                <div class="d-flex justify-content-end mt-3">
-                                    <button type="button"
-                                        onclick="zip_upload()"
-                                        class="btn btn--primary px-4" id="upload_theme">{{translate('upload')}}</button>
-                                </div>
-                            @endif
+                            <div class="d-flex justify-content-end mt-3">
+                                <button type="button"
+                                    class="btn btn--primary px-4 zip-upload" id="upload_theme">{{translate('upload')}}</button>
+                            </div>
                         </div>
                     </div>
                 </form>
             </div>
         </div>
-
-        <!-- Modal Buttons Card -->
-        {{-- <div class="card my-5">
-            <div class="card-body">
-                <!-- Activated Theme trigger -->
-                <button type="button" class="btn btn--primary" data-toggle="modal" data-target="#activatedThemeModal">
-                Activated Theme modal
-                </button>
-            </div>
-        </div> --}}
 
         <!-- Theme Items -->
         <div class="row g-1 g-sm-2">
@@ -193,7 +167,7 @@
                                                 <p class="mb-5">{{ translate('once_you_delete') }}, {{ translate('you_will_lost_the_this') .' '.$data['name']  }}</p>
                                                 <div class="btn--container justify-content-center mb-3">
                                                     <button type="button" class="fs-16 btn btn-secondary px-sm-5" data-dismiss="modal">{{ translate('cancel') }}</button>
-                                                    <button type="submit" class="fs-16 btn btn-danger px-sm-5" data-dismiss="modal" onclick="theme_delete('{{$addon}}')">{{ translate('delete') }}</button>
+                                                    <button type="submit" class="fs-16 btn btn-danger px-sm-5 theme-delete" data-dismiss="modal" data-path="{{$addon}}">{{ translate('delete') }}</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -227,7 +201,7 @@
                                                 @endif
                                                 <div class="btn--container justify-content-center mb-3">
                                                     <button type="button" class="fs-16 btn btn-secondary px-sm-5" data-dismiss="modal">{{ translate('no') }}</button>
-                                                    <button type="button" class="fs-16 btn btn--primary px-sm-5" data-dismiss="modal" onclick="publish_addon('{{$addon}}')">{{ translate('yes') }}</button>
+                                                    <button type="button" class="fs-16 btn btn--primary px-sm-5 publish-addon" data-path="{{$addon}}" data-dismiss="modal">{{ translate('yes') }}</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -274,21 +248,20 @@
 @endsection
 
 @push('script_2')
-<script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
 <script href="{{ asset('public/assets/admin/vendor/swiper/swiper-bundle.min.js')}}"></script>
 
 <script>
     $("img.svg").each(function () {
-    var $img = jQuery(this);
-    var imgID = $img.attr("id");
-    var imgClass = $img.attr("class");
-    var imgURL = $img.attr("src");
+    let $img = jQuery(this);
+    let imgID = $img.attr("id");
+    let imgClass = $img.attr("class");
+    let imgURL = $img.attr("src");
 
     jQuery.get(
       imgURL,
       function (data) {
         // Get the SVG tag, ignore the rest
-        var $svg = jQuery(data).find("svg");
+        let $svg = jQuery(data).find("svg");
 
         // Add replaced image's ID to the new SVG
         if (typeof imgID !== "undefined") {
@@ -320,32 +293,31 @@
       "xml"
     );
   });
-</script>
 
-    <script>
-        function readUrl(input) {
-            if (input.files && input.files[0]) {
-                let reader = new FileReader();
-                reader.onload = (e) => {
-                    let imgData = e.target.result;
-                    let imgName = input.files[0].name;
-                    input.setAttribute("data-title", imgName);
-                    // console.log(e.target.result);
+        $(document).ready(function () {
+            $('.read-file').on('change', function () {
+                readUrl(this);
+            });
+            function readUrl(input) {
+                if (input.files && input.files[0]) {
+                    let reader = new FileReader();
+                    reader.onload = (e) => {
+                        let imgName = input.files[0].name;
+                        input.setAttribute("data-title", imgName);
+                    };
+                    reader.readAsDataURL(input.files[0]);
                 }
-                reader.readAsDataURL(input.files[0]);
             }
-        }
-    </script>
-    <script>
+        });
 
-        function zip_upload(){
+        $('.zip-upload').on('click', function () {
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
 
-            var formData = new FormData(document.getElementById('theme_form'));
+            let formData = new FormData(document.getElementById('theme_form'));
             $.ajax({
                 type: 'POST',
                 url: "{{route('admin.business-settings.system-addon.upload')}}",
@@ -353,13 +325,13 @@
                 processData: false,
                 contentType: false,
                 xhr: function() {
-                    var xhr = new window.XMLHttpRequest();
+                    let xhr = new window.XMLHttpRequest();
                     $('#progress-bar').show();
 
                     // Listen to the upload progress event
                     xhr.upload.addEventListener("progress", function(e) {
                         if (e.lengthComputable) {
-                            var percentage = Math.round((e.loaded * 100) / e.total);
+                            let percentage = Math.round((e.loaded * 100) / e.total);
                             $("#uploadProgress").val(percentage);
                             $("#progress-label").text(percentage + "%");
                         }
@@ -389,9 +361,10 @@
                     $('#upload_theme').removeAttr('disabled');
                 },
             });
-        }
+        })
 
-        function publish_addon(path) {
+    $('.publish-addon').on('click', function () {
+        let path = $(this).data('path');
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -409,7 +382,7 @@
                             $('#activateData').empty().html(data.view);
                         } else {
                             if (data.errors) {
-                                for (var i = 0; i < data.errors.length; i++) {
+                                for (let i = 0; i < data.errors.length; i++) {
                                     toastr.error(data.errors[i].message, {
                                         CloseButton: true,
                                         ProgressBar: true
@@ -427,9 +400,10 @@
                         }
                     }
                 });
-            }
+            })
 
-            function theme_delete(path){
+        $('.theme-delete').on('click', function () {
+            let path = $(this).data('path');
                 $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -464,9 +438,9 @@
                     $('#loading').hide();
                 },
             });
-        }
+        })
 
-        var swiper = new Swiper(".mySwiper", {
+        let swiper = new Swiper(".mySwiper", {
             pagination: {
                 el: ".swiper-pagination",
                 dynamicBullets: true,

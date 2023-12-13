@@ -139,8 +139,15 @@
                                                 <input type="file" name="banner_image"  hidden>
                                             </div>
                                             @if (isset($banner_image?->value))
-                                            <span id="banner_image" class="remove_image_button"
-                                            onclick="toogleStatusModal(event,'banner_image','mail-success','mail-warning','{{translate('Important!')}}','{{translate('Warning!')}}',`<p>{{translate('Are_you_sure_you_want_to_remove_this_image')}}</p>`,`<p>{{translate('Are_you_sure_you_want_to_remove_this_image.')}}</p>`)"
+                                            <span id="banner_image" class="remove_image_button dynamic-checkbox"
+                                                  data-id="banner_image"
+                                                  data-type="status"
+                                                  data-image-on="{{asset('/public/assets/admin/img/modal')}}/mail-success"
+                                                  data-image-off="{{asset('/public/assets/admin/img/modal')}}/mail-warning"
+                                                  data-title-on="{{translate('Important!')}}"
+                                                  data-title-off="{{translate('Warning!')}}"
+                                                  data-text-on="<p>{{translate('Are_you_sure_you_want_to_remove_this_image')}}</p>"
+                                                  data-text-off="<p>{{translate('Are_you_sure_you_want_to_remove_this_image.')}}</p>"
                                             >
                                             <i class="tio-clear"></i></span>
                                             @endif
@@ -398,7 +405,7 @@
                             @endif
                             <div class="btn--container justify-content-end mt-3">
                                 <button type="reset" class="btn btn--reset">{{ translate('Reset') }}</button>
-                                <button type="submit" onclick=""
+                                <button type="submit"
                                     class="btn btn--primary mb-2">{{ translate('Save') }}</button>
                             </div>
                         </div>
@@ -419,62 +426,5 @@
     </form>
 @endsection
 @push('script_2')
-<script>
-    $(document).ready(function() {
-        "use strict"
-        $(".__upload-img, .upload-img-4, .upload-img-2, .upload-img-5, .upload-img-1, .upload-img").each(function(){
-            var targetedImage = $(this).find('.img');
-            var targetedImageSrc = $(this).find('.img img');
-            function proPicURL(input) {
-                if (input.files && input.files[0]) {
-                    var uploadedFile = new FileReader();
-                    uploadedFile.onload = function (e) {
-                        targetedImageSrc.attr('src', e.target.result);
-                        targetedImage.addClass('image-loaded');
-                        targetedImage.hide();
-                        targetedImage.fadeIn(650);
-                    }
-                    uploadedFile.readAsDataURL(input.files[0]);
-                }
-            }
-            $(this).find('input').on('change', function () {
-                proPicURL(this);
-            })
-        })
-    });
-</script>
-    <script>
-        $(".lang_link").click(function(e) {
-            e.preventDefault();
-            $(".lang_link").removeClass('active');
-            $(".lang_form").addClass('d-none');
-            $(this).addClass('active');
-
-            let form_id = this.id;
-            let lang = form_id.substring(0, form_id.length - 5);
-
-            console.log(lang);
-
-            $("#" + lang + "-form").removeClass('d-none');
-            $("#" + lang + "-form1").removeClass('d-none');
-            if (lang == '{{ $defaultLang }}') {
-                $(".from_part_2").removeClass('d-none');
-            }
-            if (lang == 'default') {
-                $(".default-form").removeClass('d-none');
-            } else {
-                $(".from_part_2").addClass('d-none');
-            }
-        });
-        $(".form-check-input").click(function() {
-            console.log($(this).val());
-            if ($(this).val() == 'image') {
-                $("#image").removeClass('d-none');
-                $("#video").addClass('d-none');
-            } else {
-                $("#video").removeClass('d-none');
-                $("#image").addClass('d-none');
-            }
-        });
-    </script>
+    <script src="{{asset('public/assets/admin')}}/js/view-pages/other-banners.js"></script>
 @endpush

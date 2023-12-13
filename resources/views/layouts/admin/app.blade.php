@@ -503,6 +503,15 @@
     function emailModalClose() {
         $('#email-modal').hide();
     }
+    function emailModalShow() {
+        $('#email-modal').show();
+    }
+    $('.route-alert').on('click',function (){
+        let route = $(this).data('url');
+        let message = $(this).data('message');
+        let title = $(this).data('title');
+        route_alert(route, message,title);
+    })
     // function emailModalShow() {
     //     $('#email-modal').show();
     // }
@@ -622,11 +631,29 @@
         location.href = nurl;
     }
 
+    $(".payment-method-filter").on("change", function () {
+        const id = $(this).val();
+        const url = $(this).data('url');
+        var nurl = new URL(url);
+        nurl.searchParams.set('payment_method_id', id);
+        location.href = nurl;
+    });
+
     function set_payment_method_filter(url, id) {
         var nurl = new URL(url);
         nurl.searchParams.set('payment_method_id', id);
         location.href = nurl;
     }
+
+    $(".set-filter").on("change", function () {
+        const id = $(this).val();
+        const url = $(this).data('url');
+        const filter_by = $(this).data('filter');
+        var nurl = new URL(url);
+        nurl.searchParams.set(filter_by, id);
+        location.href = nurl;
+        tour.next();
+    });
 
     function set_filter(url, id, filter_by) {
         var nurl = new URL(url);

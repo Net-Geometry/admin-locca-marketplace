@@ -55,8 +55,7 @@
                                                     </label>
                                                     <input type="text" name="title[]" id="default_title"
                                                         class="form-control" maxlength="100" placeholder="{{ translate('messages.ex_:_new_flash_sale') }}"
-
-                                                        oninvalid="document.getElementById('en-link').click()">
+                                                    >
                                                 </div>
                                                 <input type="hidden" name="lang[]" value="default">
                                             </div>
@@ -69,8 +68,7 @@
                                                         ({{ strtoupper($lang) }})
                                                     </label>
                                                     <input type="text" maxlength="100" name="title[]" id="{{ $lang }}_title"
-                                                        class="form-control" placeholder="{{ translate('messages.ex_:_new_flash_sale') }}"
-                                                        oninvalid="document.getElementById('en-link').click()">
+                                                        class="form-control" placeholder="{{ translate('messages.ex_:_new_flash_sale') }}">
                                                 </div>
                                                 <input type="hidden" name="lang[]" value="{{ $lang }}">
                                             </div>
@@ -197,19 +195,22 @@
                                     </td>
                                     <td class="text-center">
                                         <label class="toggle-switch toggle-switch-sm" for="is_publish-{{$flash_sale['id']}}">
-                                            <input type="checkbox" class="toggle-switch-input" onclick="toogleStatusModal(event,'is_publish-{{$flash_sale['id']}}','zone-is_publish-on.png','zone-is_publish-off.png','{{translate('Want_to_publish_this_flash_sale?')}}','{{translate('Want_to_hide_this_flash_sale?')}}',`<p>{{translate('If_you_publish_this_flash_sale,_Customers_can_see_all_stores_&_products_available_under_this_flash_sale_from_the_Customer_App_&_Website._other_flash_sales_will_be_turned_off.')}}</p>`,`<p>{{translate('If_you_hide_this_flash_sale,_Customers_Will_NOT_see_all_stores_&_products_available_under_this_flash_sale_from_the_Customer_App_&_Website.')}}</p>`)" id="is_publish-{{$flash_sale['id']}}" {{$flash_sale->is_publish?'checked':''}}>
+                                            <input type="checkbox" class="toggle-switch-input dynamic-checkbox" {{$flash_sale->is_publish?'checked':''}}
+                                                    data-id="is_publish-{{$flash_sale['id']}}"
+                                                   data-type="status"
+                                                   data-image-on='{{asset('/public/assets/admin/img/modal')}}/zone-is_publish-on.png'
+                                                   data-image-off="{{asset('/public/assets/admin/img/modal')}}/zone-is_publish-off.png"
+                                                   data-title-on="{{translate('Want_to_publish_this_flash_sale?')}}"
+                                                   data-title-off="{{translate('Want_to_hide_this_flash_sale?')}}"
+                                                   data-text-on="<p>{{translate('If_you_publish_this_flash_sale,_Customers_can_see_all_stores_&_products_available_under_this_flash_sale_from_the_Customer_App_&_Website._other_flash_sales_will_be_turned_off.')}}</p>"
+                                                   data-text-off="<p>{{translate('If_you_hide_this_flash_sale,_Customers_Will_NOT_see_all_stores_&_products_available_under_this_flash_sale_from_the_Customer_App_&_Website.')}}</p>"
+                                                   id="is_publish-{{$flash_sale['id']}}">
                                             <span class="toggle-switch-label mx-auto">
                                                 <span class="toggle-switch-indicator"></span>
                                             </span>
                                         </label>
                                         <form action="{{route('admin.flash-sale.publish',[$flash_sale['id'],$flash_sale->is_publish?0:1])}}" method="get" id="is_publish-{{$flash_sale['id']}}_form">
                                         </form>
-                                        {{-- <label class="toggle-switch toggle-switch-sm" for="publishCheckbox{{$flash_sale->id}}">
-                                            <input type="checkbox" onclick="location.href='{{route('admin.flash-sale.publish',[$flash_sale['id'],$flash_sale->is_publish?0:1])}}'"class="toggle-switch-input" id="publishCheckbox{{$flash_sale->id}}" {{$flash_sale->is_publish?'checked':''}}>
-                                            <span class="toggle-switch-label mx-auto">
-                                                <span class="toggle-switch-indicator"></span>
-                                            </span>
-                                        </label> --}}
                                     </td>
                                     <td>
                                         <div class="btn--container justify-content-center">
@@ -217,7 +218,7 @@
                                             </a>
                                             <a class="btn action-btn btn--primary btn-outline-primary" href="{{route('admin.flash-sale.edit',[$flash_sale['id']])}}" title="{{translate('messages.edit')}}"><i class="tio-edit"></i>
                                             </a>
-                                            <a class="btn action-btn btn--danger btn-outline-danger" href="javascript:" onclick="form_alert('flash_sale-{{$flash_sale['id']}}','{{ translate('Want to delete this flash_sale ?') }}')" title="{{translate('messages.delete')}}"><i class="tio-delete-outlined"></i>
+                                            <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:" data-id="flash_sale-{{$flash_sale['id']}}" data-message="{{ translate('Want to delete this flash_sale ?') }}" title="{{translate('messages.delete')}}"><i class="tio-delete-outlined"></i>
                                             </a>
                                             <form action="{{route('admin.flash-sale.delete',[$flash_sale['id']])}}"
                                                     method="post" id="flash_sale-{{$flash_sale['id']}}">
@@ -253,63 +254,5 @@
 @endsection
 
 @push('script_2')
-
-<script>
-        $("#from").on("change", function () {
-            $('#to').attr('min',$(this).val());
-        });
-
-        $("#to").on("change", function () {
-            $('#from').attr('max',$(this).val());
-        });
-        $(document).on('ready', function () {
-            $('#from').attr('min',(new Date()).toISOString().split('T')[0]);
-            $('#to').attr('min',(new Date()).toISOString().split('T')[0]);
-            // INITIALIZATION OF DATATABLES
-            // =======================================================
-            var datatable = $.HSCore.components.HSDatatables.init($('#columnSearchDatatable'));
-
-            $('#column1_search').on('keyup', function () {
-                datatable
-                    .columns(1)
-                    .search(this.value)
-                    .draw();
-            });
-
-
-            $('#column3_search').on('change', function () {
-                datatable
-                    .columns(2)
-                    .search(this.value)
-                    .draw();
-            });
-
-
-            // INITIALIZATION OF SELECT2
-            // =======================================================
-            $('.js-select2-custom').each(function () {
-                var select2 = $.HSCore.components.HSSelect2.init($(this));
-            });
-        });
-
-            $(".lang_link").click(function(e){
-                e.preventDefault();
-                $(".lang_link").removeClass('active');
-                $(".lang_form").addClass('d-none');
-                $(this).addClass('active');
-
-                let form_id = this.id;
-                let lang = form_id.substring(0, form_id.length - 5);
-                console.log(lang);
-                $("#"+lang+"-form").removeClass('d-none');
-                if(lang == '{{$defaultLang}}')
-                {
-                    $("#from_part_2").removeClass('d-none');
-                }
-                else
-                {
-                    $("#from_part_2").addClass('d-none');
-                }
-            })
-        </script>
+    <script src="{{asset('public/assets/admin')}}/js/view-pages/flash-sale-index.js"></script>
 @endpush
