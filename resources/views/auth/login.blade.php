@@ -60,23 +60,8 @@
                         <div class="mb-5">
                             <h2 class="title">{{ translate($role) }} {{translate('messages.signin')}}</h2>
                             <div>{{translate('messages.welcome_back_login_to_your_panel') }}.</div>
-                            {{-- <span class="badge badge-soft-info">( {{translate('messages.select_your_role_&_login')}} )</span> --}}
                         </div>
                     </div>
-
-                    <!-- Form Group -->
-                    {{-- <div class="js-form-message form-group py-0">
-                        <label class="input-label text-capitalize" for="signinSrEmail">{{translate('messages.your_role')}}</label>
-
-                        <select name="role" class="form-control form-control-lg py-0" id="role-select" required data-msg="Please select a role.">
-                            <option value="">{{ translate('select_role') }}</option>
-                            <option value="admin" {{ $role == 'admin' ? 'selected' : '' }}>{{ translate('messages.admin') }}</option>
-                            <option value="admin_employee" {{ $role == 'admin_employee' ? 'selected' : '' }}>{{ translate('admin_employee') }}</option>
-                            <option value="vendor" {{ $role == 'vendor' ? 'selected' : '' }}>{{ translate('messages.store') }}</option>
-                            <option value="vendor_employee" {{ $role == 'vendor_employee' ? 'selected' : '' }}>{{ translate('store_employee') }}</option>
-                        </select>
-                    </div> --}}
-                    <!-- End Form Group -->
 
                     <!-- Form Group -->
                     <div class="js-form-message form-group">
@@ -143,7 +128,6 @@
                         <!-- End forget password -->
                     </div>
 
-                    {{-- recaptcha --}}
                     @php($recaptcha = \App\CentralLogics\Helpers::get_business_settings('recaptcha'))
                     @if(isset($recaptcha) && $recaptcha['status'] == 1)
                         <div id="recaptcha_element" class="w-100" data-type="image"></div>
@@ -152,16 +136,13 @@
                         <div class="row p-2" id="reload-captcha">
                             <div class="col-6 pr-0">
                                 <input type="text" class="form-control form-control-lg border-0" name="custome_recaptcha"
-                                        id="custome_recaptcha" required placeholder="{{\translate('Enter recaptcha value')}}" autocomplete="off" value="{{env('APP_MODE')=='dev'? session('six_captcha'):''}}">
+                                        id="custome_recaptcha" required placeholder="{{translate('Enter recaptcha value')}}" autocomplete="off" value="{{env('APP_MODE')=='dev'? session('six_captcha'):''}}">
                             </div>
                             <div class="col-6 bg-white rounded d-flex">
                                 <img src="<?php echo $custome_recaptcha->inline(); ?>" class="rounded w-100" />
-                                <div class="p-3 pr-0 capcha-spin" onclick="reloadCaptcha()">
+                                <div class="p-3 pr-0 capcha-spin reloadCaptcha">
                                     <i class="tio-cached"></i>
                                 </div>
-                                {{-- <a class="" onclick="reloadCaptcha()">
-                                    <i class="tio-edit"></i>
-                                </a> --}}
                             </div>
                         </div>
                     @endif
@@ -178,7 +159,7 @@
                             <span class="d-block"><strong>Password</strong> : 12345678</span>
                         </div>
                         <div>
-                            <button class="btn action-btn btn--primary m-0" onclick="copy_cred()"><i class="tio-copy"></i>
+                            <button class="btn action-btn btn--primary m-0 copy_cred"><i class="tio-copy"></i>
                             </button>
                         </div>
                     </div>
@@ -192,7 +173,7 @@
                             <span class="d-block"><strong>Password</strong> : 12345678</span>
                         </div>
                         <div>
-                            <button class="btn action-btn btn--primary m-0" onclick="copy_cred2()"><i class="tio-copy"></i>
+                            <button class="btn action-btn btn--primary m-0 copy_cred2"><i class="tio-copy"></i>
                             </button>
                         </div>
                     </div>
@@ -228,9 +209,6 @@
             <a class="btn btn-lg btn-block btn--primary mt-3" href="{{route('reset-password')}}">
                 {{ translate('Send Mail') }}
             </a>
-            {{-- <button class="btn btn-lg btn-block btn--primary mt-3" type="button">
-                Send Mail
-            </button> --}}
         </div>
       </div>
     </div>
@@ -370,7 +348,8 @@
 {{-- recaptcha scripts end --}}
 
 <script>
-        function reloadCaptcha() {
+
+            $('.reloadCaptcha').on('click', function () {
             $.ajax({
                 url: "{{ route('reload-captcha') }}",
                 type: "GET",
@@ -387,27 +366,27 @@
                     $('.capcha-spin').removeClass('active')
                 }
             });
-        }
+        })
 </script>
 
 @if(env('APP_MODE')=='demo')
     <script>
-        function copy_cred() {
+        $('.copy_cred').on('click', function () {
             $('#signinSrEmail').val('admin@admin.com');
             $('#signupSrPassword').val('12345678');
             toastr.success('Copied successfully!', 'Success!', {
                 CloseButton: true,
                 ProgressBar: true
             });
-        }
-        function copy_cred2() {
+        })
+        $('.copy_cred2').on('click', function () {
             $('#signinSrEmail').val('test.restaurant@gmail.com');
             $('#signupSrPassword').val('12345678');
             toastr.success('Copied successfully!', 'Success!', {
                 CloseButton: true,
                 ProgressBar: true
             });
-        }
+        })
     </script>
 @endif
 

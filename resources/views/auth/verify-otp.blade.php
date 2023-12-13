@@ -48,7 +48,7 @@
         <div class="auth-wrapper-right">
             <label class="badge badge-soft-success __login-badge">
                 {{translate('messages.software_version')}} : {{env('SOFTWARE_VERSION')}}
-            </label>          
+            </label>
             <!-- OTP Card -->
             <div class="otp-card">
                 <div class="text-center">
@@ -77,13 +77,13 @@
                     </div>
                     <div class="d-flex justify-content-between">
                         <span>{{ translate('Didn`t receive the code?') }}</span>
-                        <button class="text--primary resend" onclick="otp_resent()" disabled id="otp-button">{{ translate('Resend_it') }}
+                        <button class="text--primary resend otp_resent" disabled id="otp-button">{{ translate('Resend_it') }}
                             {{-- (<span class="verifyCounter"></span>s) --}}
                         </button>
                     </div>
                 </div>
             </div>
-            <!-- End Card -->               
+            <!-- End Card -->
         </div>
     </div>
 </main>
@@ -110,8 +110,7 @@
 
 <script>
 
-    function otp_resent(token) {
-
+    $('.otp_resent').on('click', function () {
         $.ajax({
             url: "{{ route('otp_resent') }}",
             type: "GET",
@@ -142,7 +141,7 @@
                 }
             }
         });
-    }
+    })
 </script>
 
 <!-- IE Support -->
