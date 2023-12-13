@@ -707,10 +707,6 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                 Route::post('discount', 'POSController@update_discount')->name('discount');
                 Route::get('customers', 'POSController@get_customers')->name('customers');
                 Route::post('order', 'POSController@place_order')->name('order');
-                Route::get('orders', 'POSController@order_list')->name('orders');
-                Route::post('search', 'POSController@search')->name('search');
-                Route::get('order-details/{id}', 'POSController@order_details')->name('order-details');
-                Route::get('invoice/{id}', 'POSController@generate_invoice');
                 Route::post('customer-store', 'POSController@customer_store')->name('customer-store');
                 Route::post('add-delivery-address', 'POSController@addDeliveryInfo')->name('add-delivery-address');
                 Route::get('data', 'POSController@extra_charge')->name('extra_charge');

@@ -600,6 +600,15 @@
         });
     }
 
+
+    $(document).on('click', '.quick-View-Cart-Item', function () {
+        $(this).data('product-id');
+        $(this).data('item-key');
+
+
+    });
+
+
     function checkAddToCartValidity() {
         var names = {};
         $('#add-to-cart-form input:radio').each(function () { // find unique names

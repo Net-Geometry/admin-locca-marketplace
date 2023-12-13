@@ -41,7 +41,7 @@
                     $addon_price += $cartItem['addon_price'];
                     ?>
                 <tr>
-                    <td class="media align-items-center cursor-pointer" onclick="quickViewCartItem({{$cartItem['id']}}, {{$key}})">
+                    <td class="media align-items-center cursor-pointer quick-View-Cart-Item" data-id="{{$cartItem['id']}}" data-key="{{$key}}">
                         <img class="avatar avatar-sm mr-1" src="{{asset('storage/app/public/product')}}/{{$cartItem['image']}}"
                                 onerror="this.src='{{asset('public/assets/admin/img/100x100/2.png')}}'" alt="{{$cartItem['name']}} image">
                         <div class="media-body">
@@ -336,32 +336,7 @@
         </div>
     </div>
 
-    <!-- Duplicate of Delivery Information Modal -->
-    {{-- <div class="modal fade" id="insertPayableAmount" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">{{translate('messages.payment')}}</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form>
-                        @csrf
-                        <input type="hidden" name="user_id" id="customer_id">
-                        <div class="form-group">
-                            <label class="input-label" for="">{{translate('messages.amount')}}({{\App\CentralLogics\Helpers::currency_symbol()}})</label>
-                            <input type="number" class="form-control" name="amount" min="0" step="0.01" value="{{round($total+$total_tax_amount, 2)}}">
-                        </div>
-                        <div class="text-right">
-                            <button class="btn btn-sm btn--primary" type="submit">{{translate('messages.submit')}}</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div> --}}
+
 
 
     <script>
