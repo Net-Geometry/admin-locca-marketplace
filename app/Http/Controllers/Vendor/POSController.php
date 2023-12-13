@@ -710,15 +710,15 @@ class POSController extends Controller
     //     }
     // }
 
-    // public function generate_invoice($id)
-    // {
-    //     $order = Order::where('id', $id)->first();
+    public function generate_invoice($id)
+    {
+        $order = Order::where('id', $id)->first();
 
-    //     return response()->json([
-    //         'success' => 1,
-    //         'view' => view('vendor-views.pos.order.invoice', compact('order'))->render(),
-    //     ]);
-    // }
+        return response()->json([
+            'success' => 1,
+            'view' => view('vendor-views.pos.order.invoice', compact('order'))->render(),
+        ]);
+    }
 
     public function customer_store(Request $request)
     {

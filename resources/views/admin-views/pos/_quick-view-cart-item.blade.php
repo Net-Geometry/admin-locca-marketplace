@@ -56,8 +56,7 @@
                         id="set-discount-amount">{{ \App\CentralLogics\Helpers::get_product_discount($product) }}</strong>
                 </div>
             @endif
-            <!-- Product panels-->
-            {{-- <div class="sharethis-inline-share-buttons"></div> --}}
+
         </div>
     </div>
     <div class="row pt-2">
@@ -75,9 +74,8 @@
                     @if ($product->food_variations)
 
                         @php($values = [])
-                        @php($selected_variations = $cart_item['variations'])
+                        @php($selected_variations =  $cart_item['variations'] ?? []  )
                         @php($names = [])
-                        @php($values = [])
                         @foreach ($selected_variations as $key => $var)
                             @if (isset($var['values']))
                                 @php($names[$key] = $var['name'])
@@ -89,8 +87,8 @@
 
                         @foreach (json_decode($product->food_variations) as $key => $choice)
                             @if (isset($choice->name) && isset($choice->values))
-                                <div class="h3 p-0 pt-2">{{ $choice->name }} <small style="font-size: 12px"
-                                        class="text-muted">
+                                <div class="h3 p-0 pt-2">{{ $choice->name }} <small
+                                        class="text-muted initial--18">
                                         ({{ $choice->required == 'on' ? translate('messages.Required') : translate('messages.optional') }})
                                     </small>
                                 </div>
@@ -130,12 +128,12 @@
                         @endforeach
                     @endif
                 @else
-                    @foreach (json_decode($product->choice_options) as $key => $choice)
+                    @foreach (json_decode($product->choice_options) as $choice)
                         <div class="h3 p-0 pt-2">{{ $choice->title }}
                         </div>
 
                         <div class="d-flex justify-content-left flex-wrap">
-                            @foreach ($choice->options as $key => $option)
+                            @foreach ($choice->options as $option)
                                 <input class="btn-check" type="radio" id="{{ $choice->name }}-{{ $option }}"
                                     name="{{ $choice->name }}" value="{{ $option }}"
                                     {{ trim($option) == $cart_item[$choice->name] ? 'checked' : '' }}
@@ -173,17 +171,21 @@
                     </div>
                 </div>
                 @php($add_ons = json_decode($product->add_ons))
+
                 @if (count($add_ons) > 0 && $add_ons[0])
                     <div class="h3 p-0 pt-2">{{ translate('messages.addon') }}
                     </div>
-
                     <div class="d-flex justify-content-left flex-wrap">
+                            @php ( $selected_addons= array_combine($cart_item['add_ons'] ,  $cart_item['add_on_qtys']) )
                         @foreach (\App\Models\AddOn::withoutGlobalScope(\App\Scopes\StoreScope::class)->whereIn('id', $add_ons)->active()->get() as $key => $add_on)
+
+
+
                             <div class="flex-column pb-2">
                                 <input type="hidden" name="addon-price{{ $add_on->id }}"
                                     value="{{ $add_on->price }}">
-                                <input class="btn-check addon-chek" type="checkbox" id="addon{{ $key }}"
-                                    onchange="addon_quantity_input_toggle(event)" name="addon_id[]"
+                                <input class="btn-check addon-chek addon-quantity-input-toggle" type="checkbox" id="addon{{ $key }}"
+                                     name="addon_id[]"
                                     value="{{ $add_on->id }}"
                                     {{ in_array($add_on->id, $cart_item['add_ons']) ? 'checked' : '' }}
                                     autocomplete="off">
@@ -192,17 +194,17 @@
                                     for="addon{{ $key }}">{{ Str::limit($add_on->name, 20, '...') }} <br>
                                     {{ \App\CentralLogics\Helpers::format_currency($add_on->price) }}</label>
                                 <label
-                                    class="input-group addon-quantity-input mx-1 shadow bg-white rounded px-1 @if (in_array($add_on->id, $cart_item['add_ons'])) visibility-visible @endif"
+                                    class="input-group addon-quantity-input mx-1 shadow bg-white rounded px-1" @if (in_array($add_on->id, $cart_item['add_ons'])) style="visibility:visible;" @endif
                                     for="addon{{ $key }}">
-                                    <button class="btn btn-sm h-100 text-dark px-0" type="button"
-                                        onclick="this.parentNode.querySelector('input[type=number]').stepDown(), getVariantPrice()"><i
+                                    <button class="btn btn-sm h-100 text-dark px-0 decrease-button" data-id="{{ $add_on->id }}"  type="button"
+                                        ><i
                                             class="tio-remove  font-weight-bold"></i></button>
-                                    <input type="number" name="addon-quantity{{ $add_on->id }}"
-                                        class="form-control text-center border-0 h-100" placeholder="1"
-                                        value="{{ array_search($add_on->id, $cart_item['add_ons']) ? $cart_item['add_on_qtys'][array_search($add_on->id, $cart_item['add_ons'])] : 1 }}"
-                                        min="1" max="{{ $product->maximum_cart_quantity?? '9999999999' }}" readonly>
-                                    <button class="btn btn-sm h-100 text-dark px-0" type="button"
-                                        onclick="this.parentNode.querySelector('input[type=number]').stepUp(), getVariantPrice()"><i
+                                    <input id="addon_quantity_input{{ $add_on->id }}"   type="number" name="addon-quantity{{ $add_on->id }}"
+                                        class="form-control text-center border-0 h-100 " placeholder="1"
+                                        value="{{ in_array($add_on->id, $cart_item['add_ons']) ?  $selected_addons[$add_on->id]  : 1 }}"
+                                        min="1" max="9999999999" readonly>
+                                    <button class="btn btn-sm h-100 text-dark px-0 increase-button" data-id="{{ $add_on->id }}" type="button"
+                                        ><i
                                             class="tio-add  font-weight-bold"></i></button>
                                 </label>
                             </div>
@@ -221,7 +223,7 @@
                 </div>
 
                 <div class="d-flex justify-content-center mt-2">
-                    <button class="btn btn--primary h--45px" onclick="addToCart()" type="button">
+                    <button class="btn btn--primary h--45px add-To-Cart" type="button">
                         <i class="tio-shopping-cart"></i>
                         {{ translate('messages.update') }}
                     </button>
@@ -232,9 +234,11 @@
 </div>
 
 <script type="text/javascript">
+    "use strict";
     cartQuantityInitialize();
     getVariantPrice();
     $('#add-to-cart-form input').on('change', function() {
         getVariantPrice();
     });
 </script>
+

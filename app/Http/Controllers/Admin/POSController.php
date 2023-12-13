@@ -700,6 +700,22 @@ class POSController extends Controller
     }
 
 
+    public function generate_invoice($id)
+    {
+        $order = Order::with(['details', 'store' => function ($query) {
+            return $query->withCount('orders');
+        }, 'details.item' => function ($query) {
+            return $query->withoutGlobalScope(StoreScope::class);
+        }, 'details.campaign' => function ($query) {
+            return $query->withoutGlobalScope(StoreScope::class);
+        }])->where('id', $id)->first();
+
+        return response()->json([
+            'success' => 1,
+            'view' => view('admin-views.pos.invoice', compact('order'))->render(),
+        ]);
+    }
+
     public function customer_store(Request $request)
     {
         $request->validate([
