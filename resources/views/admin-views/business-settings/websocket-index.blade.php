@@ -2,9 +2,6 @@
 
 @section('title', translate('messages.websocket_settings'))
 
-@push('css_or_js')
-@endpush
-
 @section('content')
     <div class="content container-fluid">
         <!-- Page Header -->
@@ -46,7 +43,17 @@
                                                         alt="{{ translate('messages.websocket_toggle') }}"> *
                                                 </span>
                                             </span>
-                                            <input type="checkbox" onclick="toogleModal(event,'websocket','schedule-on.png','schedule-off.png','{{translate('messages.Want_to_enable')}} <strong>{{translate('messages.websocket_?')}}</strong>','{{translate('messages.Want_to_disable')}} <strong>{{translate('messages.websocket_?')}}</strong>',`<p>{{translate('messages.If_you_enable_this,_customers_can_choose_websocket_during_checkout.')}}</p>`,`<p>{{translate('messages.If_you_disable_this,_the_websocket_feature_will_be_hidden.')}}</p>`)" class="toggle-switch-input" value="1"
+                                            <input type="checkbox"
+                                                   data-id="websocket"
+                                                   data-type="toggle"
+                                                   data-image-on="{{ asset('/public/assets/admin/img/modal/schedule-on.png') }}"
+                                                   data-image-off="{{ asset('/public/assets/admin/img/modal/schedule-off.png') }}"
+                                                   data-title-on="{{translate('messages.Want_to_enable')}} <strong>{{translate('messages.websocket_?')}}</strong>"
+                                                   data-title-off="{{translate('messages.Want_to_disable')}} <strong>{{translate('messages.websocket_?')}}</strong>'"
+                                                   data-text-on="<p>{{ translate('messages.If_you_enable_this,_customers_can_choose_websocket_during_checkout.') }}</p>"
+                                                   data-text-off="<p>{{ translate('messages.If_you_disable_this,_the_websocket_feature_will_be_hidden.') }}</p>"
+                                                   class="status toggle-switch-input dynamic-checkbox-toggle"
+                                                   value="1"
                                                 name="websocket_status" id="websocket"
                                                 {{ $websocket == 1 ? 'checked' : '' }}>
                                             <span class="toggle-switch-label text">
@@ -59,8 +66,8 @@
                                     @php($websocket_url = \App\Models\BusinessSetting::where('key', 'websocket_url')->first())
                                     <div class="form-group mb-0">
                                         <label class="form-label"
-                                            for="exampleFormControlInput1">{{ translate('messages.websocket_url') }}</label>
-                                        <input type="text" name="websocket_url" value="{{ $websocket_url->value ?? '' }}"
+                                            for="websocket_url">{{ translate('messages.websocket_url') }}</label>
+                                        <input type="text" id="websocket_url" name="websocket_url" value="{{ $websocket_url->value ?? '' }}"
                                             class="form-control" placeholder="{{ translate('messages.Ex_:_ws://178.128.117.0') }}"
                                             required>
                                     </div>
@@ -69,8 +76,8 @@
                                 @php($websocket_port = \App\Models\BusinessSetting::where('key', 'websocket_port')->first())
                                     <div class="form-group mb-0">
                                         <label class="form-label"
-                                            for="exampleFormControlInput1">{{ translate('messages.websocket_port') }}</label>
-                                        <input type="websocket_port" value="{{ $websocket_port->value ?? '' }}" name="websocket_port"
+                                            for="websocket_port">{{ translate('messages.websocket_port') }}</label>
+                                        <input id="websocket_port" type="number" value="{{ $websocket_port->value ?? '' }}" name="websocket_port"
                                             class="form-control" placeholder="{{ translate('messages.Ex_:_6001') }}" required>
                                     </div>
                                 </div>
@@ -86,104 +93,3 @@
         </form>
     </div>
 @endsection
-@push('script_2')
-    <script>
-        $(document).on('ready', function() {
-            @if (isset($data['wallet_status']) && $data['wallet_status'] != 1)
-                $('.wallet-section').hide();
-            @endif
-            @if (isset($data['loyalty_point_status']) && $data['loyalty_point_status'] != 1)
-                $('.loyalty-point-section').hide();
-            @endif
-            @if (isset($data['ref_earning_status']) && $data['ref_earning_status'] != 1)
-                $('.referrer-earning').hide();
-            @endif
-
-            // INITIALIZATION OF DATATABLES
-            // =======================================================
-            var datatable = $.HSCore.components.HSDatatables.init($('#columnSearchDatatable'));
-            $('#column1_search').on('keyup', function() {
-                datatable
-                    .columns(1)
-                    .search(this.value)
-                    .draw();
-            });
-
-
-            $('#column3_search').on('change', function() {
-                datatable
-                    .columns(2)
-                    .search(this.value)
-                    .draw();
-            });
-        });
-    </script>
-
-    <script>
-        function section_visibility(id) {
-            console.log($('#' + id).data('section'));
-            if ($('#' + id).is(':checked')) {
-                console.log('checked');
-                $('.' + $('#' + id).data('section')).show();
-            } else {
-                console.log('unchecked');
-                $('.' + $('#' + id).data('section')).hide();
-            }
-        }
-        $('#add_fund').on('submit', function(e) {
-
-            e.preventDefault();
-            var formData = new FormData(this);
-
-            Swal.fire({
-                title: '{{ translate('messages.are_you_sure') }}',
-                text: '{{ translate('messages.you_want_to_add_fund') }}' + $('#amount').val() +
-                    ' {{ \App\CentralLogics\Helpers::currency_code() . ' ' . translate('messages.to') }} ' + $(
-                        '#customer option:selected').text() + '{{ translate('messages.to_wallet') }}',
-                type: 'info',
-                showCancelButton: true,
-                cancelButtonColor: 'default',
-                confirmButtonColor: 'primary',
-                cancelButtonText: '{{ translate('messages.no') }}',
-                confirmButtonText: '{{ translate('messages.send') }}',
-                reverseButtons: true
-            }).then((result) => {
-                if (result.value) {
-                    $.ajaxSetup({
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        }
-                    });
-                    $.post({
-                        url: '{{ route('admin.customer.wallet.add-fund') }}',
-                        data: formData,
-                        cache: false,
-                        contentType: false,
-                        processData: false,
-                        success: function(data) {
-                            if (data.errors) {
-                                for (var i = 0; i < data.errors.length; i++) {
-                                    toastr.error(data.errors[i].message, {
-                                        CloseButton: true,
-                                        ProgressBar: true
-                                    });
-                                }
-                            } else {
-                                toastr.success(
-                                    '{{ translate('messages.fund_added_successfully') }}', {
-                                        CloseButton: true,
-                                        ProgressBar: true
-                                    });
-                            }
-                        }
-                    });
-                }
-            })
-        })
-    </script>
-        <script>
-            $('#reset_btn').click(function(){
-                location.reload(true);
-            })
-        </script>
-@endpush

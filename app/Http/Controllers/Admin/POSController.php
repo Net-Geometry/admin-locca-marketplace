@@ -699,51 +699,6 @@ class POSController extends Controller
         return back();
     }
 
-    public function order_list()
-    {
-        $orders = Order::with(['customer'])
-        ->pos()
-        ->latest()
-        ->paginate(config('default_pagination'));
-
-        return view('admin-views.pos.order.list', compact('orders'));
-    }
-
-    public function search(Request $request){
-        $key = explode(' ', $request['search']);
-        $orders=Order::where(function ($q) use ($key) {
-            foreach ($key as $value) {
-                $q->orWhere('id', 'like', "%{$value}%")
-                    ->orWhere('order_status', 'like', "%{$value}%")
-                    ->orWhere('transaction_reference', 'like', "%{$value}%");
-            }
-        })->pos()->limit(100)->get();
-        $parcel_order =  false;
-        return response()->json([
-            'view'=>view('admin-views.pos.order.partials._table',compact('orders', 'parcel_order'))->render()
-        ]);
-    }
-
-    public function order_details($id)
-    {
-        $order = Order::with(['details', 'store' => function ($query) {
-            return $query->withCount('orders');
-        }, 'customer' => function ($query) {
-            return $query->withCount('orders');
-        }, 'delivery_man' => function ($query) {
-            return $query->withCount('orders');
-        }, 'details.item' => function ($query) {
-            return $query->withoutGlobalScope(StoreScope::class);
-        }, 'details.campaign' => function ($query) {
-            return $query->withoutGlobalScope(StoreScope::class);
-        }])->where(['id' => $id])->first();
-        if (isset($order)) {
-            return view('admin-views.pos.order.order-view', compact('order'));
-        } else {
-            Toastr::info(translate('No more orders!'));
-            return back();
-        }
-    }
 
     public function generate_invoice($id)
     {
@@ -757,7 +712,7 @@ class POSController extends Controller
 
         return response()->json([
             'success' => 1,
-            'view' => view('admin-views.pos.order.invoice', compact('order'))->render(),
+            'view' => view('admin-views.pos.invoice', compact('order'))->render(),
         ]);
     }
 
@@ -796,14 +751,6 @@ class POSController extends Controller
     public function extra_charge(Request $request)
     {
         $distance_data = $request->distancMileResult ?? 1;
-
-        // $data= Vehicle::where('starting_coverage_area','<=' , $distance )->where('maximum_coverage_area','>=', $distance)->first();
-        // if(!$data){
-        //     $data= Vehicle::where('maximum_coverage_area','>=', $distance)->first();
-        //         if(!$data){
-        //         $data= Vehicle::orderBy('maximum_coverage_area','DESC')->first();
-        //         }
-        // }
         $data=  DMVehicle::active()->where(function($query)use($distance_data) {
                 $query->where('starting_coverage_area','<=' , $distance_data )->where('maximum_coverage_area','>=', $distance_data);
             })

@@ -113,5 +113,27 @@
             $(".default-form").removeClass('d-none');
         }
     });
+    
+$('[data-slide]').on('click', function(){
+    let serial = $(this).data('slide')
+    $(`.tab--content .item`).removeClass('show')
+    $(`.tab--content .item:nth-child(${serial})`).addClass('show')
+})
+$(document).ready(function() {
+    $('.add-required-attribute').on('click', function() {
+        let status = $(this).attr('id');
+        let name = $(this).data('textarea-name');
+        if ($('#' + status).is(':checked')) {
+            $('#en-form .' + name).attr('required', true);
+        } else {
+            $('#en-form .' + name).removeAttr('required');
+        }
+    });
+});
 
-
+$(document).on('click', '.location-reload', function () {
+    location.reload();
+});
+$(document).on('click', '.redirect-url', function () {
+    location.href=$(this).data('url');
+});

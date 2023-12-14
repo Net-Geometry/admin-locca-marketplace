@@ -124,10 +124,19 @@
                                                 @if ($lang == 'en')
                                                         <label class="switch--custom-label toggle-switch d-flex align-items-center"
                                                             for="pending_status">
-                                                            <input type="checkbox" onclick="toogleModal(event,'pending_status','pending-order-on.png','pending-order-off.png','{{translate('By Turning ON Order ')}} <strong>{{translate('pending Message')}}</strong>','{{translate('By Turning OFF Order ')}} <strong>{{translate('pending Message')}}</strong>',`<p>{{translate('User will get a clear message to know that order is pending')}}</p>`,`<p>{{translate('User can not get a clear message to know that order is pending or not')}}</p>`)" name="pending_status" class="toggle-switch-input"
-                                                            @if ($lang == 'en')
-                                                            onchange="add_required_attribute('pending_status', 'pending_messages')"
-                                                            @endif
+                                                            <input type="checkbox"
+                                                                   data-id="pending_status"
+                                                                   data-type="toggle"
+                                                                   data-image-on="{{ asset('/public/assets/admin/img/modal/pending-order-on.png') }}"
+                                                                   data-image-off="{{ asset('/public/assets/admin/img/modal/pending-order-off.png') }}"
+                                                                   data-title-on="{{ translate('By Turning ON Order') }} <strong>{{ translate('pending Message') }}</strong>"
+                                                                   data-title-off="{{ translate('By Turning OFF Order') }} <strong>{{ translate('pending Message') }}</strong>"
+                                                                   data-text-on="<p>{{ translate('User will get a clear message to know that the order is pending.') }}</p>"
+                                                                   data-text-off="<p>{{ translate('User cannot get a clear message to know that the order is pending or not.') }}</p>"
+                                                                   class="status toggle-switch-input add-required-attribute  dynamic-checkbox-toggle"
+                                                                   name="pending_status"
+
+                                                                   data-textarea-name="pending_messages"
                                                                 value="1" id="pending_status" {{$data?($data['status']==1?'checked':''):''}}>
                                                             <span class="toggle-switch-label">
                                                                 <span class="toggle-switch-indicator"></span>
@@ -136,7 +145,7 @@
 
                                                 @endif
                                                 </div>
-                                                <textarea name="pending_message[]"  placeholder="{{translate('Write your message')}}" class="form-control pending_messages" oninvalid="document.getElementById('en-link').click()"
+                                                <textarea name="pending_message[]" placeholder="{{translate('Write your message')}}" class="form-control pending_messages" oninvalid="document.getElementById('en-link').click()"
                                                 @if ($lang == 'en')
                                                 {{$data?($data['status']==1?'required':''):''}}
                                                 @endif
@@ -168,8 +177,19 @@
                                                     @if ($lang == 'en')
                                                         <label class="switch--custom-label toggle-switch d-flex align-items-center mb-0"
                                                             for="confirm_status">
-                                                            <input type="checkbox" onclick="toogleModal(event,'confirm_status','pending-order-on.png','pending-order-off.png','{{translate('By Turning ON Order ')}} <strong>{{translate('confirmation Message')}}</strong>','{{translate('By Turning OFF Order ')}} <strong>{{translate('confirmation Message')}}</strong>',`<p>{{translate('User will get a clear message to know that order is confirmed')}}</p>`,`<p>{{translate('User can not get a clear message to know that order is confirmed or not')}}</p>`)" name="confirm_status" class="toggle-switch-input"
-                                                            onchange="add_required_attribute('confirm_status', 'confirm_message')"
+                                                            <input type="checkbox"
+                                                                   data-id="confirm_status"
+                                                                   data-type="toggle"
+                                                                   data-image-on="{{ asset('/public/assets/admin/img/modal/pending-order-on.png') }}"
+                                                                   data-image-off="{{ asset('/public/assets/admin/img/modal/pending-order-off.png') }}"
+                                                                   data-title-on="{{ translate('By Turning ON Order') }} <strong>{{ translate('confirmation Message') }}</strong>"
+                                                                   data-title-off="{{ translate('By Turning OFF Order') }} <strong>{{ translate('confirmation Message') }}</strong>"
+                                                                   data-text-on="<p>{{ translate('User will get a clear message to know that the order is confirmed.') }}</p>"
+                                                                   data-text-off="<p>{{ translate('User cannot get a clear message to know that the order is confirmed or not.') }}</p>"
+                                                                   class="status toggle-switch-input add-required-attribute  dynamic-checkbox-toggle"
+                                                                   name="confirm_status"
+                                                                   data-textarea-name="confirm_message"
+
                                                                 value="1" id="confirm_status" {{$data?($data['status']==1?'checked':''):''}}>
                                                             <span class="toggle-switch-label">
                                                                 <span class="toggle-switch-indicator"></span>
@@ -212,8 +232,19 @@
                                                     </span>
                                                     @if ($lang == 'en')
                                                         <label class="switch--custom-label toggle-switch d-flex align-items-center mb-0" for="processing_status">
-                                                            <input type="checkbox" onclick="toogleModal(event,'processing_status','pending-order-on.png','pending-order-off.png','{{translate('By Turning ON Order ')}} <strong>{{translate('processing Message')}}</strong>','{{translate('By Turning OFF Order ')}} <strong>{{translate('processing Message')}}</strong>',`<p>{{translate('User will get a clear message to know that order is processing')}}</p>`,`<p>{{translate('User can not get a clear message to know that order is processing or not')}}</p>`)" name="processing_status" class="toggle-switch-input"
-                                                            onchange="add_required_attribute('processing_status', 'processing_message')" value="1" id="processing_status" {{$data?($data['status']==1?'checked':''):''}}>
+                                                            <input type="checkbox"
+                                                                   data-id="processing_status"
+                                                                   data-type="toggle"
+                                                                   data-image-on="{{ asset('/public/assets/admin/img/modal/pending-order-on.png') }}"
+                                                                   data-image-off="{{ asset('/public/assets/admin/img/modal/pending-order-off.png') }}"
+                                                                   data-title-on="{{ translate('By Turning ON Order') }} <strong>{{ translate('processing Message') }}</strong>"
+                                                                   data-title-off="{{ translate('By Turning OFF Order') }} <strong>{{ translate('processing Message') }}</strong>"
+                                                                   data-text-on="<p>{{ translate('User will get a clear message to know that the order is processing.') }}</p>"
+                                                                   data-text-off="<p>{{ translate('User cannot get a clear message to know that the order is processing or not.') }}</p>"
+                                                                   class="status toggle-switch-input add-required-attribute  dynamic-checkbox-toggle"
+                                                                   name="processing_status"
+                                                                   data-textarea-name="processing_message"
+                                                                   value="1" id="processing_status" {{$data?($data['status']==1?'checked':''):''}}>
                                                             <span class="toggle-switch-label">
                                                                 <span class="toggle-switch-indicator"></span>
                                                             </span>
@@ -252,10 +283,20 @@
                                                     @if ($lang == 'en')
                                                         <label class="switch--custom-label toggle-switch d-flex align-items-center mb-0"
                                                                 for="order_handover_message_status">
-                                                            <input type="checkbox" onclick="toogleModal(event,'order_handover_message_status','pending-order-on.png','pending-order-off.png','{{translate('By Turning ON Order ')}} <strong>{{translate('Order Handover Message')}}</strong>','{{translate('By Turning OFF Order ')}} <strong>{{translate('Order Handover Message')}}</strong>',`<p>{{translate('User will get a clear message to know that order is handovered')}}</p>`,`<p>{{translate('User can not get a clear message to know that order is handovered or not')}}</p>`)" name="order_handover_message_status"
-                                                                    class="toggle-switch-input"
-                                                                    onchange="add_required_attribute('order_handover_message_status', 'order_handover_message')"
-                                                                    value="1"
+                                                            <input type="checkbox"
+                                                                   data-id="order_handover_message_status"
+                                                                   data-type="toggle"
+                                                                   data-image-on="{{ asset('/public/assets/admin/img/modal/pending-order-on.png') }}"
+                                                                   data-image-off="{{ asset('/public/assets/admin/img/modal/pending-order-off.png') }}"
+                                                                   data-title-on="{{ translate('By Turning ON Order') }} <strong>{{ translate('Order Handover Message') }}</strong>"
+                                                                   data-title-off="{{ translate('By Turning OFF Order') }} <strong>{{ translate('Order Handover Message') }}</strong>"
+                                                                   data-text-on="<p>{{ translate('User will get a clear message to know that the order is handovered.') }}</p>"
+                                                                   data-text-off="<p>{{ translate('User cannot get a clear message to know that the order is handovered or not.') }}</p>"
+                                                                   class="status toggle-switch-input add-required-attribute  dynamic-checkbox-toggle"
+
+                                                                   name="order_handover_message_status"
+                                                                   data-textarea-name="order_handover_message"
+                                                                   value="1"
                                                                     id="order_handover_message_status" {{$data?($data['status']==1?'checked':''):''}}>
                                                             <span class="toggle-switch-label">
                                                                 <span class="toggle-switch-indicator"></span>
@@ -298,9 +339,18 @@
                                                     @if ($lang == 'en')
                                                         <label class="switch--custom-label toggle-switch d-flex align-items-center mb-0"
                                                                 for="out_for_delivery">
-                                                            <input type="checkbox" onclick="toogleModal(event,'out_for_delivery','pending-order-on.png','pending-order-off.png','{{translate('By Turning ON Order ')}} <strong>{{translate('Out For Delivery Message')}}</strong>','{{translate('By Turning OFF Order ')}} <strong>{{translate('Out For Delivery Message')}}</strong>',`<p>{{translate('User will get a clear message to know that order is out for delivery')}}</p>`,`<p>{{translate('User can not get a clear message to know that order is out for delivery or not')}}</p>`)" name="out_for_delivery_status"
-                                                                    class="toggle-switch-input"
-                                                                    onchange="add_required_attribute('out_for_delivery', 'out_for_delivery_message')"
+                                                            <input type="checkbox"
+                                                                   data-id="out_for_delivery"
+                                                                   data-type="toggle"
+                                                                   data-image-on="{{ asset('/public/assets/admin/img/modal/pending-order-on.png') }}"
+                                                                   data-image-off="{{ asset('/public/assets/admin/img/modal/pending-order-off.png') }}"
+                                                                   data-title-on="{{ translate('By Turning ON Order') }} <strong>{{ translate('Out For Delivery Message') }}</strong>"
+                                                                   data-title-off="{{ translate('By Turning OFF Order') }} <strong>{{ translate('Out For Delivery Message') }}</strong>"
+                                                                   data-text-on="<p>{{ translate('User will get a clear message to know that the order is out for delivery.') }}</p>"
+                                                                   data-text-off="<p>{{ translate('User cannot get a clear message to know that the order is out for delivery or not.') }}</p>"
+                                                                   class="status toggle-switch-input add-required-attribute  dynamic-checkbox-toggle"
+                                                                   name="out_for_delivery_status"
+                                                                   data-textarea-name="out_for_delivery_message"
                                                                     value="1" id="out_for_delivery" {{$data?($data['status']==1?'checked':''):''}}>
                                                             <span class="toggle-switch-label">
                                                                 <span class="toggle-switch-indicator"></span>
@@ -339,9 +389,18 @@
                                                     @if ($lang == 'en')
                                                         <label class="switch--custom-label toggle-switch d-flex align-items-center mb-0"
                                                                 for="delivered_status">
-                                                            <input type="checkbox" onclick="toogleModal(event,'delivered_status','pending-order-on.png','pending-order-off.png','{{translate('By Turning ON Order ')}} <strong>{{translate('delivered Message')}}</strong>','{{translate('By Turning OFF Order ')}} <strong>{{translate('delivered Message')}}</strong>',`<p>{{translate('User will get a clear message to know that order is delivered')}}</p>`,`<p>{{translate('User can not get a clear message to know that order is delivered or not')}}</p>`)" name="delivered_status"
-                                                                    class="toggle-switch-input"
-                                                                    onchange="add_required_attribute('delivered_status', 'delivered_message')"
+                                                            <input type="checkbox"
+                                                                   data-id="delivered_status"
+                                                                   data-type="toggle"
+                                                                   data-image-on="{{ asset('/public/assets/admin/img/modal/pending-order-on.png') }}"
+                                                                   data-image-off="{{ asset('/public/assets/admin/img/modal/pending-order-off.png') }}"
+                                                                   data-title-on="{{ translate('By Turning ON Order') }} <strong>{{ translate('delivered Message') }}</strong>"
+                                                                   data-title-off="{{ translate('By Turning OFF Order') }} <strong>{{ translate('delivered Message') }}</strong>"
+                                                                   data-text-on="<p>{{ translate('User will get a clear message to know that the order is delivered.') }}</p>"
+                                                                   data-text-off="<p>{{ translate('User cannot get a clear message to know that the order is delivered or not.') }}</p>"
+                                                                   class="status toggle-switch-input add-required-attribute  dynamic-checkbox-toggle"
+                                                                   name="delivered_status"
+                                                                   data-textarea-name="delivered_message"
                                                                     value="1" id="delivered_status" {{$data?($data['status']==1?'checked':''):''}}>
                                                             <span class="toggle-switch-label">
                                                                 <span class="toggle-switch-indicator"></span>
@@ -381,9 +440,18 @@
                                                     @if ($lang == 'en')
                                                         <label class="switch--custom-label toggle-switch d-flex align-items-center mb-0"
                                                             for="delivery_boy_assign">
-                                                            <input type="checkbox" onclick="toogleModal(event,'delivery_boy_assign','pending-order-on.png','pending-order-off.png','{{translate('By Turning ON Order ')}} <strong>{{translate('Delivery Man Assigned Message')}}</strong>','{{translate('By Turning OFF Order ')}} <strong>{{translate('Delivery Man Assigned Message')}}</strong>',`<p>{{translate('User will get a clear message to know that order is assigned to delivery man')}}</p>`,`<p>{{translate('User can not get a clear message to know that order is assigned to delivery man or not')}}</p>`)" name="delivery_boy_assign_status"
-                                                                class="toggle-switch-input"
-                                                                onchange="add_required_attribute('delivery_boy_assign', 'delivery_boy_assign_message')"
+                                                            <input type="checkbox"
+                                                                   data-id="delivery_boy_assign"
+                                                                   data-type="toggle"
+                                                                   data-image-on="{{ asset('/public/assets/admin/img/modal/pending-order-on.png') }}"
+                                                                   data-image-off="{{ asset('/public/assets/admin/img/modal/pending-order-off.png') }}"
+                                                                   data-title-on="{{ translate('By Turning ON Order') }} <strong>{{ translate('Delivery Man Assigned Message') }}</strong>"
+                                                                   data-title-off="{{ translate('By Turning OFF Order') }} <strong>{{ translate('Delivery Man Assigned Message') }}</strong>"
+                                                                   data-text-on="<p>{{ translate('User will get a clear message to know that the order is assigned to a delivery man.') }}</p>"
+                                                                   data-text-off="<p>{{ translate('User cannot get a clear message to know that the order is assigned to a delivery man or not.') }}</p>"
+                                                                   class="status toggle-switch-input add-required-attribute  dynamic-checkbox-toggle"
+                                                                   data-textarea-name="delivery_boy_assign_message"
+                                                                   name="delivery_boy_assign_status"
                                                                 value="1"
                                                                 id="delivery_boy_assign" {{$data?($data['status']==1?'checked':''):''}}>
                                                             <span class="toggle-switch-label">
@@ -425,9 +493,18 @@
                                                     @if ($lang == 'en')
                                                         <label class="switch--custom-label toggle-switch d-flex align-items-center mb-0"
                                                                 for="delivery_boy_delivered">
-                                                            <input type="checkbox" onclick="toogleModal(event,'delivery_boy_delivered','pending-order-on.png','pending-order-off.png','{{translate('By Turning ON Order ')}} <strong>{{translate('Delivery Man Delivered Message')}}</strong>','{{translate('By Turning OFF Order ')}} <strong>{{translate('Delivery Man Delivered Message')}}</strong>',`<p>{{translate('User will get a clear message to know that order is delivered by delivery man')}}</p>`,`<p>{{translate('User can not get a clear message to know that order is delivered by delivery man or not')}}</p>`)" name="delivery_boy_delivered_status"
-                                                                    class="toggle-switch-input"
-                                                                    onchange="add_required_attribute('delivery_boy_delivered', 'delivery_boy_delivered_message')"
+                                                            <input type="checkbox"
+                                                                   data-id="delivery_boy_delivered"
+                                                                   data-type="toggle"
+                                                                   data-image-on="{{ asset('/public/assets/admin/img/modal/pending-order-on.png') }}"
+                                                                   data-image-off="{{ asset('/public/assets/admin/img/modal/pending-order-off.png') }}"
+                                                                   data-title-on="{{ translate('By Turning ON Order') }} <strong>{{ translate('Delivery Man Delivered Message') }}</strong>"
+                                                                   data-title-off="{{ translate('By Turning OFF Order') }} <strong>{{ translate('Delivery Man Delivered Message') }}</strong>"
+                                                                   data-text-on="<p>{{ translate('User will get a clear message to know that the order is delivered by a delivery man.') }}</p>"
+                                                                   data-text-off="<p>{{ translate('User cannot get a clear message to know that the order is delivered by a delivery man or not.') }}</p>"
+                                                                   class="status toggle-switch-input add-required-attribute  dynamic-checkbox-toggle"
+                                                                   name="delivery_boy_delivered_status"
+                                                                   data-textarea-name="delivery_boy_delivered_message"
                                                                     value="1"
                                                                     id="delivery_boy_delivered" {{$data?($data['status']==1?'checked':''):''}}>
                                                             <span class="toggle-switch-label">
@@ -470,9 +547,18 @@
                                                     @if ($lang == 'en')
                                                         <label class="switch--custom-label toggle-switch d-flex align-items-center mb-0"
                                                                 for="order_cancled_message">
-                                                            <input type="checkbox" onclick="toogleModal(event,'order_cancled_message','pending-order-on.png','pending-order-off.png','{{translate('By Turning ON Order ')}} <strong>{{translate('canceled Message')}}</strong>','{{translate('By Turning OFF Order ')}} <strong>{{translate('canceled Message')}}</strong>',`<p>{{translate('User will get a clear message to know that order is canceled')}}</p>`,`<p>{{translate('User can not get a clear message to know that order is canceled or not')}}</p>`)" name="order_cancled_message_status"
-                                                                    class="toggle-switch-input"
-                                                                    onchange="add_required_attribute('order_cancled_message', 'order_cancled_message')"
+                                                            <input type="checkbox"
+                                                                   name="order_cancled_message_status"
+                                                                   data-id="order_cancled_message"
+                                                                   data-type="toggle"
+                                                                   data-image-on="{{ asset('/public/assets/admin/img/modal/pending-order-on.png') }}"
+                                                                   data-image-off="{{ asset('/public/assets/admin/img/modal/pending-order-off.png') }}"
+                                                                   data-title-on="{{ translate('By Turning ON Order') }} <strong>{{ translate('canceled Message') }}</strong>"
+                                                                   data-title-off="{{ translate('By Turning OFF Order') }} <strong>{{ translate('canceled Message') }}</strong>"
+                                                                   data-text-on="<p>{{ translate('User will get a clear message to know that the order is canceled.') }}</p>"
+                                                                   data-text-off="<p>{{ translate('User cannot get a clear message to know that the order is canceled or not.') }}</p>"
+                                                                   class="status toggle-switch-input add-required-attribute  dynamic-checkbox-toggle"
+                                                                   data-textarea-name="order_cancled_message"
                                                                     value="1"
                                                                     id="order_cancled_message" {{$data?($data['status']==1?'checked':''):''}}>
                                                             <span class="toggle-switch-label">
@@ -514,10 +600,19 @@
                                                         @if ($lang == 'en')
                                                             <label class="switch--custom-label toggle-switch d-flex align-items-center mb-0"
                                                             for="order_refunded_message">
-                                                                <input type="checkbox" onclick="toogleModal(event,'order_refunded_message','pending-order-on.png','pending-order-off.png','{{translate('By Turning ON Order ')}} <strong>{{translate('Order Refund Message')}}</strong>','{{translate('By Turning OFF Order ')}} <strong>{{translate('Order Refund Message')}}</strong>',`<p>{{translate('User will get a clear message to know that order is refunded')}}</p>`,`<p>{{translate('User can not get a clear message to know that order is refunded or not')}}</p>`)" name="order_refunded_message_status"
-                                                                        class="toggle-switch-input"
-                                                                        onchange="add_required_attribute('order_refunded_message', 'order_refunded_message')"
-                                                                        value="1"
+                                                                <input type="checkbox"
+                                                                       data-id="order_refunded_message"
+                                                                       data-type="toggle"
+                                                                       data-image-on="{{ asset('/public/assets/admin/img/modal/pending-order-on.png') }}"
+                                                                       data-image-off="{{ asset('/public/assets/admin/img/modal/pending-order-off.png') }}"
+                                                                       data-title-on="{{ translate('By Turning ON Order') }} <strong>{{ translate('Order Refund Message') }}</strong>"
+                                                                       data-title-off="{{ translate('By Turning OFF Order') }} <strong>{{ translate('Order Refund Message') }}</strong>"
+                                                                       data-text-on="<p>{{ translate('User will get a clear message to know that the order is refunded.') }}</p>"
+                                                                       data-text-off="<p>{{ translate('User cannot get a clear message to know that the order is refunded or not.') }}</p>"
+                                                                       class="status toggle-switch-input add-required-attribute  dynamic-checkbox-toggle"
+                                                                       name="order_refunded_message_status"
+                                                                       data-textarea-name="order_refunded_message"
+                                                                       value="1"
                                                                         id="order_refunded_message" {{$data?($data['status']==1?'checked':''):''}}>
                                                                 <span class="toggle-switch-label">
                                                                     <span class="toggle-switch-indicator"></span>
@@ -556,9 +651,20 @@
                                                         @if ($lang == 'en')
                                                             <label class="switch--custom-label toggle-switch d-flex align-items-center mb-0"
                                                             for="refund_request_canceled">
-                                                                <input type="checkbox" onclick="toogleModal(event,'refund_request_canceled','pending-order-on.png','pending-order-off.png','{{translate('By Turning ON Order ')}} <strong>{{translate('Refund Request Cancel Message')}}</strong>','{{translate('By Turning OFF Order ')}} <strong>{{translate('Refund Request Cancel Message')}}</strong>',`<p>{{translate('User will get a clear message to know that orders refund request canceled')}}</p>`,`<p>{{translate('User can not get a clear message to know that orders refund request canceled or not')}}</p>`)" name="refund_request_canceled_status"
-                                                                        class="toggle-switch-input"
-                                                                        onchange="add_required_attribute('refund_request_canceled', 'refund_request_canceled')"
+                                                                <input type="checkbox"
+                                                                       data-id="refund_request_canceled"
+                                                                       data-type="toggle"
+                                                                       data-image-on="{{ asset('/public/assets/admin/img/modal/pending-order-on.png') }}"
+                                                                       data-image-off="{{ asset('/public/assets/admin/img/modal/pending-order-off.png') }}"
+                                                                       data-title-on="{{ translate('By Turning ON Order') }} <strong>{{ translate('Refund Request Cancel Message') }}</strong>"
+                                                                       data-title-off="{{ translate('By Turning OFF Order') }} <strong>{{ translate('Refund Request Cancel Message') }}</strong>"
+                                                                       data-text-on="<p>{{ translate('User will get a clear message to know that the order\'s refund request is canceled.') }}</p>"
+                                                                       data-text-off="<p>{{ translate('User cannot get a clear message to know that the order\'s refund request is canceled or not.') }}</p>"
+                                                                       class="status toggle-switch-input add-required-attribute  dynamic-checkbox-toggle"
+
+                                                                       name="refund_request_canceled_status"
+
+                                                                       data-textarea-name="refund_request_canceled"
                                                                         value="1"
                                                                         id="refund_request_canceled" {{$data?($data['status']==1?'checked':''):''}}>
                                                                 <span class="toggle-switch-label">
@@ -599,9 +705,19 @@
                                                     @if ($lang == 'en')
                                                         <label class="switch--custom-label toggle-switch d-flex align-items-center mb-0"
                                                                 for="offline_order_accept_message">
-                                                            <input type="checkbox" onclick="toogleModal(event,'offline_order_accept_message','pending-order-on.png','pending-order-off.png','{{translate('By Turning ON Offline Order ')}} <strong>{{translate('accept Message')}}</strong>','{{translate('By Turning OFF Offline Order ')}} <strong>{{translate('accept Message')}}</strong>',`<p>{{translate('User will get a clear message to know that offline order is accepted')}}</p>`,`<p>{{translate('User can not get a clear message to know that offline order is accepted or not')}}</p>`)" name="offline_order_accept_message_status"
-                                                                    class="toggle-switch-input"
-                                                                    onchange="add_required_attribute('offline_order_accept_message', 'offline_order_accept_message')"
+                                                            <input type="checkbox"
+
+                                                                   data-id="offline_order_accept_message"
+                                                                   data-type="toggle"
+                                                                   data-image-on="{{ asset('/public/assets/admin/img/modal/pending-order-on.png') }}"
+                                                                   data-image-off="{{ asset('/public/assets/admin/img/modal/pending-order-off.png') }}"
+                                                                   data-title-on="{{ translate('By Turning ON Offline Order') }} <strong>{{ translate('accept Message') }}</strong>"
+                                                                   data-title-off="{{ translate('By Turning OFF Offline Order') }} <strong>{{ translate('accept Message') }}</strong>"
+                                                                   data-text-on="<p>{{ translate('User will get a clear message to know that the offline order is accepted.') }}</p>"
+                                                                   data-text-off="<p>{{ translate('User cannot get a clear message to know that the offline order is accepted or not.') }}</p>"
+                                                                   class="status toggle-switch-input add-required-attribute  dynamic-checkbox-toggle"
+                                                                   name="offline_order_accept_message_status"
+                                                                   data-textarea-name="offline_order_accept_message"
                                                                     value="1"
                                                                     id="offline_order_accept_message" {{$data?($data['status']==1?'checked':''):''}}>
                                                             <span class="toggle-switch-label">
@@ -643,10 +759,19 @@
                                                     @if ($lang == 'en')
                                                         <label class="switch--custom-label toggle-switch d-flex align-items-center mb-0"
                                                                 for="offline_order_deny_message">
-                                                            <input type="checkbox" onclick="toogleModal(event,'offline_order_deny_message','pending-order-on.png','pending-order-off.png','{{translate('By Turning ON Offline Order ')}} <strong>{{translate('deny Message')}}</strong>','{{translate('By Turning OFF Offline Order ')}} <strong>{{translate('deny Message')}}</strong>',`<p>{{translate('User will get a clear message to know that offline order is denied')}}</p>`,`<p>{{translate('User can not get a clear message to know that offline order is denied or not')}}</p>`)" name="offline_order_deny_message_status"
-                                                                    class="toggle-switch-input"
-                                                                    onchange="add_required_attribute('offline_order_deny_message', 'offline_order_deny_message')"
-                                                                    value="1"
+                                                            <input type="checkbox"
+                                                                   data-id="offline_order_deny_message"
+                                                                   data-type="toggle"
+                                                                   data-image-on="{{ asset('/public/assets/admin/img/modal/pending-order-on.png') }}"
+                                                                   data-image-off="{{ asset('/public/assets/admin/img/modal/pending-order-off.png') }}"
+                                                                   data-title-on="{{ translate('By Turning ON Offline Order') }} <strong>{{ translate('deny Message') }}</strong>"
+                                                                   data-title-off="{{ translate('By Turning OFF Offline Order') }} <strong>{{ translate('deny Message') }}</strong>"
+                                                                   data-text-on="<p>{{ translate('User will get a clear message to know that the offline order is denied.') }}</p>"
+                                                                   data-text-off="<p>{{ translate('User cannot get a clear message to know that the offline order is denied or not.') }}</p>"
+                                                                   class="status toggle-switch-input add-required-attribute  dynamic-checkbox-toggle"
+                                                                   name="offline_order_deny_message_status"
+                                                                   data-textarea-name="offline_order_deny_message"
+                                                                   value="1"
                                                                     id="offline_order_deny_message" {{$data?($data['status']==1?'checked':''):''}}>
                                                             <span class="toggle-switch-label">
                                                                 <span class="toggle-switch-indicator"></span>
@@ -678,85 +803,6 @@
             </div>
         </div>
 
-        <!-- Firebase Modal -->
-        <div class="modal fade" id="firebase-modal">
-            <div class="modal-dialog status-warning-modal">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">
-                            <span aria-hidden="true" class="tio-clear"></span>
-                        </button>
-                    </div>
-                    <div class="modal-body pb-5 pt-0">
-                        <div class="single-item-slider owl-carousel">
-                            <div class="item">
-                                <div class="mb-20">
-                                    <div class="text-center">
-                                        <img src="{{asset('/public/assets/admin/img/firebase/slide-1.png')}}" alt="" class="mb-20">
-                                        <h5 class="modal-title">{{translate('Go to Firebase Console')}}</h5>
-                                    </div>
-                                    <ul>
-                                        <li>
-                                            {{translate('Open your web browser and go to the Firebase Console')}}
-                                            <a href="#" class="text--underline">
-                                                {{translate('(https://console.firebase.google.com/)')}}
-                                            </a>
-                                        </li>
-                                        <li>
-                                            {{translate("Select the project for which you want to configure FCM from the Firebase Console dashboard.")}}
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="item">
-                                <div class="mb-20">
-                                    <div class="text-center">
-                                        <img src="{{asset('/public/assets/admin/img/firebase/slide-2.png')}}" alt="" class="mb-20">
-                                        <h5 class="modal-title">{{translate('Navigate to Project Settings')}}</h5>
-                                    </div>
-                                    <ul>
-                                        <li>
-                                            {{translate('In the left-hand menu, click on the "Settings" gear icon, and then select "Project settings" from the dropdown.')}}
-                                        </li>
-                                        <li>
-                                            {{translate('In the Project settings page, click on the "Cloud Messaging" tab from the top menu.')}}
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="item">
-                                <div class="mb-20">
-                                    <div class="text-center">
-                                        <img src="{{asset('/public/assets/admin/img/firebase/slide-3.png')}}" alt="" class="mb-20">
-                                        <h5 class="modal-title">{{translate('Obtain All The Information Asked!')}}</h5>
-                                    </div>
-                                    <ul>
-                                        <li>
-                                            {{translate('In the Firebase Project settings page, click on the "General" tab from the top menu.')}}
-                                        </li>
-                                        <li>
-                                            {{translate('Under the "Your apps" section, click on the "Web" app for which you want to configure FCM.')}}
-                                        </li>
-                                        <li>
-                                            {{translate('Then Obtain API Key, FCM Project ID, Auth Domain, Storage Bucket, Messaging Sender ID.')}}
-                                        </li>
-                                    </ul>
-                                    <p>
-                                        {{translate('Note: Please make sure to use the obtained information securely and in accordance with Firebase and FCM documentation, terms of service, and any applicable laws and regulations.')}}
-                                    </p>
-                                    <div class="btn-wrap">
-                                        <button type="submit" class="btn btn--primary w-100" data-dismiss="modal" data-toggle="modal" data-target="#firebase-modal-2">{{translate('Got It')}}</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="d-flex justify-content-center">
-                            <div class="slide-counter"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
         <!-- Firebase Modal -->
         <div class="modal fade" id="push-notify-modal">
             <div class="modal-dialog status-warning-modal">
@@ -813,97 +859,6 @@
             </div>
         </div>
 
-        <!-- Change Order Status Modal -->
-        <div class="modal fade" id="order-status-modal">
-            <div class="modal-dialog status-warning-modal">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">
-                            <span aria-hidden="true" class="tio-clear"></span>
-                        </button>
-                    </div>
-                    <div class="modal-body pt-0">
-                        <div class="text-center mb-20">
-                            <!-- Warning Content -->
-                            <!-- <img src="{{asset('/public/assets/admin/img/modal/pending-order-off.png')}}" alt="" class="mb-20">
-                            <h5 class="modal-title">{{translate('By Turning OFF Order ')}}<strong class="font-bold">{{translate('Pending Message')}}</strong></h5>
-                            <p class="txt">
-                                {{translate("User can't get a clear message to know that order is pending or not")}}
-                            </p> -->
-                            <!-- Success Content -->
-                            <img src="{{asset('/public/assets/admin/img/modal/pending-order-on.png')}}" alt="" class="mb-20">
-                            <h5 class="modal-title">{{translate('By Turning ON Order ')}} <strong class="font-bold">{{translate('Pending Message')}}</strong></h5>
-                            <p class="txt">
-                                {{translate("User will get a clear message to know that order is pending")}}
-                            </p>
-                        </div>
-                        <div class="btn--container justify-content-center">
-                            <button type="submit" class="btn btn--primary min-w-120" data-dismiss="modal">{{translate('Ok')}}</button>
-                            <button id="reset_btn" type="reset" class="btn btn--cancel min-w-120" data-dismiss="modal">{{translate("Cancel")}}</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 @endsection
 
-@push('script_2')
-
-<script>
-    $('[data-slide]').on('click', function(){
-        let serial = $(this).data('slide')
-        $(`.tab--content .item`).removeClass('show')
-        $(`.tab--content .item:nth-child(${serial})`).addClass('show')
-    })
-</script>
-
-
-<script>
-
-    function checkedFunc() {
-        $('.switch--custom-label .toggle-switch-input').each( function() {
-            if(this.checked) {
-                $(this).closest('.switch--custom-label').addClass('checked')
-            }else {
-                $(this).closest('.switch--custom-label').removeClass('checked')
-            }
-        })
-    }
-    checkedFunc()
-    $('.switch--custom-label .toggle-switch-input').on('change', checkedFunc)
-
-</script>
-<script>
-    $(".lang_link").click(function(e){
-        e.preventDefault();
-        $(".lang_link").removeClass('active');
-        $(".lang_form").addClass('d-none');
-        $(this).addClass('active');
-
-        let form_id = this.id;
-        let lang = form_id.substring(0, form_id.length - 5);
-        console.log(lang);
-        $("#"+lang+"-form").removeClass('d-none');
-        if(lang == '{{$defaultLang}}')
-        {
-            $("#from_part_2").removeClass('d-none');
-        }
-        else
-        {
-            $("#from_part_2").addClass('d-none');
-        }
-    })
-</script>
-
-<script>
-    function add_required_attribute(status, name, lang_en){
-        if($('#'+status).is(':checked')){
-            $('#en-form .'+name).attr('required', true);
-        } else {
-            $('#en-form .'+name).removeAttr('required');
-        }
-    }
-</script>
-
-@endpush

@@ -70,7 +70,7 @@
                     }
                 }
             }
-            
+
             ?>
             <h2>{{ translate('messages.description') }}</h2>
             <span class="d-block text-dark text-break">
@@ -81,7 +81,7 @@
                 <input type="hidden" name="id" value="{{ $product->id }}">
                 @if ($product->module->module_type == 'food')
                     @if ($product->food_variations)
-                        
+
                         @foreach (json_decode($product->food_variations) as $key => $choice)
                             @if (isset($choice->price) == false)
                                 <div class="h3 p-0 pt-2">{{ $choice->name }} <small style="font-size: 12px"
@@ -124,7 +124,7 @@
                         @endforeach
                     @endif
                 @else
-                    @foreach (json_decode($product->choice_options) as $key => $choice)
+                    @foreach (json_decode($product->choice_options) as $choice)
                         <div class="h3 p-0 pt-2">{{ $choice->title }}
                         </div>
 
@@ -173,8 +173,8 @@
                             <div class="flex-column pb-2">
                                 <input type="hidden" name="addon-price{{ $add_on->id }}"
                                     value="{{ $add_on->price }}">
-                                <input class="btn-check addon-chek" type="checkbox" id="addon{{ $key }}"
-                                    onchange="addon_quantity_input_toggle(event)" name="addon_id[]"
+                                <input class="btn-check addon-chek addon-quantity-input-toggle" type="checkbox" id="addon{{ $key }}"
+                                    name="addon_id[]"
                                     value="{{ $add_on->id }}" autocomplete="off">
                                 <label
                                     class="d-flex align-items-center btn btn-sm check-label mx-1 addon-input text-break"
@@ -182,14 +182,14 @@
                                     {{ \App\CentralLogics\Helpers::format_currency($add_on->price) }}</label>
                                 <label class="input-group addon-quantity-input mx-1 shadow bg-white rounded px-1"
                                     for="addon{{ $key }}">
-                                    <button class="btn btn-sm h-100 text-dark px-0" type="button"
-                                        onclick="this.parentNode.querySelector('input[type=number]').stepDown(), getVariantPrice()"><i
+                                    <button class="btn btn-sm h-100 text-dark px-0 decrease-button" data-id="{{ $add_on->id }}" type="button"
+                                       ><i
                                             class="tio-remove  font-weight-bold"></i></button>
-                                    <input type="number" name="addon-quantity{{ $add_on->id }}"
+                                    <input type="number" name="addon-quantity{{ $add_on->id }}" id="addon_quantity_input{{ $add_on->id }}"
                                         class="form-control text-center border-0 h-100" placeholder="1"
-                                        value="1" min="1" max="{{ $product->maximum_cart_quantity?? '9999999999' }}" readonly>
-                                    <button class="btn btn-sm h-100 text-dark px-0" type="button"
-                                        onclick="this.parentNode.querySelector('input[type=number]').stepUp(), getVariantPrice()"><i
+                                        value="1" min="1" max="9999999999" readonly>
+                                    <button class="btn btn-sm h-100 text-dark px-0 increase-button" data-id="{{ $add_on->id }}" type="button"
+                                        ><i
                                             class="tio-add  font-weight-bold"></i></button>
                                 </label>
                             </div>
@@ -208,7 +208,7 @@
                 </div>
 
                 <div class="d-flex justify-content-center mt-2">
-                    <button class="btn btn--primary" onclick="addToCart()" type="button" class="h--45px">
+                    <button class="btn btn--primary add-To-Cart" type="button" class="h--45px">
                         <i class="tio-shopping-cart"></i>
                         {{ translate('messages.add_to_cart') }}
                     </button>
@@ -219,6 +219,7 @@
 </div>
 
 <script type="text/javascript">
+    "use strict";
     cartQuantityInitialize();
     getVariantPrice();
     $('#add-to-cart-form input').on('change', function() {

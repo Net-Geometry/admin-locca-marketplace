@@ -180,48 +180,6 @@
                         </tr>
                         @php($sub_total += $amount)
                         @php($total_tax += $detail['tax_amount'] * $detail['quantity'])
-
-                        {{-- @elseif($detail->campaign)
-                            <tr>
-                                <td class="">
-                                    {{$detail['quantity']}}
-                                </td>
-                                <td class="text-break">
-                                    {{$detail->campaign['title']}} <br>
-                                    @if (count(json_decode($detail['variation'], true)) > 0)
-                                        <strong><u>Variation : </u></strong>
-                                        @foreach (json_decode($detail['variation'], true)[0] as $key1 => $variation)
-                                            <div class="font-size-sm text-body">
-                                                <span>{{$key1}} :  </span>
-                                                <span class="font-weight-bold">{{$key1=='price'?\App\CentralLogics\Helpers::format_currency($variation):$variation}}</span>
-                                            </div>
-                                        @endforeach
-                                    @else
-                                    <div class="font-size-sm text-body">
-                                        <span>{{translate('messages.price')}} :  </span>
-                                        <span class="font-weight-bold">{{\App\CentralLogics\Helpers::format_currency($detail->price)}}</span>
-                                    </div>
-                                    @endif
-
-                                    @foreach (json_decode($detail['add_ons'], true) as $key2 => $addon)
-                                        @if ($key2 == 0)<strong><u>{{translate('messages.price')}} : </u></strong>@endif
-                                        <div class="font-size-sm text-body">
-                                            <span class="text-break">{{$addon['name']}} :  </span>
-                                            <span class="font-weight-bold">
-                                                {{$addon['quantity']}} x {{\App\CentralLogics\Helpers::format_currency($addon['price'])}}
-                                            </span>
-                                        </div>
-                                        @php($add_ons_cost+=$addon['price']*$addon['quantity'])
-                                    @endforeach
-                                </td>
-                                <td class="w-28p">
-                                    @php($amount=($detail['price'])*$detail['quantity'])
-                                    {{\App\CentralLogics\Helpers::format_currency($amount)}}
-                                </td>
-                            </tr>
-                            @php($sub_total+=$amount)
-                            @php($total_tax+=$detail['tax_amount']*$detail['quantity'])
-                        @endif --}}
                     @endforeach
                 @endif
 

@@ -2,9 +2,7 @@
 
 @section('title',translate('messages.terms_and_condition'))
 
-@push('css_or_js')
-    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
-@endpush
+
 
 @section('content')
     <div class="content container-fluid">
@@ -86,21 +84,5 @@
 @endsection
 
 @push('script_2')
-<script src="//cdn.ckeditor.com/4.14.1/standard/ckeditor.js"></script>
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('.ckeditor').ckeditor();
-    });
-</script>
-<script>
-    $(".lang_link").click(function(e){
-        e.preventDefault();
-        $(".lang_link").removeClass('active');
-        $(".lang_form").addClass('d-none');
-        $(this).addClass('active');
-        let form_id = this.id;
-        let lang = form_id.substring(0, form_id.length - 5);
-        $("#"+lang+"-form").removeClass('d-none');
-    });
-</script>
+    <script src="{{asset('public/assets/admin/ckeditor/ckeditor.js')}}"></script>
 @endpush
