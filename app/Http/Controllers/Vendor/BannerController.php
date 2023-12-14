@@ -112,17 +112,17 @@ class BannerController extends Controller
         return back();
     }
 
-    public function search(Request $request){
-        $key = explode(' ', $request['search']);
-        $banners=Banner::where('data',Helpers::get_store_id())->where('created_by','store')->where(function ($q) use ($key) {
-            foreach ($key as $value) {
-                $q->orWhere('title', 'like', "%{$value}%");
-            }
-        })->limit(50)->get();
-        return response()->json([
-            'view'=>view('vendor-views.banner.partials._table',compact('banners'))->render(),
-            'count'=>$banners->count()
-        ]);
-    }
+    // public function search(Request $request){
+    //     $key = explode(' ', $request['search']);
+    //     $banners=Banner::where('data',Helpers::get_store_id())->where('created_by','store')->where(function ($q) use ($key) {
+    //         foreach ($key as $value) {
+    //             $q->orWhere('title', 'like', "%{$value}%");
+    //         }
+    //     })->limit(50)->get();
+    //     return response()->json([
+    //         'view'=>view('vendor-views.banner.partials._table',compact('banners'))->render(),
+    //         'count'=>$banners->count()
+    //     ]);
+    // }
 
 }

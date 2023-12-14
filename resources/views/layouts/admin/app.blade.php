@@ -373,7 +373,7 @@
     var baseUrl = '{{ url('/') }}';
 </script>
 
-<script src="{{asset('public/assets/admin')}}/js/view-pages/common.js"></script>
+<script src="{{asset('public/assets/admin/js/view-pages/common.js')}}"></script>
 <script>
     @php($modules = \App\Models\Module::Active()->get())
     var tour = new Tour({

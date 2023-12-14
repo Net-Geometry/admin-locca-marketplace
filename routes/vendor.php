@@ -48,8 +48,8 @@ Route::group(['namespace' => 'Vendor', 'as' => 'vendor.'], function () {
             Route::get('get-all', 'CategoryController@get_all')->name('get-all');
             Route::get('list', 'CategoryController@index')->name('add');
             Route::get('sub-category-list', 'CategoryController@sub_index')->name('add-sub-category');
-            Route::post('search', 'CategoryController@search')->name('search');
-            Route::post('sub-search', 'CategoryController@sub_search')->name('sub-search');
+//            Route::post('search', 'CategoryController@search')->name('search');
+//            Route::post('sub-search', 'CategoryController@sub_search')->name('sub-search');
             Route::get('export-categories', 'CategoryController@export_categories')->name('export-categories');
             Route::get('export-sub-categories', 'CategoryController@export_sub_categories')->name('export-sub-categories');
         });
@@ -139,7 +139,7 @@ Route::group(['namespace' => 'Vendor', 'as' => 'vendor.'], function () {
             Route::post('update/{banner}', 'BannerController@update')->name('update');
             Route::get('status/{id}/{status}', 'BannerController@status_update')->name('status_update');
             Route::delete('delete/{banner}', 'BannerController@delete')->name('delete');
-            Route::post('search', 'BannerController@search')->name('search');
+            // Route::post('search', 'BannerController@search')->name('search');
             Route::get('join_campaign/{id}/{status}', 'BannerController@status')->name('status');
         });
 
@@ -148,7 +148,7 @@ Route::group(['namespace' => 'Vendor', 'as' => 'vendor.'], function () {
             Route::get('item/list', 'CampaignController@itemlist')->name('itemlist');
             Route::get('remove-store/{campaign}/{store}', 'CampaignController@remove_store')->name('remove-store');
             Route::get('add-store/{campaign}/{store}', 'CampaignController@addstore')->name('add-store');
-            Route::post('search', 'CampaignController@search')->name('search');
+            // Route::post('search', 'CampaignController@search')->name('search');
             Route::post('search-item', 'CampaignController@searchItem')->name('searchItem');
         });
 

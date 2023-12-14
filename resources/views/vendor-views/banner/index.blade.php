@@ -45,13 +45,13 @@
                                 <div class="col-sm-6">
                                     <div class="form-group">
 
-                                        <label class="form-label">{{translate('Banner_title')}}</label>
-                                        <input type="text" name="title" class="form-control" placeholder="{{translate('messages.title_here...')}}" required>
+                                        <label for="title" class="form-label">{{translate('Banner_title')}}</label>
+                                        <input id="title" type="text" name="title" class="form-control" placeholder="{{translate('messages.title_here...')}}" required>
                                     </div>
                                     <div class="form-group">
 
-                                        <label class="form-label">{{translate('Redirection_URL_/_Link')}}</label>
-                                        <input type="url" name="default_link" class="form-control" placeholder="{{translate('messages.Enter_URL')}}">
+                                        <label for="default_link" class="form-label">{{translate('Redirection_URL_/_Link')}}</label>
+                                        <input id="default_link" type="url" name="default_link" class="form-control" placeholder="{{translate('messages.Enter_URL')}}">
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
@@ -60,7 +60,7 @@
                                             </h3>
                                     <label class="upload-img-3 m-0 d-block">
                                         <div class="img">
-                                            <img src="" id="viewer" onerror='this.src="{{asset('/public/assets/admin/img/upload-4.png')}}"' class="vertical-img mw-100 vertical" alt="">
+                                            <img src="{{asset('/public/assets/admin/img/upload-4.png')}}" id="viewer"  class="vertical-img mw-100 vertical" alt="">
                                         </div>
                                             <input type="file" name="image"  hidden>
                                     </label>
@@ -131,15 +131,18 @@
                                     <td><h5 class="text-hover-primary mb-0">{{Str::limit($banner['title'], 25, '...')}}</h5></td>
                                     <td>
                                         <span class="media align-items-center">
-                                            <img class="img--ratio-3 w-auto h--50px rounded mr-2" src="{{asset('storage/app/public/banner')}}/{{$banner['image']}}"
-                                                 onerror="this.src='{{asset('/public/assets/admin/img/900x400/img1.jpg')}}'" alt="{{$banner->name}} image">
+                                            <img class="img--ratio-3 w-auto h--50px rounded mr-2 onerror-image" src="{{asset('storage/app/public/banner')}}/{{$banner['image']}}"
+                                                 data-onerror-image="{{asset('/public/assets/admin/img/900x400/img1.jpg')}}"
+                                                  alt="{{$banner->name}} image">
                                         </span>
                                     </td>
                                     <td><a href="{{ $banner->default_link }}"> {{Str::limit($banner['default_link'], 60, '...')}}</a></td>
                                     <td>
                                         <div class="d-flex justify-content-center">
                                             <label class="toggle-switch toggle-switch-sm" for="statusCheckbox{{$banner->id}}">
-                                            <input type="checkbox" onclick="location.href='{{route('vendor.banner.status_update',[$banner['id'],$banner->status?0:1])}}'" class="toggle-switch-input" id="statusCheckbox{{$banner->id}}" {{$banner->status?'checked':''}}>
+                                            <input type="checkbox"
+                                                   data-url="{{route('vendor.banner.status_update',[$banner['id'],$banner->status?0:1])}}"
+                                                   class="toggle-switch-input redirect-url" id="statusCheckbox{{$banner->id}}" {{$banner->status?'checked':''}}>
                                             <span class="toggle-switch-label">
                                                 <span class="toggle-switch-indicator"></span>
                                             </span>
@@ -148,9 +151,12 @@
                                     </td>
                                     <td>
                                         <div class="btn--container justify-content-center">
-                                            <a class="btn action-btn btn--primary btn-outline-primary" href="{{route('vendor.banner.edit',[$banner['id']])}}"title="{{translate('messages.edit_banner')}}"><i class="tio-edit"></i>
+                                            <a class="btn action-btn btn--primary btn-outline-primary" href="{{route('vendor.banner.edit',[$banner['id']])}}" title="{{translate('messages.edit_banner')}}"><i class="tio-edit"></i>
                                             </a>
-                                            <a class="btn action-btn btn--danger btn-outline-danger" href="javascript:" onclick="form_alert('banner-{{$banner['id']}}','{{ translate('Want to delete this banner ?') }}')" title="{{translate('messages.delete_banner')}}"><i class="tio-delete-outlined"></i>
+                                            <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:"
+                                               data-id="banner-{{$banner['id']}}"
+                                               data-message="{{ translate('Want to delete this banner ?') }}"
+                                                title="{{translate('messages.delete_banner')}}"><i class="tio-delete-outlined"></i>
                                             </a>
                                             <form action="{{route('vendor.banner.delete',[$banner['id']])}}"
                                                         method="post" id="banner-{{$banner['id']}}">
@@ -188,32 +194,10 @@
 
 @push('script_2')
         <script>
+            "use strict";
             $('#reset_btn').click(function(){
                 $('#viewer').attr('src','{{asset('/public/assets/admin/img/upload-4.png')}}');
             })
         </script>
-        <script>
-            $(document).ready(function() {
-                "use strict"
-                $(".upload-img-3, .upload-img-4, .upload-img-2, .upload-img-5, .upload-img-1, .upload-img").each(function(){
-                    var targetedImage = $(this).find('.img');
-                    var targetedImageSrc = $(this).find('.img img');
-                    function proPicURL(input) {
-                        if (input.files && input.files[0]) {
-                            var uploadedFile = new FileReader();
-                            uploadedFile.onload = function (e) {
-                                targetedImageSrc.attr('src', e.target.result);
-                                targetedImage.addClass('image-loaded');
-                                targetedImage.hide();
-                                targetedImage.fadeIn(650);
-                            }
-                            uploadedFile.readAsDataURL(input.files[0]);
-                        }
-                    }
-                    $(this).find('input').on('change', function () {
-                        proPicURL(this);
-                    })
-                })
-            });
-        </script>
+
 @endpush

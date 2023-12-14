@@ -75,21 +75,21 @@ class CategoryController extends Controller
     //     ]);
     // }
 
-    public function sub_search(Request $request){
-        $key = explode(' ', $request['search']);
-        $categories=Category::with(['parent'])
-        ->where(function ($q) use ($key) {
-            foreach ($key as $value) {
-                $q->orWhere('name', 'like', "%{$value}%");
-            }
-        })
-        ->where(['position'=>1])->limit(50)->get();
-
-        return response()->json([
-            'view'=>view('vendor-views.category.partials._sub_table',compact('categories'))->render(),
-            'count'=>$categories->count()
-        ]);
-    }
+//    public function sub_search(Request $request){
+//        $key = explode(' ', $request['search']);
+//        $categories=Category::with(['parent'])
+//        ->where(function ($q) use ($key) {
+//            foreach ($key as $value) {
+//                $q->orWhere('name', 'like', "%{$value}%");
+//            }
+//        })
+//        ->where(['position'=>1])->limit(50)->get();
+//
+//        return response()->json([
+//            'view'=>view('vendor-views.category.partials._sub_table',compact('categories'))->render(),
+//            'count'=>$categories->count()
+//        ]);
+//    }
 
     public function export_categories(Request $request){
         $key = explode(' ', $request['search']);
@@ -103,11 +103,6 @@ class CategoryController extends Controller
         })
         ->latest()->get();
 
-        // if($type == 'excel'){
-        //     return (new FastExcel(Helpers::export_categories($categories)))->download('Categories.xlsx');
-        // }elseif($type == 'csv'){
-        //     return (new FastExcel(Helpers::export_categories($categories)))->download('Categories.csv');
-        // }
 
         $data=[
             'data' =>$categories,
@@ -146,11 +141,5 @@ class CategoryController extends Controller
             }
             return Excel::download(new StoreSubCategoryExport($data), 'SubCategories.xlsx');
 
-
-        // if($type == 'excel'){
-        //     return (new FastExcel(Helpers::export_sub_categories($categories)))->download('Categories.xlsx');
-        // }elseif($type == 'csv'){
-        //     return (new FastExcel(Helpers::export_sub_categories($categories)))->download('Categories.csv');
-        // }
     }
 }

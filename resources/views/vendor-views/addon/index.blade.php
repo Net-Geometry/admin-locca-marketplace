@@ -43,28 +43,28 @@
                                     @endforeach
                                 </ul>
                                 <div class="form-group lang_form" id="default-form">
-                                    <label class="input-label" for="exampleFormControlInput1">{{translate('messages.name')}} ({{translate('messages.default')}})</label>
-                                    <input type="text" name="name[]" class="form-control" placeholder="{{translate('messages.new_addon')}}" maxlength="191" oninvalid="document.getElementById('en-link').click()">
+                                    <label class="input-label" for="name">{{translate('messages.name')}} ({{translate('messages.default')}})</label>
+                                    <input id="name" type="text" name="name[]" class="form-control" placeholder="{{translate('messages.new_addon')}}" maxlength="191" oninvalid="document.getElementById('en-link').click()">
                                 </div>
                                 <input type="hidden" name="lang[]" value="default">
                                 @foreach(json_decode($language) as $lang)
                                     <div class="form-group d-none lang_form" id="{{$lang}}-form">
-                                        <label class="input-label" for="exampleFormControlInput1">{{translate('messages.name')}} ({{strtoupper($lang)}})</label>
-                                        <input type="text" name="name[]" class="form-control" placeholder="{{translate('messages.new_addon')}}" maxlength="191" oninvalid="document.getElementById('en-link').click()">
+                                        <label class="input-label" for="name{{$lang}}">{{translate('messages.name')}} ({{strtoupper($lang)}})</label>
+                                        <input type="text" id="name{{$lang}}" name="name[]" class="form-control" placeholder="{{translate('messages.new_addon')}}" maxlength="191" oninvalid="document.getElementById('en-link').click()">
                                     </div>
                                     <input type="hidden" name="lang[]" value="{{$lang}}">
                                 @endforeach
                             @else
                                 <div class="form-group">
-                                    <label class="input-label" for="exampleFormControlInput1">{{translate('messages.name')}}</label>
-                                    <input type="text" name="name" class="form-control" placeholder="{{translate('messages.new_addon')}}" value="{{old('name')}}" required maxlength="191">
+                                    <label  class="input-label" for="name">{{translate('messages.name')}}</label>
+                                    <input id="name" type="text" name="name" class="form-control" placeholder="{{translate('messages.new_addon')}}" value="{{old('name')}}" required maxlength="191">
                                 </div>
                                 <input type="hidden" name="lang[]" value="default">
                             @endif
 
                             <div class="form-group">
-                                <label class="input-label" for="exampleFormControlInput1">{{translate('messages.price')}}</label>
-                                <input type="number" min="0" max="999999999999.99" name="price" step="0.01" class="form-control" placeholder="100.00" value="{{old('price')}}" required>
+                                <label class="input-label" for="price">{{translate('messages.price')}}</label>
+                                <input  id="price" type="number" min="0" max="999999999999.99" name="price" step="0.01" class="form-control" placeholder="100.00" value="{{old('price')}}" required>
                             </div>
                             <div class="btn--container justify-content-end">
                                 <button type="reset" class="btn btn--reset">{{translate('messages.reset')}}</button>
@@ -161,54 +161,5 @@
 @endsection
 
 @push('script_2')
-    <script>
-        $(document).on('ready', function () {
-            // INITIALIZATION OF DATATABLES
-            // =======================================================
-            var datatable = $.HSCore.components.HSDatatables.init($('#columnSearchDatatable'));
-
-            $('#column1_search').on('keyup', function () {
-                datatable
-                    .columns(1)
-                    .search(this.value)
-                    .draw();
-            });
-
-
-            $('#column3_search').on('change', function () {
-                datatable
-                    .columns(2)
-                    .search(this.value)
-                    .draw();
-            });
-
-
-            // INITIALIZATION OF SELECT2
-            // =======================================================
-            $('.js-select2-custom').each(function () {
-                var select2 = $.HSCore.components.HSSelect2.init($(this));
-            });
-        });
-    </script>
-    <script>
-        $(".lang_link").click(function(e){
-            e.preventDefault();
-            $(".lang_link").removeClass('active');
-            $(".lang_form").addClass('d-none');
-            $(this).addClass('active');
-
-            let form_id = this.id;
-            let lang = form_id.substring(0, form_id.length - 5);
-            console.log(lang);
-            $("#"+lang+"-form").removeClass('d-none');
-            if(lang == '{{$defaultLang}}')
-            {
-                $(".from_part_2").removeClass('d-none');
-            }
-            else
-            {
-                $(".from_part_2").addClass('d-none');
-            }
-        });
-    </script>
+    <script src="{{asset('public/assets/admin/js/view-pages/datatable-search.js')}}"></script>
 @endpush
