@@ -3576,4 +3576,6 @@
   'If_disabled,_store_recommended_section_will_not_be_shuffled.' => 'If disabled  store recommended section will not be shuffled.',
   'store_earned' => 'Store earned',
   'admin_earned' => 'Admin earned',
+  'Last name is required!' => 'Last name is required!',
+  'admin_updated_successfully' => 'Admin updated successfully',
 );
