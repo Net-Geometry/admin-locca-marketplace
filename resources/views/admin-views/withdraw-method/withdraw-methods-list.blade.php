@@ -79,8 +79,8 @@
 
                                     <td>
                                         <label class="toggle-switch toggle-switch-sm">
-                                            <input class="toggle-switch-input status"
-                                                   onclick="featured_status('{{$withdrawal_method->id}}')"
+                                            <input class="toggle-switch-input status featured-status"
+                                                   data-id="{{$withdrawal_method->id}}"
                                                    type="checkbox" {{$withdrawal_method->is_active?'checked':''}}>
                                                    <span class="toggle-switch-label">
                                                     <span class="toggle-switch-indicator"></span>
@@ -107,9 +107,8 @@
                                             </a>
 
                                             @if(!$withdrawal_method->is_default)
-                                                <a class="btn btn-sm btn--danger btn-outline-danger action-btn" href="javascript:"
-                                                   title="{{ translate('messages.Delete')}}"
-                                                   onclick="form_alert('delete-{{$withdrawal_method->id}}','Want to delete this item ?')">
+                                                <a class="btn btn-sm btn--danger btn-outline-danger action-btn form-alert" href="javascript:"
+                                                   title="{{ translate('messages.Delete')}}" data-id="delete-{{$withdrawal_method->id}}" data-message="{{ translate('Want to delete this item ?') }}">
                                                     <i class="tio-delete-outlined"></i>
                                                 </a>
                                                 <form action="{{route('admin.transactions.withdraw-method.delete',[$withdrawal_method->id])}}"
@@ -149,6 +148,7 @@
 
 @push('script_2')
   <script>
+      "use strict";
       $(document).on('change', '.default-method', function () {
           let id = $(this).attr("id");
           let status = $(this).prop("checked") === true ? 1:0;
@@ -184,7 +184,8 @@
           });
       });
 
-      function featured_status(id) {
+      $('.featured-status').on('change', function () {
+          let id = $(this).data('id');
           $.ajaxSetup({
               headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -202,6 +203,6 @@
                   toastr.success('{{ translate('messages.status_updated_successfully')}}');
               }
           });
-      }
+      })
   </script>
 @endpush

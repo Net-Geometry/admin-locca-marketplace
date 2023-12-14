@@ -43,7 +43,7 @@
                         <div class="lang_form" id="default-form">
                             <div class="form-group" >
                                 <label class="input-label" for="exampleFormControlInput1">{{ translate('messages.Business_Module_name')}} ({{ translate('messages.default') }})</label>
-                                <input type="text" name="module_name[]" class="form-control" maxlength="191" value="{{$module?->getRawOriginal('module_name')}}" oninvalid="document.getElementById('en-link').click()">
+                                <input type="text" name="module_name[]" class="form-control" maxlength="191" value="{{$module?->getRawOriginal('module_name')}}">
                             </div>
                             <div class="form-group">
                                 <label class="input-label d-flex" for="module_type">{{translate('messages.description')}} ({{ translate('messages.default') }})<span class="form-label-secondary text-danger d-flex"
@@ -75,7 +75,7 @@
                             <div class="d-none lang_form" id="{{$lang}}-form">
                                 <div class="form-group" >
                                     <label class="input-label" for="exampleFormControlInput1">{{ translate('messages.Business_Module_name')}} ({{strtoupper($lang)}})</label>
-                                    <input type="text" name="module_name[]" class="form-control" maxlength="191" value="{{$translate[$lang]['module_name']??''}}" oninvalid="document.getElementById('en-link').click()">
+                                    <input type="text" name="module_name[]" class="form-control" maxlength="191" value="{{$translate[$lang]['module_name']??''}}">
                                 </div>
                                 <div class="form-group">
                                     <label class="input-label d-flex" for="module_type">{{translate('messages.description')}} ({{strtoupper($lang)}})<span class="form-label-secondary text-danger d-flex"
@@ -114,38 +114,6 @@
                                 </div>
                             </div>
                         </div>
-                        {{-- <div class="col-sm-6">
-                            <div class="form-group" id="zone_check">
-                                <label class="input-label">{{ translate('Store can serve in') }} <small class="text-danger"><span class="input-label-secondary"
-                                        title="{{ translate('messages.business_module_all_zone_hint') }}">
-                                        <img src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
-                                            alt="{{ translate('messages.business_module_all_zone_hint') }}" class="initial--14">
-                                </span> *</small></label>
-
-                                <div class="input-group input-group-md-down-break">
-                                    <!-- Custom Radio -->
-                                    <div class="form-control">
-                                        <div class="custom-control custom-radio">
-                                            <input type="radio" class="custom-control-input" value="1"
-                                                name="all_zone_service" id="all_zone_service1" {{$module->all_zone_service == 1? 'checked': ''}}>
-                                            <label class="custom-control-label" for="all_zone_service1">{{ translate('messages.All_Zones') }}</label>
-                                        </div>
-                                    </div>
-                                    <!-- End Custom Radio -->
-
-                                    <!-- Custom Radio -->
-                                    <div class="form-control">
-                                        <div class="custom-control custom-radio">
-                                            <input type="radio" class="custom-control-input" value="0"
-                                                name="all_zone_service" id="all_zone_service2" {{$module->all_zone_service == 1? '': 'checked'}}>
-                                            <label class="custom-control-label"
-                                                for="all_zone_service2">{{ translate('One Zone') }}</label>
-                                        </div>
-                                    </div>
-                                    <!-- End Custom Radio -->
-                                </div>
-                            </div>
-                        </div> --}}
                     </div>
                     <div class="card h-100 module-logo-card mb-3">
                         <div class="card-body">
@@ -196,7 +164,13 @@
 @endsection
 
 @push('script_2')
+    <script src="{{asset('public/assets/admin/ckeditor/ckeditor.js')}}"></script>
     <script>
+        "use strict";
+        $('.module-change').on('click', function (){
+            let id = $(this).val();
+            modulChange(id)
+        })
         function modulChange(id)
         {
             $.get({
@@ -223,7 +197,7 @@
 
         function readURL(input, id) {
             if (input.files && input.files[0]) {
-                var reader = new FileReader();
+                let reader = new FileReader();
 
                 reader.onload = function (e) {
                     $('#'+id).attr('src', e.target.result);
@@ -240,8 +214,7 @@
         $("#customFileEg2").change(function () {
             readURL(this,'viewer2');
         });
-    </script>
-    <script>
+
         $(".lang_link").click(function(e){
             e.preventDefault();
             $(".lang_link").removeClass('active');
@@ -252,18 +225,8 @@
             let lang = form_id.substring(0, form_id.length - 5);
             console.log(lang);
             $("#"+lang+"-form").removeClass('d-none');
-            if(lang == '{{$defaultLang}}')
-            {
-                $(".from_part_2").removeClass('d-none');
-            }
-            else
-            {
-                $(".from_part_2").addClass('d-none');
-            }
         });
-    </script>
-    <script src="//cdn.ckeditor.com/4.14.1/standard/ckeditor.js"></script>
-    <script type="text/javascript">
+
         $(document).ready(function () {
             @if ($module->module_type=='parcel')
                 $('#module_des_card').hide();
@@ -272,8 +235,7 @@
             @endif
             $('.ckeditor').ckeditor();
         });
-    </script>
-    <script>
+
         $('#reset_btn').click(function(){
             $('#viewer').attr('src','{{asset('storage/app/public/module/'.$module['icon'])}}');
             $('#viewer2').attr('src','{{asset('storage/app/public/module/'.$module['thumbnail'])}}');

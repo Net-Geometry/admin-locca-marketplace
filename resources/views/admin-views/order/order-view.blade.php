@@ -1,14 +1,6 @@
 @extends('layouts.admin.app')
 
 @section('title', translate('Order Details'))
-<style>
-    .select2-container--open {
-    z-index: 99999999999999;
-}
-    #offline_payment_cancelation_note {
-    z-index: 99999999999999;
-}
-</style>
 
 @section('content')
     <?php
@@ -162,8 +154,7 @@
                                 @if (  !$parcel_order &&  !$editing && in_array($order->order_status, ['pending', 'confirmed', 'processing', 'accepted']) &&
                                         isset($order->store) &&
                                         $order->prescription_order == 0 && count($order?->payments) == 0 && $order?->flash_admin_discount_amount == 0 && ($order->payment_method == 'cash_on_delivery'))
-                                    <button class="btn btn-sm btn--danger btn-outline-danger font-regular" type="button"
-                                        onclick="edit_order()">
+                                    <button class="btn btn-sm btn--danger btn-outline-danger font-regular edit-order" type="button">
                                         <i class="tio-edit"></i> {{ translate('messages.edit') }}
                                     </button>
                                 @endif
@@ -407,9 +398,8 @@
                                         <div class="col-sm-6">
                                             <div class="input-group header-item w-100">
                                                 <select name="category" id="category"
-                                                    class="form-control js-select2-custom mx-1"
-                                                    title="{{ translate('messages.select_category') }}"
-                                                    onchange="set_category_filter(this.value)">
+                                                    class="form-control js-select2-custom mx-1 set-category-filter"
+                                                    title="{{ translate('messages.select_category') }}">
                                                     <option value="">{{ translate('messages.all_categories') }}
                                                     </option>
                                                     @foreach ($categories as $item)
@@ -559,8 +549,7 @@
                                                     <td>
                                                         <div class="media media--sm">
                                                             @if ($editing)
-                                                                <div class="avatar avatar-xl mr-3 cursor-pointer"
-                                                                    onclick="quick_view_cart_item({{ $key }})"
+                                                                <div class="avatar avatar-xl mr-3 cursor-pointer quick-view-cart-item" data-key="{{ $key }}"
                                                                     title="{{ translate('messages.click_to_edit_this_item') }}">
                                                                     <span
                                                                         class="avatar-status avatar-lg-status avatar-status-dark"><i
@@ -695,8 +684,7 @@
                                                     <td>
                                                         <div class="media media--sm">
                                                             @if ($editing)
-                                                                <div class="avatar avatar-xl mr-3  cursor-pointer"
-                                                                    onclick="quick_view_cart_item({{ $key }})"
+                                                                <div class="avatar avatar-xl mr-3  cursor-pointer quick-view-cart-item" data-key="{{ $key }}"
                                                                     title="{{ translate('messages.click_to_edit_this_item') }}">
                                                                     <span
                                                                         class="avatar-status avatar-lg-status avatar-status-dark"><i
@@ -961,10 +949,8 @@
                             @if ($editing)
                                 <div class="col-12">
                                     <div class="btn--container justify-content-end">
-                                        <button class="btn btn-sm btn--reset" type="button"
-                                            onclick="cancle_editing_order()">{{ translate('messages.cancel') }}</button>
-                                        <button class="btn btn-sm btn--primary" type="button"
-                                            onclick="update_order()">{{ translate('messages.submit') }}</button>
+                                        <button class="btn btn-sm btn--reset cancel-edit-order" type="button" >{{ translate('messages.cancel') }}</button>
+                                        <button class="btn btn-sm btn--primary submit-edit-order" type="button">{{ translate('messages.submit') }}</button>
                                     </div>
                                 </div>
                             @endif
@@ -1148,12 +1134,10 @@
                                         (($refund && $refund->value == true) || $order->order_status == 'refund_requested') &&
                                             $order->payment_status == 'paid' &&
                                             $order->order_status != 'refunded')
-                                        <button class="btn btn--primary btn--sm"
-                                            onclick="route_alert('{{ route('admin.order.status', [
-                                                'id' => $order['id'],
-                                                // 'refund_method'=> 'bank',
-                                                'order_status' => 'refunded',
-                                            ]) }}','{{ translate('messages.you_want_to_refund_this_order', ['amount' => $refund_amount . ' ' . \App\CentralLogics\Helpers::currency_code()]) }}', '{{ translate('messages.are_you_sure_want_to_refund') }}')"><i
+                                        <button class="btn btn--primary btn--sm route-alert"
+                                                data-url="{{ route('admin.order.status', ['id' => $order['id'],'order_status' => 'refunded',
+                                            ]) }}" data-message="{{ translate('messages.you_want_to_refund_this_order', ['amount' => $refund_amount . ' ' . \App\CentralLogics\Helpers::currency_code()]) }}" data-title="{{ translate('messages.are_you_sure_want_to_refund') }}"
+                                        ><i
                                                 class="tio-money"></i> <span
                                                 class="ml-1">{{ translate('messages.Refund') }}</span> </button>
                                     @endif
@@ -1233,34 +1217,32 @@
                                         </button>
                                         @php($order_delivery_verification = (bool) \App\Models\BusinessSetting::where(['key' => 'order_delivery_verification'])->first()->value)
                                         <div class="dropdown-menu text-capitalize" aria-labelledby="dropdownMenuButton">
-                                                <a class="dropdown-item {{ $order['order_status'] == 'pending' ? 'active' : '' }}"
-                                                    onclick="route_alert('{{ route('admin.order.status', ['id' => $order['id'], 'order_status' => 'pending']) }}','{{ translate('Change status to pending ?') }}')"
+                                                <a class="dropdown-item {{ $order['order_status'] == 'pending' ? 'active' : '' }} route-alert"
+                                                   data-url="{{ route('admin.order.status', ['id' => $order['id'], 'order_status' => 'pending']) }}" data-message="{{ translate('Change status to pending ?') }}"
                                                     href="javascript:">{{ translate('messages.pending') }}</a>
-                                                <a class="dropdown-item {{ $order['order_status'] == 'confirmed' ? 'active' : '' }}"
-                                                    onclick="route_alert('{{ route('admin.order.status', ['id' => $order['id'], 'order_status' => 'confirmed']) }}','{{ translate('Change status to confirmed ?') }}')"
+                                                <a class="dropdown-item {{ $order['order_status'] == 'confirmed' ? 'active' : '' }} route-alert"
+                                                   data-url="{{ route('admin.order.status', ['id' => $order['id'], 'order_status' => 'confirmed']) }}" data-message="{{ translate('Change status to confirmed ?') }}"
                                                     href="javascript:">{{ translate('messages.confirmed') }}</a>
                                                 @if ($order->order_type != 'parcel')
                                                     @if ($order->store && $order->store->module->module_type == 'food')
-                                                    <a class="dropdown-item {{ $order['order_status'] == 'processing' ? 'active' : '' }}"
-                                                    onclick="order_status_change_alert('{{ route('admin.order.status', ['id' => $order['id'], 'order_status' => 'processing']) }}','{{ translate('Change status to cooking ?') }}', {{ $max_processing_time }})"
+                                                    <a class="dropdown-item {{ $order['order_status'] == 'processing' ? 'active' : '' }} order_status_change_alert" data-url="{{ route('admin.order.status', ['id' => $order['id'], 'order_status' => 'processing']) }}" data-message="{{ translate('Change status to cooking ?') }}" data-processing={{ $max_processing_time }}
                                                         href="javascript:">{{ translate('messages.processing') }}</a>
                                                     @else
-                                                    <a class="dropdown-item {{ $order['order_status'] == 'processing' ? 'active' : '' }}"
-                                                        onclick="route_alert('{{ route('admin.order.status', ['id' => $order['id'], 'order_status' => 'processing']) }}','{{ translate('Change status to processing ?') }}')"
+                                                    <a class="dropdown-item {{ $order['order_status'] == 'processing' ? 'active' : '' }} route-alert"
+                                                       data-url="{{ route('admin.order.status', ['id' => $order['id'], 'order_status' => 'processing']) }}" data-message="{{ translate('Change status to processing ?') }}"
                                                         href="javascript:">{{ translate('messages.processing') }}</a>
                                                     @endif
-                                                    <a class="dropdown-item {{ $order['order_status'] == 'handover' ? 'active' : '' }}"
-                                                        onclick="route_alert('{{ route('admin.order.status', ['id' => $order['id'], 'order_status' => 'handover']) }}','{{ translate('Change status to handover ?') }}')"
+                                                    <a class="dropdown-item {{ $order['order_status'] == 'handover' ? 'active' : '' }} route-alert"
+                                                       data-url="{{ route('admin.order.status', ['id' => $order['id'], 'order_status' => 'handover']) }}" data-message="{{ translate('Change status to handover ?') }}"
                                                         href="javascript:">{{ translate('messages.handover') }}</a>
                                                 @endif
-                                                <a class="dropdown-item {{ $order['order_status'] == 'picked_up' ? 'active' : '' }}"
-                                                    onclick="route_alert('{{ route('admin.order.status', ['id' => $order['id'], 'order_status' => 'picked_up']) }}','{{ translate('Change status to out for delivery ?') }}')"
+                                                <a class="dropdown-item {{ $order['order_status'] == 'picked_up' ? 'active' : '' }} route-alert"
+                                                   data-url="{{ route('admin.order.status', ['id' => $order['id'], 'order_status' => 'picked_up']) }}" data-message="{{ translate('Change status to out for delivery ?') }}"
                                                     href="javascript:">{{ translate('messages.out_for_delivery') }}</a>
-                                                <a class="dropdown-item {{ $order['order_status'] == 'delivered' ? 'active' : '' }}"
-                                                    onclick="route_alert('{{ route('admin.order.status', ['id' => $order['id'], 'order_status' => 'delivered']) }}','{{ translate('Change status to delivered (payment status will be paid if not)?') }}')"
+                                                <a class="dropdown-item {{ $order['order_status'] == 'delivered' ? 'active' : '' }} route-alert"
+                                                   data-url="{{ route('admin.order.status', ['id' => $order['id'], 'order_status' => 'delivered']) }}" data-message="{{ translate('Change status to delivered (payment status will be paid if not)?') }}"
                                                     href="javascript:">{{ translate('messages.delivered') }}</a>
-                                                <a class="dropdown-item {{ $order['order_status'] == 'canceled' ? 'active' : '' }}"
-                                                onclick="cancelled_status()">{{ translate('messages.canceled') }}</a>
+                                                <a class="dropdown-item {{ $order['order_status'] == 'canceled' ? 'active' : '' }} canceled-status">{{ translate('messages.canceled') }}</a>
                                             </div>
 
                                     </div>
@@ -1885,8 +1867,7 @@
                                             {{ $dm['name'] }}
                                         </span>
 
-                                        <a class="btn btn-primary btn-xs float-right"
-                                            onclick="addDeliveryMan({{ $dm['id'] }})">{{ translate('messages.assign') }}</a>
+                                        <a class="btn btn-primary btn-xs float-right add-delivery-man" data-id="{{ $dm['id'] }}">{{ translate('messages.assign') }}</a>
                                     </li>
                                 @endforeach
                             </ul>
@@ -2019,10 +2000,10 @@
                         @if ($order?->offline_payments->status != 'denied')
                         <button type="button" class="btn btn--danger btn-outline-danger offline_payment_cancelation_note" data-toggle="modal" data-target="#offline_payment_cancelation_note" data-id="{{ $order['id'] }}" class="btn btn--reset">{{translate('Payment_Didn’t_Recerive')}}</button>
                         @elseif ($order?->offline_payments->status == 'denied')
-                            <button type="button" onclick="route_alert('{{ route('admin.order.offline_payment', [ 'id' => $order['id'], 'verify' => 'switched_to_cod', ]) }}','{{ translate('messages.Make_the_payment_verified_for_this_order') }}')" onclick="" class="btn btn-info mb-2">{{translate('Switched_to_COD')}}</button>
+                            <button type="button" data-url="{{ route('admin.order.offline_payment', [ 'id' => $order['id'], 'verify' => 'switched_to_cod', ]) }}" data-message="{{ translate('messages.Make_the_payment_verified_for_this_order') }}" class="btn btn-info mb-2 route-alert">{{translate('Switched_to_COD')}}</button>
                         @endif
 
-                        <button type="button" onclick="route_alert('{{ route('admin.order.offline_payment', [ 'id' => $order['id'], 'verify' => 'yes', ]) }}','{{ translate('messages.Make_the_payment_verified_for_this_order') }}')" onclick="" class="btn btn--primary mb-2">{{translate('Yes,_Payment_Received')}}</button>
+                        <button type="button" data-url="{{ route('admin.order.offline_payment', [ 'id' => $order['id'], 'verify' => 'yes', ]) }}" data-message="{{ translate('messages.Make_the_payment_verified_for_this_order') }}" class="btn btn--primary mb-2 route-alert">{{translate('Yes,_Payment_Received')}}</button>
                     </div>
                     @endif
                 </div>
@@ -2069,11 +2050,16 @@
             location.href = nurl;
         });
 
-        function set_category_filter(id) {
+        $('.set-category-filter').on('change', function() {
+            let id = $(this).val();
             var nurl = new URL('{!! url()->full() !!}');
             nurl.searchParams.set('category_id', id);
             location.href = nurl;
-        }
+        })
+
+        $('.addon_quantity_input_toggle').on('change', function(event) {
+            addon_quantity_input_toggle(event);
+        })
 
         function addon_quantity_input_toggle(e) {
             var cb = $(e.target);
@@ -2088,7 +2074,8 @@
             }
         }
 
-        function quick_view_cart_item(key) {
+        $('.quick-view-cart-item').on('click',function (){
+            let key = $(this).data('key');
             $.get({
                 url: '{{ route('admin.order.quick-view-cart-item') }}',
                 dataType: 'json',
@@ -2107,7 +2094,12 @@
                     $('#loading').hide();
                 },
             });
-        }
+        })
+
+        $('.quick-view').on('click',function (){
+            let product_id = $(this).data('quick-view');
+            quickView(product_id);
+        })
 
         function quickView(product_id) {
             $.get({
@@ -2233,6 +2225,10 @@
             }
         }
 
+        $('.update_order_item').on('click',function (){
+            update_order_item();
+        })
+
         function update_order_item(form_id = 'add-to-cart-form') {
             $.ajaxSetup({
                 headers: {
@@ -2282,6 +2278,11 @@
             });
         }
 
+        $('.removeFromCart').on('click',function (){
+            let key = $(this).data('key');
+            removeFromCart(key);
+        })
+
         function removeFromCart(key) {
             Swal.fire({
                 title: '{{ translate('messages.are_you_sure') }}',
@@ -2322,7 +2323,7 @@
 
         }
 
-        function edit_order() {
+        $('.edit-order').on('click',function (){
             Swal.fire({
                 title: '{{ translate('messages.are_you_sure') }}',
                 text: '{{ translate('messages.you_want_to_edit_this_order') }}',
@@ -2338,9 +2339,9 @@
                     location.href = '{{ route('admin.order.edit', $order->id) }}';
                 }
             })
-        }
+        })
 
-        function cancle_editing_order() {
+        $('.cancel-edit-order').on('click',function (){
             Swal.fire({
                 title: '{{ translate('messages.are_you_sure') }}',
                 text: '{{ translate('messages.you_want_to_cancel_editing') }}',
@@ -2356,9 +2357,9 @@
                     location.href = '{{ route('admin.order.edit', $order->id) }}?cancle=true';
                 }
             })
-        }
+        })
 
-        function update_order() {
+        $('.submit-edit-order').on('click',function (){
             Swal.fire({
                 title: '{{ translate('messages.are_you_sure') }}',
                 text: '{{ translate('messages.you_want_to_submit_all_changes_for_this_order') }}',
@@ -2374,7 +2375,7 @@
                     location.href = '{{ route('admin.order.update', $order->id) }}';
                 }
             })
-        }
+        })
     </script>
 
     <script
@@ -2387,7 +2388,8 @@
             var select2 = $.HSCore.components.HSSelect2.init($(this));
         });
 
-        function addDeliveryMan(id) {
+            $('.add-delivery-man').on('click',function (){
+                id = $(this).data('id');
             $.ajax({
                 type: "GET",
                 url: '{{ url('/') }}/admin/order/add-delivery-man/{{ $order['id'] }}/' + id,
@@ -2407,7 +2409,14 @@
                     });
                 }
             });
-        }
+        })
+
+        $('.order_status_change_alert').on('click', function (){
+            let route = $(this).data('url');
+            let message = $(this).data('message');
+            let processing = $(this).data('processing');
+            order_status_change_alert(route, message, processing);
+        })
 
         function order_status_change_alert(route, message, processing = false) {
             if (processing) {
@@ -2455,7 +2464,7 @@
                 ProgressBar: true
             });
         }
-        function cancelled_status() {
+            $('.canceled-status').on('click', function (){
             Swal.fire({
                 title: '{{ translate('messages.are_you_sure') }}',
                 text: '{{ translate('messages.Change status to canceled ?') }}',
@@ -2490,7 +2499,7 @@
                     location.href = '{!! route('admin.order.status', ['id' => $order['id'],'order_status' => 'canceled']) !!}&reason='+reason,'{{ translate('Change status to canceled ?') }}';
                 }
             })
-        }
+        })
     </script>
     <script>
         var deliveryMan = <?php echo json_encode($deliveryMen); ?>;

@@ -50,8 +50,15 @@
                                             <input type="file" name="image"  hidden>
                                         </div>
                                         @if (isset($bottom_section_banner?->value))
-                                        <span id="bottom_section_banner" class="remove_image_button"
-                                        onclick="toogleStatusModal(event,'bottom_section_banner','mail-success','mail-warning','{{translate('Important!')}}','{{translate('Warning!')}}',`<p>{{translate('Are_you_sure_you_want_to_remove_this_image')}}</p>`,`<p>{{translate('Are_you_sure_you_want_to_remove_this_image.')}}</p>`)"
+                                        <span id="bottom_section_banner" class="remove_image_button dynamic-checkbox"
+                                              data-id="bottom_section_banner"
+                                              data-type="status"
+                                              data-image-on="{{asset('/public/assets/admin/img/modal')}}/mail-success"
+                                              data-image-off="{{asset('/public/assets/admin/img/modal')}}/mail-warning"
+                                              data-title-on="{{translate('Important!')}}"
+                                              data-title-off="{{translate('Warning!')}}"
+                                              data-text-on="<p>{{translate('Are_you_sure_you_want_to_remove_this_image')}}</p>"
+                                              data-text-off="<p>{{translate('Are_you_sure_you_want_to_remove_this_image.')}}</p>"
                                         >
                                         <i class="tio-clear"></i></span>
                                         @endif
@@ -118,8 +125,15 @@
                                         <input type="file" name="image"  hidden>
                                     </div>
                                     @if (isset($basic_section_nearby?->value))
-                                    <span id="basic_section_nearby" class="remove_image_button"
-                                    onclick="toogleStatusModal(event,'basic_section_nearby','mail-success','mail-warning','{{translate('Important!')}}','{{translate('Warning!')}}',`<p>{{translate('Are_you_sure_you_want_to_remove_this_image')}}</p>`,`<p>{{translate('Are_you_sure_you_want_to_remove_this_image.')}}</p>`)"
+                                    <span id="basic_section_nearby" class="remove_image_button dynamic-checkbox"
+                                          data-id="basic_section_nearby"
+                                          data-type="status"
+                                          data-image-on="{{asset('/public/assets/admin/img/modal')}}/mail-success"
+                                          data-image-off="{{asset('/public/assets/admin/img/modal')}}/mail-warning"
+                                          data-title-on="{{translate('Important!')}}"
+                                          data-title-off="{{translate('Warning!')}}"
+                                          data-text-on="<p>{{translate('Are_you_sure_you_want_to_remove_this_image')}}</p>"
+                                          data-text-off="<p>{{translate('Are_you_sure_you_want_to_remove_this_image.')}}</p>"
                                     >
                                     <i class="tio-clear"></i></span>
                                     @endif
@@ -163,33 +177,10 @@
 @endsection
 
 @push('script_2')
+    <script src="{{asset('public/assets/admin')}}/js/view-pages/other-banners.js"></script>
         <script>
             $('#reset_btn').click(function(){
                 $('#viewer').attr('src','{{asset('/public/assets/admin/img/upload-placeholder.png')}}');
             })
-        </script>
-        <script>
-            $(document).ready(function() {
-                "use strict"
-                $(".__upload-img, .upload-img-4, .upload-img-2, .upload-img-5, .upload-img-1, .upload-img").each(function(){
-                    var targetedImage = $(this).find('.img');
-                    var targetedImageSrc = $(this).find('.img img');
-                    function proPicURL(input) {
-                        if (input.files && input.files[0]) {
-                            var uploadedFile = new FileReader();
-                            uploadedFile.onload = function (e) {
-                                targetedImageSrc.attr('src', e.target.result);
-                                targetedImage.addClass('image-loaded');
-                                targetedImage.hide();
-                                targetedImage.fadeIn(650);
-                            }
-                            uploadedFile.readAsDataURL(input.files[0]);
-                        }
-                    }
-                    $(this).find('input').on('change', function () {
-                        proPicURL(this);
-                    })
-                })
-            });
         </script>
 @endpush

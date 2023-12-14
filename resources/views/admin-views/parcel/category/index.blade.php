@@ -142,33 +142,8 @@
                         {{translate('messages.parcel_category_list')}}
                         <span class="badge badge-soft-dark ml-2" id="itemCount">{{$parcel_categories->total()}}</span>
                     </h5>
-                    {{-- <div class="min--240">
-                        <select name="module_id" class="form-control js-select2-custom" onchange="set_filter('{{url()->full()}}',this.value,'module_id')" title="{{translate('messages.select_modules')}}">
-                            <option value="" {{!request('module_id') ? 'selected':''}}>{{translate('messages.all_modules')}}</option>
-                            @foreach (\App\Models\Module::Parcel()->get() as $module)
-                                <option
-                                    value="{{$module->id}}" {{request('module_id') == $module->id?'selected':''}}>
-                                    {{$module['module_name']}}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div> --}}
-                </div>
 
-                {{--<form id="dataSearch" class="col">
-                    @csrf
-                    <!-- Search -->
-                    <div class="input-group input-group-merge input-group-flush">
-                        <div class="input-group-prepend">
-                            <div class="input-group-text">
-                                <i class="tio-search"></i>
-                            </div>
-                        </div>
-                        <input type="search" name="search" class="form-control" placeholder="{{translate('messages.search_categories')}}" aria-label="{{translate('messages.search_categories')}}">
-                        <button type="submit" class="btn btn-light">{{translate('messages.search')}}</button>
-                    </div>
-                    <!-- End Search -->
-                </form>--}}
+                </div>
             </div>
             <div class="card-body p-0">
                 <div class="table-responsive datatable-custom">
@@ -235,8 +210,8 @@
                                         <a class="btn action-btn btn--primary btn-outline-primary"
                                             href="{{route('admin.parcel.category.edit',[$category['id']])}}" title="{{translate('messages.edit_category')}}"><i class="tio-edit"></i>
                                         </a>
-                                        <a class="btn action-btn btn--danger btn-outline-danger" href="javascript:"
-                                        onclick="form_alert('category-{{$category['id']}}','{{ translate('Want to delete this category') }}')" title="{{translate('messages.delete_category')}}"><i class="tio-delete-outlined"></i>
+                                        <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:"
+                                        data-id="category-{{$category['id']}}" data-message="{{ translate('Want to delete this category') }}" title="{{translate('messages.delete_category')}}"><i class="tio-delete-outlined"></i>
                                         </a>
                                         <form action="{{route('admin.parcel.category.destroy',[$category['id']])}}" method="post" id="category-{{$category['id']}}">
                                             @csrf @method('delete')
@@ -271,26 +246,21 @@
 
 @push('script_2')
     <script>
+        "use strict";
         $(document).on('ready', function () {
             // INITIALIZATION OF DATATABLES
             // =======================================================
 
-
-
-
-
             // INITIALIZATION OF SELECT2
             // =======================================================
             $('.js-select2-custom').each(function () {
-                var select2 = $.HSCore.components.HSSelect2.init($(this));
+                let select2 = $.HSCore.components.HSSelect2.init($(this));
             });
         });
-    </script>
 
-    <script>
         function readURL(input) {
             if (input.files && input.files[0]) {
-                var reader = new FileReader();
+                let reader = new FileReader();
 
                 reader.onload = function (e) {
                     $('#viewer').attr('src', e.target.result);
@@ -303,8 +273,7 @@
         $("#customFileEg1").change(function () {
             readURL(this);
         });
-    </script>
-    <script>
+
         $(".lang_link").click(function(e){
             e.preventDefault();
             $(".lang_link").removeClass('active');
@@ -324,8 +293,7 @@
                 $(".from_part_2").addClass('d-none');
             }
         });
-    </script>
-    <script>
+
         $('#reset_btn').click(function(){
             $('#module_id').val(null).trigger('change');
             $('#viewer').attr('src', "{{asset('public/assets/admin/img/900x400/img1.jpg')}}");

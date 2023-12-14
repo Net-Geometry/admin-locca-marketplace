@@ -367,13 +367,13 @@ class DeliveryManController extends BaseController
     public function getConversationList(Request $request): JsonResponse
     {
         $user = $this->userInfoRepo->getFirstWhere(params: ['deliveryman_id' => $request['user_id']]);
-        $dm = $this->deliveryManRepo->getFirstWhere(params: ['id' => $request['user_id']]);
+        $deliveryMan = $this->deliveryManRepo->getFirstWhere(params: ['id' => $request['user_id']]);
         if($user){
             $conversations = $this->conversationRepo->getDmConversationList(request: $request,dataLimit: 8);
         }else{
             $conversations = [];
         }
-        $view = view(DeliveryManViewPath::CONVERSATION_LIST[VIEW],compact('conversations','dm'))->render();
+        $view = view(DeliveryManViewPath::CONVERSATION_LIST[VIEW],compact('conversations','deliveryMan'))->render();
 
         return response()->json(['html'=>$view]);
 

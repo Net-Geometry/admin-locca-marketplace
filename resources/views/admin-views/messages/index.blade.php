@@ -26,7 +26,7 @@
                         </div>
                     </div>
                     <!-- Body -->
-                    <div class="card-body p-0 initial-19" style="overflow-y: scroll;height: 600px" id="conversation-list">
+                    <div class="card-body p-0 initial-19" id="conversation-list">
                         <div class="border-bottom"></div>
                         @include('admin-views.messages.data')
                     </div>
@@ -51,6 +51,16 @@
 <script src="{{ asset('public/assets/admin/js/spartan-multi-image-picker.js') }}"></script>
 
     <script>
+        "use strict";
+
+        $('.view-conv').on('click', function (){
+            let url = $(this).data('url');
+            let id_to_active = $(this).data('active-id');
+            let conv_id = $(this).data('conv-id');
+            let sender_id = $(this).data('sender-id');
+            viewConvs(url, id_to_active, conv_id, sender_id);
+        })
+
         function viewConvs(url, id_to_active, conv_id, sender_id) {
             $('.customer-list').removeClass('conv-active');
             $('#' + id_to_active).addClass('conv-active');
@@ -66,7 +76,7 @@
             });
 
         }
-        var page = 1;
+        let page = 1;
         $('#conversation-list').scroll(function() {
             if ($('#conversation-list').scrollTop() + $('#conversation-list').height() >= $('#conversation-list')
                 .height()) {
@@ -105,7 +115,7 @@
         }
 
         $(document).on('keyup', '#serach', function() {
-            var query = $('#serach').val();
+            let query = $('#serach').val();
             fetch_data(page, query);
         });
     </script>

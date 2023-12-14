@@ -56,8 +56,7 @@
                                                     </label>
                                                     <input type="text" name="title[]" id="default_title"
                                                         class="form-control" placeholder="{{ translate('messages.Ex:_EID_Dhamaka') }}"
-
-                                                        oninvalid="document.getElementById('en-link').click()">
+                                                    >
                                                 </div>
                                             </div>
                                             <div class="col-6">
@@ -68,8 +67,7 @@
                                                     </label>
                                                     <input type="text" name="description[]" id="default_description"
                                                         class="form-control" placeholder="{{ translate('messages.Ex:_EID_Dhamaka') }}"
-
-                                                        oninvalid="document.getElementById('en-link').click()">
+                                                    >
                                                 </div>
                                             </div>
                                         </div>
@@ -86,8 +84,7 @@
                                                                 ({{ strtoupper($lang) }})
                                                             </label>
                                                             <input type="text" name="title[]" id="{{ $lang }}_title"
-                                                                class="form-control" placeholder="{{ translate('messages.Ex:_EID_Dhamaka') }}"
-                                                                oninvalid="document.getElementById('en-link').click()">
+                                                                class="form-control" placeholder="{{ translate('messages.Ex:_EID_Dhamaka') }}">
                                                         </div>
                                                     </div>
                                                     <div class="col-6">
@@ -97,8 +94,7 @@
                                                                 ({{ strtoupper($lang) }})
                                                             </label>
                                                             <input type="text" name="description[]" id="{{ $lang }}_description"
-                                                                class="form-control" placeholder="{{ translate('messages.Ex:_EID_Dhamaka') }}"
-                                                                oninvalid="document.getElementById('en-link').click()">
+                                                                class="form-control" placeholder="{{ translate('messages.Ex:_EID_Dhamaka') }}">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -252,7 +248,7 @@
                                     <td>{{ \Carbon\Carbon::parse($bonus->end_date)->format('d M Y') }}</td>
                                     <td>
                                         <label class="toggle-switch toggle-switch-sm" for="bonusCheckbox{{$bonus->id}}">
-                                            <input type="checkbox" onclick="location.href='{{route('admin.users.customer.wallet.bonus.status',[$bonus['id'],$bonus->status?0:1])}}'" class="toggle-switch-input" id="bonusCheckbox{{$bonus->id}}" {{$bonus->status?'checked':''}}>
+                                            <input type="checkbox" data-url="{{route('admin.users.customer.wallet.bonus.status',[$bonus['id'],$bonus->status?0:1])}}" class="toggle-switch-input redirect-url" id="bonusCheckbox{{$bonus->id}}" {{$bonus->status?'checked':''}}>
                                             <span class="toggle-switch-label">
                                                 <span class="toggle-switch-indicator"></span>
                                             </span>
@@ -261,9 +257,9 @@
                                     <td>
                                         <div class="btn--container justify-content-center">
 
-                                            <a class="btn action-btn btn--primary btn-outline-primary" href="{{route('admin.users.customer.wallet.bonus.update',[$bonus['id']])}}"title="{{translate('messages.edit_bonus')}}"><i class="tio-edit"></i>
+                                            <a class="btn action-btn btn--primary btn-outline-primary" href="{{route('admin.users.customer.wallet.bonus.update',[$bonus['id']])}}" title="{{translate('messages.edit_bonus')}}"><i class="tio-edit"></i>
                                             </a>
-                                            <a class="btn action-btn btn--danger btn-outline-danger" href="javascript:" onclick="form_alert('bonus-{{$bonus['id']}}','{{ translate('Want to delete this bonus ?') }}')" title="{{translate('messages.delete_bonus')}}"><i class="tio-delete-outlined"></i>
+                                            <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:" data-id="bonus-{{$bonus['id']}}" data-message="{{ translate('Want to delete this bonus ?') }}" title="{{translate('messages.delete_bonus')}}"><i class="tio-delete-outlined"></i>
                                             </a>
                                             <form action="{{route('admin.users.customer.wallet.bonus.delete',[$bonus['id']])}}"
                                             method="post" id="bonus-{{$bonus['id']}}">
@@ -331,64 +327,33 @@
 @endsection
 
 @push('script_2')
+    <script src="{{asset('public/assets/admin')}}/js/view-pages/wallet-bonus-index.js"></script>
 <script>
-    $("#date_from").on("change", function () {
-        $('#date_to').attr('min',$(this).val());
-    });
-
-    $("#date_to").on("change", function () {
-        $('#date_from').attr('max',$(this).val());
-    });
-
+    "use strict";
     $(document).on('ready', function () {
-        $('#bonus_type').on('change', function() {
-         if($('#bonus_type').val() == 'amount')
-            {
-                $('#maximum_bonus_amount').attr("readonly","true");
-                $('#maximum_bonus_amount').val(null);
-                $('#percentage').addClass('d-none');
-                $('#cuttency_symbol').removeClass('d-none');
-            }
-            else
-            {
-                $('#maximum_bonus_amount').removeAttr("readonly");
-                $('#percentage').removeClass('d-none');
-                $('#cuttency_symbol').addClass('d-none');
-            }
-        });
-
-        $('#date_from').attr('min',(new Date()).toISOString().split('T')[0]);
-        $('#date_to').attr('min',(new Date()).toISOString().split('T')[0]);
-
-            // INITIALIZATION OF DATATABLES
-            // =======================================================
-            var datatable = $.HSCore.components.HSDatatables.init($('#columnSearchDatatable'), {
-                select: {
-                    style: 'multi',
-                    classMap: {
-                        checkAll: '#datatableCheckAll',
-                        counter: '#datatableCounter',
-                        counterInfo: '#datatableCounterInfo'
-                    }
-                },
-                language: {
-                    zeroRecords: '<div class="text-center p-4">' +
-                    '<img class="w-7rem mb-3" src="{{asset('public/assets/admin/svg/illustrations/sorry.svg')}}" alt="Image Description">' +
-
-                    '</div>'
+        // INITIALIZATION OF DATATABLES
+        // =======================================================
+        let datatable = $.HSCore.components.HSDatatables.init($('#columnSearchDatatable'), {
+            select: {
+                style: 'multi',
+                classMap: {
+                    checkAll: '#datatableCheckAll',
+                    counter: '#datatableCounter',
+                    counterInfo: '#datatableCounterInfo'
                 }
-            });
+            },
+            language: {
+                zeroRecords: '<div class="text-center p-4">' +
+                '<img class="w-7rem mb-3" src="{{asset('public/assets/admin/svg/illustrations/sorry.svg')}}" alt="Image Description">' +
 
-            // INITIALIZATION OF SELECT2
-            // =======================================================
-            $('.js-select2-custom').each(function () {
-                var select2 = $.HSCore.components.HSSelect2.init($(this));
-            });
+                '</div>'
+            }
         });
+    });
 
-        $('#dataSearch').on('submit', function (e) {
+    $('#dataSearch').on('submit', function (e) {
             e.preventDefault();
-            var formData = new FormData(this);
+            let formData = new FormData(this);
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -413,35 +378,6 @@
                 },
             });
         });
-    </script>
-    <script>
-        $('#reset_btn').click(function(){
-            $('#module_select').val(null).trigger('change');
-            $('#store_id').val(null).trigger('change');
-            $('#store_wise').show();
-            $('#zone_wise').hide();
-        })
 
-    </script>
-    <script>
-        $(".lang_link").click(function(e){
-            e.preventDefault();
-            $(".lang_link").removeClass('active');
-            $(".lang_form").addClass('d-none');
-            $(this).addClass('active');
-
-            let form_id = this.id;
-            let lang = form_id.substring(0, form_id.length - 5);
-            console.log(lang);
-            $("#"+lang+"-form").removeClass('d-none');
-            if(lang == '{{$defaultLang}}')
-            {
-                $("#from_part_2").removeClass('d-none');
-            }
-            else
-            {
-                $("#from_part_2").addClass('d-none');
-            }
-        })
-    </script>
+</script>
 @endpush

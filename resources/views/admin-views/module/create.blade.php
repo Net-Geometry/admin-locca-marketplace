@@ -60,7 +60,7 @@
                 <div class="lang_form p-1 mb-2" id="default-form">
                     <div class="form-group">
                         <label class="input-label text-capitalize d-flex" for="exampleFormControlInput1">{{translate('Business_Module_name')}} ({{ translate('messages.default') }})</label>
-                        <input type="text" name="module_name[]" class="form-control" maxlength="191" oninvalid="document.getElementById('en-link').click()" placeholder="{{ translate('messages.Ex:_Grocery,eCommerce,Pharmacy,etc.') }}">
+                        <input type="text" name="module_name[]" class="form-control" maxlength="191" placeholder="{{ translate('messages.Ex:_Grocery,eCommerce,Pharmacy,etc.') }}">
                     </div>
                     <div class="form-group">
                         <label class="input-label d-flex" for="module_type">{{ translate('Business_Module_description')}} ({{ translate('messages.default') }})<span class="form-label-secondary text-danger d-flex"
@@ -77,7 +77,7 @@
                 <div class="d-none lang_form p-1 mb-2" id="{{$lang}}-form">
                     <div class="form-group">
                         <label class="input-label text-capitalize d-flex" for="exampleFormControlInput1">{{translate('Business_Module_name')}} ({{strtoupper($lang)}})</label>
-                        <input type="text" name="module_name[]" class="form-control" maxlength="191" oninvalid="document.getElementById('en-link').click()" placeholder="{{ translate('messages.Ex:_Grocery,eCommerce,Pharmacy,etc.') }}">
+                        <input type="text" name="module_name[]" class="form-control" maxlength="191" placeholder="{{ translate('messages.Ex:_Grocery,eCommerce,Pharmacy,etc.') }}">
                     </div>
                     <div class="form-group">
                         <label class="input-label d-flex" for="module_type">{{ translate('Business_Module_description')}} ({{strtoupper($lang)}})<span class="form-label-secondary text-danger d-flex"
@@ -94,7 +94,7 @@
                 @else
                 <div class="form-group">
                     <label class="input-label" for="exampleFormControlInput1">{{translate('Business_Module_name')}}</label>
-                    <input type="text" name="module_name" class="form-control" placeholder="{{translate('messages.new_category')}}" value="{{old('name')}}" maxlength="191"  placeholder="{{ translate('messages.Ex:_business_Module Name') }}">
+                    <input type="text" name="module_name" class="form-control" value="{{old('name')}}" maxlength="191"  placeholder="{{ translate('messages.Ex:_business_Module Name') }}">
                 </div>
                 <div class="form-group">
                     <label class="input-label" for="module_type">{{ translate('Business_Module_description')}}</label>
@@ -106,7 +106,7 @@
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label class="input-label" for="module_type">{{translate('messages.business_module_type')}}</label>
-                            <select name="module_type" id="module_type" class="form-control text-capitalize" onchange="modulChange(this.value)">
+                            <select name="module_type" id="module_type" class="form-control text-capitalize module-change">
                                 <option disabled selected>{{translate('messages.select_business_module_type')}}</option>
                                 @foreach (config('module.module_type') as $key)
                                 <option class="" value="{{$key}}">{{translate($key)}}</option>
@@ -169,7 +169,13 @@
 @endsection
 
 @push('script_2')
-<script>
+    <script src="{{asset('public/assets/admin/ckeditor/ckeditor.js')}}"></script>
+    <script>
+        "use strict";
+    $('.module-change').on('click', function (){
+        let id = $(this).val();
+        modulChange(id)
+    })
     function modulChange(id) {
         $.get({
             url: "{{url('/')}}/admin/module/type/?module_type=" + id,
@@ -216,8 +222,7 @@
     $("#customFileEg2").change(function() {
         readURL(this, 'viewer2');
     });
-</script>
-<script>
+
     $(".lang_link").click(function(e) {
         e.preventDefault();
         $(".lang_link").removeClass('active');
@@ -228,20 +233,12 @@
         let lang = form_id.substring(0, form_id.length - 5);
         console.log(lang);
         $("#" + lang + "-form").removeClass('d-none');
-        if (lang == '{{$defaultLang}}') {
-            $(".from_part_2").removeClass('d-none');
-        } else {
-            $(".from_part_2").addClass('d-none');
-        }
     });
-</script>
-<script src="//cdn.ckeditor.com/4.14.1/standard/ckeditor.js"></script>
-<script type="text/javascript">
+
     $(document).ready(function () {
         $('.ckeditor').ckeditor();
     });
-</script>
-<script>
+
         $('#reset_btn').click(function(){
             $('#viewer').attr('src','{{asset('public/assets/admin/img/400x400/img2.jpg')}}');
             $('#viewer2').attr('src','{{asset('public/assets/admin/img/400x400/img2.jpg')}}');

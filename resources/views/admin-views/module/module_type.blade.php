@@ -44,20 +44,6 @@
         <div class="card mt-3">
             <div class="card-header pb-0">
                 <h5>{{translate('messages.module_type_list')}}</h5>
-                {{--<form id="dataSearch">
-                    @csrf
-                    <!-- Search -->
-                    <div class="input-group input-group-merge input-group-flush">
-                        <div class="input-group-prepend">
-                            <div class="input-group-text">
-                                <i class="tio-search"></i>
-                            </div>
-                        </div>
-                        <input type="search" name="search" class="form-control" placeholder="{{translate('messages.search_categories')}}" aria-label="{{translate('messages.search_categories')}}">
-                        <button type="submit" class="btn btn-light">{{translate('messages.search')}}</button>
-                    </div>
-                    <!-- End Search -->
-                </form>--}}
             </div>
             <div class="card-body">
                 <div class="table-responsive datatable-custom">
@@ -98,8 +84,9 @@
 @endsection
 
 @push('script_2')
-    <script src="//cdn.ckeditor.com/4.14.1/standard/ckeditor.js"></script>
-    <script type="text/javascript">
+    <script src="{{asset('public/assets/admin/ckeditor/ckeditor.js')}}"></script>
+    <script>
+        "use strict";
         $(document).ready(function () {
             $('.ckeditor').ckeditor();
         });

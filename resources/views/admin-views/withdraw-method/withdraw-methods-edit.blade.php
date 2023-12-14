@@ -151,7 +151,7 @@
 
 
                                             <div class="col-md-1 ">
-                                                <span class="btn btn-danger" onclick="remove_field({{$key}})">
+                                                <span class="btn btn-danger remove-field" data-id="{{$key}}">
                                                     <i class="tio-delete"></i>
                                                 </span>
                                             </div>
@@ -181,11 +181,9 @@
 
 @push('script_2')
     <script>
-        function remove_field(fieldRowId) {
-            $( `#field-row--${fieldRowId}` ).remove();
-            counter--;
-        }
-        var count= {{isset($withdrawal_method->method_fields)?count($withdrawal_method->method_fields):0}};
+        "use strict";
+        let count= {{isset($withdrawal_method->method_fields)?count($withdrawal_method->method_fields):0}};
+        let counter = 0;
         jQuery(document).ready(function ($) {
             counter = count + 1;
 
@@ -234,7 +232,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-1 ">
-                                    <span class="btn btn-danger" onclick="remove_field(${counter})">
+                                    <span class="btn btn-danger remove-field" data-id="${counter}">
                                     <i class="tio-delete"></i>
                                     </span>
                                 </div>
@@ -261,6 +259,12 @@
 
                 counter = 1;
             })
+
+            $(document).on('click', '.remove-field', function () {
+                let fieldRowId=  $(this).data('id');
+                $( `#field-row--${fieldRowId}` ).remove();
+                counter--;
+            });
         });
     </script>
 @endpush

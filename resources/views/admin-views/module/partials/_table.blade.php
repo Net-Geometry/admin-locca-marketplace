@@ -14,12 +14,19 @@
     </td>
     <td>
         <label class="toggle-switch toggle-switch-sm" for="status-{{$module->id}}">
-        <input type="checkbox" class="toggle-switch-input" onclick="toogleStatusModal(event,'status-{{$module->id}}','module-on.png','module-off.png','{{translate('Want_to_activate_this')}} <strong>{{translate('Business_Module?')}}</strong>','{{translate('Want_to_deactivate_this')}} <strong>{{translate('Business_Module?')}}</strong>',`<p>{{translate('If_you_activate_this_business_module,_all_its_features_and_functionalities_will_be_available_and_accessible_to_all_users.')}}</p>`,`<p>{{translate('If_you_deactivate_this_business_module,_all_its_features_and_functionalities_will_be_disabled_and_hidden_from_users.')}}</p>`)"
-        {{-- onclick="location.href='{{route('admin.business-settings.module.status',[$module['id'],$module->status?0:1])}}'" --}}
-        class="toggle-switch-input" id="status-{{$module->id}}" {{$module->status?'checked':''}}>
+            <input type="checkbox" class="toggle-switch-input dynamic-checkbox"
+                   data-id="status-{{$module->id}}"
+                   data-type="status"
+                   data-image-on='{{asset('/public/assets/admin/img/modal')}}/module-on.png'
+                   data-image-off="{{asset('/public/assets/admin/img/modal')}}/module-off.png"
+                   data-title-on="{{translate('Want_to_activate_this')}} <strong>{{translate('Business_Module?')}}</strong>','{{translate('Want_to_deactivate_this')}} <strong>{{translate('Business_Module?')}}</strong>"
+                   data-title-off="<p>{{translate('If_you_activate_this_business_module,_all_its_features_and_functionalities_will_be_available_and_accessible_to_all_users.')}}</p>"
+                   data-text-on="<p>{{translate('If_you_deactivate_this_business_module,_all_its_features_and_functionalities_will_be_disabled_and_hidden_from_users.')}}</p>"
+                   data-text-off=""
+                   class="toggle-switch-input" id="status-{{$module->id}}" {{$module->status?'checked':''}}>
             <span class="toggle-switch-label">
-                <span class="toggle-switch-indicator"></span>
-            </span>
+                                            <span class="toggle-switch-indicator"></span>
+                                        </span>
         </label>
         <form action="{{route('admin.business-settings.module.status',[$module['id'],$module->status?0:1])}}" method="get" id="status-{{$module->id}}_form">
         </form>

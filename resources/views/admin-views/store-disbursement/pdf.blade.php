@@ -309,43 +309,6 @@
             <br>
         </div>
     </div>
-
-{{--    <table class="table-2" style="margin:0">--}}
-{{--        <tbody>--}}
-{{--        <tr>--}}
-{{--            <td style="border-top: 0.5px solid #EBEDF2;--}}
-{{--                    background: #F2F4F7;--}}
-{{--                    position: absolute;--}}
-{{--                    bottom: 0;--}}
-{{--                    left: 0;--}}
-{{--                    width: 100%;--}}
-{{--                    display: flex;--}}
-{{--                    justify-content: center;--}}
-{{--                    align-items: center;--}}
-{{--                    column-gap: 60px;--}}
-{{--                    padding: 15px;--}}
-{{--                    box-sizing: border-box; text-align: center">--}}
-{{--                <table class="table-2" style="margin:0">--}}
-{{--                    <tbody>--}}
-{{--                    <tr>--}}
-{{--                        <td style="text-align:center">--}}
-{{--                            <a style=" color: #000000; text-align:center;--}}
-{{--                    text-decoration: none;" href="www.stackfood.inc">www.stackfood.inc</a>--}}
-{{--                        </td>--}}
-{{--                        <td style="text-align:center">--}}
-{{--                            <a style=" color: #000000; text-align:center;--}}
-{{--                    text-decoration: none;" href="tel:+91 00000 00000">+91 00000 00000</a>--}}
-{{--                        </td>--}}
-{{--                        <td style="text-align:center">--}}
-{{--                            <a style=" color: #000000; text-align:center;--}}
-{{--                    text-decoration: none;" href="mailto:hello@email.com">hello@email.com</a>--}}
-{{--                        </td>--}}
-{{--                    </tr>--}}
-{{--                    </tbody>--}}
-{{--                </table>--}}
-{{--            </td></tr>--}}
-{{--        </tbody>--}}
-{{--    </table>--}}
 </div>
 <!-- Invoice -->
 

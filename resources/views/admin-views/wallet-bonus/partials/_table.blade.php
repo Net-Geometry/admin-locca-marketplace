@@ -27,32 +27,32 @@
         <tr>
             <td>{{$key+1}}</td>
             <td>
-            <span class="d-block font-size-sm text-body">
-            {{Str::limit($bonus['title'],15,'...')}}
-            </span>
+<span class="d-block font-size-sm text-body">
+                                    {{Str::limit($bonus['title'],25,'...')}}
+                                    </span>
             </td>
             <td>{{ translate('messages.minimum_add_amount') }} -    {{\App\CentralLogics\Helpers::format_currency($bonus['minimum_add_amount'])}} <br>
                 {{ translate('messages.maximum_bonus') }} - {{\App\CentralLogics\Helpers::format_currency($bonus['maximum_bonus_amount'])}}</td>
             <td>{{$bonus->bonus_type == 'amount'?\App\CentralLogics\Helpers::format_currency($bonus['bonus_amount']): $bonus['bonus_amount'].' (%)'}}</td>
-            <td>{{$bonus['start_date']}}</td>
-            <td>{{$bonus['end_date']}}</td>
+            <td>{{ \Carbon\Carbon::parse($bonus->start_date)->format('d M Y') }}</td>
+            <td>{{ \Carbon\Carbon::parse($bonus->end_date)->format('d M Y') }}</td>
             <td>
                 <label class="toggle-switch toggle-switch-sm" for="bonusCheckbox{{$bonus->id}}">
-                    <input type="checkbox" onclick="location.href='{{route('admin.users.customer.wallet.bonus.status',[$bonus['id'],$bonus->status?0:1])}}'" class="toggle-switch-input" id="bonusCheckbox{{$bonus->id}}" {{$bonus->status?'checked':''}}>
+                    <input type="checkbox" data-url="{{route('admin.users.customer.wallet.bonus.status',[$bonus['id'],$bonus->status?0:1])}}" class="toggle-switch-input redirect-url" id="bonusCheckbox{{$bonus->id}}" {{$bonus->status?'checked':''}}>
                     <span class="toggle-switch-label">
-                        <span class="toggle-switch-indicator"></span>
-                    </span>
+                                                <span class="toggle-switch-indicator"></span>
+                                            </span>
                 </label>
             </td>
             <td>
                 <div class="btn--container justify-content-center">
 
-                    <a class="btn action-btn btn--primary btn-outline-primary" href="{{route('admin.users.customer.wallet.bonus.update',[$bonus['id']])}}"title="{{translate('messages.edit_bonus')}}"><i class="tio-edit"></i>
+                    <a class="btn action-btn btn--primary btn-outline-primary" href="{{route('admin.users.customer.wallet.bonus.update',[$bonus['id']])}}" title="{{translate('messages.edit_bonus')}}"><i class="tio-edit"></i>
                     </a>
-                    <a class="btn action-btn btn--danger btn-outline-danger" href="javascript:" onclick="form_alert('bonus-{{$bonus['id']}}','{{ translate('Want to delete this bonus ?') }}')" title="{{translate('messages.delete_bonus')}}"><i class="tio-delete-outlined"></i>
+                    <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:" data-id="bonus-{{$bonus['id']}}" data-message="{{ translate('Want to delete this bonus ?') }}" title="{{translate('messages.delete_bonus')}}"><i class="tio-delete-outlined"></i>
                     </a>
                     <form action="{{route('admin.users.customer.wallet.bonus.delete',[$bonus['id']])}}"
-                    method="post" id="bonus-{{$bonus['id']}}">
+                          method="post" id="bonus-{{$bonus['id']}}">
                         @csrf @method('delete')
                     </form>
                 </div>
