@@ -58,7 +58,7 @@
                         </div> <!-- price-wrap .// -->
                     </td>
                     <td class="align-items-center text-center">
-                        <a href="javascript:" data-id="{{$key}}" class="btn btn-sm btn-outline-danger remove-From-Cart"> <i class="tio-delete-outlined"></i></a>
+                        <a href="javascript:" data-product-id="{{$key}}" class="btn btn-sm btn-outline-danger remove-From-Cart"> <i class="tio-delete-outlined"></i></a>
                     </td>
                 </tr>
                 @endif

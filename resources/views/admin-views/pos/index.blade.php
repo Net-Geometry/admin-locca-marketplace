@@ -60,7 +60,7 @@
                                         <form id="search-form" class="search-form">
                                             <!-- Search -->
                                             <div class="input-group input--group">
-                                                <input id="datatableSearch" type="search" value="{{$keyword?$keyword:''}}" name="search" class="form-control h--45px" placeholder="{{translate('messages.ex_:_search_here')}}" aria-label="{{translate('messages.search_here')}}" disabled>
+                                                <input id="datatableSearch" type="search" value="{{$keyword??''}}" name="search" class="form-control h--45px" placeholder="{{translate('messages.ex_:_search_here')}}" aria-label="{{translate('messages.search_here')}}" disabled>
                                                 <button type="submit" class="btn btn--secondary h--45px">
                                                     <i class="tio-search"></i>
                                                 </button>
@@ -125,7 +125,7 @@
                                         <span class="card-title-icon">
                                             <i class="tio-user"></i>
                                         </span>
-                                        <span>{{ translate('Delivery Infomation') }} <small>({{ translate('Home Delivery') }})</small></span>
+                                        <span>{{ translate('Delivery Information') }} <small>({{ translate('Home Delivery') }})</small></span>
                                     </h5>
                                     <span class="delivery--edit-icon text-primary" id="delivery_address" data-toggle="modal" data-target="#deliveryAddrModal"><i class="tio-edit"></i></span>
                                 </div>
@@ -198,32 +198,32 @@
                         <div class="row" >
                             <div class="col-12 col-lg-6">
                                 <div class="form-group">
-                                    <label class="input-label" >{{translate('first_name')}} <span
+                                    <label for="f_name" class="input-label" >{{translate('first_name')}} <span
                                             class="input-label-secondary text-danger">*</span></label>
-                                    <input type="text" name="f_name" class="form-control" value="{{ old('f_name') }}"  placeholder="{{translate('first_name')}}" required>
+                                    <input id="f_name" type="text" name="f_name" class="form-control" value="{{ old('f_name') }}"  placeholder="{{translate('first_name')}}" required>
                                 </div>
                             </div>
                             <div class="col-12 col-lg-6">
                                 <div class="form-group">
-                                    <label class="input-label" >{{translate('last_name')}} <span
+                                    <label for="l_name" class="input-label" >{{translate('last_name')}} <span
                                             class="input-label-secondary text-danger">*</span></label>
-                                    <input type="text" name="l_name" class="form-control" value="{{ old('l_name') }}"  placeholder="{{translate('last_name')}}" required>
+                                    <input id="l_name" type="text" name="l_name" class="form-control" value="{{ old('l_name') }}"  placeholder="{{translate('last_name')}}" required>
                                 </div>
                             </div>
                         </div>
                         <div class="row" >
                             <div class="col-12 col-lg-6">
                                 <div class="form-group">
-                                    <label class="input-label" >{{translate('email')}}<span
+                                    <label for="email" class="input-label" >{{translate('email')}}<span
                                         class="input-label-secondary text-danger">*</span></label>
-                                    <input type="email" name="email" class="form-control" value="{{ old('email') }}"  placeholder="{{translate('Ex_:_ex@example.com')}}" required>
+                                    <input id="email" type="email" name="email" class="form-control" value="{{ old('email') }}"  placeholder="{{translate('Ex_:_ex@example.com')}}" required>
                                 </div>
                             </div>
                             <div class="col-12 col-lg-6">
                                 <div class="form-group">
-                                    <label class="input-label" >{{translate('phone')}} ({{translate('with_country_code')}})<span
+                                    <label for="phone" class="input-label" >{{translate('phone')}} ({{translate('with_country_code')}})<span
                                         class="input-label-secondary text-danger">*</span></label>
-                                    <input type="text" name="phone" class="form-control" value="{{ old('phone') }}"  placeholder="{{translate('phone')}}" required>
+                                    <input id="phone" type="text" name="phone" class="form-control" value="{{ old('phone') }}"  placeholder="{{translate('phone')}}" required>
                                 </div>
                             </div>
                         </div>
@@ -402,7 +402,8 @@
                         document.getElementById('longitude').value = coordinates['lng'];
                         infoWindow.open(map);
 
-                        let geocoder = geocoder = new google.maps.Geocoder();
+                        let geocoder;
+                        geocoder = new google.maps.Geocoder();
                         let latlng = new google.maps.LatLng( coordinates['lat'], coordinates['lng'] ) ;
 
                         geocoder.geocode({ 'latLng': latlng }, function (results, status) {
@@ -430,10 +431,8 @@
                                     service.getDistanceMatrix(request).then((response) => {
                                         // put response
                                         let distancMeter = response.rows[0].elements[0].distance['value'];
-                                        console.log(distancMeter);
                                         let distanceMile = distancMeter/1000;
                                         let distancMileResult = Math.round((distanceMile + Number.EPSILON) * 100) / 100;
-                                        console.log(distancMileResult);
                                         document.getElementById('distance').value = distancMileResult;
                                         <?php
                                         $module_wise_delivery_charge = $store->zone->modules()->where('modules.id', $store->module_id)->first();
@@ -496,7 +495,6 @@
         infoWindow.open(map);
     }
 
-
     $(document).on('ready', function () {
         $('#store_select').select2({
             ajax: {
@@ -527,7 +525,6 @@
 
 
 
-
     $('#search-form').on('submit', function (e) {
         e.preventDefault();
         let keyword= $('#datatableSearch').val();
@@ -535,11 +532,6 @@
         url.searchParams.set('keyword', keyword);
         location.href = url;
     });
-
-
-
-
-
 
 
     function quickView(product_id) {
