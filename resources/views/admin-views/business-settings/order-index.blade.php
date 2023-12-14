@@ -48,7 +48,18 @@
                                                             alt="{{ translate('messages.order_varification_toggle') }}"> *
                                                     </span>
                                                 </span>
-                                                <input type="checkbox" onclick="toogleModal(event,'odc1','order-delivery-verification-on.png','order-delivery-verification-off.png','{{translate('messages.Want_to_enable')}} <strong>{{translate('messages.Delivery_Verification?')}}</strong>','{{translate('messages.Want_to_disable')}} <strong>{{translate('messages.Delivery_Verification?')}}</strong>',`<p>{{translate('messages.If you enable this, the Deliveryman has to verify the order during delivery through a 4-digit verification code.')}}</p>`,`<p>{{translate('messages.If you disable this, Deliveryman will deliver the order and update the status. He doesn’t need to verify the order with any code.')}}</p>`)" class="toggle-switch-input" value="1"
+                                                <input type="checkbox"
+                                                       data-id="odc1"
+                                                       data-type="toggle"
+                                                       data-image-on="{{ asset('/public/assets/admin/img/modal/order-delivery-verification-on.png') }}"
+                                                       data-image-off="{{ asset('/public/assets/admin/img/modal/order-delivery-verification-off.png') }}"
+                                                       data-title-on="{{ translate('messages.Want_to_enable') }} <strong>{{ translate('messages.Delivery_Verification?') }}</strong>"
+                                                       data-title-off="{{ translate('messages.Want_to_disable') }} <strong>{{ translate('messages.Delivery_Verification?') }}</strong>"
+                                                       data-text-on="<p>{{ translate('messages.If you enable this, the Deliveryman has to verify the order during delivery through a 4-digit verification code.') }}</p>"
+                                                       data-text-off="<p>{{ translate('messages.If you disable this, the Deliveryman will deliver the order and update the status. He doesn’t need to verify the order with any code.') }}</p>"
+                                                       class="status toggle-switch-input dynamic-checkbox-toggle"
+
+                                                       value="1"
                                                     name="odc" id="odc1" {{ $odc == 1 ? 'checked' : '' }}>
                                                 <span class="toggle-switch-label text">
                                                     <span class="toggle-switch-indicator"></span>
@@ -74,7 +85,17 @@
                                                             src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
                                                             alt="{{ translate('messages.prescription_order_status') }}"> * </span>
                                                 </span>
-                                                <input type="checkbox" onclick="toogleModal(event,'prescription_order_status','prescription-on.png','prescription-off.png','{{translate('messages.Want_to_enable')}} <strong>{{translate('messages.Place_Order_by_Prescription?')}}</strong>','{{translate('messages.Want_to_disable')}} <strong>{{translate('messages.Place_Order_by_Prescription?')}}</strong>',`<p>{{translate('messages.If_you_enable_this,_customers_can_place_an_order_by_simply_uploading_their_prescriptions_in_the_Pharmacy_module_from_the_Customer_App_or_Website._Stores_can_enable/disable_this_feature_from_store_settings_if_needed.')}}</p>`,`<p>{{translate('messages.If_disabled,_this_feature_will_be_hidden_from_the_Customer_App,_Website,_and_Store_App_&_Panel.')}}</p>`)" class="toggle-switch-input" value="1"
+                                                <input type="checkbox"
+                                                       data-id="prescription_order_status"
+                                                       data-type="toggle"
+                                                       data-image-on="{{ asset('/public/assets/admin/img/modal/prescription-on.png') }}"
+                                                       data-image-off="{{ asset('/public/assets/admin/img/modal/prescription-off.png') }}"
+                                                       data-title-on="{{ translate('messages.Want_to_enable') }} <strong>{{ translate('messages.Place_Order_by_Prescription?') }}</strong>"
+                                                       data-title-off="{{ translate('messages.Want_to_disable') }} <strong>{{ translate('messages.Place_Order_by_Prescription?') }}</strong>"
+                                                       data-text-on="<p>{{ translate('messages.If you enable this, customers can place an order by simply uploading their prescriptions in the Pharmacy module from the Customer App or Website. Stores can enable/disable this feature from store settings if needed.') }}</p>"
+                                                       data-text-off="<p>{{ translate('messages.If disabled, this feature will be hidden from the Customer App, Website, and Store App & Panel.') }}</p>"
+                                                       class="status toggle-switch-input dynamic-checkbox-toggle"
+                                                       value="1"
                                                     name="prescription_order_status" id="prescription_order_status"
                                                     {{ $prescription_order_status == 1 ? 'checked' : '' }}>
                                                 <span class="toggle-switch-label text">
@@ -100,8 +121,18 @@
                                                             src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
                                                             alt="{{ translate('Home Delivery') }}"></span>
                                                 </span>
-                                                <input type="checkbox" onclick="toogleModal(event,'home_delivery','home-delivery-on.png','home-delivery-off.png','{{translate('messages.Want_to_enable')}} <strong>{{translate('messages.Home_Delivery?')}}</strong>','{{translate('messages.Want_to_disable')}} <strong>{{translate('messages.Home_Delivery?')}}</strong>',`<p>{{translate('messages.If_you_enable_this,_customers_can_use_Home_Delivery_Option_during_checkout_from_the_Customer_App_or_Website.')}}</p>`,`<p>{{translate('messages.If_you_disable_this,_the_Home_Delivery_feature_will_be_hidden_from_the_customer_app_and_website.')}}</p>`)" name ="home_delivery_status" id="home_delivery" value="1"
-                                                class="toggle-switch-input" {{ $home_delivery_status == 1 ? 'checked' : '' }}>
+                                                <input type="checkbox"
+                                                       data-id="home_delivery"
+                                                       data-type="toggle"
+                                                       data-image-on="{{ asset('/public/assets/admin/img/modal/home-delivery-on.png') }}"
+                                                       data-image-off="{{ asset('/public/assets/admin/img/modal/home-delivery-off.png') }}"
+                                                       data-title-on="{{ translate('messages.Want_to_enable') }} <strong>{{ translate('messages.Home_Delivery?') }}</strong>"
+                                                       data-title-off="{{ translate('messages.Want_to_disable') }} <strong>{{ translate('messages.Home_Delivery?') }}</strong>"
+                                                       data-text-on="<p>{{ translate('messages.If you enable this, customers can use the Home Delivery Option during checkout from the Customer App or Website.') }}</p>"
+                                                       data-text-off="<p>{{ translate('messages.If you disable this, the Home Delivery feature will be hidden from the customer app and website.') }}</p>"
+                                                       class="status toggle-switch-input dynamic-checkbox-toggle"
+                                                       name ="home_delivery_status" id="home_delivery" value="1"
+                                               {{ $home_delivery_status == 1 ? 'checked' : '' }}>
                                                 <span class="toggle-switch-label text">
                                                     <span class="toggle-switch-indicator"></span>
                                                 </span>
@@ -125,7 +156,17 @@
                                                             src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
                                                             alt="{{ translate('Home Delivery') }}"></span>
                                                 </span>
-                                                <input type="checkbox" onclick="toogleModal(event,'take_away','takeaway-on.png','takeaway-off.png','{{translate('messages.Want_to_enable')}} <strong>{{translate('messages.the_Takeaway_feature?')}}</strong>','{{translate('messages.Want_to_disable')}} <strong>{{translate('messages.the_Takeaway_feature?')}}</strong>',`<p>{{translate('messages.If_you_enable_this,_customers_can_use_the_Takeaway_feature_during_checkout_from_the_Customer_App_or_Website.')}}</p>`,`<p>{{translate('messages.If_you_disable_this,_the_Takeaway_feature_will_be_hidden_from_the_Customer_App_or_Website.')}}</p>`)" class="toggle-switch-input" name="takeaway_status" value="1" id="take_away" {{ $takeaway_status == 1 ? 'checked' : '' }}>
+                                                <input type="checkbox"
+                                                       data-id="take_away"
+                                                       data-type="toggle"
+                                                       data-image-on="{{ asset('/public/assets/admin/img/modal/takeaway-on.png') }}"
+                                                       data-image-off="{{ asset('/public/assets/admin/img/modal/takeaway-off.png') }}"
+                                                       data-title-on="{{ translate('messages.Want_to_enable') }} <strong>{{ translate('messages.the_Takeaway_feature?') }}</strong>"
+                                                       data-title-off="{{ translate('messages.Want_to_disable') }} <strong>{{ translate('messages.the_Takeaway_feature?') }}</strong>"
+                                                       data-text-on="<p>{{ translate('messages.If you enable this, customers can use the Takeaway feature during checkout from the Customer App or Website.') }}</p>"
+                                                       data-text-off="<p>{{ translate('messages.If you disable this, the Takeaway feature will be hidden from the Customer App or Website.') }}</p>"
+                                                       class="status toggle-switch-input dynamic-checkbox-toggle"
+                                                       name="takeaway_status" value="1" id="take_away" {{ $takeaway_status == 1 ? 'checked' : '' }}>
                                                 <span class="toggle-switch-label text">
                                                     <span class="toggle-switch-indicator"></span>
                                                 </span>
@@ -150,7 +191,17 @@
                                                             alt="{{ translate('messages.customer_varification_toggle') }}"> *
                                                     </span>
                                                 </span>
-                                                <input type="checkbox" onclick="toogleModal(event,'schedule_order','schedule-on.png','schedule-off.png','{{translate('messages.Want_to_enable')}} <strong>{{translate('messages.Scheduled Delivery?')}}</strong>','{{translate('messages.Want_to_disable')}} <strong>{{translate('messages.Scheduled Delivery?')}}</strong>',`<p>{{translate('messages.If_you_enable_this,_customers_can_choose_a_suitable_delivery_schedule_during checkout.')}}</p>`,`<p>{{translate('messages.If_you_disable_this,_the_Scheduled_Delivery_feature_will_be_hidden.')}}</p>`)" class="toggle-switch-input" value="1"
+                                                <input type="checkbox"
+                                                       data-id="schedule_order"
+                                                       data-type="toggle"
+                                                       data-image-on="{{ asset('/public/assets/admin/img/modal/schedule-on.png') }}"
+                                                       data-image-off="{{ asset('/public/assets/admin/img/modal/schedule-off.png') }}"
+                                                       data-title-on="{{ translate('messages.Want_to_enable') }} <strong>{{ translate('messages.Scheduled Delivery?') }}</strong>"
+                                                       data-title-off="{{ translate('messages.Want_to_disable') }} <strong>{{ translate('messages.Scheduled Delivery?') }}</strong>"
+                                                       data-text-on="<p>{{ translate('messages.If you enable this, customers can choose a suitable delivery schedule during checkout.') }}</p>"
+                                                       data-text-off="<p>{{ translate('messages.If you disable this, the Scheduled Delivery feature will be hidden.') }}</p>"
+                                                       class="status toggle-switch-input dynamic-checkbox-toggle"
+                                                       value="1"
                                                     name="schedule_order" id="schedule_order"
                                                     {{ $schedule_order == 1 ? 'checked' : '' }}>
                                                 <span class="toggle-switch-label text">
@@ -184,7 +235,7 @@
                                                 id="schedule_order_slot_duration"
                                                 value="{{ $schedule_order_slot_duration?->value ? $schedule_order_slot_duration_time_format?->value == 'hour' ? $schedule_order_slot_duration?->value /60 : $schedule_order_slot_duration?->value: 0 }}"
                                                 min="0" required>
-                                                <select  name="schedule_order_slot_duration_time_format" class="custom-select form-control w-90px">
+                                                <select   name="schedule_order_slot_duration_time_format" class="custom-select form-control w-90px">
                                                     <option  value="min" {{ $schedule_order_slot_duration_time_format?->value == 'min'? 'selected' : '' }}>{{ translate('Min') }}</option>
                                                     <option  value="hour" {{ $schedule_order_slot_duration_time_format?->value == 'hour'? 'selected' : ''}}>{{ translate('Hour') }}</option>
                                                 </select>
@@ -205,15 +256,15 @@
             </div>
         </form>
 
-        <form action="{{ route('admin.business-settings.order-cancel-reasons.store') }}" method="post">
-            @csrf
             <div class="mt-4">
                 <h4 class="card-title mb-3">
                     <i class="tio-document-text-outlined mr-1"></i>
-                    {{translate('Order Cancelation Messages')}}
+                    {{translate('Order Cancellation Messages')}}
                 </h4>
                 <div class="card">
                     <div class="card-body">
+                <form action="{{ route('admin.business-settings.order-cancel-reasons.store') }}" method="post">
+                    @csrf
                         @php($language = \App\Models\BusinessSetting::where('key', 'language')->first())
                         @php($language = $language->value ?? null)
                         @php($defaultLang = str_replace('_', '-', app()->getLocale()))
@@ -233,7 +284,7 @@
                         @endif
                         <div class="row g-3">
                             <div class="col-sm-6 lang_form1 default-form1">
-                                <label class="form-label">{{ translate('Order Cancellation Reason') }}
+                                <label for="order_cancellation" class="form-label">{{ translate('Order Cancellation Reason') }}
                                     ({{ translate('messages.default') }})</label>
                                 <input type="text" class="form-control h--45px" name="reason[]"
                                     id="order_cancellation" placeholder="{{ translate('Ex:_Item_is_Broken') }}">
@@ -242,16 +293,16 @@
                             @if ($language)
                                 @foreach (json_decode($language) as $lang)
                                     <div class="col-sm-6 d-none lang_form1" id="{{ $lang }}-form1">
-                                        <label class="form-label">{{ translate('Order Cancellation Reason') }}
+                                        <label for="order_cancellation{{$lang}}" class="form-label">{{ translate('Order Cancellation Reason') }}
                                             ({{ strtoupper($lang) }})</label>
                                         <input type="text" class="form-control h--45px" name="reason[]"
-                                            id="order_cancellation" placeholder="{{ translate('Ex:_Item_is_Broken') }}">
+                                            id="order_cancellation{{$lang}}" placeholder="{{ translate('Ex:_Item_is_Broken') }}">
                                         <input type="hidden" name="lang[]" value="{{ $lang }}">
                                     </div>
                                 @endforeach
                             @endif
                             <div class="col-sm-6">
-                                <label class="form-label d-flex">
+                                <label for="user_type" class="form-label d-flex">
                                     <span class="line--limit-1">{{ translate('User Type') }} </span>
                                     <span class="form-label-secondary text-danger d-flex" data-toggle="tooltip"
                                         data-placement="right"
@@ -259,7 +310,7 @@
                                             src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
                                             alt="{{ translate('messages.prescription_order_status') }}"></span>
                                 </label>
-                                <select name="user_type" class="form-control h--45px" required>
+                                <select id="user_type" name="user_type" class="form-control h--45px" required>
                                     <option value="">{{ translate('messages.select_user_type') }}</option>
                                     <option value="admin">{{ translate('messages.admin') }}</option>
                                     <option value="store">{{ translate('messages.store') }}</option>
@@ -323,7 +374,8 @@
                                                             <label class="toggle-switch toggle-switch-sm"
                                                                 for="stocksCheckbox{{ $reason->id }}">
                                                                 <input type="checkbox"
-                                                                    onclick="location.href='{{ route('admin.business-settings.order-cancel-reasons.status', [$reason['id'], $reason->status ? 0 : 1]) }}'"class="toggle-switch-input"
+                                                                       data-url="{{ route('admin.business-settings.order-cancel-reasons.status', [$reason['id'], $reason->status ? 0 : 1]) }}"
+                                                                    class="toggle-switch-input redirect-url"
                                                                     id="stocksCheckbox{{ $reason->id }}"
                                                                     {{ $reason->status ? 'checked' : '' }}>
                                                                 <span class="toggle-switch-label">
@@ -343,9 +395,10 @@
                                                 </a>
 
 
-                                                                <a class="btn btn-sm btn--danger btn-outline-danger action-btn"
+                                                                <a class="btn btn-sm btn--danger btn-outline-danger action-btn form-alert"
                                                                     href="javascript:"
-                                                                    onclick="form_alert('order-cancellation-reason-{{ $reason['id'] }}','{{ translate('messages.If_you_want_to_delete_this_reason,_please_confirm_your_decision.') }}')"
+                                                                   data-id="order-cancellation-reason-{{ $reason['id'] }}"
+                                                                   data-message="{{ translate('messages.If_you_want_to_delete_this_reason,_please_confirm_your_decision.') }}"
                                                                     title="{{ translate('messages.delete') }}">
                                                                     <i class="tio-delete-outlined"></i>
                                                                 </a>
@@ -369,8 +422,8 @@
                                                                         <span aria-hidden="true">&times;</span>
                                                                     </button>
                                                                 </div>
-                                                                <div class="modal-body">
                                                                     <form action="{{ route('admin.business-settings.order-cancel-reasons.update') }}" method="post">
+                                                                <div class="modal-body">
                                                                         @csrf
                                                                         @method('put')
 
@@ -380,15 +433,16 @@
                                                                     @php($defaultLang = str_replace('_', '-', app()->getLocale()))
                                                                     <ul class="nav nav-tabs nav--tabs mb-3 border-0">
                                                                         <li class="nav-item">
-                                                                            <a class="nav-link lang_link add_active active"
+                                                                            <a class="nav-link update-lang_link add_active active"
                                                                             href="#"
                                                                             id="default-link">{{ translate('Default') }}</a>
                                                                         </li>
                                                                         @if($language)
                                                                         @foreach (json_decode($language) as $lang)
                                                                             <li class="nav-item">
-                                                                                <a class="nav-link lang_link"
+                                                                                <a class="nav-link update-lang_link"
                                                                                     href="#"
+                                                                                   data-reason-id="{{$reason->id}}"
                                                                                     id="{{ $lang }}-link">{{ \App\CentralLogics\Helpers::get_language_name($lang) . '(' . strtoupper($lang) . ')' }}</a>
                                                                             </li>
                                                                         @endforeach
@@ -396,9 +450,9 @@
                                                                     </ul>
                                                                         <input type="hidden" name="reason_id"  value="{{$reason->id}}" />
 
-                                                                        <div class="form-group mb-3 add_active_2  lang_form" id="default-form_{{$reason->id}}">
-                                                                            <label class="form-label">{{translate('Order Cancellation Reason')}} ({{translate('messages.default')}}) </label>
-                                                                            <input class="form-control" name='reason[]' value="{{$reason?->getRawOriginal('reason')}}" type="text">
+                                                                        <div class="form-group mb-3 add_active_2  update-lang_form" id="default-form_{{$reason->id}}">
+                                                                            <label for="reason" class="form-label">{{translate('Order Cancellation Reason')}} ({{translate('messages.default')}}) </label>
+                                                                            <input id="reason" class="form-control" name='reason[]' value="{{$reason?->getRawOriginal('reason')}}" type="text">
                                                                             <input type="hidden" name="lang1[]" value="default">
                                                                         </div>
                                                                                         @if($language)
@@ -415,16 +469,16 @@
                                                                                                 }
 
                                                                                                 ?>
-                                                                                                <div class="form-group mb-3 d-none lang_form" id="{{$lang}}-form_{{$reason->id}}">
-                                                                                                    <label class="form-label">{{translate('Order Cancellation Reason')}} ({{strtoupper($lang)}})</label>
-                                                                                                    <input class="form-control" name='reason[]' placeholder="{{ translate('Ex:_Item_is_Broken') }}" value="{{ $translate[$lang]['reason'] ?? null }}"  type="text">
+                                                                                                <div class="form-group mb-3 d-none update-lang_form" id="{{$lang}}-langform_{{$reason->id}}">
+                                                                                                    <label for="reason{{$lang}}" class="form-label">{{translate('Order Cancellation Reason')}} ({{strtoupper($lang)}})</label>
+                                                                                                    <input id="reason{{$lang}}" class="form-control" name='reason[]' placeholder="{{ translate('Ex:_Item_is_Broken') }}" value="{{ $translate[$lang]['reason'] ?? null }}"  type="text">
                                                                                                     <input type="hidden" name="lang1[]" value="{{$lang}}">
                                                                                                 </div>
                                                                                                 @empty
                                                                                                 @endforelse
                                                                                                 @endif
 
-                                                                        <select name="user_type" required class="form-control h--45px"
+                                                                        <select name="user_type"  class="form-control h--45px"
                                                                             required>
                                                                             <option value="">{{ translate('messages.select_user_type') }}</option>
                                                                             <option {{ $reason->user_type == 'admin' ? 'selected': '' }} value="admin">{{ translate('messages.admin') }}</option>
@@ -436,8 +490,8 @@
                                                                 <div class="modal-footer">
                                                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ translate('Close') }}</button>
                                                                     <button type="submit" class="btn btn-primary">{{ translate('Save_changes') }}</button>
-                                                                    </form>
                                                                 </div>
+                                                                    </form>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -457,51 +511,5 @@
 @endsection
 
 @push('script_2')
-    <script>
-        function edit_reason() {
-            $(".add_active").addClass('active');
-            $(".lang_form").addClass('d-none');
-            $(".add_active_2").removeClass('d-none');
-        }
-
-        $(".lang_link").click(function(e) {
-            e.preventDefault();
-            $(".lang_link").removeClass('active');
-            $(".lang_form").addClass('d-none');
-            $(".add_active").removeClass('active');
-            $(this).addClass('active');
-
-            let form_id = this.id;
-            let lang = form_id.substring(0, form_id.length - 5);
-
-            console.log(lang);
-
-            // $("#"+lang+"-form").removeClass('d-none');
-
-            @foreach ($reasons as $reason)
-                $("#" + lang + "-form_{{ $reason->id }}").removeClass('d-none');
-            @endforeach
-            if (lang == '{{ $defaultLang }}') {
-                $(".from_part_2").removeClass('d-none');
-            }
-            if (lang == 'default') {
-                $(".default-form").removeClass('d-none');
-            } else {
-                $(".from_part_2").addClass('d-none');
-            }
-        });
-
-        $(".lang_link1").click(function(e) {
-            e.preventDefault();
-            $(".lang_link1").removeClass('active');
-            $(".lang_form1").addClass('d-none');
-            $(this).addClass('active');
-            let form_id = this.id;
-            let lang = form_id.substring(0, form_id.length - 6);
-            $("#" + lang + "-form1").removeClass('d-none');
-            if (lang == 'default') {
-                $(".default-form1").removeClass('d-none');
-            }
-        })
-    </script>
+    <script src="{{asset('public/assets/admin/js/view-pages/business-settings-order-page.js')}}"></script>
 @endpush

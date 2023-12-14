@@ -257,7 +257,7 @@ class POSController extends Controller
         $variations = [];
         $price = 0;
         $addon_price = 0;
-    
+
         //Gets all the choice values of customer choice option and generate a string like Black-S-Cotton
         foreach (json_decode($product->choice_options) as $key => $choice) {
             $data[$choice->name] = $request[$choice->name];
@@ -279,7 +279,7 @@ class POSController extends Controller
                         ]);
                     }
                 }
-    
+
             }
         }
         //Check the string and decreases quantity for the stock
@@ -294,7 +294,7 @@ class POSController extends Controller
         } else {
             $price = $product->price;
         }
-    
+
         $data['quantity'] = $request['quantity'];
         $data['price'] = $price;
         $data['name'] = $product->name;
@@ -303,7 +303,7 @@ class POSController extends Controller
         $data['add_ons'] = [];
         $data['add_on_qtys'] = [];
         $data['maximum_cart_quantity'] = $product->maximum_cart_quantity;
-    
+
         if($request['addon_id'])
         {
             foreach($request['addon_id'] as $id)
@@ -313,9 +313,9 @@ class POSController extends Controller
             }
             $data['add_ons'] = $request['addon_id'];
         }
-    
+
         $data['addon_price'] = $addon_price;
-    
+
         if ($request->session()->has('cart')) {
             $cart = $request->session()->get('cart', collect([]));
             if(isset($request->cart_item_key))
@@ -327,7 +327,7 @@ class POSController extends Controller
             {
                 $cart->push($data);
             }
-    
+
         } else {
             $cart = collect([$data]);
             $request->session()->put('cart', $cart);
@@ -455,7 +455,7 @@ class POSController extends Controller
             $address = $request->session()->get('address');
         }
         $distance_data = isset($address) ? $address['distance'] : 0;
-        
+
         $data =  DMVehicle::active()->where(function ($query) use ($distance_data) {
             $query->where('starting_coverage_area', '<=', $distance_data)->where('maximum_coverage_area', '>=', $distance_data)
             ->orWhere(function ($query) use ($distance_data) {
@@ -554,7 +554,7 @@ class POSController extends Controller
                             $price = $product['price'];
                             $stock = $product->stock;
                         }
-    
+
                         if(config('module.'.$product->module->module_type)['stock'])
                         {
                             if($c['quantity']>$stock)
@@ -562,14 +562,14 @@ class POSController extends Controller
                                 Toastr::error(translate('messages.product_out_of_stock_warning',['item'=>$product->name]));
                                 return back();
                             }
-    
+
                             $product_data[]=[
                                 'item'=>clone $product,
                                 'quantity'=>$c['quantity'],
                                 'variant'=>count($c['variations'])>0?$c['variations']['type']:null
                             ];
                         }
-    
+
                         $price = $c['price'];
                         $product->tax = $store->tax;
                         $product = Helpers::product_data_formatting($product);
@@ -674,41 +674,41 @@ class POSController extends Controller
         return back();
     }
 
-    public function order_list()
-    {
-        $orders = Order::with(['customer'])
-        ->where('order_type', 'pos')
-        ->where('store_id',\App\CentralLogics\Helpers::get_store_id())
-        ->latest()
-        ->paginate(config('default_pagination'));
+    // public function order_list()
+    // {
+    //     $orders = Order::with(['customer'])
+    //     ->where('order_type', 'pos')
+    //     ->where('store_id',\App\CentralLogics\Helpers::get_store_id())
+    //     ->latest()
+    //     ->paginate(config('default_pagination'));
 
-        return view('vendor-views.pos.order.list', compact('orders'));
-    }
+    //     return view('vendor-views.pos.order.list', compact('orders'));
+    // }
 
-    public function search(Request $request){
-        $key = explode(' ', $request['search']);
-        $orders=Order::where(['store_id'=>Helpers::get_store_id()])->where(function ($q) use ($key) {
-            foreach ($key as $value) {
-                $q->orWhere('id', 'like', "%{$value}%")
-                    ->orWhere('order_status', 'like', "%{$value}%")
-                    ->orWhere('transaction_reference', 'like', "%{$value}%");
-            }
-        })->pos()->limit(100)->get();
-        return response()->json([
-            'view'=>view('vendor-views.pos.order.partials._table',compact('orders'))->render()
-        ]);
-    }
+    // public function search(Request $request){
+    //     $key = explode(' ', $request['search']);
+    //     $orders=Order::where(['store_id'=>Helpers::get_store_id()])->where(function ($q) use ($key) {
+    //         foreach ($key as $value) {
+    //             $q->orWhere('id', 'like', "%{$value}%")
+    //                 ->orWhere('order_status', 'like', "%{$value}%")
+    //                 ->orWhere('transaction_reference', 'like', "%{$value}%");
+    //         }
+    //     })->pos()->limit(100)->get();
+    //     return response()->json([
+    //         'view'=>view('vendor-views.pos.order.partials._table',compact('orders'))->render()
+    //     ]);
+    // }
 
-    public function order_details($id)
-    {
-        $order = Order::with('details')->where(['id' => $id, 'store_id' => Helpers::get_store_id()])->first();
-        if (isset($order)) {
-            return view('vendor-views.pos.order.order-view', compact('order'));
-        } else {
-            Toastr::info(translate('No more orders!'));
-            return back();
-        }
-    }
+    // public function order_details($id)
+    // {
+    //     $order = Order::with('details')->where(['id' => $id, 'store_id' => Helpers::get_store_id()])->first();
+    //     if (isset($order)) {
+    //         return view('vendor-views.pos.order.order-view', compact('order'));
+    //     } else {
+    //         Toastr::info(translate('No more orders!'));
+    //         return back();
+    //     }
+    // }
 
     public function generate_invoice($id)
     {

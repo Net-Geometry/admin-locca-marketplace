@@ -39,7 +39,7 @@
                                                 data-original-title="{{ translate('messages.Admin_can_enable/disable_Store’s_order_cancellation_option.') }}">
                                                 <i class="tio-info-outined"></i>
                                             </span></label>
-                                        <div class="resturant-type-group border">
+                                        <div class="restaurant-type-group border">
                                             <label class="form-check form--check mr-2 mr-md-4">
                                                 <input class="form-check-input" type="radio" value="1"
                                                     name="canceled_by_store" id="canceled_by_store"
@@ -77,7 +77,17 @@
                                                         alt="{{ translate('messages.store_self_registration') }}"> *
                                                 </span>
                                             </span>
-                                            <input type="checkbox" onclick="toogleModal(event,'store_self_registration1','store-self-reg-on.png','store-self-reg-off.png','{{translate('messages.Want_to_enable')}} <strong>{{translate('messages.Store_Self_Registration?')}}</strong>','{{translate('messages.Want_to_disable')}} <strong>{{translate('messages.Store_Self_Registration?')}}</strong>',`<p>{{translate('messages.If_you_enable_this,_Stores_can_do_self-registration_from_the_store_or_customer_app_or_website.')}}</p>`,`<p>{{translate('messages.If_you_disable_this,_the_Store_Self-Registration_feature_will_be_hidden_from_the_store_or_customer_app,_website,_or_admin_landing_page.')}}</p>`)" class="toggle-switch-input" value="1"
+                                            <input type="checkbox"
+                                                   data-id="store_self_registration1"
+                                                   data-type="toggle"
+                                                   data-image-on="{{ asset('/public/assets/admin/img/modal/store-self-reg-on.png') }}"
+                                                   data-image-off="{{ asset('/public/assets/admin/img/modal/store-self-reg-off.png') }}"
+                                                   data-title-on=""
+                                                   data-title-off=""
+                                                   data-text-on="<p>{{ translate('messages.If_you_enable_this,_Stores_can_do_self-registration_from_the_store_or_customer_app_or_website.') }}</p>"
+                                                   data-text-off="<p>{{ translate('messages.If_you_disable_this,_the_Store_Self-Registration_feature_will_be_hidden_from_the_store_or_customer_app,_website,_or_admin_landing_page.') }}</p>"
+                                                   class="status toggle-switch-input dynamic-checkbox-toggle"
+                                                   value="1"
                                                 name="store_self_registration" id="store_self_registration1"
                                                 {{ $store_self_registration == 1 ? 'checked' : '' }}>
                                             <span class="toggle-switch-label text">
@@ -103,7 +113,18 @@
                                                         alt="{{ translate('messages.Product_Gallery') }}"> *
                                                 </span>
                                             </span>
-                                            <input type="checkbox" onclick="toogleModal(event,'product_gallery','store-reg-on.png','store-reg-off.png','<strong>{{translate('messages.Want_to_enable_product_gallery?')}}</strong>','<strong>{{translate('messages.Want_to_disable_product_gallery?')}}</strong>',`<p>{{translate('messages.If_you_enable_this,can_create_duplicate_products')}}</p>`,`<p>{{translate('messages.If_you_disable_this,can_not_create_duplicate_products.')}}</p>`)" class="status toggle-switch-input" value="1"
+                                            <input type="checkbox"
+
+                                                   data-id="product_gallery"
+                                                   data-type="toggle"
+                                                   data-image-on="{{ asset('/public/assets/admin/img/modal/store-reg-on.png') }}"
+                                                   data-image-off="{{ asset('/public/assets/admin/img/modal/store-reg-off.png') }}"
+                                                   data-title-on="<strong>{{translate('messages.Want_to_enable_product_gallery?')}}</strong>"
+                                                   data-title-off="<strong>{{translate('messages.Want_to_disable_product_gallery?')}}</strong>"
+                                                   data-text-on="<p>{{ translate('messages.If_you_enable_this,can_create_duplicate_products') }}</p>"
+                                                   data-text-off="<p>{{ translate('messages.If_you_disable_this,can_not_create_duplicate_products.') }}</p>"
+                                                   class="status toggle-switch-input dynamic-checkbox-toggle"
+                                                   value="1"
                                                 name="product_gallery" id="product_gallery"
                                                 {{ $product_gallery == 1 ? 'checked' : '' }}>
                                             <span class="toggle-switch-label text">
@@ -128,7 +149,18 @@
                                                         alt="{{ translate('messages.access_all_products') }}"> *
                                                 </span>
                                             </span>
-                                            <input type="checkbox" onclick="toogleModal(event,'access_all_products','store-reg-on.png','store-reg-off.png','<strong>{{translate('messages.Want_to_enable_access_all_products?')}}</strong>','<strong>{{translate('messages.Want_to_disable_access_all_products?')}}</strong>',`<p>{{translate('messages.If_you_enable_this,_Stores_can_access_all_products_of_other_available_stores')}}</p>`,`<p>{{translate('messages.If_you_disable_this,_Stores_can_not_access_all_products_of_other_stores.')}}</p>`)" class="status toggle-switch-input" value="1"
+                                            <input type="checkbox"
+
+                                                   data-id="access_all_products"
+                                                   data-type="toggle"
+                                                   data-image-on="{{ asset('/public/assets/admin/img/modal/store-reg-on.png') }}"
+                                                   data-image-off="{{ asset('/public/assets/admin/img/modal/store-reg-off.png') }}"
+                                                   data-title-on="<strong>{{translate('messages.Want_to_enable_access_all_products?')}}</strong>"
+                                                   data-title-off="<strong>{{translate('messages.Want_to_disable_access_all_products?')}}</strong>"
+                                                   data-text-on="<p>{{ translate('messages.If_you_enable_this,_Stores_can_access_all_products_of_other_available_stores') }}</p>"
+                                                   data-text-off="<p>{{ translate('messages.If_you_disable_this,_Stores_can_not_access_all_products_of_other_stores.') }}</p>"
+                                                   class="status toggle-switch-input dynamic-checkbox-toggle"
+                                                   value="1"
                                                 name="access_all_products" id="access_all_products"
                                                 {{ $access_all_products == 1 ? 'checked' : '' }}>
                                             <span class="toggle-switch-label text">
@@ -150,10 +182,20 @@
                                                     data-toggle="tooltip" data-placement="right"
                                                     data-original-title="{{ translate('messages.If_enabled,_this_option_to_require_admin_approval_for_products_to_be_displayed_on_the_user_side.')}}"><img
                                                         src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
-                                                        alt="{{ translate('messages.customer_varification_toggle') }}"> *
+                                                        alt="{{ translate('messages.customer_verification_toggle') }}"> *
                                                 </span>
                                             </span>
-                                            <input type="checkbox" onclick="toogleModal(event,'product_approval','store-reg-on.png','store-reg-off.png','<strong>{{translate('messages.Want_to_enable_product_approval?')}}</strong>','<strong>{{translate('messages.Want_to_disable_product_approval?')}}</strong>',`<p>{{translate('messages.If_you_enable_this,_option_to_require_admin_approval_for_products_to_be_displayed_on_the_user_side')}}</p>`,`<p>{{translate('messages.If_you_disable_this,products_will_to_be_displayed_on_the_user_side_without_admin_approval.')}}</p>`)" class="status toggle-switch-input" value="1"
+                                            <input type="checkbox"
+                                                   data-id="product_approval"
+                                                   data-type="toggle"
+                                                   data-image-on="{{ asset('/public/assets/admin/img/modal/store-reg-on.png') }}"
+                                                   data-image-off="{{ asset('/public/assets/admin/img/modal/store-reg-off.png') }}"
+                                                   data-title-on="<strong>{{translate('messages.Want_to_enable_product_approval?')}}</strong>"
+                                                   data-title-off="<strong>{{translate('messages.Want_to_disable_product_approval?')}}</strong>"
+                                                   data-text-on="<p>{{ translate('messages.If_you_enable_this,_option_to_require_admin_approval_for_products_to_be_displayed_on_the_user_side') }}</p>"
+                                                   data-text-off="<p>{{ translate('messages.If_you_disable_this,products_will_to_be_displayed_on_the_user_side_without_admin_approval.') }}</p>"
+                                                   class="status toggle-switch-input dynamic-checkbox-toggle"
+                                                   value="1"
                                                 name="product_approval" id="product_approval"
                                                 {{ $product_approval == 1 ? 'checked' : '' }}>
                                             <span class="toggle-switch-label text">
@@ -189,11 +231,6 @@
 
 
 
-
-
-
-
-
                             <div class="row g-3 align-items-end">
                             <div class="col-lg-4 col-sm-6">
                                 @php($cash_in_hand_overflow = \App\Models\BusinessSetting::where('key', 'cash_in_hand_overflow_store')->first())
@@ -213,7 +250,17 @@
                                                         alt="{{ translate('messages.cash_in_hand_overflow') }}"> *
                                                 </span>
                                             </span>
-                                        <input type="checkbox" onclick="toogleModal(event,'cash_in_hand_overflow','show-earning-in-apps-on.png','show-earning-in-apps-off.png','{{translate('Want_to_enable')}} <strong>{{translate('Cash_In_Hand_Overflow')}}</strong> ?','{{translate('Want_to_disable')}} <strong>{{translate('Cash_In_Hand_Overflow')}}</strong>  ?',`<p>{{translate('If_enabled,_stores_have_to_provide_collected_cash_by_them_self')}}</p>`,`<p>{{translate('If_disabled,_stores_do_not_have_to_provide_collected_cash_by_them_self')}}</p>`)" class="toggle-switch-input" value="1"
+                                        <input type="checkbox"
+                                               data-id="cash_in_hand_overflow"
+                                               data-type="toggle"
+                                               data-image-on="{{ asset('/public/assets/admin/img/modal/show-earning-in-apps-on.png') }}"
+                                               data-image-off="{{ asset('/public/assets/admin/img/modal/show-earning-in-apps-off.png') }}"
+                                               data-title-on="{{translate('Want_to_enable')}} <strong>{{translate('Cash_In_Hand_Overflow')}}</strong>"
+                                               data-title-off="{{translate('Want_to_disable')}} <strong>{{translate('Cash_In_Hand_Overflow')}}</strong> "
+                                               data-text-on="<p>{{ translate('If_enabled,_stores_have_to_provide_collected_cash_by_them_self') }}</p>"
+                                               data-text-off="<p>{{ translate('If_disabled,_stores_do_not_have_to_provide_collected_cash_by_them_self') }}</p>"
+                                               class="status toggle-switch-input dynamic-checkbox-toggle"
+                                                value="1"
                                                name="cash_in_hand_overflow_store" id="cash_in_hand_overflow"
                                             {{ $cash_in_hand_overflow == 1 ? 'checked' : '' }}>
                                         <span class="toggle-switch-label text">
@@ -234,11 +281,8 @@
                                            for="cash_in_hand_overflow_store_amount">
                                             <span>
                                                 {{ translate('Maximum_Amount_to_Hold_Cash_in_Hand') }} ({{ \App\CentralLogics\Helpers::currency_symbol() }})
-
                                             </span>
-                                        {{-- <div class="d-flex align-items-center">
-                                            <span class="line--limit-1 flex-grow"> </span>
-                                        </div> --}}
+
                                         <span class="form-label-secondary"
                                               data-toggle="tooltip" data-placement="right"
                                               data-original-title="{{ translate('Enter_the_maximum_cash_amount_stores_can_hold._If_this_number_exceeds,_stores_will_be_suspended_and_not_receive_any_orders.') }}"><img
@@ -261,9 +305,7 @@
                                                 {{ translate('Minimum_Amount_To_Pay') }} ({{ \App\CentralLogics\Helpers::currency_symbol() }})
 
                                             </span>
-                                        {{-- <div class="d-flex align-items-center">
-                                            <span class="line--limit-1 flex-grow"> </span>
-                                        </div> --}}
+
                                         <span class="form-label-secondary"
                                               data-toggle="tooltip" data-placement="right"
                                               data-original-title="{{ translate('Enter_the_minimum_cash_amount_stores_can_pay') }}"><img
@@ -278,14 +320,10 @@
                             </div>
 
 
-
-
-
                             <div class="btn--container justify-content-end mt-3">
                                 <button type="reset" class="btn btn--reset">{{ translate('messages.reset') }}</button>
                                 <button type="{{ env('APP_MODE') != 'demo' ? 'submit' : 'button' }}"
-                                    onclick="{{ env('APP_MODE') != 'demo' ? '' : 'call_demo()' }}"
-                                    class="btn btn--primary">{{ translate('save_information') }}</button>
+                                    class="btn btn--primary call-demo">{{ translate('save_information') }}</button>
                             </div>
                         </div>
                     </div>
@@ -298,6 +336,3 @@
 
 @endsection
 
-@push('script_2')
-
-@endpush

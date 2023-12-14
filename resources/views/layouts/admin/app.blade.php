@@ -952,21 +952,7 @@
 </script>
 
 <script>
-    // function toogleModal(e, toggle_id, on_image, off_image, on_title, off_title, on_message, off_message) {
-    //     e.preventDefault();
-    //     if ($('#'+toggle_id).is(':checked')) {
-    //         $('#toggle-title').empty().append(on_title);
-    //         $('#toggle-message').empty().append(on_message);
-    //         $('#toggle-image').attr('src', "{{asset('/public/assets/admin/img/modal')}}/"+on_image);
-    //         $('#toggle-ok-button').attr('toggle-ok-button', toggle_id);
-    //     } else {
-    //         $('#toggle-title').empty().append(off_title);
-    //         $('#toggle-message').empty().append(off_message);
-    //         $('#toggle-image').attr('src', "{{asset('/public/assets/admin/img/modal')}}/"+off_image);
-    //         $('#toggle-ok-button').attr('toggle-ok-button', toggle_id);
-    //     }
-    //     $('#toggle-modal').modal('show');
-    // }
+
 
     function confirmToggle() {
         var toggle_id = $('#toggle-ok-button').attr('toggle-ok-button');
@@ -1040,21 +1026,7 @@
 
     }
 
-    // function toogleStatusModal(e, toggle_id, on_image, off_image, on_title, off_title, on_message, off_message) {
-    //     e.preventDefault();
-    //     if ($('#'+toggle_id).is(':checked')) {
-    //         $('#toggle-status-title').empty().append(on_title);
-    //         $('#toggle-status-message').empty().append(on_message);
-    //         $('#toggle-status-image').attr('src', "{{asset('/public/assets/admin/img/modal')}}/"+on_image);
-    //         $('#toggle-status-ok-button').attr('toggle-ok-button', toggle_id);
-    //     } else {
-    //         $('#toggle-status-title').empty().append(off_title);
-    //         $('#toggle-status-message').empty().append(off_message);
-    //         $('#toggle-status-image').attr('src', "{{asset('/public/assets/admin/img/modal')}}/"+off_image);
-    //         $('#toggle-status-ok-button').attr('toggle-ok-button', toggle_id);
-    //     }
-    //     $('#toggle-status-modal').modal('show');
-    // }
+
 
     function confirmStatusToggle() {
         var toggle_id = $('#toggle-status-ok-button').attr('toggle-ok-button');
@@ -1087,9 +1059,7 @@
             });
         @endif
     });
-    $(document).on('click', '.location-reload', function () {
-        location.reload();
-    });
+
 
 </script>
 

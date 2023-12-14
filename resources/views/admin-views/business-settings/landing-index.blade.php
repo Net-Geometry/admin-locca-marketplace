@@ -38,7 +38,7 @@
                             title="{{ translate('You_can_turn_off/on_system-provided_landing_page') }}"></i>
                     </h5>
                     <label class="toggle-switch toggle-switch-sm">
-                        <input type="checkbox" class="status toggle-switch-input" onclick="landing_page()"
+                        <input type="checkbox" class="status toggle-switch-input landing-page"
                             {{ isset($config) && $config ? 'checked' : '' }}>
                         <span class="toggle-switch-label text mb-0">
                             <span class="toggle-switch-indicator"></span>
@@ -106,12 +106,12 @@
                         <div class="__input-tab {{ $landing_integration_type == 'url' ? 'active' : '' }}" id="url">
                             <div class="__bg-F8F9FC-card">
                                 <div class="form-group mb-0 pb-2">
-                                    <label class="form-label text-capitalize">
+                                    <label for="redirect_url" class="form-label text-capitalize">
                                         {{ translate('landing_page_url') }}
                                     </label>
                                     <input type="text"
                                         placeholder="{{ translate('messages.Ex: https://6ammart-web.6amtech.com/') }}"
-                                        class="form-control h--45px" name="redirect_url" value="{{ $redirect_url }}">
+                                        class="form-control h--45px" id="redirect_url" name="redirect_url" value="{{ $redirect_url }}">
                                 </div>
                             </div>
                         </div>
@@ -125,8 +125,8 @@
                                             <div class="uploadDnD">
                                                 <div class="form-group mb-0 inputDnD bg-white rounded">
                                                     <input type="file" name="file_upload"
-                                                        class="form-control-file text--primary font-weight-bold"
-                                                        id="inputFile" onchange="readUrl(this)" accept=".zip"
+                                                        class="form-control-file text--primary font-weight-bold read-file"
+                                                        id="inputFile"  accept=".zip"
                                                         data-title="Drag & drop file or Browse file">
                                                 </div>
                                             </div>
@@ -158,12 +158,6 @@
                                                         {{ translate('Upload_content_as_a_single_ZIP_file_and_the_file_name_must_be') }}
                                                         <b>index.blade.php</b>
                                                     </li>
-                                                    {{-- <li>
-                                                            Other instructions -1
-                                                        </li>
-                                                        <li>
-                                                            Other instructions -2
-                                                        </li> --}}
                                                 </ul>
                                             </div>
                                         </div>
@@ -180,9 +174,9 @@
                                                 index.blade.php
                                             </h3>
 
-
-                                            <a class="btn action-btn btn--danger btn-outline-danger border-0" href="javascript:"
-                                            onclick="form_alert('index_page','{{ translate('Want to delete this index_page ?') }}')" title="{{translate('messages.delete_index_page')}}"><i class="tio-delete-outlined"></i>
+                                            <a class="btn action-btn btn--danger btn-outline-danger border-0 form-alert"  href="javascript:"
+                                               data-id="index_page"
+                                               data-message="{{ translate('Want to delete this index_page ?') }}" title="{{translate('messages.delete_index_page')}}"><i class="tio-delete-outlined"></i>
                                         </a>
                                         </div>
                                     </div>
@@ -218,11 +212,11 @@
                     </div>
                     <div class="btn--container justify-content-end mt-3">
                         <button type="reset" id="reset_btn" class="btn btn--reset">{{ translate('Reset') }}</button>
-                        <button type="button" onclick="zip_upload()" class="btn btn--primary mb-2" id="update_setting">
+                        <button type="button"  class="btn btn--primary mb-2 zip-upload" id="update_setting">
                             {{ translate('Save_Information') }}</button>
                     </div>
                 </div>
-        </div>
+
         </form>
         <form action="{{route('admin.business-settings.delete-custom-landing-page')}}" method="post" id="index_page">
             @csrf @method('delete')
@@ -283,211 +277,20 @@
     </div>
 @endsection
 @push('script_2')
-    <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
-    <script href="{{ asset('public/assets/admin/vendor/swiper/swiper-bundle.min.js') }}"></script>
+            <script src="{{asset('public/assets/admin/js/view-pages/business-settings-landing-page.js')}}"></script>
+            <script href="{{ asset('public/assets/admin/vendor/swiper/swiper-bundle.min.js') }}"></script>
+
 
     <script>
-        $("img.svg").each(function() {
-            var $img = jQuery(this);
-            var imgID = $img.attr("id");
-            var imgClass = $img.attr("class");
-            var imgURL = $img.attr("src");
 
-            jQuery.get(
-                imgURL,
-                function(data) {
-                    // Get the SVG tag, ignore the rest
-                    var $svg = jQuery(data).find("svg");
+        "use strict";
 
-                    // Add replaced image's ID to the new SVG
-                    if (typeof imgID !== "undefined") {
-                        $svg = $svg.attr("id", imgID);
-                    }
-                    // Add replaced image's classes to the new SVG
-                    if (typeof imgClass !== "undefined") {
-                        $svg = $svg.attr("class", imgClass + " replaced-svg");
-                    }
-
-                    // Remove any invalid XML tags as per http://validator.w3.organim
-                    $svg = $svg.removeAttr("xmlns:a");
-
-                    // Check if the viewport is set, else we gonna set it if we can.
-                    if (
-                        !$svg.attr("viewBox") &&
-                        $svg.attr("height") &&
-                        $svg.attr("width")
-                    ) {
-                        $svg.attr(
-                            "viewBox",
-                            "0 0 " + $svg.attr("height") + " " + $svg.attr("width")
-                        );
-                    }
-
-                    // Replace image with new SVG
-                    $img.replaceWith($svg);
-                },
-                "xml"
-            );
-        });
-    </script>
-
-    <script>
-        function readUrl(input) {
-            if (input.files && input.files[0]) {
-                let reader = new FileReader();
-                reader.onload = (e) => {
-                    let imgData = e.target.result;
-                    let imgName = input.files[0].name;
-                    input.setAttribute("data-title", imgName);
-                    // console.log(e.target.result);
-                }
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-    </script>
-    <script>
-        function zip_upload() {
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-
-            var formData = new FormData(document.getElementById('theme_form'));
-            $.ajax({
-                type: 'POST',
-                url: "{{ route('admin.business-settings.update-landing-setup') }}",
-                data: formData,
-                processData: false,
-                contentType: false,
-                xhr: function() {
-                    var xhr = new window.XMLHttpRequest();
-                    if ($('#inputFile').val()) {
-                        $('#progress-bar').show();
-                    }
-
-                    // Listen to the upload progress event
-                    xhr.upload.addEventListener("progress", function(e) {
-                        if (e.lengthComputable) {
-                            var percentage = Math.round((e.loaded * 100) / e.total);
-                            $("#uploadProgress").val(percentage);
-                            $("#progress-label").text(percentage + "%");
-                        }
-                    }, false);
-
-                    return xhr;
-                },
-                beforeSend: function() {
-                    $('#update_setting').attr('disabled');
-                },
-                success: function(response) {
-                    if (response.status == 'error') {
-                        $('#progress-bar').hide();
-                        toastr.error(response.message, {
-                            CloseButton: true,
-                            ProgressBar: true
-                        });
-                    } else if (response.status == 'success') {
-                        toastr.success(response.message, {
-                            CloseButton: true,
-                            ProgressBar: true
-                        });
-                        location.reload();
-                    }
-                },
-                complete: function() {
-                    $('#update_setting').removeAttr('disabled');
-                },
-            });
-        }
-
-        function publish_addon(path) {
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $.post({
-                url: '{{ route('admin.business-settings.system-addon.publish') }}',
-                data: {
-                    'path': path
-                },
-                success: function(data) {
-                    if (data.flag === 'inactive') {
-                        // console.log(data.view)
-                        $('#activatedThemeModal').modal('show');
-                        $('#activateData').empty().html(data.view);
-                    } else {
-                        if (data.errors) {
-                            for (var i = 0; i < data.errors.length; i++) {
-                                toastr.error(data.errors[i].message, {
-                                    CloseButton: true,
-                                    ProgressBar: true
-                                });
-                            }
-                        } else {
-                            toastr.success('{{ translate('updated successfully!') }}', {
-                                CloseButton: true,
-                                ProgressBar: true
-                            });
-                            setTimeout(function() {
-                                location.reload()
-                            }, 2000);
-                        }
-                    }
-                }
-            });
-        }
-
-        function theme_delete(path) {
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $.post({
-                url: '{{ route('admin.business-settings.system-addon.delete') }}',
-                data: {
-                    path
-                },
-                beforeSend: function() {
-                    $('#loading').show();
-                },
-                success: function(data) {
-                    if (data.status === 'success') {
-                        setTimeout(function() {
-                            location.reload()
-                        }, 2000);
-
-                        toastr.success(data.message, {
-                            CloseButton: true,
-                            ProgressBar: true
-                        });
-                    } else if (data.status === 'error') {
-                        toastr.error(data.message, {
-                            CloseButton: true,
-                            ProgressBar: true
-                        });
-                    }
-                },
-                complete: function() {
-                    $('#loading').hide();
-                },
-            });
-        }
-
-        var swiper = new Swiper(".mySwiper", {
-            pagination: {
-                el: ".swiper-pagination",
-                dynamicBullets: true,
-            },
-        });
-    </script>
-    <script>
-        function landing_page(message) {
-            @if (env('APP_MODE') == 'demo')
+        $(document).ready(function() {
+            $('.landing-page').on('click', function(event) {
+                event.preventDefault();
+                @if (env('APP_MODE') == 'demo')
                 toastr.warning('Sorry! You can not change landing page in demo!');
-            @else
+                @else
                 Swal.fire({
                     title: '{{ isset($config) && $config ? translate('messages.Want_to_Turn_Off_the_Default_Admin_Landing_Page_?') : translate('messages.Want_to_Turn_On_the_Default_Admin_Landing_Page_?') }}',
                     text: '{{ isset($config) && $config ? translate('If_disabled,_the_landing_page_won’t_be_visible_to_anyone') : translate('If_enabled,_the_landing_page_will_be_visible_to_everyone') }}',
@@ -515,27 +318,77 @@
                                 $('#loading').hide();
                             },
                         });
-                    } else {
-                        location.reload();
                     }
                 })
-            @endif
-        };
-    </script>
-    <script>
-        $('input[name="landing_integration_via"]').on('change', function() {
-            $(`.__input-tab`).removeClass('active')
-            $(`#${this.value}`).addClass('active') 
-        })
-    </script>
-    <script>
+                @endif
+
+            });
+
+            $('.zip-upload').on('click', function(){
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                let formData = new FormData(document.getElementById('theme_form'));
+                $.ajax({
+                    type: 'POST',
+                    url: "{{ route('admin.business-settings.update-landing-setup') }}",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    xhr: function() {
+                        let xhr = new window.XMLHttpRequest();
+                        if ($('#inputFile').val()) {
+                            $('#progress-bar').show();
+                        }
+
+                        xhr.upload.addEventListener("progress", function(e) {
+                            if (e.lengthComputable) {
+                                let percentage = Math.round((e.loaded * 100) / e.total);
+                                $("#uploadProgress").val(percentage);
+                                $("#progress-label").text(percentage + "%");
+                            }
+                        }, false);
+
+                        return xhr;
+                    },
+                    beforeSend: function() {
+                        $('#update_setting').attr('disabled');
+                    },
+                    success: function(response) {
+                        if (response.status === 'error') {
+                            $('#progress-bar').hide();
+                            toastr.error(response.message, {
+                                CloseButton: true,
+                                ProgressBar: true
+                            });
+                        } else if (response.status === 'success') {
+                            toastr.success(response.message, {
+                                CloseButton: true,
+                                ProgressBar: true
+                            });
+                            location.reload();
+                        }
+                    },
+                    complete: function() {
+                        $('#update_setting').removeAttr('disabled');
+                    },
+                });
+
+            });
+
+        });
+
         $('#reset_btn').click(function() {
             $('.uploadDnD').empty().append(`<div class="form-group mb-0 inputDnD bg-white rounded">
-                                                        <input type="file" name="file_upload" class="form-control-file text--primary font-weight-bold"
-                                                        id="inputFile" onchange="readUrl(this)" accept=".zip" data-title="Drag & drop file or Browse file">
+                                                        <input type="file" name="file_upload" class="form-control-file text--primary font-weight-bold read-file "
+                                                        id="inputFile"  accept=".zip" data-title="Drag & drop file or Browse file">
                                                     </div>`)
             $(`.__input-tab`).removeClass('active')
             $(`#{{ $landing_integration_type }}`).addClass('active')
         })
+
+
     </script>
 @endpush
