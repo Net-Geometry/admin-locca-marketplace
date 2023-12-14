@@ -31,7 +31,7 @@
                         <button type="button" class="btn-sm btn--primary" data-toggle="modal" data-target="#updatesettingsmodal">
                             <i class="tio-open-in-new"></i> {{translate('messages.update')}}
                         </button>
-                        <button type="button" onclick="form_alert('discount-{{$store->id}}','{{ translate('Want to remove discount?') }}')" class="btn btn--danger text-white"><i class="tio-delete-outlined"></i>  {{translate('messages.delete')}}</button>
+                        <button type="button" data-url="discount-{{$store->id}}" data-message="{{ translate('Want to remove discount?') }}" class="btn btn--danger text-white form-alert"><i class="tio-delete-outlined"></i>  {{translate('messages.delete')}}</button>
                         @else
                         <button type="button" class="btn-sm btn--primary" data-toggle="modal" data-target="#updatesettingsmodal">
                             <i class="tio-add"></i> {{translate('messages.add_discount')}}
@@ -41,9 +41,6 @@
                 </div>
                 <div class="card-body">
                     @if($store->discount)
-                    {{-- <div class="text--info mb-3">
-                        {{translate('* When this discount is available, is applied on all the items in this stores.')}}
-                    </div> --}}
                     <div class="row gy-3">
                         <div class="col-md-4 align-self-center text-center">
 
@@ -173,11 +170,12 @@
 
 @push('script_2')
     <script>
+        "use strict";
         $(document).on('ready', function () {
             // INITIALIZATION OF SELECT2
             // =======================================================
             $('.js-select2-custom').each(function () {
-                var select2 = $.HSCore.components.HSSelect2.init($(this));
+                let select2 = $.HSCore.components.HSSelect2.init($(this));
             });
             $('#date_from').attr('min',(new Date()).toISOString().split('T')[0]);
             $('#date_to').attr('min',(new Date()).toISOString().split('T')[0]);
@@ -193,7 +191,7 @@
 
         $('#discount-form').on('submit', function (e) {
             e.preventDefault();
-            var formData = new FormData(this);
+            let formData = new FormData(this);
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -207,7 +205,7 @@
                 processData: false,
                 success: function (data) {
                     if (data.errors) {
-                        for (var i = 0; i < data.errors.length; i++) {
+                        for (let i = 0; i < data.errors.length; i++) {
                             toastr.error(data.errors[i].message, {
                                 CloseButton: true,
                                 ProgressBar: true

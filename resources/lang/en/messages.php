@@ -3573,4 +3573,7 @@
   'QTY Sold' => 'QTY Sold',
   'Discount Given' => 'Discount Given',
   'Day' => 'Day',
+  'If_disabled,_store_recommended_section_will_not_be_shuffled.' => 'If disabled  store recommended section will not be shuffled.',
+  'store_earned' => 'Store earned',
+  'admin_earned' => 'Admin earned',
 );

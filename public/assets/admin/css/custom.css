@@ -162,3 +162,12 @@ ol.breadcrumb {
 #offline_payment_cancelation_note {
     z-index: 99999999999999;
 }
+
+.w-100-p{
+    width:100%;
+}
+
+div.scroll-down {
+    max-height: 300px;
+    overflow-y: scroll;
+}

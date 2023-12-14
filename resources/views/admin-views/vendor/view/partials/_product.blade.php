@@ -17,7 +17,7 @@
     <td>{{\App\CentralLogics\Helpers::format_currency($food['price'])}}</td>
     <td>
         <label class="toggle-switch toggle-switch-sm" for="stocksCheckbox{{$food->id}}">
-            <input type="checkbox" onclick="location.href='{{route('admin.item.status',[$food['id'],$food->status?0:1])}}'"class="toggle-switch-input" id="stocksCheckbox{{$food->id}}" {{$food->status?'checked':''}}>
+            <input type="checkbox" class="toggle-switch-input redirect-url" data-url="{{route('admin.item.status',[$food['id'],$food->status?0:1])}}" id="stocksCheckbox{{$food->id}}" {{$food->status?'checked':''}}>
             <span class="toggle-switch-label">
                 <span class="toggle-switch-indicator"></span>
             </span>
@@ -26,14 +26,14 @@
     <td>
         <div class="btn--container justify-content-center">
             <a class="btn action-btn btn--primary btn-outline-primary"
-                href="{{route('admin.item.edit',[$food['id']])}}" title="{{translate('messages.edit_item')}}"><i class="tio-edit"></i>
+               href="{{route('admin.item.edit',[$food['id']])}}" title="{{translate('messages.edit_item')}}"><i class="tio-edit"></i>
             </a>
-            <a class="btn action-btn btn--danger btn-outline-danger" href="javascript:"
-                onclick="form_alert('food-{{$food['id']}}','{{ translate('messages.Want to delete this item ?') }}')" title="{{translate('messages.delete_item')}}"><i class="tio-delete-outlined"></i>
+            <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:"
+               data-url="food-{{$food['id']}}" data-message="{{ translate('messages.Want to delete this item ?') }}" title="{{translate('messages.delete_item')}}"><i class="tio-delete-outlined"></i>
             </a>
         </div>
         <form action="{{route('admin.item.delete',[$food['id']])}}"
-                method="post" id="food-{{$food['id']}}">
+              method="post" id="food-{{$food['id']}}">
             @csrf @method('delete')
         </form>
     </td>

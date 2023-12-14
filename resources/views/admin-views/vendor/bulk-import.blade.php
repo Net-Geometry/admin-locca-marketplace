@@ -91,7 +91,7 @@
                     <div class="btn--container justify-content-end mt-3">
                         <button id="reset_btn" type="reset" class="btn btn--reset">{{translate('messages.Clear')}}</button>
                         <button type="submit" name="button" value="update" class="btn btn--warning">{{translate('messages.update')}}</button>
-                        <button type="submit" name="button" value="import"class="btn btn--primary">{{translate('messages.Import')}}</button>
+                        <button type="submit" name="button" value="import" class="btn btn--primary">{{translate('messages.Import')}}</button>
                     </div>
                 </form>
             </div>
@@ -109,7 +109,7 @@
 
     $(document).on("click", ":submit", function(e){
         e.preventDefault();
-            var data = $(this).val();
+            let data = $(this).val();
             myFunction(data)
     });
 
@@ -130,9 +130,6 @@
                 $('#btn_value').val(data);
                 $("#import_form").submit();
             }
-            // else {
-            //     toastr.success("{{ translate('Cancelled') }}");
-            // }
         })
     }
         </script>
