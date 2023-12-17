@@ -33,29 +33,29 @@
                     <div class="row g-3">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="input-label qcont text-capitalize"
-                                    for="fname">{{ translate('messages.first_name') }}</label>
-                                <input type="text" name="f_name" class="form-control" id="fname"
+                                <label class="input-label text-capitalize"
+                                    for="f_name">{{ translate('messages.first_name') }}</label>
+                                <input type="text" name="f_name" class="form-control" id="f_name"
                                     placeholder="{{ translate('messages.Ex:') }} Sakeef Ameer" value="{{ old('f_name') }}"
                                     required>
                             </div>
                             <div class="form-group">
-                                <label class="input-label qcont text-capitalize"
-                                    for="lname">{{ translate('messages.last_name') }}</label>
-                                <input type="text" name="l_name" class="form-control" id="lname"
+                                <label class="input-label text-capitalize"
+                                    for="l_name">{{ translate('messages.last_name') }}</label>
+                                <input type="text" name="l_name" class="form-control" id="l_name"
                                     value="{{ old('l_name') }}" placeholder="{{ translate('messages.Ex:') }} Prodhan"
-                                    value="{{ old('name') }}">
+                                    >
                             </div>
                             <div class="form-group">
-                                <label class="input-label qcont text-capitalize"
+                                <label class="input-label text-capitalize"
                                     for="phone">{{ translate('messages.phone') }}</label>
                                 <input type="number" name="phone" value="{{ old('phone') }}" class="form-control"
                                     id="phone" placeholder="{{ translate('messages.Ex:') }} +88017********" required>
                             </div>
                             <div class="form-group mb-0">
-                                <label class="input-label qcont text-capitalize"
+                                <label class="input-label text-capitalize"
                                     for="role_id">{{ translate('messages.Role') }}</label>
-                                <select class="form-control custom-select2" name="role_id" required>
+                                <select id="role_id" class="form-control custom-select2" name="role_id" required>
                                     <option value="" selected disabled>{{ translate('messages.select_Role') }}</option>
                                     @foreach ($rls as $r)
                                         <option value="{{ $r->id }}">{{ $r->name }}</option>
@@ -71,8 +71,9 @@
                                         <span class="text-danger">{{ translate('messages.Ratio (1:1)') }}</span>
                                     </h5>
                                     <center class="my-auto">
-                                        <img class="store-banner" id="viewer"
-                                            src="{{ asset('public\assets\admin\img\160x160\img1.jpg') }}"
+                                        <img class="store-banner onerror-image" id="viewer"
+                                             data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
+                                            src="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
                                             alt="Employee thumbnail" />
                                     </center>
                                     <div class="form-group mt-3 mb-0">
@@ -80,7 +81,7 @@
                                             <span class="text-danger">*</span></label>
                                         <div class="custom-file">
                                             <input type="file" name="image" id="customFileUpload"
-                                                class="custom-file-input"
+                                                class="custom-file-input read-url"
                                                 accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*"
                                                 value="{{ old('image') }}" required>
                                             <label class="custom-file-label"
@@ -101,7 +102,7 @@
                                 <div class="card-body">
                                     <div class="row g-3">
                                         <div class="col-md-4">
-                                            <label class="input-label qcont text-capitalize"
+                                            <label class="input-label text-capitalize"
                                                 for="email">{{ translate('messages.email') }}</label>
                                             <input type="email" name="email" value="{{ old('email') }}"
                                                 class="form-control" id="email"
@@ -124,7 +125,7 @@
                                                     "classChangeTarget": ".js-toggle-passowrd-show-icon-1"
                                                     }'>
                                                     <div class="js-toggle-password-target-1 input-group-append">
-                                                        <a class="input-group-text" href="javascript:;">
+                                                        <a class="input-group-text" href="javascript:">
                                                             <i class="js-toggle-passowrd-show-icon-1 tio-visible-outlined"></i>
                                                         </a>
                                                     </div>
@@ -146,7 +147,7 @@
                                                         "classChangeTarget": ".js-toggle-passowrd-show-icon-2"
                                                         }'>
                                                     <div class="js-toggle-password-target-2 input-group-append">
-                                                        <a class="input-group-text" href="javascript:;">
+                                                        <a class="input-group-text" href="javascript:">
                                                         <i class="js-toggle-passowrd-show-icon-2 tio-visible-outlined"></i>
                                                         </a>
                                                     </div>
@@ -176,48 +177,10 @@
 @endsection
 
 @push('script_2')
-<script>
-    $(document).on('ready', function () {
-      // INITIALIZATION OF SHOW PASSWORD
-      // =======================================================
-      $('.js-toggle-password').each(function () {
-        new HSTogglePassword(this).init()
-      });
-
-
-      // INITIALIZATION OF FORM VALIDATION
-      // =======================================================
-      $('.js-validate').each(function() {
-        $.HSCore.components.HSValidation.init($(this), {
-          rules: {
-            confirmPassword: {
-              equalTo: '#signupSrPassword'
-            }
-          }
-        });
-      });
-    });
-  </script>
     <script>
-        function readURL(input) {
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
-
-                reader.onload = function(e) {
-                    $('#viewer').attr('src', e.target.result);
-                }
-
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-
-        $("#customFileUpload").change(function() {
-            readURL(this);
-        });
-    </script>
-    <script>
+        "use strict";
         $('#reset_btn').click(function() {
-            $('#viewer').attr('src', '{{ asset('public\assets\admin\img\400x400\img2.jpg') }}');
+            $('#viewer').attr('src', '{{ asset('public/assets/admin/img/160x160/img1.jpg') }}');
         })
     </script>
 @endpush

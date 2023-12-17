@@ -468,7 +468,7 @@ fetch('https://iid.googleapis.com/iid/v1/' + token + '/rel/topics/' + topic, {
             }
         }
 
-        function converationList() {
+        function conversationList() {
             $.ajax({
                 url: "{{ route('vendor.message.list') }}",
                 success: function(data) {
@@ -518,7 +518,7 @@ fetch('https://iid.googleapis.com/iid/v1/' + token + '/rel/topics/' + topic, {
                     });
 
             if($('#conversation-list').scrollTop() == 0){
-                converationList();
+                conversationList();
             }
         }
         });
@@ -554,7 +554,7 @@ fetch('https://iid.googleapis.com/iid/v1/' + token + '/rel/topics/' + topic, {
         }
 
         startFCM();
-        converationList();
+        conversationList();
         if(getUrlParameter('conversation')){
             conversationView();
         }

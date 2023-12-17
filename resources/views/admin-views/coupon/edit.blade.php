@@ -40,7 +40,7 @@
                                 <div class="lang_form" id="default-form">
                                     <div class="form-group">
                                         <label class="input-label" for="default_title">{{translate('messages.title')}} ({{translate('messages.default')}})</label>
-                                        <input type="text" name="title[]" id="default_title" class="form-control" placeholder="{{translate('messages.new_coupon')}}" value="{{$coupon?->getRawOriginal('title')}}" oninvalid="document.getElementById('en-link').click()">
+                                        <input type="text" name="title[]" id="default_title" class="form-control" placeholder="{{translate('messages.new_coupon')}}" value="{{$coupon?->getRawOriginal('title')}}"  >
                                     </div>
                                     <input type="hidden" name="lang[]" value="default">
                                 </div>
@@ -59,7 +59,7 @@
                                     <div class="d-none lang_form" id="{{$lang}}-form">
                                         <div class="form-group">
                                             <label class="input-label" for="{{$lang}}_title">{{translate('messages.title')}} ({{strtoupper($lang)}})</label>
-                                            <input type="text" name="title[]" id="{{$lang}}_title" class="form-control" placeholder="{{translate('messages.new_coupon')}}" value="{{$translate[$lang]['title']??''}}" oninvalid="document.getElementById('en-link').click()">
+                                            <input type="text" name="title[]" id="{{$lang}}_title" class="form-control" placeholder="{{translate('messages.new_coupon')}}" value="{{$translate[$lang]['title']??''}}"  >
                                         </div>
                                         <input type="hidden" name="lang[]" value="{{$lang}}">
                                     </div>

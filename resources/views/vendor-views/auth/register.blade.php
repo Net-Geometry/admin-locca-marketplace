@@ -55,7 +55,7 @@
                                     <input type="text" name="name[]" id="default_name"
                                         class="form-control __form-control" placeholder="{{ translate('messages.store_name') }}"
                                         required
-                                        oninvalid="document.getElementById('en-link').click()">
+                                         >
                                 </div>
                                 </div>
                                 <input type="hidden" name="lang[]" value="default">
@@ -78,7 +78,7 @@
                                             </label>
                                             <input type="text" name="name[]" id="{{ $lang }}_name"
                                                 class="form-control __form-control" placeholder="{{ translate('messages.store_name') }}"
-                                                oninvalid="document.getElementById('en-link').click()">
+                                                 >
                                         </div>
                                         </div>
                                         <input type="hidden" name="lang[]" value="{{ $lang }}">

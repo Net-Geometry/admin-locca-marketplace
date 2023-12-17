@@ -82,13 +82,13 @@
                                 <div class="tab-content">
                                     <div class="form-group lang_form" id="default-form">
                                         <label class="input-label" for="exampleFormControlInput1">{{ translate('messages.business_Zone_name')}} ({{ translate('messages.default') }})</label>
-                                        <input type="text" name="name[]" class="form-control" placeholder="{{translate('messages.Write_a_New_Business_Zone_Name')}}" maxlength="191" oninvalid="document.getElementById('en-link').click()">
+                                        <input type="text" name="name[]" class="form-control" placeholder="{{translate('messages.Write_a_New_Business_Zone_Name')}}" maxlength="191"  >
                                     </div>
                                     <input type="hidden" name="lang[]" value="default">
                                     @foreach($language as $lang)
                                         <div class="form-group d-none lang_form" id="{{$lang}}-form">
                                             <label class="input-label" for="exampleFormControlInput1">{{ translate('messages.business_Zone_name')}} ({{strtoupper($lang)}})</label>
-                                            <input type="text" name="name[]" class="form-control" placeholder="{{translate('messages.Write_a_New_Business_Zone_Name')}}" maxlength="191" oninvalid="document.getElementById('en-link').click()">
+                                            <input type="text" name="name[]" class="form-control" placeholder="{{translate('messages.Write_a_New_Business_Zone_Name')}}" maxlength="191"  >
                                         </div>
                                         <input type="hidden" name="lang[]" value="{{$lang}}">
                                     @endforeach

@@ -61,7 +61,7 @@
                                                 <input type="text" name="meta_title[]" id="default_title"
                                                     class="form-control" placeholder="{{ translate('messages.meta_title') }}" value="{{$store->getRawOriginal('meta_title')}}"
 
-                                                    oninvalid="document.getElementById('en-link').click()">
+                                                     >
                                             </div>
                                             <input type="hidden" name="lang[]" value="default">
                                             <div class="form-group mb-0">
@@ -94,7 +94,7 @@
                                                         </label>
                                                         <input type="text" name="meta_title[]" id="{{ $lang }}_title"
                                                             class="form-control" value="{{ $translate[$lang]['meta_title']??'' }}" placeholder="{{ translate('messages.meta_title') }}"
-                                                            oninvalid="document.getElementById('en-link').click()">
+                                                             >
                                                     </div>
                                                     <input type="hidden" name="lang[]" value="{{ $lang }}">
                                                     <div class="form-group mb-0">

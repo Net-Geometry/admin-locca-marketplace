@@ -137,6 +137,16 @@ $(document).on('click', '.redirect-url', function () {
     location.href=$(this).data('url');
 });
 
+function readUrl(input) {
+    if (input.files && input.files[0]) {
+        let reader = new FileReader();
+        reader.onload = function (e) {
+            $('#viewer').attr('src', e.target.result);
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
 $(document).ready(function() {
     "use strict"
     $(".upload-img-3, .upload-img-4, .upload-img-2, .upload-img-5, .upload-img-1, .upload-img").each(function(){
@@ -158,5 +168,36 @@ $(document).ready(function() {
             proPicURL(this);
         })
     })
+
+    $('.read-url').on('change', function () {
+        readUrl(this);
+    });
+
+});
+$(document).on('ready', function () {
+    // INITIALIZATION OF SHOW PASSWORD
+    // =======================================================
+    $('.js-toggle-password').each(function () {
+        new HSTogglePassword(this).init()
+    });
+
+
+    // INITIALIZATION OF FORM VALIDATION
+    // =======================================================
+    $('.js-validate').each(function() {
+        $.HSCore.components.HSValidation.init($(this), {
+            rules: {
+                confirmPassword: {
+                    equalTo: '#signupSrPassword'
+                }
+            }
+        });
+    });
 });
 
+$('.route-alert').on('click',function (){
+    let route = $(this).data('url');
+    let message = $(this).data('message');
+    let title = $(this).data('title');
+    route_alert(route, message,title);
+})

@@ -60,7 +60,7 @@
                                     <input type="text" name="name[]" id="default_name"
                                         class="form-control" placeholder="{{ translate('messages.store_name') }}" value="{{$store->getRawOriginal('name')}}"
                                         required
-                                        oninvalid="document.getElementById('en-link').click()">
+                                         >
                                 </div>
                                 <input type="hidden" name="lang[]" value="default">
                                 <div class="form-group mb-0">
@@ -93,7 +93,7 @@
                                             </label>
                                             <input type="text" name="name[]" id="{{ $lang }}_name"
                                                 class="form-control" value="{{ $translate[$lang]['name']??'' }}" placeholder="{{ translate('messages.store_name') }}"
-                                                oninvalid="document.getElementById('en-link').click()">
+                                                 >
                                         </div>
                                         <input type="hidden" name="lang[]" value="{{ $lang }}">
                                         <div class="form-group mb-0">

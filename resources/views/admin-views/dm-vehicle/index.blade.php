@@ -47,13 +47,13 @@
                                     @if ($language)
                                     <div class="form-group lang_form" id="default-form">
                                         <label class="input-label text-capitalize" for="title">{{translate('messages.Vehicle_type')}} ({{ translate('messages.default') }})</label>
-                                        <input type="text" name="type[]" class="form-control h--45px" placeholder="{{translate('messages.ex_:_bike')}}" maxlength="191" required oninvalid="document.getElementById('en-link').click()">
+                                        <input type="text" name="type[]" class="form-control h--45px" placeholder="{{translate('messages.ex_:_bike')}}" maxlength="191" required  >
                                     </div>
                                     <input type="hidden" name="lang[]" value="default">
                                         @foreach($language as $lang)
                                             <div class="form-group d-none lang_form" id="{{$lang}}-form">
                                                 <label class="input-label text-capitalize" for="title">{{translate('messages.Vehicle_type')}} ({{strtoupper($lang)}})</label>
-                                                <input type="text" name="type[]" class="form-control h--45px" placeholder="{{translate('messages.ex_:_bike')}}" maxlength="191" oninvalid="document.getElementById('en-link').click()">
+                                                <input type="text" name="type[]" class="form-control h--45px" placeholder="{{translate('messages.ex_:_bike')}}" maxlength="191"  >
                                             </div>
                                             <input type="hidden" name="lang[]" value="{{$lang}}">
                                         @endforeach

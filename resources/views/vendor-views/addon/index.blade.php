@@ -44,13 +44,13 @@
                                 </ul>
                                 <div class="form-group lang_form" id="default-form">
                                     <label class="input-label" for="name">{{translate('messages.name')}} ({{translate('messages.default')}})</label>
-                                    <input id="name" type="text" name="name[]" class="form-control" placeholder="{{translate('messages.new_addon')}}" maxlength="191" oninvalid="document.getElementById('en-link').click()">
+                                    <input id="name" type="text" name="name[]" class="form-control" placeholder="{{translate('messages.new_addon')}}" maxlength="191"  >
                                 </div>
                                 <input type="hidden" name="lang[]" value="default">
                                 @foreach(json_decode($language) as $lang)
                                     <div class="form-group d-none lang_form" id="{{$lang}}-form">
                                         <label class="input-label" for="name{{$lang}}">{{translate('messages.name')}} ({{strtoupper($lang)}})</label>
-                                        <input type="text" id="name{{$lang}}" name="name[]" class="form-control" placeholder="{{translate('messages.new_addon')}}" maxlength="191" oninvalid="document.getElementById('en-link').click()">
+                                        <input type="text" id="name{{$lang}}" name="name[]" class="form-control" placeholder="{{translate('messages.new_addon')}}" maxlength="191"  >
                                     </div>
                                     <input type="hidden" name="lang[]" value="{{$lang}}">
                                 @endforeach

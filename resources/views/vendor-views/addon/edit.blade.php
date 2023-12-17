@@ -47,7 +47,7 @@
                     @if ($language)
                     <div class="form-group lang_form" id="default-form">
                         <label class="input-label" for="name">{{translate('messages.name')}} ({{ translate('messages.Default') }})</label>
-                        <input type="text" id="name" name="name[]" class="form-control" placeholder="{{translate('messages.new_addon')}}" maxlength="191" value="{{$addon->getRawOriginal('name')}}" oninvalid="document.getElementById('en-link').click()">
+                        <input type="text" id="name" name="name[]" class="form-control" placeholder="{{translate('messages.new_addon')}}" maxlength="191" value="{{$addon->getRawOriginal('name')}}"  >
                     </div>
                     <input type="hidden" name="lang[]" value="{{$lang}}">
                         @foreach(json_decode($language) as $lang)
@@ -64,7 +64,7 @@
                             ?>
                             <div class="form-group d-none lang_form" id="{{$lang}}-form">
                                 <label class="input-label" for="name{{$lang}}">{{translate('messages.name')}} ({{strtoupper($lang)}})</label>
-                                <input id="name{{$lang}}" type="text" name="name[]" class="form-control" placeholder="{{translate('messages.new_addon')}}" maxlength="191" value="{{$translate[$lang]['name']??''}}" oninvalid="document.getElementById('en-link').click()">
+                                <input id="name{{$lang}}" type="text" name="name[]" class="form-control" placeholder="{{translate('messages.new_addon')}}" maxlength="191" value="{{$translate[$lang]['name']??''}}"  >
                             </div>
                             <input type="hidden" name="lang[]" value="{{$lang}}">
                         @endforeach

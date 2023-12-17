@@ -50,7 +50,7 @@
                                             <input type="text" name="unit[]" id="default_title"
                                                 class="form-control" placeholder="{{ translate('messages.unit_name') }}" maxlength="191"
 
-                                                oninvalid="document.getElementById('en-link').click()">
+                                                 >
                                         </div>
                                         <input type="hidden" name="lang[]" value="default">
                                     </div>
@@ -64,7 +64,7 @@
                                                     </label>
                                                     <input type="text" name="unit[]" id="{{ $lang }}_title"
                                                         class="form-control" placeholder="{{ translate('messages.unit_name') }}" maxlength="191"
-                                                        oninvalid="document.getElementById('en-link').click()">
+                                                         >
                                                 </div>
                                                 <input type="hidden" name="lang[]" value="{{ $lang }}">
                                             </div>

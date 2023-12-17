@@ -60,7 +60,7 @@ Route::group(['namespace' => 'Vendor', 'as' => 'vendor.'], function () {
             Route::get('edit/{id}', 'CustomRoleController@edit')->name('edit');
             Route::post('update/{id}', 'CustomRoleController@update')->name('update');
             Route::delete('delete/{id}', 'CustomRoleController@distroy')->name('delete');
-            Route::post('search', 'CustomRoleController@search')->name('search');
+//            Route::post('search', 'CustomRoleController@search')->name('search');
         });
 
         Route::group(['prefix' => 'delivery-man', 'as' => 'delivery-man.', 'middleware' => ['module:deliveryman']], function () {
@@ -73,7 +73,7 @@ Route::group(['namespace' => 'Vendor', 'as' => 'vendor.'], function () {
             Route::get('edit/{id}', 'DeliveryManController@edit')->name('edit');
             Route::post('update/{id}', 'DeliveryManController@update')->name('update');
             Route::delete('delete/{id}', 'DeliveryManController@delete')->name('delete');
-            Route::post('search', 'DeliveryManController@search')->name('search');
+//            Route::post('search', 'DeliveryManController@search')->name('search');
             Route::get('get-deliverymen', 'DeliveryManController@get_deliverymen')->name('get-deliverymen');
             Route::post('transation/search', 'DeliveryManController@transaction_search')->name('transaction-search');
 
@@ -89,7 +89,7 @@ Route::group(['namespace' => 'Vendor', 'as' => 'vendor.'], function () {
             Route::get('edit/{id}', 'EmployeeController@edit')->name('edit');
             Route::post('update/{id}', 'EmployeeController@update')->name('update');
             Route::delete('delete/{id}', 'EmployeeController@distroy')->name('delete');
-            Route::post('search', 'EmployeeController@search')->name('search');
+//            Route::post('search', 'EmployeeController@search')->name('search');
             Route::get('list-export', 'EmployeeController@list_export')->name('export-employee');
         });
 
@@ -180,7 +180,7 @@ Route::group(['namespace' => 'Vendor', 'as' => 'vendor.'], function () {
             Route::post('update/{id}', 'CouponController@update');
             Route::get('status/{id}/{status}', 'CouponController@status')->name('status');
             Route::delete('delete/{id}', 'CouponController@delete')->name('delete');
-            Route::post('search', 'CouponController@search')->name('search');
+//            Route::post('search', 'CouponController@search')->name('search');
         });
 
         Route::group(['prefix' => 'addon', 'as' => 'addon.', 'middleware' => ['module:addon']], function () {

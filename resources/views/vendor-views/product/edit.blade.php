@@ -90,7 +90,7 @@
                                 <div class="lang_form" id="default-form">
                                     <div class="form-group">
                                         <label class="input-label" for="default_name">{{translate('messages.name')}} ({{ translate('messages.default') }})</label>
-                                        <input type="text" name="name[]" id="default_name" class="form-control" placeholder="{{translate('messages.new_food')}}" value="{{$product->getRawOriginal('name')}}" oninvalid="document.getElementById('en-link').click()">
+                                        <input type="text" name="name[]" id="default_name" class="form-control" placeholder="{{translate('messages.new_food')}}" value="{{$product->getRawOriginal('name')}}"  >
                                     </div>
                                     <input type="hidden" name="lang[]" value="default">
                                     <div class="form-group pt-2 mb-0">
@@ -116,7 +116,7 @@
                                         <div class="d-none lang_form" id="{{$lang}}-form">
                                             <div class="form-group">
                                                 <label class="input-label" for="{{$lang}}_name">{{translate('messages.name')}} ({{strtoupper($lang)}})</label>
-                                                <input type="text" name="name[]" id="{{$lang}}_name" class="form-control" placeholder="{{translate('messages.new_food')}}" value="{{$translate[$lang]['name']??''}}" oninvalid="document.getElementById('en-link').click()">
+                                                <input type="text" name="name[]" id="{{$lang}}_name" class="form-control" placeholder="{{translate('messages.new_food')}}" value="{{$translate[$lang]['name']??''}}"  >
                                             </div>
                                             <input type="hidden" name="lang[]" value="{{$lang}}">
                                             <div class="form-group pt-2 mb-0">

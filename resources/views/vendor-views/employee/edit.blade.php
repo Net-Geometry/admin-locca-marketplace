@@ -1,8 +1,5 @@
 @extends('layouts.vendor.app')
 @section('title',translate('messages.Employee Edit'))
-@push('css_or_js')
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-@endpush
 
 @section('content')
 <div class="content container-fluid">
@@ -32,23 +29,23 @@
                 <div class="row g-3">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label class="input-label qcont" for="name">{{translate('messages.first_name')}}</label>
+                            <label class="input-label " for="f_name">{{translate('messages.first_name')}}</label>
                             <input type="text" name="f_name" value="{{$e['f_name']}}" class="form-control" id="f_name"
                                     placeholder="{{translate('messages.first_name')}}" required>
                         </div>
                         <div class="form-group">
-                            <label class="input-label qcont" for="name">{{translate('messages.last_name')}}</label>
+                            <label class="input-label " for="l_name">{{translate('messages.last_name')}}</label>
                             <input type="text" name="l_name" value="{{$e['l_name']}}" class="form-control" id="l_name"
                                     placeholder="{{translate('messages.last_name')}}">
                         </div>
                         <div class="form-group">
-                            <label class="input-label qcont" for="name">{{translate('messages.phone')}}</label>
+                            <label class="input-label " for="phone">{{translate('messages.phone')}}</label>
                             <input type="number" value="{{$e['phone']}}" required name="phone" class="form-control" id="phone"
                                     placeholder="{{ translate('messages.Ex:') }} +88017********">
                         </div>
                         <div class="form-group mb-0">
-                            <label class="input-label qcont" for="name">{{translate('messages.Role')}}</label>
-                            <select class="form-control w-100" name="role_id">
+                            <label class="input-label " for="role_id">{{translate('messages.Role')}}</label>
+                            <select class="form-control w-100" id="role_id" name="role_id">
                                     <option value="" selected disabled>{{translate('messages.select_Role')}}</option>
                                     @foreach($rls as $r)
                                         <option
@@ -66,15 +63,15 @@
                                 </h5>
 
                                 <center class="mb-auto">
-                                    <img class="store-banner" id="viewer"
-                                    onerror="this.src='{{asset('public/assets/admin/img/160x160/img1.jpg')}}'"
+                                    <img class="store-banner onerror-image" id="viewer"
+                                         data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
                                     src="{{asset('storage/app/public/vendor')}}/{{$e['image']}}" alt="Employee thumbnail"/>
                                 </center>
 
                                 <div class="form-group mt-3 mb-0">
                                     <label class="form-label">{{translate('messages.Employee image size max 2 MB')}} <span class="text-danger">*</span></label>
                                     <div class="custom-file">
-                                        <input type="file" name="image" id="customFileUpload" class="custom-file-input"
+                                        <input type="file" name="image" id="customFileUpload" class="custom-file-input read-url"
                                             accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
                                         <label class="custom-file-label" for="customFileUpload">{{translate('messages.choose_file')}}</label>
                                     </div>
@@ -94,7 +91,7 @@
                             <div class="card-body">
                                 <div class="row g-3">
                                     <div class="col-md-4">
-                                        <label class="input-label qcont" for="name">{{translate('messages.email')}}</label>
+                                        <label class="input-label " for="email">{{translate('messages.email')}}</label>
                                         <input type="email" value="{{$e['email']}}" name="email" class="form-control" id="email"
                                                 placeholder="{{ translate('messages.Ex:') }} ex@gmail.com">
                                     </div>
@@ -115,7 +112,7 @@
                                                 "classChangeTarget": ".js-toggle-passowrd-show-icon-1"
                                                 }'>
                                                 <div class="js-toggle-password-target-1 input-group-append">
-                                                    <a class="input-group-text" href="javascript:;">
+                                                    <a class="input-group-text" href="javascript:">
                                                         <i class="js-toggle-passowrd-show-icon-1 tio-visible-outlined"></i>
                                                     </a>
                                                 </div>
@@ -137,7 +134,7 @@
                                                     "classChangeTarget": ".js-toggle-passowrd-show-icon-2"
                                                     }'>
                                                 <div class="js-toggle-password-target-2 input-group-append">
-                                                    <a class="input-group-text" href="javascript:;">
+                                                    <a class="input-group-text" href="javascript:">
                                                     <i class="js-toggle-passowrd-show-icon-2 tio-visible-outlined"></i>
                                                     </a>
                                                 </div>
@@ -163,55 +160,8 @@
 @endsection
 
 @push('script_2')
-<script>
-    $(document).on('ready', function () {
-      // INITIALIZATION OF SHOW PASSWORD
-      // =======================================================
-      $('.js-toggle-password').each(function () {
-        new HSTogglePassword(this).init()
-      });
-
-
-      // INITIALIZATION OF FORM VALIDATION
-      // =======================================================
-      $('.js-validate').each(function() {
-        $.HSCore.components.HSValidation.init($(this), {
-          rules: {
-            confirmPassword: {
-              equalTo: '#signupSrPassword'
-            }
-          }
-        });
-      });
-    });
-  </script>
-    <script>
-        function readURL(input) {
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
-
-                reader.onload = function (e) {
-                    $('#viewer').attr('src', e.target.result);
-                }
-
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-
-        $("#customFileUpload").change(function () {
-            readURL(this);
-        });
-
-
-        $(".js-example-theme-single").select2({
-            theme: "classic"
-        });
-
-        $(".js-example-responsive").select2({
-            width: 'resolve'
-        });
-    </script>
             <script>
+                "use strict";
                 $('#reset_btn').click(function(){
                     $('#viewer').attr('src','{{asset('storage/app/public/vendor')}}/{{$e['image']}}');
                 })

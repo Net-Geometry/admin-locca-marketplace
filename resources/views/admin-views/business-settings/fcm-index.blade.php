@@ -145,7 +145,7 @@
 
                                                 @endif
                                                 </div>
-                                                <textarea name="pending_message[]" placeholder="{{translate('Write your message')}}" class="form-control pending_messages" oninvalid="document.getElementById('en-link').click()"
+                                                <textarea name="pending_message[]" placeholder="{{translate('Write your message')}}" class="form-control pending_messages"
                                                 @if ($lang == 'en')
                                                 {{$data?($data['status']==1?'required':''):''}}
                                                 @endif
@@ -198,7 +198,7 @@
 
                                                     @endif
                                                 </div>
-                                                <textarea name="confirm_message[]"  placeholder="{{translate('Write your message')}}" class="form-control confirm_message" oninvalid="document.getElementById('en-link').click()"
+                                                <textarea name="confirm_message[]"  placeholder="{{translate('Write your message')}}" class="form-control confirm_message"
                                                 @if ($lang == 'en')
                                                 {{$data?($data['status']==1?'required':''):''}}
                                                 @endif >{!! (isset($translate_2) && isset($translate_2[$lang]))?$translate_2[$lang]['message']:($data?$data['message']:'') !!}</textarea>
@@ -252,7 +252,7 @@
 
                                                     @endif
                                                 </div>
-                                                <textarea name="processing_message[]"  placeholder="{{translate('Write your message')}}" class="form-control processing_message" oninvalid="document.getElementById('en-link').click()"                                         @if ($lang == 'en')
+                                                <textarea name="processing_message[]"  placeholder="{{translate('Write your message')}}" class="form-control processing_message"                                           @if ($lang == 'en')
                                                 {{$data?($data['status']==1?'required':''):''}}
                                                 @endif
                                                 >{!! (isset($translate_3) && isset($translate_3[$lang]))?$translate_3[$lang]['message']:($data?$data['message']:'') !!}</textarea>
@@ -305,7 +305,7 @@
 
                                                     @endif
                                                 </div>
-                                                <textarea name="order_handover_message[]"  placeholder="{{translate('Write your message')}}" class="form-control order_handover_message" oninvalid="document.getElementById('en-link').click()"                                         @if ($lang == 'en')
+                                                <textarea name="order_handover_message[]"  placeholder="{{translate('Write your message')}}" class="form-control order_handover_message"                                           @if ($lang == 'en')
                                                 {{$data?($data['status']==1?'required':''):''}}
                                                 @endif
                                                 >{!! (isset($translate_4) && isset($translate_4[$lang]))?$translate_4[$lang]['message']:($data?$data['message']:'') !!}</textarea>
@@ -358,7 +358,7 @@
                                                         </label>
                                                     @endif
                                                 </div>
-                                                <textarea name="out_for_delivery_message[]"  placeholder="{{translate('Write your message')}}" class="form-control out_for_delivery_message" oninvalid="document.getElementById('en-link').click()"                                         @if ($lang == 'en')
+                                                <textarea name="out_for_delivery_message[]"  placeholder="{{translate('Write your message')}}" class="form-control out_for_delivery_message"                                           @if ($lang == 'en')
                                                 {{$data?($data['status']==1?'required':''):''}}
                                                 @endif
                                                 >{!! (isset($translate_5) && isset($translate_5[$lang]))?$translate_5[$lang]['message']:($data?$data['message']:'') !!}</textarea>
@@ -409,7 +409,7 @@
 
                                                     @endif
                                                 </div>
-                                                <textarea name="delivered_message[]"  placeholder="{{translate('Write your message')}}" class="form-control delivered_message" oninvalid="document.getElementById('en-link').click()"                                         @if ($lang == 'en')
+                                                <textarea name="delivered_message[]"  placeholder="{{translate('Write your message')}}" class="form-control delivered_message"                                           @if ($lang == 'en')
                                                 {{$data?($data['status']==1?'required':''):''}}
                                                 @endif
                                                 >{!! (isset($translate_6) && isset($translate_6[$lang]))?$translate_6[$lang]['message']:($data?$data['message']:'') !!}</textarea>
@@ -461,7 +461,7 @@
 
                                                     @endif
                                                 </div>
-                                                <textarea name="delivery_boy_assign_message[]"  placeholder="{{translate('Write your message')}}" class="form-control delivery_boy_assign_message" oninvalid="document.getElementById('en-link').click()"                                         @if ($lang == 'en')
+                                                <textarea name="delivery_boy_assign_message[]"  placeholder="{{translate('Write your message')}}" class="form-control delivery_boy_assign_message"                                           @if ($lang == 'en')
                                                 {{$data?($data['status']==1?'required':''):''}}
                                                 @endif
                                                 >{!! (isset($translate_7) && isset($translate_7[$lang]))?$translate_7[$lang]['message']:($data?$data['message']:'') !!}</textarea>
@@ -515,7 +515,7 @@
                                                     @endif
                                                 </div>
 
-                                                <textarea name="delivery_boy_delivered_message[]"  placeholder="{{translate('Write your message')}}" class="form-control delivery_boy_delivered_message" oninvalid="document.getElementById('en-link').click()"                                         @if ($lang == 'en')
+                                                <textarea name="delivery_boy_delivered_message[]"  placeholder="{{translate('Write your message')}}" class="form-control delivery_boy_delivered_message"                                           @if ($lang == 'en')
                                                 {{$data?($data['status']==1?'required':''):''}}
                                                 @endif
                                                 >{!! (isset($translate_8) && isset($translate_8[$lang]))?$translate_8[$lang]['message']:($data?$data['message']:'') !!}</textarea>
@@ -569,7 +569,7 @@
                                                     @endif
                                                 </div>
 
-                                                <textarea name="order_cancled_message[]"  placeholder="{{translate('Write your message')}}" class="form-control order_cancled_message" oninvalid="document.getElementById('en-link').click()"                                         @if ($lang == 'en')
+                                                <textarea name="order_cancled_message[]"  placeholder="{{translate('Write your message')}}" class="form-control order_cancled_message"                                           @if ($lang == 'en')
                                                 {{$data?($data['status']==1?'required':''):''}}
                                                 @endif
                                                 >{!! (isset($translate_9) && isset($translate_9[$lang]))?$translate_9[$lang]['message']:($data?$data['message']:'') !!}</textarea>
@@ -621,7 +621,7 @@
                                                         @endif
                                                     </div>
 
-                                                    <textarea name="order_refunded_message[]"  placeholder="{{translate('Write your message')}}" class="form-control order_refunded_message" oninvalid="document.getElementById('en-link').click()"                                         @if ($lang == 'en')
+                                                    <textarea name="order_refunded_message[]"  placeholder="{{translate('Write your message')}}" class="form-control order_refunded_message"                                           @if ($lang == 'en')
                                                     {{$data?($data['status']==1?'required':''):''}}
                                                     @endif
                                                     >{!! (isset($translate_10) && isset($translate_10[$lang]))?$translate_10[$lang]['message']:($data?$data['message']:'') !!}</textarea>
@@ -673,7 +673,7 @@
                                                             </label>
                                                         @endif
                                                     </div>
-                                                    <textarea name="refund_request_canceled[]"  placeholder="{{translate('Write your message')}}" class="form-control refund_request_canceled" oninvalid="document.getElementById('en-link').click()"                                         @if ($lang == 'en')
+                                                    <textarea name="refund_request_canceled[]"  placeholder="{{translate('Write your message')}}" class="form-control refund_request_canceled"                                           @if ($lang == 'en')
                                                     {{$data?($data['status']==1?'required':''):''}}
                                                     @endif
                                                     >{!! (isset($translate_11) && isset($translate_11[$lang]))?$translate_11[$lang]['message']:($data?$data['message']:'') !!}</textarea>
@@ -728,7 +728,7 @@
                                                     @endif
                                                 </div>
 
-                                                <textarea name="offline_order_accept_message[]"  placeholder="{{translate('Write your message')}}" class="form-control offline_order_accept_message" oninvalid="document.getElementById('en-link').click()"                                         @if ($lang == 'en')
+                                                <textarea name="offline_order_accept_message[]"  placeholder="{{translate('Write your message')}}" class="form-control offline_order_accept_message"                                           @if ($lang == 'en')
                                                 {{$data?($data['status']==1?'required':''):''}}
                                                 @endif
                                                 >{!! (isset($translate_12) && isset($translate_12[$lang]))?$translate_12[$lang]['message']:($data?$data['message']:'') !!}</textarea>
@@ -781,7 +781,7 @@
                                                     @endif
                                                 </div>
 
-                                                <textarea name="offline_order_deny_message[]"  placeholder="{{translate('Write your message')}}" class="form-control offline_order_deny_message" oninvalid="document.getElementById('en-link').click()"                                         @if ($lang == 'en')
+                                                <textarea name="offline_order_deny_message[]"  placeholder="{{translate('Write your message')}}" class="form-control offline_order_deny_message"                                           @if ($lang == 'en')
                                                 {{$data?($data['status']==1?'required':''):''}}
                                                 @endif
                                                 >{!! (isset($translate_13) && isset($translate_13[$lang]))?$translate_13[$lang]['message']:($data?$data['message']:'') !!}</textarea>

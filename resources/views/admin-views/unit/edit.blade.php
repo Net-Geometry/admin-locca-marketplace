@@ -43,7 +43,7 @@
                             <div class="lang_form" id="default-form">
                                 <div class="form-group">
                                     <label class="input-label" for="default_title">{{translate('messages.name')}} ({{translate('messages.default')}})</label>
-                                    <input type="text" name="unit[]" id="default_title" class="form-control" placeholder="{{translate('messages.unit_name')}}" value="{{$unit?->getRawOriginal('unit')}}" maxlength="191" oninvalid="document.getElementById('en-link').click()">
+                                    <input type="text" name="unit[]" id="default_title" class="form-control" placeholder="{{translate('messages.unit_name')}}" value="{{$unit?->getRawOriginal('unit')}}" maxlength="191"  >
                                 </div>
                                 <input type="hidden" name="lang[]" value="default">
                             </div>
@@ -62,7 +62,7 @@
                                 <div class="d-none lang_form" id="{{$lang}}-form">
                                     <div class="form-group">
                                         <label class="input-label" for="{{$lang}}_title">{{translate('messages.name')}} ({{strtoupper($lang)}})</label>
-                                        <input type="text" name="unit[]" id="{{$lang}}_title" class="form-control" placeholder="{{translate('messages.unit_name')}}" value="{{$translate[$lang]['unit']??''}}" maxlength="191" oninvalid="document.getElementById('en-link').click()">
+                                        <input type="text" name="unit[]" id="{{$lang}}_title" class="form-control" placeholder="{{translate('messages.unit_name')}}" value="{{$translate[$lang]['unit']??''}}" maxlength="191"  >
                                     </div>
                                     <input type="hidden" name="lang[]" value="{{$lang}}">
                                 </div>

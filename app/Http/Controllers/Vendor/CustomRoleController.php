@@ -9,13 +9,23 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\CentralLogics\Helpers;
 use App\Models\Translation;
-use Illuminate\Validation\Rule; 
+use Illuminate\Validation\Rule;
 
 class CustomRoleController extends Controller
 {
-    public function create()
+    public function create(Request $request)
     {
-        $rl=EmployeeRole::where('store_id',Helpers::get_store_id())->orderBy('name')->paginate(config('default_pagination'));
+        $key = explode(' ', $request['search']);
+        $rl=EmployeeRole::where('store_id',Helpers::get_store_id())->orderBy('name')
+            ->when( isset($key) , function($query) use($key){
+                $query->where(function ($q) use ($key) {
+                    foreach ($key as $value) {
+                        $q->orWhere('name', 'like', "%{$value}%");
+                    }
+                 });
+                }
+            )
+            ->paginate(config('default_pagination'));
         return view('vendor-views.custom-role.create',compact('rl'));
     }
 
@@ -144,18 +154,5 @@ class CustomRoleController extends Controller
         $role=EmployeeRole::where('store_id',Helpers::get_store_id())->where(['id'=>$id])->delete();
         Toastr::success(translate('messages.role_deleted_successfully'));
         return back();
-    }
-
-    public function search(Request $request){
-        $key = explode(' ', $request['search']);
-        $rl=EmployeeRole::where('store_id',Helpers::get_store_id())->
-        where(function ($q) use ($key) {
-            foreach ($key as $value) {
-                $q->orWhere('name', 'like', "%{$value}%");
-            }
-        })->orderBy('name')->limit(50)->get();
-        return response()->json([
-            'view'=>view('vendor-views.custom-role.partials._table',compact('rl'))->render()
-        ]);
     }
 }

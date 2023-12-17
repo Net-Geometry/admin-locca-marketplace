@@ -48,7 +48,7 @@
                                             <input type="text" name="title[]" id="default_title"
                                                 class="form-control" placeholder="{{ translate('messages.new_coupon') }}"
 
-                                                oninvalid="document.getElementById('en-link').click()">
+                                                 >
                                         </div>
                                         <input type="hidden" name="lang[]" value="default">
                                     </div>
@@ -62,7 +62,7 @@
                                                     </label>
                                                     <input type="text" name="title[]" id="{{ $lang }}_title"
                                                         class="form-control" placeholder="{{ translate('messages.new_coupon') }}"
-                                                        oninvalid="document.getElementById('en-link').click()">
+                                                         >
                                                 </div>
                                                 <input type="hidden" name="lang[]" value="{{ $lang }}">
                                             </div>
