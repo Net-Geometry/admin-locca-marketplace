@@ -54,9 +54,9 @@
                 <form method="get">
                     <div class="row g-3">
                         <div class="col-sm-6 col-md-3">
-                            <select name="payment_method_id" onchange="set_payment_method_filter('{{ url()->full() }}',this.value)"
+                            <select name="payment_method_id" data-url="{{ url()->full() }}" data-filter="payment_method_id"
                                     data-placeholder="{{ translate('messages.select_payment_method') }}"
-                                    class="form-control js-select2-custom">
+                                    class="form-control js-select2-custom set-filter">
                                 <option value="all">{{translate('All_Payment_Method')}}</option>
                                 @foreach($withdrawal_methods as $item)
                                     <option value="{{$item['id']}}" {{ isset($payment_method_id) && $payment_method_id == $item['id'] ? 'selected' : '' }}>{{$item['method_name']}}</option>
@@ -64,9 +64,9 @@
                             </select>
                         </div>
                         <div class="col-sm-6 col-md-3">
-                            <select name="status" onchange="set_status_filter('{{ url()->full() }}',this.value)"
+                            <select name="status" data-url="{{ url()->full() }}" data-filter="status"
                                     data-placeholder="{{ translate('messages.select_status') }}"
-                                    class="form-control js-select2-custom">
+                                    class="form-control js-select2-custom set-filter">
                                 <option value="all" {{ isset($status) && $status == 'all' ? 'selected' : '' }}>{{translate('All_status')}}</option>
                                 <option value="pending" {{ isset($status) && $status == 'pending' ? 'selected' : '' }}>{{ translate('pending') }}</option>
                                 <option value="completed" {{ isset($status) && $status == 'completed' ? 'selected' : '' }}>{{ translate('completed') }}</option>
@@ -74,8 +74,8 @@
                             </select>
                         </div>
                         <div class="col-sm-6 col-md-3">
-                            <select class="form-control" name="filter"
-                                    onchange="set_time_filter('{{ url()->full() }}',this.value)">
+                            <select class="form-control set-filter" name="filter"
+                                    data-url="{{ url()->full() }}" data-filter="filter">
                                 <option value="all_time" {{ isset($filter) && $filter == 'all_time' ? 'selected' : '' }}>
                                     {{ translate('messages.All_Time') }}</option>
                                 <option value="this_year" {{ isset($filter) && $filter == 'this_year' ? 'selected' : '' }}>
@@ -223,23 +223,6 @@
 @endpush
 
 @push('script_2')
-    <script>
-        $('#from_date,#to_date').change(function() {
-            let fr = $('#from_date').val();
-            let to = $('#to_date').val();
-            if (fr != '' && to != '') {
-                if (fr > to) {
-                    $('#from_date').val('');
-                    $('#to_date').val('');
-                    toastr.error('Invalid date range!', Error, {
-                        CloseButton: true,
-                        ProgressBar: true
-                    });
-                }
-            }
-
-        })
-
-    </script>
+    <script src="{{asset('public/assets/admin')}}/js/view-pages/vendor/report.js"></script>
 @endpush
 

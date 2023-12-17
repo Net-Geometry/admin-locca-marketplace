@@ -85,8 +85,8 @@
                             class="avatar avatar-xxl avatar-circle avatar-border-lg avatar-uploader profile-cover-avatar"
                             for="avatarUploader">
                             <img id="viewer"
-                                 onerror="this.src='{{asset('public/assets/admin/img/160x160/img1.jpg')}}'"
-                                 class="avatar-img"
+                                 data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
+                                 class="avatar-img onerror-image"
                                  src="{{asset('storage/app/public/vendor')}}/{{auth('vendor')->check()?auth('vendor')->user()->image:auth('vendor_employee')->user()->image}}"
                                  alt="Image">
 
@@ -157,7 +157,7 @@
                             </div>
 
                             <div class="d-flex justify-content-end">
-                                <button type="button" onclick="@if(env('APP_MODE')!='demo') form_alert('vendor-settings-form','{{translate('messages.you_want_to_update_user_info')}}') @else call_demo() @endif" class="btn btn--primary">{{translate('messages.save_changes')}}</button>
+                                <button type="button" data-id="vendor-settings-form" data-message="{{ translate('you_want_to_update_user_info') }}" class="btn btn-primary {{env('APP_MODE')!='demo'?'form-alert':'call-demo'}}">{{ translate('messages.Save_changes') }}</button>
                             </div>
 
                             <!-- End Form -->
@@ -226,7 +226,7 @@
                             <!-- End Form Group -->
 
                             <div class="d-flex justify-content-end">
-                                <button type="button" onclick="@if(env('APP_MODE')!='demo') form_alert('changePasswordForm', '{{translate('messages.want_to_update_password')}}') @else call_demo() @endif" class="btn btn--primary">{{translate('messages.save_changes')}}</button>
+                                <button type="button" data-id="changePasswordForm" data-message="{{translate('messages.want_to_update_password')}}" class="btn btn-primary {{env('APP_MODE')!='demo'?'form-alert':'call-demo'}}">{{translate('messages.Save_changes')}}</button>
                             </div>
                         </form>
                         <!-- End Form -->
@@ -245,39 +245,5 @@
 @endsection
 
 @push('script_2')
-    <script>
-        function readURL(input) {
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
-
-                reader.onload = function (e) {
-                    $('#viewer').attr('src', e.target.result);
-                }
-
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-
-        $("#customFileEg1").change(function () {
-            readURL(this);
-        });
-    </script>
-
-    <script>
-        $("#generalSection").click(function() {
-            $("#passwordSection").removeClass("active");
-            $("#generalSection").addClass("active");
-            $('html, body').animate({
-                scrollTop: $("#generalDiv").offset().top
-            }, 2000);
-        });
-
-        $("#passwordSection").click(function() {
-            $("#generalSection").removeClass("active");
-            $("#passwordSection").addClass("active");
-            $('html, body').animate({
-                scrollTop: $("#passwordDiv").offset().top
-            }, 2000);
-        });
-    </script>
+    <script src="{{asset('public/assets/admin')}}/js/view-pages/vendor/profile-index.js"></script>
 @endpush

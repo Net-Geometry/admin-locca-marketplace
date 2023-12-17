@@ -83,7 +83,7 @@
                                     <div class="d-flex">
                                         <div>
                                             <label class="toggle-switch toggle-switch-sm mr-2" data-toggle="tooltip" data-placement="top" title="{{ translate('messages.make_default_method') }}" for="statusCheckbox{{$e->id}}">
-                                                <input type="checkbox" onclick="location.href='{{route('vendor.wallet-method.default',[$e['id'],$e->is_default?0:1])}}'"class="toggle-switch-input" id="statusCheckbox{{$e->id}}" {{$e->is_default?'checked':''}}>
+                                                <input type="checkbox" data-url="{{route('vendor.wallet-method.default',[$e['id'],$e->is_default?0:1])}}" class="toggle-switch-input redirect-url" id="statusCheckbox{{$e->id}}" {{$e->is_default?'checked':''}}>
                                                 <span class="toggle-switch-label">
                                                 <span class="toggle-switch-indicator"></span>
                                             </span>
@@ -96,7 +96,7 @@
                                     @if (auth('vendor_employee')->id()  != $e['id'])
                                         <div class="btn--container justify-content-center">
                                             <a class="btn action-btn btn--danger btn-outline-danger" href="javascript:"
-                                               onclick="form_alert('employee-{{$e['id']}}','{{translate('messages.Want_to_delete_this_method_info')}}')" title="{{translate('messages.delete_method')}}"><i class="tio-delete-outlined"></i>
+                                               data-id="employee-{{$e['id']}}" data-message="{{translate('messages.Want_to_delete_this_method_info')}}" title="{{translate('messages.delete_method')}}"><i class="tio-delete-outlined"></i>
                                             </a>
                                             <form action="{{route('vendor.wallet-method.delete',[$e['id']])}}"
                                                   method="post" id="employee-{{$e['id']}}">
@@ -165,24 +165,15 @@
                 </div>
             </div>
         </div>
-
-
-
     </div>
-
-
-
-
-
-
-
 
 @endsection
 @push('script_2')
     <script>
+        "use strict";
         $('#withdraw_method').on('change', function () {
             $('#submit_button').attr("disabled","true");
-            var method_id = this.value;
+            let method_id = this.value;
 
             // Set header if need any otherwise remove setup part
             $.ajaxSetup({
@@ -215,11 +206,6 @@
                 }
             });
         });
-    </script>
-
-    <script>
-
-
         function showMyModal(data) {
             $(".modal-body #hiddenValue").html(data);
             $('#exampleModal').modal('show');
