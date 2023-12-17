@@ -16,7 +16,6 @@
     <div class="tab-content">
         <div class="tab-pane fade show active" id="product">
 
-
             <div class="col-12 mb-3">
                 <div class="row g-2">
                     @php($item = \App\Models\Item::withoutGlobalScope(\App\Scopes\StoreScope::class)->where(['store_id'=>$store->id])->count())
@@ -92,18 +91,6 @@
                     </div>
                 </div>
             </div>
-
-
-
-
-
-
-
-
-
-
-
-
 
             <div class="card">
                 <div class="card-header border-0 py-2">
@@ -181,12 +168,11 @@
                                 @if (isset($sub_tab) &&  ($sub_tab == 'rejected-items' || $sub_tab == 'pending-items'))
 
                                 <tr>
-                                    {{-- {{route('admin.item.view',[$item['id']])}} --}}
                                     <td>{{$key+$foods->firstItem()}}</td>
                                     <td>
                                         <a class="media align-items-center" href="{{route('admin.item.requested_item_view',['id'=> $food['id']])}}">
-                                            <img class="avatar avatar-lg mr-3" src="{{asset('storage/app/public/product')}}/{{$food['image']}}"
-                                                    onerror="this.src='{{asset('public/assets/admin/img/160x160/img2.jpg')}}'" alt="{{$food->name}} image">
+                                            <img class="avatar avatar-lg mr-3 onerror-image" src="{{asset('storage/app/public/product')}}/{{$food['image']}}"
+                                                    data-onerror-image="{{asset('public/assets/admin/img/160x160/img2.jpg')}}" alt="{{$food->name}} image">
                                             <div class="media-body">
                                                 <h5 class="text-hover-primary mb-0">{{Str::limit($food['name'],20,'...')}}</h5>
                                             </div>
@@ -220,21 +206,21 @@
                                             data-original-title="{{ translate('messages.View') }}" href="{{route('admin.item.requested_item_view',['id'=> $food['id']])}}">
                                                 <i class="tio-invisible"></i>
                                             </a>
-                                            <a class="btn action-btn btn--primary btn-outline-primary" data-toggle="tooltip" data-placement="top"
+                                            <a class="btn action-btn btn--primary btn-outline-primary route-alert" data-toggle="tooltip" data-placement="top"
                                             data-original-title="{{ translate('messages.approve') }}"
-                                            onclick="request_alert('{{route('admin.item.approved',[ 'id'=> $food['id']])}}','{{translate('messages.you_want_to_approve_this_product')}}')"
+                                            data-url="{{route('admin.item.approved',[ 'id'=> $food['id']])}}" data-message="{{translate('messages.you_want_to_approve_this_product')}}"
                                                 href="javascript:"><i class="tio-done font-weight-bold"></i> </a>
                                             @if($food->is_rejected == 0)
-                                                <a class="btn action-btn btn--danger btn-outline-danger " data-toggle="tooltip" data-placement="top"
+                                                <a class="btn action-btn btn--danger btn-outline-danger canceled-status" data-toggle="tooltip" data-placement="top"
                                                 data-original-title="{{ translate('messages.deny') }}"
-                                                onclick="cancelled_status('{{ route('admin.item.deny', ['id'=> $food['id']]) }}','{{ translate('you_want_to_deny_this_product') }}')"
+                                                data-url="{{ route('admin.item.deny', ['id'=> $food['id']]) }}" data-message="{{ translate('you_want_to_deny_this_product') }}"
                                                 href="javascript:"><i class="tio-clear font-weight-bold"></i></a>
                                             @endif
                                             <a class="btn action-btn btn--primary btn-outline-primary"
                                                 href="{{route('admin.item.edit',[$food['id'], 'temp_product' => true])}}" title="{{translate('messages.edit_item')}}"><i class="tio-edit"></i>
                                             </a>
-                                            <a class="btn action-btn btn--danger btn-outline-danger" href="javascript:"
-                                                onclick="form_alert('food-{{$food['id']}}','{{translate('messages.Want_to_delete_this_item')}}')" title="{{translate('messages.delete_item')}}"><i class="tio-delete-outlined"></i>
+                                            <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:"
+                                                data-url="food-{{$food['id']}}" data-message="{{translate('messages.Want_to_delete_this_item')}}" title="{{translate('messages.delete_item')}}"><i class="tio-delete-outlined"></i>
                                             </a>
                                             <form action="{{route('admin.item.delete',[$food['id']])}}"
                                                     method="post" id="food-{{$food['id']}}">
@@ -252,8 +238,8 @@
                                     <td>{{$key+1}}</td>
                                     <td>
                                         <a class="media align-items-center" href="{{route('admin.item.view',[$food['id']])}}">
-                                            <img class="avatar avatar-lg mr-3" src="{{asset('storage/app/public/product')}}/{{$food['image']}}"
-                                                    onerror="this.src='{{asset('public/assets/admin/img/160x160/img2.jpg')}}'" alt="{{$food->name}} image">
+                                            <img class="avatar avatar-lg mr-3 onerror-image" src="{{asset('storage/app/public/product')}}/{{$food['image']}}"
+                                                    data-onerror-image="{{asset('public/assets/admin/img/160x160/img2.jpg')}}" alt="{{$food->name}} image">
                                             <div class="media-body">
                                                 <h5 class="text-hover-primary mb-0">{{Str::limit($food['name'],20,'...')}}</h5>
                                             </div>
@@ -265,7 +251,7 @@
                                     <td>{{\App\CentralLogics\Helpers::format_currency($food['price'])}}</td>
                                     <td>
                                         <label class="toggle-switch toggle-switch-sm" for="stocksCheckbox{{$food->id}}">
-                                            <input type="checkbox" onclick="location.href='{{route('admin.item.status',[$food['id'],$food->status?0:1])}}'"class="toggle-switch-input" id="stocksCheckbox{{$food->id}}" {{$food->status?'checked':''}}>
+                                            <input type="checkbox" class="toggle-switch-input redirect-url" data-url="{{route('admin.item.status',[$food['id'],$food->status?0:1])}}" id="stocksCheckbox{{$food->id}}" {{$food->status?'checked':''}}>
                                             <span class="toggle-switch-label">
                                                 <span class="toggle-switch-indicator"></span>
                                             </span>
@@ -276,8 +262,8 @@
                                             <a class="btn action-btn btn--primary btn-outline-primary"
                                                 href="{{route('admin.item.edit',[$food['id']])}}" title="{{translate('messages.edit_item')}}"><i class="tio-edit"></i>
                                             </a>
-                                            <a class="btn action-btn btn--danger btn-outline-danger" href="javascript:"
-                                                onclick="form_alert('food-{{$food['id']}}','{{ translate('messages.Want to delete this item ?') }}')" title="{{translate('messages.delete_item')}}"><i class="tio-delete-outlined"></i>
+                                            <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:"
+                                                data-url="food-{{$food['id']}}" data-message="{{ translate('messages.Want to delete this item ?') }}" title="{{translate('messages.delete_item')}}"><i class="tio-delete-outlined"></i>
                                             </a>
                                         </div>
                                         <form action="{{route('admin.item.delete',[$food['id']])}}"
@@ -286,34 +272,7 @@
                                         </form>
                                     </td>
                                 </tr>
-
-
-
-
                                 @endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                         @endforeach
                         </tbody>
                     </table>
@@ -341,16 +300,14 @@
 @push('script_2')
     <!-- Page level plugins -->
     <script>
+        "use script";
         // Call the dataTables jQuery plugin
         $(document).ready(function () {
             $('#dataTable').DataTable();
-        });
-    </script>
-    <script>
-        $(document).on('ready', function () {
+
             // INITIALIZATION OF DATATABLES
             // =======================================================
-            var datatable = $.HSCore.components.HSDatatables.init($('#columnSearchDatatable'));
+            let datatable = $.HSCore.components.HSDatatables.init($('#columnSearchDatatable'));
 
             $('#column1_search').on('keyup', function () {
                 datatable
@@ -384,37 +341,8 @@
             // INITIALIZATION OF SELECT2
             // =======================================================
             $('.js-select2-custom').each(function () {
-                var select2 = $.HSCore.components.HSSelect2.init($(this));
+                let select2 = $.HSCore.components.HSSelect2.init($(this));
             });
         });
-
-        // $('#search-form').on('submit', function (e) {
-        //         e.preventDefault();
-        //         var formData = new FormData(this);
-        //         $.ajaxSetup({
-        //             headers: {
-        //                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        //             }
-        //         });
-        //         $.post({
-        //             url: '{{route('admin.item.store-search', $store->id)}}',
-        //             data: formData,
-        //             cache: false,
-        //             contentType: false,
-        //             processData: false,
-        //             beforeSend: function () {
-        //                 $('#loading').show();
-        //             },
-        //             success: function (data) {
-        //                 $('#setrows').html(data.view);
-        //                 $('#total_items').html(data.count);
-        //                 $('.page-area').hide();
-        //             },
-        //             complete: function () {
-        //                 $('#loading').hide();
-        //             },
-        //         });
-        //     });
-
     </script>
 @endpush

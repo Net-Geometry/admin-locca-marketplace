@@ -18,35 +18,35 @@
                 <div class="col-md-12">
                     <div class="resturant-card-navbar">
 
-                        <div class="order-info-item"  onclick="location.href='{{route('admin.order.list',['all'])}}?vendor[]={{$store->id}}'">
+                        <div class="order-info-item redirect-url" data-url="{{route('admin.order.list',['all'])}}?vendor[]={{$store->id}}">
                             <div class="order-info-icon">
                                 <img src="{{asset('public/assets/admin/img/navbar/all.png')}}" alt="public">
                             </div>
                             <h6 class="card-subtitle">{{translate('messages.all')}}<span class="amount text--primary">{{\App\Models\Order::where('store_id', $store->id)->StoreOrder()->count()}}</span></h6>
                         </div>
                         <span class="order-info-seperator"></span>
-                        <div class="order-info-item" onclick="location.href='{{route('admin.order.list',['scheduled'])}}?vendor[]={{$store->id}}'">
+                        <div class="order-info-item redirect-url" data-url="{{route('admin.order.list',['scheduled'])}}?vendor[]={{$store->id}}">
                             <div class="order-info-icon">
                                 <img src="{{asset('public/assets/admin/img/navbar/schedule.png')}}" alt="public">
                             </div>
                             <h6 class="card-subtitle">{{translate('messages.scheduled')}}<span class="amount text--warning">{{\App\Models\Order::Scheduled()->where('store_id', $store->id)->StoreOrder()->count()}}</span></h6>
                         </div>
                         <span class="order-info-seperator"></span>
-                        <div class="order-info-item" onclick="location.href='{{route('admin.order.list',['pending'])}}?vendor[]={{$store->id}}'">
+                        <div class="order-info-item redirect-url" data-url="{{route('admin.order.list',['pending'])}}?vendor[]={{$store->id}}">
                             <div class="order-info-icon">
                                 <img src="{{asset('public/assets/admin/img/navbar/pending.png')}}" alt="public">
                             </div>
                             <h6 class="card-subtitle">{{translate('messages.pending')}}<span class="amount text--info">{{\App\Models\Order::where(['order_status'=>'pending','store_id'=>$store->id])->StoreOrder()->OrderScheduledIn(30)->count()}}</span></h6>
                         </div>
                         <span class="order-info-seperator"></span>
-                        <div class="order-info-item" onclick="location.href='{{route('admin.order.list',['delivered'])}}?vendor[]={{$store->id}}'">
+                        <div class="order-info-item redirect-url" data-url="{{route('admin.order.list',['delivered'])}}?vendor[]={{$store->id}}">
                             <div class="order-info-icon">
                                 <img src="{{asset('public/assets/admin/img/navbar/delivered.png')}}" alt="public">
                             </div>
                             <h6 class="card-subtitle">{{translate('messages.delivered')}}<span class="amount text--success">{{\App\Models\Order::where(['order_status'=>'delivered', 'store_id'=>$store->id])->StoreOrder()->count()}}</span></h6>
                         </div>
                         <span class="order-info-seperator"></span>
-                        <div class="order-info-item" onclick="location.href='{{route('admin.order.list',['canceled'])}}?vendor[]={{$store->id}}'">
+                        <div class="order-info-item redirect-url" data-url="{{route('admin.order.list',['canceled'])}}?vendor[]={{$store->id}}">
                             <div class="order-info-icon">
                                 <img src="{{asset('public/assets/admin/img/navbar/cancel.png')}}" alt="public">
                             </div>
@@ -163,7 +163,7 @@
                                                 @php($customer_details = json_decode($order['delivery_address'],true))
                                                 <strong>{{$customer_details['contact_person_name']}}</strong>
                                                 <div>{{$customer_details['contact_person_number']}}</div>
-                                                
+
                                                 @elseif($order->customer)
                                                 <div>
                                                     <a class="text-body text-capitalize"
@@ -260,16 +260,14 @@
 @push('script_2')
     <!-- Page level plugins -->
     <script>
+        "use strict";
         // Call the dataTables jQuery plugin
         $(document).ready(function () {
             $('#dataTable').DataTable();
-        });
-    </script>
-    <script>
-        $(document).on('ready', function () {
+
             // INITIALIZATION OF DATATABLES
             // =======================================================
-            var datatable = $.HSCore.components.HSDatatables.init($('#columnSearchDatatable'));
+            let datatable = $.HSCore.components.HSDatatables.init($('#columnSearchDatatable'));
 
             $('#column1_search').on('keyup', function () {
                 datatable
@@ -303,11 +301,11 @@
             // INITIALIZATION OF SELECT2
             // =======================================================
             $('.js-select2-custom').each(function () {
-                var select2 = $.HSCore.components.HSSelect2.init($(this));
+                let select2 = $.HSCore.components.HSSelect2.init($(this));
             });
 
             $('#search-form').on('submit', function () {
-            var formData = new FormData(this);
+            let formData = new FormData(this);
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

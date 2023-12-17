@@ -264,7 +264,7 @@
                             CloseButton: true,
                             ProgressBar: true
                         });
-                        $('#view-conversation').html(data.view);
+                        $('#admin-view-conversation').html(data.view);
                         conversationList();
                     }
                 },

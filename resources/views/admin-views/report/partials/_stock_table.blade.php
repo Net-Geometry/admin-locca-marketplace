@@ -26,8 +26,9 @@
     <td>
         {{$item->stock}}
     </td>
+
     <td>
-        <a class="btn action-btn btn--primary btn-outline-primary" href="javascript:" title="{{translate('messages.edit_quantity')}}" onclick="update_quantity({{ $item->id }})" data-toggle="modal" data-target="#update-quantity"><i class="tio-edit"></i>
+        <a class="btn action-btn btn--primary btn-outline-primary update-quantity" href="javascript:" title="{{translate('messages.edit_quantity')}}" data-id="{{ $item->id }}" data-toggle="modal" data-target="#update-quantity"><i class="tio-edit"></i>
         </a>
     </td>
 </tr>

@@ -212,19 +212,6 @@
         </div>
         <!-- End Stats -->
 
-        {{-- <div class="row gx-2 gx-lg-3">
-            <div class="col-lg-12 mb-3 mb-lg-12">
-                <!-- Card -->
-                <div class="card h-100" id="monthly-earning-graph">
-                    <!-- Body -->
-                @include('admin-views.partials._monthly-earning-graph',['total_sell'=>$total_sell,'commission'=>$commission,'delivery_commission'=>$delivery_commission])
-                <!-- End Body -->
-                </div>
-                <!-- End Card -->
-            </div>
-        </div> --}}
-        <!-- End Row -->
-
         <div class="row g-2">
             <div class="col-lg-8 col--xl-8">
                 <div class="card h-100">
@@ -392,7 +379,7 @@
 
     <!-- Dognut Pie Chart -->
     <script>
-        var options = {
+        let options = {
             series: [{{ $data['customer']}}, {{$data['stores']}}, {{$data['delivery_man']}}],
             chart: {
                 width: 320,
@@ -422,13 +409,10 @@
             },
         };
 
-        var chart = new ApexCharts(document.querySelector("#dognut-pie"), options);
+        let chart = new ApexCharts(document.querySelector("#dognut-pie"), options);
         chart.render();
 
-    </script>
-
-    <script>
-    var options = {
+    let options = {
           series: [{
           name: 'Gross Sale',
           data: [60, 40, 80, 31, 42, 109, 100, 50, 30, 80, 65, 35]
@@ -462,12 +446,10 @@
         },
         };
 
-        var chart = new ApexCharts(document.querySelector("#grow-sale-chart"), options);
+        let chart = new ApexCharts(document.querySelector("#grow-sale-chart"), options);
         chart.render();
-    </script>
 
     <!-- Dognut Pie Chart -->
-    <script>
         // INITIALIZATION OF CHARTJS
         // =======================================================
         Chart.plugins.unregister(ChartDataLabels);
@@ -476,10 +458,8 @@
             $.HSCore.components.HSChartJS.init($(this));
         });
 
-        var updatingChart = $.HSCore.components.HSChartJS.init($('#updatingData'));
-    </script>
+        let updatingChart = $.HSCore.components.HSChartJS.init($('#updatingData'));
 
-    <script>
         function order_stats_update(type) {
             $.ajaxSetup({
                 headers: {
@@ -559,14 +539,12 @@
                 }
             });
         }
-    </script>
 
-    <script>
         function insert_param(key, value) {
             key = encodeURIComponent(key);
             value = encodeURIComponent(value);
             // kvp looks like ['key1=value1', 'key2=value2', ...]
-            var kvp = document.location.search.substr(1).split('&');
+            let kvp = document.location.search.substr(1).split('&');
             let i = 0;
 
             for (; i < kvp.length; i++) {

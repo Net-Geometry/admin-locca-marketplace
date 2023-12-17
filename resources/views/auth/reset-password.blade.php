@@ -1,13 +1,5 @@
 <!DOCTYPE html>
 <?php
-    // $site_direction = session()->get('site_direction');
-    // if (env('APP_MODE') == 'demo') {
-    //     $site_direction = session()->get('site_direction');
-    // }else{
-    //     $site_direction = \App\Models\BusinessSetting::where('key', 'site_direction')->first();
-    //     $site_direction = $site_direction->value ?? 'ltr';
-    // }
-
     $log_email_succ = session()->get('log_email_succ');
 ?>
 
@@ -63,9 +55,6 @@
                         <div class="js-form-message form-group mb-4">
                             <label class="input-label">
                                 {{translate('New Password')}}
-                                {{-- <span class="d-flex justify-content-between align-items-center">
-                                    {{translate('New Password')}}
-                                </span> --}}
                                 <span class="form-label-secondary" data-toggle="tooltip" data-placement="right"
                                 data-original-title="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"><img src="{{ asset('/public/assets/admin/img/info-circle.svg') }}" alt="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"></span>
                             </label>
@@ -119,7 +108,7 @@
                 </div>
             </div>
             <!-- End Card -->
-                
+
         </div>
     </div>
 </main>
@@ -205,14 +194,14 @@
 
 @if(env('APP_MODE')=='demo')
     <script>
-        function copy_cred() {
+        $('.copy_cred').on('click', function () {
             $('#signinSrEmail').val('admin@admin.com');
             $('#signupSrPassword').val('12345678');
             toastr.success('Copied successfully!', 'Success!', {
                 CloseButton: true,
                 ProgressBar: true
             });
-        }
+        })
     </script>
 @endif
 

@@ -113,6 +113,7 @@
             $(".default-form").removeClass('d-none');
         }
     });
+    
 $('[data-slide]').on('click', function(){
     let serial = $(this).data('slide')
     $(`.tab--content .item`).removeClass('show')

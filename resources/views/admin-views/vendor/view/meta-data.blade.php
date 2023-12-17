@@ -60,8 +60,7 @@
                                                 </label>
                                                 <input type="text" name="meta_title[]" id="default_title"
                                                     class="form-control" placeholder="{{ translate('messages.meta_title') }}" value="{{$store->getRawOriginal('meta_title')}}"
-
-                                                    oninvalid="document.getElementById('en-link').click()">
+                                                >
                                             </div>
                                             <input type="hidden" name="lang[]" value="default">
                                             <div class="form-group mb-0">
@@ -93,8 +92,7 @@
                                                             ({{ strtoupper($lang) }})
                                                         </label>
                                                         <input type="text" name="meta_title[]" id="{{ $lang }}_title"
-                                                            class="form-control" value="{{ $translate[$lang]['meta_title']??'' }}" placeholder="{{ translate('messages.meta_title') }}"
-                                                            oninvalid="document.getElementById('en-link').click()">
+                                                            class="form-control" value="{{ $translate[$lang]['meta_title']??'' }}" placeholder="{{ translate('messages.meta_title') }}">
                                                     </div>
                                                     <input type="hidden" name="lang[]" value="{{ $lang }}">
                                                     <div class="form-group mb-0">
@@ -140,17 +138,24 @@
                                                     {{ translate('meta_image') }} <span class="text--primary">({{ translate('1:1') }})</span>
                                                 </label>
                                                 <center>
-                                                    <img class="img--110 min-height-170px min-width-170px" id="viewer"
-                                                        onerror="this.src='{{ asset('public/assets/admin/img/upload.png') }}'"
-                                                        src="{{asset('storage/app/public/store').'/'.$store->meta_image}}" alt="{{$store->name}}"
+                                                    <img class="img--110 min-height-170px min-width-170px onerror-image" id="viewer"
+                                                        data-onerror-image="{{ asset('public/assets/admin/img/upload.png') }}"
+                                                        src="{{asset('storage/app/public/store').'/'.$store->meta_image}}"
                                                         alt="{{ translate('meta_image') }}" />
                                                 </center>
                                                 <input type="file" name="meta_image" id="customFileEg1" class="custom-file-input"
                                                     accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
 
                                                     @if (isset($store->meta_image))
-                                                    <span id="earning_delivery_img" class="remove_image_button mt-4"
-                                                        onclick="toogleStatusModal(event,'earning_delivery_img','mail-success','mail-warning','{{translate('Important!')}}','{{translate('Warning!')}}',`<p>{{translate('Are_you_sure_you_want_to_remove_this_image')}}</p>`,`<p>{{translate('Are_you_sure_you_want_to_remove_this_image.')}}</p>`)"
+                                                    <span id="earning_delivery_img" class="remove_image_button mt-4 dynamic-checkbox"
+                                                          data-id="earning_delivery_img"
+                                                          data-type="status"
+                                                          data-image-on='{{asset('/public/assets/admin/img/modal')}}/mail-success.png'
+                                                          data-image-off="{{asset('/public/assets/admin/img/modal')}}/mail-warning.png"
+                                                          data-title-on="{{translate('Important!')}}"
+                                                          data-title-off="{{translate('Warning!')}}"
+                                                          data-text-on="<p>{{translate('Are_you_sure_you_want_to_remove_this_image')}}</p>"
+                                                          data-text-off="<p>{{translate('Are_you_sure_you_want_to_remove_this_image.')}}</p>"
                                                         > <i class="tio-clear"></i></span>
                                                     @endif
                                                 </div>
@@ -174,7 +179,6 @@
 <form  id="earning_delivery_img_form" action="{{ route('admin.remove_image') }}" method="post">
     @csrf
     <input type="hidden" name="id" value="{{  $store?->id}}" >
-    {{-- <input type="hidden" name="json" value="1" > --}}
     <input type="hidden" name="model_name" value="Store" >
     <input type="hidden" name="image_path" value="store" >
     <input type="hidden" name="field_name" value="meta_image" >
@@ -185,7 +189,7 @@
 <script>
     function readURL(input, viewer) {
         if (input.files && input.files[0]) {
-            var reader = new FileReader();
+            let reader = new FileReader();
 
             reader.onload = function (e) {
                 $('#'+viewer).attr('src', e.target.result);
@@ -201,26 +205,6 @@
 
     $("#coverImageUpload").change(function () {
         readURL(this, 'coverImageViewer');
-    });
-
-    $(".lang_link").click(function(e){
-        e.preventDefault();
-        $(".lang_link").removeClass('active');
-        $(".lang_form").addClass('d-none');
-        $(this).addClass('active');
-
-        let form_id = this.id;
-        let lang = form_id.substring(0, form_id.length - 5);
-        console.log(lang);
-        $("#"+lang+"-form").removeClass('d-none');
-        if(lang == '{{$defaultLang}}')
-        {
-            $(".from_part_2").removeClass('d-none');
-        }
-        else
-        {
-            $(".from_part_2").addClass('d-none');
-        }
     });
 </script>
 @endpush

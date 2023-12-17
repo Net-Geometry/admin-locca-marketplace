@@ -100,49 +100,13 @@
                                     <input type="hidden" name="lang[]" value="default">
                                 @endif
                                 </div>
-                                {{-- <div class="d-flex flex-wrap select--all-checkes">
-                                    <h5 class="input-label m-0 text-capitalize">{{translate('messages.Payment Method')}} </h5>
-                                </div>
-                                <div class="check--item-wrapper mb-1">
-                                    <div class="check-item">
-                                        <div class="form-group form-check form--check">
-                                            <input type="checkbox" name="cash_on_delivery" value="cash_on_delivery" class="form-check-input"
-                                                   id="cash_on_delivery">
-                                            <label class="form-check-label qcont text-dark" for="cash_on_delivery">{{translate('messages.Cash On Delivery')}}</label>
-                                        </div>
-                                    </div>
-                                    <div class="check-item">
-                                        <div class="form-group form-check form--check">
-                                            <input type="checkbox" name="digital_payment" value="digital_payment" class="form-check-input"
-                                                   id="digital_payment">
-                                            <label class="form-check-label qcont text-dark" for="digital_payment">{{translate('messages.digital payment')}}</label>
-                                        </div>
-                                    </div>
-                                </div> --}}
+
                                 <div class="form-group mb-3 d-none">
                                     <label class="input-label"
                                         for="exampleFormControlInput1">{{ translate('Coordinates') }}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right"
         data-original-title="{{translate('messages.draw_your_zone_on_the_map')}}">{{translate('messages.draw_your_zone_on_the_map')}}</span></label>
                                         <textarea type="text" rows="8" name="coordinates"  id="coordinates" class="form-control" readonly></textarea>
                                 </div>
-                                {{-- <div class="row">
-                                    <div class="col-sm-6">
-                                        <div class="form-group mb-3">
-                                            <label class="input-label">
-                                                {{ translate('Minimum delivery charge') }} ({{ \App\CentralLogics\Helpers::currency_symbol() }})
-                                            </label>
-                                            <input type="number" id="minimum_delivery_charge" name="minimum_delivery_charge" class="form-control h--45px" placeholder="{{ translate('Ex:') }} 10" required="">
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <div class="form-group mb-3">
-                                            <label class="input-label">
-                                                {{ translate('Delivery charge per KM') }} ({{ \App\CentralLogics\Helpers::currency_symbol() }})
-                                            </label>
-                                            <input type="number" id="delivery_charge_per_km" name="per_km_delivery_charge" class="form-control h--45px" placeholder="{{ translate('messages.Ex:') }} 10" required="">
-                                        </div>
-                                    </div>
-                                </div> --}}
                                 <div class="map-warper rounded mt-0">
                                     <input id="pac-input" class="controls rounded" title="{{translate('messages.search_your_location_here')}}" type="text" placeholder="{{translate('messages.search_here')}}"/>
                                     <div id="map-canvas" class="rounded"></div>
@@ -191,20 +155,6 @@
 
                                 <div id="usersExportDropdown"
                                     class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
-                                    {{-- <span class="dropdown-header">{{ translate('messages.options') }}</span>
-                                    <a id="export-copy" class="dropdown-item" href="javascript:;">
-                                        <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                            src="{{ asset('public/assets/admin') }}/svg/illustrations/copy.svg"
-                                            alt="Image Description">
-                                        {{ translate('messages.copy') }}
-                                    </a>
-                                    <a id="export-print" class="dropdown-item" href="javascript:;">
-                                        <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                            src="{{ asset('public/assets/admin') }}/svg/illustrations/print.svg"
-                                            alt="Image Description">
-                                        {{ translate('messages.print') }}
-                                    </a>
-                                    <div class="dropdown-divider"></div> --}}
                                     <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
                                     <a id="export-excel" class="dropdown-item" href="{{route('admin.business-settings.zone.export', ['type'=>'excel',request()->getQueryString()])}}">
                                         <img class="avatar avatar-xss avatar-4by3 mr-2"
@@ -218,12 +168,6 @@
                                             alt="Image Description">
                                         .{{ translate('messages.csv') }}
                                     </a>
-                                    {{-- <a id="export-pdf" class="dropdown-item" href="javascript:;">
-                                        <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                            src="{{ asset('public/assets/admin') }}/svg/components/pdf.svg"
-                                            alt="Image Description">
-                                        {{ translate('messages.pdf') }}
-                                    </a> --}}
                                 </div>
                             </div>
                             <!-- End Unfold -->
@@ -274,16 +218,17 @@
                                     <td>{{$zone->stores_count}}</td>
                                     <td>{{$zone->deliverymen_count}}</td>
                                     <td>
-                                        {{--<label class="toggle-switch toggle-switch-sm" for="status-{{$zone['id']}}">
-                                            <input type="checkbox" onclick="status_form_alert('status-{{$zone['id']}}','{{ translate('Want to change status for this zone ?') }}', event)" class="toggle-switch-input" id="status-{{$zone['id']}}" {{$zone->status?'checked':''}}>
-                                            <span class="toggle-switch-label">
-                                                <span class="toggle-switch-indicator"></span>
-                                            </span>
-                                        </label>
-                                        <form action="{{route('admin.business-settings.zone.status',[$zone['id'],$zone->status?0:1])}}" method="get" id="status-{{$zone['id']}}">
-                                        </form>--}}
                                         <label class="toggle-switch toggle-switch-sm" for="status-{{$zone['id']}}">
-                                            <input type="checkbox" class="toggle-switch-input" onclick="toogleStatusModal(event,'status-{{$zone['id']}}','zone-status-on.png','zone-status-off.png','{{translate('Want_to_activate_this_Zone?')}}','{{translate('Want_to_deactivate_this_Zone?')}}',`<p>{{translate('If_you_activate_this_zone,_Customers_can_see_all_stores_&_products_available_under_this_Zone_from_the_Customer_App_&_Website.')}}</p>`,`<p>{{translate('If_you_deactivate_this_zone,_Customers_Will_NOT_see_all_stores_&_products_available_under_this_Zone_from_the_Customer_App_&_Website.')}}</p>`)" id="status-{{$zone['id']}}" {{$zone->status?'checked':''}}>
+                                            <input type="checkbox" class="toggle-switch-input dynamic-checkbox"
+                                                   data-id="status-{{$zone['id']}}"
+                                                   data-type="status"
+                                                   data-image-on='{{asset('/public/assets/admin/img/modal')}}/zone-status-on.png'
+                                                   data-image-off="{{asset('/public/assets/admin/img/modal')}}/zone-status-off.png"
+                                                   data-title-on="{{translate('Want_to_activate_this_Zone?')}}"
+                                                   data-title-off="{{translate('Want_to_deactivate_this_Zone?')}}"
+                                                   data-text-on="<p>{{translate('If_you_activate_this_zone,_Customers_can_see_all_stores_&_products_available_under_this_Zone_from_the_Customer_App_&_Website.')}}</p>"
+                                                   data-text-off="<p>{{translate('If_you_deactivate_this_zone,_Customers_Will_NOT_see_all_stores_&_products_available_under_this_Zone_from_the_Customer_App_&_Website.')}}</p>"
+                                                   id="status-{{$zone['id']}}" {{$zone->status?'checked':''}}>
                                             <span class="toggle-switch-label">
                                                 <span class="toggle-switch-indicator"></span>
                                             </span>
@@ -294,7 +239,7 @@
                                     @if ($digital_payment && $digital_payment['status']==1)
                                     <td>
                                         <label class="toggle-switch toggle-switch-sm" for="digital_paymentCheckbox{{$zone->id}}">
-                                            <input type="checkbox" onclick="status_form_alert('digital_payment-{{$zone['id']}}',`{{ $zone->digital_payment?translate('Want_to_disable_‘Digital_Payment’?'):translate('Want_to_enable_‘Digital_Payment’?') }}`,`{{ $zone->digital_payment? translate('If_yes,_the_digital_payment_option_will_be_hidden_during_checkout.'):translate('If_yes,_Customers_can_choose_the_‘Digital_Payment’_option_during_checkout.')}}`, event)" class="toggle-switch-input" id="digital_paymentCheckbox{{$zone->id}}" {{$zone->digital_payment?'checked':''}}>
+                                            <input type="checkbox" data-id="digital_payment-{{$zone['id']}}" data-title="{{ $zone->digital_payment?translate('Want_to_disable_‘Digital_Payment’?'):translate('Want_to_enable_‘Digital_Payment’?') }}" data-message="{{ $zone->digital_payment? translate('If_yes,_the_digital_payment_option_will_be_hidden_during_checkout.'):translate('If_yes,_Customers_can_choose_the_‘Digital_Payment’_option_during_checkout.')}}" class="toggle-switch-input status_form_alert" id="digital_paymentCheckbox{{$zone->id}}" {{$zone->digital_payment?'checked':''}}>
                                             <span class="toggle-switch-label">
                                                 <span class="toggle-switch-indicator"></span>
                                             </span>
@@ -306,7 +251,7 @@
                                     @if ($config && $config['status']==1)
                                     <td>
                                         <label class="toggle-switch toggle-switch-sm" for="cashOnDeliveryCheckbox{{$zone->id}}">
-                                            <input type="checkbox" onclick="status_form_alert('cash_on_delivery-{{$zone['id']}}',`{{ $zone->cash_on_delivery?translate('Want_to_disable_‘Cash_On_Delivery’?'):translate('Want_to_enable_‘Cash_On_Delivery’?') }}`,`{{ $zone->cash_on_delivery? translate('If_yes,_the_Cash_on_Delivery_option_will_be_hidden_during_checkout.'):translate('If_yes,_Customers_can_choose_the_‘Cash_On_Delivery’_option_during_checkout.')}}`, event)" class="toggle-switch-input" id="cashOnDeliveryCheckbox{{$zone->id}}" {{$zone->cash_on_delivery?'checked':''}}>
+                                            <input type="checkbox" data-id="cash_on_delivery-{{$zone['id']}}" data-title="{{ $zone->cash_on_delivery?translate('Want_to_disable_‘Cash_On_Delivery’?'):translate('Want_to_enable_‘Cash_On_Delivery’?') }}" data-message="{{ $zone->cash_on_delivery? translate('If_yes,_the_Cash_on_Delivery_option_will_be_hidden_during_checkout.'):translate('If_yes,_Customers_can_choose_the_‘Cash_On_Delivery’_option_during_checkout.')}}" class="toggle-switch-input status_form_alert" id="cashOnDeliveryCheckbox{{$zone->id}}" {{$zone->cash_on_delivery?'checked':''}}>
                                             <span class="toggle-switch-label">
                                                 <span class="toggle-switch-indicator"></span>
                                             </span>
@@ -318,7 +263,7 @@
                                     @if ($offline_payment && $offline_payment==1)
                                     <td>
                                         <label class="toggle-switch toggle-switch-sm" for="offline_paymentCheckbox{{$zone->id}}">
-                                            <input type="checkbox" onclick="status_form_alert('offline_payment-{{$zone['id']}}',`{{ $zone->offline_payment?translate('Want_to_disable_‘offline_Payment’?'):translate('Want_to_enable_‘offline_Payment’?') }}`,`{{ $zone->offline_payment? translate('If_yes,_the_offline_payment_option_will_be_hidden_during_checkout.'):translate('If_yes,_Customers_can_choose_the_‘offline_Payment’_option_during_checkout.')}}`, event)" class="toggle-switch-input" id="offline_paymentCheckbox{{$zone->id}}" {{$zone->offline_payment?'checked':''}}>
+                                            <input type="checkbox" data-id="offline_payment-{{$zone['id']}}" data-title="{{ $zone->offline_payment?translate('Want_to_disable_‘offline_Payment’?'):translate('Want_to_enable_‘offline_Payment’?') }}" data-message="{{ $zone->offline_payment? translate('If_yes,_the_offline_payment_option_will_be_hidden_during_checkout.'):translate('If_yes,_Customers_can_choose_the_‘offline_Payment’_option_during_checkout.')}}" class="toggle-switch-input status_form_alert" id="offline_paymentCheckbox{{$zone->id}}" {{$zone->offline_payment?'checked':''}}>
                                             <span class="toggle-switch-label">
                                                 <span class="toggle-switch-indicator"></span>
                                             </span>
@@ -348,8 +293,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <a class="btn action-btn btn--danger btn-outline-danger" href="javascript:"
-                                            onclick="status_form_alert('zone-{{$zone['id']}}','{{ translate('Want_to_Delete_this_Zone?') }}','{{ translate('If_yes,_all_its_modules,_stores,_and_products_will_be_DELETED_FOREVER.') }}',event)" title="{{translate('messages.delete_zone')}}"><i class="tio-delete-outlined"></i>
+                                            <a class="btn action-btn btn--danger btn-outline-danger status_form_alert" href="javascript:" data-id="zone-{{$zone['id']}}" data-title="{{ translate('Want_to_Delete_this_Zone?') }}" data-message="{{ translate('If_yes,_all_its_modules,_stores,_and_products_will_be_DELETED_FOREVER.') }}" title="{{translate('messages.delete_zone')}}"><i class="tio-delete-outlined"></i>
                                             </a>
                                             <form action="{{route('admin.business-settings.zone.delete',[$zone['id']])}}" method="post" id="zone-{{$zone['id']}}">
                                                 @csrf @method('delete')
@@ -395,12 +339,12 @@
                 <img src="{{asset('/public/assets/admin/img/zone-settings-popup-arrow.gif')}}" alt="admin/img" class="w-100">
                 <div class="mt-3 d-flex flex-wrap align-items-center justify-content-between">
                     <label class="form-check form--check m-0">
-                        <input type="checkbox" class="form-check-input rounded" onclick="location.href='{{route('admin.business-settings.zone.instruction')}}'">
+                        <input type="checkbox" class="form-check-input rounded redirect-url" data-url="{{route('admin.business-settings.zone.instruction')}}">
                         <span class="form-check-label">{{translate("Don't show this anymore")}}</span>
                     </label>
                     <div class="btn--container justify-content-end">
                         <button id="reset_btn" type="reset" class="btn btn--reset" data-dismiss="modal">{{translate("I will do it later")}}</button>
-                        <a id="module-setup-modal-button" onclick="location.href='{{route('admin.business-settings.zone.go-module-setup')}}'" class="btn btn--primary">{{translate('Go_to_zone_Settings')}}</a>
+                        <a id="module-setup-modal-button" data-url="{{route('admin.business-settings.zone.go-module-setup')}}" class="btn btn--primary redirect-url">{{translate('Go_to_zone_Settings')}}</a>
                     </div>
                 </div>
             </div>
@@ -424,13 +368,6 @@
                         <p class="txt">
                             {{translate("In the user app & website all stores & products  already assigned under this zone will show to the customers")}}
                         </p>
-                    {{--
-                        <img src="{{asset('/public/assets/admin/img/zone-status-off.png')}}" alt="" class="mb-20">
-                        <h5 class="modal-title">{{translate('By switching the status off, this zone and under all the functionality of this zone will be turned off')}}</h5>
-                        <p class="txt">
-                            {{translate("In the user app & website no stores & products  already assigned under this zon this zone will not show to the customers")}}
-                        </p>
-                    --}}
                     </div>
                     <div class="btn--container justify-content-center">
                         <button type="submit" class="btn btn--primary min-w-120" data-dismiss="modal">{{translate('Ok')}}</button>
@@ -444,17 +381,20 @@
 @endsection
 
 @push('script_2')
-{{-- <script>
-    setTimeout(() => {
-        $('#warning-modal').modal('show')
-    }, 5000);
-</script> --}}
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key={{\App\Models\BusinessSetting::where('key', 'map_api_key')->first()->value}}&callback=initialize&libraries=drawing,places&v=3.49"></script>
 <script>
-$(".popover-wrapper").click(function(){
-  $(".popover-wrapper").removeClass("active");
-});
-</script>
-    <script>
+    "use strict";
+        $(".popover-wrapper").click(function(){
+          $(".popover-wrapper").removeClass("active");
+        });
+
+        $('.status_form_alert').on('click', function (event) {
+            let id = $(this).data('id');
+            let title = $(this).data('title');
+            let message = $(this).data('message');
+            status_form_alert(id, title, message, event)
+        })
+
         function status_form_alert(id, title, message, e) {
             e.preventDefault();
             Swal.fire({
@@ -480,12 +420,11 @@ $(".popover-wrapper").click(function(){
         element.style.height = (element.scrollHeight)+"px";
     }
 
-    </script>
-    <script>
+
         $(document).on('ready', function () {
             // INITIALIZATION OF DATATABLES
             // =======================================================
-            var datatable = $.HSCore.components.HSDatatables.init($('#columnSearchDatatable'));
+            let datatable = $.HSCore.components.HSDatatables.init($('#columnSearchDatatable'));
 
             $('#column1_search').on('keyup', function () {
                 datatable
@@ -506,7 +445,7 @@ $(".popover-wrapper").click(function(){
             // INITIALIZATION OF SELECT2
             // =======================================================
             $('.js-select2-custom').each(function () {
-                var select2 = $.HSCore.components.HSSelect2.init($(this));
+                let select2 = $.HSCore.components.HSSelect2.init($(this));
             });
 
             $("#zone_form").on('keydown', function(e){
@@ -515,15 +454,11 @@ $(".popover-wrapper").click(function(){
                 }
             })
         });
-    </script>
 
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key={{\App\Models\BusinessSetting::where('key', 'map_api_key')->first()->value}}&callback=initialize&libraries=drawing,places&v=3.49"></script>
-
-    <script>
-        var map; // Global declaration of the map
-        var drawingManager;
-        var lastpolygon = null;
-        var polygons = [];
+        let map; // Global declaration of the map
+        let drawingManager;
+        let lastpolygon = null;
+        let polygons = [];
 
         function resetMap(controlDiv) {
             // Set CSS for the control border.
@@ -559,10 +494,10 @@ $(".popover-wrapper").click(function(){
         function initialize() {
             @php($default_location=\App\Models\BusinessSetting::where('key','default_location')->first())
             @php($default_location=$default_location->value?json_decode($default_location->value, true):0)
-            var myLatlng = { lat: {{$default_location?$default_location['lat']:'23.757989'}}, lng: {{$default_location?$default_location['lng']:'90.360587'}} };
+            let myLatlng = { lat: {{$default_location?$default_location['lat']:'23.757989'}}, lng: {{$default_location?$default_location['lng']:'90.360587'}} };
 
 
-            var myOptions = {
+            let myOptions = {
                 zoom: 13,
                 center: myLatlng,
                 mapTypeId: google.maps.MapTypeId.ROADMAP
@@ -676,7 +611,7 @@ $(".popover-wrapper").click(function(){
                 url: '{{route('admin.zone.zoneCoordinates')}}',
                 dataType: 'json',
                 success: function (data) {
-                    for(var i=0; i<data.length;i++)
+                    for(let i=0; i<data.length;i++)
                     {
                         polygons.push(new google.maps.Polygon({
                             paths: data[i],
@@ -696,11 +631,9 @@ $(".popover-wrapper").click(function(){
             set_all_zones();
         });
 
-    </script>
 
-    <script>
         $('#zone_form').on('submit', function () {
-            var formData = new FormData(this);
+            let formData = new FormData(this);
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -741,34 +674,9 @@ $(".popover-wrapper").click(function(){
                 },
             });
         });
-    </script>
-        <script>
-            $(".lang_link").click(function(e){
-                e.preventDefault();
-                $(".lang_link").removeClass('active');
-                $(".lang_form").addClass('d-none');
-                $(this).addClass('active');
 
-                let form_id = this.id;
-                let lang = form_id.substring(0, form_id.length - 5);
-                console.log(lang);
-                $("#"+lang+"-form").removeClass('d-none');
-                if(lang == '{{$defaultLang}}')
-                {
-                    $(".from_part_2").removeClass('d-none');
-                }
-                else
-                {
-                    $(".from_part_2").addClass('d-none');
-                }
-            });
-        </script>
-        <script>
             $('#reset_btn').click(function(){
                 $('.tab-content').find('input:text').val('');
-                // $('input[name="name"]').val('');
-                // $('#minimum_delivery_charge').val(null);
-                // $('#delivery_charge_per_km').val(null);
 
                 lastpolygon.setMap(null);
                 $('#coordinates').val(null);

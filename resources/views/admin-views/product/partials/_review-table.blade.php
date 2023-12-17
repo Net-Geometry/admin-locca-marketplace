@@ -31,7 +31,10 @@
     </td>
     <td>
         <label class="toggle-switch toggle-switch-sm" for="reviewCheckbox{{$review->id}}">
-            <input type="checkbox" onclick="status_form_alert('status-{{$review['id']}}','{{$review->status?translate('messages.you_want_to_hide_this_review_for_customer'):translate('messages.you_want_to_show_this_review_for_customer')}}', event)" class="toggle-switch-input" id="reviewCheckbox{{$review->id}}" {{$review->status?'checked':''}}>
+            <input type="checkbox"
+                   data-id="status-{{ $review['id'] }}" data-message="{{ $review->status ? translate('messages.you_want_to_hide_this_review_for_customer') : translate('messages.you_want_to_show_this_review_for_customer') }}"
+                   class="toggle-switch-input status_form_alert" id="reviewCheckbox{{ $review->id }}"
+                {{ $review->status ? 'checked' : '' }}>
             <span class="toggle-switch-label">
                 <span class="toggle-switch-indicator"></span>
             </span>

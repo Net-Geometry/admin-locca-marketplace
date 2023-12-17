@@ -217,6 +217,7 @@
 @push('script_2')
     <script src="{{ asset('public/assets/admin') }}/js/tags-input.min.js"></script>
     <script>
+        "use strict";
 
         $(document).on('ready', function() {
             $("#increased_delivery_fee_status").on('change', function() {
@@ -242,7 +243,7 @@
         }
         $('#choice_modules').on('change', function() {
             $('#mod-label').show();
-            var ids = $('.module-row').map(function() {
+            let ids = $('.module-row').map(function() {
                 return $(this).attr('id').split('_')[1];
             }).get();
 
@@ -252,7 +253,7 @@
                     ids = ids.filter(id => id !== $(this).val());
                 } else {
                     let name = $('#choice_modules option[value="' + $(this).val() + '"]').html();
-                    var found = modules.find(modul=> modul.id == $(this).val());
+                    let found = modules.find(modul=> modul.id == $(this).val());
                     if (found.module_type == 'parcel'){
 
                         add_parcel_module($(this).val(), name.trim());

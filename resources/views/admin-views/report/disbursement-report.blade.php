@@ -62,8 +62,7 @@
                 <form method="get">
                     <div class="row g-3">
                         <div class="col-sm-6 col-md-3">
-                            <select name="zone_id" class="form-control js-select2-custom"
-                                    onchange="set_zone_filter('{{ url()->full() }}',this.value)" id="zone">
+                            <select name="zone_id" class="form-control js-select2-custom set-filter" data-url="{{ url()->full() }}" data-filter="zone_id" id="zone">
                                 <option value="all">{{ translate('messages.All_Zones') }}</option>
                                 @foreach (\App\Models\Zone::orderBy('name')->get(['id','name']) as $z)
                                     <option value="{{ $z['id'] }}"
@@ -75,8 +74,7 @@
                         </div>
                         @if($tab=='store')
                         <div class="col-sm-6 col-md-3">
-                            <select name="module_id" class="form-control js-select2-custom"
-                                    onchange="set_filter('{{ url()->full() }}',this.value,'module_id')"
+                            <select name="module_id" class="form-control js-select2-custom set-filter" data-url="{{ url()->full() }}" data-filter="module_id"
                                     title="{{ translate('messages.select_modules') }}">
                                 <option value="" {{ !request('module_id') ? 'selected' : '' }}>
                                     {{ translate('messages.all_modules') }}</option>
@@ -89,9 +87,9 @@
                             </select>
                         </div>
                         <div class="col-sm-6 col-md-3">
-                            <select name="store_id" onchange="set_store_filter('{{ url()->full() }}',this.value)"
+                            <select name="store_id" data-url="{{ url()->full() }}" data-filter="store_id"
                                     data-placeholder="{{ translate('messages.select_store') }}"
-                                    class="js-data-example-ajax form-control">
+                                    class="js-data-example-ajax form-control set-filter">
                                 @if (isset($store))
                                     <option value="{{ $store->id }}" selected>{{ $store->name }}</option>
                                 @else
@@ -101,9 +99,9 @@
                         </div>
                         @else
                         <div class="col-sm-6 col-md-3">
-                            <select name="deliveryman_id" id="deliveryman" onchange="set_delivery_man_filter('{{ url()->full() }}',this.value)"
+                            <select name="deliveryman_id" id="deliveryman" data-url="{{ url()->full() }}" data-filter="deliveryman_id"
                                     data-placeholder="{{ translate('messages.select_delivery_man') }}"
-                                    class="js-data-example-ajax form-control">
+                                    class="js-data-example-ajax form-control set-filter">
                                 @if (isset($delivery_man))
                                     <option value="{{ $delivery_man->id }}" selected>{{ $delivery_man->name }}</option>
                                 @else
@@ -113,9 +111,9 @@
                         </div>
                         @endif
                         <div class="col-sm-6 col-md-3">
-                            <select name="payment_method_id" onchange="set_payment_method_filter('{{ url()->full() }}',this.value)"
+                            <select name="payment_method_id" data-url="{{ url()->full() }}" data-filter="payment_method_id"
                                     data-placeholder="{{ translate('messages.select_payment_method') }}"
-                                    class="form-control js-select2-custom">
+                                    class="form-control js-select2-custom set-filter">
                                 <option value="all">{{translate('All_Payment_Method')}}</option>
                                 @foreach($withdrawal_methods as $item)
                                     <option value="{{$item['id']}}" {{ isset($payment_method_id) && $payment_method_id == $item['id'] ? 'selected' : '' }}>{{$item['method_name']}}</option>
@@ -123,9 +121,9 @@
                             </select>
                         </div>
                         <div class="col-sm-6 col-md-3">
-                            <select name="status" onchange="set_status_filter('{{ url()->full() }}',this.value)"
+                            <select name="status" data-url="{{ url()->full() }}" data-filter="status"
                                     data-placeholder="{{ translate('messages.select_status') }}"
-                                    class="form-control js-select2-custom">
+                                    class="form-control js-select2-custom set-filter">
                                 <option value="all" {{ isset($status) && $status == 'all' ? 'selected' : '' }}>{{translate('All_status')}}</option>
                                 <option value="pending" {{ isset($status) && $status == 'pending' ? 'selected' : '' }}>{{ translate('pending') }}</option>
                                 <option value="completed" {{ isset($status) && $status == 'completed' ? 'selected' : '' }}>{{ translate('completed') }}</option>
@@ -133,8 +131,7 @@
                             </select>
                         </div>
                         <div class="col-sm-6 col-md-3">
-                            <select class="form-control" name="filter"
-                                    onchange="set_time_filter('{{ url()->full() }}',this.value)">
+                            <select class="form-control set-filter" name="filter" data-url="{{ url()->full() }}" data-filter="filter">
                                 <option value="all_time" {{ isset($filter) && $filter == 'all_time' ? 'selected' : '' }}>
                                     {{ translate('messages.All_Time') }}</option>
                                 <option value="this_year" {{ isset($filter) && $filter == 'this_year' ? 'selected' : '' }}>
@@ -255,7 +252,7 @@
                             </td>
                             @else
                                 <td>
-                                    <a href="{{route('admin.delivery-man.preview', $disbursement->delivery_man_id)}}"
+                                    <a href="{{route('admin.users.delivery-man.preview', $disbursement->delivery_man_id)}}"
                                        class="table-rest-info">
                                         <div class="info">
                                             <span class="d-block text-body">
@@ -461,7 +458,7 @@
                     @endforeach
                     </tbody>
                 </table>
-              
+
                 @if(count($disbursements) === 0)
                     <div class="empty--data">
                         <img src="{{asset('/public/assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
@@ -487,7 +484,9 @@
 @endpush
 
 @push('script_2')
+    <script src="{{ asset('public/assets/admin') }}/js/view-pages/admin-reports.js"></script>
     <script>
+        "use strict";
         $(document).on('ready', function() {
             $('.js-data-example-ajax').select2({
                 ajax: {
@@ -512,7 +511,7 @@
                         };
                     },
                     __port: function(params, success, failure) {
-                        var $request = $.ajax(params);
+                        let $request = $.ajax(params);
 
                         $request.then(success);
                         $request.fail(failure);
@@ -537,7 +536,7 @@
                         };
                     },
                     __port: function (params, success, failure) {
-                        var $request = $.ajax(params);
+                        let $request = $.ajax(params);
 
                         $request.then(success);
                         $request.fail(failure);
@@ -547,25 +546,6 @@
                 }
             });
         });
-    </script>
-
-    <script>
-        $('#from_date,#to_date').change(function() {
-            let fr = $('#from_date').val();
-            let to = $('#to_date').val();
-            if (fr != '' && to != '') {
-                if (fr > to) {
-                    $('#from_date').val('');
-                    $('#to_date').val('');
-                    toastr.error('Invalid date range!', Error, {
-                        CloseButton: true,
-                        ProgressBar: true
-                    });
-                }
-            }
-
-        })
-
     </script>
 @endpush
 
