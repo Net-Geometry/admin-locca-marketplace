@@ -23,8 +23,7 @@
                 </div>
 
                 <div class="col-sm-auto min--280">
-                    <select name="zone_id" class="form-control js-select2-custom"
-                            onchange="fetch_data_zone_wise(this.value)">
+                    <select name="zone_id" class="form-control js-select2-custom fetch_data_zone_wise">
                         <option value="all">{{ translate('messages.All_Zones') }}</option>
                         @foreach(\App\Models\Zone::orderBy('name')->get() as $zone)
                             <option
@@ -248,8 +247,7 @@
                         <h5 class="card-header-title">
                             {{translate('User Statistics')}}
                         </h5>
-                        <select class="custom-select border-0 text-center w-auto" name="user_overview"
-                                onchange="user_overview_stats_update(this.value)">
+                        <select class="custom-select border-0 text-center w-auto user_overview_stats_update" name="user_overview">
                             <option
                                 value="this_month" {{$params['user_overview'] == 'this_month'?'selected':''}}>
                                 {{translate('This month')}}
@@ -379,7 +377,10 @@
 
     <!-- Dognut Pie Chart -->
     <script>
-        let options = {
+        "use strict";
+        let options;
+        let chart;
+        options = {
             series: [{{ $data['customer']}}, {{$data['stores']}}, {{$data['delivery_man']}}],
             chart: {
                 width: 320,
@@ -409,10 +410,10 @@
             },
         };
 
-        let chart = new ApexCharts(document.querySelector("#dognut-pie"), options);
+        chart = new ApexCharts(document.querySelector("#dognut-pie"), options);
         chart.render();
 
-    let options = {
+    options = {
           series: [{
           name: 'Gross Sale',
           data: [60, 40, 80, 31, 42, 109, 100, 50, 30, 80, 65, 35]
@@ -446,7 +447,7 @@
         },
         };
 
-        let chart = new ApexCharts(document.querySelector("#grow-sale-chart"), options);
+        chart = new ApexCharts(document.querySelector("#grow-sale-chart"), options);
         chart.render();
 
     <!-- Dognut Pie Chart -->
@@ -484,7 +485,8 @@
             });
         }
 
-        function fetch_data_zone_wise(zone_id) {
+        $('.fetch_data_zone_wise').on('change', function (){
+            let zone_id = $(this).val();
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -514,9 +516,10 @@
                     $('#loading').hide()
                 }
             });
-        }
+        })
 
-        function user_overview_stats_update(type) {
+        $('.user_overview_stats_update').on('change', function (){
+            let type = $(this).val();
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -538,7 +541,7 @@
                     $('#loading').hide()
                 }
             });
-        }
+        })
 
         function insert_param(key, value) {
             key = encodeURIComponent(key);

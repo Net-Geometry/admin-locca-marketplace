@@ -25,7 +25,7 @@
         @foreach($top_rated_foods as $key=>$item)
             <a href="{{route('admin.item.view',[$item['id']])}}">
                 <div class="rated-media d-flex align-items-center">
-                    <img src="{{asset('storage/app/public/product')}}/{{$item['image']}}" onerror="this.src='{{asset('public/assets/admin/img/100x100/2.png')}}'" alt="{{Str::limit($item->name??translate('messages.Item deleted!'),20,'...')}}">
+                    <img src="{{asset('storage/app/public/product')}}/{{$item['image']}}" class="onerror-image" data-onerror-image="{{asset('public/assets/admin/img/100x100/2.png')}}" alt="{{Str::limit($item->name??translate('messages.Item deleted!'),20,'...')}}">
                     <span class="line--limit-1 w-0 flex-grow-1">
                         {{Str::limit($item->name??translate('messages.Item deleted!'),20,'...')}}
                     </span>

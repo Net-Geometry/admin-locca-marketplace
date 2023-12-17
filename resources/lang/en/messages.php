@@ -3578,4 +3578,7 @@
   'admin_earned' => 'Admin earned',
   'Last name is required!' => 'Last name is required!',
   'admin_updated_successfully' => 'Admin updated successfully',
+  'total_sell' => 'Total sell',
+  'delivery_commission' => 'Delivery commission',
+  'currency' => 'Currency',
 );
