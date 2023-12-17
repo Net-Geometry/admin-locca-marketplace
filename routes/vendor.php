@@ -194,7 +194,7 @@ Route::group(['namespace' => 'Vendor', 'as' => 'vendor.'], function () {
         Route::group(['prefix' => 'order', 'as' => 'order.' , 'middleware' => ['module:order']], function () {
             Route::get('list/{status}', 'OrderController@list')->name('list');
             Route::put('status-update/{id}', 'OrderController@status')->name('status-update');
-            Route::post('search', 'OrderController@search')->name('search');
+//            Route::post('search', 'OrderController@search')->name('search');
             Route::post('add-to-cart', 'OrderController@add_to_cart')->name('add-to-cart');
             Route::post('remove-from-cart', 'OrderController@remove_from_cart')->name('remove-from-cart');
             Route::get('update/{order}', 'OrderController@update')->name('update');

@@ -11175,8 +11175,6 @@ body > .initial-38-1 {
     z-index: 1;
 }
 
-
-
 .module-warning-text{
     color: #8c1515;
     padding-top: 10px;
@@ -11188,3 +11186,9 @@ body > .initial-38-1 {
 .view_conversation-h4-style{
     color: rgba(113,120,133,0.62);
 }
+.select2-container--open {
+    z-index: 99999999999999;
+}
+
+
+

@@ -31,14 +31,14 @@
 
                             <!-- Search -->
                             <div class="input-group input--group">
-                                <input id="datatableSearch_" type="search" value="{{  request()?->search ?? null }}" name="search" class="form-control" placeholder="{{translate('messages.ex_:_search_order_id')}}" aria-label="{{translate('messages.search')}}" >
+                                <input  type="search" value="{{  request()?->search ?? null }}" name="search" class="form-control" placeholder="{{translate('messages.ex_:_search_order_id')}}" aria-label="{{translate('messages.search')}}" >
                                 <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
                             </div>
                             <!-- End Search -->
                         </form>
                         <!-- Unfold -->
                         <div class="hs-unfold mr-2">
-                            <a class="js-hs-unfold-invoker btn btn-sm btn-white dropdown-toggle h--40px" href="javascript:;"
+                            <a class="js-hs-unfold-invoker btn btn-sm btn-white dropdown-toggle h--40px" href="javascript:"
                                 data-hs-unfold-options='{
                                     "target": "#usersExportDropdown",
                                     "type": "css-animation"
@@ -49,36 +49,36 @@
                             <div id="usersExportDropdown"
                                     class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
                                 <span class="dropdown-header">{{translate('messages.options')}}</span>
-                                <a id="export-copy" class="dropdown-item" href="javascript:;">
+                                <a id="export-copy" class="dropdown-item" href="javascript:">
                                     <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                            src="{{asset('public/assets/admin')}}/svg/illustrations/copy.svg"
+                                            src="{{asset('public/assets/admin/svg/illustrations/copy.svg')}}"
                                             alt="Image Description">
                                     {{translate('messages.copy')}}
                                 </a>
-                                <a id="export-print" class="dropdown-item" href="javascript:;">
+                                <a id="export-print" class="dropdown-item" href="javascript:">
                                     <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                            src="{{asset('public/assets/admin')}}/svg/illustrations/print.svg"
+                                            src="{{asset('public/assets/admin/svg/illustrations/print.svg')}}"
                                             alt="Image Description">
                                     {{translate('messages.print')}}
                                 </a>
                                 <div class="dropdown-divider"></div>
                                 <span
                                     class="dropdown-header">{{translate('messages.download_options')}}</span>
-                                <a id="export-excel" class="dropdown-item" href="javascript:;">
+                                <a id="export-excel" class="dropdown-item" href="javascript:">
                                     <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                            src="{{asset('public/assets/admin')}}/svg/components/excel.svg"
+                                            src="{{asset('public/assets/admin/svg/components/excel.svg')}}"
                                             alt="Image Description">
                                     {{translate('messages.excel')}}
                                 </a>
-                                <a id="export-csv" class="dropdown-item" href="javascript:;">
+                                <a id="export-csv" class="dropdown-item" href="javascript:">
                                     <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                            src="{{asset('public/assets/admin')}}/svg/components/placeholder-csv-format.svg"
+                                            src="{{asset('public/assets/admin/svg/components/placeholder-csv-format.svg')}}"
                                             alt="Image Description">
                                     .{{translate('messages.csv')}}
                                 </a>
-                                <a id="export-pdf" class="dropdown-item" href="javascript:;">
+                                <a id="export-pdf" class="dropdown-item" href="javascript:">
                                     <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                            src="{{asset('public/assets/admin')}}/svg/components/pdf.svg"
+                                            src="{{asset('public/assets/admin/svg/components/pdf.svg')}}"
                                             alt="Image Description">
                                     {{translate('messages.pdf')}}
                                 </a>
@@ -88,7 +88,7 @@
 
                         <!-- Unfold -->
                         <div class="hs-unfold">
-                            <a class="js-hs-unfold-invoker btn btn-sm btn-white h--40px" href="javascript:;"
+                            <a class="js-hs-unfold-invoker btn btn-sm btn-white h--40px" href="javascript:"
                                 data-hs-unfold-options='{
                                     "target": "#showHideDropdown",
                                     "type": "css-animation"
@@ -243,15 +243,13 @@
                                     <strong>{{$customer_details['contact_person_name']}}</strong>
                                     <div>{{$customer_details['contact_person_number']}}</div>
                                     @elseif($order->customer)
-                                    {{-- <a class="text-body text-capitalize"
-                                    href="{{route('vendor.customer.view',[$order['user_id']])}}"> --}}
+
                                     <strong>
                                         {{$order->customer['f_name'].' '.$order->customer['l_name']}}
                                     </strong>
                                     <div>
                                         {{$order->customer['phone']}}
                                     </div>
-                                {{-- </a> --}}
                                     @else
                                         <label
                                             class="badge badge-danger">{{translate('messages.invalid_customer_data')}}</label>
@@ -345,28 +343,15 @@
             <!-- End Footer -->
         </div>
         <!-- End Card -->
-    </div>
+
 @endsection
 
 @push('script_2')
     <script>
+        "use strict";
         $(document).on('ready', function () {
-            // INITIALIZATION OF NAV SCROLLER
-            // =======================================================
-            $('.js-nav-scroller').each(function () {
-                new HsNavScroller($(this)).init()
-            });
 
-            // INITIALIZATION OF SELECT2
-            // =======================================================
-            $('.js-select2-custom').each(function () {
-                var select2 = $.HSCore.components.HSSelect2.init($(this));
-            });
-
-
-            // INITIALIZATION OF DATATABLES
-            // =======================================================
-            var datatable = $.HSCore.components.HSDatatables.init($('#datatable'), {
+            let datatable = $.HSCore.components.HSDatatables.init($('#datatable'), {
                 dom: 'Bfrtip',
                 buttons: [
                     {
@@ -376,7 +361,7 @@
                     {
                         extend: 'excel',
                         className: 'd-none',
-                        action: function (e, dt, node, config)
+                        action: function ()
                         {
                             window.location.href = '{{route("vendor.order.export",['status'=>$status,'file_type'=>'excel','type'=>'order', request()->getQueryString()])}}';
                         }
@@ -384,7 +369,7 @@
                     {
                         extend: 'csv',
                         className: 'd-none',
-                        action: function (e, dt, node, config)
+                        action: function ()
                         {
                             window.location.href = '{{route("vendor.order.export",['status'=>$status,'file_type'=>'csv','type'=>'order', request()->getQueryString()])}}';
                         }
@@ -459,39 +444,7 @@
                 datatable.columns(6).visible(e.target.checked)
             })
 
-            // INITIALIZATION OF TAGIFY
-            // =======================================================
-            $('.js-tagify').each(function () {
-                var tagify = $.HSCore.components.HSTagify.init($(this));
-            });
         });
     </script>
 
-    <script>
-        // $('#search-form').on('submit', function () {
-        //     var formData = new FormData(this);
-        //     $.ajaxSetup({
-        //         headers: {
-        //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        //         }
-        //     });
-        //     $.post({
-        //         url: '{{route('vendor.order.search')}}',
-        //         data: formData,
-        //         cache: false,
-        //         contentType: false,
-        //         processData: false,
-        //         beforeSend: function () {
-        //             $('#loading').show();
-        //         },
-        //         success: function (data) {
-        //             $('#set-rows').html(data.view);
-        //             $('.card-footer').hide();
-        //         },
-        //         complete: function () {
-        //             $('#loading').hide();
-        //         },
-        //     });
-        // });
-    </script>
 @endpush

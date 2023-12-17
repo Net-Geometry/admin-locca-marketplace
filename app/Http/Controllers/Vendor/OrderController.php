@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Vendor;
 
 use App\Models\Order;
+use App\Models\OrderCancelReason;
 use App\Models\Store;
 use App\Models\Coupon;
 use App\Exports\OrderExport;
@@ -204,19 +205,19 @@ class OrderController extends Controller
 
     }
 
-    public function search(Request $request){
-        $key = explode(' ', $request['search']);
-        $orders=Order::where(['store_id'=>Helpers::get_store_id()])->where(function ($q) use ($key) {
-            foreach ($key as $value) {
-                $q->orWhere('id', 'like', "%{$value}%")
-                    ->orWhere('order_status', 'like', "%{$value}%")
-                    ->orWhere('transaction_reference', 'like', "%{$value}%");
-            }
-        })->StoreOrder()->NotDigitalOrder()->limit(100)->get();
-        return response()->json([
-            'view'=>view('vendor-views.order.partials._table',compact('orders'))->render()
-        ]);
-    }
+//    public function search(Request $request){
+//        $key = explode(' ', $request['search']);
+//        $orders=Order::where(['store_id'=>Helpers::get_store_id()])->where(function ($q) use ($key) {
+//            foreach ($key as $value) {
+//                $q->orWhere('id', 'like', "%{$value}%")
+//                    ->orWhere('order_status', 'like', "%{$value}%")
+//                    ->orWhere('transaction_reference', 'like', "%{$value}%");
+//            }
+//        })->StoreOrder()->NotDigitalOrder()->limit(100)->get();
+//        return response()->json([
+//            'view'=>view('vendor-views.order.partials._table',compact('orders'))->render()
+//        ]);
+//    }
 
     public function details(Request $request,$id)
     {
@@ -226,7 +227,8 @@ class OrderController extends Controller
             return $query->withCount('orders');
         }])->where(['id' => $id, 'store_id' => Helpers::get_store_id()])->first();
         if (isset($order)) {
-            return view('vendor-views.order.order-view', compact('order'));
+            $reasons=OrderCancelReason::where('status', 1)->where('user_type' ,'store' )->get();
+            return view('vendor-views.order.order-view', compact('order' ,'reasons'));
         } else {
             Toastr::info('No more orders!');
             return back();
