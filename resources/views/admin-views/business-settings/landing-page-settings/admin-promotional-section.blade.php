@@ -106,7 +106,7 @@
                                 </label>
                                 <label class="upload-img-3 m-0 d-block">
                                     <div class="img">
-                                        <img src="" onerror='this.src="{{asset('/public/assets/admin/img/upload-4.png')}}"' class="vertical-img mw-100 vertical" alt="">
+                                        <img src="" data-onerror-image="{{asset('/public/assets/admin/img/upload-4.png')}}" class="vertical-img mw-100 vertical onerror-image" alt="">
                                     </div>
                                         <input type="file" name="image"  hidden>
                                 </label>
@@ -165,7 +165,7 @@
                                     </td>
                                     <td>
                                         <img src="{{asset('storage/app/public/promotional_banner')}}/{{$banner->image}}"
-                                        onerror="this.src='{{asset('/public/assets/admin/img/upload-3.png')}}'" class="__size-105" alt="">
+                                        data-onerror-image="{{asset('/public/assets/admin/img/upload-3.png')}}" class="__size-105 onerror-image" alt="">
                                     </td>
                                     <td>
                                         <label class="toggle-switch toggle-switch-sm">

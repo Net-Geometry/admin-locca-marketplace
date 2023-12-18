@@ -4,7 +4,7 @@
     <td>
         <div>
             <a href="{{route('admin.store.view', $store->id)}}" class="table-rest-info" alt="view store">
-            <img class="img--60 circle" onerror="this.src='{{asset('public/assets/admin/img/160x160/img1.jpg')}}'"
+            <img class="img--60 circle onerror-image" data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
                     src="{{asset('storage/app/public/store')}}/{{$store['logo']}}">
                 <div class="info"><div class="text--title">
                     {{Str::limit($store->name,20,'...')}}

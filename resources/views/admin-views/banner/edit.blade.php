@@ -130,7 +130,7 @@
                                             <small class="text-danger">* ( {{translate('messages.ratio')}} 900x300 )</small>
                                         </label>
                                         <center class="py-3 my-auto">
-                                            <img class="img--vertical" id="viewer" onerror="this.src='{{asset('public/assets/admin/img/900x400/img1.jpg')}}'" src="{{asset('storage/app/public/banner')}}/{{$banner['image']}}" alt="banner image"/>
+                                            <img class="img--vertical onerror-image" id="viewer" data-onerror-image="{{asset('public/assets/admin/img/900x400/img1.jpg')}}" src="{{asset('storage/app/public/banner')}}/{{$banner['image']}}" alt="banner image"/>
                                         </center>
                                         <div class="custom-file">
                                             <input type="file" name="image" id="customFileEg1" class="custom-file-input"

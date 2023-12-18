@@ -137,7 +137,7 @@
                 <div class="card-body">
                     <div class="resturant--info-address">
                         <div class="avatar avatar-xxl avatar-circle avatar-border-lg">
-                            <img class="avatar-img onerror-image" data-onerror-message="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
+                            <img class="avatar-img onerror-image" data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
                         src="{{asset('storage/app/public/vendor')}}/{{$store->vendor->image}}" alt="Image Description">
                         </div>
                         <ul class="address-info address-info-2 list-unstyled list-unstyled-py-3 text-dark">

@@ -31,9 +31,9 @@
                         <div class="row align-items-md-center">
                             <div class="col-lg-5 col-md-6 mb-3 mb-md-0">
                                 <div class="d-flex flex-wrap align-items-center food--media">
-                                    <img class="avatar avatar-xxl avatar-4by3 mr-4"
+                                    <img class="avatar avatar-xxl avatar-4by3 mr-4 onerror-image"
                                         src="{{ asset('storage/app/public/product') }}/{{ $product['image'] }}"
-                                        onerror="this.src='{{ asset('public/assets/admin/img/160x160/img2.jpg') }}'"
+                                        data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
                                         alt="Image Description">
                                     <div class="d-block">
                                         <div class="rating--review">
@@ -231,8 +231,8 @@
                         @if ($product->store)
                             <a class="resturant--information-single"
                                 href="{{ route('admin.store.view', $product->store_id) }}">
-                                <img class="img--120 rounded mx-auto mb-3"
-                                    onerror="this.src='{{ asset('public/assets/admin/img/160x160/img1.jpg') }}'"
+                                <img class="img--120 rounded mx-auto mb-3 onerror-image"
+                                data-onerror-image="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}"
                                     src="{{ asset('storage/app/public/store/' . $product->store->logo) }}"
                                     alt="Image Description">
                                 <div class="text-center">

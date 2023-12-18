@@ -244,8 +244,8 @@
                     </div>
                     <div class="col-md-4">
                         <div class="d-flex align-items-center justify-content-center">
-                            <img class="avatar avatar-xxl avatar-4by3 mr-4 img--120"
-                                 onerror="this.src='{{asset('public/assets/admin/img/160x160/img1.jpg')}}'"
+                            <img class="avatar avatar-xxl avatar-4by3 mr-4 img--120 onerror-image"
+                                 data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
                                  src="{{asset('storage/app/public/delivery-man')}}/{{$deliveryMan['image']}}"
                                  alt="Image Description">
                             <div class="d-block">
@@ -433,8 +433,8 @@
                                 <button class="btn w-100" data-toggle="modal"
                                     data-target="#image-{{ $key }}">
                                     <div class="gallary-card">
-                                        <img onerror="this.src='{{ asset('/public/assets/admin/img/900x400/img1.jpg') }}'"
-                                        src="{{ asset('storage/app/public/delivery-man') }}/{{ $img }}" class="w-100">
+                                        <img data-onerror-image="{{ asset('/public/assets/admin/img/900x400/img1.jpg') }}"
+                                        src="{{ asset('storage/app/public/delivery-man') }}/{{ $img }}" class="w-100 onerror-image">
                                     </div>
                                 </button>
                                 <div class="modal fade" id="image-{{ $key }}" tabindex="-1" role="dialog"
@@ -449,9 +449,9 @@
                                                     class="sr-only">{{ translate('messages.Close') }}</span></button>
                                         </div>
                                         <div class="modal-body">
-                                            <img onerror="this.src='{{ asset('/public/assets/admin/img/900x400/img1.jpg') }}'"
+                                            <img data-onerror-image="{{ asset('/public/assets/admin/img/900x400/img1.jpg') }}"
                                                 src="{{ asset('storage/app/public/delivery-man/' . $img) }}"
-                                                class="w-100">
+                                                class="w-100 onerror-image">
                                         </div>
                                         <div class="modal-footer">
                                         </div>
@@ -542,7 +542,6 @@
                                         href="{{route('admin.customer.view',[$review['user_id']])}}">
                                             <div class="avatar avatar-circle">
                                                 <img class="avatar-img" width="75" height="75"
-                                                    {{-- onerror="this.src='{{asset('public/assets/admin/img/160x160/img1.jpg')}}'" --}}
                                                     src="{{asset('storage/app/public/profile/')}}/{{$review->customer?$review->customer->image:''}}"
                                                     alt="Image Description">
                                             </div>

@@ -48,7 +48,7 @@
 
                                     <label class="upload-img-3 d-block max-w-640">
                                         <div class="img">
-                                            <img src="" onerror="this.src='{{asset("/public/assets/admin/img/upload-4.png")}}'" class="vertical-img w-100 mw-100" alt="">
+                                            <img src="" data-onerror-image="{{asset("/public/assets/admin/img/upload-4.png")}}" class="vertical-img w-100 mw-100 onerror-image" alt="">
                                         </div>
                                         <input type="file"  name="image" hidden="">
                                     </label>
@@ -83,7 +83,7 @@
                                         <td>{{ $key+1 }}</td>
                                         <td>
                                             <img src="{{asset('storage/app/public/promotional_banner')}}/{{$banner['img']}}"
-                                            onerror="this.src='{{asset('/public/assets/admin/img/upload-3.png')}}'" class="__size-105 mw-100" alt="">
+                                            data-onerror-image="{{asset('/public/assets/admin/img/upload-3.png')}}" class="__size-105 mw-100 onerror-image" alt="">
                                         </td>
                                         <td>
                                             <div class="btn--container justify-content-center">

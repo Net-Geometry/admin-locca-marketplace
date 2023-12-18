@@ -161,9 +161,9 @@
                                         <input type="hidden" id="removedImageKeysInput" name="removedImageKeys" value="">
                                         @foreach($product->images as $key => $photo)
                                             <div id="product_images_{{ $key }}" class="spartan_item_wrapper min-w-100px max-w-100px">
-                                                <img class="img--square"
+                                                <img class="img--square onerror-image"
                                                     src="{{ asset("storage/app/public/product/$photo") }}"
-                                                    onerror="this.src='{{ asset('public/assets/admin/img/upload.png') }}'"
+                                                    data-onerror-image="{{ asset('public/assets/admin/img/upload.png') }}"
                                                     alt="Product image">
                                                     @if (request()->product_gellary  == 1)
                                                         <a href="#" data-key={{ $key }} data-photo="{{ $photo }}"
@@ -182,9 +182,9 @@
                                         <small class="text-danger">* ( {{ translate('messages.ratio') }} 1:1 )</small>
                                     </label>
                                     <label class="d-inline-block m-0">
-                                        <img class="img--100" id="viewer"
+                                        <img class="img--100 onerror-image" id="viewer"
                                             src="{{ asset('storage/app/public/product') }}/{{ $product['image'] }}"
-                                            onerror="this.src='{{ asset('public/assets/admin/img/upload.png') }}'"
+                                            data-onerror-image="{{ asset('public/assets/admin/img/upload.png') }}"
                                             alt="thumbnail" />
                                         <input type="file" name="image" id="customFileEg1"
                                             class="custom-file-input d-none"

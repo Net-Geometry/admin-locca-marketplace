@@ -450,9 +450,9 @@
                                 <div class="media align-items-center cart--media pb-2">
                                     <div class="avatar avatar-xl mr-3"
                                         title="{{ $order->parcel_category ? $order->parcel_category->name : translate('messages.parcel_category_not_found') }}">
-                                        <img class="img-fluid"
+                                        <img class="img-fluid onerror-image"
                                             src="{{ asset('storage/app/public/parcel_category') }}/{{ $order->parcel_category ? $order->parcel_category->image : '' }}"
-                                            onerror="this.src='{{ asset('public/assets/admin/img/160x160/img2.jpg') }}'">
+                                            data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}">
                                     </div>
                                     <div class="media-body">
                                         <div class="row">
@@ -554,17 +554,17 @@
                                                                     <span
                                                                         class="avatar-status avatar-lg-status avatar-status-dark"><i
                                                                             class="tio-edit"></i></span>
-                                                                    <img class="img-fluid rounded aspect-ratio-1"
+                                                                    <img class="img-fluid rounded aspect-ratio-1 onerror-image"
                                                                         src="{{ asset('storage/app/public/product') }}/{{ $detail->item['image'] }}"
-                                                                        onerror="this.src='{{ asset('public/assets/admin/img/160x160/img2.jpg') }}'"
+                                                                        data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
                                                                         alt="Image Description">
                                                                 </div>
                                                             @else
                                                                 <a class="avatar avatar-xl mr-3"
                                                                     href="{{ route('admin.item.view', [$detail->item['id'],'module_id' => $order->module_id]) }}">
-                                                                    <img class="img-fluid rounded aspect-ratio-1"
+                                                                    <img class="img-fluid rounded aspect-ratio-1 onerror-image"
                                                                         src="{{ asset('storage/app/public/product') }}/{{ $detail->item['image'] }}"
-                                                                        onerror="this.src='{{ asset('public/assets/admin/img/160x160/img2.jpg') }}'"
+                                                                        data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
                                                                         alt="Image Description">
                                                                 </a>
                                                             @endif
@@ -689,17 +689,17 @@
                                                                     <span
                                                                         class="avatar-status avatar-lg-status avatar-status-dark"><i
                                                                             class="tio-edit"></i></span>
-                                                                    <img class="img-fluid rounded"
+                                                                    <img class="img-fluid rounded onerror-image"
                                                                         src="{{ asset('storage/app/public/campaign') }}/{{ $detail->campaign['image'] }}"
-                                                                        onerror="this.src='{{ asset('public/assets/admin/img/160x160/img2.jpg') }}'"
+                                                                        data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
                                                                         alt="Image Description">
                                                                 </div>
                                                             @else
                                                                 <a class="avatar avatar-xl mr-3"
                                                                     href="{{ route('admin.campaign.view', ['item', $detail->campaign['id']]) }}">
-                                                                    <img class="img-fluid rounded"
+                                                                    <img class="img-fluid rounded onerror-image"
                                                                         src="{{ asset('storage/app/public/campaign') }}/{{ $detail->campaign['image'] }}"
-                                                                        onerror="this.src='{{ asset('public/assets/admin/img/160x160/img2.jpg') }}'"
+                                                                        data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
                                                                         alt="Image Description">
                                                                 </a>
                                                             @endif
@@ -1056,9 +1056,9 @@
                                     @if ($data)
                                         @foreach ($data as $key => $img)
                                             <div class="col-3">
-                                                <img class="img__aspect-1 rounded border w-100" data-toggle="modal"
+                                                <img class="img__aspect-1 rounded border w-100 onerror-image" data-toggle="modal"
                                                     data-target="#imagemodal{{ $key }}"
-                                                    onerror="this.src='{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
+                                                    data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
                                                     src="{{ asset('storage/app/public/refund') . '/' . $img }}">
                                             </div>
                                             <div class="modal fade" id="imagemodal{{ $key }}" tabindex="-1"
@@ -1092,8 +1092,8 @@
                                         @endforeach
                                     @else
                                         <div class="col-3">
-                                            <img class="img__aspect-1 rounded border w-100"
-                                                onerror="this.src='{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
+                                            <img class="img__aspect-1 rounded border w-100 onerror-image"
+                                                data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
                                                 src="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}">
                                         </div>
                                     @endif
@@ -1279,8 +1279,8 @@
                                 <a class="media align-items-center deco-none customer--information-single"
                                     href="{{ route('admin.users.delivery-man.preview', [$order->delivery_man['id']]) }}">
                                     <div class="avatar avatar-circle">
-                                        <img class="avatar-img"
-                                            onerror="this.src='{{ asset('public/assets/admin/img/160x160/img1.jpg') }}'"
+                                        <img class="avatar-img onerror-image"
+                                            data-onerror-image="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}"
                                             src="{{ asset('storage/app/public/delivery-man/' . $order->delivery_man->image) }}"
                                             alt="Image Description">
                                     </div>
@@ -1342,8 +1342,8 @@
                             <a class="media align-items-center deco-none customer--information-single"
                                 href="{{ route('admin.users.customer.view', [$order->customer['id']]) }}">
                                 <div class="avatar avatar-circle">
-                                    <img class="avatar-img"
-                                        onerror="this.src='{{ asset('public/assets/admin/img/160x160/img1.jpg') }}'"
+                                    <img class="avatar-img onerror-image"
+                                        data-onerror-image="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}"
                                         src="{{ asset('storage/app/public/profile/' . $order->customer->image) }}"
                                         alt="Image Description">
                                 </div>
@@ -1477,9 +1477,9 @@
                         <div class="row g-3">
                                 @foreach ($data as $key => $img)
                                     <div class="col-3">
-                                        <img class="img__aspect-1 rounded border w-100" data-toggle="modal"
+                                        <img class="img__aspect-1 rounded border w-100 onerror-image" data-toggle="modal"
                                             data-target="#imagemodal{{ $key }}"
-                                            onerror="this.src='{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
+                                            data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
                                             src="{{ asset('storage/app/public/order') . '/' . $img }}">
                                     </div>
                                     <div class="modal fade" id="imagemodal{{ $key }}" tabindex="-1"
@@ -1531,8 +1531,8 @@
                             <a class="media align-items-center deco-none resturant--information-single"
                                 href="{{ route('admin.store.view', [$order->store['id'],'module_id' => $order->module_id]) }}">
                                 <div class="avatar avatar-circle">
-                                    <img class="avatar-img w-75px"
-                                        onerror="this.src='{{ asset('public/assets/admin/img/100x100/1.png') }}'"
+                                    <img class="avatar-img w-75px onerror-image"
+                                        data-onerror-image="{{ asset('public/assets/admin/img/100x100/1.png') }}"
                                         src="{{ asset('storage/app/public/store/' . $order->store->logo) }}"
                                         alt="Image Description">
                                 </div>
@@ -1860,8 +1860,8 @@
                                 @foreach ($deliveryMen as $dm)
                                     <li class="list-group-item">
                                         <span class="dm_list" role='button' data-id="{{ $dm['id'] }}">
-                                            <img class="avatar avatar-sm avatar-circle mr-1"
-                                                onerror="this.src='{{ asset('public/assets/admin/img/160x160/img1.jpg') }}'"
+                                            <img class="avatar avatar-sm avatar-circle mr-1 onerror-image"
+                                                data-onerror-image="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}"
                                                 src="{{ asset('storage/app/public/delivery-man') }}/{{ $dm['image'] }}"
                                                 alt="{{ $dm['name'] }}">
                                             {{ $dm['name'] }}
