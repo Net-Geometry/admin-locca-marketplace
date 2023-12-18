@@ -288,8 +288,8 @@
                             <td>
                                 <label class="toggle-switch toggle-switch-sm" for="stausCheckbox{{$addon->id}}">
                                     <input type="checkbox"
-                                           onclick="location.href='{{route('admin.addon.status',[$addon['id'],$addon->status?0:1])}}'"
-                                           class="toggle-switch-input"
+                                           data-url="{{route('admin.addon.status',[$addon['id'],$addon->status?0:1])}}"
+                                           class="toggle-switch-input redirect-url"
                                            id="stausCheckbox{{$addon->id}}" {{$addon->status?'checked':''}}>
                                     <span class="toggle-switch-label mx-auto">
                                             <span class="toggle-switch-indicator"></span>

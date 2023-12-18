@@ -147,7 +147,7 @@
                             </td>
                             <td>
                                 <label class="toggle-switch toggle-switch-sm" for="stocksCheckbox{{$reason->id}}">
-                                <input type="checkbox" onclick="location.href='{{route('admin.refund.reason_status',[$reason['id'],$reason->status?0:1])}}'" class="toggle-switch-input" id="stocksCheckbox{{$reason->id}}" {{$reason->status?'checked':''}}>
+                                <input type="checkbox" data-url="{{route('admin.refund.reason_status',[$reason['id'],$reason->status?0:1])}}" class="toggle-switch-input redirect-url" id="stocksCheckbox{{$reason->id}}" {{$reason->status?'checked':''}}>
                                     <span class="toggle-switch-label">
                                         <span class="toggle-switch-indicator"></span>
                                     </span>

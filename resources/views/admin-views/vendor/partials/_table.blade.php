@@ -31,11 +31,10 @@
     </td>
     <td>
         {{$store->zone?$store->zone->name:translate('messages.zone_deleted')}}
-        {{--<span class="d-block font-size-sm">{{$banner['image']}}</span>--}}
     </td>
     <td>
         <label class="toggle-switch toggle-switch-sm" for="featuredCheckbox{{$store->id}}">
-            <input type="checkbox" onclick="location.href='{{route('admin.store.featured',[$store->id,$store->featured?0:1])}}'" class="toggle-switch-input" id="featuredCheckbox{{$store->id}}" {{$store->featured?'checked':''}}>
+            <input type="checkbox" data-url="{{route('admin.store.featured',[$store->id,$store->featured?0:1])}}" class="toggle-switch-input redirect-url" id="featuredCheckbox{{$store->id}}" {{$store->featured?'checked':''}}>
             <span class="toggle-switch-label">
                 <span class="toggle-switch-indicator"></span>
             </span>

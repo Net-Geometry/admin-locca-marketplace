@@ -154,7 +154,7 @@
                                     </td>
                                     <td class="text-center">
                                         <label class="toggle-switch toggle-switch-sm" for="publishCheckbox{{$item->id}}">
-                                            <input type="checkbox" onclick="location.href='{{route('admin.flash-sale.status-product',[$item['id'],$item->status?0:1])}}'" class="toggle-switch-input" id="publishCheckbox{{$item->id}}" {{$item->status?'checked':''}}>
+                                            <input type="checkbox" data-url="{{route('admin.flash-sale.status-product',[$item['id'],$item->status?0:1])}}" class="toggle-switch-input redirect-url" id="publishCheckbox{{$item->id}}" {{$item->status?'checked':''}}>
                                             <span class="toggle-switch-label mx-auto">
                                                 <span class="toggle-switch-indicator"></span>
                                             </span>

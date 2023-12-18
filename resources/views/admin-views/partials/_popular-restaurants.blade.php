@@ -20,7 +20,7 @@
 <div class="card-body">
     <ul class="most-popular">
     @foreach($popular as $key=>$item)
-        <li class="cursor-pointer" onclick="location.href='{{route('admin.store.view', $item->store_id)}}'">
+        <li class="cursor-pointer redirect-url" data-url="{{route('admin.store.view', $item->store_id)}}">
             <div class="img-container">
                 <img class="onerror-image" data-onerror-image="{{asset('public/assets/admin/img/100x100/1.png')}}" src="{{asset('storage/app/public/store')}}/{{$item->store['logo']}}" alt="{{translate('store')}}">
                 <span class="ml-2"> {{Str::limit($item->store->name??translate('messages.store deleted!'), 20, '...')}} </span>

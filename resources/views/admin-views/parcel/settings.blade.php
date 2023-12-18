@@ -169,7 +169,7 @@
                                     </td>
                                     <td>
                                         <label class="toggle-switch toggle-switch-sm" for="stocksCheckbox{{$instruction->id}}">
-                                            <input type="checkbox" onclick="location.href='{{route('admin.parcel.instruction_status',[$instruction['id'],$instruction->status?0:1])}}'"class="toggle-switch-input" id="stocksCheckbox{{$instruction->id}}" {{$instruction->status?'checked':''}}>
+                                            <input type="checkbox" data-url="{{route('admin.parcel.instruction_status',[$instruction['id'],$instruction->status?0:1])}}" class="toggle-switch-input redirect-url" id="stocksCheckbox{{$instruction->id}}" {{$instruction->status?'checked':''}}>
                                             <span class="toggle-switch-label">
                                         <span class="toggle-switch-indicator"></span>
                                     </span>

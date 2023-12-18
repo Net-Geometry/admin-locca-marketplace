@@ -215,7 +215,7 @@
                                     <td>
                                         <div class="d-flex justify-content-center">
                                             <label class="toggle-switch toggle-switch-sm" for="featuredCheckbox{{$banner->id}}">
-                                                <input type="checkbox" onclick="location.href='{{route('admin.banner.featured',[$banner['id'],$banner->featured?0:1])}}'" class="toggle-switch-input" id="featuredCheckbox{{$banner->id}}" {{$banner->featured?'checked':''}}>
+                                                <input type="checkbox" data-url="{{route('admin.banner.featured',[$banner['id'],$banner->featured?0:1])}}" class="toggle-switch-input redirect-url" id="featuredCheckbox{{$banner->id}}" {{$banner->featured?'checked':''}}>
                                                 <span class="toggle-switch-label">
                                                     <span class="toggle-switch-indicator"></span>
                                                 </span>
@@ -225,7 +225,7 @@
                                     <td>
                                         <div class="d-flex justify-content-center">
                                             <label class="toggle-switch toggle-switch-sm" for="statusCheckbox{{$banner->id}}">
-                                            <input type="checkbox" onclick="location.href='{{route('admin.banner.status',[$banner['id'],$banner->status?0:1])}}'" class="toggle-switch-input" id="statusCheckbox{{$banner->id}}" {{$banner->status?'checked':''}}>
+                                            <input type="checkbox" data-url="{{route('admin.banner.status',[$banner['id'],$banner->status?0:1])}}" class="toggle-switch-input redirect-url" id="statusCheckbox{{$banner->id}}" {{$banner->status?'checked':''}}>
                                             <span class="toggle-switch-label">
                                                 <span class="toggle-switch-indicator"></span>
                                             </span>

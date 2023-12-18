@@ -145,8 +145,8 @@
                                     </td>
                                     <td>
                                         <!-- Dropdown -->
-                                        <div class="inline--2"
-                                                 onclick="location.href='{{route('admin.banner.campaign',[$banner->id, $dm['id']])}}'">
+                                        <div class="inline--2 redirect-url"
+                                                 data-url="{{route('admin.banner.campaign',[$banner->id, $dm['id']])}}">
                                                 <span class="legend-indicator bg-danger"></span>{{ translate('messages.remove') }}
                                             </div>
                                         <!-- End Dropdown -->
