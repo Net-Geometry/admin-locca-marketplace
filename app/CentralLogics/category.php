@@ -242,7 +242,7 @@ class CategoryLogic
                 });
             })
             ->whereHas('category',function($q){
-                return $q->where(['featured' => 1 , 'status' => 1]);
+                return $q->where(['featured' => 1 , 'status' => 1 , 'module_id' => config('module.current_module_data')['id']]);
             })
             ->latest()->paginate($limit, ['*'], 'page', $offset);
 
@@ -258,7 +258,7 @@ class CategoryLogic
                 });
             })
             ->whereHas('category',function($q){
-                return $q->where(['featured' => 1 , 'status' => 1]);
+                return $q->where(['featured' => 1 , 'status' => 1 , 'module_id' => config('module.current_module_data')['id']]);
             })
             ->pluck('category_id')->toArray();
 

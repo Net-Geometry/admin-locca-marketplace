@@ -272,7 +272,7 @@
                                 <div class="col-sm-6 col-lg-4">
                                     <div class="form-group mb-0">
                                         <label class="input-label" for="exampleFormControlInput1">{{translate('messages.price')}}</label>
-                                        <input type="number" value="{{$product->price}}" min="0" max="100000" name="price"
+                                        <input type="number" value="{{$product->price}}" min="0" max="999999999999" name="price"
                                                 class="form-control" step="0.01"
                                                 placeholder="{{ translate('messages.Ex:') }} 100" required>
                                     </div>

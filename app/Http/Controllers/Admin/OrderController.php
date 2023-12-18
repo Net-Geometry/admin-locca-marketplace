@@ -1594,7 +1594,7 @@ class OrderController extends Controller
                 ];
 
                 $fcm= $order->is_guest == 0 ? $order?->customer?->cm_firebase_token : $order?->guest?->fcm_token;
-                if($fcm){
+                if($fcm && ( $value || $request->note)){
                     Helpers::send_push_notif_to_device($fcm, $data);
                     DB::table('user_notifications')->insert([
                         'data' => json_encode($data),
@@ -1647,7 +1647,7 @@ class OrderController extends Controller
                     ];
 
                     $fcm= $order->is_guest == 0 ? $order?->customer?->cm_firebase_token : $order?->guest?->fcm_token ;
-                    if($fcm){
+                    if($fcm && ( $value || $request->note)){
                         Helpers::send_push_notif_to_device($fcm, $data);
                         DB::table('user_notifications')->insert([
                             'data' => json_encode($data),

@@ -28,10 +28,10 @@
     @php($section_title = \App\Models\ModuleWiseBanner::withoutGlobalScope('translate')->where('module_id',Config::get('module.current_module_id'))->where('type','video_banner_content')->where('key', 'section_title')->first())
     @php($banner_type = \App\Models\ModuleWiseBanner::withoutGlobalScope('translate')->where('module_id',Config::get('module.current_module_id'))->where('type','video_banner_content')->where('key', 'banner_type')->first())
     @php($banner_video = \App\Models\ModuleWiseBanner::withoutGlobalScope('translate')->where('module_id',Config::get('module.current_module_id'))->where('type','video_banner_content')->where('key', 'banner_video')->first())
+    @php($banner_video_content = \App\Models\ModuleWiseBanner::withoutGlobalScope('translate')->where('module_id',Config::get('module.current_module_id'))->where('type','video_banner_content')->where('key', 'banner_video_content')->first())
     @php($banner_image = \App\Models\ModuleWiseBanner::withoutGlobalScope('translate')->where('module_id',Config::get('module.current_module_id'))->where('type','video_banner_content')->where('key', 'banner_image')->first())
         @php($language = \App\Models\BusinessSetting::where('key', 'language')->first())
         @php($language = $language->value ?? null)
-        @php($defaultLang = str_replace('_', '-', app()->getLocale()))
         @if ($language)
             <ul class="nav nav-tabs mb-4 border-0">
                 <li class="nav-item">
@@ -62,7 +62,7 @@
                                     <div class="col-md-6 lang_form default-form">
                                         <div class="row g-3">
                                             <div class="col-12">
-                                                <label class="form-label">{{ translate('Section_Title') }}
+                                                <label for="section_title" class="form-label">{{ translate('Section_Title') }}
                                                     ({{ translate('messages.default') }})<span
                                                         class="form-label-secondary" data-toggle="tooltip"
                                                         data-placement="right"
@@ -70,7 +70,7 @@
                                                         <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
                                                             alt="">
                                                     </span></label>
-                                                <input type="text" maxlength="20" name="section_title[]" value="{{ $section_title?->getRawOriginal('value') }}" class="form-control"
+                                                <input type="text" id="section_title" maxlength="20" name="section_title[]" value="{{ $section_title?->getRawOriginal('value') }}" class="form-control"
                                                     placeholder="{{ translate('Ex:Enter_section_title') }}">
                                             </div>
                                         </div>
@@ -90,7 +90,7 @@
                                         <div class="col-md-6 d-none lang_form" id="{{ $lang }}-form1">
                                             <div class="row g-3">
                                                 <div class="col-12">
-                                                    <label class="form-label">{{ translate('Section_Title') }}
+                                                    <label for="section_title{{$lang}}" class="form-label">{{ translate('Section_Title') }}
                                                         ({{ strtoupper($lang) }})<span
                                                         class="form-label-secondary" data-toggle="tooltip"
                                                         data-placement="right"
@@ -98,7 +98,7 @@
                                                         <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
                                                             alt="">
                                                     </span></label>
-                                                <input type="text" maxlength="20" name="section_title[]" value="{{ $section_title_translate[$lang]['value'] ?? '' }}" class="form-control"
+                                                <input type="text" id="section_title{{$lang}}" maxlength="20" name="section_title[]" value="{{ $section_title_translate[$lang]['value'] ?? '' }}" class="form-control"
                                                         placeholder="{{ translate('Ex:Enter_section_title') }}">
                                                 </div>
                                             </div>
@@ -115,6 +115,12 @@
                                         <div class="resturant-type-group border">
                                             <label class="form-check form--check mr-2 mr-md-4">
                                                 <input class="form-check-input" type="radio" value="video" name="banner_type" {{ $banner_type ? ($banner_type->value == 'video' ? 'checked' : '') : '' }}>
+                                                <span class="form-check-label">
+                                                    {{translate('video_url')}}
+                                                </span>
+                                            </label>
+                                            <label class="form-check form--check mr-2 mr-md-4">
+                                                <input class="form-check-input" type="radio" value="video_content" name="banner_type" {{ $banner_type ? ($banner_type->value == 'video_content' ? 'checked' : '') : '' }}>
                                                 <span class="form-check-label">
                                                     {{translate('video')}}
                                                 </span>
@@ -160,9 +166,60 @@
 
                                     </div>
                                 </div>
+
+                                <div class="col-12 {{ $banner_type ? ($banner_type->value == 'video_content' ? '' : 'd-none') : '' }}" id="video_content">
+
+                                                    <div class="row">
+                                                        <div class="col-6">
+                                                            <h4 class="mb-3 text-capitalize d-flex align-items-center">{{translate('upload_video')}}</h4>
+                                                            <div class="uploadDnD">
+                                                                <div class="form-group inputDnD">
+                                                                    <input type="file" name="banner_video_content" class="form-control-file text--primary font-weight-bold"
+                                                                    id="inputFile" onchange="readUrl(this)" accept=".mp4,.webm,.ogg,.avi,.flv,.mov,.3gp,.mkv,.mpeg" data-title="{{ translate('Browse_file"') }}">
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="mt-5 card px-3 py-2 d--none" id="progress-bar">
+                                                                <div class="d-flex flex-wrap align-items-center gap-3">
+                                                                    <div class="">
+                                                                        <img width="24" src="{{asset('/public/assets/admin/img/zip.png')}}" alt="">
+                                                                    </div>
+                                                                    <div class="flex-grow-1 text-start">
+                                                                        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
+                                                                            <span id="name_of_file" class="text-truncate fz-12"></span>
+                                                                            <span class="text-muted fz-12" id="progress-label">0%</span>
+                                                                        </div>
+                                                                        <progress id="uploadProgress" class="w-100" value="0" max="100"></progress>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="text-center mt-5">
+                                                                <h3 class="form-label d-block mt-2">
+                                                                {{translate('Video_Size_Max_2MB')}}
+                                                            </h3>
+                                                            <p>{{translate('Video_format_:_MP4_,_WebM_,_Ogg')}}</p>
+
+                                                            </div>
+
+                                                        </div>
+                                                        @if ($banner_video_content?->value)
+
+                                                        <div class="col-6">
+                                                            <h4 class="mb-3  ml-4 text-capitalize d-flex align-items-center">{{translate('Video')}}</h4>
+                                                            @php($extention =explode('.', $banner_video_content?->value))
+                                                            <video width="320" height="140" controls>
+                                                                <source src="{{asset('storage/app/public/promotional_banner/video')}}/{{$banner_video_content?->value}}" type="video/{{ data_get($extention,1,'mp4') }}">
+                                                            </video>
+                                                        </div>
+                                                        @endif
+
+                                                            </div>
+
+                                                </div>
                                 <div class="col-12 {{ $banner_type ? ($banner_type->value == 'video' ? '' : 'd-none') : 'd-none' }}" id="video">
-                                    <label class="form-label">{{ translate('Video_Link') }}</label>
-                                    <input type="url" name="banner_video" value="{{ $banner_video?->value }}" class="form-control"
+                                    <label for="banner_video" class="form-label">{{ translate('Video_Link') }}</label>
+                                    <input type="url" id="banner_video" name="banner_video" value="{{ $banner_video?->value }}" class="form-control"
                                         placeholder="{{ translate('messages.Enter_URL') }}">
                                 </div>
                             </div>
@@ -187,26 +244,26 @@
                                         <label class="form-label">{{ translate('content-1') }}</label>
                                         <div class="row g-3 __bg-F8F9FC-card">
                                             <div class="col-sm-6">
-                                                <label class="form-label">{{ translate('Title') }}
+                                                <label for="content1_title" class="form-label">{{ translate('Title') }}
                                                     ({{ translate('messages.default') }})<span class="form-label-secondary"
                                                         data-toggle="tooltip" data-placement="right"
                                                         data-original-title="{{ translate('Write_the_title_within_80_characters') }}">
                                                         <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
                                                             alt="">
                                                     </span></label>
-                                                <input type="text" maxlength="80" name="content1_title[]"
+                                                <input type="text" id="content1_title" maxlength="80" name="content1_title[]"
                                                     value="{{ $content1_title?->getRawOriginal('value') }}" class="form-control"
                                                     placeholder="{{ translate('Ex_:_Enter_Title') }}">
                                             </div>
                                             <div class="col-sm-6">
-                                                <label class="form-label">{{ translate('messages.Sub Title') }}
+                                                <label for="content1_subtitle" class="form-label">{{ translate('messages.Sub Title') }}
                                                     ({{ translate('messages.default') }})<span class="form-label-secondary"
                                                         data-toggle="tooltip" data-placement="right"
                                                         data-original-title="{{ translate('Write_the_title_within_240_characters') }}">
                                                         <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
                                                             alt="">
                                                     </span></label>
-                                                <input type="text" maxlength="240" name="content1_subtitle[]"
+                                                <input type="text" id="content1_subtitle" maxlength="240" name="content1_subtitle[]"
                                                     value="{{ $content1_subtitle?->getRawOriginal('value') }}" class="form-control"
                                                     placeholder="{{ translate('Ex_:_Enter_Subtitle') }}">
                                             </div>
@@ -216,26 +273,26 @@
                                         <label class="form-label">{{ translate('content-2') }}</label>
                                         <div class="row g-3 __bg-F8F9FC-card">
                                             <div class="col-sm-6">
-                                                <label class="form-label">{{ translate('Title') }}
+                                                <label for="content2_title" class="form-label">{{ translate('Title') }}
                                                     ({{ translate('messages.default') }})<span class="form-label-secondary"
                                                         data-toggle="tooltip" data-placement="right"
                                                         data-original-title="{{ translate('Write_the_title_within_80_characters') }}">
                                                         <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
                                                             alt="">
                                                     </span></label>
-                                                <input type="text" maxlength="80" name="content2_title[]"
+                                                <input type="text" id="content2_title" maxlength="80" name="content2_title[]"
                                                     value="{{ $content2_title?->getRawOriginal('value') }}" class="form-control"
                                                     placeholder="{{ translate('Ex_:_Enter_Title') }}">
                                             </div>
                                             <div class="col-sm-6">
-                                                <label class="form-label">{{ translate('messages.Sub Title') }}
+                                                <label for="content2_subtitle" class="form-label">{{ translate('messages.Sub Title') }}
                                                     ({{ translate('messages.default') }})<span class="form-label-secondary"
                                                         data-toggle="tooltip" data-placement="right"
                                                         data-original-title="{{ translate('Write_the_title_within_240_characters') }}">
                                                         <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
                                                             alt="">
                                                     </span></label>
-                                                <input type="text" maxlength="240" name="content2_subtitle[]"
+                                                <input id="content2_subtitle" type="text" maxlength="240" name="content2_subtitle[]"
                                                     value="{{ $content2_subtitle?->getRawOriginal('value') }}" class="form-control"
                                                     placeholder="{{ translate('Ex_:_Enter_Subtitle') }}">
                                             </div>
@@ -245,26 +302,26 @@
                                         <label class="form-label">{{ translate('content-3') }}</label>
                                         <div class="row g-3 __bg-F8F9FC-card">
                                             <div class="col-sm-6">
-                                                <label class="form-label">{{ translate('Title') }}
+                                                <label for="content3_title" class="form-label">{{ translate('Title') }}
                                                     ({{ translate('messages.default') }})<span class="form-label-secondary"
                                                         data-toggle="tooltip" data-placement="right"
                                                         data-original-title="{{ translate('Write_the_title_within_80_characters') }}">
                                                         <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
                                                             alt="">
                                                     </span></label>
-                                                <input type="text" maxlength="80" name="content3_title[]"
+                                                <input id="content3_title" type="text" maxlength="80" name="content3_title[]"
                                                     value="{{ $content3_title?->getRawOriginal('value') }}" class="form-control"
                                                     placeholder="{{ translate('Ex_:_Enter_Title') }}">
                                             </div>
                                             <div class="col-sm-6">
-                                                <label class="form-label">{{ translate('messages.Sub Title') }}
+                                                <label for="content3_subtitle" class="form-label">{{ translate('messages.Sub Title') }}
                                                     ({{ translate('messages.default') }})<span class="form-label-secondary"
                                                         data-toggle="tooltip" data-placement="right"
                                                         data-original-title="{{ translate('Write_the_title_within_240_characters') }}">
                                                         <img src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
                                                             alt="">
                                                     </span></label>
-                                                <input type="text" maxlength="240" name="content3_subtitle[]"
+                                                <input type="text" id="content3_subtitle" maxlength="240" name="content3_subtitle[]"
                                                     value="{{ $content3_subtitle?->getRawOriginal('value') }}" class="form-control"
                                                     placeholder="{{ translate('Ex_:_Enter_Subtitle') }}">
                                             </div>
@@ -328,21 +385,21 @@
                                             <label class="form-label">{{ translate('content-1') }}</label>
                                             <div class="row g-3 __bg-F8F9FC-card">
                                                 <div class="col-sm-6">
-                                                    <label class="form-label">{{ translate('Title') }}
+                                                    <label for="content1_title{{$lang}}" class="form-label">{{ translate('Title') }}
                                                         ({{ strtoupper($lang) }})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_80_characters') }}">
                                                         <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
                                                     </span></label>
-                                                <input type="text"  maxlength="80" name="content1_title[]"
+                                                <input type="text" id="content1_title{{$lang}}"  maxlength="80" name="content1_title[]"
                                                         value="{{ $content1_title_translate[$lang]['value'] ?? '' }}"
                                                         class="form-control"
                                                         placeholder="{{ translate('Ex_:_Enter_Title') }}">
                                                 </div>
                                                 <div class="col-sm-6">
-                                                    <label class="form-label">{{ translate('messages.Sub Title') }}
+                                                    <label for="content1_subtitle{{$lang}}" class="form-label">{{ translate('messages.Sub Title') }}
                                                         ({{ strtoupper($lang) }})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_240_characters') }}">
                                                         <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
                                                     </span></label>
-                                                <input type="text"  maxlength="240" name="content1_subtitle[]"
+                                                <input type="text" id="content1_subtitle{{$lang}}"  maxlength="240" name="content1_subtitle[]"
                                                         value="{{ $content1_subtitle_translate[$lang]['value'] ?? '' }}"
                                                         class="form-control"
                                                         placeholder="{{ translate('Ex_:_Enter_Subtitle') }}">
@@ -353,21 +410,21 @@
                                             <label class="form-label">{{ translate('content-2') }}</label>
                                             <div class="row g-3 __bg-F8F9FC-card">
                                                 <div class="col-sm-6">
-                                                    <label class="form-label">{{ translate('Title') }}
+                                                    <label for="content2_title{{$lang}}" class="form-label">{{ translate('Title') }}
                                                         ({{ strtoupper($lang) }})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_80_characters') }}">
                                                         <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
                                                     </span></label>
-                                                <input type="text"  maxlength="80" name="content2_title[]"
+                                                <input type="text" id="content2_title{{$lang}}"  maxlength="80" name="content2_title[]"
                                                         value="{{ $content2_title_translate[$lang]['value'] ?? '' }}"
                                                         class="form-control"
                                                         placeholder="{{ translate('Ex_:_Enter_Title') }}">
                                                 </div>
                                                 <div class="col-sm-6">
-                                                    <label class="form-label">{{ translate('messages.Sub Title') }}
+                                                    <label for="content2_subtitle{{$lang}}" class="form-label">{{ translate('messages.Sub Title') }}
                                                         ({{ strtoupper($lang) }})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_240_characters') }}">
                                                         <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
                                                     </span></label>
-                                                <input type="text"  maxlength="240" name="content2_subtitle[]"
+                                                <input type="text"  id="content2_subtitle{{$lang}}" maxlength="240" name="content2_subtitle[]"
                                                         value="{{ $content2_subtitle_translate[$lang]['value'] ?? '' }}"
                                                         class="form-control"
                                                         placeholder="{{ translate('Ex_:_Enter_Subtitle') }}">
@@ -378,21 +435,21 @@
                                             <label class="form-label">{{ translate('content-3') }}</label>
                                             <div class="row g-3 __bg-F8F9FC-card">
                                                 <div class="col-sm-6">
-                                                    <label class="form-label">{{ translate('Title') }}
+                                                    <label for="content3_title{{$lang}}" class="form-label">{{ translate('Title') }}
                                                         ({{ strtoupper($lang) }})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_80_characters') }}">
                                                         <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
                                                     </span></label>
-                                                <input type="text"  maxlength="80" name="content3_title[]"
+                                                <input type="text" id="content3_title{{$lang}}"  maxlength="80" name="content3_title[]"
                                                         value="{{ $content3_title_translate[$lang]['value'] ?? '' }}"
                                                         class="form-control"
                                                         placeholder="{{ translate('Ex_:_Enter_Title') }}">
                                                 </div>
                                                 <div class="col-sm-6">
-                                                    <label class="form-label">{{ translate('messages.Sub Title') }}
+                                                    <label for="content3_subtitle{{$lang}}" class="form-label">{{ translate('messages.Sub Title') }}
                                                         ({{ strtoupper($lang) }})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_240_characters') }}">
                                                         <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
                                                     </span></label>
-                                                <input type="text"  maxlength="240" name="content3_subtitle[]"
+                                                <input type="text"  maxlength="240" id="content3_subtitle{{$lang}}" name="content3_subtitle[]"
                                                         value="{{ $content3_subtitle_translate[$lang]['value'] ?? '' }}"
                                                         class="form-control"
                                                         placeholder="{{ translate('Ex_:_Enter_Subtitle') }}">
@@ -414,17 +471,16 @@
             </div>
         </div>
     </div>
-    </div>
+
 
     <form  id="banner_image_form" action="{{ route('admin.remove_image') }}" method="post">
         @csrf
         <input type="hidden" name="id" value="{{  $banner_image?->id}}" >
-        {{-- <input type="hidden" name="json" value="1" > --}}
         <input type="hidden" name="model_name" value="ModuleWiseBanner" >
         <input type="hidden" name="image_path" value="promotional_banner" >
         <input type="hidden" name="field_name" value="value" >
     </form>
 @endsection
 @push('script_2')
-    <script src="{{asset('public/assets/admin')}}/js/view-pages/other-banners.js"></script>
+    <script src="{{asset('public/assets/admin/js/view-pages/other-banners.js')}}"></script>
 @endpush
