@@ -645,15 +645,7 @@
         location.href = nurl;
     }
 
-    $(".set-filter").on("change", function () {
-        const id = $(this).val();
-        const url = $(this).data('url');
-        const filter_by = $(this).data('filter');
-        var nurl = new URL(url);
-        nurl.searchParams.set(filter_by, id);
-        location.href = nurl;
-        tour.next();
-    });
+
 
     function set_filter(url, id, filter_by) {
         var nurl = new URL(url);

@@ -11191,4 +11191,8 @@ body > .initial-38-1 {
 }
 
 
-
+@page {
+    size: auto;
+    margin: 0;
+    /* this affects the margin in the printer settings */
+}

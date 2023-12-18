@@ -1,8 +1,9 @@
-<div class="product-card card" onclick="quickView('{{$product->id}}')">
+<div class="product-card card quick-View"
+data-id="{{$product->id}}">
     <div class="card-header inline_product clickable p-0 initial--31">
-        <div class="d-flex align-items-center justify-content-center h-100 d-block w-100">
+        <div class="d-flex align-items-center justify-content-center h-100 d-block w-100 onerror-image">
             <img src="{{asset('storage/app/public/product')}}/{{$product['image']}}"
-                onerror="this.src='{{asset('public/assets/admin/img/160x160/img2.jpg')}}'"
+            data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
                 class="w-100 h-100 object-cover" alt="image">
         </div>
     </div>

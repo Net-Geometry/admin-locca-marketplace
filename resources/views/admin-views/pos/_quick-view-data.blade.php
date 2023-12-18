@@ -13,9 +13,9 @@
         @endif
         <!-- Product gallery-->
         <div class="d-flex align-items-center justify-content-center active">
-            <img class="img-responsive initial--30"
+            <img class="img-responsive initial--30 onerror-image"
                 src="{{ asset('storage/app/public/product') }}/{{ $product['image'] }}"
-                onerror="this.src='{{ asset('public/assets/admin/img/160x160/img2.jpg') }}'"
+                data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
                 data-zoom="{{ asset('storage/app/public/product') }}/{{ $product['image'] }}" alt="Product image"
                 width="">
             <div class="cz-image-zoom-pane"></div>
@@ -84,8 +84,7 @@
 
                         @foreach (json_decode($product->food_variations) as $key => $choice)
                             @if (isset($choice->price) == false)
-                                <div class="h3 p-0 pt-2">{{ $choice->name }} <small style="font-size: 12px"
-                                        class="text-muted">
+                                <div class="h3 p-0 pt-2">{{ $choice->name }} <small  class="text-muted initial--18">
                                         ({{ $choice->required == 'on' ? translate('messages.Required') : translate('messages.optional') }})
                                     </small>
                                 </div>

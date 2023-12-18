@@ -173,14 +173,14 @@
 {!! Toastr::message() !!}
 
 @if ($errors->any())
-    <script>
-        @foreach($errors->all() as $error)
-        toastr.error('{{$error}}', Error, {
-            CloseButton: true,
-            ProgressBar: true
-        });
-        @endforeach
-    </script>
+<script>
+    @foreach ($errors->all() as $error)
+    toastr.error('{{ translate($error) }}', Error, {
+        CloseButton: true,
+        ProgressBar: true
+    });
+    @endforeach
+</script>
 @endif
 <!-- Toggle Direction Init -->
 <script>
