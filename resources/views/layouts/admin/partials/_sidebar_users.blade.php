@@ -55,7 +55,7 @@
                     <small class="tio-more-horizontal nav-subtitle-replacer"></small>
                 </li>
                 <li
-                    class="navbar-vertical-aside-has-menu {{ Request::is('admin/users/delivery-man/vehicle/*') ? 'active' : '' }}">
+                    class="navbar-vertical-aside-has-menu {{ Request::is('admin/users/delivery-man/vehicle*') ? 'active' : '' }}">
                     <a class="js-navbar-vertical-aside-menu-link nav-link"
                         href="{{ route('admin.users.delivery-man.vehicle.list') }}"
                         title="{{ translate('messages.vehicles_category') }}">
@@ -84,7 +84,7 @@
                 </li>
 
 
-                <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/users/delivery-man/list') ? 'active' : '' }}">
+                <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/users/delivery-man') ? 'active' : '' }}">
                     <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.users.delivery-man.list') }}" title="{{ translate('messages.deliveryman_list') }}">
                         <i class="tio-filter-list nav-icon"></i>
                         <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
@@ -93,7 +93,7 @@
                     </a>
                 </li>
 
-                <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/users/delivery-man/reviews/list') ? 'active' : '' }}">
+                <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/users/delivery-man/reviews') ? 'active' : '' }}">
                     <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.users.delivery-man.reviews.list') }}" title="{{ translate('messages.reviews') }}">
                         <i class="tio-star-outlined nav-icon"></i>
                         <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
@@ -235,13 +235,13 @@
                         <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('messages.employees') }}</span>
                     </a>
                     <ul class="js-navbar-vertical-aside-submenu nav nav-sub"  style="display:{{ Request::is('admin/users/employee*') ? 'block' : 'none' }}">
-                        <li class="nav-item {{ Request::is('admin/users/employee/add-new') ? 'active' : '' }}">
+                        <li class="nav-item {{ Request::is('admin/users/employee/store') ? 'active' : '' }}">
                             <a class="nav-link " href="{{ route('admin.users.employee.add-new') }}" title="{{ translate('messages.add_new_Employee') }}">
                                 <span class="tio-circle nav-indicator-icon"></span>
                                 <span class="text-truncate">{{ translate('messages.add_new') }}</span>
                             </a>
                         </li>
-                        <li class="nav-item {{ Request::is('admin/users/employee/list') ? 'active' : '' }}">
+                        <li class="nav-item {{ Request::is('admin/users/employee*') ? 'active' : '' }}">
                             <a class="nav-link " href="{{ route('admin.users.employee.list') }}" title="{{ translate('messages.Employee_list') }}">
                                 <span class="tio-circle nav-indicator-icon"></span>
                                 <span class="text-truncate">{{ translate('messages.list') }}</span>

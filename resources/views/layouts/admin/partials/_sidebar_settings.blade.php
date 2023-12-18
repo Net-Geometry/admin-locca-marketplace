@@ -61,7 +61,7 @@
                         <span class="text-truncate">{{ translate('messages.module_setup') }}</span>
                     </a>
                     <ul class="js-navbar-vertical-aside-submenu nav nav-sub" style="display:{{ Request::is('admin/business-settings/module*') ? 'block' : 'none' }}">
-                        <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/module/create') ? 'active' : '' }}">
+                        <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/module/store') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.business-settings.module.create') }}" title="{{ translate('messages.add_Business_Module') }}">
                                 <span class="tio-circle nav-indicator-icon"></span>
                                 <span class="text-truncate">
@@ -69,7 +69,7 @@
                                 </span>
                             </a>
                         </li>
-                        <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/module') ? 'active' : '' }}">
+                        <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/module*') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.business-settings.module.index') }}" title="{{ translate('messages.modules') }}">
                                 <span class="tio-circle nav-indicator-icon"></span>
                                 <span class="text-truncate">

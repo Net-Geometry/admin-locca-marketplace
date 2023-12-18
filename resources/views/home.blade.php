@@ -3358,7 +3358,7 @@
             <div class="special-feature-wrapper wow fadeInUp">
                 @foreach ($special as $item)
                 @if ($item->status == '1')
-                    
+
                 <div class="feature-card">
                     <div class="feature-card-icon">
                         <img src="{{ asset('storage/app/public/special_criteria')}}/{{ isset($item['image']) ? $item['image'] : null }}" alt="{{$item['title']}}"
@@ -3448,7 +3448,7 @@
 
     <!-- ==== Counter Section Starts Here ==== -->
     @php($counter = $landing_data['counter_section'])
-    @if (isset($counter) && $counter['status'] == '1')    
+    @if (isset($counter) && $counter['status'] == '1')
     <section class="counter-section  mb--186px">
         <div class="container">
             <div class="counter-wrapper">
@@ -3525,7 +3525,7 @@
                             </h4>
                             <div class="text">{{translate("messages.Deliveryman")}}</div>
                         </div>
-                        {{-- <div class="counter-item wow fadeInUp">
+                        <div class="counter-item wow fadeInUp">
                             <div class="icon">
                                 <svg width="32" height="26" viewBox="0 0 32 26" fill="none"
                                     xmlns="http://www.w3.org/2000/svg">
@@ -3559,7 +3559,7 @@
                             <h4 class="title"> <span class=" odometer" data-odometer-final="{{$counter['customer_count_numbers'] ?? 0}}"></span> <span>+</span>
                             </h4>
                             <div class="text">{{translate("messages.customer")}}</div>
-                        </div> --}}
+                        </div>
                         {{-- <div class="counter-item wow fadeInUp">
                             <div class="icon">
                                 <svg width="32" height="18" viewBox="0 0 32 18" fill="none"

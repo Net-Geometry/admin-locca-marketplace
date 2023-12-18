@@ -79,7 +79,7 @@ enum DeliveryMan
         VIEW => 'admin-views.delivery-man.partials._table'
     ];
     const REVIEW_LIST = [
-        URI => 'search',
+        URI => '',
         VIEW => 'admin-views.delivery-man.reviews-list'
     ];
 
