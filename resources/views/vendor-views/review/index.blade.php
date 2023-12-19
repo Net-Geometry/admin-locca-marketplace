@@ -64,8 +64,8 @@
                                 @if($review->customer)
                                 <div class="d-flex align-items-center">
                                     <div class="avatar avatar-circle">
-                                        <img class="avatar-img" width="75" height="75"
-                                            onerror="this.src='{{asset('public/assets/admin/img/160x160/img1.jpg')}}'"
+                                        <img class="avatar-img onerror-image" width="75" height="75"
+                                            data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
                                             src="{{asset('storage/app/public/profile/'.$review->customer->image)}}"
                                             alt="Image Description">
                                     </div>
@@ -129,10 +129,11 @@
 
 @push('script_2')
     <script>
+        "use strict";
         $(document).on('ready', function () {
             // INITIALIZATION OF DATATABLES
             // =======================================================
-            var datatable = $.HSCore.components.HSDatatables.init($('#columnSearchDatatable'));
+            let datatable = $.HSCore.components.HSDatatables.init($('#columnSearchDatatable'));
 
         });
     </script>

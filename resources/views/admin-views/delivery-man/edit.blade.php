@@ -100,9 +100,9 @@
                             <div class="d-flex flex-column h-100">
                                 <label>{{translate('messages.deliveryman_image')}} <small class="text-danger">* ( {{translate('messages.ratio')}} 1:1 )</small></label>
                                 <center class="py-3 my-auto">
-                                    <img class="img--100 rounded" id="viewer"
+                                    <img class="img--100 rounded onerror-image" id="viewer"
                                             src="{{asset('storage/app/public/delivery-man').'/'.$deliveryMan['image']}}"
-                                            onerror='this.src="{{asset('/public/assets/admin/img/admin.png')}}"'
+                                            data-onerror-image="{{asset('/public/assets/admin/img/admin.png')}}"
                                             alt="delivery-man image"/>
                                 </center>
                                 <div class="custom-file">

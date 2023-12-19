@@ -133,8 +133,8 @@
                                     </td>
                                     <td class="text-center">
                                         <a class="media align-items-center" href="{{route('admin.item.view',[$item['item_id']])}}">
-                                            <img class="avatar avatar-lg mr-3" src="{{asset('storage/app/public/product')}}/{{$item->item['image']}}"
-                                                    onerror="this.src='{{asset('public/assets/admin/img/160x160/img2.jpg')}}'" alt="{{$item->item->name}} image">
+                                            <img class="avatar avatar-lg mr-3 onerror-image" src="{{asset('storage/app/public/product')}}/{{$item->item['image']}}"
+                                            data-onerror-image="{{asset('public/assets/admin/img/160x160/img2.jpg')}}" alt="{{$item->item->name}} image">
                                             <div class="media-body">
                                                 <h5 class="text-hover-primary mb-0">{{Str::limit($item->item['name'],20,'...')}}</h5>
                                             </div>
@@ -154,7 +154,7 @@
                                     </td>
                                     <td class="text-center">
                                         <label class="toggle-switch toggle-switch-sm" for="publishCheckbox{{$item->id}}">
-                                            <input type="checkbox" onclick="location.href='{{route('admin.flash-sale.status-product',[$item['id'],$item->status?0:1])}}'" class="toggle-switch-input" id="publishCheckbox{{$item->id}}" {{$item->status?'checked':''}}>
+                                            <input type="checkbox" data-url="{{route('admin.flash-sale.status-product',[$item['id'],$item->status?0:1])}}" class="toggle-switch-input redirect-url" id="publishCheckbox{{$item->id}}" {{$item->status?'checked':''}}>
                                             <span class="toggle-switch-label mx-auto">
                                                 <span class="toggle-switch-indicator"></span>
                                             </span>

@@ -389,8 +389,8 @@
                                                 {{ translate('logo') }} <span class="text--primary">( {{ translate('3:1') }} )</span>
                                             </label>
                                             <center>
-                                                <img class="img--vertical" id="viewer"
-                                                    onerror="this.src='{{ asset('public/assets/admin/img/upload-img.png') }}'"
+                                                <img class="img--vertical onerror-image" id="viewer"
+                                                    data-onerror-image="{{ asset('public/assets/admin/img/upload-img.png') }}"
                                                     src="{{ asset('storage/app/public/business/' . $logo) }}"
                                                     alt="logo image" />
                                             </center>
@@ -406,8 +406,8 @@
                                                 {{ translate('Favicon') }}  <span class="text--primary">( {{ translate('1:1') }} )</span>
                                             </label>
                                             <center>
-                                                <img class="img--110" id="iconViewer"
-                                                    onerror="this.src='{{ asset('public/assets/admin/img/upload-img.png') }}'"
+                                                <img class="img--110 onerror-image" id="iconViewer"
+                                                    data-onerror-image="{{ asset('public/assets/admin/img/upload-img.png') }}"
                                                     src="{{ asset('storage/app/public/business/' . $icon) }}"
                                                     alt="Fav icon" />
                                             </center>

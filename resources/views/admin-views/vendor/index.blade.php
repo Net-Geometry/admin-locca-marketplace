@@ -121,8 +121,8 @@
                                         {{ translate('logo') }} <span class="text--primary">({{ translate('1:1') }})</span>
                                     </label>
                                     <center>
-                                        <img class="img--110 min-height-170px min-width-170px" id="viewer"
-                                            onerror="this.src='{{ asset('public/assets/admin/img/upload.png') }}'"
+                                        <img class="img--110 min-height-170px min-width-170px onerror-image" id="viewer"
+                                        data-onerror-image="{{ asset('public/assets/admin/img/upload.png') }}"
                                             src="{{ asset('public/assets/admin/img/upload-img.png') }}"
                                             alt="logo image" />
                                     </center>
@@ -137,8 +137,8 @@
                                         {{ translate('Store Cover') }}  <span class="text--primary">({{ translate('2:1') }})</span>
                                     </label>
                                     <center>
-                                        <img class="img--vertical min-height-170px min-width-170px" id="coverImageViewer"
-                                            onerror="this.src='{{ asset('public/assets/admin/img/upload-img.png') }}'"
+                                        <img class="img--vertical min-height-170px min-width-170px onerror-image" id="coverImageViewer"
+                                        data-onerror-image="{{ asset('public/assets/admin/img/upload-img.png') }}"
                                             src="{{ asset('public/assets/admin/img/upload-img.png') }}"
                                             alt="Fav icon" />
                                     </center>

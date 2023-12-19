@@ -24,7 +24,7 @@
                     <div class="card-header flex-wrap justify-content-end p-2 px-xl-4">
                         @if($data->holder_name)
                             <button class="btn btn--primary m-1 m-sm-2" type="button" data-toggle="modal" data-target="#update-modal"><i class="tio-edit"></i> {{translate('messages.update')}}</button>
-                            <a class="btn btn--danger m-1 m-sm-2" href="javascript:void(0)" onclick="form_alert('del','{{ translate('Delete Bank Info ?') }}')"><i class="tio-delete-outlined"></i> {{translate('messages.delete')}}</a>
+                            <a class="btn btn--danger m-1 m-sm-2 form-alert" href="javascript:void(0)" data-id="del" data-message="{{ translate('Delete Bank Info ?') }}"><i class="tio-delete-outlined"></i> {{translate('messages.delete')}}</a>
                             <form action="{{ route('vendor.profile.bank_delete') }}" id="del" method="post">
                                 @csrf @method('post')
                             </form>

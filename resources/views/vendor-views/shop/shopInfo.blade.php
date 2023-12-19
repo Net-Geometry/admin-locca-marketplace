@@ -23,20 +23,20 @@
         <div class="card-body p-0">
             @if($shop->cover_photo)
             <div>
-                <img class="my-restaurant-img" src="{{asset('storage/app/public/store/cover/'.$shop->cover_photo)}}" onerror="this.src='{{asset('public/assets/admin/img/900x400/img1.jpg')}}'">
+                <img class="my-restaurant-img onerror-image" src="{{asset('storage/app/public/store/cover/'.$shop->cover_photo)}}" data-onerror-image="{{asset('public/assets/admin/img/900x400/img1.jpg')}}">
             </div>
             @endif
             <div class="my-resturant--card">
 
                 @if($shop->image=='def.png')
                 <div class="my-resturant--avatar">
-                    <img class="border"
+                    <img class="border onerror-image"
                     src="{{asset('public/assets/back-end')}}/img/shop.png"
-                    onerror="this.src='{{asset('public/assets/admin/img/160x160/img1.jpg')}}'" alt="User Pic">
+                    data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}" alt="User Pic">
                 </div>
                 @else
-                    <div class="my-resturant--avatar">
-                        <img src="{{asset('storage/app/public/store/'.$shop->logo)}}" class="border" onerror="this.src='{{asset('public/assets/admin/img/160x160/img1.jpg')}}'" alt="">
+                    <div class="my-resturant--avatar onerror-image">
+                        <img src="{{asset('storage/app/public/store/'.$shop->logo)}}" class="border" data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}" alt="">
                     </div>
                 @endif
 
@@ -67,7 +67,16 @@
                 <span>{{translate('Announcement')}}</span><span class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('This_feature_is_for_sharing_important_information_or_announcements_related_to_the_store.')}}"><img src="{{asset('/public/assets/admin/img/info-circle.svg')}}" alt="{{translate('messages.This_feature_is_for_sharing_important_information_or_announcements_related_to_the_store')}}"></span>
             </h5>
             <label class="toggle-switch toggle-switch-sm" for="announcement_status">
-                <input class="toggle-switch-input" type="checkbox" id="announcement_status" onclick="toogleStatusModal(event,'announcement_status','digital-payment-on.png','digital-payment-off.png','{{translate('Do_you_want_to_enable_the_announcement')}}','{{translate('Do_you_want_to_disable_the_announcement')}}',`<p>{{translate('User_will_able_to_see_the_Announcement_on_the_store_page.')}}</p>`,`<p>{{translate('User_will_not_be_able_to_see_the_Announcement_on_the_store_page')}}</p>`)"name="announcement" value="1" {{$shop->announcement?'checked':''}}>
+                <input class="toggle-switch-input dynamic-checkbox" type="checkbox" id="announcement_status"
+                       data-id="announcement_status"
+                       data-type="status"
+                       data-image-on='{{asset('/public/assets/admin/img/modal')}}/digital-payment-on.png'
+                       data-image-off="{{asset('/public/assets/admin/img/modal')}}/digital-payment-off.png"
+                       data-title-on="{{translate('Do_you_want_to_enable_the_announcement')}}"
+                       data-title-off="{{translate('Do_you_want_to_disable_the_announcement')}}"
+                       data-text-on="<p>{{translate('User_will_able_to_see_the_Announcement_on_the_store_page.')}}</p>"
+                       data-text-off="<p>{{translate('User_will_not_be_able_to_see_the_Announcement_on_the_store_page')}}</p>"
+                       name="announcement" value="1" {{$shop->announcement?'checked':''}}>
                                 <span class="toggle-switch-label">
                                     <span class="toggle-switch-indicator"></span>
                                 </span>

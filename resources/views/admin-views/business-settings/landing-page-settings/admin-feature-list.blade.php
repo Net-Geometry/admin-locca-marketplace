@@ -270,8 +270,8 @@
                                     <label class="upload-img-3 m-0">
                                         <div class="img">
                                             <img src=""
-                                                onerror='this.src="{{ asset('/public/assets/admin/img/aspect-1.png') }}"'
-                                                alt="" class="img__aspect-1 min-w-187px max-w-187px">
+                                            data-onerror-image="{{ asset('/public/assets/admin/img/aspect-1.png') }}"
+                                                alt="" class="img__aspect-1 min-w-187px max-w-187px onerror-image">
                                         </div>
                                         <input type="file" name="image" hidden>
                                     </label>

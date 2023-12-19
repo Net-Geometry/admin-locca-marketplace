@@ -44,7 +44,7 @@
                                     </h3>
                                     <label class="__upload-img aspect-4-1 m-auto d-block position-relative">
                                         <div class="img">
-                                            <img src="{{asset('storage/app/public/promotional_banner')}}/{{$bottom_section_banner?->value}}" onerror='this.src="{{asset('/public/assets/admin/img/upload-placeholder.png')}}"' alt="">
+                                            <img class="onerror-image" src="{{asset('storage/app/public/promotional_banner')}}/{{$bottom_section_banner?->value}}" data-onerror-image="{{asset('/public/assets/admin/img/upload-placeholder.png')}}" alt="">
                                         </div>
                                         <div class="">
                                             <input type="file" name="image"  hidden>
@@ -118,7 +118,7 @@
                                     <label class="__upload-img aspect-235-375 m-auto d-block">
                                         <div class="position-relative">
                                         <div class="img">
-                                            <img src="{{asset('storage/app/public/promotional_banner')}}/{{$best_reviewed_section_banner?->value}}" onerror='this.src="{{asset('/public/assets/admin/img/upload-placeholder.png')}}"' alt="">
+                                            <img class="onerror-image" src="{{asset('storage/app/public/promotional_banner')}}/{{$best_reviewed_section_banner?->value}}" data-onerror-image="{{asset('/public/assets/admin/img/upload-placeholder.png')}}" alt="">
                                         </div>
                                         <input type="file" name="image"  hidden>
                                         @if (isset($best_reviewed_section_banner?->value))

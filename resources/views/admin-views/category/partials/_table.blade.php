@@ -15,7 +15,7 @@
     </td>
     <td>
         <label class="toggle-switch toggle-switch-sm" for="stocksCheckbox{{$category->id}}">
-            <input type="checkbox" onclick="location.href='{{route('admin.category.status',[$category['id'],$category->status?0:1])}}'"class="toggle-switch-input" id="stocksCheckbox{{$category->id}}" {{$category->status?'checked':''}}>
+            <input type="checkbox" data-url="{{route('admin.category.status',[$category['id'],$category->status?0:1])}}" class="toggle-switch-input redirect-url" id="stocksCheckbox{{$category->id}}" {{$category->status?'checked':''}}>
             <span class="toggle-switch-label mx-auto">
                 <span class="toggle-switch-indicator"></span>
             </span>
@@ -23,7 +23,7 @@
     </td>
     <td>
         <label class="toggle-switch toggle-switch-sm" for="featuredCheckbox{{$category->id}}">
-            <input type="checkbox" onclick="location.href='{{route('admin.category.featured',[$category['id'],$category->featured?0:1])}}'"class="toggle-switch-input" id="featuredCheckbox{{$category->id}}" {{$category->featured?'checked':''}}>
+            <input type="checkbox" data-url="{{route('admin.category.featured',[$category['id'],$category->featured?0:1])}}" class="toggle-switch-input redirect-url" id="featuredCheckbox{{$category->id}}" {{$category->featured?'checked':''}}>
             <span class="toggle-switch-label mx-auto">
                 <span class="toggle-switch-indicator"></span>
             </span>

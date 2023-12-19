@@ -139,9 +139,9 @@
                                     <small class="text-danger">* ( {{translate('messages.ratio')}} 900x300 )</small>
                                 </label>
                                 <center class="py-3 my-auto">
-                                    <img class="initial--4" id="viewer"
+                                    <img class="initial--4 onerror-image" id="viewer"
                                          src="{{asset('storage/app/public/campaign')}}/{{$campaign->image}}"
-                                         onerror='this.src="{{ asset('public/assets/admin/img/900x400/img1.jpg') }}"' alt="campaign image"/>
+                                         data-onerror-image="{{ asset('public/assets/admin/img/900x400/img1.jpg') }}" alt="campaign image"/>
                                 </center>
                                 <div class="custom-file">
                                     <input type="file" name="image" id="customFileEg1" class="custom-file-input"

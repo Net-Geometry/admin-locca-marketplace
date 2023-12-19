@@ -4,7 +4,7 @@
     <td>
         <div>
             <a href="{{route('admin.store.view', $store->id)}}" class="table-rest-info" alt="view store">
-            <img class="img--60 circle" onerror="this.src='{{asset('public/assets/admin/img/160x160/img1.jpg')}}'"
+            <img class="img--60 circle onerror-image" data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
                     src="{{asset('storage/app/public/store')}}/{{$store['logo']}}">
                 <div class="info"><div class="text--title">
                     {{Str::limit($store->name,20,'...')}}
@@ -31,11 +31,10 @@
     </td>
     <td>
         {{$store->zone?$store->zone->name:translate('messages.zone_deleted')}}
-        {{--<span class="d-block font-size-sm">{{$banner['image']}}</span>--}}
     </td>
     <td>
         <label class="toggle-switch toggle-switch-sm" for="featuredCheckbox{{$store->id}}">
-            <input type="checkbox" onclick="location.href='{{route('admin.store.featured',[$store->id,$store->featured?0:1])}}'" class="toggle-switch-input" id="featuredCheckbox{{$store->id}}" {{$store->featured?'checked':''}}>
+            <input type="checkbox" data-url="{{route('admin.store.featured',[$store->id,$store->featured?0:1])}}" class="toggle-switch-input redirect-url" id="featuredCheckbox{{$store->id}}" {{$store->featured?'checked':''}}>
             <span class="toggle-switch-label">
                 <span class="toggle-switch-indicator"></span>
             </span>

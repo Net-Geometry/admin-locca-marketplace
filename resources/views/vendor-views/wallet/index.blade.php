@@ -62,7 +62,7 @@
                     @foreach($withdraw_req as $k=>$wr)
 
                         <tr>
-                            <td scope="row">{{$k+$withdraw_req->firstItem()}}</td>
+                            <td>{{$k+$withdraw_req->firstItem()}}</td>
                             <td> {{ \App\CentralLogics\Helpers::format_currency($wr['amount'])}}</td>
 
                             <td>
@@ -130,17 +130,17 @@
                                 @if($wr->transaction_note )
                                     @if($wr->transaction_note == 'Store_wallet_adjustment_partial' )
                                         {!!     Str::limit(translate('Adjusted_Amount_Partially'), 20,
-                                     '<a  href="#" onClick="javascript:showMyModal(\''.translate('Adjusted_Amount_Partially').'\')" >...Read more.</a>'
+                                     '<a  href="#" class="showMyModal" data-message="'.translate('Adjusted_Amount_Partially')." >...Read more.</a>'
                                      ) !!}
                                     @elseif($wr->transaction_note == 'Store_wallet_adjustment_full' )
                                         {!!     Str::limit(translate('Adjusted_Amount'), 20,
-                                   '<a  href="#" onClick="javascript:showMyModal(\''.translate('Adjusted_Amount').'\')" >...Read more.</a>'
+                                   '<a  href="#" class="showMyModal" data-message="'.translate('Adjusted_Amount').'" >...Read more.</a>'
                                    ) !!}
 
                                     @else
                                         {!!
                                    Str::limit(translate($wr->transaction_note), 20,
-                                   '<a  href="#" onClick="javascript:showMyModal(\''.translate($wr->transaction_note).'\')" >...Read more.</a>'
+                                   '<a  href="#" class="showMyModal" data-message="'.translate($wr->transaction_note).'" >...Read more.</a>'
                                    )  !!}
                                     @endif
 
@@ -149,17 +149,10 @@
                                 @endif
                             </td>
 
-
-
-
                             <td>
 
                                 @if($wr->approved==0)
-                                    {{-- <a href="{{route('vendor.withdraw.close',[$wr['id']])}}"
-                                        class="btn btn-outline-danger btn--danger action-btn">
-                                        {{translate('messages.Delete')}}
-                                    </a> --}}
-                                    <a class="btn btn-outline-danger btn--danger action-btn" href="javascript:" onclick="form_alert('withdraw-{{$wr['id']}}','{{ translate('Want to delete this  ?') }}')" title="{{translate('messages.delete')}}"><i class="tio-delete-outlined"></i>
+                                    <a class="btn btn-outline-danger btn--danger action-btn form-alert" href="javascript:" data-id="withdraw-{{$wr['id']}}" data-message="{{ translate('Want to delete this  ?') }}" title="{{translate('messages.delete')}}"><i class="tio-delete-outlined"></i>
                                     </a>
 
                                     <form action="{{route('vendor.wallet.close-request',[$wr['id']])}}"
@@ -188,10 +181,6 @@
             {{$withdraw_req->links()}}
         </div>
     </div>
-    </div>
-    </div>
-    </div>
-
 
     <div class="modal fade" id="payment_model" tabindex="-1"  role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -261,73 +250,7 @@
         </div>
     </div>
 
-
-
-
-
-
-
-
-
 @endsection
 @push('script_2')
-    <script>
-        $('#withdraw_method').on('change', function () {
-            $('#submit_button').attr("disabled","true");
-            var method_id = this.value;
-
-            // Set header if need any otherwise remove setup part
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $.ajax({
-                url: "{{route('vendor.wallet.method-list')}}" + "?method_id=" + method_id,
-                data: {},
-                processData: false,
-                contentType: false,
-                type: 'get',
-                success: function (response) {
-                    $('#submit_button').removeAttr('disabled');
-                    let method_fields = response.content.method_fields;
-                    $("#method-filed__div").html("");
-                    method_fields.forEach((element, index) => {
-                        $("#method-filed__div").append(`
-                    <div class="form-group mt-2">
-                        <label for="wr_num" class="fz-16 c1 mb-2">${element.input_name.replaceAll('_', ' ')}</label>
-                        <input type="${element.input_type == 'phone' ? 'number' : element.input_type  }" class="form-control" name="${element.input_name}" placeholder="${element.placeholder}" ${element.is_required === 1 ? 'required' : ''}>
-                    </div>
-                `);
-                    })
-
-                },
-                error: function () {
-
-                }
-            });
-        });
-    </script>
-
-    <script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        function showMyModal(data) {
-            $(".modal-body #hiddenValue").html(data);
-            $('#exampleModal').modal('show');
-        }
-
-    </script>
+    <script src="{{asset('public/assets/admin')}}/js/view-pages/vendor/wallet-method.js"></script>
 @endpush

@@ -1,13 +1,5 @@
 <!DOCTYPE html>
 <?php
-    // $site_direction = session()->get('site_direction');
-    // if (env('APP_MODE') == 'demo') {
-    //     $site_direction = session()->get('site_direction');
-    // }else{
-    //     $site_direction = \App\Models\BusinessSetting::where('key', 'site_direction')->first();
-    //     $site_direction = $site_direction->value ?? 'ltr';
-    // }
-
     $log_email_succ = session()->get('log_email_succ');
 ?>
 
@@ -77,8 +69,7 @@
                     </div>
                     <div class="d-flex justify-content-between">
                         <span>{{ translate('Didn`t receive the code?') }}</span>
-                        <button class="text--primary resend otp_resent" disabled id="otp-button">{{ translate('Resend_it') }}
-                            {{-- (<span class="verifyCounter"></span>s) --}}
+                        <button class="text--primary resend otp_resend" disabled id="otp-button">{{ translate('Resend_it') }}
                         </button>
                     </div>
                 </div>
@@ -110,7 +101,7 @@
 
 <script>
 
-    $('.otp_resent').on('click', function () {
+    $('.otp_resend').on('click', function () {
         $.ajax({
             url: "{{ route('otp_resent') }}",
             type: "GET",
@@ -189,13 +180,13 @@
   });
 
   $(document).ready(function() {
-  var otpButton = $("#otp-button");
-  var countdownTimer;
+  let otpButton = $("#otp-button");
+  let countdownTimer;
 
   function startCountdown() {
     otpButton.prop("disabled", true);
     otpButton.addClass("resend");
-    var countdown = 30;
+    let countdown = 30;
     countdownTimer = setInterval(function() {
       otpButton.text("Resend it (" + countdown + ")");
       countdown--;

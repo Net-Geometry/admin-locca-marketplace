@@ -133,6 +133,7 @@
     <script src="{{asset('public/assets')}}/vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
     <script>
+        "use strict";
         // Call the dataTables jQuery plugin
         $(document).ready(function () {
             $('#dataTable').DataTable();

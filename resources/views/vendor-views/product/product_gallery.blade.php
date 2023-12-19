@@ -8,7 +8,7 @@
 
 @section('content')
 @php($store_data=\App\CentralLogics\Helpers::get_store_data())
-    <div class="content container-fluid"> 
+    <div class="content container-fluid">
         <!-- Page Header -->
         <div class="page-header">
             <div class="btn--container align-items-center mb-0">
@@ -20,17 +20,6 @@
                     <p>{{ translate('search_product_and_use_its_info_to_create_own_product') }}</p>
                     </div>
                 </div>
-                {{-- @if (($store_data->module->module_type == 'food') && $toggle_veg_non_veg)
-                <!-- Veg/NonVeg filter -->
-                <div>
-                    <select name="category_id" onchange="set_filter('{{url()->full()}}',this.value, 'type')" data-placeholder="{{translate('messages.all')}}" class="form-control max-lg-h-40px">
-                        <option value="all" {{$type=='all'?'selected':''}}>{{translate('messages.all')}}</option>
-                        <option value="veg" {{$type=='veg'?'selected':''}}>{{translate('messages.veg')}}</option>
-                        <option value="non_veg" {{$type=='non_veg'?'selected':''}}>{{translate('messages.non_veg')}}</option>
-                    </select>
-                </div>
-                <!-- End Veg/NonVeg filter -->
-                @endif --}}
             </div>
         </div>
         <!-- End Page Header -->
@@ -50,30 +39,6 @@
                         </div>
                     </div>
                 </form>
-                {{-- <div class="search--button-wrapper justify-content-end">
-                    <form id="search-form" class="search-form">
-                    @csrf
-                    <input type="hidden" value="1" name="product_gallery">
-                        <!-- Search -->
-                        <div class="input-group input--group">
-                            <input id="datatableSearch" type="search" value="{{  request()?->search ?? null }}" name="search" class="form-control" placeholder="{{translate('messages.ex_search_name')}}" aria-label="{{translate('messages.search_here')}}">
-                            <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
-                        </div>
-                        <!-- End Search -->
-                    </form>
-
-                    <!-- Unfold -->
-                    <div class="hs-unfold mr-2 min--250">
-                        <select name="category_id" id="category" onchange="set_filter('{{url()->full()}}',this.value, 'category_id')" data-placeholder="{{translate('messages.select_category')}}" class="js-data-example-ajax form-control">
-                            @if($category)
-                                <option value="{{$category->id}}" selected>{{$category->name}} ({{$category->position == 0?translate('messages.main'):translate('messages.sub')}})</option>
-                            @else
-                                <option value="all" selected>{{translate('messages.all_categories')}}</option>
-                            @endif
-                        </select>
-                    </div>
-                    <!-- End Unfold -->
-                </div> --}}
             </div>
             <!-- End Header -->
         </div>
@@ -104,10 +69,11 @@
 
 @push('script_2')
     <script>
+        "use strict";
         $(document).on('ready', function () {
             // INITIALIZATION OF DATATABLES
             // =======================================================
-            var datatable = $.HSCore.components.HSDatatables.init($('#datatable'), {
+            let datatable = $.HSCore.components.HSDatatables.init($('#datatable'), {
           select: {
             style: 'multi',
             classMap: {
@@ -125,13 +91,13 @@
         });
 
         $('#datatableSearch').on('mouseup', function (e) {
-          var $input = $(this),
+          let $input = $(this),
             oldValue = $input.val();
 
           if (oldValue == "") return;
 
           setTimeout(function(){
-            var newValue = $input.val();
+            let newValue = $input.val();
 
             if (newValue == ""){
               // Gotcha
@@ -165,7 +131,7 @@
             // INITIALIZATION OF SELECT2
             // =======================================================
             $('.js-select2-custom').each(function () {
-                var select2 = $.HSCore.components.HSSelect2.init($(this));
+                let select2 = $.HSCore.components.HSSelect2.init($(this));
             });
         });
 
@@ -185,7 +151,7 @@
                     };
                 },
                 __port: function (params, success, failure) {
-                    var $request = $.ajax(params);
+                    let $request = $.ajax(params);
 
                     $request.then(success);
                     $request.fail(failure);
@@ -194,12 +160,10 @@
                 }
             }
         });
-    </script>
 
-    <script>
         $('#search-form').on('submit', function (e) {
             e.preventDefault();
-            var formData = new FormData(this);
+            let formData = new FormData(this);
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

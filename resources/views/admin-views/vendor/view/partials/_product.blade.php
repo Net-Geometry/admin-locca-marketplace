@@ -4,8 +4,8 @@
     <td>{{$key+1}}</td>
     <td>
         <a class="media align-items-center" href="{{route('admin.item.view',[$food['id']])}}">
-            <img class="avatar avatar-lg mr-3" src="{{asset('storage/app/public/product')}}/{{$food['image']}}"
-                    onerror="this.src='{{asset('public/assets/admin/img/160x160/img2.jpg')}}'" alt="{{$food->name}} image">
+            <img class="avatar avatar-lg mr-3 onerror-image" src="{{asset('storage/app/public/product')}}/{{$food['image']}}"
+            data-onerror-image="{{asset('public/assets/admin/img/160x160/img2.jpg')}}" alt="{{$food->name}} image">
             <div class="media-body">
                 <h5 class="text-hover-primary mb-0">{{Str::limit($food['name'],20,'...')}}</h5>
             </div>

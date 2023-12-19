@@ -1,31 +1,5 @@
 
 @foreach($items as $key=>$item)
-{{-- <div class="col-md-6 mt-4">
-        <a target="_blank" href="{{ route('vendor.item.edit',['id' => $item->id , 'product_gellary' => true ]) }}">
-        <div class="product-card card" onclick="quickView('{{$item->id}}')">
-            <div class="card-header inline_product clickable p-0 initial--31">
-                <div class="d-flex align-items-center justify-content-center h-100 d-block w-100">
-                    <img src="{{asset('storage/app/public/product')}}/{{$item['image']}}"
-                        onerror="this.src='{{asset('public/assets/admin/img/160x160/img2.jpg')}}'"
-                        class="w-100 h-100 object-cover">
-                </div>
-            </div>
-
-            <div class="card-body inline_product text-center p-1 clickable initial--32">
-                <div class="position-relative product-title1 text-dark font-weight-bold text-capitalize">
-                    {{ Str::limit($item['name'], 120,'...') }}
-                </div>
-                <div class="justify-content-between text-center">
-                    <div class="product-price text-center">
-                        <span class="text-accent text-dark font-weight-bold">
-                            {{\App\CentralLogics\Helpers::format_currency($item['price'])}}
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </a>
-</div> --}}
 <div class="col-12">
     <div class="card mb-3">
         <!-- Body -->
@@ -35,9 +9,9 @@
                     <div class="d-flex">
                         <div>
                             <div class="d-flex flex-wrap align-items-center food--media position-relative mr-4">
-                                <img class="avatar avatar-xxl avatar-4by3"
+                                <img class="avatar avatar-xxl avatar-4by3 onerror-image"
                                     src="{{ asset('storage/app/public/product') }}/{{ $item['image'] }}"
-                                    onerror="this.src='{{ asset('public/assets/admin/img/160x160/img2.jpg') }}'"
+                                    data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
                                     alt="Image Description">
                             </div>
                         </div>
@@ -117,26 +91,12 @@
                                                                 <strong>
                                                                     {{ $variation['name'] }} -
                                                                 </strong>
-                                                                {{-- @if ($variation['type'] == 'multi')
-                                                                    {{ translate('messages.multiple_select') }}
-                                                                @elseif($variation['type'] == 'single')
-                                                                    {{ translate('messages.single_select') }}
-                                                                @endif
-                                                                @if ($variation['required'] == 'on')
-                                                                    - ({{ translate('messages.required') }})
-                                                                @endif --}}
                                                             </span>
-
-                                                            {{-- @if ($variation['min'] != 0 && $variation['max'] != 0)
-                                                                ({{ translate('messages.Min_select') }}: {{ $variation['min'] }} -
-                                                                {{ translate('messages.Max_select') }}: {{ $variation['max'] }})
-                                                            @endif --}}
 
                                                             @if (isset($variation['values']))
                                                                 @foreach ($variation['values'] as $value)
                                                                     <span class="d-block text-capitalize">
                                                                         &nbsp; &nbsp; {{ $value['label'] }}
-                                                                        {{-- : <strong>{{ \App\CentralLogics\Helpers::format_currency($value['optionPrice']) }}</strong> --}}
                                                                     </span>
                                                                 @endforeach
                                                             @endif
@@ -148,16 +108,15 @@
                                                     @foreach (json_decode($item['variations'], true) as $variation)
                                                         <span class="d-block mb-1 text-capitalize">
                                                             {{ $variation['type'] }}
-                                                            {{-- : {{ \App\CentralLogics\Helpers::format_currency($variation['price']) }} --}}
                                                         </span>
                                                     @endforeach
                                                 @endif
                                         </td>
                                         @endif
 
-                                            <td>
-                                                @foreach($item->tags as $c) {{$c->tag.','}} @endforeach
-                                            </td>
+                                        <td>
+                                            @foreach($item->tags as $c) {{$c->tag.','}} @endforeach
+                                        </td>
 
                                     </tr>
                                 </tbody>

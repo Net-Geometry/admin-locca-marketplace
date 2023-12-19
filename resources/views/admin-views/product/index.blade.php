@@ -510,9 +510,9 @@
 @push('script_2')
     <script src="{{ asset('public/assets/admin') }}/js/tags-input.min.js"></script>
     <script src="{{ asset('public/assets/admin/js/spartan-multi-image-picker.js') }}"></script>
+    <script src="{{asset('public/assets/admin')}}/js/view-pages/product-index.js"></script>
     <script>
         "use strict";
-        let element = "";
         $(document).ready(function() {
             $("#add_new_option_button").click(function(e) {
                 $('#empty-variation').hide();
@@ -618,62 +618,6 @@
             });
         });
 
-        let count = 0;
-        let countRow = 0;
-
-        function show_min_max(data) {
-            $('#min_max1_' + data).removeAttr("readonly");
-            $('#min_max2_' + data).removeAttr("readonly");
-            $('#min_max1_' + data).attr("required", "true");
-            $('#min_max2_' + data).attr("required", "true");
-        }
-
-        function hide_min_max(data) {
-            $('#min_max1_' + data).val(null).trigger('change');
-            $('#min_max2_' + data).val(null).trigger('change');
-            $('#min_max1_' + data).attr("readonly", "true");
-            $('#min_max2_' + data).attr("readonly", "true");
-            $('#min_max1_' + data).attr("required", "false");
-            $('#min_max2_' + data).attr("required", "false");
-        }
-
-        $(document).on('change', '.show_min_max', function () {
-            let data = $(this).data('count');
-            show_min_max(data);
-        });
-
-        $(document).on('change', '.hide_min_max', function () {
-            let data = $(this).data('count');
-            hide_min_max(data);
-        });
-
-        function new_option_name(value, data) {
-            $("#new_option_name_" + data).empty();
-            $("#new_option_name_" + data).text(value)
-            console.log(value);
-        }
-
-        function removeOption(e) {
-            element = $(e);
-            element.parents('.view_new_option').remove();
-        }
-
-        $(document).on('click', '.delete_input_button', function () {
-            let e = $(this);
-            removeOption(e);
-        });
-
-        function deleteRow(e) {
-            element = $(e);
-            element.parents('.add_new_view_row_class').remove();
-        }
-
-        $(document).on('click', '.deleteRow', function () {
-            let e = $(this);
-            deleteRow(e);
-        });
-
-
         function add_new_row_button(data) {
             count = data;
             countRow = 1 + $('#option_price_view_' + data).children('.add_new_view_row_class').length;
@@ -704,79 +648,12 @@
 
         }
 
-        $(document).on('click', '.add_new_row_button', function () {
-            let data = $(this).data('count');
-            add_new_row_button(data);
-        });
-
-        $(document).on('keyup', '.new_option_name', function () {
-            let data = $(this).data('count');
-            let value = $(this).val();
-            new_option_name(value, data);
-        });
-
-        $('.foodModalClose').on('click',function (){
-            $('#food-modal').hide();
-        })
-
-        $('.foodModalShow').on('click',function (){
-           $('#food-modal').show();
-        })
-
-        $('.attributeModalClose').on('click',function (){
-            $('#attribute-modal').hide();
-        })
-
-        $('.attributeModalShow').on('click',function (){
-            $('#attribute-modal').show();
-        })
 
         $('#store_id').on('change', function () {
             let route = '{{url('/')}}/admin/store/get-addons?data[]=0&store_id='+$(this).val();
             let id = 'add_on';
             getRestaurantData(route, id);
         });
-
-        function getRestaurantData(route, id) {
-            $.get({
-                url: route + id,
-                dataType: 'json',
-                success: function(data) {
-                    $('#' + id).empty().append(data.options);
-                },
-            });
-        }
-
-        function getRequest(route, id) {
-            $.get({
-                url: route,
-                dataType: 'json',
-                success: function(data) {
-                    $('#' + id).empty().append(data.options);
-                },
-            });
-        }
-
-        function readURL(input) {
-            if (input.files && input.files[0]) {
-                let reader = new FileReader();
-
-                reader.onload = function(e) {
-                    $('#viewer').attr('src', e.target.result);
-                }
-
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-
-        $("#customFileEg1").change(function() {
-            readURL(this);
-        });
-
-        let module_id = {{Config::get('module.current_module_id')}};
-        let parent_category_id = 0;
-        let module_data = null;
-        let stock = true;
 
         function modulChange(id) {
             $.get({
@@ -842,11 +719,6 @@
         }
 
         modulChange({{Config::get('module.current_module_id')}});
-
-        $('#category_id').on('change', function () {
-            parent_category_id = $(this).val();
-            console.log(parent_category_id);
-        });
 
         $('#condition_id').select2({
             ajax: {
@@ -1008,10 +880,6 @@
                 }
             });
         }
-
-        $(document).on('change', '.combination_update', function () {
-            combination_update();
-        });
 
         $('#item_form').on('submit', function(e) {
             e.preventDefault();

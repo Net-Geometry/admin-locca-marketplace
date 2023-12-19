@@ -162,7 +162,7 @@
                                 <label class="upload-img-3 m-0">
                                     <div class="position-relative">
                                     <div class="img">
-                                        <img src="{{asset('storage/app/public/download_user_app_image')}}/{{ $download_user_app_image['value']??'' }}" onerror='this.src="{{asset('/public/assets/admin/img/upload-4.png')}}"' alt="" class="vertical-img mw-100 vertical">
+                                        <img src="{{asset('storage/app/public/download_user_app_image')}}/{{ $download_user_app_image['value']??'' }}" data-onerror-image="{{asset('/public/assets/admin/img/upload-4.png')}}" alt="" class="vertical-img mw-100 vertical onerror-image">
                                     </div>
                                       <input type="file"  name="image" hidden>
                                       @if (isset($download_user_app_image['value']))
