@@ -38,10 +38,10 @@
                 <!-- End Card -->
             </div>
             <div class="col-lg-8 col-nd-6" id="view-conversation">
-                <center class="view_conversation-style">
+                <div class="text-center view_conversation-style">
                     <h4 class="view_conversation-h4-style">{{ translate('messages.view_conversation') }}
                     </h4>
-                </center>
+                </div>
                 {{-- view here --}}
             </div>
         </div>

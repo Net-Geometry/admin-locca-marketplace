@@ -257,12 +257,12 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-12">
-                            <center>
+                            <div class="text-center"> 
                                 <h2>
                                     {{translate('messages.please_select_a_store_first')}}
                                 </h2>
                                 <button data-dismiss="modal" class="btn btn-primary">{{translate('messages.Ok')}}</button>
-                            </center>
+                            </div>
                         </div>
                     </div>
                 </div>

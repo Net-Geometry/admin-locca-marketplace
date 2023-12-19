@@ -148,11 +148,11 @@
                             </h5>
                         </div>
                         <div class="card-body d-flex flex-column pt-0">
-                            <center class="my-auto py-4 py-xl-5">
+                            <div class="text-center my-auto py-4 py-xl-5">
                                 <img class="store-banner onerror-image" id="viewer"
                                 data-onerror-image="{{asset('public/assets/admin/img/image-place-holder.png')}}"
                                 src="{{asset('storage/app/public/store/'.$shop->logo)}}" alt="Product thumbnail"/>
-                            </center>
+                            </div>
                             <div class="custom-file">
                                 <input type="file" name="image" id="customFileUpload" class="custom-file-input"
                                     accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
@@ -169,11 +169,11 @@
                             </h5>
                         </div>
                         <div class="card-body d-flex flex-column pt-0">
-                            <center class="my-auto py-4 py-xl-5">
+                            <div class="text-center my-auto py-4 py-xl-5">
                                 <img class="store-banner onerror-image" id="coverImageViewer"
                                 data-onerror-image="{{asset('public/assets/admin/img/restaurant_cover.jpg')}}"
                                 src="{{asset('storage/app/public/store/cover/'.$shop->cover_photo)}}" alt="Product thumbnail"/>
-                            </center>
+                            </div>
                             <div class="custom-file">
                                 <input type="file" name="photo" id="coverImageUpload" class="custom-file-input"
                                     accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">

@@ -5,7 +5,7 @@
 @endpush
 
 @section('content')
-    <center><h1>Please do not refresh this page...</h1></center>
+    <div class="text-center"> <h1>Please do not refresh this page...</h1></div>
 
 
     <form action="{!!route('razor-pay.payment',['payment_id'=>$data->id])!!}" id="form" method="POST">

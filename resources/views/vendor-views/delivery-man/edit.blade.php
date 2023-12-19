@@ -108,10 +108,10 @@
                         </div>
                         <div class="card-body d-flex flex-column">
                             <div class="my-auto">
-                                <center class="pt-3">
+                                <div class="text-center pt-3">
                                     <img class="img--120" id="viewer"
                                         src="{{asset('storage/app/public/delivery-man').'/'.$delivery_man['image']}}" alt="delivery-man image"/>
-                                </center>
+                                </div>
                             </div>
                             <div class="custom-file mt-3">
                                 <input type="file" name="image" id="customFileEg1" class="custom-file-input read-url"

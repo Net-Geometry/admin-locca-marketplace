@@ -3669,4 +3669,12 @@
   'maximum_coverage_area' => 'Maximum coverage area',
   'maximum_coverage_area_hint' => 'Maximum coverage area hint',
   'Vehicle_category_updated' => 'Vehicle category updated',
+  'confirm_this_order_?' => 'Confirm this order  ',
+  'This report will show all the orders in which the store discount has been used. The store discounts are: Free delivery, Coupon discount & item discounts(partial according to order commission).' => 'This report will show all the orders in which the store discount has been used. The store discounts are: Free delivery  Coupon discount & item discounts(partial according to order commission).',
+  'customers_reviews' => 'Customers reviews',
+  'Unadjusted' => 'Unadjusted',
+  'Adjust_with_wallet' => 'Adjust with wallet',
+  'Adjust_the_withdrawable_balance_&_unadjusted_balance_with_your_wallet_(Cash_in_Hand)_or_click_‘Request_Withdraw’' => 'Adjust the withdrawable balance & unadjusted balance with your wallet (Cash in Hand) or click ‘Request Withdraw’',
+  'request_withdraw' => 'Request withdraw',
+  'As_you_have_more_‘Withdrawable_Balance’_than_‘Cash_in_Hand’,_you_need_to_request_for_withdrawal_from_Admin' => 'As you have more ‘Withdrawable Balance’ than ‘Cash in Hand’  you need to request for withdrawal from Admin',
 );

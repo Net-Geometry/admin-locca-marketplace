@@ -216,11 +216,11 @@
                     </div>
                     <div class="modal-body row ff-emoji">
                         <div class="col-md-12">
-                            <center>
+                            <div class="text-center"> 
                                 <input type="button" class="btn btn--primary non-printable text-white print-Div"
                                     value="Proceed, If thermal printer is ready." />
                                 <a href="{{ url()->previous() }}" class="btn btn-danger non-printable">{{translate('messages.back')}}</a>
-                            </center>
+                            </div>
                             <hr class="non-printable">
                         </div>
                         <div class="row m-auto" id="print-modal-content">

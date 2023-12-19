@@ -372,12 +372,12 @@
                                             <label class="form-label">
                                                 {{ translate('meta_image') }} <span class="text--primary">({{ translate('1:1') }})</span>
                                             </label>
-                                            <center>
+                                            <div class="text-center"> 
                                                 <img class="img--110 min-height-170px min-width-170px onerror-image" id="viewer"
                                                      data-onerror-image="{{ asset('public/assets/admin/img/upload.png') }}"
                                                     src="{{asset('storage/app/public/store').'/'.$store->meta_image}}"
                                                      alt="{{ translate('meta_image') }}" />
-                                            </center>
+                                            </div>
                                             <input type="file" name="meta_image" id="customFileEg1" class="custom-file-input"
                                                 accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
                                         </label>

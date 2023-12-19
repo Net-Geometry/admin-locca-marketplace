@@ -106,10 +106,10 @@
                         <div class="card-body mt-3 mx-lg-4">
                             <div class="row">
                                 <div class="col-12">
-                                    <center>
+                                    <div class="text-center"> 
                                         <h3>{{translate('Send_Mail')}}</h3>
                                         <label class="badge-soft-danger px-1">{{translate('messages.Configure_your_mail_setup_first')}}.</label>
-                                    </center>
+                                    </div>
 
 
                                     <form action="{{route('admin.users.contact.contact-send-mail',$contact->id)}}" method="post">

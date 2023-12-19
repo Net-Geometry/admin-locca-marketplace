@@ -13,9 +13,9 @@
         <div class="col-md-4 col-6">
             <div class="grid-card top--rated-food pb-4 cursor-pointer redirect-url"
                  data-url="{{route('vendor.item.view',[$item['id']])}}">
-                <center>
+                <div class="text-center">
                     <img class="rounded onerror-image" src="{{asset('storage/app/public/product')}}/{{$item['image']}}" data-onerror-image="{{asset('public/assets/admin/img/100x100/2.png')}}" alt="{{Str::limit($item->name??translate('messages.Item deleted!'),20,'...')}}">
-                </center>
+                </div>
 
                 <div class="text-center mt-3">
                     <h5 class="name m-0 mb-1">{{Str::limit($item->name??translate('messages.Item deleted!'),20,'...')}}</h5>

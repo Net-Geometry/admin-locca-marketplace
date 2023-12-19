@@ -47,9 +47,9 @@
 <div class="container pb-5 mb-2 mb-md-4">
     <div class="row">
         <div class="col-md-12 mb-5 pt-5">
-            <center class="">
+            <div class="text-center ">
                 <h1>Payment method</h1>
-            </center>
+            </div>
         </div>
         @php($order=\App\Models\Order::find(session('order_id')))
         <section class="col-lg-12">

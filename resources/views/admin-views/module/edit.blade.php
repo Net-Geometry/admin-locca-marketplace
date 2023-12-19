@@ -124,9 +124,9 @@
                                             {{translate('messages.icon')}}
                                             <small class="text-danger">* ( {{translate('messages.ratio')}} 1:1)</small>
                                         </label>
-                                        <center class="my-auto py-3">
+                                        <div class="text-center my-auto py-3">
                                             <img class="initial--15 onerror-image" id="viewer" data-onerror-image="{{asset('public/assets/admin/img/400x400/img2.jpg')}}" src="{{asset('storage/app/public/module/'.$module['icon'])}}" alt="image" />
-                                        </center>
+                                        </div>
                                         <div class="custom-file">
                                             <input type="file" name="icon" id="customFileEg1" class="custom-file-input" accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
                                             <label class="custom-file-label" for="customFileEg1">{{translate('messages.choose_file')}}</label>
@@ -139,9 +139,9 @@
                                             {{translate('messages.thumbnail')}}
                                             <small class="text-danger">* ( {{translate('messages.ratio')}} 1:1)</small>
                                         </label>
-                                        <center class="my-auto py-3">
+                                        <div class="text-center my-auto py-3">
                                             <img class="initial--15 onerror-image" id="viewer2" data-onerror-image="{{asset('public/assets/admin/img/400x400/img2.jpg')}}" src="{{asset('storage/app/public/module/'.$module['thumbnail'])}}" alt="image" />
-                                        </center>
+                                        </div>
                                         <div class="custom-file">
                                             <input type="file" name="thumbnail" id="customFileEg2" class="custom-file-input" accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
                                             <label class="custom-file-label" for="customFileEg2">{{translate('messages.choose_file')}}</label>

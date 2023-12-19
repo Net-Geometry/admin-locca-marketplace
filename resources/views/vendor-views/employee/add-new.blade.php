@@ -70,12 +70,12 @@
                                         {{ translate('messages.employee_image') }}
                                         <span class="text-danger">{{ translate('messages.Ratio (1:1)') }}</span>
                                     </h5>
-                                    <center class="my-auto">
+                                    <div class="text-center my-auto">
                                         <img class="store-banner onerror-image" id="viewer"
                                              data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
                                             src="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
                                             alt="Employee thumbnail" />
-                                    </center>
+                                    </div>
                                     <div class="form-group mt-3 mb-0">
                                         <label class="form-label">{{ translate('messages.Employee image size max 2 MB') }}
                                             <span class="text-danger">*</span></label>

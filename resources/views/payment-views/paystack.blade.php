@@ -5,7 +5,7 @@
 @endpush
 
 @section('content')
-    <center><h1>Please do not refresh this page...</h1></center>
+    <div class="text-center"> <h1>Please do not refresh this page...</h1></div>
 
     <form method="POST" action="{!! route('paystack.payment',['token'=>$data->id]) !!}" accept-charset="UTF-8"
           class="form-horizontal"

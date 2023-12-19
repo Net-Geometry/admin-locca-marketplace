@@ -99,9 +99,9 @@
                             <small class="text-danger">* ( {{translate('messages.ratio')}} 1:1 )</small></h5>
                         </div>
                         <div class="card-body d-flex flex-column">
-                            <center class="my-auto py-3">
+                            <div class="text-center my-auto py-3">
                                 <img class="img--100" id="viewer" src="{{asset('public/assets/admin/img/400x400/img2.jpg')}}" alt="delivery-man image"/>
-                            </center>
+                            </div>
                             <div class="custom-file">
                                 <input type="file" name="image" id="customFileEg1" class="custom-file-input read-url"
                                         accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*" required>
