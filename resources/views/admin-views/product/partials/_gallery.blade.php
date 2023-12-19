@@ -150,3 +150,4 @@
         </div>
     </div>
 @endforeach
+<script src="{{asset('public/assets/admin')}}/js/view-pages/common.js"></script>

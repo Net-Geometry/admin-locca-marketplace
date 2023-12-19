@@ -16,12 +16,14 @@ use App\Enums\ViewPaths\Admin\DeliveryMan as DeliveryManViewPath;
 use App\Exports\DeliveryManEarningExport;
 use App\Exports\DeliveryManListExport;
 use App\Exports\DeliveryManReviewExport;
+use App\Exports\DisbursementHistoryExport;
 use App\Exports\SingleDeliveryManReviewExport;
 use App\Http\Controllers\BaseController;
 use App\Http\Requests\Admin\DeliveryManAddRequest;
 use App\Http\Requests\Admin\DeliveryManUpdateRequest;
 use App\Mail\DmSelfRegistration;
 use App\Mail\DmSuspendMail;
+use App\Models\DisbursementDetails;
 use App\Services\DeliveryManService;
 use App\Traits\NotificationTrait;
 use Exception;
@@ -311,6 +313,20 @@ class DeliveryManController extends BaseController
         {
             $date = $request->query('date');
             return view(DeliveryManViewPath::TRANSACTION[VIEW], compact('deliveryMan', 'date'));
+        } else if ($tab == 'disbursement') {
+            $key = explode(' ', $request['search']);
+            $disbursements=DisbursementDetails::where('delivery_man_id', $deliveryMan->id)
+                ->when(isset($key), function ($q) use ($key){
+                    $q->where(function ($q) use ($key) {
+                        foreach ($key as $value) {
+                            $q->orWhere('disbursement_id', 'like', "%{$value}%")
+                                ->orWhere('status', 'like', "%{$value}%");
+                        }
+                    });
+                })
+                ->latest()->paginate(config('default_pagination'));
+            return view('admin-views.delivery-man.view.disbursement', compact('deliveryMan','disbursements'));
+
         }
 
         $user = $this->userInfoRepo->getFirstWhere(params: ['deliveryman_id' => $id]);
@@ -413,5 +429,34 @@ class DeliveryManController extends BaseController
         }
         Toastr::success(translate('messages.application_status_updated_successfully'));
         return back();
+    }
+
+    public function disbursement_export(Request $request,$id,$type)
+    {
+        $key = explode(' ', $request['search']);
+
+        $dm= \App\Models\DeliveryMan::find($id);
+        $disbursements=DisbursementDetails::where('delivery_man_id', $dm->id)
+            ->when(isset($key), function ($q) use ($key){
+                $q->where(function ($q) use ($key) {
+                    foreach ($key as $value) {
+                        $q->orWhere('disbursement_id', 'like', "%{$value}%")
+                            ->orWhere('status', 'like', "%{$value}%");
+                    }
+                });
+            })
+            ->latest()->get();
+        $data = [
+            'disbursements'=>$disbursements,
+            'search'=>$request->search??null,
+            'delivery_man'=>$dm->f_name.' '.$dm->l_name,
+            'type'=>'dm',
+        ];
+
+        if ($request->type == 'excel') {
+            return Excel::download(new DisbursementHistoryExport($data), 'Disbursementlist.xlsx');
+        } else if ($request->type == 'csv') {
+            return Excel::download(new DisbursementHistoryExport($data), 'Disbursementlist.csv');
+        }
     }
 }

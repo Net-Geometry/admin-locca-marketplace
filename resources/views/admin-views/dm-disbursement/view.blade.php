@@ -41,9 +41,9 @@
                     <span>{{ translate('total_amount') }}</span> <span class="mx-2">:</span> <h3 class="m-0">{{\App\CentralLogics\Helpers::format_currency($disbursement['total_amount'])}}</h3>
                 </div>
                 <div class="w-16rem">
-                    <select name="delivery_man_id" data-url="{{ url()->current() }}"
+                    <select name="delivery_man_id" data-url="{{ url()->current() }}" data-filter="delivery_man_id"
                             data-placeholder="{{ translate('messages.select_delivery_man') }}"
-                            class="js-select2-custom form-control deliveryman-filter">
+                            class="js-select2-custom form-control set-filter">
 
                         <option value="all">{{ translate('messages.all_delivery_man') }}</option>
                         @foreach (\App\Models\DeliveryMan::where('type' ,'zone_wise')->where('earning' ,1)->active()->get(['id','f_name','l_name']) as $dm)

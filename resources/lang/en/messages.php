@@ -3677,4 +3677,6 @@
   'Adjust_the_withdrawable_balance_&_unadjusted_balance_with_your_wallet_(Cash_in_Hand)_or_click_‘Request_Withdraw’' => 'Adjust the withdrawable balance & unadjusted balance with your wallet (Cash in Hand) or click ‘Request Withdraw’',
   'request_withdraw' => 'Request withdraw',
   'As_you_have_more_‘Withdrawable_Balance’_than_‘Cash_in_Hand’,_you_need_to_request_for_withdrawal_from_Admin' => 'As you have more ‘Withdrawable Balance’ than ‘Cash in Hand’  you need to request for withdrawal from Admin',
+  'search_by_disbursement_id' => 'Search by disbursement id',
+  'Disbursement_List' => 'Disbursement List',
 );
