@@ -106,7 +106,7 @@
                                             <label class="toggle-switch toggle-switch-sm"
                                                 for="stocksCheckbox{{ $reason->id }}">
                                                 <input type="checkbox"
-                                                    onclick="location.href='{{ route('admin.business-settings.order-cancel-reasons.status', [$reason['id'], $reason->status ? 0 : 1]) }}'" class="toggle-switch-input"
+                                                    data-url="{{ route('admin.business-settings.order-cancel-reasons.status', [$reason['id'], $reason->status ? 0 : 1]) }}" class="toggle-switch-input redirect-url"
                                                     id="stocksCheckbox{{ $reason->id }}"
                                                     {{ $reason->status ? 'checked' : '' }}>
                                                 <span class="toggle-switch-label">

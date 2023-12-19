@@ -371,7 +371,6 @@
     }
 
     $('.form-alert').on('click',function (){
-
         let id = $(this).data('id')
         let message = $(this).data('message')
         Swal.fire({
@@ -390,6 +389,23 @@
             }
         })
     })
+
+
+    $('.onerror-image').on('error', function() {
+        let img = $(this).data('onerror-image')
+        $(this).attr('src', img);
+    });
+
+
+    $(".set-filter").on("change", function () {
+        const id = $(this).val();
+        const url = $(this).data('url');
+        const filter_by = $(this).data('filter');
+        var nurl = new URL(url);
+        nurl.searchParams.set(filter_by, id);
+        location.href = nurl;
+        tour.next();
+    });
 
     function set_filter(url, id, filter_by) {
         var nurl = new URL(url);

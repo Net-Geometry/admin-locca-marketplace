@@ -33,8 +33,8 @@
                     <div class="col-sm-6 col-md-4">
                         <div class="select-item">
                             <select name="category_id" id="category" data-placeholder="{{ translate('messages.select_category') }}"
-                                class="js-data-example-ajax form-control" id="category_id"
-                                onchange="set_filter('{{url()->full()}}',this.value,'category_id')">
+                                class="js-data-example-ajax form-control set-filter" id="category_id"
+                                data-url="{{url()->full()}}" data-filter="category_id">
                                 @if($category)
                                 <option value="{{$category->id}}" selected>{{$category->name}}</option>
                                 @else
@@ -45,7 +45,7 @@
                     </div>
                     <div class="col-sm-6 col-md-4">
                         <div class="select-item">
-                            <select name="sub_category_id" class="form-control js-select2-custom" data-placeholder="{{ translate('messages.select_sub_category') }}" id="sub-categories" onchange="set_filter('{{url()->full()}}',this.value,'sub_category_id')">
+                            <select name="sub_category_id" class="form-control js-select2-custom set-filter" data-placeholder="{{ translate('messages.select_sub_category') }}" id="sub-categories" data-url="{{url()->full()}}" data-filter="sub_category_id">
                                 <option value="all" selected>{{translate('messages.all_sub_category')}}</option>
                                 @foreach($sub_categories as $z)
                                 <option
@@ -63,7 +63,7 @@
 
                 <div class="col-sm-6 col-md-4">
                     <div class="select-item">
-                        <select name="category_id" onchange="set_filter('{{url()->full()}}',this.value, 'type')" data-placeholder="{{translate('messages.all')}}" class="form-control max-lg-h-40px">
+                        <select name="category_id" data-url="{{url()->full()}}" data-filter="type" data-placeholder="{{translate('messages.all')}}" class="form-control max-lg-h-40px set-filter">
                             <option value="all" {{$type=='all'?'selected':''}}>{{translate('messages.all')}}</option>
                             <option value="veg" {{$type=='veg'?'selected':''}}>{{translate('messages.veg')}}</option>
                             <option value="non_veg" {{$type=='non_veg'?'selected':''}}>{{translate('messages.non_veg')}}</option>
@@ -90,98 +90,6 @@
                         </div>
                         <!-- End Search -->
                     </form>
-
-
-
-                    {{-- <!-- Unfold -->
-                    <div class="hs-unfold">
-                        <a class="js-hs-unfold-invoker btn btn-white" href="javascript:;"
-                            data-hs-unfold-options='{
-                            "target": "#showHideDropdown",
-                            "type": "css-animation"
-                            }'>
-                            <i class="tio-table mr-1"></i> {{ translate('messages.columns') }} <span class="badge badge-soft-dark rounded-circle ml-1">6</span>
-                        </a>
-
-                        <div id="showHideDropdown" class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-right dropdown-card">
-                            <div class="card card-sm">
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-between align-items-center mb-3">
-                                        <span class="mr-2">#</span>
-                                        <!-- Checkbox Switch -->
-                                        <label class="toggle-switch toggle-switch-sm" for="toggleColumn_index">
-                                            <input type="checkbox" class="toggle-switch-input" id="toggleColumn_index" checked>
-                                            <span class="toggle-switch-label">
-                                            <span class="toggle-switch-indicator"></span>
-                                            </span>
-                                        </label>
-                                    <!-- End Checkbox Switch -->
-                                    </div>
-                                    <div class="d-flex justify-content-between align-items-center mb-3">
-                                        <span class="mr-2">{{ translate('messages.Name') }}</span>
-                                        <!-- Checkbox Switch -->
-                                        <label class="toggle-switch toggle-switch-sm" for="toggleColumn_name">
-                                            <input type="checkbox" class="toggle-switch-input" id="toggleColumn_name" checked>
-                                            <span class="toggle-switch-label">
-                                            <span class="toggle-switch-indicator"></span>
-                                            </span>
-                                        </label>
-                                    <!-- End Checkbox Switch -->
-                                    </div>
-
-                                    <div class="d-flex justify-content-between align-items-center mb-3">
-                                        <span class="mr-2">{{ translate('messages.type') }}</span>
-
-                                        <!-- Checkbox Switch -->
-                                        <label class="toggle-switch toggle-switch-sm" for="toggleColumn_type">
-                                            <input type="checkbox" class="toggle-switch-input" id="toggleColumn_type" checked>
-                                            <span class="toggle-switch-label">
-                                            <span class="toggle-switch-indicator"></span>
-                                            </span>
-                                        </label>
-                                    <!-- End Checkbox Switch -->
-                                    </div>
-
-                                    <div class="d-flex justify-content-between align-items-center mb-3">
-                                        <span class="mr-2">{{ translate('messages.status') }}</span>
-
-                                        <!-- Checkbox Switch -->
-                                        <label class="toggle-switch toggle-switch-sm" for="toggleColumn_status">
-                                            <input type="checkbox" class="toggle-switch-input" id="toggleColumn_status" checked>
-                                            <span class="toggle-switch-label">
-                                            <span class="toggle-switch-indicator"></span>
-                                            </span>
-                                        </label>
-                                        <!-- End Checkbox Switch -->
-                                    </div>
-                                    <div class="d-flex justify-content-between align-items-center mb-3">
-                                        <span class="mr-2">{{ translate('messages.price') }}</span>
-
-                                        <!-- Checkbox Switch -->
-                                        <label class="toggle-switch toggle-switch-sm" for="toggleColumn_price">
-                                            <input type="checkbox" class="toggle-switch-input" id="toggleColumn_price" checked>
-                                            <span class="toggle-switch-label">
-                                            <span class="toggle-switch-indicator"></span>
-                                            </span>
-                                        </label>
-                                        <!-- End Checkbox Switch -->
-                                    </div>
-                                    <div class="d-flex justify-content-between align-items-center mb-3">
-                                        <span class="mr-2">{{ translate('messages.action') }}</span>
-
-                                        <!-- Checkbox Switch -->
-                                        <label class="toggle-switch toggle-switch-sm" for="toggleColumn_action">
-                                            <input type="checkbox" class="toggle-switch-input" id="toggleColumn_action" checked>
-                                            <span class="toggle-switch-label">
-                                            <span class="toggle-switch-indicator"></span>
-                                            </span>
-                                        </label>
-                                        <!-- End Checkbox Switch -->
-                                    </div>
-                            </div>
-                            </div>
-                        </div>
-                    </div> --}}
                     <!-- End Unfold -->
                     <div>
                         <a href="{{route('vendor.item.add-new')}}" class="btn btn--primary m-0 pull-right"><i
@@ -229,8 +137,8 @@
                             <td>{{$key+$items->firstItem()}}</td>
                             <td>
                                 <a class="media align-items-center" href="{{route('vendor.item.view',[$item['id']])}}">
-                                    <img class="avatar avatar-lg mr-3" src="{{asset('storage/app/public/product')}}/{{$item['image']}}"
-                                            onerror="this.src='{{asset('public/assets/admin/img/160x160/img2.jpg')}}'" alt="{{$item->name}} image">
+                                    <img class="avatar avatar-lg mr-3 onerror-image" src="{{asset('storage/app/public/product')}}/{{$item['image']}}"
+                                         data-onerror-image="{{asset('public/assets/admin/img/160x160/img2.jpg')}}" alt="{{$item->name}} image">
                                     <div class="media-body">
                                         <h5 class="text-hover-primary mb-0">{{Str::limit($item['name'],20,'...')}}</h5>
                                     </div>
@@ -248,7 +156,7 @@
                                 <div class="d-flex">
                                     <div class="mx-auto">
                                         <label class="toggle-switch toggle-switch-sm mr-2"  data-toggle="tooltip" data-placement="top" title="{{ translate('messages.Recommend_to_customers') }}" for="recCheckbox{{$item->id}}">
-                                            <input type="checkbox" onclick="location.href='{{route('vendor.item.recommended',[$item['id'],$item->recommended?0:1])}}'"class="toggle-switch-input" id="recCheckbox{{$item->id}}" {{$item->recommended?'checked':''}}>
+                                            <input type="checkbox" data-url="{{route('vendor.item.recommended',[$item['id'],$item->recommended?0:1])}}" class="toggle-switch-input redirect-url" id="recCheckbox{{$item->id}}" {{$item->recommended?'checked':''}}>
                                             <span class="toggle-switch-label">
                                                 <span class="toggle-switch-indicator"></span>
                                             </span>
@@ -258,7 +166,7 @@
                             </td>
                             <td>
                                 <label class="toggle-switch toggle-switch-sm" for="stocksCheckbox{{$item->id}}">
-                                    <input type="checkbox" onclick="location.href='{{route('vendor.item.status',[$item['id'],$item->status?0:1])}}'"class="toggle-switch-input" id="stocksCheckbox{{$item->id}}" {{$item->status?'checked':''}}>
+                                    <input type="checkbox" data-url="{{route('vendor.item.status',[$item['id'],$item->status?0:1])}}" class="toggle-switch-input redirect-url" id="stocksCheckbox{{$item->id}}" {{$item->status?'checked':''}}>
                                     <span class="toggle-switch-label mx-auto">
                                         <span class="toggle-switch-indicator"></span>
                                     </span>
@@ -269,8 +177,8 @@
                                     <a class="btn btn-sm btn--primary btn-outline-primary action-btn"
                                         href="{{route('vendor.item.edit',[$item['id']])}}" title="{{translate('messages.edit_item')}}"><i class="tio-edit"></i>
                                     </a>
-                                    <a class="btn btn-sm btn--danger btn-outline-danger action-btn" href="javascript:"
-                                        onclick="form_alert('food-{{$item['id']}}','{{ translate('Want to delete this item ?') }}')" title="{{translate('messages.delete_item')}}"><i class="tio-delete-outlined"></i>
+                                    <a class="btn btn-sm btn--danger btn-outline-danger action-btn form-alert" href="javascript:"
+                                        data-id="food-{{$item['id']}}" data-message="{{ translate('Want to delete this item ?') }}" title="{{translate('messages.delete_item')}}"><i class="tio-delete-outlined"></i>
                                     </a>
                                 </div>
                                 <form action="{{route('vendor.item.delete',[$item['id']])}}"
@@ -308,10 +216,11 @@
 
 @push('script_2')
     <script>
+        "use strict";
         $(document).on('ready', function () {
-            // INITIALIZATION OF DATATABLES
-            // =======================================================
-            var datatable = $.HSCore.components.HSDatatables.init($('#datatable'), {
+        // INITIALIZATION OF DATATABLES
+        // =======================================================
+        let datatable = $.HSCore.components.HSDatatables.init($('#datatable'), {
           select: {
             style: 'multi',
             classMap: {
@@ -329,13 +238,13 @@
         });
 
         $('#datatableSearch').on('mouseup', function (e) {
-          var $input = $(this),
+          let $input = $(this),
             oldValue = $input.val();
 
           if (oldValue == "") return;
 
           setTimeout(function(){
-            var newValue = $input.val();
+            let newValue = $input.val();
 
             if (newValue == ""){
               // Gotcha
@@ -369,7 +278,7 @@
             // INITIALIZATION OF SELECT2
             // =======================================================
             $('.js-select2-custom').each(function () {
-                var select2 = $.HSCore.components.HSSelect2.init($(this));
+                let select2 = $.HSCore.components.HSSelect2.init($(this));
             });
         });
 
@@ -389,7 +298,7 @@
                     };
                 },
                 __port: function (params, success, failure) {
-                    var $request = $.ajax(params);
+                    let $request = $.ajax(params);
 
                     $request.then(success);
                     $request.fail(failure);
@@ -398,12 +307,10 @@
                 }
             }
         });
-    </script>
 
-    <script>
         $('#search-form').on('submit', function (e) {
             e.preventDefault();
-            var formData = new FormData(this);
+            let formData = new FormData(this);
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

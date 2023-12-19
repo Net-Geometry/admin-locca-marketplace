@@ -137,8 +137,8 @@
                                 <div class="col-4 {{ $banner_type ? ($banner_type->value == 'image' ? '' : 'd-none') : '' }}" id="image">
                                     <label class="__upload-img aspect-615-350 d-block position-relative">
                                         <div class="img">
-                                            <img src="{{asset('storage/app/public/promotional_banner')}}/{{$banner_image?->value}}"
-                                            onerror='this.src="{{ asset('/public/assets/admin/img/upload-placeholder.png') }}"' alt="">
+                                            <img class="onerror-image" src="{{asset('storage/app/public/promotional_banner')}}/{{$banner_image?->value}}"
+                                            data-onerror-image="{{ asset('/public/assets/admin/img/upload-placeholder.png') }}" alt="">
                                         </div>
 
                                         <div class="">

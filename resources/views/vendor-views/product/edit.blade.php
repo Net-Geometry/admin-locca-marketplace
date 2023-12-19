@@ -525,33 +525,20 @@
 @endpush
 
 @push('script_2')
-<script>
-    var count = 0;
-    var mod_type="{{ $module_type }}";
-    var removedImageKeys = [];
-        function function_remove_img(key,photo) {
-        $('#product_images_' + key).addClass('d-none');
-        removedImageKeys.push(photo);
-        $('#removedImageKeysInput').val(removedImageKeys.join(','));
-    }
+    <script src="{{asset('public/assets/admin')}}/js/tags-input.min.js"></script>
+    <script src="{{asset('public/assets/admin/js/spartan-multi-image-picker.js')}}"></script>
+    <script src="{{asset('public/assets/admin')}}/js/view-pages/vendor/product-index.js"></script>
+    <script>
+        "use strict";
+
+    mod_type="{{ $module_type }}";
 
     $(document).ready(function() {
-        $('#organic').hide();
-            if (mod_type == 'grocery') {
-                        $('#organic').show();
-                    }
-        if (mod_type == 'food') {
-                $('#food_variation_section').show();
-                $('#attribute_section').hide();
-            } else {
-                $('#food_variation_section').hide();
-                $('#attribute_section').show();
-            }
         $("#add_new_option_button").click(function(e) {
             $('#empty-variation').hide();
             count++;
-            var add_option_view = `
-            <div class="__bg-F8F9FC-card view_new_option mb-2">
+            let add_option_view = `
+                    <div class="__bg-F8F9FC-card view_new_option mb-2">
                         <div>
                             <div class="d-flex align-items-center justify-content-between mb-3">
                                 <label class="form-check form--check">
@@ -559,7 +546,7 @@
                                     <span class="form-check-label">{{ translate('Required') }}</span>
                                 </label>
                                 <div>
-                                    <button type="button" class="btn btn-danger btn-sm delete_input_button" onclick="removeOption(this)"
+                                    <button type="button" class="btn btn-danger btn-sm delete_input_button"
                                         title="{{ translate('Delete') }}">
                                         <i class="tio-add-to-trash"></i>
                                     </button>
@@ -569,8 +556,8 @@
                                 <div class="col-xl-4 col-lg-6">
                                     <label for="">{{ translate('name') }}</label>
                                     <input required name=options[` + count +
-                `][name] class="form-control" type="text" onkeyup="new_option_name(this.value,` +
-                count + `)">
+                `][name] class="form-control new_option_name" type="text" data-count="`+
+                count +`">
                                 </div>
 
                                 <div class="col-xl-4 col-lg-6">
@@ -579,31 +566,31 @@
                                         </label>
                                         <div class="resturant-type-group px-0">
                                             <label class="form-check form--check mr-2 mr-md-4">
-                                                <input class="form-check-input" type="radio" value="multi"
+                                                <input class="form-check-input show_min_max" data-count="`+count+`" type="radio" value="multi"
                                                 name="options[` + count + `][type]" id="type` + count +
-                `" checked onchange="show_min_max(` + count + `)"
+                `" checked
                                                 >
                                                 <span class="form-check-label">
                                                     {{ translate('Multiple Selection') }}
-                                                </span>
-                                            </label>
+                </span>
+            </label>
 
-                                            <label class="form-check form--check mr-2 mr-md-4">
-                                                <input class="form-check-input" type="radio" value="single"
-                                                name="options[` + count + `][type]" id="type` + count +
-                `" onchange="hide_min_max(` + count + `)"
+            <label class="form-check form--check mr-2 mr-md-4">
+                <input class="form-check-input hide_min_max" data-count="`+count+`" type="radio" value="single"
+                    name="options[` + count + `][type]" id="type` + count +
+                `"
                                                 >
                                                 <span class="form-check-label">
                                                     {{ translate('Single Selection') }}
-                                                </span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xl-4 col-lg-6">
-                                    <div class="row g-2">
-                                        <div class="col-6">
-                                            <label for="">{{ translate('Min') }}</label>
+                </span>
+            </label>
+        </div>
+    </div>
+</div>
+<div class="col-xl-4 col-lg-6">
+    <div class="row g-2">
+        <div class="col-6">
+            <label for="">{{ translate('Min') }}</label>
                                             <input id="min_max1_` + count + `" required  name="options[` + count + `][min]" class="form-control" type="number" min="1">
                                         </div>
                                         <div class="col-6">
@@ -633,8 +620,8 @@
                                     </div>
                                     <div class="row mt-3 p-3 mr-1 d-flex "  id="add_new_button_` + count +
                 `">
-                                        <button type="button" class="btn btn--primary btn-outline-primary" onclick="add_new_row_button(` +
-                count + `)" >{{ translate('Add_New_Option') }}</button>
+                                        <button type="button" class="btn btn--primary btn-outline-primary add_new_row_button" data-count="`+
+                count +`">{{ translate('Add_New_Option') }}</button>
                                     </div>
                                 </div>
                             </div>
@@ -645,99 +632,37 @@
         });
     });
 
-    function show_min_max(data) {
-        $('#min_max1_' + data).removeAttr("readonly");
-        $('#min_max2_' + data).removeAttr("readonly");
-        $('#min_max1_' + data).attr("required", "true");
-        $('#min_max2_' + data).attr("required", "true");
-    }
-
-    function hide_min_max(data) {
-        $('#min_max1_' + data).val(null).trigger('change');
-        $('#min_max2_' + data).val(null).trigger('change');
-        $('#min_max1_' + data).attr("readonly", "true");
-        $('#min_max2_' + data).attr("readonly", "true");
-        $('#min_max1_' + data).attr("required", "false");
-        $('#min_max2_' + data).attr("required", "false");
-    }
-
-
-
-
-    function new_option_name(value, data) {
-        $("#new_option_name_" + data).empty();
-        $("#new_option_name_" + data).text(value)
-        console.log(value);
-    }
-
-    function removeOption(e) {
-        element = $(e);
-        element.parents('.view_new_option').remove();
-    }
-
-    function deleteRow(e) {
-        element = $(e);
-        element.parents('.add_new_view_row_class').remove();
-    }
-
-
     function add_new_row_button(data) {
         count = data;
         countRow = 1 + $('#option_price_view_' + data).children('.add_new_view_row_class').length;
-        var add_new_row_view = `
-        <div class="row add_new_view_row_class mb-3 position-relative pt-3 pt-sm-0">
-            <div class="col-md-4 col-sm-5">
-                    <label for="">{{ translate('Option_name') }}</label>
-                    <input class="form-control" required type="text" name="options[` + count + `][values][` +
-            countRow + `][label]" id="">
-                </div>
+        let add_new_row_view = `
+            <div class="row add_new_view_row_class mb-3 position-relative pt-3 pt-sm-0">
                 <div class="col-md-4 col-sm-5">
-                    <label for="">{{ translate('Additional_price') }}</label>
-                    <input class="form-control"  required type="number" min="0" step="0.01" name="options[` +
+                        <label for="">{{ translate('Option_name') }}</label>
+                        <input class="form-control" required type="text" name="options[` + count + `][values][` +
+            countRow + `][label]" id="">
+                    </div>
+                    <div class="col-md-4 col-sm-5">
+                        <label for="">{{ translate('Additional_price') }}</label>
+                        <input class="form-control"  required type="number" min="0" step="0.01" name="options[` +
             count +
             `][values][` + countRow + `][optionPrice]" id="">
-                </div>
-                <div class="col-sm-2 max-sm-absolute">
-                    <label class="d-none d-sm-block">&nbsp;</label>
-                    <div class="mt-1">
-                        <button type="button" class="btn btn-danger btn-sm" onclick="deleteRow(this)"
-                            title="{{ translate('Delete') }}">
-                            <i class="tio-add-to-trash"></i>
-                        </button>
                     </div>
-            </div>
-        </div>`;
+                    <div class="col-sm-2 max-sm-absolute">
+                        <label class="d-none d-sm-block">&nbsp;</label>
+                        <div class="mt-1">
+                            <button type="button" class="btn btn-danger btn-sm deleteRow"
+                                title="{{ translate('Delete') }}">
+                                <i class="tio-add-to-trash"></i>
+                            </button>
+                        </div>
+                </div>
+            </div>`;
         $('#option_price_view_' + data).append(add_new_row_view);
 
     }
-</script>
-    <script>
-        function getRequest(route, id) {
-            $.get({
-                url: route,
-                dataType: 'json',
-                success: function (data) {
-                    $('#' + id).empty().append(data.options);
-                },
-            });
-        }
 
-        function readURL(input) {
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
 
-                reader.onload = function (e) {
-                    $('#viewer').attr('src', e.target.result);
-                }
-
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-
-        $("#customFileEg1").change(function () {
-            readURL(this);
-            $('#image-viewer-section').show(1000)
-        });
 
         $(document).ready(function () {
             setTimeout(function () {
@@ -748,50 +673,21 @@
                 getRequest('{{url('/')}}/store-panel/item/get-categories?parent_id=' + sub_category + '&&sub_category=' + sub_sub_category, 'sub-sub-categories');
             }, 1000)
         });
-    </script>
-
-    <script>
-        $(document).on('ready', function () {
-            $('.js-select2-custom').each(function () {
-                var select2 = $.HSCore.components.HSSelect2.init($(this));
-            });
-        });
-    </script>
 
 
-    <script src="{{asset('public/assets/admin')}}/js/tags-input.min.js"></script>
 
-    <script>
-        $('#choice_attributes').on('change', function () {
-            combination_update();
-            $('#customer_choice_options').html(null);
-            $.each($("#choice_attributes option:selected"), function () {
-                add_more_customer_choice_option($(this).val(), $(this).text());
-            });
-        });
 
-        function add_more_customer_choice_option(i, name) {
-            let n = name;
 
-            $('#customer_choice_options').append(
-                `<div class="__choos-item"><div><input type="hidden" name="choice_no[]" value="${i}"><input type="text" class="form-control d-none" name="choice[]" value="${n}" placeholder="{{ translate('messages.choice_title') }}" readonly> <label class="form-label">${n}</label> </div><div><input type="text" class="form-control" name="choice_options_${i}[]" placeholder="{{ translate('messages.enter_choice_values') }}" data-role="tagsinput" onchange="combination_update()"></div></div>`
-            );
-            $("input[data-role=tagsinput], select[multiple][data-role=tagsinput]").tagsinput();
-        }
+    function add_more_customer_choice_option(i, name) {
+        let n = name;
 
-        setTimeout(function () {
-            $('.call-update-sku').on('change', function () {
-                combination_update();
-            });
-        }, 2000)
+        $('#customer_choice_options').append(
+            `<div class="__choos-item"><div><input type="hidden" name="choice_no[]" value="${i}"><input type="text" class="form-control d-none" name="choice[]" value="${n}" placeholder="{{ translate('messages.choice_title') }}" readonly> <label class="form-label">${n}</label> </div><div><input type="text" class="form-control combination_update" name="choice_options_${i}[]" placeholder="{{ translate('messages.enter_choice_values') }}" data-role="tagsinput"></div></div>`
+        );
+        $("input[data-role=tagsinput], select[multiple][data-role=tagsinput]").tagsinput();
+    }
 
-        $('#colors-selector').on('change', function () {
-            combination_update();
-        });
 
-        $('input[name="unit_price"]').on('keyup', function () {
-            combination_update();
-        });
 
         function combination_update() {
             $.ajaxSetup({
@@ -818,11 +714,9 @@
                 }
             });
         }
-    </script>
 
-    <script>
         $('#product_form').on('submit', function () {
-            var formData = new FormData(this);
+            let formData = new FormData(this);
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -841,7 +735,7 @@
                 success: function (data) {
                     $('#loading').hide();
                     if (data.errors) {
-                        for (var i = 0; i < data.errors.length; i++) {
+                        for (let i = 0; i < data.errors.length; i++) {
                             toastr.error(data.errors[i].message, {
                                 CloseButton: true,
                                 ProgressBar: true
@@ -869,33 +763,7 @@
                 }
             });
         });
-    </script>
-    <script>
-        $(".lang_link").click(function(e){
-            e.preventDefault();
-            $(".lang_link").removeClass('active');
-            $(".lang_form").addClass('d-none');
-            $(this).addClass('active');
-            let form_id = this.id;
-            let lang = form_id.substring(0, form_id.length - 5);
-            console.log(lang);
-            $("#"+lang+"-form").removeClass('d-none');
-            if(lang == 'en')
-            {
-                $("#from_part_2").removeClass('d-none');
-            }
-            else
-            {
-                $("#from_part_2").addClass('d-none');
-            }
-        })
-        $('#reset_btn').click(function(){
-            location.reload(true);
-        })
-    </script>
 
-    <script src="{{asset('public/assets/admin/js/spartan-multi-image-picker.js')}}"></script>
-    <script type="text/javascript">
         $(function () {
             $("#coba").spartanMultiImagePicker({
                 fieldName: 'item_images[]',

@@ -86,8 +86,8 @@
                             class="avatar avatar-xxl avatar-circle avatar-border-lg avatar-uploader profile-cover-avatar"
                             for="avatarUploader">
                             <img id="viewer"
-                                 onerror="this.src='{{asset('public/assets/back-end/img/160x160/img1.jpg')}}'"
-                                 class="avatar-img"
+                                 data-onerror-image="{{asset('public/assets/back-end/img/160x160/img1.jpg')}}"
+                                 class="avatar-img onerror-image"
                                  src="{{asset('storage/app/public/seller')}}/{{$data->image}}"
                                  alt="Image">
                         </label>
@@ -165,7 +165,7 @@
                                 </div>
 
                             <div class="d-flex justify-content-end">
-                                <button type="button" onclick="{{env('APP_MODE')!='demo'?"form_alert('seller-profile-form','Want to update seller info ?')":"call_demo()"}}" class="btn btn-primary">{{ translate('messages.Save_changes') }}</button>
+                                <button type="button" data-id="seller-profile-form" data-message="{{ translate('Want to update seller info') }}" class="btn btn-primary {{env('APP_MODE')!='demo'?'form-alert':'call-demo'}}">{{ translate('messages.Save_changes') }}</button>
                             </div>
 
                             <!-- End Form -->
@@ -231,7 +231,7 @@
                             <!-- End Form Group -->
 
                             <div class="d-flex justify-content-end">
-                                <button type="button" onclick="{{env('APP_MODE')!='demo'?"form_alert('changePasswordForm','{{translate('messages.want_to_update_password')}}')":"call_demo()"}}" class="btn btn-primary">{{translate('messages.Save_changes')}}</button>
+                                <button type="button" data-id="changePasswordForm" data-message="{{translate('messages.want_to_update_password')}}" class="btn btn-primary {{env('APP_MODE')!='demo'?'form-alert':'call-demo'}}">{{translate('messages.Save_changes')}}</button>
                             </div>
                         </form>
                         <!-- End Form -->
@@ -247,40 +247,6 @@
        <!--modal-->
 
 @push('script_2')
-    <script>
-        function readURL(input) {
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
-
-                reader.onload = function (e) {
-                    $('#viewer').attr('src', e.target.result);
-                }
-
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-
-        $("#customFileUpload").change(function () {
-            readURL(this);
-        });
-    </script>
-
-    <script>
-        $("#generalSection").click(function() {
-            $("#passwordSection").removeClass("active");
-            $("#generalSection").addClass("active");
-            $('html, body').animate({
-                scrollTop: $("#generalDiv").offset().top
-            }, 2000);
-        });
-
-        $("#passwordSection").click(function() {
-            $("#generalSection").removeClass("active");
-            $("#passwordSection").addClass("active");
-            $('html, body').animate({
-                scrollTop: $("#passwordDiv").offset().top
-            }, 2000);
-        });
-    </script>
+    <script src="{{asset('public/assets/admin')}}/js/view-pages/vendor/profile-edit.js"></script>
 @endpush
 

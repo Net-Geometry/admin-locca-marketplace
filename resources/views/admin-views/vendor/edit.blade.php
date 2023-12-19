@@ -140,8 +140,8 @@
                                         {{ translate('logo') }} <span class="text--primary">({{ translate('1:1') }})</span>
                                     </label>
                                     <center>
-                                        <img class="img--110 min-height-170px min-width-170px" id="viewer"
-                                            onerror="this.src='{{ asset('public/assets/admin/img/upload.png') }}'"
+                                        <img class="img--110 min-height-170px min-width-170px onerror-image" id="viewer"
+                                        data-onerror-image="{{ asset('public/assets/admin/img/upload.png') }}"
                                             src="{{asset('storage/app/public/store').'/'.$store->logo}}" alt="{{$store->name}}"
                                             alt="logo image" />
                                     </center>
@@ -156,8 +156,8 @@
                                         {{ translate('Store Cover') }}  <span class="text--primary">({{ translate('2:1') }})</span>
                                     </label>
                                     <center>
-                                        <img class="img--vertical min-height-170px min-width-170px" id="coverImageViewer"
-                                            onerror="this.src='{{ asset('public/assets/admin/img/upload-img.png') }}'"
+                                        <img class="img--vertical min-height-170px min-width-170px onerror-image" id="coverImageViewer"
+                                        data-onerror-image="{{ asset('public/assets/admin/img/upload-img.png') }}"
                                             src="{{asset('storage/app/public/store/cover/'.$store->cover_photo)}}"
                                             alt="Fav icon" />
                                     </center>
@@ -214,7 +214,7 @@
                                                             </select>
                                                         </div>
                                                         <div class="item smaller">
-                                                            <button type="button" class="btn btn--primary" onclick="deliveryTime()">{{ translate('done') }}</button>
+                                                            <button type="button" class="btn btn--primary delivery-time">{{ translate('done') }}</button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -222,22 +222,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                {{--
-                                <div class="col-md-6">
-                                    <div class="form-group mb-0">
-                                        <label class="input-label" for="maximum_delivery_time">{{translate('messages.approx_delivery_time')}}</label>
-                                        <div class="input-group">
-                                            <input type="number" name="minimum_delivery_time" class="form-control" placeholder="Min: 10" value="{{old('minimum_delivery_time')}}">
-                                            <input type="number" name="maximum_delivery_time" class="form-control" placeholder="Max: 20" value="{{old('maximum_delivery_time')}}">
-                                            <select name="delivery_time_type" class="form-control text-capitalize" id="" required>
-                                                <option value="min">{{translate('messages.minutes')}}</option>
-                                                <option value="hours">{{translate('messages.hours')}}</option>
-                                                <option value="days">{{translate('messages.days')}}</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                --}}
                             </div>
                             <div class="row g-3 my-0">
                                 <div class="col-lg-4">
@@ -245,8 +229,8 @@
                                         <label class="input-label" for="choice_zones">{{translate('messages.zone')}}<span
                                                 class="form-label-secondary" data-toggle="tooltip" data-placement="right"
         data-original-title="{{translate('messages.select_zone_for_map')}}"><img src="{{asset('/public/assets/admin/img/info-circle.svg')}}" alt="{{translate('messages.select_zone_for_map')}}"></span></label>
-                                        <select name="zone_id" id="choice_zones" onchange="get_zone_data(this.value)" data-placeholder="{{translate('messages.select_zone')}}"
-                                                class="form-control js-select2-custom">
+                                        <select name="zone_id" id="choice_zones" data-placeholder="{{translate('messages.select_zone')}}"
+                                                class="form-control js-select2-custom get_zone_data">
                                             @foreach(\App\Models\Zone::active()->get() as $zone)
                                                 @if(isset(auth('admin')->user()->zone_id))
                                                     @if(auth('admin')->user()->zone_id == $zone->id)
@@ -399,18 +383,20 @@
 @endsection
 
 @push('script_2')
+    <script src="{{asset('public/assets/admin/js/intlTelInputCdn.min.js')}}"></script>
+    <script src="{{asset('public/assets/admin/js/intlTelInputCdn-jquery.min.js')}}"></script>
+    <script src="{{asset('public/assets/admin/js/spartan-multi-image-picker.js')}}"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key={{\App\Models\BusinessSetting::where('key', 'map_api_key')->first()->value}}&libraries=places&callback=initMap&v=3.45.8"></script>
     <script>
-        $(document).on('ready', function() {
+        "use strict";
+      $(document).on('ready', function () {
             $('.offcanvas').on('click', function(){
                 $('.offcanvas, .floating--date').removeClass('active')
             })
             $('.floating-date-toggler').on('click', function(){
                 $('.offcanvas, .floating--date').toggleClass('active')
             })
-        });
-    </script>
-    <script>
-      $(document).on('ready', function () {
         @if (isset(auth('admin')->user()->zone_id))
             $('#choice_zones').trigger('change');
         @endif
@@ -434,16 +420,10 @@
         });
 
     });
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.13/js/intlTelInput.min.js" integrity="sha512-QMUqEPmhXq1f3DnAVdXvu40C8nbTgxvBGvNruP6RFacy3zWKbNTmx7rdQVVM2gkd2auCWhlPYtcW2tHwzso4SA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.13/js/intlTelInput-jquery.min.js" integrity="sha512-hkmipUFWbNGcKnR0nayU95TV/6YhJ7J9YUAkx4WLoIgrVr7w1NYz28YkdNFMtPyPeX1FrQzbfs3gl+y94uZpSw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.13/js/utils.min.js" integrity="sha512-lv6g7RcY/5b9GMtFgw1qpTrznYu1U4Fm2z5PfDTG1puaaA+6F+aunX+GlMotukUFkxhDrvli/AgjAu128n2sXw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> -->
-    <link rel="shortcut icon" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.13/img/flags.png" type="image/x-icon">
-    <link rel="shortcut icon" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.13/img/flags@2x.png" type="image/x-icon">
-    <script>
+
         function readURL(input, viewer) {
             if (input.files && input.files[0]) {
-                var reader = new FileReader();
+                let reader = new FileReader();
 
                 reader.onload = function (e) {
                     $('#'+viewer).attr('src', e.target.result);
@@ -461,8 +441,8 @@
             readURL(this, 'coverImageViewer');
         });
         @php($country=\App\Models\BusinessSetting::where('key','country')->first())
-        var phone = $("#phone").intlTelInput({
-            utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/8.4.6/js/utils.js",
+        let phone = $("#phone").intlTelInput({
+            utilsScript: "{{asset('public/assets/admin/js/intlTelInputCdn-utils.min.js')}}",
             autoHideDialCode: true,
             autoPlaceholder: "ON",
             dropdownContainer: document.body,
@@ -472,10 +452,7 @@
             placeholderNumberType: "MOBILE",
             separateDialCode: true
         });
-    </script>
 
-    <script src="{{asset('public/assets/admin/js/spartan-multi-image-picker.js')}}"></script>
-    <script type="text/javascript">
         $(function () {
             $("#coba").spartanMultiImagePicker({
                 fieldName: 'identity_image[]',
@@ -511,21 +488,18 @@
                 }
             });
         });
-    </script>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key={{\App\Models\BusinessSetting::where('key', 'map_api_key')->first()->value}}&libraries=places&callback=initMap&v=3.45.8"></script>
-    <script>
+
         let myLatlng = { lat: {{$store->latitude}}, lng: {{$store->longitude}} };
         const map = new google.maps.Map(document.getElementById("map"), {
             zoom: 13,
             center: myLatlng,
         });
-        var zonePolygon = null;
+        let zonePolygon = null;
         let infoWindow = new google.maps.InfoWindow({
                 content: "Click the map to get Lat/Lng!",
                 position: myLatlng,
             });
-        var bounds = new google.maps.LatLngBounds();
+        let bounds = new google.maps.LatLngBounds();
         function initMap() {
             // Create the initial InfoWindow.
             new google.maps.Marker({
@@ -585,8 +559,8 @@
             });
         }
         initMap();
-        function get_zone_data(id)
-        {
+        $('.get_zone_data').on('click',function (){
+            let id = $(this).val();
             $.get({
                 url: '{{url('/')}}/admin/zone/get-coordinates/'+id,
                 dataType: 'json',
@@ -612,8 +586,8 @@
                         position: mapsMouseEvent.latLng,
                         content: JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2),
                         });
-                        var coordinates = JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2);
-                        var coordinates = JSON.parse(coordinates);
+                        let coordinates = JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2);
+                        coordinates = JSON.parse(coordinates);
 
                         document.getElementById('latitude').value = coordinates['lat'];
                         document.getElementById('longitude').value = coordinates['lng'];
@@ -621,9 +595,9 @@
                     });
                 },
             });
-        }
+        })
         $(document).on('ready', function (){
-            var id = $('#choice_zones').val();
+            let id = $('#choice_zones').val();
             $.get({
                 url: '{{url('/')}}/admin/zone/get-coordinates/'+id,
                 dataType: 'json',
@@ -655,8 +629,8 @@
                         position: mapsMouseEvent.latLng,
                         content: JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2),
                         });
-                        var coordinates = JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2);
-                        var coordinates = JSON.parse(coordinates);
+                        let coordinates = JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2);
+                        coordinates = JSON.parse(coordinates);
 
                         document.getElementById('latitude').value = coordinates['lat'];
                         document.getElementById('longitude').value = coordinates['lng'];
@@ -665,88 +639,64 @@
                 },
             });
         });
-    </script>
-        <script>
-            $('#reset_btn').click(function(){
-                $('#viewer').attr('src', "{{ asset('public/assets/admin/img/upload.png') }}");
-                $('#customFileEg1').val(null);
-                $('#coverImageViewer').attr('src', "{{ asset('public/assets/admin/img/upload-img.png') }}");
-                $('#coverImageUpload').val(null);
-                $('#choice_zones').val(null).trigger('change');
-                $('#module_id').val(null).trigger('change');
-                zonePolygon.setMap(null);
-                $('#coordinates').val(null);
-                $('#latitude').val(null);
-                $('#longitude').val(null);
-            })
-        </script>
 
-        <script>
-            var zone_id = 0;
-            $('#choice_zones').on('change', function() {
-                if($(this).val())
-            {
-                zone_id = $(this).val();
-            }
-            });
+    $('#reset_btn').click(function(){
+        $('#viewer').attr('src', "{{ asset('public/assets/admin/img/upload.png') }}");
+        $('#customFileEg1').val(null);
+        $('#coverImageViewer').attr('src', "{{ asset('public/assets/admin/img/upload-img.png') }}");
+        $('#coverImageUpload').val(null);
+        $('#choice_zones').val(null).trigger('change');
+        $('#module_id').val(null).trigger('change');
+        zonePolygon.setMap(null);
+        $('#coordinates').val(null);
+        $('#latitude').val(null);
+        $('#longitude').val(null);
+    })
 
-
-
-            $('#module_id').select2({
-                    ajax: {
-                         url: '{{url('/')}}/store/get-all-modules',
-                        data: function (params) {
-                            return {
-                                q: params.term, // search term
-                                page: params.page,
-                                zone_id: zone_id
-                            };
-                        },
-                        processResults: function (data) {
-                            return {
-                            results: data
-                            };
-                        },
-                        __port: function (params, success, failure) {
-                            var $request = $.ajax(params);
-
-                            $request.then(success);
-                            $request.fail(failure);
-
-                            return $request;
-                        }
-                    }
-                });
-        </script>
-
-<script>
-    $(".lang_link").click(function(e){
-        e.preventDefault();
-        $(".lang_link").removeClass('active');
-        $(".lang_form").addClass('d-none');
-        $(this).addClass('active');
-
-        let form_id = this.id;
-        let lang = form_id.substring(0, form_id.length - 5);
-        console.log(lang);
-        $("#"+lang+"-form").removeClass('d-none');
-        if(lang == '{{$defaultLang}}')
-        {
-            $(".from_part_2").removeClass('d-none');
-        }
-        else
-        {
-            $(".from_part_2").addClass('d-none');
-        }
+    let zone_id = 0;
+    $('#choice_zones').on('change', function() {
+        if($(this).val())
+    {
+        zone_id = $(this).val();
+    }
     });
 
-    function deliveryTime() {
-        var min = $("#minimum_delivery_time").val();
-        var max = $("#maximum_delivery_time").val();
-        var type = $("#delivery_time_type").val();
+
+
+    $('#module_id').select2({
+            ajax: {
+                 url: '{{url('/')}}/store/get-all-modules',
+                data: function (params) {
+                    return {
+                        q: params.term, // search term
+                        page: params.page,
+                        zone_id: zone_id
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                    results: data
+                    };
+                },
+                __port: function (params, success, failure) {
+                    let $request = $.ajax(params);
+
+                    $request.then(success);
+                    $request.fail(failure);
+
+                    return $request;
+                }
+            }
+        });
+
+
+    $('.delivery-time').on('click',function (){
+        let min = $("#minimum_delivery_time").val();
+        let max = $("#maximum_delivery_time").val();
+        let type = $("#delivery_time_type").val();
         $("#floating--date").removeClass('active');
         $("#time_view").val(min+' to '+max+' '+type);
 
-    }
+    })
 </script>
 @endpush

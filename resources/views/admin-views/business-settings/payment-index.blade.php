@@ -179,9 +179,9 @@
 
                             @php($additional_data = $payment['additional_data'] != null ? json_decode($payment['additional_data']) : [])
                             <div class="card-body">
-                                <div class="payment--gateway-img">
+                                <div class="payment--gateway-img onerror-image">
                                     <img  id="{{$payment->key_name}}-image-preview" class="__height-80"
-                                    onerror="this.src='{{asset('/public/assets/admin/img/payment/placeholder.png')}}'"
+                                    data-onerror-image="{{asset('/public/assets/admin/img/payment/placeholder.png')}}"
                                     src="{{asset('storage/app/public/payment_modules/gateway_image')}}/{{$additional_data != null ? $additional_data->gateway_image : ''}}"
                                          alt="public">
                                 </div>

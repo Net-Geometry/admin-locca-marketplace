@@ -4,10 +4,7 @@
 </div>
 <div class="col-6 bg-white rounded d-flex">
     <img src="<?php echo $custome_recaptcha->inline(); ?>" class="rounded w-100" />
-    <div class="p-3 pr-0 capcha-spin" onclick="reloadCaptcha()">
+    <div class="p-3 pr-0 capcha-spin reloadCaptcha">
         <i class="tio-cached"></i>
-    </div>  
-    {{-- <a class="" onclick="reloadCaptcha()">
-        <i class="tio-edit"></i>
-    </a> --}}
+    </div>
 </div>

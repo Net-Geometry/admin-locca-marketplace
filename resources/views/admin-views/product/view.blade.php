@@ -31,9 +31,9 @@
                         <div class="row align-items-md-center">
                             <div class="col-lg-5 col-md-6 mb-3 mb-md-0">
                                 <div class="d-flex flex-wrap align-items-center food--media">
-                                    <img class="avatar avatar-xxl avatar-4by3 mr-4"
+                                    <img class="avatar avatar-xxl avatar-4by3 mr-4 onerror-image"
                                         src="{{ asset('storage/app/public/product') }}/{{ $product['image'] }}"
-                                        onerror="this.src='{{ asset('public/assets/admin/img/160x160/img2.jpg') }}'"
+                                        data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
                                         alt="Image Description">
                                     <div class="d-block">
                                         <div class="rating--review">
@@ -231,8 +231,8 @@
                         @if ($product->store)
                             <a class="resturant--information-single"
                                 href="{{ route('admin.store.view', $product->store_id) }}">
-                                <img class="img--120 rounded mx-auto mb-3"
-                                    onerror="this.src='{{ asset('public/assets/admin/img/160x160/img1.jpg') }}'"
+                                <img class="img--120 rounded mx-auto mb-3 onerror-image"
+                                data-onerror-image="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}"
                                     src="{{ asset('storage/app/public/store/' . $product->store->logo) }}"
                                     alt="Image Description">
                                 <div class="text-center">
@@ -502,8 +502,8 @@
                                 <label class="toggle-switch toggle-switch-sm"
                                     for="reviewCheckbox{{ $review->id }}">
                                     <input type="checkbox"
-                                        onclick="status_form_alert('status-{{ $review['id'] }}','{{ $review->status ? translate('messages.you_want_to_hide_this_review_for_customer') : translate('messages.you_want_to_show_this_review_for_customer') }}', event)"
-                                        class="toggle-switch-input" id="reviewCheckbox{{ $review->id }}"
+                                           data-id="status-{{ $review['id'] }}" data-message="{{ $review->status ? translate('messages.you_want_to_hide_this_review_for_customer') : translate('messages.you_want_to_show_this_review_for_customer') }}"
+                                        class="toggle-switch-input status_form_alert" id="reviewCheckbox{{ $review->id }}"
                                         {{ $review->status ? 'checked' : '' }}>
                                     <span class="toggle-switch-label">
                                         <span class="toggle-switch-indicator"></span>
@@ -542,7 +542,10 @@
 
 @push('script_2')
 <script>
-    function status_form_alert(id, message, e) {
+    "use strict";
+    $(".status_form_alert").on("click", function (e) {
+        const id = $(this).data('id');
+        const message = $(this).data('message');
         e.preventDefault();
         Swal.fire({
             title: '{{ translate('messages.are_you_sure') }}',
@@ -559,6 +562,6 @@
                 $('#' + id).submit()
             }
         })
-    }
+    })
 </script>
 @endpush

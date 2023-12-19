@@ -285,8 +285,8 @@
                                     <td>
                                     @if ($review->item)
                                         <a class="media align-items-center" href="{{route('admin.item.view',[$review->item['id']])}}">
-                                            <img class="avatar avatar-lg mr-3" src="{{asset('storage/app/public/product')}}/{{$review->item['image']}}"
-                                                onerror="this.src='{{asset('public/assets/admin/img/160x160/img2.jpg')}}'" alt="{{$review->item->name}} image">
+                                            <img class="avatar avatar-lg mr-3 onerror-image" src="{{asset('storage/app/public/product')}}/{{$review->item['image']}}"
+                                            data-onerror-image="{{asset('public/assets/admin/img/160x160/img2.jpg')}}" alt="{{$review->item->name}} image">
                                             <div class="media-body">
                                                 <h5 class="text-hover-primary mb-0">{{Str::limit($review->item['name'],10)}}</h5>
                                             </div>
@@ -301,8 +301,8 @@
                                         <a class="d-flex align-items-center"
                                         href="{{route('admin.customer.view',[$review['user_id']])}}">
                                             <div class="avatar avatar-circle">
-                                                <img class="avatar-img" width="75" height="75"
-                                                    onerror="this.src='{{asset('public/assets/admin/img/160x160/img1.jpg')}}'"
+                                                <img class="avatar-img onerror-image" width="75" height="75"
+                                                    data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
                                                     src="{{asset('storage/app/public/profile/'.$review->customer->image)}}"
                                                     alt="Image Description">
                                             </div>
@@ -365,16 +365,13 @@
 @push('script_2')
     <!-- Page level plugins -->
     <script>
+        "use strict";
         // Call the dataTables jQuery plugin
         $(document).ready(function () {
             $('#dataTable').DataTable();
-        });
-    </script>
-    <script>
-        $(document).on('ready', function () {
             // INITIALIZATION OF DATATABLES
             // =======================================================
-            var datatable = $.HSCore.components.HSDatatables.init($('#columnSearchDatatable'));
+            let datatable = $.HSCore.components.HSDatatables.init($('#columnSearchDatatable'));
 
             $('#column1_search').on('keyup', function () {
                 datatable
@@ -408,12 +405,12 @@
             // INITIALIZATION OF SELECT2
             // =======================================================
             $('.js-select2-custom').each(function () {
-                var select2 = $.HSCore.components.HSSelect2.init($(this));
+                let select2 = $.HSCore.components.HSSelect2.init($(this));
             });
         });
 
         $('#search-form').on('submit', function () {
-            var formData = new FormData(this);
+            let formData = new FormData(this);
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

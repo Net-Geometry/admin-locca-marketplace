@@ -85,9 +85,9 @@
                                     <small class="text-danger">* ( {{translate('messages.ratio')}} 1:1 )</small>
                                 </label>
                                 <center class="py-3 my-auto">
-                                    <img class="img--100" id="viewer"
+                                    <img class="img--100 onerror-image" id="viewer"
                                         src="{{asset('storage/app/public/category')}}/{{$category['image']}}"
-                                        onerror='this.src="{{asset('public/assets/admin/img/900x400/img1.jpg')}}"'
+                                        data-onerror-image="{{asset('public/assets/admin/img/900x400/img1.jpg')}}"
                                         alt=""/>
                                 </center>
                                 <div class="custom-file">

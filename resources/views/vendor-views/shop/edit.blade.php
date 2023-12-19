@@ -149,8 +149,8 @@
                         </div>
                         <div class="card-body d-flex flex-column pt-0">
                             <center class="my-auto py-4 py-xl-5">
-                                <img class="store-banner" id="viewer"
-                                onerror="this.src='{{asset('public/assets/admin/img/image-place-holder.png')}}'"
+                                <img class="store-banner onerror-image" id="viewer"
+                                data-onerror-image="{{asset('public/assets/admin/img/image-place-holder.png')}}"
                                 src="{{asset('storage/app/public/store/'.$shop->logo)}}" alt="Product thumbnail"/>
                             </center>
                             <div class="custom-file">
@@ -170,8 +170,8 @@
                         </div>
                         <div class="card-body d-flex flex-column pt-0">
                             <center class="my-auto py-4 py-xl-5">
-                                <img class="store-banner" id="coverImageViewer"
-                                onerror="this.src='{{asset('public/assets/admin/img/restaurant_cover.jpg')}}'"
+                                <img class="store-banner onerror-image" id="coverImageViewer"
+                                data-onerror-image="{{asset('public/assets/admin/img/restaurant_cover.jpg')}}"
                                 src="{{asset('storage/app/public/store/cover/'.$shop->cover_photo)}}" alt="Product thumbnail"/>
                             </center>
                             <div class="custom-file">
@@ -192,47 +192,5 @@
 @endsection
 
 @push('script_2')
-<script>
-    $(".lang_link").click(function(e){
-        e.preventDefault();
-        $(".lang_link").removeClass('active');
-        $(".lang_form").addClass('d-none');
-        $(this).addClass('active');
-
-        let form_id = this.id;
-        let lang = form_id.substring(0, form_id.length - 5);
-        console.log(lang);
-        $("#"+lang+"-form").removeClass('d-none');
-        if(lang == '{{$defaultLang}}')
-        {
-            $(".from_part_2").removeClass('d-none');
-        }
-        else
-        {
-            $(".from_part_2").addClass('d-none');
-        }
-    });
-</script>
-
-   <script>
-        function readURL(input, viewer) {
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
-
-                reader.onload = function (e) {
-                    $('#'+viewer).attr('src', e.target.result);
-                }
-
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-
-        $("#coverImageUpload").change(function () {
-            readURL(this, 'coverImageViewer');
-        });
-
-        $("#customFileUpload").change(function () {
-            readURL(this, 'viewer');
-        });
-   </script>
+    <script src="{{asset('public/assets/admin')}}/js/view-pages/vendor/shop-edit.js"></script>
 @endpush

@@ -85,8 +85,8 @@
                             class="avatar avatar-xxl avatar-circle avatar-border-lg avatar-uploader profile-cover-avatar"
                             for="avatarUploader">
                             <img id="viewer"
-                                 onerror="this.src='{{asset('public/assets/admin/img/160x160/img1.jpg')}}'"
-                                 class="avatar-img"
+                                 data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
+                                 class="avatar-img onerror-image"
                                  src="{{asset('storage/app/public/admin')}}/{{auth('admin')->user()->image}}"
                                  alt="Image">
 
@@ -157,7 +157,7 @@
                             </div>
 
                             <div class="d-flex justify-content-end">
-                                <button type="button" onclick="{{env('APP_MODE')!='demo'?"form_alert('admin-settings-form','".translate('Want to update admin info ?')."')":"call_demo()"}}" class="btn btn-primary">{{translate('messages.save')}}</button>
+                                <button type="button" data-id="admin-settings-form" data-message="{{translate('Want to update admin info ?')}}" class="btn btn-primary {{env('APP_MODE')!='demo'?"form-alert":"call-demo"}}">{{translate('messages.save')}}</button>
                             </div>
 
                             <!-- End Form -->
@@ -223,7 +223,7 @@
                             <!-- End Form Group -->
 
                             <div class="d-flex justify-content-end">
-                                <button type="button" onclick="{{env('APP_MODE')!='demo'?"form_alert('changePasswordForm','".translate('messages.want_to_update_admin_password')."')":"call_demo()"}}" class="btn btn-primary">{{translate('messages.save')}}</button>
+                                <button type="button" data-id="changePasswordForm" data-message="{{translate('messages.want_to_update_admin_password')}}" class="btn btn-primary {{env('APP_MODE')!='demo'?"form-alert":"call-demo"}}">{{translate('messages.save')}}</button>
                             </div>
                         </form>
                         <!-- End Form -->
@@ -243,9 +243,10 @@
 
 @push('script_2')
     <script>
+        "use strict";
         function readURL(input) {
             if (input.files && input.files[0]) {
-                var reader = new FileReader();
+                let reader = new FileReader();
 
                 reader.onload = function (e) {
                     $('#viewer').attr('src', e.target.result);
@@ -258,9 +259,7 @@
         $("#customFileEg1").change(function () {
             readURL(this);
         });
-    </script>
 
-    <script>
         $("#generalSection").click(function() {
             $("#passwordSection").removeClass("active");
             $("#generalSection").addClass("active");

@@ -147,7 +147,7 @@
                                 <label class="upload-img-3 m-0">
                                         <div class="position-relative">
                                         <div class="img">
-                                            <img src="{{asset('storage/app/public/admin_feature')}}/{{$feature->image}}" onerror='this.src="{{asset('/public/assets/admin/img/upload-3.png')}}"' alt="">
+                                            <img class="onerror-image" src="{{asset('storage/app/public/admin_feature')}}/{{$feature->image}}" data-onerror-image="{{asset('/public/assets/admin/img/upload-3.png')}}" alt="">
                                         </div>
                                             <input type="file" name="image"  hidden>
                                             @if (isset($feature->image))

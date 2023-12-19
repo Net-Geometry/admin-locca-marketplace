@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection as SupportCollection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 
@@ -103,7 +104,7 @@ class CategoryRepository implements CategoryRepositoryInterface
             })->latest()->paginate($dataLimit);
     }
 
-    public function getNameList(Request $request, int|string $dataLimit = DEFAULT_DATA_LIMIT): Collection|LengthAwarePaginator
+    public function getNameList(Request $request, int|string $dataLimit = DEFAULT_DATA_LIMIT): SupportCollection|LengthAwarePaginator
     {
         return $this->category->where('name', 'like', '%' . $request->searchValue . '%')
             ->when($request->module_id, function ($query) use ($request) {

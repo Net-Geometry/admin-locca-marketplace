@@ -25,69 +25,91 @@
             </div>
 
         </div>
+        @php
+            $pharmacy =0;
+            if (Config::get('module.current_module_type') == 'pharmacy'){
+                $pharmacy =1;
+            }
+        @endphp
         <!-- End Page Header -->
         <div class="card mb-3">
             <!-- Header -->
             <div class="card-header py-2 border-0">
                 <h1>{{ translate('search_data') }}</h1>
             </div>
-                <div class="row mr-1 ml-2 mb-5">
-                    <div class="col-sm-6 col-md-3">
-                        <div class="select-item">
-                        <select name="store_id" id="store" onchange="set_store_filter('{{url()->full()}}',this.value)" data-placeholder="{{translate('messages.select_store')}}" class="js-data-example-ajax form-control" onchange="getStoreData('{{url('/')}}/admin/store/get-addons?data[]=0&store_id=',this.value,'add_on')" required title="Select Store" oninvalid="this.setCustomValidity('{{translate('messages.please_select_store')}}')">
+            <div class="row mr-1 ml-2 mb-5">
+                <div class="col-sm-6 col-md-3">
+                    <div class="select-item">
+                        <select name="store_id" id="store" data-url="{{url()->full()}}" data-placeholder="{{translate('messages.select_store')}}" class="js-data-example-ajax form-control store-filter" required title="Select Store" oninvalid="this.setCustomValidity('{{translate('messages.please_select_store')}}')">
                             @if($store)
-                            <option value="{{$store->id}}" selected>{{$store->name}}</option>
+                                <option value="{{$store->id}}" selected>{{$store->name}}</option>
                             @else
-                            <option value="all" selected>{{translate('messages.all_stores')}}</option>
+                                <option value="all" selected>{{translate('messages.all_stores')}}</option>
                             @endif
-                            </select>
-                        </div>
+                        </select>
                     </div>
-                    <div class="col-sm-6 col-md-3">
-                        @if(!isset(auth('admin')->user()->zone_id))
+                </div>
+                <div class="col-sm-6 col-md-3">
+                    @if(!isset(auth('admin')->user()->zone_id))
                         <div class="select-item">
-                            <select name="zone_id" class="form-control js-select2-custom"
-                                    onchange="set_filter('{{url()->full()}}',this.value,'zone_id')">
+                            <select name="zone_id" class="form-control js-select2-custom set-filter"
+                                    data-url="{{url()->full()}}" data-filter="zone_id">
                                 <option value="" {{!request('zone_id')?'selected':''}}>{{ translate('messages.All_Zones') }}</option>
                                 @foreach(\App\Models\Zone::orderBy('name')->get(['id','name']) as $z)
                                     <option
-                                        value="{{$z['id']}}" {{request()?->zone_id == $z['id']?'selected':''}}>
+                                            value="{{$z['id']}}" {{request()?->zone_id == $z['id']?'selected':''}}>
                                         {{$z['name']}}
                                     </option>
                                 @endforeach
                             </select>
                         </div>
-                        @endif
-                    </div>
+                    @endif
+                </div>
 
-                    <div class="col-sm-6 col-md-3">
-                        <div class="select-item">
-                            <select name="category_id" id="category_id" data-placeholder="{{ translate('messages.select_category') }}"
-                                class="js-data-example-ajax form-control" id="category_id"
-                                onchange="set_filter('{{url()->full()}}',this.value,'category_id')">
-                                @if($category)
+                <div class="col-sm-6 col-md-{{ $pharmacy == 1 ? '2':'3' }}">
+                    <div class="select-item">
+
+                        <select name="category_id" id="category_id" data-placeholder="{{ translate('messages.select_category') }}"
+                                class="js-data-example-ajax form-control set-filter" id="category_id"
+                                data-url="{{url()->full()}}" data-filter="category_id">
+                            @if($category)
                                 <option value="{{$category->id}}" selected>{{$category->name}}</option>
-                                @else
+                            @else
                                 <option value="all" selected>{{translate('messages.all_category')}}</option>
+                            @endif
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-{{ $pharmacy == 1 ? '2':'3' }}">
+                    <div class="select-item">
+                        <select name="sub_category_id" class="form-control js-select2-custom set-filter" data-placeholder="{{ translate('messages.select_sub_category') }}" id="sub-categories" data-url="{{url()->full()}}" data-filter="sub_category_id">
+                            <option value="all" selected>{{translate('messages.all_sub_category')}}</option>
+                            @foreach($sub_categories as $z)
+                                <option
+                                        value="{{$z['id']}}" {{ request()?->sub_category_id == $z['id']?'selected':''}}>
+                                    {{$z['name']}}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                @if ($pharmacy == 1)
+                    <div class="col-sm-6 col-md-2">
+                        <div class="select-item">
+                            <select name="condition_id" id="condition_id" class="form-control set-filter"
+                                    data-placeholder="{{ translate('messages.Select_Condition') }}"
+                                    data-url="{{url()->full()}}" data-filter="condition_id">
+                                @if($condition)
+                                    <option value="{{$condition->id}}" selected>{{$condition->name}}</option>
+                                @else
+                                    <option value="all" selected>{{translate('messages.all_conditions')}}</option>
                                 @endif
                             </select>
                         </div>
                     </div>
-                    <div class="col-sm-6 col-md-3">
-                        <div class="select-item">
+                @endif
 
-                            <select name="sub_category_id" class="form-control js-select2-custom" data-placeholder="{{ translate('messages.select_sub_category') }}" id="sub-categories" onchange="set_filter('{{url()->full()}}',this.value,'sub_category_id')">
-                                <option value="all" selected>{{translate('messages.all_sub_category')}}</option>
-                                @foreach($sub_categories as $z)
-                                <option
-                                    value="{{$z['id']}}" {{ request()?->sub_category_id == $z['id']?'selected':''}}>
-                                    {{$z['name']}}
-                                </option>
-                            @endforeach
-                            </select>
-                        </div>
-                    </div>
-                </div>
+            </div>
 
         </div>
         <!-- Card -->
@@ -176,12 +198,11 @@
                     <tbody id="set-rows">
                     @foreach($items as $key=>$item)
                         <tr>
-                            {{-- {{route('admin.item.view',[$item['id']])}} --}}
                             <td>{{$key+$items->firstItem()}}</td>
                             <td>
                                 <a class="media align-items-center" href="{{route('admin.item.requested_item_view',['id'=> $item['id']])}}">
-                                    <img class="avatar avatar-lg mr-3" src="{{asset('storage/app/public/product')}}/{{$item['image']}}"
-                                            onerror="this.src='{{asset('public/assets/admin/img/160x160/img2.jpg')}}'" alt="{{$item->name}} image">
+                                    <img class="avatar avatar-lg mr-3 onerror-image" src="{{asset('storage/app/public/product')}}/{{$item['image']}}"
+                                    data-onerror-image="{{asset('public/assets/admin/img/160x160/img2.jpg')}}" alt="{{$item->name}} image">
                                     <div class="media-body">
                                         <h5 class="text-hover-primary mb-0">{{Str::limit($item['name'],20,'...')}}</h5>
                                     </div>
@@ -190,7 +211,7 @@
                             <td>
                             {{Str::limit($item->category?$item->category->name:translate('messages.category_deleted'),20,'...')}}
                             </td>
-                        
+
                             <td>
                                 @if ($item->store)
                                 <a href="{{route('admin.store.view', $item->store->id)}}" class="table-rest-info" alt="view store"> {{  Str::limit($item->store->name, 20, '...') }}</a>
@@ -221,21 +242,20 @@
                                     data-original-title="{{ translate('messages.View') }}" href="{{route('admin.item.requested_item_view',['id'=> $item['id']])}}">
                                         <i class="tio-invisible"></i>
                                     </a>
-                                    <a class="btn action-btn btn--primary btn-outline-primary" data-toggle="tooltip" data-placement="top"
+                                    <a class="btn action-btn btn--primary btn-outline-primary request_alert" data-toggle="tooltip" data-placement="top"
                                     data-original-title="{{ translate('messages.approve') }}"
-                                    onclick="request_alert('{{route('admin.item.approved',[ 'id'=> $item['id']])}}','{{translate('messages.you_want_to_approve_this_product')}}')"
+                                    data-url="{{route('admin.item.approved',[ 'id'=> $item['id']])}}" data-message="{{translate('messages.you_want_to_approve_this_product')}}"
                                         href="javascript:"><i class="tio-done font-weight-bold"></i> </a>
                                     @if($item->is_rejected == 0)
-                                        <a class="btn action-btn btn--danger btn-outline-danger " data-toggle="tooltip" data-placement="top"
-                                        data-original-title="{{ translate('messages.deny') }}"
-                                        onclick="cancelled_status('{{ route('admin.item.deny', ['id'=> $item['id']]) }}','{{ translate('you_want_to_deny_this_product') }}')"
+                                        <a class="btn action-btn btn--danger btn-outline-danger cancelled_status" data-toggle="tooltip" data-placement="top"
+                                        data-original-title="{{ translate('messages.deny') }}" data-url="{{ route('admin.item.deny', ['id'=> $item['id']]) }}" data-message="{{ translate('you_want_to_deny_this_product') }}"
                                         href="javascript:"><i class="tio-clear font-weight-bold"></i></a>
                                     @endif
                                     <a class="btn action-btn btn--primary btn-outline-primary"
                                         href="{{route('admin.item.edit',[$item['id'], 'temp_product' => true])}}" title="{{translate('messages.edit_item')}}"><i class="tio-edit"></i>
                                     </a>
-                                    <a class="btn action-btn btn--danger btn-outline-danger" href="javascript:"
-                                        onclick="form_alert('food-{{$item['id']}}','{{translate('messages.Want_to_delete_this_item')}}')" title="{{translate('messages.delete_item')}}"><i class="tio-delete-outlined"></i>
+                                    <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:"
+                                        data-id="food-{{$item['id']}}" data-message="{{translate('messages.Want_to_delete_this_item')}}" title="{{translate('messages.delete_item')}}"><i class="tio-delete-outlined"></i>
                                     </a>
                                     <form action="{{route('admin.item.delete',[$item['id']])}}"
                                             method="post" id="food-{{$item['id']}}">
@@ -273,10 +293,11 @@
 
 @push('script_2')
     <script>
+        "use strict";
         $(document).on('ready', function () {
             // INITIALIZATION OF DATATABLES
             // =======================================================
-        var datatable = $.HSCore.components.HSDatatables.init($('#datatable'), {
+        let datatable = $.HSCore.components.HSDatatables.init($('#datatable'), {
           select: {
             style: 'multi',
             classMap: {
@@ -294,13 +315,13 @@
         });
 
         $('#datatableSearch').on('mouseup', function (e) {
-          var $input = $(this),
+          let $input = $(this),
             oldValue = $input.val();
 
           if (oldValue == "") return;
 
           setTimeout(function(){
-            var newValue = $input.val();
+            let newValue = $input.val();
 
             if (newValue == ""){
               // Gotcha
@@ -337,7 +358,7 @@
             // INITIALIZATION OF SELECT2
             // =======================================================
             $('.js-select2-custom').each(function () {
-                var select2 = $.HSCore.components.HSSelect2.init($(this));
+                let select2 = $.HSCore.components.HSSelect2.init($(this));
             });
         });
 
@@ -357,7 +378,7 @@
                     };
                 },
                 __port: function (params, success, failure) {
-                    var $request = $.ajax(params);
+                    let $request = $.ajax(params);
 
                     $request.then(success);
                     $request.fail(failure);
@@ -384,7 +405,7 @@
                     };
                 },
                 __port: function (params, success, failure) {
-                    var $request = $.ajax(params);
+                    let $request = $.ajax(params);
 
                     $request.then(success);
                     $request.fail(failure);
@@ -394,35 +415,9 @@
             }
         });
 
-        // $('#search-form').on('submit', function (e) {
-        //     e.preventDefault();
-        //     var formData = new FormData(this);
-        //     $.ajaxSetup({
-        //         headers: {
-        //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        //         }
-        //     });
-        //     $.post({
-        //         url: '{{route('admin.item.search')}}',
-        //         data: formData,
-        //         cache: false,
-        //         contentType: false,
-        //         processData: false,
-        //         beforeSend: function () {
-        //             $('#loading').show();
-        //         },
-        //         success: function (data) {
-        //             $('#set-rows').html(data.view);
-        //             $('.page-area').hide();
-        //             $('#foodCount').html(data.count);
-        //         },
-        //         complete: function () {
-        //             $('#loading').hide();
-        //         },
-        //     });
-        // });
-
-        function request_alert(url, message) {
+        $(".request_alert").on("click", function () {
+            const url = $(this).data('url');
+            const message = $(this).data('message');
             Swal.fire({
                 title: '{{translate('messages.are_you_sure')}}',
                 text: message,
@@ -438,9 +433,12 @@
                     location.href = url;
                 }
             })
-        }
+        })
 
-        function cancelled_status(route, message, processing = false) {
+        $(".cancelled_status").on("click", function () {
+            const route = $(this).data('url');
+            const message = $(this).data('message');
+            const processing = false;
             Swal.fire({
                     //text: message,
                     title: '{{ translate('messages.Are you sure ?') }}',
@@ -459,6 +457,6 @@
                     },
                     allowOutsideClick: () => !Swal.isLoading()
                 })
-        }
+        })
     </script>
 @endpush

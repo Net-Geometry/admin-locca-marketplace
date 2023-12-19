@@ -46,8 +46,8 @@
                             <!-- End Card -->
                         </div>
                         <div class="col-lg-8 col-nd-6" id="vendor-view-conversation">
-                            <center style="margin-top: 10%">
-                                <h4 style="color: rgba(113,120,133,0.62)">{{ translate('messages.view_conversation') }}
+                            <center class="mt-2">
+                                <h4 class="initial-29">{{ translate('messages.view_conversation') }}
                                 </h4>
                             </center>
                             {{-- view here --}}
@@ -65,6 +65,14 @@
 
 @push('script_2')
 <script>
+    "use strict";
+    $('.view-dm-conv').on('click', function (){
+        let url = $(this).data('url');
+        let id_to_active = $(this).data('active-id');
+        let conv_id = $(this).data('conv-id');
+        let sender_id = $(this).data('sender-id');
+        viewConvs(url, id_to_active, conv_id, sender_id);
+    })
     function viewConvs(url, id_to_active, conv_id, sender_id) {
         $('.customer-list').removeClass('conv-active');
         $('#' + id_to_active).addClass('conv-active');
@@ -78,8 +86,8 @@
             });
     }
 
-    var page = 1;
-    var user_id =  $('#vendor_id').val();
+    let page = 1;
+    let user_id =  $('#vendor_id').val();
     $('#vendor-conversation-list').scroll(function() {
         if ($('#vendor-conversation-list').scrollTop() + $('#vendor-conversation-list').height() >= $('#vendor-conversation-list')
             .height()) {
@@ -121,7 +129,7 @@
         };
 
         $(document).on('keyup', '#serach', function() {
-            var query = $('#serach').val();
+            let query = $('#serach').val();
             fetch_data(page, query);
         });
 </script>

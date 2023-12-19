@@ -30,8 +30,8 @@
                 <form method="get">
                     <div class="row g-3">
                         <div class="col-sm-6 col-md-3">
-                            <select class="form-control" name="filter"
-                                onchange="set_time_filter('{{ url()->full() }}',this.value)">
+                            <select class="form-control set-filter" name="filter"
+                                    data-url="{{ url()->full() }}" data-filter="filter">
                                 <option value="all_time" {{ isset($filter) && $filter == 'all_time' ? 'selected' : '' }}>
                                     {{ translate('messages.All Time') }}</option>
                                 <option value="this_year" {{ isset($filter) && $filter == 'this_year' ? 'selected' : '' }}>
@@ -207,23 +207,6 @@
 @endpush
 
 @push('script_2')
-    <script>
-        $('#from_date,#to_date').change(function() {
-            let fr = $('#from_date').val();
-            let to = $('#to_date').val();
-            if (fr != '' && to != '') {
-                if (fr > to) {
-                    $('#from_date').val('');
-                    $('#to_date').val('');
-                    toastr.error('Invalid date range!', Error, {
-                        CloseButton: true,
-                        ProgressBar: true
-                    });
-                }
-            }
-
-        })
-
-    </script>
+    <script src="{{asset('public/assets/admin')}}/js/view-pages/vendor/report.js"></script>
 @endpush
 

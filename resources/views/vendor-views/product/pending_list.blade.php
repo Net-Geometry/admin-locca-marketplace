@@ -19,63 +19,6 @@
         </div>
         <!-- End Page Header -->
 
-
-
-    <!-- End Page Header -->
-    {{-- <div class="card mb-3">
-    <!-- Header -->
-        <div class="card-header py-2 border-0">
-            <h1>{{ translate('search_data') }}</h1>
-        </div>
-        <div class="row mr-1 ml-2 mb-5">
-            <div class="col-sm-6 col-md-4">
-                <div class="select-item">
-                    <select name="category_id" id="category" data-placeholder="{{ translate('messages.select_category') }}"
-                        class="js-data-example-ajax form-control" id="category_id"
-                        onchange="set_filter('{{url()->full()}}',this.value,'category_id')">
-                        @if($category)
-                        <option value="{{$category->id}}" selected>{{$category->name}}</option>
-                        @else
-                        <option value="all" selected>{{translate('messages.all_category')}}</option>
-                        @endif
-                    </select>
-                </div>
-            </div>
-            <div class="col-sm-6 col-md-4">
-                <div class="select-item">
-                    <select name="sub_category_id" class="form-control js-select2-custom" data-placeholder="{{ translate('messages.select_sub_category') }}" id="sub-categories" onchange="set_filter('{{url()->full()}}',this.value,'sub_category_id')">
-                        <option value="all" selected>{{translate('messages.all_sub_category')}}</option>
-                        @foreach($sub_categories as $z)
-                        <option
-                            value="{{$z['id']}}" {{ request()?->sub_category_id == $z['id']?'selected':''}}>
-                            {{$z['name']}}
-                        </option>
-                    @endforeach
-                    </select>
-                </div>
-            </div>
-
-
-                @if (($store_data->module->module_type == 'food') && $toggle_veg_non_veg)
-                <!-- Veg/NonVeg filter -->
-
-                    <div class="col-sm-6 col-md-4">
-                        <div class="select-item">
-                            <select name="category_id" onchange="set_filter('{{url()->full()}}',this.value, 'type')" data-placeholder="{{translate('messages.all')}}" class="form-control max-lg-h-40px">
-                                <option value="all" {{$type=='all'?'selected':''}}>{{translate('messages.all')}}</option>
-                                <option value="veg" {{$type=='veg'?'selected':''}}>{{translate('messages.veg')}}</option>
-                                <option value="non_veg" {{$type=='non_veg'?'selected':''}}>{{translate('messages.non_veg')}}</option>
-                            </select>
-                        </div>
-                    </div>
-                <!-- End Veg/NonVeg filter -->
-                @endif
-        </div>
-    </div> --}}
-
-<!-- Card -->
-
-
         <!-- Card -->
         <div class="card">
             <!-- Header -->
@@ -129,12 +72,11 @@
                     <tbody id="set-rows">
                     @foreach($items as $key=>$item)
                         <tr>
-                            {{-- {{route('vendor.item.view',[$item['id']])}} --}}
                             <td>{{$key+$items->firstItem()}}</td>
                             <td>
                                 <a class="media align-items-center" href="{{route('vendor.item.requested_item_view',['id'=> $item['id']])}}">
-                                    <img class="avatar avatar-lg mr-3" src="{{asset('storage/app/public/product')}}/{{$item['image']}}"
-                                            onerror="this.src='{{asset('public/assets/admin/img/160x160/img2.jpg')}}'" alt="{{$item->name}} image">
+                                    <img class="avatar avatar-lg mr-3 onerror-image" src="{{asset('storage/app/public/product')}}/{{$item['image']}}"
+                                         data-onerror-image="{{asset('public/assets/admin/img/160x160/img2.jpg')}}" alt="{{$item->name}} image">
                                     <div class="media-body">
                                         <h5 class="text-hover-primary mb-0">{{Str::limit($item['name'],20,'...')}}</h5>
                                     </div>
@@ -166,8 +108,8 @@
                                         href="{{route('vendor.item.edit',[$item['id'] , 'temp_product' => true])}}" title="{{translate('messages.edit_item')}}"><i class="tio-edit"></i>
                                     </a>
                                     @endif
-                                    <a class="btn btn-sm btn--danger btn-outline-danger action-btn" href="javascript:"
-                                        onclick="form_alert('food-{{$item['id']}}','{{ translate('Want to delete this item ?') }}')" title="{{translate('messages.delete_item')}}"><i class="tio-delete-outlined"></i>
+                                    <a class="btn btn-sm btn--danger btn-outline-danger action-btn form-alert" href="javascript:"
+                                        data-id="food-{{$item['id']}}" data-message="{{ translate('Want to delete this item ?') }}" title="{{translate('messages.delete_item')}}"><i class="tio-delete-outlined"></i>
                                     </a>
                                 </div>
                                 <form action="{{route('vendor.item.delete',[$item['id']])}}"
@@ -207,10 +149,11 @@
 
 @push('script_2')
     <script>
+        "use strict";
         $(document).on('ready', function () {
             // INITIALIZATION OF DATATABLES
             // =======================================================
-            var datatable = $.HSCore.components.HSDatatables.init($('#datatable'), {
+            let datatable = $.HSCore.components.HSDatatables.init($('#datatable'), {
           select: {
             style: 'multi',
             classMap: {
@@ -228,13 +171,13 @@
         });
 
         $('#datatableSearch').on('mouseup', function (e) {
-          var $input = $(this),
+          let $input = $(this),
             oldValue = $input.val();
 
           if (oldValue == "") return;
 
           setTimeout(function(){
-            var newValue = $input.val();
+            let newValue = $input.val();
 
             if (newValue == ""){
               // Gotcha
@@ -268,7 +211,7 @@
             // INITIALIZATION OF SELECT2
             // =======================================================
             $('.js-select2-custom').each(function () {
-                var select2 = $.HSCore.components.HSSelect2.init($(this));
+                let select2 = $.HSCore.components.HSSelect2.init($(this));
             });
         });
 
@@ -288,7 +231,7 @@
                     };
                 },
                 __port: function (params, success, failure) {
-                    var $request = $.ajax(params);
+                    let $request = $.ajax(params);
 
                     $request.then(success);
                     $request.fail(failure);

@@ -118,7 +118,7 @@
                                 </td>
                                 <td>
                                     <label class="toggle-switch toggle-switch-sm" for="stocksCheckbox{{$condition->id}}">
-                                    <input type="checkbox" onclick="location.href='{{route('admin.common-condition.status',[$condition['id'],$condition->status?0:1])}}'"class="toggle-switch-input" id="stocksCheckbox{{$condition->id}}" {{$condition->status?'checked':''}}>
+                                    <input type="checkbox" data-url="{{route('admin.common-condition.status',[$condition['id'],$condition->status?0:1])}}" class="toggle-switch-input redirect-url" id="stocksCheckbox{{$condition->id}}" {{$condition->status?'checked':''}}>
                                         <span class="toggle-switch-label mx-auto">
                                             <span class="toggle-switch-indicator"></span>
                                         </span>

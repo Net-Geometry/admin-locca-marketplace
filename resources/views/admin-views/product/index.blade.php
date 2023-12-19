@@ -25,14 +25,14 @@
                 </div>
 
                 @if(Config::get('module.current_module_type') == 'food')
-                <div class="text--primary-2 py-1 d-flex flex-wrap align-items-center "  type="button" onclick="foodModalShow()" >
+                <div class="text--primary-2 py-1 d-flex flex-wrap align-items-center foodModalShow"  type="button" >
                     <strong class="mr-2">{{translate('See_how_it_works!')}}</strong>
                     <div>
                         <i class="tio-info-outined"></i>
                     </div>
                 </div>
                 @else
-                <div class="text--primary-2 py-1 d-flex flex-wrap align-items-center mb-3 " type="button" onclick="attributeModalShow()" >
+                <div class="text--primary-2 py-1 d-flex flex-wrap align-items-center mb-3 attributeModalShow" type="button" >
                     <strong class="mr-2">{{translate('See_how_it_works!')}}</strong>
                     <div>
                         <i class="tio-info-outined"></i>
@@ -169,9 +169,7 @@
                                         <label class="input-label" for="store_id">{{ translate('messages.store') }}<span
                                                 class="input-label-secondary"></span></label>
                                         <select name="store_id" id="store_id"
-                                            data-placeholder="{{ translate('messages.select_store') }}"
-                                            id="store_id" class="js-data-example-ajax form-control"
-                                            onchange="getRestaurantData('{{ url('/') }}/admin/store/get-addons?data[]=0&store_id=',this.value,'add_on')"
+                                            data-placeholder="{{ translate('messages.select_store') }}" class="js-data-example-ajax form-control"
                                             oninvalid="this.setCustomValidity('{{ translate('messages.please_select_store') }}')">
 
                                         </select>
@@ -183,8 +181,7 @@
                                             for="category_id">{{ translate('messages.category') }}<span
                                                 class="input-label-secondary">*</span></label>
                                         <select name="category_id" id="category_id" data-placeholder="{{ translate('messages.select_category') }}"
-                                            class="js-data-example-ajax form-control" id="category_id"
-                                            onchange="categoryChange(this.value)">
+                                            class="js-data-example-ajax form-control">
                                         </select>
                                     </div>
                                 </div>
@@ -207,8 +204,7 @@
                                         <label class="input-label" for="condition_id">{{ translate('messages.Suitable_For') }}<span
                                                 class="input-label-secondary"></span></label>
                                         <select name="condition_id" id="condition_id"
-                                            data-placeholder="{{ translate('messages.Select_Condition') }}"
-                                            id="condition_id" class="js-data-example-ajax form-control"
+                                            data-placeholder="{{ translate('messages.Select_Condition') }}" class="js-data-example-ajax form-control"
                                             oninvalid="this.setCustomValidity('{{ translate('messages.Select_Condition') }}')">
 
                                         </select>
@@ -483,7 +479,7 @@
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-body">
-                    <button type="button" class="close" data-dismiss="modal" onclick="foodModalClose()" aria-label="Close">
+                    <button type="button" class="close foodModalClose" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                       </button>
                     <div class="embed-responsive embed-responsive-16by9">
@@ -498,7 +494,7 @@
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-body">
-                    <button type="button" class="close" data-dismiss="modal" onclick="attributeModalClose()" aria-label="Close">
+                    <button type="button" class="close attributeModalClose" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                       </button>
                     <div class="embed-responsive embed-responsive-16by9">
@@ -508,18 +504,20 @@
             </div>
         </div>
     </div>
-
 @endsection
 
 
 @push('script_2')
+    <script src="{{ asset('public/assets/admin') }}/js/tags-input.min.js"></script>
+    <script src="{{ asset('public/assets/admin/js/spartan-multi-image-picker.js') }}"></script>
+    <script src="{{asset('public/assets/admin')}}/js/view-pages/product-index.js"></script>
     <script>
-        var count = 0;
+        "use strict";
         $(document).ready(function() {
             $("#add_new_option_button").click(function(e) {
                 $('#empty-variation').hide();
                 count++;
-                var add_option_view = `
+                let add_option_view = `
                     <div class="__bg-F8F9FC-card view_new_option mb-2">
                         <div>
                             <div class="d-flex align-items-center justify-content-between mb-3">
@@ -528,7 +526,7 @@
                                     <span class="form-check-label">{{ translate('Required') }}</span>
                                 </label>
                                 <div>
-                                    <button type="button" class="btn btn-danger btn-sm delete_input_button" onclick="removeOption(this)"
+                                    <button type="button" class="btn btn-danger btn-sm delete_input_button"
                                         title="{{ translate('Delete') }}">
                                         <i class="tio-add-to-trash"></i>
                                     </button>
@@ -538,8 +536,8 @@
                                 <div class="col-xl-4 col-lg-6">
                                     <label for="">{{ translate('name') }}</label>
                                     <input required name=options[` + count +
-                    `][name] class="form-control" type="text" onkeyup="new_option_name(this.value,` +
-                    count + `)">
+                    `][name] class="form-control new_option_name" type="text" data-count="`+
+                    count +`">
                                 </div>
 
                                 <div class="col-xl-4 col-lg-6">
@@ -548,31 +546,31 @@
                                         </label>
                                         <div class="resturant-type-group px-0">
                                             <label class="form-check form--check mr-2 mr-md-4">
-                                                <input class="form-check-input" type="radio" value="multi"
+                                                <input class="form-check-input show_min_max" data-count="`+count+`" type="radio" value="multi"
                                                 name="options[` + count + `][type]" id="type` + count +
-                    `" checked onchange="show_min_max(` + count + `)"
+                    `" checked
                                                 >
                                                 <span class="form-check-label">
                                                     {{ translate('Multiple Selection') }}
-                                                </span>
-                                            </label>
+                    </span>
+                </label>
 
-                                            <label class="form-check form--check mr-2 mr-md-4">
-                                                <input class="form-check-input" type="radio" value="single"
-                                                name="options[` + count + `][type]" id="type` + count +
-                    `" onchange="hide_min_max(` + count + `)"
+                <label class="form-check form--check mr-2 mr-md-4">
+                    <input class="form-check-input hide_min_max" data-count="`+count+`" type="radio" value="single"
+                    name="options[` + count + `][type]" id="type` + count +
+                    `"
                                                 >
                                                 <span class="form-check-label">
                                                     {{ translate('Single Selection') }}
-                                                </span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xl-4 col-lg-6">
-                                    <div class="row g-2">
-                                        <div class="col-6">
-                                            <label for="">{{ translate('Min') }}</label>
+                    </span>
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-4 col-lg-6">
+        <div class="row g-2">
+            <div class="col-6">
+                <label for="">{{ translate('Min') }}</label>
                                             <input id="min_max1_` + count + `" required  name="options[` + count + `][min]" class="form-control" type="number" min="1">
                                         </div>
                                         <div class="col-6">
@@ -602,8 +600,8 @@
                                     </div>
                                     <div class="row mt-3 p-3 mr-1 d-flex "  id="add_new_button_` + count +
                     `">
-                                        <button type="button" class="btn btn--primary btn-outline-primary" onclick="add_new_row_button(` +
-                    count + `)" >{{ translate('Add_New_Option') }}</button>
+                                        <button type="button" class="btn btn--primary btn-outline-primary add_new_row_button" data-count="`+
+                    count +`">{{ translate('Add_New_Option') }}</button>
                                     </div>
                                 </div>
                             </div>
@@ -612,48 +610,18 @@
 
                 $("#add_new_option").append(add_option_view);
             });
+
+            // INITIALIZATION OF SELECT2
+            // =======================================================
+            $('.js-select2-custom').each(function() {
+                let select2 = $.HSCore.components.HSSelect2.init($(this));
+            });
         });
-
-        function show_min_max(data) {
-            $('#min_max1_' + data).removeAttr("readonly");
-            $('#min_max2_' + data).removeAttr("readonly");
-            $('#min_max1_' + data).attr("required", "true");
-            $('#min_max2_' + data).attr("required", "true");
-        }
-
-        function hide_min_max(data) {
-            $('#min_max1_' + data).val(null).trigger('change');
-            $('#min_max2_' + data).val(null).trigger('change');
-            $('#min_max1_' + data).attr("readonly", "true");
-            $('#min_max2_' + data).attr("readonly", "true");
-            $('#min_max1_' + data).attr("required", "false");
-            $('#min_max2_' + data).attr("required", "false");
-        }
-
-
-
-
-        function new_option_name(value, data) {
-            $("#new_option_name_" + data).empty();
-            $("#new_option_name_" + data).text(value)
-            console.log(value);
-        }
-
-        function removeOption(e) {
-            element = $(e);
-            element.parents('.view_new_option').remove();
-        }
-
-        function deleteRow(e) {
-            element = $(e);
-            element.parents('.add_new_view_row_class').remove();
-        }
-
 
         function add_new_row_button(data) {
             count = data;
             countRow = 1 + $('#option_price_view_' + data).children('.add_new_view_row_class').length;
-            var add_new_row_view = `
+            let add_new_row_view = `
             <div class="row add_new_view_row_class mb-3 position-relative pt-3 pt-sm-0">
                 <div class="col-md-4 col-sm-5">
                         <label for="">{{ translate('Option_name') }}</label>
@@ -669,7 +637,7 @@
                     <div class="col-sm-2 max-sm-absolute">
                         <label class="d-none d-sm-block">&nbsp;</label>
                         <div class="mt-1">
-                            <button type="button" class="btn btn-danger btn-sm" onclick="deleteRow(this)"
+                            <button type="button" class="btn btn-danger btn-sm deleteRow"
                                 title="{{ translate('Delete') }}">
                                 <i class="tio-add-to-trash"></i>
                             </button>
@@ -679,69 +647,17 @@
             $('#option_price_view_' + data).append(add_new_row_view);
 
         }
-    </script>
-    <script src="{{ asset('public/assets/admin') }}/js/tags-input.min.js"></script>
-    <script>
-    function foodModalClose() {
-        $('#food-modal').hide();
 
-    }
-    function foodModalShow() {
-        $('#food-modal').show();
-    }
-    function attributeModalClose() {
-        $('#attribute-modal').hide();
 
-    }
-    function attributeModalShow() {
-        $('#attribute-modal').show();
-    }
-        function getRestaurantData(route, store_id, id) {
-            $.get({
-                url: route + store_id,
-                dataType: 'json',
-                success: function(data) {
-                    $('#' + id).empty().append(data.options);
-                },
-            });
-        }
-
-        function getRequest(route, id) {
-            $.get({
-                url: route,
-                dataType: 'json',
-                success: function(data) {
-                    $('#' + id).empty().append(data.options);
-                },
-            });
-        }
-
-        function readURL(input) {
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
-
-                reader.onload = function(e) {
-                    $('#viewer').attr('src', e.target.result);
-                }
-
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-
-        $("#customFileEg1").change(function() {
-            readURL(this);
+        $('#store_id').on('change', function () {
+            let route = '{{url('/')}}/admin/store/get-addons?data[]=0&store_id='+$(this).val();
+            let id = 'add_on';
+            getRestaurantData(route, id);
         });
-    </script>
-
-    <script>
-        var module_id = {{Config::get('module.current_module_id')}};
-        var parent_category_id = 0;
-        var module_data = null;
-        var stock = true;
 
         function modulChange(id) {
             $.get({
-                url: "{{ url('/') }}/admin/module/" + id,
+                url: "{{url('/')}}/admin/business-settings/module/show/"+id,
                 dataType: 'json',
                 success: function(data) {
                     module_data = data.data;
@@ -801,19 +717,9 @@
             });
             module_id = id;
         }
-        modulChange({{Config::get('module.current_module_id')}});
-        function categoryChange(id) {
-            parent_category_id = id;
-            console.log(parent_category_id);
-        }
 
-        $(document).on('ready', function() {
-            // INITIALIZATION OF SELECT2
-            // =======================================================
-            $('.js-select2-custom').each(function() {
-                var select2 = $.HSCore.components.HSSelect2.init($(this));
-            });
-        });
+        modulChange({{Config::get('module.current_module_id')}});
+
         $('#condition_id').select2({
             ajax: {
                 url: '{{ url('/') }}/admin/common-condition/get-all',
@@ -829,7 +735,7 @@
                     };
                 },
                 __port: function(params, success, failure) {
-                    var $request = $.ajax(params);
+                    let $request = $.ajax(params);
 
                     $request.then(success);
                     $request.fail(failure);
@@ -838,6 +744,7 @@
                 }
             }
         });
+
         $('#store_id').select2({
             ajax: {
                 url: '{{ url('/') }}/admin/store/get-stores',
@@ -854,7 +761,7 @@
                     };
                 },
                 __port: function(params, success, failure) {
-                    var $request = $.ajax(params);
+                    let $request = $.ajax(params);
 
                     $request.then(success);
                     $request.fail(failure);
@@ -880,7 +787,7 @@
                     };
                 },
                 __port: function(params, success, failure) {
-                    var $request = $.ajax(params);
+                    let $request = $.ajax(params);
 
                     $request.then(success);
                     $request.fail(failure);
@@ -908,7 +815,7 @@
                     };
                 },
                 __port: function(params, success, failure) {
-                    var $request = $.ajax(params);
+                    let $request = $.ajax(params);
 
                     $request.then(success);
                     $request.fail(failure);
@@ -945,7 +852,7 @@
             let n = name;
 
             $('#customer_choice_options').append(
-                `<div class="__choos-item"><div><input type="hidden" name="choice_no[]" value="${i}"><input type="text" class="form-control d-none" name="choice[]" value="${n}" placeholder="{{ translate('messages.choice_title') }}" readonly> <label class="form-label">${n}</label> </div><div><input type="text" class="form-control" name="choice_options_${i}[]" placeholder="{{ translate('messages.enter_choice_values') }}" data-role="tagsinput" onchange="combination_update()"></div></div>`
+                `<div class="__choos-item"><div><input type="hidden" name="choice_no[]" value="${i}"><input type="text" class="form-control d-none" name="choice[]" value="${n}" placeholder="{{ translate('messages.choice_title') }}" readonly> <label class="form-label">${n}</label> </div><div><input type="text" class="form-control combination_update" name="choice_options_${i}[]" placeholder="{{ translate('messages.enter_choice_values') }}" data-role="tagsinput"></div></div>`
             );
             $("input[data-role=tagsinput], select[multiple][data-role=tagsinput]").tagsinput();
         }
@@ -973,12 +880,10 @@
                 }
             });
         }
-    </script>
 
-    <script>
         $('#item_form').on('submit', function(e) {
             e.preventDefault();
-            var formData = new FormData(this);
+            let formData = new FormData(this);
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -997,7 +902,7 @@
                 success: function(data) {
                     $('#loading').hide();
                     if (data.errors) {
-                        for (var i = 0; i < data.errors.length; i++) {
+                        for (let i = 0; i < data.errors.length; i++) {
                             toastr.error(data.errors[i].message, {
                                 CloseButton: true,
                                 ProgressBar: true
@@ -1016,27 +921,8 @@
                 }
             });
         });
-    </script>
-    <script>
-        $(".lang_link").click(function(e) {
-            e.preventDefault();
-            $(".lang_link").removeClass('active');
-            $(".lang_form").addClass('d-none');
-            $(this).addClass('active');
 
-            let form_id = this.id;
-            let lang = form_id.substring(0, form_id.length - 5);
-            console.log(lang);
-            $("#" + lang + "-form").removeClass('d-none');
-            if (lang == '{{ $defaultLang }}') {
-                $("#from_part_2").removeClass('d-none');
-            } else {
-                $("#from_part_2").addClass('d-none');
-            }
-        })
-    </script>
-    <script src="{{ asset('public/assets/admin/js/spartan-multi-image-picker.js') }}"></script>
-    <script type="text/javascript">
+
         $(function() {
             $("#coba").spartanMultiImagePicker({
                 fieldName: 'item_images[]',
@@ -1073,8 +959,7 @@
                 }
             });
         });
-    </script>
-    <script>
+
         $('#reset_btn').click(function() {
             $('#module_id').val(null).trigger('change');
             $('#store_id').val(null).trigger('change');

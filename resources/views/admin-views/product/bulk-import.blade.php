@@ -101,9 +101,6 @@
                 <div class="card mt-2 rest-part">
                     <div class="card-header">
                         <h5 class="card-title">
-                            {{-- <span class="card-header-icon">
-                                <i class="tio-canvas-text"></i>
-                            </span> --}}
                             <span>{{ translate('messages.food_variations_generator') }}</span>
                         </h5>
                     </div>
@@ -132,7 +129,6 @@
                 <div class="card card mt-2 rest-part">
                     <div class="card-header">
                         <h5 class="card-title">
-                            {{-- <span class="card-header-icon"><i class="tio-canvas-text"></i></span> --}}
                             <span>{{ translate('variations') }}</span>
                         </h5>
                     </div>
@@ -175,9 +171,11 @@
 @endsection
 
 @push('script_2')
+    <script src="{{ asset('public/assets/admin') }}/js/tags-input.min.js"></script>
+    <script src="{{asset('public/assets/admin')}}/js/view-pages/product-import.js"></script>
 <script>
-    var count = 0;
-    // var countRow=0;
+    "use strict";
+
     $(document).ready(function() {
         @if($module_type== 'food')
             $('#food_variation_section').show();
@@ -188,7 +186,7 @@
         @endif
         $("#add_new_option_button").click(function(e) {
             count++;
-            var add_option_view = `
+            let add_option_view = `
                 <div class="card view_new_option mb-2" >
                     <div class="card-header">
                         <label for="" id=new_option_name_` + count + `> {{ translate('add_new') }}</label>
@@ -197,9 +195,9 @@
                         <div class="row g-2">
                             <div class="col-lg-3 col-md-6">
                                 <label for="">{{ translate('name') }}</label>
-                                <input required name=options[` + count +
-                `][name] class="form-control" type="text" onkeyup="new_option_name(this.value,` +
-                count + `)">
+                                 <input required name=options[` + count +
+                `][name] class="form-control new_option_name" type="text" data-count="`+
+                count +`">
                             </div>
 
                             <div class="col-lg-3 col-md-6">
@@ -208,31 +206,31 @@
                                     </label>
                                     <div class="resturant-type-group border">
                                         <label class="form-check form--check mr-2 mr-md-4">
-                                            <input class="form-check-input" type="radio" value="multi"
-                                            name="options[` + count + `][type]" id="type` + count +
-                `" checked onchange="show_min_max(` + count + `)"
-                                            >
-                                            <span class="form-check-label">
-                                                {{ translate('Multiple') }}
-                                            </span>
-                                        </label>
+                                                <input class="form-check-input show_min_max" data-count="`+count+`" type="radio" value="multi"
+                                                name="options[` + count + `][type]" id="type` + count +
+                `" checked
+                                                >
+                                                <span class="form-check-label">
+                                                    {{ translate('Multiple Selection') }}
+                </span>
+            </label>
 
-                                        <label class="form-check form--check mr-2 mr-md-4">
-                                            <input class="form-check-input" type="radio" value="single"
-                                            name="options[` + count + `][type]" id="type` + count +
-                `" onchange="hide_min_max(` + count + `)"
-                                            >
-                                            <span class="form-check-label">
-                                                {{ translate('Single') }}
-                                            </span>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-lg-6">
-                                <div class="row g-2">
-                                    <div class="col-sm-6 col-md-4">
-                                        <label for="">{{ translate('Min') }}</label>
+            <label class="form-check form--check mr-2 mr-md-4">
+                <input class="form-check-input hide_min_max" data-count="`+count+`" type="radio" value="single"
+                                                name="options[` + count + `][type]" id="type` + count +
+                `"
+                                                >
+                                                <span class="form-check-label">
+                                                    {{ translate('Single Selection') }}
+                </span>
+            </label>
+    </div>
+</div>
+</div>
+<div class="col-12 col-lg-6">
+<div class="row g-2">
+    <div class="col-sm-6 col-md-4">
+        <label for="">{{ translate('Min') }}</label>
                                         <input id="min_max1_` + count + `" required  name="options[` + count + `][min]" class="form-control" type="number" min="1">
                                     </div>
                                     <div class="col-sm-6 col-md-4">
@@ -249,7 +247,7 @@
                                                 <label for="options[` + count + `][required]" class="m-0">{{ translate('Required') }}</label>
                                             </div>
                                             <div>
-                                                <button type="button" class="btn btn-danger btn-sm delete_input_button" onclick="removeOption(this)"
+                                                <button type="button" class="btn btn-danger btn-sm delete_input_button"
                                                     title="{{ translate('Delete') }}">
                                                     <i class="tio-add-to-trash"></i>
                                                 </button>
@@ -279,8 +277,8 @@
                                 </div>
                                 <div class="row mt-3 p-3 mr-1 d-flex "  id="add_new_button_` + count +
                 `">
-                                    <button type="button" class="btn btn-outline-primary" onclick="add_new_row_button(` +
-                count + `)" >{{ translate('Add_New_Option') }}</button>
+                                   <button type="button" class="btn btn--primary btn-outline-primary add_new_row_button" data-count="`+
+                count +`" >{{ translate('Add_New_Option') }}</button>
                                 </div>
                             </div>
                         </div>
@@ -291,46 +289,10 @@
         });
     });
 
-    function show_min_max(data) {
-        $('#min_max1_' + data).removeAttr("readonly");
-        $('#min_max2_' + data).removeAttr("readonly");
-        $('#min_max1_' + data).attr("required", "true");
-        $('#min_max2_' + data).attr("required", "true");
-    }
-
-    function hide_min_max(data) {
-        $('#min_max1_' + data).val(null).trigger('change');
-        $('#min_max2_' + data).val(null).trigger('change');
-        $('#min_max1_' + data).attr("readonly", "true");
-        $('#min_max2_' + data).attr("readonly", "true");
-        $('#min_max1_' + data).attr("required", "false");
-        $('#min_max2_' + data).attr("required", "false");
-    }
-
-
-
-
-    function new_option_name(value, data) {
-        $("#new_option_name_" + data).empty();
-        $("#new_option_name_" + data).text(value)
-        console.log(value);
-    }
-
-    function removeOption(e) {
-        element = $(e);
-        element.parents('.view_new_option').remove();
-    }
-
-    function deleteRow(e) {
-        element = $(e);
-        element.parents('.add_new_view_row_class').remove();
-    }
-
-
     function add_new_row_button(data) {
         count = data;
         countRow = 1 + $('#option_price_view_' + data).children('.add_new_view_row_class').length;
-        var add_new_row_view = `
+        let add_new_row_view = `
         <div class="row add_new_view_row_class mb-3 position-relative pt-3 pt-sm-0">
             <div class="col-md-4 col-sm-5">
                     <label for="">{{ translate('Option_name') }}</label>
@@ -346,7 +308,7 @@
                 <div class="col-sm-2 max-sm-absolute">
                     <label class="d-none d-sm-block">&nbsp;</label>
                     <div class="mt-1">
-                        <button type="button" class="btn btn-danger btn-sm" onclick="deleteRow(this)"
+                        <button type="button" class="btn btn-danger btn-sm deleteRow"
                             title="{{ translate('Delete') }}">
                             <i class="tio-add-to-trash"></i>
                         </button>
@@ -356,10 +318,7 @@
         $('#option_price_view_' + data).append(add_new_row_view);
 
     }
-</script>
-<script src="{{ asset('public/assets/admin') }}/js/tags-input.min.js"></script>
 
-<script>
     $('#choice_attributes').on('change', function() {
         $('#customer_choice_options').html(null);
         $.each($("#choice_attributes option:selected"), function() {
@@ -380,9 +339,9 @@
         $('#customer_choice_options').append(
             '<div class="row gy-1"><div class="col-sm-3"><input type="hidden" name="choice_no[]" value="' + i +
             '"><input type="text" class="form-control" name="choice[]" value="' + n +
-            '" placeholder="{{ translate('messages.choice_title') }}" readonly></div><div class="col-sm-9"><input type="text" class="form-control" name="choice_options_' +
+            '" placeholder="{{ translate('messages.choice_title') }}" readonly></div><div class="col-sm-9"><input type="text" class="form-control combination_update" name="choice_options_' +
             i +
-            '[]" placeholder="{{ translate('messages.enter_choice_values') }}" data-role="tagsinput" onchange="combination_update()"></div></div>'
+            '[]" placeholder="{{ translate('messages.enter_choice_values') }}" data-role="tagsinput"></div></div>'
         );
         $("input[data-role=tagsinput], select[multiple][data-role=tagsinput]").tagsinput();
     }
@@ -410,12 +369,14 @@
             }
         });
     }
-</script>
 
-<script>
+    $(document).on('change', '.combination_update', function () {
+        combination_update();
+    });
+
     $('#item_form_2').on('submit', function(e) {
         e.preventDefault();
-        var formData = new FormData(this);
+        let formData = new FormData(this);
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -434,7 +395,7 @@
             success: function(data) {
                 $('#loading').hide();
                 if (data.errors) {
-                    for (var i = 0; i < data.errors.length; i++) {
+                    for (let i = 0; i < data.errors.length; i++) {
                         toastr.error(data.errors[i].message, {
                             CloseButton: true,
                             ProgressBar: true
@@ -446,11 +407,10 @@
             }
         });
     });
-</script>
-<script>
+
     $('#item_form').on('submit', function(e) {
         e.preventDefault();
-        var formData = new FormData(this);
+        let formData = new FormData(this);
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -469,7 +429,7 @@
             success: function(data) {
                 $('#loading').hide();
                 if (data.errors) {
-                    for (var i = 0; i < data.errors.length; i++) {
+                    for (let i = 0; i < data.errors.length; i++) {
                         toastr.error(data.errors[i].message, {
                             CloseButton: true,
                             ProgressBar: true
@@ -481,20 +441,6 @@
             }
         });
     });
-</script>
-<script>
-        $('#reset_btn').click(function(){
-            $('#bulk__import').val(null);
-        })
-    </script>
-        <script>
-
-    $(document).on("click", ".submit_btn", function(e){
-        e.preventDefault();
-            var data = $(this).val();
-            myFunction(data)
-    });
-
 
     function myFunction(data) {
         Swal.fire({
@@ -512,9 +458,6 @@
                 $('#btn_value').val(data);
                 $("#import_form").submit();
             }
-            // else {
-            //     toastr.success("{{ translate('Cancelled') }}");
-            // }
         })
     }
         </script>

@@ -553,6 +553,34 @@
         })
     })
 
+    $('.canceled-status').on('click',function (){
+        let route = $(this).data('url');
+        let message = $(this).data('message');
+        let processing = $(this).data('processing')??false;
+        cancelled_status(route, message, processing);
+    })
+
+    function cancelled_status(route, message, processing = false) {
+        Swal.fire({
+            //text: message,
+            title: '<?php echo e(translate('messages.Are you sure ?')); ?>',
+            type: 'warning',
+            showCancelButton: true,
+            cancelButtonColor: 'default',
+            confirmButtonColor: '#FC6A57',
+            cancelButtonText: '<?php echo e(translate('messages.Cancel')); ?>',
+            confirmButtonText: '<?php echo e(translate('messages.submit')); ?>',
+            inputPlaceholder: "<?php echo e(translate('Enter_a_reason')); ?>",
+            input: 'text',
+            html: message + '<br/>'+'<label><?php echo e(translate('Enter_a_reason')); ?></label>',
+            inputValue: processing,
+            preConfirm: (note) => {
+                location.href = route + '&note=' + note;
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+        })
+    }
+
     {{--function form_alert(id, message) {--}}
     {{--    Swal.fire({--}}
     {{--        title: '{{ translate('messages.Are you sure?') }}',--}}
@@ -698,6 +726,13 @@
             setTimeout(function () {
                 $('button[type=submit]').prop('disabled', false);
                 }, 1000);
+        });
+    });
+
+    $(document).ready(function() {
+        $('.onerror-image').on('error', function() {
+            let img = $(this).data('onerror-image')
+            $(this).attr('src', img);
         });
     });
 

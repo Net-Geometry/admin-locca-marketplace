@@ -114,7 +114,7 @@
                                 <td>
                                     <div class="d-flex flex-wrap justify-content-center">
                                         <label class="toggle-switch toggle-switch-sm" for="campaignCheckbox{{$campaign->id}}">
-                                            <input type="checkbox" onclick="location.href='{{route('admin.campaign.status',['item',$campaign['id'],$campaign->status?0:1])}}'"class="toggle-switch-input" id="campaignCheckbox{{$campaign->id}}" {{$campaign->status?'checked':''}}>
+                                            <input type="checkbox" data-url="{{route('admin.campaign.status',['item',$campaign['id'],$campaign->status?0:1])}}" class="toggle-switch-input redirect-url" id="campaignCheckbox{{$campaign->id}}" {{$campaign->status?'checked':''}}>
                                             <span class="toggle-switch-label">
                                                 <span class="toggle-switch-indicator"></span>
                                             </span>

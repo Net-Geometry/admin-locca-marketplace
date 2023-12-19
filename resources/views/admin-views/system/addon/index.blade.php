@@ -232,8 +232,8 @@
                         </div>
 
                         <div class="aspect-ration-3:2 border border-color-primary-light radius-10">
-                            <img class="img-fit radius-10"
-                                onerror='this.src="{{asset('public/assets/admin/img/placeholder.png')}}"'
+                            <img class="img-fit radius-10 onerror-image"
+                            data-onerror-image="{{asset('public/assets/admin/img/placeholder.png')}}"
                                 src="{{asset($addon.'/public/addon.png')}}">
                         </div>
                     </div>

@@ -32,21 +32,12 @@
                     <div class="row align-items-md-center">
                         <div class="col-lg-5 col-md-6 mb-3 mb-md-0">
                             <div class="d-flex flex-wrap align-items-center food--media">
-                                <img class="avatar avatar-xxl avatar-4by3 mr-4"
+                                <img class="avatar avatar-xxl avatar-4by3 mr-4 onerror-image"
                                         src="{{asset('storage/app/public/product')}}/{{$product['image']}}"
-                                        onerror="this.src='{{asset('public/assets/admin/img/160x160/img2.jpg')}}'"
+                                        data-onerror-image="{{asset('public/assets/admin/img/160x160/img2.jpg')}}"
                                         alt="Image Description">
                                         <div class="d-block">
                                             <div class="rating--review">
-
-                                                {{--<h4 class="title">{{round($product->avg_rating,1)}}</h4>
-
-                                                <p> {{translate('messages.of')}} {{$product->reviews->count()}} {{translate('messages.reviews')}}
-                                                    <span class="badge badge-soft-dark badge-pill ml-1"></span>
-                                                </p>
-
-                                                --}}
-
                                                 <h1 class="title">{{ number_format($product->avg_rating, 1)}}<span class="out-of">/5</span></h1>
                                                 @if ($product->avg_rating == 5)
                                                         <div class="rating">
@@ -146,7 +137,6 @@
                                                         </div>
                                                         @endif
                                                 <div class="info">
-                                                    {{-- <span class="mr-3">of {{ $product->rating ? count(json_decode($product->rating, true)): 0 }} Rating</span> --}}
                                                     <span>{{translate('messages.of')}} {{$product->reviews->count()}} {{translate('messages.reviews')}}</span>
                                                 </div>
                                             </div>
@@ -399,8 +389,8 @@
                                 @if ($review->customer)
                                     <div class="d-flex align-items-center">
                                         <div class="avatar avatar-circle">
-                                            <img class="avatar-img" width="75" height="75"
-                                                onerror="this.src='{{asset('public/assets/admin/img/160x160/img1.jpg')}}'"
+                                            <img class="avatar-img onerror-image" width="75" height="75"
+                                                 data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
                                                 src="{{asset('storage/app/public/profile/'.$review->customer->image)}}"
                                                 alt="Image Description">
                                         </div>

@@ -3,8 +3,8 @@
         <td>{{ $key + 1 }}</td>
         <td>
             <a class="media align-items-center" href="{{ route('admin.item.view', [$item['id']]) }}">
-                <img class="avatar avatar-lg mr-3" src="{{ asset('storage/app/public/product') }}/{{ $item['image'] }}"
-                    onerror="this.src='{{ asset('public/assets/admin/img/160x160/img2.jpg') }}'"
+                <img class="avatar avatar-lg mr-3 onerror-image" src="{{ asset('storage/app/public/product') }}/{{ $item['image'] }}"
+                    data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
                     alt="{{ $item->name }} image">
                 <div class="media-body">
                     <h5 class="text-hover-primary mb-0">{{ Str::limit($item['name'], 20, '...') }}</h5>
@@ -24,8 +24,7 @@
         </td>
         <td>
             <label class="toggle-switch toggle-switch-sm" for="stocksCheckbox{{ $item->id }}">
-                <input type="checkbox"
-                    onclick="location.href='{{ route('admin.item.status', [$item['id'], $item->status ? 0 : 1]) }}'"class="toggle-switch-input"
+                <input type="checkbox" class="toggle-switch-input redirect-url" data-url="{{ route('admin.item.status', [$item['id'], $item->status ? 0 : 1]) }}"
                     id="stocksCheckbox{{ $item->id }}" {{ $item->status ? 'checked' : '' }}>
                 <span class="toggle-switch-label mx-auto">
                     <span class="toggle-switch-indicator"></span>
@@ -38,8 +37,8 @@
                     href="{{ route('admin.item.edit', [$item['id']]) }}"
                     title="{{ translate('messages.edit_item') }}"><i class="tio-edit"></i>
                 </a>
-                <a class="btn  action-btn btn--danger btn-outline-danger" href="javascript:"
-                    onclick="form_alert('food-{{ $item['id'] }}','{{ translate('messages.Want_to_delete_this_item') }}')"
+                <a class="btn  action-btn btn--danger btn-outline-danger form-alert" href="javascript:"
+                    data-id="food-{{ $item['id'] }}" data-message="{{ translate('messages.Want_to_delete_this_item') }}"
                     title="{{ translate('messages.delete_item') }}"><i
                         class="tio-delete-outlined"></i>
                 </a>

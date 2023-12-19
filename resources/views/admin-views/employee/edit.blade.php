@@ -79,8 +79,8 @@
                     <div class="col-md-4">
                         <label class="h-100 d-flex flex-column">
                             <center class="py-3 my-auto">
-                                <img class="img--100" id="viewer"
-                                onerror="this.src='{{asset('public/assets/front-end/img/image-place-holder.png')}}'"
+                                <img class="img--100 onerror-image" id="viewer"
+                                data-onerror-image="{{asset('/public/assets/admin/img/admin.png')}}"
                                 src="{{asset('storage/app/public/admin')}}/{{$employee['image']}}" alt="Employee thumbnail"/>
                             </center>
                             <div class="custom-file">

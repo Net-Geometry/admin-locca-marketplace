@@ -113,6 +113,7 @@
             $(".default-form").removeClass('d-none');
         }
     });
+
 $('[data-slide]').on('click', function(){
     let serial = $(this).data('slide')
     $(`.tab--content .item`).removeClass('show')
@@ -209,4 +210,10 @@ $(".set-filter").on("change", function () {
     nurl.searchParams.set(filter_by, id);
     location.href = nurl;
     tour.next();
+});
+$(document).ready(function() {
+    $('.onerror-image').on('error', function() {
+        let img = $(this).data('onerror-image')
+        $(this).attr('src', img);
+    });
 });
