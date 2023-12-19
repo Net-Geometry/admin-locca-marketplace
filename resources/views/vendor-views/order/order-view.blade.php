@@ -701,11 +701,13 @@
                                    data-url="{{ route('vendor.order.status', ['id' => $order['id'], 'order_status' => 'handover']) }}"
                                    data-message="{{ translate('messages.make_ready_for_handover') }}"
                                     href="javascript:">{{ translate('messages.make_ready_for_handover') }}</a>
-                                <a class="btn btn--primary w-100 order-status-change-alert {{ $order['order_status'] == 'handover' ? '' : 'd-none' }}"
+
+                                <a class="btn  w-100   {{($order['order_status'] == 'handover' && ($order['order_type'] == 'take_away' || $order->store->self_delivery_system == 1) ) ?  'btn--primary order-status-change-alert'  :  'btn--secondary  self-delivery-warning' }} "
                                    data-url="{{ route('vendor.order.status', ['id' => $order['id'], 'order_status' => 'delivered']) }}"
                                    data-message="{{ translate('messages.Change status to delivered (payment status will be paid if not)?') }}"
                                    data-verification="{{ $order_delivery_verification ? 'true' : 'false' }}"
                                     href="javascript:">{{ translate('messages.make_delivered') }}</a>
+
                             </div>
                         </div>
 
@@ -1175,6 +1177,19 @@
     <script src="{{ asset('public/assets/admin/js/spartan-multi-image-picker.js') }}"></script>
     <script type="text/javascript">
         "use strict";
+
+
+        $('.self-delivery-warning').on('click',function (event ){
+            event.preventDefault();
+            toastr.info(
+                "{{ translate('messages.Self_Delivery_is_Disable') }}", {
+                    CloseButton: true,
+                    ProgressBar: true
+                });
+        });
+
+
+
         $('.cancelled-status').on('click',function (){
             Swal.fire({
                 title: '{{ translate('messages.are_you_sure') }}',

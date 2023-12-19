@@ -105,8 +105,20 @@
                                     </a>
                                 @endif
 
-                                @if ($disbursement_type ==  'manual' )
-                                    <a class="btn btn--primary d-flex gap-1 align-items-center text-nowrap" href="javascript:" data-toggle="modal" data-target="#balance-modal">{{translate('messages.request_withdraw')}}
+                                @if ($disbursement_type ==  'manual'  )
+                                    <a  href="javascript:"
+
+                                       @if(count($withdrawal_methods) !== 0 )
+                                           class="btn btn--primary d-flex gap-1 align-items-center text-nowrap"
+                                       data-toggle="modal" data-target="#balance-modal"
+                                        @else
+                                            class="btn btn--primary d-flex gap-1 align-items-center text-nowrap withdrawal-methods-disable"
+                                        data-message="{{translate('Withdraw_methods_are_not_available')}}"
+                                       @endif
+
+
+
+                                    >{{translate('messages.request_withdraw')}}
 
                                         <span class="form-label-secondary  d-flex"
                                               data-toggle="tooltip" data-placement="right"
