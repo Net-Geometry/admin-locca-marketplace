@@ -36,7 +36,7 @@ class OtherBannerController extends Controller
         ];
 
         $data = array_merge($data, $bannerData);
-        
+
         return response()->json($data, 200);
 
     }
@@ -45,7 +45,7 @@ class OtherBannerController extends Controller
     {
         $module_id= $request->header('moduleId');
 
-        $banners=ModuleWiseBanner::Active()->where('module_id', $module_id)->where('type','video_banner_content')->whereIn('key', ['section_title','banner_type','banner_video','banner_image'])->get();
+        $banners=ModuleWiseBanner::Active()->where('module_id', $module_id)->where('type','video_banner_content')->whereIn('key', ['section_title','banner_type','banner_video','banner_image','banner_video_content'])->get();
 
         $bannerData = [];
 
@@ -58,6 +58,7 @@ class OtherBannerController extends Controller
         $banner_contents=ModuleWiseBanner::Active()->where('module_id', $module_id)->where('type','video_banner_content')->whereIn('key', ['content1_title','content1_subtitle','content2_title','content2_subtitle','content3_title','content3_subtitle'])->get();
 
         $data =  [
+            'banner_video_content_url' => asset('storage/app/public/promotional_banner/video'),
             'promotional_banner_url' => asset('storage/app/public/promotional_banner'),
             'banner_contents' => $banner_contents
         ];

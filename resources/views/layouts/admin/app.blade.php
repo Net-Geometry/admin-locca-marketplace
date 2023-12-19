@@ -86,13 +86,13 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-12">
-                            <center>
+                            <div class="text-center"> 
                                 <h2>
                                     <i class="tio-shopping-cart-outlined"></i> {{translate('messages.You have new order, Check Please.')}}
                                 </h2>
                                 <hr>
                                 <button onclick="check_order()" class="btn btn-primary">{{translate('messages.Ok, let me check')}}</button>
-                            </center>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -373,7 +373,7 @@
     var baseUrl = '{{ url('/') }}';
 </script>
 
-<script src="{{asset('public/assets/admin')}}/js/view-pages/common.js"></script>
+<script src="{{asset('public/assets/admin/js/view-pages/common.js')}}"></script>
 <script>
     @php($modules = \App\Models\Module::Active()->get())
     var tour = new Tour({
@@ -673,15 +673,7 @@
         location.href = nurl;
     }
 
-    $(".set-filter").on("change", function () {
-        const id = $(this).val();
-        const url = $(this).data('url');
-        const filter_by = $(this).data('filter');
-        var nurl = new URL(url);
-        nurl.searchParams.set(filter_by, id);
-        location.href = nurl;
-        tour.next();
-    });
+
 
     function set_filter(url, id, filter_by) {
         var nurl = new URL(url);

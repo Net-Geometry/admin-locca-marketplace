@@ -47,8 +47,17 @@ $(".form-check-input").click(function() {
     if ($(this).val() == 'image') {
         $("#image").removeClass('d-none');
         $("#video").addClass('d-none');
-    } else {
+        $("#video_content").addClass('d-none');
+
+
+    } else if($(this).val() == 'video_content'){
+        $("#video_content").removeClass('d-none');
+        $("#video").addClass('d-none');
+        $("#image").addClass('d-none');
+    }
+    else {
         $("#video").removeClass('d-none');
         $("#image").addClass('d-none');
+        $("#video_content").addClass('d-none');
     }
 });

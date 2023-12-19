@@ -39,3 +39,4 @@
     </div>
 </div>
 <!-- End Body -->
+<script src="{{asset('public/assets/admin')}}/js/view-pages/common.js"></script>

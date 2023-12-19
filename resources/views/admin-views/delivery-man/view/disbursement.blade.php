@@ -14,23 +14,23 @@
                 <span class="page-header-icon">
                     <img src="{{asset('public/assets/admin/img/delivery-man.png')}}" class="w--26" alt="">
                 </span>
-                <span>{{$dm['f_name'].' '.$dm['l_name']}}</span>
+                <span>{{$deliveryMan['f_name'].' '.$deliveryMan['l_name']}}</span>
             </h1>
             <div class="row">
                 <div class="js-nav-scroller hs-nav-scroller-horizontal mt-2">
                     <!-- Nav -->
                     <ul class="nav nav-tabs nav--tabs border-0">
                         <li class="nav-item">
-                            <a class="nav-link" href="{{route('admin.users.delivery-man.preview', ['id'=>$dm->id, 'tab'=> 'info'])}}"  aria-disabled="true">{{translate('messages.info')}}</a>
+                            <a class="nav-link" href="{{route('admin.users.delivery-man.preview', ['id'=>$deliveryMan->id, 'tab'=> 'info'])}}"  aria-disabled="true">{{translate('messages.info')}}</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{route('admin.users.delivery-man.preview', ['id'=>$dm->id, 'tab'=> 'transaction'])}}"  aria-disabled="true">{{translate('messages.transaction')}}</a>
+                            <a class="nav-link" href="{{route('admin.users.delivery-man.preview', ['id'=>$deliveryMan->id, 'tab'=> 'transaction'])}}"  aria-disabled="true">{{translate('messages.transaction')}}</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{route('admin.users.delivery-man.preview', ['id'=>$dm->id, 'tab'=> 'conversation'])}}"  aria-disabled="true">{{translate('messages.conversations')}}</a>
+                            <a class="nav-link" href="{{route('admin.users.delivery-man.preview', ['id'=>$deliveryMan->id, 'tab'=> 'conversation'])}}"  aria-disabled="true">{{translate('messages.conversations')}}</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active" href="{{route('admin.users.delivery-man.preview', ['id'=>$dm->id, 'tab'=> 'disbursement'])}}"  aria-disabled="true">{{translate('messages.disbursements')}}</a>
+                            <a class="nav-link active" href="{{route('admin.users.delivery-man.preview', ['id'=>$deliveryMan->id, 'tab'=> 'disbursement'])}}"  aria-disabled="true">{{translate('messages.disbursements')}}</a>
                         </li>
                     </ul>
                     <!-- End Nav -->
@@ -65,11 +65,11 @@
                         <div id="usersExportDropdown"
                              class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
                             <span class="dropdown-header">{{translate('messages.download_options')}}</span>
-                            <a id="export-excel" class="dropdown-item" href="{{route('admin.users.delivery-man.disbursement-export', ['id'=>$dm->id,'type'=>'excel',request()->getQueryString()])}}">
+                            <a id="export-excel" class="dropdown-item" href="{{route('admin.users.delivery-man.disbursement-export', ['id'=>$deliveryMan->id,'type'=>'excel',request()->getQueryString()])}}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2" src="{{asset('public/assets/admin')}}/svg/components/excel.svg" alt="Image Description">
                                 {{translate('messages.excel')}}
                             </a>
-                            <a id="export-csv" class="dropdown-item" href="{{route('admin.users.delivery-man.disbursement-export', ['id'=>$dm->id,'type'=>'excel',request()->getQueryString()])}}">
+                            <a id="export-csv" class="dropdown-item" href="{{route('admin.users.delivery-man.disbursement-export', ['id'=>$deliveryMan->id,'type'=>'excel',request()->getQueryString()])}}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2" src="{{asset('public/assets/admin')}}/svg/components/placeholder-csv-format.svg" alt="Image Description">
                                 {{translate('messages.csv')}}
                             </a>

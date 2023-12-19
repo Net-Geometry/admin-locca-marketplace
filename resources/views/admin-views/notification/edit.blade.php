@@ -69,10 +69,10 @@
                                     {{translate('messages.image')}}
                                     <small class="text-danger">* ( {{translate('messages.ratio')}} 900x300 )</small>
                                 </label>
-                                <center class="py-3 my-auto">
+                                <div class="text-center py-3 my-auto">
                                     <img class="img--vertical onerror-image" id="viewer"
                                         src="{{asset('storage/app/public/notification')}}/{{$notification['image']}}"  data-onerror-image="{{asset('public/assets/admin/img/900x400/img1.jpg')}}" alt="image"/>
-                                </center>
+                                </div>
                                 <div class="custom-file">
                                     <input type="file" name="image" id="customFileEg1" class="custom-file-input"
                                         accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">

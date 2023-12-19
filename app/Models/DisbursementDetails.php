@@ -10,6 +10,15 @@ class DisbursementDetails extends Model
 {
     use HasFactory, ReportFilter;
 
+    protected $casts = [
+        'disbursement_id' => 'integer',
+        'delivery_man_id' => 'integer',
+        'store_id' => 'integer',
+        'payment_method' => 'integer',
+        'disbursement_amount' => 'float',
+        'is_default'=>'boolean',
+    ];
+    
     public function store()
     {
         return $this->belongsTo(Store::class);

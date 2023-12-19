@@ -78,11 +78,11 @@
                     </div>
                     <div class="col-md-4">
                         <label class="h-100 d-flex flex-column">
-                            <center class="py-3 my-auto">
+                            <div class="text-center py-3 my-auto">
                                 <img class="img--100 onerror-image" id="viewer"
                                 data-onerror-image="{{asset('/public/assets/admin/img/admin.png')}}"
                                 src="{{asset('storage/app/public/admin')}}/{{$employee['image']}}" alt="Employee thumbnail"/>
-                            </center>
+                            </div>
                             <div class="custom-file">
                                 <input type="file" name="image" id="customFileUpload" class="custom-file-input"
                                     accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">

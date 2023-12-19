@@ -2,15 +2,10 @@
 
 @section('title', translate('messages.Order Details'))
 
-<style>
-    .select2-container--open {
-    z-index: 99999999999999;
-}
-</style>
-{{-- {{ dd(count(json_decode($order->order_proof))) }} --}}
+
 @section('content')
     <?php
-    $reasons=\App\Models\OrderCancelReason::where('status', 1)->where('user_type' ,'store' )->get();
+
     $tax_included =0;
     if (count($order->details) > 0) {
         $campaign_order = $order->details[0]->campaign ? true : false;
@@ -215,7 +210,7 @@
                                         <h5 class="text-dark">
                                             {{ translate('messages.prescription') }}:
                                         </h5>
-                                        <div class="d-flex flex-wrap flex-md-row-reverse" style="gap:15px">
+                                        <div class="d-flex flex-wrap flex-md-row-reverse __gap-15px" >
                                             @foreach ($order_images as $key => $item)
                                                 <div>
                                                     <button class="btn w-100 px-0" data-toggle="modal"
@@ -242,7 +237,7 @@
                                                             </div>
                                                             <div class="modal-body">
                                                                 <img src="{{ asset('storage/app/' . 'public/order/' . $item) }}"
-                                                                    class="initial--22 w-100">
+                                                                    class="initial--22 w-100" alt="image">
                                                             </div>
                                                             <div class="modal-footer">
                                                                 <a class="btn btn-primary"
@@ -281,7 +276,7 @@
                                                 </div>
                                                 <div class="modal-body">
                                                     <img src="{{ asset('storage/app/' . 'public/order/' . $order->order_attachment) }}"
-                                                        class="initial--22 w-100">
+                                                        class="initial--22 w-100" alt="image">
                                                 </div>
                                                 <div class="modal-footer">
                                                     <a class="btn btn-primary"
@@ -346,9 +341,9 @@
                                                     <div class="media media--sm">
                                                         <a class="avatar avatar-xl mr-3"
                                                             href="{{ route('vendor.item.view', $detail->item['id']) }}">
-                                                            <img class="img-fluid rounded"
+                                                            <img class="img-fluid rounded onerror-image"
                                                                 src="{{ asset('storage/app/public/product') }}/{{ $detail->item['image'] }}"
-                                                                onerror="this.src='{{ asset('public/assets/admin/img/160x160/img2.jpg') }}'"
+                                                                 data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
                                                                 alt="Image Description">
                                                         </a>
                                                         <div class="media-body">
@@ -456,9 +451,9 @@
                                                 <td>
                                                     <div class="media media--sm">
                                                         <div class="avatar avatar-xl mr-3">
-                                                            <img class="img-fluid"
+                                                            <img class="img-fluid onerror-image"
                                                                 src="{{ asset('storage/app/public/campaign') }}/{{ $detail->campaign['image'] }}"
-                                                                onerror="this.src='{{ asset('public/assets/admin/img/160x160/img2.jpg') }}'"
+                                                                 data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
                                                                 alt="Image Description">
                                                         </div>
                                                         <div class="media-body">
@@ -676,33 +671,40 @@
                             <div class="mb-4">
                                 <div class="row g-1">
                                     <div class="{{ config('canceled_by_store') ? 'col-6' : 'col-12' }}">
-                                        <a class="btn btn--primary w-100 fz--13 px-2 {{ $order['order_status'] == 'pending' ? '' : 'd-none' }}"
-                                            onclick="route_alert('{{ route('vendor.order.status', ['id' => $order['id'], 'order_status' => 'confirmed']) }}','{{ translate('messages.confirm_this_order') }}')"
+                                        <a class="btn btn--primary w-100 fz--13 px-2 {{ $order['order_status'] == 'pending' ? '' : 'd-none' }} route-alert"
+                                           data-url="{{ route('vendor.order.status', ['id' => $order['id'], 'order_status' => 'confirmed']) }}"
+                                           data-message="{{ translate('messages.confirm_this_order_?') }}"
                                             href="javascript:">{{ translate('messages.confirm_this_order') }}</a>
                                     </div>
                                     @if (config('canceled_by_store'))
                                         <div class="col-6">
-                                            <a class="btn btn--danger w-100 fz--13 px-2 {{ $order['order_status'] == 'pending' ? '' : 'd-none' }}"
-                                            onclick="cancelled_status()">{{ translate('Cancel Order') }}</a>
+                                            <a class="btn btn--danger w-100 fz--13 px-2 cancelled-status {{ $order['order_status'] == 'pending' ? '' : 'd-none' }}"
+                                               >{{ translate('Cancel Order') }}</a>
                                         </div>
                                     @endif
                                 </div>
-                                {{-- <a class="btn btn--primary w-100 {{ $order['order_status'] == 'confirmed' || $order['order_status'] == 'accepted' ? '' : 'd-none' }}"
-                                    onclick="route_alert('{{ route('vendor.order.status', ['id' => $order['id'], 'order_status' => 'processing']) }}','{{ translate('messages.proceed_for_processing') }}')"
-                                    href="javascript:">{{ translate('messages.proceed_for_processing') }}</a> --}}
                                     @if ($order->store && $order->store->module->module_type == 'food')
-                                        <a class="btn btn--primary w-100 {{ $order['order_status'] == 'confirmed' || $order['order_status'] == 'accepted' ? '' : 'd-none' }}"
-                                        onclick="order_status_change_alert('{{ route('vendor.order.status', ['id' => $order['id'], 'order_status' => 'processing']) }}','{{ translate('Change status to cooking ?') }}', verification = false, {{ $max_processing_time }})" href="javascript:">{{ translate('messages.proceed_for_processing') }}</a>
+                                        <a class="btn btn--primary w-100 order-status-change-alert {{ $order['order_status'] == 'confirmed' || $order['order_status'] == 'accepted' ? '' : 'd-none' }}"
+
+                                           data-url="{{ route('vendor.order.status', ['id' => $order['id'], 'order_status' => 'processing']) }}"
+                                           data-message="{{ translate('Change status to cooking ?') }}"
+                                           data-verification="false"
+                                           data-processing-time="{{ $max_processing_time }}"
+                                           href="javascript:">{{ translate('messages.proceed_for_processing') }}</a>
                                     @else
-                                    <a class="btn btn--primary w-100 {{ $order['order_status'] == 'confirmed' || $order['order_status'] == 'accepted' ? '' : 'd-none' }}"
-                                    onclick="route_alert('{{ route('vendor.order.status', ['id' => $order['id'], 'order_status' => 'processing']) }}','{{ translate('messages.proceed_for_processing') }}')"
+                                    <a class="btn btn--primary w-100 route-alert  {{ $order['order_status'] == 'confirmed' || $order['order_status'] == 'accepted' ? '' : 'd-none' }}"
+                                       data-url="{{ route('vendor.order.status', ['id' => $order['id'], 'order_status' => 'processing']) }}"
+                                       data-message="{{ translate('messages.proceed_for_processing') }}"
                                     href="javascript:">{{ translate('messages.proceed_for_processing') }}</a>
                                     @endif
-                                <a class="btn btn--primary w-100 {{ $order['order_status'] == 'processing' ? '' : 'd-none' }}"
-                                    onclick="route_alert('{{ route('vendor.order.status', ['id' => $order['id'], 'order_status' => 'handover']) }}','{{ translate('messages.make_ready_for_handover') }}')"
+                                <a class="btn btn--primary w-100 route-alert {{ $order['order_status'] == 'processing' ? '' : 'd-none' }}"
+                                   data-url="{{ route('vendor.order.status', ['id' => $order['id'], 'order_status' => 'handover']) }}"
+                                   data-message="{{ translate('messages.make_ready_for_handover') }}"
                                     href="javascript:">{{ translate('messages.make_ready_for_handover') }}</a>
-                                <a class="btn btn--primary w-100 {{ $order['order_status'] == 'handover' ? '' : 'd-none' }}"
-                                    onclick="order_status_change_alert('{{ route('vendor.order.status', ['id' => $order['id'], 'order_status' => 'delivered']) }}','{{ translate('messages.Change status to delivered (payment status will be paid if not)?') }}', {{ $order_delivery_verification ? 'true' : 'false' }})"
+                                <a class="btn btn--primary w-100 order-status-change-alert {{ $order['order_status'] == 'handover' ? '' : 'd-none' }}"
+                                   data-url="{{ route('vendor.order.status', ['id' => $order['id'], 'order_status' => 'delivered']) }}"
+                                   data-message="{{ translate('messages.Change status to delivered (payment status will be paid if not)?') }}"
+                                   data-verification="{{ $order_delivery_verification ? 'true' : 'false' }}"
                                     href="javascript:">{{ translate('messages.make_delivered') }}</a>
                             </div>
                         </div>
@@ -777,8 +779,8 @@
                             @if ($order->delivery_man)
                                 <div class="media align-items-center customer--information-single" href="javascript:">
                                     <div class="avatar avatar-circle">
-                                        <img class="avatar-img"
-                                            onerror="this.src='{{ asset('public/assets/admin/img/160x160/img1.jpg') }}'"
+                                        <img class="avatar-img onerror-image"
+                                             data-onerror-image="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}"
                                             src="{{ asset('storage/app/public/delivery-man/' . $order->delivery_man->image) }}"
                                             alt="Image Description">
                                     </div>
@@ -854,10 +856,10 @@
                         <div class="row g-3">
                                 @foreach ($data as $key => $img)
                                     <div class="col-3">
-                                        <img class="img__aspect-1 rounded border w-100" data-toggle="modal"
+                                        <img class="img__aspect-1 rounded border w-100 onerror-image" data-toggle="modal"
                                             data-target="#imagemodal{{ $key }}"
-                                            onerror="this.src='{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
-                                            src="{{ asset('storage/app/public/order') . '/' . $img }}">
+                                             data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
+                                            src="{{ asset('storage/app/public/order') . '/' . $img }}" alt="image">
                                     </div>
                                     <div class="modal fade" id="imagemodal{{ $key }}" tabindex="-1"
                                         role="dialog" aria-labelledby="order_proof_{{ $key }}"
@@ -875,7 +877,7 @@
                                                 </div>
                                                 <div class="modal-body">
                                                     <img src="{{ asset('storage/app/' . 'public/order/' . $img) }}"
-                                                        class="initial--22 w-100">
+                                                        class="initial--22 w-100" alt="img">
                                                 </div>
                                                 <div class="modal-footer">
                                                     <a class="btn btn-primary"
@@ -910,8 +912,8 @@
 
                             <div class="media align-items-center customer--information-single" href="javascript:">
                                 <div class="avatar avatar-circle">
-                                    <img class="avatar-img"
-                                        onerror="this.src='{{ asset('public/assets/admin/img/160x160/img1.jpg') }}'"
+                                    <img class="avatar-img onerror-image "
+                                         data-onerror-image="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}"
                                         src="{{ asset('storage/app/public/profile/' . $order->customer->image) }}"
                                         alt="Image Description">
                                 </div>
@@ -1059,135 +1061,7 @@
         <!-- End Row -->
     </div>
 
-    <!-- Modal -->
-    <div id="shipping-address-modal" class="modal fade" tabindex="-1" role="dialog"
-        aria-labelledby="exampleModalTopCoverTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <!-- Header -->
-                <div class="modal-top-cover bg-dark text-center">
-                    <figure class="position-absolute right-0 bottom-0 left-0 mb--n-1">
-                        <svg preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
-                            viewBox="0 0 1920 100.1">
-                            <path fill="#fff" d="M0,0c0,0,934.4,93.4,1920,0v100.1H0L0,0z" />
-                        </svg>
-                    </figure>
 
-                    <div class="modal-close">
-                        <button type="button" class="btn btn-icon btn-sm btn-ghost-light" data-dismiss="modal"
-                            aria-label="Close">
-                            <svg width="16" height="16" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
-                                <path fill="currentColor"
-                                    d="M11.5,9.5l5-5c0.2-0.2,0.2-0.6-0.1-0.9l-1-1c-0.3-0.3-0.7-0.3-0.9-0.1l-5,5l-5-5C4.3,2.3,3.9,2.4,3.6,2.6l-1,1 C2.4,3.9,2.3,4.3,2.5,4.5l5,5l-5,5c-0.2,0.2-0.2,0.6,0.1,0.9l1,1c0.3,0.3,0.7,0.3,0.9,0.1l5-5l5,5c0.2,0.2,0.6,0.2,0.9-0.1l1-1 c0.3-0.3,0.3-0.7,0.1-0.9L11.5,9.5z" />
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-                <!-- End Header -->
-
-                <div class="modal-top-cover-icon">
-                    <span class="icon icon-lg icon-light icon-circle icon-centered shadow-soft">
-                        <i class="tio-location-search"></i>
-                    </span>
-                </div>
-
-                @php($address = \App\Models\CustomerAddress::find($order['delivery_address_id']))
-                @if (isset($address))
-                    <form action="{{ route('vendor.order.update-shipping', [$order['delivery_address_id']]) }}"
-                        method="post">
-                        @csrf
-                        <div class="modal-body">
-                            <div class="row mb-3">
-                                <label for="requiredLabel" class="col-md-2 col-form-label input-label text-md-right">
-                                    {{ translate('messages.type') }}
-                                </label>
-                                <div class="col-md-10 js-form-message">
-                                    <input type="text" class="form-control" name="address_type"
-                                        value="{{ $address['address_type'] }}" required>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <label for="requiredLabel" class="col-md-2 col-form-label input-label text-md-right">
-                                    {{ translate('messages.contact') }}
-                                </label>
-                                <div class="col-md-10 js-form-message">
-                                    <input type="text" class="form-control" name="contact_person_number"
-                                        value="{{ $address['contact_person_number'] }}" required>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <label for="requiredLabel" class="col-md-2 col-form-label input-label text-md-right">
-                                    {{ translate('messages.name') }}
-                                </label>
-                                <div class="col-md-10 js-form-message">
-                                    <input type="text" class="form-control" name="contact_person_name"
-                                        value="{{ $address['contact_person_name'] }}" required>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <label for="requiredLabel" class="col-md-2 col-form-label input-label text-md-right">
-                                    {{ translate('House') }}
-                                </label>
-                                <div class="col-md-10 js-form-message">
-                                    <input type="text" class="form-control" name="house"
-                                        value="{{ isset($address['house']) ? $address['house'] : '' }}" required>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <label for="requiredLabel" class="col-md-2 col-form-label input-label text-md-right">
-                                    {{ translate('Floor') }}
-                                </label>
-                                <div class="col-md-10 js-form-message">
-                                    <input type="text" class="form-control" name="floor"
-                                        value="{{ isset($address['floor']) ? $address['floor'] : '' }}" required>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <label for="requiredLabel" class="col-md-2 col-form-label input-label text-md-right">
-                                    {{ translate('Road') }}
-                                </label>
-                                <div class="col-md-10 js-form-message">
-                                    <input type="text" class="form-control" name="road"
-                                        value="{{ isset($address['road']) ? $address['road'] : '' }}" required>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <label for="requiredLabel" class="col-md-2 col-form-label input-label text-md-right">
-                                    {{ translate('messages.address') }}
-                                </label>
-                                <div class="col-md-10 js-form-message">
-                                    <input type="text" class="form-control" name="address"
-                                        value="{{ $address['address'] }}" required>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <label for="requiredLabel" class="col-md-2 col-form-label input-label text-md-right">
-                                    {{ translate('messages.latitude') }}
-                                </label>
-                                <div class="col-md-4 js-form-message">
-                                    <input type="text" class="form-control" name="latitude"
-                                        value="{{ $address['latitude'] }}" required>
-                                </div>
-                                <label for="requiredLabel" class="col-md-2 col-form-label input-label text-md-right">
-                                    {{ translate('messages.longitude') }}
-                                </label>
-                                <div class="col-md-4 js-form-message">
-                                    <input type="text" class="form-control" name="longitude"
-                                        value="{{ $address['longitude'] }}" required>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-white"
-                                data-dismiss="modal">{{ translate('messages.close') }}</button>
-                            <button type="submit" class="btn btn-primary">{{ translate('messages.save_changes') }}</button>
-                        </div>
-                    </form>
-                @endif
-            </div>
-        </div>
-    </div>
-    <!-- End Modal -->
 
         <!-- Modal -->
         <div class="modal fade order-proof-modal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
@@ -1207,10 +1081,7 @@
                     <div class="modal-body">
                         <!-- Input Group -->
                         <div class="flex-grow-1 mx-auto">
-                            {{-- <label class="text-dark d-block">
-                                {{ translate('messages.item_image') }}
-                                <small class="text-danger">* ( {{ translate('messages.ratio') }} 1:1 )</small>
-                            </label> --}}
+
                             <div class="d-flex flex-wrap __gap-12px __new-coba" id="coba">
                                 @php($proof = isset($order->order_proof) ? json_decode($order->order_proof, true) : 0)
                                 @if ($proof)
@@ -1253,8 +1124,8 @@
                         @csrf
                         <input type="hidden" name="order_id" value="{{ $order->id }}">
                         <div class="form-group col-12">
-                            <label for="">{{ translate('messages.order_amount') }}</label>
-                            <input type="number" class="form-control" name="order_amount" min="0"
+                            <label for="order_amount">{{ translate('messages.order_amount') }}</label>
+                            <input id="order_amount" type="number" class="form-control" name="order_amount" min="0"
                                 value="{{ $order['order_amount'] - $order['total_tax_amount']  - $order['additional_charge'] -  $order['delivery_charge'] + $order['store_discount_amount'] }}" step=".01">
                         </div>
 
@@ -1281,8 +1152,8 @@
                         @csrf
                         <input type="hidden" name="order_id" value="{{ $order->id }}">
                         <div class="form-group col-12">
-                            <label for="">{{ translate('messages.discount_amount') }}</label>
-                            <input type="number" class="form-control" name="discount_amount" min="0"
+                            <label for="discount_amount">{{ translate('messages.discount_amount') }}</label>
+                            <input type="number" id="discount_amount" class="form-control" name="discount_amount" min="0"
                                 value="{{ $order['store_discount_amount'] }}" step=".01">
                         </div>
 
@@ -1301,18 +1172,20 @@
 
 @endsection
 @push('script_2')
-    <script>
-        function cancelled_status() {
+    <script src="{{ asset('public/assets/admin/js/spartan-multi-image-picker.js') }}"></script>
+    <script type="text/javascript">
+        "use strict";
+        $('.cancelled-status').on('click',function (){
             Swal.fire({
                 title: '{{ translate('messages.are_you_sure') }}',
                 text: '{{ translate('messages.Change status to canceled ?') }}',
                 type: 'warning',
                 html:
-                `   <select class="form-control js-select2-custom mx-1" name="reason" id="reason">
+                    `   <select class="form-control js-select2-custom mx-1" name="reason" id="reason">
                     @foreach ($reasons as $r)
-                        <option value="{{ $r->reason }}">
+                    <option value="{{ $r->reason }}">
                             {{ $r->reason }}
-                        </option>
+                    </option>
                     @endforeach
 
                     </select>`,
@@ -1323,24 +1196,28 @@
                 confirmButtonText: '{{ translate('messages.yes') }}',
                 reverseButtons: true,
                 onOpen: function () {
-                        $('.js-select2-custom').select2({
-                            minimumResultsForSearch: 5,
-                            width: '100%',
-                            placeholder: "Select Reason",
-                            language: "en",
-                        });
-                    }
+                    $('.js-select2-custom').select2({
+                        minimumResultsForSearch: 5,
+                        width: '100%',
+                        placeholder: "Select Reason",
+                        language: "en",
+                    });
+                }
             }).then((result) => {
                 if (result.value) {
-                    // console.log(result);
-                    var reason = document.getElementById('reason').value;
+                    let reason = document.getElementById('reason').value;
                     location.href = '{!! route('vendor.order.status', ['id' => $order['id'],'order_status' => 'canceled']) !!}&reason='+reason,'{{ translate('Change status to canceled ?') }}';
                 }
             })
-        }
 
+        });
 
-        function order_status_change_alert(route, message, verification, processing = false) {
+        $('.order-status-change-alert').on('click',function (){
+            let route = $(this).data('url');
+            let message = $(this).data('message');
+            let verification = $(this).data('verification');
+            let processing = $(this).data('processing-time') ?? false;
+
             if (verification) {
                 Swal.fire({
                     title: '{{ translate('Enter order verification code') }}',
@@ -1360,7 +1237,6 @@
                 })
             } else if (processing) {
                 Swal.fire({
-                    //text: message,
                     title: '{{ translate('messages.Are you sure ?') }}',
                     type: 'warning',
                     showCancelButton: true,
@@ -1394,17 +1270,9 @@
                     }
                 })
             }
-        }
 
-        function last_location_view() {
-            toastr.warning('Only available when order is out for delivery!', {
-                CloseButton: true,
-                ProgressBar: true
-            });
-        }
-    </script>
-    <script src="{{ asset('public/assets/admin/js/spartan-multi-image-picker.js') }}"></script>
-    <script type="text/javascript">
+        });
+
         $(function() {
             $("#coba").spartanMultiImagePicker({
                 fieldName: 'order_proof[]',
@@ -1426,14 +1294,14 @@
                 onRemoveRow: function(index) {
 
                 },
-                onExtensionErr: function(index, file) {
+                onExtensionErr: function() {
                     toastr.error(
                         "{{ translate('messages.please_only_input_png_or_jpg_type_file') }}", {
                             CloseButton: true,
                             ProgressBar: true
                         });
                 },
-                onSizeErr: function(index, file) {
+                onSizeErr: function() {
                     toastr.error("{{ translate('messages.file_size_too_big') }}", {
                         CloseButton: true,
                         ProgressBar: true

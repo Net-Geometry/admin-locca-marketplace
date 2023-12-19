@@ -49,24 +49,24 @@
                         <div class="lang_form" id="default-form">
                             <div class="form-group">
                                 <label class="input-label" for="default_name">{{translate('messages.name')}} ({{ translate('messages.default') }})</label>
-                                <input type="text" name="name[]" id="default_name" class="form-control" placeholder="{{translate('messages.new_item')}}" oninvalid="document.getElementById('en-link').click()">
+                                <input type="text" name="name[]" id="default_name" class="form-control" placeholder="{{translate('messages.new_item')}}"  >
                             </div>
                             <input type="hidden" name="lang[]" value="default">
                             <div class="form-group">
                                 <label class="input-label" for="description">{{translate('messages.short_description')}} ({{ translate('messages.default') }})</label>
-                                <textarea type="text" name="description[]" class="form-control ckeditor" oninvalid="document.getElementById('en-link').click()"></textarea>
+                                <textarea type="text" name="description[]" class="form-control ckeditor"  ></textarea>
                             </div>
                         </div>
                             @foreach(json_decode($language) as $lang)
                                 <div class="d-none lang_form" id="{{$lang}}-form">
                                     <div class="form-group">
                                         <label class="input-label" for="{{$lang}}_name">{{translate('messages.name')}} ({{strtoupper($lang)}})</label>
-                                        <input type="text" name="name[]" id="{{$lang}}_name" class="form-control" placeholder="{{translate('messages.new_item')}}" oninvalid="document.getElementById('en-link').click()">
+                                        <input type="text" name="name[]" id="{{$lang}}_name" class="form-control" placeholder="{{translate('messages.new_item')}}"  >
                                     </div>
                                     <input type="hidden" name="lang[]" value="{{$lang}}">
                                     <div class="form-group">
                                         <label class="input-label" for="description">{{translate('messages.short_description')}} ({{strtoupper($lang)}})</label>
-                                        <textarea type="text" name="description[]" class="form-control ckeditor" oninvalid="document.getElementById('en-link').click()"></textarea>
+                                        <textarea type="text" name="description[]" class="form-control ckeditor"  ></textarea>
                                     </div>
                                 </div>
                             @endforeach
@@ -100,11 +100,11 @@
                                 {{translate('messages.image')}}
                                 <small class="text-danger">* ( {{translate('messages.ratio')}} 200x200)</small>
                             </label>
-                            <center class="py-3 my-auto">
+                            <div class="text-center py-3 my-auto">
                                 <img class="img--120" id="viewer"
                                     src="{{asset('public/assets/admin/img/900x400/img1.jpg')}}"
                                     alt="image"/>
-                            </center>
+                            </div>
                             <div class="custom-file">
                                 <input type="file" name="image" id="customFileEg1" class="custom-file-input"
                                     accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*" required>

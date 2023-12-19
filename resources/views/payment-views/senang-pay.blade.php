@@ -7,7 +7,7 @@
 @section('content')
 
     @if(isset($config))
-        <center><h1>Please do not refresh this page...</h1></center>
+        <div class="text-center"> <h1>Please do not refresh this page...</h1></div>
 
         <div class="col-md-6 mb-4" style="cursor: pointer">
             <div class="card">

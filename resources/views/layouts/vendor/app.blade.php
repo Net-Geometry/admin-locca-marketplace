@@ -140,13 +140,13 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-12">
-                            <center>
+                            <div class="text-center"> 
                                 <h2>
                                     <i class="tio-shopping-cart-outlined"></i> {{translate('messages.You have new order, Check Please.')}}
                                 </h2>
                                 <hr>
                                 <button onclick="check_order()" class="btn btn-primary">{{translate('messages.Ok, let me check')}}</button>
-                            </center>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -173,14 +173,14 @@
 {!! Toastr::message() !!}
 
 @if ($errors->any())
-    <script>
-        @foreach($errors->all() as $error)
-        toastr.error('{{$error}}', Error, {
-            CloseButton: true,
-            ProgressBar: true
-        });
-        @endforeach
-    </script>
+<script>
+    @foreach ($errors->all() as $error)
+    toastr.error('{{ translate($error) }}', Error, {
+        CloseButton: true,
+        ProgressBar: true
+    });
+    @endforeach
+</script>
 @endif
 <!-- Toggle Direction Init -->
 <script>
@@ -339,7 +339,7 @@
 <audio id="myAudio">
     <source src="{{asset('public/assets/admin/sound/notification.mp3')}}" type="audio/mpeg">
 </audio>
-
+    <script src="{{asset('public/assets/admin/js/view-pages/common.js')}}"></script>
 <script>
     var audio = document.getElementById("myAudio");
 
@@ -484,7 +484,7 @@ fetch('https://iid.googleapis.com/iid/v1/' + token + '/rel/topics/' + topic, {
             }
         }
 
-        function converationList() {
+        function conversationList() {
             $.ajax({
                 url: "{{ route('vendor.message.list') }}",
                 success: function(data) {
@@ -534,7 +534,7 @@ fetch('https://iid.googleapis.com/iid/v1/' + token + '/rel/topics/' + topic, {
                     });
 
             if($('#conversation-list').scrollTop() == 0){
-                converationList();
+                conversationList();
             }
         }
         });
@@ -570,7 +570,7 @@ fetch('https://iid.googleapis.com/iid/v1/' + token + '/rel/topics/' + topic, {
         }
 
         startFCM();
-        converationList();
+        conversationList();
         if(getUrlParameter('conversation')){
             conversationView();
         }
@@ -600,21 +600,6 @@ fetch('https://iid.googleapis.com/iid/v1/' + token + '/rel/topics/' + topic, {
 
 
 <script>
-      function toogleModal(e, toggle_id, on_image, off_image, on_title, off_title, on_message, off_message) {
-        e.preventDefault();
-        if ($('#'+toggle_id).is(':checked')) {
-            $('#toggle-title').empty().append(on_title);
-            $('#toggle-message').empty().append(on_message);
-            $('#toggle-image').attr('src', "{{asset('/public/assets/admin/img/modal')}}/"+on_image);
-            $('#toggle-ok-button').attr('toggle-ok-button', toggle_id);
-        } else {
-            $('#toggle-title').empty().append(off_title);
-            $('#toggle-message').empty().append(off_message);
-            $('#toggle-image').attr('src', "{{asset('/public/assets/admin/img/modal')}}/"+off_image);
-            $('#toggle-ok-button').attr('toggle-ok-button', toggle_id);
-        }
-        $('#toggle-modal').modal('show');
-    }
 
     function confirmToggle() {
         var toggle_id = $('#toggle-ok-button').attr('toggle-ok-button');
@@ -651,21 +636,7 @@ fetch('https://iid.googleapis.com/iid/v1/' + token + '/rel/topics/' + topic, {
 
     }
 
-    function toogleStatusModal(e, toggle_id, on_image, off_image, on_title, off_title, on_message, off_message) {
-        e.preventDefault();
-        if ($('#'+toggle_id).is(':checked')) {
-            $('#toggle-status-title').empty().append(on_title);
-            $('#toggle-status-message').empty().append(on_message);
-            $('#toggle-status-image').attr('src', "{{asset('/public/assets/admin/img/modal')}}/"+on_image);
-            $('#toggle-status-ok-button').attr('toggle-ok-button', toggle_id);
-        } else {
-            $('#toggle-status-title').empty().append(off_title);
-            $('#toggle-status-message').empty().append(off_message);
-            $('#toggle-status-image').attr('src', "{{asset('/public/assets/admin/img/modal')}}/"+off_image);
-            $('#toggle-status-ok-button').attr('toggle-ok-button', toggle_id);
-        }
-        $('#toggle-status-modal').modal('show');
-    }
+
 
     function confirmStatusToggle() {
         var toggle_id = $('#toggle-status-ok-button').attr('toggle-ok-button');

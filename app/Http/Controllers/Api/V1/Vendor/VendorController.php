@@ -79,8 +79,8 @@ class VendorController extends Controller
         }
 
         $vendor['show_pay_now_button'] = false;
-
-        if ($min_amount_to_pay_store <= $vendor?->wallet?->collected_cash){
+        $digital_payment = Helpers::get_business_settings('digital_payment');
+        if ($min_amount_to_pay_store <= $vendor?->wallet?->collected_cash && $digital_payment['status'] == 1 ){
             $vendor['show_pay_now_button'] = true;
         }
 
@@ -413,7 +413,7 @@ class VendorController extends Controller
             if($order->is_guest == 0){
                 $order->customer->increment('order_count');
             }
-            $order->store->increment('order_count');
+            $order?->store?->increment('order_count');
 
 
             $img_names = [];

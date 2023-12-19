@@ -46,10 +46,10 @@
                             <!-- End Card -->
                         </div>
                         <div class="col-lg-8 col-nd-6" id="vendor-view-conversation">
-                            <center class="mt-2">
+                            <div class="text-center mt-2">
                                 <h4 class="initial-29">{{ translate('messages.view_conversation') }}
                                 </h4>
-                            </center>
+                            </div>
                             {{-- view here --}}
                         </div>
                     </div>

@@ -84,8 +84,7 @@
 
                         @foreach (json_decode($product->food_variations) as $key => $choice)
                             @if (isset($choice->price) == false)
-                                <div class="h3 p-0 pt-2">{{ $choice->name }} <small style="font-size: 12px"
-                                        class="text-muted">
+                                <div class="h3 p-0 pt-2">{{ $choice->name }} <small  class="text-muted initial--18">
                                         ({{ $choice->required == 'on' ? translate('messages.Required') : translate('messages.optional') }})
                                     </small>
                                 </div>
@@ -217,7 +216,7 @@
         </div>
     </div>
 </div>
-
+<script src="{{asset('public/assets/admin')}}/js/view-pages/common.js"></script>
 <script type="text/javascript">
     "use strict";
     cartQuantityInitialize();

@@ -68,7 +68,7 @@
                                         </label>
                                         <input type="text" name="name[]" id="default_name"
                                             class="form-control" placeholder="{{ translate('messages.new_item') }}"
-                                            oninvalid="document.getElementById('en-link').click()">
+                                             >
                                     </div>
                                     <input type="hidden" name="lang[]" value="default">
                                     <div class="form-group mb-0">
@@ -87,7 +87,7 @@
                                                 </label>
                                                 <input type="text" name="name[]" id="{{ $lang }}_name"
                                                     class="form-control" placeholder="{{ translate('messages.new_item') }}"
-                                                    oninvalid="document.getElementById('en-link').click()">
+                                                     >
                                             </div>
                                             <input type="hidden" name="lang[]" value="{{ $lang }}">
                                             <div class="form-group mb-0">
@@ -137,10 +137,10 @@
                                     {{translate('messages.item_thumbnail')}}
                                     <small class="text-danger">* ( {{translate('messages.ratio')}} 1:1 )</small>
                                 </label>
-                                <center id="image-viewer-section" class="pt-2 pb-3 text-left">
+                                <div id="image-viewer-section" class="text-center pt-2 pb-3 text-left">
                                     <img class="img--100" id="viewer"
                                             src="{{asset('public/assets/admin/img/100x100/2.png')}}" alt="banner image"/>
-                                </center>
+                                </div>
                                 <div class="custom-file">
                                     <input type="file" name="image" id="customFileEg1" class="custom-file-input"
                                             accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*" required>
@@ -226,7 +226,7 @@
                                 <div class="col-sm-6 col-lg-4">
                                     <div class="form-group mb-0">
                                         <label class="input-label" for="exampleFormControlInput1">{{translate('messages.price')}}</label>
-                                        <input type="number" min="0" max="100000" step="0.01" value="1" name="price" class="form-control"
+                                        <input type="number" min="0" max="999999999999" step="0.01" value="1" name="price" class="form-control"
                                                 placeholder="{{ translate('messages.Ex:') }} 100" required>
                                     </div>
                                 </div>

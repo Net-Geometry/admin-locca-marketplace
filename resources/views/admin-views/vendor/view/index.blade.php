@@ -185,7 +185,7 @@
                         </li>
                         @else
                         <li class="my-auto">
-                            <center class="card-subtitle">{{ translate('messages.No Data found') }}</center>
+                            <div class="text-center card-subtitle">{{ translate('messages.No Data found') }}</div>
                         </li>
                         @endif
                     </ul>

@@ -229,6 +229,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                     Route::get(DeliveryMan::EXPORT[URI], [DeliveryManController::class, 'exportList'])->name('export');
                     Route::get(DeliveryMan::EARNING_EXPORT[URI], [DeliveryManController::class, 'getEarningListExport'])->name('earning-export');
                     Route::get(DeliveryMan::REVIEW_EXPORT[URI], [DeliveryManController::class, 'getReviewExportList'])->name('review-export');
+                    Route::get('disbursement-export/{id}/{type}', [DeliveryManController::class, 'disbursement_export'])->name('disbursement-export');
 
                     Route::group(['prefix' => 'reviews', 'as' => 'reviews.'], function () {
                         Route::get(DeliveryMan::REVIEW_LIST[URI], [DeliveryManController::class, 'getReviewListView'])->name('list');

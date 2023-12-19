@@ -276,7 +276,8 @@ class OtherBannerController extends Controller
         $request->validate([
             'section_title' => 'required',
             'banner_type' => 'required',
-            'banner_video' => 'required_if:banner_type,video'
+            'banner_video' => 'required_if:banner_type,video',
+            'banner_video_content' => 'nullable|file|mimes:mp4,webm,ogg|max:5120'
         ]);
 
         $module_id = Config::get('module.current_module_id');
@@ -317,6 +318,16 @@ class OtherBannerController extends Controller
 
         $banner_image->value = $request->has('banner_image') ? Helpers::update('promotional_banner/', $banner_image->value, 'png', $request->file('banner_image')) :$banner_image->value;
         $banner_image->save();
+
+        $banner_video_content = ModuleWiseBanner::firstOrNew([
+            'module_id' => $module_id,
+            'type' => 'video_banner_content',
+            'key' => 'banner_video_content',
+        ]);
+
+        $banner_video_content->value = $request->has('banner_video_content') ? Helpers::update('promotional_banner/video/', $banner_video_content->value, $request->file('banner_video_content')->getClientOriginalExtension(), $request->file('banner_video_content')) : $banner_video_content->value;
+        $banner_video_content->save();
+
 
         Toastr::success(translate('messages.video_/_image_content_setup_updated'));
         return back();

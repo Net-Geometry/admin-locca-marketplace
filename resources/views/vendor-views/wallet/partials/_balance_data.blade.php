@@ -17,6 +17,10 @@
     else{
         $adjust_able = false;
     }
+
+    $digital_payment = App\CentralLogics\Helpers::get_business_settings('digital_payment');
+    $digital_payment  = $digital_payment['status'];
+
     ?>
 
     @if($adjust_able ==  true  || ($disbursement_type ==  'manual' && $wallet->balance > 0) || $wallet->balance < 0 || ( $wallet->collected_cash > 0 && $min_amount_to_pay_store <= $wallet->collected_cash ))
@@ -123,7 +127,7 @@
                                     </a>
                                 @endif
 
-                                @if ($min_amount_to_pay_store <= $wallet->collected_cash)
+                                @if ($min_amount_to_pay_store <= $wallet->collected_cash && $digital_payment == 1)
                                     <a class="btn btn--primary d-flex gap-1 align-items-center text-nowrap"  href="javascript:" data-toggle="modal" data-target="#payment_model">{{translate('messages.Pay_Now')}}
 
                                         <span class="form-label-secondary  d-flex"

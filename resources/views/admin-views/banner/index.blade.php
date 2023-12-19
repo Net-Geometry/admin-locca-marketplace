@@ -126,10 +126,10 @@
                                 <div class="col-lg-6">
                                     <div class="h-100 d-flex flex-column">
                                         <label class="mt-auto mb-0 d-block text-center">{{translate('messages.banner_image')}} <small class="text-danger">* ( {{translate('messages.ratio')}} 3:1 )</small></label>
-                                        <center class="py-3 my-auto">
+                                        <div class="text-center py-3 my-auto">
                                             <img class="img--vertical" id="viewer"
                                                 src="{{asset('public/assets/admin/img/900x400/img1.jpg')}}" alt="banner image"/>
-                                        </center>
+                                        </div>
                                         <div class="custom-file">
                                             <input type="file" name="image" id="customFileEg1" class="custom-file-input"
                                                 accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*" required>

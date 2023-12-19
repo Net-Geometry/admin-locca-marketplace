@@ -42,13 +42,13 @@
                                                 <div class="col-6">
                                                     <div class="form-group">
                                                         <label class="input-label" for="default_title">{{translate('messages.Bonus_Title')}} ({{translate('messages.default')}})</label>
-                                                        <input type="text" name="title[]" id="default_title" class="form-control" placeholder="{{translate('messages.title')}}" value="{{$bonus?->getRawOriginal('title')}}" oninvalid="document.getElementById('en-link').click()">
+                                                        <input type="text" name="title[]" id="default_title" class="form-control" placeholder="{{translate('messages.title')}}" value="{{$bonus?->getRawOriginal('title')}}"  >
                                                     </div>
                                                 </div>
                                                 <div class="col-6">
                                                     <div class="form-group">
                                                         <label class="input-label" for="default_description">{{translate('messages.Short_Description')}} ({{translate('messages.default')}})</label>
-                                                        <input type="text" name="description[]" id="default_description" class="form-control" placeholder="{{translate('messages.description')}}" value="{{$bonus?->getRawOriginal('description')}}" oninvalid="document.getElementById('en-link').click()">
+                                                        <input type="text" name="description[]" id="default_description" class="form-control" placeholder="{{translate('messages.description')}}" value="{{$bonus?->getRawOriginal('description')}}"  >
                                                     </div>
                                                 </div>
                                             </div>
@@ -74,13 +74,13 @@
                                                     <div class="col-6">
                                                         <div class="form-group">
                                                             <label class="input-label" for="{{$lang}}_title">{{translate('messages.Bonus_Title')}} ({{strtoupper($lang)}})</label>
-                                                            <input type="text" name="title[]" id="{{$lang}}_title" class="form-control" placeholder="{{translate('messages.title')}}" value="{{$translate[$lang]['title']??''}}" oninvalid="document.getElementById('en-link').click()">
+                                                            <input type="text" name="title[]" id="{{$lang}}_title" class="form-control" placeholder="{{translate('messages.title')}}" value="{{$translate[$lang]['title']??''}}"  >
                                                         </div>
                                                     </div>
                                                     <div class="col-6">
                                                         <div class="form-group">
                                                             <label class="input-label" for="{{$lang}}_description">{{translate('messages.Short_Description')}} ({{strtoupper($lang)}})</label>
-                                                            <input type="text" name="description[]" id="{{$lang}}_description" class="form-control" placeholder="{{translate('messages.description')}}" value="{{$translate[$lang]['description']??''}}" oninvalid="document.getElementById('en-link').click()">
+                                                            <input type="text" name="description[]" id="{{$lang}}_description" class="form-control" placeholder="{{translate('messages.description')}}" value="{{$translate[$lang]['description']??''}}"  >
                                                         </div>
                                                     </div>
                                                 </div>

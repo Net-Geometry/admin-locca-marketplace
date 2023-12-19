@@ -47,7 +47,7 @@
                             @if($language)
                                 <div class="form-group lang_form" id="default-form">
                                     <label class="input-label" for="exampleFormControlInput1">{{translate('messages.name')}} ({{ translate('messages.default') }})</label>
-                                    <input type="text" name="name[]" class="form-control" placeholder="{{translate('messages.new_category')}}" maxlength="191" value="{{$category?->getRawOriginal('name')}}" oninvalid="document.getElementById('en-link').click()">
+                                    <input type="text" name="name[]" class="form-control" placeholder="{{translate('messages.new_category')}}" maxlength="191" value="{{$category?->getRawOriginal('name')}}"  >
                                 </div>
                                 <input type="hidden" name="lang[]" value="default">
                                 @foreach($language as $lang)
@@ -64,7 +64,7 @@
                                     ?>
                                     <div class="form-group d-none lang_form" id="{{$lang}}-form">
                                         <label class="input-label" for="exampleFormControlInput1">{{translate('messages.name')}} ({{strtoupper($lang)}})</label>
-                                        <input type="text" name="name[]" class="form-control" placeholder="{{translate('messages.new_category')}}" maxlength="191" value="{{$translate[$lang]['name']??''}}" oninvalid="document.getElementById('en-link').click()">
+                                        <input type="text" name="name[]" class="form-control" placeholder="{{translate('messages.new_category')}}" maxlength="191" value="{{$translate[$lang]['name']??''}}"  >
                                     </div>
                                     <input type="hidden" name="lang[]" value="{{$lang}}">
                                 @endforeach
@@ -84,12 +84,12 @@
                                 <label class="mb-0">{{translate('messages.image')}}
                                     <small class="text-danger">* ( {{translate('messages.ratio')}} 1:1 )</small>
                                 </label>
-                                <center class="py-3 my-auto">
+                                <div class="text-center py-3 my-auto">
                                     <img class="img--100 onerror-image" id="viewer"
                                         src="{{asset('storage/app/public/category')}}/{{$category['image']}}"
                                         data-onerror-image="{{asset('public/assets/admin/img/900x400/img1.jpg')}}"
                                         alt=""/>
-                                </center>
+                                </div>
                                 <div class="custom-file">
                                     <input type="file" name="image" id="customFileEg1" class="custom-file-input"
                                             accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">

@@ -31,10 +31,10 @@ Route::group(['namespace' => 'Vendor', 'as' => 'vendor.'], function () {
                 Route::post('discount', 'POSController@update_discount')->name('discount');
                 Route::get('customers', 'POSController@get_customers')->name('customers');
                 Route::post('order', 'POSController@place_order')->name('order');
-                Route::get('orders', 'POSController@order_list')->name('orders');
-                Route::post('search', 'POSController@search')->name('search');
-                Route::get('order-details/{id}', 'POSController@order_details')->name('order-details');
-                Route::get('invoice/{id}', 'POSController@generate_invoice');
+                // Route::get('orders', 'POSController@order_list')->name('orders');
+                // Route::post('search', 'POSController@search')->name('search');
+                // Route::get('order-details/{id}', 'POSController@order_details')->name('order-details');
+                // Route::get('invoice/{id}', 'POSController@generate_invoice');
                 Route::post('customer-store', 'POSController@customer_store')->name('customer-store');
                 Route::get('data', 'POSController@extra_charge')->name('extra_charge');
             });
@@ -48,8 +48,8 @@ Route::group(['namespace' => 'Vendor', 'as' => 'vendor.'], function () {
             Route::get('get-all', 'CategoryController@get_all')->name('get-all');
             Route::get('list', 'CategoryController@index')->name('add');
             Route::get('sub-category-list', 'CategoryController@sub_index')->name('add-sub-category');
-            Route::post('search', 'CategoryController@search')->name('search');
-            Route::post('sub-search', 'CategoryController@sub_search')->name('sub-search');
+//            Route::post('search', 'CategoryController@search')->name('search');
+//            Route::post('sub-search', 'CategoryController@sub_search')->name('sub-search');
             Route::get('export-categories', 'CategoryController@export_categories')->name('export-categories');
             Route::get('export-sub-categories', 'CategoryController@export_sub_categories')->name('export-sub-categories');
         });
@@ -60,7 +60,7 @@ Route::group(['namespace' => 'Vendor', 'as' => 'vendor.'], function () {
             Route::get('edit/{id}', 'CustomRoleController@edit')->name('edit');
             Route::post('update/{id}', 'CustomRoleController@update')->name('update');
             Route::delete('delete/{id}', 'CustomRoleController@distroy')->name('delete');
-            Route::post('search', 'CustomRoleController@search')->name('search');
+//            Route::post('search', 'CustomRoleController@search')->name('search');
         });
 
         Route::group(['prefix' => 'delivery-man', 'as' => 'delivery-man.', 'middleware' => ['module:deliveryman']], function () {
@@ -73,7 +73,7 @@ Route::group(['namespace' => 'Vendor', 'as' => 'vendor.'], function () {
             Route::get('edit/{id}', 'DeliveryManController@edit')->name('edit');
             Route::post('update/{id}', 'DeliveryManController@update')->name('update');
             Route::delete('delete/{id}', 'DeliveryManController@delete')->name('delete');
-            Route::post('search', 'DeliveryManController@search')->name('search');
+//            Route::post('search', 'DeliveryManController@search')->name('search');
             Route::get('get-deliverymen', 'DeliveryManController@get_deliverymen')->name('get-deliverymen');
             Route::post('transation/search', 'DeliveryManController@transaction_search')->name('transaction-search');
 
@@ -89,7 +89,7 @@ Route::group(['namespace' => 'Vendor', 'as' => 'vendor.'], function () {
             Route::get('edit/{id}', 'EmployeeController@edit')->name('edit');
             Route::post('update/{id}', 'EmployeeController@update')->name('update');
             Route::delete('delete/{id}', 'EmployeeController@distroy')->name('delete');
-            Route::post('search', 'EmployeeController@search')->name('search');
+//            Route::post('search', 'EmployeeController@search')->name('search');
             Route::get('list-export', 'EmployeeController@list_export')->name('export-employee');
         });
 
@@ -139,7 +139,7 @@ Route::group(['namespace' => 'Vendor', 'as' => 'vendor.'], function () {
             Route::post('update/{banner}', 'BannerController@update')->name('update');
             Route::get('status/{id}/{status}', 'BannerController@status_update')->name('status_update');
             Route::delete('delete/{banner}', 'BannerController@delete')->name('delete');
-            Route::post('search', 'BannerController@search')->name('search');
+            // Route::post('search', 'BannerController@search')->name('search');
             Route::get('join_campaign/{id}/{status}', 'BannerController@status')->name('status');
         });
 
@@ -148,7 +148,7 @@ Route::group(['namespace' => 'Vendor', 'as' => 'vendor.'], function () {
             Route::get('item/list', 'CampaignController@itemlist')->name('itemlist');
             Route::get('remove-store/{campaign}/{store}', 'CampaignController@remove_store')->name('remove-store');
             Route::get('add-store/{campaign}/{store}', 'CampaignController@addstore')->name('add-store');
-            Route::post('search', 'CampaignController@search')->name('search');
+            // Route::post('search', 'CampaignController@search')->name('search');
             Route::post('search-item', 'CampaignController@searchItem')->name('searchItem');
         });
 
@@ -180,7 +180,7 @@ Route::group(['namespace' => 'Vendor', 'as' => 'vendor.'], function () {
             Route::post('update/{id}', 'CouponController@update');
             Route::get('status/{id}/{status}', 'CouponController@status')->name('status');
             Route::delete('delete/{id}', 'CouponController@delete')->name('delete');
-            Route::post('search', 'CouponController@search')->name('search');
+//            Route::post('search', 'CouponController@search')->name('search');
         });
 
         Route::group(['prefix' => 'addon', 'as' => 'addon.', 'middleware' => ['module:addon']], function () {
@@ -194,7 +194,7 @@ Route::group(['namespace' => 'Vendor', 'as' => 'vendor.'], function () {
         Route::group(['prefix' => 'order', 'as' => 'order.' , 'middleware' => ['module:order']], function () {
             Route::get('list/{status}', 'OrderController@list')->name('list');
             Route::put('status-update/{id}', 'OrderController@status')->name('status-update');
-            Route::post('search', 'OrderController@search')->name('search');
+//            Route::post('search', 'OrderController@search')->name('search');
             Route::post('add-to-cart', 'OrderController@add_to_cart')->name('add-to-cart');
             Route::post('remove-from-cart', 'OrderController@remove_from_cart')->name('remove-from-cart');
             Route::get('update/{order}', 'OrderController@update')->name('update');

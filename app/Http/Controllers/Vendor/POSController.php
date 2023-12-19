@@ -674,51 +674,7 @@ class POSController extends Controller
         return back();
     }
 
-    // public function order_list()
-    // {
-    //     $orders = Order::with(['customer'])
-    //     ->where('order_type', 'pos')
-    //     ->where('store_id',\App\CentralLogics\Helpers::get_store_id())
-    //     ->latest()
-    //     ->paginate(config('default_pagination'));
 
-    //     return view('vendor-views.pos.order.list', compact('orders'));
-    // }
-
-    // public function search(Request $request){
-    //     $key = explode(' ', $request['search']);
-    //     $orders=Order::where(['store_id'=>Helpers::get_store_id()])->where(function ($q) use ($key) {
-    //         foreach ($key as $value) {
-    //             $q->orWhere('id', 'like', "%{$value}%")
-    //                 ->orWhere('order_status', 'like', "%{$value}%")
-    //                 ->orWhere('transaction_reference', 'like', "%{$value}%");
-    //         }
-    //     })->pos()->limit(100)->get();
-    //     return response()->json([
-    //         'view'=>view('vendor-views.pos.order.partials._table',compact('orders'))->render()
-    //     ]);
-    // }
-
-    // public function order_details($id)
-    // {
-    //     $order = Order::with('details')->where(['id' => $id, 'store_id' => Helpers::get_store_id()])->first();
-    //     if (isset($order)) {
-    //         return view('vendor-views.pos.order.order-view', compact('order'));
-    //     } else {
-    //         Toastr::info(translate('No more orders!'));
-    //         return back();
-    //     }
-    // }
-
-    public function generate_invoice($id)
-    {
-        $order = Order::where('id', $id)->first();
-
-        return response()->json([
-            'success' => 1,
-            'view' => view('vendor-views.pos.order.invoice', compact('order'))->render(),
-        ]);
-    }
 
     public function customer_store(Request $request)
     {

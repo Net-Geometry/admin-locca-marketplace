@@ -25,26 +25,24 @@ class DeliveryManController extends Controller
 
     public function list(Request $request)
     {
-        $delivery_men = DeliveryMan::where('store_id', Helpers::get_store_id())->latest()->paginate(config('default_pagination'));
+        $key = explode(' ', $request['search']);
+        $delivery_men = DeliveryMan::where('store_id', Helpers::get_store_id())
+                 ->when( isset($key) , function($query) use($key){
+                    $query->where(function ($q) use ($key) {
+                        foreach ($key as $value) {
+                            $q->orWhere('f_name', 'like', "%{$value}%")
+                                ->orWhere('l_name', 'like', "%{$value}%")
+                                ->orWhere('email', 'like', "%{$value}%")
+                                ->orWhere('phone', 'like', "%{$value}%")
+                                ->orWhere('identity_number', 'like', "%{$value}%");
+                        }
+                    });
+                }
+        )->latest()->paginate(config('default_pagination'));
         return view('vendor-views.delivery-man.list', compact('delivery_men'));
     }
 
-    public function search(Request $request){
-        $key = explode(' ', $request['search']);
-        $delivery_men=DeliveryMan::where(function ($q) use ($key) {
-            foreach ($key as $value) {
-                $q->orWhere('f_name', 'like', "%{$value}%")
-                    ->orWhere('l_name', 'like', "%{$value}%")
-                    ->orWhere('email', 'like', "%{$value}%")
-                    ->orWhere('phone', 'like', "%{$value}%")
-                    ->orWhere('identity_number', 'like', "%{$value}%");
-            }
-        })->where('store_id', Helpers::get_store_id())->get();
-        return response()->json([
-            'view'=>view('vendor-views.delivery-man.partials._table',compact('delivery_men'))->render(),
-            'count'=>$delivery_men->count()
-        ]);
-    }
+
 
     public function reviews_list(){
         $reviews=DMReview::with(['delivery_man','customer'])->latest()->paginate(config('default_pagination'));

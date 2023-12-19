@@ -11175,9 +11175,24 @@ body > .initial-38-1 {
     z-index: 1;
 }
 
-
-
 .module-warning-text{
     color: #8c1515;
     padding-top: 10px;
+}
+
+.view_conversation-style{
+    margin-top: 10%;
+}
+.view_conversation-h4-style{
+    color: rgba(113,120,133,0.62);
+}
+.select2-container--open {
+    z-index: 99999999999999;
+}
+
+
+@page {
+    size: auto;
+    margin: 0;
+    /* this affects the margin in the printer settings */
 }

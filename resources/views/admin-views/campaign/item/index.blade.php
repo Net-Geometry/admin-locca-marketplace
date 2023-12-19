@@ -131,10 +131,10 @@
                                 <small class="text-danger">* ( {{translate('messages.ratio')}} 1:1 )</small>
                             </label>
 
-                            <center id="image-viewer-section" class="py-3 my-auto">
+                            <div id="image-viewer-section" class="text-center py-3 my-auto">
                                 <img class="img--120" id="viewer"
                                         src="{{asset('public/assets/admin/img/100x100/2.png')}}" alt="banner image"/>
-                            </center>
+                            </div>
                             <div class="custom-file">
                                 <input type="file" name="image" id="customFileEg1" class="custom-file-input"
                                         accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*" required>

@@ -75,9 +75,13 @@ class DeliverymanController extends Controller
         }
 
         $dm['show_pay_now_button'] = false;
-        if ($min_amount_to_pay_dm <= $dm?->wallet?->collected_cash  ){
+
+        $digital_payment = Helpers::get_business_settings('digital_payment');
+
+        if ($min_amount_to_pay_dm <= $dm?->wallet?->collected_cash  && $digital_payment['status'] == 1  ){
             $dm['show_pay_now_button'] = true;
         }
+        
         $Payable_Balance =  $over_flow_balance  < 0 ? 1: 0;
         $cash_in_hand_overflow=  BusinessSetting::where('key' ,'cash_in_hand_overflow_delivery_man')->first()?->value;
         $cash_in_hand_overflow_delivery_man =  BusinessSetting::where('key' ,'dm_max_cash_in_hand')->first()?->value;

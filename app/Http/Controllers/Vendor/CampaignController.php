@@ -15,9 +15,21 @@ use Illuminate\Support\Facades\Mail;
 
 class CampaignController extends Controller
 {
-    function list()
+    function list(Request $request)
     {
-        $campaigns=Campaign::with('stores')->running()->latest()->module(Helpers::get_store_data()->module_id)->paginate(config('default_pagination'));
+        $key = explode(' ', $request['search']);
+
+        $campaigns=Campaign::with('stores')->running()->latest()->module(Helpers::get_store_data()->module_id)
+
+        ->when($key, function($query)use($key){
+            $query->where(function ($q) use ($key) {
+                foreach ($key as $value) {
+                    $q->orWhere('title', 'like', "%". $value."%");
+                }
+            });
+        })
+
+        ->paginate(config('default_pagination'));
         return view('vendor-views.campaign.list',compact('campaigns'));
     }
 
@@ -59,24 +71,12 @@ class CampaignController extends Controller
         return back();
     }
 
-    public function search(Request $request){
-        $key = explode(' ', $request['search']);
-        $campaigns=Campaign::
-        where(function ($q) use ($key) {
-            foreach ($key as $value) {
-                $q->orWhere('title', 'like', "%{$value}%");
-            }
-        })
-        ->module(Helpers::get_store_data()->module_id)
-        ->limit(50)->get();
-        return response()->json([
-            'view'=>view('vendor-views.campaign.partials._table',compact('campaigns'))->render()
-        ]);
-    }
+
 
     public function searchItem(Request $request){
         $key = explode(' ', $request['search']);
-        $campaigns=ItemCampaign::where('store_id', Helpers::get_store_id())->where(function ($q) use ($key) {
+        $campaigns=ItemCampaign::where('store_id', Helpers::get_store_id())
+        ->where(function ($q) use ($key) {
             foreach ($key as $value) {
                 $q->orWhere('title', 'like', "%{$value}%");
             }

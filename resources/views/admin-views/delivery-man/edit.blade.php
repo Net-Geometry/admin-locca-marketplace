@@ -99,12 +99,12 @@
                         <div class="col-lg-4">
                             <div class="d-flex flex-column h-100">
                                 <label>{{translate('messages.deliveryman_image')}} <small class="text-danger">* ( {{translate('messages.ratio')}} 1:1 )</small></label>
-                                <center class="py-3 my-auto">
+                                <div class="text-center py-3 my-auto">
                                     <img class="img--100 rounded onerror-image" id="viewer"
                                             src="{{asset('storage/app/public/delivery-man').'/'.$deliveryMan['image']}}"
                                             data-onerror-image="{{asset('/public/assets/admin/img/admin.png')}}"
                                             alt="delivery-man image"/>
-                                </center>
+                                </div>
                                 <div class="custom-file">
                                     <input type="file" name="image" id="customFileEg1" class="custom-file-input"
                                             accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">

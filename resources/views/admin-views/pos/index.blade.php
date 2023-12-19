@@ -165,11 +165,11 @@
                 </div>
                 <div class="modal-body row ff-emoji">
                     <div class="col-md-12">
-                        <center>
+                        <div class="text-center"> 
                             <input type="button" class="btn btn--primary non-printable text-white print-Div"
                                 value="{{ translate('Proceed, If thermal printer is ready.') }}"/>
                             <a href="{{url()->previous()}}" class="btn btn-danger non-printable">{{ translate('messages.back') }}</a>
-                        </center>
+                        </div>
                         <hr class="non-printable">
                     </div>
                     <div class="row m-auto" id="print-modal-content">
@@ -252,7 +252,6 @@
         let customer_id = document.getElementById('customer');
         if(customer_id.value)
         {
-            console.log(customer_id.value);
             document.getElementById('customer_id').value = customer_id.value;
             let form = document.getElementById('order_place');
             form.submit();
@@ -262,7 +261,6 @@
                 ProgressBar: true
             });
         }
-
     });
 
 
@@ -323,7 +321,6 @@
                     console.log("Returned place contains no geometry");
                     return;
                 }
-                console.log(place.geometry.location);
                 if(!google.maps.geometry.poly.containsLocation(
                     place.geometry.location,
                     zonePolygon
@@ -485,15 +482,7 @@
         @endif
 
     }
-    function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-        infoWindow.setPosition(pos);
-        infoWindow.setContent(
-            browserHasGeolocation ?
-                "Error: {{ translate('The Geolocation service failed') }}." :
-                "Error: {{ translate('Your browser doesn`t support geolocation') }}."
-        );
-        infoWindow.open(map);
-    }
+
 
     $(document).on('ready', function () {
         $('#store_select').select2({
@@ -533,13 +522,12 @@
         location.href = url;
     });
 
-
-    function quickView(product_id) {
+    $(document).on('click', '.quick-View', function () {
         $.get({
             url: '{{route('admin.pos.quick-view')}}',
             dataType: 'json',
             data: {
-                product_id: product_id
+                product_id: $(this).data('id')
             },
             beforeSend: function () {
                 $('#loading').show();
@@ -552,7 +540,8 @@
                 $('#loading').hide();
             },
         });
-    }
+    });
+
 
 
     $(document).on('click', '.quick-View-Cart-Item', function () {
@@ -882,7 +871,6 @@
                 $('#loading').show();
             },
             success: function (data) {
-                console.log("success...")
                 $('#print-invoice').modal('show');
                 $('#print-modal-content').empty().html(data.view);
             },

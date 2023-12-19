@@ -7,6 +7,12 @@ $("#order_place").on('keydown', function(e) {
         e.preventDefault();
     }
 })
+$("#insertPayableAmount").on('keydown', function(e) {
+    if (e.keyCode === 13) {
+        e.preventDefault();
+    }
+})
+
 $(document).on('click', '.print-Div', function () {
     let printContents = document.getElementById('printableArea').innerHTML;
     let originalContents = document.body.innerHTML;
@@ -151,3 +157,29 @@ $( "#customer" ).change(function() {
         $('#customer_id').val($(this).val());
     }
 });
+
+
+$('#payment_card').on('change', function() {
+    $("#paid_section").hide();
+});
+$('#payment_cash').on('change', function() {
+    $("#paid_section").show();
+});
+
+$(document).on('change', '#discount_input_type', function () {
+    let discountInput = $('#discount_input');
+    let discountInputType = $(this);
+    let maxLimit = (discountInputType.val() === 'percent') ? 100 : 1000000000;
+    discountInput.attr('max', maxLimit);
+});
+
+
+function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+    infoWindow.setPosition(pos);
+    infoWindow.setContent(
+        browserHasGeolocation ?
+            "Error: {{ translate('The Geolocation service failed') }}." :
+            "Error: {{ translate('Your browser doesn`t support geolocation') }}."
+    );
+    infoWindow.open(map);
+}

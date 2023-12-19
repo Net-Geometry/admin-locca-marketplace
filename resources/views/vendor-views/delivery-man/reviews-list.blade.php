@@ -2,9 +2,6 @@
 
 @section('title','Review List')
 
-@push('css_or_js')
-
-@endpush
 
 @section('content')
     <div class="content container-fluid">
@@ -50,7 +47,7 @@
                             @foreach($reviews as $key=>$review)
                                 @if(isset($review->delivery_man))
                                     <tr>
-                                        <td>{{$key+1}}</td>
+                                        <td>{{$key+$reviews->firstItem()}}</td>
                                         <td>
                                         <span class="d-block font-size-sm text-body">
                                             <a href="{{route('vendor.delivery-man.preview',[$review['delivery_man_id']])}}">
@@ -61,7 +58,7 @@
                                         <td>
                                             @if ($review->customer)
                                             <a href="{{route('vendor.customer.view',[$review->user_id])}}">
-                                                {{$review->customer?$review->customer->f_name:""}} {{$review->customer?$review->customer->l_name:""}}
+                                                {{$$review->customer->f_name}} {{$review->customer?->l_name}}
                                             </a>
                                             @else
                                                 {{translate('messages.customer_not_found')}}
@@ -88,6 +85,14 @@
                             </tfoot>
                         </table>
                     </div>
+                    @if(count($reviews) === 0)
+                        <div class="empty--data">
+                            <img src="{{asset('/public/assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
+                            <h5>
+                                {{translate('no_data_found')}}
+                            </h5>
+                        </div>
+                    @endif
                     <!-- End Table -->
                 </div>
                 <!-- End Card -->
@@ -97,13 +102,3 @@
 
 @endsection
 
-@push('script_2')
-    <script>
-        $(document).on('ready', function () {
-            // INITIALIZATION OF DATATABLES
-            // =======================================================
-            var datatable = $.HSCore.components.HSDatatables.init($('#columnSearchDatatable'));
-
-        });
-    </script>
-@endpush

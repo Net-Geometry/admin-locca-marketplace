@@ -83,7 +83,7 @@
                                         <input type="text" name="name[]" id="default_name" class="form-control"
                                             placeholder="{{ translate('messages.new_food') }}"
                                             value="{{ $product?->getRawOriginal('name') }}" required
-                                            oninvalid="document.getElementById('en-link').click()">
+                                             >
                                     </div>
                                     <input type="hidden" name="lang[]" value="default">
                                     <div class="form-group pt-2 mb-0">
@@ -115,7 +115,7 @@
                                             <input type="text" name="name[]" id="{{ $lang }}_name"
                                                 class="form-control" placeholder="{{ translate('messages.new_food') }}"
                                                 value="{{ $translate[$lang]['name'] ?? '' }}"
-                                                oninvalid="document.getElementById('en-link').click()">
+                                                 >
                                         </div>
                                         <input type="hidden" name="lang[]" value="{{ $lang }}">
                                         <div class="form-group pt-2 mb-0">

@@ -90,7 +90,7 @@
                                 <div class="lang_form" id="default-form">
                                     <div class="form-group">
                                         <label class="input-label" for="default_name">{{translate('messages.name')}} ({{ translate('messages.default') }})</label>
-                                        <input type="text" name="name[]" id="default_name" class="form-control" placeholder="{{translate('messages.new_food')}}" value="{{$product->getRawOriginal('name')}}" oninvalid="document.getElementById('en-link').click()">
+                                        <input type="text" name="name[]" id="default_name" class="form-control" placeholder="{{translate('messages.new_food')}}" value="{{$product->getRawOriginal('name')}}"  >
                                     </div>
                                     <input type="hidden" name="lang[]" value="default">
                                     <div class="form-group pt-2 mb-0">
@@ -116,7 +116,7 @@
                                         <div class="d-none lang_form" id="{{$lang}}-form">
                                             <div class="form-group">
                                                 <label class="input-label" for="{{$lang}}_name">{{translate('messages.name')}} ({{strtoupper($lang)}})</label>
-                                                <input type="text" name="name[]" id="{{$lang}}_name" class="form-control" placeholder="{{translate('messages.new_food')}}" value="{{$translate[$lang]['name']??''}}" oninvalid="document.getElementById('en-link').click()">
+                                                <input type="text" name="name[]" id="{{$lang}}_name" class="form-control" placeholder="{{translate('messages.new_food')}}" value="{{$translate[$lang]['name']??''}}"  >
                                             </div>
                                             <input type="hidden" name="lang[]" value="{{$lang}}">
                                             <div class="form-group pt-2 mb-0">
@@ -176,13 +176,13 @@
                             </div>
                             <div class="mt-3">
                                 <label class="text-dark">{{translate('messages.item_thumbnail')}} <small class="text-danger">* ( {{translate('messages.ratio')}} 1:1 )</small></label>
-                                <center class="d-block" id="image-viewer-section" class="pt-2">
+                                <div class="text-center d-block" id="image-viewer-section" class="pt-2">
                                     <img class="img--100" id="viewer"
                                             src="{{asset('storage/app/public/product')}}/{{$product['image']}}"
                                             onerror='this.
                                             src="{{asset('/public/assets/admin/img/400x400/img2.jpg')}}"'
                                             alt="product image"/>
-                                </center>
+                                </div>
                                 <div class="custom-file mt-3">
                                     <input type="file" name="image" id="customFileEg1" class="custom-file-input"
                                             accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
@@ -272,7 +272,7 @@
                                 <div class="col-sm-6 col-lg-4">
                                     <div class="form-group mb-0">
                                         <label class="input-label" for="exampleFormControlInput1">{{translate('messages.price')}}</label>
-                                        <input type="number" value="{{$product->price}}" min="0" max="100000" name="price"
+                                        <input type="number" value="{{$product->price}}" min="0" max="999999999999" name="price"
                                                 class="form-control" step="0.01"
                                                 placeholder="{{ translate('messages.Ex:') }} 100" required>
                                     </div>
