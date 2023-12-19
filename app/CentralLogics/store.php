@@ -507,7 +507,7 @@ class StoreLogic
         }
         $paginator = Store::withOpen($longitude??0,$latitude??0)
             ->withCount(['items','campaigns'])
-            ->wherehas('Store_config', function ($q){
+            ->wherehas('storeConfig', function ($q){
                 $q->where(['is_recommended_deleted'=> 0 , 'is_recommended' => 1]);
             })
             ->when(config('module.current_module_data'), function($query)use($zone_id){

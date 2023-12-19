@@ -171,7 +171,7 @@
                                     </td>
                                     <td class="text-center">
                                         <div class="btn--container justify-content-center">
-                                            <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:" data-url="item-{{$store['id']}}" data-message="{{ translate('Want_to_remove_the_store_from_the_list?') }}" title="{{translate('messages.delete')}}"><i class="tio-delete-outlined"></i>
+                                            <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:" data-id="item-{{$store['id']}}" data-message="{{ translate('Want_to_remove_the_store_from_the_list?') }}" title="{{translate('messages.delete')}}"><i class="tio-delete-outlined"></i>
                                             </a>
                                             <form action="{{route('admin.store.recommended_store_remove',[$store['id']])}}"
                                                     method="post" id="item-{{$store['id']}}">
