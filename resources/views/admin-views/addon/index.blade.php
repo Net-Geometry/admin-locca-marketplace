@@ -301,8 +301,7 @@
                                     <a class="btn action-btn btn--primary btn-outline-primary"
                                        href="{{route('admin.addon.edit',[$addon['id']])}}"
                                        title="{{translate('messages.edit_addon')}}"><i class="tio-edit"></i></a>
-                                    <a class="btn action-btn btn--danger btn-outline-danger" href="javascript:"
-                                       onclick="form_alert('addon-{{$addon['id']}}','{{ translate('Want to delete this addon ?') }}')"
+                                    <a class="btn action-btn btn--danger btn-outline-danger form-alert" data-id="addon-{{$addon['id']}}" data-message="{{ translate('Want to delete this addon ?') }}" href="javascript:"
                                        title="{{translate('messages.delete_addon')}}"><i
                                             class="tio-delete-outlined"></i></a>
                                     <form action="{{route('admin.addon.delete',[$addon['id']])}}"

@@ -162,7 +162,7 @@
                                     </td>
                                     <td class="text-center">
                                         <div class="btn--container justify-content-center">
-                                            <a class="btn action-btn btn--danger btn-outline-danger form-control" href="javascript:" data-id="item-{{$item['id']}}" data-message="{{ translate('Want to delete this item ?') }}" title="{{translate('messages.delete')}}"><i class="tio-delete-outlined"></i>
+                                            <a class="btn action-btn btn--danger btn-outline-danger form-control form-alert" href="javascript:" data-id="item-{{$item['id']}}" data-message="{{ translate('Want to delete this item ?') }}" title="{{translate('messages.delete')}}"><i class="tio-delete-outlined"></i>
                                             </a>
                                             <form action="{{route('admin.flash-sale.delete-product',[$item['id']])}}"
                                                     method="post" id="item-{{$item['id']}}">

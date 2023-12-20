@@ -194,7 +194,7 @@
                         })
                         .catch(error => {
                             document.getElementById("loading-message").style.display = "none";
-                            document.getElementById("error_alert").innerHtml = error;
+                            document.getElementById("error_alert").innerText = "{{ translate('payment_failed') }}";
                             document.getElementById("error_alert").style.display = "block";
                         });
                 },

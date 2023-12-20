@@ -23,7 +23,7 @@ class CategoryService
         };
     }
 
-    public function getAddData($request, string|null $parentCategory): array
+    public function getAddData($request, string|null|Object $parentCategory): array
     {
         return [
             'name' => $request->name[array_search('default', $request->lang)],
