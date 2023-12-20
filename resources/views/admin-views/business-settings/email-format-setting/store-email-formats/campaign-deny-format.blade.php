@@ -28,7 +28,6 @@
             <div class="tab-pane fade show active">
                 <div class="card mb-3">
                     @php($mail_status=\App\Models\BusinessSetting::where('key','campaign_deny_mail_status_store')->first()?->value ?? '0')
-                    @php($mail_status = $mail_status ? $mail_status->value : '0')
                     <div class="card-body">
                         <div class="maintenance-mode-toggle-bar d-flex flex-wrap justify-content-between border rounded align-items-center p-2">
                             <h5 class="text-capitalize m-0 text--primary pl-2">

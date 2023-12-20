@@ -506,16 +506,16 @@
 
                                 </label>
                                 <label class="toggle-switch toggle-switch-sm m-0">
-                                    <input type="checkbox" name="web_app_url_status"
+                                    <input type="checkbox" name="web_app_url_status" id="apple-dm-status"
                                            data-id="apple-dm-status"
-                                           data-type="toggle"
+                                           data-type="status"
                                            data-image-on="{{ asset('/public/assets/admin/img/modal/apple-on.png') }}"
                                            data-image-off="{{ asset('/public/assets/admin/img/modal/apple-off.png') }}"
                                            data-title-on="{{ translate('Browse Web Button Enabled for Landing Page') }}"
                                            data-title-off="{{ translate('Browse Web Button Disabled for Landing Page') }}"
                                            data-text-on="<p>{{ translate('Browse Web button is enabled now everyone can use or see the button') }}</p>"
                                            data-text-off="<p>{{ translate('Browse Web button is disabled now no one can use or see the button') }}</p>"
-                                           class="status toggle-switch-input dynamic-checkbox-toggle"
+                                           class="status toggle-switch-input dynamic-checkbox"
 
 
                                            value="1" {{(isset($fixed_link) && $fixed_link['web_app_url_status'])?'checked':''}}>

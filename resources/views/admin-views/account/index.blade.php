@@ -160,7 +160,7 @@
                                         {{$at['amount']}}
                                     </div></td>
                                     <td><div class="pl-4">
-                                        {{$at['ref']}}
+                                        {{translate($at['ref'])}}
                                     </div></td>
                                     <td>
                                         <div class="btn--container justify-content-center">

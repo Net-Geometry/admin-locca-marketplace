@@ -143,4 +143,23 @@ class DeliveryManRepository implements DeliveryManRepositoryInterface
             })->active()->limit(8)->get(['id',DB::raw('CONCAT(f_name, " ", l_name) as text')]);
     }
 
+    public function getActiveFirstWhere(string $searchValue = null, array $filters = [], array $relations = []): ?Model
+    {
+        $key = explode(' ', $searchValue);
+        return $this->deliveryMan->with($relations)->where($filters)
+            ->when(isset($key), function($query) use($key){
+                $query->where(function ($query) use ($key) {
+                    foreach ($key as $value) {
+                        $query->orWhere('f_name', 'like', "%{$value}%")
+                            ->orWhere('l_name', 'like', "%{$value}%")
+                            ->orWhere('email', 'like', "%{$value}%")
+                            ->orWhere('phone', 'like', "%{$value}%")
+                            ->orWhere('identity_number', 'like', "%{$value}%");
+                    }
+                });
+            })
+            ->Active()
+            ->first();
+    }
+
 }

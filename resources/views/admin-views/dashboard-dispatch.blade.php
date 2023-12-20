@@ -231,6 +231,7 @@
                 contentType: false,
                 processData: false,
                 success: function (data) {
+                        console.log(data);
                     if(data.dm){
                         let id = data.dm.id;
                         map.panTo(dmMarkers[id].getPosition());
