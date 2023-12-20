@@ -38,7 +38,7 @@
                                         <div class="w-100 px-2">
                                             <div class="search-form mb-3">
                                                 <button type="button" class="btn"></button>
-                                                <input type="text" class="js-form-search form-control search-bar-input" onkeyup="search_product()" placeholder="{{translate('Search Stores')}}...">
+                                                <input type="text" class="js-form-search form-control search-bar-input"  placeholder="{{translate('Search Stores')}}...">
                                             </div>
                                             <div class="d-flex flex-wrap column-gap-4 row-gap-2 max-h-40vh overflow-y-auto overflow-x-hidden search-result-box" id='hide_class'> </div>
 
@@ -109,14 +109,14 @@
                                  "paging":false
                                }'>
                             <thead class="thead-light">
-                            <tr class="text-center">
+                            <tr >
                                 <th class="border-0">{{translate('sl')}}</th>
                                 <th class="border-0">{{translate('messages.Store_Name')}}</th>
                                 <th class="border-0">{{translate('messages.Ratings')}}</th>
                                 <th class="border-0">{{translate('messages.Total_Products')}}</th>
                                 <th class="border-0">{{translate('messages.Total_Orders')}}</th>
-                                <th class="border-0">{{translate('messages.status')}}</th>
-                                <th class="border-0">{{translate('messages.action')}}</th>
+                                <th class="text-center">{{translate('messages.status')}}</th>
+                                <th class="text-center">{{translate('messages.action')}}</th>
                             </tr>
 
                             </thead>
@@ -124,12 +124,12 @@
                             <tbody id="set-rows">
                             @foreach($stores as $key=>$store)
                                 <tr>
-                                    <td class="text-center">
+                                    <td >
                                         <span class="mr-3">
                                             {{$key+$stores->firstItem()}}
                                         </span>
                                     </td>
-                                    <td class="text-center">
+                                    <td >
                                         <div>
                                             <a href="{{route('admin.store.view', $store->id)}}" class="table-rest-info" alt="view store">
                                                 <img class="img--60 circle onerror-image" data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
@@ -145,23 +145,23 @@
                                         </div>
                                     </td>
 
-                                    <td class="text-center">
+                                    <td >
                                         <i class="fs-13 tio-star"></i>
                                         @php
                                         $ratings= \App\CentralLogics\StoreLogic::calculate_store_rating($store['rating'])
                                         @endphp
                                         {{ $ratings['rating'] }}
                                         </td>
-                                    <td class="text-center">
+                                    <td >
                                         {{ $store->items_count }}
                                     </td>
-                                    <td class="text-center">
+                                    <td >
                                         {{ $store->orders_count }}
                                     </td>
 
 
 
-                                    <td class="text-center">
+                                    <td  >
                                         <label class="toggle-switch toggle-switch-sm" for="publishCheckbox{{$store->id}}">
                                             <input type="checkbox" data-url="{{route('admin.store.recommended_store_status',[$store['id'],$store->storeConfig->is_recommended?0:1])}}" class="toggle-switch-input redirect-url" id="publishCheckbox{{$store->id}}" {{$store->storeConfig->is_recommended?'checked':''}}>
                                             <span class="toggle-switch-label mx-auto">
@@ -169,7 +169,7 @@
                                             </span>
                                         </label>
                                     </td>
-                                    <td class="text-center">
+                                    <td >
                                         <div class="btn--container justify-content-center">
                                             <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:" data-id="item-{{$store['id']}}" data-message="{{ translate('Want_to_remove_the_store_from_the_list?') }}" title="{{translate('messages.delete')}}"><i class="tio-delete-outlined"></i>
                                             </a>
@@ -210,20 +210,19 @@
     <script>
         "use strict";
         let selected_store_ids = [];
-        function search_product(){
-            let name = $(".search-bar-input").val();
-            if (name.length >0) {
-            $("#hide_class").addClass('d-flex');
-            $("#hide_class").addClass('search-result-box');
-            $("#hide_class").removeClass('d-none');
 
+        $(document).on('input', '.search-bar-input', function() {
+        let name = $(this).val();
+        if (name.length > 0) {
+            $("#hide_class").addClass('d-flex search-result-box').removeClass('d-none');
             $("#hide_class_2").addClass('d-none');
 
-                $.get("{{route('admin.get_all_stores')}}",{name:name},(response)=>{
-                    $('.search-result-box').empty().html(response.result);
-                })
-            }
+            $.get("{{ route('admin.get_all_stores') }}", { name: name }, function(response) {
+                $('.search-result-box').empty().html(response.result);
+            });
         }
+    });
+
 
         function selected_stores(key, remove=false) {
             if(remove == true){

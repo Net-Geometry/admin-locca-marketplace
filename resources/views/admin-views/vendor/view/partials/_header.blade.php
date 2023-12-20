@@ -17,12 +17,14 @@
                     </a>
                     @else
                         @if(!isset($store->vendor->status))
-                        <a class="btn btn--danger text-capitalize font-weight-bold float-right"
-                        onclick="request_alert('{{route('admin.store.application',[$store['id'],0])}}','{{translate('messages.you_want_to_deny_this_application')}}')"
+                        <a class="btn btn--danger text-capitalize font-weight-bold float-right request_alert"
+                    data-url="{{route('admin.store.application',[$store['id'],0])}}"
+                    data-message="{{translate('messages.you_want_to_deny_this_application')}}"
                             href="javascript:"><i class="tio-clear-circle-outlined font-weight-bold pr-1"></i> {{translate('messages.deny')}}</a>
                         @endif
-                        <a class="btn btn--primary text-capitalize font-weight-bold float-right mr-2"
-                        onclick="request_alert('{{route('admin.store.application',[$store['id'],1])}}','{{translate('messages.you_want_to_approve_this_application')}}')"
+                        <a class="btn btn--primary text-capitalize font-weight-bold float-right mr-2 request_alert"
+                        data-url="{{route('admin.store.application',[$store['id'],1])}}"
+                        data-message="{{translate('messages.you_want_to_approve_this_application')}}"
                             href="javascript:"><i class="tio-checkmark-circle-outlined font-weight-bold pr-1"></i>{{translate('messages.approve')}}</a>
                     @endif
                 @endif

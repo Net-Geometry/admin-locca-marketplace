@@ -5,6 +5,13 @@ let count = 0;
 let countRow = 0;
 let mod_type="";
 let removedImageKeys = [];
+
+$('.function_remove_img').on('change', function () {
+    let key = $(this).data('key');
+    let photo = $(this).data('photo');
+    function_remove_img(key,photo);
+})
+
 function function_remove_img(key,photo) {
     $('#product_images_' + key).addClass('d-none');
     removedImageKeys.push(photo);

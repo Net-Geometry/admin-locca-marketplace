@@ -240,12 +240,36 @@
     $('#instruction-modal').show();
     @endif
 
-    function restartTour() {
+
+
+    $('.restart-Tour').on('click',function (){
         @if(isset($modules) && ($modules->count()>0))
             tour.restart();
             $('body').css('overflow','hidden')
         @endif
-    }
+    });
+
+
+    $('.log-out').on('click',function (){
+
+        Swal.fire({
+            title: '{{ translate('Do you want to logout?') }}',
+            showDenyButton: true,
+            showCancelButton: true,
+            confirmButtonColor: '#FC6A57',
+            cancelButtonColor: '#363636',
+            confirmButtonText: `{{ translate('yes')}}`,
+            cancelButtonText: `{{ translate('Do_not_Logout')}}`,
+            }).then((result) => {
+            if (result.value) {
+            location.href='{{route('logout')}}';
+            } else{
+            Swal.fire('{{ translate('messages.canceled') }}', '', 'info')
+            }
+        })
+
+    });
+
 
     function route_alert(route, message, title="{{translate('messages.are_you_sure')}}") {
         Swal.fire({
@@ -576,6 +600,30 @@
             });
         @endif
     });
+
+    $('.request_alert').on('click', function (event) {
+            let url = $(this).data('url');
+            let message = $(this).data('message');
+            request_alert(url, message)
+        })
+
+        function request_alert(url, message) {
+            Swal.fire({
+                title: '{{translate('messages.are_you_sure')}}',
+                text: message,
+                type: 'warning',
+                showCancelButton: true,
+                cancelButtonColor: 'default',
+                confirmButtonColor: '#FC6A57',
+                cancelButtonText: '{{translate('messages.no')}}',
+                confirmButtonText: '{{translate('messages.yes')}}',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.value) {
+                    location.href = url;
+                }
+            })
+        }
 
 
 </script>

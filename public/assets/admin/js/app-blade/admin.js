@@ -21,6 +21,12 @@ function pauseAudio() {
     audio.pause();
 }
 
+
+$(document).on('click', '.next-tour', function () {
+    next_tour();
+
+});
+
 function next_tour() {
     tour.next();
 }
@@ -258,6 +264,14 @@ function set_filter(url, id, filter_by) {
     tour.next();
 }
 
+$(".set-module").on("click", function () {
+    const url = $(this).data('url');
+    const id = $(this).data('module-id');
+    const filter_by = $(this).data('filter');
+    let nurl = new URL(url);
+    nurl.searchParams.set(filter_by, id);
+    location.href = nurl
+});
 
 $(document).ready(function(){
     $('button[type=submit]').on("click", function(){

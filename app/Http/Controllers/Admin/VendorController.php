@@ -686,44 +686,9 @@ class VendorController extends Controller
         }
         return Excel::download(new StoreListExport($data), 'Stores.xlsx');
 
-
-
-        // if($request->type == 'excel'){
-        //     return (new FastExcel(Helpers::export_stores(Helpers::Export_generator($stores))))->download('Stores.xlsx');
-        // }elseif($request->type == 'csv'){
-        //     return (new FastExcel(Helpers::export_stores(Helpers::Export_generator($stores))))->download('Stores.csv');
-        // }
     }
 
-    public function search(Request $request){
-        $key = explode(' ', $request['search']);
-        $stores=Store::whereHas('vendor',function ($q) {
-            $q->where('status', 1);
-        })->where(function($query)use($key){
-            $query->orWhereHas('vendor',function ($q) use ($key) {
-                $q->where(function($q)use($key){
-                    foreach ($key as $value) {
-                        $q->orWhere('f_name', 'like', "%{$value}%")
-                            ->orWhere('l_name', 'like', "%{$value}%")
-                            ->orWhere('email', 'like', "%{$value}%")
-                            ->orWhere('phone', 'like', "%{$value}%");
-                    }
-                });
-            })->orWhere(function ($q) use ($key) {
-                foreach ($key as $value) {
-                    $q->orWhere('name', 'like', "%{$value}%")
-                        ->orWhere('email', 'like', "%{$value}%")
-                        ->orWhere('phone', 'like', "%{$value}%");
-                }
-            });
-        })
-        ->module(Config::get('module.current_module_id'))
-        ->get();
-        $total=$stores->count();
-        return response()->json([
-            'view'=>view('admin-views.vendor.partials._table',compact('stores'))->render(), 'total'=>$total
-        ]);
-    }
+
 
     public function get_stores(Request $request){
         $zone_ids = isset($request->zone_ids)?(count($request->zone_ids)>0?$request->zone_ids:[]):0;

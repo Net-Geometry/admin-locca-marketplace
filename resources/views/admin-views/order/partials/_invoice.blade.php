@@ -1,12 +1,13 @@
 <div class="content container-fluid invoice-page initial-38">
     <div id="printableArea">
         <div>
-            <div class="text-center"> 
+            <div class="text-center">
                 <input type="button" class="btn btn-primary mt-3 non-printable" onclick="printDiv('printableArea')"
                     value="{{ translate('Proceed,_If_thermal_printer_is_ready.') }}" />
                 <a href="{{ url()->previous() }}"
                     class="btn btn-danger non-printable mt-3">{{ translate('messages.back') }}</a>
             </div>
+        
             <hr class="non-printable">
             <div class="print--invoice initial-38-1">
                 @if ($order->store)

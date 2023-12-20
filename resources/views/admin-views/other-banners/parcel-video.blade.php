@@ -174,8 +174,8 @@
                                                             <h4 class="mb-3 text-capitalize d-flex align-items-center">{{translate('upload_video')}}</h4>
                                                             <div class="uploadDnD">
                                                                 <div class="form-group inputDnD">
-                                                                    <input type="file" name="banner_video_content" class="form-control-file text--primary font-weight-bold"
-                                                                    id="inputFile" onchange="readUrl(this)" accept=".mp4,.webm,.ogg,.avi,.flv,.mov,.3gp,.mkv,.mpeg" data-title="{{ translate('Browse_file"') }}">
+                                                                    <input type="file" name="banner_video_content" class="form-control-file text--primary font-weight-bold read-url" 
+                                                                    id="inputFile" accept=".mp4,.webm,.ogg,.avi,.flv,.mov,.3gp,.mkv,.mpeg" data-title="{{ translate('Browse_file"') }}">
                                                                 </div>
                                                             </div>
 
@@ -196,7 +196,7 @@
 
                                                             <div class="text-center mt-5">
                                                                 <h3 class="form-label d-block mt-2">
-                                                                {{translate('Video_Size_Max_2MB')}}
+                                                                {{translate('Video_Size_Max_5MB')}}
                                                             </h3>
                                                             <p>{{translate('Video_format_:_MP4_,_WebM_,_Ogg')}}</p>
 

@@ -55,7 +55,7 @@
                                 <ul>
                                     @if (\App\CentralLogics\Helpers::module_permission_check('module'))
                                     <li>
-                                        <a href="{{ route('admin.business-settings.module.index') }}" onclick="next_tour()">
+                                        <a href="{{ route('admin.business-settings.module.index') }}" class="next-tour">
                                             <img src="{{asset('/public/assets/admin/img/navbar-setting-icon/module.svg')}}" alt="">
                                             <span>{{translate('System Module Setup')}}</span>
                                         </a>
@@ -63,7 +63,7 @@
                                     @endif
                                     @if (\App\CentralLogics\Helpers::module_permission_check('zone'))
                                     <li>
-                                        <a href="{{ route('admin.business-settings.zone.home') }}" onclick="next_tour()">
+                                        <a href="{{ route('admin.business-settings.zone.home') }}" class="next-tour">
                                             <img src="{{asset('/public/assets/admin/img/navbar-setting-icon/location.svg')}}" alt="">
                                             <span>{{translate('Zone Setup')}}</span>
                                         </a>
@@ -71,7 +71,7 @@
                                     @endif
                                     @if (\App\CentralLogics\Helpers::module_permission_check('settings'))
                                     <li>
-                                        <a href="{{ route('admin.business-settings.business-setup') }}" onclick="next_tour()">
+                                        <a href="{{ route('admin.business-settings.business-setup') }}" class="next-tour">
                                             <img src="{{asset('/public/assets/admin/img/navbar-setting-icon/business.svg')}}" alt="">
                                             <span>{{translate('Business Settings')}}</span>
                                         </a>
@@ -79,13 +79,13 @@
                                     @endif
                                     @if (\App\CentralLogics\Helpers::module_permission_check('settings'))
                                     <li>
-                                        <a href="{{ route('admin.business-settings.third-party.payment-method') }}" onclick="next_tour()">
+                                        <a href="{{ route('admin.business-settings.third-party.payment-method') }}" class="next-tour">
                                             <img src="{{asset('/public/assets/admin/img/navbar-setting-icon/third-party.svg')}}" alt="">
                                             <span>{{translate('3rd Party')}}</span>
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="{{route('admin.business-settings.social-media.index')}}" onclick="next_tour()">
+                                        <a href="{{route('admin.business-settings.social-media.index')}}" class="next-tour">
                                             <img src="{{asset('/public/assets/admin/img/navbar-setting-icon/social.svg')}}" alt="">
                                             <span>{{translate('Social Media and Page Setup')}}</span>
                                         </a>
@@ -93,7 +93,7 @@
                                     @endif
                                 </ul>
                                 <div class="text-center mt-2">
-                                    <a href="{{ route('admin.business-settings.business-setup') }}" onclick="next_tour()">{{translate('View All')}}</a>
+                                    <a href="{{ route('admin.business-settings.business-setup') }}" class="next-tour">{{translate('View All')}}</a>
                                 </div>
                             </div>
                         </div>
@@ -157,7 +157,11 @@
                     <li class="nav-item __nav-item">
                         <a href="javascript:void(0)" class="__nav-link module--nav-icon" id="tourb-0">
                             @if ($mod)
-                            <img  src="{{asset('storage/app/public/module')}}/{{$mod->icon}}" onerror="this.src='{{asset('/public/assets/admin/img/new-img/module-icon.svg')}}'" width="20px" alt="public/img">
+                            <img  src="{{asset('storage/app/public/module')}}/{{$mod->icon}}"
+
+                                    class="onerror-image"
+                                  data-onerror-image="{{asset('/public/assets/admin/img/new-img/module-icon.svg')}}"
+                           width="20px" alt="public/img">
                             @else
                             <img src="{{asset('/public/assets/admin/img/new-img/module-icon.svg')}}" alt="public/img">
                             @endif
@@ -182,11 +186,17 @@
                             <div class="__nav-module-body">
                                 <div class="__nav-module-items">
                                     @foreach ($modules as $module)
-                                        <a href="javascript:;" onclick="set_filter('{{route('admin.dashboard')}}','{{ $module->id }}','module_id')" class="__nav-module-item {{Config::get('module.current_module_id') == $module->id?'active':''}}">
-                                            <div class="img w--70px">
+                                        <a href="javascript:"
+
+                                            data-module-id="{{ $module->id }}"
+                                            data-url="{{route('admin.dashboard')}}"
+                                            data-filter="module_id"
+
+                                        class="__nav-module-item set-module {{Config::get('module.current_module_id') == $module->id?'active':''}}">
+                                            <div class="img w--70px ">
                                                 <img src="{{asset('storage/app/public/module')}}/{{$module->icon}}"
-                                                onerror="this.src='{{asset('public/assets/admin/img/new-img/module/e-shop.svg')}}'"
-                                                alt="new-img" class="mw-100">
+                                                     data-onerror-image="{{asset('public/assets/admin/img/new-img/module/e-shop.svg')}}"
+                                                alt="new-img" class="mw-100 onerror-image">
                                             </div>
                                             <div>
                                                 {{ $module->module_name }}
@@ -227,7 +237,7 @@
             <span class="text-capitalize">{{ translate('Turotial') }}</span>
         </span>
     </a>
-    <div class="d-flex align-items-center gap-10px"  onclick="restartTour()">
+    <div class="d-flex align-items-center gap-10px restart-Tour" >
         <img src="{{ asset('public/assets/admin/img/tour.svg') }}" alt="">
         <span>
             <span class="text-capitalize">{{ translate('Tour') }}</span>

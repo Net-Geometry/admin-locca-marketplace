@@ -385,9 +385,9 @@
                                                         <td>
                                                             <div class="btn--container justify-content-center">
 
-                                                                <a class="btn btn-sm btn--primary btn-outline-primary action-btn"
+                                                                <a class="btn btn-sm btn--primary btn-outline-primary action-btn edit-reason"
                                                     title="{{ translate('messages.edit') }}"
-                                                    onclick="edit_reason('{{ $reason['id'] }}')" data-toggle="modal"
+                                                    data-toggle="modal"
                                                     data-target="#add_update_reason_{{ $reason->id }}"><i
                                                         class="tio-edit"></i>
                                                 </a>

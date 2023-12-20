@@ -145,7 +145,7 @@
                                     <i class="tio-shopping-cart-outlined"></i> {{translate('messages.You have new order, Check Please.')}}
                                 </h2>
                                 <hr>
-                                <button onclick="check_order()" class="btn btn-primary">{{translate('messages.Ok, let me check')}}</button>
+                                <button  class="btn btn-primary check-order">{{translate('messages.Ok, let me check')}}</button>
                             </div>
                         </div>
                     </div>
@@ -412,18 +412,37 @@ fetch('https://iid.googleapis.com/iid/v1/' + token + '/rel/topics/' + topic, {
         }, 10000);
         @endif
 
-        function check_order() {
+        $('.check-order').on('click',function (){
             if(order_type){
                 location.href = '{{url('/')}}/store-panel/order/list/'+order_type;
             }
-            location.href = '{{url('/')}}/store-panel/order/list/all';
-        }
-
+        });
         startFCM();
         conversationList();
         if(getUrlParameter('conversation')){
             conversationView();
         }
+
+
+        $('.log-out').on('click',function (){
+
+            Swal.fire({
+            title: '{{ translate('Do you want to logout?') }}',
+            showDenyButton: true,
+            showCancelButton: true,
+            confirmButtonColor: '#FC6A57',
+            cancelButtonColor: '#363636',
+            confirmButtonText: `{{ translate('yes')}}`,
+            cancelButtonText: `{{ translate('Do_not_Logout')}}`,
+            }).then((result) => {
+            if (result.value) {
+            location.href='{{route('logout')}}';
+            } else{
+            Swal.fire('{{ translate('messages.canceled') }}', '', 'info')
+            }
+        })
+
+});
 
 
 </script>
