@@ -127,7 +127,7 @@
                                 "classChangeTarget": ".js-toggle-passowrd-show-icon-1"
                                 }'>
                                 <div class="js-toggle-password-target-1 input-group-append">
-                                    <a class="input-group-text" href="javascript:;">
+                                    <a class="input-group-text" href="javascript:">
                                         <i class="js-toggle-passowrd-show-icon-1 tio-visible-outlined"></i>
                                     </a>
                                 </div>
@@ -149,7 +149,7 @@
                                     "classChangeTarget": ".js-toggle-passowrd-show-icon-2"
                                     }'>
                                 <div class="js-toggle-password-target-2 input-group-append">
-                                    <a class="input-group-text" href="javascript:;">
+                                    <a class="input-group-text" href="javascript:">
                                     <i class="js-toggle-passowrd-show-icon-2 tio-visible-outlined"></i>
                                     </a>
                                 </div>
@@ -172,7 +172,26 @@
     <script src="{{asset('public/assets/admin')}}/js/view-pages/employee.js"></script>
 <script>
     "use strict";
+    $(document).on('ready', function () {
+        // INITIALIZATION OF SHOW PASSWORD
+        // =======================================================
+        $('.js-toggle-password').each(function () {
+            new HSTogglePassword(this).init()
+        });
 
+
+        // INITIALIZATION OF FORM VALIDATION
+        // =======================================================
+        $('.js-validate').each(function() {
+            $.HSCore.components.HSValidation.init($(this), {
+                rules: {
+                    confirmPassword: {
+                        equalTo: '#signupSrPassword'
+                    }
+                }
+            });
+        });
+    });
         $('#reset_btn').click(function(){
             $('#viewer').attr('src', "{{asset('storage/app/public/admin')}}/{{$employee['image']}}') }}");
             $('#customFileUpload').val(null);

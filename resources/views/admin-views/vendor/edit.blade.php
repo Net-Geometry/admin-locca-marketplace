@@ -139,7 +139,7 @@
                                     <label class="form-label">
                                         {{ translate('logo') }} <span class="text--primary">({{ translate('1:1') }})</span>
                                     </label>
-                                    <div class="text-center"> 
+                                    <div class="text-center">
                                         <img class="img--110 min-height-170px min-width-170px onerror-image" id="viewer"
                                         data-onerror-image="{{ asset('public/assets/admin/img/upload.png') }}"
                                             src="{{asset('storage/app/public/store').'/'.$store->logo}}" alt="{{$store->name}}"
@@ -155,7 +155,7 @@
                                     <label class="form-label">
                                         {{ translate('Store Cover') }}  <span class="text--primary">({{ translate('2:1') }})</span>
                                     </label>
-                                    <div class="text-center"> 
+                                    <div class="text-center">
                                         <img class="img--vertical min-height-170px min-width-170px onerror-image" id="coverImageViewer"
                                         data-onerror-image="{{ asset('public/assets/admin/img/upload-img.png') }}"
                                             src="{{asset('storage/app/public/store/cover/'.$store->cover_photo)}}"
@@ -400,25 +400,6 @@
         @if (isset(auth('admin')->user()->zone_id))
             $('#choice_zones').trigger('change');
         @endif
-        // INITIALIZATION OF SHOW PASSWORD
-        // =======================================================
-        $('.js-toggle-password').each(function () {
-          new HSTogglePassword(this).init()
-        });
-
-
-        // INITIALIZATION OF FORM VALIDATION
-        // =======================================================
-        $('.js-validate').each(function() {
-          $.HSCore.components.HSValidation.init($(this), {
-            rules: {
-              confirmPassword: {
-                equalTo: '#signupSrPassword'
-              }
-            }
-          });
-        });
-
     });
 
         function readURL(input, viewer) {

@@ -120,7 +120,7 @@
                                     <label class="form-label">
                                         {{ translate('logo') }} <span class="text--primary">({{ translate('1:1') }})</span>
                                     </label>
-                                    <div class="text-center"> 
+                                    <div class="text-center">
                                         <img class="img--110 min-height-170px min-width-170px onerror-image" id="viewer"
                                         data-onerror-image="{{ asset('public/assets/admin/img/upload.png') }}"
                                             src="{{ asset('public/assets/admin/img/upload-img.png') }}"
@@ -136,7 +136,7 @@
                                     <label class="form-label">
                                         {{ translate('Store Cover') }}  <span class="text--primary">({{ translate('2:1') }})</span>
                                     </label>
-                                    <div class="text-center"> 
+                                    <div class="text-center">
                                         <img class="img--vertical min-height-170px min-width-170px onerror-image" id="coverImageViewer"
                                         data-onerror-image="{{ asset('public/assets/admin/img/upload-img.png') }}"
                                             src="{{ asset('public/assets/admin/img/upload-img.png') }}"
@@ -320,7 +320,7 @@
                                             "classChangeTarget": ".js-toggle-passowrd-show-icon-1"
                                             }'>
                                             <div class="js-toggle-password-target-1 input-group-append">
-                                                <a class="input-group-text" href="javascript:;">
+                                                <a class="input-group-text" href="javascript:">
                                                     <i class="js-toggle-passowrd-show-icon-1 tio-visible-outlined"></i>
                                                 </a>
                                             </div>
@@ -342,7 +342,7 @@
                                                 "classChangeTarget": ".js-toggle-passowrd-show-icon-2"
                                                 }'>
                                             <div class="js-toggle-password-target-2 input-group-append">
-                                                <a class="input-group-text" href="javascript:;">
+                                                <a class="input-group-text" href="javascript:">
                                                 <i class="js-toggle-passowrd-show-icon-2 tio-visible-outlined"></i>
                                                 </a>
                                             </div>
@@ -385,25 +385,6 @@
         @if (isset(auth('admin')->user()->zone_id))
             $('#choice_zones').trigger('change');
         @endif
-        // INITIALIZATION OF SHOW PASSWORD
-        // =======================================================
-        $('.js-toggle-password').each(function () {
-          new HSTogglePassword(this).init()
-        });
-
-
-        // INITIALIZATION OF FORM VALIDATION
-        // =======================================================
-        $('.js-validate').each(function() {
-          $.HSCore.components.HSValidation.init($(this), {
-            rules: {
-              confirmPassword: {
-                equalTo: '#signupSrPassword'
-              }
-            }
-          });
-        });
-
     });
 
     function readURL(input, viewer) {

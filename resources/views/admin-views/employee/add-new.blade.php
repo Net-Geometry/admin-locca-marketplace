@@ -114,7 +114,7 @@
                             <div class="input-group input-group-merge">
                                 <input type="password" class="js-toggle-password form-control" name="password" id="signupSrPassword" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"
                                 placeholder="{{ translate('messages.password_length_placeholder', ['length' => '8+']) }}"
-                                aria-label="8+ characters required"required
+                                aria-label="8+ characters required" required
                                 data-msg="Your password is invalid. Please try again."
                                 data-hs-toggle-password-options='{
                                 "target": [".js-toggle-password-target-1", ".js-toggle-password-target-2"],
@@ -123,7 +123,7 @@
                                 "classChangeTarget": ".js-toggle-passowrd-show-icon-1"
                                 }'>
                                 <div class="js-toggle-password-target-1 input-group-append">
-                                    <a class="input-group-text" href="javascript:;">
+                                    <a class="input-group-text" href="javascript:">
                                         <i class="js-toggle-passowrd-show-icon-1 tio-visible-outlined"></i>
                                     </a>
                                 </div>
@@ -145,7 +145,7 @@
                                     "classChangeTarget": ".js-toggle-passowrd-show-icon-2"
                                     }'>
                                 <div class="js-toggle-password-target-2 input-group-append">
-                                    <a class="input-group-text" href="javascript:;">
+                                    <a class="input-group-text" href="javascript:">
                                     <i class="js-toggle-passowrd-show-icon-2 tio-visible-outlined"></i>
                                     </a>
                                 </div>
@@ -167,6 +167,26 @@
     <script src="{{asset('public/assets/admin')}}/js/view-pages/employee.js"></script>
 <script>
     "use strict";
+    $(document).on('ready', function () {
+        // INITIALIZATION OF SHOW PASSWORD
+        // =======================================================
+        $('.js-toggle-password').each(function () {
+            new HSTogglePassword(this).init()
+        });
+
+
+        // INITIALIZATION OF FORM VALIDATION
+        // =======================================================
+        $('.js-validate').each(function() {
+            $.HSCore.components.HSValidation.init($(this), {
+                rules: {
+                    confirmPassword: {
+                        equalTo: '#signupSrPassword'
+                    }
+                }
+            });
+        });
+    });
         $('#reset_btn').click(function(){
             $('#viewer').attr('src', "{{ asset('public/assets/admin/img/400x400/img2.jpg') }}");
             $('#customFileUpload').val(null);
