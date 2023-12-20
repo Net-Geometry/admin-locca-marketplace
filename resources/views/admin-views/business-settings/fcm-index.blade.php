@@ -80,7 +80,10 @@
                                 @endif
                             </div>
                             <div class="col-sm-auto mb-5">
-                                <select name="module_type" class="form-control js-select2-custom" onchange="set_filter('{{url()->full()}}',this.value,'module_type')" title="{{translate('messages.select_modules')}}">
+                                <select name="module_type" class="form-control js-select2-custom set-filter"
+                                data-url="{{url()->full()}}"
+                                data-filter="module_type"
+                                title="{{translate('messages.select_modules')}}">
                                     @foreach (config('module.module_type') as $module)
                                         <option
                                             value="{{$module}}" {{$mod_type == $module?'selected':''}}>

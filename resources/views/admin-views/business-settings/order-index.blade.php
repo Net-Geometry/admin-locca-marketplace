@@ -246,8 +246,7 @@
                                 <div class="btn--container justify-content-end mt-3">
                                     <button type="reset" class="btn btn--reset">{{ translate('messages.reset') }}</button>
                                     <button type="{{ env('APP_MODE') != 'demo' ? 'submit' : 'button' }}"
-                                        onclick="{{ env('APP_MODE') != 'demo' ? '' : 'call_demo()' }}"
-                                        class="btn btn--primary">{{ translate('save_information') }}</button>
+                                        class="btn btn--primary call-demo">{{ translate('save_information') }}</button>
                                 </div>
                             </div>
                         </div>
@@ -325,8 +324,7 @@
                         <div class="btn--container justify-content-end mt-3 mb-4">
                             <button type="reset" class="btn btn--reset">{{ translate('messages.reset') }}</button>
                             <button type="{{ env('APP_MODE') != 'demo' ? 'submit' : 'button' }}"
-                                onclick="{{ env('APP_MODE') != 'demo' ? '' : 'call_demo()' }}"
-                                class="btn btn--primary">{{ translate('Submit') }}</button>
+                                class="btn btn--primary call-demo">{{ translate('Submit') }}</button>
                         </div>
                     </form>
                         <div class="card">

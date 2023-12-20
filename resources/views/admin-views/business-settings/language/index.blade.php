@@ -108,19 +108,23 @@
                                     <td class="text-center">
                                         <div class="btn--container justify-content-center">
                                             @if($data['code']!='en')
-                                                <a class="btn btn-sm btn--primary btn-outline-primary action-btn" data-toggle="modal"
-                                                    data-target="{{ ( ($key == 0 ||  $key == 1 ) && env('APP_MODE') == 'demo') ? '' :'#lang-modal-update-'.$data['code'] }}"
-                                                     onclick="{{( ($key== 0 ||  $key== 1 ) && env('APP_MODE') == 'demo') ?'call_demo()':''}}">
-                                                     <i class="tio-edit"></i></a>
+                                                <a class="btn btn-sm btn--primary btn-outline-primary action-btn call-demo-lang" data-toggle="modal"
+                                            data-key="{{ $key }}"
+                                            data-env-mode="{{ env('APP_MODE') }}"
+                                                    data-target="{{ ( ($key == 0 ||  $key == 1 ) && env('APP_MODE') == 'demo') ? '' :'#lang-modal-update-'.$data['code'] }}">
+                                                    <i class="tio-edit"></i></a>
                                                 @if ($data['default'])
                                                 @else
-                                                    <a class="btn btn-sm btn--danger btn-outline-danger action-btn {{( ($key == 0 ||  $key == 1 ) && env('APP_MODE') == 'demo') ? '' : 'delete'}}"
-                                                    onclick="{{( ($key== 0 || $key== 1 ) && env('APP_MODE') == 'demo') ?'call_demo()':''}}"
+                                                    <a class="btn btn-sm btn--danger btn-outline-danger action-btn call-demo-lang {{( ($key == 0 ||  $key == 1 ) && env('APP_MODE') == 'demo') ? '' : 'delete'}}"
+                                                    data-key="{{ $key }}"
+                                                    data-env-mode="{{ env('APP_MODE') }}"
                                                     id="{{( ($key == 0 ||  $key == 1 ) && env('APP_MODE') == 'demo')  ? 'javascript:' :route('admin.business-settings.language.delete',[$data['code']])}}"><i class="tio-delete-outlined"></i></a>
 
                                                 @endif
                                             @endif
-                                            <a class="btn btn-sm btn--warning btn-outline-warning action-btn" onclick="{{( ($key== 0 || $key== 1 ) && env('APP_MODE') == 'demo') ?'call_demo()':''}}"
+                                            <a class="btn btn-sm btn--warning btn-outline-warning action-btn call-demo-lang"
+                                                data-key="{{ $key }}"
+                                                data-env-mode="{{ env('APP_MODE') }}"
                                                 href="{{( ($key == 0 ||  $key == 1 ) && env('APP_MODE') == 'demo') ? 'javascript:' :route('admin.business-settings.language.translate',[$data['code']]) }}">
                                                 <i class="tio-globe"></i>
 
@@ -551,6 +555,20 @@
             $(".update-lang-status").click(function (e) {
                 e.preventDefault();
                 toastr.warning('{{translate('default language can not be updated! to update change the default language first!')}}');
+            });
+
+
+            $(".call-demo-lang").click(function (e) {
+                e.preventDefault();
+                let key = $(this).data('key');
+                let mode = $(this).data('env-mode');
+
+                if(  (key === 0 ||  key === 1 ) &&  mode === 'demo' ){
+                    toastr.info('{{ translate('Update option is disabled for demo!') }}', {
+                        CloseButton: true,
+                        ProgressBar: true
+                    });
+                }
             });
 
             $(".status-update").click(function () {

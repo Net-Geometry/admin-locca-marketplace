@@ -24,8 +24,10 @@
                 @if(isset($module_section_type))
                     <div class="min--280 max-sm-flex-grow-1">
                         <!-- Select -->
-                        <select name="zone_id" class="form-control js-select2-custom"
-                                onchange="set_filter('{{url()->full()}}',this.value,'module_id')" title="{{translate('messages.select_modules')}}">
+                        <select name="zone_id" class="form-control js-select2-custom set-filter"
+                            data-url="{{url()->full()}}"
+                            data-filter="module_id"
+                            title="{{translate('messages.select_modules')}}">
                             <option value="" {{!request('module_id') ? 'selected':''}}>{{translate('messages.all_modules')}}</option>
                             @foreach (\App\Models\Module::notParcel()->where('module_type',$module_section_type)->get() as $module)
                                 <option
