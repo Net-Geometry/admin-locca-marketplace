@@ -97,22 +97,37 @@
     });
 
 
-    $(".lang_link").click(function(e) {
-        e.preventDefault();
-        $(".lang_link").removeClass('active');
-        $(".lang_form").addClass('d-none');
-        $(this).addClass('active');
-        let form_id = this.id;
-        let lang = form_id.substring(0, form_id.length - 5);
-        $("#" + lang + "-form").removeClass('d-none');
-        $("#" + lang + "-form1").removeClass('d-none');
-        $("#" + lang + "-form2").removeClass('d-none');
-        $("#" +lang+" -form3").removeClass('d-none');
-        $("#" +lang+"-form4").removeClass('d-none');
-        if (lang === 'default') {
-            $(".default-form").removeClass('d-none');
-        }
+    document.addEventListener('DOMContentLoaded', function () {
+        const langLinks = document.querySelectorAll(".lang_link");
+
+        langLinks.forEach(function (langLink) {
+            langLink.addEventListener('click', function (e) {
+                e.preventDefault();
+                langLinks.forEach(function (link) {
+                    link.classList.remove('active');
+                });
+                this.classList.add('active');
+                document.querySelectorAll(".lang_form").forEach(function (form) {
+                    form.classList.add('d-none');
+                });
+                let form_id = this.id;
+                let lang = form_id.substring(0, form_id.length - 5);
+
+                $("#" + lang + "-form").removeClass('d-none');
+                $("#" + lang + "-form1").removeClass('d-none');
+                $("#" + lang + "-form2").removeClass('d-none');
+                $("#" +lang+" -form3").removeClass('d-none');
+                $("#" +lang+"-form4").removeClass('d-none');
+                if (lang === 'default') {
+                    $(".default-form").removeClass('d-none');
+                }
+            });
+        });
     });
+
+
+
+
 
 $('[data-slide]').on('click', function(){
     let serial = $(this).data('slide')
@@ -280,6 +295,9 @@ $(document).on('click', '.confirm-Toggle', function () {
             $('#dm_max_cash_in_hand').attr('readonly', true).removeAttr('required');
         }
     }
+
+
+
 });
 
 

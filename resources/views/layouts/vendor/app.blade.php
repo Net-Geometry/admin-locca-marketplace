@@ -94,7 +94,7 @@
                             </div>
                         </div>
                         <div class="btn--container justify-content-center">
-                            <button type="button" id="toggle-ok-button" class="btn btn--primary min-w-120" data-dismiss="modal" onclick="confirmToggle()">{{translate('Ok')}}</button>
+                            <button type="button" id="toggle-ok-button" class="btn btn--primary min-w-120 confirm-Toggle" data-dismiss="modal">{{translate('Ok')}}</button>
                             <button id="reset_btn" type="reset" class="btn btn--cancel min-w-120" data-dismiss="modal">
                                 {{translate("Cancel")}}
                             </button>
@@ -124,7 +124,7 @@
                             </div>
                         </div>
                         <div class="btn--container justify-content-center">
-                            <button type="button" id="toggle-status-ok-button" class="btn btn--primary min-w-120" data-dismiss="modal" onclick="confirmStatusToggle()">{{translate('Ok')}}</button>
+                            <button type="button" id="toggle-status-ok-button" class="btn btn--primary min-w-120 confirm-Status-Toggle" data-dismiss="modal">{{translate('Ok')}}</button>
                             <button id="reset_btn" type="reset" class="btn btn--cancel min-w-120" data-dismiss="modal">
                                 {{translate("Cancel")}}
                             </button>
@@ -140,7 +140,7 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-12">
-                            <div class="text-center"> 
+                            <div class="text-center">
                                 <h2>
                                     <i class="tio-shopping-cart-outlined"></i> {{translate('messages.You have new order, Check Please.')}}
                                 </h2>
@@ -170,10 +170,14 @@
 <script src="{{asset('public/assets/admin')}}/js/sweet_alert.js"></script>
 <script src="{{asset('public/assets/admin')}}/js/toastr.js"></script>
 <script src="{{asset('public/assets/admin')}}/js/emogi-area.js"></script>
+
+<script src="{{asset('public/assets/admin/js/app-blade/vendor.js')}}"></script>
 {!! Toastr::message() !!}
 
 @if ($errors->any())
 <script>
+
+"use strict";
     @foreach ($errors->all() as $error)
     toastr.error('{{ translate($error) }}', Error, {
         CloseButton: true,
@@ -182,9 +186,16 @@
     @endforeach
 </script>
 @endif
-<!-- Toggle Direction Init -->
+
+@stack('script_2')
+<audio id="myAudio">
+    <source src="{{asset('public/assets/admin/sound/notification.mp3')}}" type="audio/mpeg">
+</audio>
+    <script src="{{asset('public/assets/admin/js/view-pages/common.js')}}"></script>
+
 <script>
 
+"use strict";
     $(document).on('ready', function(){
         // $('body').css('overflow','')
         $(".direction-toggle").on("click", function () {
@@ -196,14 +207,14 @@
                 $('html').addClass('active')
             }
         });
-        if ($('html').attr('dir') == "rtl") {
+        if ($('html').attr('dir') === "rtl") {
             $(".direction-toggle").find('span').text('Toggle LTR')
         } else {
             $(".direction-toggle").find('span').text('Toggle RTL')
         }
 
         function setDirection(status) {
-            if (status == 1) {
+            if (status === 1) {
                 $("html").attr('dir', 'ltr');
                 $(".direction-toggle").find('span').text('Toggle RTL')
             } else {
@@ -217,141 +228,13 @@
                         status: status,
                     },
                     success: function() {
-                        alert(ok);
                     },
 
                 });
             }
         });
 
-</script>
-<!-- JS Plugins Init. -->
-<script>
-    $(document).on('ready', function () {
-        // ONLY DEV
-        // =======================================================
-        if (window.localStorage.getItem('hs-builder-popover') === null) {
-            $('#builderPopover').popover('show')
-                .on('shown.bs.popover', function () {
-                    $('.popover').last().addClass('popover-dark')
-                });
 
-            $(document).on('click', '#closeBuilderPopover', function () {
-                window.localStorage.setItem('hs-builder-popover', true);
-                $('#builderPopover').popover('dispose');
-            });
-        } else {
-            $('#builderPopover').on('show.bs.popover', function () {
-                return false
-            });
-        }
-        // END ONLY DEV
-        // =======================================================
-
-        // BUILDER TOGGLE INVOKER
-        // =======================================================
-        $('.js-navbar-vertical-aside-toggle-invoker').click(function () {
-            $('.js-navbar-vertical-aside-toggle-invoker i').tooltip('hide');
-        });
-
-        // INITIALIZATION OF NAVBAR VERTICAL NAVIGATION
-        // =======================================================
-        var sidebar = $('.js-navbar-vertical-aside').hsSideNav();
-
-
-        // INITIALIZATION OF TOOLTIP IN NAVBAR VERTICAL MENU
-        // =======================================================
-        $('.js-nav-tooltip-link').tooltip({boundary: 'window'})
-
-        $(".js-nav-tooltip-link").on("show.bs.tooltip", function (e) {
-            if (!$("body").hasClass("navbar-vertical-aside-mini-mode")) {
-                return false;
-            }
-        });
-
-
-        // INITIALIZATION OF UNFOLD
-        // =======================================================
-        $('.js-hs-unfold-invoker').each(function () {
-            var unfold = new HSUnfold($(this)).init();
-        });
-
-
-        // INITIALIZATION OF FORM SEARCH
-        // =======================================================
-        $('.js-form-search').each(function () {
-            new HSFormSearch($(this)).init()
-        });
-
-
-        // INITIALIZATION OF SELECT2
-        // =======================================================
-        $('.js-select2-custom').each(function () {
-            var select2 = $.HSCore.components.HSSelect2.init($(this));
-        });
-
-
-        // INITIALIZATION OF DATERANGEPICKER
-        // =======================================================
-        $('.js-daterangepicker').daterangepicker();
-
-        $('.js-daterangepicker-times').daterangepicker({
-            timePicker: true,
-            startDate: moment().startOf('hour'),
-            endDate: moment().startOf('hour').add(32, 'hour'),
-            locale: {
-                format: 'M/DD hh:mm A'
-            }
-        });
-
-        var start = moment();
-        var end = moment();
-
-        function cb(start, end) {
-            $('#js-daterangepicker-predefined .js-daterangepicker-predefined-preview').html(start.format('MMM D') + ' - ' + end.format('MMM D, YYYY'));
-        }
-
-        $('#js-daterangepicker-predefined').daterangepicker({
-            startDate: start,
-            endDate: end,
-            ranges: {
-                'Today': [moment(), moment()],
-                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-                'This Month': [moment().startOf('month'), moment().endOf('month')],
-                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-            }
-        }, cb);
-
-        cb(start, end);
-
-
-        // INITIALIZATION OF CLIPBOARD
-        // =======================================================
-        $('.js-clipboard').each(function () {
-            var clipboard = $.HSCore.components.HSClipboard.init(this);
-        });
-    });
-</script>
-
-@stack('script_2')
-<audio id="myAudio">
-    <source src="{{asset('public/assets/admin/sound/notification.mp3')}}" type="audio/mpeg">
-</audio>
-    <script src="{{asset('public/assets/admin/js/view-pages/common.js')}}"></script>
-<script>
-    var audio = document.getElementById("myAudio");
-
-    function playAudio() {
-        audio.play();
-    }
-
-    function pauseAudio() {
-        audio.pause();
-    }
-</script>
-<script>
     function route_alert(route, message) {
         Swal.fire({
             title: '{{ translate('messages.Are you sure?') }}',
@@ -391,32 +274,14 @@
     })
 
 
-    $('.onerror-image').on('error', function() {
-        let img = $(this).data('onerror-image')
-        $(this).attr('src', img);
-    });
-
-
-    $(".set-filter").on("change", function () {
-        const id = $(this).val();
-        const url = $(this).data('url');
-        const filter_by = $(this).data('filter');
-        var nurl = new URL(url);
-        nurl.searchParams.set(filter_by, id);
-        location.href = nurl;
-        tour.next();
-    });
-
     function set_filter(url, id, filter_by) {
-        var nurl = new URL(url);
+        let nurl = new URL(url);
         nurl.searchParams.set(filter_by, id);
         location.href = nurl;
     }
-</script>
 
-<script>
     @php($fcm_credentials = \App\CentralLogics\Helpers::get_business_settings('fcm_credentials'))
-    var firebaseConfig = {
+    let firebaseConfig = {
         apiKey: "{{isset($fcm_credentials['apiKey']) ? $fcm_credentials['apiKey'] : ''}}",
         authDomain: "{{isset($fcm_credentials['authDomain']) ? $fcm_credentials['authDomain'] : ''}}",
         projectId: "{{isset($fcm_credentials['projectId']) ? $fcm_credentials['projectId'] : ''}}",
@@ -437,21 +302,6 @@ messaging
     }).then(function (response) {
         @php($store_id=\App\CentralLogics\Helpers::get_store_id())
         subscribeTokenToTopic(response, "store_panel_{{$store_id}}_message");
-        // $.ajaxSetup({
-        //     headers: {
-        //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        //     }
-        // });
-        // $.ajax({
-        //     url: '{{ route('vendor.store.token') }}',
-        //     type: 'POST',
-        //     data: {
-        //         token: response
-        //     },
-        //     // error: function (error) {
-        //     //     alert(error);
-        //     // },
-        // });
     }).catch(function (error) {
         console.log(error);
     });
@@ -474,11 +324,11 @@ fetch('https://iid.googleapis.com/iid/v1/' + token + '/rel/topics/' + topic, {
 })
 }
     function getUrlParameter(sParam) {
-            var sPageURL = window.location.search.substring(1);
-            var sURLVariables = sPageURL.split('&');
-            for (var i = 0; i < sURLVariables.length; i++) {
-                var sParameterName = sURLVariables[i].split('=');
-                if (sParameterName[0] == sParam) {
+            let sPageURL = window.location.search.substring(1);
+            let sURLletiables = sPageURL.split('&');
+            for (let i = 0; i < sURLletiables.length; i++) {
+                let sParameterName = sURLletiables[i].split('=');
+                if (sParameterName[0] === sParam) {
                     return sParameterName[1];
                 }
             }
@@ -490,7 +340,7 @@ fetch('https://iid.googleapis.com/iid/v1/' + token + '/rel/topics/' + topic, {
                 success: function(data) {
                     $('#conversation-list').empty();
                     $("#conversation-list").append(data.html);
-                    var user_id = getUrlParameter('user');
+                    let user_id = getUrlParameter('user');
                     $('.customer-list').removeClass('conv-active');
                     $('#customer-' + user_id).addClass('conv-active');
                 }
@@ -498,9 +348,9 @@ fetch('https://iid.googleapis.com/iid/v1/' + token + '/rel/topics/' + topic, {
         }
 
         function conversationView() {
-            var conversation_id = getUrlParameter('conversation');
-            var user_id = getUrlParameter('user');
-            var url= '{{url('/')}}/store-panel/message/view/'+conversation_id+'/' + user_id;
+            let conversation_id = getUrlParameter('conversation');
+            let user_id = getUrlParameter('user');
+            let url= '{{url('/')}}/store-panel/message/view/'+conversation_id+'/' + user_id;
             $.ajax({
                 url: url,
                 success: function(data) {
@@ -510,18 +360,18 @@ fetch('https://iid.googleapis.com/iid/v1/' + token + '/rel/topics/' + topic, {
         }
         @php($order_notification_type = \App\Models\BusinessSetting::where('key', 'order_notification_type')->first())
         @php($order_notification_type = $order_notification_type ? $order_notification_type->value : 'firebase')
-        var order_type = 'all';
+        let order_type = 'all';
         messaging.onMessage(function (payload) {
-            if(payload.data.order_id && payload.data.type == 'new_order'){
+            if(payload.data.order_id && payload.data.type === 'new_order'){
                 @if(\App\CentralLogics\Helpers::employee_module_permission_check('order') && $order_notification_type == 'firebase')
                     order_type = payload.data.order_type
                     playAudio();
                     $('#popup-modal').appendTo("body").modal('show');
                 @endif
-            }else if(payload.data.type == 'message'){
-            var conversation_id = getUrlParameter('conversation');
-            var user_id = getUrlParameter('user');
-            var url= '{{url('/')}}/store-panel/message/view/'+conversation_id+'/' + user_id;
+            }else if(payload.data.type === 'message'){
+            let conversation_id = getUrlParameter('conversation');
+            let user_id = getUrlParameter('user');
+            let url= '{{url('/')}}/store-panel/message/view/'+conversation_id+'/' + user_id;
             $.ajax({
                 url: url,
                 success: function(data) {
@@ -533,7 +383,7 @@ fetch('https://iid.googleapis.com/iid/v1/' + token + '/rel/topics/' + topic, {
                         ProgressBar: true
                     });
 
-            if($('#conversation-list').scrollTop() == 0){
+            if($('#conversation-list').scrollTop() === 0){
                 conversationList();
             }
         }
@@ -574,86 +424,9 @@ fetch('https://iid.googleapis.com/iid/v1/' + token + '/rel/topics/' + topic, {
         if(getUrlParameter('conversation')){
             conversationView();
         }
+
+
 </script>
-
-<script>
-    function call_demo(){
-        toastr.info('{{ translate('Update option is disabled for demo!') }}', {
-            CloseButton: true,
-            ProgressBar: true
-        });
-    }
-    function set_time_filter(url, id) {
-            var nurl = new URL(url);
-            nurl.searchParams.set('filter', id);
-            location.href = nurl;
-        }
-</script>
-
-
-
-
-
-
-
-
-
-
-<script>
-
-    function confirmToggle() {
-        var toggle_id = $('#toggle-ok-button').attr('toggle-ok-button');
-        if ($('#'+toggle_id).is(':checked')) {
-            $('#'+toggle_id).prop('checked', false);
-        } else {
-            $('#'+toggle_id).prop('checked', true);
-        }
-        $('#toggle-modal').modal('hide');
-
-        if(toggle_id == 'free_delivery_over_status'){
-            if ($("#free_delivery_over_status").is(':checked')) {
-                $('#free_delivery_over').removeAttr('readonly');
-            } else {
-                $('#free_delivery_over').attr('readonly', true);
-                $('#free_delivery_over').val(null);
-            }
-        }
-        if(toggle_id == 'product_gallery'){
-            if ($("#product_gallery").is(':checked')) {
-                $(".access_all_products").removeClass('d-none');
-            } else {
-                $(".access_all_products").addClass('d-none');
-            }
-        }
-        if(toggle_id == 'product_approval'){
-            if ($("#product_approval").is(':checked')) {
-                $(".access_product_approval").removeClass('d-none');
-            } else {
-                $(".access_product_approval").addClass('d-none');
-            }
-        }
-
-
-    }
-
-
-
-    function confirmStatusToggle() {
-        var toggle_id = $('#toggle-status-ok-button').attr('toggle-ok-button');
-        if ($('#'+toggle_id).is(':checked')) {
-            $('#'+toggle_id).prop('checked', false);
-            $('#'+toggle_id).val(0);
-        } else {
-            $('#'+toggle_id).prop('checked', true);
-            $('#'+toggle_id).val(1);
-        }
-        $('#'+toggle_id+'_form').submit();
-
-    }
-</script>
-
-
-
 
 
 <!-- IE Support -->
