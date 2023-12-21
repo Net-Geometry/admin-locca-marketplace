@@ -79,8 +79,9 @@ class VendorController extends Controller
         }
 
         $vendor['show_pay_now_button'] = false;
+        $digital_payment = Helpers::get_business_settings('digital_payment');
 
-        if ($min_amount_to_pay_store <= $vendor?->wallet?->collected_cash ){
+        if ($min_amount_to_pay_store <= $vendor?->wallet?->collected_cash && $digital_payment['status'] == 1 ){
             $vendor['show_pay_now_button'] = true;
         }
 

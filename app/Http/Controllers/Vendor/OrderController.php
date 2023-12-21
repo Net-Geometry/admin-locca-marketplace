@@ -334,7 +334,9 @@ class OrderController extends Controller
                     $item->item->increment('order_count');
                 }
             });
-            $order->customer->increment('order_count');
+            if($order->is_guest == 0) {
+            $order?->customer?->increment('order_count');
+            }
         }
         if($request->order_status == 'canceled' || $request->order_status == 'delivered')
         {

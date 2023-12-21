@@ -109,7 +109,7 @@
                     @else
                         <label class="badge badge-danger p-2 rounded-bottom">{{translate('messages.Denied')}}</label>
                     @endif
-                          {{-- <div class=" bg-primary text-light p-2 rounded-bottom" >{{translate('messages.Approved')}}</div> --}}
+                          
                       </div>
                     @endif
                 </div>

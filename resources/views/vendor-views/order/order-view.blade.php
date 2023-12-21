@@ -701,12 +701,14 @@
                                    data-url="{{ route('vendor.order.status', ['id' => $order['id'], 'order_status' => 'handover']) }}"
                                    data-message="{{ translate('messages.make_ready_for_handover') }}"
                                     href="javascript:">{{ translate('messages.make_ready_for_handover') }}</a>
-
-                                <a class="btn  w-100   {{($order['order_status'] == 'handover' && ($order['order_type'] == 'take_away' || $order->store->self_delivery_system == 1) ) ?  'btn--primary order-status-change-alert'  :  'btn--secondary  self-delivery-warning' }} "
-                                   data-url="{{ route('vendor.order.status', ['id' => $order['id'], 'order_status' => 'delivered']) }}"
-                                   data-message="{{ translate('messages.Change status to delivered (payment status will be paid if not)?') }}"
-                                   data-verification="{{ $order_delivery_verification ? 'true' : 'false' }}"
-                                    href="javascript:">{{ translate('messages.make_delivered') }}</a>
+                                 @if($order['order_status'] == 'handover')
+                                    <a class="btn  w-100
+                                    {{ ($order['order_type'] == 'take_away' || $order->store->self_delivery_system == 1)  ?  'btn--primary order-status-change-alert'  :  'btn--secondary  self-delivery-warning' }} "
+                                       data-url="{{ route('vendor.order.status', ['id' => $order['id'], 'order_status' => 'delivered']) }}"
+                                       data-message="{{ translate('messages.Change status to delivered (payment status will be paid if not)?') }}"
+                                       data-verification="{{ $order_delivery_verification ? 'true' : 'false' }}"
+                                        href="javascript:">{{ translate('messages.make_delivered') }}</a>
+                                 @endif
 
                             </div>
                         </div>
@@ -1128,7 +1130,7 @@
                         <div class="form-group col-12">
                             <label for="order_amount">{{ translate('messages.order_amount') }}</label>
                             <input id="order_amount" type="number" class="form-control" name="order_amount" min="0"
-                                value="{{ $order['order_amount'] - $order['total_tax_amount']  - $order['additional_charge'] -  $order['delivery_charge'] + $order['store_discount_amount'] }}" step=".01">
+                                value="{{ round($order['order_amount'] - $order['total_tax_amount']  - $order['additional_charge'] -  $order['delivery_charge'] + $order['store_discount_amount'] ,6) }}" step=".01">
                         </div>
 
                         <div class="form-group col-sm-12">

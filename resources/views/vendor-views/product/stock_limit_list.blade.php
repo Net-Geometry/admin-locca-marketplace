@@ -49,7 +49,7 @@
                     </form>
                     <!-- Unfold -->
                     <div class="hs-unfold mr-2 min--250">
-                        <select name="category_id" id="category" data-url="{{url()->full()}}" data-filter="category_id" data-placeholder="{{translate('messages.select_category')}}" class="js-data-example-ajax form-control">
+                        <select name="category_id" id="category" data-url="{{url()->full()}}" data-filter="category_id" data-placeholder="{{translate('messages.select_category')}}" class="js-data-example-ajax form-control set-filter">
                             @if($category)
                                 <option value="{{$category->id}}" selected>{{$category->name}} ({{$category->position == 0?translate('messages.main'):translate('messages.sub')}})</option>
                             @else
