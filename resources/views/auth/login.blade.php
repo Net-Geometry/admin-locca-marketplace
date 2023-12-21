@@ -1,12 +1,5 @@
 <!DOCTYPE html>
 <?php
-    // $site_direction = session()->get('site_direction');
-    // if (env('APP_MODE') == 'demo') {
-    //     $site_direction = session()->get('site_direction');
-    // }else{
-    //     $site_direction = \App\Models\BusinessSetting::where('key', 'site_direction')->first();
-    //     $site_direction = $site_direction->value ?? 'ltr';
-    // }
 
     $log_email_succ = session()->get('log_email_succ');
 ?>
@@ -41,7 +34,8 @@
         <div class="auth-wrapper-left">
             <div class="auth-left-cont">
                 @php($store_logo = \App\Models\BusinessSetting::where(['key' => 'logo'])->first()->value)
-                <img onerror="this.src='{{asset('/public/assets/admin/img/favicon.png')}}'" src="{{ asset('storage/app/public/business/' . $store_logo) }}" alt="public/img">
+                <img class="onerror-image"  data-onerror-image="{{asset('/public/assets/admin/img/favicon.png')}}"
+                src="{{ asset('storage/app/public/business/'. $store_logo) }}" alt="public/img">
                 <h2 class="title">{{translate('Your')}} <span class="d-block">{{translate('All Service')}}</span> <strong class="text--039D55">{{translate('in one field')}}....</strong></h2>
             </div>
         </div>
@@ -274,6 +268,7 @@
 
 @if ($errors->any())
     <script>
+        "use strict";
         @foreach($errors->all() as $error)
         toastr.error('{{translate($error)}}', Error, {
             CloseButton: true,
@@ -285,30 +280,29 @@
 @if ($log_email_succ)
 @php(session()->forget('log_email_succ'))
     <script>
+        "use strict";
         $('#successMailModal').modal('show');
     </script>
 @endif
 
 <script>
+    "use strict";
     // $("#forget-password").hide();
-      $("#role-select").change(function() {
-        var selectValue = $(this).val();
-        if (selectValue == "admin") {
-          $("#forget-password").show();
-          $("#forget-password1").hide();
-        } else if(selectValue == "vendor") {
-          $("#forget-password").hide();
-          $("#forget-password1").show();
-        }
-        else {
-          $("#forget-password").hide();
-          $("#forget-password1").hide();
-        }
-      });
-</script>
+        $("#role-select").change(function() {
+            var selectValue = $(this).val();
+            if (selectValue == "admin") {
+            $("#forget-password").show();
+            $("#forget-password1").hide();
+            } else if(selectValue == "vendor") {
+            $("#forget-password").hide();
+            $("#forget-password1").show();
+            }
+            else {
+            $("#forget-password").hide();
+            $("#forget-password1").hide();
+            }
+        });
 
-<!-- JS Plugins Init. -->
-<script>
     $(document).on('ready', function () {
         // INITIALIZATION OF SHOW PASSWORD
         // =======================================================
@@ -322,11 +316,37 @@
             $.HSCore.components.HSValidation.init($(this));
         });
     });
-</script>
 
-{{-- recaptcha scripts start --}}
+
+    $('.reloadCaptcha').on('click', function () {
+        $.ajax({
+            url: "{{ route('reload-captcha') }}",
+            type: "GET",
+            dataType: 'json',
+            beforeSend: function () {
+                $('#loading').show()
+                $('.capcha-spin').addClass('active')
+            },
+            success: function(data) {
+                $('#reload-captcha').html(data.view);
+            },
+            complete: function () {
+                $('#loading').hide()
+                $('.capcha-spin').removeClass('active')
+            }
+        });
+    })
+
+    $(document).ready(function() {
+        $('.onerror-image').on('error', function() {
+            let img = $(this).data('onerror-image')
+            $(this).attr('src', img);
+        });
+    });
+</script>
 @if(isset($recaptcha) && $recaptcha['status'] == 1)
     <script type="text/javascript">
+    "use strict";
         var onloadCallback = function () {
             grecaptcha.render('recaptcha_element', {
                 'sitekey': '{{ \App\CentralLogics\Helpers::get_business_settings('recaptcha')['site_key'] }}'
@@ -335,6 +355,7 @@
     </script>
     <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
     <script>
+        "use strict";
         $("#form-id").on('submit',function(e) {
             var response = grecaptcha.getResponse();
 
@@ -347,30 +368,11 @@
 @endif
 {{-- recaptcha scripts end --}}
 
-<script>
 
-            $('.reloadCaptcha').on('click', function () {
-            $.ajax({
-                url: "{{ route('reload-captcha') }}",
-                type: "GET",
-                dataType: 'json',
-                beforeSend: function () {
-                    $('#loading').show()
-                    $('.capcha-spin').addClass('active')
-                },
-                success: function(data) {
-                    $('#reload-captcha').html(data.view);
-                },
-                complete: function () {
-                    $('#loading').hide()
-                    $('.capcha-spin').removeClass('active')
-                }
-            });
-        })
-</script>
 
 @if(env('APP_MODE')=='demo')
     <script>
+        "use strict";
         $('.copy_cred').on('click', function () {
             $('#signinSrEmail').val('admin@admin.com');
             $('#signupSrPassword').val('12345678');

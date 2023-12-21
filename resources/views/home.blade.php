@@ -1,8 +1,7 @@
 @extends('layouts.landing.app')
-@section('title', translate("messages.landing_page") . ' | ' . \App\CentralLogics\Helpers::get_settings('business_name') != 'null' ? \App\CentralLogics\Helpers::get_settings('business_name') :
-    'Sixam Mart')
+@section('title', translate("messages.landing_page") . ' | ' . \App\CentralLogics\Helpers::get_settings('business_name') != 'null' ? \App\CentralLogics\Helpers::get_settings('business_name') :'Sixam Mart')
 @section('content')
-{{-- {{ dd($landing_data) }} --}}
+
         <!-- Basic Settings -->
         @php($front_end_url = \App\Models\BusinessSetting::where(['key' => 'front_end_url'])->first())
         @php($front_end_url = $front_end_url ? $front_end_url->value : null)
@@ -18,7 +17,7 @@
         <div class="container">
             <div class="banner-content wow fadeInUp">
                 <h1 class="title">{{ $landing_data['fixed_header_title'] }}</h1>
-                <img class="w-100" onerror="this.src='{{ asset('public/assets/admin/img/160x160/img2.jpg') }}'"
+                <img class="w-100 onerror-image"  data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
                     src="{{ asset('storage/app/public/business/' . $logo) }}" alt="">
                 <div class="text">
                     {{ $landing_data['fixed_header_sub_title'] }}
@@ -1897,7 +1896,7 @@
                     <div class="owl-theme owl-carousel" id="sync2">
                         @foreach ($modules as $key => $item)
                         <div class="item">
-                            <img class="__img-50" src="{{ asset('storage/app/public/module/') }}/{{ isset($item['icon']) ? $item['icon'] : null }}" onerror="this.src='{{asset('public/assets/admin/img/100x100/2.png')}}'" alt="">
+                            <img class="__img-50 onerror-image"  data-onerror-image="{{asset('public/assets/admin/img/100x100/2.png')}}" src="{{ asset('storage/app/public/module/') }}/{{ isset($item['icon']) ? $item['icon'] : null }}"  alt="image">
                             <div class="txt d-block">{{translate("messages.{$item->module_name}")}}</div>
                         </div>
                         @endforeach
@@ -1916,7 +1915,9 @@
                         </div>
                         <div class="col-lg-6 col-md-8">
                             <div class="venture-img mx-1">
-                                <img src="{{ asset('storage/app/public/module/') }}/{{ isset($item['thumbnail']) ? $item['thumbnail'] : null }}" onerror="this.src='{{asset('public/assets/admin/img/100x100/2.png')}}'" alt="">
+                                <img src="{{ asset('storage/app/public/module/') }}/{{ isset($item['thumbnail']) ? $item['thumbnail'] : null }}"
+                                class="onerror-image"  data-onerror-image="{{asset('public/assets/admin/img/100x100/2.png')}}"
+                                alt="image">
                             </div>
                         </div>
                     </div>
@@ -3307,9 +3308,6 @@
         </svg>
         <!-- Shape 3 -->
         <svg class="e-shape-3" viewBox="0 0 567 122" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <!-- <path
-            d="M-582.837 89.5926C-498.678 115.494 -378.341 128.602 -274.377 121.626C-192.545 116.161 -126.314 99.5684 -56.7372 85.8613C45.8295 65.6487 160.17 51.1155 280.868 42.9748C393.048 35.3853 561.343 50.5711 656.049 31.4276C718.216 18.883 765.813 -1.05388 781.239 -25.008C800.599 -54.9961 755.095 -93.1643 700.509 -113.085C589.774 -153.51 351.912 -158.264 222.748 -192.32C118.13 -219.91 95.7742 -258.665 -1.35038 -289.125C-82.4246 -314.547 -201.738 -325.361 -301.286 -317.236C-400.834 -309.111 -477.627 -282.721 -500.755 -250.113C-517.044 -227.101 -508.262 -202.147 -511.566 -178.071L-511.586 -177.657C-514.876 -155.413 -537.121 -134.597 -575.185 -117.39C-586.038 -112.47 -596.666 -107.515 -606.994 -102.497C-663.223 -75.0238 -709.701 -43.8916 -711.933 -9.20875C-714.194 26.0594 -666.917 63.6462 -582.759 89.5472L-582.837 89.5926Z"
-            fill="url(#paint0_linear_28_12)" /> -->
             <path
                 d="M0.771484 56.7829C2.51171 39.3589 24.7719 26.9408 54.061 19.8095C83.3362 12.7292 119.288 10.3136 155.143 8.25515C233.743 3.70573 306.53 -0.0574563 389.079 0.0314772C423.192 0.0674218 466.707 2.41053 502.013 4.2893C513.305 4.91499 525.072 5.70358 536.723 8.36127C548.374 11.019 560.178 15.9867 564.655 21.558C569.606 27.7792 564.004 33.0555 554.76 35.4425C545.392 37.8016 532.993 37.8981 520.962 38.0786C419.801 39.3776 321.934 48.6861 260.387 77.7089C243.206 85.8148 229.033 95.3111 212.083 103.524C195.134 111.737 174.739 118.73 148.349 120.944C121.96 123.157 88.4465 119.954 59.6276 110.022C21.5201 96.887 -0.954816 74.1559 0.785346 56.7319L0.771484 56.7829Z"
                 fill="url(#paint1_linear_28_12)" />
@@ -3362,7 +3360,7 @@
                 <div class="feature-card">
                     <div class="feature-card-icon">
                         <img src="{{ asset('storage/app/public/special_criteria')}}/{{ isset($item['image']) ? $item['image'] : null }}" alt="{{$item['title']}}"
-                        onerror="this.src='{{ asset('public/assets/admin/img/160x160/img2.jpg') }}'">
+                        class="onerror-image"  data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}">
                     </div>
                     <div class="feature-card-cont">
                         <h4 class="subtitle">
@@ -3560,25 +3558,11 @@
                             </h4>
                             <div class="text">{{translate("messages.customer")}}</div>
                         </div>
-                        {{-- <div class="counter-item wow fadeInUp">
-                            <div class="icon">
-                                <svg width="32" height="18" viewBox="0 0 32 18" fill="none"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        d="M0.00376287 7.00839C0.192297 6.67574 0.354437 6.32798 0.569367 6.01423C1.77222 4.24891 2.99393 2.49871 4.19301 0.733391C4.53614 0.230634 4.97354 -0.00373514 5.58062 4.49862e-05C9.54739 0.00760524 13.5104 0.00760524 17.4771 4.49862e-05C17.99 4.49862e-05 18.3934 0.173928 18.7441 0.55194C20.4334 2.3664 22.134 4.17331 23.8383 5.97643C23.9552 6.09739 24.1173 6.19189 24.2757 6.25237C25.9348 6.88365 27.5977 7.50359 29.2606 8.13109C31.0592 8.80774 31.9377 10.1497 31.9981 12.0738C32.0433 13.5027 31.2854 13.9109 30.2183 13.8353C29.6791 13.7975 29.1361 13.8277 28.6723 13.8277C28.3744 14.391 28.1557 14.9467 27.8164 15.4192C26.3119 17.5285 23.0125 17.5285 21.5156 15.4192C21.2214 15.0034 21.0367 14.5044 20.8293 14.0319C20.7652 13.8845 20.7086 13.8202 20.5465 13.8202C17.1529 13.824 13.7592 13.8202 10.3656 13.824C10.3355 13.824 10.3053 13.8353 10.3656 13.824C10.0602 14.3948 9.83773 14.9504 9.50213 15.423C8.02025 17.5058 4.73976 17.5209 3.23902 15.457C2.94491 15.0525 2.7526 14.5687 2.55275 14.1037C2.46603 13.9034 2.40193 13.7862 2.16437 13.8164C1.97961 13.8391 1.79108 13.8088 1.60254 13.824C0.825781 13.8769 0.27149 13.582 0 12.8298V7.00462L0.00376287 7.00839ZM11.6326 5.93862H20.2863C20.2599 5.88948 20.2524 5.86302 20.2335 5.84034C19.2418 4.78568 18.2577 3.72725 17.2547 2.68015C17.1717 2.59321 16.9983 2.5554 16.8701 2.5554C15.226 2.54784 13.5858 2.54785 11.9418 2.55163C11.84 2.55163 11.7419 2.56296 11.6326 2.56674V5.93484V5.93862ZM9.05342 5.93862V2.55163C8.0655 2.55163 7.10021 2.54785 6.13491 2.55919C6.04818 2.55919 5.9426 2.66503 5.88604 2.75198C5.19978 3.73481 4.52482 4.72142 3.8461 5.70803C3.80085 5.77229 3.76314 5.84412 3.70658 5.93862H9.05342ZM24.6377 14.4704C25.4371 14.4704 26.0856 13.8353 26.1007 13.0339C26.1158 12.2325 25.4559 11.5672 24.6415 11.5635C23.8383 11.5635 23.1897 12.2023 23.1822 12.9999C23.1709 13.8088 23.827 14.4704 24.6415 14.4704H24.6377ZM6.35738 14.4704C7.16431 14.4704 7.81287 13.8391 7.82041 13.0415C7.82795 12.2174 7.19448 11.571 6.37624 11.5672C5.55423 11.5634 4.9132 12.2061 4.91697 13.0264C4.92074 13.8353 5.55423 14.4704 6.36115 14.4704H6.35738Z"
-                                        fill="#76C5FF" />
-                                </svg>
-
-                            </div>
-                            <h4 class="title"> <span class=" odometer" data-odometer-final="900"></span>
-                            </h4>
-                            <div class="text">{{translate("messages.Car provider")}}</div>
-                        </div> --}}
                     </div>
                     @php($fav = \App\Models\BusinessSetting::where(['key' => 'icon'])->first()->value ?? '')
                     <div class="right-side d-flex word-nowrap align-items-center">
-                        <img onerror="this.src='{{ asset('public/assets/admin/img/160x160/img2.jpg') }}'"
-                        src="{{ asset('storage/app/public/business/' . $fav) }}" alt="">
+                        <img class="onerror-image"  data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
+                        src="{{ asset('storage/app/public/business/' . $fav) }}" alt="image">
                         {{translate("messages.Still increasing")}}
                     </div>
                 </div>
@@ -3734,4 +3718,14 @@
     <!-- ==== Testimonial Ends Here ==== -->
 @endsection
 @push('script_2')
+<script>
+"use strict";
+    $(document).ready(function() {
+        "use strict";
+        $('.onerror-image').on('error', function() {
+            let img = $(this).data('onerror-image')
+            $(this).attr('src', img);
+        });
+    });
+</script>
 @endpush

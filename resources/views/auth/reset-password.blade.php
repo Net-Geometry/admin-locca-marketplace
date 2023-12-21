@@ -33,7 +33,8 @@
         <div class="auth-wrapper-left">
             <div class="auth-left-cont">
                 @php($store_logo = \App\Models\BusinessSetting::where(['key' => 'logo'])->first()->value)
-                <img onerror="this.src='{{asset('/public/assets/admin/img/favicon.png')}}'" src="{{ asset('storage/app/public/business/' . $store_logo) }}" alt="public/img">
+                <img class="onerror-image" data-onerror-image="{{asset('/public/assets/admin/img/favicon.png')}}"
+                src="{{ asset('storage/app/public/business/' . $store_logo) }}" alt="public/img">
                 <h2 class="title">{{translate('Your')}} <span class="d-block">{{translate('All Service')}}</span> <strong class="text--039D55">{{translate('in one field')}}....</strong></h2>
             </div>
         </div>
@@ -124,6 +125,7 @@
 
 @if ($errors->any())
     <script>
+        "use strict";
         @foreach($errors->all() as $error)
         toastr.error('{{$error}}', Error, {
             CloseButton: true,
@@ -135,6 +137,7 @@
 
 <!-- JS Plugins Init. -->
 <script>
+    "use strict";
     $(document).on('ready', function () {
         // INITIALIZATION OF SHOW PASSWORD
         // =======================================================
@@ -153,6 +156,7 @@
 {{-- recaptcha scripts start --}}
 @if(isset($recaptcha) && $recaptcha['status'] == 1)
     <script type="text/javascript">
+    "use strict";
         var onloadCallback = function () {
             grecaptcha.render('recaptcha_element', {
                 'sitekey': '{{ \App\CentralLogics\Helpers::get_business_settings('recaptcha')['site_key'] }}'
@@ -161,6 +165,7 @@
     </script>
     <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
     <script>
+        "use strict";
         $("#form-id").on('submit',function(e) {
             var response = grecaptcha.getResponse();
 
@@ -171,9 +176,9 @@
         });
     </script>
 @endif
-{{-- recaptcha scripts end --}}
 
 <script>
+    "use strict";
         function reloadCaptcha() {
             $.ajax({
                 url: "{{ route('reload-captcha') }}",
@@ -190,10 +195,17 @@
                 }
             });
         }
+        $(document).ready(function() {
+            $('.onerror-image').on('error', function() {
+                let img = $(this).data('onerror-image')
+                $(this).attr('src', img);
+            });
+        });
 </script>
 
 @if(env('APP_MODE')=='demo')
     <script>
+        "use strict";
         $('.copy_cred').on('click', function () {
             $('#signinSrEmail').val('admin@admin.com');
             $('#signupSrPassword').val('12345678');

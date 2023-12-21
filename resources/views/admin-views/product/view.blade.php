@@ -461,8 +461,7 @@
                                     <a class="d-flex align-items-center"
                                         href="{{ route('admin.customer.view', [$review['user_id']]) }}">
                                         <div class="avatar avatar-circle">
-                                            <img class="avatar-img" width="75" height="75"
-                                                onerror="this.src='{{ asset('public/assets/admin/img/160x160/img1.jpg') }}'"
+                                            <img class="avatar-img onerror-image"  data-onerror-image="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}"  width="75" height="75"
                                                 src="{{ asset('storage/app/public/profile/' . $review->customer->image) }}"
                                                 alt="Image Description">
                                         </div>

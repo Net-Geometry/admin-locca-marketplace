@@ -52,9 +52,8 @@
                     @php($fav = \App\Models\BusinessSetting::where(['key' => 'icon'])->first()->value ?? '')
                     @php($logo = \App\Models\BusinessSetting::where(['key' => 'logo'])->first()->value ?? '')
                     <a href="{{route('home')}}" class="logo">
-                        <img
-                        onerror="this.src='{{ asset('public/assets/admin/img/160x160/img2.jpg') }}'"
-                    src="{{ asset('storage/app/public/business/' . $fav) }}" alt="">
+                        <img class="onerror-image"  data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
+                    src="{{ asset('storage/app/public/business/' . $fav) }}" alt="image">
                     </a>
                     <ul class="menu">
                         <li>
@@ -203,8 +202,8 @@
                     <div class="footer-widget">
                         <div class="footer-logo">
                             <a class="logo">
-                                <img onerror="this.src='{{ asset('public/assets/admin/img/160x160/img2.jpg') }}'"
-                            src="{{ asset('storage/app/public/business/' . $logo) }}" alt="">
+                                <img  class="onerror-image"  data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
+                            src="{{ asset('storage/app/public/business/' . $logo) }}" alt="image">
                             </a>
                         </div>
                         <div class="txt">
@@ -475,6 +474,15 @@
                 $owl_slider.to(number, 500, true);
             });
         sync1.owlCarousel();
+
+
+        $(document).ready(function() {
+        "use strict";
+            $('.onerror-image').on('error', function() {
+                let img = $(this).data('onerror-image')
+                $(this).attr('src', img);
+            });
+        });
 
     </script>
 

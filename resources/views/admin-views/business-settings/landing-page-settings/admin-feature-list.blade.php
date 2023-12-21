@@ -331,8 +331,7 @@
                                             </td>
                         <td>
                             <img src="{{ asset('storage/app/public/admin_feature') }}/{{ $feature->image }}"
-                                onerror="this.src='{{ asset('/public/assets/admin/img/upload-3.png') }}'"
-                                class="__size-105" alt="">
+                                class="__size-105 onerror-image"  data-onerror-image="{{ asset('/public/assets/admin/img/upload-3.png') }}" alt="image">
                         </td>
                         <td>
                             <label class="toggle-switch toggle-switch-sm">
