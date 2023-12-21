@@ -31,6 +31,7 @@ class UnitRepository implements UnitRepositoryInterface
 
     public function getList(array $orderBy = [], array $relations = [], int|string $dataLimit = DEFAULT_DATA_LIMIT, int $offset = null): Collection|LengthAwarePaginator
     {
+        $dataLimit = is_string($dataLimit) ? (int)$dataLimit : $dataLimit;
         return $this->unit->paginate($dataLimit);
     }
 

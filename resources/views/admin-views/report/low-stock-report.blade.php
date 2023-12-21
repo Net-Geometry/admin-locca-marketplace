@@ -140,7 +140,7 @@
                             @endif
                         </td>
                         <td>
-                            {{$item->stock}}
+                            {{ $item->stock>=0?$item->stock:0 }}
                         </td>
                         <td>
                             <a class="btn action-btn btn--primary btn-outline-primary update-quantity" href="javascript:" title="{{translate('messages.edit_quantity')}}" data-id="{{ $item->id }}" data-toggle="modal" data-target="#update-quantity"><i class="tio-edit"></i>

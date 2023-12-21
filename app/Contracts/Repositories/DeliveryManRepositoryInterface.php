@@ -35,4 +35,12 @@ interface DeliveryManRepositoryInterface extends RepositoryInterface
      * @return Collection
      */
     public function getDropdownList(Request $request): Collection;
+
+    /**
+     * @param string|null $searchValue
+     * @param array $filters
+     * @param array $relations
+     * @return Model|null
+     */
+    public function getActiveFirstWhere(string $searchValue = null, array $filters = [], array $relations = []): ?Model;
 }

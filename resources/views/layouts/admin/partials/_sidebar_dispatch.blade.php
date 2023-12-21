@@ -71,7 +71,7 @@
                             <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
                                 {{ $module->module_name }}
                                 <span class="badge badge-soft-info badge-pill ml-1">
-                                    {{ $unassigned + $unassigned }}
+                                    {{ $unassigned + $ongoing }}
 
                                 </span>
                             </span>
@@ -94,7 +94,7 @@
                                     <span class="text-truncate sidebar--badge-container">
                                         {{ translate('messages.ongoingOrders') }}
                                         <span class="badge badge-soft-light badge-pill ml-1">
-                                            {{ $unassigned }}
+                                            {{ $ongoing }}
                                         </span>
                                     </span>
                                 </a>
