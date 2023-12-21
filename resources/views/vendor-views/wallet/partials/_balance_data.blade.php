@@ -139,8 +139,18 @@
                                     </a>
                                 @endif
 
-                                @if ($min_amount_to_pay_store <= $wallet->collected_cash && $digital_payment == 1)
-                                    <a class="btn btn--primary d-flex gap-1 align-items-center text-nowrap"  href="javascript:" data-toggle="modal" data-target="#payment_model">{{translate('messages.Pay_Now')}}
+                                @if ($min_amount_to_pay_store <= $wallet->collected_cash )
+                                    <a
+                                    @if ( $digital_payment != 1)
+                                    class="btn btn--secondary d-flex gap-1 align-items-center text-nowrap payment-warning"  href="javascript:"
+
+                                    @else
+
+                                    class="btn btn--primary d-flex gap-1 align-items-center text-nowrap"  href="javascript:"
+                                    data-toggle="modal" data-target="#payment_model"
+                                    @endif
+
+                                    >{{translate('messages.Pay_Now')}}
 
                                         <span class="form-label-secondary  d-flex"
                                               data-toggle="tooltip" data-placement="right"
@@ -233,7 +243,7 @@
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"        aria-hidden="true">
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"  aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -246,7 +256,6 @@
             <div class="modal-body">
 
                 <div class="form-group">
-                    {{-- <label for="hiddenValue" class="mb-2">{{ translate('messages.Note') }}</label> --}}
                     <p  id="hiddenValue"> </p>
                 </div>
             </div>

@@ -378,5 +378,16 @@
         }
     });
 });
+
+
+$('.payment-warning').on('click',function (event ){
+            event.preventDefault();
+            toastr.info(
+                "{{ translate('messages.Currently,_there_are_no_payment_options_available._Please_contact_admin_regarding_any_payment_process_or_queries.') }}", {
+                    CloseButton: true,
+                    ProgressBar: true
+                });
+        });
+
     </script>
 @endpush
