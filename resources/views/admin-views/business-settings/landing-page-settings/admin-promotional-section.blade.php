@@ -106,7 +106,7 @@
                                 </label>
                                 <label class="upload-img-3 m-0 d-block">
                                     <div class="img">
-                                        <img src="{{asset('/public/assets/admin/img/upload-4.png')}}" data-onerror-image="{{asset('/public/assets/admin/img/upload-4.png')}}" class="vertical-img mw-100 vertical onerror-image" alt="image">
+                                        <img src="{{asset('/public/assets/admin/img/upload-4.png')}}" data-onerror-image="{{asset('/public/assets/admin/img/upload-4.png')}}" class="vertical-img mw-100 vertical onerror-image" alt="">
                                     </div>
                                         <input type="file" name="image"  hidden>
                                 </label>
