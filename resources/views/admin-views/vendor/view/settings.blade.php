@@ -324,7 +324,8 @@
 
         });
 
-        $(".delete-schedule").on('click', function(){
+
+        $(document).on('click', '.delete-schedule', function () {
             let route = $(this).data('url');
             Swal.fire({
                 title: '<?php echo e(translate('Want_to_delete_this_schedule?')); ?>',

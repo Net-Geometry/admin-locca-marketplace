@@ -20,7 +20,7 @@
                     <td>{{$at->created_at->format('Y-m-d '.config('timeformat'))}}</td>
                     <td>{{\App\CentralLogics\Helpers::format_currency($at['current_balance'])}}</td>
                     <td>{{\App\CentralLogics\Helpers::format_currency($at['amount'])}}</td>
-                    <td>{{$at['ref']}}</td>
+                    <td>{{translate($at['ref'])}}</td>
                     <td>
                     </td>
                 </tr>

@@ -252,7 +252,7 @@
     "use strict";
 
     $('.update_quantity').on('click', function (){
-        let val = $(this).val();
+        let val = $(this).data('id');
         $.get({
             url: '{{url('/')}}/store-panel/item/get-variations?id='+val,
             dataType: 'json',

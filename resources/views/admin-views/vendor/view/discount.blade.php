@@ -31,7 +31,7 @@
                         <button type="button" class="btn-sm btn--primary" data-toggle="modal" data-target="#updatesettingsmodal">
                             <i class="tio-open-in-new"></i> {{translate('messages.update')}}
                         </button>
-                        <button type="button" data-url="discount-{{$store->id}}" data-message="{{ translate('Want to remove discount?') }}" class="btn btn--danger text-white form-alert"><i class="tio-delete-outlined"></i>  {{translate('messages.delete')}}</button>
+                        <button type="button" data-id="discount-{{$store->id}}" data-message="{{ translate('Want to remove discount?') }}" class="btn btn--danger text-white form-alert"><i class="tio-delete-outlined"></i>  {{translate('messages.delete')}}</button>
                         @else
                         <button type="button" class="btn-sm btn--primary" data-toggle="modal" data-target="#updatesettingsmodal">
                             <i class="tio-add"></i> {{translate('messages.add_discount')}}
