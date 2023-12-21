@@ -60,7 +60,7 @@
                     </div>
                     <div class="btn--container justify-content-end">
                         <button type="reset" class="btn btn--reset">{{translate('messages.reset')}}</button>
-                        <button type="{{env('APP_MODE')!='demo'?'submit':'button'}}" onclick="{{env('APP_MODE')!='demo'?'':'call_demo()'}}" class="btn btn--primary">{{translate('messages.submit')}}</button>
+                        <button type="{{env('APP_MODE')!='demo'?'submit':'button'}}"  class="btn btn--primary call-demo">{{translate('messages.submit')}}</button>
                     </div>
                 </form>
             </div>

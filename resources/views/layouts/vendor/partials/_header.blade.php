@@ -42,12 +42,7 @@
                                             @if($data['status']==1)
                                                 <li>
                                                     <a class="dropdown-item py-1"
-                                                       href="{{route('vendor.lang',[$data['code']])}}">
-                                                        {{-- <img
-
-                                                            width="20"
-                                                            src="{{asset('public/assets/admin')}}/img/flags/{{$data['code']}}.png"
-                                                            alt="{{$data['code']}}"/> --}}
+                                                        href="{{route('vendor.lang',[$data['code']])}}">
                                                         <span class="text-capitalize">{{$data['code']}}</span>
                                                     </a>
                                                 </li>
@@ -93,8 +88,7 @@
                                         <span class="card-text">{{\App\CentralLogics\Helpers::get_loggedin_user()->email}}</span>
                                     </div>
                                     <div class="avatar avatar-sm avatar-circle">
-                                        <img class="avatar-img"
-                                            onerror="this.src='{{asset('public/assets/admin/img/160x160/img1.jpg')}}'"
+                                        <img class="avatar-img  onerror-image"  data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
                                             src="{{asset('storage/app/public/vendor')}}/{{\App\CentralLogics\Helpers::get_loggedin_user()->image}}"
                                             alt="Image Description">
                                         <span class="avatar-status avatar-sm-status avatar-status-success"></span>
@@ -107,8 +101,7 @@
                                 <div class="dropdown-item-text">
                                     <div class="media align-items-center">
                                         <div class="avatar avatar-sm avatar-circle mr-2">
-                                            <img class="avatar-img"
-                                                 onerror="this.src='{{asset('public/assets/admin/img/160x160/img1.jpg')}}'"
+                                            <img class="avatar-img  onerror-image"  data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
                                                  src="{{asset('storage/app/public/vendor')}}/{{\App\CentralLogics\Helpers::get_loggedin_user()->image}}"
                                                  alt="Owner image">
                                         </div>
@@ -127,21 +120,7 @@
 
                                 <div class="dropdown-divider"></div>
 
-                                <a class="dropdown-item" href="javascript:" onclick="Swal.fire({
-                                    title: '{{ translate('Do you want to logout?') }}',
-                                    showDenyButton: true,
-                                    showCancelButton: true,
-                                    confirmButtonColor: '#FC6A57',
-                                    cancelButtonColor: '#363636',
-                                    confirmButtonText: '{{ translate('messages.Yes') }}',
-                                    cancelButtonText: '{{ translate('messages.cancel') }}',
-                                    }).then((result) => {
-                                    if (result.value) {
-                                        location.href='{{route('logout')}}';
-                                    } else{
-                                    Swal.fire('{{ translate('messages.cancel') }}', '', 'info')
-                                    }
-                                    })">
+                                <a class="dropdown-item log-out" href="javascript:" >
                                     <span class="text-truncate pr-2" title="Sign out">{{translate('messages.sign_out')}}</span>
                                 </a>
                             </div>

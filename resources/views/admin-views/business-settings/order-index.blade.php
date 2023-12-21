@@ -246,8 +246,7 @@
                                 <div class="btn--container justify-content-end mt-3">
                                     <button type="reset" class="btn btn--reset">{{ translate('messages.reset') }}</button>
                                     <button type="{{ env('APP_MODE') != 'demo' ? 'submit' : 'button' }}"
-                                        onclick="{{ env('APP_MODE') != 'demo' ? '' : 'call_demo()' }}"
-                                        class="btn btn--primary">{{ translate('save_information') }}</button>
+                                        class="btn btn--primary call-demo">{{ translate('save_information') }}</button>
                                 </div>
                             </div>
                         </div>
@@ -325,8 +324,7 @@
                         <div class="btn--container justify-content-end mt-3 mb-4">
                             <button type="reset" class="btn btn--reset">{{ translate('messages.reset') }}</button>
                             <button type="{{ env('APP_MODE') != 'demo' ? 'submit' : 'button' }}"
-                                onclick="{{ env('APP_MODE') != 'demo' ? '' : 'call_demo()' }}"
-                                class="btn btn--primary">{{ translate('Submit') }}</button>
+                                class="btn btn--primary call-demo">{{ translate('Submit') }}</button>
                         </div>
                     </form>
                         <div class="card">
@@ -387,9 +385,9 @@
                                                         <td>
                                                             <div class="btn--container justify-content-center">
 
-                                                                <a class="btn btn-sm btn--primary btn-outline-primary action-btn"
+                                                                <a class="btn btn-sm btn--primary btn-outline-primary action-btn edit-reason"
                                                     title="{{ translate('messages.edit') }}"
-                                                    onclick="edit_reason('{{ $reason['id'] }}')" data-toggle="modal"
+                                                    data-toggle="modal"
                                                     data-target="#add_update_reason_{{ $reason->id }}"><i
                                                         class="tio-edit"></i>
                                                 </a>

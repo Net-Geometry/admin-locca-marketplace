@@ -100,3 +100,12 @@ $(document).on('ready', function() {
         var tagify = $.HSCore.components.HSTagify.init($(this));
     });
 });
+var forms = document.querySelectorAll('.priority-form');
+
+forms.forEach(function(form) {
+    var select = form.querySelector('.priority-select');
+
+    select.addEventListener('change', function() {
+        form.submit();
+    });
+});

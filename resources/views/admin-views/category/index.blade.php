@@ -105,8 +105,13 @@
                         <!-- Search -->
                         <div class="input-group input--group">
                             <input type="search" name="search" value="{{ request()?->search ?? null }}" class="form-control min-height-45" placeholder="{{translate('messages.search_categories')}}" aria-label="{{translate('messages.ex_:_categories')}}">
+
+
+                            <input type="hidden" name="position" value="0">
                             <button type="submit" class="btn btn--secondary min-height-45"><i class="tio-search"></i></button>
                         </div>
+
+
                         <!-- End Search -->
                     </form>
                     <!-- Unfold -->
@@ -195,13 +200,15 @@
                                     </label>
                                 </td>
                                 <td>
-                                    <form action="{{route('admin.category.priority',$category->id)}}">
-                                        <select name="priority" id="priority" class="form-control form--control-select mx-auto {{$category->priority == 0 ? 'text-title':''}} {{$category->priority == 1 ? 'text-info':''}} {{$category->priority == 2 ? 'text-success':''}} " onchange="this.form.submit()">
+
+                                    <form action="{{route('admin.category.priority',$category->id)}}" class="priority-form">
+                                        <select name="priority" id="priority" class="form-control form--control-select  priority-select  mx-auto {{$category->priority == 0 ? 'text-title':''}} {{$category->priority == 1 ? 'text-info':''}} {{$category->priority == 2 ? 'text-success':''}}" >
                                             <option value="0" class="text--title" {{$category->priority == 0?'selected':''}}>{{translate('messages.normal')}}</option>
                                             <option value="1" class="text--title" {{$category->priority == 1?'selected':''}}>{{translate('messages.medium')}}</option>
                                             <option value="2" class="text--title" {{$category->priority == 2?'selected':''}}>{{translate('messages.high')}}</option>
                                         </select>
                                     </form>
+
                                 </td>
                                 <td>
                                     <div class="btn--container justify-content-center">

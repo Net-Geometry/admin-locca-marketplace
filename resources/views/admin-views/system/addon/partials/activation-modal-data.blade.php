@@ -12,10 +12,8 @@
         <img
             width="200"
             src="{{asset('storage/app/public/restaurant/'.$logo)}}"
-            onerror="this.src='{{ asset('public/assets/admin/img/img1.jpg') }}'"
-            alt=""
-            class="dark-support"
-        />
+            alt="image"
+            class="dark-support onerror-image"  data-onerror-image="{{ asset('public/assets/admin/img/img1.jpg') }}" />
     </div>
     <h2 class="text-center mb-4">{{$addon_name}}</h2>
 

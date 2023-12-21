@@ -44,6 +44,6 @@ class DmPasswordResetMail extends Mailable
         $body = Helpers::text_variable_data_format( value:$data['body']??'',user_name:$user_name??'');
         $footer_text = Helpers::text_variable_data_format( value:$data['footer_text']??'',user_name:$user_name??'');
         $copyright_text = Helpers::text_variable_data_format( value:$data['copyright_text']??'',user_name:$user_name??'');
-        return $this->subject(translate('Password_Reset'))>view('email-templates.new-email-format-'.$template, ['company_name'=>$company_name,'data'=>$data,'title'=>$title,'body'=>$body,'footer_text'=>$footer_text,'copyright_text'=>$copyright_text,'code'=>$code]);
+        return $this->subject(translate('Password_Reset'))->view('email-templates.new-email-format-'.$template, ['company_name'=>$company_name,'data'=>$data,'title'=>$title,'body'=>$body,'footer_text'=>$footer_text,'copyright_text'=>$copyright_text,'code'=>$code]);
     }
 }

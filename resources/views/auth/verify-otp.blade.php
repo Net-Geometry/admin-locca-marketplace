@@ -33,7 +33,8 @@
         <div class="auth-wrapper-left">
             <div class="auth-left-cont">
                 @php($store_logo = \App\Models\BusinessSetting::where(['key' => 'logo'])->first()->value)
-                <img onerror="this.src='{{asset('/public/assets/admin/img/favicon.png')}}'" src="{{ asset('storage/app/public/business/' . $store_logo) }}" alt="public/img">
+                <img class="onerror-image"  data-onerror-image="{{asset('/public/assets/admin/img/favicon.png')}}"
+                src="{{ asset('storage/app/public/business/' . $store_logo) }}" alt="public/img">
                 <h2 class="title">{{translate('Your')}} <span class="d-block">{{translate('All Service')}}</span> <strong class="text--039D55">{{translate('in one field')}}....</strong></h2>
             </div>
         </div>
@@ -90,6 +91,7 @@
 
 @if ($errors->any())
     <script>
+        "use strict";
         @foreach($errors->all() as $error)
         toastr.error('{{$error}}', Error, {
             CloseButton: true,
@@ -100,6 +102,7 @@
 @endif
 
 <script>
+    "use strict";
 
     $('.otp_resend').on('click', function () {
         $.ajax({
@@ -133,6 +136,14 @@
             }
         });
     })
+
+    $(document).ready(function() {
+            $('.onerror-image').on('error', function() {
+                let img = $(this).data('onerror-image')
+                $(this).attr('src', img);
+            });
+        });
+
 </script>
 
 <!-- IE Support -->
@@ -142,6 +153,7 @@
 
 
 <script>
+    "use strict";
   $(document).ready(function () {
     $(".otp-form *:input[type!=hidden]:first").focus();
     let otp_fields = $(".otp-form .otp-field"),
@@ -199,10 +211,6 @@
     }, 1000);
   }
 
-//   otpButton.click(function() {
-//     // TODO: Send OTP code here
-//     startCountdown();
-//   });
   startCountdown();
 });
 

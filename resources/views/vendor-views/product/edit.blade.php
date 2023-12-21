@@ -163,7 +163,7 @@
 
 
                                         @if (request()->product_gellary  == 1)
-                                            <a href="#" onclick="function_remove_img({{ $key }},'{{ $photo }}')"
+                                            <a href="#"  data-key={{ $key }} data-photo="{{ $photo }}"
                                             class="spartan_remove_row"><i class="tio-add-to-trash"></i></a>
                                         @else
                                             <a href="{{ route('vendor.item.remove-image', ['id' => $product['id'], 'name' => $photo ,'temp_product' => $temp_product]) }}"
@@ -208,8 +208,9 @@
                                     <div class="form-group mb-0">
                                         <label class="input-label" for="exampleFormControlSelect1">{{translate('messages.category')}}<span
                                                 class="input-label-secondary">*</span></label>
-                                        <select name="category_id" id="category-id" class="form-control js-select2-custom"
-                                                onchange="getRequest('{{url('/')}}/store-panel/item/get-categories?parent_id='+this.value,'sub-categories')">
+                                        <select name="category_id" id="category-id" class="form-control js-select2-custom get-request"
+                                        data-url="{{url('/')}}/store-panel/item/get-categories?parent_id=" data-id="sub-categories"
+                                               >
                                             @foreach($categories as $category)
                                                 <option
                                                     value="{{$category['id']}}" {{ $category->id==$product_category[0]->id ? 'selected' : ''}} >{{$category['name']}}</option>
@@ -217,14 +218,15 @@
                                         </select>
                                     </div>
                                 </div>
+
                                 <div class="col-sm-6 col-lg-4">
                                     <div class="form-group mb-0">
                                         <label class="input-label" for="exampleFormControlSelect1">{{translate('messages.sub_category')}}<span
                                                 class="input-label-secondary"></span></label>
                                         <select name="sub_category_id" id="sub-categories"
                                                 data-id="{{count($product_category)>=2?$product_category[1]->id:''}}"
-                                                class="form-control js-select2-custom"
-                                                onchange="getRequest('{{url('/')}}/store-panel/item/get-categories?parent_id='+this.value,'sub-sub-categories')">
+                                                class="form-control js-select2-custom get-request"
+                                                data-url="{{url('/')}}/store-panel/item/get-categories?parent_id=" data-id="sub-sub-categories">
 
                                         </select>
                                     </div>

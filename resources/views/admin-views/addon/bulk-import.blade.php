@@ -79,7 +79,8 @@
                     </div>
                     <div class="btn--container justify-content-end mt-3">
                         <button id="reset_btn" type="reset" class="btn btn--reset">{{translate('messages.reset')}}</button>
-                        <button type="submit" name="button" value="update" class="btn btn--warning submit_btn" onclick="changeFormAction('update')">{{translate('messages.update')}}</button>
+                        <button type="submit" name="button" value="update" class="btn btn--warning submit_btn change-Form-Action"
+                        data-value="update">{{translate('messages.update')}}</button>
                         <button type="submit" name="button" value="import" class="btn btn--primary submit_btn">{{translate('messages.Import')}}</button>
                     </div>
                 </div>
@@ -117,13 +118,22 @@
             }
         })
     }
-    function changeFormAction(buttonValue) {
-        var form = document.getElementById('import_form');
+
+    $('.change-Form-Action').on('click',function (){
+        let buttonValue = $(this).data('value');
+        let form = document.getElementById('import_form');
         if (buttonValue === 'update') {
             form.action = '{{ route('admin.addon.bulk-update') }}';
         } else {
             form.action = '{{ route('admin.addon.bulk-import') }}';
         }
+
+    });
+
+
+
+    function changeFormAction(buttonValue) {
+
     }
 </script>
 @endpush

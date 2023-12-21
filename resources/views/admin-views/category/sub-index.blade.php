@@ -85,10 +85,12 @@
             <div class="card-header py-2 border-0">
                 <div class="search--button-wrapper">
                     <h5 class="card-title">{{translate('messages.sub_category_list')}}<span class="badge badge-soft-dark ml-2" id="itemCount">{{$categories->total()}}</span></h5>
-                    <form  class="search-form">
+
+                    <form   class="search-form">
                         <!-- Search -->
                         <div class="input-group input--group">
                             <input id="datatableSearch" name="search" value="{{ request()?->search ?? null }}"  type="search" class="form-control" placeholder="{{translate('messages.ex_:_search_sub_categories')}}" aria-label="{{translate('messages.ex_:_sub_categories')}}">
+                            <input type="hidden" name="position" value="1">
                             <input type="hidden" name="sub_category" value="1">
                             <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
                         </div>
@@ -152,8 +154,8 @@
                                     </label>
                                 </td>
                                 <td>
-                                    <form action="{{route('admin.category.priority',$category->id)}}">
-                                        <select name="priority" id="priority" onchange="this.form.submit()" class="form-control form--control-select mx-auto {{$category->priority == 0 ? 'text-title':''}} {{$category->priority == 1 ? 'text-info':''}} {{$category->priority == 2 ? 'text-success':''}}">
+                                    <form action="{{route('admin.category.priority',$category->id)}}" class="priority-form">
+                                        <select name="priority" id="priority" class="form-control priority-select form--control-select mx-auto {{$category->priority == 0 ? 'text-title':''}} {{$category->priority == 1 ? 'text-info':''}} {{$category->priority == 2 ? 'text-success':''}}">
                                             <option value="0" {{$category->priority == 0?'selected':''}}>{{translate('messages.normal')}}</option>
                                             <option value="1" {{$category->priority == 1?'selected':''}}>{{translate('messages.medium')}}</option>
                                             <option value="2" {{$category->priority == 2?'selected':''}}>{{translate('messages.high')}}</option>

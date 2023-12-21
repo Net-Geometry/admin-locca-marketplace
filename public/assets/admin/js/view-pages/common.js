@@ -97,22 +97,37 @@
     });
 
 
-    $(".lang_link").click(function(e) {
-        e.preventDefault();
-        $(".lang_link").removeClass('active');
-        $(".lang_form").addClass('d-none');
-        $(this).addClass('active');
-        let form_id = this.id;
-        let lang = form_id.substring(0, form_id.length - 5);
-        $("#" + lang + "-form").removeClass('d-none');
-        $("#" + lang + "-form1").removeClass('d-none');
-        $("#" + lang + "-form2").removeClass('d-none');
-        $("#" +lang+" -form3").removeClass('d-none');
-        $("#" +lang+"-form4").removeClass('d-none');
-        if (lang === 'default') {
-            $(".default-form").removeClass('d-none');
-        }
+    document.addEventListener('DOMContentLoaded', function () {
+        const langLinks = document.querySelectorAll(".lang_link");
+
+        langLinks.forEach(function (langLink) {
+            langLink.addEventListener('click', function (e) {
+                e.preventDefault();
+                langLinks.forEach(function (link) {
+                    link.classList.remove('active');
+                });
+                this.classList.add('active');
+                document.querySelectorAll(".lang_form").forEach(function (form) {
+                    form.classList.add('d-none');
+                });
+                let form_id = this.id;
+                let lang = form_id.substring(0, form_id.length - 5);
+
+                $("#" + lang + "-form").removeClass('d-none');
+                $("#" + lang + "-form1").removeClass('d-none');
+                $("#" + lang + "-form2").removeClass('d-none');
+                $("#" +lang+" -form3").removeClass('d-none');
+                $("#" +lang+"-form4").removeClass('d-none');
+                if (lang === 'default') {
+                    $(".default-form").removeClass('d-none');
+                }
+            });
+        });
     });
+
+
+
+
 
 $('[data-slide]').on('click', function(){
     let serial = $(this).data('slide')
@@ -206,7 +221,7 @@ $(".set-filter").on("change", function () {
     const id = $(this).val();
     const url = $(this).data('url');
     const filter_by = $(this).data('filter');
-    var nurl = new URL(url);
+    let nurl = new URL(url);
     nurl.searchParams.set(filter_by, id);
     location.href = nurl;
     tour.next();
@@ -217,3 +232,72 @@ $(document).ready(function() {
         $(this).attr('src', img);
     });
 });
+
+$(document).on('click', '.confirm-Status-Toggle', function () {
+    let Status_toggle = $('#toggle-status-ok-button').attr('toggle-ok-button');
+    if ($('#'+Status_toggle).is(':checked')) {
+        $('#'+Status_toggle).prop('checked', false).val(0);
+    } else {
+        $('#'+Status_toggle).prop('checked', true).val(1);
+    }
+    $('#'+Status_toggle+'_form').submit();
+});
+$(document).on('click', '.confirm-Toggle', function () {
+
+    let toggle_id = $('#toggle-ok-button').attr('toggle-ok-button');
+    if ($('#'+toggle_id).is(':checked')) {
+        $('#'+toggle_id).prop('checked', false);
+    } else {
+        $('#'+toggle_id).prop('checked', true);
+    }
+    $('#toggle-modal').modal('hide');
+
+    if(toggle_id === 'free_delivery_over_status'){
+        if ($("#free_delivery_over_status").is(':checked')) {
+            $('#free_delivery_over').removeAttr('readonly');
+        } else {
+            $('#free_delivery_over').attr('readonly', true).val(null);
+        }
+    }
+    if(toggle_id === 'product_gallery'){
+        if ($("#product_gallery").is(':checked')) {
+            $(".access_all_products").removeClass('d-none');
+        } else {
+            $(".access_all_products").addClass('d-none');
+        }
+    }
+    if(toggle_id === 'product_approval'){
+        if ($("#product_approval").is(':checked')) {
+            $(".access_product_approval").removeClass('d-none');
+        } else {
+            $(".access_product_approval").addClass('d-none');
+        }
+    }
+    if(toggle_id === 'additional_charge_status'){
+        if ($("#additional_charge_status").is(':checked')) {
+            $('#additional_charge_name').removeAttr('readonly').attr("required", true);
+            $('#additional_charge').removeAttr('readonly').attr("required", true);
+        } else {
+            $('#additional_charge_name').attr('readonly', true).removeAttr('required');
+            $('#additional_charge').attr('readonly', true).removeAttr('required');
+        }
+    }
+    if(toggle_id === 'cash_in_hand_overflow'){
+        if ($("#cash_in_hand_overflow").is(':checked')) {
+            $('#cash_in_hand_overflow_store_amount').removeAttr('readonly').attr('required', true);
+            $('#min_amount_to_pay_store').removeAttr('readonly').attr('required', true);
+            $('#min_amount_to_pay_dm').removeAttr('readonly').attr('required', true);
+            $('#dm_max_cash_in_hand').removeAttr('readonly').attr('required', true);
+        } else {
+            $('#cash_in_hand_overflow_store_amount').attr('readonly', true).removeAttr('required');
+            $('#min_amount_to_pay_store').attr('readonly', true).removeAttr('required');
+            $('#min_amount_to_pay_dm').attr('readonly', true).removeAttr('required');
+            $('#dm_max_cash_in_hand').attr('readonly', true).removeAttr('required');
+        }
+    }
+
+
+
+});
+
+

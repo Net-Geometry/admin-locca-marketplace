@@ -135,6 +135,7 @@
             </div>
         </div>
     </div>
+    </div>
 
 
     <div class="modal fade" id="Adjust_wallet" tabindex="-1"  role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

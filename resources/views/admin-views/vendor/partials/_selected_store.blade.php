@@ -8,7 +8,7 @@
         <div class="media-body d-flex flex-column gap-1 ">
                 <div class="d-flex gap-2 justify-content-between" >
                     <h6 class="fs-13 mb-1 text-truncate custom-width product-name">{{$store['name']}}</h6>
-                    <button type="button"  onclick="selected_stores({{ $store->id }}, true)" class="bg-transparent border-0 p-0"> <i class="tio-clear"></i></button>
+                    <button type="button"  onclick="selected_stores({{ $store->id }}, true)"z class="bg-transparent border-0 p-0"> <i class="tio-clear"></i></button>
                 </div>
                 <div class="d-flex gap-1 flex-wrap align-items-center lh--1">
                     <i class=" fs-13 tio-star"></i>

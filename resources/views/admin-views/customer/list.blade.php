@@ -33,10 +33,7 @@
                                 value="{{ request()->get('search') }}" placeholder="{{ translate('search_by_name') }}"
                                 aria-label="Search" required>
                             <button type="submit" class="btn btn--secondary min-height-40"><i class="tio-search"></i></button>
-                            {{-- @if (request()->get('search'))
-                                <button type="reset" class="btn btn-info mx-1 py-1 min-height-40"
-                                    onclick="location.href = '{{ route('admin.users.customer.list') }}'">{{ translate('messages.reset') }}</button>
-                            @endif --}}
+                    
                         </div>
                         <!-- End Search -->
                     </form>

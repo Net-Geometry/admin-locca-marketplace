@@ -1,11 +1,13 @@
 
 
 "use strict";
-function edit_reason() {
+
+$('.edit-reason').on('click',function (){
     $(".add_active").addClass('active');
     $(".update-lang_form").addClass('d-none');
     $(".add_active_2").removeClass('d-none');
-}
+});
+
 
 $(".update-lang_link").click(function(e) {
     e.preventDefault();

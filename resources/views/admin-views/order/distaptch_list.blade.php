@@ -24,8 +24,10 @@
                 @if(isset($module_section_type))
                     <div class="min--280 max-sm-flex-grow-1">
                         <!-- Select -->
-                        <select name="zone_id" class="form-control js-select2-custom"
-                                onchange="set_filter('{{url()->full()}}',this.value,'module_id')" title="{{translate('messages.select_modules')}}">
+                        <select name="zone_id" class="form-control js-select2-custom set-filter"
+                            data-url="{{url()->full()}}"
+                            data-filter="module_id"
+                            title="{{translate('messages.select_modules')}}">
                             <option value="" {{!request('module_id') ? 'selected':''}}>{{translate('messages.all_modules')}}</option>
                             @foreach (\App\Models\Module::notParcel()->where('module_type',$module_section_type)->get() as $module)
                                 <option
@@ -123,8 +125,7 @@
                     <!-- End Unfold -->
                     <!-- Unfold -->
                     <div class="hs-unfold mr-2">
-                        <a class="js-hs-unfold-invoker btn btn-sm btn-white h--40px" href="javascript:;"
-                            onclick="$('#datatableFilterSidebar,.hs-unfold-overlay').show(500)">
+                        <a class="js-hs-unfold-invoker btn btn-sm btn-white h--40px" href="javascript:" id="filter-button-on">
                             <i class="tio-filter-list mr-1"></i> {{ translate('Filters') }} <span class="badge badge-success badge-pill ml-1" id="filter_count"></span>
                         </a>
                     </div>
@@ -402,8 +403,7 @@
                     <h4 class="card-header-title">{{translate('messages.order_filter')}}</h4>
 
                     <!-- Toggle Button -->
-                    <a class="js-hs-unfold-invoker_ btn btn-icon btn-xs btn-ghost-dark ml-2" href="javascript:;"
-                    onclick="$('#datatableFilterSidebar,.hs-unfold-overlay').hide(500)">
+                    <a class="js-hs-unfold-invoker_ btn btn-icon btn-xs btn-ghost-dark ml-2" href="javascript:" id="filter-button-off">
                         <i class="tio-clear tio-lg"></i>
                     </a>
                     <!-- End Toggle Button -->
@@ -526,12 +526,23 @@
                 </form>
             </div>
         </div>
+
         <!-- End Order Filter Modal -->
 @endsection
 
 @push('script_2')
-    <!-- <script src="{{asset('public/assets/admin')}}/js/bootstrap-select.min.js"></script> -->
+
     <script>
+
+    document.getElementById('filter-button-on').addEventListener('click', function() {
+        $('#datatableFilterSidebar, .hs-unfold-overlay').show(500);
+    });
+
+    
+    document.getElementById('filter-button-off').addEventListener('click', function() {
+        $('#datatableFilterSidebar, .hs-unfold-overlay').hide(500);
+    });
+
         <?php
             $filter_count=0;
             if(isset($zone_ids) && count($zone_ids) > 0) $filter_count += 1;

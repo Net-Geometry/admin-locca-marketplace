@@ -1,5 +1,4 @@
-@php($background_Change = \App\Models\BusinessSetting::where(['key' => 'backgroundChange'])->first())
-@php($background_Change = isset($background_Change->value) ? json_decode($background_Change->value, true) : null)
+
 <!DOCTYPE html>
 <?php
     $landing_site_direction = session()->get('landing_site_direction');
@@ -53,9 +52,8 @@
                     @php($fav = \App\Models\BusinessSetting::where(['key' => 'icon'])->first()->value ?? '')
                     @php($logo = \App\Models\BusinessSetting::where(['key' => 'logo'])->first()->value ?? '')
                     <a href="{{route('home')}}" class="logo">
-                        <img
-                        onerror="this.src='{{ asset('public/assets/admin/img/160x160/img2.jpg') }}'"
-                    src="{{ asset('storage/app/public/business/' . $fav) }}" alt="">
+                        <img class="onerror-image"  data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
+                    src="{{ asset('storage/app/public/business/' . $fav) }}" alt="image">
                     </a>
                     <ul class="menu">
                         <li>
@@ -204,8 +202,8 @@
                     <div class="footer-widget">
                         <div class="footer-logo">
                             <a class="logo">
-                                <img onerror="this.src='{{ asset('public/assets/admin/img/160x160/img2.jpg') }}'"
-                            src="{{ asset('storage/app/public/business/' . $logo) }}" alt="">
+                                <img  class="onerror-image"  data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
+                            src="{{ asset('storage/app/public/business/' . $logo) }}" alt="image">
                             </a>
                         </div>
                         <div class="txt">
@@ -344,7 +342,7 @@
 
 
     <script>
-
+"use strict";
         $(".main-category-slider").owlCarousel({
             loop: true,
             nav: false,
@@ -379,10 +377,10 @@
         });
         $(".owl-prev").html('<i class="fas fa-angle-left">');
         $(".owl-next").html('<i class="fas fa-angle-right">');
-        var sync1 = $("#sync1");
-        var sync2 = $("#sync2");
-        var thumbnailItemClass = ".owl-item";
-        var slides = sync1
+        let sync1 = $("#sync1");
+        let sync2 = $("#sync2");
+        let thumbnailItemClass = ".owl-item";
+        let slides = sync1
             .owlCarousel({
                 startPosition: 12,
                 items: 1,
@@ -402,11 +400,11 @@
 
         function syncPosition(el) {
             $owl_slider = $(this).data("owl.carousel");
-            var loop = $owl_slider.options.loop;
+            let loop = $owl_slider.options.loop;
 
             if (loop) {
-                var count = el.item.count - 1;
-                var current = Math.round(
+                let count = el.item.count - 1;
+                let current = Math.round(
                     el.item.index - el.item.count / 2 - 0.5
                 );
                 if (current < 0) {
@@ -416,24 +414,24 @@
                     current = 0;
                 }
             } else {
-                var current = el.item.index;
+                let current = el.item.index;
             }
 
-            var owl_thumbnail = sync2.data("owl.carousel");
-            var itemClass = "." + owl_thumbnail.options.itemClass;
+            let owl_thumbnail = sync2.data("owl.carousel");
+            let itemClass = "." + owl_thumbnail.options.itemClass;
 
-            var thumbnailCurrentItem = sync2
+            let thumbnailCurrentItem = sync2
                 .find(itemClass)
                 .removeClass("synced")
                 .eq(current);
             thumbnailCurrentItem.addClass("synced");
 
             if (!thumbnailCurrentItem.hasClass("active")) {
-                var duration = 500;
+                let duration = 500;
                 sync2.trigger("to.owl.carousel", [current, duration, true]);
             }
         }
-        var thumbs = sync2
+        let thumbs = sync2
             .owlCarousel({
                 startPosition: 12,
                 items: 2,
@@ -458,7 +456,7 @@
                     },
                 },
                 onInitialized: function (e) {
-                    var thumbnailCurrentItem = $(e.target)
+                    let thumbnailCurrentItem = $(e.target)
                         .find(thumbnailItemClass)
                         .eq(this._current);
                     thumbnailCurrentItem.addClass("synced");
@@ -466,16 +464,25 @@
             })
             .on("click", thumbnailItemClass, function (e) {
                 e.preventDefault();
-                var duration = 500;
-                var itemIndex = $(e.target).parents(thumbnailItemClass).index();
+                let duration = 500;
+                let itemIndex = $(e.target).parents(thumbnailItemClass).index();
                 sync1.trigger("to.owl.carousel", [itemIndex, duration, true]);
             })
             .on("changed.owl.carousel", function (el) {
-                var number = el.item.index;
+                let number = el.item.index;
                 $owl_slider = sync1.data("owl.carousel");
                 $owl_slider.to(number, 500, true);
             });
         sync1.owlCarousel();
+
+
+        $(document).ready(function() {
+        "use strict";
+            $('.onerror-image').on('error', function() {
+                let img = $(this).data('onerror-image')
+                $(this).attr('src', img);
+            });
+        });
 
     </script>
 
