@@ -626,6 +626,17 @@
         }
 
 
+  document.addEventListener('DOMContentLoaded', function() {
+  var defaultImagePath = '{{asset('/public/assets/admin/img/upload-3.png')}}';
+  var images = document.querySelectorAll('img');
+
+  images.forEach(function(image) {
+    image.addEventListener('error', function() {
+      this.src = defaultImagePath;
+    });
+  });
+});
+
 </script>
 
 <script>

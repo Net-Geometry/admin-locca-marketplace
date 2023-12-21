@@ -233,10 +233,12 @@ $(".set-filter").on("change", function () {
 //     });
 // });
 
-$(document).on('error', '.onerror-image', function () {
-    let img = $(this).data('onerror-image')
-    $(this).attr('src', img);
-});
+
+
+
+
+
+
 
 $(document).on('click', '.confirm-Status-Toggle', function () {
     let Status_toggle = $('#toggle-status-ok-button').attr('toggle-ok-button');
