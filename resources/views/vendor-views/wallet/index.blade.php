@@ -129,14 +129,9 @@
                             <td >
                                 @if($wr->transaction_note )
                                     @if($wr->transaction_note == 'Store_wallet_adjustment_partial' )
-                                    {!!     Str::limit(translate('Adjusted_Amount_Partially'), 20,
-                                    `<a  href="#" class="showMyModal" data-message="'.translate('Adjusted_Amount_Partially')." >...Read more.</a>`
-                                    ) !!}
+                                   {{ translate('Adjusted_Amount_Partially') }}
                                     @elseif($wr->transaction_note == 'Store_wallet_adjustment_full' )
-                                        {!!     Str::limit(translate('Adjusted_Amount'), 20,
-                                   `<a  href="#" class="showMyModal" data-message="'.translate('Adjusted_Amount').'" >...Read more.</a>`
-                                   ) !!}
-
+                                        {{ translate('Adjusted_Amount') }}
                                     @else
                                         {!!
                                    Str::limit(translate($wr->transaction_note), 20,
