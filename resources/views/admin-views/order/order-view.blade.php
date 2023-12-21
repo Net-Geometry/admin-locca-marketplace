@@ -2097,7 +2097,7 @@
         })
 
         $('.quick-view').on('click',function (){
-            let product_id = $(this).data('quick-view');
+            let product_id = $(this).data('product-id');
             quickView(product_id);
         })
 
@@ -2225,7 +2225,10 @@
             }
         }
 
-        $('.update_order_item').on('click',function (){
+
+        $(document).on('click', '.update_order_item', function () {
+
+
             update_order_item();
         })
 
@@ -2278,7 +2281,8 @@
             });
         }
 
-        $('.removeFromCart').on('click',function (){
+
+        $(document).on('click', '.removeFromCart', function () {
             let key = $(this).data('key');
             removeFromCart(key);
         })

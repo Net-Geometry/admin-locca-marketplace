@@ -211,6 +211,17 @@
                                     @endif
                                 @endforeach
 
+                                @if($payment['key_name'] == 'paystack')
+                                    <div class="form-floating mb-2" >
+                                        <label for="Callback_Url" class="form-label">{{translate('Callback Url')}}</label>
+                                        <input id="Callback_Url" type="text"
+                                               class="form-control"
+                                               placeholder="{{translate('Callback Url')}} *"
+                                               readonly
+                                               value="{{env('APP_ENV')=='demo'?'': route('paystack.callback')}}" {{$is_published}}>
+                                    </div>
+                                @endif
+
                                 <div class="form-floating mb-2" >
                                     <label for="payment_gateway_title-{{$payment_key}}"
                                            class="form-label">{{translate('payment_gateway_title')}}</label>

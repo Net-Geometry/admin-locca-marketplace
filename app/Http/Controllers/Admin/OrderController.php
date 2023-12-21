@@ -1199,7 +1199,7 @@ class OrderController extends Controller
     public function quick_view(Request $request)
     {
 
-        $product = $product = Item::findOrFail($request->product_id);
+        $product =  Item::findOrFail($request->product_id);
         $item_type = 'item';
         $order_id = $request->order_id;
 

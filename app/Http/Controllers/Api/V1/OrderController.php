@@ -927,6 +927,17 @@ class OrderController extends Controller
                 ]
             ], 403);
         }
+
+        $store = Store::with('discount')->selectRaw('*, IF(((select count(*) from `store_schedule` where `stores`.`id` = `store_schedule`.`store_id` and `store_schedule`.`day` = ' . $schedule_at->format('w') . ' and `store_schedule`.`opening_time` < "' . $schedule_at->format('H:i:s') . '" and `store_schedule`.`closing_time` >"' . $schedule_at->format('H:i:s') . '") > 0), true, false) as open')->where('id', $request->store_id)->first();
+
+        if (!$store) {
+            return response()->json([
+                'errors' => [
+                    ['code' => 'order_time', 'message' => translate('messages.store_not_found')]
+                ]
+            ], 404);
+        }
+
         $zone = null;
         if ($request->latitude && $request->longitude) {
             $point = new Point($request->latitude, $request->longitude);
@@ -963,15 +974,7 @@ class OrderController extends Controller
                 ]
             ], 406);
         }
-        $store = Store::with('discount')->selectRaw('*, IF(((select count(*) from `store_schedule` where `stores`.`id` = `store_schedule`.`store_id` and `store_schedule`.`day` = ' . $schedule_at->format('w') . ' and `store_schedule`.`opening_time` < "' . $schedule_at->format('H:i:s') . '" and `store_schedule`.`closing_time` >"' . $schedule_at->format('H:i:s') . '") > 0), true, false) as open')->where('id', $request->store_id)->first();
 
-        if (!$store) {
-            return response()->json([
-                'errors' => [
-                    ['code' => 'order_time', 'message' => translate('messages.store_not_found')]
-                ]
-            ], 404);
-        }
 
         if ($request->schedule_at && !$store->schedule_order) {
             return response()->json([

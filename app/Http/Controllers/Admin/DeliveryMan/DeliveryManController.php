@@ -177,8 +177,7 @@ class DeliveryManController extends BaseController
     {
         $deliveryMan = $this->deliveryManRepo->update(id: $request['id'] ,data: ['status'=>$request['status']]);
 
-        try
-        {
+
             if($request['status'] == 0)
             {   $deliveryMan->auth_token = null;
                 if(isset($deliveryMan->fcm_token))
@@ -199,18 +198,19 @@ class DeliveryManController extends BaseController
                         'updated_at'=>now()
                     ]);
                 }
-
-                $mail_status = getWebConfigStatus('suspend_mail_status_dm');
-                if (config('mail.status') && $mail_status == '1') {
-                    Mail::to($deliveryMan['email'])->send(new DmSuspendMail($deliveryMan['f_name']));
+                else{
+                    Toastr::warning(translate('messages.push_notification_failed'));
+                }
+                try {
+                    $mail_status = getWebConfigStatus('suspend_mail_status_dm');
+                    if (config('mail.status') && $mail_status == '1') {
+                        Mail::to($deliveryMan['email'])->send(new DmSuspendMail($deliveryMan['f_name']));
+                    }
+                }  catch (Exception) {
+                    Toastr::warning(translate('messages.failed_to_send_mail'));
                 }
 
             }
-
-        }
-        catch (Exception) {
-            Toastr::warning(translate('messages.push_notification_failed'));
-        }
 
         Toastr::success(translate('messages.deliveryman_status_updated'));
         return back();
