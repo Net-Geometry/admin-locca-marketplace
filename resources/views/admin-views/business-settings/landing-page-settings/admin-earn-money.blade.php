@@ -299,7 +299,7 @@
                                 <label class="upload-img-3 m-0 d-block">
                                     <div class="position-relative">
                                     <div class="img">
-                                        <img src="{{asset('storage/app/public/earning')}}/{{ $earning_delivery_image['value']??'' }}" data-onerror-image="{{asset('/public/assets/admin/img/upload-4.png')}}" class="vertical-img mw-100 vertical onerror-image" alt="">
+                                        <img src="{{asset('storage/app/public/earning')}}/{{ $earning_delivery_image['value'] }}" data-onerror-image="{{asset('/public/assets/admin/img/upload-4.png')}}" class="vertical-img mw-100 vertical onerror-image" alt="">
                                     </div>
                                         <input type="file" name="earning_delivery_image"  hidden>
                                             @if (isset($earning_delivery_image['value']))
