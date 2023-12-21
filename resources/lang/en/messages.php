@@ -3778,4 +3778,6 @@
   'Created_at' => 'Created at',
   'Payout_Date' => 'Payout Date',
   'Estimated' => 'Estimated',
+  'prescription' => 'Prescription',
+  'order_attachment' => 'Order attachment',
 );
