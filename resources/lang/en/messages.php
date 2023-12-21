@@ -3769,4 +3769,13 @@
   'test module' => 'Test module',
   'retre' => 'Retre',
   'test test' => 'Test test',
+  'As_you_have_more_‘Cash_in_Hand’_than_‘Withdrawable_Balance,’_you_need_to_pay_the_Admin' => 'As you have more ‘Cash in Hand’ than ‘Withdrawable Balance ’ you need to pay the Admin',
+  'Pay_Now' => 'Pay Now',
+  'Adjust_the_payable_&_withdrawable_balance_with_your_wallet_(Cash_in_Hand)_or_click_‘Pay_Now’.' => 'Adjust the payable & withdrawable balance with your wallet (Cash in Hand) or click ‘Pay Now’.',
+  'disbursement_method_details' => 'Disbursement method details',
+  'search_by_ID' => 'Search by ID',
+  'ID' => 'ID',
+  'Created_at' => 'Created at',
+  'Payout_Date' => 'Payout Date',
+  'Estimated' => 'Estimated',
 );
