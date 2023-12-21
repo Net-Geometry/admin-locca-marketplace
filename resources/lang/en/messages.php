@@ -3731,4 +3731,13 @@
   'Ex: my-awesome-app.apps.com' => 'Ex: my-awesome-app.apps.com',
   'category_added_successfully' => 'Category added successfully',
   'campaign_deleted_successfully' => 'Campaign deleted successfully',
+  'Customer will not see loyalty point option from his profile settings' => 'Customer will not see loyalty point option from his profile settings',
+  'filter_criteria' => 'Filter criteria',
+  'unauthorized' => 'Unauthorized',
+  'Store_wallet_adjustment_partial' => 'Store wallet adjustment partial',
+  'store_collect_cash_payments' => 'Store collect cash payments',
+  'deliveryman_collect_cash_payments' => 'Deliveryman collect cash payments',
+  '7i96' => '7i96',
+  12 => '12',
+  'If_enabled,_Stores_will_receive_an_automated_confirmation_mail_that_their_join_request_is_successful' => 'If enabled  Stores will receive an automated confirmation mail that their join request is successful',
 );

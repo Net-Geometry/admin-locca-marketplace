@@ -125,9 +125,9 @@ class DeliveryManController extends BaseController
 
     public function getActiveSearchList(Request $request): JsonResponse
     {
-        $deliveryMen = $this->deliveryManRepo->getListWhere(
+        $deliveryMen = $this->deliveryManRepo->getActiveFirstWhere(
             searchValue: $request['search'],
-            filters: ['type' => 'zone_wise','active' => 1],
+            filters: ['type' => 'zone_wise'],
         );
         return response()->json([
             'dm'=>$deliveryMen

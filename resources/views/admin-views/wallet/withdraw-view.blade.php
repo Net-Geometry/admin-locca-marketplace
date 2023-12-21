@@ -47,7 +47,7 @@
                         </div>
                         <div class="col-4">
                             <div class="d-flex __gap-5px">
-                                <span>{{ translate('messages.note') }}</span><span>:</span><span> {{$wr->transaction_note}}</span>
+                                <span>{{ translate('messages.note') }}</span><span>:</span><span> {{translate($wr->transaction_note)}}</span>
                             </div>
                         </div>
                         <div class="col-4">
