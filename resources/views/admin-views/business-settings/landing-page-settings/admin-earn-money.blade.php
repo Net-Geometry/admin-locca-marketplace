@@ -303,15 +303,17 @@
 
 
 
-                                        @php
-                                        if($earning_delivery_image['value']){
-                                            $src=asset('storage/app/public/earning/').$earning_delivery_image['value'];
-                                        } else {
+                                        <?php
 
-                                            $src=asset('/public/assets/admin/img/upload-4.png');
-                                        }
+                                            if($earning_delivery_image['value']){
+                                                $src=asset('storage/app/public/earning/').$earning_delivery_image['value'];
+                                            } else {
 
-                                        @endphp
+                                                $src=asset('/public/assets/admin/img/upload-4.png');
+                                            }
+                                            ?>
+
+                                     
 
 
                                         <img src="{{ $src }}" data-onerror-image="{{asset('/public/assets/admin/img/upload-4.png')}}" class="vertical-img mw-100 vertical onerror-image" alt="">
