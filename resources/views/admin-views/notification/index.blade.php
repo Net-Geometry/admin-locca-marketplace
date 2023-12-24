@@ -181,8 +181,14 @@
                                     </td>
                                     <td>
                                         @if($notification['image']!=null)
-                                            <img class="h--50px"
-                                                 src="{{asset('storage/app/public/notification')}}/{{$notification['image']}}">
+                                            <img class="h--50px onerror-image"
+                                            src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
+                                                $notification['image'] ?? '',
+                                                asset('storage/app/public/notification').'/'.$notification['image'],
+                                                asset('public/assets/admin/img/160x160/img2.jpg'),
+                                                'notification/'
+                                            ) }}"
+                                                data-onerror-image="{{asset('public/assets/admin/img/160x160/img2.jpg')}}">
                                         @else
                                             <label class="badge badge-soft-warning">{{translate('No Image')}}</label>
                                         @endif
