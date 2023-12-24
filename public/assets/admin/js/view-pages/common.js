@@ -226,20 +226,12 @@ $(".set-filter").on("change", function () {
     location.href = nurl;
     tour.next();
 });
-// $(document).ready(function() {
-//     $('.onerror-image').on('error', function() {
-//         let img = $(this).data('onerror-image')
-//         $(this).attr('src', img);
-//     });
-// });
-
-
-
-
-
-
-
-
+$(document).ready(function() {
+    $('.onerror-image').on('error', function() {
+        let img = $(this).data('onerror-image')
+        $(this).attr('src', img);
+    });
+});
 $(document).on('click', '.confirm-Status-Toggle', function () {
     let Status_toggle = $('#toggle-status-ok-button').attr('toggle-ok-button');
     if ($('#'+Status_toggle).is(':checked')) {

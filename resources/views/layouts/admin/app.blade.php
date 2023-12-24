@@ -626,16 +626,16 @@
         }
 
 
-  document.addEventListener('DOMContentLoaded', function() {
-  var defaultImagePath = '{{asset('/public/assets/admin/img/upload-3.png')}}';
-  var images = document.querySelectorAll('img');
-
-  images.forEach(function(image) {
-    image.addEventListener('error', function() {
-      this.src = defaultImagePath;
-    });
-  });
-});
+  {{--document.addEventListener('DOMContentLoaded', function() {--}}
+  {{--    let defaultImagePath = '{{asset('/public/assets/admin/img/upload-3.png')}}';--}}
+  {{--    let images = document.querySelectorAll('img');--}}
+  {{--  --}}
+  {{--    images.forEach(function(image) {--}}
+  {{--      image.addEventListener('error', function() {--}}
+  {{--        this.src = defaultImagePath;--}}
+  {{--      });--}}
+  {{--    });--}}
+  {{--  });--}}
 
 </script>
 

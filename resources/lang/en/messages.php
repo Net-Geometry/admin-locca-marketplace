@@ -3780,4 +3780,5 @@
   'Estimated' => 'Estimated',
   'prescription' => 'Prescription',
   'order_attachment' => 'Order attachment',
+  'Thursday' => 'Thursday',
 );
