@@ -40,7 +40,7 @@
                                         <div class="col-12">
                                             <label class="__upload-img aspect-4-1 m-auto d-block">
                                                 <div class="img">
-                                                    <img class="onerror-image" src="" data-onerror-image="{{asset('/public/assets/admin/img/upload-placeholder.png')}}" alt="">
+                                                    <img class="onerror-image" src="{{asset('/public/assets/admin/img/upload-placeholder.png')}}" data-onerror-image="{{asset('/public/assets/admin/img/upload-placeholder.png')}}" alt="">
                                                 </div>
                                                     <input type="file" name="image"  hidden>
                                             </label>

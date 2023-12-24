@@ -66,7 +66,7 @@
                     @endif
                 </div>
 
-                <div class="col-sm-6 col-md-{{ $pharmacy == 1 ? '2':'3' }}">
+                <div class="col-sm-6 col-md-3">
                     <div class="select-item">
 
                         <select name="category_id" id="category_id" data-placeholder="{{ translate('messages.select_category') }}"
@@ -80,7 +80,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-sm-6 col-md-{{ $pharmacy == 1 ? '2':'3' }}">
+                <div class="col-sm-6 col-md-3">
                     <div class="select-item">
                         <select name="sub_category_id" class="form-control js-select2-custom set-filter" data-placeholder="{{ translate('messages.select_sub_category') }}" id="sub-categories" data-url="{{url()->full()}}" data-filter="sub_category_id">
                             <option value="all" selected>{{translate('messages.all_sub_category')}}</option>
@@ -93,21 +93,7 @@
                         </select>
                     </div>
                 </div>
-                @if ($pharmacy == 1)
-                    <div class="col-sm-6 col-md-2">
-                        <div class="select-item">
-                            <select name="condition_id" id="condition_id" class="form-control set-filter"
-                                    data-placeholder="{{ translate('messages.Select_Condition') }}"
-                                    data-url="{{url()->full()}}" data-filter="condition_id">
-                                @if($condition)
-                                    <option value="{{$condition->id}}" selected>{{$condition->name}}</option>
-                                @else
-                                    <option value="all" selected>{{translate('messages.all_conditions')}}</option>
-                                @endif
-                            </select>
-                        </div>
-                    </div>
-                @endif
+
 
             </div>
 

@@ -259,7 +259,7 @@
                                     <a class="btn btn-sm btn--primary btn-outline-primary action-btn" href="{{route('vendor.coupon.update',[$coupon['id']])}}" title="{{translate('messages.edit_coupon')}}"><i class="tio-edit"></i>
                                     </a>
                                     <a class="btn btn-sm btn--danger btn-outline-danger action-btn form-alert"
-                                       data-id="'coupon-{{$coupon['id']}}"
+                                       data-id="coupon-{{$coupon['id']}}"
                                        data-message="{{ translate('Want to delete this coupon ?') }}"
                                        href="javascript:" title="{{translate('messages.delete_coupon')}}"><i class="tio-delete-outlined"></i>
                                     </a>

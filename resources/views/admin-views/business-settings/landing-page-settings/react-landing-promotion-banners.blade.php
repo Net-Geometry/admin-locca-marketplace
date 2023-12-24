@@ -48,7 +48,7 @@
 
                                     <label class="upload-img-3 d-block max-w-640">
                                         <div class="img">
-                                            <img src="" data-onerror-image="{{asset("/public/assets/admin/img/upload-4.png")}}" class="vertical-img w-100 mw-100 onerror-image" alt="">
+                                            <img src="{{asset("/public/assets/admin/img/upload-4.png")}}" data-onerror-image="{{asset("/public/assets/admin/img/upload-4.png")}}" class="vertical-img w-100 mw-100 onerror-image" alt="">
                                         </div>
                                         <input type="file"  name="image" hidden="">
                                     </label>
