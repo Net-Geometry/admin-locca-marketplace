@@ -92,7 +92,13 @@
                                 <div class="btn--container" id="coba">
                                     @foreach(json_decode($delivery_man['identity_image'],true) as $img)
                                         <div>
-                                            <img class="img--120" src="{{asset('storage/app/public/delivery-man').'/'.$img}}"  alt="image">
+                                            <img class="img--120" 
+                                            src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
+                                                $img,
+                                                asset('storage/app/public/delivery-man') . '/' .$img,
+                                                asset('/public/assets/admin/img/160x160/img1.jpg'),
+                                                'delivery-man/'
+                                            ) }}"  alt="image">
                                         </div>
                                     @endforeach
                                 </div>
@@ -110,7 +116,13 @@
                             <div class="my-auto">
                                 <div class="text-center pt-3">
                                     <img class="img--120" id="viewer"
-                                        src="{{asset('storage/app/public/delivery-man').'/'.$delivery_man['image']}}" alt="delivery-man image"/>
+
+                                    src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
+                                        $delivery_man['image'],
+                                        asset('storage/app/public/delivery-man') . '/' .$delivery_man['image'],
+                                        asset('/public/assets/admin/img/160x160/img1.jpg'),
+                                        'delivery-man/'
+                                    ) }}" alt="delivery-man image"/>
                                 </div>
                             </div>
                             <div class="custom-file mt-3">
