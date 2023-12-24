@@ -46,7 +46,7 @@
                             +{{$total_customers >= 4 ? $total_customers - 2 : $total_customers}}
                         </div>
                         @foreach ($customers as $key => $customer)
-                            <img src="{{ asset('storage/app/public/profile') }}/{{ $customer['image'] }}"
+                            <img src="{{\App\CentralLogics\Helpers::onerror_image_helper($customer['image'], asset('storage/app/public/profile/').'/'.$customer['image'], asset('public/assets/admin/img/160x160/img2.jpg'), 'profile/') }}"
                                  class="onerror-image" data-onerror-image="{{asset('public/assets/admin/img/160x160/img2.jpg')}}" alt="new-img">
                         @endforeach
                     </div>
@@ -62,7 +62,7 @@
                             +{{$total_deliveryman >= 4 ? $total_deliveryman - 2 :  $total_deliveryman}}
                         </div>
                         @foreach ($delivery_man as $key => $dm)
-                            <img src="{{ asset('storage/app/public/delivery-man') }}/{{ $dm['image'] }}"
+                            <img src="{{\App\CentralLogics\Helpers::onerror_image_helper($dm['image'], asset('storage/app/public/delivery-man/').'/'.$dm['image'], asset('public/assets/admin/img/160x160/img2.jpg'), 'delivery-man/') }}"
                                  class="onerror-image" data-onerror-image="{{asset('public/assets/admin/img/160x160/img2.jpg')}}"
                              alt="new-img">
                         @endforeach
@@ -82,7 +82,7 @@
                         @if ($key == 2)
                             @break
                         @endif
-                        <img src="{{ asset('storage/app/public/delivery-man') }}/{{ $item['image'] }}"
+                        <img src="{{\App\CentralLogics\Helpers::onerror_image_helper($item['image'], asset('storage/app/public/delivery-man/').'/'.$item['image'], asset('public/assets/admin/img/160x160/img2.jpg'), 'delivery-man/') }}"
                              class="onerror-image" data-onerror-image="{{asset('public/assets/admin/img/160x160/img2.jpg')}}" alt="new-img">
                         @endforeach
                     </div>

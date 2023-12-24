@@ -246,7 +246,7 @@
                         <div class="d-flex align-items-center justify-content-center">
                             <img class="avatar avatar-xxl avatar-4by3 mr-4 img--120 onerror-image"
                                  data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
-                                 src="{{asset('storage/app/public/delivery-man')}}/{{$deliveryMan['image']}}"
+                                 src="{{\App\CentralLogics\Helpers::onerror_image_helper($deliveryMan['image'], asset('storage/app/public/delivery-man/').'/'.$deliveryMan['image'], asset('public/assets/admin/img/160x160/img1.jpg'), 'delivery-man/') }}"
                                  alt="Image Description">
                             <div class="d-block">
                                 <div class="rating--review">
@@ -434,7 +434,7 @@
                                     data-target="#image-{{ $key }}">
                                     <div class="gallary-card">
                                         <img data-onerror-image="{{ asset('/public/assets/admin/img/900x400/img1.jpg') }}"
-                                        src="{{ asset('storage/app/public/delivery-man') }}/{{ $img }}" class="w-100 onerror-image">
+                                        src="{{\App\CentralLogics\Helpers::onerror_image_helper($img, asset('storage/app/public/delivery-man/').'/'.$img, asset('public/assets/admin/img/900x400/img1.jpg'), 'delivery-man/') }}" class="w-100 onerror-image">
                                     </div>
                                 </button>
                                 <div class="modal fade" id="image-{{ $key }}" tabindex="-1" role="dialog"
@@ -450,7 +450,8 @@
                                         </div>
                                         <div class="modal-body">
                                             <img data-onerror-image="{{ asset('/public/assets/admin/img/900x400/img1.jpg') }}"
-                                                src="{{ asset('storage/app/public/delivery-man/' . $img) }}"
+                                            src="{{\App\CentralLogics\Helpers::onerror_image_helper($img, asset('storage/app/public/delivery-man/').'/'.$img, asset('public/assets/admin/img/900x400/img1.jpg'), 'delivery-man/') }}"
+
                                                 class="w-100 onerror-image">
                                         </div>
                                         <div class="modal-footer">
