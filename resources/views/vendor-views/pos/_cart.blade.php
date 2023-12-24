@@ -43,7 +43,8 @@
                                 data-product-id="{{$cartItem['id']}}" data-item-key="{{$key}}">
                                 <img class="avatar avatar-sm mr-1 onerror-image"
                                      data-onerror-image="{{ asset('public/assets/admin/img/100x100/2.png') }}"
-                                    src="{{ asset('storage/app/public/product') }}/{{ $cartItem['image'] }}"
+                                     src="{{\App\CentralLogics\Helpers::onerror_image_helper($cartItem['image'], asset('storage/app/public/product/').'/'.$cartItem['image'], asset('public/assets/admin/img/100x100/2.png'), 'product/') }}"
+
                                     alt="{{ $cartItem['name'] }} image">
                                 <div class="media-body">
                                     <h5 class="text-hover-primary mb-0">{{ Str::limit($cartItem['name'], 10) }}</h5>

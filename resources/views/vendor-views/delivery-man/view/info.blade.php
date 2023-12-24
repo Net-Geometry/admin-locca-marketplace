@@ -94,7 +94,7 @@
                         <div class="d-flex align-items-center justify-content-center">
                             <img class="avatar avatar-xxl avatar-4by3 mr-4 img--120 onerror-image"
                                  data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
-                                 src="{{asset('storage/app/public/delivery-man')}}/{{$dm['image']}}"
+                                 src="{{\App\CentralLogics\Helpers::onerror_image_helper($dm['image'], asset('storage/app/public/delivery-man').'/'.$dm['image'], asset('public/assets/admin/img/160x160/img1.jpg'), 'delivery-man/') }}"
                                  alt="Image Description">
                                  <div class="d-block">
                                     <div class="rating--review">
@@ -330,7 +330,7 @@
                                         <div class="avatar avatar-circle">
                                             <img class="avatar-img onerror-image" width="75" height="75"
                                                  data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
-                                                src="{{asset('storage/app/public/profile/'.$review->customer->image)}}"
+                                                 src="{{\App\CentralLogics\Helpers::onerror_image_helper($review->customer->image, asset('storage/app/public/profile/').'/'.$review->customer->image, asset('public/assets/admin/img/160x160/img1.jpg'), 'profile/') }}"
                                                 alt="Image Description">
                                         </div>
                                         <div class="ml-3">
@@ -358,7 +358,8 @@
                             </td>
                             <td>
                                 @foreach(json_decode($review['attachment'],true) as $attachment)
-                                    <img width="100" class="onerror-image" data-onerror-image="{{asset('public/assets/admin/img/160x160/img2.jpg')}}"  src="{{asset('storage/app/public')}}/{{$attachment}}" alt="image">
+                                    <img width="100" class="onerror-image" data-onerror-image="{{asset('public/assets/admin/img/160x160/img2.jpg')}}"  src="{{\App\CentralLogics\Helpers::onerror_image_helper($attachment, asset('storage/app/public').'/'.$attachment, asset('public/assets/admin/img/160x160/img2.jpg'), $attachment.'/') }}"
+                                    alt="image">
                                 @endforeach
                             </td>
                             <td>
