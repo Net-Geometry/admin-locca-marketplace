@@ -3234,6 +3234,14 @@ class Helpers
         return  Carbon::parse($data)->locale(app()->getLocale())->translatedFormat($time);
     }
 
+
+    public static function onerror_image_helper($data, $src, $error_src){
+        if(isset($data) && file_exists($src)  ){
+            return $src;
+        }
+        return $error_src;
+    }
+
 }
 
 
