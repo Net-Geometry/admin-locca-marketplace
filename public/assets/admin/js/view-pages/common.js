@@ -234,6 +234,18 @@ $(".set-filter").on("change", function () {
 //     });
 // });
 
+$(document).ready(function() {
+    $('.onerror-image').on('error', function() {
+        let img = $(this).data('onerror-image');
+        $(this).attr('src', img);
+    }).each(function() {
+        let defaultImage = $(this).data('onerror-image');
+        if ($(this).attr('src').endsWith('/')) {
+            $(this).attr('src', defaultImage);
+        }
+    });
+});
+
 $(document).on('click', '.confirm-Status-Toggle', function () {
     let Status_toggle = $('#toggle-status-ok-button').attr('toggle-ok-button');
     if ($('#'+Status_toggle).is(':checked')) {
