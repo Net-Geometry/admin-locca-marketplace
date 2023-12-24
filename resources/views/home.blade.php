@@ -18,7 +18,9 @@
             <div class="banner-content wow fadeInUp">
                 <h1 class="title">{{ $landing_data['fixed_header_title'] }}</h1>
                 <img class="w-100 onerror-image"  data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
-                    src="{{ asset('storage/app/public/business/' . $logo) }}" alt="">
+                src="{{\App\CentralLogics\Helpers::onerror_image_helper($logo, asset('storage/app/public/business/').'/' . $logo, asset('public/assets/admin/img/160x160/img2.jpg') ,'business/')}}"
+
+                alt="">
                 <div class="text">
                     {{ $landing_data['fixed_header_sub_title'] }}
                 </div>
@@ -1896,7 +1898,10 @@
                     <div class="owl-theme owl-carousel" id="sync2">
                         @foreach ($modules as $key => $item)
                         <div class="item">
-                            <img class="__img-50 onerror-image"  data-onerror-image="{{asset('public/assets/admin/img/100x100/2.png')}}" src="{{ asset('storage/app/public/module/') }}/{{ isset($item['icon']) ? $item['icon'] : null }}"  alt="image">
+                            <img class="__img-50 onerror-image"  data-onerror-image="{{asset('public/assets/admin/img/100x100/2.png')}}"
+                            src="{{\App\CentralLogics\Helpers::onerror_image_helper(isset($item['icon']) ? $item['icon'] : null, asset('storage/app/public/module/').'/' . isset($item['icon']) ? $item['icon'] : null, asset('public/assets/admin/img/100x100/2.png') ,'module/')}}"
+
+                            alt="image">
                             <div class="txt d-block">{{translate("messages.{$item->module_name}")}}</div>
                         </div>
                         @endforeach
@@ -1915,7 +1920,9 @@
                         </div>
                         <div class="col-lg-6 col-md-8">
                             <div class="venture-img mx-1">
-                                <img src="{{ asset('storage/app/public/module/') }}/{{ isset($item['thumbnail']) ? $item['thumbnail'] : null }}"
+                                <img
+                                src="{{\App\CentralLogics\Helpers::onerror_image_helper(isset($item['thumbnail']) ? $item['thumbnail'] : null, asset('storage/app/public/module/').'/' . isset($item['thumbnail']) ? $item['thumbnail'] : null, asset('public/assets/admin/img/100x100/2.png') ,'module/')}}"
+
                                 class="onerror-image"  data-onerror-image="{{asset('public/assets/admin/img/100x100/2.png')}}"
                                 alt="image">
                             </div>
@@ -3359,7 +3366,14 @@
 
                 <div class="feature-card">
                     <div class="feature-card-icon">
-                        <img src="{{ asset('storage/app/public/special_criteria')}}/{{ isset($item['image']) ? $item['image'] : null }}" alt="{{$item['title']}}"
+                        <img
+
+                        src="{{ asset('storage/app/public/special_criteria')}}/{{ isset($item['image']) ? $item['image'] : null }}"
+
+                        src="{{\App\CentralLogics\Helpers::onerror_image_helper(isset($item['image']) ? $item['image'] : null, asset('storage/app/public/special_criteria/').'/' . isset($item['image']) ? $item['image'] : null, asset('public/assets/admin/img/160x160/img2.jpg'),'special_criteria/')}}"
+
+
+                        alt="{{$item['title']}}"
                         class="onerror-image"  data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}">
                     </div>
                     <div class="feature-card-cont">
@@ -3562,7 +3576,11 @@
                     @php($fav = \App\Models\BusinessSetting::where(['key' => 'icon'])->first()->value ?? '')
                     <div class="right-side d-flex word-nowrap align-items-center">
                         <img class="onerror-image"  data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
-                        src="{{ asset('storage/app/public/business/' . $fav) }}" alt="image">
+                        src="{{ asset('storage/app/public/business/' . $fav) }}"
+                        src="{{\App\CentralLogics\Helpers::onerror_image_helper($fav, asset('storage/app/public/business/').'/' . $fav, asset('public/assets/admin/img/160x160/img2.jpg'),'business/')}}"
+
+
+                        alt="image">
                         {{translate("messages.Still increasing")}}
                     </div>
                 </div>

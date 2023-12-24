@@ -53,7 +53,15 @@
                     @php($logo = \App\Models\BusinessSetting::where(['key' => 'logo'])->first()->value ?? '')
                     <a href="{{route('home')}}" class="logo">
                         <img class="onerror-image"  data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
-                    src="{{ asset('storage/app/public/business/' . $fav) }}" alt="image">
+
+                    src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
+                        $fav,
+                        asset('storage/app/public/business/').'/'. $fav,
+                        asset('public/assets/admin/img/160x160/img2.jpg'),
+                        'business/'
+                    ) }}"
+
+                    alt="image">
                     </a>
                     <ul class="menu">
                         <li>
@@ -202,8 +210,7 @@
                     <div class="footer-widget">
                         <div class="footer-logo">
                             <a class="logo">
-                                <img  class="onerror-image"  data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
-                            src="{{ asset('storage/app/public/business/' . $logo) }}" alt="image">
+                                <img  class="onerror-image"  data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}" src="{{ \App\CentralLogics\Helpers::onerror_image_helper($logo, asset('storage/app/public/business/') .'/'. $logo, asset('public/assets/admin/img/upload-img.png') , 'business/') }}" alt="image">
                             </a>
                         </div>
                         <div class="txt">

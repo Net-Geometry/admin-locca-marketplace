@@ -157,8 +157,7 @@
                     <li class="nav-item __nav-item">
                         <a href="javascript:void(0)" class="__nav-link module--nav-icon" id="tourb-0">
                             @if ($mod)
-                            <img  src="{{asset('storage/app/public/module')}}/{{$mod->icon}}"
-
+                            <img  src="{{\App\CentralLogics\Helpers::onerror_image_helper($mod->icon, asset('storage/app/public/module/').'/' . $mod->icon, asset('/public/assets/admin/img/new-img/module-icon.svg') ,'module/')}}"
                                     class="onerror-image"
                                   data-onerror-image="{{asset('/public/assets/admin/img/new-img/module-icon.svg')}}"
                            width="20px" alt="public/img">
@@ -194,7 +193,8 @@
 
                                         class="__nav-module-item set-module {{Config::get('module.current_module_id') == $module->id?'active':''}}">
                                             <div class="img w--70px ">
-                                                <img src="{{asset('storage/app/public/module')}}/{{$module->icon}}"
+                                                <img src="{{\App\CentralLogics\Helpers::onerror_image_helper($mod->icon, asset('storage/app/public/module/').'/' . $mod->icon, asset('public/assets/admin/img/new-img/module/e-shop.svg') ,'module/')}}"
+
                                                      data-onerror-image="{{asset('public/assets/admin/img/new-img/module/e-shop.svg')}}"
                                                 alt="new-img" class="mw-100 onerror-image">
                                             </div>

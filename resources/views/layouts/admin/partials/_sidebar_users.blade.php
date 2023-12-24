@@ -5,9 +5,14 @@
                 <!-- Logo -->
                 @php($store_logo = \App\Models\BusinessSetting::where(['key' => 'logo'])->first()->value)
                 <a class="navbar-brand" href="{{ route('admin.users.dashboard') }}" aria-label="Front">
-                    <img class="navbar-brand-logo initial--36 onerror-image" data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}" src="{{ asset('storage/app/public/business/' . $store_logo) }}" alt="Logo">
-                    <img class="navbar-brand-logo-mini initial--36 onerror-image" data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}" src="{{ asset('storage/app/public/business/' . $store_logo) }}" alt="Logo">
+                    <img class="navbar-brand-logo initial--36 onerror-image onerror-image" data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
+                    src="{{\App\CentralLogics\Helpers::onerror_image_helper($store_logo, asset('storage/app/public/business/').'/' . $store_logo, asset('public/assets/admin/img/160x160/img1.jpg') ,'business/' )}}"
+                    alt="Logo">
+                    <img class="navbar-brand-logo-mini initial--36 onerror-image onerror-image" data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
+                    src="{{\App\CentralLogics\Helpers::onerror_image_helper($store_logo, asset('storage/app/public/business/').'/' . $store_logo, asset('public/assets/admin/img/160x160/img2.jpg') ,'business/' )}}"
+                    alt="Logo">
                 </a>
+
                 <!-- End Logo -->
 
                 <!-- Navbar Vertical Toggle -->
@@ -187,25 +192,7 @@
                         <span class="text-truncate">{{ translate('messages.contact_messages') }}</span>
                     </a>
                 </li>
-                {{-- <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/users/customer/settings') ? 'active' : '' }}">
-                    <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.users.customer.settings') }}" title="{{ translate('messages.Customer_settings') }}">
-                        <i class="tio-settings nav-icon"></i>
-                        <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                            {{ translate('messages.Customer_settings') }}
-                        </span>
-                    </a>
-                </li> --}}
-                {{-- <li
-                class="navbar-vertical-aside-has-menu {{ Request::is('admin/users/message/list') ? 'active' : '' }}">
-                <a class="js-navbar-vertical-aside-menu-link nav-link"
-                    href="{{ route('admin.users.message.list') }}"
-                    title="{{ translate('messages.customer_chat') }}">
-                    <i class="tio-chat nav-icon"></i>
-                    <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                        {{ translate('messages.Customer_Chat') }}
-                    </span>
-                </a>
-            </li> --}}
+
                 @endif
                 <!-- End customer Section -->
 
@@ -270,7 +257,9 @@
                                 <div class="avatar avatar-sm avatar-circle">
                                     <img class="avatar-img onerror-image"
                                         data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
-                                        src="{{asset('storage/app/public/admin')}}/{{auth('admin')->user()->image}}"
+
+                                        src="{{\App\CentralLogics\Helpers::onerror_image_helper(auth('admin')->user()->image, asset('storage/app/public/admin/').'/'.auth('admin')->user()->image, asset('public/assets/admin/img/160x160/img1.jpg') ,'admin/')}}"
+
                                         alt="Image Description">
                                     <span class="avatar-status avatar-sm-status avatar-status-success"></span>
                                 </div>
@@ -290,9 +279,11 @@
                                 <div class="media align-items-center">
                                     <div class="avatar avatar-sm avatar-circle mr-2">
                                         <img class="avatar-img onerror-image"
-                                                data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
-                                                src="{{asset('storage/app/public/admin')}}/{{auth('admin')->user()->image}}"
-                                                alt="Image Description">
+                                        data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
+
+                                        src="{{\App\CentralLogics\Helpers::onerror_image_helper(auth('admin')->user()->image, asset('storage/app/public/admin/').'/'.auth('admin')->user()->image, asset('public/assets/admin/img/160x160/img1.jpg') ,'admin/')}}"
+
+                                        alt="Image Description">
                                     </div>
                                     <div class="media-body">
                                         <span class="card-title h5">{{auth('admin')->user()->f_name}}</span>
