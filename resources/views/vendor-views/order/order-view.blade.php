@@ -342,7 +342,7 @@
                                                         <a class="avatar avatar-xl mr-3"
                                                             href="{{ route('vendor.item.view', $detail->item['id']) }}">
                                                             <img class="img-fluid rounded onerror-image"
-                                                            src="{{\App\CentralLogics\Helpers::onerror_image_helper($detail->item['image'], asset('storage/app/public/product/').$detail->item['image'], asset('public/assets/admin/img/160x160/img2.jpg'), 'product/') }}"
+                                                            src="{{\App\CentralLogics\Helpers::onerror_image_helper($detail->item['image'], asset('storage/app/public/product/').'/'.$detail->item['image'], asset('public/assets/admin/img/160x160/img2.jpg'), 'product/') }}"
                                                                  data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
                                                                 alt="Image Description">
                                                         </a>
@@ -452,7 +452,7 @@
                                                     <div class="media media--sm">
                                                         <div class="avatar avatar-xl mr-3">
                                                             <img class="img-fluid onerror-image"
-                                                            src="{{\App\CentralLogics\Helpers::onerror_image_helper($detail->campaign['image'], asset('storage/app/public/campaign/').$detail->campaign['image'], asset('public/assets/admin/img/160x160/img2.jpg'), 'campaign/') }}"
+                                                            src="{{\App\CentralLogics\Helpers::onerror_image_helper($detail->campaign['image'], asset('storage/app/public/campaign/').'/'.'$detail->campaign['image'], asset('public/assets/admin/img/160x160/img2.jpg'), 'campaign/') }}"
 
                                                                  data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
                                                                 alt="Image Description">
@@ -786,7 +786,7 @@
                                     <div class="avatar avatar-circle">
                                         <img class="avatar-img onerror-image"
                                              data-onerror-image="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}"
-                                             src="{{\App\CentralLogics\Helpers::onerror_image_helper($order->delivery_man->image, asset('storage/app/public/delivery-man/').$order->delivery_man->image, asset('public/assets/admin/img/160x160/img1.jpg'), 'delivery-man/') }}"
+                                             src="{{\App\CentralLogics\Helpers::onerror_image_helper($order->delivery_man->image, asset('storage/app/public/delivery-man/').'/'.$order->delivery_man->image, asset('public/assets/admin/img/160x160/img1.jpg'), 'delivery-man/') }}"
                                             alt="Image Description">
                                     </div>
                                     <div class="media-body">
@@ -920,7 +920,7 @@
                                 <div class="avatar avatar-circle">
                                     <img class="avatar-img onerror-image "
                                          data-onerror-image="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}"
-                                         src="{{\App\CentralLogics\Helpers::onerror_image_helper($order->customer->image, asset('storage/app/public/profile/').$order->customer->image, asset('public/assets/admin/img/160x160/img1.jpg'), 'profile/') }}"
+                                         src="{{\App\CentralLogics\Helpers::onerror_image_helper($order->customer->image, asset('storage/app/public/profile/')./.$order->customer->image, asset('public/assets/admin/img/160x160/img1.jpg'), 'profile/') }}"
                                         alt="Image Description">
                                 </div>
                                 <div class="media-body">
