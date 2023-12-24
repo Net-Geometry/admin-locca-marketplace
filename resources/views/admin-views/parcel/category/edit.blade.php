@@ -108,7 +108,16 @@
                                     <small class="text-danger">* ( {{translate('messages.ratio')}} 200x200 )</small>
                                 </label>
                                 <div class="text-center py-3 my-auto">
-                                    <img class="img--130 onerror-image" id="viewer" src="{{asset('storage/app/public/parcel_category')}}/{{$parcel_category['image']}}" alt="" data-onerror-image="{{asset('/public/assets/admin/img/400x400/img2.jpg')}}" />
+                                    <img class="img--130 onerror-image" id="viewer"
+
+                                    src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
+                                        $parcel_category['image'] ?? '',
+                                        asset('storage/app/public/parcel_category').'/'.$parcel_category['image'] ?? '',
+                                        asset('/public/assets/admin/img/400x400/img2.jpg'),
+                                        'parcel_category/'
+                                    ) }}"
+
+                                    data-onerror-image="{{asset('/public/assets/admin/img/400x400/img2.jpg')}}" />
                                 </div>
                                 <div class="custom-file">
                                     <input type="file" name="image" id="customFileEg1" class="custom-file-input"

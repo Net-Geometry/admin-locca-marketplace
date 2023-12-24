@@ -137,7 +137,14 @@
                                 <div class="col-4 {{ $banner_type ? ($banner_type->value == 'image' ? '' : 'd-none') : '' }}" id="image">
                                     <label class="__upload-img aspect-615-350 d-block position-relative">
                                         <div class="img">
-                                            <img class="onerror-image" src="{{asset('storage/app/public/promotional_banner')}}/{{$banner_image?->value}}"
+                                            <img class="onerror-image"
+
+                                            src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
+                                                $banner_image->value ?? '',
+                                                asset('storage/app/public/promotional_banner').'/'.$banner_image->value ?? '',
+                                                asset('/public/assets/admin/img/upload-placeholder.png'),
+                                                'promotional_banner/'
+                                            ) }}" 
                                             data-onerror-image="{{ asset('/public/assets/admin/img/upload-placeholder.png') }}" alt="">
                                         </div>
 
@@ -174,7 +181,7 @@
                                                             <h4 class="mb-3 text-capitalize d-flex align-items-center">{{translate('upload_video')}}</h4>
                                                             <div class="uploadDnD">
                                                                 <div class="form-group inputDnD">
-                                                                    <input type="file" name="banner_video_content" class="form-control-file text--primary font-weight-bold read-url" 
+                                                                    <input type="file" name="banner_video_content" class="form-control-file text--primary font-weight-bold read-url"
                                                                     id="inputFile" accept=".mp4,.webm,.ogg,.avi,.flv,.mov,.3gp,.mkv,.mpeg" data-title="{{ translate('Browse_file"') }}">
                                                                 </div>
                                                             </div>

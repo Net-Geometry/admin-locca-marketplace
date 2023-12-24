@@ -56,7 +56,15 @@
                                     </h3>
                                     <label class="__upload-img aspect-235-375 m-auto d-block position-relative">
                                         <div class="img">
-                                            <img class="onerror-image" src="{{asset('storage/app/public/promotional_banner')}}/{{$best_reviewed_section_banner?->value}}" data-onerror-image="{{asset('/public/assets/admin/img/upload-placeholder.png')}}" alt="">
+                                            <img class="onerror-image"
+                                            src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
+                                                $best_reviewed_section_banner->value,
+                                                asset('storage/app/public/promotional_banner') . '/' . $best_reviewed_section_banner->value,
+                                                asset('/public/assets/admin/img/upload-placeholder.png'),
+                                                'promotional_banner/'
+                                            ) }}"
+
+                                            data-onerror-image="{{asset('/public/assets/admin/img/upload-placeholder.png')}}" alt="">
                                         </div>
                                         <div class="">
                                         <input type="file" name="image"  hidden>

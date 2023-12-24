@@ -157,7 +157,12 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <img src="{{asset('storage/app/public/why_choose')}}/{{$banner->image}}"
+                                            <img  src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
+                                                $banner->image ?? '',
+                                                asset('storage/app/public/why_choose').'/'.$banner->image ?? '',
+                                                asset('/public/assets/admin/img/upload-3.png'),
+                                                'why_choose/'
+                                            ) }}"
                                             data-onerror-image="{{asset('/public/assets/admin/img/upload-3.png')}}" class="__size-105 onerror-image" alt="">
                                         </td>
                                         <td>

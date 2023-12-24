@@ -285,7 +285,13 @@
                                     <td>
                                     @if ($review->item)
                                         <a class="media align-items-center" href="{{route('admin.item.view',[$review->item['id']])}}">
-                                            <img class="avatar avatar-lg mr-3 onerror-image" src="{{asset('storage/app/public/product')}}/{{$review->item['image']}}"
+                                            <img class="avatar avatar-lg mr-3 onerror-image"
+                                            src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
+                                                $review->item['image'] ?? '',
+                                                asset('storage/app/public/product').'/'.$review->item['image'] ?? '',
+                                                asset('public/assets/admin/img/160x160/img2.jpg'),
+                                                'product/'
+                                            ) }}"
                                             data-onerror-image="{{asset('public/assets/admin/img/160x160/img2.jpg')}}" alt="{{$review->item->name}} image">
                                             <div class="media-body">
                                                 <h5 class="text-hover-primary mb-0">{{Str::limit($review->item['name'],10)}}</h5>
@@ -303,7 +309,12 @@
                                             <div class="avatar avatar-circle">
                                                 <img class="avatar-img onerror-image" width="75" height="75"
                                                     data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
-                                                    src="{{asset('storage/app/public/profile/'.$review->customer->image)}}"
+                                                    src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
+                                                        $review->customer->image ?? '',
+                                                        asset('storage/app/public/profile').'/'.$review->customer->image ?? '',
+                                                        asset('public/assets/admin/img/160x160/img1.jpg'),
+                                                        'profile/'
+                                                    ) }}"
                                                     alt="Image Description">
                                             </div>
                                             <div class="ml-3">

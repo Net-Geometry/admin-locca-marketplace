@@ -11,7 +11,13 @@
         @php($logo=\App\Models\BusinessSetting::where('key','logo')->first()->value)
         <img
             width="200"
-            src="{{asset('storage/app/public/restaurant/'.$logo)}}"
+            src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
+                $logo ?? '',
+                asset('storage/app/public/restaurant').'/'.$logo ?? '',
+                asset('public/assets/admin/img/img1.jpg'),
+                'restaurant/'
+            ) }}"
+
             alt="image"
             class="dark-support onerror-image"  data-onerror-image="{{ asset('public/assets/admin/img/img1.jpg') }}" />
     </div>

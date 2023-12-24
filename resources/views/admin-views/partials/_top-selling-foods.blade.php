@@ -23,8 +23,12 @@
         @foreach($top_sell as $key=>$item)
             <a class="grid--card" href="{{route('admin.item.view',[$item['id']])}}">
                 <img class="initial--28 onerror-image"
-                        src="{{asset('storage/app/public/product')}}/{{$item['image']}}"
-                      data-onerror-image="{{asset('public/assets/admin/img/placeholder-2.png')}}"
+                src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
+                    $item['image'] ?? '',
+                    asset('storage/app/public/product').'/'.$item['image'] ?? '',
+                    asset('public/assets/admin/img/placeholder-2.png'),
+                    'product/'
+                ) }}"  data-onerror-image="{{asset('public/assets/admin/img/placeholder-2.png')}}"
                         alt="{{$item->name}} image">
                 <div class="cont pt-2">
                     <span class="fz--13">{{Str::limit($item['name'],20,'...')}}</span>

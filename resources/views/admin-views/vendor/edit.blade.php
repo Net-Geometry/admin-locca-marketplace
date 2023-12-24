@@ -142,7 +142,12 @@
                                     <div class="text-center">
                                         <img class="img--110 min-height-170px min-width-170px onerror-image" id="viewer"
                                         data-onerror-image="{{ asset('public/assets/admin/img/upload.png') }}"
-                                            src="{{asset('storage/app/public/store').'/'.$store->logo}}" alt="{{$store->name}}"
+                                        src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
+                                            $store->logo ?? '',
+                                            asset('storage/app/public/store').'/'.$store->logo ?? '',
+                                            asset('public/assets/admin/img/upload.png'),
+                                            'store/'
+                                        ) }}" 
                                             alt="logo image" />
                                     </div>
                                     <input type="file" name="logo" id="customFileEg1" class="custom-file-input"
@@ -158,7 +163,12 @@
                                     <div class="text-center">
                                         <img class="img--vertical min-height-170px min-width-170px onerror-image" id="coverImageViewer"
                                         data-onerror-image="{{ asset('public/assets/admin/img/upload-img.png') }}"
-                                            src="{{asset('storage/app/public/store/cover/'.$store->cover_photo)}}"
+                                        src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
+                                            $store->cover_photo ?? '',
+                                            asset('storage/app/public/store/cover').'/'.$store->cover_photo ?? '',
+                                            asset('public/assets/admin/img/upload-img.png'),
+                                            'store/cover/'
+                                        ) }}"
                                             alt="Fav icon" />
                                     </div>
                                     <input type="file" name="cover_photo" id="coverImageUpload"  class="custom-file-input"

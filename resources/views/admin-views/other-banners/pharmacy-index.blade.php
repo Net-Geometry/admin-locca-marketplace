@@ -44,7 +44,14 @@
                                     </h3>
                                     <label class="__upload-img aspect-5-1 m-auto d-block position-relative">
                                         <div class="img">
-                                            <img class="onerror-image" src="{{asset('storage/app/public/promotional_banner')}}/{{$bottom_section_banner?->value}}" data-onerror-image="{{asset('/public/assets/admin/img/upload-placeholder.png')}}" alt="">
+                                            <img class="onerror-image"
+
+                                            src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
+                                                $bottom_section_banner->value ?? '',
+                                                asset('storage/app/public/promotional_banner').'/'.$bottom_section_banner->value ?? '',
+                                                asset('/public/assets/admin/img/upload-placeholder.png'),
+                                                'promotional_banner/'
+                                            ) }}" data-onerror-image="{{asset('/public/assets/admin/img/upload-placeholder.png')}}" alt="">
                                         </div>
                                         <div class="">
                                             <input type="file" name="image"  hidden>
@@ -119,7 +126,16 @@
                                     </h3>
                                     <label class="__upload-img aspect-235-375 m-auto d-block position-relative">
                                         <div class="img">
-                                            <img class="onerror-image" src="{{asset('storage/app/public/promotional_banner')}}/{{$basic_section_nearby?->value}}" data-onerror-image="{{asset('/public/assets/admin/img/upload-placeholder.png')}}" alt="">
+                                            <img class="onerror-image"
+
+                                            src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
+                                                $basic_section_nearby->value ?? '',
+                                                asset('storage/app/public/promotional_banner').'/'.$basic_section_nearby->value ?? '',
+                                                asset('/public/assets/admin/img/upload-placeholder.png'),
+                                                'promotional_banner/'
+                                            ) }}"
+
+                                            data-onerror-image="{{asset('/public/assets/admin/img/upload-placeholder.png')}}" alt="">
                                         </div>
                                         <div class="">
                                         <input type="file" name="image"  hidden>

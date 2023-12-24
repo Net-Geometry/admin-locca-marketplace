@@ -42,7 +42,14 @@
                     ?>
                 <tr>
                     <td class="media align-items-center cursor-pointer quick-View-Cart-Item" data-product-id="{{$cartItem['id']}}" data-item-key="{{$key}}">
-                        <img class="avatar avatar-sm mr-1 onerror-image" src="{{asset('storage/app/public/product')}}/{{$cartItem['image']}}"
+                        <img class="avatar avatar-sm mr-1 onerror-image"
+                        src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
+                            $cartItem['image'] ?? '',
+                            asset('storage/app/public/product').'/'.$cartItem['image'] ?? '',
+                            asset('public/assets/admin/img/100x100/2.png'),
+                            'product/'
+                        ) }}"
+
                                 data-onerror-image="{{asset('public/assets/admin/img/100x100/2.png')}}" alt="{{$cartItem['name']}} image">
                         <div class="media-body">
                             <h5 class="text-hover-primary mb-0">{{Str::limit($cartItem['name'], 10)}}</h5>
@@ -257,7 +264,7 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-12">
-                            <div class="text-center"> 
+                            <div class="text-center">
                                 <h2>
                                     {{translate('messages.please_select_a_store_first')}}
                                 </h2>

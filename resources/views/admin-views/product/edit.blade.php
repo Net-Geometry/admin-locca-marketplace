@@ -162,7 +162,12 @@
                                         @foreach($product->images as $key => $photo)
                                             <div id="product_images_{{ $key }}" class="spartan_item_wrapper min-w-100px max-w-100px">
                                                 <img class="img--square onerror-image"
-                                                    src="{{ asset("storage/app/public/product/$photo") }}"
+                                                src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
+                                                    $photo ?? '',
+                                                    asset('storage/app/public/product').'/'.$photo ?? '',
+                                                    asset('public/assets/admin/img/upload.png'),
+                                                    'product/'
+                                                ) }}"
                                                     data-onerror-image="{{ asset('public/assets/admin/img/upload.png') }}"
                                                     alt="Product image">
                                                     @if (request()->product_gellary  == 1)
@@ -183,7 +188,12 @@
                                     </label>
                                     <label class="d-inline-block m-0">
                                         <img class="img--100 onerror-image" id="viewer"
-                                            src="{{ asset('storage/app/public/product') }}/{{ $product['image'] }}"
+                                        src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
+                                            $product['image'] ?? '',
+                                            asset('storage/app/public/product').'/'.$product['image'] ?? '',
+                                            asset('public/assets/admin/img/upload.png'),
+                                            'product/'
+                                        ) }}" 
                                             data-onerror-image="{{ asset('public/assets/admin/img/upload.png') }}"
                                             alt="thumbnail" />
                                         <input type="file" name="image" id="customFileEg1"

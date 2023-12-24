@@ -40,7 +40,11 @@
                                         <div class="col-12">
                                             <label class="__upload-img aspect-4-1 m-auto d-block">
                                                 <div class="img">
-                                                    <img class="onerror-image" src="{{asset('/public/assets/admin/img/upload-placeholder.png')}}" data-onerror-image="{{asset('/public/assets/admin/img/upload-placeholder.png')}}" alt="">
+                                                    <img class="onerror-image"    src="{{asset('/public/assets/admin/img/upload-placeholder.png')}}" data-onerror-image="{{asset('/public/assets/admin/img/upload-placeholder.png')}}" alt="">
+
+
+
+
                                                 </div>
                                                     <input type="file" name="image"  hidden>
                                             </label>
@@ -90,8 +94,12 @@
                                                 <tr>
                                                     <td>{{ $key+1 }}</td>
                                                     <td>
-                                                        <img src="{{asset('storage/app/public/promotional_banner')}}/{{$banner->value}}"
-                                                        data-onerror-image="{{asset('/public/assets/admin/img/upload-3.png')}}" class="__size-105 onerror-image" alt="">
+                                                        <img src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
+                                                            $banner->value ?? '',
+                                                            asset('storage/app/public/promotional_banner').'/'.$banner->value ?? '',
+                                                            asset('/public/assets/admin/img/upload-3.png'),
+                                                            'promotional_banner/'
+                                                        ) }}"  data-onerror-image="{{asset('/public/assets/admin/img/upload-3.png')}}" class="__size-105 onerror-image" alt="">
                                                     </td>
                                                     <td>
                                                         <label class="toggle-switch toggle-switch-sm">

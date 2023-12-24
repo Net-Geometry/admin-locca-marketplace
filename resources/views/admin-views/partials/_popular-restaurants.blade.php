@@ -22,7 +22,16 @@
     @foreach($popular as $key=>$item)
         <li class="cursor-pointer redirect-url" data-url="{{route('admin.store.view', $item->store_id)}}">
             <div class="img-container">
-                <img class="onerror-image" data-onerror-image="{{asset('public/assets/admin/img/100x100/1.png')}}" src="{{asset('storage/app/public/store')}}/{{$item->store['logo']}}" alt="{{translate('store')}}">
+                <img class="onerror-image" data-onerror-image="{{asset('public/assets/admin/img/100x100/1.png')}}"
+
+                src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
+                    $item->store['logo'] ?? '',
+                    asset('storage/app/public/store').'/'.$item->store['logo'] ?? '',
+                    asset('public/assets/admin/img/100x100/1.png'),
+                    'store/'
+                ) }}"
+
+                alt="{{translate('store')}}">
                 <span class="ml-2"> {{Str::limit($item->store->name??translate('messages.store deleted!'), 20, '...')}} </span>
             </div>
             <span class="badge badge-soft text--primary px-2">

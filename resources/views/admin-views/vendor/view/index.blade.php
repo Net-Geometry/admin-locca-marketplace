@@ -95,7 +95,14 @@
                     <div class="resturant--info-address">
                         <div class="logo">
                             <img class="onerror-image" data-onerror-image="{{asset('public/assets/admin/img/100x100/1.png')}}"
-                        src="{{asset('storage/app/public/store')}}/{{$store->logo}}" alt="{{$store->name}} Logo">
+                            src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
+                                $store->logo ?? '',
+                                asset('storage/app/public/store').'/'.$store->logo ?? '',
+                                asset('public/assets/admin/img/100x100/1.png'),
+                                'store/'
+                            ) }}"
+
+                            alt="{{$store->name}} Logo">
                         </div>
                         <ul class="address-info list-unstyled list-unstyled-py-3 text-dark">
                             <li>
@@ -138,7 +145,18 @@
                     <div class="resturant--info-address">
                         <div class="avatar avatar-xxl avatar-circle avatar-border-lg">
                             <img class="avatar-img onerror-image" data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
-                        src="{{asset('storage/app/public/vendor')}}/{{$store->vendor->image}}" alt="Image Description">
+
+                            src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
+                                $store->vendor->image ?? '',
+                                asset('storage/app/public/vendor').'/'.$store->vendor->image ?? '',
+                                asset('public/assets/admin/img/160x160/img1.jpg'),
+                                'vendor/'
+                            ) }}"
+
+
+
+
+                            alt="Image Description">
                         </div>
                         <ul class="address-info address-info-2 list-unstyled list-unstyled-py-3 text-dark">
                             <li>
