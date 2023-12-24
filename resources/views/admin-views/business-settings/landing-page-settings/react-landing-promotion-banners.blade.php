@@ -82,7 +82,13 @@
                                     <tr>
                                         <td>{{ $key+1 }}</td>
                                         <td>
-                                            <img src="{{asset('storage/app/public/promotional_banner')}}/{{$banner['img']}}"
+                                            <img
+                                            src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
+                                                $banner['img'] ?? '',
+                                                asset('storage/app/public/promotional_banner').'/'.$banner['img'] ?? '',
+                                                asset('/public/assets/admin/img/upload-3.png'),
+                                                'promotional_banner/'
+                                            ) }}" 
                                             data-onerror-image="{{asset('/public/assets/admin/img/upload-3.png')}}" class="__size-105 mw-100 onerror-image" alt="">
                                         </td>
                                         <td>

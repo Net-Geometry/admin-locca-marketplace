@@ -147,7 +147,14 @@
                                 <label class="upload-img-3 m-0">
                                         <div class="position-relative">
                                         <div class="img">
-                                            <img class="onerror-image" src="{{asset('storage/app/public/admin_feature')}}/{{$feature->image}}" data-onerror-image="{{asset('/public/assets/admin/img/upload-3.png')}}" alt="">
+                                            <img class="onerror-image" src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
+                                                $feature->image ?? '',
+                                                asset('storage/app/public/admin_feature').'/'.$feature->image ?? '',
+                                                asset('/public/assets/admin/img/upload-3.png'),
+                                                'admin_feature/'
+                                            ) }}"
+
+                                            data-onerror-image="{{asset('/public/assets/admin/img/upload-3.png')}}" alt="">
                                         </div>
                                             <input type="file" name="image"  hidden>
                                             @if (isset($feature->image))

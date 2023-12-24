@@ -180,7 +180,17 @@
                                 <label class="upload-img-3 m-0 d-block">
                                     <div class="position-relative">
                                     <div class="img">
-                                        <img src="{{asset('storage/app/public/earning')}}/{{ $earning_seller_image['value']??'' }}" data-onerror-image="{{asset('/public/assets/admin/img/upload-4.png')}}" class="vertical-img mw-100 vertical onerror-image" alt="">
+                                        <img  src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
+                                            $earning_seller_image['value'] ?? '',
+                                            asset('storage/app/public/earning').'/'.$earning_seller_image['value'] ?? '',
+                                            asset('/public/assets/admin/img/upload-4.png'),
+                                            'earning/'
+                                        ) }}"
+
+
+                                        data-onerror-image="{{asset('/public/assets/admin/img/upload-4.png')}}"
+                                        class="vertical-img mw-100 vertical onerror-image" alt="">
+
                                     </div>
                                     <input type="file" name="earning_seller_image"  hidden>
                                     @if (isset($earning_seller_image['value']))
@@ -300,23 +310,14 @@
                                     <div class="position-relative">
                                     <div class="img">
 
+                                        <img src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
+                                            $earning_delivery_image['value'] ?? '',
+                                            asset('storage/app/public/earning/').$earning_delivery_image['value'],
+                                            asset('/public/assets/admin/img/upload-4.png'),
+                                            'earning/'
+                                        ) }}"
 
-
-
-                                        <?php
-
-                                            if($earning_delivery_image['value']){
-                                                $src=asset('storage/app/public/earning/').$earning_delivery_image['value'];
-                                            } else {
-
-                                                $src=asset('/public/assets/admin/img/upload-4.png');
-                                            }
-                                            ?>
-
-                                     
-
-
-                                        <img src="{{ $src }}" data-onerror-image="{{asset('/public/assets/admin/img/upload-4.png')}}" class="vertical-img mw-100 vertical onerror-image" alt="">
+                                        data-onerror-image="{{asset('/public/assets/admin/img/upload-4.png')}}" class="vertical-img mw-100 vertical onerror-image" alt="">
                                     </div>
                                         <input type="file" name="earning_delivery_image"  hidden>
                                             @if (isset($earning_delivery_image['value']))

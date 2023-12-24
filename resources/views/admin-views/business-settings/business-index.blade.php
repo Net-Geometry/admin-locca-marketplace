@@ -388,10 +388,10 @@
                                             <label class="form-label">
                                                 {{ translate('logo') }} <span class="text--primary">( {{ translate('3:1') }} )</span>
                                             </label>
-                                            <div class="text-center"> 
+                                            <div class="text-center">
                                                 <img class="img--vertical onerror-image" id="viewer"
                                                     data-onerror-image="{{ asset('public/assets/admin/img/upload-img.png') }}"
-                                                    src="{{ asset('storage/app/public/business/' . $logo) }}"
+                                                    src="{{ \App\CentralLogics\Helpers::onerror_image_helper($logo, asset('storage/app/public/business/').'/'.$logo, asset('public/assets/admin/img/upload-img.png'),'business/') }}"
                                                     alt="logo image" />
                                             </div>
                                             <input type="file" name="logo" id="customFileEg1"
@@ -405,10 +405,12 @@
                                             <label class="form-label">
                                                 {{ translate('Favicon') }}  <span class="text--primary">( {{ translate('1:1') }} )</span>
                                             </label>
-                                            <div class="text-center"> 
+
+
+                                            <div class="text-center">
                                                 <img class="img--110 onerror-image" id="iconViewer"
                                                     data-onerror-image="{{ asset('public/assets/admin/img/upload-img.png') }}"
-                                                    src="{{ asset('storage/app/public/business/' . $icon) }}"
+                                                    src="{{ \App\CentralLogics\Helpers::onerror_image_helper($icon, asset('storage/app/public/business/').'/'.$icon, asset('public/assets/admin/img/upload-img.png') , 'business/')}}"
                                                     alt="Fav icon" />
                                             </div>
                                             <input type="file" name="icon" id="favIconUpload"

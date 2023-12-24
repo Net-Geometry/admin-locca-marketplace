@@ -156,7 +156,8 @@
                                         </label>
                                         <label class="upload-img-3 m-0 d-block">
                                             <div class="img">
-                                                <img src="{{asset("/public/assets/admin/img/aspect-1.png")}}" data-onerror-image="{{asset("/public/assets/admin/img/aspect-1.png")}}" class="img__aspect-1 min-w-187px max-w-187px onerror-image" alt="">
+                                                <img src="{{asset("/public/assets/admin/img/aspect-1.png")}}"
+                                                data-onerror-image="{{asset("/public/assets/admin/img/aspect-1.png")}}" class="img__aspect-1 min-w-187px max-w-187px onerror-image" alt="">
                                             </div>
                                             <input type="file"  name="reviewer_image" hidden="">
                                         </label>
@@ -220,11 +221,24 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <img src="{{asset('storage/app/public/reviewer_image')}}/{{$review->reviewer_image}}"
+                                            <img   src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
+                                                $review->reviewer_image ?? '',
+                                                asset('storage/app/public/reviewer_image').'/'.$review->reviewer_image ?? '',
+                                                asset('/public/assets/admin/img/upload-3.png'),
+                                                'reviewer_image/'
+                                            ) }}"
+
                                             data-onerror-image="{{asset('/public/assets/admin/img/upload-3.png')}}" class="__size-105 onerror-image" alt="">
                                         </td>
                                         <td>
-                                            <img src="{{asset('storage/app/public/reviewer_company_image')}}/{{$review->company_image}}"
+                                            <img
+                                            src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
+                                                $review->company_image ?? '',
+                                                asset('storage/app/public/reviewer_company_image').'/'.$review->company_image ?? '',
+                                                asset('/public/assets/admin/img/upload-3.png'),
+                                                'reviewer_company_image/'
+                                            ) }}"
+                                           
                                             data-onerror-image="{{asset('/public/assets/admin/img/upload-3.png')}}" class="__size-105 onerror-image" alt="">
                                         </td>
                                         <td>

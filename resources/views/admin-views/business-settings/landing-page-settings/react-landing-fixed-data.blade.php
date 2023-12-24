@@ -68,7 +68,15 @@
                                 <label class="upload-img-3 m-2 d-block">
                                     <div class="position-relative">
                                     <div class="img">
-                                        <img src="{{asset('storage/app/public/promotional_banner')}}/{{ $fixed_promotional_banner['value']??'' }}" data-onerror-image="{{asset('/public/assets/admin/img/upload-4.png')}}" class="vertical-img mw-100 vertical onerror-image" alt="">
+                                        <img
+                                        src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
+                                            $fixed_promotional_banner['value'] ?? '',
+                                            asset('storage/app/public/promotional_banner').'/'.$fixed_promotional_banner['value'] ?? '',
+                                            asset('/public/assets/admin/img/upload-4.png'),
+                                            'promotional_banner/'
+                                        ) }}"
+
+                                        data-onerror-image="{{asset('/public/assets/admin/img/upload-4.png')}}" class="vertical-img mw-100 vertical onerror-image" alt="">
                                     </div>
                                         <input type="file" name="fixed_promotional_banner"  hidden>
                                            @if (isset($fixed_promotional_banner['value']))

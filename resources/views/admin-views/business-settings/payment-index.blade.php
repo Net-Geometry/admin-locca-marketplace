@@ -182,7 +182,21 @@
                                 <div class="payment--gateway-img">
                                     <img  id="{{$payment->key_name}}-image-preview" class="__height-80 onerror-image"
                                     data-onerror-image="{{asset('/public/assets/admin/img/payment/placeholder.png')}}"
-                                    src="{{asset('storage/app/public/payment_modules/gateway_image')}}/{{$additional_data != null ? $additional_data->gateway_image : ''}}"
+
+                                @if ($additional_data != null)
+                                    src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
+                                        $additional_data?->gateway_image,
+                                        asset('storage/app/public/payment_modules/gateway_image').'/'.$additional_data?->gateway_image,
+                                        asset('/public/assets/admin/img/payment/placeholder.png'),
+                                        'payment_modules/gateway_image/'
+                                    ) }}"
+
+                                @else
+                                src="{{asset('/public/assets/admin/img/payment/placeholder.png')}}"
+                                @endif
+
+
+
                                          alt="public">
                                 </div>
 

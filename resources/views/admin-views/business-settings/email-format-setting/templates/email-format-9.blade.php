@@ -14,7 +14,15 @@ $company_name = App\Models\BusinessSetting::where('key', 'business_name')->first
                                 <span class="d-block text-center">
                                     @php($restaurant_logo = \App\Models\BusinessSetting::where(['key' => 'logo'])->first()->value)
                                     <img class="mb-2 mail-img-2 onerror-image" data-onerror-image="{{ asset('storage/app/public/business/' . $restaurant_logo) }}"
-                                    src="{{ asset('storage/app/public/email_template/') }}/{{ $data['logo']??'' }}" id="logoViewer" alt="">
+
+                                    src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
+                                        $data['logo'],
+                                        asset('storage/app/public/email_template').'/'.$data['logo'],
+                                        asset('storage/app/public/business/' . $restaurant_logo),
+                                        'email_template/'
+                                    ) }}"
+
+                                    id="logoViewer" alt="">
                                     <h3 class="mb-3 mt-0">{{ translate('Order_Info') }}</h3>
                                 </span>
                             </td>

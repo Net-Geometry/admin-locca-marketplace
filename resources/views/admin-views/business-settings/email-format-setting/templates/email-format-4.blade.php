@@ -7,7 +7,14 @@ $company_name = App\Models\BusinessSetting::where('key', 'business_name')->first
             <td class="main-table-td">
                 <div class="text-center">
                 <img data-onerror-image="{{ asset('/public/assets/admin/img/blank3.png') }}" class="mail-img-2 onerror-image"
-                src="{{ asset('storage/app/public/email_template/') }}/{{ $data['icon']??'' }}" id="iconViewer" alt="">
+                src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
+                    $data['logo'],
+                    asset('storage/app/public/email_template').'/'.$data['logo'] ,
+                    {{ asset('/public/assets/admin/img/blank3.png') }},
+                    'email_template/'
+                ) }}"
+                id="iconViewer" alt="">
+
                     <h2 id="mail-title" class="mt-2">{{ $data['title']?? translate('Main_Title_or_Subject_of_the_Mail') }}</h2>
                     <div class="mb-1" id="mail-body">{!! $data['body']?? translate('Hi_Sabrina,') !!}</div>
                     <h2 class="email-template-otp">

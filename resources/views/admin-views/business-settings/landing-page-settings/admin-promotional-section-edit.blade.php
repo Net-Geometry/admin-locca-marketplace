@@ -121,7 +121,14 @@
                                 <div class="position-relative">
                                     <label class="upload-img-3 m-0 d-block">
                                         <div class="img">
-                                            <img  src="{{asset('storage/app/public/promotional_banner')}}/{{$banner['image']}}" data-onerror-image="{{asset('/public/assets/admin/img/upload-4.png')}}" class="vertical-img mw-100 vertical onerror-image" alt="">
+                                            <img
+                                            src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
+                                                $banner['image'] ?? '',
+                                                asset('storage/app/public/promotional_banner').'/'.$banner['image'] ?? '',
+                                                asset('/public/assets/admin/img/upload-4.png'),
+                                                'promotional_banner/'
+                                            ) }}" 
+                                            data-onerror-image="{{asset('/public/assets/admin/img/upload-4.png')}}" class="vertical-img mw-100 vertical onerror-image" alt="">
                                         </div>
                                             <input type="file" name="image"  hidden>
                                     </label>

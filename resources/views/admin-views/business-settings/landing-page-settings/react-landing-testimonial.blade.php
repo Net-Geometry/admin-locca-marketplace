@@ -190,7 +190,13 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <img src="{{asset('storage/app/public/reviewer_image')}}/{{$review->reviewer_image}}"
+                                            <img
+                                            src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
+                                                $review->reviewer_image ?? '',
+                                                asset('storage/app/public/reviewer_image').'/'.$review->reviewer_image ?? '',
+                                                asset('/public/assets/admin/img/upload-3.png'),
+                                                'reviewer_image/'
+                                            ) }}" 
                                             data-onerror-image="{{asset('/public/assets/admin/img/upload-3.png')}}" class="__size-105 onerror-image" alt="">
                                         </td>
 

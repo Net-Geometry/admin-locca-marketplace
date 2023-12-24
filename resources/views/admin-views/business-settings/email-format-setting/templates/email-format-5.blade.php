@@ -5,7 +5,16 @@ $company_name = App\Models\BusinessSetting::where('key', 'business_name')->first
     <tr>
         <td class="email-template-table-td-style">
             <img class="mail-img-2 onerror-image" data-onerror-image="{{ asset('/public/assets/admin/img/blank3.png') }}"
-            src="{{ asset('storage/app/public/email_template/') }}/{{ $data['icon']??'' }}" id="iconViewer" alt="">
+
+            src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
+                $data['icon'],
+                asset('storage/app/public/email_template').'/'.$data['icon'] ,
+                asset('/public/assets/admin/img/blank3.png'),
+                'email_template/'
+            ) }}"
+
+
+            id="iconViewer" alt="">
             <h3  class="mt-2 email-template-table-td-title-style" id="mail-title">{{ $data['title']?? translate('Main_Title_or_Subject_of_the_Mail') }}</h3>
 
         </td>
@@ -21,7 +30,16 @@ $company_name = App\Models\BusinessSetting::where('key', 'business_name')->first
             <span class="d-block">{{ translate('Thanks_&_Regards') }},</span>
             <span class="d-block" class="email-template-table-td-span-4">{{ $company_name }}</span>
             @php($store_logo = \App\Models\BusinessSetting::where(['key' => 'logo'])->first()->value)
-            <img class="email-template-img onerror-image" data-onerror-image="{{ asset('storage/app/public/business/' . $store_logo) }}" src="{{ asset('storage/app/public/email_template/') }}/{{ $data['logo']??'' }}" alt="public/img">
+            <img class="email-template-img onerror-image" data-onerror-image="{{ asset('storage/app/public/business/' . $store_logo) }}"
+
+            src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
+                $data['logo'] ,
+                asset('storage/app/public/email_template').'/'.$data['logo'] ,
+                asset('storage/app/public/business/' . $store_logo),
+                'email_template/'
+            ) }}"
+
+            alt="public/img">
 
             <span class="privacy">
                 <a href="#" id="privacy-check" style="{{ (isset($data['privacy']) && $data['privacy'] == 1)?'':'display:none;' }}"><span class="dot"></span>{{ translate('Privacy_Policy')}}</a>
