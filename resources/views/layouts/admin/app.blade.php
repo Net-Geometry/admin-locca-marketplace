@@ -624,23 +624,6 @@
                 }
             })
         }
-
-// $(document).ready(function() {
-//     $('.onerror-image').on('error', function() {
-//         let img = $(this).data('onerror-image')
-//         $(this).attr('src', img);
-//     });
-// });
-//
-// $(document).ready(function() {
-//     $('.onerror-image').each(function() {
-//     let defaultImage = $(this).data('onerror-image');
-//         if ($(this).attr('src').endsWith('/')) {
-//             $(this).attr('src', defaultImage);
-//         }
-//     });
-// });
-
 </script>
 
 <script>
