@@ -627,8 +627,8 @@
 
 
 $(document).ready(function() {
-    let defaultImage = '{{asset('/public/assets/admin/img/upload-4.png')}}';
     $('.onerror-image').each(function() {
+    let defaultImage = $(this).data('onerror-image');
         if ($(this).attr('src').endsWith('/')) {
             $(this).attr('src', defaultImage);
         }
