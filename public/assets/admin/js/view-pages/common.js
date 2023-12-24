@@ -226,27 +226,14 @@ $(".set-filter").on("change", function () {
     location.href = nurl;
     tour.next();
 });
-// $(document).ready(function() {
-//     $('.onerror-image').on('error', function() {
-//         let img = $(this).data('onerror-image')
-//         $(this).attr('src', img);
-//     });
-// });
 
-// jQuery ready function
 $(document).ready(function() {
-    // Error event handler for images with class 'onerror-image'
     $('.onerror-image').on('error', function() {
-        // Get the default image path from the data-onerror-image attribute
-        let defaultImage = $(this).data('onerror-image');
-
-        // Check if the current source ends with '/'
-        if ($(this).attr('src').endsWith('/')) {
-            // If it does, set the source to the default image path
-            $(this).attr('src', defaultImage);
-        }
+        let img = $(this).data('onerror-image')
+        $(this).attr('src', img);
     });
 });
+
 $(document).on('click', '.confirm-Status-Toggle', function () {
     let Status_toggle = $('#toggle-status-ok-button').attr('toggle-ok-button');
     if ($('#'+Status_toggle).is(':checked')) {
