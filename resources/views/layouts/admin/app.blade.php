@@ -625,6 +625,16 @@
             })
         }
 
+document.addEventListener('DOMContentLoaded', function() {
+    let images = document.querySelectorAll('img');
+
+    images.forEach(function(image) {
+        let defaultImagePath = image.dataset.onerrorImage; // Use dataset to get the data attribute
+        image.addEventListener('error', function() {
+            this.src = defaultImagePath;
+        });
+    });
+});
 
 $(document).ready(function() {
     $('.onerror-image').each(function() {
