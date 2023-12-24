@@ -65,7 +65,8 @@
                                 <div class="text-center mb-auto">
                                     <img class="store-banner onerror-image" id="viewer"
                                          data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
-                                    src="{{asset('storage/app/public/vendor')}}/{{$e['image']}}" alt="Employee thumbnail"/>
+                                         src="{{\App\CentralLogics\Helpers::onerror_image_helper($e['image'], asset('storage/app/public/vendor').'/'.$e['image'], asset('public/assets/admin/img/160x160/img1.jpg'), 'vendor/') }}"
+                                         alt="Employee thumbnail"/>
                                 </div>
 
                                 <div class="form-group mt-3 mb-0">

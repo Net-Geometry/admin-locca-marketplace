@@ -23,7 +23,8 @@
         <div class="card-body p-0">
             @if($shop->cover_photo)
             <div>
-                <img class="my-restaurant-img onerror-image" src="{{asset('storage/app/public/store/cover/'.$shop->cover_photo)}}" data-onerror-image="{{asset('public/assets/admin/img/900x400/img1.jpg')}}">
+                <img class="my-restaurant-img onerror-image" src="{{\App\CentralLogics\Helpers::onerror_image_helper($shop->cover_photo, asset('storage/app/public/store/cover/').$shop->cover_photo, asset('public/assets/admin/img/900x400/img1.jpg'), 'store/cover/') }}"
+                data-onerror-image="{{asset('public/assets/admin/img/900x400/img1.jpg')}}">
             </div>
             @endif
             <div class="my-resturant--card">
@@ -36,7 +37,8 @@
                 </div>
                 @else
                     <div class="my-resturant--avatar onerror-image">
-                        <img src="{{asset('storage/app/public/store/'.$shop->logo)}}" class="border" data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}" alt="">
+                        <img src="{{\App\CentralLogics\Helpers::onerror_image_helper($shop->logo, asset('storage/app/public/store/').$shop->logo, asset('public/assets/admin/img/160x160/img1.jpg'), 'store/') }}"
+                        class="border" data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}" alt="">
                     </div>
                 @endif
 
