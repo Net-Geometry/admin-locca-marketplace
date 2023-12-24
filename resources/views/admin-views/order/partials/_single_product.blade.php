@@ -1,6 +1,12 @@
 <div class="product-card card cursor-pointer quick-view" data-product-id="{{$product->id}}">
     <div class="card-header inline_product clickable p-0">
-        <img class="img--134 onerror-image" src="{{asset('storage/app/public/product')}}/{{$product['image']}}" data-onerror-image="{{asset('public/assets/admin/img/160x160/img2.jpg')}}">
+        <img class="img--134 onerror-image" src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
+            $product['image'], 
+            asset('storage/app/public/product/') . $product['image'], 
+            asset('public/assets/admin/img/160x160/img2.jpg'), 
+            'product/'
+        ) }}"
+         data-onerror-image="{{asset('public/assets/admin/img/160x160/img2.jpg')}}">
     </div>
 
     <div class="card-body inline_product text-center p-3 clickable">

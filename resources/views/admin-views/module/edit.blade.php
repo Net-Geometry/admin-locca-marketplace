@@ -125,7 +125,8 @@
                                             <small class="text-danger">* ( {{translate('messages.ratio')}} 1:1)</small>
                                         </label>
                                         <div class="text-center my-auto py-3">
-                                            <img class="initial--15 onerror-image" id="viewer" data-onerror-image="{{asset('public/assets/admin/img/400x400/img2.jpg')}}" src="{{asset('storage/app/public/module/'.$module['icon'])}}" alt="image" />
+                                            <img class="initial--15 onerror-image" id="viewer" data-onerror-image="{{asset('public/assets/admin/img/400x400/img2.jpg')}}" src="{{\App\CentralLogics\Helpers::onerror_image_helper($module['icon'], asset('storage/app/public/module/').'/'.$module['icon'], asset('public/assets/admin/img/400x400/img2.jpg'), 'module/') }}"
+                                            alt="image" />
                                         </div>
                                         <div class="custom-file">
                                             <input type="file" name="icon" id="customFileEg1" class="custom-file-input" accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
@@ -140,7 +141,8 @@
                                             <small class="text-danger">* ( {{translate('messages.ratio')}} 1:1)</small>
                                         </label>
                                         <div class="text-center my-auto py-3">
-                                            <img class="initial--15 onerror-image" id="viewer2" data-onerror-image="{{asset('public/assets/admin/img/400x400/img2.jpg')}}" src="{{asset('storage/app/public/module/'.$module['thumbnail'])}}" alt="image" />
+                                            <img class="initial--15 onerror-image" id="viewer2" data-onerror-image="{{asset('public/assets/admin/img/400x400/img2.jpg')}}" src="{{\App\CentralLogics\Helpers::onerror_image_helper($module['thumbnail'], asset('storage/app/public/module/').'/'.$module['thumbnail'], asset('public/assets/admin/img/400x400/img2.jpg'), 'module/') }}"
+                                            alt="image" />
                                         </div>
                                         <div class="custom-file">
                                             <input type="file" name="thumbnail" id="customFileEg2" class="custom-file-input" accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">

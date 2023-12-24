@@ -101,7 +101,7 @@
                                 <label>{{translate('messages.deliveryman_image')}} <small class="text-danger">* ( {{translate('messages.ratio')}} 1:1 )</small></label>
                                 <div class="text-center py-3 my-auto">
                                     <img class="img--100 rounded onerror-image" id="viewer"
-                                            src="{{asset('storage/app/public/delivery-man').'/'.$deliveryMan['image']}}"
+                                    src="{{\App\CentralLogics\Helpers::onerror_image_helper($deliveryMan['image'], asset('storage/app/public/delivery-man/').'/'.$deliveryMan['image'], asset('public/assets/admin/img/admin.png'), 'delivery-man/') }}"
                                             data-onerror-image="{{asset('/public/assets/admin/img/admin.png')}}"
                                             alt="delivery-man image"/>
                                 </div>

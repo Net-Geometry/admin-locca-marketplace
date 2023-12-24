@@ -86,7 +86,7 @@
                                 </label>
                                 <div class="text-center py-3 my-auto">
                                     <img class="img--100 onerror-image" id="viewer"
-                                        src="{{asset('storage/app/public/category')}}/{{$category['image']}}"
+                                    src="{{\App\CentralLogics\Helpers::onerror_image_helper($category['image'], asset('storage/app/public/category/').'/'.$category['image'], asset('public/assets/admin/img/900x400/img1.jpg'), 'category/') }}"
                                         data-onerror-image="{{asset('public/assets/admin/img/900x400/img1.jpg')}}"
                                         alt=""/>
                                 </div>
