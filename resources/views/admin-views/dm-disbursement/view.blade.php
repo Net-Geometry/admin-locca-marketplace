@@ -168,7 +168,7 @@
                                 </td>
                                 <td>
                                     <div>
-                                        {{$dm->withdraw_method->method_name}}
+                                        {{$dm->withdraw_method?->method_name}}
                                     </div>
                                 </td>
                                 <td>
@@ -246,32 +246,19 @@
                                                                 </ul>
                                                             </div>
                                                             <div class="item">
-{{--                                                                <h5>{{ translate('Owner_Information') }}</h5>--}}
-{{--                                                                <ul class="item-list">--}}
-{{--                                                                    <li class="d-flex flex-wrap">--}}
-{{--                                                                        <span class="name">{{ translate('name') }}</span>--}}
-{{--                                                                        <span>:</span>--}}
-{{--                                                                        <strong>{{$dm->delivery_man->f_name}} {{$dm->delivery_man->l_name}}</strong>--}}
-{{--                                                                    </li>--}}
-{{--                                                                    <li class="d-flex flex-wrap">--}}
-{{--                                                                        <span class="name">{{ translate('email') }}</span>--}}
-{{--                                                                        <span>:</span>--}}
-{{--                                                                        <strong>{{$dm->delivery_man->email}}</strong>--}}
-{{--                                                                    </li>--}}
-{{--                                                                </ul>--}}
                                                             </div>
                                                             <div class="item w-100">
                                                                 <h5>{{ translate('Account_Information') }}</h5>
                                                                 <ul class="item-list">
                                                                     <li class="d-flex flex-wrap">
                                                                         <span class="name">{{ translate('payment_method') }}</span>
-                                                                        <strong>{{$dm->withdraw_method->method_name}}</strong>
+                                                                        <strong>{{$dm->withdraw_method?->method_name}}</strong>
                                                                     </li>
                                                                     <li class="d-flex flex-wrap">
                                                                         <span class="name">{{ translate('amount') }}</span>
                                                                         <strong>{{\App\CentralLogics\Helpers::format_currency($dm['disbursement_amount'])}}</strong>
                                                                     </li>
-                                                                    @forelse(json_decode($dm->withdraw_method->method_fields, true) as $key=> $item)
+                                                                    @forelse(json_decode($dm->withdraw_method?->method_fields, true) ?? [] as $key=> $item)
                                                                         <li class="d-flex flex-wrap">
                                                                             <span class="name">{{  translate($key) }}</span>
                                                                             <strong>{{$item}}</strong>
