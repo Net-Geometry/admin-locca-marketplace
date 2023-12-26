@@ -123,7 +123,12 @@ class InstallController extends Controller
 
         Helpers::remove_dir('storage/app/public');
         Storage::disk('public')->makeDirectory('/');
-        Madzipper::make('installation/backup/public.zip')->extractTo('storage/app');
+
+        try {
+            Madzipper::make('installation/backup/public.zip')->extractTo('storage/app');
+        }catch (\Exception $exception){
+            info($exception);
+        }
 
         //sleep(5);
         return view('installation.step6');
