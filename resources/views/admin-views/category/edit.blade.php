@@ -91,7 +91,7 @@
                                         alt=""/>
                                 </div>
                                 <div class="custom-file">
-                                    <input type="file" name="image" id="customFileEg1" class="custom-file-input"
+                                    <input type="file" name="image" id="customFileEg1" class="custom-file-input read-url"
                                             accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
                                     <label class="custom-file-label mb-0" for="customFileEg1">{{translate('messages.choose_file')}}</label>
                                 </div>

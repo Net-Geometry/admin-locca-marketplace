@@ -270,7 +270,7 @@
                             </td>
                             <td>
                                 <div>
-                                    {{$disbursement->withdraw_method->method_name}}
+                                    {{$disbursement->withdraw_method?->method_name ?? translate('messages.N/A')}}
                                 </div>
                             </td>
                             <td>
@@ -429,13 +429,13 @@
                                                                 <h5>{{ translate('Account_Information') }}</h5>
                                                                 <ul class="item-list">
                                                                     <li class="d-flex flex-wrap">
-                                                                        <span class="name">{{ translate('payment_method') }}</span><strong>{{$disbursement->withdraw_method->method_name}}</strong>
+                                                                        <span class="name">{{ translate('payment_method') }}</span><strong>{{$disbursement->withdraw_method?->method_name ?? translate('messages.N/A')}}</strong>
                                                                     </li>
                                                                     <li class="d-flex flex-wrap">
                                                                         <span class="name">{{ translate('amount') }}</span>
                                                                         <strong>{{\App\CentralLogics\Helpers::format_currency($disbursement['disbursement_amount'])}}</strong>
                                                                     </li>
-                                                                    @forelse(json_decode($disbursement->withdraw_method->method_fields, true) as $key=> $item)
+                                                                    @forelse(json_decode($disbursement->withdraw_method?->method_fields, true) ?? [] as $key=> $item)
                                                                         <li class="d-flex flex-wrap">
                                                                             <span class="name">{{  translate($key) }}</span>
                                                                             <strong>{{$item}}</strong>

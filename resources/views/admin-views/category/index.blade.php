@@ -69,7 +69,7 @@
                             <div class="h-100 d-flex flex-column">
                                 <label class="m-0">{{translate('messages.image')}} <small class="text-danger">* ( {{translate('messages.ratio')}} 1:1)</small></label>
                                 <div class="text-center py-3 my-auto">
-                                    <img class="img--100" id="viewer"
+                                    <img class="img--100 " id="viewer"
                                         @if(isset($category))
                                         src="{{asset('storage/app/public/category')}}/{{$category['image']}}"
                                         @else
@@ -78,7 +78,7 @@
                                         alt="image"/>
                                 </div>
                                 <div class="custom-file">
-                                    <input type="file" name="image" id="customFileEg1" class="custom-file-input"
+                                    <input type="file" name="image" id="customFileEg1" class="custom-file-input read-url"
                                         accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*" required>
                                     <label class="custom-file-label" for="customFileEg1">{{translate('messages.choose_file')}}</label>
                                 </div>

@@ -312,7 +312,7 @@
 
                                         <img src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
                                             $earning_delivery_image['value'] ?? '',
-                                            asset('storage/app/public/earning/').$earning_delivery_image['value'],
+                                            asset('storage/app/public/earning/').'/'.$earning_delivery_image['value'],
                                             asset('/public/assets/admin/img/upload-4.png'),
                                             'earning/'
                                         ) }}"
