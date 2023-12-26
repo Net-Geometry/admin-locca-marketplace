@@ -525,11 +525,11 @@ class OrderLogic
 
         if($from_type  ==  'store'){
             $vendor= Vendor::find($from_id);
-            $Payable_Balance = $vendor?->wallet?->balance  < 0 ? 1: 0;
+            $Payable_Balance = $vendor?->wallet?->collected_cash   > 0 ? 1: 0;
             $cash_in_hand_overflow= BusinessSetting::where('key' ,'cash_in_hand_overflow_store')->first()?->value;
             $cash_in_hand_overflow_store_amount = BusinessSetting::where('key' ,'cash_in_hand_overflow_store_amount')->first()?->value;
 
-            if ($Payable_Balance == 1 &&  $cash_in_hand_overflow &&  $cash_in_hand_overflow_store_amount <= abs($vendor?->wallet?->balance)){
+            if ($Payable_Balance == 1 &&  $cash_in_hand_overflow && $vendor?->wallet?->balance<0 &&  $cash_in_hand_overflow_store_amount <= abs($vendor?->wallet?->collected_cash)){
                 $rest= Store::where('vendor_id', $vendor->id)->first();
                 $rest->status = 0 ;
                 $rest->save();
@@ -541,10 +541,10 @@ class OrderLogic
             // $val=  $cash_in_hand_overflow_delivery_man - (($cash_in_hand_overflow_delivery_man * 10)/100);
 
             $dm = DeliveryMan::find($from_id);
-
-            $over_flow_balance =  $dm?->wallet?->total_earning - ($dm?->wallet?->total_withdrawn +$dm?->wallet?->pending_withdraw + $dm?->wallet?->collected_cash);
-            $Payable_Balance =  $over_flow_balance  < 0 ? 1: 0;
-            if ($Payable_Balance == 1 &&  $cash_in_hand_overflow &&  $cash_in_hand_overflow_delivery_man < abs($over_flow_balance)){
+            $wallet_balance = $dm?->wallet?->total_earning - ($dm?->wallet?->total_withdrawn +$dm?->wallet?->pending_withdraw + $dm?->wallet?->collected_cash);
+            $over_flow_balance =  $dm?->wallet?->collected_cash;
+            $Payable_Balance =  $over_flow_balance   > 0 ? 1: 0;
+            if ($Payable_Balance == 1 &&  $cash_in_hand_overflow  && $wallet_balance<0 &&  $cash_in_hand_overflow_delivery_man < abs($over_flow_balance)){
                 $dm->status = 0 ;
                 // $dm->auth_token = null;
                 $dm->save();

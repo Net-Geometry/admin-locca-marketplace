@@ -138,14 +138,14 @@
 <div id="headerDouble" class="d-none"></div>
 <?php
 $wallet = \App\Models\StoreWallet::where('vendor_id',\App\CentralLogics\Helpers::get_vendor_id())->first();
-$Payable_Balance = $wallet?->balance  < 0 ? 1: 0;
+$Payable_Balance = $wallet?->collected_cash  > 0 ? 1: 0;
 
 $cash_in_hand_overflow=  \App\Models\BusinessSetting::where('key' ,'cash_in_hand_overflow_store')->first()?->value;
 $cash_in_hand_overflow_store_amount =  \App\Models\BusinessSetting::where('key' ,'cash_in_hand_overflow_store_amount')->first()?->value;
-$val=  $cash_in_hand_overflow_store_amount - (($cash_in_hand_overflow_store_amount * 10)/100);
+$val= (string) ($cash_in_hand_overflow_store_amount - (($cash_in_hand_overflow_store_amount * 10)/100));
 ?>
 
-@if ($Payable_Balance == 1 &&  $cash_in_hand_overflow &&  $wallet?->balance < 0 &&  $val <=  abs($wallet?->balance)  &&  $cash_in_hand_overflow_store_amount >= abs($wallet?->balance))
+@if ($Payable_Balance == 1 &&  $cash_in_hand_overflow &&  $wallet?->balance < 0 &&  $val <=  abs($wallet?->collected_cash)  )
     <div class="alert __alert-2 alert-warning m-0 py-1 px-2" role="alert">
         <img class="rounded mr-1"  width="25" src="{{ asset('/public/assets/admin/img/header_warning.png') }}" alt="">
         <div class="cont">
@@ -155,7 +155,7 @@ $val=  $cash_in_hand_overflow_store_amount - (($cash_in_hand_overflow_store_amou
     </div>
 @endif
 
-@if ($Payable_Balance == 1 &&  $cash_in_hand_overflow &&  $wallet?->balance < 0 &&  $cash_in_hand_overflow_store_amount < abs($wallet?->balance))
+@if ($Payable_Balance == 1 &&  $cash_in_hand_overflow &&  $wallet?->balance < 0 &&  $cash_in_hand_overflow_store_amount < $wallet?->collected_cash)
     <div class="alert __alert-2 alert-warning m-0 py-1 px-2" role="alert">
         <img class="mr-1"  width="25" src="{{ asset('/public/assets/admin/img/header_warning.png') }}" alt="">
         <div class="cont">

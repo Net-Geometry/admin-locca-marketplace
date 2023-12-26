@@ -101,20 +101,20 @@ class VendorController extends Controller
             $vendor['dynamic_balance_type']  = translate('messages.Payable_Balance') ;
         }
 
-        $Payable_Balance = $vendor?->wallet?->balance  < 0 ? 1: 0;
+        $Payable_Balance = $vendor?->wallet?->collected_cash  > 0 ? 1: 0;
 
         $cash_in_hand_overflow=  BusinessSetting::where('key' ,'cash_in_hand_overflow_store')->first()?->value;
         $cash_in_hand_overflow_store_amount =  BusinessSetting::where('key' ,'cash_in_hand_overflow_store_amount')->first()?->value;
         $val=  $cash_in_hand_overflow_store_amount - (($cash_in_hand_overflow_store_amount * 10)/100);
 
         $vendor['over_flow_warning'] = false;
-        if($Payable_Balance == 1 &&  $cash_in_hand_overflow &&  $vendor?->wallet?->balance < 0 &&  $val <=  abs($vendor?->wallet?->balance)  &&  $cash_in_hand_overflow_store_amount >= abs($vendor?->wallet?->balance)){
+        if($Payable_Balance == 1 &&  $cash_in_hand_overflow &&  $vendor?->wallet?->balance < 0 &&  $val <=  abs($vendor?->wallet?->collected_cash)  ){
 
             $vendor['over_flow_warning'] = true;
         }
 
         $vendor['over_flow_block_warning'] = false;
-        if ($Payable_Balance == 1 &&  $cash_in_hand_overflow &&  $vendor?->wallet?->balance < 0 &&  $cash_in_hand_overflow_store_amount < abs($vendor?->wallet?->balance)){
+        if ($Payable_Balance == 1 &&  $cash_in_hand_overflow &&  $vendor?->wallet?->balance < 0 &&  $cash_in_hand_overflow_store_amount < abs($vendor?->wallet?->collected_cash)){
             $vendor['over_flow_block_warning'] = true;
         }
 

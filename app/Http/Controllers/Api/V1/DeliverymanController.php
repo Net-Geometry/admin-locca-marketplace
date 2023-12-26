@@ -79,18 +79,20 @@ class DeliverymanController extends Controller
             $dm['show_pay_now_button'] = true;
         }
 
-        $Payable_Balance =  $over_flow_balance  < 0 ? 1: 0;
+
+        $Payable_Balance =  $dm?->wallet?->collected_cash > 0 ? 1: 0;
         $cash_in_hand_overflow=  BusinessSetting::where('key' ,'cash_in_hand_overflow_delivery_man')->first()?->value;
         $cash_in_hand_overflow_delivery_man =  BusinessSetting::where('key' ,'dm_max_cash_in_hand')->first()?->value;
         $val=  $cash_in_hand_overflow_delivery_man - (($cash_in_hand_overflow_delivery_man * 10)/100);
         $dm['over_flow_warning'] = false;
-        if($Payable_Balance == 1 &&  $cash_in_hand_overflow &&  $over_flow_balance < 0 &&  $val <=  abs($over_flow_balance)  &&  $cash_in_hand_overflow_delivery_man >= abs($over_flow_balance)){
+
+        if($Payable_Balance == 1 &&  $cash_in_hand_overflow &&  $over_flow_balance < 0 &&  $val <=  abs($dm?->wallet?->collected_cash)){
 
             $dm['over_flow_warning'] = true;
         }
 
         $dm['over_flow_block_warning'] = false;
-        if ($Payable_Balance == 1 &&  $cash_in_hand_overflow &&  $over_flow_balance < 0 &&  $cash_in_hand_overflow_delivery_man < abs($over_flow_balance)){
+        if ($Payable_Balance == 1 &&  $cash_in_hand_overflow &&  $over_flow_balance < 0 &&  $cash_in_hand_overflow_delivery_man < abs($dm?->wallet?->collected_cash)){
             $dm['over_flow_block_warning'] = true;
         }
 
