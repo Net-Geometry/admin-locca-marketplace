@@ -1215,10 +1215,6 @@
                                     </div>
                                 </div>
 
-
-
-
-
                             </div>
                             <div class="btn--container justify-content-end mt-3">
                                 <button type="reset" class="btn btn--reset">{{ translate('messages.reset') }}</button>
@@ -1237,6 +1233,14 @@
 @push('script_2')
     <script>
         "use strict";
+        $(document).on('ready', function() {
+            @php($country = \App\Models\BusinessSetting::where('key', 'country')->first())
+
+            @if ($country)
+            $("#country option[value='{{ $country->value }}']").attr('selected', 'selected').change();
+            @endif
+        });
+
         @php($language = \App\Models\BusinessSetting::where('key', 'language')->first())
         @php($language = $language->value ?? null)
         let language = <?php echo $language; ?>;
@@ -1400,11 +1404,6 @@
         };
         $(document).on('ready', function() {
             initAutocomplete();
-            @php($country = \App\Models\BusinessSetting::where('key', 'country')->first())
-
-            @if ($country)
-                $("#country option[value='{{ $country->value }}']").attr('selected', 'selected').change();
-            @endif
         });
 
         $(document).on("keydown", "input", function(e) {

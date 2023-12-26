@@ -23,7 +23,7 @@ class CommonConditionService
         ];
     }
 
-    public function getDropdownData(Object $data, object $request): array
+    public function getDropdownData(Object $data, object $request): array|object
     {
 
         $formattedData = $data->map(function ($condition) {

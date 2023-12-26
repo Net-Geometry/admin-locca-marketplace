@@ -349,8 +349,8 @@
 
 
     <script>
-"use strict";
-        $(".main-category-slider").owlCarousel({
+     "use strict";
+ $(".main-category-slider").owlCarousel({
             loop: true,
             nav: false,
             dots: true,
@@ -385,9 +385,9 @@
         $(".owl-prev").html('<i class="fas fa-angle-left">');
         $(".owl-next").html('<i class="fas fa-angle-right">');
         let sync1 = $("#sync1");
-        let sync2 = $("#sync2");
-        let thumbnailItemClass = ".owl-item";
-        let slides = sync1
+         let sync2 = $("#sync2");
+         let thumbnailItemClass = ".owl-item";
+         let slides = sync1
             .owlCarousel({
                 startPosition: 12,
                 items: 1,
@@ -406,12 +406,12 @@
             .on("changed.owl.carousel", syncPosition);
 
         function syncPosition(el) {
-            $owl_slider = $(this).data("owl.carousel");
+            let  $owl_slider = $(this).data("owl.carousel");
             let loop = $owl_slider.options.loop;
-
+            let current;
             if (loop) {
                 let count = el.item.count - 1;
-                let current = Math.round(
+                 current = Math.round(
                     el.item.index - el.item.count / 2 - 0.5
                 );
                 if (current < 0) {
@@ -421,7 +421,7 @@
                     current = 0;
                 }
             } else {
-                let current = el.item.index;
+                 current = el.item.index;
             }
 
             let owl_thumbnail = sync2.data("owl.carousel");
@@ -477,19 +477,10 @@
             })
             .on("changed.owl.carousel", function (el) {
                 let number = el.item.index;
-                $owl_slider = sync1.data("owl.carousel");
+                let  $owl_slider = sync1.data("owl.carousel");
                 $owl_slider.to(number, 500, true);
             });
         sync1.owlCarousel();
-
-
-        $(document).ready(function() {
-        "use strict";
-            $('.onerror-image').on('error', function() {
-                let img = $(this).data('onerror-image')
-                $(this).attr('src', img);
-            });
-        });
 
     </script>
 

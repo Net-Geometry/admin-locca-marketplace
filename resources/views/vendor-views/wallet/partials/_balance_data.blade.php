@@ -115,9 +115,6 @@
                                             class="btn btn--primary d-flex gap-1 align-items-center text-nowrap withdrawal-methods-disable"
                                         data-message="{{translate('Withdraw_methods_are_not_available')}}"
                                        @endif
-
-
-
                                     >{{translate('messages.request_withdraw')}}
 
                                         <span class="form-label-secondary  d-flex"

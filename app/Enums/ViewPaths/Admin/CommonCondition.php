@@ -5,7 +5,7 @@ namespace App\Enums\ViewPaths\Admin;
 enum CommonCondition
 {
     const DROPDOWN = [
-        URI => '/get',
+        URI => '/get-all',
         VIEW => ''
     ];
 

@@ -1586,7 +1586,7 @@ class OrderController extends Controller
                 }
                 $value = Helpers::text_variable_data_format(value:Helpers::order_status_update_message('offline_verified',$order->module->module_type),store_name:$order->store?->name,order_id:$order->id,user_name:"{$order?->customer?->f_name} {$order?->customer?->l_name}",delivery_man_name:"{$order?->delivery_man?->f_name} {$order?->delivery_man?->l_name}");
                 $data = [
-                    'title' => translate('messages.Your_Offline_payment_was_rejected'),
+                    'title' => translate('messages.Your_Offline_payment_is_approved'),
                     'description' => $value ??$request->note,
                     'order_id' => $order->id,
                     'image' => '',

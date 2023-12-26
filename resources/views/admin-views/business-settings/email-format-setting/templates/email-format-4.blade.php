@@ -10,7 +10,7 @@ $company_name = App\Models\BusinessSetting::where('key', 'business_name')->first
                 src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
                     $data['logo'],
                     asset('storage/app/public/email_template').'/'.$data['logo'] ,
-                    {{ asset('/public/assets/admin/img/blank3.png') }},
+                    asset('/public/assets/admin/img/blank3.png'),
                     'email_template/'
                 ) }}"
                 id="iconViewer" alt="">

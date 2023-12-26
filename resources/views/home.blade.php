@@ -1899,7 +1899,7 @@
                         @foreach ($modules as $key => $item)
                         <div class="item">
                             <img class="__img-50 onerror-image"  data-onerror-image="{{asset('public/assets/admin/img/100x100/2.png')}}"
-                            src="{{\App\CentralLogics\Helpers::onerror_image_helper(isset($item['icon']) ? $item['icon'] : null, asset('storage/app/public/module/').'/' . isset($item['icon']) ? $item['icon'] : null, asset('public/assets/admin/img/100x100/2.png') ,'module/')}}"
+                            src="{{\App\CentralLogics\Helpers::onerror_image_helper($item['icon'] ?? '', asset('storage/app/public/module/').'/' . $item['icon']??'', asset('public/assets/admin/img/100x100/2.png') ,'module/')}}"
 
                             alt="image">
                             <div class="txt d-block">{{translate("messages.{$item->module_name}")}}</div>
@@ -1920,8 +1920,7 @@
                         </div>
                         <div class="col-lg-6 col-md-8">
                             <div class="venture-img mx-1">
-                                <img
-                                src="{{\App\CentralLogics\Helpers::onerror_image_helper(isset($item['thumbnail']) ? $item['thumbnail'] : null, asset('storage/app/public/module/').'/' . isset($item['thumbnail']) ? $item['thumbnail'] : null, asset('public/assets/admin/img/100x100/2.png') ,'module/')}}"
+                                <img  src="{{\App\CentralLogics\Helpers::onerror_image_helper($item['thumbnail']?? '', asset('storage/app/public/module/').'/' . $item['thumbnail']?? '', asset('public/assets/admin/img/100x100/2.png') ,'module/')}}"
 
                                 class="onerror-image"  data-onerror-image="{{asset('public/assets/admin/img/100x100/2.png')}}"
                                 alt="image">
@@ -3366,13 +3365,7 @@
 
                 <div class="feature-card">
                     <div class="feature-card-icon">
-                        <img
-
-                        src="{{ asset('storage/app/public/special_criteria')}}/{{ isset($item['image']) ? $item['image'] : null }}"
-
-                        src="{{\App\CentralLogics\Helpers::onerror_image_helper(isset($item['image']) ? $item['image'] : null, asset('storage/app/public/special_criteria/').'/' . isset($item['image']) ? $item['image'] : null, asset('public/assets/admin/img/160x160/img2.jpg'),'special_criteria/')}}"
-
-
+                        <img  src="{{\App\CentralLogics\Helpers::onerror_image_helper($item['image'] ?? '', asset('storage/app/public/special_criteria/').'/' .$item['image']?? '', asset('public/assets/admin/img/160x160/img2.jpg'),'special_criteria/')}}"
                         alt="{{$item['title']}}"
                         class="onerror-image"  data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}">
                     </div>
@@ -3641,14 +3634,21 @@
                         </blockquote>
                         <div class="d-flex align-items-center justify-content-between">
                             <div class="user">
-                                <img src="{{ asset('storage/app/public/reviewer_image')}}/{{ $data['reviewer_image'] }}" alt="">
+                                <img
+
+
+                                src="{{\App\CentralLogics\Helpers::onerror_image_helper($data['reviewer_image'] , asset('storage/app/public/reviewer_image/').'/'.$data['reviewer_image'], asset('public/assets/admin/img/160x160/img2.jpg'),'reviewer_image/')}}"
+
+                                alt="image">
                                 <div>
                                     <h6 class="name">{{ $data['name'] }}</h6>
                                     <span class="designation">{{ $data['designation'] }}</span>
                                 </div>
                             </div>
                             @if (isset($data['company_image']))
-                            <img style="max-height: 35px; max-width:75px" src="{{ asset('storage/app/public/reviewer_company_image')}}/{{ $data['company_image'] }}" alt="">
+                            <img style="max-height: 35px; max-width:75px"
+                            src="{{\App\CentralLogics\Helpers::onerror_image_helper($data['company_image'] , asset('storage/app/public/reviewer_company_image/').'/'.$data['company_image'], asset('public/assets/admin/img/160x160/img2.jpg'),'reviewer_company_image/')}}"
+                            alt="image">
                             @endif
                         </div>
                     </div>
