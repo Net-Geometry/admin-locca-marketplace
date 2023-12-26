@@ -90,7 +90,7 @@
 
                         </div>
 
-                        @if($wallet->balance > 0  )
+                        @if($wallet->balance > 0  &&  $wallet->balance > $wallet->collected_cash  )
                             <div class="d-flex gap-2 flex-wrap">
                                 @if ($adjust_able ==  true )
                                     <a class="btn btn--primary d-flex gap-1 align-items-center text-nowrap"  href="javascript:" data-toggle="modal" data-target="#Adjust_wallet">{{translate('messages.Adjust_with_wallet')}}
@@ -124,7 +124,7 @@
                                     </a>
                                 @endif
                             </div>
-                        @elseif($wallet->balance < 0 ||  $wallet->collected_cash > 0)
+                        @elseif($wallet->balance < 0 ||  ($wallet->collected_cash > 0 && $wallet->collected_cash  > $wallet->balance )     )
                             <div class="d-flex gap-2 flex-wrap">
 
                                 @if ($adjust_able ==  true )
