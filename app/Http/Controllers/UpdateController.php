@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Setting;
 use App\Models\Store;
 use App\Models\DataSetting;
 
@@ -133,6 +134,21 @@ class UpdateController extends Controller
                 $store->save();
             }
 
+            if (Schema::hasTable('addon_settings')) {
+                $data_values = Setting::whereIn('settings_type', ['payment_config'])
+                    ->where('key_name', 'paystack')
+                    ->first();
+
+                if ($data_values && $data_values->additional_data !== null) {
+                    $additional_data = json_decode($data_values->additional_data, true);
+
+                    if (isset($additional_data['callback_url'])) {
+                        unset($additional_data['callback_url']);
+                        $data_values->update(['additional_data' => json_encode($additional_data)]);
+                    }
+                }
+            }
+
         } catch (\Exception $exception) {
             Toastr::error('Database import failed! try again');
             return back();
@@ -221,7 +237,6 @@ class UpdateController extends Controller
                 } elseif ($gateway == 'paystack') {
                     $additional_data = [
                         'status' => $decoded_value['status'],
-                        'callback_url' => $decoded_value['paymentUrl'],
                         'public_key' => $decoded_value['publicKey'],
                         'secret_key' => $decoded_value['secretKey'],
                         'merchant_email' => $decoded_value['merchantEmail'],
