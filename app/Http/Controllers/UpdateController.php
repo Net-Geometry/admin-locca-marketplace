@@ -139,12 +139,15 @@ class UpdateController extends Controller
                     ->where('key_name', 'paystack')
                     ->first();
 
-                if ($data_values && $data_values->additional_data !== null) {
-                    $additional_data = json_decode($data_values->additional_data, true);
 
-                    if (isset($additional_data['callback_url'])) {
+                if ($data_values) {
+                    $additional_data = $data_values->live_values;
+
+                    if (array_key_exists("callback_url",$additional_data)) {
                         unset($additional_data['callback_url']);
-                        $data_values->update(['additional_data' => json_encode($additional_data)]);
+                        $data_values->live_values = $additional_data;
+                        $data_values->test_values = $additional_data;
+                        $data_values->save();
                     }
                 }
             }
