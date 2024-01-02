@@ -3795,4 +3795,8 @@
   'default_meta_description_is_required' => 'Default meta description is required',
   'meta_data_updated' => 'Meta data updated',
   'Currently,_there_are_no_payment_options_available._Please_contact_admin_regarding_any_payment_process_or_queries.' => 'Currently  there are no payment options available. Please contact admin regarding any payment process or queries.',
+  'youtube_video_url' => 'Youtube video url',
+  'YouTube_Video_URL' => 'YouTube Video URL',
+  'Enter_YouTube_URL' => 'Enter YouTube URL',
+  'Enter_YouTube_Video_URL' => 'Enter YouTube Video URL',
 );

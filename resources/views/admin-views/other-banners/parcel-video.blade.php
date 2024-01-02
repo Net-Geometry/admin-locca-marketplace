@@ -116,15 +116,15 @@
                                             <label class="form-check form--check mr-2 mr-md-4">
                                                 <input class="form-check-input" type="radio" value="video" name="banner_type" {{ $banner_type ? ($banner_type->value == 'video' ? 'checked' : '') : '' }}>
                                                 <span class="form-check-label">
-                                                    {{translate('video_url')}}
+                                                    {{translate('YouTube_Video_URL')}}
                                                 </span>
                                             </label>
-                                            <label class="form-check form--check mr-2 mr-md-4">
-                                                <input class="form-check-input" type="radio" value="video_content" name="banner_type" {{ $banner_type ? ($banner_type->value == 'video_content' ? 'checked' : '') : '' }}>
-                                                <span class="form-check-label">
-                                                    {{translate('video')}}
-                                                </span>
-                                            </label>
+{{--                                            <label class="form-check form--check mr-2 mr-md-4">--}}
+{{--                                                <input class="form-check-input" type="radio" value="video_content" name="banner_type" {{ $banner_type ? ($banner_type->value == 'video_content' ? 'checked' : '') : '' }}>--}}
+{{--                                                <span class="form-check-label">--}}
+{{--                                                    {{translate('video')}}--}}
+{{--                                                </span>--}}
+{{--                                            </label>--}}
                                             <label class="form-check form--check mr-2 mr-md-4">
                                                 <input class="form-check-input" type="radio" value="image" name="banner_type" {{ $banner_type ? ($banner_type->value == 'image' ? 'checked' : '') : '' }}>
                                                 <span class="form-check-label">
@@ -144,7 +144,7 @@
                                                 asset('storage/app/public/promotional_banner').'/'.$banner_image->value ?? '',
                                                 asset('/public/assets/admin/img/upload-placeholder.png'),
                                                 'promotional_banner/'
-                                            ) }}" 
+                                            ) }}"
                                             data-onerror-image="{{ asset('/public/assets/admin/img/upload-placeholder.png') }}" alt="">
                                         </div>
 
@@ -225,9 +225,9 @@
 
                                                 </div>
                                 <div class="col-12 {{ $banner_type ? ($banner_type->value == 'video' ? '' : 'd-none') : 'd-none' }}" id="video">
-                                    <label for="banner_video" class="form-label">{{ translate('Video_Link') }}</label>
+                                    <label for="banner_video" class="form-label">{{ translate('YouTube_Video_URL') }}</label>
                                     <input type="url" id="banner_video" name="banner_video" value="{{ $banner_video?->value }}" class="form-control"
-                                        placeholder="{{ translate('messages.Enter_URL') }}">
+                                        placeholder="{{ translate('messages.Enter_YouTube_Video_URL') }}">
                                 </div>
                             </div>
                             <div class="btn--container justify-content-end mt-3">
