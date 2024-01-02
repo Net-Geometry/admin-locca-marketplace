@@ -3799,4 +3799,5 @@
   'YouTube_Video_URL' => 'YouTube Video URL',
   'Enter_YouTube_URL' => 'Enter YouTube URL',
   'Enter_YouTube_Video_URL' => 'Enter YouTube Video URL',
+  'Video_format_:_MP4' => 'Video format : MP4',
 );

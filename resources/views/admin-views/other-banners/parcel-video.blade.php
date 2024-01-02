@@ -119,12 +119,12 @@
                                                     {{translate('YouTube_Video_URL')}}
                                                 </span>
                                             </label>
-{{--                                            <label class="form-check form--check mr-2 mr-md-4">--}}
-{{--                                                <input class="form-check-input" type="radio" value="video_content" name="banner_type" {{ $banner_type ? ($banner_type->value == 'video_content' ? 'checked' : '') : '' }}>--}}
-{{--                                                <span class="form-check-label">--}}
-{{--                                                    {{translate('video')}}--}}
-{{--                                                </span>--}}
-{{--                                            </label>--}}
+                                            <label class="form-check form--check mr-2 mr-md-4">
+                                                <input class="form-check-input" type="radio" value="video_content" name="banner_type" {{ $banner_type ? ($banner_type->value == 'video_content' ? 'checked' : '') : '' }}>
+                                                <span class="form-check-label">
+                                                    {{translate('video')}}
+                                                </span>
+                                            </label>
                                             <label class="form-check form--check mr-2 mr-md-4">
                                                 <input class="form-check-input" type="radio" value="image" name="banner_type" {{ $banner_type ? ($banner_type->value == 'image' ? 'checked' : '') : '' }}>
                                                 <span class="form-check-label">
@@ -174,56 +174,56 @@
                                     </div>
                                 </div>
 
-{{--                                <div class="col-12 {{ $banner_type ? ($banner_type->value == 'video_content' ? '' : 'd-none') : '' }}" id="video_content">--}}
+                                <div class="col-12 {{ $banner_type ? ($banner_type->value == 'video_content' ? '' : 'd-none') : '' }}" id="video_content">
 
-{{--                                                    <div class="row">--}}
-{{--                                                        <div class="col-6">--}}
-{{--                                                            <h4 class="mb-3 text-capitalize d-flex align-items-center">{{translate('upload_video')}}</h4>--}}
-{{--                                                            <div class="uploadDnD">--}}
-{{--                                                                <div class="form-group inputDnD">--}}
-{{--                                                                    <input type="file" name="banner_video_content" class="form-control-file text--primary font-weight-bold read-url"--}}
-{{--                                                                    id="inputFile" accept=".mp4,.webm,.ogg,.avi,.flv,.mov,.3gp,.mkv,.mpeg" data-title="{{ translate('Browse_file"') }}">--}}
-{{--                                                                </div>--}}
-{{--                                                            </div>--}}
+                                                    <div class="row">
+                                                        <div class="col-6">
+                                                            <h4 class="mb-3 text-capitalize d-flex align-items-center">{{translate('upload_video')}}</h4>
+                                                            <div class="uploadDnD">
+                                                                <div class="form-group inputDnD">
+                                                                    <input type="file" name="banner_video_content" class="form-control-file text--primary font-weight-bold read-url"
+                                                                    id="inputFile" accept=".mp4" data-title="{{ translate('Browse_file"') }}">
+                                                                </div>
+                                                            </div>
 
-{{--                                                            <div class="mt-5 card px-3 py-2 d--none" id="progress-bar">--}}
-{{--                                                                <div class="d-flex flex-wrap align-items-center gap-3">--}}
-{{--                                                                    <div class="">--}}
-{{--                                                                        <img width="24" src="{{asset('/public/assets/admin/img/zip.png')}}" alt="">--}}
-{{--                                                                    </div>--}}
-{{--                                                                    <div class="flex-grow-1 text-start">--}}
-{{--                                                                        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">--}}
-{{--                                                                            <span id="name_of_file" class="text-truncate fz-12"></span>--}}
-{{--                                                                            <span class="text-muted fz-12" id="progress-label">0%</span>--}}
-{{--                                                                        </div>--}}
-{{--                                                                        <progress id="uploadProgress" class="w-100" value="0" max="100"></progress>--}}
-{{--                                                                    </div>--}}
-{{--                                                                </div>--}}
-{{--                                                            </div>--}}
+                                                            <div class="mt-5 card px-3 py-2 d--none" id="progress-bar">
+                                                                <div class="d-flex flex-wrap align-items-center gap-3">
+                                                                    <div class="">
+                                                                        <img width="24" src="{{asset('/public/assets/admin/img/zip.png')}}" alt="">
+                                                                    </div>
+                                                                    <div class="flex-grow-1 text-start">
+                                                                        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
+                                                                            <span id="name_of_file" class="text-truncate fz-12"></span>
+                                                                            <span class="text-muted fz-12" id="progress-label">0%</span>
+                                                                        </div>
+                                                                        <progress id="uploadProgress" class="w-100" value="0" max="100"></progress>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
 
-{{--                                                            <div class="text-center mt-5">--}}
-{{--                                                                <h3 class="form-label d-block mt-2">--}}
-{{--                                                                {{translate('Video_Size_Max_5MB')}}--}}
-{{--                                                            </h3>--}}
-{{--                                                            <p>{{translate('Video_format_:_MP4_,_WebM_,_Ogg')}}</p>--}}
+                                                            <div class="text-center mt-5">
+                                                                <h3 class="form-label d-block mt-2">
+                                                                {{translate('Video_Size_Max_5MB')}}
+                                                            </h3>
+                                                            <p>{{translate('Video_format_:_MP4')}}</p>
 
-{{--                                                            </div>--}}
+                                                            </div>
 
-{{--                                                        </div>--}}
-{{--                                                        @if ($banner_video_content?->value)--}}
+                                                        </div>
+                                                        @if ($banner_video_content?->value)
 
-{{--                                                        <div class="col-6">--}}
-{{--                                                            <h4 class="mb-3  ml-4 text-capitalize d-flex align-items-center">{{translate('Video')}}</h4>--}}
-{{--                                                            @php($extention =explode('.', $banner_video_content?->value))--}}
-{{--                                                            <video width="320" height="140" controls>--}}
-{{--                                                                <source src="{{asset('storage/app/public/promotional_banner/video')}}/{{$banner_video_content?->value}}" type="video/{{ data_get($extention,1,'mp4') }}">--}}
-{{--                                                            </video>--}}
-{{--                                                        </div>--}}
-{{--                                                        @endif--}}
+                                                        <div class="col-6">
+                                                            <h4 class="mb-3  ml-4 text-capitalize d-flex align-items-center">{{translate('Video')}}</h4>
+                                                            @php($extention =explode('.', $banner_video_content?->value))
+                                                            <video width="320" height="140" controls>
+                                                                <source src="{{asset('storage/app/public/promotional_banner/video')}}/{{$banner_video_content?->value}}" type="video/{{ data_get($extention,1,'mp4') }}">
+                                                            </video>
+                                                        </div>
+                                                        @endif
 
-{{--                                                            </div>--}}
+                                                            </div>
 
-{{--                                                </div>--}}
+                                                </div>
                                 <div class="col-12 {{ $banner_type ? ($banner_type->value == 'video' ? '' : 'd-none') : 'd-none' }}" id="video">
                                     <label for="banner_video" class="form-label">{{ translate('YouTube_Video_URL') }}</label>
                                     <input type="url" id="banner_video" name="banner_video" value="{{ $banner_video?->value }}" class="form-control"
