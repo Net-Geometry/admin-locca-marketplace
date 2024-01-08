@@ -204,6 +204,41 @@
         }
     });
 
+    $('#add_transaction').on('submit', function (e) {
+        e.preventDefault();
+        var formData = new FormData(this);
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.post({
+            url: '{{route('admin.transactions.provide-deliveryman-earnings.store')}}',
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                if (data.errors) {
+                    for (var i = 0; i < data.errors.length; i++) {
+                        toastr.error(data.errors[i].message, {
+                            CloseButton: true,
+                            ProgressBar: true
+                        });
+                    }
+                } else {
+                    toastr.success('{{translate('messages.transaction_saved')}}', {
+                        CloseButton: true,
+                        ProgressBar: true
+                    });
+                    setTimeout(function () {
+                        location.href = '{{route('admin.transactions.provide-deliveryman-earnings.index')}}';
+                    }, 2000);
+                }
+            }
+        });
+    });
+
     function getAccountData(route, data_id, type)
     {
         $.get({
