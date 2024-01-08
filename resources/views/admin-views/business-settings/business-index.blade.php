@@ -1231,6 +1231,9 @@
 @endsection
 
 @push('script_2')
+    <script
+        src="https://maps.googleapis.com/maps/api/js?key={{ \App\Models\BusinessSetting::where('key', 'map_api_key')->first()->value }}&libraries=places&v=3.45.8">
+    </script>
     <script>
         "use strict";
         $(document).on('ready', function() {
@@ -1303,14 +1306,9 @@
         $("#favIconUpload").change(function() {
             readURL(this, 'iconViewer');
         });
-    </script>
-    <script
-        src="https://maps.googleapis.com/maps/api/js?key={{ \App\Models\BusinessSetting::where('key', 'map_api_key')->first()->value }}&libraries=places&v=3.45.8">
-    </script>
-    <script>
-        "use strict";
+
         function initAutocomplete() {
-            let myLatLng = {
+            var myLatLng = {
                 lat: {{ $default_location ? $default_location['lat'] : '-33.8688' }},
                 lng: {{ $default_location ? $default_location['lng'] : '151.2195' }}
             };
@@ -1323,17 +1321,17 @@
                 mapTypeId: "roadmap",
             });
 
-            let marker = new google.maps.Marker({
+            var marker = new google.maps.Marker({
                 position: myLatLng,
                 map: map,
             });
 
             marker.setMap(map);
-            let geocoder = geocoder = new google.maps.Geocoder();
+            var geocoder = geocoder = new google.maps.Geocoder();
             google.maps.event.addListener(map, 'click', function(mapsMouseEvent) {
                 var coordinates = JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2);
                 var coordinates = JSON.parse(coordinates);
-                let latlng = new google.maps.LatLng(coordinates['lat'], coordinates['lng']);
+                var latlng = new google.maps.LatLng(coordinates['lat'], coordinates['lng']);
                 marker.setPosition(latlng);
                 map.panTo(latlng);
 
@@ -1344,7 +1342,7 @@
                 geocoder.geocode({
                     'latLng': latlng
                 }, function(results, status) {
-                    if (status === google.maps.GeocoderStatus.OK) {
+                    if (status == google.maps.GeocoderStatus.OK) {
                         if (results[1]) {
                             document.getElementById('address').innerHtml = results[1].formatted_address;
                         }
@@ -1365,7 +1363,7 @@
             searchBox.addListener("places_changed", () => {
                 const places = searchBox.getPlaces();
 
-                if (places.length === 0) {
+                if (places.length == 0) {
                     return;
                 }
                 // Clear out the old markers.
@@ -1380,7 +1378,7 @@
                         console.log("Returned place contains no geometry");
                         return;
                     }
-                    let mrkr = new google.maps.Marker({
+                    var mrkr = new google.maps.Marker({
                         map,
                         title: place.name,
                         position: place.geometry.location,
@@ -1402,6 +1400,7 @@
                 map.fitBounds(bounds);
             });
         };
+
         $(document).on('ready', function() {
             initAutocomplete();
         });
