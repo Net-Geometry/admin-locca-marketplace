@@ -176,40 +176,40 @@
             </div>
         </div>
         @if($store->vendor->status)
-        <div class="col-lg-6">
-            <div class="card h-100">
-                <div class="card-header">
-                    <h5 class="card-title m-0 d-flex align-items-center">
-                        <span class="card-header-icon mr-2">
-                            <i class="tio-museum"></i>
-                        </span>
-                        <span class="ml-1">{{translate('messages.bank_info')}}</span>
-                    </h5>
-                </div>
-                <div class="card-body d-flex flex-column justify-content-center">
-                    <ul class="list-unstyled list-unstyled-py-3 text-dark">
-                        @if($store->vendor->bank_name)
-                        <li class="pb-1 pt-1">
-                            <strong class="text--title">{{translate('messages.bank_name')}}:</strong> {{$store->vendor->bank_name ? $store->vendor->bank_name : 'No Data found'}}
-                        </li>
-                        <li class="pb-1 pt-1">
-                            <strong class="text--title">{{translate('messages.branch')}}  :</strong> {{$store->vendor->branch ? $store->vendor->branch : 'No Data found'}}
-                        </li>
-                        <li class="pb-1 pt-1">
-                            <strong class="text--title">{{translate('messages.holder_name')}} :</strong> {{$store->vendor->holder_name ? $store->vendor->holder_name : 'No Data found'}}
-                        </li>
-                        <li class="pb-1 pt-1">
-                            <strong class="text--title">{{translate('messages.account_no')}}  :</strong> {{$store->vendor->account_no ? $store->vendor->account_no : 'No Data found'}}
-                        </li>
-                        @else
-                        <li class="my-auto">
-                            <div class="text-center card-subtitle">{{ translate('messages.No Data found') }}</div>
-                        </li>
-                        @endif
-                    </ul>
-                </div>
-            </div>
-        </div>
+{{--        <div class="col-lg-6">--}}
+{{--            <div class="card h-100">--}}
+{{--                <div class="card-header">--}}
+{{--                    <h5 class="card-title m-0 d-flex align-items-center">--}}
+{{--                        <span class="card-header-icon mr-2">--}}
+{{--                            <i class="tio-museum"></i>--}}
+{{--                        </span>--}}
+{{--                        <span class="ml-1">{{translate('messages.bank_info')}}</span>--}}
+{{--                    </h5>--}}
+{{--                </div>--}}
+{{--                <div class="card-body d-flex flex-column justify-content-center">--}}
+{{--                    <ul class="list-unstyled list-unstyled-py-3 text-dark">--}}
+{{--                        @if($store->vendor->bank_name)--}}
+{{--                        <li class="pb-1 pt-1">--}}
+{{--                            <strong class="text--title">{{translate('messages.bank_name')}}:</strong> {{$store->vendor->bank_name ? $store->vendor->bank_name : 'No Data found'}}--}}
+{{--                        </li>--}}
+{{--                        <li class="pb-1 pt-1">--}}
+{{--                            <strong class="text--title">{{translate('messages.branch')}}  :</strong> {{$store->vendor->branch ? $store->vendor->branch : 'No Data found'}}--}}
+{{--                        </li>--}}
+{{--                        <li class="pb-1 pt-1">--}}
+{{--                            <strong class="text--title">{{translate('messages.holder_name')}} :</strong> {{$store->vendor->holder_name ? $store->vendor->holder_name : 'No Data found'}}--}}
+{{--                        </li>--}}
+{{--                        <li class="pb-1 pt-1">--}}
+{{--                            <strong class="text--title">{{translate('messages.account_no')}}  :</strong> {{$store->vendor->account_no ? $store->vendor->account_no : 'No Data found'}}--}}
+{{--                        </li>--}}
+{{--                        @else--}}
+{{--                        <li class="my-auto">--}}
+{{--                            <div class="text-center card-subtitle">{{ translate('messages.No Data found') }}</div>--}}
+{{--                        </li>--}}
+{{--                        @endif--}}
+{{--                    </ul>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--        </div>--}}
         @endif
     </div>
 </div>
