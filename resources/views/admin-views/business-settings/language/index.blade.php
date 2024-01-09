@@ -122,7 +122,7 @@
 
                                                 @endif
                                             @endif
-                                            <a class="btn btn-sm btn--warning btn-outline-warning action-btn call-demo-lang"
+                                            <a class="btn btn-sm btn--warning btn-outline-warning action-btn {{( ($key == 0 ||  $key == 1 ) && env('APP_MODE') == 'demo') ? 'call-demo-lang' : ''}}"
                                                 data-key="{{ $key }}"
                                                 data-env-mode="{{ env('APP_MODE') }}"
                                                 href="{{( ($key == 0 ||  $key == 1 ) && env('APP_MODE') == 'demo') ? 'javascript:' :route('admin.business-settings.language.translate',[$data['code']]) }}">
@@ -508,7 +508,7 @@
                                                 </option>
                                                 <option
                                                     value="rtl" {{isset($data['direction'])?$data['direction']=='rtl'?'selected':'':''}}>
-                                                     {{translate('LTR')}}
+                                                     {{translate('RTL')}}
                                                 </option>
                                             </select>
                                         </div>
