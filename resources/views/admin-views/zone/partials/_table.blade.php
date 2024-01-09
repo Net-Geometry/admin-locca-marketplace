@@ -1,6 +1,7 @@
 
 @php($config=\App\CentralLogics\Helpers::get_business_settings('cash_on_delivery'))
 @php($digital_payment=\App\CentralLogics\Helpers::get_business_settings('digital_payment'))
+@php($offline_payment=\App\CentralLogics\Helpers::get_business_settings('offline_payment_status'))
 @php($non_mod = 0)
 @foreach($zones as $key=>$zone)
 @php($non_mod = (count($zone->modules)>0 && $non_mod == 0) ? $non_mod:$non_mod+1 )
@@ -8,9 +9,9 @@
         <td>{{$key+1}}</td>
         <td>{{$zone->id}}</td>
         <td>
-                                    <span class="d-block font-size-sm text-body">
-                                        {{$zone['name']}}
-                                    </span>
+            <span class="d-block font-size-sm text-body">
+                {{$zone['name']}}
+            </span>
         </td>
         <td>{{$zone->stores_count}}</td>
         <td>{{$zone->deliverymen_count}}</td>
@@ -27,8 +28,8 @@
                        data-text-off="<p>{{translate('If_you_deactivate_this_zone,_Customers_Will_NOT_see_all_stores_&_products_available_under_this_Zone_from_the_Customer_App_&_Website.')}}</p>"
                        id="status-{{$zone['id']}}" {{$zone->status?'checked':''}}>
                 <span class="toggle-switch-label">
-                                                <span class="toggle-switch-indicator"></span>
-                                            </span>
+                        <span class="toggle-switch-indicator"></span>
+                    </span>
             </label>
             <form action="{{route('admin.business-settings.zone.status',[$zone['id'],$zone->status?0:1])}}" method="get" id="status-{{$zone['id']}}_form">
             </form>
@@ -38,8 +39,8 @@
                 <label class="toggle-switch toggle-switch-sm" for="digital_paymentCheckbox{{$zone->id}}">
                     <input type="checkbox" data-id="digital_payment-{{$zone['id']}}" data-title="{{ $zone->digital_payment?translate('Want_to_disable_‘Digital_Payment’?'):translate('Want_to_enable_‘Digital_Payment’?') }}" data-message="{{ $zone->digital_payment? translate('If_yes,_the_digital_payment_option_will_be_hidden_during_checkout.'):translate('If_yes,_Customers_can_choose_the_‘Digital_Payment’_option_during_checkout.')}}" class="toggle-switch-input status_form_alert" id="digital_paymentCheckbox{{$zone->id}}" {{$zone->digital_payment?'checked':''}}>
                     <span class="toggle-switch-label">
-                                                <span class="toggle-switch-indicator"></span>
-                                            </span>
+                        <span class="toggle-switch-indicator"></span>
+                    </span>
                 </label>
                 <form action="{{route('admin.business-settings.zone.digital-payment',[$zone['id'],$zone->digital_payment?0:1])}}" method="get" id="digital_payment-{{$zone['id']}}">
                 </form>
@@ -74,7 +75,6 @@
                 <a class="btn action-btn btn--primary btn-outline-primary"
                    href="{{route('admin.business-settings.zone.edit',[$zone['id']])}}" title="{{translate('messages.edit_zone')}}"><i class="tio-edit"></i>
                 </a>
-                <!-- <div class="popover-wrapper active"> add active class to show -->
                 <div class="popover-wrapper {{ $non_mod == 1 ? 'active':'' }}">
                     <a class="btn active action-btn btn--warning btn-outline-warning" href="{{route('admin.business-settings.zone.module-setup',[$zone['id']])}}">
                         <i class="tio-settings"></i>
@@ -83,7 +83,6 @@
                         <div class="arrow"></div>
                         <h3 class="popover-header d-flex justify-content-between">
                             <span>{{ translate('messages.Important!') }}</span>
-                            {{-- <span class="tio-clear"></span> --}}
                         </h3>
                         <div class="popover-body">
                             {{ translate('The_Business_Zone_will_NOT_work_if_you_don’t_select_your_business_module_&_payment_method.') }}

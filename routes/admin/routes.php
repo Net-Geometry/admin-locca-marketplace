@@ -147,8 +147,8 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                 Route::get(Zone::EXPORT[URI].'/{type}', [ZoneController::class, 'exportList'])->name('export');
                 Route::get(Zone::STATUS[URI].'/{id}/{status}', [ZoneController::class, 'updateStatus'])->name('status');
                 Route::get(Zone::ZONE_FILTER[URI].'/{id}', [ZoneController::class, 'zoneFilter'])->name('zone-filter');
-                Route::get(Zone::LATEST_MODULE_SETUP[URI].'/{id?}', [ZoneController::class, 'getLatestModuleSetupView'])->name('go-module-setup');
-                Route::get(Zone::MODULE_SETUP[URI], [ZoneController::class, 'getModuleSetupView'])->name('module-setup');
+                Route::get(Zone::LATEST_MODULE_SETUP[URI], [ZoneController::class, 'getLatestModuleSetupView'])->name('go-module-setup');
+                Route::get(Zone::MODULE_SETUP[URI].'/{id?}', [ZoneController::class, 'getModuleSetupView'])->name('module-setup');
                 Route::post(Zone::MODULE_UPDATE[URI].'/{id}', [ZoneController::class, 'updateModuleSetup'])->name('module-update');
                 Route::get(Zone::INSTRUCTION[URI], [ZoneController::class, 'getInstruction'])->name('instruction');
                 Route::get(Zone::DIGITAL_PAYMENT[URI].'/{id}/{digital_payment}', [ZoneController::class, 'updateDigitalPayment'])->name('digital-payment');

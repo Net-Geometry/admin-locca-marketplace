@@ -3800,4 +3800,6 @@
   'Enter_YouTube_URL' => 'Enter YouTube URL',
   'Enter_YouTube_Video_URL' => 'Enter YouTube Video URL',
   'Video_format_:_MP4' => 'Video format : MP4',
+  'business_module_data_is_required' => 'Business module data is required',
+  'zone_deleted_successfully' => 'Zone deleted successfully',
 );

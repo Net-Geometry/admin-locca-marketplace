@@ -48,15 +48,23 @@ class ZoneController extends BaseController
         return view(ZoneViewPath::INDEX[VIEW], compact('zones','language','defaultLang'));
     }
 
-    public function add(ZoneAddRequest $request): RedirectResponse
+    public function add(ZoneAddRequest $request): JsonResponse
     {
         $zoneId = $this->zoneRepo->getAll()->count()+1;
         $zone = $this->zoneRepo->add(data: $this->zoneService->getAddData(request: $request, zoneId: $zoneId));
 
         $this->translationRepo->addByModel(request: $request, model: $zone, modelPath: 'App\Models\Zone', attribute: 'name');
 
-        Toastr::success(translate('messages.zone_added_successfully'));
-        return back();
+        $zones = $this->zoneRepo->getListWhere(
+            relations: ['stores','deliverymen'],
+            dataLimit: config('default_pagination')
+        );
+
+        return response()->json([
+            'view'=>view('admin-views.zone.partials._table',compact('zones'))->render(),
+            'id'=>$zone->id,
+            'total'=>$zones->count()
+        ]);
     }
 
     public function getUpdateView(string|int $id): View|RedirectResponse
