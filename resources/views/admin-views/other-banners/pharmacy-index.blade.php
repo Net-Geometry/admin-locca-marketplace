@@ -129,8 +129,8 @@
                                             <img class="onerror-image"
 
                                             src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
-                                                $basic_section_nearby->value ?? '',
-                                                asset('storage/app/public/promotional_banner').'/'.$basic_section_nearby->value ?? '',
+                                                $basic_section_nearby?->value ?? '',
+                                                asset('storage/app/public/promotional_banner').'/'.$basic_section_nearby?->value ?? '',
                                                 asset('/public/assets/admin/img/upload-placeholder.png'),
                                                 'promotional_banner/'
                                             ) }}"
