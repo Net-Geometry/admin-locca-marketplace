@@ -47,8 +47,8 @@
                                             <img class="onerror-image"
 
                                             src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
-                                                $bottom_section_banner->value ?? '',
-                                                asset('storage/app/public/promotional_banner').'/'.$bottom_section_banner->value ?? '',
+                                                $bottom_section_banner?->value ?? '',
+                                                asset('storage/app/public/promotional_banner').'/'.$bottom_section_banner?->value ?? '',
                                                 asset('/public/assets/admin/img/upload-placeholder.png'),
                                                 'promotional_banner/'
                                             ) }}" data-onerror-image="{{asset('/public/assets/admin/img/upload-placeholder.png')}}" alt="">
