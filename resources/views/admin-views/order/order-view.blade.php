@@ -2469,42 +2469,54 @@
                 ProgressBar: true
             });
         }
-            $('.canceled-status').on('click', function (){
-            Swal.fire({
-                title: '{{ translate('messages.are_you_sure') }}',
-                text: '{{ translate('messages.Change status to canceled ?') }}',
-                type: 'warning',
-                html:
-                `   <select class="form-control js-select2-custom mx-1" name="reason" id="reason">
+        $(document).ready(function () {
+                // Event handler for 'canceled-status' click
+                $('.canceled-status').on('click', function () {
+                    // Assuming $reasons is properly populated and contains reasons
+
+                    // Create a select dropdown with options using map()
+                    var selectOptions = '';
                     @foreach ($reasons as $r)
-                        <option value="{{ $r->reason }}">
-                            {{ $r->reason }}
-                        </option>
+                        selectOptions += `<option value="{{ $r->reason }}">{{ $r->reason }}</option>`;
                     @endforeach
 
-                    </select>`,
-                showCancelButton: true,
-                cancelButtonColor: 'default',
-                confirmButtonColor: '#FC6A57',
-                cancelButtonText: '{{ translate('messages.no') }}',
-                confirmButtonText: '{{ translate('messages.yes') }}',
-                reverseButtons: true,
-                onOpen: function () {
-                        $('.js-select2-custom').select2({
-                            minimumResultsForSearch: 5,
-                            width: '100%',
-                            placeholder: "Select Reason",
-                            language: "en",
-                        });
-                    }
-            }).then((result) => {
-                if (result.value) {
-                    // console.log(result);
-                    var reason = document.getElementById('reason').value;
-                    location.href = '{!! route('admin.order.status', ['id' => $order['id'],'order_status' => 'canceled']) !!}&reason='+reason,'{{ translate('Change status to canceled ?') }}';
-                }
-            })
-        })
+                    // Generate the Swal modal with the select dropdown
+                    Swal.fire({
+                        title: '{{ translate('messages.are_you_sure') }}',
+                        text: '{{ translate('messages.Change status to canceled ?') }}',
+                        type: 'warning',
+                        html: `<select class="form-control js-select2-custom mx-1" name="reason" id="reason">${selectOptions}</select>`,
+                        showCancelButton: true,
+                        cancelButtonColor: 'default',
+                        confirmButtonColor: '#FC6A57',
+                        cancelButtonText: '{{ translate('messages.no') }}',
+                        confirmButtonText: '{{ translate('messages.yes') }}',
+                        reverseButtons: true,
+                        onOpen: function () {
+                            // Initialize select2 after the modal is opened
+                            $('.js-select2-custom').select2({
+                                minimumResultsForSearch: 5,
+                                width: '100%',
+                                placeholder: "Select Reason",
+                                language: "en",
+                            });
+                        }
+                    }).then((result) => {
+                        if (result.value) {
+                            // On confirmation, get the selected reason and redirect
+                            var reason = $('#reason').val();
+                            var orderID = '{{ $order['id'] }}';
+                            var statusRoute = '{{ route('admin.order.status') }}';
+
+                            // Redirect with order ID, status, and reason
+                            var redirectURL = `${statusRoute}?id=${orderID}&order_status=canceled&reason=${reason}`;
+
+                            // Redirect the user to the generated URL
+                            window.location.href = redirectURL;
+                        }
+                    });
+                });
+            });
     </script>
     <script>
         var deliveryMan = <?php echo json_encode($deliveryMen); ?>;

@@ -153,12 +153,14 @@ $(document).on('click', '.redirect-url', function () {
     location.href=$(this).data('url');
 });
 
-function readUrl(input) {
+function readURL(input, viewer='viewer') {
     if (input.files && input.files[0]) {
-        let reader = new FileReader();
-        reader.onload = function (e) {
-            $('#viewer').attr('src', e.target.result);
+        var reader = new FileReader();
+
+        reader.onload = function(e) {
+            $('#' + viewer).attr('src', e.target.result);
         }
+
         reader.readAsDataURL(input.files[0]);
     }
 }
