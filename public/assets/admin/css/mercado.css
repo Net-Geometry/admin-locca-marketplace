@@ -398,3 +398,17 @@ footer p a:hover {
 .container__result {
     display: none;
 }
+
+.d--none {
+     display: none;
+ }
+
+
+.checkout-cancel{
+    background-color: #dc3545!important;
+    color: white;
+}
+
+.checkout-submit{
+    color: white;
+}
