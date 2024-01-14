@@ -54,6 +54,7 @@ class MercadoPagoController extends Controller
         $payment->installments = (int)$request['installments'];
         $payment->payment_method_id = $request['paymentMethodId'];
         $payment->issuer_id = (int)$request['issuer'];
+
         $payer = new Payer();
         $payer->email = $request['payer']['email'];
         $payer->identification = array(
@@ -62,23 +63,27 @@ class MercadoPagoController extends Controller
         );
         $payment->payer = $payer;
         $payment->save();
+
+        $response = array(
+            'status' => $payment->status,
+            'status_detail' => $payment->status_detail,
+            'id' => $payment->id
+        );
+
+        if($payment->error)
+        {
+            $response['error'] = $payment->error->message;
+        }
+
         if ($payment->status == 'approved') {
-            $this->paymentRequest::where(['id' => $request['payment_id']])->update([
-                'payment_method' => 'mercadopago',
-                'is_paid' => 1,
-                'transaction_id' => $payment->id,
-            ]);
-            $data = $this->paymentRequest::where(['id' => $request['payment_id']])->first();
-            if (isset($data) && function_exists($data->success_hook)) {
-                call_user_func($data->success_hook, $data);
+            $paymentInfo = $this->paymentRequest::where(['id' => $request['payment_id']])->first();
+            if($paymentInfo){
+                $paymentInfo->transaction_id = $payment->id;
+                $paymentInfo->save();
             }
-            return $this->payment_response($data,'success');
         }
-        $payment_data = $this->paymentRequest::where(['id' => $request['payment_id']])->first();
-        if (isset($payment_data) && function_exists($payment_data->failure_hook)) {
-            call_user_func($payment_data->failure_hook, $payment_data);
-        }
-        return $this->payment_response($payment_data,'fail');
+
+        return response()->json($response);
     }
     public function get_test_user(Request $request)
     {
@@ -93,5 +98,36 @@ class MercadoPagoController extends Controller
         ));
         curl_setopt($curl, CURLOPT_POSTFIELDS, '{"site_id":"MLA"}');
         $response = curl_exec($curl);
+    }
+
+    public function success(Request $request)
+    {
+        $paymentData = $this->paymentRequest::where(['id' => $request['payment_id']])->first();
+        if($paymentData->transaction_id != null){
+            $this->paymentRequest::where(['id' => $request['payment_id']])->update([
+                'payment_method' => 'mercadopago',
+                'is_paid' => 1,
+            ]);
+            $data = $this->paymentRequest::where(['id' => $request['payment_id']])->first();
+            if (isset($data) && function_exists($data->success_hook)) {
+                call_user_func($data->success_hook, $data);
+            }
+            return $this->payment_response($data, 'success');
+        }else{
+            $paymentData = $this->paymentRequest::where(['id' => $request['payment_id']])->first();
+            if (isset($paymentData) && function_exists($paymentData->failure_hook)) {
+                call_user_func($paymentData->failure_hook, $paymentData);
+            }
+            return $this->payment_response($paymentData, 'fail');
+        }
+    }
+
+    public function failed(Request $request)
+    {
+        $paymentData = $this->paymentRequest::where(['id' => $request['payment_id']])->first();
+        if (isset($paymentData) && function_exists($paymentData->failure_hook)) {
+            call_user_func($paymentData->failure_hook, $paymentData);
+        }
+        return $this->payment_response($paymentData, 'fail');
     }
 }

@@ -3806,4 +3806,11 @@
   'RTL' => 'RTL',
   '  +data[count].name +  ' => '  +data[count].name +  ',
   ' For ' => ' For ',
+  'Card Payment' => 'Card Payment',
+  'Amount to be paid' => 'Amount to be paid',
+  'Buyer Details' => 'Buyer Details',
+  'Card Details' => 'Card Details',
+  'Pay' => 'Pay',
+  'Loading, please wait' => 'Loading  please wait',
+  'Callback Url' => 'Callback Url',
 );
