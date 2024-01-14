@@ -14,7 +14,6 @@ use App\Models\BusinessSetting;
 use App\CentralLogics\SMS_module;
 use App\Models\PhoneVerification;
 use Illuminate\Support\Facades\DB;
-use App\Models\SubscriptionPackage;
 use Gregwar\Captcha\CaptchaBuilder;
 use Illuminate\Support\Facades\App;
 use App\Http\Controllers\Controller;
@@ -22,7 +21,6 @@ use App\Mail\AdminPasswordResetMail;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Crypt;
 use App\Mail\PasswordResetRequestMail;
 use Illuminate\Support\Facades\Cookie;
@@ -221,18 +219,18 @@ class LoginController extends Controller
                 'created_at' => now(),
             ]);
             $url = url('/').'/password-reset?token='.$token;
-            // try {
-            $mail_status = Helpers::get_mail_status('forget_password_mail_status_admin');
-            if(config('mail.status') && $admin['email'] && $mail_status == '1'){
-                Mail::to($admin['email'])->send(new AdminPasswordResetMail($url,$admin['f_name']));
-                session()->put('log_email_succ',1);
-            }else{
+            try {
+                $mail_status = Helpers::get_mail_status('forget_password_mail_status_admin');
+                if(config('mail.status') && $admin['email'] && $mail_status == '1'){
+                    Mail::to($admin['email'])->send(new AdminPasswordResetMail($url,$admin['f_name']));
+                    session()->put('log_email_succ',1);
+                }else{
+                    Toastr::error(translate('messages.Failed_to_send_mail'));
+                }
+            } catch (\Throwable $th) {
+                info($th->getMessage());
                 Toastr::error(translate('messages.Failed_to_send_mail'));
             }
-            // } catch (\Throwable $th) {
-            //     info($th->getMessage());
-            //     Toastr::error(translate('messages.Failed_to_send_mail'));
-            // }
             return back();
         }
         Toastr::error(translate('messages.credential_doesnt_match'));
@@ -256,9 +254,8 @@ class LoginController extends Controller
             ]);
             $url = url('/').'/password-reset?token='.$token;
 
-            $mail_status = Helpers::get_mail_status('forget_password_mail_status_store');
             try {
-                if(config('mail.status') && $vendor['email'] && $mail_status == '1'){
+                if(config('mail.status') && $vendor['email'] ){
                     Mail::to($vendor['email'])->send(new PasswordResetRequestMail($url,$vendor['f_name']));
                     session()->put('log_email_succ',1);
                 }else{

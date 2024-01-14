@@ -27,10 +27,7 @@ class ReactValid
                     return $next($request);
                 }
             }
-
-            return $next($request);
-
-            // return response()->json([],404);
+            return response()->json([],404);
         }
         // continue request
         return $next($request);
