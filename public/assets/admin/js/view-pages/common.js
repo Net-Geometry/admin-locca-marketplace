@@ -116,7 +116,7 @@
                 $("#" + lang + "-form").removeClass('d-none');
                 $("#" + lang + "-form1").removeClass('d-none');
                 $("#" + lang + "-form2").removeClass('d-none');
-                $("#" +lang+" -form3").removeClass('d-none');
+                $("#" +lang+"-form3").removeClass('d-none');
                 $("#" +lang+"-form4").removeClass('d-none');
                 if (lang === 'default') {
                     $(".default-form").removeClass('d-none');
