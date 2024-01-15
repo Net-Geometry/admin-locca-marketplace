@@ -188,6 +188,12 @@ class LoginController extends Controller
             return redirect()->route('admin.business-settings.business-setup');
         }
         if ($data == 'vendor') {
+            if ($request->role === 'vendor_employee')
+            {
+                $employee = VendorEmployee::where('email', $request->email)->first();
+                $employee->is_logged_in = 1;
+                $employee->save();
+            }
             return redirect()->route('vendor.dashboard');
         }
 
