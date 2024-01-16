@@ -131,7 +131,7 @@ class ItemController extends Controller
         })
         ->where(function ($q) use ($key) {
             foreach ($key as $value) {
-                $q->orWhere('name', 'like', "%{$value}%");
+                $q->orWhere('name', 'like', "%{$value}%")->orWhere('description', 'like', "%{$value}%");
             }
             $q->orWhereHas('translations',function($query)use($key){
                 $query->where(function($q)use($key){
@@ -147,6 +147,21 @@ class ItemController extends Controller
                     };
                 });
             });
+            $q->orWhereHas('category.parent',function($query)use($key){
+                $query->where(function($q)use($key){
+                    foreach ($key as $value) {
+                        $q->where('name', 'like', "%{$value}%");
+                    };
+                });
+            });
+            $q->orWhereHas('category',function($query)use($key){
+                $query->where(function($q)use($key){
+                    foreach ($key as $value) {
+                        $q->where('name', 'like', "%{$value}%");
+                    };
+                });
+            });
+
         })
 
         ->paginate($limit, ['*'], 'page', $offset);
@@ -592,7 +607,7 @@ class ItemController extends Controller
         })
         ->where(function ($q) use ($key) {
             foreach ($key as $value) {
-                $q->orWhere('name', 'like', "%{$value}%");
+                $q->orwhere('name', 'like', "%{$value}%")->orWhere('description', 'like', "%{$value}%");
             }
             $q->orWhereHas('translations',function($query)use($key){
                 $query->where(function($q)use($key){
@@ -605,6 +620,20 @@ class ItemController extends Controller
                 $query->where(function($q)use($key){
                     foreach ($key as $value) {
                         $q->where('tag', 'like', "%{$value}%");
+                    };
+                });
+            });
+            $q->orWhereHas('category.parent',function($query)use($key){
+                $query->where(function($q)use($key){
+                    foreach ($key as $value) {
+                        $q->where('name', 'like', "%{$value}%");
+                    };
+                });
+            });
+            $q->orWhereHas('category',function($query)use($key){
+                $query->where(function($q)use($key){
+                    foreach ($key as $value) {
+                        $q->where('name', 'like', "%{$value}%");
                     };
                 });
             });

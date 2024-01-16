@@ -193,7 +193,7 @@
                                             asset('storage/app/public/product').'/'.$product['image'] ?? '',
                                             asset('public/assets/admin/img/upload.png'),
                                             'product/'
-                                        ) }}" 
+                                        ) }}"
                                             data-onerror-image="{{ asset('public/assets/admin/img/upload.png') }}"
                                             alt="thumbnail" />
                                         <input type="file" name="image" id="customFileEg1"
@@ -971,7 +971,9 @@
 
      $('#category_id').on('change', function () {
          parent_category_id = $(this).val();
-         console.log(parent_category_id);
+        let subCategoriesSelect = $('#sub-categories');
+            subCategoriesSelect.empty();
+            subCategoriesSelect.append('<option value="" selected>{{ translate("messages.select_sub_category") }}</option>');
      });
 
      $('.foodModalClose').on('click',function (){
