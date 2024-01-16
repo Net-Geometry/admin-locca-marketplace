@@ -567,6 +567,7 @@ class ItemController extends Controller
             $product = Item::findOrFail($request->id);
             $product?->temp_product?->translations()?->delete();
             $product?->temp_product()?->delete();
+            $product?->carts()?->delete();
         }
 
 

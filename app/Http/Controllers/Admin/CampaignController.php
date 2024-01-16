@@ -736,6 +736,7 @@ class CampaignController extends Controller
             Storage::disk('public')->delete('campaign/' . $campaign->image);
         }
         $campaign->translations()->delete();
+        $campaign?->carts()?->delete();
         $campaign->delete();
         Toastr::success(translate('messages.campaign_deleted_successfully'));
         return back();
