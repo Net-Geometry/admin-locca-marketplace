@@ -97,20 +97,29 @@ class SocialAuthController extends Controller
                             ], 405);
                         }
 
+
+                        $notification_data = [
+                            'title' => translate('messages.Your_referral_code_is_used_by').' '.$fast_name.' '.$last_name,
+                            'description' => ' ' ,
+                            'order_id' => 1,
+                            'image' => '',
+                            'type' => 'order_status',
+                        ];
+
+                        if($referar_user?->cm_firebase_token){
+                            Helpers::send_push_notif_to_device($referar_user?->cm_firebase_token, $notification_data);
+                            DB::table('user_notifications')->insert([
+                                'data' => json_encode($notification_data),
+                                'user_id' => $referar_user?->id,
+                                'created_at' => now(),
+                                'updated_at' => now()
+                            ]);
+                        }
+
                         $user->ref_by =$referar_user->id;
                         $user->save();
 
-                        // $ref_code_exchange_amt = BusinessSetting::where('key', 'ref_earning_exchange_rate')->first()->value;
 
-                        // $refer_wallet_transaction = CustomerLogic::create_wallet_transaction($referar_user->id, $ref_code_exchange_amt, 'referrer', $user->phone);
-
-                        // try {
-                        //     if (config('mail.status')) {
-                        //         Mail::to($referar_user->email)->send(new \App\Mail\AddFundToWallet($refer_wallet_transaction));
-                        //     }
-                        // } catch (\Exception $ex) {
-                        //     info($ex->getMessage());
-                        // }
                     }
                 }
             } else {
@@ -245,20 +254,29 @@ class SocialAuthController extends Controller
                             ], 405);
                         }
 
+
+                        $notification_data = [
+                            'title' => translate('messages.Your_referral_code_is_used_by').' '.$fast_name.' '.$last_name,
+                            'description' => ' ' ,
+                            'order_id' => 1,
+                            'image' => '',
+                            'type' => 'order_status',
+                        ];
+
+                        if($referar_user?->cm_firebase_token){
+                            Helpers::send_push_notif_to_device($referar_user?->cm_firebase_token, $notification_data);
+                            DB::table('user_notifications')->insert([
+                                'data' => json_encode($notification_data),
+                                'user_id' => $referar_user?->id,
+                                'created_at' => now(),
+                                'updated_at' => now()
+                            ]);
+                        }
+
+
                         $user->ref_by =$referar_user->id;
                         $user->save();
 
-                        // $ref_code_exchange_amt = BusinessSetting::where('key', 'ref_earning_exchange_rate')->first()->value;
-
-                        // $refer_wallet_transaction = CustomerLogic::create_wallet_transaction($referar_user->id, $ref_code_exchange_amt, 'referrer', $user->phone);
-
-                        // try {
-                        //     if (config('mail.status')) {
-                        //         Mail::to($referar_user->email)->send(new \App\Mail\AddFundToWallet($refer_wallet_transaction));
-                        //     }
-                        // } catch (\Exception $ex) {
-                        //     info($ex->getMessage());
-                        // }
                     }
                 }
             } else {
@@ -380,7 +398,7 @@ class SocialAuthController extends Controller
                 $iat = strtotime('now');
                 $exp = strtotime('+60days');
                 $keyContent = file_get_contents('storage/app/public/apple-login/'.$apple_login->service_file);
-            
+
                 $token = JWT::encode([
                     'iss' => $teamId,
                     'iat' => $iat,
@@ -396,8 +414,8 @@ class SocialAuthController extends Controller
                     'client_id' => $sub,
                     'client_secret' => $token,
                 ]);
-                
-            
+
+
                 $claims = explode('.', $res['id_token'])[1];
                 $data = json_decode(base64_decode($claims),true);
             }
@@ -405,14 +423,14 @@ class SocialAuthController extends Controller
             return response()->json(['error' => 'wrong credential.','message'=>$e->getMessage()],403);
         }
         if(!isset($claims)){
-            
+
             if (strcmp($email, $data['email']) != 0 || (!isset($data['id']) && !isset($data['kid']))) {
                 return response()->json(['error' => translate('messages.email_does_not_match')],403);
             }
         }
 
         $user = User::where('email', $data['email'])->first();
-        
+
         if($request['medium'] == 'apple'){
                 try {
                     if(isset($user) == false )

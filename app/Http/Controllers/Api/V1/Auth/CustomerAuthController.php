@@ -241,6 +241,26 @@ class CustomerAuthController extends Controller
                 return response()->json(['errors'=>Helpers::error_formater('phone',translate('Referrer code already used'))], 203);
             }
 
+
+            $notification_data = [
+                'title' => translate('messages.Your_referral_code_is_used_by').' '.$request->f_name.' '.$request->l_name,
+                'description' => ' ' ,
+                'order_id' => 1,
+                'image' => '',
+                'type' => 'order_status',
+            ];
+
+            if($referar_user?->cm_firebase_token){
+                Helpers::send_push_notif_to_device($referar_user?->cm_firebase_token, $notification_data);
+                DB::table('user_notifications')->insert([
+                    'data' => json_encode($notification_data),
+                    'user_id' => $referar_user?->id,
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ]);
+            }
+
+
             $ref_by= $referar_user->id;
         }
 
