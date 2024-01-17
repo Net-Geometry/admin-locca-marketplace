@@ -126,6 +126,10 @@ class Order extends Model
     {
         return $this->hasOne(Refund::class, 'order_id');
     }
+    public function OrderReference()
+    {
+        return $this->hasOne(OrderReference::class, 'order_id');
+    }
 
     public function getModuleTypeAttribute()
     {

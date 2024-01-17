@@ -2,21 +2,23 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\CentralLogics\Helpers;
-use App\Http\Controllers\Controller;
-use App\Models\CustomerAddress;
-use App\Models\Order;
 use App\Models\Item;
-use App\Models\OrderDetail;
 use App\Models\User;
+use App\Models\Zone;
+use App\Models\Order;
+use App\Models\OrderDetail;
 use Illuminate\Http\Request;
+use App\CentralLogics\Helpers;
+use App\Models\OrderReference;
 use Illuminate\Support\Carbon;
+use App\Models\CustomerAddress;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use App\Models\Zone;
-use MatanYadaev\EloquentSpatial\Objects\Point;
 use Illuminate\Validation\Rules\Password;
+use MatanYadaev\EloquentSpatial\Objects\Point;
+
 class CustomerController extends Controller
 {
     public function address_list(Request $request)
@@ -342,5 +344,28 @@ class CustomerController extends Controller
         }
         $user->delete();
         return response()->json([]);
+    }
+
+    public function review_reminder(Request $request)  {
+        $order= Order::wherehas('OrderReference',function($query){
+            $query->where('is_reviewed',0)->where('is_review_canceled',0);
+        })
+        ->where('user_id',$request->user()->id)->where('order_status','delivered')->where('is_guest',0)->latest()->select('id')->first();
+        return response()->json($order?->id,200);
+    }
+
+    public function review_reminder_cancel(Request $request)  {
+        $validator = Validator::make($request->all(), [
+            'order_id' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        }
+
+        OrderReference::where('order_id' ,$request->order_id)->update([
+            'is_review_canceled' => 1
+        ]);
+        return response()->json('success',200);
     }
 }

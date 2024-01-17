@@ -317,6 +317,9 @@ Route::group(['namespace' => 'Api\V1', 'middleware'=>'localization'], function (
 
             Route::get('visit-again', 'OrderController@order_again');
 
+            Route::get('review-reminder', 'CustomerController@review_reminder');
+            Route::get('review-reminder-cancel', 'CustomerController@review_reminder_cancel');
+
         });
         Route::group(['prefix' => 'customer', 'middleware' => 'apiGuestCheck'], function () {
             Route::group(['prefix' => 'order'], function () {

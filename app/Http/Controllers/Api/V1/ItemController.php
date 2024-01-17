@@ -546,6 +546,10 @@ class ItemController extends Controller
             }
         }
 
+        $order?->OrderReference?->update([
+            'is_reviewed' => 1
+        ]);
+
         $review->user_id = $request->user()->id;
         $review->item_id = $request->item_id;
         $review->order_id = $request->order_id;
