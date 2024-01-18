@@ -3813,4 +3813,5 @@
   'Pay' => 'Pay',
   'Loading, please wait' => 'Loading  please wait',
   'Callback Url' => 'Callback Url',
+  'store_removed' => 'Store removed',
 );
