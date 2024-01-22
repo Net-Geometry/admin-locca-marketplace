@@ -350,8 +350,18 @@ class CustomerController extends Controller
         $order= Order::wherehas('OrderReference',function($query){
             $query->where('is_reviewed',0)->where('is_review_canceled',0);
         })
-        ->where('user_id',$request->user()->id)->where('order_status','delivered')->where('is_guest',0)->latest()->select('id')->first();
-        return response()->json(['order_id' => $order?->id ?? null],200);
+        ->where('user_id',$request->user()->id)->where('order_status','delivered')->where('is_guest',0)->latest()->select('id')->with('details:id,order_id,item_details')->first();
+
+        if($order?->details){
+            $images = collect($order->details)->pluck('item_details')->map(function ($itemDetail) {
+                $decodeditemDetail = json_decode($itemDetail, true);
+                return $decodeditemDetail['image'] ?? null;
+            })->filter();
+        }
+
+        return response()->json(['order_id' =>$order?->id ?? null,
+        'images'=> $images ?? []],200);
+
     }
 
     public function review_reminder_cancel(Request $request)  {
