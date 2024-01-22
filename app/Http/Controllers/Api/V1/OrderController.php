@@ -43,15 +43,17 @@ class OrderController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'order_id' => 'required',
-            'guest_id' => $request->user ? 'nullable' : 'required',
             'contact_number' => $request->user ? 'nullable' : 'required',
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
-        $user_id = $request->user ? $request->user->id : $request['guest_id'];
-        $order = Order::with(['store', 'delivery_man.rating', 'parcel_category', 'refund','payments'])->withCount('details')->where(['id' => $request['order_id'], 'user_id' => $user_id])
+        $user_id = $request?->user?->id ;
+        $order = Order::with(['store', 'delivery_man.rating', 'parcel_category', 'refund','payments'])->withCount('details')->where('id', $request['order_id'])
+        ->when($request->user, function ($query) use ($user_id) {
+            return $query->where('user_id', $user_id);
+        })
         ->when(!$request->user, function ($query) use ($request) {
             return $query->whereJsonContains('delivery_address->contact_person_number', $request['contact_number']);
         })
