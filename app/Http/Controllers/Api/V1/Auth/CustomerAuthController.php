@@ -247,7 +247,7 @@ class CustomerAuthController extends Controller
                 'description' => ' ' ,
                 'order_id' => 1,
                 'image' => '',
-                'type' => 'order_status',
+                'type' => 'referral_code',
             ];
 
             if($referar_user?->cm_firebase_token){

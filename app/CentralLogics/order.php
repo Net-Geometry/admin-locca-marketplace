@@ -274,7 +274,7 @@ class OrderLogic
                             'description' => translate('You_have_earned_your_referral_reward_from').' '.$order?->customer?->f_name.' '.$order?->customer?->l_name ,
                             'order_id' => 1,
                             'image' => '',
-                            'type' => 'order_status',
+                            'type' => 'referral_code',
                         ];
 
                         if($referar_user?->cm_firebase_token){
