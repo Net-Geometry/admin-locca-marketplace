@@ -702,7 +702,7 @@ class ItemController extends Controller
 
     public function get_items_flashsale(Request $request)
     {
-        $items = Item::withoutGlobalScope(StoreScope::class)->with('store')
+        $items = Item::withoutGlobalScope(StoreScope::class)->with('store')->active()
             ->when($request->zone_id, function ($q) use ($request) {
                 $q->whereHas('store', function ($query) use ($request) {
                     $query->where('zone_id', $request->zone_id);
