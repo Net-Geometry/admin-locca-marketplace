@@ -46,7 +46,10 @@ class EmployeeController extends BaseController
     }
     private function getListView(Request $request): View
     {
-        $employees = $this->employeeRepo->getListWhere(searchValue: $request['search'],dataLimit: config('default_pagination'));
+        $zoneId = $request->query('zone_id', 'all');
+        $employees = $this->employeeRepo->getZoneWiseListWhere(searchValue: $request['search'],
+        zoneId: $zoneId,
+        dataLimit: config('default_pagination'));
         return view(EmployeeViewPath::INDEX[VIEW], compact('employees'));
     }
 

@@ -96,13 +96,16 @@
                         ->when($date, function($query)use($date){
                             return $query->whereDate('created_at', $date);
                         })->paginate(25))
+
                         @foreach($digital_transaction as $k=>$dt)
+
                             <tr>
                                 <td scope="row">{{$k+$digital_transaction->firstItem()}}</td>
                                 <td><a href="{{route((isset($dt->order) && $dt->order->order_type=='parcel')?'admin.parcel.order.details':'admin.order.details',[$dt->order_id,'module_id'=>$dt->order->module_id])}}">{{$dt->order_id}}</a></td>
-                                <td>{{$dt->original_delivery_charge}}</td>
-                                <td>{{$dt->dm_tips}}</td>
-                                <td>{{$dt->created_at->format('Y-m-d')}}</td>
+                               <td>{{ \App\CentralLogics\Helpers::format_currency($dt->original_delivery_charge) }}</td>
+                               <td>{{ \App\CentralLogics\Helpers::format_currency($dt->dm_tips) }}</td>
+                                <td> {{\App\CentralLogics\Helpers::date_format($dt->created_at )   }}</td>
+
                             </tr>
                         @endforeach
                         </tbody>

@@ -14,7 +14,12 @@
                 <span class="page-header-icon">
                     <img src="{{asset('public/assets/admin/img/delivery-man.png')}}" class="w--26" alt="">
                 </span>
-                <span>{{translate('messages.deliveryman_preview')}}<span class="badge badge-soft-dark ml-2" id="itemCount">{{$reviews->total()}}</span></span>
+                <span>{{translate('messages.deliveryman_preview')}}
+                    @if($deliveryMan->application_status == 'approved')
+                    <span class="badge badge-soft-dark ml-2" id="itemCount">{{$reviews->total()}}</span>
+                    @endif
+
+                </span>
             </h1>
             <div class="row">
                 @if($deliveryMan->application_status == 'approved')
@@ -43,7 +48,9 @@
                     <div class="btn--container justify-content-end">
                         <a class="btn btn--primary text-capitalize font-weight-bold request-alert" data-url="{{route('admin.users.delivery-man.application',[$deliveryMan['id'],'approved'])}}" data-message="{{translate('messages.you_want_to_approve_this_application')}}"
                             href="javascript:"><i class="tio-checkmark-circle-outlined font-weight-bold pr-1"></i> {{translate('messages.approve')}}</a>
-                        @if($deliveryMan->application_status !='denied')
+                            <a class="btn btn--primary text-capitalize font-weight-bold"  data-toggle="tooltip" data-placement="top" data-original-title="{{ translate('messages.edit') }}" href="{{route('admin.users.delivery-man.edit',[$deliveryMan['id']])}}" ><i class="tio-edit"></i> {{translate('messages.Edit')}}
+                            </a>
+                            @if($deliveryMan->application_status !='denied')
                         <a class="btn btn--danger text-capitalize font-weight-bold request-alert" data-url="{{route('admin.users.delivery-man.application',[$deliveryMan['id'],'denied'])}}" data-message="{{translate('messages.you_want_to_deny_this_application')}}"
                             href="javascript:"><i class="tio-clear-circle-outlined font-weight-bold pr-1"></i> {{translate('messages.deny')}}</a>
                         @endif
@@ -248,93 +255,97 @@
                                  data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
                                  src="{{\App\CentralLogics\Helpers::onerror_image_helper($deliveryMan['image'], asset('storage/app/public/delivery-man/').'/'.$deliveryMan['image'], asset('public/assets/admin/img/160x160/img1.jpg'), 'delivery-man/') }}"
                                  alt="Image Description">
-                            <div class="d-block">
-                                <div class="rating--review">
-                                    <h1 class="title">{{count($deliveryMan->rating)>0?number_format($deliveryMan->rating[0]->average, 1):0}}<span class="out-of">/5</span></h1>
-                                    @if (count($deliveryMan->rating)>0)
-                                    @if ($deliveryMan->rating[0]->average == 5)
-                                    <div class="rating">
-                                        <span><i class="tio-star"></i></span>
-                                        <span><i class="tio-star"></i></span>
-                                        <span><i class="tio-star"></i></span>
-                                        <span><i class="tio-star"></i></span>
-                                        <span><i class="tio-star"></i></span>
-                                    </div>
-                                    @elseif ($deliveryMan->rating[0]->average < 5 && $deliveryMan->rating[0]->average > 4.5)
-                                    <div class="rating">
-                                        <span><i class="tio-star"></i></span>
-                                        <span><i class="tio-star"></i></span>
-                                        <span><i class="tio-star"></i></span>
-                                        <span><i class="tio-star"></i></span>
-                                        <span><i class="tio-star-half"></i></span>
-                                    </div>
-                                    @elseif ($deliveryMan->rating[0]->average < 4.5 && $deliveryMan->rating[0]->average > 4)
-                                    <div class="rating">
-                                        <span><i class="tio-star"></i></span>
-                                        <span><i class="tio-star"></i></span>
-                                        <span><i class="tio-star"></i></span>
-                                        <span><i class="tio-star"></i></span>
-                                        <span><i class="tio-star-outlined"></i></span>
-                                    </div>
-                                    @elseif ($deliveryMan->rating[0]->average < 4 && $deliveryMan->rating[0]->average > 3)
-                                    <div class="rating">
-                                        <span><i class="tio-star"></i></span>
-                                        <span><i class="tio-star"></i></span>
-                                        <span><i class="tio-star"></i></span>
-                                        <span><i class="tio-star-outlined"></i></span>
-                                        <span><i class="tio-star-outlined"></i></span>
-                                    </div>
-                                    @elseif ($deliveryMan->rating[0]->average < 3 && $deliveryMan->rating[0]->average > 2)
-                                    <div class="rating">
-                                        <span><i class="tio-star"></i></span>
-                                        <span><i class="tio-star"></i></span>
-                                        <span><i class="tio-star-outlined"></i></span>
-                                        <span><i class="tio-star-outlined"></i></span>
-                                        <span><i class="tio-star-outlined"></i></span>
-                                    </div>
-                                    @elseif ($deliveryMan->rating[0]->average < 2 && $deliveryMan->rating[0]->average > 1)
-                                    <div class="rating">
-                                        <span><i class="tio-star"></i></span>
-                                        <span><i class="tio-star-outlined"></i></span>
-                                        <span><i class="tio-star-outlined"></i></span>
-                                        <span><i class="tio-star-outlined"></i></span>
-                                        <span><i class="tio-star-outlined"></i></span>
-                                    </div>
-                                    @elseif ($deliveryMan->rating[0]->average < 1 && $deliveryMan->rating[0]->average > 0)
-                                    <div class="rating">
-                                        <span><i class="tio-star-outlined"></i></span>
-                                        <span><i class="tio-star-outlined"></i></span>
-                                        <span><i class="tio-star-outlined"></i></span>
-                                        <span><i class="tio-star-outlined"></i></span>
-                                        <span><i class="tio-star-outlined"></i></span>
-                                    </div>
-                                    @elseif ($deliveryMan->rating[0]->average == 1)
-                                    <div class="rating">
-                                        <span><i class="tio-star"></i></span>
-                                        <span><i class="tio-star-outlined"></i></span>
-                                        <span><i class="tio-star-outlined"></i></span>
-                                        <span><i class="tio-star-outlined"></i></span>
-                                        <span><i class="tio-star-outlined"></i></span>
-                                    </div>
-                                    @elseif ($deliveryMan->rating[0]->average == 0)
-                                    <div class="rating">
-                                        <span><i class="tio-star-outlined"></i></span>
-                                        <span><i class="tio-star-outlined"></i></span>
-                                        <span><i class="tio-star-outlined"></i></span>
-                                        <span><i class="tio-star-outlined"></i></span>
-                                        <span><i class="tio-star-outlined"></i></span>
-                                    </div>
-                                    @endif
-                                    @endif
-                                    <div class="info">
-                                        {{-- <span class="mr-3">{{$deliveryMan->rating->count()}} {{translate('messages.rating')}}</span> --}}
-                                        <span>{{$deliveryMan->reviews->count()}} {{translate('messages.reviews')}}</span>
-                                    </div>
-                                </div>
+                                 @if($deliveryMan->application_status == 'approved')
 
-                            </div>
+                                 <div class="d-block">
+                                     <div class="rating--review">
+                                         <h1 class="title">{{count($deliveryMan->rating)>0?number_format($deliveryMan->rating[0]->average, 1):0}}<span class="out-of">/5</span></h1>
+                                         @if (count($deliveryMan->rating)>0)
+                                         @if ($deliveryMan->rating[0]->average == 5)
+                                         <div class="rating">
+                                             <span><i class="tio-star"></i></span>
+                                             <span><i class="tio-star"></i></span>
+                                             <span><i class="tio-star"></i></span>
+                                             <span><i class="tio-star"></i></span>
+                                             <span><i class="tio-star"></i></span>
+                                         </div>
+                                         @elseif ($deliveryMan->rating[0]->average < 5 && $deliveryMan->rating[0]->average > 4.5)
+                                         <div class="rating">
+                                             <span><i class="tio-star"></i></span>
+                                             <span><i class="tio-star"></i></span>
+                                             <span><i class="tio-star"></i></span>
+                                             <span><i class="tio-star"></i></span>
+                                             <span><i class="tio-star-half"></i></span>
+                                         </div>
+                                         @elseif ($deliveryMan->rating[0]->average < 4.5 && $deliveryMan->rating[0]->average > 4)
+                                         <div class="rating">
+                                             <span><i class="tio-star"></i></span>
+                                             <span><i class="tio-star"></i></span>
+                                             <span><i class="tio-star"></i></span>
+                                             <span><i class="tio-star"></i></span>
+                                             <span><i class="tio-star-outlined"></i></span>
+                                         </div>
+                                         @elseif ($deliveryMan->rating[0]->average < 4 && $deliveryMan->rating[0]->average > 3)
+                                         <div class="rating">
+                                             <span><i class="tio-star"></i></span>
+                                             <span><i class="tio-star"></i></span>
+                                             <span><i class="tio-star"></i></span>
+                                             <span><i class="tio-star-outlined"></i></span>
+                                             <span><i class="tio-star-outlined"></i></span>
+                                         </div>
+                                         @elseif ($deliveryMan->rating[0]->average < 3 && $deliveryMan->rating[0]->average > 2)
+                                         <div class="rating">
+                                             <span><i class="tio-star"></i></span>
+                                             <span><i class="tio-star"></i></span>
+                                             <span><i class="tio-star-outlined"></i></span>
+                                             <span><i class="tio-star-outlined"></i></span>
+                                             <span><i class="tio-star-outlined"></i></span>
+                                         </div>
+                                         @elseif ($deliveryMan->rating[0]->average < 2 && $deliveryMan->rating[0]->average > 1)
+                                         <div class="rating">
+                                             <span><i class="tio-star"></i></span>
+                                             <span><i class="tio-star-outlined"></i></span>
+                                             <span><i class="tio-star-outlined"></i></span>
+                                             <span><i class="tio-star-outlined"></i></span>
+                                             <span><i class="tio-star-outlined"></i></span>
+                                         </div>
+                                         @elseif ($deliveryMan->rating[0]->average < 1 && $deliveryMan->rating[0]->average > 0)
+                                         <div class="rating">
+                                             <span><i class="tio-star-outlined"></i></span>
+                                             <span><i class="tio-star-outlined"></i></span>
+                                             <span><i class="tio-star-outlined"></i></span>
+                                             <span><i class="tio-star-outlined"></i></span>
+                                             <span><i class="tio-star-outlined"></i></span>
+                                         </div>
+                                         @elseif ($deliveryMan->rating[0]->average == 1)
+                                         <div class="rating">
+                                             <span><i class="tio-star"></i></span>
+                                             <span><i class="tio-star-outlined"></i></span>
+                                             <span><i class="tio-star-outlined"></i></span>
+                                             <span><i class="tio-star-outlined"></i></span>
+                                             <span><i class="tio-star-outlined"></i></span>
+                                         </div>
+                                         @elseif ($deliveryMan->rating[0]->average == 0)
+                                         <div class="rating">
+                                             <span><i class="tio-star-outlined"></i></span>
+                                             <span><i class="tio-star-outlined"></i></span>
+                                             <span><i class="tio-star-outlined"></i></span>
+                                             <span><i class="tio-star-outlined"></i></span>
+                                             <span><i class="tio-star-outlined"></i></span>
+                                         </div>
+                                         @endif
+                                         @endif
+                                         <div class="info">
+                                             {{-- <span class="mr-3">{{$deliveryMan->rating->count()}} {{translate('messages.rating')}}</span> --}}
+                                             <span>{{$deliveryMan->reviews->count()}} {{translate('messages.reviews')}}</span>
+                                         </div>
+                                     </div>
+
+                                 </div>
+                                 @endif
                         </div>
                     </div>
+                    @if($deliveryMan->application_status == 'approved')
 
                     <div class="col-md-4">
                         <ul class="list-unstyled list-unstyled-py-2 mb-0 rating--review-right py-3">
@@ -412,6 +423,10 @@
                             <!-- End Review Ratings -->
                         </ul>
                     </div>
+                    @endif
+
+
+
                 </div>
             </div>
             <!-- End Body -->
@@ -465,7 +480,9 @@
             </div>
         </div>
 
-        <!-- Card -->
+
+        @if($deliveryMan->application_status == 'approved')
+
         <div class="card">
             <!-- Header -->
             <div class="card-header py-2 border-0">
@@ -598,6 +615,8 @@
                 @endif
             </div>
         </div>
+        @endif
+        <!-- Card -->
         <!-- End Card -->
     </div>
 @endsection

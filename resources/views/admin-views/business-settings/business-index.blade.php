@@ -352,7 +352,7 @@
                                         </div>
                                         <div class="col-sm-6">
                                             @php($default_location = \App\Models\BusinessSetting::where('key', 'default_location')->first())
-                                            @php($default_location = $default_location->value ? json_decode($default_location->value, true) : 0)
+                                            @php($default_location = $default_location?->value ? json_decode($default_location->value, true) : 0)
                                             <div class="form-group mb-0">
                                                 <label class="form-label text-capitalize"
                                                     for="latitude">{{ translate('messages.latitude') }}<span

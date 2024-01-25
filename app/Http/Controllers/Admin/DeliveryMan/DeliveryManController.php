@@ -63,11 +63,13 @@ class DeliveryManController extends BaseController
     private function getListView(Request $request): View
     {
         $zoneId = $request->query('zone_id', 'all');
-        $deliveryMen = $this->deliveryManRepo->getZoneWiseListWhere(
+        $deliveryMen = $this->deliveryManRepo->getFilterWiseListWhere(
             zoneId: $zoneId,
+            additionalFilter: $request['filter'],
+            jobType: $request['job_type'],
             searchValue: $request['search'],
             filters: ['type' => 'zone_wise','application_status' => 'approved'],
-            relations: ['zone'],
+            relations: ['zone','wallet'],
             dataLimit: config('default_pagination')
         );
         $zone = is_numeric($zoneId) ? $this->zoneRepo->getFirstWhere(params: ['id'=>$zoneId]) : null;
@@ -247,7 +249,9 @@ class DeliveryManController extends BaseController
 
     public function getReviewListView(Request $request): View
     {
-        $reviews = $this->dmReviewRepo->getListWhere(searchValue: $request['search'],relations: ['delivery_man','customer'],dataLimit: config('default_pagination'));
+        $filter=$request['deliveryman_id'] && is_numeric($request['deliveryman_id'])  ?  ['delivery_man_id' => $request['deliveryman_id'] ] : [];
+        $reviews = $this->dmReviewRepo->getListWhere(searchValue: $request['search'],
+        filters:$filter ,relations: ['delivery_man','customer'],dataLimit: config('default_pagination'));
         return view(DeliveryManViewPath::REVIEW_LIST[VIEW],compact('reviews'));
     }
 
@@ -328,6 +332,7 @@ class DeliveryManController extends BaseController
             return view('admin-views.delivery-man.view.disbursement', compact('deliveryMan','disbursements'));
 
         }
+
 
         $user = $this->userInfoRepo->getFirstWhere(params: ['deliveryman_id' => $id]);
         if($user){

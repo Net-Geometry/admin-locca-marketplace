@@ -39,8 +39,9 @@
 
         <div class="row g-2 pb-4 mb-0">
             <div class="col-sm-6 col-lg-4">
-                <div class="__user-dashboard-card">
-                    <div class="__user-dashboard-card-thumbs">
+                <a href="{{ route('admin.users.customer.list',['zone_id' => $params['zone_id'] ?? null]) }}">
+                    <div class="__user-dashboard-card">
+                        <div class="__user-dashboard-card-thumbs">
                         @php($total_customers = $blocked_customers + $active_customers)
                         <div class="more-icon">
                             +{{$total_customers >= 4 ? $total_customers - 2 : $total_customers}}
@@ -53,11 +54,14 @@
                     <h3 class="title">{{$total_customers}}</h3>
                     <h5 class="subtitle text-capitalize">{{translate('messages.total_customer')}}</h5>
                 </div>
+                    </a>
             </div>
             <div class="col-sm-6 col-lg-4">
+                <a href="{{ route('admin.users.delivery-man.list',['zone_id' => $params['zone_id'] ?? null]) }}">
                 <div class="__user-dashboard-card" style="--theme-clr:#006AB4">
+
                     <div class="__user-dashboard-card-thumbs">
-                        @php($total_deliveryman = $inactive_deliveryman + $active_deliveryman)
+                        @php($total_deliveryman = $inactive_deliveryman + $active_deliveryman + $blocked_deliveryman )
                         <div class="more-icon">
                             +{{$total_deliveryman >= 4 ? $total_deliveryman - 2 :  $total_deliveryman}}
                         </div>
@@ -70,8 +74,10 @@
                     <h3 class="title">{{$total_deliveryman}}</h3>
                     <h5 class="subtitle text-capitalize">{{translate('messages.total_delivery_man')}}</h5>
                 </div>
+            </a>
             </div>
             <div class="col-sm-6 col-lg-4">
+                <a href="{{ route('admin.users.employee.list',['zone_id' => $params['zone_id'] ?? null]) }}">
                 <div class="__user-dashboard-card" style="--theme-clr:#FFA800">
                     <div class="__user-dashboard-card-thumbs">
                         @php($total_employees = $employees->count())
@@ -89,6 +95,7 @@
                     <h3 class="title">{{$total_employees}}</h3>
                     <h5 class="subtitle text-capitalize">{{translate('messages.total_employee')}}</h5>
                 </div>
+            </a>
             </div>
         </div>
 
@@ -100,6 +107,7 @@
                     <div class="col-md-4">
                         <div class="row gap__10">
                             <div class="col-md-12 col-sm-6">
+                                <a href="{{ route('admin.users.customer.list',['zone_id' => $params['zone_id'] ?? null, 'filter'  => 'active']) }}">
                                 <div class="__customer-statistics-card">
                                     <div class="title">
                                         <img src="{{asset('/public/assets/admin/img/new-img/customer/active.svg')}}" alt="new-img">
@@ -107,8 +115,10 @@
                                     </div>
                                     <h4 class="subtitle text-capitalize">{{translate('messages.active_customer')}}</h4>
                                 </div>
+                            </a>
                             </div>
                             <div class="col-md-12 col-sm-6">
+                                <a href="{{ route('admin.users.customer.list',['zone_id' => $params['zone_id'] ?? null, 'filter'  => 'new']) }}">
                                 <div class="__customer-statistics-card" style="--clr:#006AB4">
                                     <div class="title">
                                         <img src="{{asset('/public/assets/admin/img/new-img/customer/newly.svg')}}" alt="new-img">
@@ -116,8 +126,10 @@
                                     </div>
                                     <h4 class="subtitle text-capitalize">{{translate('messages.newly_joined')}}</h4>
                                 </div>
+                            </a>
                             </div>
                             <div class="col-md-12 col-sm-6">
+                                <a href="{{ route('admin.users.customer.list',['zone_id' => $params['zone_id'] ?? null , 'filter'  => 'blocked']) }}">
                                 <div class="__customer-statistics-card" style="--clr:#FF5A54">
                                     <div class="title">
                                         <img src="{{asset('/public/assets/admin/img/new-img/customer/blocked.svg')}}" alt="new-img">
@@ -125,6 +137,7 @@
                                     </div>
                                     <h4 class="subtitle text-capitalize">{{translate('messages.blocked_customer')}}</h4>
                                 </div>
+                            </a>
                             </div>
                         </div>
                     </div>
@@ -318,7 +331,8 @@
         <div class="row g-2">
             <div class="col-lg-8">
                 <div class="row gap__10">
-                    <div class="col-md-4 col-sm-6">
+                    <div class="col-md-3 col-sm-6">
+                          <a href="{{ route('admin.users.delivery-man.list',['zone_id' => $params['zone_id'] ?? null , 'filter' => 'active']) }}">
                         <div class="__customer-statistics-card h-100">
                             <div class="title">
                                 <img src="{{asset('/public/assets/admin/img/new-img/deliveryman/active.svg')}}" alt="new-img">
@@ -326,8 +340,10 @@
                             </div>
                             <h4 class="subtitle text-capitalize">{{translate('messages.active_delivery_man')}}</h4>
                         </div>
+                    </a>
                     </div>
-                    <div class="col-md-4 col-sm-6">
+                    <div class="col-md-3 col-sm-6">
+                          <a href="{{ route('admin.users.delivery-man.list',['zone_id' => $params['zone_id'] ?? null , 'filter' => 'new']) }}">
                         <div class="__customer-statistics-card h-100" style="--clr:#006AB4">
                             <div class="title">
                                 <img src="{{asset('/public/assets/admin/img/new-img/deliveryman/newly.svg')}}" alt="new-img">
@@ -335,8 +351,10 @@
                             </div>
                             <h4 class="subtitle text-capitalize">{{translate('messages.newly_joined_delivery_man')}}</h4>
                         </div>
+                    </a>
                     </div>
-                    <div class="col-md-4 col-sm-6">
+                    <div class="col-md-3 col-sm-6">
+                          <a href="{{ route('admin.users.delivery-man.list',['zone_id' => $params['zone_id'] ?? null , 'filter' => 'inactive']) }}">
                         <div class="__customer-statistics-card h-100" style="--clr:#FF5A54">
                             <div class="title">
                                 <img src="{{asset('/public/assets/admin/img/new-img/deliveryman/in-active.svg')}}" alt="new-img">
@@ -344,6 +362,18 @@
                             </div>
                             <h4 class="subtitle text-capitalize">{{translate('messages.inactive_deliveryman')}}</h4>
                         </div>
+                    </a>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                          <a href="{{ route('admin.users.delivery-man.list',['zone_id' => $params['zone_id'] ?? null , 'filter' => 'blocked']) }}">
+                        <div class="__customer-statistics-card h-100" style="--clr:#FF5A54">
+                            <div class="title">
+                                <img src="{{asset('/public/assets/admin/img/new-img/customer/blocked.svg')}}" alt="new-img">
+                                <h4>{{$blocked_deliveryman}}</h4>
+                            </div>
+                            <h4 class="subtitle text-capitalize">{{translate('messages.Blocked_deliveryman')}}</h4>
+                        </div>
+                    </a>
                     </div>
                 </div>
                 <div class="__map-wrapper-2 mt-3">

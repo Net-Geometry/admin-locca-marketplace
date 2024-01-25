@@ -310,3 +310,8 @@ $(document).on('click', '.confirm-Toggle', function () {
 });
 
 
+$('.location-reload-to-base').on('click', function () {
+    let currentURL = window.location.href;
+    let updatedURL = currentURL.split('?')[0];
+    window.location.href = updatedURL;
+});

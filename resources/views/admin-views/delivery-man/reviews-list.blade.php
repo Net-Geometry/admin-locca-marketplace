@@ -2,10 +2,6 @@
 
 @section('title',translate('messages.Review List'))
 
-@push('css_or_js')
-
-@endpush
-
 @section('content')
     <div class="content container-fluid">
         <!-- Page Header -->
@@ -26,15 +22,36 @@
                     <div class="card-header py-2 border-0">
                         <span class="card-header-title"></span>
                         <div class="search--button-wrapper justify-content-end">
+
+
+
+                            <div class="col-sm-auto min--240">
+                                <select name="deliveryman_id" class="form-control js-select2-custom set-filter"
+                                data-filter="deliveryman_id"
+                                        data-url="{{ url()->full() }}">
+                                    <option value="all">{{ translate('messages.All_DeliveryMan') }}</option>
+                                    @foreach(\App\Models\DeliveryMan::oldest()->where('application_status' , 'approved')->get(['id','f_name','l_name' ]) as $deliveryMan)
+                                        <option
+                                            value="{{$deliveryMan->id}}" {{$deliveryMan->id == request()?->deliveryman_id ? 'selected':''}}>
+                                            {{$deliveryMan->f_name.' '. $deliveryMan->l_name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+
+
                             <form class="search-form">
-                            {{-- @csrf --}}
-                                <!-- Search -->
+
                                 <div class="input-group input--group">
-                                    <input id="datatableSearch" name="search" type="search" class="form-control" placeholder="{{translate('ex_:_search_delivery_man')}}" value="{{ request()->get('search') }}" aria-label="{{translate('messages.search_here')}}">
+                                    <input id="datatableSearch" name="search" type="search" class="form-control" placeholder="{{translate('ex_: search_delivery_man_,_email_or_phone')}}" value="{{ request()->get('search') }}" aria-label="{{translate('messages.search_here')}}">
                                     <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
                                 </div>
-                                <!-- End Search -->
                             </form>
+                            @if(request()->get('search'))
+                            <button type="reset" class="btn btn--primary ml-2 location-reload-to-base" data-url="{{url()->full()}}">{{translate('messages.reset')}}</button>
+                            @endif
+
                             <!-- Unfold -->
                             <div class="hs-unfold mr-2">
                                 <a class="js-hs-unfold-invoker btn btn-sm btn-white dropdown-toggle min-height-40" href="javascript:;"
@@ -106,7 +123,6 @@
                                             @else
                                                 {{translate('messages.customer_not_found')}}
                                             @endif
-
                                         </td>
                                         <td>
                                             {{$review->comment}}
@@ -144,44 +160,3 @@
     </div>
 
 @endsection
-
-@push('script_2')
-    <script>
-        "use strict";
-
-        $(document).on('ready', function () {
-            // INITIALIZATION OF DATATABLES
-            // =======================================================
-            let datatable = $.HSCore.components.HSDatatables.init($('#columnSearchDatatable'));
-
-        });
-
-        $('#search-form').on('submit', function (e) {
-            e.preventDefault();
-            let formData = new FormData(this);
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $.post({
-                url: '{{route('admin.users.delivery-man.reviews.search')}}',
-                data: formData,
-                cache: false,
-                contentType: false,
-                processData: false,
-                beforeSend: function () {
-                    $('#loading').show();
-                },
-                success: function (data) {
-                    $('#set-rows').html(data.view);
-                    $('#itemCount').html(data.count);
-                    $('.page-area').hide();
-                },
-                complete: function () {
-                    $('#loading').hide();
-                },
-            });
-        });
-    </script>
-@endpush

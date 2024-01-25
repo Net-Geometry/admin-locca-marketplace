@@ -33,11 +33,15 @@
                             <form id="search-form">
                                 <!-- Search -->
                                 <div class="input--group input-group input-group-merge input-group-flush">
-                                    <input id="datatableSearch" type="search" name="search" class="form-control" placeholder="{{ translate('Ex_:_Search_by_type...') }}" aria-label="Search here">
+                                    <input id="datatableSearch" type="search" name="search"  value="{{request()?->search}}"  class="form-control" placeholder="{{ translate('Ex_:_Search_by_type...') }}" aria-label="Search here">
                                     <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
                                 </div>
                                 <!-- End Search -->
                             </form>
+                            @if(request()->get('search'))
+                            <button type="reset" class="btn btn--primary ml-2 location-reload-to-base" data-url="{{url()->full()}}">{{translate('messages.reset')}}</button>
+                            @endif
+
                         </div>
                     </div>
                     <!-- Table -->
