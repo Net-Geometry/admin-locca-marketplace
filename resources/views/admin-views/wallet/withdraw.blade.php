@@ -108,7 +108,7 @@
                         @foreach($withdraw_req as $k=>$wr)
                             <tr>
                                 <td scope="row">{{$k+$withdraw_req->firstItem()}}</td>
-                                <td>{{$wr['amount']}}</td>
+                                <td>{{\App\CentralLogics\Helpers::format_currency($wr['amount'])}}</td>
                                 <td>
                                     @if($wr->vendor)
                                     <a class="deco-none"

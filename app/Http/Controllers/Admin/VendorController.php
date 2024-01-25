@@ -1061,6 +1061,9 @@ class VendorController extends Controller
 
     public function withdrawStatus(Request $request, $id)
     {
+        $request->validate([
+            'note' => 'max:200',
+        ]);
         $withdraw = WithdrawRequest::findOrFail($id);
         $withdraw->approved = $request->approved;
         $withdraw->transaction_note = $request['note'];

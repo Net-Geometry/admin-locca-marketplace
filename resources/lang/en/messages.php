@@ -3814,4 +3814,8 @@
   'Loading, please wait' => 'Loading  please wait',
   'Callback Url' => 'Callback Url',
   'store_removed' => 'Store removed',
+  'proceed' => 'Proceed',
+  'The note must not be greater than 200 characters.' => 'The note must not be greater than 200 characters.',
+  'Collect_Cash' => 'Collect Cash',
+  'Account transaction information' => 'Account transaction information',
 );

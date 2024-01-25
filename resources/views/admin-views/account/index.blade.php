@@ -155,9 +155,9 @@
                                         @endif
                                     </td>
                                     <td><label class="text-uppercase">{{translate($at['from_type'])}}</label></td>
-                                    <td>{{$at->created_at->format('Y-m-d '.config('timeformat'))}}</td>
+                                    <td>{{\App\CentralLogics\Helpers::time_date_format($at->created_at)}}</td>
                                     <td><div class="pl-4">
-                                        {{$at['amount']}}
+                                        {{\App\CentralLogics\Helpers::format_currency($at['amount'])}}
                                     </div></td>
                                     <td><div class="pl-4">
                                         {{translate($at['ref'])}}
