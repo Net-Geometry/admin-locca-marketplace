@@ -62,13 +62,18 @@
                         <div class="search--button-wrapper">
                             <h5 class="card-title"> {{translate('order_list')}} <span class="badge badge-soft-secondary">{{ $orders->total() }}</span></h5>
                             <div class="min--260">
-                                <div class="input--group input-group">
-                                    <input type="text" id="column1_search" class="form-control form-control-sm" placeholder="{{translate('ex_:_search_ID')}}">
-                                    <button type="button" class="btn btn--secondary">
-                                        <i class="tio-search"></i>
-                                    </button>
-                                </div>
+                                <form class="search-form">
+                                    <div class="input-group input--group">
+                                        <input  type="search" name="search" class="form-control"
+                                        placeholder="{{translate('ex_: search_by_order_id')}}" aria-label="{{translate('messages.search')}}" value="{{request()?->search}}" >
+                                        <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
+                                    </div>
+                                </form>
+
                             </div>
+                            @if(request()->get('search'))
+                                 <button type="reset" class="btn btn--primary ml-2 location-reload-to-base" data-url="{{url()->full()}}">{{translate('messages.reset')}}</button>
+                                 @endif
                         </div>
                     <!-- Unfold -->
                     <div class="hs-unfold mr-2">
@@ -95,12 +100,6 @@
                                     alt="Image Description">
                                 .{{ translate('messages.csv') }}
                             </a>
-                            {{-- <a id="export-pdf" class="dropdown-item" href="javascript:;">
-                                <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                    src="{{ asset('public/assets/admin') }}/svg/components/pdf.svg"
-                                    alt="Image Description">
-                                {{ translate('messages.pdf') }}
-                            </a> --}}
                         </div>
                     </div>
                     <!-- End Unfold -->
@@ -117,8 +116,12 @@
                             <thead class="thead-light">
                             <tr>
                                 <th class="border-0 pl-4">{{translate('sl')}}</th>
+                                <th class="border-0 text-center">{{translate('messages.order_date')}}</th>
                                 <th class="border-0 text-center">{{translate('messages.order_id')}}</th>
+                                <th class="border-0 text-center">{{translate('messages.product_count')}}</th>
+                                <th class="border-0 text-center">{{translate('messages.order_status')}}</th>
                                 <th class="border-0 text-center">{{translate('messages.total_amount')}}</th>
+                                <th class="border-0 text-center">{{translate('messages.Store')}}</th>
                                 <th class="border-0 text-center">{{translate('messages.action')}}</th>
                             </tr>
                             </thead>
@@ -132,13 +135,46 @@
                                         </div>
                                     </td>
                                     <td class="table-column-pl-0 text-center">
+                                        {{\App\CentralLogics\Helpers::time_date_format($order['created_at'])}}
+                                    </td>
+                                    <td class="table-column-pl-0 text-center">
                                         <a href="{{route((isset($order) && $order->order_type=='parcel')?'admin.parcel.order.details':'admin.order.details',['id'=>$order['id'],'module_id'=>$order['module_id']])}}">{{$order['id']}}</a>
+                                    </td>
+
+                                    <td>
+                                        <div class="text-right mw--85px mx-auto">
+                                            {{ $order?->details()?->count() != 0  ?  $order?->details()?->count(): translate('messages.N/A') }}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="text-right mw--85px mx-auto">
+                                            {{ translate($order->order_status) }}
+                                        </div>
                                     </td>
                                     <td>
                                         <div class="text-right mw--85px mx-auto">
                                             {{\App\CentralLogics\Helpers::format_currency($order['order_amount'])}}
                                         </div>
                                     </td>
+                                    <td>
+                                        <div>
+                                            @if ($order->store)
+                                            <a href="{{route('admin.store.view', $order->store->id)}}" class="table-rest-info" alt="view store">
+
+                                                <div class="text-right mw--85px mx-auto"><div class="text--title">
+                                                    {{Str::limit($order->store->name,20,'...')}}
+                                                    </div>
+
+                                                </div>
+                                            </a>
+
+                                            @else
+                                            {{ translate('store_not_found') }}
+                                            @endif
+                                        </div>
+                                    </td>
+
+
                                     <td>
                                         <div class="btn--container justify-content-center">
                                             <a class="btn action-btn btn--warning btn-outline-warning" href="{{route((isset($order) && $order->order_type=='parcel')?'admin.parcel.order.details':'admin.order.details',['id'=>$order['id']])}}" title="{{translate('messages.view')}} "><i class="tio-visible"></i></a>
@@ -167,8 +203,17 @@
                 </div>
             </div>
 
+
+
             <div class="col-lg-4">
                 <!-- Card -->
+                <div class="card-header">
+                    <h3 class="card-title text-center">
+                        <span class=""> {{ translate('Customer_Personal_Info') }}</span>
+                    </h3>
+                </div>
+
+
                 <div class="card">
                     <!-- Header -->
                     <div class="card-header">

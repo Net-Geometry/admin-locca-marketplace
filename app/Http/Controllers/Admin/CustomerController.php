@@ -23,6 +23,7 @@ class CustomerController extends Controller
     {
         $zone_id=  $request->zone_id ?? null;
         $filter=  $request->filter ?? null;
+        $order_wise=  $request->order_wise ?? null;
         $key = [];
         if ($request->search) {
             $key = explode(' ', $request['search']);
@@ -48,8 +49,21 @@ class CustomerController extends Controller
         ->when(isset($filter) && $filter == 'new' , function ($query) {
             $query->whereDate('created_at', '>=', now()->subDays(30)->format('Y-m-d'));
         })
+        ->when(isset($order_wise) && $order_wise == 'top' , function ($query) {
+            $query->orderBy('order_count', 'desc');
+        })
+        ->when(isset($order_wise) && $order_wise == 'least' , function ($query) {
+            $query->orderBy('order_count', 'asc');
+        })
+        ->when(isset($order_wise) && $order_wise == 'latest' , function ($query) {
+            $query->latest();
+        })
+        ->when(!$order_wise, function ($query) {
+            $query->orderBy('order_count', 'desc');
+        })
 
-            ->orderBy('order_count', 'desc')->paginate(config('default_pagination'));
+
+            ->paginate(config('default_pagination'));
         return view('admin-views.customer.list', compact('customers'));
     }
 
@@ -106,11 +120,16 @@ class CustomerController extends Controller
         ]);
     }
 
-    public function view($id)
+    public function view(Request $request,$id)
     {
+        $key = $request['search'];
         $customer = User::find($id);
         if (isset($customer)) {
-            $orders = Order::latest()->where(['user_id' => $id])->Notpos()->paginate(config('default_pagination'));
+            $orders = Order::latest()->where(['user_id' => $id])
+            ->when(isset($key), function($query) use($key){
+                $query->Where('id', 'like', "%{$key}%");
+            } )
+            ->Notpos()->paginate(config('default_pagination'));
             return view('admin-views.customer.customer-view', compact('customer', 'orders'));
         }
         Toastr::error(translate('messages.customer_not_found'));
