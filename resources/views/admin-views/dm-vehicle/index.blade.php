@@ -46,7 +46,11 @@
                                 <div class="col-md-6">
                                     @if ($language)
                                     <div class="form-group lang_form" id="default-form">
-                                        <label class="input-label text-capitalize" for="title">{{translate('messages.Vehicle_type')}} ({{ translate('messages.default') }})</label>
+                                        <label class="input-label text-capitalize" for="title">{{translate('messages.Vehicle_type')}} ({{ translate('messages.default') }})<span class="form-label-secondary text-danger"
+                                            data-toggle="tooltip" data-placement="right"
+                                            data-original-title="{{ translate('messages.Required.')}}"> *
+                                            </span>
+</label>
                                         <input type="text" name="type[]" class="form-control h--45px" placeholder="{{translate('messages.ex_:_bike')}}" maxlength="191" required  >
                                     </div>
                                     <input type="hidden" name="lang[]" value="default">
@@ -67,7 +71,11 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="input-label text-capitalize" for="title">{{translate('messages.extra_charges')}} ({{ \App\CentralLogics\Helpers::currency_symbol() }}) <span class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('This amount will be added with delivery charge')}}"><img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="public/img"></span></label>
+                                        <label class="input-label text-capitalize" for="title">{{translate('messages.extra_charges')}} ({{ \App\CentralLogics\Helpers::currency_symbol() }}) <span class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('This amount will be added with delivery charge')}}"><img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="public/img"></span><span class="form-label-secondary text-danger"
+                                            data-toggle="tooltip" data-placement="right"
+                                            data-original-title="{{ translate('messages.Required.')}}"> *
+                                            </span>
+</label>
                                         <input type="number" id="extra_charges" class="form-control h--45px" step="0.001" min="0" required name="extra_charges">
                                     </div>
                                 </div>
@@ -77,14 +85,22 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="input-label text-capitalize" for="title">{{translate('messages.minimum_coverage_area')}} ({{ translate('messages.km') }}) <span class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('This value is the minimum distance for a vehicle in this category to serve an order.')}}"><img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="public/img"></span></label>
+                                        <label class="input-label text-capitalize" for="title">{{translate('messages.minimum_coverage_area')}} ({{ translate('messages.km') }}) <span class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('This value is the minimum distance for a vehicle in this category to serve an order.')}}"><img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="public/img"></span><span class="form-label-secondary text-danger"
+                                            data-toggle="tooltip" data-placement="right"
+                                            data-original-title="{{ translate('messages.Required.')}}"> *
+                                            </span>
+</label>
                                         <input type="number" id="starting_coverage_area" class="form-control h--45px" step="0.001" min="0" required name="starting_coverage_area">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="input-label text-capitalize" for="title">{{translate('messages.maximum_coverage_area')}} ({{ translate('messages.km') }}) <span class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('This value is the miximum distance for a vehicle in this category to serve an order.
-                                            ')}}"><img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="public/img"></span></label>
+                                            ')}}"><img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="public/img"></span><span class="form-label-secondary text-danger"
+                                                        data-toggle="tooltip" data-placement="right"
+                                                        data-original-title="{{ translate('messages.Required.')}}"> *
+                                                        </span>
+</label>
                                         <input type="number" id="maximum_coverage_area" class="form-control h--45px" step="0.001" min="0"  required name="maximum_coverage_area">
                                     </div>
                                 </div>

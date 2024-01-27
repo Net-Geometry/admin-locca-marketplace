@@ -38,7 +38,11 @@
                             @endforeach
                         </ul>
                             <div class="form-group lang_form" id="default-form">
-                                <label class="input-label" for="exampleFormControlInput1">{{translate('messages.role_name')}} ({{ translate('messages.default') }})</label>
+                                <label class="input-label" for="exampleFormControlInput1">{{translate('messages.role_name')}} ({{ translate('messages.default') }}) <span class="form-label-secondary text-danger"
+                                    data-toggle="tooltip" data-placement="right"
+                                    data-original-title="{{ translate('messages.Required.')}}"> *
+                                    </span>
+                                </label>
                                 <input type="text" name="name[]" class="form-control" placeholder="{{translate('role_name_example')}}" maxlength="191">
                             </div>
                             <input type="hidden" name="lang[]" value="default">

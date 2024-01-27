@@ -3820,4 +3820,13 @@
   'ex_: search_by_name,_email,_or_subject' => 'Ex : search by name  email  or subject',
   'Set_permission' => 'Set permission',
   'role_deleted' => 'Role deleted',
+  'Blocked_deliveryman' => 'Blocked deliveryman',
+  'This value is the minimum distance for a vehicle in this category to serve an order.' => 'This value is the minimum distance for a vehicle in this category to serve an order.',
+  'This value is the miximum distance for a vehicle in this category to serve an order.
+                                            ' => 'This value is the miximum distance for a vehicle in this category to serve an order.
+                                            ',
+  'Vehicle_category_created' => 'Vehicle category created',
+  'Required.' => 'Required.',
+  'Permissions' => 'Permissions',
+  'Update_permission' => 'Update permission',
 );
