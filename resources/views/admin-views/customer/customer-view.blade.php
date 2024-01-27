@@ -238,15 +238,19 @@
                                     <ul class="list-unstyled m-0">
                                         <li class="pb-1 d-flex align-items-center">
                                             <i class="tio-email mr-2"></i>
+                                            <a href="mailto:{{ $customer['email'] }}">
                                             <span>{{$customer['email']}}</span>
+                                        </a>
                                         </li>
                                         <li class="pb-1 d-flex align-items-center">
                                             <i class="tio-call-talking-quiet mr-2"></i>
+                                            <a href="tel:{{ $customer['phone'] }}">
                                             <span>{{$customer['phone']}}</span>
+                                        </a>
                                         </li>
                                         <li class="pb-1 d-flex align-items-center">
                                             <i class="tio-shopping-basket-outlined mr-2"></i>
-                                            <span>{{$customer->order_count}} {{translate('messages.orders')}}</span>
+                                            <span>{{$customer->order_count}} {{translate('messages.Completed_orders')}}</span>
                                         </li>
                                     </ul>
                                 </div>

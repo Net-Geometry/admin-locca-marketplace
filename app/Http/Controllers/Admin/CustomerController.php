@@ -35,7 +35,7 @@ class CustomerController extends Controller
                     ->orWhere('email', 'like', "%{$value}%")
                     ->orWhere('phone', 'like', "%{$value}%");
             };
-        })
+        })->withcount('orders')
 
         ->when(isset($zone_id) && is_numeric($zone_id) , function ($query) use($zone_id){
             $query->where('zone_id' ,$zone_id);
@@ -157,14 +157,34 @@ class CustomerController extends Controller
         }
     }
 
-    public function subscribedCustomers()
+    public function subscribedCustomers(Request $request)
     {
-        $data['subscribedCustomers'] = Newsletter::orderBy('id', 'desc')->get();
+        $key = explode(' ', $request['search']);
+        $data['subscribedCustomers'] = Newsletter::orderBy('id', 'desc')
+
+        ->when(isset($key), function($query) use($key) {
+            $query->where(function ($q) use ($key) {
+                foreach ($key as $value) {
+                    $q->orWhere('email', 'like', "%". $value."%");
+                }
+            });
+        })
+        ->paginate(config('default_pagination'));
         return view('admin-views.customer.subscribed-emails', $data);
     }
 
     public function subscribed_customer_export(Request $request){
-        $customers = Newsletter::orderBy('id', 'desc')->get();
+        $key = explode(' ', $request['search']);
+        $customers = Newsletter::orderBy('id', 'desc')
+
+        ->when(isset($key), function($query) use($key) {
+            $query->where(function ($q) use ($key) {
+                foreach ($key as $value) {
+                    $q->orWhere('email', 'like', "%". $value."%");
+                }
+            });
+        })
+        ->get();
         $data = [
             'customers'=>$customers
         ];
@@ -179,11 +199,14 @@ class CustomerController extends Controller
     public function subscriberMailSearch(Request $request)
     {
         $key = explode(' ', $request['search']);
-        $customers = Newsletter::where(function ($q) use ($key) {
+        $customers = Newsletter::
+        where(function ($q) use ($key) {
             foreach ($key as $value) {
                 $q->orWhere('email', 'like', "%". $value."%");
             }
-        })->orderBy('id', 'desc')->get();
+        })
+
+        ->orderBy('id', 'desc')->get();
         return response()->json([
             'count' => count($customers),
             'view' => view('admin-views.customer.partials._subscriber-email-table', compact('customers'))->render()

@@ -50,17 +50,21 @@ class CustomerWalletController extends Controller
             {
                 info($ex->getMessage());
             }
-            
+
             return response()->json([], 200);
         }
 
         return response()->json(['errors'=>[
             'message'=>trans('messages.failed_to_create_transaction')
-        ]], 200);  
+        ]], 200);
     }
 
     public function report(Request $request)
     {
+        $key = [];
+        if ($request->search) {
+            $key = explode(' ', $request['search']);
+        }
         $data = WalletTransaction::selectRaw('sum(credit) as total_credit, sum(debit) as total_debit')
         ->when(($request->from && $request->to),function($query)use($request){
             $query->whereBetween('created_at', [$request->from.' 00:00:00', $request->to.' 23:59:59']);
@@ -71,8 +75,20 @@ class CustomerWalletController extends Controller
         ->when($request->customer_id, function($query)use($request){
             $query->where('user_id',$request->customer_id);
         })
+        ->when(count($key) > 0, function($query) use($key){
+            $query->wherehas('user',    function ($query) use ($key) {
+                foreach ($key as $value) {
+                    $query->where(function($query) use($value){
+                        $query->orWhere('f_name', 'like', "%{$value}%")
+                        ->orWhere('l_name', 'like', "%{$value}%")
+                        ->orWhere('email', 'like', "%{$value}%")
+                        ->orWhere('phone', 'like', "%{$value}%");
+                    });
+                };
+            });
+       })
         ->get();
-        
+
         $transactions = WalletTransaction::
         when(($request->from && $request->to),function($query)use($request){
             $query->whereBetween('created_at', [$request->from.' 00:00:00', $request->to.' 23:59:59']);
@@ -83,6 +99,18 @@ class CustomerWalletController extends Controller
         ->when($request->customer_id, function($query)use($request){
             $query->where('user_id',$request->customer_id);
         })
+        ->when(count($key) > 0, function($query) use($key){
+            $query->wherehas('user',    function ($query) use ($key) {
+                foreach ($key as $value) {
+                    $query->where(function($query) use($value){
+                        $query->orWhere('f_name', 'like', "%{$value}%")
+                        ->orWhere('l_name', 'like', "%{$value}%")
+                        ->orWhere('email', 'like', "%{$value}%")
+                        ->orWhere('phone', 'like', "%{$value}%");
+                    });
+                };
+            });
+       })
         ->latest()
         ->paginate(config('default_pagination'));
 
@@ -91,6 +119,11 @@ class CustomerWalletController extends Controller
 
     public function export(Request $request)
     {
+        $key = [];
+        if ($request->search) {
+            $key = explode(' ', $request['search']);
+        }
+
         $data = WalletTransaction::selectRaw('sum(credit) as total_credit, sum(debit) as total_debit')
         ->when(($request->from && $request->to),function($query)use($request){
             $query->whereBetween('created_at', [$request->from.' 00:00:00', $request->to.' 23:59:59']);
@@ -101,8 +134,20 @@ class CustomerWalletController extends Controller
         ->when($request->customer_id, function($query)use($request){
             $query->where('user_id',$request->customer_id);
         })
-        ->get();
-        
+        ->when(count($key) > 0, function($query) use($key){
+            $query->wherehas('user',    function ($query) use ($key) {
+                foreach ($key as $value) {
+                    $query->where(function($query) use($value){
+                        $query->orWhere('f_name', 'like', "%{$value}%")
+                        ->orWhere('l_name', 'like', "%{$value}%")
+                        ->orWhere('email', 'like', "%{$value}%")
+                        ->orWhere('phone', 'like', "%{$value}%");
+                    });
+                };
+            });
+       })
+       ->get();
+
         $transactions = WalletTransaction::
         when(($request->from && $request->to),function($query)use($request){
             $query->whereBetween('created_at', [$request->from.' 00:00:00', $request->to.' 23:59:59']);
@@ -113,6 +158,18 @@ class CustomerWalletController extends Controller
         ->when($request->customer_id, function($query)use($request){
             $query->where('user_id',$request->customer_id);
         })
+        ->when(count($key) > 0, function($query) use($key){
+            $query->wherehas('user',    function ($query) use ($key) {
+                foreach ($key as $value) {
+                    $query->where(function($query) use($value){
+                        $query->orWhere('f_name', 'like', "%{$value}%")
+                        ->orWhere('l_name', 'like', "%{$value}%")
+                        ->orWhere('email', 'like', "%{$value}%")
+                        ->orWhere('phone', 'like', "%{$value}%");
+                    });
+                };
+            });
+       })
         ->latest()
         ->get();
 
@@ -122,10 +179,10 @@ class CustomerWalletController extends Controller
             'from'=>$request->from??null,
             'to'=>$request->to??null,
             'transaction_type'=>$request->transaction_type??null,
-            'customer'=>$request->customer_id?Helpers::get_customer_name($request->customer_id):null,
+            'customer'=>$request->customer_id?Helpers::get_customer_name($request->customer_id):$request['search']?? null,
 
         ];
-        
+
         if ($request->type == 'excel') {
             return Excel::download(new CustomerWalletTransactionExport($data), 'CustomerWalletTransactions.xlsx');
         } else if ($request->type == 'csv') {

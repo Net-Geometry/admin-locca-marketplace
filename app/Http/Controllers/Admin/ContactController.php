@@ -37,7 +37,19 @@ class ContactController extends Controller
 
     public function list(Request $request)
     {
-        $contacts = Contact::orderBy('name')->paginate(config('default_pagination'));
+        $key = explode(' ', $request['search']);
+        $contacts = Contact::orderBy('name')
+        ->when(isset($key), function($query) use($key) {
+            $query->where(function ($q) use ($key) {
+                foreach ($key as $value) {
+                    $q->orWhere('name', 'like', "%{$value}%")
+                    ->orWhere('subject', 'like', "%{$value}%")
+                    ->orWhere('email', 'like', "%{$value}%");
+                }
+            });
+        })
+
+        ->paginate(config('default_pagination'));
         return view('admin-views.contacts.list', compact('contacts'));
 
     }
@@ -92,17 +104,5 @@ class ContactController extends Controller
         return back();
     }
 
-    public function search(Request $request){
-        $key = explode(' ', $request['search']);
-        $contacts=Contact::where(function ($q) use ($key) {
-            foreach ($key as $value) {
-                $q->orWhere('name', 'like', "%{$value}%")
-                    ->orWhere('email', 'like', "%{$value}%");
-            }
-        })->limit(50)->get();
-        return response()->json([
-            'view'=>view('admin-views.contacts.partials._table',compact('contacts'))->render(),
-            'count'=>$contacts->count()
-        ]);
-    }
+
 }

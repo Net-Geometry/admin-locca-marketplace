@@ -3814,4 +3814,10 @@
   'Loading, please wait' => 'Loading  please wait',
   'Callback Url' => 'Callback Url',
   'store_removed' => 'Store removed',
+  'ex_: search_by_name_or_email' => 'Ex : search by name or email',
+  'Not_Seen_Yet' => 'Not Seen Yet',
+  'Want to delete this message?' => 'Want to delete this message ',
+  'ex_: search_by_name,_email,_or_subject' => 'Ex : search by name  email  or subject',
+  'Set_permission' => 'Set permission',
+  'role_deleted' => 'Role deleted',
 );

@@ -2,9 +2,7 @@
 
 @section('title',translate('messages.customer_wallet_report'))
 
-@push('css_or_js')
 
-@endpush
 
 @section('content')
     <div class="content container-fluid">
@@ -44,9 +42,9 @@
                             $transaction_status=request()->get('transaction_type');
                             @endphp
                             <select name="transaction_type" id="" class="form-control" title="{{translate('messages.select_transaction_type')}}">
-                                <option value="">{{translate('messages.all')}}</option>
+                                <option value="">{{translate('messages.All_transactions')}}</option>
                                 <option value="add_fund_by_admin" {{isset($transaction_status) && $transaction_status=='add_fund_by_admin'?'selected':''}} >{{translate('messages.add_fund_by_admin')}}</option>
-                                <!-- <option value="add_fund" {{isset($transaction_status) && $transaction_status=='add_fund'?'selected':''}}>{{translate('messages.add_fund_by_customer')}}</option> -->
+                                <option value="add_fund" {{isset($transaction_status) && $transaction_status=='add_fund'?'selected':''}}>{{translate('messages.add_fund_by_customer')}}</option>
                                 <option value="order_refund" {{isset($transaction_status) && $transaction_status=='order_refund'?'selected':''}}>{{translate('messages.refund_order')}}</option>
                                 <option value="loyalty_point" {{isset($transaction_status) && $transaction_status=='loyalty_point'?'selected':''}}>{{translate('messages.customer_loyalty_point')}}</option>
                                 <option value="order_place" {{isset($transaction_status) && $transaction_status=='order_place'?'selected':''}}>{{translate('messages.order_place')}}</option>
@@ -129,14 +127,26 @@
         <div class="card mt-3">
             <!-- Header -->
             <div class="card-header border-0">
-                <h4 class="card-title">
-                    <span class="card-header-icon">
+                <div class="search--button-wrapper">
+                    <h5 class="card-title">    <span class="card-header-icon">
                         <i class="tio-dollar-outlined"></i>
-                    </span>
-                    <span>{{translate('messages.transactions')}}</span>
-                </h4>
+                    </span> {{translate('transactions')}} &nbsp; <span class="badge badge-soft-secondary"> {{ $transactions->total() }}</span></h5>
+                    <div class="min--260">
+                        <form action="{{ route('admin.users.customer.wallet.report') }}" method="get" class="search-form">
+                            <div class="input-group input--group">
+                                <input  type="search" name="search" class="form-control"
+                                placeholder="{{translate('ex_: search_by_customer_name')}}" aria-label="{{translate('messages.search')}}" value="{{request()?->search}}" >
+                                <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
+                            </div>
+                        </form>
+
+                    </div>
+                    @if(request()->get('search'))
+                         <button type="reset" class="btn btn--primary ml-2 location-reload-to-base" data-url="{{url()->full()}}">{{translate('messages.reset')}}</button>
+                         @endif
+                </div>
                 <!-- Unfold -->
-                <div class="hs-unfold mr-2">
+                <div class="hs-unfold ml-4 mr-2">
                     <a class="js-hs-unfold-invoker btn btn-sm btn-white dropdown-toggle min-height-40" href="javascript:;"
                         data-hs-unfold-options='{
                                 "target": "#usersExportDropdown",
@@ -160,12 +170,6 @@
                                 alt="Image Description">
                             .{{ translate('messages.csv') }}
                         </a>
-                        {{-- <a id="export-pdf" class="dropdown-item" href="javascript:;">
-                            <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                src="{{ asset('public/assets/admin') }}/svg/components/pdf.svg"
-                                alt="Image Description">
-                            {{ translate('messages.pdf') }}
-                        </a> --}}
                     </div>
                 </div>
                 <!-- End Unfold -->

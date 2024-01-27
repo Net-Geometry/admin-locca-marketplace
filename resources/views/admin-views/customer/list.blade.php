@@ -46,7 +46,7 @@
                         <select name="order_wise" class="form-control js-select2-custom set-filter"
                         data-filter="order_wise"
                                 data-url="{{ url()->full() }}">
-                            <option  {{ request()->get('order_wise')  == 'top'?'selected':''}}  value="top">{{ translate('messages.Top_Orderer_Customers') }}</option>
+                            <option  {{ request()->get('order_wise')  == 'top'?'selected':''}}  value="top">{{ translate('messages.Top_Completed_Orderer_Customers') }}</option>
                             <option {{ request()->get('order_wise')  == 'least'?'selected':''}}  value="least">{{ translate('messages.least_Orderer_customers') }}</option>
                             <option {{ request()->get('order_wise')  == 'latest'?'selected':''}}  value="latest">{{ translate('messages.New_Customers') }}</option>
                         </select>
@@ -65,7 +65,7 @@
                         <!-- Search -->
                         <div class="input-group input--group">
                             <input id="datatableSearch_" type="search" name="search" class="form-control min-height-40"
-                                value="{{ request()->get('search') }}" placeholder="{{ translate('search_by_name') }}"
+                                value="{{ request()->get('search') }}" placeholder="{{ translate('search_by_name_phone_or_email') }}"
                                 aria-label="Search" >
                             <button type="submit" class="btn btn--secondary min-height-40"><i class="tio-search"></i></button>
 
@@ -251,6 +251,7 @@
 
                         <tbody id="set-rows">
                             @foreach ($customers as $key => $customer)
+
                                 <tr class="">
                                     <td class="">
                                         {{ $key + $customers->firstItem() }}
@@ -262,15 +263,19 @@
                                     </td>
                                     <td>
                                         <div>
-                                            {{ $customer['email'] }}
+                                            <a href="mailto:{{ $customer['email'] }}">
+                                                {{ $customer['email'] }}
+                                            </a>
                                         </div>
                                         <div>
-                                            {{ $customer['phone'] }}
+                                            <a href="tel:{{ $customer['phone'] }}">
+                                                {{ $customer['phone'] }}
+                                            </a>
                                         </div>
                                     </td>
                                     <td>
                                         <label class="badge">
-                                            {{ $customer->order_count }}
+                                            {{ $customer->orders_count }}
                                         </label>
                                     </td>
                                     <td>

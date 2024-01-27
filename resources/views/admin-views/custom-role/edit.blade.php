@@ -78,7 +78,7 @@
                         @endif
 
                         <div class="d-flex flex-wrap select--all-checkes">
-                            <h5 class="input-label m-0 text-capitalize">{{translate('messages.module_permission')}} : </h5>
+                            <h5 class="input-label m-0 text-capitalize">{{translate('messages.Update_permission')}} : </h5>
                             <div class="check-item pb-0 w-auto">
                                 <div class="form-group form-check form--check m-0 ml-2">
                                     <input type="checkbox" name="modules[]" value="account" class="form-check-input" id="select-all">

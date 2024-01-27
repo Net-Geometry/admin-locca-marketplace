@@ -1,8 +1,5 @@
 @extends('layouts.admin.app')
 @section('title',translate('messages.custom_role'))
-@push('css_or_js')
-
-@endpush
 
 @section('content')
 <div class="content container-fluid">
@@ -61,7 +58,7 @@
                             @endif
 
                         <div class="d-flex flex-wrap select--all-checkes">
-                            <h5 class="input-label m-0 text-capitalize">{{translate('messages.module_permission')}} : </h5>
+                            <h5 class="input-label m-0 text-capitalize">{{translate('messages.Set_permission')}} : </h5>
                             <div class="check-item pb-0 w-auto">
                                 <div class="form-group form-check form--check m-0 ml-2">
                                     <input type="checkbox" name="modules[]" value="collect_cash" class="form-check-input" id="select-all">
@@ -275,7 +272,7 @@
                             <tr>
                                 <th scope="col" class="border-0">{{translate('sl')}}</th>
                                 <th scope="col" class="border-0">{{translate('messages.role_name')}}</th>
-                                <th scope="col" class="border-0">{{translate('messages.modules')}}</th>
+                                <th scope="col" class="border-0">{{translate('messages.Permissions')}}</th>
                                 <th scope="col" class="border-0">{{translate('messages.created_at')}}</th>
                                 {{--<th scope="col" class="border-0">{{translate('messages.status')}}</th>--}}
                                 <th scope="col" class="border-0 text-center">{{translate('messages.action')}}</th>
