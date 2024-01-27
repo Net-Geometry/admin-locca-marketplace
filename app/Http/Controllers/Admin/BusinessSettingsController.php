@@ -36,12 +36,13 @@ class BusinessSettingsController extends Controller
 {
     use Processor;
 
-    public function business_index($tab = 'business')
+    public function business_index(Request $request,$tab = 'business')
     {
         if (!Helpers::module_permission_check('settings')) {
             Toastr::error(translate('messages.access_denied'));
             return back();
         }
+        $type =$request->type;
         if ($tab == 'business') {
             return view('admin-views.business-settings.business-index');
         } else if ($tab == 'customer') {
@@ -56,8 +57,10 @@ class BusinessSettingsController extends Controller
         } else if ($tab == 'deliveryman') {
             return view('admin-views.business-settings.deliveryman-index');
         } else if ($tab == 'order') {
-            $reasons = OrderCancelReason::latest()->paginate(config('default_pagination'));
-            return view('admin-views.business-settings.order-index', compact('reasons'));
+            $reasons = OrderCancelReason::when($request->type && ($request->type != 'all'), function ($query) use ($request) {
+                $query->where('user_type', $request->type);
+            })->latest()->paginate(config('default_pagination'));
+            return view('admin-views.business-settings.order-index', compact('reasons','type'));
         } else if ($tab == 'store') {
             return view('admin-views.business-settings.store-index');
         } else if ($tab == 'refund-settings') {

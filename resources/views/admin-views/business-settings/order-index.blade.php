@@ -45,7 +45,7 @@
                                                         data-toggle="tooltip" data-placement="right"
                                                         data-original-title="{{ translate('messages.When_a_deliveryman_arrives_for_delivery,_Customers_will_get_a_4-digit_verification_code_on_the_order_details_section_in_the_Customer_App_and_needs_to_provide_the_code_to_the_delivery_man_to_verify_the_order.') }}"><img
                                                             src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
-                                                            alt="{{ translate('messages.order_varification_toggle') }}"> *
+                                                            alt="{{ translate('messages.order_varification_toggle') }}">
                                                     </span>
                                                 </span>
                                                 <input type="checkbox"
@@ -83,7 +83,7 @@
                                                         data-toggle="tooltip" data-placement="right"
                                                         data-original-title="{{ translate('messages.With_this_feature,_customers_can_place_an_order_by_uploading_prescription._Stores_can_enable/disable_this_feature_from_the_store_settings_if_needed.') }}"><img
                                                             src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
-                                                            alt="{{ translate('messages.prescription_order_status') }}"> * </span>
+                                                            alt="{{ translate('messages.prescription_order_status') }}"> </span>
                                                 </span>
                                                 <input type="checkbox"
                                                        data-id="prescription_order_status"
@@ -188,7 +188,7 @@
                                                         data-toggle="tooltip" data-placement="right"
                                                         data-original-title="{{ translate('messages.With_this_feature,_customers_can_choose_their_preferred_delivery_slot._Customers_can_select_a_delivery_slot_for_ASAP_or_a_specific_date_(within_2_days_from_the_order).')}}"><img
                                                             src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
-                                                            alt="{{ translate('messages.customer_varification_toggle') }}"> *
+                                                            alt="{{ translate('messages.customer_varification_toggle') }}">
                                                     </span>
                                                 </span>
                                                 <input type="checkbox"
@@ -335,8 +335,16 @@
                                             {{ translate('messages.order_cancellation_reason_list') }}
                                         </h5>
                                     </div>
+                                    <div>
+                                        <select id="type" name="type" class="form-control h--45px set-filter" data-url="{{ url()->full() }}" data-filter="type">
+                                            <option value="all" {{ request('type') == 'all' ? 'selected' : '' }}>{{ translate('messages.all_user') }}</option>
+                                            <option value="admin" {{ request('type') == 'admin' ? 'selected' : '' }}>{{ translate('messages.admin') }}</option>
+                                            <option value="store" {{ request('type') == 'store' ? 'selected' : '' }}>{{ translate('messages.store') }}</option>
+                                            <option value="customer" {{ request('type') == 'customer' ? 'selected' : '' }}>{{ translate('messages.customer') }}</option>
+                                            <option value="deliveryman" {{ request('type') == 'deliveryman' ? 'selected' : '' }}>{{ translate('messages.deliveryman') }}</option>
+                                        </select>
+                                    </div>
                                 </div>
-
                                 <!-- Table -->
                                 <div class="card-body p-0">
                                     <div class="table-responsive datatable-custom">

@@ -3818,4 +3818,14 @@
   'The note must not be greater than 200 characters.' => 'The note must not be greater than 200 characters.',
   'Collect_Cash' => 'Collect Cash',
   'Account transaction information' => 'Account transaction information',
+  'This value is the minimum distance for a vehicle in this category to serve an order.' => 'This value is the minimum distance for a vehicle in this category to serve an order.',
+  'This value is the miximum distance for a vehicle in this category to serve an order.
+                                            ' => 'This value is the miximum distance for a vehicle in this category to serve an order.
+                                            ',
+  'Vehicle_category_created' => 'Vehicle category created',
+  'all_user' => 'All user',
+  'customer_verification_toggle' => 'Customer verification toggle',
+  'If_enabled,_delivery_men_have_to_provide_collected_cash_by_themselves.' => 'If enabled  delivery men have to provide collected cash by themselves.',
+  'If_disabled,_delivery_men_do_not_have_to_provide_collected_cash_by_themselves.' => 'If disabled  delivery men do not have to provide collected cash by themselves.',
+  'all_module_type' => 'All module type',
 );
