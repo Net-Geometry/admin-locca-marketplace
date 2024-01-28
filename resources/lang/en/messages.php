@@ -3107,7 +3107,7 @@
   'search menu' => 'Search menu',
   'Order_Placed' => 'Order Placed',
   'item_price' => 'Item price',
-  'you_need_to_order_at_least' => 'You need to order at least',
+  'you_need_to_order_at_least' => 'You need to order at least ',
   'Cancel_Reason' => 'Cancel Reason',
   'Cancel_Note' => 'Cancel Note',
   'Canceled_By' => 'Canceled By',

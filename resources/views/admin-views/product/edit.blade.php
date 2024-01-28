@@ -845,7 +845,7 @@
 
     function getStoreData(route, store_id, id) {
         $.get({
-            url: route + id,
+            url: route + store_id,
             dataType: 'json',
             success: function(data) {
                 $('#' + id).empty().append(data.options);

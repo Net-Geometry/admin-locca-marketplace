@@ -234,6 +234,17 @@
 <script>
 
 "use strict";
+
+    audio = document.getElementById("myAudio");
+    function playAudio() {
+        audio.play();
+    }
+
+    function pauseAudio() {
+        audio.pause();
+    }
+
+
     @php($modules = \App\Models\Module::Active()->get())
 
     @if(isset($modules) && ($modules->count()<1))

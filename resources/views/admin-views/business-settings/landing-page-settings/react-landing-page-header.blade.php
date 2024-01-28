@@ -74,13 +74,21 @@
                                         <div class="mb-2">
                                             <label for="header_title" class="form-label">{{translate('Title')}}({{ translate('messages.default') }})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_20_characters') }}">
                                                 <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
-                                            </span></label>
+                                            </span> <span class="form-label-secondary text-danger"
+                            data-toggle="tooltip" data-placement="right"
+                            data-original-title="{{ translate('messages.Required.')}}"> *
+                            </span>
+                                </label>
                                     <input id="header_title" type="text"  maxlength="20" name="header_title[]" value="{{ $header_title?->getRawOriginal('value')??'' }}" class="form-control" placeholder="{{translate('messages.title_here...')}}">
                                         </div>
                                         <div class="mb-2">
                                             <label for="header_sub_title" class="form-label">{{translate('Sub Title')}}({{ translate('messages.default') }})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_40_characters') }}">
                                                 <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
-                                            </span></label>
+                                            </span> <span class="form-label-secondary text-danger"
+                            data-toggle="tooltip" data-placement="right"
+                            data-original-title="{{ translate('messages.Required.')}}"> *
+                            </span>
+                                </label>
                                     <input id="header_sub_title" type="text"  maxlength="40" name="header_sub_title[]" value="{{ $header_sub_title?->getRawOriginal('value')??'' }}" class="form-control" placeholder="{{translate('messages.sub_title_here...')}}">
                                         </div>
                                         <div class="mb-2">
@@ -194,7 +202,11 @@
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label d-block mb-2">
-                                    {{translate('Banner')}}  <span class="text--primary">{{translate('(size: 1:1)')}}</span>
+                                    {{translate('Banner')}}  <span class="text--primary">{{translate('(size: 1:1)')}} <span class="form-label-secondary text-danger"
+                                        data-toggle="tooltip" data-placement="right"
+                                        data-original-title="{{ translate('messages.Required.')}}"> *
+                                        </span>
+                                </span>
                                 </label>
                                 <label class="upload-img-3 m-0">
                                     <div class="position-relative">
