@@ -8,10 +8,17 @@
 <div class="modal-body">
     <div class="d-flex flex-row">
         @if (config('toggle_veg_non_veg') && config('module.' . $product->store->module->module_type)['veg_non_veg'])
-            <span
-                class="badge badge-{{ $product->veg ? 'success' : 'danger' }} position-absolute">{{ $product->veg ? translate('messages.veg') : translate('messages.non_veg') }}</span>
+        <span
+        class="badge badge-{{ $product->veg ? 'success' : 'danger' }} position-absolute">{{ $product->veg ? translate('messages.veg') : translate('messages.non_veg') }}</span>
         @endif
         <!-- Product gallery-->
+
+        @if (isset($stock) && $stock == 0)
+        <span class="badge badge-danger position-absolute">{{ translate('messages.Out_of_Stock') }}</span>
+        @endif
+
+
+
         <div class="d-flex align-items-center justify-content-center active">
             <img class="img-responsive initial--30 onerror-image"
 
@@ -134,12 +141,12 @@
                     @foreach (json_decode($product->choice_options) as $choice)
                         <div class="h3 p-0 pt-2">{{ $choice->title }}
                         </div>
-
                         <div class="d-flex justify-content-left flex-wrap">
                             @foreach ($choice->options as $key => $option)
-                                <input class="btn-check" type="radio" id="{{ $choice->name }}-{{ $option }}"
-                                    name="{{ $choice->name }}" value="{{ $option }}"
-                                    @if ($key == 0) checked @endif autocomplete="off">
+                            @php($stock_variations= json_decode($product->variations,true))
+                                <input class="btn-check check-stock" type="radio" id="{{ $choice->name }}-{{ $option }}"
+                                    name="{{ $choice->name }}" value="{{ $option }}" {{ isset($selected_item) && array_key_exists($choice->name, $selected_item) && trim($option) == $selected_item[$choice?->name] ? 'checked' : ($key == 0 ? 'checked' : '') }}
+                                    autocomplete="off" required>
                                 <label class="btn btn-sm check-label mx-1 choice-input text-break"
                                     for="{{ $choice->name }}-{{ $option }}">{{ Str::limit($option, 20, '...') }}</label>
                             @endforeach
@@ -161,7 +168,7 @@
                             </span>
                             <input type="text" name="quantity"
                                 class="form-control input-number text-center cart-qty-field" placeholder="1"
-                                value="1" min="1" max="{{ $product->maximum_cart_quantity?? '9999999999' }}">
+                                value="1" min="1" max="{{   (isset($stock) && $stock > 0) ?   ($product?->maximum_cart_quantity ?  min($stock, $product?->maximum_cart_quantity) : $stock)   :  $product?->maximum_cart_quantity ??  '9999999999' }}">
                             <span class="input-group-btn">
                                 <button class="btn btn-number p--10 text-dark" type="button" data-type="plus"
                                     data-field="quantity">
@@ -203,16 +210,44 @@
                         @endforeach
                     </div>
                 @endif
+
+                @if (isset($stock) && $stock > 0)
+
                 <div class="row no-gutters d-none mt-2 text-dark" id="chosen_price_div">
                     <div class="col-2">
                         <div class="product-description-label">{{ translate('messages.Total Price') }}:</div>
                     </div>
                     <div class="col-10">
                         <div class="product-price">
+
                             <strong id="chosen_price"></strong>
                         </div>
                     </div>
                 </div>
+
+                @endif
+                @if (isset($stock) && $stock > 0 || !isset($stock) )
+                <div class="d-flex justify-content-center mt-2">
+                    <button class="btn btn--primary add-To-Cart" type="button" class="h--45px">
+                        <i class="tio-shopping-cart"></i>
+                        {{ translate('messages.add_to_cart') }}
+                    </button>
+                </div>
+                @elseif(isset($stock) && $stock == 0 )
+
+
+
+                <div class="d-flex justify-content-center mt-2">
+                    <button class="btn btn-secondary" type="button" class="h--45px">
+                        <i class="tio-shopping-cart"></i>
+                        {{ translate('messages.Stock_Out') }}
+                    </button>
+                </div>
+
+
+                @else
+
+
 
                 <div class="d-flex justify-content-center mt-2">
                     <button class="btn btn-secondary" type="button" class="h--45px">
@@ -220,6 +255,7 @@
                         {{ translate('messages.add_to_cart') }}
                     </button>
                 </div>
+                @endif
             </form>
         </div>
     </div>
@@ -227,7 +263,6 @@
 <script src="{{asset('public/assets/admin')}}/js/view-pages/common.js"></script>
 <script type="text/javascript">
     "use strict";
-    setTimeout(check_stock, 1000);
     cartQuantityInitialize();
     getVariantPrice();
     $('#add-to-cart-form input').on('change', function() {

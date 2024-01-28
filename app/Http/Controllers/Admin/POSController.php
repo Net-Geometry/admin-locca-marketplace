@@ -184,6 +184,39 @@ class POSController extends Controller
         ]);
     }
 
+    public function item_stock_view(Request $request)
+    {
+
+        $product = Item::withoutGlobalScope(StoreScope::class)->with('store')->findOrFail($request->id);
+        $selected_item = $request->all();
+        $choice_name=[];
+
+            foreach(json_decode($product->choice_options,true) as $choices ){
+                $choice_name[]= $choices['name'] ;
+            }
+
+            $variation= [];
+            foreach($choice_name as $ii){
+                $variation[]= $selected_item[$ii];
+            }
+
+
+            $resultString = implode('-', $variation);
+
+            $stock_variations= json_decode($product->variations,true);
+            $stock= null;
+
+            foreach($stock_variations as $v){
+                    if($v['type'] ==  $resultString){
+                        $stock= $v['stock'];
+                    }
+
+            }
+
+            return response()->json([
+                'view' => view('admin-views.pos._item-stock-view', compact('product','selected_item','stock' ))->render(),
+            ]);
+    }
     public function addToCart(Request $request)
     {
         $product = Item::withoutGlobalScope(StoreScope::class)->with('store')->find($request->id);

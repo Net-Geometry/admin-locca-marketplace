@@ -7,8 +7,8 @@
 
     <style type="text/css" media="print">
         @page {
-            size: auto;   /* auto is the initial value */
-            margin: 0;  /* this affects the margin in the printer settings */
+            size: auto;
+            margin: 0;
         }
 
     </style>
@@ -64,9 +64,13 @@
                                                 <button type="submit" class="btn btn--secondary h--45px">
                                                     <i class="tio-search"></i>
                                                 </button>
+                                                @if($keyword)
+                                                <button type="reset" class="btn btn--primary ml-2 location-reload-to-base-pos" data-url="{{url()->full()}}">{{translate('messages.reset')}}</button>
+                                                @endif
                                             </div>
                                             <!-- End Search -->
                                         </form>
+
                                     </div>
                                 </div>
                             </div>
@@ -165,7 +169,7 @@
                 </div>
                 <div class="modal-body row ff-emoji">
                     <div class="col-md-12">
-                        <div class="text-center"> 
+                        <div class="text-center">
                             <input type="button" class="btn btn--primary non-printable text-white print-Div"
                                 value="{{ translate('Proceed, If thermal printer is ready.') }}"/>
                             <a href="{{url()->previous()}}" class="btn btn-danger non-printable">{{ translate('messages.back') }}</a>
@@ -703,6 +707,37 @@
     });
 
 
+
+    $(document).on('click', '.check-stock', function () {
+        check_stock();
+    });
+
+    function check_stock(){
+        $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                }
+            });
+           let form_id = 'add-to-cart-form'
+            $.post({
+                url: '{{ route('admin.pos.item_stock_view') }}',
+                data: $('#' + form_id).serializeArray(),
+                beforeSend: function () {
+                    $('#loading').show();
+                },
+                success: function (data) {
+                    $('#quick-view').modal('show');
+                    cartQuantityInitialize();
+                    getVariantPrice();
+                    $('#quick-view-modal').empty().html(data.view);
+                    // getVariantPrice();
+            },
+                complete: function () {
+                    $('#loading').hide();
+                }
+            });
+    }
+
     $(document).on('click', '.delivery-Address-Store', function () {
 
         $.ajaxSetup({
@@ -886,5 +921,13 @@
     print_invoice("{{session('last_order')}}")
     @php(session(['last_order'=> false]))
     @endif
+
+    $('.location-reload-to-base-pos').on('click', function() {
+    alert('q');
+    const url = $(this).data('url');
+    let nurl = new URL(url);
+    nurl.searchParams.delete('keyword');
+    location.href = nurl;
+});
 </script>
 @endpush

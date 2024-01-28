@@ -3829,4 +3829,7 @@
   'Required.' => 'Required.',
   'Permissions' => 'Permissions',
   'Update_permission' => 'Update permission',
+  'customer_verification_toggle' => 'Customer verification toggle',
+  'Stock_Out' => 'Stock Out',
+  'Out_of_Stock' => 'Out of Stock',
 );
