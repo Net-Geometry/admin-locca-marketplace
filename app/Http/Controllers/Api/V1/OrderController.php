@@ -882,7 +882,10 @@ class OrderController extends Controller
             return response()->json([
                 'message' => translate('messages.order_placed_successfully'),
                 'order_id' => $order->id,
-                'total_ammount' => $order->order_amount
+                'total_ammount' => $order->order_amount,
+                'offline_payments' => isset($order->offline_payments) ? Helpers::offline_payment_formater($order->offline_payments) : null,
+                'status' => $order->order_status,
+                'created_at' => $order->created_at
             ], 200);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -1279,7 +1282,11 @@ class OrderController extends Controller
             //PlaceOrderMail end
             return response()->json([
                 'message' => translate('messages.order_placed_successfully'),
-                'order_id' => $order->id
+                'order_id' => $order->id,
+                'total_ammount' => $order->order_amount,
+                'offline_payments' => isset($order->offline_payments) ? Helpers::offline_payment_formater($order->offline_payments) : null,
+                'status' => $order->order_status,
+                'created_at' => $order->created_at
             ], 200);
         } catch (\Exception $e) {
             DB::rollBack();
