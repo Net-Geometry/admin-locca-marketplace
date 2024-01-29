@@ -4523,13 +4523,14 @@ class BusinessSettingsController extends Controller
 
                 Toastr::success(translate('messages.business_section_updated'));
         } elseif ($tab == 'header-section') {
-
             $request->validate([
                 'header_title.0' => 'required',
                 'header_sub_title.0' => 'required',
+                'banner_image' => 'required',
             ],[
                 'header_title.0.required' => translate('messages.Default_title_is_required'),
                 'header_sub_title.0.required' => translate('messages.Default_subtitle_is_required'),
+                'banner_image.required' => translate('messages.Banner_image_is_required'),
             ]);
                 $header_title = DataSetting::where('type', 'react_landing_page')->where('key', 'header_title')->first();
                 if ($header_title == null) {

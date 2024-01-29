@@ -214,13 +214,7 @@
                                         <img src="{{asset('storage/app/public/header_banner')}}/{{ $header_banner['value']??'' }}" onerror='this.src="{{asset('/public/assets/admin/img/aspect-1.png')}}"' class="img__aspect-1 mw-100 min-w-135px" alt="">
                                     </div>
                                         <input type="file" name="banner_image"  hidden>
-                                           @if (isset($header_banner['value']))
-                                            <span id="header_image" class="remove_image_button remove-image"
-                                                  data-id="header_image"
-                                                  data-title="{{translate('Warning!')}}"
-                                                  data-text="<p>{{translate('Are_you_sure_you_want_to_remove_this_image_?')}}</p>"
-                                            > <i class="tio-clear"></i></span>
-                                            @endif
+
                                         </div>
                                 </label>
                             </div>
@@ -239,13 +233,7 @@
                 <input type="hidden" name="image_path" value="header_icon" >
                 <input type="hidden" name="field_name" value="value" >
             </form>
-                        <form  id="header_image_form" action="{{ route('admin.remove_image') }}" method="post">
-                @csrf
-                <input type="hidden" name="id" value="{{  $header_banner?->id}}" >
-                <input type="hidden" name="model_name" value="DataSetting" >
-                <input type="hidden" name="image_path" value="header_banner" >
-                <input type="hidden" name="field_name" value="value" >
-            </form>
+              
 
         </div>
     </div>

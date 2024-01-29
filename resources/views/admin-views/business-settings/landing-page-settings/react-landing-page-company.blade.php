@@ -187,6 +187,9 @@
                                     <h5 class="card-title">
                                         <img src="{{asset('public/assets/admin/img/btn-cont.png')}}" class="mr-2" alt="">
                                         {{translate('Button Content')}}
+                                        <span class="input-label-secondary text--title" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('You_must_provide_a_redirect_URL_when_setting_the_button_name') }}">
+                                            <i class="tio-info-outined"></i>
+                                        </span>
                                     </h5>
                                 </div>
                                 <div class="__bg-F8F9FC-card">
@@ -240,9 +243,7 @@
                                                 <i class="tio-info-outined"></i>
                                             </span>
                                         </label>
-                                        <input type="url" {{  $company_button_name?->value || isset($button_url) ? 'required' : 'readonly' }}
-
-                                        id="company_button_url" placeholder="{{translate('Ex: https://www.apple.com/app-store/')}}" class="form-control h--45px" name="company_button_url" value="{{ $company_button_url['value']??'' }}">
+                                        <input type="url"  id="company_button_url" placeholder="{{translate('Ex: https://www.apple.com/app-store/')}}" class="form-control h--45px" name="company_button_url" value="{{ $company_button_url['value']??'' }}">
                                     </div>
                                 </div>
                             </div>
@@ -265,13 +266,13 @@
 <script>
     "use strict";
 
-$(".company_button_name").on("change", function () {
-    if( $(this).val() !== '' ){
-        $('#company_button_url').removeAttr('readonly').attr('required', true);
-    } else {
-        $('#company_button_url').attr('readonly', true).removeAttr('required');
-    }
-});
+// $(".company_button_name").on("change", function () {
+//     if( $(this).val() !== '' ){
+//         $('#company_button_url').removeAttr('readonly').attr('required', true);
+//     } else {
+//         $('#company_button_url').attr('readonly', true).removeAttr('required');
+//     }
+// });
 
 
 </script>
