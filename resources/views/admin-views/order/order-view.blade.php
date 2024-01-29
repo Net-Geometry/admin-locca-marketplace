@@ -1261,7 +1261,7 @@
                         </div>
                     </div>
                 @endif
-                @if ($parcel_order || ($order['order_type'] != 'take_away' && $order->store && !$order->store->self_delivery_system))
+                @if ($parcel_order || ($order['order_type'] != 'take_away' && $order->store ))
                     @if ($order->delivery_man)
                         <div class="card mt-2">
                             <div class="card-body">
@@ -1270,7 +1270,13 @@
                                         <i class="tio-user"></i>
                                     </span>
                                     <span>{{ translate('messages.deliveryman') }}</span>
-                                    @if (!isset($order->delivered))
+
+
+                                    @if ($order->store->self_delivery_system)
+                                       &nbsp; ({{ translate('messages.store') }})
+                                    @endif
+
+                                    @if (!isset($order->delivered) && !$order->store->self_delivery_system)
                                         <a type="button" href="#myModal" class="text--base cursor-pointer ml-auto"
                                             data-toggle="modal" data-target="#myModal">
                                             {{ translate('messages.change') }}
@@ -1278,7 +1284,7 @@
                                     @endif
                                 </h5>
                                 <a class="media align-items-center deco-none customer--information-single"
-                                    href="{{ route('admin.users.delivery-man.preview', [$order->delivery_man['id']]) }}">
+                                    href="{{ !$order->store->self_delivery_system ?  route('admin.users.delivery-man.preview', [$order->delivery_man['id']]) : '#' }}">
                                     <div class="avatar avatar-circle">
                                         <img class="avatar-img onerror-image"
                                             data-onerror-image="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}"
@@ -1594,38 +1600,6 @@
         </div>
     </div>
 
-    <!-- End Modal -->
-
-    <!-- Modal -->
-    {{-- <div class="modal fade" id="offline_payment_cancelation_note" tabindex="-1" role="dialog"
-        aria-labelledby="offline_payment_cancelation_note_l" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="offline_payment_cancelation_note_l">{{ translate('messages.Add_Offline_Payment_Rejection_Note') }}</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form action="{{ route('admin.order.offline_payment') }}" method="get">
-                        <input type="hidden" name="id" value="{{ $order->id }}">
-                        <input type="text" required class="form-control" name="note" value="{{ old('note') }}"
-                            placeholder="{{ translate('transaction_id_mismatched') }}">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{{  translate('close') }}</button>
-                    <button type="submit" class="btn btn-danger">{{ translate('messages.Confirm_Rejection') }} </button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div> --}}
-
-    <!-- End Modal -->
-
-
-
 
     <!-- Modal -->
     <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
@@ -1675,12 +1649,7 @@
                 <form action="{{ route('admin.order.add-order-proof', [$order['id']]) }}" method="post" enctype="multipart/form-data">
                     @csrf
                     <div class="modal-body">
-                        <!-- Input Group -->
                         <div class="flex-grow-1 mx-auto">
-                            {{-- <label class="text-dark d-block">
-                                {{ translate('messages.item_image') }}
-                                <small class="text-danger">* ( {{ translate('messages.ratio') }} 1:1 )</small>
-                            </label> --}}
                             <div class="d-flex flex-wrap __gap-12px __new-coba" id="coba">
                                 @php($proof = isset($order->order_proof) ? json_decode($order->order_proof, true) : 0)
                                 @if ($proof)
@@ -1697,7 +1666,6 @@
                                 @endif
                             </div>
                         </div>
-                        <!-- End Input Group -->
                         <div class="text-right mt-2">
                             <button class="btn btn--primary">{{ translate('messages.submit') }}</button>
                         </div>
