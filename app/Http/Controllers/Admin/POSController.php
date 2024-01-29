@@ -186,54 +186,44 @@ class POSController extends Controller
 
     public function item_stock_view(Request $request)
     {
-
         $product = Item::withoutGlobalScope(StoreScope::class)->with('store')->findOrFail($request->id);
         $selected_item = $request->all();
-        $stock = null;
-        try {
-            $choiceNames = array_column(json_decode($product?->choice_options, true), 'name');
-            $variations = array_map(function ($choiceName) use ($selected_item) {
-                return str_replace(' ', '', $selected_item[$choiceName]);
-            }, $choiceNames);
-
-            $resultString = implode('-', $variations);
-
-            $stockVariations = json_decode($product->variations, true);
-
-            foreach ($stockVariations as $variation) {
-                if ($variation['type'] == $resultString) {
-                    $stock = $variation['stock'];
-                    break;
-                }
-            }
-        } catch (\Throwable $th) {
-            info($th->getMessage());
-        }
-
+        $stock= $this->get_stocks($product,$selected_item);
             return response()->json([
                 'view' => view('admin-views.pos._item-stock-view', compact('product','selected_item','stock' ))->render(),
             ]);
     }
+
     public function item_stock_view_update(Request $request)
     {
-
         $product = Item::withoutGlobalScope(StoreScope::class)->with('store')->findOrFail($request->id);
         $selected_item = $request->all();
-
         $item_key = $request->cart_item_key;
         $cart_item = session()->get('cart')[$item_key];
-// dd($selected_item);
-        $stock = null;
+        $stock= $this->get_stocks($product,$selected_item);
+        return response()->json([
+            'success' => 1,
+            'view' => view('admin-views.pos._quick-view-cart-item', compact('product', 'cart_item', 'item_key' ,'stock','selected_item'))->render(),
+        ]);
+    }
+
+
+    private function get_stocks($product,$selected_item){
         try {
-            $choiceNames = array_column(json_decode($product?->choice_options, true), 'name');
+
+            $choice_options=   json_decode($product?->choice_options, true);
+            $variation=  json_decode($product?->variations, true);
+
+            if(is_array($choice_options) && is_array($variation)  &&  count($choice_options) == 0 && count($variation) == 0 ){
+                return $product->stock ?? null ;
+            }
+
+            $choiceNames = array_column($choice_options, 'name');
             $variations = array_map(function ($choiceName) use ($selected_item) {
                 return str_replace(' ', '', $selected_item[$choiceName]);
             }, $choiceNames);
-
             $resultString = implode('-', $variations);
-
             $stockVariations = json_decode($product->variations, true);
-
             foreach ($stockVariations as $variation) {
                 if ($variation['type'] == $resultString) {
                     $stock = $variation['stock'];
@@ -243,17 +233,12 @@ class POSController extends Controller
         } catch (\Throwable $th) {
             info($th->getMessage());
         }
-
-        return response()->json([
-            'success' => 1,
-            'view' => view('admin-views.pos._quick-view-cart-item', compact('product', 'cart_item', 'item_key' ,'stock','selected_item'))->render(),
-        ]);
-
+        return $stock ?? null ;
     }
+
     public function addToCart(Request $request)
     {
         $product = Item::withoutGlobalScope(StoreScope::class)->with('store')->find($request->id);
-
         if($product->module->module_type == 'food'){
             $data = array();
             $data['id'] = $product->id;
@@ -334,6 +319,14 @@ class POSController extends Controller
             $variations = [];
             $price = 0;
             $addon_price = 0;
+
+            $selected_item = $request->all();
+            $stock= $this->get_stocks($product,$selected_item);
+            if((isset($stock) && min($stock, $product?->maximum_cart_quantity < $request->quantity )||  $product?->maximum_cart_quantity <  $request->quantity  ) ){
+                return response()->json([
+                    'data' => 0
+                ]);
+            }
 
             //Gets all the choice values of customer choice option and generate a string like Black-S-Cotton
             foreach (json_decode($product->choice_options) as $key => $choice) {

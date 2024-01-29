@@ -168,9 +168,9 @@
                                     <i class="tio-remove  font-weight-bold"></i>
                                 </button>
                             </span>
-                            <input type="text" name="quantity"
-                                class="form-control text-center cart-qty-field" placeholder="1"
 
+                            <input type="text" name="quantity"
+                                class="form-control text-center cart-qty-field" placeholder="1" readonly
                                 value="1" min="1" max="{{   (isset($stock) && $stock > 0) ?   ($product?->maximum_cart_quantity ?  min($stock, $product?->maximum_cart_quantity) : $stock)   :  $product?->maximum_cart_quantity ??  '9999999999' }}">
                                 <span class="input-group-btn">
                                     <button class="btn btn-number p--10 text-dark increase-button-cart" type="button" data-type="plus"
