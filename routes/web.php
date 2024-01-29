@@ -1,8 +1,5 @@
 <?php
 
-use App\Models\ItemTag;
-
-use App\Models\Translation;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PaytmController;
 use App\Http\Controllers\LiqPayController;
@@ -181,7 +178,6 @@ if (!$is_published) {
 
 
 Route::get('/test', function () {
-
     dd('Hello tester');
 });
 
