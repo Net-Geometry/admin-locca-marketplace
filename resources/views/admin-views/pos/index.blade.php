@@ -602,6 +602,7 @@
 
     function getVariantPrice() {
         if ($('#add-to-cart-form input[name=quantity]').val() > 0 && checkAddToCartValidity()) {
+            // alert(1);
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
@@ -712,6 +713,7 @@
         check_stock();
     });
 
+
     function check_stock(){
         $.ajaxSetup({
                 headers: {
@@ -726,11 +728,41 @@
                     $('#loading').show();
                 },
                 success: function (data) {
+
+
+                    $('#add-to-cart-form input[name=quantity]').empty()
                     $('#quick-view').modal('show');
-                    cartQuantityInitialize();
-                    getVariantPrice();
                     $('#quick-view-modal').empty().html(data.view);
-                    // getVariantPrice();
+            },
+                complete: function () {
+                    $('#loading').hide();
+                }
+            });
+    }
+
+
+
+    $(document).on('click', '.item-stock-view-update', function () {
+        item_stock_view_update();
+    });
+
+
+    function item_stock_view_update(){
+        $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                }
+            });
+           let form_id = 'add-to-cart-form'
+            $.post({
+                url: '{{ route('admin.pos.item_stock_view_update') }}',
+                data: $('#' + form_id).serializeArray(),
+                beforeSend: function () {
+                    $('#loading').show();
+                },
+                success: function (data) {
+                    $('#quick-view').modal('show');
+                $('#quick-view-modal').empty().html(data.view);
             },
                 complete: function () {
                     $('#loading').hide();

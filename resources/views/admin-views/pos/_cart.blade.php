@@ -57,7 +57,7 @@
                         </div>
                     </td>
                     <td class="text-center middle-align">
-                        <input type="number"  data-key="{{$key}}" class="amount--input form-control text-center update-Quantity" value="{{$cartItem['quantity']}}" min="1" max="{{$cartItem['maximum_cart_quantity']?? '9999999999'}}">
+                        <input type="number"  data-key="{{$key}}" readonly class="amount--input form-control text-center update-Quantity" value="{{$cartItem['quantity']}}" min="1" max="{{$cartItem['maximum_cart_quantity']?? '9999999999'}}">
                     </td>
                     <td class="text-center px-0 py-1">
                         <div class="btn">
@@ -113,7 +113,7 @@
             <dt  class="col-sm-6">{{ translate('messages.tax') }}  : </dt>
             <dd class="col-sm-6 text-right">
                 {{\App\CentralLogics\Helpers::format_currency(round($total_tax_amount,2))}}</dd>
-      @endif
+            @endif
             <dt  class="col-6 pr-0">
                 <hr class="mt-0">
             </dt>

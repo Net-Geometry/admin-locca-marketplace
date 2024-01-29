@@ -138,6 +138,7 @@
                         @endforeach
                     @endif
                 @else
+
                     @foreach (json_decode($product->choice_options) as $choice)
                         <div class="h3 p-0 pt-2">{{ $choice->title }}
                         </div>
@@ -155,22 +156,24 @@
                 @endif
 
                 <!-- Quantity + Add to cart -->
+                @if ((isset($stock) && $stock > 0) || !isset($stock) )
                 <div class="d-flex justify-content-between">
                     <div class="product-description-label mt-2 text-dark h3">{{ translate('messages.quantity') }}:
                     </div>
                     <div class="product-quantity d-flex align-items-center">
                         <div class="input-group input-group--style-2 pr-3 initial--19">
                             <span class="input-group-btn">
-                                <button class="btn btn-number p--10 text-dark" type="button" data-type="minus"
-                                    data-field="quantity" disabled="disabled">
+                                <button class="btn btn-number p--10 text-dark decrease-button-cart" type="button" data-type="minus"
+                                    data-field="quantity" >
                                     <i class="tio-remove  font-weight-bold"></i>
                                 </button>
                             </span>
                             <input type="text" name="quantity"
-                                class="form-control input-number text-center cart-qty-field" placeholder="1"
+                                class="form-control text-center cart-qty-field" placeholder="1"
+
                                 value="1" min="1" max="{{   (isset($stock) && $stock > 0) ?   ($product?->maximum_cart_quantity ?  min($stock, $product?->maximum_cart_quantity) : $stock)   :  $product?->maximum_cart_quantity ??  '9999999999' }}">
-                            <span class="input-group-btn">
-                                <button class="btn btn-number p--10 text-dark" type="button" data-type="plus"
+                                <span class="input-group-btn">
+                                    <button class="btn btn-number p--10 text-dark increase-button-cart" type="button" data-type="plus"
                                     data-field="quantity">
                                     <i class="tio-add  font-weight-bold"></i>
                                 </button>
@@ -178,6 +181,7 @@
                         </div>
                     </div>
                 </div>
+                @endif
                 @php($add_ons = json_decode($product->add_ons))
                 @if (count($add_ons) > 0 && $add_ons[0])
                     <div class="h3 p-0 pt-2">{{ translate('messages.addon') }}</div>
@@ -211,7 +215,7 @@
                     </div>
                 @endif
 
-                @if (isset($stock) && $stock > 0)
+                @if (isset($stock) && $stock > 0 || !isset($stock))
 
                 <div class="row no-gutters d-none mt-2 text-dark" id="chosen_price_div">
                     <div class="col-2">
@@ -234,21 +238,13 @@
                     </button>
                 </div>
                 @elseif(isset($stock) && $stock == 0 )
-
-
-
                 <div class="d-flex justify-content-center mt-2">
                     <button class="btn btn-secondary" type="button" class="h--45px">
                         <i class="tio-shopping-cart"></i>
                         {{ translate('messages.Stock_Out') }}
                     </button>
                 </div>
-
-
                 @else
-
-
-
                 <div class="d-flex justify-content-center mt-2">
                     <button class="btn btn-secondary" type="button" class="h--45px">
                         <i class="tio-shopping-cart"></i>
@@ -262,10 +258,11 @@
 </div>
 <script src="{{asset('public/assets/admin')}}/js/view-pages/common.js"></script>
 <script type="text/javascript">
-    "use strict";
-    cartQuantityInitialize();
+    // "use strict";
     getVariantPrice();
+    // cartQuantityInitialize();
     $('#add-to-cart-form input').on('change', function() {
+        // cartQuantityInitialize();
         getVariantPrice();
     });
 </script>

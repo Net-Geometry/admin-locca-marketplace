@@ -147,7 +147,7 @@
                     @endforeach
                 @endif
 
-                <!-- Quantity + Add to cart -->
+                {{-- <!-- Quantity + Add to cart -->
                 <div class="d-flex justify-content-between">
                     <div class="product-description-label mt-2 text-dark h3">{{ translate('messages.quantity') }}:
                     </div>
@@ -170,7 +170,7 @@
                             </span>
                         </div>
                     </div>
-                </div>
+                </div> --}}
                 @php($add_ons = json_decode($product->add_ons))
                 @if (count($add_ons) > 0 && $add_ons[0])
                     <div class="h3 p-0 pt-2">{{ translate('messages.addon') }}</div>
@@ -228,9 +228,9 @@
 <script type="text/javascript">
     "use strict";
     setTimeout(check_stock, 1000);
-    cartQuantityInitialize();
-    getVariantPrice();
-    $('#add-to-cart-form input').on('change', function() {
-        getVariantPrice();
-    });
+    // cartQuantityInitialize();
+    // getVariantPrice();
+    // $('#add-to-cart-form input').on('change', function() {
+    //     getVariantPrice();
+    // });
 </script>

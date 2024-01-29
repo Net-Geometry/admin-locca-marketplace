@@ -698,6 +698,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                 Route::get('/', 'POSController@index')->name('index');
                 Route::get('quick-view', 'POSController@quick_view')->name('quick-view');
                 Route::post('item-stock-view', 'POSController@item_stock_view')->name('item_stock_view');
+                Route::post('item-stock-view-update', 'POSController@item_stock_view_update')->name('item_stock_view_update');
                 Route::get('quick-view-cart-item', 'POSController@quick_view_card_item')->name('quick-view-cart-item');
                 Route::post('add-to-cart', 'POSController@addToCart')->name('add-to-cart');
                 Route::post('remove-from-cart', 'POSController@removeFromCart')->name('remove-from-cart');

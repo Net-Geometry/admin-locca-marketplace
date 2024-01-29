@@ -71,7 +71,7 @@ class FlashSaleController extends Controller
             ], 403);
         }
         try {
-            $flash_sale_items = FlashSaleItem::where('flash_sale_id',$flash_sale->id)->active()->paginate($limit, ['*'], 'page', $offset);
+            $flash_sale_items = FlashSaleItem::where('flash_sale_id',$flash_sale->id)->where('available_stock' ,'>' ,0 )->active()->paginate($limit, ['*'], 'page', $offset);
             if ($flash_sale_items) {
                 $flash_sale_items->each(function ($activeProduct) {
                     $activeProduct->item = Helpers::product_data_formatting($activeProduct->item, false, false, app()->getLocale());

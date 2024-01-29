@@ -1,5 +1,4 @@
 
-
 "use strict";
 
 $("#order_place").on('keydown', function(e) {
@@ -76,7 +75,6 @@ function cartQuantityInitialize() {
         let  minValue = parseInt($(this).attr('min'));
         let  maxValue = parseInt($(this).attr('max'));
         let  valueCurrent = parseInt($(this).val());
-
         let name = $(this).attr('name');
         if (valueCurrent >= minValue) {
             $(".btn-number[data-type='minus'][data-field='" + name + "']").removeAttr('disabled')
@@ -144,6 +142,26 @@ $(document).on('click', '.increase-button', function () {
         addon_quantity_input.val(currentValue + 1);
         getVariantPrice();
 });
+
+$(document).on('click', '.decrease-button-cart', function () {
+    let addon_quantity_input = $('input[name="quantity"]');
+    let currentValue = parseInt(addon_quantity_input.val(), 10);
+    if (currentValue > 1) {
+        addon_quantity_input.val(currentValue - 1);
+        getVariantPrice();
+    }
+});
+
+$(document).on('click', '.increase-button-cart', function () {
+    let addon_quantity_input = $('input[name="quantity"]');
+    let currentValue = parseInt(addon_quantity_input.val(), 10);
+    let  maxValue = parseInt(addon_quantity_input.attr('max'));
+    if(  maxValue-1 >= currentValue ){
+        addon_quantity_input.val(currentValue + 1);
+        getVariantPrice();
+    }
+});
+
 $('.js-select2-custom').each(function () {
     let select2 = $.HSCore.components.HSSelect2.init($(this));
 });

@@ -189,33 +189,66 @@ class POSController extends Controller
 
         $product = Item::withoutGlobalScope(StoreScope::class)->with('store')->findOrFail($request->id);
         $selected_item = $request->all();
-        $choice_name=[];
+        $stock = null;
+        try {
+            $choiceNames = array_column(json_decode($product?->choice_options, true), 'name');
+            $variations = array_map(function ($choiceName) use ($selected_item) {
+                return str_replace(' ', '', $selected_item[$choiceName]);
+            }, $choiceNames);
 
-            foreach(json_decode($product->choice_options,true) as $choices ){
-                $choice_name[]= $choices['name'] ;
+            $resultString = implode('-', $variations);
+
+            $stockVariations = json_decode($product->variations, true);
+
+            foreach ($stockVariations as $variation) {
+                if ($variation['type'] == $resultString) {
+                    $stock = $variation['stock'];
+                    break;
+                }
             }
-
-            $variation= [];
-            foreach($choice_name as $ii){
-                $variation[]= $selected_item[$ii];
-            }
-
-
-            $resultString = implode('-', $variation);
-
-            $stock_variations= json_decode($product->variations,true);
-            $stock= null;
-
-            foreach($stock_variations as $v){
-                    if($v['type'] ==  $resultString){
-                        $stock= $v['stock'];
-                    }
-
-            }
+        } catch (\Throwable $th) {
+            info($th->getMessage());
+        }
 
             return response()->json([
                 'view' => view('admin-views.pos._item-stock-view', compact('product','selected_item','stock' ))->render(),
             ]);
+    }
+    public function item_stock_view_update(Request $request)
+    {
+
+        $product = Item::withoutGlobalScope(StoreScope::class)->with('store')->findOrFail($request->id);
+        $selected_item = $request->all();
+
+        $item_key = $request->cart_item_key;
+        $cart_item = session()->get('cart')[$item_key];
+// dd($selected_item);
+        $stock = null;
+        try {
+            $choiceNames = array_column(json_decode($product?->choice_options, true), 'name');
+            $variations = array_map(function ($choiceName) use ($selected_item) {
+                return str_replace(' ', '', $selected_item[$choiceName]);
+            }, $choiceNames);
+
+            $resultString = implode('-', $variations);
+
+            $stockVariations = json_decode($product->variations, true);
+
+            foreach ($stockVariations as $variation) {
+                if ($variation['type'] == $resultString) {
+                    $stock = $variation['stock'];
+                    break;
+                }
+            }
+        } catch (\Throwable $th) {
+            info($th->getMessage());
+        }
+
+        return response()->json([
+            'success' => 1,
+            'view' => view('admin-views.pos._quick-view-cart-item', compact('product', 'cart_item', 'item_key' ,'stock','selected_item'))->render(),
+        ]);
+
     }
     public function addToCart(Request $request)
     {
