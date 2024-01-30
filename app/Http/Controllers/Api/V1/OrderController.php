@@ -1403,13 +1403,12 @@ class OrderController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'order_id' => 'required',
-            'guest_id' => $request->user ? 'nullable' : 'required',
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
-        $user_id = $request->user ? $request->user->id : $request['guest_id'];
+        $user_id = $request?->user?->id ;
 
         $order = Order::with('details', 'offline_payments','parcel_category')
         ->when(!isset($request->user) , function($query){
