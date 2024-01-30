@@ -136,11 +136,11 @@
                                             <img class="avatar avatar-lg mr-3 onerror-image" src="{{\App\CentralLogics\Helpers::onerror_image_helper($item->item['image'], asset('storage/app/public/product/').'/'.$item->item['image'], asset('public/assets/admin/img/160x160/img2.jpg'), 'product/') }}"
                                             data-onerror-image="{{asset('public/assets/admin/img/160x160/img2.jpg')}}" alt="{{$item->item->name}} image">
                                             <div class="media-body">
-                                                <h5 class="text-hover-primary mb-0">{{Str::limit($item->item['name'],20,'...')}}</h5>
+                                                <h5 title="{{ $item->item['name'] }}" class="text-hover-primary mb-0">{{Str::limit($item->item['name'],20,'...')}}</h5>
                                             </div>
                                         </a>
                                     </td>
-                                    <td class="text-center">
+                                    <td class="text-center" title="{{ $item->item->store?$item->item->store->name:'' }}">
                                         {{Str::limit($item->item->store?$item->item->store->name:translate('messages.store deleted!'), 20, '...')}}
                                         </td>
                                     <td class="text-center">
@@ -150,7 +150,7 @@
                                         {{ $item['sold'] }}
                                     </td>
                                     <td class="text-center">
-                                        {{ $item['price'] }}
+                                        {{ \App\CentralLogics\Helpers::format_currency($item['price']) }}
                                     </td>
                                     <td class="text-center">
                                         <label class="toggle-switch toggle-switch-sm" for="publishCheckbox{{$item->id}}">
