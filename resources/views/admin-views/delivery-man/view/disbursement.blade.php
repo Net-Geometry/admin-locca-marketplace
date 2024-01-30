@@ -169,7 +169,7 @@
                                                                 <ul class="item-list">
                                                                     <li class="d-flex flex-wrap">
                                                                         <span class="name">{{ translate('payment_method') }}</span>
-                                                                        <strong>{{$disbursement?->withdraw_method->method_name}}</strong>
+                                                                        <strong>{{$disbursement?->withdraw_method?->method_name ?? translate('messages.N/A')}}</strong>
                                                                     </li>
                                                                     <li class="d-flex flex-wrap">
                                                                         <span class="name">{{ translate('amount') }}</span>
