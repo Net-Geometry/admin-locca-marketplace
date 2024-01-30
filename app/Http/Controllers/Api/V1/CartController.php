@@ -72,6 +72,19 @@ class CartController extends Controller
             ], 403);
         }
 
+        $carts = Cart::where('user_id', $user_id)->where('is_guest',$is_guest)->where('module_id',$request->header('moduleId'))->with('item')->get();
+
+        foreach($carts as $cart){
+                if($cart?->item?->store_id  && $cart?->item?->store_id != $item->store_id){
+                    return response()->json([
+                        'errors' => [
+                            ['code' => 'different_stores', 'message' => translate('messages.Please_select_items_from_the_same_store')]
+                        ]
+                    ], 403);
+                }
+            }
+
+
         $cart = new Cart();
         $cart->user_id = $user_id;
         $cart->module_id = $request->header('moduleId');

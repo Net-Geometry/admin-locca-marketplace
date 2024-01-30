@@ -72,6 +72,7 @@
                             </ul>
                         @endif
                     </div>
+
                     <div class="pl-xl-5 pl-xxl-0">
                         @if($language)
                                 <div class="form-group lang_form" id="default-form">
@@ -110,12 +111,10 @@
                                     {{translate('messages.draw_your_zone_on_the_map')}}
                                 </span>
                             </label>
-                            <textarea  type="text" name="coordinates"  id="coordinates" class="form-control">@foreach($area['coordinates'] as $key=>$coords)
-                                <?php if(count($area['coordinates']) != $key+1) {if($key != 0) echo(','); ?>({{$coords[1]}}, {{$coords[0]}})
-                                <?php } ?>
-                                @endforeach
-                            </textarea>
+                                <textarea type="text" rows="8" name="coordinates" id="coordinates" class="form-control" readonly>@foreach($zone->coordinates[0]->toArray()['coordinates'] as $key=>$coords)<?php if(count($zone->coordinates[0]->toArray()['coordinates']) != $key+1) {if($key != 0) echo(','); ?>({{$coords[1]}}, {{$coords[0]}})<?php } ?>@endforeach</textarea>
                         </div>
+
+
                         <div class="map-warper rounded mt-0">
                             <input id="pac-input" class="controls rounded initial--33" title="{{translate('messages.search_your_location_here')}}" type="text" placeholder="{{translate('messages.search_here')}}"/>
                             <div id="map-canvas" class="initial--34"></div>

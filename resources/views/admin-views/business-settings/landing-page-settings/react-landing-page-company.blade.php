@@ -75,13 +75,22 @@
                                         <div class="mb-2">
                                             <label for="company_title" class="form-label">{{translate('Title')}}({{ translate('messages.default') }})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_20_characters') }}">
                                                 <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
-                                            </span></label>
+                                            </span><span class="form-label-secondary text-danger"
+                                            data-toggle="tooltip" data-placement="right"
+                                            data-original-title="{{ translate('messages.Required.')}}"> *
+                                            </span>
+                                            </label>
                                     <input id="company_title" type="text"  maxlength="20" name="company_title[]" value="{{ $company_title?->getRawOriginal('value')??'' }}" class="form-control" placeholder="{{translate('messages.title_here...')}}">
                                         </div>
                                         <div class="mb-2">
                                             <label for="company_sub_title" class="form-label">{{translate('Sub Title')}}({{ translate('messages.default') }})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_40_characters') }}">
                                                 <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
-                                            </span></label>
+                                            </span>
+                                            <span class="form-label-secondary text-danger"
+                                            data-toggle="tooltip" data-placement="right"
+                                            data-original-title="{{ translate('messages.Required.')}}"> *
+                                            </span>
+                                        </label>
                                     <input id="company_sub_title" type="text"  maxlength="40" name="company_sub_title[]" value="{{ $company_sub_title?->getRawOriginal('value')??'' }}" class="form-control" placeholder="{{translate('messages.sub_title_here...')}}">
                                         </div>
                                         <div class="mb-2">
@@ -178,6 +187,9 @@
                                     <h5 class="card-title">
                                         <img src="{{asset('public/assets/admin/img/btn-cont.png')}}" class="mr-2" alt="">
                                         {{translate('Button Content')}}
+                                        <span class="input-label-secondary text--title" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('You_must_provide_a_redirect_URL_when_setting_the_button_name') }}">
+                                            <i class="tio-info-outined"></i>
+                                        </span>
                                     </h5>
                                 </div>
                                 <div class="__bg-F8F9FC-card">
@@ -188,7 +200,7 @@
                                                 <span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_20_characters') }}">
                                                 <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
                                             </span></label>
-                                    <input id="company_button_name" type="text" maxlength="20" name="company_button_name[]" value="{{ $company_button_name?->getRawOriginal('value')??'' }}"  placeholder="{{translate('Ex: Order now')}}" class="form-control h--45px" >
+                                    <input id="company_button_name" type="text" maxlength="20" name="company_button_name[]" value="{{ $company_button_name?->getRawOriginal('value')??'' }}"  placeholder="{{translate('Ex: Order now')}}" class="form-control h--45px company_button_name" >
                                         </div>
                                     @foreach(json_decode($language) as $lang)
                                     <?php
@@ -198,6 +210,7 @@
                                             {
                                                 if($t->locale == $lang && $t->key=='company_button_name'){
                                                     $company_button_name_translate[$lang]['value'] = $t->value;
+                                                    $button_url= 1;
                                                 }
                                             }
 
@@ -209,7 +222,7 @@
                                                 <span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_20_characters') }}">
                                                 <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
                                             </span></label>
-                                    <input id="company_button_name{{$lang}}" type="text" maxlength="20" name="company_button_name[]" value="{{ $company_button_name_translate[$lang]['value']??'' }}"  placeholder="{{translate('Ex: Order now')}}" class="form-control h--45px" >
+                                    <input id="company_button_name{{$lang}}" type="text" maxlength="20" name="company_button_name[]" value="{{ $company_button_name_translate[$lang]['value']??'' }}"  placeholder="{{translate('Ex: Order now')}}" class="form-control h--45px company_button_name" >
                                         </div>
                                     @endforeach
                                 @else
@@ -220,7 +233,7 @@
                                             <i class="tio-info-outined"></i>
                                         </span>
                                     </label>
-                                    <input id="company_button_name" type="text" placeholder="{{translate('Ex: Order now')}}" class="form-control h--45px" name="company_button_name[]" >
+                                    <input id="company_button_name" type="text" placeholder="{{translate('Ex: Order now')}}" class="form-control h--45px company_button_name" name="company_button_name[]" >
                                 </div>
                                 @endif
                                     <div class="form-group mb-md-0">
@@ -230,7 +243,7 @@
                                                 <i class="tio-info-outined"></i>
                                             </span>
                                         </label>
-                                        <input type="text" id="company_button_url" placeholder="{{translate('Ex: https://www.apple.com/app-store/')}}" class="form-control h--45px" name="company_button_url" value="{{ $company_button_url['value']??'' }}">
+                                        <input type="url"  id="company_button_url" placeholder="{{translate('Ex: https://www.apple.com/app-store/')}}" class="form-control h--45px" name="company_button_url" value="{{ $company_button_url['value']??'' }}">
                                     </div>
                                 </div>
                             </div>
@@ -249,4 +262,18 @@
 <!-- How it Works -->
 @include('admin-views.business-settings.landing-page-settings.partial.how-it-work-react')
 @endsection
+@push('script_2')
+<script>
+    "use strict";
 
+// $(".company_button_name").on("change", function () {
+//     if( $(this).val() !== '' ){
+//         $('#company_button_url').removeAttr('readonly').attr('required', true);
+//     } else {
+//         $('#company_button_url').attr('readonly', true).removeAttr('required');
+//     }
+// });
+
+
+</script>
+    @endpush

@@ -72,7 +72,7 @@ class ReportController extends Controller
         $paginator=DisbursementDetails::where('store_id',$store_id)->latest()->paginate($limit, ['*'], 'page', $offset);
 
         $paginator->each(function ($data) {
-            $data->withdraw_method->method_fields = json_decode($data->withdraw_method->method_fields,true);
+            $data->withdraw_method?->method_fields ?  $data->withdraw_method->method_fields = json_decode($data->withdraw_method?->method_fields, true) : '';
         });
 
         $data = [

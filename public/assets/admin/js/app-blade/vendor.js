@@ -108,12 +108,4 @@ $(document).on('ready', function () {
     });
 });
 
-let audio = document.getElementById("myAudio");
 
-function playAudio() {
-    audio.play();
-}
-
-function pauseAudio() {
-    audio.pause();
-}

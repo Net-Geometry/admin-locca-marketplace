@@ -224,6 +224,7 @@ $(".set-filter").on("change", function () {
     const url = $(this).data('url');
     const filter_by = $(this).data('filter');
     let nurl = new URL(url);
+    nurl.searchParams.delete('page');
     nurl.searchParams.set(filter_by, id);
     location.href = nurl;
     tour.next();
@@ -277,9 +278,15 @@ $(document).on('click', '.confirm-Toggle', function () {
     }
     if(toggle_id === 'product_approval'){
         if ($("#product_approval").is(':checked')) {
-            $(".access_product_approval").removeClass('d-none');
+            $("#inlineCheckbox1").prop('disabled', false);
+            $("#inlineCheckbox2").prop('disabled', false);
+            $("#inlineCheckbox3").prop('disabled', false);
+            $("#inlineCheckbox4").prop('disabled', false);
         } else {
-            $(".access_product_approval").addClass('d-none');
+            $("#inlineCheckbox1").prop('disabled', true);
+            $("#inlineCheckbox2").prop('disabled', true);
+            $("#inlineCheckbox3").prop('disabled', true);
+            $("#inlineCheckbox4").prop('disabled', true);
         }
     }
     if(toggle_id === 'additional_charge_status'){
@@ -304,7 +311,24 @@ $(document).on('click', '.confirm-Toggle', function () {
             $('#dm_max_cash_in_hand').attr('readonly', true).removeAttr('required');
         }
     }
+    if(toggle_id === 'play-store-dm-status'){
 
+        if ($("#play-store-dm-status").is(':checked')) {
+            $('#playstore_url').removeAttr('readonly').attr('required', true);
+
+        } else {
+            $('#playstore_url').attr('readonly', true).removeAttr('required');
+        }
+    }
+    if(toggle_id === 'apple-dm-status'){
+
+        if ($("#apple-dm-status").is(':checked')) {
+            $('#apple_store_url').removeAttr('readonly').attr('required', true);
+
+        } else {
+            $('#apple_store_url').attr('readonly', true).removeAttr('required');
+        }
+    }
 
 
 });

@@ -69,14 +69,24 @@
                                             <label for="download_user_app_title" class="form-label">{{translate('Title')}} ({{ translate('messages.default') }})
                                             <span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_60_characters') }}">
                                                 <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
-                                            </span></label>
+                                            </span><span class="form-label-secondary text-danger"
+                                            data-toggle="tooltip" data-placement="right"
+                                            data-original-title="{{ translate('messages.Required.')}}"> *
+                                            </span>
+
+                                        </label>
                                     <input id="download_user_app_title" type="text"  maxlength="60" name="download_user_app_title[]" value="{{ $download_user_app_title?->getRawOriginal('value')??'' }}" class="form-control" placeholder="{{translate('messages.title_here...')}}">
                                         </div>
                                         <div class="col-12">
                                             <label for="download_user_app_sub_title" class="form-label">{{translate('Sub Title')}} ({{ translate('messages.default') }})
                                             <span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_180_characters') }}">
                                                 <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
-                                            </span></label>
+                                            </span><span class="form-label-secondary text-danger"
+                                            data-toggle="tooltip" data-placement="right"
+                                            data-original-title="{{ translate('messages.Required.')}}"> *
+                                            </span>
+
+                                        </label>
                                     <input id="download_user_app_sub_title" type="text"  maxlength="180" name="download_user_app_sub_title[]" value="{{ $download_user_app_sub_title?->getRawOriginal('value')??'' }}" class="form-control" placeholder="{{translate('messages.sub_title_here...')}}">
                                         </div>
                                     </div>
@@ -174,7 +184,7 @@
                                                 </span>
                                             </label>
                                         </div>
-                                        <input type="text" id="playstore_url" placeholder="{{translate('Ex: https://play.google.com/store/apps')}}" class="form-control h--45px" name="playstore_url" value="{{ $download_user_app_links['playstore_url']??''}}">
+                                        <input type="url" {{(isset($download_user_app_links) && $download_user_app_links['playstore_url_status'])?'required':''}} id="playstore_url" placeholder="{{translate('Ex: https://play.google.com/store/apps')}}" class="form-control h--45px" name="playstore_url" value="{{ $download_user_app_links['playstore_url']??''}}">
                                     </div>
                                 </div>
                             </div>
@@ -209,7 +219,7 @@
                                                 </span>
                                             </label>
                                         </div>
-                                        <input type="text" id="apple_store_url" placeholder="{{translate('Ex: https://www.apple.com/app-store/')}}" class="form-control h--45px" name="apple_store_url" value="{{ $download_user_app_links['apple_store_url']??''}}">
+                                        <input type="url" id="apple_store_url" {{(isset($download_user_app_links) && $download_user_app_links['apple_store_url_status'])?'required':''}} placeholder="{{translate('Ex: https://www.apple.com/app-store/')}}" class="form-control h--45px" name="apple_store_url" value="{{ $download_user_app_links['apple_store_url']??''}}">
                                     </div>
                                 </div>
                             </div>

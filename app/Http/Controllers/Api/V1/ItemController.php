@@ -131,7 +131,7 @@ class ItemController extends Controller
         })
         ->where(function ($q) use ($key) {
             foreach ($key as $value) {
-                $q->orWhere('name', 'like', "%{$value}%")->orWhere('description', 'like', "%{$value}%");
+                $q->orWhere('name', 'like', "%{$value}%");
             }
             $q->orWhereHas('translations',function($query)use($key){
                 $query->where(function($q)use($key){
@@ -163,7 +163,7 @@ class ItemController extends Controller
             });
 
         })
-
+        ->orderByRaw("FIELD(name, ?) DESC", [$request['name']])
         ->paginate($limit, ['*'], 'page', $offset);
 
         $data =  [

@@ -59,7 +59,11 @@ class PasswordResetController extends Controller
 
             $mail_status = Helpers::get_mail_status('forget_password_mail_status_user');
             if (config('mail.status') && $mail_status == '1') {
-                Mail::to($customer['email'])->send(new \App\Mail\UserPasswordResetMail($token,$customer['f_name']));
+                try {
+                    Mail::to($customer['email'])->send(new \App\Mail\UserPasswordResetMail($token,$customer['f_name']));
+                } catch (\Throwable $th) {
+                
+                }
             }
             // return response()->json(['message' => 'Email sent successfully.'], 200);
             //for payment and sms gateway addon

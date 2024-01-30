@@ -40,6 +40,14 @@
                         </div>
                         <!-- End Search -->
                     </form>
+                    <div>
+                        <select id="module_type" name="module_type" class="form-control h--45px set-filter" data-url="{{ url()->full() }}" data-filter="module_type">
+                            <option value="all" {{ request('module_type') == 'all' ? 'selected' : '' }}>{{ translate('messages.all_module_type') }}</option>
+                            @foreach (config('module.module_type') as $key)
+                                <option class="" value="{{$key}}" {{ request('module_type') == $key ? 'selected' : '' }}>{{translate($key)}}</option>
+                            @endforeach
+                        </select>
+                    </div>
                     <div class="hs-unfold mr-2">
                         <a class="js-hs-unfold-invoker btn btn-sm btn-white dropdown-toggle min-height-40" href="javascript:;"
                             data-hs-unfold-options='{
