@@ -1076,7 +1076,7 @@ class DeliverymanController extends Controller
         $paginator=DisbursementDetails::where('delivery_man_id',$dm['id'])->latest()->paginate($limit, ['*'], 'page', $offset);
 
         $paginator->each(function ($data) {
-            $data->withdraw_method->method_fields = json_decode($data->withdraw_method->method_fields,true);
+            $data->withdraw_method?->method_fields ?  $data->withdraw_method->method_fields = json_decode($data->withdraw_method?->method_fields, true) : '';
         });
 
         $data = [

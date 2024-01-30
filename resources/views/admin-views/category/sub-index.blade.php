@@ -185,7 +185,7 @@
             <hr>
             @endif
             <div class="page-area">
-                {!! $categories->links() !!}
+                {!! $categories->appends(request()->query())->links() !!}
             </div>
             @if(count($categories) === 0)
             <div class="empty--data">

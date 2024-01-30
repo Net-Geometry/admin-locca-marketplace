@@ -224,6 +224,7 @@ $(".set-filter").on("change", function () {
     const url = $(this).data('url');
     const filter_by = $(this).data('filter');
     let nurl = new URL(url);
+    nurl.searchParams.delete('page');
     nurl.searchParams.set(filter_by, id);
     location.href = nurl;
     tour.next();
@@ -310,7 +311,24 @@ $(document).on('click', '.confirm-Toggle', function () {
             $('#dm_max_cash_in_hand').attr('readonly', true).removeAttr('required');
         }
     }
+    if(toggle_id === 'play-store-dm-status'){
 
+        if ($("#play-store-dm-status").is(':checked')) {
+            $('#playstore_url').removeAttr('readonly').attr('required', true);
+
+        } else {
+            $('#playstore_url').attr('readonly', true).removeAttr('required');
+        }
+    }
+    if(toggle_id === 'apple-dm-status'){
+
+        if ($("#apple-dm-status").is(':checked')) {
+            $('#apple_store_url').removeAttr('readonly').attr('required', true);
+
+        } else {
+            $('#apple_store_url').attr('readonly', true).removeAttr('required');
+        }
+    }
 
 
 });

@@ -489,6 +489,16 @@ class OrderController extends Controller
                 if ($c['item_type'] === 'App\Models\ItemCampaign' || $c['item_type'] === 'AppModelsItemCampaign') {
                     $product = ItemCampaign::with('module')->active()->find($c['item_id']);
                     if ($product) {
+
+
+                        if($product->store_id != $order->store_id){
+                            return response()->json([
+                                'errors' => [
+                                    ['code' => 'different_stores', 'message' => translate('messages.Please_select_items_from_the_same_store')]
+                                ]
+                            ], 403);
+                        }
+
                         if ($product->module->module_type == 'food' && $product->food_variations) {
                             $product_variations = json_decode($product->food_variations, true);
                             $variations = [];
@@ -582,6 +592,16 @@ class OrderController extends Controller
                 } else {
                     $product = Item::with('module')->active()->find($c['item_id']);
                     if ($product) {
+
+                        if($product->store_id != $order->store_id){
+                            return response()->json([
+                                'errors' => [
+                                    ['code' => 'different_stores', 'message' => translate('messages.Please_select_items_from_the_same_store')]
+                                ]
+                            ], 403);
+                        }
+
+
                         if($product->maximum_cart_quantity && ($c['quantity'] > $product->maximum_cart_quantity)){
                             return response()->json([
                                 'errors' => [
@@ -882,7 +902,9 @@ class OrderController extends Controller
             return response()->json([
                 'message' => translate('messages.order_placed_successfully'),
                 'order_id' => $order->id,
-                'total_ammount' => $order->order_amount
+                'total_ammount' => $order->order_amount,
+                'status' => $order->order_status,
+                'created_at' => $order->created_at
             ], 200);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -1279,7 +1301,11 @@ class OrderController extends Controller
             //PlaceOrderMail end
             return response()->json([
                 'message' => translate('messages.order_placed_successfully'),
-                'order_id' => $order->id
+                'order_id' => $order->id,
+                'total_ammount' => $order->order_amount,
+                'offline_payments' => isset($order->offline_payments) ? Helpers::offline_payment_formater($order->offline_payments) : null,
+                'status' => $order->order_status,
+                'created_at' => $order->created_at
             ], 200);
         } catch (\Exception $e) {
             DB::rollBack();

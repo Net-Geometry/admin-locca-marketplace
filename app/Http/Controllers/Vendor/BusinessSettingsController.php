@@ -57,8 +57,8 @@ class BusinessSettingsController extends Controller
             'meta_title.0' => 'required',
             'meta_description.0' => 'required',
         ],[
-            'meta_title.0.required'=>translate('default_meta_title_is_required'),           
-            'meta_description.0.required'=>translate('default_meta_description_is_required'),           
+            'meta_title.0.required'=>translate('default_meta_title_is_required'),
+            'meta_description.0.required'=>translate('default_meta_description_is_required'),
         ]);
 
         $store->meta_image = $request->has('meta_image') ? Helpers::update('store/', $store->meta_image, 'png', $request->file('meta_image')) : $store->meta_image;
@@ -66,7 +66,7 @@ class BusinessSettingsController extends Controller
         $store->meta_title = $request->meta_title[array_search('default', $request->lang)];
         $store->meta_description = $request->meta_description[array_search('default', $request->lang)];
 
-        $store->save();        
+        $store->save();
         $default_lang = str_replace('_', '-', app()->getLocale());
         foreach($request->lang as $index=>$key)
         {
@@ -139,6 +139,12 @@ class BusinessSettingsController extends Controller
         if((($request->menu == "veg" && $store->non_veg==0) || ($request->menu == "non_veg" && $store->veg==0)) &&  $request->status == 0 )
         {
             Toastr::warning(translate('messages.veg_non_veg_disable_warning'));
+            return back();
+        }
+
+        if($request->menu == "announcement" &&  $request->status == 1 &&  !isset($store->announcement_message) )
+        {
+            Toastr::warning(translate('messages.You_need_to_add_announcement_message_first'));
             return back();
         }
 

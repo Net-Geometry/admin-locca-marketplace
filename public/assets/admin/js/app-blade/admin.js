@@ -12,14 +12,6 @@ setTimeout(() => {
 }, 5000);
 
 
-let audio = document.getElementById("myAudio");
-function playAudio() {
-    audio.play();
-}
-
-function pauseAudio() {
-    audio.pause();
-}
 
 
 $(document).on('click', '.next-tour', function () {

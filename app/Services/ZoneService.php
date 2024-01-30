@@ -13,12 +13,16 @@ class ZoneService
     {
         $value = $request['coordinates'];
 
+
+        // dd($value);
         foreach(explode('),(',trim($value,'()')) as $index=>$single_array){
             if($index == 0)
             {
                 $lastCord = explode(',',$single_array);
             }
             $coords = explode(',',$single_array);
+// dd($coords);
+
             $polygon[] = new Point($coords[0], $coords[1]);
         }
         $polygon[] = new Point($lastCord[0], $lastCord[1]);
