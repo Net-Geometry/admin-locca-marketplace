@@ -220,16 +220,31 @@
                                             </label>
                                         </div>
                                     </td>
-                                    <td>
+                                    <td  >
                                         <div class="d-flex justify-content-center">
                                             <label class="toggle-switch toggle-switch-sm" for="statusCheckbox{{$banner->id}}">
-                                            <input type="checkbox" data-url="{{route('admin.banner.status',[$banner['id'],$banner->status?0:1])}}" class="toggle-switch-input redirect-url" id="statusCheckbox{{$banner->id}}" {{$banner->status?'checked':''}}>
+                                            <input type="checkbox" data-url="{{route('admin.banner.status',[$banner['id'],$banner->status?0:1])}}"
+
+                                            data-id="statusCheckbox{{$banner->id}}"
+                                            data-type="status"
+                                            data-image-on="{{ asset('/public/assets/admin/img/modal/basic_campaign_on.png') }}"
+                                            data-image-off="{{ asset('/public/assets/admin/img/modal/basic_campaign_off.png') }}"
+                                            data-title-on="{{ translate('By_Turning_ON_Banner!') }}"
+                                            data-title-off="{{ translate('By_Turning_OFF_Banner!') }}"
+                                            data-text-on="<p>{{ translate('Turned_on_to_customer_website_and_apps._Are_you_sure_you_want_to_turn_on_the_Banner_already_inactive.') }}</p>"
+                                            data-text-off="<p>{{ translate('Turned_off_to_customer_website_and_apps._Are_you_sure_you_want_to_turn_off_the_Banner_already_active') }}</p>"
+
+                                            class="toggle-switch-input  dynamic-checkbox" id="statusCheckbox{{$banner->id}}" {{$banner->status?'checked':''}}>
                                             <span class="toggle-switch-label">
                                                 <span class="toggle-switch-indicator"></span>
                                             </span>
                                         </label>
                                         </div>
                                     </td>
+
+                                    <form action="{{route('admin.banner.status',[$banner['id'],$banner->status?0:1])}}"
+                                        method="get" id="statusCheckbox{{$banner->id}}_form">
+                                        </form>
                                     <td>
                                         <div class="btn--container justify-content-center">
                                             <a class="btn action-btn btn--primary btn-outline-primary" href="{{route('admin.banner.edit',[$banner['id']])}}" title="{{translate('messages.edit_banner')}}"><i class="tio-edit"></i>
