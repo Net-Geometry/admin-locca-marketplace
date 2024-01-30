@@ -100,7 +100,7 @@ class SocialAuthController extends Controller
 
                         $notification_data = [
                             'title' => translate('messages.Your_referral_code_is_used_by').' '.$fast_name.' '.$last_name,
-                            'description' => ' ' ,
+                            'description' => translate('Be prepare to receive when they complete there first purchase') ,
                             'order_id' => 1,
                             'image' => '',
                             'type' => 'referral_code',
@@ -257,7 +257,7 @@ class SocialAuthController extends Controller
 
                         $notification_data = [
                             'title' => translate('messages.Your_referral_code_is_used_by').' '.$fast_name.' '.$last_name,
-                            'description' => ' ' ,
+                            'description' => translate('Be prepare to receive when they complete there first purchase') ,
                             'order_id' => 1,
                             'image' => '',
                             'type' => 'referral_code',
