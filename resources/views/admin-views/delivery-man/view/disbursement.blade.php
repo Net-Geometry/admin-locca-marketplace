@@ -110,7 +110,7 @@
                                 </td>
                                 <td>
                                     <div>
-                                        {{$disbursement->withdraw_method->method_name}}
+                                        {{$disbursement?->withdraw_method?->method_name ?? translate('messages.N/A')}}
                                     </div>
                                 </td>
                                 <td>
@@ -162,32 +162,21 @@
                                                                 </ul>
                                                             </div>
                                                             <div class="item">
-                                                                {{--                                                                <h5>{{ translate('Owner_Information') }}</h5>--}}
-                                                                {{--                                                                <ul class="item-list">--}}
-                                                                {{--                                                                    <li class="d-flex flex-wrap">--}}
-                                                                {{--                                                                        <span class="name">{{ translate('name') }}</span>--}}
-                                                                {{--                                                                        <span>:</span>--}}
-                                                                {{--                                                                        <strong>{{$disbursement->restaurant->vendor->f_name}} {{$disbursement->restaurant->vendor->l_name}}</strong>--}}
-                                                                {{--                                                                    </li>--}}
-                                                                {{--                                                                    <li class="d-flex flex-wrap">--}}
-                                                                {{--                                                                        <span class="name">{{ translate('email') }}</span>--}}
-                                                                {{--                                                                        <span>:</span>--}}
-                                                                {{--                                                                        <strong>{{$disbursement->restaurant->vendor->email}}</strong>--}}
-                                                                {{--                                                                    </li>--}}
-                                                                {{--                                                                </ul>--}}
+
                                                             </div>
                                                             <div class="item w-100">
                                                                 <h5>{{ translate('Account_Information') }}</h5>
                                                                 <ul class="item-list">
                                                                     <li class="d-flex flex-wrap">
                                                                         <span class="name">{{ translate('payment_method') }}</span>
-                                                                        <strong>{{$disbursement->withdraw_method->method_name}}</strong>
+                                                                        <strong>{{$disbursement?->withdraw_method->method_name}}</strong>
                                                                     </li>
                                                                     <li class="d-flex flex-wrap">
                                                                         <span class="name">{{ translate('amount') }}</span>
                                                                         <strong>{{\App\CentralLogics\Helpers::format_currency($disbursement['disbursement_amount'])}}</strong>
                                                                     </li>
-                                                                    @forelse(json_decode($disbursement->withdraw_method->method_fields, true) as $key=> $item)
+                                                                    @if ($disbursement?->withdraw_method?->method_fields)
+                                                                    @forelse(json_decode($disbursement->withdraw_method?->method_fields, true) as $key=> $item)
                                                                         <li class="d-flex flex-wrap">
                                                                             <span class="name">{{  translate($key) }}</span>
                                                                             <strong>{{$item}}</strong>
@@ -195,6 +184,8 @@
                                                                     @empty
 
                                                                     @endforelse
+
+                                                                    @endif
 
                                                                 </ul>
                                                             </div>
