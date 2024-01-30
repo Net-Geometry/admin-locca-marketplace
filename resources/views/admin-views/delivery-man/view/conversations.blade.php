@@ -61,7 +61,11 @@
                         </div>
                         <!-- Body -->
                         <div class="card-body p-0 initial-19"  id="dm-conversation-list">
-                            <div class="border-bottom"></div>
+                            <div class="d-flex justify-content-center gap-4 mb-3">
+                                <div class="">Customer</div>
+                                <div class="">Store</div>
+                            </div>
+
                             @include('admin-views.delivery-man.partials._conversation_list')
                         </div>
                         <!-- End Body -->

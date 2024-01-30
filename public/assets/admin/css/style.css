@@ -4557,7 +4557,9 @@ div.scroll-down {
 }
 
 .conv-active {
-    background: #f3f3f3 !important;
+    border-top: 1px solid rgba(0, 134, 143, 0.40);
+    border-bottom: 1px solid rgba(0, 134, 143, 0.40);
+    background-color: rgba(0, 159, 170, 0.05);
 }
 
 .btn-check {

@@ -3828,4 +3828,7 @@
   'If_enabled,_delivery_men_have_to_provide_collected_cash_by_themselves.' => 'If enabled  delivery men have to provide collected cash by themselves.',
   'If_disabled,_delivery_men_do_not_have_to_provide_collected_cash_by_themselves.' => 'If disabled  delivery men do not have to provide collected cash by themselves.',
   'all_module_type' => 'All module type',
+  'Blocked_deliveryman' => 'Blocked deliveryman',
+  'Total_Completed_Orders' => 'Total Completed Orders',
+  'ex_: search_delivery_man_,_email_or_phone' => 'Ex : search delivery man   email or phone',
 );

@@ -6010,19 +6010,15 @@ a:hover .text-hover-primary {
     position: relative;
 }
 .conv-reply-1 {
-    background: rgba(133, 148, 159, 0.1);
-    border-radius: 5.14528px;
+    border-radius: 5px 5px 0px 0px;
+    background-color: rgba(51, 66, 87, 0.05);
     padding: 20px;
     width: calc(100% - 20px);
     max-width: 505px;
 }
-.conv-reply-2 * {
-    color: #fff !important;
-}
 .conv-reply-2 {
-    color: #fff !important;
-    background: #334257;
-    border-radius: 5.14528px;
+    border-radius: 5px 5px 0px 0px;
+    background-color: rgba(0, 159, 170, 0.05);
     padding: 20px;
     width: calc(100% - 20px);
     max-width: 505px;
