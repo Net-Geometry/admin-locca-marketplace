@@ -235,7 +235,7 @@
 
 "use strict";
 
-    audio = document.getElementById("myAudio");
+  var  audio = document.getElementById("myAudio");
     function playAudio() {
         audio.play();
     }

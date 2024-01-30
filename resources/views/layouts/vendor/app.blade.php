@@ -196,6 +196,15 @@
 <script>
 
 "use strict";
+var audio = document.getElementById("myAudio");
+
+function playAudio() {
+    audio.play();
+}
+
+function pauseAudio() {
+    audio.pause();
+}
     $(document).on('ready', function(){
         // $('body').css('overflow','')
         $(".direction-toggle").on("click", function () {
