@@ -186,7 +186,6 @@
                                 <tr>
                                     <th class="border-0">{{ translate('messages.SL') }}</th>
                                     <th class="border-0">{{translate('messages.title')}}</th>
-                                    <th class="border-0">{{translate('messages.module')}}</th>
                                     <th class="border-0">{{translate('messages.type')}}</th>
                                     <th class="border-0 text-center">{{translate('messages.featured')}}</th>
                                     <th class="border-0 text-center">{{translate('messages.status')}}</th>
@@ -203,14 +202,13 @@
                                             <img class="img--ratio-3 w-auto h--50px rounded mr-2 onerror-image" src="{{\App\CentralLogics\Helpers::onerror_image_helper($banner['image'], asset('storage/app/public/banner/').'/'.$banner['image'], asset('public/assets/admin/img/900x400/img1.jpg'), 'banner/') }}"
                                                 data-onerror-image="{{asset('/public/assets/admin/img/900x400/img1.jpg')}}" alt="{{$banner->name}} image">
                                             <div class="media-body">
-                                                <h5 class="text-hover-primary mb-0">{{Str::limit($banner['title'], 25, '...')}}</h5>
+                                                <h5 title="{{ $banner['title'] }}" class="text-hover-primary mb-0">{{Str::limit($banner['title'], 25, '...')}}</h5>
                                             </div>
                                         </span>
                                     <span class="d-block font-size-sm text-body">
 
                                     </span>
                                     </td>
-                                    <td>{{Str::limit($banner->module->module_name, 15, '...')}}</td>
                                     <td>{{translate('messages.'.$banner['type'])}}</td>
                                     <td>
                                         <div class="d-flex justify-content-center">

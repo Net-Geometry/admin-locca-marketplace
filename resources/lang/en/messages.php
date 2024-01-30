@@ -3857,4 +3857,8 @@
   'Customer Not found!' => 'Customer Not found!',
   'item_quantity' => 'Item quantity',
   'Scheduled_at' => 'Scheduled at',
+  'By_Turning_ON_Campaign!' => 'By Turning ON Campaign!',
+  'By_Turning_OFF_Campaign!' => 'By Turning OFF Campaign!',
+  'Turned_on_to_customer_website_and_apps._Are_you_sure_you_want_to_turn_on_the_campaign_already_inactive.' => 'Turned on to customer website and apps. Are you sure you want to turn on the campaign already inactive.',
+  'Turned_off_to_customer_website_and_apps._Are_you_sure_you_want_to_turn_off_the_campaign_already_active' => 'Turned off to customer website and apps. Are you sure you want to turn off the campaign already active',
 );
