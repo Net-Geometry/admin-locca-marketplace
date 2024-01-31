@@ -11352,6 +11352,10 @@ body > .initial-38-1 {
     color: #006FBD;
 }
 
+.mt-half {
+    margin-top: 2px !important;
+}
+
 @page {
     size: auto;
     margin: 0;

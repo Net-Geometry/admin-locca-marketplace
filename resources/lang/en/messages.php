@@ -3844,4 +3844,6 @@
   'Edit' => 'Edit',
   'reject' => 'Reject',
   'edit-information' => 'Edit-information',
+  'Rating' => 'Rating',
+  'order_ID' => 'Order ID',
 );

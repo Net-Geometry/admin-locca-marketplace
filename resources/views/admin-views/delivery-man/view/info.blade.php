@@ -844,8 +844,96 @@
                 </div>
             </div>
             <!-- End Header -->
-            <!-- Table -->
+
+            <!-- New Table -->
             <div class="card-body p-0">
+                <div class="table-responsive datatable-custom">
+                    <table id="datatable" class="table table-borderless table-thead-bordered table-nowrap card-table"
+                        data-hs-datatables-options='{
+                        "columnDefs": [{
+                            "targets": [0, 3, 6],
+                            "orderable": false
+                        }],
+                        "order": [],
+                        "info": {
+                        "totalQty": "#datatableWithPaginationInfoTotalQty"
+                        },
+                        "search": "#datatableSearch",
+                        "entries": "#datatableEntries",
+                        "pageLength": 25,
+                        "isResponsive": false,
+                        "isShowPaging": false,
+                        "pagination": "datatablePagination"
+                    }'>
+                        <thead class="thead-light">
+                        <tr>
+                            <th class="border-0">{{translate('messages.SL')}}</th>
+                            <th class="border-0">{{translate('messages.order_ID')}}</th>
+                            <th class="border-0">{{translate('messages.customer')}}</th>
+                            <th class="border-0">{{translate('messages.Rating')}}</th>
+                            <th class="border-0">{{translate('messages.review')}}</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+
+                        @foreach($reviews as $review)
+                            <tr>
+                                <td>1</td>
+                                <td>
+                                    <a href="{{route('admin.order.all-details',['id'=>$review->order_id])}}">{{$review->order_id}}</a>
+                                </td>
+                                <td>
+                                    @if ($review->customer)
+                                        <a class="d-flex align-items-center"
+                                        href="{{route('admin.customer.view',[$review['user_id']])}}">
+                                            <span class="d-block text-dark">
+                                                {{$review->customer?$review->customer['f_name']." ".$review->customer['l_name']:''}} 
+                                            </span>
+                                        </a>
+                                    @else
+                                        {{translate('messages.customer_not_found')}}
+                                    @endif
+                                </td>
+                                <td>
+                                    <div class="">
+                                        <div class="d-flex">
+                                            <label class="badge badge-soft-warning mb-0 d-flex align-items-center gap-1 justify-content-center">
+                                                <span class="d-inline-block mt-half">{{$review->rating}}</span>
+                                                 <i class="tio-star"></i>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="text-wrap">
+                                        {{$review['comment']}}
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
+                <!-- End Table -->
+                @if(count($reviews) !== 0)
+                <hr>
+                @endif
+                <div class="page-area">
+                    {!! $reviews->links() !!}
+                </div>
+                @if(count($reviews) === 0)
+                <div class="empty--data">
+                    <img src="{{asset('/public/assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
+                    <h5>
+                        {{translate('no_data_found')}}
+                    </h5>
+                </div>
+                @endif
+            </div>
+
+            <!-- previous Table -->
+            <div class="card-body p-0 d-none">
                 <div class="table-responsive datatable-custom">
                     <table id="datatable" class="table table-borderless table-thead-bordered table-nowrap card-table"
                         data-hs-datatables-options='{
