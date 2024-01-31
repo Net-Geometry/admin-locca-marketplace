@@ -10954,7 +10954,7 @@ body > .initial-38-1 {
     font-size: 10px;
 }
 .fs-12{
-    font-size: 12px;
+    font-size: 12px !important;
 }
 
 .select-product-item {
@@ -11241,6 +11241,30 @@ body > .initial-38-1 {
     visibility: visible;
     opacity: 1;
     transform: translateY(0px);
+}
+
+.font-weight-medium {
+    font-weight: 500 !important;
+}
+
+.key-val-list-item > * {
+    font-size: 12px;
+}
+
+.key-val-list-item > *:first-child {
+    min-width: 100px;
+}
+
+.mx-h150 {
+    max-height: 150px;
+}
+
+.mx-w-100 {
+    max-width: 100%;
+}
+
+.hr-light {
+    border-color: #D0DBE9 !important;
 }
 
 @page {

@@ -10,20 +10,49 @@
     <div class="content container-fluid">
         <!-- Page Header -->
         <div class="page-header">
-            <h1 class="page-header-title text-break">
-                <span class="page-header-icon">
-                    <img src="{{asset('public/assets/admin/img/delivery-man.png')}}" class="w--26" alt="">
-                </span>
-                <span>{{translate('messages.deliveryman_preview')}}
-                    @if($deliveryMan->application_status == 'approved')
-                    <span class="badge badge-soft-dark ml-2" id="itemCount">{{$reviews->total()}}</span>
-                    @endif
+            <div class="d-flex flex-wrap justify-content-between align-items-start gap-2">
+                <div class="d-flex gap-2">
+                    <div class="page-header-icon">
+                        <img src="{{asset('public/assets/admin/img/delivery-man.png')}}" class="w--26" alt="">
+                    </div>
+                    <div>
+                        <h1 class="page-header-title text-break mb-1">
+                            <span>
+                                {{translate('messages.deliveryman_preview')}}
+                                @if($deliveryMan->application_status == 'approved')
+                                    <span class="badge badge-soft-dark ml-2" id="itemCount">{{$reviews->total()}}</span>
+                                @endif
+                            </span>
+                        </h1>
+                        <p class="mb-0 fs-12">Requested to join at 12 July, 2022 4:30 pm</p>
+                    </div>
+                </div>
 
-                </span>
-            </h1>
-            <div class="row">
+                @if($deliveryMan->application_status != 'approved')
+                    <div class="btn-container">
+                        <a class="btn btn-primary text-capitalize font-weight-medium fs-12"  data-toggle="tooltip" data-placement="top" data-original-title="{{ translate('messages.edit') }}" href="{{route('admin.users.delivery-man.edit',[$deliveryMan['id']])}}" >
+                            <i class="tio-edit"></i> 
+                            {{translate('messages.edit-information')}}
+                        </a>
+
+                        @if($deliveryMan->application_status !='denied')
+                            <a class="btn btn-danger text-capitalize font-weight-medium request-alert fs-12" data-url="{{route('admin.users.delivery-man.application',[$deliveryMan['id'],'denied'])}}" data-message="{{translate('messages.you_want_to_deny_this_application')}}"
+                                href="javascript:">
+                                {{translate('messages.reject')}}
+                            </a>
+                        @endif
+
+                        <a class="btn btn-success text-capitalize font-weight-medium request-alert fs-12" data-url="{{route('admin.users.delivery-man.application',[$deliveryMan['id'],'approved'])}}" data-message="{{translate('messages.you_want_to_approve_this_application')}}"
+                            href="javascript:">
+                            {{translate('messages.approve')}}
+                        </a>
+                    </div>
+                @endif
+            </div>
+
+            <div class="">
                 @if($deliveryMan->application_status == 'approved')
-                <div class="col-md-12">
+                <div class="">
                     <div class="js-nav-scroller hs-nav-scroller-horizontal mt-2">
                         <!-- Nav -->
                         <ul class="nav nav-tabs mb-3 border-0 nav--tabs">
@@ -43,66 +72,53 @@
                         <!-- End Nav -->
                     </div>
                 </div>
-                @else
-                <div class="col-md-12">
-                    <div class="btn--container justify-content-end">
-                        <a class="btn btn--primary text-capitalize font-weight-bold request-alert" data-url="{{route('admin.users.delivery-man.application',[$deliveryMan['id'],'approved'])}}" data-message="{{translate('messages.you_want_to_approve_this_application')}}"
-                            href="javascript:"><i class="tio-checkmark-circle-outlined font-weight-bold pr-1"></i> {{translate('messages.approve')}}</a>
-                            <a class="btn btn--primary text-capitalize font-weight-bold"  data-toggle="tooltip" data-placement="top" data-original-title="{{ translate('messages.edit') }}" href="{{route('admin.users.delivery-man.edit',[$deliveryMan['id']])}}" ><i class="tio-edit"></i> {{translate('messages.Edit')}}
-                            </a>
-                            @if($deliveryMan->application_status !='denied')
-                        <a class="btn btn--danger text-capitalize font-weight-bold request-alert" data-url="{{route('admin.users.delivery-man.application',[$deliveryMan['id'],'denied'])}}" data-message="{{translate('messages.you_want_to_deny_this_application')}}"
-                            href="javascript:"><i class="tio-clear-circle-outlined font-weight-bold pr-1"></i> {{translate('messages.deny')}}</a>
-                        @endif
-                    </div>
-                </div>
-
                 @endif
             </div>
         </div>
         <!-- End Page Header -->
+
         @if($deliveryMan->application_status == 'approved')
-        <div class="row mb-3 row-3">
-            <!-- Earnings (Monthly) Card Example -->
-            <div class="col-sm-6 mb-2 col-md-4">
-                <div class="resturant-card card--bg-1">
-                    <h2 class="title">
-                        {{$deliveryMan->total_delivered_orders()->count()}}
-                    </h2>
-                    <h5 class="subtitle">
-                        {{translate('messages.total_delivered_orders')}}
-                    </h5>
-                    <img class="resturant-icon w--30" src="{{asset('public/assets/admin/img/tick.png')}}" alt="img">
+            <div class="row mb-3 row-3">
+                <!-- Earnings (Monthly) Card Example -->
+                <div class="col-sm-6 mb-2 col-md-4">
+                    <div class="resturant-card card--bg-1">
+                        <h2 class="title">
+                            {{$deliveryMan->total_delivered_orders()->count()}}
+                        </h2>
+                        <h5 class="subtitle">
+                            {{translate('messages.total_delivered_orders')}}
+                        </h5>
+                        <img class="resturant-icon w--30" src="{{asset('public/assets/admin/img/tick.png')}}" alt="img">
+                    </div>
                 </div>
-            </div>
 
-            <!-- Collected Cash Card Example -->
-            <div class="col-sm-6 mb-2 col-md-4">
-                <div class="resturant-card bg--3">
-                    <h2 class="title">
-                        {{\App\CentralLogics\Helpers::format_currency($deliveryMan->wallet?$deliveryMan->wallet->collected_cash:0.0)}}
-                    </h2>
-                    <h5 class="subtitle">
-                        {{translate('messages.cash_in_hand')}}
-                    </h5>
-                    <img class="resturant-icon" src="{{asset('/public/assets/admin/img/transactions/withdraw-amount.png')}}" alt="transactions">
+                <!-- Collected Cash Card Example -->
+                <div class="col-sm-6 mb-2 col-md-4">
+                    <div class="resturant-card bg--3">
+                        <h2 class="title">
+                            {{\App\CentralLogics\Helpers::format_currency($deliveryMan->wallet?$deliveryMan->wallet->collected_cash:0.0)}}
+                        </h2>
+                        <h5 class="subtitle">
+                            {{translate('messages.cash_in_hand')}}
+                        </h5>
+                        <img class="resturant-icon" src="{{asset('/public/assets/admin/img/transactions/withdraw-amount.png')}}" alt="transactions">
+                    </div>
                 </div>
-            </div>
 
-            <!-- Total Earning Card Example -->
-            <div class="col-sm-6 mb-2 col-md-4">
-                <div class="resturant-card bg--1">
-                    <h2 class="title">
-                        {{\App\CentralLogics\Helpers::format_currency($deliveryMan->wallet?$deliveryMan->wallet->total_earning:0.00)}}
-                    </h2>
-                    <h5 class="subtitle">
-                        {{translate('messages.total_earning')}}
-                    </h5>
-                    <img class="resturant-icon" src="{{asset('/public/assets/admin/img/transactions/pending.png')}}" alt="transactions">
+                <!-- Total Earning Card Example -->
+                <div class="col-sm-6 mb-2 col-md-4">
+                    <div class="resturant-card bg--1">
+                        <h2 class="title">
+                            {{\App\CentralLogics\Helpers::format_currency($deliveryMan->wallet?$deliveryMan->wallet->total_earning:0.00)}}
+                        </h2>
+                        <h5 class="subtitle">
+                            {{translate('messages.total_earning')}}
+                        </h5>
+                        <img class="resturant-icon" src="{{asset('/public/assets/admin/img/transactions/pending.png')}}" alt="transactions">
+                    </div>
                 </div>
-            </div>
 
-            <!-- Total Earning Card Example -->
+                <!-- Total Earning Card Example -->
 
                 <?php
                 $balance = 0;
@@ -111,79 +127,183 @@
                 }
 
                 ?>
-            @if($deliveryMan->earning)
+                    @if($deliveryMan->earning)
+                        @if ($balance > 0)
+                            <div class="col-sm-6 mb-2 col-md-4">
+                                <div class="resturant-card bg--1">
+                                    <h2 class="title">
+                                        {{\App\CentralLogics\Helpers::format_currency(abs($balance))}}
+                                    </h2>
+                                    <h5 class="subtitle">
+                                        {{translate('messages.Withdraw_Able_Balance')}}
+                                    </h5>
+                                    <img class="resturant-icon" src="{{asset('/public/assets/admin/img/transactions/pending.png')}}" alt="transactions">
+                                </div>
+                            </div>
+                        @elseif($balance < 0)
+                            <div class="col-sm-6 mb-2 col-md-4">
+                                <div class="resturant-card bg--1">
+                                    <h2 class="title">
+                                        {{\App\CentralLogics\Helpers::format_currency(abs($deliveryMan->wallet->collected_cash))}}
+                                    </h2>
+                                    <h5 class="subtitle">
+                                        {{translate('messages.Payable_Balance')}}
+                                    </h5>
+                                    <img class="resturant-icon" src="{{asset('/public/assets/admin/img/transactions/pending.png')}}" alt="transactions">
+                                </div>
+                            </div>
+                        @else
+                            <div class="col-sm-6 mb-2 col-md-4">
+                                <div class="resturant-card bg--1">
+                                    <h2 class="title">
+                                        {{\App\CentralLogics\Helpers::format_currency(0)}}
+                                    </h2>
+                                    <h5 class="subtitle">
+                                        {{translate('messages.Balance')}}
+                                    </h5>
+                                    <img class="resturant-icon" src="{{asset('/public/assets/admin/img/transactions/pending.png')}}" alt="transactions">
+                                </div>
+                            </div>
+                        @endif
 
-                @if ($balance > 0)
-                    <div class="col-sm-6 mb-2 col-md-4">
-                        <div class="resturant-card bg--1">
-                            <h2 class="title">
-                                {{\App\CentralLogics\Helpers::format_currency(abs($balance))}}
-                            </h2>
-                            <h5 class="subtitle">
-                                {{translate('messages.Withdraw_Able_Balance')}}
-                            </h5>
-                            <img class="resturant-icon" src="{{asset('/public/assets/admin/img/transactions/pending.png')}}" alt="transactions">
+
+                        <div class="col-sm-6 mb-2 col-md-4">
+                            <div class="resturant-card bg--1">
+                                <h2 class="title">
+                                    {{\App\CentralLogics\Helpers::format_currency($deliveryMan->wallet?$deliveryMan->wallet->total_withdrawn:0.00)}}
+                                </h2>
+                                <h5 class="subtitle">
+                                    {{translate('messages.Total_withdrawn')}}
+                                </h5>
+                                <img class="resturant-icon" src="{{asset('/public/assets/admin/img/transactions/pending.png')}}" alt="transactions">
+                            </div>
                         </div>
-                    </div>
-                @elseif($balance < 0)
-                    <div class="col-sm-6 mb-2 col-md-4">
-                        <div class="resturant-card bg--1">
-                            <h2 class="title">
-                                {{\App\CentralLogics\Helpers::format_currency(abs($deliveryMan->wallet->collected_cash))}}
-                            </h2>
-                            <h5 class="subtitle">
-                                {{translate('messages.Payable_Balance')}}
-                            </h5>
-                            <img class="resturant-icon" src="{{asset('/public/assets/admin/img/transactions/pending.png')}}" alt="transactions">
+
+                        <div class="col-sm-6 mb-2 col-md-4">
+                            <div class="resturant-card bg--1">
+                                <h2 class="title">
+                                    {{\App\CentralLogics\Helpers::format_currency($deliveryMan->wallet?$deliveryMan->wallet->pending_withdraw:0.00)}}
+                                </h2>
+                                <h5 class="subtitle">
+                                    {{translate('messages.Pending_withdraw')}}
+                                </h5>
+                                <img class="resturant-icon" src="{{asset('/public/assets/admin/img/transactions/pending.png')}}" alt="transactions">
+                            </div>
                         </div>
-                    </div>
-
-                @else
-                    <div class="col-sm-6 mb-2 col-md-4">
-                        <div class="resturant-card bg--1">
-                            <h2 class="title">
-                                {{\App\CentralLogics\Helpers::format_currency(0)}}
-                            </h2>
-                            <h5 class="subtitle">
-                                {{translate('messages.Balance')}}
-                            </h5>
-                            <img class="resturant-icon" src="{{asset('/public/assets/admin/img/transactions/pending.png')}}" alt="transactions">
-                        </div>
-                    </div>
-
-                @endif
-
-
-                <div class="col-sm-6 mb-2 col-md-4">
-                    <div class="resturant-card bg--1">
-                        <h2 class="title">
-                            {{\App\CentralLogics\Helpers::format_currency($deliveryMan->wallet?$deliveryMan->wallet->total_withdrawn:0.00)}}
-                        </h2>
-                        <h5 class="subtitle">
-                            {{translate('messages.Total_withdrawn')}}
-                        </h5>
-                        <img class="resturant-icon" src="{{asset('/public/assets/admin/img/transactions/pending.png')}}" alt="transactions">
-                    </div>
+                    @endif
                 </div>
-
-                <div class="col-sm-6 mb-2 col-md-4">
-                    <div class="resturant-card bg--1">
-                        <h2 class="title">
-                            {{\App\CentralLogics\Helpers::format_currency($deliveryMan->wallet?$deliveryMan->wallet->pending_withdraw:0.00)}}
-                        </h2>
-                        <h5 class="subtitle">
-                            {{translate('messages.Pending_withdraw')}}
-                        </h5>
-                        <img class="resturant-icon" src="{{asset('/public/assets/admin/img/transactions/pending.png')}}" alt="transactions">
-                    </div>
-                </div>
-
-            @endif
+            </div>
         </div>
-    </div>
-    </div>
-    </div>
+        </div>
         @endif
+
+        <div class="card border-0 my-3">
+            <div class="card-body pb-5">
+                <div class="d-flex flex-column flex-sm-row align-items-center gap-3 border rounded p-3">
+                    <div class="d-flex gap-3">
+                        <img class="rounded" src="http://localhost:8000/storage/app/public/delivery-man/2024-01-31-65b9e418bf56f.png" width="115" height="115" alt="Delivery man image">
+                    </div>
+
+                    <div class="flex-grow-1">
+                        <div class="row g-2">
+                            <div class="col-12">
+                                <h4 class="d-flex justify-content-center justify-content-sm-start">Jhon Doe</h4>
+                            </div>
+
+                            <div class="col-xl-3 col-md-4">
+                                <div class="d-flex justify-content-center justify-content-sm-start gap-3">
+                                    <img class="rounded-circle" src="{{asset('public/assets/admin/img/icons/job-type.png')}}" width="35" height="35" alt="">
+                                    <div class="">
+                                        <h6 class="mb-1">Job Type</h6>
+                                        <p class="mb-0 font-weight-normal">Freelance</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-md-4">
+                                <div class="d-flex justify-content-center justify-content-sm-start gap-3">
+                                    <img class="rounded-circle" src="{{asset('public/assets/admin/img/icons/vehicle-type.png')}}" width="35" height="35" alt="">
+                                    <div class="">
+                                        <h6 class="mb-1">Vehicle Type</h6>
+                                        <p class="mb-0 font-weight-normal">Car</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-md-4">
+                                <div class="d-flex justify-content-center justify-content-sm-start gap-3">
+                                    <img class="rounded-circle" src="{{asset('public/assets/admin/img/icons/zone.png')}}" width="35" height="35" alt="">
+                                    <div class="">
+                                        <h6 class="mb-1">Zone</h6>
+                                        <p class="mb-0 font-weight-normal">Mirpur - 12</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2 align-items-center mt-5">
+                    <img src="{{asset('public/assets/admin/img/icons/img-icon.png')}}" width="20" height="20" alt="">
+                    <h5 class="mb-0">Registration Information</h5>
+                    <img src="{{asset('public/assets/admin/img/icons/info-circle.png')}}" width="18" height="18" alt="">
+                </div>
+
+                <hr class="mt-2 mb-0 hr-light">
+
+
+                <div class="row g-3 mt-3">
+                    <div class="col-sm-6 col-lg-4">
+                        <h5 class="mb-3">General Information</h5>
+
+                        <div class="key-val-list-item d-flex gap-3">
+                            <div>First Name</div>:
+                            <div>Jhon</div>
+                        </div>
+                        <div class="key-val-list-item d-flex gap-3">
+                            <div>Last Name</div>:
+                            <div>Doe</div>
+                        </div>
+                        <div class="key-val-list-item d-flex gap-3">
+                            <div>Email</div>:
+                            <div>jhon@example.com</div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-4">
+                        <h5 class="mb-3">Identity Information</h5>
+
+                        <div class="key-val-list-item d-flex gap-3">
+                            <div>Identity Type</div>:
+                            <div>NID</div>
+                        </div>
+                        <div class="key-val-list-item d-flex gap-3">
+                            <div>Identity Number</div>:
+                            <div>12345678</div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-4">
+                        <h5 class="mb-3">Login Information</h5>
+
+                        <div class="key-val-list-item d-flex gap-3">
+                            <div>Phone</div>:
+                            <div>+9155 4564545</div>
+                        </div>
+                        <div class="key-val-list-item d-flex gap-3">
+                            <div>Password</div>:
+                            <div>**********</div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <h5 class="mb-3 mt-5">Identity Image</h5>
+
+                        <div class="d-flex flex-wrap gap-3">
+                            <img class="rounded mx-h150 mx-w-100" src="{{asset('public/assets/admin/img/icons/nid.png')}}" width="275" height="150" alt="">
+                            <img class="rounded mx-h150 mx-w-100" src="{{asset('public/assets/admin/img/icons/nid.png')}}" width="275" height="150" alt="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
 
         <!-- Card -->
         <div class="card mb-3">
@@ -233,7 +353,7 @@
                     </div>
                 </div>
             </div>
-            <!-- Body -->
+            
             <div class="card-body">
                 <div class="row gy-3 align-items-center">
                     <div class="col-md-4">
