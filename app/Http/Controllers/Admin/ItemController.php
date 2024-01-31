@@ -850,26 +850,30 @@ class ItemController extends Controller
 
     public function review_list(Request $request)
     {
-        // $reviews = Review::with(['item'=>function($query){
-        //     $query->withOutGlobalScope(StoreScope::class);
-        // }, 'customer'])->whereHas('item', function ($q) use ($request) {
-        //     return $q->where('module_id', Config::get('module.current_module_id'))->withOutGlobalScope(StoreScope::class);
-        // })
 
         $key = explode(' ', $request['search']);
         $reviews = Review::with('item')
-            ->when(isset($key), function ($query) use ($key) {
-                $query->whereHas('item', function ($query) use ($key) {
-                    foreach ($key as $value) {
-                        $query->where('name', 'like', "%{$value}%");
-                    }
+            ->when(isset($key), function ($query) use ($key,$request) {
+                $query->where(function($query) use($key,$request) {
+
+                    $query->whereHas('item', function ($query) use ($key) {
+                        foreach ($key as $value) {
+                            $query->where('name', 'like', "%{$value}%");
+                        }
+                    })->orWhereHas('customer', function ($query) use ($key){
+                        foreach ($key as $value) {
+                            $query->where('f_name', 'like', "%{$value}%")->orwhere('l_name', 'like', "%{$value}%");
+                        }
+                    })->orwhere('rating', $request['search']);
                 });
+
             })
             ->whereHas('item', function ($q) {
                 return $q->where('module_id', Config::get('module.current_module_id'))->withoutGlobalScope(StoreScope::class);
             })
 
             ->latest()->paginate(config('default_pagination'));
+        
         return view('admin-views.product.reviews-list', compact('reviews'));
     }
 
@@ -1666,6 +1670,7 @@ class ItemController extends Controller
                     }
                 });
             })
+            ->orderByRaw("FIELD(name, ?) DESC", [$request['name']])
             ->where('is_approved',1)
             ->module(Config::get('module.current_module_id'))
             ->type($type)

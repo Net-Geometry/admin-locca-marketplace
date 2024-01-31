@@ -142,7 +142,7 @@
                         </td>
                         <td>
                             @if($item->store)
-                            {{$item->store->zone->name}}
+                            {{$item->store?->zone?->name}}
                             @else
                             {{translate('messages.not_found')}}
                             @endif
