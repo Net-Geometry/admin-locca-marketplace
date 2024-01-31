@@ -1418,8 +1418,9 @@ class OrderController extends Controller
         ->when(isset($request->user)  , function($query){
             $query->where('is_guest' , 0);
         })
-
-        ->where('user_id', $user_id)->find($request->order_id);
+            ->when($request->user, function ($query) use ($user_id) {
+                return $query->where('user_id', $user_id);
+            })->find($request->order_id);
 
         $details = isset($order->details) ? $order->details : null;
         if ($details != null && $details->count() > 0) {
