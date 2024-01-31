@@ -11277,6 +11277,81 @@ body > .initial-38-1 {
     }
 }
 
+.color-card {
+    display: flex;
+    gap: 1rem;
+    padding: 40px 35px;
+    border-radius: 10px;
+    background: rgba(0, 224, 255, 0.10);
+}
+
+@media (max-width: 767px) {
+    .color-card {
+        display: flex;
+        gap: 1rem;
+        padding: 20px 16px;
+        border-radius: 10px;
+        background: rgba(0, 224, 255, 0.10);
+    }
+}
+
+.color-card .img-box  {
+    --size: 60px;
+    width: var(--size);
+    height: var(--size);
+    border-radius: var(--size);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background-color: #fff;
+
+}
+
+.color-card .title  {
+    color: var(--primary-clr);
+}
+
+.color-card.color-2 {
+    background: rgba(3, 157, 85, 0.05);
+}
+
+.color-card.color-2 .title {
+    color: #039D55;
+}
+
+.color-card.color-3 {
+    background: #FFFCDE;
+}
+
+.color-card.color-3 .title {
+    color: #E27E26;
+}
+
+.color-card.color-4 {
+    background: rgba(255, 126, 13, 0.10);
+}
+
+.color-card.color-4 .title {
+    color: #E27E26;
+}
+
+.color-card.color-5 {
+    background: rgba(168, 99, 255, 0.10);
+}
+
+.color-card.color-5 .title {
+    color: #A863FF;
+}
+
+.color-card.color-6 {
+    background: rgba(0, 224, 255, 0.10);
+}
+
+.color-card.color-6 .title {
+    color: #006FBD;
+}
+
 @page {
     size: auto;
     margin: 0;
