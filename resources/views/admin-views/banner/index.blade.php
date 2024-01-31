@@ -108,8 +108,8 @@
                                     <div class="form-group mb-0" id="store_wise">
                                         <label class="input-label" for="exampleFormControlSelect1">{{translate('messages.store')}}<span
                                                 class="input-label-secondary"></span></label>
-                                        <select name="store_id" id="store_id" class="js-data-example-ajax form-control"  title="Select Restaurant">
-
+                                        <select name="store_id" id="store_id" class="js-data-example-ajax form-control"  title="{{translate('messages.select_store')}}">
+                                            <option disabled selected>---{{translate('messages.select_store')}}---</option>
                                         </select>
                                     </div>
                                     <div class="form-group mb-0" id="item_wise">
@@ -157,31 +157,34 @@
                             <h5 class="card-title">
                                 {{translate('messages.banner_list')}}<span class="badge badge-soft-dark ml-2" id="itemCount">{{$banners->count()}}</span>
                             </h5>
-                            <form id="search-form" class="search-form">
-                                @csrf
+                            <form  class="search-form">
                                 <!-- Search -->
                                 <div class="input-group input--group">
-                                    <input id="datatableSearch" type="search" name="search" class="form-control" placeholder="{{translate('messages.search_by_title')}}" aria-label="{{translate('messages.search_here')}}">
+                                    <input id="datatableSearch" type="search" value="{{ request()->get('search')?? '' }}" name="search" class="form-control" placeholder="{{translate('messages.search_by_title')}}" aria-label="{{translate('messages.search_here')}}">
                                     <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
                                 </div>
                                 <!-- End Search -->
                             </form>
+                            @if(request()->get('search'))
+                            <button type="reset" class="btn btn--primary ml-2 location-reload-to-base" data-url="{{url()->full()}}">{{translate('messages.reset')}}</button>
+                            @endif
+
                         </div>
                     </div>
                     <!-- Table -->
                     <div class="table-responsive datatable-custom">
                         <table id="columnSearchDatatable"
-                               class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table"
-                               data-hs-datatables-options='{
-                                "order": [],
-                                "orderCellsTop": true,
-                                "search": "#datatableSearch",
-                                "entries": "#datatableEntries",
-                                "isResponsive": false,
-                                "isShowPaging": false,
-                                "paging": false
-                               }'
-                               >
+                                class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table"
+                                data-hs-datatables-options='{
+                                    "order": [],
+                                    "orderCellsTop": true,
+                                    "search": "#datatableSearch",
+                                    "entries": "#datatableEntries",
+                                    "isResponsive": false,
+                                    "isShowPaging": false,
+                                    "paging": false
+                                }'
+                                >
                             <thead class="thead-light">
                                 <tr>
                                     <th class="border-0">{{ translate('messages.SL') }}</th>
@@ -223,8 +226,7 @@
                                     <td  >
                                         <div class="d-flex justify-content-center">
                                             <label class="toggle-switch toggle-switch-sm" for="statusCheckbox{{$banner->id}}">
-                                            <input type="checkbox" data-url="{{route('admin.banner.status',[$banner['id'],$banner->status?0:1])}}"
-
+                                            <input type="checkbox"
                                             data-id="statusCheckbox{{$banner->id}}"
                                             data-type="status"
                                             data-image-on="{{ asset('/public/assets/admin/img/modal/basic_campaign_on.png') }}"
@@ -233,7 +235,6 @@
                                             data-title-off="{{ translate('By_Turning_OFF_Banner!') }}"
                                             data-text-on="<p>{{ translate('Turned_on_to_customer_website_and_apps._Are_you_sure_you_want_to_turn_on_the_Banner_already_inactive.') }}</p>"
                                             data-text-off="<p>{{ translate('Turned_off_to_customer_website_and_apps._Are_you_sure_you_want_to_turn_off_the_Banner_already_active') }}</p>"
-
                                             class="toggle-switch-input  dynamic-checkbox" id="statusCheckbox{{$banner->id}}" {{$banner->status?'checked':''}}>
                                             <span class="toggle-switch-label">
                                                 <span class="toggle-switch-indicator"></span>
@@ -378,33 +379,7 @@
             });
         });
 
-        $('#search-form').on('submit', function (e) {
-            e.preventDefault();
-            var formData = new FormData(this);
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $.post({
-                url: '{{route('admin.banner.search')}}',
-                data: formData,
-                cache: false,
-                contentType: false,
-                processData: false,
-                beforeSend: function () {
-                    $('#loading').show();
-                },
-                success: function (data) {
-                    $('#set-rows').html(data.view);
-                    $('#itemCount').html(data.count);
-                    $('.page-area').hide();
-                },
-                complete: function () {
-                    $('#loading').hide();
-                },
-            });
-        });
+
 
         $('#reset_btn').click(function(){
         $('#module_select').val(null).trigger('change');

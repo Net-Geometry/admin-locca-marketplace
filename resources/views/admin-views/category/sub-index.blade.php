@@ -41,7 +41,11 @@
                         @endforeach
                     </ul>
                     <div class="form-group lang_form" id="default-form">
-                        <label class="input-label" for="exampleFormControlInput1">{{translate('messages.name')}} ({{ translate('messages.default') }})</label>
+                        <label class="input-label" for="exampleFormControlInput1">{{translate('messages.name')}} ({{ translate('messages.default') }}) <span class="form-label-secondary text-danger"
+                            data-toggle="tooltip" data-placement="right"
+                            data-original-title="{{ translate('messages.Required.')}}"> *
+                            </span>
+                        </label>
                         <input type="text" name="name[]" class="form-control" placeholder="{{translate('messages.new_sub_category')}}" maxlength="191"  >
                     </div>
                     <input type="hidden" name="lang[]" value="default">
@@ -96,6 +100,10 @@
                         </div>
                         <!-- End Search -->
                     </form>
+                    @if(request()->get('search'))
+                    <button type="reset" class="btn btn--primary ml-2 location-reload-to-category" data-url="{{url()->full()}}">{{translate('messages.reset')}}</button>
+                    @endif
+
                 </div>
             </div>
             <div class="card-body p-0">
@@ -201,4 +209,13 @@
 
 @push('script_2')
     <script src="{{asset('public/assets/admin')}}/js/view-pages/sub-category-index.js"></script>
+    <script>
+        "use strict";
+            $('.location-reload-to-category').on('click', function() {
+                const url = $(this).data('url');
+                let nurl = new URL(url);
+                nurl.searchParams.delete('search');
+                location.href = nurl;
+            });
+            </script>
 @endpush

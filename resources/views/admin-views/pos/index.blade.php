@@ -955,7 +955,6 @@
     @endif
 
     $('.location-reload-to-base-pos').on('click', function() {
-    alert('q');
     const url = $(this).data('url');
     let nurl = new URL(url);
     nurl.searchParams.delete('keyword');

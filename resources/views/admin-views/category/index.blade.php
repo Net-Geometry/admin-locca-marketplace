@@ -45,7 +45,13 @@
                         <div class="col-md-12">
                             @if ($language)
                             <div class="form-group lang_form" id="default-form">
-                                <label class="input-label" for="exampleFormControlInput1">{{translate('messages.name')}} ({{ translate('messages.default') }})</label>
+                                <label class="input-label" for="exampleFormControlInput1">{{translate('messages.name')}} ({{ translate('messages.default') }})
+                                    <span class="form-label-secondary text-danger"
+                                    data-toggle="tooltip" data-placement="right"
+                                    data-original-title="{{ translate('messages.Required.')}}"> *
+                                    </span>
+
+                                </label>
                                 <input type="text" name="name[]" class="form-control" placeholder="{{translate('messages.new_category')}}" maxlength="191">
                             </div>
                             <input type="hidden" name="lang[]" value="default">
@@ -101,19 +107,17 @@
                     <h5 class="card-title">{{translate('messages.category_list')}}<span class="badge badge-soft-dark ml-2" id="itemCount">{{$categories->total()}}</span></h5>
 
                     <form class="search-form">
-
                         <!-- Search -->
                         <div class="input-group input--group">
                             <input type="search" name="search" value="{{ request()?->search ?? null }}" class="form-control min-height-45" placeholder="{{translate('messages.search_categories')}}" aria-label="{{translate('messages.ex_:_categories')}}">
-
-
                             <input type="hidden" name="position" value="0">
                             <button type="submit" class="btn btn--secondary min-height-45"><i class="tio-search"></i></button>
                         </div>
-
-
                         <!-- End Search -->
                     </form>
+                    @if(request()->get('search'))
+                    <button type="reset" class="btn btn--primary ml-2 location-reload-to-category" data-url="{{url()->full()}}">{{translate('messages.reset')}}</button>
+                    @endif
                     <!-- Unfold -->
                     <div class="hs-unfold mr-2">
                         <a class="js-hs-unfold-invoker btn btn-sm btn-white dropdown-toggle min-height-40" href="javascript:;"
@@ -160,7 +164,6 @@
                                 <th class="border-0">{{translate('sl')}}</th>
                                 <th class="border-0">{{translate('messages.id')}}</th>
                                 <th class="border-0 w--1">{{translate('messages.name')}}</th>
-                                <th class="border-0 text-center">{{translate('messages.module')}}</th>
                                 <th class="border-0 text-center">{{translate('messages.status')}}</th>
                                 <th class="border-0 text-center">{{translate('messages.featured')}}</th>
                                 <th class="border-0 text-center">{{translate('messages.priority')}}</th>
@@ -176,11 +179,6 @@
                                 <td>
                                     <span class="d-block font-size-sm text-body">
                                         {{Str::limit($category['name'], 20,'...')}}
-                                    </span>
-                                </td>
-                                <td>
-                                    <span class="d-block font-size-sm text-body text-center">
-                                        {{Str::limit($category->module->module_name, 15,'...')}}
                                     </span>
                                 </td>
                                 <td>
@@ -251,4 +249,13 @@
 
 @push('script_2')
     <script src="{{asset('public/assets/admin')}}/js/view-pages/category-index.js"></script>
+    <script>
+    "use strict";
+        $('.location-reload-to-category').on('click', function() {
+            const url = $(this).data('url');
+            let nurl = new URL(url);
+            nurl.searchParams.delete('search');
+            location.href = nurl;
+        });
+        </script>
 @endpush
