@@ -38,5 +38,13 @@
         </div>
     </div>
 @endif
+
+{{-- For empty conversation --}}
+<div class="empty-conversation-content d-flex flex-column align-items-center gap-3">
+    <img width="128" height="128" src="{{asset('/public/assets/admin/img/icons/empty-conversation.png')}}" alt="public">
+    <h5 class="text-muted">
+        {{translate('no_conversation_found')}}
+    </h5>
+</div>
 @endforeach
 <script src="{{asset('public/assets/admin')}}/js/view-pages/common.js"></script>

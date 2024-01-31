@@ -51,6 +51,14 @@
                 @endif
             @endforeach
             <div id="scroll-here"></div>
+
+            {{-- For empty conversation --}}
+            <div class="empty-conversation-content d-flex flex-column align-items-center gap-3">
+                <img width="128" height="128" src="{{asset('/public/assets/admin/img/icons/empty-conversation.png')}}" alt="public">
+                <h5 class="text-muted">
+                    {{translate('no_conversation_found')}}
+                </h5>
+            </div>
         </div>
     </div>
     <div class="mt-auto d-flex justify-content-center fs-12 font-medium text-dark p-3">

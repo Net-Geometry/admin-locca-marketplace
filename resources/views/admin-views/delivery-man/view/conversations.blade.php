@@ -16,7 +16,7 @@
                 </span>
                 <span>{{$deliveryMan['f_name'].' '.$deliveryMan['l_name']}}</span>
             </h1>
-            <div class="row">
+            <div class="">
                 <div class="js-nav-scroller hs-nav-scroller-horizontal mt-2">
                     <!-- Nav -->
                     <ul class="nav nav-tabs nav--tabs border-0">
@@ -39,7 +39,7 @@
         </div>
         <!-- End Page Header -->
 
-        <div class="content container-fluid">
+        <div class="content">
             <!-- Page Header -->
             <div class="page-header">
                 <h1 class="page-header-title">{{ translate('messages.conversation_list') }}</h1>
