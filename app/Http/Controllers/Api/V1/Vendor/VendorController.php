@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1\Vendor;
 
 use App\Models\AccountTransaction;
+use App\Models\Admin;
 use App\Models\Item;
 use App\Models\Order;
 use App\Models\Store;
@@ -669,6 +670,22 @@ class VendorController extends Controller
         $store = $request['vendor']->stores[0];
         $campaign->stores()->attach($store);
         $campaign->save();
+        try
+        {
+            $admin= Admin::where('role_id', 1)->first();
+            $mail_status = Helpers::get_mail_status('campaign_request_mail_status_admin');
+            if(config('mail.status') && $mail_status == '1') {
+                Mail::to($admin->email)->send(new \App\Mail\CampaignRequestMail($store->name));
+            }
+            $mail_status = Helpers::get_mail_status('campaign_request_mail_status_store');
+            if(config('mail.status') && $mail_status == '1') {
+                Mail::to($store->vendor->email)->send(new \App\Mail\VendorCampaignRequestMail($store->name,'pending'));
+            }
+        }
+        catch(\Exception $e)
+        {
+            info($e->getMessage());
+        }
         return response()->json(['message'=>translate('messages.you_are_successfully_joined_to_the_campaign')], 200);
     }
 
