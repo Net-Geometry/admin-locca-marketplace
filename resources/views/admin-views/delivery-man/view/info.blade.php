@@ -7,7 +7,7 @@
 @endpush
 
 @section('content')
-    <div class="content container-fluid">
+    <div class="content container-fluid pb-0">
         <!-- Page Header -->
         <div class="page-header">
             <div class="d-flex flex-wrap justify-content-between align-items-start gap-2">
@@ -197,7 +197,9 @@
         </div>
         @endif
 
-        <div class="card border-0 my-3">
+
+        {{-- Deliveryman Preview Card 1 --}}
+        <div class="card my-3 d-none">
             <div class="card-body pb-5">
                 <div class="d-flex flex-column flex-sm-row align-items-center gap-3 border rounded p-3">
                     <div class="d-flex gap-3">
@@ -244,7 +246,7 @@
                 <div class="d-flex gap-2 align-items-center mt-5">
                     <img src="{{asset('public/assets/admin/img/icons/img-icon.png')}}" width="20" height="20" alt="">
                     <h5 class="mb-0">Registration Information</h5>
-                    <img src="{{asset('public/assets/admin/img/icons/info-circle.png')}}" width="18" height="18" alt="">
+                    <img data-toggle="tooltip" data-placement="top" title="Tooltip on top" src="{{asset('public/assets/admin/img/icons/info-circle.png')}}" width="18" height="18" alt="">
                 </div>
 
                 <hr class="mt-2 mb-0 hr-light">
@@ -303,6 +305,175 @@
             </div>
         </div>
 
+        {{-- Deliveryman Preview Card 2 --}}
+        <div class="content container-fluid pt-0">
+            <div class="card my-3">
+                <div class="card-body pb-5">
+                    <div class="d-flex mb-3 justify-content-between align-items-center gap-2 flex-wrap position-relative z-index-2">
+                        <h4 class="card-title align-items-center flex-wrap gap-2">
+                            Jhon Doe ( Main Demo Zone )
+                            <label class="badge badge-soft-primary mb-0">Online</label>
+                        </h4>
+                        <div class="d-flex flex-wrap gap-2">
+                            <a href="javascript:" class="btn request-alert btn--danger py-2" data-message="You want to suspend this deliveryman">
+                                Suspend this delivery man
+                            </a>
+                            <div class="hs-unfold">
+                                <div class="dropdown">
+                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Type (Freelancer)
+                                    </button>
+                                    <div class="dropdown-menu text-capitalize" aria-labelledby="dropdownMenuButton">
+                                        <a class="dropdown-item active request-alert" data-message="Want to enable earnings" href="javascript:">Freelancer</a>
+                                        <a class="dropdown-item  request-alert" data-message="Want to disable earnings" href="javascript:">Salary based</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex flex-column flex-md-row align-items-center gap-3 border rounded p-3">
+                        <div class="d-flex gap-3">
+                            <img class="rounded" src="http://localhost:8000/storage/app/public/delivery-man/2024-01-31-65b9e418bf56f.png" width="115" height="115" alt="Delivery man image">
+                        </div>
+
+                        <div class="flex-grow-1">
+                            <div class="row g-2">
+                                <div class="col-12">
+                                    <h4 class="d-flex justify-content-center justify-content-md-start mb-0">Jhon Doe</h4>
+                                    <div class="fs-12 text-muted d-flex justify-content-center justify-content-md-start">jhon@example.com</div>
+                                </div>
+
+                                <div class="col-md-6 col-xl-4">
+                                    <div class="d-flex justify-content-center justify-content-md-start gap-3">
+                                        <img class="rounded-circle" src="{{asset('public/assets/admin/img/icons/job-type.png')}}" width="35" height="35" alt="">
+                                        <div class="">
+                                            <h6 class="mb-1">Job Type</h6>
+                                            <p class="mb-0 font-weight-normal">Freelance</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-xl-4">
+                                    <div class="d-flex justify-content-center justify-content-md-start gap-3">
+                                        <img class="rounded-circle" src="{{asset('public/assets/admin/img/icons/vehicle-type.png')}}" width="35" height="35" alt="">
+                                        <div class="">
+                                            <h6 class="mb-1">Vehicle Type</h6>
+                                            <p class="mb-0 font-weight-normal">Car</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-xl-4">
+                                    <div class="d-flex justify-content-center justify-content-md-start gap-3">
+                                        <img class="rounded-circle" src="{{asset('public/assets/admin/img/icons/zone.png')}}" width="35" height="35" alt="">
+                                        <div class="">
+                                            <h6 class="mb-1">Zone</h6>
+                                            <p class="mb-0 font-weight-normal">Mirpur - 12</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex flex-column flex-lg-row gap-3 flex-grow-1 border-lg-left">
+                            <div class="d-flex flex-column align-items-center justify-content-center px-4">
+                                <img class="" width="80" height="80" src="{{asset('public/assets/admin/img/icons/rating-stars.png')}}" alt="">
+                                     
+                                <div class="d-block">
+                                    <div class="rating--review">
+                                    <h3 class="title mb-0">5.0<span class="out-of">/5</span></h3>
+                                    <div class="info">
+                                            <span>of 1 Reviews</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <ul class="list-unstyled list-unstyled-py-2 mb-0 rating--review-right py-3 flex-grow-1 review-color-progress">
+                                <!-- Review Ratings -->
+                                <li class="d-flex align-items-center font-size-sm">
+                                    <span class="progress-name mr-3">Excellent</span>
+                                    <div class="progress flex-grow-1">
+                                        <div class="progress-bar" role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                    <span class="ml-3">1</span>
+                                </li>
+                                <!-- End Review Ratings -->
+
+                                <!-- Review Ratings -->
+                                <li class="d-flex align-items-center font-size-sm">
+                                    <span class="progress-name mr-3">Good</span>
+                                    <div class="progress flex-grow-1">
+                                        <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                    <span class="ml-3">0</span>
+                                </li>
+                                <!-- End Review Ratings -->
+
+                                <!-- Review Ratings -->
+                                <li class="d-flex align-items-center font-size-sm">
+                                    <span class="progress-name mr-3">Average</span>
+                                    <div class="progress flex-grow-1">
+                                        <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                    <span class="ml-3">0</span>
+                                </li>
+                                <!-- End Review Ratings -->
+
+                                <!-- Review Ratings -->
+                                <li class="d-flex align-items-center font-size-sm">
+                                    <span class="progress-name mr-3">Below average</span>
+                                    <div class="progress flex-grow-1">
+                                        <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                    <span class="ml-3">0</span>
+                                </li>
+                                <!-- End Review Ratings -->
+
+                                <!-- Review Ratings -->
+                                <li class="d-flex align-items-center font-size-sm">
+                                    <span class="progress-name mr-3">Poor</span>
+                                    <div class="progress flex-grow-1">
+                                        <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                    <span class="ml-3">0</span>
+                                </li>
+                                <!-- End Review Ratings -->
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-2 align-items-center mt-5">
+                        <img src="{{asset('public/assets/admin/img/icons/img-icon.png')}}" width="20" height="20" alt="">
+                        <h5 class="mb-0">Identity Documents</h5>
+                    </div>
+
+                    <hr class="mt-2 hr-light">
+
+                    <div class="col-12">
+                        <div class="row">
+                            <div class="col-sm-6 col-lg-4">
+                                <h5 class="mb-3">General Information</h5>
+    
+                                <div class="key-val-list-item d-flex gap-3">
+                                    <div>Identity Type</div>:
+                                    <div>NID</div>
+                                </div>
+                                <div class="key-val-list-item d-flex gap-3">
+                                    <div>Identity Number</div>:
+                                    <div>12345678</div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-lg-8">
+                                <div class="d-flex flex-wrap gap-3">
+                                    <img class="rounded mx-h150 mx-w-100" src="{{asset('public/assets/admin/img/icons/nid.png')}}" width="275" height="150" alt="">
+                                    <img class="rounded mx-h150 mx-w-100" src="{{asset('public/assets/admin/img/icons/nid.png')}}" width="275" height="150" alt="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
 
         <!-- Card -->

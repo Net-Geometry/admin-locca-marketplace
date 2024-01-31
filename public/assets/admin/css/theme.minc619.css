@@ -3678,7 +3678,7 @@ a:hover .text-hover-primary {
 }
 
 .z-index-2 {
-    z-index: 2;
+    z-index: 2 !important;
 }
 
 .z-index-99 {

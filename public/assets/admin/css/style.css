@@ -2178,22 +2178,21 @@ textarea.form-control[readonly] {
 }
 .rating--review .title {
     font-weight: 600;
-    font-size: 50px;
-    line-height: 59px;
+    font-size: 20px;
     letter-spacing: 0.007em;
-    color: var(--primary-clr);
+    color: var(--warning-clr);
+    text-align: center;
 }
 
 .rating--review .title .out-of {
-    font-size: 35px;
-    line-height: 41px;
+    font-size: 16px;
     color: #758590;
     font-weight: 500;
+    text-align: center;
 }
 
 .rating--review .info {
-    font-weight: 500;
-    font-size: 14px;
+    font-size: 12px;
     line-height: 19px;
     letter-spacing: 0.007em;
     color: #758590;
@@ -4317,10 +4316,15 @@ td .amount--input {
 }
 .progress {
     background: #f3f4f5;
+    min-width: 100px;
 }
 
 .progress .progress-bar {
     background: var(--primary-clr);
+}
+
+.review-color-progress .progress .progress-bar {
+    background: #F59300;
 }
 
 .review-table-date {
@@ -11264,7 +11268,13 @@ body > .initial-38-1 {
 }
 
 .hr-light {
-    border-color: #D0DBE9 !important;
+    border-color: #f1f1ff !important;
+}
+
+@media (min-width: 992px) {
+    .border-lg-left {
+        border-left: 0.0625rem solid #e7eaf3 !important;
+    }
 }
 
 @page {
