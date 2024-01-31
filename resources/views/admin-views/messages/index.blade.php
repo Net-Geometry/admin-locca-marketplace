@@ -27,7 +27,6 @@
                     </div>
                     <!-- Body -->
                     <div class="card-body p-0 initial-19" id="conversation-list">
-                        <div class="border-bottom"></div>
                         @include('admin-views.messages.data')
                     </div>
                     <!-- End Body -->

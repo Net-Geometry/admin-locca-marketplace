@@ -17,8 +17,10 @@
             <h5 class="mb-0 d-flex justify-content-between">
                 <span class=" mr-3">{{$user['f_name'].' '.$user['l_name']}}</span>
                  <span class="{{$unchecked ? 'badge badge-info' : ''}}">{{$unchecked ? $unchecked : ''}}</span>
+                 <small class="text-muted">03:36:pm</small>
             </h5>
-            <span>{{ $user['phone'] }}</span>
+            <small class="text-muted mb-1">{{ $user['phone'] }}</small>
+            <div class="text-title fs-12">last message will be here...</div>
         </div>
     </div>
 @else

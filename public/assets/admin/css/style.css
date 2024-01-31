@@ -4562,6 +4562,10 @@ div.scroll-down {
     background-color: rgba(0, 159, 170, 0.05);
 }
 
+.conv-active .chat-user-info-content h5 {
+    color: var(--primary-clr);
+}
+
 .btn-check {
     position: absolute;
     clip: rect(0, 0, 0, 0);
@@ -10949,6 +10953,9 @@ body > .initial-38-1 {
 .fs-10{
     font-size: 10px;
 }
+.fs-12{
+    font-size: 12px;
+}
 
 .select-product-item {
     flex: 1 0 48%;
@@ -11192,6 +11199,49 @@ body > .initial-38-1 {
     z-index: 99999999999999;
 }
 
+.tab-button-group button {
+    border: none;
+    background-color: transparent;
+    padding: 5px;
+    font-weight: 600;
+    border-bottom: 3px solid transparent;
+}
+
+.tab-button-group button.active {
+    border-color: #334257;
+}
+
+.chat-user-conv-img img {
+    border-radius: 50%;
+}
+
+/* .learn-more-wrap {
+    position: relative;
+} */
+
+.learn-more-content {
+    position: absolute;
+    width: 100%;
+    background-color: #fff;
+    left: 0;
+    bottom: 0;
+
+    border-radius: 0px 0px 10px 10px;
+    border-top: 0.5px solid var(--primary-color-30, rgba(3, 157, 85, 0.30));
+    box-shadow: 0px 2px 32px 0px rgba(0, 0, 0, 0.05);
+
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 300ms ease-in-out;
+}
+
+
+.learn-more-wrap:hover .learn-more-content {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0px);
+}
 
 @page {
     size: auto;

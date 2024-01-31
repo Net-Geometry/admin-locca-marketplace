@@ -6012,17 +6012,21 @@ a:hover .text-hover-primary {
 .conv-reply-1 {
     border-radius: 5px 5px 0px 0px;
     background-color: rgba(51, 66, 87, 0.05);
-    padding: 20px;
+    padding: 10px 20px;
     width: calc(100% - 20px);
     max-width: 505px;
 }
 .conv-reply-2 {
     border-radius: 5px 5px 0px 0px;
     background-color: rgba(0, 159, 170, 0.05);
-    padding: 20px;
+    padding: 10px 20px;
     width: calc(100% - 20px);
     max-width: 505px;
     margin-inline-start: auto;
+}
+
+.conv-reply-1 *, .conv-reply-2 * {
+    font-weight: 400;
 }
 
 .conv-reply-1 *:last-child,

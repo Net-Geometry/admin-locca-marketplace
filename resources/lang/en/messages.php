@@ -3831,4 +3831,5 @@
   'Blocked_deliveryman' => 'Blocked deliveryman',
   'Total_Completed_Orders' => 'Total Completed Orders',
   'ex_: search_delivery_man_,_email_or_phone' => 'Ex : search delivery man   email or phone',
+  'Salary_Base' => 'Salary Base',
 );

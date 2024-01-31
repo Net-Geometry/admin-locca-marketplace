@@ -61,9 +61,9 @@
                         </div>
                         <!-- Body -->
                         <div class="card-body p-0 initial-19"  id="dm-conversation-list">
-                            <div class="d-flex justify-content-center gap-4 mb-3">
-                                <div class="">Customer</div>
-                                <div class="">Store</div>
+                            <div class="d-flex justify-content-center gap-4 mb-3 tab-button-group">
+                                <button class="active">Customer</button>
+                                <button class="">Store</button>
                             </div>
 
                             @include('admin-views.delivery-man.partials._conversation_list')
