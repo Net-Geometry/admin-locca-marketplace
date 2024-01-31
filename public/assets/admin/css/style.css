@@ -11352,6 +11352,14 @@ body > .initial-38-1 {
     color: #006FBD;
 }
 
+.color-card.color-7 {
+    background: rgba(0, 111, 189, 0.10);
+}
+
+.color-card.color-7 .title {
+    color: #006FBD;
+}
+
 .mt-half {
     margin-top: 2px !important;
 }

@@ -3846,4 +3846,9 @@
   'edit-information' => 'Edit-information',
   'Rating' => 'Rating',
   'order_ID' => 'Order ID',
+  'cancel_order' => 'Cancel order',
+  'completed_order' => 'Completed order',
+  'ongoing_order' => 'Ongoing order',
+  'delivery_date' => 'Delivery date',
+  'total_items' => 'Total items',
 );
