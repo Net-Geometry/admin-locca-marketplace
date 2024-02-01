@@ -196,7 +196,7 @@
 <script>
 
 "use strict";
-var audio = document.getElementById("myAudio");
+audio = document.getElementById("myAudio");
 
 function playAudio() {
     audio.play();
