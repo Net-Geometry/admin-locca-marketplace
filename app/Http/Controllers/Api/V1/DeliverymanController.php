@@ -62,7 +62,7 @@ class DeliverymanController extends Controller
 
         $over_flow_balance = $dm['balance'] - $dm?->wallet?->collected_cash ;
 
-        $wallet_earning =  round($dm->wallet->total_earning - ($dm->wallet->total_withdrawn +$dm?->wallet?->pending_withdraw) ,8);
+        $wallet_earning =  round($dm?->wallet?->total_earning - ($dm?->wallet?->total_withdrawn +$dm?->wallet?->pending_withdraw) ,8);
         if(isset($dm?->wallet) && (($over_flow_balance > 0 && $dm?->wallet?->collected_cash > 0 ) || ($dm?->wallet?->collected_cash != 0 && $dm['balance'] !=  0)) ){
             $dm['adjust_able'] = true;
 
