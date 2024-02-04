@@ -43,6 +43,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::get('category/status/{id}/{status}', 'ParcelCategoryController@status')->name('category.status');
             Route::resource('category', 'ParcelCategoryController');
             Route::get('orders/{status}', 'ParcelController@orders')->name('orders');
+            Route::get('orders/export/{status}/{file_type}', 'ParcelController@parcel_orders_export')->name('parcel_orders_export');
             Route::get('details/{id}', 'ParcelController@order_details')->name('order.details');
             Route::get('settings', 'ParcelController@settings')->name('settings');
             Route::post('settings', 'ParcelController@update_settings')->name('update.settings');

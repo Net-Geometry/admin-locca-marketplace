@@ -7,6 +7,8 @@
 @endpush
 
 @section('content')
+@php($parcel_order = Request::is('admin/parcel/dispatch*'))
+
     <div class="content container-fluid">
         <!-- Page Header -->
         <div class="page-header">
@@ -87,20 +89,8 @@
 
                         <div id="usersExportDropdown"
                                 class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
-                            <span class="dropdown-header">{{translate('messages.options')}}</span>
-                            <a id="export-copy" class="dropdown-item" href="javascript:;">
-                                <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                        src="{{asset('public/assets/admin')}}/svg/illustrations/copy.svg"
-                                        alt="Image Description">
-                                {{translate('messages.copy')}}
-                            </a>
-                            <a id="export-print" class="dropdown-item" href="javascript:;">
-                                <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                        src="{{asset('public/assets/admin')}}/svg/illustrations/print.svg"
-                                        alt="Image Description">
-                                {{translate('messages.print')}}
-                            </a>
-                            <div class="dropdown-divider"></div>
+
+
                             <span class="dropdown-header">{{translate('messages.download_options')}}</span>
                             <a id="export-excel" class="dropdown-item" href="javascript:;">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
@@ -114,12 +104,7 @@
                                         alt="Image Description">
                                 .{{translate('messages.csv')}}
                             </a>
-                            <a id="export-pdf" class="dropdown-item" href="javascript:;">
-                                <img class="avatar avatar-xss avatar-4by3 mr-2"
-                                        src="{{asset('public/assets/admin')}}/svg/components/pdf.svg"
-                                        alt="Image Description">
-                                {{translate('messages.pdf')}}
-                            </a>
+
                         </div>
                     </div>
                     <!-- End Unfold -->
@@ -128,123 +113,6 @@
                         <a class="js-hs-unfold-invoker btn btn-sm btn-white h--40px" href="javascript:" id="filter-button-on">
                             <i class="tio-filter-list mr-1"></i> {{ translate('Filters') }} <span class="badge badge-success badge-pill ml-1" id="filter_count"></span>
                         </a>
-                    </div>
-                    <!-- End Unfold -->
-                    <!-- Unfold -->
-                    <div class="hs-unfold">
-                        <a class="js-hs-unfold-invoker btn btn-sm btn-white h--40px" href="javascript:;"
-                            data-hs-unfold-options='{
-                                "target": "#showHideDropdown",
-                                "type": "css-animation"
-                            }'>
-                            <i class="tio-table mr-1"></i> {{translate('messages.columns')}}
-                        </a>
-
-                        <div id="showHideDropdown"
-                                class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-right dropdown-card min--240">
-                            <div class="card card-sm">
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-between align-items-center mb-3">
-                                        <span class="mr-2">{{translate('messages.order')}}</span>
-
-                                        <!-- Checkbox Switch -->
-                                        <label class="toggle-switch toggle-switch-sm" for="toggleColumn_order">
-                                            <input type="checkbox" class="toggle-switch-input"
-                                                    id="toggleColumn_order" checked>
-                                            <span class="toggle-switch-label">
-                                            <span class="toggle-switch-indicator"></span>
-                                            </span>
-                                        </label>
-                                        <!-- End Checkbox Switch -->
-                                    </div>
-
-                                    <div class="d-flex justify-content-between align-items-center mb-3">
-                                        <span class="mr-2">{{translate('messages.date')}}</span>
-
-                                        <!-- Checkbox Switch -->
-                                        <label class="toggle-switch toggle-switch-sm" for="toggleColumn_date">
-                                            <input type="checkbox" class="toggle-switch-input"
-                                                    id="toggleColumn_date" checked>
-                                            <span class="toggle-switch-label">
-                                            <span class="toggle-switch-indicator"></span>
-                                            </span>
-                                        </label>
-                                        <!-- End Checkbox Switch -->
-                                    </div>
-
-                                    <div class="d-flex justify-content-between align-items-center mb-3">
-                                        <span class="mr-2">{{translate('messages.customer')}}</span>
-
-                                        <!-- Checkbox Switch -->
-                                        <label class="toggle-switch toggle-switch-sm"
-                                                for="toggleColumn_customer">
-                                            <input type="checkbox" class="toggle-switch-input"
-                                                    id="toggleColumn_customer" checked>
-                                            <span class="toggle-switch-label">
-                                            <span class="toggle-switch-indicator"></span>
-                                            </span>
-                                        </label>
-                                        <!-- End Checkbox Switch -->
-                                    </div>
-                                    <div class="d-flex justify-content-between align-items-center mb-3">
-                                        <span class="mr-2">{{translate('messages.store')}}</span>
-
-                                        <!-- Checkbox Switch -->
-                                        <label class="toggle-switch toggle-switch-sm"
-                                                for="toggleColumn_restaurant">
-                                            <input type="checkbox" class="toggle-switch-input"
-                                                    id="toggleColumn_restaurant" checked>
-                                            <span class="toggle-switch-label">
-                                            <span class="toggle-switch-indicator"></span>
-                                            </span>
-                                        </label>
-                                        <!-- End Checkbox Switch -->
-                                    </div>
-
-                                    <div class="d-flex justify-content-between align-items-center mb-3">
-                                        <span class="mr-2">{{translate('messages.total_amount')}}</span>
-
-                                        <!-- Checkbox Switch -->
-                                        <label class="toggle-switch toggle-switch-sm" for="toggleColumn_total">
-                                            <input type="checkbox" class="toggle-switch-input"
-                                                    id="toggleColumn_total" checked>
-                                            <span class="toggle-switch-label">
-                                            <span class="toggle-switch-indicator"></span>
-                                            </span>
-                                        </label>
-                                        <!-- End Checkbox Switch -->
-                                    </div>
-                                    <div class="d-flex justify-content-between align-items-center mb-3">
-                                        <span class="mr-2">{{translate('messages.order_status')}}</span>
-
-                                        <!-- Checkbox Switch -->
-                                        <label class="toggle-switch toggle-switch-sm" for="toggleColumn_order_status">
-                                            <input type="checkbox" class="toggle-switch-input"
-                                                    id="toggleColumn_order_status" checked>
-                                            <span class="toggle-switch-label">
-                                            <span class="toggle-switch-indicator"></span>
-                                            </span>
-                                        </label>
-                                        <!-- End Checkbox Switch -->
-                                    </div>
-
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <span class="mr-2">{{translate('messages.actions')}}</span>
-
-                                        <!-- Checkbox Switch -->
-                                        <label class="toggle-switch toggle-switch-sm"
-                                                for="toggleColumn_actions">
-                                            <input type="checkbox" class="toggle-switch-input"
-                                                    id="toggleColumn_actions" checked>
-                                            <span class="toggle-switch-label">
-                                            <span class="toggle-switch-indicator"></span>
-                                            </span>
-                                        </label>
-                                        <!-- End Checkbox Switch -->
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                     <!-- End Unfold -->
                 </div>
@@ -277,7 +145,10 @@
                         <th class="table-column-pl-0 border-0">{{translate('messages.order_id')}}</th>
                         <th class="border-0">{{translate('messages.order_date')}}</th>
                         <th class="border-0">{{translate('messages.customer_information')}}</th>
+                        @if (!$parcel_order)
+
                         <th class="border-0">{{translate('messages.store')}}</th>
+                        @endif
                         <th class="border-0">{{translate('messages.total_amount')}}</th>
                         <th class="border-0 text-center">{{translate('messages.order_status')}}</th>
                         <th class="border-0 text-center">{{translate('messages.actions')}}</th>
@@ -303,9 +174,11 @@
                                     <label class="badge badge-danger">{{translate('messages.invalid_customer_data')}}</label>
                                 @endif
                             </td>
+                            @if (!$parcel_order)
                             <td>
                                 <div>{{$order->store?$order->store->name:'Store deleted!'}}</div>
                             </td>
+                            @endif
                             <td>
                                 <div class="text-right mw--85px">
                                     <div>
@@ -348,14 +221,16 @@
                                       {{str_replace('_',' ',$order['order_status'])}}
                                     </span>
                                 @endif
-                                @if($order['order_type']=='take_away')
-                                    <div class="text-title mt-1">
-                                        {{translate('messages.take_away')}}
-                                    </div>
-                                @else
-                                    <div class="text-title mt-1">
-                                      {{translate('messages.home_delivery')}}
-                                    </div>
+                                @if (!$parcel_order)
+                                    @if($order['order_type']=='take_away')
+                                        <div class="text-title mt-1">
+                                            {{translate('messages.take_away')}}
+                                        </div>
+                                    @else
+                                        <div class="text-title mt-1">
+                                        {{translate('messages.home_delivery')}}
+                                        </div>
+                                    @endif
                                 @endif
                             </td>
                             <td>
@@ -366,8 +241,7 @@
                                         <a class="btn action-btn btn--primary btn-outline-primary" target="_blank" href="{{route('admin.dispatch.order.generate-invoice',[$order['id']])}}"><i
                                                     class="tio-download"></i></a>
                                     @else
-                                        <a class="btn action-btn btn--primary btn-outline-primary" target="_blank" href="{{route('admin.order.generate-invoice',[$order['id']])}}"><i
-                                                    class="tio-download"></i></a>
+                                        <a class="btn action-btn btn--primary btn-outline-primary" target="_blank" href="{{route('admin.order.generate-invoice',[$order['id']])}}">  <i class="tio-print"></i></a>
                                     @endif
                                 </div>
                             </td>
@@ -538,7 +412,7 @@
         $('#datatableFilterSidebar, .hs-unfold-overlay').show(500);
     });
 
-    
+
     document.getElementById('filter-button-off').addEventListener('click', function() {
         $('#datatableFilterSidebar, .hs-unfold-overlay').hide(500);
     });
