@@ -1179,6 +1179,12 @@ li.active
     display: inline-block;
 }
 
+#fund-statistics-board .chart--label .indicator {
+    width: 10px;
+    height: 10px;
+    margin-top: 3px;
+}
+
 .chart--label .info {
     width: calc(100% - 15px);
     -webkit-padding-start: 8px;
@@ -1187,6 +1193,11 @@ li.active
     font-size: 14px;
     line-height: 16px;
     align-self: center;
+}
+
+#fund-statistics-board .chart--label .info {
+    font-size: 10px;
+    white-space: nowrap;
 }
 
 .card-header-title img.card-header-icon {
