@@ -75,33 +75,30 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="d-flex gap-3 align-items-center">
-                                <img
-                                    src="{{asset('public/assets/installation')}}/assets/img/svg-icons/curl-enabled.svg"
-                                    alt="">
-                                <div
-                                    class="d-flex align-items-center gap-2 justify-content-between flex-grow-1">
-                                    Curl Enabled
+                        @foreach($permission as $key => $item)
+                            @if ($key != 'db_file_write_perm' && $key != 'routes_file_write_perm')
+                                <div class="col-md-6">
+                                    <div class="d-flex gap-3 align-items-center">
+                                        <img src="{{ asset('public/assets/installation') }}/assets/img/svg-icons/curl-enabled.svg" alt="">
+                                        <div class="d-flex align-items-center gap-2 justify-content-between flex-grow-1">
+                                            {{ translate($key) . ' ' . translate('Enabled') }}
 
-                                    @if ($permission['curl_enabled'])
-                                        <img width="20"
-                                             src="{{asset('public/assets/installation')}}/assets/img/svg-icons/check.png"
-                                             alt="">
-                                    @else
-                                        <span class="cursor-pointer" data-bs-toggle="tooltip"
-                                              data-bs-placement="top" data-bs-custom-class="custom-tooltip"
-                                              data-bs-html="true" data-bs-delay='{"hide":1000}'
-                                              data-bs-title="Curl extension is not enabled in your server. To enable go to PHP version > extensions and select curl.">
-                                                <img
-                                                    src="{{asset('public/assets/installation')}}/assets/img/svg-icons/info.svg"
-                                                    class="svg text-danger" alt="">
-                                            </span>
-                                    @endif
-
+                                            @if ($item)
+                                                <img width="20" src="{{ asset('public/assets/installation') }}/assets/img/svg-icons/check.png" alt="">
+                                            @else
+                                                <span class="cursor-pointer" data-bs-toggle="tooltip"
+                                                      data-bs-placement="top" data-bs-custom-class="custom-tooltip"
+                                                      data-bs-html="true" data-bs-delay='{"hide":1000}'
+                                                      data-bs-title="{{ translate($key) }} extension is not enabled in your server. To enable go to PHP version > extensions and select {{ translate($key) }}.">
+                            <img src="{{ asset('public/assets/installation') }}/assets/img/svg-icons/info.svg"
+                                 class="svg text-danger" alt="">
+                        </span>
+                                            @endif
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
+                            @endif
+                        @endforeach
                         <div class="col-md-6">
                             <div class="d-flex gap-3 align-items-center">
                                 <img

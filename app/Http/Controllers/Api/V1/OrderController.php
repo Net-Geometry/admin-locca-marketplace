@@ -1403,13 +1403,12 @@ class OrderController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'order_id' => 'required',
-            'guest_id' => $request->user ? 'nullable' : 'required',
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
-        $user_id = $request->user ? $request->user->id : $request['guest_id'];
+        $user_id = $request?->user?->id ;
 
         $order = Order::with('details', 'offline_payments','parcel_category')
         ->when(!isset($request->user) , function($query){
@@ -1419,8 +1418,9 @@ class OrderController extends Controller
         ->when(isset($request->user)  , function($query){
             $query->where('is_guest' , 0);
         })
-
-        ->where('user_id', $user_id)->find($request->order_id);
+            ->when($request->user, function ($query) use ($user_id) {
+                return $query->where('user_id', $user_id);
+            })->find($request->order_id);
 
         $details = isset($order->details) ? $order->details : null;
         if ($details != null && $details->count() > 0) {

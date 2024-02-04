@@ -232,10 +232,7 @@
     <source src="{{asset('public/assets/admin/sound/notification.mp3')}}" type="audio/mpeg">
 </audio>
 <script>
-
-"use strict";
-
-  var  audio = document.getElementById("myAudio");
+    var audio = document.getElementById("myAudio");
     function playAudio() {
         audio.play();
     }
@@ -243,6 +240,7 @@
     function pauseAudio() {
         audio.pause();
     }
+"use strict";
 
 
     @php($modules = \App\Models\Module::Active()->get())

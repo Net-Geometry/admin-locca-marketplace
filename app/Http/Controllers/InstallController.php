@@ -25,6 +25,21 @@ class InstallController extends Controller
     {
         if (Hash::check('step_1', $request['token'])) {
             $permission['curl_enabled'] = function_exists('curl_version');
+            //extensions
+            $permission['curl'] = function_exists('curl_version');
+            $permission['bcmath'] = extension_loaded('bcmath');
+            $permission['ctype'] = extension_loaded('ctype');
+            $permission['json'] = extension_loaded('json');
+            $permission['mbstring'] = extension_loaded('mbstring');
+            $permission['openssl'] = extension_loaded('openssl');
+            $permission['pdo'] = defined('PDO::ATTR_DRIVER_NAME');
+            $permission['tokenizer'] = extension_loaded('tokenizer');
+            $permission['xml'] = extension_loaded('xml');
+            $permission['zip'] = extension_loaded('zip');
+            $permission['fileinfo'] = extension_loaded('fileinfo');
+            $permission['gd'] = extension_loaded('gd');
+            $permission['sodium'] = extension_loaded('sodium');
+            $permission['pdo_mysql'] = extension_loaded('pdo_mysql');
             $permission['db_file_write_perm'] = is_writable(base_path('.env'));
             $permission['routes_file_write_perm'] = is_writable(base_path('app/Providers/RouteServiceProvider.php'));
             return view('installation.step1', compact('permission'));
