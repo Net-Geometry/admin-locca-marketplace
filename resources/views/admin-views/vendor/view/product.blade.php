@@ -92,11 +92,20 @@
                 </div>
             </div>
 
+            <?php
+          $item= match ($sub_tab) {
+                'active-items' => translate('messages.Active') ,
+                'inactive-items' => translate('messages.Inactive') ,
+                'pending-items' => translate('messages.Pending') ,
+                'rejected-items' => translate('messages.Rejected') ,
+                default => '',
+            }
+            ?>
+
             <div class="card">
                 <div class="card-header border-0 py-2">
                     <div class="search--button-wrapper">
-                        <h3 class="card-title">
-                            {{translate('messages.items')}} <span class="badge badge-soft-dark ml-2"><span class="total_items">{{$foods->total()}}</span></span>
+                        <h3 class="card-title"> {{ $item ?? '' }} {{translate('messages.items')}} <span class="badge badge-soft-dark ml-2"><span class="total_items">{{$foods->total()}}</span></span>
                         </h3>
 
                     <form class="search-form">

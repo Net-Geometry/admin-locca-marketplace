@@ -516,7 +516,7 @@
                         </span>
                     </a>
                 </li>
-                <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/store/list') ? 'active' : '' }}">
+                <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/store/list') ||  Request::is('admin/store/view/*') ? 'active' : '' }}">
                     <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.store.list') }}" title="{{ translate('messages.restaurants_list') }}">
                         <span class="tio-layout nav-icon"></span>
                         <span class="text-truncate">{{ translate('messages.restaurants') }}

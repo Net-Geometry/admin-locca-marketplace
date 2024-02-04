@@ -873,7 +873,7 @@ class ItemController extends Controller
             })
 
             ->latest()->paginate(config('default_pagination'));
-        
+
         return view('admin-views.product.reviews-list', compact('reviews'));
     }
 
@@ -1507,7 +1507,10 @@ class ItemController extends Controller
         $sub_category_id = $request->query('sub_category_id', 'all');
         $zone_id = $request->query('zone_id', 'all');
         $type = $request->query('type', 'all');
+        $filter = $request->query('filter');
         $key = explode(' ', $request['search']);
+        $from =  $request->query('from');
+        $to =  $request->query('to');
 
         $items = TempProduct::withoutGlobalScope(StoreScope::class)
             ->when($request->query('module_id', null), function ($query) use ($request) {
@@ -1536,15 +1539,26 @@ class ItemController extends Controller
                     }
                 });
             })
-            // ->where('is_rejected',1)
+            ->when(isset($filter) && $filter == 'pending' , function ($query)  {
+                return $query->where('is_rejected', 0);
+            })
+            ->when(isset($filter) && $filter == 'rejected' , function ($query)  {
+                return $query->where('is_rejected', 1);
+            })
+            ->when(isset($from) && isset($to) && $from != null && $to != null && isset($filter) && $filter == 'custom', function ($query) use ($from, $to) {
+                return $query->whereBetween('updated_at', [$from . " 00:00:00", $to . " 23:59:59"]);
+            })
+
             ->module(Config::get('module.current_module_id'))
             ->type($type)
-            ->latest()->paginate(config('default_pagination'));
+            ->orderBy('is_rejected', 'asc')
+            ->orderBy('updated_at', 'desc')
+            ->paginate(config('default_pagination'));
         $store = $store_id != 'all' ? Store::findOrFail($store_id) : null;
         $category = $category_id != 'all' ? Category::findOrFail($category_id) : null;
         $sub_categories = $category_id != 'all' ? Category::where('parent_id', $category_id)->get(['id','name']) : [];
 
-        return view('admin-views.product.approv_list', compact('items', 'store', 'category', 'type','sub_categories'));
+        return view('admin-views.product.approv_list', compact('items', 'store', 'category', 'type','sub_categories','filter'));
     }
 
 
