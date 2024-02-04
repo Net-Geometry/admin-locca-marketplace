@@ -3892,4 +3892,11 @@
   'Order Refund ($1500)' => 'Order Refund ($1500)',
   'Fund added by Admin ($1123)' => 'Fund added by Admin ($1123)',
   'customer_info' => 'Customer info',
+  'New_Customers' => 'New Customers',
+  'Customer_info' => 'Customer info',
+  'current_points_in_wallet' => 'Current points in wallet',
+  'points_converted' => 'Points converted',
+  'points_earned' => 'Points earned',
+  'transaction_ID' => 'Transaction ID',
+  'current_Points_in_Wallet' => 'Current Points in Wallet',
 );
