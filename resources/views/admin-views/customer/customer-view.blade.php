@@ -38,7 +38,7 @@
         {{-- Create Coupon Card --}}
         <div class="card mb-3">
             <div class="card-body">
-                <div class="d-flex align-items-center justify-content-between gap-2">
+                <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
                     <div class="d-flex gap-2 align-items-center">
                         <img src="{{asset('public/assets/admin/img/icons/coupon-icon.png')}}" width="16" height="16" alt="">
                         <p class="mb-0">if you want to make a customized COUPON for this customer, click the Create Coupon button and influence them buy more from your store. </p>
@@ -56,7 +56,7 @@
             <div class="col-lg-6">
                 <div class="card">
                     <div class="card-body">
-                        <div class="d-flex gap-3">
+                        <div class="d-flex flex-wrap gap-3">
                             <div class="color-card flex-column align-items-center justify-content-center color-2 flex-grow-1">
                                 <div class="img-box">
                                     <img class="resturant-icon w--30" src="{{asset('/public/assets/admin/img/icons/order-icon-1.png')}}" alt="">
@@ -86,7 +86,7 @@
             <div class="col-lg-6">
                 <div class="card">
                     <div class="card-body">
-                        <div class="d-flex gap-3">
+                        <div class="d-flex flex-wrap gap-3">
                             <div class="color-card flex-column align-items-center justify-content-center color-7 flex-grow-1">
                                 <div class="img-box">
                                     <img class="resturant-icon w--30" src="{{asset('/public/assets/admin/img/icons/order-icon-3.png')}}" alt="transactions">
@@ -118,7 +118,7 @@
         <div class="row" id="printableArea">
             <div class="col-lg-8 mb-3 mb-lg-0">
                 <div class="card">
-                    <div class="card-header border-0 py-2 d-flex gap-2">
+                    <div class="card-header border-0 py-2 d-flex flex-wrap gap-2">
                         <div class="search--button-wrapper">
                             <h5 class="card-title d-flex gap-2 align-items-center"> 
                                 {{translate('order_list')}} 
@@ -168,6 +168,7 @@
                     </div>
                     <!-- End Unfold -->
                     </div>
+
                     <!-- Table -->
                     <div class="table-responsive datatable-custom">
                         <table id="columnSearchDatatable"
@@ -178,45 +179,50 @@
                                  "paging":false
                                }'>
                             <thead class="thead-light">
-                            <tr>
-                                <th class="border-0 pl-4">{{translate('SL')}}</th>
-                                <th class="border-0">{{translate('messages.order_ID')}}</th>
-                                <th class="border-0 text-center">{{translate('messages.total_Items')}}</th>
-                                <th class="border-0 text-right">{{translate('messages.total_amount')}}</th>
-                                <th class="border-0 text-center">{{translate('messages.action')}}</th>
-                            </tr>
+                                <tr>
+                                    <th class="border-0 pl-4">{{translate('SL')}}</th>
+                                    <th class="border-0">{{translate('messages.order_ID')}}</th>
+                                    <th class="border-0 text-center">{{translate('messages.total_Items')}}</th>
+                                    <th class="border-0 text-right">{{translate('messages.total_amount')}}</th>
+                                    <th class="border-0 text-center">{{translate('messages.action')}}</th>
+                                </tr>
                             </thead>
 
                             <tbody>
-                            @foreach($orders as $key=>$order)
-                                <tr>
-                                    <td>
-                                        <div class="pl-2">
-                                            {{$key+$orders->firstItem()}}
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <a class="text-dark" href="{{route((isset($order) && $order->order_type=='parcel')?'admin.parcel.order.details':'admin.order.details',['id'=>$order['id'],'module_id'=>$order['module_id']])}}">{{$order['id']}}</a>
-                                    </td>
-                                    <td>
-                                        <div class="text-center mw--85px mx-auto">
-                                            {{-- {{ $order?->details()?->count() != 0  ?  $order?->details()?->count(): translate('messages.N/A') }} --}}
-                                            12
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="text-right">
-                                            {{\App\CentralLogics\Helpers::format_currency($order['order_amount'])}}
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="btn--container justify-content-center">
-                                            <a class="btn action-btn btn--warning btn-outline-warning" href="{{route((isset($order) && $order->order_type=='parcel')?'admin.parcel.order.details':'admin.order.details',['id'=>$order['id']])}}" title="{{translate('messages.view')}} "><i class="tio-visible"></i></a>
-                                            <a class="btn action-btn btn--primary btn-outline-primary" target="_blank" href="{{route('admin.order.generate-invoice',[$order['id']])}}" title="{{translate('messages.invoice')}}"><i class="tio-print"></i> </a>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endforeach
+                                @foreach($orders as $key=>$order)
+                                    <tr>
+                                        <td>
+                                            <div class="pl-2">
+                                                {{$key+$orders->firstItem()}}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <a class="text-dark" href="{{route((isset($order) && $order->order_type=='parcel')?'admin.parcel.order.details':'admin.order.details',['id'=>$order['id'],'module_id'=>$order['module_id']])}}">{{$order['id']}}</a>
+                                        </td>
+                                        <td>
+                                            <div class="text-center mw--85px mx-auto">
+                                                {{-- {{ $order?->details()?->count() != 0  ?  $order?->details()?->count(): translate('messages.N/A') }} --}}
+                                                12
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="text-right">
+                                                {{\App\CentralLogics\Helpers::format_currency($order['order_amount'])}}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="btn--container justify-content-center">
+                                                <a class="btn action-btn btn--warning btn-outline-warning" href="{{route((isset($order) && $order->order_type=='parcel')?'admin.parcel.order.details':'admin.order.details',['id'=>$order['id']])}}" title="{{translate('messages.view')}} "><i class="tio-visible"></i></a>
+                                                {{-- <a class="btn action-btn btn--primary btn-outline-primary" target="_blank" href="{{route('admin.order.generate-invoice',[$order['id']])}}" title="{{translate('messages.invoice')}}">
+                                                    <i class="tio-print"></i>
+                                                </a> --}}
+                                                <a class="btn action-btn btn--primary btn-outline-primary" target="_blank" href="#" title="{{translate('messages.download')}}">
+                                                    <i class="tio-download-to"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforeach
                             </tbody>
                         </table>
                         @if(count($orders) !== 0)
@@ -237,25 +243,18 @@
                 </div>
             </div>
 
-
-
             <div class="col-lg-4">
-                <!-- Card -->
-                <div class="card-header">
-                    <h3 class="card-title text-center">
-                        <span class=""> {{ translate('Customer_Personal_Info') }}</span>
-                    </h3>
-                </div>
-
-
                 <div class="card">
                     <!-- Header -->
                     <div class="card-header">
-                        <h4 class="card-title">
-                            <span class="card-header-icon">
-                                <i class="tio-user"></i>
-                            </span>
-                            <span>{{$customer['f_name'].' '.$customer['l_name']}}</span>
+                        <h4 class="card-title d-flex flex-wrap align-items-center gap-2">
+                            <div class="d-flex align-items-center gap-1">
+                                <span class="card-header-icon">
+                                    <i class="tio-user"></i>
+                                </span>
+                                <span class=""> {{ translate('customer_information') }}</span>
+                            </div>
+                            <span class="badge badge-soft-info">Total order: 5</span>
                         </h4>
                     </div>
                     <!-- End Header -->
@@ -263,37 +262,44 @@
                     <!-- Body -->
                     @if($customer)
                         <div class="card-body">
-                            <div class="customer--information-single media align-items-center" href="javascript:">
-                                <div class="avatar avatar-circle">
-                                    <img class="avatar-img onerror-image" data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}" src="{{\App\CentralLogics\Helpers::onerror_image_helper($customer->image, asset('storage/app/public/profile/').'/'.$customer->image, asset('public/assets/admin/img/160x160/img1.jpg'), 'profile/') }}"
+                            <div class="media gap-3 flex-wrap">
+                                <div class="avatar avatar-circle avatar-70">
+                                    <img class="avatar-img onerror-image" width="70" height="70" data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}" src="{{\App\CentralLogics\Helpers::onerror_image_helper($customer->image, asset('storage/app/public/profile/').'/'.$customer->image, asset('public/assets/admin/img/160x160/img1.jpg'), 'profile/') }}"
                                     alt="Image Description">
                                 </div>
                                 <div class="media-body">
-                                    <ul class="list-unstyled m-0">
-                                        <li class="pb-1 d-flex align-items-center">
-                                            <i class="tio-email mr-2"></i>
-                                            <a href="mailto:{{ $customer['email'] }}">
-                                            <span>{{$customer['email']}}</span>
-                                        </a>
-                                        </li>
-                                        <li class="pb-1 d-flex align-items-center">
-                                            <i class="tio-call-talking-quiet mr-2"></i>
-                                            <a href="tel:{{ $customer['phone'] }}">
-                                            <span>{{$customer['phone']}}</span>
-                                        </a>
-                                        </li>
+                                    <div class="key-value-list d-flex flex-column gap-2 text-dark" style="--min-width: 60px">
+                                        <div class="key-val-list-item d-flex gap-3">
+                                            <div>{{ translate('name') }}</div>:
+                                            <div class="font-semibold">{{$customer['f_name'].' '.$customer['l_name']}}</div>
+                                        </div>
+                                        <div class="key-val-list-item d-flex gap-3">
+                                            <div>{{ translate('contact') }}</div>:
+                                            <a href="tel:{{ $customer['phone'] }}" class="text-dark font-semibold">{{$customer['phone']}}</a>
+                                        </div>
+                                        <div class="key-val-list-item d-flex gap-3">
+                                            <div>{{ translate('email') }}</div>:
+                                            <a href="mailto:{{ $customer['email'] }}" class="text-dark font-semibold">{{$customer['email']}}</a>
+                                        </div>
+                                        @foreach($customer->addresses as $address)
+                                            <div class="key-val-list-item d-flex gap-3">
+                                                <div>{{ translate('address') }}</div>:
+                                                <div>{{$address['address']}}</div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+
+                                    {{-- <ul class="list-unstyled m-0">
                                         <li class="pb-1 d-flex align-items-center">
                                             <i class="tio-shopping-basket-outlined mr-2"></i>
                                             <span>{{$customer->order_count}} {{translate('messages.Completed_orders')}}</span>
                                         </li>
-                                    </ul>
+                                    </ul> --}}
                                 </div>
                             </div>
 
-                            <hr>
 
-
-                            @foreach($customer->addresses as $address)
+                            {{-- @foreach($customer->addresses as $address)
                                 <div class="d-flex justify-content-between align-items-center">
                                     <h5>{{translate('messages.addresses')}}</h5>
                                 </div>
@@ -316,7 +322,7 @@
                                     </li>
                                 </ul>
                                 <hr>
-                            @endforeach
+                            @endforeach --}}
 
                         </div>
                 @endif

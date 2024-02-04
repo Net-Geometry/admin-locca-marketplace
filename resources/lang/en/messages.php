@@ -3869,4 +3869,8 @@
   'ex_: search_by_order_id' => 'Ex : search by order id',
   'create_coupon' => 'Create coupon',
   'total_Items' => 'Total Items',
+  'search_by_name_phone_or_email' => 'Search by name phone or email',
+  'All_transactions' => 'All transactions',
+  'receiver_name' => 'Receiver name',
+  'sender_name' => 'Sender name',
 );

@@ -11255,8 +11255,12 @@ body > .initial-38-1 {
     font-size: 12px;
 }
 
+.key-val-list {
+    --min-width: 100px;
+}
+
 .key-val-list-item > *:first-child {
-    min-width: 100px;
+    min-width: var(--min-width, 100px);
 }
 
 .mx-h150 {
@@ -11394,5 +11398,14 @@ body > .initial-38-1 {
     text-overflow: ellipsis;
     -webkit-line-clamp: 2;
     max-height: 3.6em;
-  }
-  
+}
+
+.break-all {
+    word-break: break-all !important;
+}
+
+.avatar-70 {
+    width: 70px;
+    min-width: 70px;
+    height: 70px;
+}
