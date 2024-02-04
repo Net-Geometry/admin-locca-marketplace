@@ -3851,4 +3851,13 @@
   'ongoing_order' => 'Ongoing order',
   'delivery_date' => 'Delivery date',
   'total_items' => 'Total items',
+  'All_DeliveryMan' => 'All DeliveryMan',
+  'Suspended' => 'Suspended',
+  'Order_ID' => 'Order ID',
+  'Offline' => 'Offline',
+  'Online' => 'Online',
+  'All_Types' => 'All Types',
+  'Completed_orders' => 'Completed orders',
+  'ex_: search_by_customer_name' => 'Ex : search by customer name',
+  'Customer_Personal_Info' => 'Customer Personal Info',
 );

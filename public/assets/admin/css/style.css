@@ -11369,3 +11369,30 @@ body > .initial-38-1 {
     margin: 0;
     /* this affects the margin in the printer settings */
 }
+
+.theme-style input,
+.theme-style + .select2 .select2-selection {
+    border-color: #5FAEB4 !important;
+}
+
+.theme-style .btn--secondary {
+    background-color: #5FAEB4 !important;
+}
+
+.theme-style + .select2 .select2-selection__rendered > span {
+    color: #5FAEB4 !important;
+}
+
+.mt-3px {
+    margin-top: 3px !important;
+}
+
+.max-text-2-line {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 2;
+    max-height: 3.6em;
+  }
+  
