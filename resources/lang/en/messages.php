@@ -3860,4 +3860,13 @@
   'Completed_orders' => 'Completed orders',
   'ex_: search_by_customer_name' => 'Ex : search by customer name',
   'Customer_Personal_Info' => 'Customer Personal Info',
+  'Item_Quantity' => 'Item Quantity',
+  'Joining_date' => 'Joining date',
+  'addresses' => 'Addresses',
+  'office' => 'Office',
+  'store_not_found' => 'Store not found',
+  'product_count' => 'Product count',
+  'ex_: search_by_order_id' => 'Ex : search by order id',
+  'create_coupon' => 'Create coupon',
+  'total_Items' => 'Total Items',
 );
