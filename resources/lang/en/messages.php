@@ -3900,4 +3900,6 @@
   'transaction_ID' => 'Transaction ID',
   'current_Points_in_Wallet' => 'Current Points in Wallet',
   'points_Converted' => 'Points Converted',
+  'Search_by_product_name_or_bar_code' => 'Search by product name or bar code',
+  'customer_Information' => 'Customer Information',
 );

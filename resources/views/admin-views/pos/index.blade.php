@@ -24,16 +24,14 @@
                     <div class="card h-100">
                         <div class="card-header bg-light border-0">
                             <h5 class="card-title">
-                                <span class="card-header-icon">
-                                    <i class="tio-incognito"></i>
-                                </span>
                                 <span>
                                     {{translate('product_section')}}
                                 </span>
                             </h5>
                         </div>
-                        <div class="card-header">
-                            <div class="w-100">
+
+                        <div class="card-body d-flex flex-column" id="items">
+                            <div class="mb-4">
                                 <div class="row g-2 justify-content-around">
                                     <div class="col-sm-6 col-12">
                                         <select name="store_id" id="store_select"
@@ -60,7 +58,7 @@
                                         <form id="search-form" class="search-form">
                                             <!-- Search -->
                                             <div class="input-group input--group input-group--merge">
-                                                <input id="datatableSearch" type="search" value="{{$keyword??''}}" name="search" class="form-control h--45px" placeholder="{{translate('messages.ex_:_search_here')}}" aria-label="{{translate('messages.search_here')}}" disabled>
+                                                <input id="datatableSearch" type="search" value="{{$keyword??''}}" name="search" class="form-control h--45px" placeholder="{{translate('messages.Search_by_product_name_or_bar_code')}}" aria-label="{{translate('messages.search_here')}}" disabled>
                                                 <img width="16" height="16" src="{{asset('public/assets/admin/img/icons/search-icon.png')}}" alt="" class="search-icon">
 
                                                 @if($keyword)
@@ -74,9 +72,6 @@
                                 </div>
                             </div>
 
-
-                        </div>
-                        <div class="card-body d-flex flex-column" id="items">
                             <div class="row g-3 mb-auto">
                                 @foreach($products as $product)
                                     <div class="order--item-box item-box">
@@ -85,12 +80,12 @@
                                 @endforeach
                             </div>
                             @if(count($products)===0)
-                            <div class="search--no-found">
-                                <img src="{{asset('public/assets/admin/img/search-icon.png')}}" alt="img">
-                                <p>
-                                    {{translate('messages.no_products_on_pos_search')}}
-                                </p>
-                            </div>
+                                <div class="search--no-found">
+                                    <img src="{{asset('public/assets/admin/img/search-icon.png')}}" alt="img">
+                                    <p>
+                                        {{translate('messages.no_products_on_pos_search')}}
+                                    </p>
+                                </div>
                             @endif
                         </div>
                         <div class="card-footer border-0">
@@ -100,26 +95,23 @@
 				</div>
 				<div class="order--pos-right">
                     <div class="card h-100">
-                        <div class="card-header bg-light border-0 m-1">
+                        <div class="card-header bg-light border-0">
                             <h5 class="card-title">
-                                <span class="card-header-icon">
-                                    <i class="tio-money-vs"></i>
-                                </span>
                                 <span>
                                     {{translate('billing_section')}}
                                 </span>
                             </h5>
                         </div>
                         <div class="card-body p-0">
-                            <div class="d-flex flex-wrap flex-row p-2 add--customer-btn">
+                            <div class="d-flex flex-wrap p-3 add--customer-btn">
                                 <select id="customer" name="customer_id"
-                                        data-placeholder="{{ translate('messages.select_customer') }}"
-                                        class="js-data-example-ajax form-control">
-                                    </select>
+                                    data-placeholder="{{ translate('messages.select_customer') }}"
+                                    class="js-data-example-ajax form-control">
+                                </select>
                                 <button class="btn btn--primary rounded font-regular" id="add_new_customer"
                                     type="button" data-toggle="modal" data-target="#add-customer"
                                     title="Add Customer">
-                                    <i class="tio-add-circle-outlined"></i> {{ translate('Add new customer') }}
+                                    {{ translate('Add new customer') }}
                                 </button>
                             </div>
                             <div class="pos--delivery-options">
@@ -132,9 +124,9 @@
                                     </h5>
                                     <span class="delivery--edit-icon text-primary" id="delivery_address" data-toggle="modal" data-target="#deliveryAddrModal"><i class="tio-edit"></i></span>
                                 </div>
-                                    <div class="pos--delivery-options-info d-flex flex-wrap" id="del-add">
-                                        @include('admin-views.pos._address')
-                                    </div>
+                                <div class="pos--delivery-options-info d-flex flex-wrap" id="del-add">
+                                    @include('admin-views.pos._address')
+                                </div>
                             </div>
                             <div class='w-100' id="cart">
                                 @include('admin-views.pos._cart',['store'=>$store])
