@@ -11496,3 +11496,51 @@ body > .initial-38-1 {
 .custom-select.theme-style {
     border-color: var(--primary-clr) !important;
 }
+
+.withdraw-info-sidebar {
+    position: fixed;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 400px;
+    max-width: 100%;
+    background: #fff;
+    z-index: 999;
+    transform: translateX(100%);
+    transition: transform ease 0.3s;
+    padding: 1.25rem;
+    overflow-y: auto;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+}
+
+.withdraw-info-sidebar.show {
+    transform: translateX(0);
+}
+
+.withdraw-info-sidebar-overlay {
+    background-color: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 998;
+    visibility: hidden;
+    opacity: 0;
+    transition: all ease 0.3s;
+}
+
+.withdraw-info-sidebar-overlay.show {
+    visibility: visible;
+    opacity: 1;
+}
+
+.circle {
+    --size: 26px;
+    width: var(--size);
+    min-width: var(--size);
+    height: var(--size);
+    border-radius: var(--size);
+    display: grid;
+    place-items: center;
+}

@@ -23,7 +23,7 @@
         <div class="card mt-2">
 
             <!-- Header -->
-            <div class="card-header py-2 border-0">
+            <div class="card-header flex-wrap py-2 border-0">
                 <div class="d-flex align-items-center gap-2 mb-2">
                     <h4 class="mb-0">{{ translate('messages.transaction_History')}}</h4>
                     <span class="badge badge-soft-dark rounded-circle">{{$withdraw_req->total()}}</span>
@@ -130,6 +130,8 @@
                                     @endif
                                 </td>
                                 <td>
+                                    <button class="withdraw-info-show">show sidebar</i>
+                                    </button>
                                     @if($wr->vendor)
                                     <a href="{{route('admin.transactions.store.withdraw_view',[$wr['id'],$wr->vendor['id']])}}"
                                         class="btn action-btn btn--warning btn-outline-warning"><i class="tio-visible-outlined"></i>
@@ -160,9 +162,98 @@
             @endif
         </div>
     </div>
+
+    {{-- Withdraw Information Sidebar --}}
+    <div class="withdraw-info-sidebar-wrap">
+        <div class="withdraw-info-sidebar-overlay"></div>
+        <div class="withdraw-info-sidebar">
+            <div class="d-flex pb-3">
+                <span class="circle bg-light withdraw-info-hide cursor-pointer">
+                    <i class="tio-clear"></i>
+                </span>
+            </div>
+
+            <div class="d-flex flex-column align-items-center gap-1 mb-3">
+                <h3 class="mb-3">Withdraw Information</h3>
+                <div class="d-flex gap-2 align-items-center mb-1 flex-wrap">
+                    <span>Withdraw Amount:</span>
+                    <span class="font-semibold">$4654.00</span>
+                    <label class="badge badge-soft-success mb-0">Approved</label>
+                </div>
+                <div class="d-flex gap-2 align-items-center fs-12">
+                    <span>Request Time:</span>
+                    <span>2023-11-27 13:46:23</span>
+                </div>
+            </div>
+
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h6 class="mb-0 font-medium">Store Info</h6>
+                </div>
+                <div class="card-body">
+                    <div class="key-val-list d-flex flex-column gap-2" style="--min-width: 60px">
+                        <div class="key-val-list-item d-flex gap-3">
+                            <span>Name:</span>
+                            <span>Click & Collect</span>
+                        </div>
+                        <div class="key-val-list-item d-flex gap-3">
+                            <span>Address:</span>
+                            <span>House: 00, Road: 00, City-0000, Country</span>
+                        </div>
+                    </div>
+
+                    <div class="rounded bg-light p-3 mt-3">
+                        <div class="key-val-list-item d-flex gap-3">
+                            <span>Store Balance:</span>
+                            <span class="font-semibold text-primary fs-16">$ 455.55</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h6 class="mb-0 font-medium">Owner Info</h6>
+                </div>
+                <div class="card-body">
+                    <div class="key-val-list d-flex flex-column gap-2" style="--min-width: 60px">
+                        <div class="key-val-list-item d-flex gap-3">
+                            <span>Name:</span>
+                            <span>Click & Collect</span>
+                        </div>
+                        <div class="key-val-list-item d-flex gap-3">
+                            <span>Email:</span>
+                            <a href="mailto:gmail@demo.com" class="text-dark">gmail@demo.com</a>
+                        </div>
+                        <div class="key-val-list-item d-flex gap-3">
+                            <span>Phone:</span>
+                            <a href="tel:+8801478523698" class="text-dark">+8801478523698</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="">
+                <h5 class="font-medium">Approved Note</h5>
+
+                <div class="rounded bg-light p-3">
+                    Store wallet adjustment partial
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @push('script_2')
+    <script>
+        "use strict";
+        $('.withdraw-info-hide, .withdraw-info-sidebar-overlay').on('click', function () {
+            $('.withdraw-info-sidebar, .withdraw-info-sidebar-overlay').removeClass('show');
+        });
+        $('.withdraw-info-show').on('click', function () {
+            $('.withdraw-info-sidebar, .withdraw-info-sidebar-overlay').addClass('show');
+        })
+    </script>
     <script>
         "use strict";
         $('.status-filter').on('change',function () {
