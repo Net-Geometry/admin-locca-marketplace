@@ -158,11 +158,21 @@
 
                                 </div>
                             </div>
+                            <div class="col-md-12">
+                                <div class="btn--container justify-content-end mb-3">
+                                    <button type="submit" class="btn btn--primary">{{translate('generate')}}</button>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="">{{ translate('messages.Generated_varient') }} <span class="form-label-secondary text-danger " data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('messages.This_field_is_for_geenrated_variation._copy_them_&_paste_into_excel_sheet') }} "><img src="{{ asset('/public/assets/admin/img/info-circle.svg') }}" alt="Veg non veg"> * </span></label>
+                                <textarea name="" id="variation_output" class="form-control" rows="5" readonly></textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="">{{ translate('messages.Generated_choice_option') }} <span class="form-label-secondary text-danger " data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('messages.Choice_option_is_required_if_you_are_using_product_variation') }}"><img src="{{ asset('/public/assets/admin/img/info-circle.svg') }}" alt="Veg non veg"> * </span></label>
+                                <textarea name="" id="choice_output" class="form-control" rows="5" readonly></textarea>
+                            </div>
                         </div>
-                        <div class="btn--container justify-content-end mb-3">
-                            <button type="submit" class="btn btn--primary">{{translate('generate')}}</button>
-                        </div>
-                        <textarea name="" id="variation_output" class="form-control" rows="5" readonly></textarea>
+
                     </div>
                 </div>
             </div>
@@ -403,6 +413,7 @@
                     }
                 } else {
                     $('#variation_output').val(data.variation)
+                    $('#choice_output').val(data.choice_options)
                 }
             }
         });

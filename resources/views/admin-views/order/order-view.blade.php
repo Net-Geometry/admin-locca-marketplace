@@ -846,7 +846,7 @@
 
                                 $store_discount_amount = round($store_discount_amount, 2);
 
-                                if ($order->store->free_delivery) {
+                                if ($order?->store?->free_delivery) {
                                     $del_c = 0;
                                 }
 
@@ -1193,7 +1193,6 @@
 
 
                             @if ($order->offline_payments == null  || ($order?->offline_payments && $order?->offline_payments->status == 'verified'))
-
                             @if ( !in_array($order->order_status, [ 'refunded', 'refund_request_canceled']))
                                 <div class="hs-unfold w-100">
                                     <div class="dropdown">
@@ -1249,7 +1248,7 @@
                                     </div>
                                 </div>
                             @endif
-                                @if (!in_array($order->order_status, [ 'refunded','delivered', 'canceled']) &&  ( !$order->delivery_man && $order['order_type'] != 'take_away' && (($order->store && !$order->store->self_delivery_system) || $parcel_order)))
+                                @if (!in_array($order->order_status, [ 'refunded','delivered', 'canceled']) &&  ( !$order->delivery_man && $order['order_type'] != 'take_away' && (($order->store && !$order?->store?->self_delivery_system) || $parcel_order)))
                                     <div class="w-100 text-center mt-3">
                                         <button type="button" class="btn btn--primary w-100" data-toggle="modal"
                                             data-target="#myModal" data-lat='21.03' data-lng='105.85'>
@@ -1272,11 +1271,11 @@
                                     <span>{{ translate('messages.deliveryman') }}</span>
 
 
-                                    @if ($order->store->self_delivery_system)
+                                    @if ($order?->store?->self_delivery_system)
                                        &nbsp; ({{ translate('messages.store') }})
                                     @endif
 
-                                    @if (!isset($order->delivered) && !$order->store->self_delivery_system)
+                                    @if (!isset($order->delivered) && !$order?->store?->self_delivery_system)
                                         <a type="button" href="#myModal" class="text--base cursor-pointer ml-auto"
                                             data-toggle="modal" data-target="#myModal">
                                             {{ translate('messages.change') }}
@@ -1284,7 +1283,7 @@
                                     @endif
                                 </h5>
                                 <a class="media align-items-center deco-none customer--information-single"
-                                    href="{{ !$order->store->self_delivery_system ?  route('admin.users.delivery-man.preview', [$order->delivery_man['id']]) : '#' }}">
+                                    href="{{ !$order?->store?->self_delivery_system ?  route('admin.users.delivery-man.preview', [$order->delivery_man['id']]) : '#' }}">
                                     <div class="avatar avatar-circle">
                                         <img class="avatar-img onerror-image"
                                             data-onerror-image="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}"
@@ -1466,17 +1465,17 @@
                     </div>
                 </div>
                 <!-- Customer Card -->
+                @php($data = isset($order->order_proof) ? json_decode($order->order_proof, true) : [])
+                @if ( in_array($order->order_status, [ 'handover', 'delivered', 'picked_up']) || count($data) > 0 )
 
                 <!-- order proof -->
                 <div class="card mb-2 mt-2">
                     <div class="card-header border-0 text-center pb-0">
                         <h4 class="m-0">{{ translate('messages.delivery_proof') }} </h4>
-                        <button class="btn btn-outline-primary btn-sm" data-toggle="modal"
-                                            data-target=".order-proof-modal">
-                                            {{ translate('messages.add') }}
-                                        </button>
+                        @if ( in_array($order->order_status, [ 'handover', 'delivered', 'picked_up']) )
+                            <button class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target=".order-proof-modal">  {{ translate('messages.add') }}  </button>
+                        @endif
                     </div>
-                    @php($data = isset($order->order_proof) ? json_decode($order->order_proof, true) : 0)
                     <div class="card-body pt-2">
                         @if ($data)
                         <label class="input-label"
@@ -1498,7 +1497,7 @@
                                                     <h4 class="modal-title"
                                                         id="order_proof_{{ $key }}">
                                                         {{ translate('order_proof_image') }}</h4>
-                                                    <button type="button" class="close"
+                                                        <button type="button" class="close"
                                                         data-dismiss="modal"><span
                                                             aria-hidden="true">&times;</span><span
                                                             class="sr-only">{{ translate('messages.cancel') }}</span></button>
@@ -1522,9 +1521,9 @@
                             @endif
                         </div>
                     </div>
+                @endif
 
-
-                @if ($order->store)
+                    @if ($order->store)
                     <!-- Restaurant Card -->
                     <div class="card mt-2">
                         <!-- Body -->
@@ -1540,7 +1539,7 @@
                                 <div class="avatar avatar-circle">
                                     <img class="avatar-img w-75px onerror-image"
                                         data-onerror-image="{{ asset('public/assets/admin/img/100x100/1.png') }}"
-                                        src="{{\App\CentralLogics\Helpers::onerror_image_helper($order->store->logo , asset('storage/app/public/store/') .'/'. $order->store->logo , asset('public/assets/admin/img/100x100/1.png'), 'store/') }}"
+                                        src="{{\App\CentralLogics\Helpers::onerror_image_helper($order?->store?->logo , asset('storage/app/public/store/') .'/'. $order?->store?->logo , asset('public/assets/admin/img/100x100/1.png'), 'store/') }}"
                                         alt="Image Description">
                                 </div>
                                 <div class="media-body">
@@ -2540,7 +2539,7 @@
                     @else
                         position: new google.maps.LatLng({{ $order->store->latitude }},
                             {{ $order->store->longitude }}),
-                        title: "{{ Str::limit($order->store->name, 15, '...') }}",
+                        title: "{{ Str::limit($order?->store?->name, 15, '...') }}",
                         icon: "{{ asset('public/assets/admin/img/restaurant_map.png') }}",
                     @endif
                     map: map,
@@ -2555,7 +2554,7 @@
                             );
                         @else
                             infowindow.setContent(
-                                "<div style='float:left'><img style='max-height:40px;wide:auto;' src='{{ asset('storage/app/public/restaurant/' . $order->store->logo) }}'></div><div class='text-break' style='float:right; padding: 10px;'><b>{{ Str::limit($order->store->name, 15, '...') }}</b><br /> {{ $order->store->address }}</div>"
+                                "<div style='float:left'><img style='max-height:40px;wide:auto;' src='{{ asset('storage/app/public/restaurant/' . $order->store->logo) }}'></div><div class='text-break' style='float:right; padding: 10px;'><b>{{ Str::limit($order?->store?->name, 15, '...') }}</b><br /> {{ $order->store->address }}</div>"
                             );
                         @endif
                         infowindow.open(map, Restaurantmarker);
@@ -2806,14 +2805,14 @@
                         position: new google.maps.LatLng({{ $order->store->latitude }},
                             {{ $order->store->longitude }}),
                         map: map,
-                        title: "{{ Str::limit($order->store->name, 15, '...') }}",
+                        title: "{{ Str::limit($order?->store?->name, 15, '...') }}",
                         icon: "{{ asset('public/assets/admin/img/restaurant_map.png') }}"
                     });
 
                     google.maps.event.addListener(Retaurantmarker, 'click', (function(Retaurantmarker) {
                         return function() {
                             infowindow.setContent(
-                                "<div style='float:left'><img style='max-height:40px;wide:auto;' src='{{ asset('storage/app/public/restaurant/' . $order->store->logo) }}'></div> <div style='float:right; padding: 10px;'><b>{{ Str::limit($order->store->name, 15, '...') }}</b><br /> {{ $order->store->address }}</div>"
+                                "<div style='float:left'><img style='max-height:40px;wide:auto;' src='{{ asset('storage/app/public/restaurant/' . $order->store->logo) }}'></div> <div style='float:right; padding: 10px;'><b>{{ Str::limit($order?->store?->name, 15, '...') }}</b><br /> {{ $order->store->address }}</div>"
                             );
                             infowindow.open(map, Retaurantmarker);
                         }

@@ -850,26 +850,30 @@ class ItemController extends Controller
 
     public function review_list(Request $request)
     {
-        // $reviews = Review::with(['item'=>function($query){
-        //     $query->withOutGlobalScope(StoreScope::class);
-        // }, 'customer'])->whereHas('item', function ($q) use ($request) {
-        //     return $q->where('module_id', Config::get('module.current_module_id'))->withOutGlobalScope(StoreScope::class);
-        // })
 
         $key = explode(' ', $request['search']);
         $reviews = Review::with('item')
-            ->when(isset($key), function ($query) use ($key) {
-                $query->whereHas('item', function ($query) use ($key) {
-                    foreach ($key as $value) {
-                        $query->where('name', 'like', "%{$value}%");
-                    }
+            ->when(isset($key), function ($query) use ($key,$request) {
+                $query->where(function($query) use($key,$request) {
+
+                    $query->whereHas('item', function ($query) use ($key) {
+                        foreach ($key as $value) {
+                            $query->where('name', 'like', "%{$value}%");
+                        }
+                    })->orWhereHas('customer', function ($query) use ($key){
+                        foreach ($key as $value) {
+                            $query->where('f_name', 'like', "%{$value}%")->orwhere('l_name', 'like', "%{$value}%");
+                        }
+                    })->orwhere('rating', $request['search']);
                 });
+
             })
             ->whereHas('item', function ($q) {
                 return $q->where('module_id', Config::get('module.current_module_id'))->withoutGlobalScope(StoreScope::class);
             })
 
             ->latest()->paginate(config('default_pagination'));
+
         return view('admin-views.product.reviews-list', compact('reviews'));
     }
 
@@ -973,7 +977,6 @@ class ItemController extends Controller
             Toastr::error(translate('messages.you_have_uploaded_a_wrong_format_file'));
             return back();
         }
-
         if ($request->button == 'import') {
             $data = [];
             try{
@@ -982,7 +985,6 @@ class ItemController extends Controller
                         Toastr::error(translate('messages.please_fill_all_required_fields'));
                         return back();
                     }
-
                     if (isset($collection['Price']) && ($collection['Price'] < 0)) {
                         Toastr::error(translate('messages.Price_must_be_greater_then_0') . ' ' . $collection['Id']);
                         return back();
@@ -991,7 +993,6 @@ class ItemController extends Controller
                         Toastr::error(translate('messages.Discount_must_be_greater_then_0') . ' ' . $collection['Id']);
                         return back();
                     }
-
                     try {
                         $t1 = Carbon::parse($collection['AvailableTimeStarts']);
                         $t2 = Carbon::parse($collection['AvailableTimeEnds']);
@@ -1004,7 +1005,6 @@ class ItemController extends Controller
                         Toastr::error(translate('messages.Invalid_AvailableTimeEnds_or_AvailableTimeStarts_on_id') . ' ' . $collection['Id']);
                         return back();
                     }
-
                     array_push($data, [
                         'name' => $collection['Name'],
                         'description' => $collection['Description'],
@@ -1020,12 +1020,12 @@ class ItemController extends Controller
                         'available_time_starts' => $collection['AvailableTimeStarts'] ?? '00:00:00',
                         'available_time_ends' => $collection['AvailableTimeEnds'] ?? '23:59:59',
                         'variations' => $module_type == 'food' ? json_encode([]) : $collection['Variations'] ?? json_encode([]),
+                        'choice_options' => $module_type == 'food' ? json_encode([]) : $collection['ChoiceOptions'] ?? json_encode([]),
                         'food_variations' => $module_type == 'food' ? $collection['Variations'] ?? json_encode([]) : json_encode([]),
                         'add_ons' => $collection['AddOns'] ? ($collection['AddOns'] == "" ? json_encode([]) : $collection['AddOns']) : json_encode([]),
                         'attributes' => $collection['Attributes'] ? ($collection['Attributes'] == "" ? json_encode([]) : $collection['Attributes']) : json_encode([]),
                         'store_id' => $collection['StoreId'],
                         'module_id' => $module_id,
-                        'choice_options' => json_encode([]),
                         'status' => $collection['Status'] == 'active' ? 1 : 0,
                         'veg' => $collection['Veg'] == 'yes' ? 1 : 0,
                         'recommended' => $collection['Recommended'] == 'yes' ? 1 : 0,
@@ -1040,10 +1040,8 @@ class ItemController extends Controller
             }
             try {
                 DB::beginTransaction();
-
                 $chunkSize = 100;
                 $chunk_items = array_chunk($data, $chunkSize);
-
                 foreach ($chunk_items as $key => $chunk_item) {
                     DB::table('items')->insert($chunk_item);
                 }
@@ -1054,11 +1052,9 @@ class ItemController extends Controller
                 Toastr::error(translate('messages.failed_to_import_data'));
                 return back();
             }
-
             Toastr::success(translate('messages.product_imported_successfully', ['count' => count($data)]));
             return back();
         }
-
         $data = [];
         try {
                 foreach ($collections as $collection) {
@@ -1078,7 +1074,6 @@ class ItemController extends Controller
                         Toastr::error(translate('messages.Discount_must_be_less_then_100') . ' ' . $collection['Id']);
                         return back();
                     }
-
                     try {
                         $t1 = Carbon::parse($collection['AvailableTimeStarts']);
                         $t2 = Carbon::parse($collection['AvailableTimeEnds']);
@@ -1091,8 +1086,6 @@ class ItemController extends Controller
                         Toastr::error(translate('messages.Invalid_AvailableTimeEnds_or_AvailableTimeStarts_on_id') . ' ' . $collection['Id']);
                         return back();
                     }
-
-
                     array_push($data, [
                         'id' => $collection['Id'],
                         'name' => $collection['Name'],
@@ -1109,6 +1102,7 @@ class ItemController extends Controller
                         'available_time_starts' => $collection['AvailableTimeStarts'] ?? '00:00:00',
                         'available_time_ends' => $collection['AvailableTimeEnds'] ?? '23:59:59',
                         'variations' => $module_type == 'food' ? json_encode([]) : $collection['Variations'] ?? json_encode([]),
+                        'choice_options' => $module_type == 'food' ? json_encode([]) : $collection['ChoiceOptions'] ?? json_encode([]),
                         'food_variations' => $module_type == 'food' ? $collection['Variations'] ?? json_encode([]) : json_encode([]),
                         'add_ons' => $collection['AddOns'] ? ($collection['AddOns'] == "" ? json_encode([]) : $collection['AddOns']) : json_encode([]),
                         'attributes' => $collection['Attributes'] ? ($collection['Attributes'] == "" ? json_encode([]) : $collection['Attributes']) : json_encode([]),
@@ -1125,22 +1119,17 @@ class ItemController extends Controller
                     Toastr::error(translate('messages.Item_doesnt_exist_at_the_database'));
                     return back();
                 }
-
-
             }catch(\Exception $e){
                 info(["line___{$e->getLine()}",$e->getMessage()]);
                 Toastr::error(translate('messages.failed_to_import_data'));
                 return back();
             }
-
         try {
             DB::beginTransaction();
-
             $chunkSize = 100;
             $chunk_items = array_chunk($data, $chunkSize);
-
             foreach ($chunk_items as $key => $chunk_item) {
-                DB::table('items')->upsert($chunk_item, ['id', 'module_id'], ['name', 'description', 'image', 'images', 'category_id', 'category_ids', 'unit_id', 'stock', 'price', 'discount', 'discount_type', 'available_time_starts', 'available_time_ends', 'variations', 'food_variations', 'add_ons', 'attributes', 'store_id', 'status', 'veg', 'recommended']);
+                DB::table('items')->upsert($chunk_item, ['id', 'module_id'], ['name', 'description', 'image', 'images', 'category_id', 'category_ids', 'unit_id', 'stock', 'price', 'discount', 'discount_type', 'available_time_starts', 'available_time_ends','choice_options', 'variations', 'food_variations', 'add_ons', 'attributes', 'store_id', 'status', 'veg', 'recommended']);
             }
             DB::commit();
         } catch (\Exception $e) {
@@ -1149,7 +1138,6 @@ class ItemController extends Controller
             Toastr::error(translate('messages.failed_to_import_data'));
             return back();
         }
-
         Toastr::success(translate('messages.product_imported_successfully', ['count' => count($data)]));
         return back();
     }
@@ -1503,7 +1491,10 @@ class ItemController extends Controller
         $sub_category_id = $request->query('sub_category_id', 'all');
         $zone_id = $request->query('zone_id', 'all');
         $type = $request->query('type', 'all');
+        $filter = $request->query('filter');
         $key = explode(' ', $request['search']);
+        $from =  $request->query('from');
+        $to =  $request->query('to');
 
         $items = TempProduct::withoutGlobalScope(StoreScope::class)
             ->when($request->query('module_id', null), function ($query) use ($request) {
@@ -1532,15 +1523,26 @@ class ItemController extends Controller
                     }
                 });
             })
-            // ->where('is_rejected',1)
+            ->when(isset($filter) && $filter == 'pending' , function ($query)  {
+                return $query->where('is_rejected', 0);
+            })
+            ->when(isset($filter) && $filter == 'rejected' , function ($query)  {
+                return $query->where('is_rejected', 1);
+            })
+            ->when(isset($from) && isset($to) && $from != null && $to != null && isset($filter) && $filter == 'custom', function ($query) use ($from, $to) {
+                return $query->whereBetween('updated_at', [$from . " 00:00:00", $to . " 23:59:59"]);
+            })
+
             ->module(Config::get('module.current_module_id'))
             ->type($type)
-            ->latest()->paginate(config('default_pagination'));
+            ->orderBy('is_rejected', 'asc')
+            ->orderBy('updated_at', 'desc')
+            ->paginate(config('default_pagination'));
         $store = $store_id != 'all' ? Store::findOrFail($store_id) : null;
         $category = $category_id != 'all' ? Category::findOrFail($category_id) : null;
         $sub_categories = $category_id != 'all' ? Category::where('parent_id', $category_id)->get(['id','name']) : [];
 
-        return view('admin-views.product.approv_list', compact('items', 'store', 'category', 'type','sub_categories'));
+        return view('admin-views.product.approv_list', compact('items', 'store', 'category', 'type','sub_categories','filter'));
     }
 
 
@@ -1666,6 +1668,7 @@ class ItemController extends Controller
                     }
                 });
             })
+            ->orderByRaw("FIELD(name, ?) DESC", [$request['name']])
             ->where('is_approved',1)
             ->module(Config::get('module.current_module_id'))
             ->type($type)

@@ -73,7 +73,11 @@
                                 <div class="form-group">
                                     <label class="input-label"
                                         for="default_name">{{ translate('messages.name') }}
-                                        (Default)
+                                        ( {{ translate('messages.Default') }}) <span class="form-label-secondary text-danger"
+                                        data-toggle="tooltip" data-placement="right"
+                                        data-original-title="{{ translate('messages.Required.')}}"> *
+                                        </span>
+
                                     </label>
                                     <input type="text" name="name[]" id="default_name"
                                         class="form-control" placeholder="{{ translate('messages.new_item') }}"
@@ -83,7 +87,10 @@
                                 <input type="hidden" name="lang[]" value="default">
                                 <div class="form-group mb-0">
                                     <label class="input-label"
-                                        for="exampleFormControlInput1">{{ translate('messages.short_description') }} ({{ translate('messages.default') }})</label>
+                                        for="exampleFormControlInput1">{{ translate('messages.short_description') }} ({{ translate('messages.default') }})<span class="form-label-secondary text-danger"
+                                        data-toggle="tooltip" data-placement="right"
+                                        data-original-title="{{ translate('messages.Required.')}}"> *
+                                        </span></label>
                                     <textarea type="text" name="description[]" class="form-control min-h-90px ckeditor"></textarea>
                                 </div>
                             </div>
@@ -166,7 +173,10 @@
                             <div class="row g-2">
                                 <div class="col-sm-6 col-lg-3">
                                     <div class="form-group mb-0">
-                                        <label class="input-label" for="store_id">{{ translate('messages.store') }}<span
+                                        <label class="input-label" for="store_id">{{ translate('messages.store') }} <span class="form-label-secondary text-danger"
+                                            data-toggle="tooltip" data-placement="right"
+                                            data-original-title="{{ translate('messages.Required.')}}"> *
+                                            </span><span
                                                 class="input-label-secondary"></span></label>
                                         <select name="store_id" id="store_id"
                                             data-placeholder="{{ translate('messages.select_store') }}" class="js-data-example-ajax form-control"
@@ -178,8 +188,10 @@
                                 <div class="col-sm-6 col-lg-3">
                                     <div class="form-group mb-0">
                                         <label class="input-label"
-                                            for="category_id">{{ translate('messages.category') }}<span
-                                                class="input-label-secondary">*</span></label>
+                                            for="category_id">{{ translate('messages.category') }}<span class="form-label-secondary text-danger"
+                                            data-toggle="tooltip" data-placement="right"
+                                            data-original-title="{{ translate('messages.Required.')}}"> *
+                                            </span></label>
                                         <select name="category_id" id="category_id" data-placeholder="{{ translate('messages.select_category') }}"
                                             class="js-data-example-ajax form-control">
                                         </select>
@@ -224,7 +236,10 @@
                                 <div class="col-sm-6 col-lg-3" id="veg_input">
                                     <div class="form-group mb-0">
                                         <label class="input-label"
-                                            for="exampleFormControlInput1">{{ translate('messages.item_type') }}</label>
+                                            for="exampleFormControlInput1">{{ translate('messages.item_type') }} <span class="form-label-secondary text-danger"
+                                            data-toggle="tooltip" data-placement="right"
+                                            data-original-title="{{ translate('messages.Required.')}}"> *
+                                            </span></label>
                                         <select name="veg" id="veg" class="form-control js-select2-custom"
                                             required>
                                             <option value="0">{{ translate('messages.non_veg') }}</option>
@@ -341,7 +356,10 @@
                                 <div class="col-sm-4 col-6">
                                     <div class="form-group mb-0">
                                         <label class="input-label"
-                                            for="exampleFormControlInput1">{{ translate('messages.price') }}</label>
+                                            for="exampleFormControlInput1">{{ translate('messages.price') }} <span class="form-label-secondary text-danger"
+                                            data-toggle="tooltip" data-placement="right"
+                                            data-original-title="{{ translate('messages.Required.')}}"> *
+                                            </span></label>
                                         <input type="number" min="0" max="999999999999.99" step="0.01"
                                             value="1" name="price" class="form-control"
                                             placeholder="{{ translate('messages.Ex:') }} 100" required>
@@ -350,7 +368,10 @@
                                 <div class="col-sm-4 col-6">
                                     <div class="form-group mb-0">
                                         <label class="input-label"
-                                            for="exampleFormControlInput1">{{ translate('messages.discount_type') }}<span
+                                            for="exampleFormControlInput1">{{ translate('messages.discount_type') }} <span class="form-label-secondary text-danger"
+                                            data-toggle="tooltip" data-placement="right"
+                                            data-original-title="{{ translate('messages.Required.')}}"> *
+                                            </span><span
                                                 class="input-label-secondary text--title" data-toggle="tooltip"
                                                 data-placement="right"
                                                 data-original-title="{{ translate('Admin_shares_the_same_percentage/amount_on_discount_as_he_takes_commissions_from_stores') }}">
@@ -359,15 +380,19 @@
                                         </label>
                                         <select name="discount_type" id="discount_type"
                                             class="form-control js-select2-custom">
-                                            <option value="percent">{{ translate('messages.percent') }}</option>
-                                            <option value="amount">{{ translate('messages.amount') }}</option>
+                                            <option value="percent">{{ translate('messages.percent') }} (%)</option>
+                                            <option value="amount">{{ translate('messages.amount') }} ({{ \App\CentralLogics\Helpers::currency_symbol() }})
+                                            </option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-sm-4 col-6">
                                     <div class="form-group mb-0">
                                         <label class="input-label"
-                                            for="exampleFormControlInput1">{{ translate('messages.discount') }}</label>
+                                            for="exampleFormControlInput1">{{ translate('messages.discount') }}<span class="form-label-secondary text-danger"
+                                            data-toggle="tooltip" data-placement="right"
+                                            data-original-title="{{ translate('messages.Required.')}}"> *
+                                            </span></label>
                                         <input type="number" min="0" max="9999999999999999999999" value="0"
                                             name="discount" class="form-control"
                                             placeholder="{{ translate('messages.Ex:') }} 100">
@@ -468,7 +493,7 @@
                     <div class="btn--container justify-content-end">
                         <button type="reset" id="reset_btn"
                             class="btn btn--reset">{{ translate('messages.reset') }}</button>
-                        <button type="submit" class="btn btn--primary">{{ translate('messages.submit') }}</button>
+                        <button type="submit" id="submitButton"  class="btn btn--primary">{{ translate('messages.submit') }}</button>
                     </div>
                 </div>
             </div>
@@ -882,6 +907,7 @@
         }
 
         $('#item_form').on('submit', function(e) {
+            $('#submitButton').attr('disabled', true);
             e.preventDefault();
             let formData = new FormData(this);
             $.ajaxSetup({
@@ -915,8 +941,8 @@
                         });
                         setTimeout(function() {
                             location.href =
-                                "{{ \Request::server('HTTP_REFERER') ?? route('admin.item.list') }}";
-                        }, 2000);
+                                "{{ route('admin.item.list') }}";
+                        }, 1000);
                     }
                 }
             });

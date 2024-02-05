@@ -355,8 +355,10 @@ class VendorController extends Controller
         return back();
     }
 
-    public function view($store_id, $tab=null, $sub_tab='cash')
+    public function view(Request $request,$store_id, $tab=null, $sub_tab='cash')
     {
+        $filter= $request?->filter;
+
         $key = explode(' ', request()->search);
 
         $store = Store::find($store_id);
@@ -386,6 +388,19 @@ class VendorController extends Controller
                             }
                         });
                     })
+                    ->when(isset($filter)  && $filter == 'scheduled_orders' , function($q){
+                        $q->Scheduled();
+                    })
+                    ->when(isset($filter)  && $filter == 'pending_orders' , function($q){
+                        $q->where(['order_status'=>'pending'])->OrderScheduledIn(30);
+                    })
+                    ->when(isset($filter)  && $filter == 'delivered_orders' , function($q){
+                        $q->where(['order_status'=>'delivered']);
+                    })
+                    ->when(isset($filter)  && $filter == 'canceled_orders' , function($q){
+                        $q->where(['order_status'=>'canceled']);
+                    })
+                    ->StoreOrder()
             ->Notpos()->paginate(10);
             return view('admin-views.vendor.view.order', compact('store','orders'));
         }

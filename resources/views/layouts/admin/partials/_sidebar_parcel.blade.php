@@ -61,14 +61,14 @@
                         <small class="tio-more-horizontal nav-subtitle-replacer"></small>
                     </li>
 
-                    <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/parcel/orders/*') ? 'active' : '' }}">
+                    <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/parcel/orders/*')  ? 'active' : '' }}">
                         <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:" title="{{ translate('messages.orders') }}">
                             <i class="tio-shopping-cart nav-icon"></i>
                             <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
                                 {{ translate('messages.orders') }}
                             </span>
                         </a>
-                        <ul class="js-navbar-vertical-aside-submenu nav nav-sub" style="display:{{ Request::is('admin/parcel/orders/*') ? 'block' : 'none' }}">
+                        <ul class="js-navbar-vertical-aside-submenu nav nav-sub" style="display:{{ Request::is('admin/parcel/orders/*') || Request::is('admin/order/offline/payment/list*')? 'block' : 'none' }}">
                             <li class="nav-item {{ Request::is('admin/parcel/orders/all') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('admin.parcel.orders', ['all']) }}" title="{{ translate('messages.all_orders') }}">
                                     <span class="tio-circle nav-indicator-icon"></span>
@@ -80,7 +80,7 @@
                                     </span>
                                 </a>
                             </li>
-                            <li class="nav-item {{ Request::is('admin/parcel/orders/scheduled') ? 'active' : '' }}">
+                            {{-- <li class="nav-item {{ Request::is('admin/parcel/orders/scheduled') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('admin.parcel.orders', ['scheduled']) }}" title="{{ translate('messages.scheduled_orders') }}">
                                     <span class="tio-circle nav-indicator-icon"></span>
                                     <span class="text-truncate sidebar--badge-container">
@@ -90,7 +90,7 @@
                                         </span>
                                     </span>
                                 </a>
-                            </li>
+                            </li> --}}
                             <li class="nav-item {{ Request::is('admin/parcel/orders/pending') ? 'active' : '' }}">
                                 <a class="nav-link " href="{{ route('admin.parcel.orders', ['pending']) }}" title="{{ translate('messages.pending_orders') }}">
                                     <span class="tio-circle nav-indicator-icon"></span>
@@ -169,7 +169,7 @@
                                     </span>
                                 </a>
                             </li>
-                            <li class="nav-item {{ Request::is('admin/parcel/orders/refunded') ? 'active' : '' }}">
+                            {{-- <li class="nav-item {{ Request::is('admin/parcel/orders/refunded') ? 'active' : '' }}">
                                 <a class="nav-link " href="{{ route('admin.parcel.orders', ['refunded']) }}" title="{{ translate('messages.refunded_orders') }}">
                                     <span class="tio-circle nav-indicator-icon"></span>
                                     <span class="text-truncate sidebar--badge-container">
@@ -179,7 +179,7 @@
                                         </span>
                                     </span>
                                 </a>
-                            </li>
+                            </li> --}}
 
                             <li class="nav-item {{ Request::is('admin/order/offline/payment/list*') ? 'active' : '' }}">
                                 <a class="nav-link " href="{{ route('admin.order.offline_verification_list', ['all']) }}" title="{{ translate('Offline_Payments') }}">
