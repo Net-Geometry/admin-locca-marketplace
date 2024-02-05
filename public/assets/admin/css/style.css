@@ -11420,3 +11420,15 @@ body > .initial-38-1 {
     min-width: 70px;
     height: 70px;
 }
+
+.input-group--merge > .search-icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 9;
+}
+
+.input-group--merge > input {
+    padding-left: 35px !important;
+}

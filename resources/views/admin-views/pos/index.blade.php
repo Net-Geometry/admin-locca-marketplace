@@ -59,13 +59,12 @@
                                     <div class="col-sm-12 col-12">
                                         <form id="search-form" class="search-form">
                                             <!-- Search -->
-                                            <div class="input-group input--group">
+                                            <div class="input-group input--group input-group--merge">
                                                 <input id="datatableSearch" type="search" value="{{$keyword??''}}" name="search" class="form-control h--45px" placeholder="{{translate('messages.ex_:_search_here')}}" aria-label="{{translate('messages.search_here')}}" disabled>
-                                                <button type="submit" class="btn btn--secondary h--45px">
-                                                    <i class="tio-search"></i>
-                                                </button>
+                                                <img width="16" height="16" src="{{asset('public/assets/admin/img/icons/search-icon.png')}}" alt="" class="search-icon">
+
                                                 @if($keyword)
-                                                <button type="reset" class="btn btn--primary ml-2 location-reload-to-base-pos" data-url="{{url()->full()}}">{{translate('messages.reset')}}</button>
+                                                    <button type="reset" class="btn btn--primary ml-2 location-reload-to-base-pos" data-url="{{url()->full()}}">{{translate('messages.reset')}}</button>
                                                 @endif
                                             </div>
                                             <!-- End Search -->

@@ -3899,4 +3899,5 @@
   'points_earned' => 'Points earned',
   'transaction_ID' => 'Transaction ID',
   'current_Points_in_Wallet' => 'Current Points in Wallet',
+  'points_Converted' => 'Points Converted',
 );
