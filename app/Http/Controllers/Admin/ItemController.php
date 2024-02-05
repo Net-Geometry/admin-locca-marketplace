@@ -977,7 +977,6 @@ class ItemController extends Controller
             Toastr::error(translate('messages.you_have_uploaded_a_wrong_format_file'));
             return back();
         }
-
         if ($request->button == 'import') {
             $data = [];
             try{
@@ -986,7 +985,6 @@ class ItemController extends Controller
                         Toastr::error(translate('messages.please_fill_all_required_fields'));
                         return back();
                     }
-
                     if (isset($collection['Price']) && ($collection['Price'] < 0)) {
                         Toastr::error(translate('messages.Price_must_be_greater_then_0') . ' ' . $collection['Id']);
                         return back();
@@ -995,7 +993,6 @@ class ItemController extends Controller
                         Toastr::error(translate('messages.Discount_must_be_greater_then_0') . ' ' . $collection['Id']);
                         return back();
                     }
-
                     try {
                         $t1 = Carbon::parse($collection['AvailableTimeStarts']);
                         $t2 = Carbon::parse($collection['AvailableTimeEnds']);
@@ -1008,7 +1005,6 @@ class ItemController extends Controller
                         Toastr::error(translate('messages.Invalid_AvailableTimeEnds_or_AvailableTimeStarts_on_id') . ' ' . $collection['Id']);
                         return back();
                     }
-
                     array_push($data, [
                         'name' => $collection['Name'],
                         'description' => $collection['Description'],
@@ -1024,12 +1020,12 @@ class ItemController extends Controller
                         'available_time_starts' => $collection['AvailableTimeStarts'] ?? '00:00:00',
                         'available_time_ends' => $collection['AvailableTimeEnds'] ?? '23:59:59',
                         'variations' => $module_type == 'food' ? json_encode([]) : $collection['Variations'] ?? json_encode([]),
+                        'choice_options' => $module_type == 'food' ? json_encode([]) : $collection['ChoiceOptions'] ?? json_encode([]),
                         'food_variations' => $module_type == 'food' ? $collection['Variations'] ?? json_encode([]) : json_encode([]),
                         'add_ons' => $collection['AddOns'] ? ($collection['AddOns'] == "" ? json_encode([]) : $collection['AddOns']) : json_encode([]),
                         'attributes' => $collection['Attributes'] ? ($collection['Attributes'] == "" ? json_encode([]) : $collection['Attributes']) : json_encode([]),
                         'store_id' => $collection['StoreId'],
                         'module_id' => $module_id,
-                        'choice_options' => json_encode([]),
                         'status' => $collection['Status'] == 'active' ? 1 : 0,
                         'veg' => $collection['Veg'] == 'yes' ? 1 : 0,
                         'recommended' => $collection['Recommended'] == 'yes' ? 1 : 0,
@@ -1044,10 +1040,8 @@ class ItemController extends Controller
             }
             try {
                 DB::beginTransaction();
-
                 $chunkSize = 100;
                 $chunk_items = array_chunk($data, $chunkSize);
-
                 foreach ($chunk_items as $key => $chunk_item) {
                     DB::table('items')->insert($chunk_item);
                 }
@@ -1058,11 +1052,9 @@ class ItemController extends Controller
                 Toastr::error(translate('messages.failed_to_import_data'));
                 return back();
             }
-
             Toastr::success(translate('messages.product_imported_successfully', ['count' => count($data)]));
             return back();
         }
-
         $data = [];
         try {
                 foreach ($collections as $collection) {
@@ -1082,7 +1074,6 @@ class ItemController extends Controller
                         Toastr::error(translate('messages.Discount_must_be_less_then_100') . ' ' . $collection['Id']);
                         return back();
                     }
-
                     try {
                         $t1 = Carbon::parse($collection['AvailableTimeStarts']);
                         $t2 = Carbon::parse($collection['AvailableTimeEnds']);
@@ -1095,8 +1086,6 @@ class ItemController extends Controller
                         Toastr::error(translate('messages.Invalid_AvailableTimeEnds_or_AvailableTimeStarts_on_id') . ' ' . $collection['Id']);
                         return back();
                     }
-
-
                     array_push($data, [
                         'id' => $collection['Id'],
                         'name' => $collection['Name'],
@@ -1113,6 +1102,7 @@ class ItemController extends Controller
                         'available_time_starts' => $collection['AvailableTimeStarts'] ?? '00:00:00',
                         'available_time_ends' => $collection['AvailableTimeEnds'] ?? '23:59:59',
                         'variations' => $module_type == 'food' ? json_encode([]) : $collection['Variations'] ?? json_encode([]),
+                        'choice_options' => $module_type == 'food' ? json_encode([]) : $collection['ChoiceOptions'] ?? json_encode([]),
                         'food_variations' => $module_type == 'food' ? $collection['Variations'] ?? json_encode([]) : json_encode([]),
                         'add_ons' => $collection['AddOns'] ? ($collection['AddOns'] == "" ? json_encode([]) : $collection['AddOns']) : json_encode([]),
                         'attributes' => $collection['Attributes'] ? ($collection['Attributes'] == "" ? json_encode([]) : $collection['Attributes']) : json_encode([]),
@@ -1129,22 +1119,17 @@ class ItemController extends Controller
                     Toastr::error(translate('messages.Item_doesnt_exist_at_the_database'));
                     return back();
                 }
-
-
             }catch(\Exception $e){
                 info(["line___{$e->getLine()}",$e->getMessage()]);
                 Toastr::error(translate('messages.failed_to_import_data'));
                 return back();
             }
-
         try {
             DB::beginTransaction();
-
             $chunkSize = 100;
             $chunk_items = array_chunk($data, $chunkSize);
-
             foreach ($chunk_items as $key => $chunk_item) {
-                DB::table('items')->upsert($chunk_item, ['id', 'module_id'], ['name', 'description', 'image', 'images', 'category_id', 'category_ids', 'unit_id', 'stock', 'price', 'discount', 'discount_type', 'available_time_starts', 'available_time_ends', 'variations', 'food_variations', 'add_ons', 'attributes', 'store_id', 'status', 'veg', 'recommended']);
+                DB::table('items')->upsert($chunk_item, ['id', 'module_id'], ['name', 'description', 'image', 'images', 'category_id', 'category_ids', 'unit_id', 'stock', 'price', 'discount', 'discount_type', 'available_time_starts', 'available_time_ends','choice_options', 'variations', 'food_variations', 'add_ons', 'attributes', 'store_id', 'status', 'veg', 'recommended']);
             }
             DB::commit();
         } catch (\Exception $e) {
@@ -1153,7 +1138,6 @@ class ItemController extends Controller
             Toastr::error(translate('messages.failed_to_import_data'));
             return back();
         }
-
         Toastr::success(translate('messages.product_imported_successfully', ['count' => count($data)]));
         return back();
     }
