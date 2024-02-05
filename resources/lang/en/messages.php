@@ -3905,4 +3905,8 @@
   'QTY' => 'QTY',
   'paid_By' => 'Paid By',
   ' pin the address in the map to calculate delivery fee' => ' pin the address in the map to calculate delivery fee',
+  'statistics by zone' => 'Statistics by zone',
+  'Monitor your' => 'Monitor your',
+  'suspended' => 'Suspended',
+  'in_Active' => 'In Active',
 );

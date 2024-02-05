@@ -7,8 +7,11 @@
 
     <div class="content container-fluid">
         <!-- Page Header -->
-        <div class="page-header">
-            <h1 class="page-header-title">{{ translate('messages.conversation_list') }}</h1>
+        <div class="page-header d-flex align-items-center gap-2 mb-2">
+            <img width="20" height="20" src="{{asset('public/assets/admin/img/icons/conversation-icon.png')}}" alt="">
+            <h1 class="page-header-title mb-0">
+                {{ translate('messages.conversation_list') }}
+            </h1>
         </div>
         <!-- End Page Header -->
 

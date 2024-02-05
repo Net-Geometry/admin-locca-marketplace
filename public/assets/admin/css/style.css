@@ -8416,7 +8416,8 @@ ul.delivery--information-single li:not(:last-child) {
     column-gap: 15px;
 }
 
-.__customer-statistics-card .title h4 {
+.__customer-statistics-card .title h4,
+.__customer-statistics-card .title {
     margin: 0;
     color: var(--clr);
     font-weight: 700;
