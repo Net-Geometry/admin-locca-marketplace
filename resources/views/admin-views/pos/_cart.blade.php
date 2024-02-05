@@ -1,14 +1,14 @@
-<div class="d-flex flex-row cart--table-scroll">
-        <table class="table table-bordered">
+<div class="d-flex flex-row cart--table-scroll px-2">
+        <table class="table table--vertical-middle">
             <thead class="text-muted thead-light">
                 <tr class="text-center">
-                    <th class="border-bottom-0" scope="col">{{translate('messages.item')}}</th>
-                    <th class="border-bottom-0" scope="col">{{translate('messages.qty')}}</th>
-                    <th class="border-bottom-0" scope="col">{{translate('messages.price')}}</th>
-                    <th class="border-bottom-0" scope="col">{{translate('messages.delete')}}</th>
+                    <th class="border-bottom-0 border-top-0" scope="col">{{translate('messages.food')}}</th>
+                    <th class="border-bottom-0 border-top-0" scope="col">{{translate('messages.QTY')}}</th>
+                    <th class="border-bottom-0 border-top-0 text-right" scope="col">{{translate('messages.price')}}</th>
+                    <th class="border-bottom-0 border-top-0" scope="col">{{translate('messages.delete')}}</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="border-left border-right border-bottom">
             <?php
                 $subtotal = 0;
                 $addon_price = 0;
@@ -48,24 +48,22 @@
                             asset('storage/app/public/product').'/'.$cartItem['image'] ?? '',
                             asset('public/assets/admin/img/100x100/2.png'),
                             'product/'
-                        ) }}"
-
-                                data-onerror-image="{{asset('public/assets/admin/img/100x100/2.png')}}" alt="{{$cartItem['name']}} image">
+                        ) }}" data-onerror-image="{{asset('public/assets/admin/img/100x100/2.png')}}" alt="{{$cartItem['name']}} image">
                         <div class="media-body">
-                            <h5 class="text-hover-primary mb-0">{{Str::limit($cartItem['name'], 10)}}</h5>
+                            <h6 class="text-hover-primary mb-0 fs-12">{{Str::limit($cartItem['name'], 14)}}</h6>
                             <small>{{Str::limit($cartItem['variant'], 20)}}</small>
                         </div>
                     </td>
                     <td class="text-center middle-align">
                         <input type="number"  data-key="{{$key}}" readonly class="amount--input form-control text-center update-Quantity" value="{{$cartItem['quantity']}}" min="1" max="{{$cartItem['maximum_cart_quantity']?? '9999999999'}}">
                     </td>
-                    <td class="text-center px-0 py-1">
-                        <div class="btn">
-                            {{\App\CentralLogics\Helpers::format_currency($product_subtotal)}}
-                        </div> <!-- price-wrap .// -->
+                    <td class="text-right fs-14 font-medium">
+                        {{\App\CentralLogics\Helpers::format_currency($product_subtotal)}}
                     </td>
-                    <td class="align-items-center text-center">
-                        <a href="javascript:" data-product-id="{{$key}}" class="btn btn-sm btn-outline-danger remove-From-Cart"> <i class="tio-delete-outlined"></i></a>
+                    <td>
+                        <div class="d-flex justify-content-center">
+                            <a href="javascript:" data-product-id="{{$key}}" class="pos-cart-remove-btn remove-From-Cart rounded-circle"> <i class="tio-delete-outlined"></i></a>    
+                        </div>                        
                     </td>
                 </tr>
                 @endif
@@ -89,48 +87,47 @@
         $total = $total + $delivery_fee;
     ?>
     <div class="box p-3">
-        <dl class="row text-sm-right">
-
-            <dt  class="col-sm-6">{{translate('messages.addon')}}:</dt>
+        <dl class="row text-dark">
+            <dd  class="col-sm-6">{{translate('messages.addon')}}:</dd>
             <dd class="col-sm-6 text-right">{{\App\CentralLogics\Helpers::format_currency($addon_price)}}</dd>
 
-            <dt  class="col-sm-6">{{translate('messages.subtotal')}}
+            <dd  class="col-sm-6">{{translate('messages.subtotal')}}
                 @if ($tax_included ==  1)
                 ({{ translate('messages.TAX_Included') }})
                 @php($total_tax_amount=0)
                 @endif
-                :</dt>
+                :</dd>
             <dd class="col-sm-6 text-right">{{\App\CentralLogics\Helpers::format_currency($subtotal+$addon_price)}}</dd>
 
 
-            <dt  class="col-sm-6">{{translate('messages.discount')}} :</dt>
+            <dd  class="col-sm-6">{{translate('messages.discount')}} :</dd>
             <dd class="col-sm-6 text-right">- {{\App\CentralLogics\Helpers::format_currency(round($discount_on_product,2))}}</dd>
-            <dt class="col-6">{{ translate('messages.delivery_fee') }} :</dt>
+            <dd class="col-6">{{ translate('messages.delivery_fee') }} :</dd>
             <dd class="col-6 text-right" id="delivery_price">
                 {{ \App\CentralLogics\Helpers::format_currency($delivery_fee) }}</dd>
                 @if ($tax_included !=  1)
 
-            <dt  class="col-sm-6">{{ translate('messages.tax') }}  : </dt>
+            <dd  class="col-sm-6">{{ translate('messages.tax') }}  : </dd>
             <dd class="col-sm-6 text-right">
                 {{\App\CentralLogics\Helpers::format_currency(round($total_tax_amount,2))}}</dd>
             @endif
-            <dt  class="col-6 pr-0">
-                <hr class="mt-0">
-            </dt>
-            <dt  class="col-6 pl-0">
-                <hr class="mt-0">
-            </dt>
-            <dt  class="col-sm-6">{{ translate('messages.total') }}  : </dt>
-            <dd class="col-sm-6 text-right">
-                {{\App\CentralLogics\Helpers::format_currency(round($total+$total_tax_amount, 2))}}
+            <dd  class="col-6 pr-0">
+                <hr class="my-0">
             </dd>
-
+            <dd  class="col-6 pl-0">
+                <hr class="my-0">
+            </dd>
+            <dt  class="col-sm-6">{{ translate('messages.total') }}  : </dt>
+            <dt class="col-sm-6 text-right">
+                {{\App\CentralLogics\Helpers::format_currency(round($total+$total_tax_amount, 2))}}
+            </dt>
         </dl>
+
         <form action="{{route('admin.pos.order')}}?store_id={{request('store_id')}}" id='order_place' method="post" >
             @csrf
             <input type="hidden" name="user_id" id="customer_id">
             <div class="pos--payment-options mt-3 mb-3">
-                <h5 class="mb-3">{{ translate('Payment Method') }}</h5>
+                <p class="mb-3">{{ translate('paid_By') }}</p>
                 <ul>
                     @php($cod=\App\CentralLogics\Helpers::get_business_settings('cash_on_delivery'))
                     @if ($cod['status'])
@@ -155,11 +152,14 @@
 
         <div class="row button--bottom-fixed g-1 bg-white">
             <div class="col-sm-6">
-                <button type="submit" class="btn  btn--primary btn-sm place-order-submit btn-block">{{ translate('messages.place_order') }} </button>
+                <button type="submit" class="btn h-100  btn-outline-danger place-order-submit btn-block">{{ translate('messages.cancel_order') }} </button>
             </div>
             <div class="col-sm-6">
-                <a href="#" class="btn btn--reset btn-sm btn-block empty-Cart" >{{  translate('Clear Cart') }}</a>
+                <button type="submit" class="btn  btn--primary place-order-submit btn-block">{{ translate('messages.place_order') }} </button>
             </div>
+            {{-- <div class="col-sm-6">
+                <a href="#" class="btn btn--reset btn-sm btn-block empty-Cart" >{{  translate('Clear Cart') }}</a>
+            </div> --}}
         </div>
         </form>
     </div>

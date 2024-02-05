@@ -115,8 +115,8 @@
                                 </button>
                             </div>
                             <div class="pos--delivery-options">
-                                <div class="d-flex justify-content-between">
-                                    <h5 class="card-title">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <h5 class="card-title d-flex align-items-center gap-2">
                                         <span class="card-title-icon">
                                             <i class="tio-user"></i>
                                         </span>
@@ -135,10 +135,10 @@
                     </div>
 				</div>
 			</div>
-		</div><!-- container //  -->
+		</div>
 	</section>
 
-    <!-- End Content -->
+    <!-- Quick View Modal -->
     <div class="modal fade" id="quick-view" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content" id="quick-view-modal">
@@ -148,7 +148,7 @@
     </div>
 
 
-
+    {{-- Print Invoice Modal --}}
     <div class="modal fade" id="print-invoice" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -167,16 +167,14 @@
                         </div>
                         <hr class="non-printable">
                     </div>
-                    <div class="row m-auto" id="print-modal-content">
-
-                    </div>
-
+                    <div class="row m-auto" id="print-modal-content"></div>
                 </div>
             </div>
         </div>
     </div>
 
 
+    {{-- Add Customer Modal --}}
     <div class="modal fade" id="add-customer" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">

@@ -3342,7 +3342,7 @@ td .amount--input {
 }
 
 .pos--delivery-options-info ul li:not(:last-child) {
-    margin-bottom: 5px;
+    margin-bottom: 8px;
 }
 
 .pos--delivery-options-info ul li strong {
@@ -11463,4 +11463,25 @@ body > .initial-38-1 {
 .pos-product-card:hover::after {
      opacity: 1;
      visibility: visible;
+}
+
+.amount--input.update-Quantity {
+    background: #fff !important;
+    padding: 5px 10px;
+    height: 28px;
+    width: 52px;
+}
+
+.pos-cart-remove-btn {
+    width: 25px;
+    height: 25px;
+    display: grid;
+    place-items: center;
+    background-color: var(--danger-clr);
+    color: #fff;
+}
+
+
+.pos-cart-remove-btn:hover {
+    color: #fff;
 }
