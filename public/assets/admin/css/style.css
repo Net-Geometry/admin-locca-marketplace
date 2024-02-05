@@ -11485,3 +11485,8 @@ body > .initial-38-1 {
 .pos-cart-remove-btn:hover {
     color: #fff;
 }
+
+.modal-scroll {
+    max-height: 94dvh;
+    overflow-y: auto;
+}

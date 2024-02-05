@@ -3904,4 +3904,5 @@
   'customer_Information' => 'Customer Information',
   'QTY' => 'QTY',
   'paid_By' => 'Paid By',
+  ' pin the address in the map to calculate delivery fee' => ' pin the address in the map to calculate delivery fee',
 );

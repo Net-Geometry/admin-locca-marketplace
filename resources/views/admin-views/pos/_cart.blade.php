@@ -88,27 +88,27 @@
     ?>
     <div class="box p-3">
         <dl class="row text-dark">
-            <dd  class="col-sm-6">{{translate('messages.addon')}}:</dd>
-            <dd class="col-sm-6 text-right">{{\App\CentralLogics\Helpers::format_currency($addon_price)}}</dd>
+            <dd  class="col-6">{{translate('messages.addon')}}:</dd>
+            <dd class="col-6 text-right">{{\App\CentralLogics\Helpers::format_currency($addon_price)}}</dd>
 
-            <dd  class="col-sm-6">{{translate('messages.subtotal')}}
+            <dd  class="col-6">{{translate('messages.subtotal')}}
                 @if ($tax_included ==  1)
                 ({{ translate('messages.TAX_Included') }})
                 @php($total_tax_amount=0)
                 @endif
                 :</dd>
-            <dd class="col-sm-6 text-right">{{\App\CentralLogics\Helpers::format_currency($subtotal+$addon_price)}}</dd>
+            <dd class="col-6 text-right">{{\App\CentralLogics\Helpers::format_currency($subtotal+$addon_price)}}</dd>
 
 
-            <dd  class="col-sm-6">{{translate('messages.discount')}} :</dd>
-            <dd class="col-sm-6 text-right">- {{\App\CentralLogics\Helpers::format_currency(round($discount_on_product,2))}}</dd>
+            <dd  class="col-6">{{translate('messages.discount')}} :</dd>
+            <dd class="col-6 text-right">- {{\App\CentralLogics\Helpers::format_currency(round($discount_on_product,2))}}</dd>
             <dd class="col-6">{{ translate('messages.delivery_fee') }} :</dd>
             <dd class="col-6 text-right" id="delivery_price">
                 {{ \App\CentralLogics\Helpers::format_currency($delivery_fee) }}</dd>
                 @if ($tax_included !=  1)
 
-            <dd  class="col-sm-6">{{ translate('messages.tax') }}  : </dd>
-            <dd class="col-sm-6 text-right">
+            <dd  class="col-6">{{ translate('messages.tax') }}  : </dd>
+            <dd class="col-6 text-right">
                 {{\App\CentralLogics\Helpers::format_currency(round($total_tax_amount,2))}}</dd>
             @endif
             <dd  class="col-6 pr-0">
@@ -117,8 +117,8 @@
             <dd  class="col-6 pl-0">
                 <hr class="my-0">
             </dd>
-            <dt  class="col-sm-6">{{ translate('messages.total') }}  : </dt>
-            <dt class="col-sm-6 text-right">
+            <dt  class="col-6">{{ translate('messages.total') }}  : </dt>
+            <dt class="col-6 text-right">
                 {{\App\CentralLogics\Helpers::format_currency(round($total+$total_tax_amount, 2))}}
             </dt>
         </dl>
@@ -165,18 +165,18 @@
     </div>
 
 
+    {{-- Delivery Address Modal --}}
     <div class="modal fade" id="deliveryAddrModal" tabindex="-1">
         <div class="modal-dialog modal-lg">
-            <div class="modal-content">
+            <div class="modal-content modal-scroll">
                 <div class="modal-header bg-light border-bottom py-3">
-                    <h5 class="modal-title flex-grow-1 text-center">{{translate('delivery_options')}}</h5>
+                    <h4 class="modal-title flex-grow-1 text-center">{{translate('delivery_options')}}</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
                 @if ($store)
                 <div class="modal-body">
-
                     <?php
                         if(session()->has('address')) {
                             $old = session()->get('address');
@@ -202,57 +202,63 @@
                                 <input id="contact_person_number" type="tel" class="form-control" name="contact_person_number"
                                     value="{{ $old ? $old['contact_person_number'] : '' }}"  placeholder="{{ translate('messages.Ex :') }} +3264124565">
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <label class="input-label" for="road">{{ translate('messages.Road') }}<span
                                                 class="input-label-secondary text-danger">*</span></label>
                                 <input id="road" type="text" class="form-control" name="road" value="{{ $old ? $old['road'] : '' }}"  placeholder="{{ translate('messages.Ex :') }} 4th">
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <label  class="input-label" for="house">{{ translate('messages.House') }}<span
                                                 class="input-label-secondary text-danger">*</span></label>
                                 <input id="house" type="text" class="form-control" name="house" value="{{ $old ? $old['house'] : '' }}" placeholder="{{ translate('messages.Ex :') }} 45/C">
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <label class="input-label" for="floor">{{ translate('messages.Floor') }}<span
                                                 class="input-label-secondary text-danger">*</span></label>
                                 <input id="floor" type="text" class="form-control" name="floor" value="{{ $old ? $old['floor'] : '' }}"  placeholder="{{ translate('messages.Ex :') }} 1A">
                             </div>
-                            <div class="col-md-6">
-                                <label class="input-label" for="longitude">{{ translate('messages.longitude') }}<span
-                                                class="input-label-secondary text-danger">*</span></label>
-                                <input  type="text" class="form-control" id="longitude" name="longitude"
-                                    value="{{ $old ? $old['longitude'] : '' }}" readonly >
-                            </div>
-                            <div class="col-md-6">
-                                <label class="input-label" for="latitude">{{ translate('messages.latitude') }}<span
-                                                class="input-label-secondary text-danger">*</span></label>
-                                <input  type="text" class="form-control" id="latitude" name="latitude"
-                                    value="{{ $old ? $old['latitude'] : '' }}" readonly>
-                            </div>
-                            <div class="col-md-12">
-                                <label class="input-label" for="address">{{ translate('messages.address') }}</label>
-                                <textarea id="address" name="address" class="form-control" cols="30" rows="3" placeholder="{{ translate('messages.Ex :') }} address">{{ $old ? $old['address'] : '' }}</textarea>
-                            </div>
-                            <div class="col-12">
-                                <div class="d-flex justify-content-between">
-                                    <span class="text-primary">
-                                        {{ translate('* pin the address in the map to calculate delivery fee') }}
-                                    </span>
-                                    <div>
-                                        <input type="hidden" name="distance" id="distance">
-                                        <span>{{ translate('Delivery fee') }} :</span>
-                                        <input type="hidden" name="delivery_fee" id="delivery_fee" value="{{ $old ? $old['delivery_fee'] : '' }}">
-                                        <strong>{{ $old ? $old['delivery_fee'] : 0 }} {{ \App\CentralLogics\Helpers::currency_symbol() }}</strong>
-                                    </div>
+                        </div>
+
+                        <div class="border p-3 mt-3 rounded border-success">
+                            <div class="row g-2">
+                                <div class="col-md-6">
+                                    <label class="input-label" for="longitude">{{ translate('messages.longitude') }}<span
+                                                    class="input-label-secondary text-danger">*</span></label>
+                                    <input  type="text" class="form-control" id="longitude" name="longitude"
+                                        value="{{ $old ? $old['longitude'] : '' }}" readonly >
                                 </div>
-                                <input id="pac-input" class="controls rounded initial-8"
-                                    title="{{ translate('messages.search_your_location_here') }}" type="text"
-                                    placeholder="{{ translate('messages.search_here') }}" />
-                                <div class="mb-2 h-200px" id="map"></div>
+                                <div class="col-md-6">
+                                    <label class="input-label" for="latitude">{{ translate('messages.latitude') }}<span
+                                                    class="input-label-secondary text-danger">*</span></label>
+                                    <input  type="text" class="form-control" id="latitude" name="latitude"
+                                        value="{{ $old ? $old['latitude'] : '' }}" readonly>
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="input-label" for="address">{{ translate('messages.address') }}</label>
+                                    <textarea id="address" name="address" class="form-control" cols="30" rows="3" placeholder="{{ translate('messages.Ex :') }} address">{{ $old ? $old['address'] : '' }}</textarea>
+                                </div>
+                                <div class="col-12">
+                                    <div class="d-flex flex-wrap gap-1 justify-content-between mb-3">
+                                        <div>
+                                            <span class="text-danger">*</span>
+                                            {{ translate(' pin the address in the map to calculate delivery fee') }}
+                                        </div>
+                                        <div>
+                                            <input type="hidden" name="distance" id="distance">
+                                            <span>{{ translate('Delivery fee') }} :</span>
+                                            <input type="hidden" name="delivery_fee" id="delivery_fee" value="{{ $old ? $old['delivery_fee'] : '' }}">
+                                            <strong>{{ $old ? $old['delivery_fee'] : 0 }} {{ \App\CentralLogics\Helpers::currency_symbol() }}</strong>
+                                        </div>
+                                    </div>
+                                    <input id="pac-input" class="controls rounded initial-8"
+                                        title="{{ translate('messages.search_your_location_here') }}" type="text"
+                                        placeholder="{{ translate('messages.search_here') }}" />
+                                    <div class="mb-2 h-200px" id="map"></div>
+                                </div>
                             </div>
                         </div>
                         <div class="col-md-12">
-                            <div class="btn--container justify-content-end">
+                            <div class="btn--container justify-content-end mt-3">
                                 <button class="btn btn-sm btn--primary w-100 delivery-Address-Store" type="button">
                                     {{  translate('Update_Delivery address') }}
                                 </button>
