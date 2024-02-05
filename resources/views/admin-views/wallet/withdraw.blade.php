@@ -12,11 +12,10 @@
         <div class="page-header">
             <h1 class="page-header-title mr-3 mb-md-0">
                 <span class="page-header-icon">
-                    <img src="{{asset('public/assets/admin/img/withdraw.png')}}" class="w--26" alt="">
+                    <img src="{{asset('public/assets/admin/img/icons/wallet.png')}}" class="w--26" alt="">
                 </span>
                 <span>
-                    {{ translate('messages.store_withdraw_transaction')}} <span
-                        class="badge badge-soft-dark ml-2" id="itemCount">{{$withdraw_req->total()}}</span>
+                    {{ translate('messages.store_withdraw_transaction')}}
                 </span>
             </h1>
         </div>
@@ -25,8 +24,12 @@
 
             <!-- Header -->
             <div class="card-header py-2 border-0">
+                <div class="d-flex align-items-center gap-2">
+                    <h4>{{ translate('messages.transaction_History')}}</h4>
+                    <span class="badge badge-soft-dark rounded-circle">{{$withdraw_req->total()}}</span>
+                </div>
                 <div class="search--button-wrapper justify-content-end">
-                    <form class="search-form">
+                    <form class="search-form theme-style">
                         {{-- @csrf --}}
                         <!-- Search -->
                         <div class="input-group input--group">

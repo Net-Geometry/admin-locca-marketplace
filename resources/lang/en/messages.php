@@ -3909,4 +3909,5 @@
   'Monitor your' => 'Monitor your',
   'suspended' => 'Suspended',
   'in_Active' => 'In Active',
+  'transaction_History' => 'Transaction History',
 );
