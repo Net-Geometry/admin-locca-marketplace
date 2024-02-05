@@ -2713,6 +2713,7 @@ textarea.form-control[readonly] {
 .badge-soft-primary {
     color: #24bac3;
     background-color: rgba(0, 241, 255, 0.1);
+    border: 1px solid rgba(0, 241, 255, 0.6);
 }
 
 a.badge-soft-primary:focus,
@@ -11490,4 +11491,8 @@ body > .initial-38-1 {
 .modal-scroll {
     max-height: 94dvh;
     overflow-y: auto;
+}
+
+.custom-select.theme-style {
+    border-color: var(--primary-clr) !important;
 }

@@ -24,8 +24,8 @@
 
             <!-- Header -->
             <div class="card-header py-2 border-0">
-                <div class="d-flex align-items-center gap-2">
-                    <h4>{{ translate('messages.transaction_History')}}</h4>
+                <div class="d-flex align-items-center gap-2 mb-2">
+                    <h4 class="mb-0">{{ translate('messages.transaction_History')}}</h4>
                     <span class="badge badge-soft-dark rounded-circle">{{$withdraw_req->total()}}</span>
                 </div>
                 <div class="search--button-wrapper justify-content-end">
@@ -40,8 +40,7 @@
                     </form>
 
                     <div class="max-sm-flex-1">
-                        <select name="withdraw_status_filter"
-                                class="custom-select h--40px py-0 status-filter">
+                        <select name="withdraw_status_filter" class="custom-select h--40px py-0 status-filter theme-style">
                             <option
                                 value="all" {{session()->has('withdraw_status_filter') && session('withdraw_status_filter') == 'all'?'selected':''}}>
                                 {{translate('messages.all')}}
@@ -99,7 +98,7 @@
                             class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
                         <thead class="thead-light">
                         <tr>
-                            <th class="border-0">{{translate('sl')}}</th>
+                            <th class="border-0">{{translate('SL')}}</th>
                             <th class="border-0">{{translate('messages.amount')}}</th>
                             <th class="border-0">{{ translate('messages.store') }}</th>
                             <th class="border-0">{{translate('messages.request_time')}}</th>
@@ -123,11 +122,11 @@
                                 <td>{{date('Y-m-d '.config('timeformat'),strtotime($wr->created_at))}}</td>
                                 <td>
                                     @if($wr->approved==0)
-                                        <label class="badge badge-primary">{{ translate('messages.pending') }}</label>
+                                        <label class="badge badge-soft-primary">{{ translate('messages.pending') }}</label>
                                     @elseif($wr->approved==1)
-                                        <label class="badge badge-success">{{ translate('messages.approved') }}</label>
+                                        <label class="badge badge-soft-success">{{ translate('messages.approved') }}</label>
                                     @else
-                                        <label class="badge badge-danger">{{ translate('messages.denied') }}</label>
+                                        <label class="badge badge-soft-danger">{{ translate('messages.denied') }}</label>
                                     @endif
                                 </td>
                                 <td>
