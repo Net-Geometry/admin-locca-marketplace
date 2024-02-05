@@ -182,7 +182,7 @@
                                                             <div class="uploadDnD">
                                                                 <div class="form-group inputDnD">
                                                                     <input type="file" name="banner_video_content" class="form-control-file text--primary font-weight-bold read-url"
-                                                                    id="inputFile" accept=".mp4" data-title="{{ translate('Browse_file"') }}">
+                                                                    id="inputFile" accept=".mp4 ,.webm" data-title="{{ translate('Browse_file"') }}">
                                                                 </div>
                                                             </div>
 
@@ -215,7 +215,7 @@
                                                         <div class="col-6">
                                                             <h4 class="mb-3  ml-4 text-capitalize d-flex align-items-center">{{translate('Video')}}</h4>
                                                             @php($extention =explode('.', $banner_video_content?->value))
-                                                            <video width="320" height="140" controls>
+                                                            <video width="320" height="140" id="video-preview" controls>
                                                                 <source src="{{asset('storage/app/public/promotional_banner/video')}}/{{$banner_video_content?->value}}" type="video/{{ data_get($extention,1,'mp4') }}">
                                                             </video>
                                                         </div>
@@ -490,4 +490,27 @@
 @endsection
 @push('script_2')
     <script src="{{asset('public/assets/admin/js/view-pages/other-banners.js')}}"></script>
+    <script>
+        "use strict";
+        const input = document.getElementById('inputFile');
+        const video = document.getElementById('video-preview');
+        const videoSource = document.createElement('source');
+        input.addEventListener('change', function() {
+            const files = this.files || [];
+            if (!files.length) return;
+            const reader = new FileReader()
+            video.innerHTML = ""
+            input.setAttribute('data-title', files[0].name);
+            reader.onload = function(e) {
+                videoSource.setAttribute('src', e.target.result);
+                video.appendChild(videoSource);
+                video.load();
+                video.play();
+            };
+            reader.onprogress = function(e) {
+                console.log('progress: ', Math.round((e.loaded * 100) / e.total));
+            };
+            reader.readAsDataURL(files[0]);
+        });
+    </script>
 @endpush
