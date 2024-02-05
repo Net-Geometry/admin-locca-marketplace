@@ -576,20 +576,16 @@
         return true;
     }
 
-
-
-
-
-        function checkStore() {
-            let module_id = {{Config::get('module.current_module_id')}};
-            let store_id = getUrlParameter('store_id');
-            if(module_id && store_id){
-                $('#category').prop("disabled", false);
-                $('#datatableSearch').prop("disabled", false);
-            }
+    function checkStore() {
+        let module_id = {{Config::get('module.current_module_id')}};
+        let store_id = getUrlParameter('store_id');
+        if(module_id && store_id){
+            $('#category').prop("disabled", false);
+            $('#datatableSearch').prop("disabled", false);
         }
+    }
 
-        checkStore();
+    checkStore();
 
     function getVariantPrice() {
         if ($('#add-to-cart-form input[name=quantity]').val() > 0 && checkAddToCartValidity()) {
