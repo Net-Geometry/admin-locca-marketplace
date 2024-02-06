@@ -57,8 +57,6 @@
             <div class="">
                 @include('admin-views.delivery-man.partials._tab_menu')
             </div>
-
-            </div>
         </div>
         <!-- End Page Header -->
 
@@ -227,7 +225,6 @@
     </div>
     @endif
 
-    {{-- Deliveryman Preview Card 2 --}}
     <div class="content container-fluid pt-0">
         <div class="card my-3">
             <div class="card-body pb-5">
@@ -236,11 +233,7 @@
                     class="d-flex mb-3 justify-content-between align-items-center gap-2 flex-wrap position-relative z-index-2">
                     <h4 class="card-title align-items-center flex-wrap gap-2">
                         {{ $deliveryMan['f_name'] . ' ' . $deliveryMan['l_name'] }}
-                        ( @if ($deliveryMan->zone)
-                            {{ $deliveryMan->zone->name }}
-                        @else
-                            {{ translate('messages.zone_deleted') }}
-                        @endif )
+                            {{ $deliveryMan?->zone?->name  ??  translate('messages.zone_deleted')}}
                         @if ($deliveryMan->application_status == 'approved')
                             @if ($deliveryMan['status'])
                                 @if ($deliveryMan['active'])
@@ -301,11 +294,11 @@
                     <div class="flex-grow-1">
                         <div class="row g-2">
                             <div class="col-12">
-                                <h4 class="d-flex justify-content-center justify-content-md-start mb-0">
+                                <h4 title="{{$deliveryMan['f_name'] . ' ' . $deliveryMan['l_name']}}" class="d-flex justify-content-center justify-content-md-start mb-0">
                                     {{ $deliveryMan['f_name'] . ' ' . $deliveryMan['l_name'] }}</h4>
                                 <div class="fs-12 text-muted d-flex justify-content-center justify-content-md-start">
                                     @if ($deliveryMan->application_status == 'approved')
-                                    {{ $deliveryMan['email'] }}
+                                        <a href="mailto:{{ $deliveryMan['email'] }}"> {{ $deliveryMan['email'] }}</a>
                                     @endif
                                 </div>
                             </div>
@@ -447,13 +440,10 @@
 
                                 @else
 
-
                                 <div class="d-flex flex-column align-items-center justify-content-center px-4">
                                     <img class=" w-100"
                                         src="{{ asset('public/assets/admin/img/icons/no-rating.png') }}"
                                         alt="">
-
-
                                 </div>
                                 @endif
                             </div>
@@ -463,7 +453,7 @@
                 </div>
 
                 <div class="d-flex gap-2 align-items-center mt-5">
-                    <img src="{{ asset('public/assets/admin/img/icons/no-rating.png') }}" width="20" height="20"
+                    <img src="{{ asset('public/assets/admin/img/entypo_image-inverted.png') }}" width="20" height="20"
                         alt="">
                         @if ($deliveryMan->application_status == 'approved')
                         <h5 class="mb-0">{{ translate('Identity_Documents') }}</h5>
@@ -578,6 +568,9 @@
             <div class="card-header py-2 border-0">
                 <h5 class="card-header-title">
                     {{ translate('messages.review_list') }}
+                    <span class="badge badge-soft-dark ml-2" id="itemCount">
+                            {{$reviews->total()}}
+                        </span>
                 </h5>
                 <div class="search--button-wrapper justify-content-end">
                     <!-- Unfold -->
@@ -803,8 +796,7 @@
         </div>
     </div>
     @endif
-    <!-- Card -->
-    <!-- End Card -->
+
     </div>
 @endsection
 

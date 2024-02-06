@@ -19,7 +19,6 @@
         </div>
         <!-- End Page Header -->
 
-        {{-- Order List Page Card --}}
         <div class="card">
             <div class="card-body">
                 <div class="row gy-3">
@@ -85,7 +84,11 @@
         <div class="card mb-3 mb-lg-5 mt-2">
             <div class="card-header py-2 border-0 gap-2">
                 <div class="search--button-wrapper">
-                    <h4 class="card-title">{{ translate('messages.order_list')}}</h4>
+                    <h4 class="card-title">{{ translate('messages.order_list')}}
+                        <span class="badge badge-soft-dark ml-2" id="itemCount">
+                            {{$order_lists->total()}}
+                        </span>
+                    </h4>
                 </div>
             </div>
             <!-- Body -->
@@ -103,7 +106,6 @@
                                 <th class="border-0">{{translate('messages.delivery_date')}}</th>
                             </tr>
                         </thead>
-
                         <tbody>
                             @foreach($order_lists as $key=>$order)
                             <tr>
@@ -114,11 +116,11 @@
 
                                 @if($order->is_guest)
                                 @php($customer_details = json_decode($order['delivery_address'],true))
-                                <strong>{{$customer_details['contact_person_name']}}</strong>
+                                <strong title="{{$customer_details['contact_person_name']}}" >{{$customer_details['contact_person_name']}}</strong>
                                 <div>{{$customer_details['contact_person_number']}}</div>
                                 @elseif($order->customer)
 
-                                <a class="text-body" href="{{route('admin.customer.view',[$order['user_id']])}}">
+                                <a class="text-body" title="{{$order->customer['f_name'].' '.$order->customer['l_name']}}" href="{{route('admin.customer.view',[$order['user_id']])}}">
                                     <strong> <div> {{$order->customer['f_name'].' '.$order->customer['l_name']}}</div></strong>
                                 </a>
                                 <a href="tel:{{$order->customer['phone']}}">
@@ -143,12 +145,23 @@
 
                         </tbody>
                     </table>
+                    @if(count($order_lists) !== 0)
+                <hr>
+                @endif
+                <div class="page-area">
+                    {!! $order_lists->links() !!}
+                </div>
+                @if(count($order_lists) === 0)
+                <div class="empty--data">
+                    <img src="{{asset('/public/assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
+                    <h5>
+                        {{translate('no_data_found')}}
+                    </h5>
+                </div>
+                @endif
                 </div>
             </div>
-                    <!-- End Body -->
-                    <div class="card-footer">
-                        {!!$order_lists->links()!!}
-                    </div>
+
         </div>
     </div>
 @endsection
