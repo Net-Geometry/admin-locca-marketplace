@@ -17,16 +17,17 @@
                     {{ translate('messages.expense_report') }}
                 </span>
             </h1>
-            <div class="__page-header-txt">
-                {{ translate('This report will show all the orders in which the admin discount has been used. The admin discount are: Free delivery over, store discount, Coupon discount & item discounts(partial according to order commission).') }}
-            </div>
-
         </div>
         <!-- End Page Header -->
 
+        <div class="light-card mb-3 d-flex gap-3 rounded align-items-center p-3 fs-12">
+            <img width="18" src="{{ asset('public/assets/admin/img/icons/intel.png') }}" alt="">
+            {{ translate('This report will show all the orders in which the admin discount has been used. The admin discount are: Free delivery over, store discount, Coupon discount & item discounts(partial according to order commission).') }}
+        </div>
+
         <div class="card mb-20">
             <div class="card-body">
-                <h4 class="">{{ translate('Search Data') }}</h4>
+                <h4 class="mb-3">{{ translate('Filter Data') }}</h4>
                 <form action="{{ route('admin.transactions.report.set-date') }}" method="post">
                     @csrf
                     <div class="row g-3">
@@ -111,8 +112,9 @@
                             </div>
                         @endif
                         <div class="col-sm-6 col-md-3 ml-auto">
-                            <button type="submit"
-                                class="btn btn-primary btn-block h--45px">{{ translate('Filter') }}</button>
+                            <div class="d-flex justify-content-end">
+                                <button type="submit" class="btn btn--primary h--45px min-w-100px">{{ translate('Filter') }}</button>
+                            </div>
                         </div>
                     </div>
                 </form>
@@ -129,11 +131,11 @@
             <!-- Header -->
             <div class="card-header border-0 py-2">
                 <div class="search--button-wrapper">
-                    <h3 class="card-title">
-                        {{ translate('messages.expense_lists') }} <span
-                            class="badge badge-soft-secondary" id="countItems">{{ $expense->total() }}</span>
+                    <h3 class="card-title d-flex align-items-center gap-2">
+                        {{ translate('messages.expense_lists') }} 
+                        <span class="badge badge-soft-secondary" id="countItems">{{ $expense->total() }}</span>
                     </h3>
-                    <form class="search-form">
+                    <form class="search-form theme-style">
                         <!-- Search -->
                         <div class="input--group input-group input-group-merge input-group-flush">
                             <input name="search" type="search" value="{{ request()?->search ?? null}}" class="form-control" placeholder="{{ translate('Search by Order ID') }}">
@@ -202,8 +204,7 @@
                                     @if ($exp->order)
 
                                     <div>
-                                        <a
-                                            href="{{ route('admin.order.details', ['id' => $exp->order->id,'module_id'=>$exp->order->module_id]) }}">{{ $exp['order_id'] }}</a>
+                                        <a class="text-dark" href="{{ route('admin.order.details', ['id' => $exp->order->id,'module_id'=>$exp->order->module_id]) }}">{{ $exp['order_id'] }}</a>
                                     </div>
                                     @endif
                                 </td>

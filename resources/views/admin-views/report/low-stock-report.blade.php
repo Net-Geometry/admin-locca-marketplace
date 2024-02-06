@@ -22,7 +22,7 @@
         <!-- Header -->
         <div class="card-header border-0 py-2">
             <div class="search--button-wrapper justify-content-end">
-                <form class="search-form">
+                <form class="search-form theme-style">
                     <!-- Search -->
                     <div class="input-group input--group">
                         <input id="datatableSearch" name="search" type="search" class="form-control" placeholder="{{translate('ex_:_search_name')}}" value="{{ request()?->search ?? null}}" aria-label="{{translate('messages.search_here')}}">
@@ -31,7 +31,7 @@
                     <!-- End Search -->
                 </form>
                 <div class="min--200">
-                    <select name="zone_id" class="form-control js-select2-custom set-filter" data-url="{{ url()->full() }}" data-filter="zone_id" id="zone">
+                    <select name="zone_id" class="form-control js-select2-custom set-filter theme-style" data-url="{{ url()->full() }}" data-filter="zone_id" id="zone">
                         <option value="all">{{translate('All Zones')}}</option>
                         @foreach(\App\Models\Zone::orderBy('name')->get() as $z)
                         <option value="{{$z['id']}}" {{isset($zone) && $zone->id == $z['id']?'selected':''}}>
@@ -41,7 +41,7 @@
                     </select>
                 </div>
                 <div class="min--200">
-                    <select name="store_id" data-placeholder="{{translate('messages.select_store')}}" class="js-data-example-ajax form-control set-filter" data-url="{{ url()->full() }}" data-filter="store_id">
+                    <select name="store_id" data-placeholder="{{translate('messages.select_store')}}" class="js-data-example-ajax form-control set-filter theme-style" data-url="{{ url()->full() }}" data-filter="store_id">
                         @if(isset($store))
                         <option value="{{$store->id}}" selected>{{$store->name}}</option>
                         @else
@@ -103,7 +103,7 @@
                     }'>
                 <thead class="thead-light">
                     <tr>
-                        <th class="border-0">{{translate('sl')}}</th>
+                        <th class="border-0">{{translate('SL')}}</th>
                         <th class="border-0 w--2">{{translate('messages.name')}}</th>
                         <th class="border-0 w--2">{{translate('messages.store')}}</th>
                         <th class="border-0">{{translate('messages.zone')}}</th>

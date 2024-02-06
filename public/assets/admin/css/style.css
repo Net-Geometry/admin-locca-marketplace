@@ -11550,3 +11550,8 @@ body > .initial-38-1 {
     max-height: 67dvh;
     overflow-y: auto;
 }
+
+.light-card {
+    background-color: #EDF7FF;
+    color: #0477CA;
+}
