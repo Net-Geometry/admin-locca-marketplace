@@ -3933,4 +3933,12 @@
   'ex_: search_email' => 'Ex : search email',
   'earned' => 'Earned',
   'converted' => 'Converted',
+  'Top_Completed_Orderer_Customers' => 'Top Completed Orderer Customers',
+  'least_Orderer_customers' => 'Least Orderer customers',
+  'If you want to make a customized COUPON for this customer, click the Create Coupon button and influence them buy more from your store.' => 'If you want to make a customized COUPON for this customer  click the Create Coupon button and influence them buy more from your store.',
+  'sender_info' => 'Sender info',
+  'Select_coupon_type' => 'Select coupon type',
+  'Currently_you_need_to_manage_discount_with_the_Store.' => 'Currently you need to manage discount with the Store.',
+  'Ex:_Coupon_Title_Or_Code' => 'Ex: Coupon Title Or Code',
+  'add_to_fund' => 'Add to fund',
 );

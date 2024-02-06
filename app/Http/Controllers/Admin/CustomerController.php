@@ -125,12 +125,17 @@ class CustomerController extends Controller
         $key = $request['search'];
         $customer = User::find($id);
         if (isset($customer)) {
+            $total_order_amount = Order::selectRaw('sum(order_amount) as total_order_amount')->latest()->where(['user_id' => $id])
+                ->when(isset($key), function($query) use($key){
+                    $query->Where('id', 'like', "%{$key}%");
+                } )
+                ->Notpos()->get();
             $orders = Order::latest()->where(['user_id' => $id])
             ->when(isset($key), function($query) use($key){
                 $query->Where('id', 'like', "%{$key}%");
             } )
             ->Notpos()->paginate(config('default_pagination'));
-            return view('admin-views.customer.customer-view', compact('customer', 'orders'));
+            return view('admin-views.customer.customer-view', compact('customer', 'orders','total_order_amount'));
         }
         Toastr::error(translate('messages.customer_not_found'));
         return back();

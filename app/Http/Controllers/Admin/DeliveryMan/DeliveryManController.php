@@ -65,10 +65,10 @@ class DeliveryManController extends BaseController
         $zoneId = $request->query('zone_id', 'all');
         $deliveryMen = $this->deliveryManRepo->getFilterWiseListWhere(
             zoneId: $zoneId,
-            additionalFilter: $request['filter'],
-            jobType: $request['job_type'],
             searchValue: $request['search'],
             filters: ['type' => 'zone_wise','application_status' => 'approved'],
+            additionalFilter: $request['filter'],
+            jobType: $request['job_type'],
             relations: ['zone','wallet'],
             dataLimit: config('default_pagination')
         );
@@ -127,9 +127,9 @@ class DeliveryManController extends BaseController
 
     public function getActiveSearchList(Request $request): JsonResponse
     {
-        $deliveryMen = $this->deliveryManRepo->getActiveFirstWhere(
+        $deliveryMen = $this->deliveryManRepo->getFilterWiseListWhere(
             searchValue: $request['search'],
-            filters: ['type' => 'zone_wise'],
+            filters: ['type' => 'zone_wise','status' => 1],
         );
         return response()->json([
             'dm'=>$deliveryMen

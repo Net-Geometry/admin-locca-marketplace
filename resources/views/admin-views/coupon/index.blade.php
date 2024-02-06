@@ -119,7 +119,7 @@
                                             multiple="multiple" data-placeholder="{{translate('messages.select_customer')}}">
                                             <option  value="all">{{translate('messages.all')}} </option>
                                         @foreach(\App\Models\User::get(['id','f_name','l_name']) as $user)
-                                            <option class="select_customer_option" value="{{$user->id}}">{{$user->f_name.' '.$user->l_name}}</option>
+                                            <option class="select_customer_option" value="{{$user->id}}" {{ (isset($customer) && is_numeric($customer) && ($customer == $user->id))?'selected':'' }}>{{$user->f_name.' '.$user->l_name}}</option>
                                         @endforeach
                                         </select>
                                     </div>

@@ -100,13 +100,13 @@
 
             Swal.fire({
                 title: '{{translate('messages.are_you_sure')}}',
-                text: '{{translate('messages.you_want_to_add_fund')}}'+$('#amount').val()+' {{\App\CentralLogics\Helpers::currency_code().' '.translate('messages.to')}} '+$('#customer option:selected').text()+'{{translate('messages.to_wallet')}}',
+                text: '{{translate('messages.you_want_to_add_fund')}} '+$('#amount').val()+' {{\App\CentralLogics\Helpers::currency_code().' '.translate('messages.to')}} '+$('#customer option:selected').text()+'{{translate('messages.to_wallet')}}',
                 type: 'info',
                 showCancelButton: true,
                 cancelButtonColor: 'default',
                 confirmButtonColor: 'primary',
                 cancelButtonText: '{{translate('messages.no')}}',
-                confirmButtonText: '{{translate('messages.add')}}',
+                confirmButtonText: '{{translate('messages.add_to_fund')}}',
                 reverseButtons: true
             }).then((result) => {
                 if (result.value) {
