@@ -180,18 +180,19 @@
 </div>
 @endsection
 
+{{-- Stock Update Modal --}}
 <div class="modal fade" id="update-quantity" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-body py-2">
+            <div class="modal-body py-3">
                 <form action="{{route('admin.item.stock-update')}}" method="post">
                     @csrf
                     <div class="mt-2 rest-part w-100"></div>
-                    <div class="btn--container justify-content-end">
-                        <button type="button" class="btn btn--danger" data-dismiss="modal" aria-label="Close">
+                    <div class="btn--container justify-content-center">
+                        <button type="button" class="btn btn-soft-primary min-w-100px" data-dismiss="modal" aria-label="Close">
                             {{translate('messages.close')}}
                         </button>
-                        <button class="btn btn--primary" type="submit">{{translate('messages.update')}}</button>
+                        <button class="btn btn--primary min-w-100px" type="submit">{{translate('messages.update')}}</button>
                     </div>
                 </form>
             </div>

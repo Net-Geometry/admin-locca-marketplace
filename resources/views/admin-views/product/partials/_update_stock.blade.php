@@ -1,8 +1,18 @@
-<div class="card-header border-0">
-    <h4>{{ translate('messages.stock') }}</h4>
+{{-- <div class="card-header border-0">
+    <h4 class="text-center">{{ translate('messages.stock_Update') }}</h4>
     <input name="product_id" value="{{$product['id']}}" class="initial-hidden">
-</div>
+</div> --}}
 <div class="card-body">
+    <h3 class="text-center mb-4">{{ translate('messages.stock_Update') }}</h3>
+
+    <div class="d-flex align-items-center gap-2 flex-column mb-3">
+        <img width="50" height="50" class="rounded" src="{{asset('storage/app/public/product')}}/{{$product['image']}}" alt="">
+        <p class="mb-0">Nestle Every Day Full Cream with honey</p>
+        <div class="d-flex gap-2 align-items-center">
+            <span>Current Stock </span>: 
+            <span class="font-semibold text-dark">10</span>
+        </div>
+    </div>
     <div class="form-group">
         <div class="mb-4">
             <div class="variant_combination" id="variant_combination">

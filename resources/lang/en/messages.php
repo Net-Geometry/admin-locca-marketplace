@@ -3940,4 +3940,5 @@
   'see_all' => 'See all',
   'method_Name' => 'Method Name',
   'withdraw_Method_List' => 'Withdraw Method List',
+  'stock_Update' => 'Stock Update',
 );
