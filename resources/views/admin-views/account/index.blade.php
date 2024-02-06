@@ -82,7 +82,7 @@
             <div class="card">
                 <div class="card-header py-2 border-0">
                     <div class="search--button-wrapper">
-                        <h5 class="card-title">
+                        <h5 class="card-title d-flex gap-2 align-items-center">
                             <span>
                                 {{ translate('messages.transaction_history')}}
                             </span>
@@ -91,7 +91,7 @@
                             </span>
                         </h5>
 
-                        <form class="search-form">
+                        <form class="search-form theme-style">
                             <div class="input-group input--group">
                                 <input id="datatableSearch" name="search" type="search" class="form-control h--40px" placeholder="{{translate('Search By Referance  or Name')}}" value="{{ request()?->search ?? null}}" aria-label="{{translate('messages.search_here')}}">
                                 <button type="submit" class="btn btn--secondary h--40px"><i class="tio-search"></i></button>
@@ -132,7 +132,7 @@
                             class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
                             <thead class="thead-light">
                                 <tr>
-                                    <th class="border-0">{{translate('sl')}}</th>
+                                    <th class="border-0">{{translate('SL')}}</th>
                                     <th class="border-0">{{ translate('messages.collect_from') }}</th>
                                     <th class="border-0">{{ translate('messages.type') }}</th>
                                     <th class="border-0">{{translate('messages.received_at')}}</th>
@@ -164,6 +164,8 @@
                                     </div></td>
                                     <td>
                                         <div class="btn--container justify-content-center">
+                                            <button class="withdraw-info-show">show sidebar</i>
+                                            </button>
                                             <a href="{{route('admin.transactions.account-transaction.view',[$at['id']])}}"
                                             class="btn action-btn btn--warning btn-outline-warning"><i class="tio-visible"></i>
                                             </a>
@@ -193,9 +195,73 @@
         </div>
      </div>
 </div>
+
+{{-- Account Transaction Information Sidebar --}}
+<div class="sidebar-wrap">
+    <div class="withdraw-info-sidebar-overlay"></div>
+    <div class="withdraw-info-sidebar">
+        <div class="d-flex pb-3">
+            <span class="circle bg-light withdraw-info-hide cursor-pointer">
+                <i class="tio-clear"></i>
+            </span>
+        </div>
+
+        <div class="d-flex flex-column align-items-center gap-1 mb-4">
+            <h3 class="mb-3">{{translate('account_Transaction_Information')}}</h3>
+            <div class="d-flex gap-2 align-items-center fs-12">
+                <span>{{translate('method')}}:</span>
+                <span class="text-dark font-semibold">Stripe</span>
+            </div>
+            <div class="d-flex gap-2 align-items-center fs-12">
+                <span>{{translate('amount')}}:</span>
+                <span class="text-dark font-bold">$4654.00</span>
+            </div>
+            <div class="d-flex gap-2 align-items-center fs-12">
+                <span>{{translate('request_time')}}:</span>
+                <span>2023-11-27 13:46:23</span>
+            </div>
+            <div class="d-flex gap-2 align-items-center fs-12">
+                <span>{{translate('reference')}}:</span>
+                <span>Store collect cash payments</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0 font-medium">{{translate('store_Info')}}</h6>
+            </div>
+            <div class="card-body">
+                <div class="key-val-list d-flex flex-column gap-2" style="--min-width: 60px">
+                    <div class="key-val-list-item d-flex gap-3">
+                        <span>{{translate('name')}}:</span>
+                        <span>Click & Collect</span>
+                    </div>
+                    <div class="key-val-list-item d-flex gap-3">
+                        <span>{{translate('phone')}}:</span>
+                        <a href="tel:+8801478523698" class="text-dark">+8801478523698</a>
+                    </div>
+                    <div class="key-val-list-item d-flex gap-3">
+                        <span>{{translate('address')}}:</span>
+                        <span>House: 00, Road: 00, City-0000, Country</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @push('script_2')
+<script>
+    "use strict";
+    $('.withdraw-info-hide, .withdraw-info-sidebar-overlay').on('click', function () {
+        $('.withdraw-info-sidebar, .withdraw-info-sidebar-overlay').removeClass('show');
+    });
+    $('.withdraw-info-show').on('click', function () {
+        $('.withdraw-info-sidebar, .withdraw-info-sidebar-overlay').addClass('show');
+    })
+</script>
+
 <script src="{{asset('public/assets/admin')}}/js/view-pages/account-index.js"></script>
 <script>
     "use strict";

@@ -20937,7 +20937,7 @@ a.badge-soft-primary:hover {
 .badge-soft-secondary {
     color: #71869d;
     background-color: rgba(113, 134, 157, 0.1);
-    border: 1px solid rgba(113, 134, 157, 0.6);
+    /* border: 1px solid rgba(113, 134, 157, 0.6); */
 }
 
 a.badge-soft-secondary:focus,

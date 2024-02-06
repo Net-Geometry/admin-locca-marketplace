@@ -3927,4 +3927,8 @@
   'sodium' => 'Sodium',
   'pdo_mysql' => 'Pdo mysql',
   'points_Earned' => 'Points Earned',
+  'denial_note' => 'Denial note',
+  'approval_note' => 'Approval note',
+  'store_Info' => 'Store Info',
+  'account_Transaction_Information' => 'Account Transaction Information',
 );
