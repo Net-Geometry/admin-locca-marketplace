@@ -11405,12 +11405,13 @@ body > .initial-38-1 {
 }
 
 .max-text-2-line {
+    --line-count: 2;
     overflow: hidden;
     display: -webkit-box;
     -webkit-box-orient: vertical;
     text-overflow: ellipsis;
-    -webkit-line-clamp: 2;
-    max-height: 3.6em;
+    -webkit-line-clamp: var(--line-count);
+    /* max-height: 3.6em; */
 }
 
 .break-all {
@@ -11543,4 +11544,9 @@ body > .initial-38-1 {
     border-radius: var(--size);
     display: grid;
     place-items: center;
+}
+
+.table-responsive {
+    max-height: 67dvh;
+    overflow-y: auto;
 }

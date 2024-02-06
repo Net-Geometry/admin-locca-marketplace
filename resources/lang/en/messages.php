@@ -3931,4 +3931,11 @@
   'approval_note' => 'Approval note',
   'store_Info' => 'Store Info',
   'account_Transaction_Information' => 'Account Transaction Information',
+  'approved_Note' => 'Approved Note',
+  'owner_Info' => 'Owner Info',
+  'withdraw_Amount' => 'Withdraw Amount',
+  'add_New_method' => 'Add New method',
+  'withdraw_method_list' => 'Withdraw method list',
+  'Search_by_ID_or_name' => 'Search by ID or name',
+  'see_all' => 'See all',
 );
