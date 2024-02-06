@@ -18,12 +18,24 @@
 
     <div class="card-body d-flex flex-column">
         <div class="scroll-down">
+            @php($count=0)
+            @php($created_for=0)
             @forelse($conversations as $con)
-            {{-- <div class="d-flex justify-content-center">{{  \App\CentralLogics\Helpers::time_date_format($con?->created_at) }}</div> --}}
+                    @if ( Carbon\Carbon::parse($con?->created_at)->format('Y-m-d') == now()->format('Y-m-d') && $count == 0)
+                        <div class="d-flex justify-content-center">{{ translate('Today').' '. \App\CentralLogics\Helpers::time_format($con?->created_at) }}</div>
+                        @php($count=1)
+                    @elseif(Carbon\Carbon::parse($con?->created_at)->format('Y-m-d') != $created_for && $count == 0)
+                        <div class="d-flex justify-content-center">{{  \App\CentralLogics\Helpers::time_date_format($con?->created_at) }}</div>
+                        @php($count=1)
+                        @php($created_for=Carbon\Carbon::parse($con?->created_at)->format('Y-m-d'))
+                    @else
+                        @php($count=0)
+                    @endif
+
                 @if($con->sender_id == $user->id)
                     <div class="py-2 d-flex gap-2 align-items-end">
                         <div class="chat-user-conv-img">
-                            <img class="avatar-img onerror-image" width="28" height="28" src="{{\App\CentralLogics\Helpers::onerror_image_helper($user['image'], asset('storage/app/public/profile/').'/'.$user['image'], asset('public/assets/admin/img/160x160/img1.jpg'), 'profile/') }}" data-onerror-image="{{\App\CentralLogics\Helpers::onerror_image_helper($user['image'], asset('storage/app/public/profile/').'/'.$user['image'], asset('public/assets/admin/img/160x160/img1.jpg'), 'profile/') }}" alt="Image Description">
+                            <img class="avatar-img onerror-image" width="28" height="28" src="{{\App\CentralLogics\Helpers::onerror_image_helper($user['image'], asset('storage/app/public/profile/').'/'.$user['image'], asset('public/assets/admin/img/160x160/img1.jpg'), 'profile/') }}" data-onerror-image="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}" alt="Image Description">
                         </div>
 
                         <div class="conv-reply-1">
@@ -31,7 +43,8 @@
                             @if($con->file!=null)
                             @foreach (json_decode($con->file) as $img)
                             <br>
-                                <img class="w-100" src="{{asset('storage/app/public/conversation').'/'.$img}}">
+                                <img  width="50" height="50"
+                                src="{{\App\CentralLogics\Helpers::onerror_image_helper($img, asset('storage/app/public/conversation/').'/'.$img, asset('public/assets/admin/img/160x160/img1.jpg'), 'conversation/') }}" data-onerror-image="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}" alt="Image Description">
                                 @endforeach
                             @endif
                         </div>
@@ -43,7 +56,8 @@
                             @if($con->file!=null)
                             @foreach (json_decode($con->file) as $img)
                             <br>
-                                <img class="w-100" src="{{asset('storage/app/public/conversation').'/'.$img}}">
+                                <img  width="50" height="50"
+                                src="{{\App\CentralLogics\Helpers::onerror_image_helper($img, asset('storage/app/public/conversation/').'/'.$img, asset('public/assets/admin/img/160x160/img1.jpg'), 'conversation/') }}" data-onerror-image="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}" alt="Image Description">
                                 @endforeach
                             @endif
                         </div>
@@ -84,7 +98,6 @@
 
 
 </div>
-{{-- <script src="{{asset('public/assets/admin')}}/js/view-pages/common.js"></script> --}}
 <script>
     "use strict";
     $(document).ready(function () {
