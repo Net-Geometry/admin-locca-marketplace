@@ -3926,4 +3926,5 @@
   'gd' => 'Gd',
   'sodium' => 'Sodium',
   'pdo_mysql' => 'Pdo mysql',
+  'points_Earned' => 'Points Earned',
 );

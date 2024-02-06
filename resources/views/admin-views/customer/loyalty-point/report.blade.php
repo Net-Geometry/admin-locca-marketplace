@@ -156,9 +156,6 @@
             <!-- Header -->
             <div class="card-header border-0">
                 <h4 class="card-title">
-                    <span class="card-header-icon">
-                        <i class="tio-dollar-outlined"></i>
-                    </span>
                     <span>{{translate('messages.transactions')}}</span>
                 </h4>
                 <!-- Unfold -->

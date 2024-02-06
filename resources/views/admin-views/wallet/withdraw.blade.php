@@ -174,21 +174,21 @@
             </div>
 
             <div class="d-flex flex-column align-items-center gap-1 mb-3">
-                <h3 class="mb-3">Withdraw Information</h3>
+                <h3 class="mb-3">{{translate('withdraw_Information')}}</h3>
                 <div class="d-flex gap-2 align-items-center mb-1 flex-wrap">
-                    <span>Withdraw Amount:</span>
+                    <span>{{translate('withdraw_Amount')}}:</span>
                     <span class="font-semibold">$4654.00</span>
-                    <label class="badge badge-soft-success mb-0">Approved</label>
+                    <label class="badge badge-soft-success mb-0">{{translate('approved')}}</label>
                 </div>
                 <div class="d-flex gap-2 align-items-center fs-12">
-                    <span>Request Time:</span>
+                    <span>{{translate('request_time')}}:</span>
                     <span>2023-11-27 13:46:23</span>
                 </div>
             </div>
 
             <div class="card mb-3">
                 <div class="card-header">
-                    <h6 class="mb-0 font-medium">Store Info</h6>
+                    <h6 class="mb-0 font-medium">{{translate('store_Info')}}</h6>
                 </div>
                 <div class="card-body">
                     <div class="key-val-list d-flex flex-column gap-2" style="--min-width: 60px">
@@ -213,7 +213,7 @@
 
             <div class="card mb-3">
                 <div class="card-header">
-                    <h6 class="mb-0 font-medium">Owner Info</h6>
+                    <h6 class="mb-0 font-medium">{{translate('owner_Info')}}</h6>
                 </div>
                 <div class="card-body">
                     <div class="key-val-list d-flex flex-column gap-2" style="--min-width: 60px">
@@ -234,10 +234,41 @@
             </div>
 
             <div class="">
-                <h5 class="font-medium">Approved Note</h5>
+                <h5 class="font-medium">{{translate('approved_Note')}}</h5>
 
                 <div class="rounded bg-light p-3">
                     Store wallet adjustment partial
+                </div>
+            </div>
+
+            <div class="mt-4 d-flex justify-content-center gap-3">
+                <button type="button" class="btn btn-soft-danger withdraw-info-hide min-w-100px">{{translate('deny')}}</button>
+                <button type="button" class="btn btn-success withdraw-info-hide min-w-100px">{{translate('approved')}}</button>
+            </div>
+
+            <div class="mt-5">
+                <h5 class="font-semibold text-center mb-3">{{translate('approval_note')}} </h5>
+                <textarea name="" id="" class="form-control" rows="6" placeholder="Type a note about request approval"></textarea>
+
+                <div class="mt-4 d-flex justify-content-center gap-3">
+                    <button type="button" class="btn btn-soft-secondary min-w-100px">
+                        <i class="tio-arrow-backward"></i>
+                        {{translate('back')}}
+                    </button>
+                    <button type="button" class="btn btn-success min-w-100px">{{translate('complete')}}</button>
+                </div>
+            </div>
+
+            <div class="mt-5">
+                <h5 class="font-semibold text-center mb-3">{{translate('denial_note')}}</h5>
+                <textarea name="" id="" class="form-control" rows="6" placeholder="Type a note about request denial"></textarea>
+
+                <div class="mt-4 d-flex justify-content-center gap-3">
+                    <button type="button" class="btn btn-soft-secondary min-w-100px">
+                        <i class="tio-arrow-backward"></i>
+                        {{translate('back')}}
+                    </button>
+                    <button type="button" class="btn btn-success min-w-100px">{{translate('complete')}}</button>
                 </div>
             </div>
         </div>
