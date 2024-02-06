@@ -3938,4 +3938,6 @@
   'withdraw_method_list' => 'Withdraw method list',
   'Search_by_ID_or_name' => 'Search by ID or name',
   'see_all' => 'See all',
+  'method_Name' => 'Method Name',
+  'withdraw_Method_List' => 'Withdraw Method List',
 );
