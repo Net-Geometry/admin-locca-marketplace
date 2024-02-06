@@ -7,6 +7,10 @@
 @endpush
 
 @section('content')
+    @php
+        $from = session('from_date');
+        $to = session('to_date');
+    @endphp
     <div class="content container-fluid">
         <!-- Page Header -->
         <div class="page-header">
@@ -22,28 +26,29 @@
         <!-- Page Header -->
 
         {{-- Filter Options Card --}}
-        <div class="card mb-3"> 
+        <div class="card mb-3">
             <div class="card-body">
                 <h4 class="card-title mb-4">
                     <span>{{translate('messages.filter_options')}}</span>
                 </h4>
 
-                <form action="{{route('admin.users.customer.loyalty-point.report')}}" method="get">
+                <form action="{{route('admin.users.customer.loyalty-point.set-date')}}" method="post">
+                    @csrf
                     <div class="row justify-content-end align-items-end g-3">
                         <div class="col-lg-4">
                             @php
                             $transaction_status=request()->get('transaction_type');
                             @endphp
                             <label class="text-dark text-capitalize" for="add-fund-type">{{translate('messages.add_fund_type')}}</label>
-                            <select name="transaction_type" id="add-fund-type" class="form-control" title="{{translate('messages.select_transaction_type')}}">
-                                <option value="">{{translate('messages.all')}}</option>
+                            <select name="transaction_type" id="add-fund-type" class="form-control set-filter" data-url="{{ url()->full() }}" data-filter="transaction_type" title="{{translate('messages.select_transaction_type')}}">
+                                <option value="all">{{translate('messages.all')}}</option>
                                 <option value="point_to_wallet" {{isset($transaction_status) && $transaction_status=='point_to_wallet'?'selected':''}}>{{translate('messages.point_to_wallet')}}</option>
                                 <option value="order_place" {{isset($transaction_status) && $transaction_status=='order_place'?'selected':''}}>{{translate('messages.order_place')}}</option>
                             </select>
                         </div>
                         <div class="col-lg-4">
                             <label class="text-dark text-capitalize" for="customer">{{translate('messages.customer')}}</label>
-                            <select id='customer' name="customer_id" data-placeholder="{{translate('messages.select_customer')}}" class="js-data-example-ajax form-control" title="{{translate('messages.select_customer')}}">
+                            <select id='customer' name="customer_id" data-url="{{ url()->full() }}" data-filter="customer_id" data-placeholder="{{translate('messages.select_customer')}}" class="js-data-example-ajax form-control set-filter" title="{{translate('messages.select_customer')}}">
                                 @if (request()->get('customer_id') && $customer_info = \App\Models\User::find(request()->get('customer_id')))
                                     <option value="{{$customer_info->id}}" selected>{{$customer_info->f_name.' '.$customer_info->l_name}}({{$customer_info->phone}})</option>
                                 @endif
@@ -51,26 +56,43 @@
                             </select>
                         </div>
                         <div class="col-lg-4">
-                            <label class="text-dark text-capitalize" for="duration">{{translate('messages.duration')}}</label>
-                            <select id='duration' name="duration" data-placeholder="{{translate('messages.duration')}}" class="form-control" title="{{translate('messages.select_duration')}}">
-                                <option value="1" selected>All Time</option>
-                                <option value="1">Previous Year</option>
-                                <option value="1">This Month</option>
-                                <option value="1">This Week</option>
-                                <option value="1">Custom</option>
+                            <label class="text-dark text-capitalize" for="filter">{{translate('messages.duration')}}</label>
+                            <select class="form-control set-filter" name="filter" data-url="{{ url()->full() }}" data-filter="filter">
+                                <option value="all_time" {{ isset($filter) && $filter == 'all_time' ? 'selected' : '' }}>
+                                    {{ translate('messages.All Time') }}</option>
+                                <option value="this_year" {{ isset($filter) && $filter == 'this_year' ? 'selected' : '' }}>
+                                    {{ translate('messages.This Year') }}</option>
+                                <option value="previous_year"
+                                    {{ isset($filter) && $filter == 'previous_year' ? 'selected' : '' }}>
+                                    {{ translate('messages.Previous Year') }}</option>
+                                <option value="this_month"
+                                    {{ isset($filter) && $filter == 'this_month' ? 'selected' : '' }}>
+                                    {{ translate('messages.This Month') }}</option>
+                                <option value="this_week" {{ isset($filter) && $filter == 'this_week' ? 'selected' : '' }}>
+                                    {{ translate('messages.This Week') }}</option>
+                                <option value="custom" {{ isset($filter) && $filter == 'custom' ? 'selected' : '' }}>
+                                    {{ translate('messages.Custom') }}</option>
                             </select>
                         </div>
-                        <div class="col-lg-4">
-                            <label class="text-dark text-capitalize" for="from_date">{{translate('messages.start_date')}}</label>
-                            <input type="date" name="from" id="from_date" value="{{request()->get('from')}}" class="form-control" title="{{translate('messages.from_date')}}">
-                        </div>
-                        <div class="col-lg-4">
-                            <label class="text-dark text-capitalize" for="to_date">{{translate('messages.end_date')}}</label>
-                            <input type="date" name="to" id="to_date" value="{{request()->get('to')}}" class="form-control" title="{{translate('messages.to_date')}}">
-                        </div>
+                        @if (isset($filter) && $filter == 'custom')
+                            <div class="col-lg-4">
+
+                                <input type="date" name="from" id="from_date" class="form-control"
+                                       placeholder="{{ translate('Start Date') }}"
+                                       {{ session()->has('from_date') ? 'value=' . session('from_date') : '' }} required>
+
+                            </div>
+                            <div class="col-lg-4">
+
+                                <input type="date" name="to" id="to_date" class="form-control"
+                                       placeholder="{{ translate('End Date') }}"
+                                       {{ session()->has('to_date') ? 'value=' . session('to_date') : '' }} required>
+
+                            </div>
+                        @endif
                         <div class="col-lg-4">
                             <div class="btn--container justify-content-end">
-                                <button type="reset" class="btn btn--reset">{{translate('messages.reset')}}</button>
+                                <button type="reset" class="btn btn--reset location-reload-to-base" data-url="{{url()->full()}}">{{translate('messages.reset')}}</button>
                                 <button type="submit" class="btn btn--primary">{{translate('messages.filter')}}</button>
                             </div>
                         </div>
@@ -85,8 +107,8 @@
             <div class="card-body">
                 <div class="row g-3">
                     @php
-                        $credit = $data[0]->total_credit??0;
-                        $debit = $data[0]->total_debit??0;
+                        $credit = (int)$data[0]->total_credit??0;
+                        $debit = (int)$data[0]->total_debit??0;
                         $balance = $credit - $debit;
                     @endphp
                     <!--Debit earned-->
@@ -97,8 +119,7 @@
                             </div>
                             <div>
                                 <h2 class="title">
-                                    {{-- {{$debit}} --}}
-                                    1000
+                                     {{$debit}}
                                 </h2>
                                 <div class="subtitle">
                                     {{translate('messages.points_Earned')}}
@@ -116,8 +137,7 @@
                             </div>
                             <div>
                                 <h2 class="title">
-                                    {{-- {{$credit}} --}}
-                                    2000
+                                     {{$credit}}
                                 </h2>
                                 <div class="subtitle">
                                     {{translate('messages.points_Converted')}}
@@ -135,8 +155,7 @@
                             </div>
                             <div>
                                 <h2 class="title">
-                                    {{-- {{$balance}} --}}
-                                    200
+                                     {{$balance}}
                                 </h2>
                                 <div class="subtitle">
                                     {{translate('messages.current_Points_in_Wallet')}}
@@ -216,19 +235,15 @@
                                 <td >{{$k+$transactions->firstItem()}}</td>
                                 <td>{{$wt->transaction_id}}</td>
                                 <td><a class="text-dark" href="{{route('admin.users.customer.view',['user_id'=>$wt->user_id])}}">{{Str::limit($wt->user?$wt->user->f_name.' '.$wt->user->l_name:translate('messages.not_found'),20,'...')}}</a></td>
-                                {{-- <td>{{$wt->credit}}</td> --}}
-                                {{-- <td>{{$wt->debit}}</td>
-                                <td>{{$wt->balance}}</td> --}}
-                                <td>$601.13</td>
-                                <td>$601.13</td>
-                                <td>800</td>
+                                <td>{{$wt->credit}}</td>
+                                <td>{{$wt->debit}}</td>
+                                <td>{{$wt->balance}}</td>
                                 <td>
                                     <span class="badge badge-soft-{{$wt->transaction_type=='point_to_wallet'?'success':'dark'}}">
                                         {{translate('messages.'.$wt->transaction_type)}}
                                     </span>
                                 </td>
                                 <td>{{$wt->reference}}</td>
-                                {{-- <td>{{date('Y/m/d '.config('timeformat'), strtotime($wt->created_at))}}</td> --}}
                                 <td>
                                     {{ date('Y/m/d', strtotime($wt->created_at)) }}
                                     <br>

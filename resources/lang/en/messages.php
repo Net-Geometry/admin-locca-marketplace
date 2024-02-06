@@ -3926,4 +3926,11 @@
   'gd' => 'Gd',
   'sodium' => 'Sodium',
   'pdo_mysql' => 'Pdo mysql',
+  'points_Earned' => 'Points Earned',
+  'loyalty_point_transaction_history' => 'Loyalty point transaction history',
+  'transaction_date' => 'Transaction date',
+  'Fund added by Admin' => 'Fund added by Admin',
+  'ex_: search_email' => 'Ex : search email',
+  'earned' => 'Earned',
+  'converted' => 'Converted',
 );

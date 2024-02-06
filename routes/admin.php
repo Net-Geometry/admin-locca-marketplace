@@ -850,6 +850,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                 Route::group(['prefix' => 'wallet', 'as' => 'wallet.', 'middleware' => ['module:customer_management']], function () {
                     Route::get('add-fund', 'CustomerWalletController@add_fund_view')->name('add-fund');
                     Route::post('add-fund', 'CustomerWalletController@add_fund');
+                    Route::post('set-date', 'CustomerWalletController@set_date')->name('set-date');
                     Route::get('report', 'CustomerWalletController@report')->name('report');
                     Route::get('export', 'CustomerWalletController@export')->name('export');
                     // Route::group(['prefix' => 'bonus', 'as' => 'bonus.'], function () {
@@ -872,6 +873,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
 
                     Route::get('loyalty-point/report', 'LoyaltyPointController@report')->name('loyalty-point.report');
                     Route::get('loyalty-point/export', 'LoyaltyPointController@export')->name('loyalty-point.export');
+                    Route::post('loyalty-point/set-date', 'LoyaltyPointController@set_date')->name('loyalty-point.set-date');
                     Route::get('settings', 'CustomerController@settings')->name('settings');
                     Route::post('update-settings', 'CustomerController@update_settings')->name('update-settings');
                     Route::get('export', 'CustomerController@export')->name('export');
