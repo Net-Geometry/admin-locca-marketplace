@@ -41,10 +41,10 @@
                 <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
                     <div class="d-flex gap-2 align-items-center">
                         <img src="{{asset('public/assets/admin/img/icons/coupon-icon.png')}}" width="16" height="16" alt="">
-                        <p class="mb-0">if you want to make a customized COUPON for this customer, click the Create Coupon button and influence them buy more from your store. </p>
+                        <p class="mb-0">{{ translate('If you want to make a customized COUPON for this customer, click the Create Coupon button and influence them buy more from your store.') }}</p>
                     </div>
 
-                    <a href="#" class="btn btn-warning text-white font-semibold">
+                    <a href="{{ route('admin.coupon.add-new',['customer' => $customer['id']]) }}" class="btn btn-warning text-white font-semibold">
                         <i class="tio-add"></i>
                         {{translate('messages.create_coupon')}}
                     </a>
@@ -62,9 +62,9 @@
                                     <img class="resturant-icon w--30" src="{{asset('/public/assets/admin/img/icons/order-icon-1.png')}}" alt="">
                                 </div>
                                 <div class="d-flex flex-column align-items-center">
-                                    <h2 class="title"> 20 </h2>
+                                    <h2 class="title"> {{ $orders->total() }} </h2>
                                     <div class="subtitle">
-                                        Total order
+                                        {{ translate('total_order') }}
                                     </div>
                                 </div>
                             </div>
@@ -73,9 +73,9 @@
                                     <img class="resturant-icon w--30" src="{{asset('/public/assets/admin/img/icons/order-icon-2.png')}}" alt="">
                                 </div>
                                 <div class="d-flex flex-column align-items-center">
-                                    <h2 class="title"> $1800 </h2>
+                                    <h2 class="title"> {{ \App\CentralLogics\Helpers::format_currency($total_order_amount[0]->total_order_amount) }} </h2>
                                     <div class="subtitle">
-                                        Total Order Amount
+                                        {{ translate('total_order_amount') }}
                                     </div>
                                 </div>
                             </div>
@@ -120,8 +120,8 @@
                 <div class="card">
                     <div class="card-header border-0 py-2 d-flex flex-wrap gap-2">
                         <div class="search--button-wrapper">
-                            <h5 class="card-title d-flex gap-2 align-items-center"> 
-                                {{translate('order_list')}} 
+                            <h5 class="card-title d-flex gap-2 align-items-center">
+                                {{translate('order_list')}}
                                 <span class="badge badge-soft-secondary">{{ $orders->total() }}</span>
                             </h5>
 
@@ -201,12 +201,11 @@
                                         </td>
                                         <td>
                                             <div class="text-center mw--85px mx-auto">
-                                                {{-- {{ $order?->details()?->count() != 0  ?  $order?->details()?->count(): translate('messages.N/A') }} --}}
-                                                12
+                                                {{ $order?->details()?->count() != 0  ?  $order?->details()?->count(): translate('messages.N/A') }}
                                             </div>
                                         </td>
                                         <td>
-                                            <div class="text-right">
+                                            <div class="text-center">
                                                 {{\App\CentralLogics\Helpers::format_currency($order['order_amount'])}}
                                             </div>
                                         </td>
@@ -216,7 +215,7 @@
                                                 {{-- <a class="btn action-btn btn--primary btn-outline-primary" target="_blank" href="{{route('admin.order.generate-invoice',[$order['id']])}}" title="{{translate('messages.invoice')}}">
                                                     <i class="tio-print"></i>
                                                 </a> --}}
-                                                <a class="btn action-btn btn--primary btn-outline-primary" target="_blank" href="#" title="{{translate('messages.download')}}">
+                                                <a class="btn action-btn btn--primary btn-outline-primary" target="_blank" href="{{route('admin.order.generate-invoice',[$order['id']])}}" title="{{translate('messages.download')}}">
                                                     <i class="tio-download-to"></i>
                                                 </a>
                                             </div>
@@ -254,7 +253,7 @@
                                 </span>
                                 <span class=""> {{ translate('customer_information') }}</span>
                             </div>
-                            <span class="badge badge-soft-info">Total order: 5</span>
+                            <span class="badge badge-soft-info">{{ translate('total_order') }}: {{ $orders->total() }}</span>
                         </h4>
                     </div>
                     <!-- End Header -->

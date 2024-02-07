@@ -239,9 +239,11 @@ class POSController extends Controller
     public function addToCart(Request $request)
     {
         $product = Item::withoutGlobalScope(StoreScope::class)->with('store')->find($request->id);
+        $product_ids = $request->session()->has('cart_product_ids') ? $request->session()->get('cart_product_ids') : [];
         if($product->module->module_type == 'food'){
             $data = array();
             $data['id'] = $product->id;
+            array_push($product_ids,$product->id);
             $str = '';
             $variations = [];
             $price = 0;
@@ -311,10 +313,12 @@ class POSController extends Controller
                 $cart = collect([$data,'store_id'=>$product->store_id]);
                 $request->session()->put('cart', $cart);
             }
+            $request->session()->put('cart_product_ids', $product_ids);
         }else{
 
             $data = array();
             $data['id'] = $product->id;
+            array_push($product_ids,$product->id);
             $str = '';
             $variations = [];
             $price = 0;
@@ -409,8 +413,8 @@ class POSController extends Controller
                 $cart->put('store_id', $product->store_id);
                 $request->session()->put('cart', $cart);
             }
+            $request->session()->put('cart_product_ids', $product_ids);
         }
-
 
         return response()->json([
             'data' => $data

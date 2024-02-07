@@ -3,6 +3,10 @@
 @section('title',translate('messages.customer_wallet_report'))
 
 @section('content')
+    @php
+        $from = session('from_date');
+        $to = session('to_date');
+    @endphp
     <div class="content container-fluid">
         <!-- Page Header -->
         <div class="page-header">
@@ -23,15 +27,16 @@
                     <span>{{translate('messages.filter_options')}}</span>
                 </h4>
 
-                <form action="{{route('admin.users.customer.wallet.report')}}" method="get">
+                <form action="{{route('admin.users.customer.wallet.set-date')}}" method="post">
+                    @csrf
                     <div class="row justify-content-end align-items-end g-3">
                         <div class="col-lg-4">
                             <label class="text-dark text-capitalize" for="add-fund-type">{{translate('messages.add_fund_type')}}</label>
                             @php
                             $transaction_status=request()->get('transaction_type');
                             @endphp
-                            <select name="transaction_type" id="add-fund-type" class="form-control" title="{{translate('messages.select_transaction_type')}}">
-                                <option value="">{{translate('messages.All_transactions')}}</option>
+                            <select name="transaction_type" id="add-fund-type" data-url="{{ url()->full() }}" data-filter="transaction_type" class="form-control set-filter" title="{{translate('messages.select_transaction_type')}}">
+                                <option value="all">{{translate('messages.All_transactions')}}</option>
                                 <option value="add_fund_by_admin" {{isset($transaction_status) && $transaction_status=='add_fund_by_admin'?'selected':''}} >{{translate('messages.add_fund_by_admin')}}</option>
                                 <option value="add_fund" {{isset($transaction_status) && $transaction_status=='add_fund'?'selected':''}}>{{translate('messages.add_fund_by_customer')}}</option>
                                 <option value="order_refund" {{isset($transaction_status) && $transaction_status=='order_refund'?'selected':''}}>{{translate('messages.refund_order')}}</option>
@@ -41,34 +46,50 @@
                         </div>
                         <div class="col-lg-4">
                             <label class="text-dark text-capitalize" for="customer">{{translate('messages.customer')}}</label>
-                            <select id='customer' name="customer_id" data-placeholder="{{translate('messages.select_customer')}}" class="js-data-example-ajax form-control" title="{{translate('messages.select_customer')}}">
+                            <select id='customer' name="customer_id" data-url="{{ url()->full() }}" data-filter="customer_id" data-placeholder="{{translate('messages.select_customer')}}" class="js-data-example-ajax form-control set-filter" title="{{translate('messages.select_customer')}}">
                                 @if (request()->get('customer_id') && $customer_info = \App\Models\User::find(request()->get('customer_id')))
                                     <option value="{{$customer_info->id}}" selected>{{$customer_info->f_name.' '.$customer_info->l_name}}({{$customer_info->phone}})</option>
                                 @endif
                             </select>
                         </div>
                         <div class="col-lg-4">
-                            <label class="text-dark text-capitalize" for="duration">{{translate('messages.duration')}}</label>
-                            <select id='duration' name="duration" data-placeholder="{{translate('messages.duration')}}" class="form-control" title="{{translate('messages.select_duration')}}">
-                                <option value="1" selected>All Time</option>
-                                <option value="1">Previous Year</option>
-                                <option value="1">This Month</option>
-                                <option value="1">This Week</option>
-                                <option value="1">Custom</option>
+                            <label class="text-dark text-capitalize" for="filter">{{translate('messages.duration')}}</label>
+                            <select class="form-control set-filter" name="filter" data-url="{{ url()->full() }}" data-filter="filter">
+                                <option value="all_time" {{ isset($filter) && $filter == 'all_time' ? 'selected' : '' }}>
+                                    {{ translate('messages.All Time') }}</option>
+                                <option value="this_year" {{ isset($filter) && $filter == 'this_year' ? 'selected' : '' }}>
+                                    {{ translate('messages.This Year') }}</option>
+                                <option value="previous_year"
+                                    {{ isset($filter) && $filter == 'previous_year' ? 'selected' : '' }}>
+                                    {{ translate('messages.Previous Year') }}</option>
+                                <option value="this_month"
+                                    {{ isset($filter) && $filter == 'this_month' ? 'selected' : '' }}>
+                                    {{ translate('messages.This Month') }}</option>
+                                <option value="this_week" {{ isset($filter) && $filter == 'this_week' ? 'selected' : '' }}>
+                                    {{ translate('messages.This Week') }}</option>
+                                <option value="custom" {{ isset($filter) && $filter == 'custom' ? 'selected' : '' }}>
+                                    {{ translate('messages.Custom') }}</option>
                             </select>
                         </div>
+                        @if (isset($filter) && $filter == 'custom')
+                            <div class="col-lg-4">
 
-                        <div class="col-lg-4">
-                            <label class="text-dark text-capitalize" for="from_date">{{translate('messages.start_date')}}</label>
-                            <input type="date" name="from" id="from_date" value="{{request()->get('from')}}" class="form-control" title="{{translate('messages.from_date')}}">
-                        </div>
-                        <div class="col-lg-4">
-                            <label class="text-dark text-capitalize" for="to_date">{{translate('messages.end_date')}}</label>
-                            <input type="date" name="to" id="to_date" value="{{request()->get('to')}}" class="form-control" title="{{translate('messages.to_date')}}">
-                        </div>
+                                <input type="date" name="from" id="from_date" class="form-control"
+                                       placeholder="{{ translate('Start Date') }}"
+                                       {{ session()->has('from_date') ? 'value=' . session('from_date') : '' }} required>
+
+                            </div>
+                            <div class="col-lg-4">
+
+                                <input type="date" name="to" id="to_date" class="form-control"
+                                       placeholder="{{ translate('End Date') }}"
+                                       {{ session()->has('to_date') ? 'value=' . session('to_date') : '' }} required>
+
+                            </div>
+                        @endif
                         <div class="col-lg-4">
                             <div class="btn--container justify-content-end">
-                                <button type="reset" class="btn btn--reset">{{translate('messages.reset')}}</button>
+                                <button type="reset" class="btn btn--reset location-reload-to-base" data-url="{{url()->full()}}">{{translate('messages.reset')}}</button>
                                 <button type="submit" class="btn btn--primary">{{translate('messages.filter')}}</button>
                             </div>
                         </div>
@@ -85,6 +106,10 @@
                             @php
                                 $credit = $data[0]->total_credit;
                                 $debit = $data[0]->total_debit;
+                                $add_fund_total = $data[0]->add_fund_total;
+                                $order_refund_total = $data[0]->order_refund_total;
+                                $loyalty_point_total = $data[0]->loyalty_point_total;
+                                $order_place_total = $data[0]->total_debit;
                                 $balance = $credit - $debit;
                             @endphp
 
@@ -139,7 +164,7 @@
                                     <div id="doughnut-pie"></div>
                                     <!-- Total Orders -->
                                     <div class="total--orders">
-                                        <h4 class="text-uppercase mb-1">$533k</h4>
+                                        <h4 class="text-uppercase mb-1">{{\App\CentralLogics\Helpers::number_format_short($add_fund_total+$order_refund_total+$loyalty_point_total+$order_place_total)}}</h4>
                                         <span class="text-capitalize">{{translate('messages.total')}}</span>
                                     </div>
                                     <!-- Total Orders -->
@@ -148,25 +173,25 @@
                                     <div class="chart--label">
                                         <span class="indicator chart-bg-1"></span>
                                         <span class="info">
-                                            {{translate('messages.Fund added by Admin ($1123)')}}
+                                            {{translate('messages.Fund added by Admin')}} ({{\App\CentralLogics\Helpers::format_currency($add_fund_total)}})
                                         </span>
                                     </div>
                                     <div class="chart--label">
                                         <span class="indicator chart-bg-3"></span>
                                         <span class="info">
-                                            {{translate('messages.Order Refund ($1500)')}}
+                                            {{translate('messages.Order Refund')}} ({{\App\CentralLogics\Helpers::format_currency($order_refund_total)}})
                                         </span>
                                     </div>
                                     <div class="chart--label">
                                         <span class="indicator chart-bg-1"></span>
                                         <span class="info">
-                                            {{translate('messages.Loyalty Point ($1100)')}}
+                                            {{translate('messages.Loyalty Point')}} ({{\App\CentralLogics\Helpers::format_currency($loyalty_point_total)}})
                                         </span>
                                     </div>
                                     <div class="chart--label">
                                         <span class="indicator chart-bg-3"></span>
                                         <span class="info">
-                                            {{translate('messages.Order place ($1109)')}}
+                                            {{translate('messages.Order place')}} ({{\App\CentralLogics\Helpers::format_currency($order_place_total)}})
                                         </span>
                                     </div>
                                 </div>
@@ -185,8 +210,8 @@
                     <h5 class="card-title">
                         <span class="card-header-icon">
                             <i class="tio-dollar-outlined"></i>
-                        </span> 
-                        {{translate('transactions')}} &nbsp; 
+                        </span>
+                        {{translate('transactions')}} &nbsp;
                         <span class="badge badge-soft-secondary"> {{ $transactions->total() }}</span>
                     </h5>
 
@@ -320,15 +345,15 @@
         let options;
         let chart;
         options = {
-            series: [24, 6, 12, 16],
+            series: [{{$add_fund_total}}, {{$order_refund_total}}, {{$loyalty_point_total}}, {{$order_place_total}}],
             chart: {
                 width: 180,
                 type: 'donut',
             },
             labels: [
-                '{{ translate('Admin Add Fund') }}', 
-                '{{ translate('Order Refund') }}', 
-                '{{ translate('Loyalty Point') }}', 
+                '{{ translate('Admin Add Fund') }}',
+                '{{ translate('Order Refund') }}',
+                '{{ translate('Loyalty Point') }}',
                 '{{ translate('Order place') }}'
             ],
             dataLabels: {

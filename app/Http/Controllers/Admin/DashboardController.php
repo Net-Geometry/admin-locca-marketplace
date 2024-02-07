@@ -184,6 +184,11 @@ class DashboardController extends Controller
         })
         ->Zonewise()->where('application_status','approved')->where('active',0)->count();
 
+        $suspend_deliveryman = DeliveryMan::when(is_numeric($params['zone_id']), function ($q) use ($params) {
+            return $q->where('zone_id', $params['zone_id']);
+        })
+        ->Zonewise()->where('application_status','approved')->where('status',0)->count();
+
         $unavailable_deliveryman = DeliveryMan::when(is_numeric($params['zone_id']), function ($q) use ($params) {
             return $q->where('zone_id', $params['zone_id']);
         })
@@ -206,7 +211,7 @@ class DashboardController extends Controller
         $deliveryMen = Helpers::deliverymen_list_formatting($deliveryMen);
 
         $module_type = Config::get('module.current_module_type');
-        return view("admin-views.dashboard-{$module_type}", compact('data','active_deliveryman','deliveryMen','unavailable_deliveryman','available_deliveryman','inactive_deliveryman','newly_joined_deliveryman','delivery_man', 'total_sell', 'commission', 'delivery_commission','label', 'params','module_type'));
+        return view("admin-views.dashboard-{$module_type}", compact('data','active_deliveryman','deliveryMen','unavailable_deliveryman','available_deliveryman','inactive_deliveryman','newly_joined_deliveryman','delivery_man', 'total_sell', 'commission', 'delivery_commission','label', 'params','module_type','suspend_deliveryman'));
     }
 
     public function dashboard(Request $request)
