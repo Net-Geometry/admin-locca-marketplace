@@ -3985,4 +3985,6 @@
   'ghf' => 'Ghf',
   'es' => 'Es',
   'DeliveryMan_Info' => 'DeliveryMan Info',
+  'Other_Expences' => 'Other Expences',
+  'Other_Expenses' => 'Other Expenses',
 );

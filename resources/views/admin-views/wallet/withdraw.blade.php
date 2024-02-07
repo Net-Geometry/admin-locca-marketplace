@@ -166,7 +166,7 @@
         </div>
     </div>
 
- 
+
     <div class="withdraw-info-sidebar-wrap">
         <div class="withdraw-info-sidebar-overlay"></div>
         <div class="withdraw-info-sidebar">

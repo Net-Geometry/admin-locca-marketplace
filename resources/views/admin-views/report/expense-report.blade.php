@@ -132,7 +132,7 @@
             <div class="card-header border-0 py-2">
                 <div class="search--button-wrapper">
                     <h3 class="card-title d-flex align-items-center gap-2">
-                        {{ translate('messages.expense_lists') }} 
+                        {{ translate('messages.expense_lists') }}
                         <span class="badge badge-soft-secondary" id="countItems">{{ $expense->total() }}</span>
                     </h3>
                     <form class="search-form theme-style">
@@ -143,6 +143,10 @@
                         </div>
                         <!-- End Search -->
                     </form>
+
+                    @if(request()->get('search'))
+                                    <button type="reset" class="btn btn--primary ml-2 location-reload-to-base" data-url="{{url()->full()}}">{{translate('messages.reset')}}</button>
+                                    @endif
                     <!-- Static Export Button -->
                     <div class="hs-unfold ml-3">
                         <a class="js-hs-unfold-invoker btn btn-sm btn-white dropdown-toggle btn export-btn font--sm"
@@ -206,6 +210,8 @@
                                     <div>
                                         <a class="text-dark" href="{{ route('admin.order.details', ['id' => $exp->order->id,'module_id'=>$exp->order->module_id]) }}">{{ $exp['order_id'] }}</a>
                                     </div>
+                                    @else
+                                    <label class="badge badge-primary">{{translate('messages.Other_Expenses')}}</label>
                                     @endif
                                 </td>
                                 <td>

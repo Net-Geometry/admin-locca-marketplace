@@ -2,10 +2,6 @@
 
 @section('title',translate('messages.account_transaction'))
 
-@push('css_or_js')
-
-@endpush
-
 @section('content')
 <div class="content container-fluid">
     <div class="page-header">
@@ -87,7 +83,7 @@
                                 {{ translate('messages.transaction_history')}}
                             </span>
                             <span class="badge badge-soft-secondary" id="itemCount">
-                                ({{ $account_transaction->total() }})
+                                {{ $account_transaction->total() }}
                             </span>
                         </h5>
 
@@ -97,6 +93,11 @@
                                 <button type="submit" class="btn btn--secondary h--40px"><i class="tio-search"></i></button>
                             </div>
                         </form>
+
+                        @if(request()->get('search'))
+                            <button type="reset" class="btn btn--primary ml-2 location-reload-to-base" data-url="{{url()->full()}}">{{translate('messages.reset')}}</button>
+                        @endif
+
 
                         <div class="hs-unfold mr-2">
                             <a class="js-hs-unfold-invoker btn btn-sm btn-white dropdown-toggle min-height-40" href="javascript:;"
@@ -144,7 +145,6 @@
                             <tbody id="set-rows">
                             @foreach($account_transaction as $k=>$at)
                                 <tr>
-                                    {{-- {{ dd($at) }} --}}
                                     <td>{{$k+$account_transaction->firstItem()}}</td>
                                     <td>
                                         @if($at->store)
@@ -160,8 +160,9 @@
                                     <td><div class="pl-4">
                                         {{\App\CentralLogics\Helpers::format_currency($at['amount'])}}
                                     </div></td>
-                                    <td><div class="pl-4">
-                                        {{translate($at['ref'])}}
+                                    <td><div title="{{ translate($at['ref']) }}" class="pl-4">
+                                        {{Str::limit(translate($at['ref']),40,'...')}}
+
                                     </div></td>
                                     <td>
                                         <div class="btn--container justify-content-center"> <a href="#"

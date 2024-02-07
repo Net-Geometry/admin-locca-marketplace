@@ -999,6 +999,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                 Route::delete('delete/{id}', 'WithdrawalMethodController@delete')->name('delete');
                 Route::post('status-update', 'WithdrawalMethodController@status_update')->name('status-update');
                 Route::post('default-status-update', 'WithdrawalMethodController@default_status_update')->name('default-status-update');
+                Route::get('get-method-info', 'WithdrawalMethodController@getMethodInfo')->name('getMethodInfo');
             });
 
             Route::group(['prefix' => 'store-disbursement', 'as' => 'store-disbursement.', 'middleware' => ['module:account']], function () {

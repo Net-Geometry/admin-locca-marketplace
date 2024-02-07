@@ -3017,7 +3017,7 @@ class ReportController extends Controller
         $customer = is_numeric($customer_id) ? User::findOrFail($customer_id) : null;
         $filter = $request->query('filter', 'all_time');
 
-        $expense = Expense::with('order', 'order.customer:id,f_name,l_name')
+        $expense = Expense::with('user','order', 'order.customer:id,f_name,l_name')
             ->when(isset($zone) || isset($store) || isset($customer), function ($query) use ($zone, $store, $customer) {
                 return $query->whereHas('order', function ($query) use ($zone, $store, $customer) {
                     $query->when($zone, function ($query) use ($zone) {
