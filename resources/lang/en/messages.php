@@ -3969,4 +3969,8 @@
   'Order#' => 'Order#',
   'Review' => 'Review',
   'withdraw_Information' => 'Withdraw Information',
+  'Requested_to_join_at' => 'Requested to join at',
+  'Job_Type' => 'Job Type',
+  'Identity_Documents' => 'Identity Documents',
+  'Identity_Information' => 'Identity Information',
 );

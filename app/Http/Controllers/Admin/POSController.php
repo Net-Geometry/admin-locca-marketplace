@@ -326,10 +326,12 @@ class POSController extends Controller
 
             $selected_item = $request->all();
             $stock= $this->get_stocks($product,$selected_item);
-            if((isset($stock) && min($stock, $product?->maximum_cart_quantity < $request->quantity )||  $product?->maximum_cart_quantity <  $request->quantity  ) ){
-                return response()->json([
-                    'data' => 0
-                ]);
+            if($product?->maximum_cart_quantity > 0){
+                if((isset($stock) && min($stock, $product?->maximum_cart_quantity < $request->quantity )||  $product?->maximum_cart_quantity <  $request->quantity  ) ){
+                    return response()->json([
+                        'data' => 0
+                    ]);
+                }
             }
 
             //Gets all the choice values of customer choice option and generate a string like Black-S-Cotton

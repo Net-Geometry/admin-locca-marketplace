@@ -242,7 +242,7 @@
                                             <span class="text-danger">*</span>
                                             {{ translate(' pin the address in the map to calculate delivery fee') }}
                                         </div>
-                                        <div>
+                                        <div class="btn btn--primary text-white">
                                             <input type="hidden" name="distance" id="distance">
                                             <span>{{ translate('Delivery fee') }} :</span>
                                             <input type="hidden" name="delivery_fee" id="delivery_fee" value="{{ $old ? $old['delivery_fee'] : '' }}">
