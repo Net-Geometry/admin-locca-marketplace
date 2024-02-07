@@ -704,6 +704,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                 Route::post('add-to-cart', 'POSController@addToCart')->name('add-to-cart');
                 Route::post('remove-from-cart', 'POSController@removeFromCart')->name('remove-from-cart');
                 Route::post('cart-items', 'POSController@cart_items')->name('cart_items');
+                Route::post('single-items', 'POSController@single_items')->name('single_items');
                 Route::post('update-quantity', 'POSController@updateQuantity')->name('updateQuantity');
                 Route::post('empty-cart', 'POSController@emptyCart')->name('emptyCart');
                 Route::post('tax', 'POSController@update_tax')->name('tax');

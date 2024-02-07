@@ -43,6 +43,7 @@ class POSController extends Controller
             if(!isset($cart['store_id']) || $cart['store_id'] != $store_id) {
                 session()->forget('cart');
                 session()->forget('address');
+                session()->forget('cart_product_ids');
             }
         }
 
@@ -151,9 +152,9 @@ class POSController extends Controller
         $validator = Validator::make($request->all(),[
             'contact_person_name' => 'required',
             'contact_person_number' => 'required',
-            'floor' => 'required',
-            'road' => 'required',
-            'house' => 'required',
+//            'floor' => 'required',
+//            'road' => 'required',
+//            'house' => 'required',
             'longitude' => 'required',
             'latitude' => 'required',
         ]);
@@ -243,7 +244,6 @@ class POSController extends Controller
         if($product->module->module_type == 'food'){
             $data = array();
             $data['id'] = $product->id;
-            array_push($product_ids,$product->id);
             $str = '';
             $variations = [];
             $price = 0;
@@ -313,12 +313,12 @@ class POSController extends Controller
                 $cart = collect([$data,'store_id'=>$product->store_id]);
                 $request->session()->put('cart', $cart);
             }
+            $product_ids[$product->id] = $request['quantity'];
             $request->session()->put('cart_product_ids', $product_ids);
         }else{
 
             $data = array();
             $data['id'] = $product->id;
-            array_push($product_ids,$product->id);
             $str = '';
             $variations = [];
             $price = 0;
@@ -413,12 +413,43 @@ class POSController extends Controller
                 $cart->put('store_id', $product->store_id);
                 $request->session()->put('cart', $cart);
             }
+            $product_ids[$product->id] = $request['quantity'];
             $request->session()->put('cart_product_ids', $product_ids);
         }
 
         return response()->json([
             'data' => $data
         ]);
+    }
+
+    public function single_items(Request $request)
+    {
+        $category = $request->category_id??0;
+        $module_id = Config::get('module.current_module_id');
+        $store_id = $request->store_id;
+        $categories = Category::active()->module(Config::get('module.current_module_id'))->get();
+        $store = Store::active()->find($store_id);
+        $keyword = $request->keyword??false;
+        $key = explode(' ', $keyword);
+        $products = Item::withoutGlobalScope(StoreScope::class)->active()
+            ->when($category, function($query)use($category){
+                $query->whereHas('category',function($q)use($category){
+                    return $q->whereId($category)->orWhere('parent_id', $category);
+                });
+            })
+            ->when($keyword, function($query)use($key){
+                return $query->where(function ($q) use ($key) {
+                    foreach ($key as $value) {
+                        $q->orWhere('name', 'like', "%{$value}%");
+                    }
+                });
+            })
+            ->whereHas('store', function($query)use($store_id, $module_id){
+                return $query->where(['id'=>$store_id, 'module_id'=>$module_id]);
+            })
+            // ->available($time)
+            ->latest()->paginate(10);
+        return view('admin-views.pos._single_product_list', compact('products','store'));
     }
 
     public function cart_items(Request $request)
@@ -432,6 +463,14 @@ class POSController extends Controller
     {
         if ($request->session()->has('cart')) {
             $cart = $request->session()->get('cart', collect([]));
+            if($request->session()->has('cart_product_ids')) {
+                $item_id = $cart[$request->key]['id'];
+                $product_ids = $request->session()->get('cart_product_ids');
+                if (isset($product_ids[$item_id])) {
+                    unset($product_ids[$item_id]);
+                    $request->session()->put('cart_product_ids', $product_ids);
+                }
+            }
             $cart->forget($request->key);
             $request->session()->put('cart', $cart);
         }
@@ -450,6 +489,14 @@ class POSController extends Controller
             return $object;
         });
         $request->session()->put('cart', $cart);
+        if($request->session()->has('cart_product_ids')) {
+            $item_id = $cart[$request->key]['id'];
+            $product_ids = $request->session()->get('cart_product_ids');
+            if (isset($product_ids[$item_id])) {
+                $product_ids[$item_id] = $request['quantity'];
+                $request->session()->put('cart_product_ids', $product_ids);
+            }
+        }
         return response()->json([],200);
     }
 
@@ -458,6 +505,7 @@ class POSController extends Controller
     {
         session()->forget('cart');
         session()->forget('address');
+        session()->forget('cart_product_ids');
         return response()->json([], 200);
     }
 
@@ -735,6 +783,7 @@ class POSController extends Controller
             }
             session()->forget('cart');
             session()->forget('address');
+            session()->forget('cart_product_ids');
             session(['last_order' => $order->id]);
             Helpers::send_order_notification($order);
             $mail_status = Helpers::get_mail_status('place_order_mail_status_user');

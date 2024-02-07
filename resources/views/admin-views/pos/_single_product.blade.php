@@ -1,4 +1,4 @@
-<div class="pos-product-card active product-card card quick-View h-100" data-id="{{$product->id}}" data-item-count="12">
+<div class="pos-product-card {{ in_array($product->id,array_keys($cart_product_ids))?'active':'' }} product-card card quick-View h-100" data-id="{{$product->id}}" data-item-count="{{ isset($cart_product_ids[$product->id])?$cart_product_ids[$product->id]:0 }}">
     <div class="inline_product clickable p-0 initial--31">
         <div class="d-flex align-items-center justify-content-center h-100 d-block w-100 ">
             <img

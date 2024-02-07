@@ -71,11 +71,17 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="row g-3 mb-auto">
+                            <div class="row g-3 mb-auto" id="single-list">
+                            <?php
+                            if(session()->get('cart_product_ids') && count(session()->get('cart_product_ids'))>0){
+                                $cart_product_ids = session()->get('cart_product_ids');
+                            }else{
+                                $cart_product_ids = [];
+                            }
+                            ?>
                                 @foreach($products as $product)
                                     <div class="order--item-box item-box">
-                                        @include('admin-views.pos._single_product',['product'=>$product, 'store_data'=>$store])
+                                        @include('admin-views.pos._single_product',['product'=>$product, 'store_data'=>$store, 'cart_product_ids'=>$cart_product_ids])
                                     </div>
                                 @endforeach
                             </div>
@@ -832,7 +838,15 @@
         $.post('<?php echo e(route('admin.pos.cart_items')); ?>?store_id={{request()?->store_id}}', {_token: '<?php echo e(csrf_token()); ?>'}, function (data) {
             $('#cart').empty().html(data);
         });
+        $.post('<?php echo e(route('admin.pos.single_items')); ?>?store_id={{request()?->store_id}}&&category_id={{request()?->category_id}}&&keyword={{request()?->keyword}}', {_token: '<?php echo e(csrf_token()); ?>'}, function (data) {
+            $('#single-list').empty().html(data);
+        });
     }
+    {{--function updateSingleItem() {--}}
+    {{--    $.post('<?php echo e(route('admin.pos.single_items')); ?>?store_id={{request()?->store_id}}&&category_id={{request()?->category_id}}&&keyword={{request()?->keyword}}', {_token: '<?php echo e(csrf_token()); ?>'}, function (data) {--}}
+    {{--        $('#single-list').empty().html(data);--}}
+    {{--    });--}}
+    {{--}--}}
 
    $(function(){
         $(document).on('click','input[type=number]',function(){ this.select(); });
