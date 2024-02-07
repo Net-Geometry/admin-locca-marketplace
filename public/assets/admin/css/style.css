@@ -11461,7 +11461,7 @@ body > .initial-38-1 {
      transition: all ease 0.3s;
 }
 
-.pos-product-card:hover::after {
+.pos-product-card.active::after {
      opacity: 1;
      visibility: visible;
 }

@@ -18,6 +18,8 @@
                 $discount_on_product = 0;
                 $variation_price  = 0;
             ?>
+{{--            {{dd(session()->get('cart'))}}--}}
+
             @if(session()->has('cart') && count( session()->get('cart')) > 0)
                 <?php
                     $cart = session()->get('cart');
@@ -62,8 +64,8 @@
                     </td>
                     <td>
                         <div class="d-flex justify-content-center">
-                            <a href="javascript:" data-product-id="{{$key}}" class="pos-cart-remove-btn remove-From-Cart rounded-circle"> <i class="tio-delete-outlined"></i></a>    
-                        </div>                        
+                            <a href="javascript:" data-product-id="{{$key}}" class="pos-cart-remove-btn remove-From-Cart rounded-circle"> <i class="tio-delete-outlined"></i></a>
+                        </div>
                     </td>
                 </tr>
                 @endif

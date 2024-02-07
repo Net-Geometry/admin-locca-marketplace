@@ -3941,4 +3941,6 @@
   'Currently_you_need_to_manage_discount_with_the_Store.' => 'Currently you need to manage discount with the Store.',
   'Ex:_Coupon_Title_Or_Code' => 'Ex: Coupon Title Or Code',
   'add_to_fund' => 'Add to fund',
+  'category_deleted' => 'Category deleted',
+  'store deleted!' => 'Store deleted!',
 );
