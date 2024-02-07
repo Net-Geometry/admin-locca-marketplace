@@ -144,6 +144,7 @@
                             <tbody id="set-rows">
                             @foreach($account_transaction as $k=>$at)
                                 <tr>
+                                    {{-- {{ dd($at) }} --}}
                                     <td>{{$k+$account_transaction->firstItem()}}</td>
                                     <td>
                                         @if($at->store)
@@ -163,11 +164,17 @@
                                         {{translate($at['ref'])}}
                                     </div></td>
                                     <td>
-                                        <div class="btn--container justify-content-center">
-                                            <button class="withdraw-info-show">show sidebar</i>
-                                            </button>
-                                            <a href="{{route('admin.transactions.account-transaction.view',[$at['id']])}}"
-                                            class="btn action-btn btn--warning btn-outline-warning"><i class="tio-visible"></i>
+                                        <div class="btn--container justify-content-center"> <a href="#"
+                                            data-payment_method="{{ $at->method }}"
+                                            data-ref="{{translate($at['ref'])}}"
+                                            data-amount="{{\App\CentralLogics\Helpers::format_currency($at['amount'])}}"
+                                            data-date="{{\App\CentralLogics\Helpers::time_date_format($at->created_at)}}"
+                                            data-type="{{ $at->from_type == 'deliveryman' ?  translate('DeliveryMan_Info') : translate('Store_Info') }}"
+                                            data-phone="{{ $at->store ?  $at?->store?->phone : $at?->deliveryman?->phone  }}"
+                                            data-address="{{ $at->store ?  $at?->store?->address : $at?->deliveryman?->last_location?->location ?? tralslate('address_not_found') }}"
+                                            data-name="{{ $at->store ?  $at?->store?->name : $at?->deliveryman?->f_name.' '.$at?->deliveryman?->l_name }}"
+
+                                            class="btn action-btn btn--warning btn-outline-warning withdraw-info-show" ><i class="tio-visible"></i>
                                             </a>
                                         </div>
                                     </td>
@@ -196,7 +203,7 @@
      </div>
 </div>
 
-{{-- Account Transaction Information Sidebar --}}
+
 <div class="sidebar-wrap">
     <div class="withdraw-info-sidebar-overlay"></div>
     <div class="withdraw-info-sidebar">
@@ -210,39 +217,39 @@
             <h3 class="mb-3">{{translate('account_Transaction_Information')}}</h3>
             <div class="d-flex gap-2 align-items-center fs-12">
                 <span>{{translate('method')}}:</span>
-                <span class="text-dark font-semibold">Stripe</span>
+                <span id="payment_method" class="text-dark font-semibold"></span>
             </div>
             <div class="d-flex gap-2 align-items-center fs-12">
                 <span>{{translate('amount')}}:</span>
-                <span class="text-dark font-bold">$4654.00</span>
+                <span class="text-dark font-bold" id="amount"> </span>
             </div>
             <div class="d-flex gap-2 align-items-center fs-12">
                 <span>{{translate('request_time')}}:</span>
-                <span>2023-11-27 13:46:23</span>
+                <span id="date"></span>
             </div>
             <div class="d-flex gap-2 align-items-center fs-12">
                 <span>{{translate('reference')}}:</span>
-                <span>Store collect cash payments</span>
+                <span id="ref"></span>
             </div>
         </div>
 
         <div class="card">
             <div class="card-header">
-                <h6 class="mb-0 font-medium">{{translate('store_Info')}}</h6>
+                <h6 class="mb-0 font-medium" id="type"></h6>
             </div>
             <div class="card-body">
                 <div class="key-val-list d-flex flex-column gap-2" style="--min-width: 60px">
                     <div class="key-val-list-item d-flex gap-3">
                         <span>{{translate('name')}}:</span>
-                        <span>Click & Collect</span>
+                        <span id="name"></span>
                     </div>
                     <div class="key-val-list-item d-flex gap-3">
                         <span>{{translate('phone')}}:</span>
-                        <a href="tel:+8801478523698" class="text-dark">+8801478523698</a>
+                        <a href="tel:" id="phone" class="text-dark"></a>
                     </div>
                     <div class="key-val-list-item d-flex gap-3">
                         <span>{{translate('address')}}:</span>
-                        <span>House: 00, Road: 00, City-0000, Country</span>
+                        <span id="address"></span>
                     </div>
                 </div>
             </div>
@@ -258,7 +265,20 @@
         $('.withdraw-info-sidebar, .withdraw-info-sidebar-overlay').removeClass('show');
     });
     $('.withdraw-info-show').on('click', function () {
-        $('.withdraw-info-sidebar, .withdraw-info-sidebar-overlay').addClass('show');
+
+        let data = $(this).data();
+            $('.sidebar-wrap #payment_method').text(data.payment_method);
+            $('.sidebar-wrap #amount').text(data.amount);
+            $('.sidebar-wrap #type').text(data.type);
+            $('.sidebar-wrap #date').text(data.date);
+            $('.sidebar-wrap #ref').text(data.ref);
+            $('.sidebar-wrap #name') .text(data.name);
+            $('.sidebar-wrap #phone').text(data.phone).attr('href', 'tel:' + data.phone);
+            $('.sidebar-wrap #address').text(data.address);
+            // $('#deliverymanReviewModal').modal('show');
+
+            $('.withdraw-info-sidebar, .withdraw-info-sidebar-overlay').addClass('show');
+
     })
 </script>
 
@@ -371,31 +391,6 @@
         });
     });
 
-    $('#search-form').on('submit', function () {
-            var formData = new FormData(this);
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $.post({
-                url: '{{route('admin.transactions.account-transaction.search')}}',
-                data: formData,
-                cache: false,
-                contentType: false,
-                processData: false,
-                beforeSend: function () {
-                    $('#loading').show();
-                },
-                success: function (data) {
-                    $('#set-rows').html(data.view);
-                    $('#itemCount').html(data.total);
-                    $('.page-area').hide();
-                },
-                complete: function () {
-                    $('#loading').hide();
-                },
-            });
-        });
+
 </script>
 @endpush
