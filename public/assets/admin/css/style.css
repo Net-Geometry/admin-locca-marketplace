@@ -9620,7 +9620,13 @@ body > .initial-38-1 {
 }
 
 .table-responsive {
-    padding-block: 10px;
+    padding-block: 0 10px;
+}
+
+.table-responsive  thead {
+    position: sticky;
+    top: 0;
+    z-index: 9;
 }
 
 .how-it-works {
