@@ -1466,7 +1466,7 @@
                 </div>
                 <!-- Customer Card -->
                 @php($data = isset($order->order_proof) ? json_decode($order->order_proof, true) : [])
-                @if ( in_array($order->order_status, [ 'handover', 'delivered', 'picked_up']) || count($data) > 0 )
+                @if ( in_array($order->order_status, [ 'handover', 'delivered', 'picked_up']) || ($data != null && count($data) > 0) )
 
                 <!-- order proof -->
                 <div class="card mb-2 mt-2">

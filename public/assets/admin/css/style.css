@@ -10399,11 +10399,11 @@ body > .initial-38-1 {
     list-style: none;
 }
 
-.chat-user-info-content .badge {
+/* .chat-user-info-content .badge {
     position: absolute;
     right: 16px;
     top: 60px;
-}
+} */
 
 .object--cover {
     -o-object-fit: cover;
