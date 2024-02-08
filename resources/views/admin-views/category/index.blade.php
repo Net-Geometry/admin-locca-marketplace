@@ -26,7 +26,7 @@
                 <form action="{{isset($category)?route('admin.category.update',[$category['id']]):route('admin.category.store')}}" method="post" enctype="multipart/form-data">
                     @csrf
                     @if($language)
-                        <ul class="nav nav-tabs mb-4">
+                        <ul class="nav nav-tabs mb-4 border-0">
                             <li class="nav-item">
                                 <a class="nav-link lang_link active"
                                 href="#"
@@ -42,7 +42,7 @@
                         </ul>
                     @endif
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             @if ($language)
                             <div class="form-group lang_form" id="default-form">
                                 <label class="input-label" for="exampleFormControlInput1">{{translate('messages.name')}} ({{ translate('messages.default') }})
@@ -71,24 +71,25 @@
                             @endif
                             <input name="position" value="0" class="initial-hidden">
                         </div>
-                        <div class="col-md-12">
-                            <div class="h-100 d-flex flex-column">
-                                <label class="m-0">{{translate('messages.image')}} <small class="text-danger">* ( {{translate('messages.ratio')}} 1:1)</small></label>
-                                <div class="text-center py-3 my-auto">
-                                    <img class="img--100 " id="viewer"
+                        <div class="col-md-6">
+                            <div class="h-100 d-flex align-items-center flex-column">
+                                <label class="mb-3 text-center">{{translate('messages.image')}} <small class="text-danger">* ( {{translate('messages.ratio')}} 1:1)</small></label>
+                                <div class="text-center my-auto position-relative d-inline-block">
+                                    <img class="img--176 border" id="viewer"
                                         @if(isset($category))
                                         src="{{asset('storage/app/public/category')}}/{{$category['image']}}"
                                         @else
-                                        src="{{asset('public/assets/admin/img/900x400/img1.jpg')}}"
+                                        src="{{asset('public/assets/admin/img/upload-img.png')}}"
                                         @endif
                                         alt="image"/>
+                                    <div class="icon-file-group">
+                                        <label class="icon-file">
+                                            <input type="file" name="image" id="customFileEg1" class="custom-file-input read-url"
+                                                accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*" required>
+                                                <i class="tio-edit"></i>
+                                        </label>
+                                    </div>
                                 </div>
-                                <div class="custom-file">
-                                    <input type="file" name="image" id="customFileEg1" class="custom-file-input read-url"
-                                        accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*" required>
-                                    <label class="custom-file-label" for="customFileEg1">{{translate('messages.choose_file')}}</label>
-                                </div>
-                                <small class="text-danger mt-1 d-none d-md-block">&nbsp;</small>
                             </div>
                         </div>
                     </div>

@@ -22,7 +22,7 @@
                     {{ request()->product_gellary  == 1 ?  translate('Add_item') : translate('item_update') }}
                 </span>
             </h1>
-            <div class="d-flex align-items-end">
+            <div class="d-flex align-items-end flex-wrap">
                 @if(Config::get('module.current_module_type') == 'food')
                 <div class="text--primary-2 py-1 d-flex flex-wrap align-items-center foodModalShow" type="button" >
                     <strong class="mr-2">{{translate('See_how_it_works!')}}</strong>
@@ -160,16 +160,17 @@
 
                                         <input type="hidden" id="removedImageKeysInput" name="removedImageKeys" value="">
                                         @foreach($product->images as $key => $photo)
-                                            <div id="product_images_{{ $key }}" class="spartan_item_wrapper min-w-100px max-w-100px">
+                                            <div id="product_images_{{ $key }}" class="spartan_item_wrapper min-w-176px max-w-176px">
                                                 <img class="img--square onerror-image"
                                                 src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
                                                     $photo ?? '',
                                                     asset('storage/app/public/product').'/'.$photo ?? '',
-                                                    asset('public/assets/admin/img/upload.png'),
+                                                    asset('public/assets/admin/img/upload-img.png'),
                                                     'product/'
                                                 ) }}"
-                                                    data-onerror-image="{{ asset('public/assets/admin/img/upload.png') }}"
+                                                    data-onerror-image="{{ asset('public/assets/admin/img/upload-img.png') }}"
                                                     alt="Product image">
+                                                    <div class="pen spartan_remove_row"><i class="tio-edit"></i></div>
                                                     @if (request()->product_gellary  == 1)
                                                         <a href="#" data-key={{ $key }} data-photo="{{ $photo }}"
                                                         class="spartan_remove_row function_remove_img"><i class="tio-add-to-trash"></i></a>
@@ -186,19 +187,27 @@
                                         {{ translate('messages.item_thumbnail') }}
                                         <small class="text-danger">* ( {{ translate('messages.ratio') }} 1:1 )</small>
                                     </label>
-                                    <label class="d-inline-block m-0">
-                                        <img class="img--100 onerror-image" id="viewer"
+                                    <label class="d-inline-block m-0 position-relative">
+                                        <img class="img--176 border onerror-image" id="viewer"
                                         src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
                                             $product['image'] ?? '',
                                             asset('storage/app/public/product').'/'.$product['image'] ?? '',
-                                            asset('public/assets/admin/img/upload.png'),
+                                            asset('public/assets/admin/img/upload-img.png'),
                                             'product/'
                                         ) }}"
-                                            data-onerror-image="{{ asset('public/assets/admin/img/upload.png') }}"
+                                            data-onerror-image="{{ asset('public/assets/admin/img/upload-img.png') }}"
                                             alt="thumbnail" />
                                         <input type="file" name="image" id="customFileEg1"
                                             class="custom-file-input d-none"
                                             accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
+
+                                        <div class="icon-file-group">
+                                            <label class="icon-file">
+                                                <input type="file" name="image" id="customFileEg1" class="custom-file-input read-url"
+                                                    accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*" required>
+                                                    <i class="tio-edit"></i>
+                                            </label>
+                                        </div>
                                     </label>
                                 </div>
                             </div>
@@ -1245,11 +1254,11 @@
             fieldName: 'item_images[]',
             maxCount: 6,
             // rowHeight: '100px !important',
-            groupClassName: 'spartan_item_wrapper min-w-100px max-w-100px',
+            groupClassName: 'spartan_item_wrapper min-w-176px max-w-176px',
             maxFileSize: '',
             placeholderImage: {
-                image: "{{ asset('public/assets/admin/img/upload.png') }}",
-                width: '100px'
+                image: "{{ asset('public/assets/admin/img/upload-img.png') }}",
+                width: '176px'
             },
             dropFileLabel: "Drop Here",
             onAddRow: function(index, file) {
@@ -1293,11 +1302,11 @@
         $("#coba").empty().spartanMultiImagePicker({
             fieldName: 'item_images[]',
             maxCount: 6,
-            rowHeight: '100px !important',
-            groupClassName: 'spartan_item_wrapper min-w-100px max-w-100px',
+            rowHeight: '176px !important',
+            groupClassName: 'spartan_item_wrapper min-w-176px max-w-176px',
             maxFileSize: '',
             placeholderImage: {
-                image: "{{ asset('public/assets/admin/img/upload.png') }}",
+                image: "{{ asset('public/assets/admin/img/upload-img.png') }}",
                 width: '100%'
             },
             dropFileLabel: "Drop Here",

@@ -19,7 +19,7 @@
                     {{ translate('messages.add_new_item') }}
                 </span>
             </h1>
-            <div class="d-flex align-items-end">
+            <div class="d-flex align-items-end flex-wrap">
                 <div class="text--primary-2 d-flex flex-wrap align-items-center mr-2">
                     <a href="{{ route('admin.item.product_gallery') }}" class="btn btn--primary font-regular">{{translate('messages.Add_From_Product_Gallery')}}</a>
                 </div>
@@ -138,22 +138,26 @@
                         <div class="card-body d-flex flex-wrap align-items-center">
                             <div class="w-100 d-flex flex-wrap __gap-15px">
                                 <div class="flex-grow-1 mx-auto">
-                                    <label class="text-dark d-block">
+                                    <label class="text-dark d-block mb-4 mb-xl-5">
                                         {{ translate('messages.item_image') }}
                                         <small class="text-danger">* ( {{ translate('messages.ratio') }} 1:1 )</small>
                                     </label>
                                     <div class="d-flex flex-wrap __gap-12px __new-coba" id="coba"></div>
                                 </div>
                                 <div class="flex-grow-1 mx-auto">
-                                    <label class="text-dark d-block">
+                                    <label class="text-dark d-block mb-4 mb-xl-5">
                                         {{ translate('messages.item_thumbnail') }}
                                         <small class="text-danger">* ( {{ translate('messages.ratio') }} 1:1 )</small>
                                     </label>
-                                    <label class="d-inline-block m-0">
-                                        <img class="img--100" id="viewer" src="{{ asset('public/assets/admin/img/upload.png') }}" alt="thumbnail" />
-                                        <input type="file" name="image" id="customFileEg1" class="custom-file-input d-none"
+                                    <div class="d-inline-block m-0 position-relative">
+                                        <img class="img--176 border" id="viewer" src="{{ asset('public/assets/admin/img/upload-img.png') }}" alt="thumbnail" />
+                                        <div class="icon-file-group">
+                                            <label class="icon-file"><input type="file" name="image" id="customFileEg1" class="custom-file-input d-none"
                                             accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
-                                    </label>
+                                                    <i class="tio-edit"></i>
+                                            </label>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -953,12 +957,12 @@
             $("#coba").spartanMultiImagePicker({
                 fieldName: 'item_images[]',
                 maxCount: 5,
-                rowHeight: '100px !important',
-                groupClassName: 'spartan_item_wrapper min-w-100px max-w-100px',
+                rowHeight: '176px !important',
+                groupClassName: 'spartan_item_wrapper min-w-176px max-w-176px',
                 maxFileSize: '',
                 placeholderImage: {
-                    image: "{{ asset('public/assets/admin/img/upload.png') }}",
-                    width: '100px'
+                    image: "{{ asset('public/assets/admin/img/upload-img.png') }}",
+                    width: '176px'
                 },
                 dropFileLabel: "Drop Here",
                 onAddRow: function(index, file) {
@@ -1003,11 +1007,11 @@
             $("#coba").empty().spartanMultiImagePicker({
                 fieldName: 'item_images[]',
                 maxCount: 6,
-                rowHeight: '100px !important',
-                groupClassName: 'spartan_item_wrapper min-w-100px max-w-100px',
+                rowHeight: '176px !important',
+                groupClassName: 'spartan_item_wrapper min-w-176px max-w-176px',
                 maxFileSize: '',
                 placeholderImage: {
-                    image: "{{ asset('public/assets/admin/img/upload.png') }}",
+                    image: "{{ asset('public/assets/admin/img/upload-img.png') }}",
                     width: '100%'
                 },
                 dropFileLabel: "Drop Here",
