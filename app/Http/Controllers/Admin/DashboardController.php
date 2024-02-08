@@ -133,7 +133,7 @@ class DashboardController extends Controller
         })
         ->get();
 
-        $deliveryMen = DeliveryMan::when(is_numeric($params['zone_id']), function ($q) use ($params) {
+        $deliveryMen = DeliveryMan::with('last_location')->when(is_numeric($params['zone_id']), function ($q) use ($params) {
             return $q->where('zone_id', $params['zone_id']);
         })->zonewise()->available()->active()->get();
 
