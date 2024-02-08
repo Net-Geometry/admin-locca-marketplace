@@ -17,7 +17,6 @@
                 <span>
                     {{translate('messages.business_Module_list')}}
                 </span>
-                <span class="badge badge-soft-dark ml-2" id="itemCount">{{$modules->total()}}</span>
             </h1>
             <div class="text--primary-2 d-flex flex-wrap align-items-center" type="button" data-toggle="modal" data-target="#warning-status-modal">
                 <strong class="mr-2">{{translate('How it Works')}}</strong>
@@ -30,9 +29,8 @@
         <div class="card">
             <!-- Header -->
             <div class="card-header border-0 py-2">
-                <div class="search--button-wrapper justify-content-end">
-                    <form class="search-form">
-
+                <div class="search--button-wrapper">
+                    <form class="search-form mr-auto">
                         <!-- Search -->
                         <div class="input-group input--group">
                             <input id="datatableSearch" name="search" type="search" class="form-control" placeholder="{{translate('ex_:_Search_Module_by_Name')}}" aria-label="{{translate('messages.search_here')}}" value="{{request()->query('search')}}">
@@ -95,8 +93,8 @@
                                 <th class="border-0 w--1">{{translate('messages.module_id')}}</th>
                                 <th class="border-0 w--2">{{translate('messages.name')}}</th>
                                 <th class="border-0 w--2">{{translate('messages.business_Module_type')}}</th>
-                                <th class="border-0 w--1">{{translate('messages.status')}}</th>
                                 <th class="border-0 text-center w--2">{{translate('messages.total_stores')}}</th>
+                                <th class="border-0 w--1">{{translate('messages.status')}}</th>
                                 <th class="border-0 text-center w--15">{{translate('messages.action')}}</th>
                             </tr>
                         </thead>
@@ -116,6 +114,7 @@
                                         {{Str::limit(translate($module['module_type']), 20,'...')}}
                                     </span>
                                 </td>
+                                <td class="text-center">{{$module->stores_count}}</td>
                                 <td>
                                     <label class="toggle-switch toggle-switch-sm" for="status-{{$module->id}}">
                                     <input type="checkbox" class="toggle-switch-input dynamic-checkbox"
@@ -135,7 +134,6 @@
                                     <form action="{{route('admin.business-settings.module.status',[$module['id'],$module->status?0:1])}}" method="get" id="status-{{$module->id}}_form">
                                     </form>
                                 </td>
-                                <td class="text-center">{{$module->stores_count}}</td>
                                 <td>
                                     <div class="btn--container justify-content-center">
                                         <a class="btn action-btn btn--primary btn-outline-primary"
@@ -169,68 +167,76 @@
     </div>
 
 
-    <div class="modal fade" id="warning-modal">
-        <div class="modal-dialog modal-lg warning-modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">
-                        <span aria-hidden="true" class="tio-clear"></span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="text-center mb-3">
-                        <h3 class="modal-title mb-3">{{translate('Please go to settings and select module for this zone')}}</h3>
-                        <p class="txt">
-                            {{translate("Otherwise this zone won't function properly & will work show anything against this zone")}}
-                        </p>
-                    </div>
-                    <img src="{{asset('/public/assets/admin/img/zone-settings-popup-arrow.gif')}}" alt="admin/img" class="w-100">
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="modal fade" id="warning-status-modal">
         <div class="modal-dialog modal-lg warning-status-modal">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h2 class="modal-title">{{translate('How does it works ?')}}</h2>
+                <div class="modal-header pb-0">
                     <button type="button" class="close" data-dismiss="modal">
                         <span aria-hidden="true" class="tio-clear"></span>
                     </button>
                 </div>
-                <div class="modal-body">
-                    <div class="how-it-works">
-                        <div class="item">
-                            <img src="{{asset('/public/assets/admin/img/how/how1.png')}}" alt="">
-                            <h2 class="serial">{{ translate('1') }}</h2>
-                            <h5>{{ translate('Create_Business_Module') }}</h5>
-                            <p>
-                                {{ translate('To_create_a_new_business_module,_go_to:_‘Module_Setup’_→_‘Add_Business_Module.’')}}
-                            </p>
+                <div class="single-item-slider owl-carousel">
+                    <div class="item">
+                        <div class="modal-header pt-0">
+                            <h2 class="modal-title">{{translate('How does it works ?')}}</h2>
                         </div>
-                        <div class="item">
-                            <img src="{{asset('/public/assets/admin/img/how/how2.png')}}" alt="">
-                            <h2 class="serial">{{ translate('2') }}</h2>
-                            <h5>{{ translate('Add_Module_to_Zone') }}</h5>
-                            <p>
-                                {{ translate('Go_to_‘Zone_Setup’→_‘Business_Zone_List’→_‘Zone_Settings’→_Choose_Payment_Method→Add_Business_Module_into_Zone_with_Parameters.') }}
-                            </p>
-                        </div>
-                        <div class="item">
-                            <img src="{{asset('/public/assets/admin/img/how/how3.png')}}" alt="">
-                            <h2 class="serial">{{ translate('3') }}</h2>
-                            <h5>{{ translate('Create_Stores') }}</h5>
-                            <p>
-                                {{ translate('Select_your_Module_from_the_Module_Section,_Click_→_’Store_Management’→’Add_Store’→Add_Store_details_&_select_Zone_to_integrate_Module+Zone+Store.') }}
-                            </p>
+                        <div class="modal-body">
+                            <div class="how-it-works">
+                                <div class="item">
+                                    <img src="{{asset('/public/assets/admin/img/how/how1.png')}}" class="h-60px object-contain object-left" alt="">
+                                    <h2 class="serial">{{ translate('1') }}</h2>
+                                    <h5>{{ translate('Create_Business_Module') }}</h5>
+                                    <p>
+                                        {{ translate('To_create_a_new_business_module,_go_to:_‘Module_Setup’_→_‘Add_Business_Module.’')}}
+                                    </p>
+                                </div>
+                                <div class="item">
+                                    <img src="{{asset('/public/assets/admin/img/how/how2.png')}}" class="h-60px object-contain object-left" alt="">
+                                    <h2 class="serial">{{ translate('2') }}</h2>
+                                    <h5>{{ translate('Add_Module_to_Zone') }}</h5>
+                                    <p>
+                                        {{ translate('Go_to_‘Zone_Setup’→_‘Business_Zone_List’→_‘Zone_Settings’→_Choose_Payment_Method→Add_Business_Module_into_Zone_with_Parameters.') }}
+                                    </p>
+                                </div>
+                                <div class="item mw-100">
+                                    <img src="{{asset('/public/assets/admin/img/how/how3.png')}}" class="h-60px object-contain object-left" alt="">
+                                    <h2 class="serial">{{ translate('3') }}</h2>
+                                    <h5>{{ translate('Create_Stores') }}</h5>
+                                    <p>
+                                        {{ translate('Select_your_Module_from_the_Module_Section,_Click_→_’Store_Management’→’Add_Store’→Add_Store_details_&_select_Zone_to_integrate_Module+Zone+Store.') }}
+                                    </p>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="mt-3 d-flex flex-wrap align-items-center justify-content-end">
-                        <div class="btn--container justify-content-end">
-                            <button type="button" data-dismiss="modal" data-toggle="modal" data-target="#warning-modal" class="btn btn--primary">{{translate('next')}}</button>
+                    <div class="item">
+                        <div class="modal-body py-0">
+                            <div class="text-center ">
+                                <h3 class="modal-title mb-3">{{translate('Please go to settings and select module for this zone')}}</h3>
+                                <p class="txt">
+                                    {{translate("Otherwise this zone won't function properly & will work show anything against this zone")}}
+                                </p>
+                            </div>
+                            <img src="{{asset('/public/assets/admin/img/zone-settings-popup-arrow.gif')}}" alt="admin/img" class="w-100 h-unset">
                         </div>
                     </div>
+                    <div class="item px-xl-4">
+                        <div class="d-flex align-items-center">
+                            <div class="col-sm-4 text-14">
+                                <h4>{{translate('Make Sure')}}</h4>
+                                <p>
+                                    {{translate('All of your module details should be well-structured. Because those details are dynamically shown on the Landing page of your business.')}}
+                                </p>
+                            </div>
+                            <div class="col-sm-8">
+                                <img src="{{asset('/public/assets/admin/img/module2.png')}}" alt="admin/img" class="w-100 h-unset">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-center pb-5">
+                    <div class="slide-counter"></div>
                 </div>
             </div>
         </div>

@@ -114,37 +114,47 @@
                         </div>
                         <div class="card-body">
                             <div class="d-flex flex-wrap flex-sm-nowrap __gap-12px">
-                                <label class="__custom-upload-img mr-lg-5">
+                                <div class="__custom-upload-img mr-lg-5">
                                     @php($logo = \App\Models\BusinessSetting::where('key', 'logo')->first())
                                     @php($logo = $logo->value ?? '')
                                     <label class="form-label">
                                         {{ translate('logo') }} <span class="text--primary">({{ translate('1:1') }})</span>
                                     </label>
-                                    <div class="text-center">
-                                        <img class="img--110 min-height-170px min-width-170px onerror-image" id="viewer"
+                                    <div class="text-center position-relative">
+                                        <img class="img--110 min-height-170px min-width-170px onerror-image image--border" id="viewer"
                                         data-onerror-image="{{ asset('public/assets/admin/img/upload.png') }}"
                                             src="{{ asset('public/assets/admin/img/upload-img.png') }}"
                                             alt="logo image" />
+                                        <div class="icon-file-group">
+                                            <label class="icon-file">
+                                                <i class="tio-edit"></i>
+                                                <input type="file" name="logo" id="customFileEg1" class="custom-file-input"
+                                                    accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*" required>
+                                            </label>
+                                        </div>
                                     </div>
-                                    <input type="file" name="logo" id="customFileEg1" class="custom-file-input"
-                                        accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*" required>
-                                </label>
+                                </div>
 
-                                <label class="__custom-upload-img">
+                                <div class="__custom-upload-img">
                                     @php($icon = \App\Models\BusinessSetting::where('key', 'icon')->first())
                                     @php($icon = $icon->value ?? '')
                                     <label class="form-label">
                                         {{ translate('Store Cover') }}  <span class="text--primary">({{ translate('2:1') }})</span>
                                     </label>
-                                    <div class="text-center">
-                                        <img class="img--vertical min-height-170px min-width-170px onerror-image" id="coverImageViewer"
+                                    <div class="text-center position-relative">
+                                        <img class="img--vertical min-height-170px min-width-170px onerror-image image--border" id="coverImageViewer"
                                         data-onerror-image="{{ asset('public/assets/admin/img/upload-img.png') }}"
                                             src="{{ asset('public/assets/admin/img/upload-img.png') }}"
                                             alt="Fav icon" />
+                                        <div class="icon-file-group">
+                                            <label class="icon-file">
+                                                <i class="tio-edit"></i>
+                                                <input type="file" name="cover_photo" id="coverImageUpload"  class="custom-file-input"
+                                                    accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
+                                            </label>
+                                        </div>
                                     </div>
-                                    <input type="file" name="cover_photo" id="coverImageUpload"  class="custom-file-input"
-                                        accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
-                                </label>
+                                </div>
                             </div>
                         </div>
                     </div>

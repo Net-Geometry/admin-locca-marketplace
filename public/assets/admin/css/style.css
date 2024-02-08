@@ -321,8 +321,8 @@ button[class*="btn--"] {
 }
 
 @media screen and (min-width: 1450px) {
-    a[class*="btn--"],
-    button[class*="btn--"] {
+    a[class*="btn--"]:not(.btn-sm),
+    button[class*="btn--"]:not(.btn-sm) {
         padding: 12px 24px;
     }
 }
@@ -9670,7 +9670,7 @@ body > .initial-38-1 {
     left: 65px;
     background: rgba(158, 173, 193, 0.3);
     width: calc(100% - 80px);
-    top: 78px;
+    top: 88px;
     height: 1px;
 }
 .how-it-works .item .serial {
@@ -10901,6 +10901,25 @@ body > .initial-38-1 {
     color: #ffffff;
     padding: 10px;
 }
+.review-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    border-radius: 0px 0px 0.3125rem 0.3125rem;
+    border-radius: 0px 0px 10px 10px;
+    background: rgba(7, 88, 159, 0.9);
+    color: #ffffff;
+    padding: 10px;
+}
+@media screen and (max-width: 767px) {
+    .reject-info,
+    .pending-info,
+    .review-info {
+        font-size: 12px;
+    }
+}
 .__upload-img {
     border-radius: 10px;
     border: 2px dashed #e5e5e5;
@@ -11593,6 +11612,10 @@ body > .initial-38-1 {
     border: 2px dashed #e5e5e5 !important;
     border-radius: 6px;
 }
+.image--border {
+    border: 2px dashed #e5e5e5 !important;
+    border-radius: 6px;
+}
 .img--176 {
     width: 176px;
     aspect-ratio: 1;
@@ -11633,4 +11656,57 @@ body > .initial-38-1 {
 .btn-outline-primary:focus,
 .btn-outline-primary.focus {
     box-shadow: none;
+}
+.alert-soft-primary {
+    background: #edf7ff;
+    color: #0477ca;
+}
+.alert-soft-primary .close {
+    color: var(--title-clr);
+}
+.module-radio-group .form--check {
+    padding: 0 !important;
+    display: flex;
+    align-items: center;
+    flex-direction: row-reverse;
+}
+.module-radio-group .form--check input {
+    margin: 0;
+    margin-inline-end: 20px;
+}
+.module-radio-group .form--check .form-check-label {
+    padding: 15px 20px;
+    width: 100%;
+}
+
+.module-radio-group .form--check:first-child .form-check-label {
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+}
+.module-radio-group .form--check:last-child .form-check-label {
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+}
+.module-radio-group .form--check input:checked ~ .form-check-label {
+    background: #e8f2f3;
+    font-weight: 700;
+    color: #334257;
+}
+.module-radio-group .form--check:not(:last-child) {
+    border-bottom: 1px solid #f6f6f6;
+}
+.product-gallery-info {
+    font-size: 12px;
+}
+.h-60px {
+    height: 60px !important;
+}
+.object-contain {
+    object-fit: contain;
+}
+.object-left {
+    object-position: center left;
+}
+.text-14 {
+    font-size: 14px;
 }
