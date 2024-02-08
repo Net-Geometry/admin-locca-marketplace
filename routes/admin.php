@@ -986,6 +986,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                 Route::post('withdraw_search', 'VendorController@withdraw_search')->name('withdraw_search');
                 Route::get('withdraw_export', 'VendorController@withdraw_export')->name('withdraw_export');
                 Route::get('withdraw-view/{withdraw_id}/{seller_id}', 'VendorController@withdraw_view')->name('withdraw_view');
+                Route::get('get-Withdraw-Details', 'VendorController@getWithdrawDetails')->name('getWithdrawDetails');
                 // });
 
             });
@@ -999,6 +1000,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                 Route::delete('delete/{id}', 'WithdrawalMethodController@delete')->name('delete');
                 Route::post('status-update', 'WithdrawalMethodController@status_update')->name('status-update');
                 Route::post('default-status-update', 'WithdrawalMethodController@default_status_update')->name('default-status-update');
+                Route::get('get-method-info', 'WithdrawalMethodController@getMethodInfo')->name('getMethodInfo');
             });
 
             Route::group(['prefix' => 'store-disbursement', 'as' => 'store-disbursement.', 'middleware' => ['module:account']], function () {
