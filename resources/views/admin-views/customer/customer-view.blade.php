@@ -224,21 +224,21 @@
                                 @endforeach
                             </tbody>
                         </table>
-                        @if(count($orders) !== 0)
-                        <hr>
-                        @endif
-                        <div class="page-area">
-                            {!! $orders->links() !!}
-                        </div>
-                        @if(count($orders) === 0)
-                        <div class="empty--data">
-                            <img src="{{asset('/public/assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
-                            <h5>
-                                {{translate('no_data_found')}}
-                            </h5>
-                        </div>
-                        @endif
                     </div>
+                    @if(count($orders) !== 0)
+                    <hr>
+                    @endif
+                    <div class="page-area">
+                        {!! $orders->links() !!}
+                    </div>
+                    @if(count($orders) === 0)
+                    <div class="empty--data">
+                        <img src="{{asset('/public/assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
+                        <h5>
+                            {{translate('no_data_found')}}
+                        </h5>
+                    </div>
+                    @endif
                 </div>
             </div>
 

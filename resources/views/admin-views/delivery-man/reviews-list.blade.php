@@ -43,10 +43,18 @@
                                     @endforeach
                                 </select>
                             </div>
-
+                            <div class="col-sm-auto min--240">
+                                <select name="order_by"
+                                        class="form-control js-select2-custom set-filter theme-style"
+                                        data-filter="order_by"
+                                        data-url="{{ url()->full() }}">
+                                    <option>{{ translate('messages.Latest_ratings') }}</option>
+                                    <option value="desc" {{  request()?->order_by == 'desc' ? 'selected' : '' }} >{{ translate('messages.Top_ratings') }}</option>
+                                    <option value="asc" {{  request()?->order_by == 'asc' ? 'selected' : '' }} >{{ translate('messages.Low_ratings') }}</option>
+                                </select>
+                            </div>
 
                             <form class="search-form theme-style">
-
                                 <div class="input-group input--group">
                                     <input id="datatableSearch" name="search" type="search" class="form-control"
                                            placeholder="{{translate('ex_: search_delivery_man_,_email_or_phone')}}"
@@ -185,21 +193,21 @@
                             @endforeach
                             </tbody>
                         </table>
-                        @if(count($reviews) !== 0)
-                            <hr>
-                        @endif
-                        <div class="page-area">
-                            {!! $reviews->links() !!}
-                        </div>
-                        @if(count($reviews) === 0)
-                            <div class="empty--data">
-                                <img src="{{asset('/public/assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
-                                <h5>
-                                    {{translate('no_data_found')}}
-                                </h5>
-                            </div>
-                        @endif
                     </div>
+                    @if(count($reviews) !== 0)
+                        <hr>
+                    @endif
+                    <div class="page-area">
+                        {!! $reviews->links() !!}
+                    </div>
+                    @if(count($reviews) === 0)
+                        <div class="empty--data">
+                            <img src="{{asset('/public/assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
+                            <h5>
+                                {{translate('no_data_found')}}
+                            </h5>
+                        </div>
+                    @endif
                     <!-- End Table -->
                 </div>
                 <!-- End Card -->
