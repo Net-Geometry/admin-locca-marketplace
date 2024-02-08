@@ -42,11 +42,19 @@
                 <form id="search-form" action="javascript:;" class="search-form">
                     @csrf
                     <input type="hidden" value="1" name="product_gallery">
-                    <div class="row">
-                        <div class="col-11">
+                    <div class="row g-2">
+                        <div class="col-md-5 col-lg-4">
+                            <select class="form-control js-select2-custom set-filter">
+                                <option>Categories</option>
+                                <option>Categories</option>
+                                <option>Categories</option>
+                                <option>Categories</option>
+                            </select>
+                        </div>
+                        <div class="col-md-5 col-lg-6">
                             <input id="datatableSearch" type="search" value="{{  request()?->search ?? null }}" name="search" class="form-control" placeholder="{{translate('messages.ex_search_name')}}" aria-label="{{translate('messages.search_here')}}">
                         </div>
-                        <div class="col-1">
+                        <div class="col-md-2 col-lg-1 text-end">
                             <button type="submit" class="btn btn--primary">{{ translate('messages.search') }}</button>
                         </div>
                     </div>
@@ -55,8 +63,7 @@
             <!-- End Header -->
         </div>
         <div>
-            <h2>{{ translate('messages.Product_List') }}</h2>
-            <p>{{ translate('search_product_and_use_its_info_to_create_new_product') }}</p>
+            <h4 class="text-center pb-2 pt-4">53434{{ translate('messages.products found') }}</h4>
         </div>
 
         <div class="row" id="set-rows">

@@ -11623,3 +11623,14 @@ body > .initial-38-1 {
 .spartan_remove_row {
     border: 1px solid rgb(255, 7, 0);
 }
+.product-gallery-info > .d-block > span:first-child {
+    display: inline-block;
+    width: 93px;
+}
+.product-gallery-info > .d-block > span:nth-child(2) {
+    margin-right: 5px;
+}
+.btn-outline-primary:focus,
+.btn-outline-primary.focus {
+    box-shadow: none;
+}
