@@ -78,6 +78,22 @@
                             </select>
                         </div>
                         <div class="col-sm-6 col-md-3">
+                            <select class="form-control set-filter" data-url="{{ url()->full() }}" data-filter="type" name="type">
+                                <option value="all_time" {{ isset($type) && $type == 'all' ? 'selected' : '' }}>
+                                    {{ translate('messages.All Type') }}</option>
+                                <option value="add_fund_bonus" {{ isset($type) && $type == 'add_fund_bonus' ? 'selected' : '' }}>
+                                    {{ translate('messages.add_fund_bonus') }}</option>
+                                <option value="free_delivery" {{ isset($type) && $type == 'free_delivery' ? 'selected' : '' }}>
+                                    {{ translate('messages.free_delivery') }}</option>
+                                <option value="coupon_discount" {{ isset($type) && $type == 'coupon_discount' ? 'selected' : '' }}>
+                                    {{ translate('messages.coupon_discount') }}</option>
+                                <option value="discount_on_product" {{ isset($type) && $type == 'discount_on_product' ? 'selected' : '' }}>
+                                    {{ translate('messages.discount_on_product') }}</option>
+                                <option value="flash_sale_discount" {{ isset($type) && $type == 'flash_sale_discount' ? 'selected' : '' }}>
+                                    {{ translate('messages.flash_sale_discount') }}</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-6 col-md-3">
                             <select class="form-control set-filter" data-url="{{ url()->full() }}" data-filter="filter" name="filter">
                                 <option value="all_time" {{ isset($filter) && $filter == 'all_time' ? 'selected' : '' }}>
                                     {{ translate('messages.All Time') }}</option>

@@ -206,7 +206,7 @@
                     @csrf
                 <div class="mt-5">
                     <h5 class="font-semibold text-center mb-3">{{translate('approval_note')}} </h5>
-                    <textarea required name="note" id="" class="form-control" rows="6" placeholder="{{translate('Type_a_note_about_request_approval')}}"></textarea>
+                    <textarea required name="note" id="" class="form-control" rows="6" maxlength="200" placeholder="{{translate('Type_a_note_about_request_approval')}}"></textarea>
                     <input name="approved" value="1" type="hidden">
                     <div class="mt-4 d-flex justify-content-center gap-3">
                         <button type="button"  data-id="${id}" class="btn btn-soft-secondary min-w-100px withdraw-info-show">
