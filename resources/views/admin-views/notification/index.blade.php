@@ -60,7 +60,7 @@
                                         <div class="col-12">
                                             <div class="form-group mb-0">
                                                 <label class="input-label" for="exampleFormControlInput1">{{translate('messages.description')}}</label>
-                                                <textarea name="description" class="form-control" required></textarea>
+                                                <textarea name="description" class="form-control" maxlength="1000" required></textarea>
                                             </div>
                                         </div>
                                     </div>

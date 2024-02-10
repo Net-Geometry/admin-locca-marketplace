@@ -278,22 +278,22 @@
                     @endforeach
                     </tbody>
                 </table>
-                @if(count($items) !== 0)
+            </div>
+            @if(count($items) !== 0)
                 <hr>
-                @endif
-                <div class="page-area">
-                        <tfoot class="border-top">
-                        {!! $items->withQueryString()->links() !!}
-                </div>
-                @if(count($items) === 0)
+            @endif
+            <div class="page-area">
+                <tfoot class="border-top">
+                {!! $items->withQueryString()->links() !!}
+            </div>
+            @if(count($items) === 0)
                 <div class="empty--data">
                     <img src="{{asset('/public/assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                     <h5>
                         {{translate('no_data_found')}}
                     </h5>
                 </div>
-                @endif
-            </div>
+            @endif
             <!-- End Table -->
         </div>
         <!-- End Card -->

@@ -158,6 +158,7 @@
                     @endforeach
                 </tbody>
             </table>
+        </div>
             @if(count($items) !== 0)
             <hr>
             @endif
@@ -172,7 +173,6 @@
                 </h5>
             </div>
             @endif
-        </div>
         <!-- End Table -->
     </div>
     <!-- End Card -->

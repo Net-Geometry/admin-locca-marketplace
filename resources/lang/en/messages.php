@@ -4023,4 +4023,5 @@
   'Write_the_short_description_within_150_characters' => 'Write the short description within 150 characters',
   'The banner video content must be a file of type: mp4, webm, ogg.' => 'The banner video content must be a file of type: mp4  webm  ogg.',
   'Write_the_short_description_within_191_characters' => 'Write the short description within 191 characters',
+  'notification_updated_successfully' => 'Notification updated successfully',
 );
