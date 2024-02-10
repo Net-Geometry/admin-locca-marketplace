@@ -175,7 +175,8 @@
                         </div>
                     </div>
                     <ul class="__customer-review">
-                        <li>
+                        <li title="{{ translate('positive_review_given_total').' '.$positive_reviews. ' '.translate('messages.customers')  }} ({{ translate('Scale: 4-5') }}) ">
+
                             <span class="tag">{{ translate('Positive') }}</span>
                             @php($positive_parcent = $positive_reviews > 0 ? round($positive_reviews / $reviews * 100) : 0)
                             <span class="review">
@@ -212,7 +213,8 @@
                             </span>
                             <span class="ratio">{{$positive_parcent}}%</span>
                         </li>
-                        <li>
+                        <li title="{{ translate('good_review_given_total').' '.$good_reviews. ' '.translate('messages.customers') }} ({{ translate('Scale: 3') }})">
+
                             <span class="tag">{{ translate('Good') }}</span>
                             @php($good_parcent = $good_reviews > 0 ? round($good_reviews / $reviews * 100) : 0)
                                 <span class="review">
@@ -249,7 +251,7 @@
                                 </span>
                             <span class="ratio">{{$good_parcent}}%</span>
                         </li>
-                        <li>
+                        <li title="{{ translate('neutral_review_given_total').' '.$neutral_reviews. ' '.translate('messages.customers') }} ({{ translate('Scale: 2') }})">
                             <span class="tag">{{ translate('Neutral') }}</span>
                             @php($neutral_parcent = $neutral_reviews > 0 ? round($neutral_reviews / $reviews * 100) : 0)
                             <span class="review">
@@ -286,7 +288,7 @@
                             </span>
                             <span class="ratio">{{$neutral_parcent}}%</span>
                         </li>
-                        <li>
+                        <li title="{{ translate('negative_review_given_total').' '.$negative_reviews. ' '.translate('messages.customers') }} ({{ translate('Scale: 1') }})">
                             <span class="tag">{{ translate('Negetive') }}</span>
                             @php($negative_percent = $negative_reviews > 0 ? round($negative_reviews / $reviews * 100) : 0)
                             <span class="review">

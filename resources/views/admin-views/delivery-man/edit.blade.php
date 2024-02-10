@@ -36,7 +36,11 @@
                             <div class="row g-3">
                                 <div class="col-sm-6">
                                     <div class="form-group mb-0">
-                                        <label class="input-label" for="exampleFormControlInput1">{{translate('messages.first_name')}}</label>
+                                        <label class="input-label" for="exampleFormControlInput1">{{translate('messages.first_name')}} <span class="form-label-secondary text-danger"
+                            data-toggle="tooltip" data-placement="right"
+                            data-original-title="{{ translate('messages.Required.')}}"> *
+                            </span>
+                                </label>
                                         <input type="text" value="{{$deliveryMan['f_name']}}" name="f_name"
                                                 class="form-control" placeholder="{{translate('messages.first_name')}}"
                                                 required>
@@ -44,7 +48,11 @@
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group mb-0">
-                                        <label class="input-label" for="exampleFormControlInput1">{{translate('messages.last_name')}}</label>
+                                        <label class="input-label" for="exampleFormControlInput1">{{translate('messages.last_name')}} <span class="form-label-secondary text-danger"
+                            data-toggle="tooltip" data-placement="right"
+                            data-original-title="{{ translate('messages.Required.')}}"> *
+                            </span>
+                                </label>
                                         <input type="text" value="{{$deliveryMan['l_name']}}" name="l_name"
                                                 class="form-control" placeholder="{{translate('messages.last_name')}}"
                                                 required>
@@ -52,7 +60,11 @@
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group mb-0">
-                                        <label class="input-label" for="exampleFormControlInput1">{{translate('messages.email')}}</label>
+                                        <label class="input-label" for="exampleFormControlInput1">{{translate('messages.email')}} <span class="form-label-secondary text-danger"
+                            data-toggle="tooltip" data-placement="right"
+                            data-original-title="{{ translate('messages.Required.')}}"> *
+                            </span>
+                                </label>
                                         <input type="email" value="{{$deliveryMan['email']}}" name="email" class="form-control"
                                                 placeholder="{{ translate('messages.Ex:') }} ex@example.com"
                                                 required>
@@ -60,8 +72,12 @@
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group mb-0">
-                                        <label class="input-label" for="exampleFormControlInput1">{{translate('messages.deliveryman_type')}}</label>
-                                        <select name="earning" class="form-control" required>
+                                        <label class="input-label" for="exampleFormControlInput1">{{translate('messages.deliveryman_type')}} <span class="form-label-secondary text-danger"
+                            data-toggle="tooltip" data-placement="right"
+                            data-original-title="{{ translate('messages.Required.')}}"> *
+                            </span>
+                                </label>
+                                        <select name="earning" class="form-control  js-select2-custom" required>
                                             <option value="1" {{$deliveryMan->earning?'selected':''}}>{{translate('messages.freelancer')}}</option>
                                             <option value="0" {{$deliveryMan->earning?'':'selected'}}>{{translate('messages.salary_based')}}</option>
                                         </select>
@@ -69,8 +85,12 @@
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group mb-0">
-                                        <label class="input-label" for="exampleFormControlInput1">{{translate('messages.zone')}}</label>
-                                        <select name="zone_id" class="form-control">
+                                        <label class="input-label" for="exampleFormControlInput1">{{translate('messages.zone')}} <span class="form-label-secondary text-danger"
+                            data-toggle="tooltip" data-placement="right"
+                            data-original-title="{{ translate('messages.Required.')}}"> *
+                            </span>
+                                </label>
+                                        <select name="zone_id" class="form-control  js-select2-custom">
                                         @foreach(\App\Models\Zone::all() as $zone)
                                             @if(isset(auth('admin')->user()->zone_id))
                                                 @if(auth('admin')->user()->zone_id == $zone->id)
@@ -85,7 +105,11 @@
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group m-0">
-                                        <label class="input-label" for="exampleFormControlInput1">{{translate('messages.vehicle')}}</label>
+                                        <label class="input-label" for="exampleFormControlInput1">{{translate('messages.vehicle')}}<span class="form-label-secondary text-danger"
+                                            data-toggle="tooltip" data-placement="right"
+                                            data-original-title="{{ translate('messages.Required.')}}"> *
+                                            </span>
+                                        </label>
                                         <select name="vehicle_id" class="form-control js-select2-custom h--45px">
                                             <option value="" readonly="true" hidden="true">{{ translate('messages.select_vehicle') }}</option>
                                         @foreach(\App\Models\DMVehicle::where('status',1)->get(['id','type']) as $v)
@@ -116,8 +140,12 @@
                             <div class="row g-3">
                                 <div class="col-sm-6 col-lg-12">
                                     <div class="form-group mb-0">
-                                        <label class="input-label" for="exampleFormControlInput1">{{translate('messages.identity_type')}}</label>
-                                        <select name="identity_type" class="form-control">
+                                        <label class="input-label" for="exampleFormControlInput1">{{translate('messages.identity_type')}}<span class="form-label-secondary text-danger"
+                                            data-toggle="tooltip" data-placement="right"
+                                            data-original-title="{{ translate('messages.Required.')}}"> *
+                                            </span>
+                </label>
+                                        <select name="identity_type" class="form-control  js-select2-custom">
                                             <option
                                                 value="passport" {{$deliveryMan['identity_type']=='passport'?'selected':''}}>
                                                 {{translate('messages.passport')}}
@@ -137,7 +165,11 @@
                                 </div>
                                 <div class="col-sm-6 col-lg-12">
                                     <div class="form-group mb-0">
-                                        <label class="input-label" for="exampleFormControlInput1">{{translate('messages.identity_number')}}</label>
+                                        <label class="input-label" for="exampleFormControlInput1">{{translate('messages.identity_number')}}<span class="form-label-secondary text-danger"
+                                            data-toggle="tooltip" data-placement="right"
+                                            data-original-title="{{ translate('messages.Required.')}}"> *
+                                            </span>
+                </label>
                                         <input type="text" name="identity_number" value="{{$deliveryMan['identity_number']}}"
                                                 class="form-control"
                                                 placeholder="{{ translate('messages.Ex:') }} DH-23434-LS"
@@ -152,12 +184,12 @@
                                     <div class="row g-2">
                                         <div class="col-12 pb-0">
                                             <div class="form-group mb-0">
-                                                <label class="input-label" for="exampleFormControlInput1">{{translate('messages.identity_images')}} : </label>
+                                                <label class="input-label" for="exampleFormControlInput1">{{translate('messages.identity_images')}} 
                                             </div>
                                         </div>
                                         @foreach(json_decode($deliveryMan['identity_image'],true) as $img)
                                         <div class="col-6 spartan_item_wrapper size--sm">
-                                            <img class="rounded border" src="{{asset('storage/app/public/delivery-man').'/'.$img}}">
+                                            <img class="rounded border" src="{{\App\CentralLogics\Helpers::onerror_image_helper($img, asset('storage/app/public/delivery-man/').'/'.$img, asset('public/assets/admin/img/160x160/img1.jpg'), 'delivery-man/') }}">
                                         </div>
                                         @endforeach
                                     </div>
@@ -188,7 +220,11 @@
                     <div class="row g-3">
                         <div class="col-sm-4">
                             <div class="form-group mb-0">
-                                <label class="input-label" for="exampleFormControlInput1">{{translate('messages.phone')}}</label>
+                                <label class="input-label" for="exampleFormControlInput1">{{translate('messages.phone')}}<span class="form-label-secondary text-danger"
+                                    data-toggle="tooltip" data-placement="right"
+                                    data-original-title="{{ translate('messages.Required.')}}"> *
+                                    </span>
+        </label>
                                 <input type="text" id="phone" name="phone" value="{{$deliveryMan['phone']}}" class="form-control"
                                         placeholder="{{ translate('messages.Ex:') }} 017********"
                                         required>

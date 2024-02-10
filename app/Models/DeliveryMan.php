@@ -37,7 +37,7 @@ class DeliveryMan extends Authenticatable
     {
         return $this->hasMany(Order::class)->whereIn('order_status',['handover','picked_up']);
     }
-    
+
     public function userinfo()
     {
         return $this->hasOne(UserInfo::class,'deliveryman_id', 'id');
@@ -100,7 +100,7 @@ class DeliveryMan extends Authenticatable
 
     public function last_location()
     {
-        return $this->hasOne(DeliveryHistory::class, 'delivery_man_id')->latest();
+        return $this->hasOne(DeliveryHistory::class, 'delivery_man_id')->latestOfMany();
     }
 
     public function zone()

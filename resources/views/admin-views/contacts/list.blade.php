@@ -38,6 +38,8 @@
                                 @endif
 
                         </div>
+
+
                     </div>
                     <!-- Table -->
                     <div class="table-responsive datatable-custom">
@@ -108,21 +110,21 @@
                             @endforeach
                             </tbody>
                         </table>
-                        @if(count($contacts) !== 0)
-                        <hr>
-                        @endif
-                        <div class="page-area">
-                            {!! $contacts->links() !!}
-                        </div>
-                        @if(count($contacts) === 0)
-                        <div class="empty--data">
-                            <img src="{{asset('/public/assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
-                            <h5>
-                                {{translate('messages.no_data_found')}}
-                            </h5>
-                        </div>
-                        @endif
                     </div>
+                    @if(count($contacts) !== 0)
+                    <hr>
+                    @endif
+                    <div class="page-area">
+                        {!! $contacts->links() !!}
+                    </div>
+                    @if(count($contacts) === 0)
+                    <div class="empty--data">
+                        <img src="{{asset('/public/assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
+                        <h5>
+                            {{translate('messages.no_data_found')}}
+                        </h5>
+                    </div>
+                    @endif
                 </div>
             </div>
             <!-- End Table -->
