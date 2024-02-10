@@ -183,7 +183,7 @@
                                     <th class="border-0 pl-4">{{translate('SL')}}</th>
                                     <th class="border-0">{{translate('messages.order_ID')}}</th>
                                     <th class="border-0 text-center">{{translate('messages.total_Items')}}</th>
-                                    <th class="border-0 text-right">{{translate('messages.total_amount')}}</th>
+                                    <th class="border-0 text-center">{{translate('messages.total_amount')}}</th>
                                     <th class="border-0 text-center">{{translate('messages.action')}}</th>
                                 </tr>
                             </thead>
@@ -201,7 +201,7 @@
                                         </td>
                                         <td>
                                             <div class="text-center mw--85px mx-auto">
-                                                {{ $order?->details()?->count() != 0  ?  $order?->details()?->count(): translate('messages.N/A') }}
+                                                {{ $order?->details_count != 0  ?  $order?->details_count: translate('messages.N/A') }}
                                             </div>
                                         </td>
                                         <td>

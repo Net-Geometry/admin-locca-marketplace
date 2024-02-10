@@ -134,7 +134,7 @@ class CustomerController extends Controller
                     $query->Where('id', 'like', "%{$key}%");
                 } )
                 ->Notpos()->get();
-            $orders = Order::latest()->where(['user_id' => $id])
+            $orders = Order::withcount('details')->latest()->where(['user_id' => $id])
             ->when(isset($key), function($query) use($key){
                 $query->Where('id', 'like', "%{$key}%");
             } )

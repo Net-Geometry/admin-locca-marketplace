@@ -51,7 +51,7 @@ class LoyaltyPointController extends Controller
         })
         ->get();
 
-        $transactions = LoyaltyPointTransaction::
+        $transactions = LoyaltyPointTransaction::with('user')->
         when(($request->from && $request->to),function($query)use($request){
             $query->whereBetween('created_at', [$request->from.' 00:00:00', $request->to.' 23:59:59']);
         })
@@ -79,7 +79,7 @@ class LoyaltyPointController extends Controller
         ->when(isset($request->customer_id) && is_numeric($request->customer_id), function($query)use($request){
             $query->where('user_id',$request->customer_id);
         })
-        ->latest()
+        ->latest('balance')
         ->paginate(config('default_pagination'));
 
         return view('admin-views.customer.loyalty-point.report', compact('data','transactions','filter'));

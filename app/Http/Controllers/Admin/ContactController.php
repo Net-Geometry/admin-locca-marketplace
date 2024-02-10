@@ -53,6 +53,24 @@ class ContactController extends Controller
         return view('admin-views.contacts.list', compact('contacts'));
 
     }
+    public function exportList(Request $request)
+    {
+        $key = explode(' ', $request['search']);
+        $contacts = Contact::orderBy('name')
+        ->when(isset($key), function($query) use($key) {
+            $query->where(function ($q) use ($key) {
+                foreach ($key as $value) {
+                    $q->orWhere('name', 'like', "%{$value}%")
+                    ->orWhere('subject', 'like', "%{$value}%")
+                    ->orWhere('email', 'like', "%{$value}%");
+                }
+            });
+        })
+
+        ->paginate(config('default_pagination'));
+        return view('admin-views.contacts.list', compact('contacts'));
+
+    }
 
     public function view($id)
     {
