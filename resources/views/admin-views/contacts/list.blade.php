@@ -37,6 +37,40 @@
                                 <button type="reset" class="btn btn--primary ml-2 location-reload-to-base" data-url="{{url()->full()}}">{{translate('messages.reset')}}</button>
                                 @endif
 
+
+                            <!-- Unfold -->
+                            <div class="hs-unfold mr-2">
+                                <a class="js-hs-unfold-invoker btn btn-sm btn-white dropdown-toggle min-height-40"
+                                   href="javascript:"
+                                   data-hs-unfold-options='{
+                                                        "target": "#usersExportDropdown",
+                                                        "type": "css-animation"
+                                                    }'>
+                                    <i class="tio-download-to mr-1"></i> {{ translate('messages.export') }}
+                                </a>
+
+                                <div id="usersExportDropdown"
+                                     class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
+                                    <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
+                                    <a id="export-excel" class="dropdown-item"
+                                       href="{{route('admin.users.contact.exportList', ['type'=>'excel',request()->getQueryString()])}}">
+                                        <img class="avatar avatar-xss avatar-4by3 mr-2"
+                                             src="{{ asset('public/assets/admin/svg/components/excel.svg') }}"
+                                             alt="Image Description">
+                                        {{ translate('messages.excel') }}
+                                    </a>
+                                    <a id="export-csv" class="dropdown-item"
+                                       href="{{route('admin.users.contact.exportList', ['type'=>'csv',request()->getQueryString()])}}">
+                                        <img class="avatar avatar-xss avatar-4by3 mr-2"
+                                             src="{{ asset('public/assets/admin/svg/components/placeholder-csv-format.svg') }}"
+                                             alt="Image Description">
+                                        .{{ translate('messages.csv') }}
+                                    </a>
+                                </div>
+                            </div>
+                            <!-- End Unfold -->
+
+
                         </div>
 
 

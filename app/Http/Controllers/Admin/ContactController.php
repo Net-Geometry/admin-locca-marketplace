@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Models\BusinessSetting;
 use App\Models\Contact;
-use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\Request;
+use App\Models\BusinessSetting;
+use App\Http\Controllers\Controller;
+use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\Mail;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\ContactMessageExport;
 
 class ContactController extends Controller
 {
@@ -66,10 +68,11 @@ class ContactController extends Controller
                 }
             });
         })
-
-        ->paginate(config('default_pagination'));
-        return view('admin-views.contacts.list', compact('contacts'));
-
+        ->get();
+        if($request->type == 'csv'){
+            return Excel::download(new ContactMessageExport($contacts,$request['search']), 'Contacts.csv');
+        }
+        return Excel::download(new ContactMessageExport($contacts,$request['search']), 'Contacts.xlsx');
     }
 
     public function view($id)
@@ -85,7 +88,7 @@ class ContactController extends Controller
         $contact->seen = 1;
         $contact->update();
         Toastr::success('Feedback  Update successfully!');
-        return redirect()->route('admin.contact.contact-list');
+        return redirect()->route('admin.users.contact.contact-list');
     }
 
     public function destroy(Request $request)
