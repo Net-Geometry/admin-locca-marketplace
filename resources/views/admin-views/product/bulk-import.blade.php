@@ -121,9 +121,39 @@
             <input type="hidden" name="button" id="btn_value">
             <div class="card mt-2 rest-part">
                 <div class="card-body">
-                    <div class="custom-file custom--file">
-                        <input type="file" name="products_file" class="form-control" id="products_file">
-                        <label class="custom-file-label" for="products_file">{{ translate('messages.Choose File') }}</label>
+                    <div class="row g-3">
+                        <div class="col-sm-6">
+                            <h5 class="text-capitalize mb-3">Select Data Upload type</h5>
+                            <div class="module-radio-group border rounded">
+                                <label class="form-check form--check">
+                                    <input class="form-check-input" type="radio" name="upload_type" checked>
+                                    <span class="form-check-label py-20">
+                                        Upload New Data
+                                    </span>
+                                </label>
+                                <label class="form-check form--check">
+                                    <input class="form-check-input" type="radio" name="upload_type">
+                                    <span class="form-check-label py-20">
+                                        Update Existing Data
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <h5 class="text-capitalize mb-3">Import items file</h5>
+                            <div class="uploadDnD">
+                                <div class="form-group inputDnD input_image input_image_edit position-relative">
+                                    <div class="upload-text">
+                                        <div>
+                                            <img src="{{asset('/public/assets/admin/img/bulk-import-3.png')}}" alt="">
+                                        </div>
+                                        <div class="filename">{{translate('Must be Excel files using our Excel template above')}}</div>
+                                    </div>
+                                    <input type="file" name="products_file" class="form-control-file text--primary font-weight-bold action-upload-section-dot-area" id="products_file">
+                                </div>
+                            </div>
+                            
+                        </div>
                     </div>
                     <div class="btn--container justify-content-end mt-3">
                         <button id="reset_btn" type="reset" class="btn btn--reset">{{translate('messages.reset')}}</button>
@@ -226,6 +256,17 @@
     <script src="{{asset('public/assets/admin')}}/js/view-pages/product-import.js"></script>
 <script>
     "use strict";
+
+    $(".action-upload-section-dot-area").on("change", function () {
+        if (this.files && this.files[0]) {
+            let reader = new FileReader();
+            reader.onload = () => {
+                let imgName = this.files[0].name;
+                $(this).closest(".uploadDnD").find('.filename').text(imgName);
+            };
+            reader.readAsDataURL(this.files[0]);
+        }
+    });
 
     $(document).ready(function() {
         @if($module_type== 'food')
