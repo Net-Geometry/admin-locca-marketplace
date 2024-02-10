@@ -48,6 +48,7 @@ class EmployeeController extends BaseController
     {
         $zoneId = $request->query('zone_id', 'all');
         $employees = $this->employeeRepo->getZoneWiseListWhere(searchValue: $request['search'],
+        relations:['role'],
         zoneId: $zoneId,
         dataLimit: config('default_pagination'));
         return view(EmployeeViewPath::INDEX[VIEW], compact('employees'));

@@ -5,8 +5,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
 
-//    Route::get('zone/get-coordinates/{id}', 'ZoneController@get_coordinates')->name('zone.get-coordinates');
-
     Route::group(['middleware' => ['admin', 'current-module']], function () {
         Route::get('get-all-stores', 'VendorController@get_all_stores')->name('get_all_stores');
         Route::get('lang/{locale}', 'LanguageController@lang')->name('lang');
@@ -18,26 +16,8 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
         //dashboard
         Route::get('/', 'DashboardController@dashboard')->name('dashboard');
 
-        // Route::resource('account-transaction', 'AccountTransactionController')->middleware('module:collect_cash');
-        // Route::get('export-account-transaction', 'AccountTransactionController@export_account_transaction')->name('export-account-transaction');
-        // Route::post('search-account-transaction', 'AccountTransactionController@search_account_transaction')->name('search-account-transaction');
-
-        // Route::resource('provide-deliveryman-earnings', 'ProvideDMEarningController')->middleware('module:provide_dm_earning');
-        // Route::get('export-deliveryman-earnings', 'ProvideDMEarningController@dm_earning_list_export')->name('export-deliveryman-earning');
-        // Route::post('deliveryman-earnings-search', 'ProvideDMEarningController@search_deliveryman_earning')->name('search-deliveryman-earning');
         Route::get('maintenance-mode', 'SystemController@maintenance_mode')->name('maintenance-mode');
         Route::get('landing-page', 'SystemController@landing_page')->name('landing-page');
-
-//        Route::get('module/status/{id}/{status}', 'ModuleController@status')->middleware('module:module')->name('module.status');
-//        Route::get('module/type', 'ModuleController@type')->middleware('module:module')->name('module.type');
-//        Route::post('module/search', 'ModuleController@search')->middleware('module:module')->name('module.search');
-//        Route::get('module/export', 'ModuleController@export')->middleware('module:module')->name('module.export');
-//        Route::resource('module', 'ModuleController')->middleware('module:module')->except('show');
-//        Route::get('module/{id}', 'ModuleController@show')->name('show');
-
-//        Route::resource('unit', 'UnitController')->middleware('module:unit');
-//        Route::post('unit/search', 'UnitController@search')->middleware('module:unit')->name('unit.search');
-//        Route::get('unit/export/{type}', 'UnitController@export')->middleware('module:unit')->name('unit.export');
 
         Route::group(['prefix' => 'parcel', 'as' => 'parcel.', 'middleware' => ['module:parcel']], function () {
             Route::get('category/status/{id}/{status}', 'ParcelCategoryController@status')->name('category.status');
@@ -62,24 +42,6 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::post('business-overview', 'DashboardController@business_overview')->name('business-overview');
         });
 
-//        Route::group(['prefix' => 'custom-role', 'as' => 'custom-role.', 'middleware' => ['module:custom_role']], function () {
-//            Route::get('create', 'CustomRoleController@create')->name('create');
-//            Route::post('create', 'CustomRoleController@store');
-//            Route::get('edit/{id}', 'CustomRoleController@edit')->name('edit');
-//            Route::post('update/{id}', 'CustomRoleController@update')->name('update');
-//            Route::delete('delete/{id}', 'CustomRoleController@distroy')->name('delete');
-//            Route::post('search', 'CustomRoleController@search')->name('search');
-//        });
-
-        // Route::group(['prefix' => 'employee', 'as' => 'employee.', 'middleware' => ['module:employee']], function () {
-        //     Route::get('add-new', 'EmployeeController@add_new')->name('add-new');
-        //     Route::post('add-new', 'EmployeeController@store');
-        //     Route::get('list', 'EmployeeController@list')->name('list');
-        //     Route::get('update/{id}', 'EmployeeController@edit')->name('edit');
-        //     Route::post('update/{id}', 'EmployeeController@update')->name('update');
-        //     Route::delete('delete/{id}', 'EmployeeController@distroy')->name('delete');
-        //     Route::post('search', 'EmployeeController@search')->name('search');
-        // });
         Route::post('item/variant-price', 'ItemController@variant_price')->name('item.variant-price');
 
         Route::group(['prefix' => 'item', 'as' => 'item.', 'middleware' => ['module:item']], function () {
@@ -129,17 +91,6 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::post('bulk-export', 'ItemController@bulk_export_data')->name('bulk-export');
         });
 
-//        Route::group(['prefix' => 'banner', 'as' => 'banner.', 'middleware' => ['module:banner']], function () {
-//            Route::get('add-new', 'BannerController@index')->name('add-new');
-//            Route::post('store', 'BannerController@store')->name('store');
-//            Route::get('edit/{banner}', 'BannerController@edit')->name('edit');
-//            Route::post('update/{banner}', 'BannerController@update')->name('update');
-//            Route::get('status/{id}/{status}', 'BannerController@status')->name('status');
-//            Route::get('featured/{id}/{status}', 'BannerController@featured')->name('featured');
-//            Route::delete('delete/{banner}', 'BannerController@delete')->name('delete');
-//            Route::post('search', 'BannerController@search')->name('search');
-//            Route::get('promotional', 'BannerController@other_index')->name('promotional');
-//        });
         Route::group(['prefix' => 'promotional-banner', 'as' => 'promotional-banner.', 'middleware' => ['module:banner']], function () {
             Route::get('add-new', 'OtherBannerController@promotional_index')->name('add-new');
             Route::get('add-video', 'OtherBannerController@promotional_video')->name('add-video');
@@ -180,32 +131,6 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
 
         });
 
-//        Route::group(['prefix' => 'coupon', 'as' => 'coupon.', 'middleware' => ['module:coupon']], function () {
-//            Route::get('add-new', 'CouponController@add_new')->name('add-new');
-//            Route::post('store', 'CouponController@store')->name('store');
-//            Route::get('update/{id}', 'CouponController@edit')->name('update');
-//            Route::post('update/{id}', 'CouponController@update');
-//            Route::get('status/{id}/{status}', 'CouponController@status')->name('status');
-//            Route::delete('delete/{id}', 'CouponController@delete')->name('delete');
-//            Route::get('coupon-export', 'CouponController@coupon_export')->name('coupon_export');
-//            // Route::post('search', 'CouponController@search')->name('search');
-//        });
-
-//        Route::group(['prefix' => 'attribute', 'as' => 'attribute.', 'middleware' => ['module:attribute']], function () {
-//            Route::get('add-new', 'AttributeController@index')->name('add-new');
-//            Route::post('store', 'AttributeController@store')->name('store');
-//            Route::get('edit/{id}', 'AttributeController@edit')->name('edit');
-//            Route::post('update/{id}', 'AttributeController@update')->name('update');
-//            Route::delete('delete/{id}', 'AttributeController@delete')->name('delete');
-//            // Route::post('search', 'AttributeController@search')->name('search');
-//            Route::get('export-attributes', 'AttributeController@export_attributes')->name('export-attributes');
-//
-//            //Import and export
-//            Route::get('bulk-import', 'AttributeController@bulk_import_index')->name('bulk-import');
-//            Route::post('bulk-import', 'AttributeController@bulk_import_data');
-//            Route::get('bulk-export', 'AttributeController@bulk_export_index')->name('bulk-export-index');
-//            Route::post('bulk-export', 'AttributeController@bulk_export_data')->name('bulk-export');
-//        });
 
         Route::group(['prefix' => 'flash-sale', 'as' => 'flash-sale.'], function () {
             Route::get('add-new', 'FlashSaleController@index')->name('add-new');
@@ -225,14 +150,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::post('store/{user_id}', 'ConversationController@store')->name('store');
             Route::get('view/{conversation_id}/{user_id}', 'ConversationController@view')->name('view');
         });
-        Route::group(['prefix' => 'contact', 'as' => 'contact.', 'middleware' => ['module:customer_management']], function () {
-            Route::get('contact-list', 'ContactController@list')->name('contact-list');
-            Route::delete('contact-delete/{id}', 'ContactController@destroy')->name('contact-delete');
-            Route::get('contact-view/{id}', 'ContactController@view')->name('contact-view');
-            Route::post('contact-update/{id}', 'ContactController@update')->name('contact-update');
-            Route::post('contact-send-mail/{id}', 'ContactController@send_mail')->name('contact-send-mail');
-            Route::post('contact-search', 'ContactController@search')->name('contact-search');
-        });
+
 
 
 
@@ -308,56 +226,6 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             return to_route('admin.system-addon.index');
         })->name('addon.index');
 
-//        Route::group(['prefix' => 'addon', 'as' => 'addon.', 'middleware' => ['module:addon']], function () {
-//            Route::get('add-new', 'AddOnController@index')->name('add-new');
-//            Route::post('store', 'AddOnController@store')->name('store');
-//            Route::get('edit/{id}', 'AddOnController@edit')->name('edit');
-//            Route::post('update/{id}', 'AddOnController@update')->name('update');
-//            Route::delete('delete/{id}', 'AddOnController@delete')->name('delete');
-//            Route::get('status/{addon}/{status}', 'AddOnController@status')->name('status');
-//            // Route::post('search', 'AddOnController@search')->name('search');
-//            //Import and export
-//            Route::get('bulk-import', 'AddOnController@bulk_import_index')->name('bulk-import');
-//            Route::post('bulk-import', 'AddOnController@bulk_import_data');
-//            Route::get('bulk-export', 'AddOnController@bulk_export_index')->name('bulk-export-index');
-//            Route::post('bulk-export', 'AddOnController@bulk_export_data')->name('bulk-export');
-//
-//            Route::get('export', 'AddOnController@export')->name('export');
-//        });
-
-       /* Route::group(['prefix' => 'category', 'as' => 'category.'], function () {
-            Route::get('get-all', 'CategoryController@get_all')->name('get-all');
-            Route::group(['middleware' => ['module:category']], function () {
-                Route::get('add', 'CategoryController@index')->name('add');
-                Route::get('add-sub-category', 'CategoryController@sub_index')->name('add-sub-category');
-                Route::get('add-sub-sub-category', 'CategoryController@sub_sub_index')->name('add-sub-sub-category');
-                Route::post('store', 'CategoryController@store')->name('store');
-                Route::get('edit/{id}', 'CategoryController@edit')->name('edit');
-                Route::post('update/{id}', 'CategoryController@update')->name('update');
-                Route::get('update-priority/{category}', 'CategoryController@update_priority')->name('priority');
-                Route::post('store', 'CategoryController@store')->name('store');
-                Route::get('status/{id}/{status}', 'CategoryController@status')->name('status');
-                Route::get('featured/{id}/{featured}', 'CategoryController@featured')->name('featured');
-                Route::delete('delete/{id}', 'CategoryController@delete')->name('delete');
-                // Route::post('search', 'CategoryController@search')->name('search');
-                Route::get('export-categories', 'CategoryController@export_categories')->name('export-categories');
-
-                //Import and export
-                Route::get('bulk-import', 'CategoryController@bulk_import_index')->name('bulk-import');
-                Route::post('bulk-import', 'CategoryController@bulk_import_data');
-                Route::get('bulk-export', 'CategoryController@bulk_export_index')->name('bulk-export-index');
-                Route::post('bulk-export', 'CategoryController@bulk_export_data')->name('bulk-export');
-            });
-        });*/
-//        Route::group(['prefix' => 'common-condition', 'as' => 'common-condition.'], function () {
-//            Route::get('get-all', 'CommonConditionController@get_all')->name('get-all');
-//            Route::get('add', 'CommonConditionController@index')->name('add');
-//            Route::post('store', 'CommonConditionController@store')->name('store');
-//            Route::get('edit/{id}', 'CommonConditionController@edit')->name('edit');
-//            Route::post('update/{id}', 'CommonConditionController@update')->name('update');
-//            Route::get('status/{id}/{status}', 'CommonConditionController@status')->name('status');
-//            Route::delete('delete/{id}', 'CommonConditionController@delete')->name('delete');
-//        });
         Route::get('order/generate-invoice/{id}', 'OrderController@generate_invoice')->name('order.generate-invoice');
         Route::get('order/print-invoice/{id}', 'OrderController@print_invoice')->name('order.print-invoice');
         Route::get('order/status', 'OrderController@status')->name('order.status');
@@ -408,35 +276,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::get('/{status}', 'OrderController@list')->name('refund_attr');
         });
 
-//        Route::group(['prefix' => 'zone', 'as' => 'zone.', 'middleware' => ['module:zone']], function () {
-//            Route::get('/', 'ZoneController@index')->name('home');
-//            Route::post('store', 'ZoneController@store')->name('store');
-//            Route::get('edit/{id}', 'ZoneController@edit')->name('edit');
-//            Route::post('update/{id}', 'ZoneController@update')->name('update');
-//            Route::get('module-setup/{id}', 'ZoneController@module_setup')->name('module-setup');
-//            Route::get('module-setup', 'ZoneController@go_module_setup')->name('go-module-setup');
-//            Route::get('instruction', 'ZoneController@instruction')->name('instruction');
-//            Route::post('module-update/{id}', 'ZoneController@module_update')->name('module-update');
-//            Route::delete('delete/{zone}', 'ZoneController@destroy')->name('delete');
-//            Route::get('status/{id}/{status}', 'ZoneController@status')->name('status');
-//            Route::get('digital-payment/{id}/{digital_payment}', 'ZoneController@digital_payment')->name('digital-payment');
-//            Route::get('cash-on-delivery/{id}/{cash_on_delivery}', 'ZoneController@cash_on_delivery')->name('cash-on-delivery');
-//            Route::get('offline-payment/{id}/{offline_payment}', 'ZoneController@offline_payment')->name('offline-payment');
-//            Route::post('search', 'ZoneController@search')->name('search');
-//            Route::get('export/{type}', 'ZoneController@export')->name('export');
-//            Route::get('zone-filter/{id}', 'ZoneController@zone_filter')->name('zonefilter');
-//            Route::get('get-all-zone-cordinates/{id?}', 'ZoneController@get_all_zone_cordinates')->name('zoneCoordinates');
-//        });
 
-//        Route::group(['prefix' => 'notification', 'as' => 'notification.', 'middleware' => ['module:notification']], function () {
-//            Route::get('add-new', 'NotificationController@index')->name('add-new');
-//            Route::post('store', 'NotificationController@store')->name('store');
-//            Route::get('edit/{id}', 'NotificationController@edit')->name('edit');
-//            Route::post('update/{id}', 'NotificationController@update')->name('update');
-//            Route::get('status/{id}/{status}', 'NotificationController@status')->name('status');
-//            Route::delete('delete/{id}', 'NotificationController@delete')->name('delete');
-//            Route::get('export', 'NotificationController@export')->name('export');
-//        });
 
         Route::group(['prefix' => 'business-settings', 'as' => 'business-settings.', 'middleware' => ['module:settings', 'actch']], function () {
             Route::get('business-setup/{tab?}', 'BusinessSettingsController@business_index')->name('business-setup');
@@ -608,66 +448,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             });
 
         });
-        Route::group(['prefix' => 'business-settings', 'as' => 'business-settings.'], function () {
-            //module
-//            Route::get('module/status/{id}/{status}', 'ModuleController@status')->middleware('module:module')->name('module.status');
-//            Route::get('module/type', 'ModuleController@type')->middleware('module:module')->name('module.type');
-//            Route::post('module/search', 'ModuleController@search')->middleware('module:module')->name('module.search');
-//            Route::get('module/export', 'ModuleController@export')->middleware('module:module')->name('module.export');
-//            Route::resource('module', 'ModuleController')->middleware('module:module');
 
-            //zone
-//            Route::group(['prefix' => 'zone', 'as' => 'zone.', 'middleware' => ['module:zone']], function () {
-//                Route::get('/', 'ZoneController@index')->name('home');
-//                Route::post('store', 'ZoneController@store')->name('store');
-//                Route::get('edit/{id}', 'ZoneController@edit')->name('edit');
-//                Route::post('update/{id}', 'ZoneController@update')->name('update');
-//                Route::get('module-setup/{id}', 'ZoneController@module_setup')->name('module-setup');
-//                Route::post('module-update/{id}', 'ZoneController@module_update')->name('module-update');
-//                Route::delete('delete/{zone}', 'ZoneController@destroy')->name('delete');
-//                Route::get('status/{id}/{status}', 'ZoneController@status')->name('status');
-//                Route::post('search', 'ZoneController@search')->name('search');
-//                Route::get('export/{type}', 'ZoneController@export')->name('export');
-//                Route::get('zone-filter/{id}', 'ZoneController@zone_filter')->name('zonefilter');
-//                Route::get('get-all-zone-cordinates/{id?}', 'ZoneController@get_all_zone_cordinates')->name('zoneCoordinates');
-//            });
-        });
-
-        // Route::group(['prefix' => 'delivery-man', 'as' => 'delivery-man.'], function () {
-        //     Route::get('get-deliverymen', 'DeliveryManController@get_deliverymen')->name('get-deliverymen');
-        //     Route::get('get-account-data/{deliveryman}', 'DeliveryManController@get_account_data')->name('store-filter');
-        //     Route::group(['middleware' => ['module:deliveryman']], function () {
-        //         Route::get('add', 'DeliveryManController@index')->name('add');
-        //         Route::post('store', 'DeliveryManController@store')->name('store');
-        //         Route::get('list', 'DeliveryManController@list')->name('list');
-        //         Route::get('new', 'DeliveryManController@new_delivery_man')->name('new');
-        //         Route::get('deny', 'DeliveryManController@deny_delivery_man')->name('deny');
-        //         Route::get('preview/{id}/{tab?}', 'DeliveryManController@preview')->name('preview');
-        //         Route::get('status/{id}/{status}', 'DeliveryManController@status')->name('status');
-        //         Route::get('earning/{id}/{status}', 'DeliveryManController@earning')->name('earning');
-        //         Route::get('update-application/{id}/{status}', 'DeliveryManController@update_application')->name('application');
-        //         Route::get('edit/{id}', 'DeliveryManController@edit')->name('edit');
-        //         Route::post('update/{id}', 'DeliveryManController@update')->name('update');
-        //         Route::delete('delete/{id}', 'DeliveryManController@delete')->name('delete');
-        //         Route::post('search', 'DeliveryManController@search')->name('search');
-        //         Route::get('review-export', 'DeliveryManController@review_export')->name('review-export');
-        //         Route::get('earning-export', 'DeliveryManController@earning_export')->name('earning-export');
-
-        //         Route::get('export', 'DeliveryManController@export')->name('export');
-
-        //         Route::group(['prefix' => 'reviews', 'as' => 'reviews.'], function () {
-        //             Route::get('list', 'DeliveryManController@reviews_list')->name('list');
-        //             Route::get('export', 'DeliveryManController@reviews_export')->name('export');
-        //             Route::post('search', 'DeliveryManController@review_search')->name('search');
-        //             Route::get('status/{id}/{status}', 'DeliveryManController@reviews_status')->name('status');
-        //         });
-
-        //         // message
-        //         Route::get('message/{conversation_id}/{user_id}', 'DeliveryManController@conversation_view')->name('message-view');
-        //         Route::get('{user_id}/message/list', 'DeliveryManController@conversation_list')->name('message-list');
-        //         Route::get('messages/details', 'DeliveryManController@get_conversation_list')->name('message-list-search');
-        //     });
-        // });
         // Subscribed customer Routes
         Route::group(['prefix' => 'customer', 'as' => 'customer.'], function () {
 
@@ -797,53 +578,9 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
 
         Route::group(['prefix' => 'users', 'as' => 'users.'], function () {
             Route::get('/', 'DashboardController@user_dashboard')->name('dashboard');
-            // Route::group(['prefix' => 'delivery-man', 'as' => 'delivery-man.'], function () {
-            //     Route::get('get-deliverymen', 'DeliveryManController@get_deliverymen')->name('get-deliverymen');
-            //     Route::get('get-account-data/{deliveryman}', 'DeliveryManController@get_account_data')->name('store-filter');
-            //     Route::group(['middleware' => ['module:deliveryman']], function () {
-            //         Route::get('add', 'DeliveryManController@index')->name('add');
-            //         Route::post('store', 'DeliveryManController@store')->name('store');
-            //         Route::get('list', 'DeliveryManController@list')->name('list');
-            //         Route::get('new', 'DeliveryManController@new_delivery_man')->name('new');
-            //         Route::get('deny', 'DeliveryManController@deny_delivery_man')->name('deny');
-            //         Route::get('preview/{id}/{tab?}', 'DeliveryManController@preview')->name('preview');
-            //         Route::get('status/{id}/{status}', 'DeliveryManController@status')->name('status');
-            //         Route::get('earning/{id}/{status}', 'DeliveryManController@earning')->name('earning');
-            //         Route::get('update-application/{id}/{status}', 'DeliveryManController@update_application')->name('application');
-            //         Route::get('edit/{id}', 'DeliveryManController@edit')->name('edit');
-            //         Route::post('update/{id}', 'DeliveryManController@update')->name('update');
-            //         Route::delete('delete/{id}', 'DeliveryManController@delete')->name('delete');
-            //         Route::post('search', 'DeliveryManController@search')->name('search');
-            //         Route::post('active-search', 'DeliveryManController@active_search')->name('active-search');
-
             Route::get('disbursement-export/{id}/{type}', 'DeliveryManController@disbursement_export')->name('disbursement-export');
             Route::get('export', 'DeliveryManController@export')->name('export');
-            //         Route::get('export', 'DeliveryManController@export')->name('export');
 
-            //         Route::group(['prefix' => 'reviews', 'as' => 'reviews.'], function () {
-            //             Route::get('list', 'DeliveryManController@reviews_list')->name('list');
-            //             Route::post('search', 'DeliveryManController@review_search')->name('search');
-            //             Route::get('status/{id}/{status}', 'DeliveryManController@reviews_status')->name('status');
-            //         });
-
-            //         // message
-            //         Route::get('message/{conversation_id}/{user_id}', 'DeliveryManController@conversation_view')->name('message-view');
-            //         Route::get('{user_id}/message/list', 'DeliveryManController@conversation_list')->name('message-list');
-            //         Route::get('messages/details', 'DeliveryManController@get_conversation_list')->name('message-list-search');
-
-            //         // Route::group(['prefix' => 'vehicle', 'as' => 'vehicle.'], function () {
-            //         //     Route::get('list', 'DmVehicleController@list')->name('list');
-            //         //     Route::get('add', 'DmVehicleController@create')->name('create');
-            //         //     Route::get('status/{vehicle}/{status}', 'DmVehicleController@status')->name('status');
-            //         //     Route::get('edit/{id}', 'DmVehicleController@edit')->name('edit');
-            //         //     Route::post('store', 'DmVehicleController@store')->name('store');
-            //         //     Route::post('update/{vehicle}', 'DmVehicleController@update')->name('update');
-            //         //     Route::delete('delete', 'DmVehicleController@destroy')->name('delete');
-            //         //     Route::get('view/{vehicle}', 'DmVehicleController@view')->name('view');
-
-            //         // });
-            //     });
-            // });
             // Subscribed customer Routes
             Route::group(['prefix' => 'customer', 'as' => 'customer.'], function () {
 
@@ -854,15 +591,6 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                     Route::post('set-date', 'CustomerWalletController@set_date')->name('set-date');
                     Route::get('report', 'CustomerWalletController@report')->name('report');
                     Route::get('export', 'CustomerWalletController@export')->name('export');
-                    // Route::group(['prefix' => 'bonus', 'as' => 'bonus.'], function () {
-                    //     Route::get('add-new', 'WalletBonusController@add_new')->name('add-new');
-                    //     Route::post('store', 'WalletBonusController@store')->name('store');
-                    //     Route::get('update/{id}', 'WalletBonusController@edit')->name('update');
-                    //     Route::post('update/{id}', 'WalletBonusController@update');
-                    //     Route::get('status/{id}/{status}', 'WalletBonusController@status')->name('status');
-                    //     Route::delete('delete/{id}', 'WalletBonusController@delete')->name('delete');
-                    //     Route::post('search', 'WalletBonusController@search')->name('search');
-                    // });
                 });
 
                 Route::group(['middleware' => ['module:customer_management']], function () {
@@ -891,6 +619,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             });
             Route::group(['prefix' => 'contact', 'as' => 'contact.', 'middleware' => ['module:customer_management']], function () {
                 Route::get('contact-list', 'ContactController@list')->name('contact-list');
+                Route::get('contact-list-export', 'ContactController@exportList')->name('exportList');
                 Route::delete('contact-delete/{id}', 'ContactController@destroy')->name('contact-delete');
                 Route::get('contact-view/{id}', 'ContactController@view')->name('contact-view');
                 Route::post('contact-update/{id}', 'ContactController@update')->name('contact-update');
@@ -898,25 +627,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                 Route::post('contact-search', 'ContactController@search')->name('contact-search');
             });
 
-            // Route::group(['prefix' => 'custom-role', 'as' => 'custom-role.', 'middleware' => ['module:custom_role']], function () {
-            //     Route::get('create', 'CustomRoleController@create')->name('create');
-            //     Route::post('create', 'CustomRoleController@store');
-            //     Route::get('edit/{id}', 'CustomRoleController@edit')->name('edit');
-            //     Route::post('update/{id}', 'CustomRoleController@update')->name('update');
-            //     Route::delete('delete/{id}', 'CustomRoleController@distroy')->name('delete');
-            //     Route::post('search', 'CustomRoleController@search')->name('search');
-            // });
 
-            // Route::group(['prefix' => 'employee', 'as' => 'employee.', 'middleware' => ['module:employee']], function () {
-            //     Route::get('add-new', 'EmployeeController@add_new')->name('add-new');
-            //     Route::post('add-new', 'EmployeeController@store');
-            //     Route::get('list', 'EmployeeController@list')->name('list');
-            //     Route::get('update/{id}', 'EmployeeController@edit')->name('edit');
-            //     Route::post('update/{id}', 'EmployeeController@update')->name('update');
-            //     Route::delete('delete/{id}', 'EmployeeController@distroy')->name('delete');
-            //     Route::post('search', 'EmployeeController@search')->name('search');
-            //     Route::get('export', 'EmployeeController@export')->name('export');
-            // });
         });
         Route::group(['prefix' => 'transactions', 'as' => 'transactions.'], function () {
             Route::get('/', 'DashboardController@transaction_dashboard')->name('dashboard');
@@ -961,7 +672,6 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                 Route::get('disbursement-report-export/{type}/{tab?}', 'ReportController@disbursement_report_export')->name('disbursement_report_export');
             });
 
-            // Route::resource('account-transaction', 'AccountTransactionController')->middleware('module:collect_cash');
             Route::group(['prefix' => 'account-transaction', 'as' => 'account-transaction.', 'middleware' => ['module:collect_cash']], function () {
                 Route::get('list', 'AccountTransactionController@index')->name('index');
                 Route::post('store', 'AccountTransactionController@store')->name('store');
@@ -977,8 +687,6 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::post('deliveryman-earnings-search', 'ProvideDMEarningController@search_deliveryman_earning')->name('search-deliveryman-earning');
 
             Route::group(['prefix' => 'store', 'as' => 'store.'], function () {
-                // Route::group(function () {
-                // Route::group(['middleware' => ['module:withdraw_list']], function () {
                 Route::get('view/{store}/{tab?}/{sub_tab?}', 'VendorController@view')->name('view');
                 Route::post('status-filter', 'VendorController@status_filter')->name('status-filter');
                 Route::post('withdraw-status/{id}', 'VendorController@withdrawStatus')->name('withdraw_status');
@@ -987,7 +695,6 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                 Route::get('withdraw_export', 'VendorController@withdraw_export')->name('withdraw_export');
                 Route::get('withdraw-view/{withdraw_id}/{seller_id}', 'VendorController@withdraw_view')->name('withdraw_view');
                 Route::get('get-Withdraw-Details', 'VendorController@getWithdrawDetails')->name('getWithdrawDetails');
-                // });
 
             });
 

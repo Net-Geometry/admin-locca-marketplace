@@ -4092,4 +4092,6 @@
   'You_can’t_reply_to_this_conversation.' => 'You can’t reply to this conversation.',
   'Learn_more' => 'Learn more',
   'You_can’t_chat_in_deliveryman_chat_because_it’s_delivery_man_previous_chat_history_only_you_can_monitor_or_view_their_conversation_to_avoid_unexpected_situation.' => 'You can’t chat in deliveryman chat because it’s delivery man previous chat history only you can monitor or view their conversation to avoid unexpected situation.',
+  'Employee_image' => 'Employee image',
+  'role_deleted' => 'Role deleted',
 );
