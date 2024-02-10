@@ -1710,6 +1710,7 @@ select.form-control {
 .img--110,
 .img--120,
 .img--130,
+.img--133,
 .img--200 {
     aspect-ratio: 1;
     -o-object-fit: cover;
@@ -1728,6 +1729,10 @@ select.form-control {
 
 .img--130 {
     width: 130px;
+}
+
+.img--133 {
+    width: 133px;
 }
 
 .img--120 {
