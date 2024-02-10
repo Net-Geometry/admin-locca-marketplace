@@ -126,8 +126,7 @@
                                 </div>
                                 <div class="col-sm-12">
                                     <div class="form-group mb-0">
-                                        <label class="input-label"
-                                            for="exampleFormControlInput1">{{ translate('messages.identity_image') }}</label>
+                                        <label class="input-label">{{ translate('messages.identity_image') }}</label>
                                         <div>
                                             <div class="row" id="coba"></div>
                                         </div>
@@ -181,14 +180,19 @@
                             <div class="row d-flex">
                                 <div class="col-lg-6">
                                     <div class="form-group pt-3 mb-5">
-                                        <img class="__register-img mb-3" id="viewer"
-                                            src="{{ asset('public/assets/admin/img/400x400/img2.jpg') }}"
-                                            alt="delivery-man image" />
                                         <label  class="input-label">{{ translate('messages.deliveryman_image') }}<small
                                             class="text-danger">* ( {{ translate('messages.ratio') }} 1:1 )</small></label>
-                                        <div class="custom-file">
-                                            <input type="file" name="image" id="customFileEg1" class="form-control __form-control"
-                                                accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*" required>
+                                        <div class="position-relative">
+                                            <img class="__register-img mb-3 image--border h-140px" id="viewer"
+                                                src="{{ asset('public/assets/admin/img/upload-img.png') }}"
+                                                alt="delivery-man image" />
+                                            <div class="icon-file-group">
+                                                <label class="icon-file">
+                                                    <input type="file" name="image" id="customFileEg1" class="form-control __form-control"
+                                                    accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*" required>
+                                                    <img src="{{asset('/public/assets/admin/img/pen.png')}}" alt="">
+                                                </label>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -283,8 +287,8 @@
                 groupClassName: 'col-lg-2 col-md-4 col-sm-4 col-6',
                 maxFileSize: '',
                 placeholderImage: {
-                    image: '{{ asset('public/assets/admin/img/400x400/img2.jpg') }}',
-                    width: '100%'
+                    image: '{{ asset('public/assets/admin/img/upload-img.png') }}',
+                    width: '100%',
                 },
                 dropFileLabel: "Drop Here",
                 onAddRow: function(index, file) {

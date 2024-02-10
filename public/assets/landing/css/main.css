@@ -3187,4 +3187,15 @@ input::-webkit-inner-spin-button {
 }
 .bg-F8F9FC .card-header {
   border-color: #d0dbe9;
+}
+
+.spartan_item_wrapper img {
+  width: 100% !important;
+  height: 100% !important;
+  -o-object-fit: cover !important;
+     object-fit: cover !important;
+}
+
+.h-140px {
+  height: 140px !important;
 }/*# sourceMappingURL=main.css.map */

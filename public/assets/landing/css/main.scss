@@ -3354,3 +3354,13 @@ input::-webkit-inner-spin-button {
         border-color: #d0dbe9;
     }
 }
+.spartan_item_wrapper {
+    img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+    }
+}
+.h-140px {
+    height: 140px !important;
+}
