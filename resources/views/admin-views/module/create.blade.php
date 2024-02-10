@@ -150,15 +150,15 @@
         <h5 class="mb-3">{{translate('module_setup')}}</h5>
         <div class="card">
             <div class="card-body">
-                <div class="row">
+                <div class="row g-3">
                     <div class="col-lg-6">
-                    <h6 class="mb-3">{{translate('select_business_module_type')}}</h6>
-                    <div class="card">
-                        <div class="card-body p-0">
-                            <div class="module-radio-group">
+                        <h6 class="mb-3">{{translate('select_business_module_type')}}</h6>
+                        <div class="card">
+                            <div class="card-body p-0">
+                                <div class="module-radio-group">
                                 @foreach (config('module.module_type') as $key)
                                 <label class="form-check form--check">
-                                    <input class="form-check-input" type="radio" value="deliveryman" name="module_type" value="{{$key}}">
+                                    <input class="form-check-input" type="radio" name="module_type" value="{{$key}}">
                                     <span class="form-check-label">
                                         {{translate($key)}}
                                     </span>
