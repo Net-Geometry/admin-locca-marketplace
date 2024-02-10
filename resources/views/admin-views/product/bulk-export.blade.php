@@ -20,21 +20,57 @@
         </div>
         <div class="card mt-2 rest-part">
             <div class="card-body">
-                <div class="export-steps">
-                    <div class="export-steps-item">
-                        <div class="inner">
-                            <h5>{{translate('STEP 1')}}</h5>
-                            <p>
-                                {{translate('Select Data Type')}}
-                            </p>
+                <div class="export-steps-2">
+                    <div class="row g-4">
+                        <div class="col-sm-6 col-lg-4">
+                            <div class="export-steps-item-2 h-100">
+                                <div class="top">
+                                    <div>
+                                        <h3 class="font-regular">{{translate('Step 1')}}</h3>
+                                        <div>
+                                            {{translate('Select Data Type')}}
+                                        </div>
+                                    </div>
+                                    <img src="{{asset('/public/assets/admin/img/bulk-export-1.png')}}" alt="">
+                                </div>
+                                <h4>Instruction</h4>
+                                <ul class="m-0 pl-4">
+                                    <li>
+                                        Download the format file and fill it with proper data.
+                                    </li>
+                                    <li>
+                                        You can download the example file to understand how the data must be filled.
+                                    </li>
+                                    <li>
+                                        Have to upload zip file
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
-                    </div>
-                    <div class="export-steps-item">
-                        <div class="inner">
-                            <h5>{{translate('STEP 2')}}</h5>
-                            <p>
-                                {{translate('Select Data Range by Date or ID and Export')}}
-                            </p>
+                        <div class="col-sm-6 col-lg-4">
+                            <div class="export-steps-item-2 h-100">
+                                <div class="top">
+                                    <div>
+                                        <h3 class="font-regular">{{translate('Step 2')}}</h3>
+                                        <div>
+                                            {{translate('Select Data Range by Date or ID and Export')}}
+                                        </div>
+                                    </div>
+                                    <img src="{{asset('/public/assets/admin/img/bulk-export-2.png')}}" alt="">
+                                </div>
+                                <h4>Instruction</h4>
+                                <ul class="m-0 pl-4">
+                                    <li>
+                                        Download the format file and fill it with proper data.
+                                    </li>
+                                    <li>
+                                        You can download the example file to understand how the data must be filled.
+                                    </li>
+                                    <li>
+                                        Have to upload zip file
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>

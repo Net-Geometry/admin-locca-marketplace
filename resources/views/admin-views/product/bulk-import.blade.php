@@ -22,67 +22,105 @@
         <!-- Content Row -->
         <div class="card">
             <div class="card-body">
-                <div class="export-steps style-2">
-                    <div class="export-steps-item">
-                        <div class="inner">
-                            <h5>{{translate('STEP 1')}}</h5>
-                            <p>
-                                {{translate('Download Excel File')}}
-                            </p>
+                <div class="export-steps-2">
+                    <div class="row g-4">
+                        <div class="col-sm-6 col-lg-4">
+                            <div class="export-steps-item-2 h-100">
+                                <div class="top">
+                                    <div>
+                                        <h3 class="font-regular">{{translate('Step 1')}}</h3>
+                                        <div>
+                                            {{translate('Download Excel File')}}
+                                        </div>
+                                    </div>
+                                    <img src="{{asset('/public/assets/admin/img/bulk-import-1.png')}}" alt="">
+                                </div>
+                                <h4>Instruction</h4>
+                                <ul class="m-0 pl-4">
+                                    <li>
+                                        Download the format file and fill it with proper data.
+                                    </li>
+                                    <li>
+                                        You can download the example file to understand how the data must be filled.
+                                    </li>
+                                    <li>
+                                        Have to upload zip file
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-lg-4">
+                            <div class="export-steps-item-2 h-100">
+                                <div class="top">
+                                    <div>
+                                        <h3 class="font-regular">{{translate('Step 2')}}</h3>
+                                        <div>
+                                            {{translate('Match Spread sheet data according to instruction')}}
+                                        </div>
+                                    </div>
+                                    <img src="{{asset('/public/assets/admin/img/bulk-import-2.png')}}" alt="">
+                                </div>
+                                <h4>Instruction</h4>
+                                <ul class="m-0 pl-4">
+                                    <li>
+                                        Download the format file and fill it with proper data.
+                                    </li>
+                                    <li>
+                                        You can download the example file to understand how the data must be filled.
+                                    </li>
+                                    <li>
+                                        Have to upload zip file
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-lg-4">
+                            <div class="export-steps-item-2 h-100">
+                                <div class="top">
+                                    <div>
+                                        <h3 class="font-regular">{{translate('Step 3')}}</h3>
+                                        <div>
+                                            {{translate('Validate data and complete import')}}
+                                        </div>
+                                    </div>
+                                    <img src="{{asset('/public/assets/admin/img/bulk-import-3.png')}}" alt="">
+                                </div>
+                                <h4>Instruction</h4>
+                                <ul class="m-0 pl-4">
+                                    <li>
+                                        Download the format file and fill it with proper data.
+                                    </li>
+                                    <li>
+                                        You can download the example file to understand how the data must be filled.
+                                    </li>
+                                    <li>
+                                        Have to upload zip file
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
-                    <div class="export-steps-item">
-                        <div class="inner">
-                            <h5>{{translate('STEP 2')}}</h5>
-                            <p>
-                                {{translate('Match Spread sheet data according to instruction')}}
-                            </p>
-                        </div>
-                    </div>
-                    <div class="export-steps-item">
-                        <div class="inner">
-                            <h5>{{translate('STEP 3')}}</h5>
-                            <p>
-                                {{translate('Validate data and complete import')}}
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="jumbotron pt-1 mb-0 pb-4 bg-white">
-                    <h3>{{ translate('messages.Instructions') }} : </h3>
-                    <p>{{ translate('1. Download the format file and fill it with proper data.') }}</p>
-
-                    <p>{{ translate('2. You can download the example file to understand how the data must be filled.') }}</p>
-
-                    <p>{{ translate('3. Once you have downloaded and filled the format file, upload it in the form below and submit.') }}</p>
-                    <p>{{ translate('4. You can get store id, module id and unit id from their list, please input the right ids.') }}</p>
-
-                    <p>{{ translate('5. For ecommerce item avaliable time start and end will be 00:00:00 and 23:59:59') }}</p>
-
-                    <p>{{ translate('6. You can upload your product images in product folder from gallery, and copy image`s path.') }}</p>
-
                 </div>
                 <div class="text-center pb-4">
-                    <h3 class="mb-3 export--template-title">{{translate('download_spreadsheet_template')}}</h3>
+                    <h3 class="mb-3 export--template-title font-regular">{{translate('download_spreadsheet_template')}}</h3>
                     <div class="btn--container justify-content-center export--template-btns">
                         @if($module_type== 'food')
-                        <a href="{{asset('public/assets/foods_bulk_format.xlsx')}}" download="" class="btn btn-dark">{{translate('template_with_existing_data')}}</a>
+                        <a href="{{asset('public/assets/foods_bulk_format.xlsx')}}" download="" class="btn btn--primary btn-outline-primary">{{translate('With Current Data')}}</a>
                         @else
-                        <a href="{{asset('public/assets/items_bulk_format.xlsx')}}" download="" class="btn btn-dark">{{translate('template_with_existing_data')}}</a>
+                        <a href="{{asset('public/assets/items_bulk_format.xlsx')}}" download="" class="btn btn--primary btn-outline-primary">{{translate('With Current Data')}}</a>
                             @endif
-                        <a href="{{asset('public/assets/items_bulk_format_nodata.xlsx')}}" download="" class="btn btn-dark">{{translate('template_without_data')}}</a>
+                        <a href="{{asset('public/assets/items_bulk_format_nodata.xlsx')}}" download="" class="btn btn--primary">{{translate('Without Any Data')}}</a>
                     </div>
                 </div>
             </div>
         </div>
-
+        <br>
         <form class="product-form" id="import_form" action="{{route('admin.item.bulk-import')}}" method="POST"
                 enctype="multipart/form-data">
             @csrf
             <input type="hidden" name="button" id="btn_value">
             <div class="card mt-2 rest-part">
                 <div class="card-body">
-                    <h4 class="mb-3">{{translate('messages.import_items_file')}}</h4>
                     <div class="custom-file custom--file">
                         <input type="file" name="products_file" class="form-control" id="products_file">
                         <label class="custom-file-label" for="products_file">{{ translate('messages.Choose File') }}</label>
@@ -95,7 +133,6 @@
                 </div>
             </div>
         </form>
-
         <form action="javascript:" method="post" id="item_form" enctype="multipart/form-data">
             <div id="food_variation_section" style="display: none">
                 <div class="card mt-2 rest-part">
@@ -110,35 +147,46 @@
                                 <div id="add_new_option">
                                 </div>
                                 <br>
-                                <div class="mt-2">
-                                    <a class="btn btn-outline-success"
+                                <div class="mt-2 text-center">
+                                    <a class="btn btn--primary"
                                         id="add_new_option_button">{{ translate('add_new_variation') }}</a>
                                 </div> <br><br>
                             </div>
                         </div>
                         <div class="btn--container justify-content-end mb-3">
-                            <button type="submit" class="btn btn--primary">{{translate('generate')}}</button>
+                            <button type="submit" class="btn btn--warning">{{translate('Generate Value')}}</button>
                         </div>
                         <textarea name="" id="food_variation_outpot" class="form-control" rows="5" readonly></textarea>
                     </div>
                 </div>
             </div>
         </form>
+        <br>
         <form action="javascript:" method="post" id="item_form_2" enctype="multipart/form-data">
             <div id="attribute_section" style="display: none">
+                <h4 class="mb-3">{{translate('Generate Variation')}}</h4>
                 <div class="card card mt-2 rest-part">
-                    <div class="card-header">
-                        <h5 class="card-title">
-                            <span>{{ translate('variations') }}</span>
-                        </h5>
+                    <div class="card-header border-0 p-0">
+                        <div class="alert w-100 alert-soft-primary alert-dismissible fade show d-flex m-0" role="alert">
+                            <div>
+                                <img src="{{asset('/public/assets/admin/img/icons/intel.png')}}" width="22" alt="">
+                            </div>
+                            <div class="w-0 flex-grow-1 pl-3">
+                                <strong>Holy guacamole!</strong> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
+                            </div>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
                     </div>
-                    <div class="card-body pb-0">
+                    <div class="card-body">
+                        <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+                            <label class="input-label m-0">{{ translate('messages.attribute') }}<span class="input-label-secondary"></span></label>
+                            <button type="submit" class="btn btn--primary">{{translate('generate value')}}</button>
+                        </div>
                         <div class="row g-2">
-                            <div class="col-12">
+                            <div class="col-lg-6">
                                 <div class="form-group mb-0">
-                                    <label class="input-label"
-                                        for="exampleFormControlSelect1">{{ translate('messages.attribute') }}<span
-                                            class="input-label-secondary"></span></label>
                                     <select name="attribute_id[]" id="choice_attributes"
                                         class="form-control js-select2-custom" multiple="multiple">
                                         @foreach (\App\Models\Attribute::orderBy('name')->get() as $attribute)
@@ -146,21 +194,11 @@
                                         @endforeach
                                     </select>
                                 </div>
-                            </div>
-
-                            <div class="col-md-12">
-                                <div class="customer_choice_options" id="customer_choice_options">
-
+                                <div class="customer_choice_options pt-3" id="customer_choice_options">
                                 </div>
                             </div>
-                            <div class="col-md-12">
+                            <div class="col-lg-12">
                                 <div class="variant_combination" id="variant_combination">
-
-                                </div>
-                            </div>
-                            <div class="col-md-12">
-                                <div class="btn--container justify-content-end mb-3">
-                                    <button type="submit" class="btn btn--primary">{{translate('generate')}}</button>
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -176,7 +214,6 @@
                                 <textarea name="" id="attributes" class="form-control" rows="5" readonly></textarea>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -254,14 +291,14 @@
 
                                     <div class="col-md-4">
                                         <label class="d-md-block d-none">&nbsp;</label>
-                                            <div class="d-flex align-items-center justify-content-between">
-                                            <div>
-                                                <input id="options[` + count + `][required]" name="options[` +
+                                            <div class="d-flex align-items-center justify-content-between pt-2">
+                                            <div class="form-check form--check">
+                                                <input class="form-check-input" id="options[` + count + `][required]" name="options[` +
                 count + `][required]" type="checkbox">
                                                 <label for="options[` + count + `][required]" class="m-0">{{ translate('Required') }}</label>
                                             </div>
                                             <div>
-                                                <button type="button" class="btn btn-danger btn-sm delete_input_button"
+                                                <button type="button" class="btn btn-outline-danger btn-sm delete_input_button"
                                                     title="{{ translate('Delete') }}">
                                                     <i class="tio-add-to-trash"></i>
                                                 </button>
@@ -273,7 +310,7 @@
                         </div>
 
                         <div id="option_price_` + count + `" >
-                            <div class="border rounded p-3 pb-0 mt-3">
+                            <div class="__bg-F8F9FC-card border rounded p-3 pb-0 mt-3">
                                 <div  id="option_price_view_` + count + `">
                                     <div class="row g-3 add_new_view_row_class mb-3">
                                         <div class="col-md-4 col-sm-6">
@@ -289,10 +326,10 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row mt-3 p-3 mr-1 d-flex "  id="add_new_button_` + count +
+                                <div id="add_new_button_` + count +
                 `">
-                                   <button type="button" class="btn btn--primary btn-outline-primary add_new_row_button" data-count="`+
-                count +`" >{{ translate('Add_New_Option') }}</button>
+                                   <button type="button" class="text-success bg-transparent border-0 p-0 add_new_row_button" data-count="`+
+                count +`" > <i class="tio-add-square"></i> {{ translate('Add_New_Option') }}</button>
                                 </div>
                             </div>
                         </div>

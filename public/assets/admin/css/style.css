@@ -3722,6 +3722,8 @@ td .amount--input {
     background-color: #fff;
     border: 0.0625rem solid #e7eaf3;
     border-radius: 0.3125rem;
+    border-radius: 6px;
+    padding-inline: 16px;
 }
 
 .quick--address-bar {
@@ -11721,6 +11723,27 @@ body > .initial-38-1 {
 .bg-F1E8FA {
     background: #f1e8fa !important;
 }
+.__dashboard-card.bg-F1E8FA .meter {
+    background: #fdfcff !important;
+}
+.__dashboard-card.bg-F1E8FA .meter span {
+    background: #d0b4ec !important;
+}
 .top-50px {
     top: 50px !important;
+}
+.export-steps-2 {
+    margin-bottom: 32px;
+}
+.export-steps-item-2 {
+    border-radius: 10px;
+    border: 1px solid rgba(51, 66, 87, 0.1);
+    background: #fff;
+    padding: 30px;
+}
+.export-steps-item-2 .top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
 }
