@@ -154,7 +154,7 @@
 
         <div class="row button--bottom-fixed g-1 bg-white">
             <div class="col-sm-6">
-                <button type="submit" class="btn h-100  btn-outline-danger place-order-submit btn-block">{{ translate('messages.cancel_order') }} </button>
+                <button type="button" class="btn h-100  btn-outline-danger btn-block empty-Cart">{{ translate('messages.Clear Cart') }} </button>
             </div>
             <div class="col-sm-6">
                 <button type="submit" class="btn  btn--primary place-order-submit btn-block">{{ translate('messages.place_order') }} </button>
@@ -205,18 +205,15 @@
                                     value="{{ $old ? $old['contact_person_number'] : '' }}"  placeholder="{{ translate('messages.Ex :') }} +3264124565">
                             </div>
                             <div class="col-md-6">
-                                <label class="input-label" for="road">{{ translate('messages.Road') }}<span
-                                                class="input-label-secondary text-danger">*</span></label>
+                                <label class="input-label" for="road">{{ translate('messages.Road') }}</label>
                                 <input id="road" type="text" class="form-control" name="road" value="{{ $old ? $old['road'] : '' }}"  placeholder="{{ translate('messages.Ex :') }} 4th">
                             </div>
                             <div class="col-md-3">
-                                <label  class="input-label" for="house">{{ translate('messages.House') }}<span
-                                                class="input-label-secondary text-danger">*</span></label>
+                                <label  class="input-label" for="house">{{ translate('messages.House') }}</label>
                                 <input id="house" type="text" class="form-control" name="house" value="{{ $old ? $old['house'] : '' }}" placeholder="{{ translate('messages.Ex :') }} 45/C">
                             </div>
                             <div class="col-md-3">
-                                <label class="input-label" for="floor">{{ translate('messages.Floor') }}<span
-                                                class="input-label-secondary text-danger">*</span></label>
+                                <label class="input-label" for="floor">{{ translate('messages.Floor') }}</label>
                                 <input id="floor" type="text" class="form-control" name="floor" value="{{ $old ? $old['floor'] : '' }}"  placeholder="{{ translate('messages.Ex :') }} 1A">
                             </div>
                         </div>
@@ -245,7 +242,7 @@
                                             <span class="text-danger">*</span>
                                             {{ translate(' pin the address in the map to calculate delivery fee') }}
                                         </div>
-                                        <div>
+                                        <div class="btn btn--primary text-white">
                                             <input type="hidden" name="distance" id="distance">
                                             <span>{{ translate('Delivery fee') }} :</span>
                                             <input type="hidden" name="delivery_fee" id="delivery_fee" value="{{ $old ? $old['delivery_fee'] : '' }}">

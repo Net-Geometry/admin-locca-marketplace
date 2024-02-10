@@ -251,8 +251,10 @@ class DeliveryManController extends BaseController
     public function getReviewListView(Request $request): View
     {
         $filter=$request['deliveryman_id'] && is_numeric($request['deliveryman_id'])  ?  ['delivery_man_id' => $request['deliveryman_id'] ] : [];
-        $reviews = $this->dmReviewRepo->getListWhere(searchValue: $request['search'],
-        filters:$filter ,relations: ['delivery_man','customer'],dataLimit: config('default_pagination'));
+        $orderBy=$request['order_by'] && isset($request['order_by']) && in_array($request['order_by'],['asc','desc']) ?  ['col' => 'rating' ,'type' => $request['order_by'] ] : [];
+        $reviews = $this->dmReviewRepo->getListWhereOrder(searchValue: $request['search'],
+        filters:$filter ,relations: ['delivery_man','customer','order'],dataLimit: config('default_pagination') ,orderBy: $orderBy);
+
         return view(DeliveryManViewPath::REVIEW_LIST[VIEW],compact('reviews'));
     }
 

@@ -971,7 +971,7 @@ class VendorController extends Controller
         $denied = session()->has('withdraw_status_filter') && session('withdraw_status_filter') == 'denied' ? 1 : 0;
         $pending = session()->has('withdraw_status_filter') && session('withdraw_status_filter') == 'pending' ? 1 : 0;
 
-        $withdraw_req =WithdrawRequest::with(['vendor'])
+        $withdraw_req =WithdrawRequest::with(['vendor.stores'])
             ->when($all, function ($query) {
                 return $query;
             })
@@ -1046,6 +1046,14 @@ class VendorController extends Controller
         } else if ($request->type == 'csv') {
             return Excel::download(new StoreWithdrawTransactionExport($data), 'WithdrawRequests.csv');
         }
+    }
+
+    public function getWithdrawDetails(Request $request)
+    {
+        $withdraw = WithdrawRequest::with(['vendor.stores'])->where(['id' => $request->withdraw_id])->first();
+        return response()->json([
+            'view' => view('admin-views.wallet.partials._side_view', compact('withdraw'))->render(),
+        ]);
     }
 
     public function withdraw_search(Request $request){

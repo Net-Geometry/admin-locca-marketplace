@@ -495,21 +495,26 @@
         const input = document.getElementById('inputFile');
         const video = document.getElementById('video-preview');
         const videoSource = document.createElement('source');
+
         input.addEventListener('change', function() {
             const files = this.files || [];
+
             if (!files.length) return;
+
             const reader = new FileReader()
             video.innerHTML = ""
             input.setAttribute('data-title', files[0].name);
-            reader.onload = function(e) {
+            reader.onload = function (e) {
                 videoSource.setAttribute('src', e.target.result);
                 video.appendChild(videoSource);
                 video.load();
                 video.play();
             };
-            reader.onprogress = function(e) {
+
+            reader.onprogress = function (e) {
                 console.log('progress: ', Math.round((e.loaded * 100) / e.total));
             };
+
             reader.readAsDataURL(files[0]);
         });
     </script>

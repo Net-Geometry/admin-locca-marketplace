@@ -13,38 +13,41 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithColumnWidths;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
-use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 
 
-class ItemReportExport implements  FromView, ShouldAutoSize, WithStyles,WithColumnWidths ,WithHeadings, WithEvents
+class ContactMessageExport implements  FromView, ShouldAutoSize, WithStyles,WithColumnWidths ,WithHeadings, WithEvents
 {
 
     use Exportable;
     protected $data;
+    protected $search;
+    // protected $search;
 
-    public function __construct($data) {
+    public function __construct($data,$search=null) {
         $this->data = $data;
+        $this->search = $search;
     }
 
     public function view(): View
     {
-        return view('file-exports.item-report', [
+        return view('file-exports.contact_message', [
             'data' => $this->data,
+            'search' => $this->search,
         ]);
     }
 
     public function columnWidths(): array
     {
         return [
-            // 'C' => 45,
+            'C' => 45,
         ];
     }
 
     public function styles(Worksheet $sheet) {
-        $sheet->getStyle('A2:M2')->getFont()->setBold(true);
-        $sheet->getStyle('A3:M3')->getFill()->applyFromArray([
+        $sheet->getStyle('A2:H4')->getFont()->setBold(true);
+        $sheet->getStyle('A4:H4')->getFill()->applyFromArray([
             'fillType' => 'solid',
             'rotation' => 0,
             'color' => ['rgb' => '9F9F9F'],
@@ -64,7 +67,7 @@ class ItemReportExport implements  FromView, ShouldAutoSize, WithStyles,WithColu
         $sheet->getStyle('A1:C1')->applyFromArray($styleArray);
         return [
             // Define the style for cells with data
-            'A1:M'.$this->data['items']->count() +3 => [
+            'A1:H'.$this->data->count() +4 => [
                 'borders' => [
                     'allBorders' => [
                         'borderStyle' => Border::BORDER_THIN,
@@ -76,24 +79,11 @@ class ItemReportExport implements  FromView, ShouldAutoSize, WithStyles,WithColu
 
     }
 
-    public function setImage($workSheet) {
-        $this->data['items']->each(function($item,$index) use($workSheet) {
-            $drawing = new Drawing();
-            $drawing->setName($item->name);
-            $drawing->setDescription($item->name);
-            $drawing->setPath(is_file(storage_path('app/public/product/'.$item->image))?storage_path('app/public/product/'.$item->image):public_path('/assets/admin/img/160x160/img2.jpg'));
-            $drawing->setHeight(25);
-            $index+=4;
-            $drawing->setCoordinates("B$index");
-            $drawing->setWorksheet($workSheet);
-        });
-    }
-
     public function registerEvents(): array
     {
         return [
             AfterSheet::class => function(AfterSheet $event) {
-                $event->sheet->getStyle('A1:M1') // Adjust the range as per your needs
+                $event->sheet->getStyle('A1:H1') // Adjust the range as per your needs
                     ->getAlignment()
                     ->setHorizontal(Alignment::HORIZONTAL_CENTER)
                     ->setVertical(Alignment::VERTICAL_CENTER);
@@ -105,30 +95,26 @@ class ItemReportExport implements  FromView, ShouldAutoSize, WithStyles,WithColu
                     ->getAlignment()
                     ->setHorizontal(Alignment::HORIZONTAL_CENTER)
                     ->setVertical(Alignment::VERTICAL_CENTER);
-                $event->sheet->getStyle('A4:C4')
-                    ->getAlignment()
-                    ->setHorizontal(Alignment::HORIZONTAL_CENTER)
-                    ->setVertical(Alignment::VERTICAL_CENTER);
 
-                $event->sheet->getStyle('A4:M'.$this->data['items']->count() +3)
+                $event->sheet->getStyle('A3:H'.$this->data->count() +4)
                     ->getAlignment()
                     ->setHorizontal(Alignment::HORIZONTAL_CENTER)
                     ->setVertical(Alignment::VERTICAL_CENTER);
-                $event->sheet->getStyle('D2:M2')
+                $event->sheet->getStyle('D2:H3')
                     ->getAlignment()
                     ->setHorizontal(Alignment::HORIZONTAL_LEFT)
                     ->setVertical(Alignment::VERTICAL_CENTER);
 
 
-                    $event->sheet->mergeCells('A1:M1');
+                    $event->sheet->mergeCells('A1:H1');
                     $event->sheet->mergeCells('A2:C2');
-                    $event->sheet->mergeCells('D2:M2');
+                    $event->sheet->mergeCells('D2:H2');
+                    $event->sheet->mergeCells('A3:C3');
+                    $event->sheet->mergeCells('D3:H3');
 
                     $event->sheet->getDefaultRowDimension()->setRowHeight(30);
                     $event->sheet->getRowDimension(1)->setRowHeight(50);
-                    $event->sheet->getRowDimension(2)->setRowHeight(100);
-                    $workSheet = $event->sheet->getDelegate();
-                    $this->setImage($workSheet);
+                    $event->sheet->getRowDimension(2)->setRowHeight(40);
                 },
         ];
     }

@@ -19,6 +19,10 @@ use Rap2hpoutre\FastExcel\FastExcel;
 
 class CustomerController extends Controller
 {
+    public function __construct()
+    {
+        DB::statement("SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));");
+    }
     public function customer_list(Request $request)
     {
         $zone_id=  $request->zone_id ?? null;
@@ -130,7 +134,7 @@ class CustomerController extends Controller
                     $query->Where('id', 'like', "%{$key}%");
                 } )
                 ->Notpos()->get();
-            $orders = Order::latest()->where(['user_id' => $id])
+            $orders = Order::withcount('details')->latest()->where(['user_id' => $id])
             ->when(isset($key), function($query) use($key){
                 $query->Where('id', 'like', "%{$key}%");
             } )

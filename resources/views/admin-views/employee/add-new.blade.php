@@ -96,6 +96,10 @@
                         </div>
                     <div class="col-md-4">
                         <label class="h-100 d-flex flex-column">
+                            <div class="text-center input-label qcont py-3 my-auto">
+                                {{ translate('messages.Employee_image') }} <small  class="text-danger">* ( {{ translate('messages.ratio') }} 1:1 )</small>
+
+                            </div>
                             <div class="text-center py-3 my-auto">
                                 <img class="img--100" id="viewer"
                                 src="{{asset('public\assets\admin\img\400x400\img2.jpg')}}" alt="Employee thumbnail"/>
@@ -132,9 +136,9 @@
                     </div>
                     <div class="col-md-4">
                         <div class="js-form-message form-group mb-0">
-                            <label class="input-label" for="signupSrPassword">{{translate('messages.password')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right"
+                            <label class="input-label" for="signupSrPassword">{{translate('messages.password')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="top"
         data-original-title="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"><img src="{{ asset('/public/assets/admin/img/info-circle.svg') }}" alt="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"></span> <span class="form-label-secondary text-danger"
-                            data-toggle="tooltip" data-placement="right"
+                            data-toggle="tooltip" data-placement="top"
                             data-original-title="{{ translate('messages.Required.')}}"> *
                             </span> </label>
 

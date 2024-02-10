@@ -302,6 +302,7 @@
                         @endforeach
                         </tbody>
                     </table>
+                </div>
                     @if(count($foods) !== 0)
                     <hr>
                     @endif
@@ -316,7 +317,6 @@
                         </h5>
                     </div>
                     @endif
-                </div>
             </div>
         </div>
     </div>

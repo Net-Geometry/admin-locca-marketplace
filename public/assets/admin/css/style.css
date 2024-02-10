@@ -11023,6 +11023,9 @@ body > .initial-38-1 {
 .fs-12 {
     font-size: 12px !important;
 }
+.fs-16{
+    font-size: 16px !important;
+}
 
 .select-product-item {
     flex: 1 0 48%;

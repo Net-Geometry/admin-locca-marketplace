@@ -114,7 +114,7 @@ class CustomerWalletController extends Controller
        })
         ->get();
 
-        $transactions = WalletTransaction::
+        $transactions = WalletTransaction::with('user')->
             when(($request->from && $request->to),function($query)use($request){
                 $query->whereBetween('created_at', [$request->from.' 00:00:00', $request->to.' 23:59:59']);
             })

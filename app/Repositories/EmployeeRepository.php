@@ -56,7 +56,7 @@ class EmployeeRepository implements EmployeeRepositoryInterface
     public function getZoneWiseListWhere(string $zoneId = 'all', string $searchValue = null, array $filters = [], array $relations = [], int|string $dataLimit = DEFAULT_DATA_LIMIT, int $offset = null): Collection|LengthAwarePaginator
     {
         $key = explode(' ', $searchValue);
-        return $this->employee->zone()->where('role_id', '!=','1')
+        return $this->employee->zone()->where('role_id', '!=','1')->with($relations)
         ->where($filters)
         ->when(is_numeric($zoneId), function($query) use($zoneId){
             return $query->where('zone_id', $zoneId);
