@@ -21,16 +21,6 @@
                         </span>
                     </h1>
                 </div>
-
-                <div class="col-sm-3 col-md-3">
-                    <select name="store_id" id="store" data-url="{{url()->full()}}" data-placeholder="{{translate('messages.select_store')}}" class="js-data-example-ajax form-control store-filter" required title="Select Store" oninvalid="this.setCustomValidity('{{translate('messages.please_select_store')}}')">
-                    @if($store)
-                    <option value="{{$store->id}}" selected>{{$store->name}}</option>
-                    @else
-                    <option value="all" selected>{{translate('messages.all_stores')}}</option>
-                    @endif
-                    </select>
-                </div>
             </div>
 
         </div>
@@ -43,18 +33,30 @@
                     @csrf
                     <input type="hidden" value="1" name="product_gallery">
                     <div class="row g-2">
-                        <div class="col-md-5 col-lg-4">
-                            <select class="form-control js-select2-custom set-filter">
-                                <option>Categories</option>
-                                <option>Categories</option>
-                                <option>Categories</option>
-                                <option>Categories</option>
+                        <div class="col-md-3 col-lg-3">
+                            <select name="store_id" id="store" data-url="{{url()->full()}}" data-placeholder="{{translate('messages.select_store')}}" class="js-data-example-ajax form-control store-filter" required title="Select Store" oninvalid="this.setCustomValidity('{{translate('messages.please_select_store')}}')">
+                                @if($store)
+                                    <option value="{{$store->id}}" selected>{{$store->name}}</option>
+                                @else
+                                    <option value="all" selected>{{translate('messages.all_stores')}}</option>
+                                @endif
                             </select>
                         </div>
-                        <div class="col-md-5 col-lg-6">
+                        <div class="col-md-3 col-lg-3">
+                            <select name="category_id" id="category_id" data-placeholder="{{ translate('messages.select_category') }}"
+                                    class="js-data-example-ajax form-control set-filter" id="category_id"
+                                    data-url="{{url()->full()}}" data-filter="category_id">
+                                @if($category)
+                                    <option value="{{$category->id}}" selected>{{$category->name}}</option>
+                                @else
+                                    <option value="all" selected>{{translate('messages.all_category')}}</option>
+                                @endif
+                            </select>
+                        </div>
+                        <div class="col-md-4 col-lg-4">
                             <input id="datatableSearch" type="search" value="{{  request()?->search ?? null }}" name="search" class="form-control" placeholder="{{translate('messages.ex_search_name')}}" aria-label="{{translate('messages.search_here')}}">
                         </div>
-                        <div class="col-md-2 col-lg-1 text-end">
+                        <div class="col-md-2 col-lg-2 text-end">
                             <button type="submit" class="btn btn--primary">{{ translate('messages.search') }}</button>
                         </div>
                     </div>
@@ -62,9 +64,9 @@
             </div>
             <!-- End Header -->
         </div>
-        <div>
-            <h4 class="text-center pb-2 pt-4">53434{{ translate('messages.products found') }}</h4>
-        </div>
+{{--        <div>--}}
+{{--            <h4 class="text-center pb-2 pt-4">53434{{ translate('messages.products found') }}</h4>--}}
+{{--        </div>--}}
 
         <div class="row" id="set-rows">
                         @include('admin-views.product.partials._gallery', [
@@ -183,7 +185,7 @@
             }
         });
 
-        $('#category').select2({
+        $('#category_id').select2({
             ajax: {
                 url: '{{route("admin.category.get-all")}}',
                 data: function (params) {

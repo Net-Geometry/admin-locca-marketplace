@@ -60,17 +60,17 @@
                 </div>
                 <div class="row g-4">
                     <div class="col-lg-3">
-                        <div class="__card-1 bg-E6F6EE h-100">
+                        <a class="__card-1 bg-E6F6EE h-100" href="{{route('admin.parcel.orders',['all'])}}">
                             <img src="{{asset('/public/assets/admin/img/report/new/total.png')}}" class="icon" alt="report/new">
-                            <h3 class="title text-success">1582</h3>
-                            <h6 class="subtitle font-regular">Total orders</h6>
-                        </div>
+                            <h3 class="title text-success">{{$data['total_orders']}}</h3>
+                            <h6 class="subtitle font-regular">{{ translate('total_orders') }}</h6>
+                        </a>
                     </div>
                     <div class="col-lg-9">
                         <div class="row g-2" id="order_stats">
                             <div class="col-sm-6">
                                 <!-- Card -->
-                                <a class="resturant-card dashboard--card __dashboard-card card--bg-1" href="{{route('admin.parcel.list',['searching_for_deliverymen'])}}">
+                                <a class="resturant-card dashboard--card __dashboard-card card--bg-1" href="{{route('admin.parcel.orders',['searching_for_deliverymen'])}}">
                                 <span class="meter">
                                         <span style="height:{{$data['total_orders']>0?($data['searching_for_dm']*100)/$data['total_orders']:0}}%"></span>
                                 </span>

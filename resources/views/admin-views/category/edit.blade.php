@@ -123,5 +123,9 @@
             $('#module_id').val("{{ $category->module_id }}").trigger('change');
             $('#viewer').attr('src', "{{asset('storage/app/public/category')}}/{{$category['image']}}");
         })
+        $("#customFileEg1").change(function() {
+            readURL(this);
+            $('#viewer').show(1000)
+        });
     </script>
 @endpush
