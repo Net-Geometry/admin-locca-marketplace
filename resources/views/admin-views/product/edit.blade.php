@@ -204,7 +204,7 @@
                                         <div class="icon-file-group">
                                             <label class="icon-file">
                                                 <input type="file" name="image" id="customFileEg1" class="custom-file-input read-url"
-                                                    accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*" required>
+                                                    accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*" >
                                                     <i class="tio-edit"></i>
                                             </label>
                                         </div>

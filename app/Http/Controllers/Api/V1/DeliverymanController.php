@@ -586,9 +586,13 @@ class DeliverymanController extends Controller
         if ($details != null && $details->count() > 0) {
             $details = $details = Helpers::order_details_data_formatting($details);
             return response()->json($details, 200);
-        } else if ($order->order_type == 'parcel' || $order->prescription_order == 1) {
+        }
+        else if ($order->order_type == 'parcel' ) {
             $order->delivery_address = json_decode($order->delivery_address, true);
             return response()->json(($order), 200);
+        }
+        elseif($order->prescription_order == 1){
+            return response()->json([], 200);
         }
 
         return response()->json([
