@@ -35,17 +35,15 @@
                                     </div>
                                     <img src="{{asset('/public/assets/admin/img/bulk-import-1.png')}}" alt="">
                                 </div>
-                                <h4>Instruction</h4>
+                                <h4>{{ translate('Instruction') }}</h4>
                                 <ul class="m-0 pl-4">
                                     <li>
-                                        Download the format file and fill it with proper data.
+                                        {{ translate('Download_the_format_file_and_fill_it_with_proper_data.') }}
                                     </li>
                                     <li>
-                                        You can download the example file to understand how the data must be filled.
+                                        {{ translate('You_can_download_the_example_file_to_understand_how_the_data_must_be_filled.') }}
                                     </li>
-                                    <li>
-                                        Have to upload zip file
-                                    </li>
+
                                 </ul>
                             </div>
                         </div>
@@ -60,16 +58,16 @@
                                     </div>
                                     <img src="{{asset('/public/assets/admin/img/bulk-import-2.png')}}" alt="">
                                 </div>
-                                <h4>Instruction</h4>
+                                  <h4>{{ translate('Instruction') }}</h4>
                                 <ul class="m-0 pl-4">
                                     <li>
-                                        Download the format file and fill it with proper data.
+                                        {{ translate('Once_you_have_downloaded_and_filled_the_format_file_upload_it_in_the_form_below_and_submit') }}
                                     </li>
                                     <li>
-                                        You can download the example file to understand how the data must be filled.
+                                        {{ translate('You_can_get_store_id_module_id_and_unit_id_from_their_list_please_input_the_right_ids.') }}
                                     </li>
                                     <li>
-                                        Have to upload zip file
+                                        {{ translate('For_ecommerce_item_avaliable_time_start_and_end_will_be_00:00:00_and_23:59:59') }}
                                     </li>
                                 </ul>
                             </div>
@@ -85,16 +83,14 @@
                                     </div>
                                     <img src="{{asset('/public/assets/admin/img/bulk-import-3.png')}}" alt="">
                                 </div>
-                                <h4>Instruction</h4>
+                                  <h4>{{ translate('Instruction') }}</h4>
                                 <ul class="m-0 pl-4">
                                     <li>
-                                        Download the format file and fill it with proper data.
+                                       {{ translate('You_can_upload_your_product_images_in_product_folder_from_gallery_and_copy_image`s_path') }}
                                     </li>
+
                                     <li>
-                                        You can download the example file to understand how the data must be filled.
-                                    </li>
-                                    <li>
-                                        Have to upload zip file
+                                        {{ translate('Have_to_upload_excel_file') }}
                                     </li>
                                 </ul>
                             </div>
@@ -123,24 +119,24 @@
                 <div class="card-body">
                     <div class="row g-3">
                         <div class="col-sm-6">
-                            <h5 class="text-capitalize mb-3">Select Data Upload type</h5>
+                            <h5 class="text-capitalize mb-3">{{ translate('Select_Data_Upload_type') }}</h5>
                             <div class="module-radio-group border rounded">
                                 <label class="form-check form--check">
-                                    <input class="form-check-input" type="radio" name="upload_type" checked>
+                                    <input class="form-check-input "   value="import" type="radio" name="upload_type" checked>
                                     <span class="form-check-label py-20">
-                                        Upload New Data
+                                        {{ translate('Upload_New_Data') }}
                                     </span>
                                 </label>
                                 <label class="form-check form--check">
-                                    <input class="form-check-input" type="radio" name="upload_type">
+                                    <input class="form-check-input " value="update" type="radio" name="upload_type">
                                     <span class="form-check-label py-20">
-                                        Update Existing Data
+                                        {{ translate('Update_Existing_Data') }}
                                     </span>
                                 </label>
                             </div>
                         </div>
                         <div class="col-sm-6">
-                            <h5 class="text-capitalize mb-3">Import items file</h5>
+                            <h5 class="text-capitalize mb-3">{{ translate('Import_items_file') }}</h5>
                             <div class="uploadDnD">
                                 <div class="form-group inputDnD input_image input_image_edit position-relative">
                                     <div class="upload-text">
@@ -152,13 +148,12 @@
                                     <input type="file" name="products_file" class="form-control-file text--primary font-weight-bold action-upload-section-dot-area" id="products_file">
                                 </div>
                             </div>
-                            
+
                         </div>
                     </div>
                     <div class="btn--container justify-content-end mt-3">
                         <button id="reset_btn" type="reset" class="btn btn--reset">{{translate('messages.reset')}}</button>
-                        <button type="submit" name="button" value="update" class="btn btn--warning submit_btn">{{translate('messages.update')}}</button>
-                        <button type="submit" name="button" value="import" class="btn btn--primary submit_btn">{{translate('messages.Import')}}</button>
+                        <button type="button" class="btn btn--primary update_or_import">{{translate('messages.Upload')}}</button>
                     </div>
                 </div>
             </div>
@@ -202,7 +197,8 @@
                                 <img src="{{asset('/public/assets/admin/img/icons/intel.png')}}" width="22" alt="">
                             </div>
                             <div class="w-0 flex-grow-1 pl-3">
-                                <strong>Holy guacamole!</strong> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
+                                <strong>{{ translate('Attention!') }}</strong>
+                              {{ translate('You_must_generate_variations_from_this_generator_if_you_want_to_add_variations_to_your_products.You_must_copy_from_the_specific_filed_and_past_it_to_the_specific_column_at_your_excel_sheet.Otherwise_you_might_get_500_error_if_you_swap_or_entered_invalid_data.And_if_you_want_to_make_it_empty_then_you_have_to_enter_an_empty_array_[_]_.') }}
                             </div>
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">×</span>
@@ -256,6 +252,10 @@
     <script src="{{asset('public/assets/admin')}}/js/view-pages/product-import.js"></script>
 <script>
     "use strict";
+    $('.update_or_import').on("click", function () {
+    let upload_type = $('input[name="upload_type"]:checked').val();
+    myFunction(upload_type)
+});
 
     $(".action-upload-section-dot-area").on("change", function () {
         if (this.files && this.files[0]) {
@@ -316,14 +316,14 @@
                                                     {{ translate('Single Selection') }}
                 </span>
             </label>
-    </div>
-</div>
-</div>
-<div class="col-12 col-lg-6">
-<div class="row g-2">
-    <div class="col-sm-6 col-md-4">
-        <label for="">{{ translate('Min') }}</label>
-                                        <input id="min_max1_` + count + `" required  name="options[` + count + `][min]" class="form-control" type="number" min="1">
+            </div>
+        </div>
+        </div>
+        <div class="col-12 col-lg-6">
+        <div class="row g-2">
+            <div class="col-sm-6 col-md-4">
+                <label for="">{{ translate('Min') }}</label>
+                                                <input id="min_max1_` + count + `" required  name="options[` + count + `][min]" class="form-control" type="number" min="1">
                                     </div>
                                     <div class="col-sm-6 col-md-4">
                                         <label for="">{{ translate('Max') }}</label>
@@ -539,7 +539,7 @@
     function myFunction(data) {
         Swal.fire({
         title: '{{ translate('Are you sure?') }}' ,
-        text: "{{ translate('You_want_to_') }}" +data,
+        text: "{{ translate('You_want_to_') }}" +data + " {{ translate('Data.') }}",
         type: 'warning',
         showCancelButton: true,
         cancelButtonColor: 'default',

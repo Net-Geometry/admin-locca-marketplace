@@ -33,17 +33,13 @@
                                     </div>
                                     <img src="{{asset('/public/assets/admin/img/bulk-export-1.png')}}" alt="">
                                 </div>
-                                <h4>Instruction</h4>
+                                <h4>{{ translate('Instruction') }}</h4>
                                 <ul class="m-0 pl-4">
                                     <li>
-                                        Download the format file and fill it with proper data.
+                                       {{ translate('You_can_edit_and_update_the_file_to_bulk_upload') }}
                                     </li>
-                                    <li>
-                                        You can download the example file to understand how the data must be filled.
-                                    </li>
-                                    <li>
-                                        Have to upload zip file
-                                    </li>
+
+
                                 </ul>
                             </div>
                         </div>
@@ -58,16 +54,11 @@
                                     </div>
                                     <img src="{{asset('/public/assets/admin/img/bulk-export-2.png')}}" alt="">
                                 </div>
-                                <h4>Instruction</h4>
+                                <h4>{{ translate('Instruction') }}</h4>
                                 <ul class="m-0 pl-4">
+
                                     <li>
-                                        Download the format file and fill it with proper data.
-                                    </li>
-                                    <li>
-                                        You can download the example file to understand how the data must be filled.
-                                    </li>
-                                    <li>
-                                        Have to upload zip file
+                                        {{ translate('You_can_download_it_to_excel_file') }}
                                     </li>
                                 </ul>
                             </div>
