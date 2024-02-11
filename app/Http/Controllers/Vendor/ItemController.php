@@ -17,6 +17,7 @@ use App\Models\FlashSaleItem;
 use App\CentralLogics\Helpers;
 use App\Models\BusinessSetting;
 use App\Models\CommonCondition;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use App\CentralLogics\ProductLogic;
 use App\Models\PharmacyItemDetails;
@@ -57,7 +58,11 @@ class ItemController extends Controller
             'name.0' => 'required',
             'name.*' => 'max:191',
             'category_id' => 'required',
-            'image' => 'required_unless:product_gellary,1',
+            'image' => [
+                Rule::requiredIf(function ()use ($request) {
+                    return (Helpers::get_store_data()->module->module_type != 'food' && $request?->product_gellary == null )  ;
+                })
+            ],
             'price' => 'required|numeric|between:.01,999999999999.99',
             'description.*' => 'max:1000',
             'description.0' => 'required',

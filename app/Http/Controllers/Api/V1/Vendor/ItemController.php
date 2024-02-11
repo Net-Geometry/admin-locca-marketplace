@@ -11,6 +11,7 @@ use App\Models\TempProduct;
 use App\Models\Translation;
 use Illuminate\Http\Request;
 use App\CentralLogics\Helpers;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use App\Models\PharmacyItemDetails;
 use App\Http\Controllers\Controller;
@@ -34,7 +35,11 @@ class ItemController extends Controller
 
         $validator = Validator::make($request->all(), [
             'category_id' => 'required',
-            'image' => 'required',
+            'image' => [
+                Rule::requiredIf(function ()use ($request) {
+                    return ($request['vendor']->stores[0]->module->module_type != 'food')  ;
+                })
+            ],
             'price' => 'required|numeric|min:0.01',
             'discount' => 'required|numeric|min:0',
             'translations'=>'required',
