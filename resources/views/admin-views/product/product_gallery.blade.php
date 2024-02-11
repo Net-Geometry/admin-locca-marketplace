@@ -54,10 +54,10 @@
                             </select>
                         </div>
                         <div class="col-md-4 col-lg-4">
-                            <input id="datatableSearch" type="search" value="{{  request()?->search ?? null }}" name="search" class="form-control" placeholder="{{translate('messages.ex_search_name')}}" aria-label="{{translate('messages.search_here')}}">
+                            <input id="datatableSearch" type="search" value="{{  request()?->search ?? null }}" name="search" class="form-control h--42px" placeholder="{{translate('messages.ex_search_name')}}" aria-label="{{translate('messages.search_here')}}">
                         </div>
                         <div class="col-md-2 col-lg-2 text-end">
-                            <button type="submit" class="btn btn--primary">{{ translate('messages.search') }}</button>
+                            <button type="submit" class="btn btn--primary w-100 h-100">{{ translate('messages.search') }}</button>
                         </div>
                     </div>
                 </form>
