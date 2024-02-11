@@ -122,6 +122,7 @@ class OrderController extends Controller
         $free_delivery_by = null;
         $distance_data = $request->distance;
         $increased=0;
+        $maximum_shipping_charge = 0;
 
         if($request['order_type'] == 'delivery' && !Helpers::get_business_settings('home_delivery_status')){
             return response()->json([
@@ -943,7 +944,7 @@ class OrderController extends Controller
         $free_delivery_by = null;
         $distance_data = $request->distance;
         $increased=0;
-
+        $maximum_shipping_charge = 0;
         if($request['order_type'] == 'delivery' && !Helpers::get_business_settings('home_delivery_status')){
             return response()->json([
                 'errors' => [

@@ -277,7 +277,7 @@
                     <h4 class="card-header-title">{{translate('messages.order_filter')}}</h4>
 
                     <!-- Toggle Button -->
-                    <a class="js-hs-unfold-invoker_ btn btn-icon btn-xs btn-ghost-dark ml-2" href="javascript:" id="filter-button-off">
+                    <a class="js-hs-unfold-invoker_ btn btn-icon btn-sm btn-ghost-dark ml-2" href="javascript:" id="filter-button-off">
                         <i class="tio-clear tio-lg"></i>
                     </a>
                     <!-- End Toggle Button -->
