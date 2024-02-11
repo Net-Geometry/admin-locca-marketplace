@@ -18,6 +18,7 @@ use Illuminate\Http\Request;
 use App\CentralLogics\Helpers;
 use App\Exports\ItemListExport;
 use App\Models\CommonCondition;
+use Illuminate\Validation\Rule;
 use App\Exports\StoreItemExport;
 use App\Exports\ItemReviewExport;
 use Illuminate\Support\Facades\DB;
@@ -48,7 +49,11 @@ class ItemController extends Controller
             'name.0' => 'required',
             'name.*' => 'max:191',
             'category_id' => 'required',
-            'image' => 'required_unless:product_gellary,1',
+            'image' => [
+                Rule::requiredIf(function ()use ($request) {
+                    return (Config::get('module.current_module_type') != 'food' && $request?->product_gellary == null )  ;
+                })
+            ],
             'price' => 'required|numeric|between:.01,999999999999.99',
             'discount' => 'required|numeric|min:0',
             'store_id' => 'required',
@@ -59,7 +64,6 @@ class ItemController extends Controller
             'description.*.max' => translate('messages.description_length_warning'),
             'name.0.required' => translate('messages.item_name_required'),
             'category_id.required' => translate('messages.category_required'),
-            'image.required_unless' => translate('messages.Image_is_required'),
             'name.0.required' => translate('default_name_is_required'),
             'description.0.required' => translate('default_description_is_required'),
         ]);
@@ -70,12 +74,13 @@ class ItemController extends Controller
         }
 
         if ($request['price'] <= $dis) {
-            $validator->getMessageBag()->add('unit_price', translate('messages.discount_can_not_be_more_than_or_equal'));
+                $validator->getMessageBag()->add('unit_price', translate('messages.discount_can_not_be_more_than_or_equal'));
         }
 
         if ($request['price'] <= $dis || $validator->fails()) {
-            return response()->json(['errors' => Helpers::error_processor($validator)]);
-        }
+                return response()->json(['errors' => Helpers::error_processor($validator)]);
+            }
+
         $images = [];
 
         if($request->item_id && $request?->product_gellary == 1 ){
@@ -828,12 +833,23 @@ class ItemController extends Controller
 
     public function search(Request $request)
     {
+        // dd('frdiuhgiu');
         $view='admin-views.product.partials._table';
         $key = explode(' ', $request['search']);
-        $items = Item::withoutGlobalScope(StoreScope::class)->where(function ($q) use ($key) {
+        $store_id = $request->query('store_id', 'all');
+        $category_id = $request->query('category_id', 'all');
+        $items = Item::withoutGlobalScope(StoreScope::class)
+        ->where(function ($q) use ($key) {
             foreach ($key as $value) {
                 $q->where('name', 'like', "%{$value}%");
             }
+        })->when(is_numeric($store_id), function ($query) use ($store_id) {
+            return $query->where('store_id', $store_id);
+        })
+        ->when(is_numeric($category_id), function ($query) use ($category_id) {
+            return $query->whereHas('category', function ($q) use ($category_id) {
+                return $q->whereId($category_id)->orWhere('parent_id', $category_id);
+            });
         })->module(Config::get('module.current_module_id'))->where('is_approved',1);
 
         if(isset($request->product_gallery) && $request->product_gallery==1){

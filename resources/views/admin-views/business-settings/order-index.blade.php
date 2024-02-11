@@ -335,7 +335,7 @@
                                             {{ translate('messages.order_cancellation_reason_list') }}
                                         </h5>
                                     </div>
-                                    <div>
+                                    <div class="my-2">
                                         <select id="type" name="type" class="form-control h--45px set-filter" data-url="{{ url()->full() }}" data-filter="type">
                                             <option value="all" {{ request('type') == 'all' ? 'selected' : '' }}>{{ translate('messages.all_user') }}</option>
                                             <option value="admin" {{ request('type') == 'admin' ? 'selected' : '' }}>{{ translate('messages.admin') }}</option>

@@ -110,7 +110,7 @@
                         <div class="row g-3">
                             <div class="col-lg-6">
                                 <div class="form-group">
-                                    <h6 class="mb-3">{{translate('business_module_type')}}</h6>
+                                    <h6 class="mb-3">{{translate('business_module_type')}} <span class="badge badge-danger">{{ translate('not_editable') }}</span></h6>
                                     <div class="card">
                                         <div class="card-body p-0">
                                             <div class="module-radio-group">

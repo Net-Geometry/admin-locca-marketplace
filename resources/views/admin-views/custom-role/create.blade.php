@@ -252,15 +252,17 @@
                         <h5 class="card-title">
                             {{translate('messages.roles_table')}} <span class="badge badge-soft-dark ml-2" id="itemCount">{{$roles->total()}}</span>
                         </h5>
-                        <form action="javascript:" id="search-form" class="search-form min--200">
-                            @csrf
+                        <form class="search-form min--200">
                             <!-- Search -->
                             <div class="input-group input--group">
-                                <input id="datatableSearch_" type="search" name="search" class="form-control" placeholder="{{translate('ex_:_search_role_name')}}" aria-label="Search">
+                                <input id="datatableSearch_" type="search" name="search"  value="{{request()?->search}}" class="form-control" placeholder="{{translate('ex_:_search_role_name')}}" aria-label="Search">
                                 <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
                             </div>
                             <!-- End Search -->
                         </form>
+                        @if(request()->get('search'))
+                        <button type="reset" class="btn btn--primary ml-2 location-reload-to-base" data-url="{{url()->full()}}">{{translate('messages.reset')}}</button>
+                        @endif
                     </div>
                 </div>
                 <div class="card-body p-0">
@@ -278,7 +280,6 @@
                                 <th scope="col" class="border-0">{{translate('messages.role_name')}}</th>
                                 <th scope="col" class="border-0">{{translate('messages.Permissions')}}</th>
                                 <th scope="col" class="border-0">{{translate('messages.created_at')}}</th>
-                                {{--<th scope="col" class="border-0">{{translate('messages.status')}}</th>--}}
                                 <th scope="col" class="border-0 text-center">{{translate('messages.action')}}</th>
                             </tr>
                             </thead>
@@ -286,22 +287,22 @@
                             @foreach($roles as $k=>$role)
                                 <tr>
                                     <td scope="row">{{$k+$roles->firstItem()}}</td>
-                                    <td>{{Str::limit($role['name'],25,'...')}}</td>
+                                    <td title="{{ $role['name'] }}" >{{Str::limit($role['name'],25,'...')}}</td>
                                     <td class="text-capitalize">
                                         @if($role['modules']!=null)
                                             @foreach((array)json_decode($role['modules']) as $key=>$module)
-                                               {{translate(str_replace('_',' ',$module))}}
+                                                {{translate(str_replace('_',' ',$module))}}
+
+                                                {{  !$loop->last ? ',' : '.'}}
                                             @endforeach
                                         @endif
                                     </td>
                                     <td>
                                         <div class="create-date">
-                                            {{date('d-M-y',strtotime($role['created_at']))}}
+                                            {{\App\CentralLogics\Helpers::date_format($role['created_at'])}}
                                         </div>
                                     </td>
-                                    {{--<td>
-                                        {{$r->status?'Active':'Inactive'}}
-                                    </td>--}}
+
                                     <td>
                                         <div class="btn--container justify-content-center">
                                             <a class="btn action-btn btn--primary btn-outline-primary"
@@ -344,36 +345,7 @@
 
 @push('script_2')
     <script src="{{asset('public/assets/admin')}}/js/view-pages/custom-role-index.js"></script>
-    <script>
-        "use strict";
-        $('#search-form').on('submit', function (e) {
-            e.preventDefault();
-            let formData = new FormData(this);
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $.post({
-                url: '{{route('admin.users.custom-role.search')}}',
-                data: formData,
-                cache: false,
-                contentType: false,
-                processData: false,
-                beforeSend: function () {
-                    $('#loading').show();
-                },
-                success: function (data) {
-                    $('#set-rows').html(data.view);
-                    $('#itemCount').html(data.count);
-                    $('.page-area').hide();
-                },
-                complete: function () {
-                    $('#loading').hide();
-                },
-            });
-        });
-</script>
+
 
 @endpush
 
