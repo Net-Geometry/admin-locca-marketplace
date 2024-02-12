@@ -103,7 +103,7 @@
                         </div>
                         <div class="col-12">
                             <div class="btn--container justify-content-end">
-                                <button class="btn btn--reset" type="reset">{{translate('messages.clear')}}</button>
+                                <button class="btn btn--reset" id="reset-btn" type="reset">{{translate('messages.clear')}}</button>
                                 <button class="btn btn--primary" type="submit">{{translate('messages.export')}}</button>
                             </div>
                         </div>
@@ -116,4 +116,11 @@
 
 @push('script_2')
     <script src="{{asset('public/assets/admin')}}/js/view-pages/category-import-export.js"></script>
+    <script>
+        $('#reset-btn').on('click', function()
+        {
+            $('.id_wise').hide();
+            $('.date_wise').hide();
+        })
+    </script>
 @endpush

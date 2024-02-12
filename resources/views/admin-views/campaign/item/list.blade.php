@@ -154,6 +154,7 @@
                         @endforeach
                         </tbody>
                     </table>
+                </div>
                     @if(count($campaigns) !== 0)
                     <hr>
                     @endif
@@ -168,7 +169,6 @@
                         </h5>
                     </div>
                     @endif
-                </div>
                 <!-- End Table -->
             </div>
         </div>

@@ -320,6 +320,7 @@
                             @endforeach
                             </tbody>
                         </table>
+                    </div>
 
                         @if(count($coupons) !== 0)
                         <hr>
@@ -335,7 +336,6 @@
                             </h5>
                         </div>
                         @endif
-                    </div>
                 </div>
             </div>
             <!-- End Table -->

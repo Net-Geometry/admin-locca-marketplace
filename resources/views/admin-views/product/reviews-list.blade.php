@@ -15,7 +15,7 @@
                     <img src="{{asset('public/assets/admin/img/items.png')}}" class="w--22" alt="">
                 </span>
                 <span>
-                    {{translate('messages.item_reviews')}} 
+                    {{translate('messages.item_reviews')}}
                 </span>
             </h1>
         </div>
@@ -153,6 +153,7 @@
                     @endforeach
                     </tbody>
                 </table>
+            </div>
                 @if(count($reviews) !== 0)
                 <hr>
                 @endif
@@ -167,7 +168,6 @@
                     </h5>
                 </div>
                 @endif
-            </div>
             <!-- End Table -->
         </div>
         <!-- End Card -->
