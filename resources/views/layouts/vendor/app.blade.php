@@ -5,6 +5,8 @@
     }else{
         $site_direction = session()->has('vendor_site_direction')?session()->get('vendor_site_direction'):'ltr';
     }
+    $country=\App\Models\BusinessSetting::where('key','country')->first();
+$countryCode= strtolower($country?$country->value:'auto');
 
 ?>
 <html dir="{{ $site_direction }}" lang="{{ str_replace('_', '-', app()->getLocale()) }}"  class="{{ $site_direction === 'rtl'?'active':'' }}">
@@ -29,6 +31,7 @@
     <link rel="stylesheet" href="{{asset('public/assets/admin')}}/css/theme.minc619.css?v=1.0">
     <link rel="stylesheet" href="{{asset('public/assets/admin/css/emogi-area.css')}}">
     <link rel="stylesheet" href="{{asset('public/assets/admin/css/style.css')}}">
+    <link rel="stylesheet" href="{{asset('public/assets/admin/intltelinput/css/intlTelInput.css')}}">
     @stack('css_or_js')
 
     <script src="{{asset('public/assets/admin')}}/vendor/hs-navbar-vertical-aside/hs-navbar-vertical-aside-mini-cache.js"></script>
@@ -173,11 +176,12 @@
 
 <script src="{{asset('public/assets/admin/js/app-blade/vendor.js')}}"></script>
 {!! Toastr::message() !!}
+<script src="{{asset('public/assets/admin/intltelinput/js/intlTelInput.min.js')}}"></script>
 
 @if ($errors->any())
-<script>
 
-"use strict";
+<script>
+    "use strict";
     @foreach ($errors->all() as $error)
     toastr.error('{{ translate($error) }}', Error, {
         CloseButton: true,
@@ -205,6 +209,18 @@
     }
 "use strict";
 
+
+
+const input = document.querySelector('input[type="tel"]');
+    window.intlTelInput(input, {
+    initialCountry: "{{$countryCode}}",
+    utilsScript: "{{ asset('public/assets/admin/intltelinput/js/utils.js') }}",
+    autoInsertDialCode: true,
+    nationalMode: false,
+    formatOnDisplay: false,
+    });
+
+    
     $(document).on('ready', function(){
         // $('body').css('overflow','')
         $(".direction-toggle").on("click", function () {

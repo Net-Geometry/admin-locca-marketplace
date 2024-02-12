@@ -3056,16 +3056,16 @@ textarea.__form-control {
 }
 
 
-.iti__country {
+/* .iti__country {
   display: flex;
-}
+} */
 
-.iti--allow-dropdown .iti__flag-container,
+/* .iti--allow-dropdown .iti__flag-container,
 .iti--separate-dial-code .iti__flag-container {
   inset-inline-start: 0;
   inset-inline-end: unset !important;
-}
-
+} */
+/* 
 .iti--allow-dropdown input,
 .iti--allow-dropdown input[type=text],
 .iti--allow-dropdown input[type=tel],
@@ -3087,7 +3087,7 @@ textarea.__form-control {
 }
 [dir=rtl] .iti-mobile .iti--container .iti__country {
   direction: rtl;
-}
+} */
 
 [dir=rtl] .input-group .form-control:first-child {
   border-radius: 0 5px 5px 0 !important;

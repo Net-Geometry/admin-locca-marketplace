@@ -9012,7 +9012,7 @@ body > .initial-38-1 {
     overflow: hidden;
 }
 
-.iti__country {
+/* .iti__country {
     display: flex;
 }
 
@@ -9032,7 +9032,7 @@ body > .initial-38-1 {
     padding-inline-end: 6px !important;
     -webkit-padding-start: 93px !important;
     padding-inline-start: 93px !important;
-}
+} */
 
 #navbarSettings .nav-item .nav-link {
     display: flex;
@@ -9057,7 +9057,7 @@ body > .initial-38-1 {
     padding: 23px 22px 31px;
 }
 
-.iti--container {
+/* .iti--container {
     direction: ltr;
 }
 
@@ -9068,7 +9068,7 @@ body > .initial-38-1 {
 }
 [dir="rtl"] .iti-mobile .iti--container .iti__country {
     direction: rtl;
-}
+} */
 
 @media print {
     .direction-toggle {

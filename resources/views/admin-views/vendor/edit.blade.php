@@ -2,8 +2,9 @@
 
 @section('title','Update restaurant info')
 @push('css_or_js')
-    <link rel="stylesheet" href="{{asset('/public/assets/admin/css/intlTelInput.css')}}" />
-@endpush
+    {{-- <link rel="stylesheet" href="{{asset('/public/assets/admin/css/intlTelInput.css')}}" /> --}}
+
+    @endpush
 
 @section('content')
     <div class="content container-fluid">
@@ -147,7 +148,7 @@
                                             asset('storage/app/public/store').'/'.$store->logo ?? '',
                                             asset('public/assets/admin/img/upload-img.png'),
                                             'store/'
-                                        ) }}" 
+                                        ) }}"
                                             alt="logo image" />
                                         <div class="icon-file-group">
                                             <label class="icon-file">
@@ -315,7 +316,7 @@
                                 <div class="col-md-4 col-sm-6">
                                     <div class="form-group mb-0">
                                         <label class="input-label" for="phone">{{translate('messages.phone')}}</label>
-                                        <input type="text" id="phone" name="phone" class="form-control"
+                                        <input type="tel" id="phone" name="phone" class="form-control"
                                         placeholder="{{ translate('messages.Ex:') }} 017********" value="{{$store->vendor->phone}}"
                                         required>
                                     </div>
@@ -403,8 +404,6 @@
 @endsection
 
 @push('script_2')
-    <script src="{{asset('public/assets/admin/js/intlTelInputCdn.min.js')}}"></script>
-    <script src="{{asset('public/assets/admin/js/intlTelInputCdn-jquery.min.js')}}"></script>
     <script src="{{asset('public/assets/admin/js/spartan-multi-image-picker.js')}}"></script>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key={{\App\Models\BusinessSetting::where('key', 'map_api_key')->first()->value}}&libraries=places&callback=initMap&v=3.45.8"></script>
@@ -441,19 +440,6 @@
         $("#coverImageUpload").change(function () {
             readURL(this, 'coverImageViewer');
         });
-        @php($country=\App\Models\BusinessSetting::where('key','country')->first())
-        let phone = $("#phone").intlTelInput({
-            utilsScript: "{{asset('public/assets/admin/js/intlTelInputCdn-utils.min.js')}}",
-            autoHideDialCode: true,
-            autoPlaceholder: "ON",
-            dropdownContainer: document.body,
-            formatOnDisplay: true,
-            hiddenInput: "phone",
-            initialCountry: "{{$country?$country->value:auto}}",
-            placeholderNumberType: "MOBILE",
-            separateDialCode: true
-        });
-
         $(function () {
             $("#coba").spartanMultiImagePicker({
                 fieldName: 'identity_image[]',

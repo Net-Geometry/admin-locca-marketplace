@@ -1,5 +1,9 @@
 <!DOCTYPE html>
+<?php
 
+$country=\App\Models\BusinessSetting::where('key','country')->first();
+$countryCode= strtolower($country?$country->value:'auto');
+?>
 <html dir="{{ session()->get('site_direction') }}" lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="{{session()->get('site_direction') === 'rtl'?'active':'' }}">
 <head>
     <meta charset="utf-8">
@@ -24,6 +28,9 @@
     <link rel="stylesheet" href="{{asset('public/assets/admin/css/bootstrap-tour-standalone.min.css')}}">
     <link rel="stylesheet" href="{{asset('public/assets/admin/css/emogi-area.css')}}">
     <link rel="stylesheet" href="{{asset('public/assets/admin/css/style.css')}}">
+
+    <link rel="stylesheet" href="{{asset('public/assets/admin/intltelinput/css/intlTelInput.css')}}">
+
     @stack('css_or_js')
 
     <script src="{{asset('public/assets/admin/vendor/hs-navbar-vertical-aside/hs-navbar-vertical-aside-mini-cache.js')}}"></script>
@@ -633,6 +640,34 @@
                 }
             })
         }
+</script>
+        <script src="{{asset('public/assets/admin/intltelinput/js/intlTelInput.min.js')}}"></script>
+
+        <script>
+
+    //     const input = document.querySelector('input[type="tel"]');
+    // const iti = window.intlTelInput(input, {
+    //     utilsScript: "",
+    //     initialCountry: "{{$countryCode}}",
+    //     autoInsertDialCode: true,
+    //     autoPlaceholder: 'polite',
+    //     // formatOnDisplay: true,
+    //     // placeholderNumberType: "MOBILE",
+    //     // separateDialCode: true,
+    //     // showSelectedDialCode: true,
+    //     // allowDropdown : true,
+    //     // hiddenInput: "phone"
+    // });
+
+    const input = document.querySelector('input[type="tel"]');
+  window.intlTelInput(input, {
+    initialCountry: "{{$countryCode}}",
+    utilsScript: "{{ asset('public/assets/admin/intltelinput/js/utils.js') }}",
+    autoInsertDialCode: true,
+    nationalMode: false,
+    formatOnDisplay: false,
+  });
+
 </script>
 
 <script>

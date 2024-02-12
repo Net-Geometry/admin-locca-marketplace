@@ -4,8 +4,6 @@
     <link rel="stylesheet" href="{{ asset('public/assets/admin/css/toastr.css') }}">
     <link rel="stylesheet" href="{{ asset('public/assets/admin/css/view-pages/vendor-registration.css') }}">
     <link rel="stylesheet" href="{{ asset('public/assets/landing/css/select2.min.css') }}"/>
-
-
 @endpush
 @section('content')
     <section class="m-0 py-5">
@@ -309,7 +307,7 @@
                     <div class="col-md-4 col-lg-4 col-sm-12">
                         <div class="form-group">
                             <label class="input-label" for="phone">{{ translate('messages.phone') }}</label>
-                            <input type="text" id="phone" name="phone" class="form-control __form-control"
+                            <input type="tel" id="phone" name="phone" class="form-control __form-control"
                                 placeholder="{{ translate('messages.Ex:') }} 017********" value="{{ old('phone') }}"
                                 required>
                         </div>

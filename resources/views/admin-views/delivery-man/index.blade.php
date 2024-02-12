@@ -2,9 +2,6 @@
 
 @section('title', translate('messages.Add new delivery-man'))
 
-@push('css_or_js')
-    <link rel="stylesheet" href="{{ asset('/public/assets/admin/css/intlTelInput.css') }}" />
-@endpush
 
 @section('content')
     <div class="content container-fluid">
@@ -142,7 +139,7 @@
                         <div class="col-lg-4">
                             <div class="d-flex flex-column h-100">
                                 <label class="text-center">{{ translate('messages.deliveryman_image') }} <small
-                                        class="text-danger">* ( {{ translate('messages.ratio') }} 1:1 )</small> 
+                                        class="text-danger">* ( {{ translate('messages.ratio') }} 1:1 )</small>
                                 </label>
                                 <div class="text-center py-3 my-auto">
                                     <img class="img--100" id="viewer"
@@ -236,7 +233,7 @@
                                         data-original-title="{{ translate('messages.Required.') }}"> *
                                     </span>
                                 </label>
-                                <input type="text" id="phone" name="phone" class="form-control"
+                                <input type="tel" id="phone" name="phone" class="form-control"
                                     placeholder="{{ translate('messages.Ex:') }} 017********" required>
                             </div>
                         </div>
@@ -318,8 +315,7 @@
 @endsection
 
 @push('script_2')
-    <script src="{{ asset('public/assets/admin/js/intlTelInputCdn.min.js') }}"></script>
-    <script src="{{ asset('public/assets/admin/js/intlTelInputCdn-jquery.min.js') }}"></script>
+
     <script src="{{ asset('public/assets/admin/js/spartan-multi-image-picker.js') }}"></script>
     <script>
         "use strict";
@@ -338,18 +334,6 @@
 
         $("#customFileEg1").change(function() {
             readURL(this);
-        });
-        @php($country = \App\Models\BusinessSetting::where('key', 'country')->first())
-        let phone = $("#phone").intlTelInput({
-            utilsScript: "{{ asset('public/assets/admin/js/intlTelInputCdn-utils.min.js') }}",
-            autoHideDialCode: true,
-            autoPlaceholder: "ON",
-            dropdownContainer: document.body,
-            formatOnDisplay: true,
-            hiddenInput: "phone",
-            initialCountry: "{{ $country ? $country->value : auto }}",
-            placeholderNumberType: "MOBILE",
-            separateDialCode: true
         });
 
         $(function() {

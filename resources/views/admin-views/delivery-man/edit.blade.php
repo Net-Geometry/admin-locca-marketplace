@@ -2,9 +2,6 @@
 
 @section('title',translate('Update delivery-man'))
 
-@push('css_or_js')
-    <link rel="stylesheet" href="{{asset('/public/assets/admin/css/intlTelInput.css')}}"/>
-@endpush
 
 @section('content')
     <div class="content container-fluid">
@@ -184,7 +181,7 @@
                                     <div class="row g-2">
                                         <div class="col-12 pb-0">
                                             <div class="form-group mb-0">
-                                                <label class="input-label" for="exampleFormControlInput1">{{translate('messages.identity_images')}} 
+                                                <label class="input-label" for="exampleFormControlInput1">{{translate('messages.identity_images')}}
                                             </div>
                                         </div>
                                         @foreach(json_decode($deliveryMan['identity_image'],true) as $img)
@@ -225,7 +222,7 @@
                                     data-original-title="{{ translate('messages.Required.')}}"> *
                                     </span>
         </label>
-                                <input type="text" id="phone" name="phone" value="{{$deliveryMan['phone']}}" class="form-control"
+                                <input type="tel" id="phone" name="phone" value="{{$deliveryMan['phone']}}" class="form-control"
                                         placeholder="{{ translate('messages.Ex:') }} 017********"
                                         required>
                             </div>
@@ -296,8 +293,6 @@
 @endsection
 
 @push('script_2')
-    <script src="{{asset('public/assets/admin/js/intlTelInputCdn.min.js')}}"></script>
-    <script src="{{asset('public/assets/admin/js/intlTelInputCdn-jquery.min.js')}}"></script>
     <script src="{{asset('public/assets/admin/js/spartan-multi-image-picker.js')}}"></script>
 <script>
     "use strict";
@@ -317,19 +312,6 @@
             readURL(this);
         });
 
-        @php($country=\App\Models\BusinessSetting::where('key','country')->first())
-        let phone = $("#phone").intlTelInput({
-            utilsScript: "{{asset('public/assets/admin/js/intlTelInputCdn-utils.min.js')}}",
-            nationalMode: true,
-            autoHideDialCode: true,
-            autoPlaceholder: "ON",
-            dropdownContainer: document.body,
-            formatOnDisplay: true,
-            hiddenInput: "phone",
-            initialCountry: "{{$country?$country->value:auto}}",
-            placeholderNumberType: "MOBILE",
-            separateDialCode: true
-        });
 
         $(function () {
             $("#coba").spartanMultiImagePicker({
