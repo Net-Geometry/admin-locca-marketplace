@@ -462,50 +462,60 @@
         }
 
         function initialize() {
-            @php($default_location=\App\Models\BusinessSetting::where('key','default_location')->first())
-            @php($default_location=$default_location->value?json_decode($default_location->value, true):0)
-            let myLatlng = { lat: {{$default_location?$default_location['lat']:'23.757989'}}, lng: {{$default_location?$default_location['lng']:'90.360587'}} };
-            let dmbounds = new google.maps.LatLngBounds(null);
-            let myOptions = {
+            @php($default_location = \App\Models\BusinessSetting::where('key', 'default_location')->first())
+            @php($default_location = $default_location->value ? json_decode($default_location->value, true) : 0)
+            var myLatlng = {
+                lat: {{ $default_location ? $default_location['lat'] : '23.757989' }},
+                lng: {{ $default_location ? $default_location['lng'] : '90.360587' }}
+            };
+            var dmbounds = new google.maps.LatLngBounds(null);
+            var myOptions = {
                 zoom: 13,
                 center: myLatlng,
                 mapTypeId: google.maps.MapTypeId.ROADMAP
             }
-            let deliveryMan = <?php echo json_encode($deliveryMen); ?>;
+            var deliveryMan = <?php echo json_encode($deliveryMen); ?>;
             map = new google.maps.Map(document.getElementById("map-canvas"), myOptions);
 
-            let infowindow = new google.maps.InfoWindow();
+            var infowindow = new google.maps.InfoWindow();
 
             map.fitBounds(dmbounds);
-            for (let i = 0; i < deliveryMan.length; i++) {
-                if (deliveryMan[i].lat) {
-                    let contentString = "<div style='float:left'><img style='max-height:40px;wide:auto;' src='{{ asset('storage/app/public/delivery-man') }}/"+deliveryMan[i].image+"'></div><div style='float:right; padding: 10px;'><b>"+deliveryMan[i].name+"</b><br/> "+deliveryMan[i].location+"</div>";
-                    let point = new google.maps.LatLng(deliveryMan[i].lat, deliveryMan[i].lng);
+            deliveryMan.forEach(dm => {
+                if (dm.lat) {
+                    const point = new google.maps.LatLng(dm.lat, dm.lng);
                     dmbounds.extend(point);
                     map.fitBounds(dmbounds);
-                    let marker = new google.maps.Marker({
+
+                    const marker = new google.maps.Marker({
                         position: point,
                         map: map,
-                        title: deliveryMan[i].image,
-                        icon: "{{ asset('public/assets/admin/img/delivery_boy_map.png') }}"
+                        title: dm.image,
+                        icon: "{{ asset('public/assets/admin/img/delivery_boy_active.png') }}"
                     });
-                    dmMarkers[deliveryMan[i].id] = marker;
-                    google.maps.event.addListener(marker, 'click', (function(marker, i) {
-                        return function() {
-                            infowindow.setContent(
-                                "<div style='float:left'><img style='max-height:40px;wide:auto;' src='{{ asset('storage/app/public/delivery-man') }}/" +
-                                deliveryMan[i].image +
-                                "'></div><div style='float:right; padding: 10px;'><b>" + deliveryMan[i]
-                                .name + "</b><br/> " + deliveryMan[i].location + "</b><br/> " + 'Assigned Order: ' + deliveryMan[i].assigned_order_count + "</div>"
-                                );
-                            infowindow.open(map, marker);
-                        }
-                    })(marker, i));
-                }
 
-            };
+                    dmMarkers[dm.id] = marker;
+
+                    google.maps.event.addListener(marker, 'click', function() {
+                        infowindow.setContent(`
+                <div style='float:left'>
+                    <img style='max-height:40px;wide:auto;' onerror="this.src='{{ asset('public/assets/admin/img/160x160/img1.jpg') }}'"  src='{{ asset('storage/app/public/delivery-man') }}/${dm.image}'>
+                </div>
+                <div style='float:right; padding: 10px;'>
+                    <b>${dm.name}</b><br/>
+                    ${dm.location}<br/>
+                    Assigned Order: ${dm.assigned_order_count}
+                </div>`);
+                        infowindow.open(map, marker);
+                    });
+                }
+            });
+
         }
+
         $('#search-form').on('submit', function (e) {
+            initialize();
+            var deliveryMan = <?php echo json_encode($deliveryMen); ?>;
+            var infowindow = new google.maps.InfoWindow();
             let formData = new FormData(this);
             $.ajaxSetup({
                 headers: {
@@ -513,21 +523,52 @@
                 }
             });
             $.post({
-                url: '{{route('admin.users.delivery-man.active-search')}}',
+                url: '{{ route('admin.users.delivery-man.active-search') }}',
                 data: formData,
                 cache: false,
                 contentType: false,
                 processData: false,
-                success: function (data) {
-                    if(data.dm){
-                        let id = data.dm.id;
-                        map.panTo(dmMarkers[id].getPosition());
-                        map.setZoom(20);
-                        dmMarkers[id].setAnimation(google.maps.Animation.BOUNCE);
-                        window.setTimeout(() => {
-                            dmMarkers[id].setAnimation(null);
-                        }, 3);
-                    }else{
+                success: function(data) {
+                    let itemCount = 0;
+                    if (data.dm) {
+                        deliveryMan.forEach(item => {
+
+                            const isDMActive = data.dm.some(ddm => ddm.id === item.id);
+                            if (isDMActive) {
+                                itemCount++
+                            }
+                            const icon = isDMActive ?
+                                "{{ asset('public/assets/admin/img/delivery_boy_active.png') }}" :
+                                "{{ asset('public/assets/admin/img/delivery_boy_map_inactive.png') }}";
+
+                            const marker = new google.maps.Marker({
+                                position: dmMarkers[item.id].getPosition(),
+                                map: map,
+                                icon: icon,
+                            });
+                            map.panTo(dmMarkers[item.id].getPosition());
+                            map.setZoom(20);
+                            let dmViewContent = `
+                <div style='float:left'>
+                    <img style='max-height:40px;wide:auto;' onerror="this.src='{{ asset('public/assets/admin/img/160x160/img1.jpg') }}'"  src='{{ asset('storage/app/public/delivery-man') }}/${item.image}'>
+                </div>
+                <div style='float:right; padding: 10px;'>
+                    <b>${item.name}</b><br/>
+                    ${item.location}<br/>
+                    Assigned Order: ${item.assigned_order_count}
+                </div>`
+
+                            if (isDMActive && itemCount == 1) {
+                                infowindow.setContent(dmViewContent);
+                                infowindow.open(map, marker);
+                            } else {
+                                google.maps.event.addListener(marker, 'click', function() {
+                                    infowindow.setContent(dmViewContent);
+                                    infowindow.open(map, marker);
+                                });
+                            }
+                        });
+                    } else {
                         toastr.error('Delivery Man not found', {
                             CloseButton: true,
                             ProgressBar: true
@@ -536,86 +577,6 @@
                 },
             });
         });
-
-        function set_all_zones()
-        {
-            $.get({
-                url: '{{route('admin.zone.zoneCoordinates')}}',
-                dataType: 'json',
-                success: function (data) {
-                    for(let i=0; i<data.length;i++)
-                    {
-                        polygons.push(new google.maps.Polygon({
-                            paths: data[i],
-                            strokeColor: "#FF0000",
-                            strokeOpacity: 0.8,
-                            strokeWeight: 2,
-                            fillColor: "#FF0000",
-                            fillOpacity: 0.1,
-                        }));
-                        polygons[i].setMap(map);
-                    }
-
-                },
-            });
-        }
-        $(document).on('ready', function(){
-            // set_all_zones();
-        });
-
-
-    let options = {
-          series: [{
-          name: '{{ translate('New_Customer_Growth') }}',
-          data: [{{$last_year_users > 0 ? number_format($user_data[1]/$last_year_users,2) : 0}},
-           {{$user_data[1] > 0 ? number_format($user_data[2]/$user_data[1],2) : 0}},
-           {{$user_data[2] > 0 ? number_format($user_data[3]/$user_data[2],2) : 0}},
-           {{$user_data[3] > 0 ? number_format($user_data[4]/$user_data[3],2) : 0}},
-           {{$user_data[4] > 0 ? number_format($user_data[5]/$user_data[4],2) : 0}},
-           {{$user_data[5] > 0 ? number_format($user_data[6]/$user_data[5],2) : 0}},
-           {{$user_data[6] > 0 ? number_format($user_data[7]/$user_data[6],2) : 0}},
-           {{$user_data[7] > 0 ? number_format($user_data[8]/$user_data[7],2) : 0}},
-           {{$user_data[8] > 0 ? number_format($user_data[9]/$user_data[8],2) : 0}},
-           {{$user_data[9] > 0 ? number_format($user_data[10]/$user_data[9],2) : 0}},
-           {{$user_data[10] > 0 ? number_format($user_data[11]/$user_data[10],2) : 0}},
-           {{$user_data[11] > 0 ? number_format($user_data[12]/$user_data[11],2) : 0}}]
-        }],
-          chart: {
-          height: 235,
-          type: 'area',
-          toolbar: {
-            show:false
-        }
-        },
-        dataLabels: {
-          enabled: false
-        },
-        stroke: {
-          curve: 'straight',
-          width: 2,
-        },
-        colors: ['#107980'],
-        fill: {
-            type: 'gradient',
-            colors: ['#107980'],
-        },
-        xaxis: {
-        //   type: 'datetime',
-          categories: ["{{ translate('Jan') }}", "{{ translate('Feb') }}", "{{ translate('Mar') }}", "{{ translate('Apr') }}", "{{ translate('May') }}", "{{ translate('Jun') }}", "{{ translate('Jul') }}", "{{ translate('Aug') }}", "{{ translate('Sep') }}", "{{ translate('Oct') }}", "{{ translate('Nov') }}", "{{ translate('Dec') }}" ]
-        },
-        tooltip: {
-          x: {
-            format: 'dd/MM/yy HH:mm'
-          },
-        },
-        };
-
-        let chart = new ApexCharts(document.querySelector("#customer-growth-chart"), options);
-        chart.render();
-
-
-
-
     </script>
 
 @endpush
