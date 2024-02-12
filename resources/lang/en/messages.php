@@ -4168,7 +4168,8 @@
   'store_imported_successfully' => 'Store imported successfully',
   'You_can_upload_your_category_images_in_category_folder_from_gallery_and_copy_image`s_path' => 'You can upload your category images in category folder from gallery and copy image`s path',
   'Select_Data_Range_by_Date_or_ID_and_Export' => 'Select Data Range by Date or ID and Export',
-  'Ex: ABC Company' => 'Ex: ABC Company',
-  'Select_zone_first' => 'Select zone first',
-  'Upload Cover Photo' => 'Upload Cover Photo',
+  'pages' => 'pages',
+  'system' => 'system',
+  'categoriy' => 'Categoriy',
+  'restaurant' => 'Restaurant',
 );

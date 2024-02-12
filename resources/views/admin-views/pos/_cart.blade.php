@@ -4,7 +4,7 @@
                 <tr class="text-center">
                     <th class="border-bottom-0 border-top-0" scope="col">{{translate('messages.food')}}</th>
                     <th class="border-bottom-0 border-top-0" scope="col">{{translate('messages.QTY')}}</th>
-                    <th class="border-bottom-0 border-top-0 text-right" scope="col">{{translate('messages.price')}}</th>
+                    <th class="border-bottom-0 border-top-0 text-right" scope="col">{{translate('messages.Unit_price')}}</th>
                     <th class="border-bottom-0 border-top-0" scope="col">{{translate('messages.delete')}}</th>
                 </tr>
             </thead>
@@ -90,8 +90,11 @@
     ?>
     <div class="box p-3">
         <dl class="row text-dark">
+            @if (Config::get('module.current_module_type') == 'food')
+
             <dd  class="col-6">{{translate('messages.addon')}}:</dd>
             <dd class="col-6 text-right">{{\App\CentralLogics\Helpers::format_currency($addon_price)}}</dd>
+            @endif
 
             <dd  class="col-6">{{translate('messages.subtotal')}}
                 @if ($tax_included ==  1)

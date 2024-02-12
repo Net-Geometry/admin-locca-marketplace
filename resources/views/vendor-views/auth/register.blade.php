@@ -18,7 +18,7 @@
             @php($language = $language->value ?? null)
             @php($defaultLang = 'en')
             <!-- End Page Header -->
-            
+
     <form class="js-validate" action="{{ route('restaurant.store') }}" method="post" enctype="multipart/form-data"
         id="form-id">
         @csrf
@@ -541,6 +541,8 @@
                     });
                 </script>
             @endif
+
+
 
     <script src="{{ asset('public/assets/landing/js/select2.min.js') }}"></script>
     @endpush
