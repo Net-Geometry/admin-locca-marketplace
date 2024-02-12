@@ -220,7 +220,21 @@ const input = document.querySelector('input[type="tel"]');
     formatOnDisplay: false,
     });
 
-    
+
+    function keepNumbersAndPlus(inputString) {
+    let regex = /[0-9+]/g;
+    let filteredString = inputString.match(regex);
+    let result = filteredString ? filteredString.join('') : '';
+    return result;
+}
+
+    document.getElementById('phone').addEventListener('keyup', function(event) {
+        let input = event.target.value;
+        let result = keepNumbersAndPlus(input);
+        event.target.value = result;
+    });
+
+
     $(document).on('ready', function(){
         // $('body').css('overflow','')
         $(".direction-toggle").on("click", function () {

@@ -365,6 +365,18 @@ $countryCode= strtolower($country?$country->value:'auto');
         formatOnDisplay: false,
         });
 
+        function keepNumbersAndPlus(inputString) {
+        let regex = /[0-9+]/g;
+        let filteredString = inputString.match(regex);
+        let result = filteredString ? filteredString.join('') : '';
+        return result;
+        }
+
+        document.getElementById('phone').addEventListener('keyup', function(event) {
+            let input = event.target.value;
+            let result = keepNumbersAndPlus(input);
+            event.target.value = result;
+        });
 
  $(".main-category-slider").owlCarousel({
             loop: true,

@@ -256,7 +256,7 @@ class ItemController extends Controller
             $this->store_temp_data($item, $request,$tag_ids);
             $item->is_approved = 0;
             $item->save();
-            return response()->json(['success' => translate('messages.The_product_will_be_published_once_it_receives_approval_from_the_admin.')], 200);
+            return response()->json(['message' => translate('messages.The_product_will_be_published_once_it_receives_approval_from_the_admin.')], 200);
 
         }
 
@@ -522,7 +522,7 @@ class ItemController extends Controller
         if (Helpers::get_mail_status('product_approval') && ((data_get($product_approval_datas,'Update_anything_in_product_details',null) == 1) || (data_get($product_approval_datas,'Update_product_price',null) == 1 && $old_price !=  $request->price) || ( data_get($product_approval_datas,'Update_product_variation',null) == 1 &&  $variation_changed)) )  {
 
             $this->store_temp_data($p, $request,$tag_ids, true);
-            return response()->json(['product_approval' => translate('your_product_added_for_approval')], 200);
+            return response()->json(['message' => translate('your_product_added_for_approval')], 200);
         }
 
 
