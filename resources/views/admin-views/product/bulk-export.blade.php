@@ -107,7 +107,7 @@
                         </div>
                         <div class="col-12">
                             <div class="btn--container justify-content-end">
-                                <button type="reset" class="btn btn--reset">{{translate('clear')}}</button>
+                                <button type="reset" id="reset-btn" class="btn btn--reset">{{translate('clear')}}</button>
                                 <button type="submit" class="btn btn--primary">{{translate('export')}}</button>
                             </div>
                         </div>
@@ -129,6 +129,11 @@
             $('.id_wise').hide();
             $('.date_wise').hide();
             $('.'+$(this).val()).show();
+        })
+        $('#reset-btn').on('click', function()
+        {
+            $('.id_wise').hide();
+            $('.date_wise').hide();
         })
     });
 </script>

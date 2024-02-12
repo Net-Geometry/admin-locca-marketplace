@@ -101,7 +101,7 @@
                                     alt="{{$dm['f_name']}} {{$dm['l_name']}}">
                                     <div class="info">
                                         <h5 class="text-hover-primary mb-0">{{$dm['f_name'].' '.$dm['l_name']}}</h5>
-                                    
+
                                     </div>
                                 </a>
                             </td>
@@ -148,6 +148,7 @@
                     @endforeach
                     </tbody>
                 </table>
+            </div>
                 @if(count($deliveryMen) !== 0)
                 <hr>
                 @endif
@@ -162,7 +163,6 @@
                     </h5>
                 </div>
                 @endif
-            </div>
             <!-- End Table -->
         </div>
         <!-- End Card -->
