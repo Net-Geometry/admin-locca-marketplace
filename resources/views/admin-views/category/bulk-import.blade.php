@@ -22,9 +22,9 @@
                             <div class="export-steps-item-2 h-100">
                                 <div class="top">
                                     <div>
-                                        <h3 class="font-regular">{{translate('Step 1')}}</h3>
+                                        <h3 class="font-regular">{{translate('Step_1')}}</h3>
                                         <div>
-                                            {{translate('Download Excel File')}}
+                                            {{translate('Download_Excel_File')}}
                                         </div>
                                     </div>
                                     <img src="{{asset('/public/assets/admin/img/bulk-import-1.png')}}" alt="">
@@ -37,6 +37,9 @@
                                     <li>
                                         {{ translate('You_can_download_the_example_file_to_understand_how_the_data_must_be_filled.') }}
                                     </li>
+                                    <li>
+                                        {{ translate('Have_to_upload_excel_file.') }}
+                                    </li>
 
                                 </ul>
                             </div>
@@ -45,9 +48,9 @@
                             <div class="export-steps-item-2 h-100">
                                 <div class="top">
                                     <div>
-                                        <h3 class="font-regular">{{translate('Step 2')}}</h3>
+                                        <h3 class="font-regular">{{translate('Step_2')}}</h3>
                                         <div>
-                                            {{translate('Match Spread sheet data according to instruction')}}
+                                            {{translate('Match_Spread_sheet_data_according_to_instruction')}}
                                         </div>
                                     </div>
                                     <img src="{{asset('/public/assets/admin/img/bulk-import-2.png')}}" alt="">
@@ -55,7 +58,7 @@
                                 <h4>{{ translate('Instruction') }}</h4>
                                 <ul class="m-0 pl-4">
                                     <li>
-                                        {{ translate('Once_you_have_downloaded_and_filled_the_format_file_upload_it_in_the_form_below_and_submit') }}
+                                        {{ translate('Fill_up_the_data_according_to_the_format') }}
                                     </li>
                                     <li>
                                         {{ translate('For_parent_category_"position"_will_0_and_for_sub_category_it_will_be_1')}}
@@ -76,9 +79,9 @@
                             <div class="export-steps-item-2 h-100">
                                 <div class="top">
                                     <div>
-                                        <h3 class="font-regular">{{translate('Step 3')}}</h3>
+                                        <h3 class="font-regular">{{translate('Step_3')}}</h3>
                                         <div>
-                                            {{translate('Validate data and complete import')}}
+                                            {{translate('Validate_data_and_complete_import')}}
                                         </div>
                                     </div>
                                     <img src="{{asset('/public/assets/admin/img/bulk-import-3.png')}}" alt="">
@@ -86,11 +89,17 @@
                                   <h4>{{ translate('Instruction') }}</h4>
                                 <ul class="m-0 pl-4">
                                     <li>
-                                       {{ translate('You_can_upload_your_category_images_in_category_folder_from_gallery_and_copy_image`s_path') }}
-                                    </li>
-                                    <li>
-                                        {{ translate('Have_to_upload_excel_file') }}
-                                    </li>
+                                        {{ translate('In_the_Excel_file_upload_section,_first_select_the_upload_option.') }}
+                                     </li>
+                                     <li>
+                                        {{ translate('Upload_your_file_in_.xls,_.xlsx_format.') }}
+                                     </li>
+                                     <li>
+                                        {{ translate('Finally_click_the_upload_button.') }}
+                                     </li>
+                                     <li>
+                                        {{ translate('You_can_upload_your_category_images_in_category_folder_from_gallery_and_copy_image`s_path.') }}
+                                     </li>
 
                                 </ul>
                             </div>
@@ -142,7 +151,7 @@
                                             <div>
                                                 <img src="{{asset('/public/assets/admin/img/bulk-import-3.png')}}" alt="">
                                             </div>
-                                            <div class="filename">{{translate('Must be Excel files using our Excel template above')}}</div>
+                                            <div class="filename">{{translate('Must_be_Excel_files_using_our_Excel_template_above')}}</div>
                                         </div>
                                         <input type="file" name="products_file" class="form-control-file text--primary font-weight-bold action-upload-section-dot-area" id="products_file">
                                     </div>
