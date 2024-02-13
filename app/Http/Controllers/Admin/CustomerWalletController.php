@@ -72,7 +72,7 @@ class CustomerWalletController extends Controller
         if ($request->search) {
             $key = explode(' ', $request['search']);
         }
-        $data = WalletTransaction::selectRaw('sum(credit) as total_credit, sum(debit) as total_debit, SUM(IF(transaction_type = "add_fund_by_admin", credit, 0)) as add_fund_total,SUM(IF(transaction_type = "order_refund", credit, 0)) as order_refund_total,SUM(IF(transaction_type = "loyalty_point", credit, 0)) as loyalty_point_total,SUM(IF(transaction_type = "order_place", credit, 0)) as order_place_total')
+        $data = WalletTransaction::selectRaw('sum(credit+admin_bonus) as total_credit, sum(debit) as total_debit, SUM(IF(transaction_type = "add_fund_by_admin", credit, 0)) as add_fund_total,SUM(IF(transaction_type = "order_refund", credit, 0)) as order_refund_total,SUM(IF(transaction_type = "loyalty_point", credit, 0)) as loyalty_point_total,SUM(IF(transaction_type = "order_place", credit, 0)) as order_place_total')
             ->when(($request->from && $request->to),function($query)use($request){
                 $query->whereBetween('created_at', [$request->from.' 00:00:00', $request->to.' 23:59:59']);
             })

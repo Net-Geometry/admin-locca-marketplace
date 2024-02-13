@@ -47,7 +47,13 @@ class DeliveryManUpdateRequest extends FormRequest
             'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10|unique:delivery_men,phone,'.$this->id,
             'vehicle_id' => 'required',
             'earning' => 'required',
-            'password' => ['nullable', Password::min(8)->mixedCase()->letters()->numbers()->symbols()->uncompromised()],
+            'password' => ['required', Password::min(8)->mixedCase()->letters()->numbers()->symbols()->uncompromised(),
+                function ($attribute, $value, $fail) {
+                    if (strpos($value, ' ') !== false) {
+                        $fail('The :attribute cannot contain white spaces.');
+                    }
+                },
+            ],
         ];
     }
 
@@ -64,6 +70,7 @@ class DeliveryManUpdateRequest extends FormRequest
             'password.numbers' => translate('The password must contain numbers'),
             'password.symbols' => translate('The password must contain symbols'),
             'password.uncompromised' => translate('The password is compromised. Please choose a different one'),
+            'password.custom' => translate('The password cannot contain white spaces.'),
         ];
     }
 }

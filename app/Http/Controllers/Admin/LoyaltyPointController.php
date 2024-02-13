@@ -26,7 +26,7 @@ class LoyaltyPointController extends Controller
             $query->whereBetween('created_at', [$request->from.' 00:00:00', $request->to.' 23:59:59']);
         })
         ->when(isset($from) && isset($to) && $from != null && $to != null && $filter == 'custom', function ($query) use ($from, $to) {
-            return $query->whereBetween('created_at', [$from . " 00:00:00", $to . " 23:59:59"]);
+            return $query->whereBetween('created_at', [$from . " 00:00:00", $to . " P23:59:59"]);
         })
         ->when(isset($filter) && $filter == 'this_year', function ($query) {
             return $query->whereYear('created_at', now()->format('Y'));

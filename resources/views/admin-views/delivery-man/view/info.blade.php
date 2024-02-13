@@ -71,7 +71,7 @@
                         </div>
                         <div>
                             <h2 class="title">
-                                {{ $deliveryMan->total_delivered_orders()->count() }}
+                                {{count($deliveryMan['order_transaction'])}}
                             </h2>
                             <div class="subtitle">
                                 {{ translate('messages.total_delivered_orders') }}
@@ -131,7 +131,7 @@
                             <div class="color-card color-4">
                                 <div class="img-box">
                                     <img class="resturant-icon w--30"
-                                        src="{{ asset('/public/assets/admin/img/icons/color-icon-4.png') }}"
+                                        src="{{ asset('/public/assets/admin/img/icons/group.png') }}"
                                         alt="transactions">
                                 </div>
                                 <div>
@@ -167,7 +167,7 @@
                             <div class="color-card color-4">
                                 <div class="img-box">
                                     <img class="resturant-icon w--30"
-                                        src="{{ asset('/public/assets/admin/img/icons/color-icon-4.png') }}"
+                                        src="{{ asset('/public/assets/admin/img/icons/group.png') }}"
                                         alt="transactions">
                                 </div>
                                 <div>
@@ -334,7 +334,7 @@
                                         height="35" alt="">
                                     <div class="">
                                         <h6 class="mb-1">{{ translate('messages.Zone') }}</h6>
-                                        <p class="mb-0 font-weight-normal">{{ $deliveryMan->zone->name }}</p>
+                                        <p class="mb-0 font-weight-normal">{{ isset($deliveryMan->zone)?$deliveryMan->zone->name:translate('zone_deleted') }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -440,10 +440,13 @@
 
                                 @else
 
-                                <div class="d-flex flex-column align-items-center justify-content-center px-4">
+                                <div class="d-flex flex-column align-items-center justify-content-center px-4 m-auto">
                                     <img class=" w-100"
-                                        src="{{ asset('public/assets/admin/img/icons/no-rating.png') }}"
+                                        src="{{ asset('public/assets/admin/img/icons/no_rating.png') }}"
                                         alt="">
+                                    <p class="mb-0 font-weight-normal">
+                                        {{ translate('messages.no_review/rating_given_yet') }}
+                                    </p>
                                 </div>
                                 @endif
                             </div>

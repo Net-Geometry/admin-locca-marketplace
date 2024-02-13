@@ -121,7 +121,7 @@
                                             data-status="{{ $vehicle->status}}"
                                             data-starting_coverage_area="{{ $vehicle->starting_coverage_area}}"
                                             data-maximum_coverage_area="{{ $vehicle->maximum_coverage_area}}"
-                                            data-extra_charges="{{\App\CentralLogics\Helpers::format_currency($vehicle->extra_charges)}}"
+                                            data-extra_charges="{{$vehicle->extra_charges}}"
                                             data-edit_button="{{route('admin.users.delivery-man.vehicle.edit',[$vehicle['id']])}}"
                                             data-delete_button="vehicle-{{$vehicle['id']}}"
                                             class="btn action-btn btn--warning btn-outline-warning vehicle-info-show" ><i class="tio-visible"></i>
@@ -204,7 +204,7 @@
                                     <span class="font-semibold text-dark" id="maximum_coverage_area"></span>
                                 </div>
                                 <div class="d-flex justify-content-center  align-items-center gap-2">
-                                    <span>{{translate('extra_charges')}}</span>
+                                    <span>{{translate('extra_charges')}} ({{\App\CentralLogics\Helpers::currency_symbol()}})</span>
                                     :
                                     <span class="font-semibold text-dark" id="extra_charges"></span>
                                 </div>

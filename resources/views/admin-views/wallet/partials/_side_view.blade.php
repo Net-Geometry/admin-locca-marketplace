@@ -35,7 +35,8 @@
             </div>
             <div class="key-val-list-item d-flex gap-3">
                 <span>{{ translate('Address') }}:</span>
-                <span>{{$withdraw->vendor->stores[0]->address}}</span>
+                <a href="https://www.google.com/maps/search/?api=1&query={{ data_get($withdraw->vendor->stores[0],'latitude',0)}},{{ data_get($withdraw->vendor->stores[0],'longitude',0)}}" target="_blank">{{ $withdraw->vendor->stores[0]['address'] }}</a>
+
             </div>
         </div>
 
@@ -88,6 +89,6 @@
     @if ($withdraw->approved == 0)
     <div class="mt-4 d-flex justify-content-center gap-3">
         <button type="button" data-id="{{$withdraw->id}}" class="btn btn-soft-danger withdraw-info-hide min-w-100px show-deny-view">{{translate('deny')}}</button>
-        <button type="button" data-id="{{$withdraw->id}}" class="btn btn-success withdraw-info-hide min-w-100px show-approve-view">{{translate('approved')}}</button>
+        <button type="button" data-id="{{$withdraw->id}}" class="btn btn-success withdraw-info-hide min-w-100px show-approve-view">{{translate('approve')}}</button>
     </div>
     @endif

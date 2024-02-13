@@ -173,6 +173,8 @@
                                             data-type="{{ $at->from_type == 'deliveryman' ?  translate('DeliveryMan_Info') : translate('Store_Info') }}"
                                             data-phone="{{ $at->store ?  $at?->store?->phone : $at?->deliveryman?->phone  }}"
                                             data-address="{{ $at->store ?  $at?->store?->address : $at?->deliveryman?->last_location?->location ?? tralslate('address_not_found') }}"
+                                            data-latitude="{{ $at->store ?  $at?->store?->latitude : $at?->deliveryman?->last_location?->location ?? 0 }}"
+                                            data-longitude="{{ $at->store ?  $at?->store?->longitude : $at?->deliveryman?->last_location?->location ?? 0 }}"
                                             data-name="{{ $at->store ?  $at?->store?->name : $at?->deliveryman?->f_name.' '.$at?->deliveryman?->l_name }}"
 
                                             class="btn action-btn btn--warning btn-outline-warning withdraw-info-show" ><i class="tio-visible"></i>
@@ -250,7 +252,7 @@
                     </div>
                     <div class="key-val-list-item d-flex gap-3">
                         <span>{{translate('address')}}:</span>
-                        <span id="address"></span>
+                        <a id="address" target="_blank"></a>
                     </div>
                 </div>
             </div>
@@ -268,6 +270,7 @@
     $('.withdraw-info-show').on('click', function () {
 
         let data = $(this).data();
+        console.log(data)
             $('.sidebar-wrap #payment_method').text(data.payment_method);
             $('.sidebar-wrap #amount').text(data.amount);
             $('.sidebar-wrap #type').text(data.type);
@@ -275,7 +278,7 @@
             $('.sidebar-wrap #ref').text(data.ref);
             $('.sidebar-wrap #name') .text(data.name);
             $('.sidebar-wrap #phone').text(data.phone).attr('href', 'tel:' + data.phone);
-            $('.sidebar-wrap #address').text(data.address);
+            $('.sidebar-wrap #address').text(data.address).attr('href', "https://www.google.com/maps/search/?api=1&query=" + data.latitude + "," + data.longitude);
             // $('#deliverymanReviewModal').modal('show');
 
             $('.withdraw-info-sidebar, .withdraw-info-sidebar-overlay').addClass('show');

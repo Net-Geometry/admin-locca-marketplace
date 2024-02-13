@@ -278,15 +278,9 @@ $(document).on('click', '.confirm-Toggle', function () {
     }
     if(toggle_id === 'product_approval'){
         if ($("#product_approval").is(':checked')) {
-            $("#inlineCheckbox1").prop('disabled', false);
-            $("#inlineCheckbox2").prop('disabled', false);
-            $("#inlineCheckbox3").prop('disabled', false);
-            $("#inlineCheckbox4").prop('disabled', false);
+            $(".access_product_approval").removeClass('d-none');
         } else {
-            $("#inlineCheckbox1").prop('disabled', true);
-            $("#inlineCheckbox2").prop('disabled', true);
-            $("#inlineCheckbox3").prop('disabled', true);
-            $("#inlineCheckbox4").prop('disabled', true);
+            $(".access_product_approval").addClass('d-none');
         }
     }
     if(toggle_id === 'additional_charge_status'){
@@ -334,8 +328,3 @@ $(document).on('click', '.confirm-Toggle', function () {
 });
 
 
-$('.location-reload-to-base').on('click', function () {
-    let currentURL = window.location.href;
-    let updatedURL = currentURL.split('?')[0];
-    window.location.href = updatedURL;
-});

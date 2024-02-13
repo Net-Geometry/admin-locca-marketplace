@@ -89,7 +89,7 @@
                     <img class="rounded-circle" width="20" height="20" src="{{asset('public/assets/admin/img/icons/info-icon.png')}}" alt="">
                     <h6 class="mb-0"> {{ translate('Learn_more') }}</h6>
                 </div>
-                <p class="mb-0 text-muted text-normal">{{ translate('You_can’t_chat_in_deliveryman_chat_because_it’s_delivery_man_previous_chat_history_only_you_can_monitor_or_view_their_conversation_to_avoid_unexpected_situation.')}}</p>
+                <p class="mb-0 text-muted text-normal">{{ translate('You can’t chat with deliveryman because it’s delivery man previous chat history, only you can monitor or view their conversation to avoid unexpected situation.')}}</p>
             </div>
         </div>
     </div>
