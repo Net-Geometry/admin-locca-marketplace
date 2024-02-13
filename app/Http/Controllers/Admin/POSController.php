@@ -473,6 +473,9 @@ class POSController extends Controller
                     $request->session()->put('cart_product_ids', $product_ids);
                 }
             }
+
+
+            
             $cart->forget($request->key);
             $request->session()->put('cart', $cart);
         }

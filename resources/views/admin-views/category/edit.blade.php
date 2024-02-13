@@ -94,7 +94,7 @@
                                     <div class="icon-file-group">
                                         <label class="icon-file">
                                             <input type="file" name="image" id="customFileEg1" class="custom-file-input read-url"
-                                                accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*" required>
+                                                accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
                                                 <i class="tio-edit"></i>
                                         </label>
                                     </div>
@@ -121,11 +121,14 @@
         "use strict";
         $('#reset_btn').click(function(){
             $('#module_id').val("{{ $category->module_id }}").trigger('change');
-            $('#viewer').attr('src', "{{asset('storage/app/public/category')}}/{{$category['image']}}");
+            $('#viewer').attr('src', "{{\App\CentralLogics\Helpers::onerror_image_helper($category['image'], asset('storage/app/public/category/').'/'.$category['image'], asset('public/assets/admin/img/upload-img.png'), 'category/') }}");
         })
         $("#customFileEg1").change(function() {
             readURL(this);
             $('#viewer').show(1000)
         });
+
+
+        
     </script>
 @endpush

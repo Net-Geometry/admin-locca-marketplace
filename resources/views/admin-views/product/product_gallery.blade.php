@@ -213,31 +213,33 @@
         });
 
         $('#search-form').on('submit', function (e) {
-            e.preventDefault();
-            let formData = new FormData(this);
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $.post({
-                url: '{{route('admin.item.search')}}',
-                data: formData,
-                cache: false,
-                contentType: false,
-                processData: false,
-                beforeSend: function () {
-                    $('#loading').show();
-                },
-                success: function (data) {
-                    $('#set-rows').html(data.view);
-                    $('.page-area').hide();
-                    $('#foodCount').html(data.count);
-                },
-                complete: function () {
-                    $('#loading').hide();
-                },
-            });
-        });
+    e.preventDefault();
+    let formData = new FormData(this);
+    let queryParams = $(this).serialize();
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    $.post({
+        url: '{{ route('admin.item.search') }}?' + queryParams,
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        beforeSend: function () {
+            $('#loading').show();
+        },
+        success: function (data) {
+            $('#set-rows').html(data.view);
+            $('.page-area').hide();
+            $('#foodCount').html(data.count);
+        },
+        complete: function () {
+            $('#loading').hide();
+        },
+    });
+});
     </script>
 @endpush

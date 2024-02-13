@@ -74,7 +74,7 @@ class ItemController extends Controller
         }
 
         if ($request['price'] <= $dis) {
-                $validator->getMessageBag()->add('unit_price', translate('messages.discount_can_not_be_more_than_or_equal'));
+                $validator->getMessageBag()->add('unit_price', translate('messages.discount_can_not_be_more_than_or_equal_han_the_item_price'));
         }
 
         if ($request['price'] <= $dis || $validator->fails()) {
@@ -833,7 +833,6 @@ class ItemController extends Controller
 
     public function search(Request $request)
     {
-        // dd('frdiuhgiu');
         $view='admin-views.product.partials._table';
         $key = explode(' ', $request['search']);
         $store_id = $request->query('store_id', 'all');

@@ -58,7 +58,7 @@
                                         <form id="search-form" class="search-form">
                                             <!-- Search -->
                                             <div class="input-group input--group input-group--merge">
-                                                <input id="datatableSearch" type="search" value="{{$keyword??''}}" name="search" class="form-control h--45px" placeholder="{{translate('messages.Search_by_product_name_or_bar_code')}}" aria-label="{{translate('messages.search_here')}}" disabled>
+                                                <input id="datatableSearch" type="search" value="{{$keyword??''}}" name="search" class="form-control h--45px" placeholder="{{translate('messages.Search_by_product_name')}}" aria-label="{{translate('messages.search_here')}}" disabled>
                                                 <img width="16" height="16" src="{{asset('public/assets/admin/img/icons/search-icon.png')}}" alt="" class="search-icon">
 
                                                 @if($keyword)
@@ -842,11 +842,7 @@
             $('#single-list').empty().html(data);
         });
     }
-    {{--function updateSingleItem() {--}}
-    {{--    $.post('<?php echo e(route('admin.pos.single_items')); ?>?store_id={{request()?->store_id}}&&category_id={{request()?->category_id}}&&keyword={{request()?->keyword}}', {_token: '<?php echo e(csrf_token()); ?>'}, function (data) {--}}
-    {{--        $('#single-list').empty().html(data);--}}
-    {{--    });--}}
-    {{--}--}}
+
 
    $(function(){
         $(document).on('click','input[type=number]',function(){ this.select(); });

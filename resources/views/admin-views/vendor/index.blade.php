@@ -127,7 +127,7 @@
                                             <label class="icon-file">
                                                 <i class="tio-edit"></i>
                                                 <input type="file" name="logo" id="customFileEg1" class="custom-file-input"
-                                                    accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*" required>
+                                                    accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*" >
                                             </label>
                                         </div>
                                     </div>

@@ -659,14 +659,18 @@ $countryCode= strtolower($country?$country->value:'auto');
     //     // hiddenInput: "phone"
     // });
 
-    const input = document.querySelector('input[type="tel"]');
-  window.intlTelInput(input, {
-    initialCountry: "{{$countryCode}}",
-    utilsScript: "{{ asset('public/assets/admin/intltelinput/js/utils.js') }}",
-    autoInsertDialCode: true,
-    nationalMode: false,
-    formatOnDisplay: false,
-  });
+    const inputs = document.querySelectorAll('input[type="tel"]');
+
+    inputs.forEach(input => {
+        window.intlTelInput(input, {
+            initialCountry: "{{$countryCode}}",
+            utilsScript: "{{ asset('public/assets/admin/intltelinput/js/utils.js') }}",
+            autoInsertDialCode: true,
+            nationalMode: false,
+            formatOnDisplay: false,
+        });
+    });
+
 
   function keepNumbersAndPlus(inputString) {
     let regex = /[0-9+]/g;
@@ -676,6 +680,11 @@ $countryCode= strtolower($country?$country->value:'auto');
 }
 
 document.getElementById('phone').addEventListener('keyup', function(event) {
+    let input = event.target.value;
+    let result = keepNumbersAndPlus(input);
+    event.target.value = result;
+});
+document.getElementById('contact_person_number').addEventListener('keyup', function(event) {
     let input = event.target.value;
     let result = keepNumbersAndPlus(input);
     event.target.value = result;

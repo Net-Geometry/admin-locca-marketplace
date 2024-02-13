@@ -81,7 +81,7 @@
                                     </label>
                                     <input type="text" name="name[]" id="default_name"
                                         class="form-control" placeholder="{{ translate('messages.new_item') }}"
-                                        required
+                                        
                                          >
                                 </div>
                                 <input type="hidden" name="lang[]" value="default">
@@ -120,7 +120,7 @@
                                         <label class="input-label"
                                             for="exampleFormControlInput1">{{ translate('messages.name') }} ({{ translate('messages.default') }})</label>
                                         <input type="text" name="name[]" class="form-control"
-                                            placeholder="{{ translate('messages.new_item') }}" required>
+                                            placeholder="{{ translate('messages.new_item') }}" >
                                     </div>
                                     <input type="hidden" name="lang[]" value="default">
                                     <div class="form-group mb-0">
@@ -140,14 +140,18 @@
                                 <div class="flex-grow-1 mx-auto">
                                     <label class="text-dark d-block mb-4 mb-xl-5">
                                         {{ translate('messages.item_image') }}
-                                        <small class="text-danger">* ( {{ translate('messages.ratio') }} 1:1 )</small>
+                                        <small class="">( {{ translate('messages.ratio') }} 1:1 )</small>
                                     </label>
                                     <div class="d-flex flex-wrap __gap-12px __new-coba" id="coba"></div>
                                 </div>
                                 <div class="flex-grow-1 mx-auto">
                                     <label class="text-dark d-block mb-4 mb-xl-5">
                                         {{ translate('messages.item_thumbnail') }}
+                                        @if(Config::get('module.current_module_type') == 'food')
+                                        <small class="">( {{ translate('messages.ratio') }} 1:1 )</small>
+                                        @else
                                         <small class="text-danger">* ( {{ translate('messages.ratio') }} 1:1 )</small>
+                                        @endif
                                     </label>
                                     <div class="d-inline-block m-0 position-relative">
                                         <img class="img--176 border" id="viewer" src="{{ asset('public/assets/admin/img/upload-img.png') }}" alt="thumbnail" />
