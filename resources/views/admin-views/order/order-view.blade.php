@@ -378,7 +378,8 @@
                     <div class="card-body px-0">
                         <!-- item cart -->
                         @if ($editing && !$campaign_order)
-                            <div class="row border-top py-5">
+                        <hr>
+                            <div class="row  px-4 py-5">
                                 <div class="col-12">
                                     <div class="row justify-content-end">
                                         <div class="col-sm-6">
@@ -1153,11 +1154,7 @@
                         </div>
                     @endif
                 @endif
-                @if ( !in_array($order->order_status, ['refund_requested', 'refunded', 'refund_request_canceled', 'delivered']) )
-                    {{-- $order->order_status != 'refund_requested' &&
-                        $order->order_status != 'refunded' &&
-                        $order->order_status != 'refund_request_canceled' &&
-                        $order->order_status != 'delivered' --}}
+                @if ( !in_array($order->order_status, ['refund_requested', 'refunded', 'refund_request_canceled', 'delivered','canceled']) )
                     <div class="card">
                         <div class="card-header justify-content-center">
                             <h5 class="card-title">{{ translate('order_setup') }}</h5>

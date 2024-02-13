@@ -112,7 +112,7 @@ class ParcelController extends Controller
         ->when(isset($request->payment_by) && $request->payment_by == 'receiver', function($query){
             return $query->where('charge_payer' ,'receiver');
         })
-
+        ->with('parcel_category')
         ->ParcelOrder()
         ->module(Config::get('module.current_module_id'))
         ->orderBy('schedule_at', 'desc')
@@ -316,6 +316,8 @@ class ParcelController extends Controller
 
     public function dispatch_list($status, Request $request)
     {
+
+         $key = isset($request->search) ?explode(' ', $request->search): ($request['amp;search'] ? explode(' ', $request['amp;search']) : null) ;
         $module_id = $request->query('module_id', null);
 
         if (session()->has('order_filter')) {
@@ -328,6 +330,15 @@ class ParcelController extends Controller
         $orders = Order::with(['customer', 'store'])
             ->when(isset($module_id), function ($query) use ($module_id) {
                 return $query->module($module_id);
+            })
+            ->when(isset($key),function($query)use($key){
+                return $query->where(function ($q) use ($key) {
+                    foreach ($key as $value) {
+                        $q->orWhere('id', 'like', "%{$value}%")
+                        ->orWhere('order_status', 'like', "%{$value}%")
+                        ->orWhere('transaction_reference', 'like', "%{$value}%");
+                    }
+                });
             })
             ->when(isset($request->zone), function ($query) use ($request) {
                 return $query->whereHas('store', function ($query) use ($request) {
@@ -366,6 +377,7 @@ class ParcelController extends Controller
     }
     public function parcel_dispatch_list($module,$status, Request $request)
     {
+        $key = isset($request->search) ?explode(' ', $request->search): ($request['amp;search'] ? explode(' ', $request['amp;search']) : null) ;
         $module_id = $request->query('module_id', null);
 
         if (session()->has('order_filter')) {
@@ -378,6 +390,15 @@ class ParcelController extends Controller
         $orders = Order::with(['customer', 'store'])
             ->whereHas('module', function($query) use($module){
                 $query->where('id', $module);
+            })
+            ->when(isset($key),function($query)use($key){
+                return $query->where(function ($q) use ($key) {
+                    foreach ($key as $value) {
+                        $q->orWhere('id', 'like', "%{$value}%")
+                            ->orWhere('order_status', 'like', "%{$value}%")
+                            ->orWhere('transaction_reference', 'like', "%{$value}%");
+                    }
+                });
             })
             ->when(isset($module_id), function ($query) use ($module_id) {
                 return $query->module($module_id);
@@ -413,8 +434,8 @@ class ParcelController extends Controller
         $from_date = isset($request->from_date) ? $request->from_date : null;
         $to_date = isset($request->to_date) ? $request->to_date : null;
         $total = $orders->total();
-
-        return view('admin-views.order.distaptch_list', compact('orders','module', 'status', 'orderstatus', 'scheduled', 'vendor_ids', 'zone_ids', 'from_date', 'to_date', 'total'));
+        $parcel= true;
+        return view('admin-views.order.distaptch_list', compact('orders','module', 'status', 'orderstatus', 'scheduled', 'vendor_ids', 'zone_ids', 'from_date', 'to_date', 'total','parcel'));
     }
 
     public function instruction(Request $request)

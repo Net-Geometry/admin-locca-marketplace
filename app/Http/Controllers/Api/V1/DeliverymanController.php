@@ -426,6 +426,14 @@ class DeliverymanController extends Controller
 
         $order = Order::where(['id' => $request['order_id'], 'delivery_man_id' => $dm['id']])->dmOrder()->first();
 
+        if(!$order || (!$order->store && $order->order_type !='parcel') ){
+            return response()->json([
+                'errors' => [
+                    ['code' => 'not_found', 'message' => translate('messages.you_can_not_change_the_status_of_this_order')]
+                ]
+            ], 403);
+        }
+
         if($request['status'] =="confirmed" && config('order_confirmation_model') == 'store')
         {
             return response()->json([

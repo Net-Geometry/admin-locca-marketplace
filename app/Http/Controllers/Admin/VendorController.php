@@ -340,16 +340,44 @@ class VendorController extends Controller
             Toastr::warning(translate('messages.you_can_not_delete_this_store_please_add_a_new_store_to_delete'));
             return back();
         }
-        if (Storage::disk('public')->exists('store/' . $store['logo'])) {
-            Storage::disk('public')->delete('store/' . $store['logo']);
+        if(Order::where('store_id', $store->id)->whereIn('order_status', ['pending','accepted','confirmed','processing','handover','picked_up'])->exists())
+        {
+            Toastr::warning(translate('messages.you_can_not_delete_this_store_Please_complete_the_ongoing_and_accepted_orders'));
+            return back();
         }
-        $store->delete();
 
-        $vendor = Vendor::findOrFail($store->vendor->id);
-        if($vendor->userinfo){
-            $vendor->userinfo->delete();
+        if (Storage::disk('public')->exists('vendor/' . $store->vendor['image'])) {
+            Storage::disk('public')->delete('vendor/' . $store->vendor['image']);
         }
-        $vendor->delete();
+        if (Storage::disk('public')->exists('store/' . $store->logo)) {
+            Storage::disk('public')->delete('store/' . $store->logo);
+        }
+
+        if (Storage::disk('public')->exists('store/cover/' . $store->cover_photo)) {
+            Storage::disk('public')->delete('store/cover/' . $store->cover_photo);
+        }
+        foreach($store->deliverymen as $dm) {
+            if (Storage::disk('public')->exists('delivery-man/' . $dm['image'])) {
+                Storage::disk('public')->delete('delivery-man/' . $dm['image']);
+            }
+
+            foreach (json_decode($dm['identity_image'], true) as $img) {
+                if (Storage::disk('public')->exists('delivery-man/' . $img)) {
+                    Storage::disk('public')->delete('delivery-man/' . $img);
+                }
+            }
+        }
+
+
+        $store?->deliverymen()?->delete();
+        $store?->discount()?->delete();
+        $store?->schedules()?->delete();
+        $store?->storeConfig()?->delete();
+        $store?->translations()?->delete();
+        $store?->vendor?->userinfo()?->delete();
+        $store?->vendor()?->delete();
+        $store?->delete();
+
         Toastr::success(translate('messages.store_removed'));
         return back();
     }

@@ -310,22 +310,26 @@
                             @endif
                             <td>
                                 @if($order->is_guest)
-                                @php($customer_details = json_decode($order['delivery_address'],true))
-                                <strong>{{$customer_details['contact_person_name']}}</strong>
-                                <div>{{$customer_details['contact_person_number']}}</div>
+                                    @php($customer_details = json_decode($order['delivery_address'],true))
+                                    <strong>{{$customer_details['contact_person_name']}}</strong>
+                                    <a href="tel:{{$customer_details['contact_person_number']}}">
+                                        <div>{{$customer_details['contact_person_number']}}</div>
+                                    </a>
                                 @elseif($order->customer)
 
-                                <a class="text-body" href="{{route('admin.customer.view',[$order['user_id']])}}">
-                                    <strong> <div> {{$order->customer['f_name'].' '.$order->customer['l_name']}}</div></strong>
-                                </a>
-                                <a href="tel:{{$order->customer['phone']}}">
-                                    <div>{{$order->customer['phone']}}</div>
-                                </a>
+                                    <a class="text-body" href="{{route('admin.customer.view',[$order['user_id']])}}">
+                                        <strong>
+                                            <div> {{$order->customer['f_name'].' '.$order->customer['l_name']}}</div>
+                                        </strong>
+                                    </a>
+                                    <a href="tel:{{$order->customer['phone']}}">
+                                        <div>{{$order->customer['phone']}}</div>
+                                    </a>
                                 @else
-                                    <label class="badge badge-danger">{{translate('messages.invalid_customer_data')}}</label>
+                                    <label
+                                        class="badge badge-danger">{{translate('messages.invalid_customer_data')}}</label>
                                 @endif
                             </td>
-
                             <td>
                                 @if ($parcel_order)
                                     <div>{{Str::limit($order->parcel_category?$order->parcel_category->name:translate('messages.not_found'),20,'...')}}</div>
