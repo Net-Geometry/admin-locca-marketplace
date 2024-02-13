@@ -32,7 +32,7 @@
                                 <h4>{{ translate('Instruction') }}</h4>
                                 <ul class="m-0 pl-4">
                                     <li>
-                                       {{ translate('You_can_edit_and_update_the_file_to_bulk_upload') }}
+                                       {{ translate('Select_data_type_in_which_order_you_want_your_data_sorted_while_downloading.') }}
                                     </li>
 
 
@@ -45,7 +45,7 @@
                                     <div>
                                         <h3 class="font-regular">{{translate('Step 2')}}</h3>
                                         <div>
-                                            {{translate('Select_Data_Range_by_Date_or_ID_and_Export')}}
+                                            {{translate('Select Data Range by Date or ID and Export')}}
                                         </div>
                                     </div>
                                     <img src="{{asset('/public/assets/admin/img/bulk-export-2.png')}}" alt="">
@@ -54,7 +54,10 @@
                                 <ul class="m-0 pl-4">
 
                                     <li>
-                                        {{ translate('You_can_download_it_to_excel_file') }}
+                                        {{ translate('The_file_will_be_downloaded_in_.xls_format') }}
+                                    </li>
+                                    <li>
+                                        {{ translate('Click_reset_if_you_want_to_clear_you_changes_and_want_to_download_in_default_sort_wise_data') }}
                                     </li>
                                 </ul>
                             </div>

@@ -42,6 +42,9 @@
                                     <li>
                                         {{ translate('You_can_download_the_example_file_to_understand_how_the_data_must_be_filled.') }}
                                     </li>
+                                    <li>
+                                        {{ translate('Have_to_upload_excel_file.') }}
+                                    </li>
 
                                 </ul>
                             </div>
@@ -60,13 +63,16 @@
                                 <h4>{{ translate('Instruction') }}</h4>
                                 <ul class="m-0 pl-4">
                                     <li>
-                                        {{ translate('Once_you_have_downloaded_and_filled_the_format_file,_upload_it_in_the_form_below_and_submit.Make_sure_the_phone_numbers_and_email_addresses_are_unique') }}
+                                        {{ translate('Fill_up_the_data_according_to_the_format.') }}
                                     </li>
                                     <li>
-                                        {{ translate('You can get module id and  zone id from their list, please input the right ids.')}}
+                                        {{ translate('Make_sure_the_phone_numbers_and_email_addresses_are_unique.') }}
                                     </li>
                                     <li>
-                                        {{ translate('For delivery time the format is "from-to type" for example: "30-40 min". Also you can use days or hours as type. Please be carefull about this format or leave this field empty.') }}
+                                        {{ translate('You_can_get_module_id_and_zone_id_from_their_list,_please_input_the_right_ids.')}}
+                                    </li>
+                                    <li>
+                                        {{ translate('For_delivery_time_the_format_is_"from-to_type"_for_example:_"30-40_min"._Also_you_can_use_days_or_hours_as_type._Please_be_carefull_about_this_format_or_leave_this_field_empty.') }}
                                     </li>
                                     <li>
                                         {{ translate('Latitude_must_be_a_number_between_-90_to_90_and_Longitude_must_a_number_between_-180_to_180._Otherwise_it_will_create_server_error') }}
@@ -89,8 +95,14 @@
                                   <h4>{{ translate('Instruction') }}</h4>
                                 <ul class="m-0 pl-4">
                                     <li>
-                                        {{ translate('Have_to_upload_excel_file') }}
-                                    </li>
+                                        {{ translate('In_the_Excel_file_upload_section,_first_select_the_upload_option.') }}
+                                     </li>
+                                     <li>
+                                        {{ translate('Upload_your_file_in_.xls,_.xlsx_format.') }}
+                                     </li>
+                                     <li>
+                                        {{ translate('Finally_click_the_upload_button.') }}
+                                     </li>
                                     <li>
                                        {{ translate('After_uploading_stores_you_need_to_edit_them_and_set_stores`s_logo_and_cover.`s_path')}}
                                     </li>

@@ -30,7 +30,7 @@
                                     <div>
                                         <h3 class="font-regular">{{translate('Step 1')}}</h3>
                                         <div>
-                                            {{translate('Download Excel File')}}
+                                            {{translate('Download_Excel_File')}}
                                         </div>
                                     </div>
                                     <img src="{{asset('/public/assets/admin/img/bulk-import-1.png')}}" alt="">
@@ -43,7 +43,9 @@
                                     <li>
                                         {{ translate('You_can_download_the_example_file_to_understand_how_the_data_must_be_filled.') }}
                                     </li>
-
+                                    <li>
+                                        {{ translate('Have_to_upload_excel_file.') }}
+                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -53,7 +55,7 @@
                                     <div>
                                         <h3 class="font-regular">{{translate('Step 2')}}</h3>
                                         <div>
-                                            {{translate('Match Spread sheet data according to instruction')}}
+                                            {{translate('Match_Spread_sheet_data_according_to_instruction')}}
                                         </div>
                                     </div>
                                     <img src="{{asset('/public/assets/admin/img/bulk-import-2.png')}}" alt="">
@@ -61,13 +63,19 @@
                                   <h4>{{ translate('Instruction') }}</h4>
                                 <ul class="m-0 pl-4">
                                     <li>
-                                        {{ translate('Once_you_have_downloaded_and_filled_the_format_file_upload_it_in_the_form_below_and_submit') }}
+                                        {{ translate('Fill_up_the_data_according_to_the_format_and_validations.') }}
                                     </li>
                                     <li>
                                         {{ translate('You_can_get_store_id_module_id_and_unit_id_from_their_list_please_input_the_right_ids.') }}
                                     </li>
                                     <li>
                                         {{ translate('For_ecommerce_item_avaliable_time_start_and_end_will_be_00:00:00_and_23:59:59') }}
+                                    </li>
+                                    <li>
+                                        {{ translate('If_you_want_to_create_a_product_with_variation,_just_create_variations_from_the_generate_variation_section_below_and_click_generate_value.') }}
+                                    </li>
+                                    <li>
+                                        {{ translate('Copy_the_value_and_paste_the_the_spread_sheet_file_column_name_variation_in_the_selected_product_row.') }}
                                     </li>
                                 </ul>
                             </div>
@@ -86,12 +94,19 @@
                                   <h4>{{ translate('Instruction') }}</h4>
                                 <ul class="m-0 pl-4">
                                     <li>
-                                       {{ translate('You_can_upload_your_product_images_in_product_folder_from_gallery_and_copy_image`s_path') }}
+                                       {{ translate('In_the_Excel_file_upload_section,_first_select_the_upload_option.') }}
+                                    </li>
+                                    <li>
+                                       {{ translate('Upload_your_file_in_.xls,_.xlsx_format.') }}
+                                    </li>
+                                    <li>
+                                       {{ translate('Finally_click_the_upload_button.') }}
+                                    </li>
+                                    <li>
+                                       {{ translate('You_can_upload_your_product_images_in_product_folder_from_gallery_and_copy_image`s_path.') }}
                                     </li>
 
-                                    <li>
-                                        {{ translate('Have_to_upload_excel_file') }}
-                                    </li>
+
                                 </ul>
                             </div>
                         </div>
@@ -143,7 +158,7 @@
                                         <div>
                                             <img src="{{asset('/public/assets/admin/img/bulk-import-3.png')}}" alt="">
                                         </div>
-                                        <div class="filename">{{translate('Must be Excel files using our Excel template above')}}</div>
+                                        <div class="filename">{{translate('Must_be_Excel_files_using_our_Excel_template_above')}}</div>
                                     </div>
                                     <input type="file" name="products_file" class="form-control-file text--primary font-weight-bold action-upload-section-dot-area" id="products_file">
                                 </div>

@@ -46,7 +46,7 @@ class VendorLoginController extends Controller
                 {
                     return response()->json([
                         'errors' => [
-                            ['code' => 'auth-002', 'message' => translate('messages.inactive_vendor_warning')]
+                            ['code' => 'auth-002', 'message' => translate('messages.Your_registration_is_not_approved_yet._You_can_login_once_admin_approved_the_request')]
                         ]
                     ], 403);
                 }
@@ -55,7 +55,7 @@ class VendorLoginController extends Controller
                 return response()->json(['token' => $token, 'zone_wise_topic'=> $vendor->stores[0]->zone->store_wise_topic], 200);
             }  else {
                 $errors = [];
-                array_push($errors, ['code' => 'auth-001', 'message' => 'Unauthorized.']);
+                array_push($errors, ['code' => 'auth-001', 'message' => translate('Credential_do_not_match,_please_try_again')]);
                 return response()->json([
                     'errors' => $errors
                 ], 401);
@@ -69,7 +69,7 @@ class VendorLoginController extends Controller
                 {
                     return response()->json([
                         'errors' => [
-                            ['code' => 'auth-002', 'message' => translate('messages.inactive_vendor_warning')]
+                            ['code' => 'auth-002', 'message' => translate('messages.Your_registration_is_not_approved_yet._You_can_login_once_admin_approved_the_request')]
                         ]
                     ], 403);
                 }
@@ -79,14 +79,14 @@ class VendorLoginController extends Controller
                 return response()->json(['token' => $token, 'zone_wise_topic'=> $vendor->store->zone->store_wise_topic, 'role'=>$role], 200);
             } else {
                 $errors = [];
-                array_push($errors, ['code' => 'auth-001', 'message' => 'Unauthorized.']);
+                array_push($errors, ['code' => 'auth-001', 'message' => translate('Credential_do_not_match,_please_try_again')]);
                 return response()->json([
                     'errors' => $errors
                 ], 401);
             }
         } else {
             $errors = [];
-            array_push($errors, ['code' => 'auth-001', 'message' => 'Unauthorized.']);
+            array_push($errors, ['code' => 'auth-001', 'message' => translate('Credential_do_not_match,_please_try_again')]);
             return response()->json([
                 'errors' => $errors
             ], 401);
@@ -130,6 +130,14 @@ class VendorLoginController extends Controller
             'module_id' => 'required',
             'logo' => 'required',
             'tax' => 'required'
+        ],[
+            'password.required' => translate('The password is required'),
+            'password.min_length' => translate('The password must be at least :min characters long'),
+            'password.mixed' => translate('The password must contain both uppercase and lowercase letters'),
+            'password.letters' => translate('The password must contain letters'),
+            'password.numbers' => translate('The password must contain numbers'),
+            'password.symbols' => translate('The password must contain symbols'),
+            'password.uncompromised' => translate('The password is compromised. Please choose a different one'),
         ]);
 
         if($request->zone_id)
@@ -183,7 +191,7 @@ class VendorLoginController extends Controller
         {
             StoreLogic::insert_schedule($store->id);
         }
-     
+
         foreach ($data as $key=>$i) {
             $data[$key]['translationable_type'] = 'App\Models\Store';
             $data[$key]['translationable_id'] = $store->id;
