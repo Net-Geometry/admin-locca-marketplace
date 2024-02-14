@@ -35,9 +35,16 @@
                         <div class="input-group input--group">
                             <input id="datatableSearch" name="search" type="search" class="form-control" placeholder="{{translate('ex_:_Search_Module_by_Name')}}" aria-label="{{translate('messages.search_here')}}" value="{{request()->query('search')}}">
                             <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
+                            @if(request()->get('search'))
+                            <button type="reset" class="btn btn--primary ml-2 location-reload-to-base" data-url="{{url()->full()}}">{{translate('messages.reset')}}</button>
+                            @endif
                         </div>
                         <!-- End Search -->
                     </form>
+
+
+
+
                     <div>
                         <select id="module_type" name="module_type" class="form-control h--45px set-filter" data-url="{{ url()->full() }}" data-filter="module_type">
                             <option value="all" {{ request('module_type') == 'all' ? 'selected' : '' }}>{{ translate('messages.all_module_type') }}</option>
