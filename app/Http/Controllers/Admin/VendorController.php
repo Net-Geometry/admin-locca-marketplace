@@ -69,7 +69,12 @@ class VendorController extends Controller
             'minimum_delivery_time' => 'required',
             'maximum_delivery_time' => 'required',
             'delivery_time_type'=>'required',
-            'password' => ['required', Password::min(8)->mixedCase()->letters()->numbers()->symbols()->uncompromised()],
+            'password' => ['required', Password::min(8)->mixedCase()->letters()->numbers()->symbols()->uncompromised(),
+                function ($attribute, $value, $fail) {
+                    if (strpos($value, ' ') !== false) {
+                        $fail('The :attribute cannot contain white spaces.');
+                    }
+                },],
             'zone_id' => 'required',
             // 'module_id' => 'required',
             'logo' => 'required',
@@ -213,7 +218,11 @@ class VendorController extends Controller
             'latitude' => 'required',
             'longitude' => 'required',
             'tax' => 'required',
-            'password' => ['nullable', Password::min(8)->mixedCase()->letters()->numbers()->symbols()->uncompromised()],
+            'password' => ['nullable', Password::min(8)->mixedCase()->letters()->numbers()->symbols()->uncompromised(),function ($attribute, $value, $fail) {
+                if (strpos($value, ' ') !== false) {
+                    $fail('The :attribute cannot contain white spaces.');
+                }
+            },],
             'minimum_delivery_time' => 'required',
             'maximum_delivery_time' => 'required',
             'delivery_time_type'=>'required'

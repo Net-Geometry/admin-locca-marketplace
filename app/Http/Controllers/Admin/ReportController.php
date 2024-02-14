@@ -3080,7 +3080,7 @@ class ReportController extends Controller
             ->paginate(config('default_pagination'))->withQueryString();
 
 
-        return view('admin-views.report.expense-report', compact('expense', 'zone', 'store', 'filter', 'customer'));
+        return view('admin-views.report.expense-report', compact('expense', 'zone', 'store', 'filter', 'customer','type'));
     }
 
     public function generate_statement($id)

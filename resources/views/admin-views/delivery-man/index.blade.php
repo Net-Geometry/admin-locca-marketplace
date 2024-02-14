@@ -258,7 +258,7 @@
                                         aria-label="8+ characters required" required
                                         data-msg="Your password is invalid. Please try again."
                                         data-hs-toggle-password-options='{
-                                    "target": [".js-toggle-password-target-1", ".js-toggle-password-target-2"],
+                                    "target": [".js-toggle-password-target-1"],
                                     "defaultClass": "tio-hidden-outlined",
                                     "showClass": "tio-visible-outlined",
                                     "classChangeTarget": ".js-toggle-passowrd-show-icon-1"
@@ -288,7 +288,7 @@
                                         aria-label="8+ characters required" required
                                         data-msg="Password does not match the confirm password."
                                         data-hs-toggle-password-options='{
-                                        "target": [".js-toggle-password-target-1", ".js-toggle-password-target-2"],
+                                        "target": [".js-toggle-password-target-2"],
                                         "defaultClass": "tio-hidden-outlined",
                                         "showClass": "tio-visible-outlined",
                                         "classChangeTarget": ".js-toggle-passowrd-show-icon-2"

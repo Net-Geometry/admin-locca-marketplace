@@ -240,7 +240,7 @@
                                     aria-label="8+ characters required"
                                     data-msg="Your password is invalid. Please try again."
                                     data-hs-toggle-password-options='{
-                                    "target": [".js-toggle-password-target-1", ".js-toggle-password-target-2"],
+                                    "target": [".js-toggle-password-target-1"],
                                     "defaultClass": "tio-hidden-outlined",
                                     "showClass": "tio-visible-outlined",
                                     "classChangeTarget": ".js-toggle-passowrd-show-icon-1"
@@ -262,7 +262,7 @@
                                 aria-label="8+ characters required"
                                         data-msg="Password does not match the confirm password."
                                         data-hs-toggle-password-options='{
-                                        "target": [".js-toggle-password-target-1", ".js-toggle-password-target-2"],
+                                        "target": [".js-toggle-password-target-2"],
                                         "defaultClass": "tio-hidden-outlined",
                                         "showClass": "tio-visible-outlined",
                                         "classChangeTarget": ".js-toggle-passowrd-show-icon-2"
@@ -281,11 +281,11 @@
             <div class="btn--container justify-content-end mt-3">
                 <button type="reset" id="reset_btn" class="btn btn--reset">{{translate('messages.reset')}}</button>
 
-                @if ( $deliveryMan->application_status == 'pending' || $deliveryMan->application_status ==  'denied')
-                    <button type="submit" class="btn btn--primary">{{translate('messages.Edit_&_Approve')}}</button>
-                @else
+{{--                @if ( $deliveryMan->application_status == 'pending' || $deliveryMan->application_status ==  'denied')--}}
+{{--                    <button type="submit" class="btn btn--primary">{{translate('messages.Edit_&_Approve')}}</button>--}}
+{{--                @else--}}
                     <button type="submit" class="btn btn--primary">{{translate('messages.submit')}}</button>
-                @endif
+{{--                @endif--}}
             </div>
         </form>
     </div>

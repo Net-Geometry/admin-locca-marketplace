@@ -283,7 +283,7 @@
                                         @foreach($customer->addresses as $address)
                                             <div class="key-val-list-item d-flex gap-3">
                                                 <div>{{ translate('address') }}</div>:
-                                                <div>{{$address['address']}}</div>
+                                                <a href="https://www.google.com/maps/search/?api=1&query={{ data_get($address,'latitude',0)}},{{ data_get($address,'longitude',0)}}" target="_blank">{{ $address['address'] }}</a>
                                             </div>
                                         @endforeach
                                     </div>

@@ -142,7 +142,7 @@
                             </div>
                             <div>
                                 <h2 class="title">
-                                    {{$debit}}
+                                    {{$credit}}
                                 </h2>
                                 <div class="subtitle">
                                     {{translate('messages.points_Earned')}}
@@ -162,7 +162,7 @@
                             </div>
                             <div>
                                 <h2 class="title">
-                                    {{$credit}}
+                                    {{$debit}}
                                 </h2>
                                 <div class="subtitle">
                                     {{translate('messages.points_Converted')}}

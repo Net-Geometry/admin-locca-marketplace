@@ -54,20 +54,21 @@ class CustomerController extends Controller
             $query->whereDate('created_at', '>=', now()->subDays(30)->format('Y-m-d'));
         })
         ->when(isset($order_wise) && $order_wise == 'top' , function ($query) {
-            $query->orderBy('order_count', 'desc');
+            $query->orderBy('orders_count', 'desc');
         })
         ->when(isset($order_wise) && $order_wise == 'least' , function ($query) {
-            $query->orderBy('order_count', 'asc');
+            $query->orderBy('orders_count', 'asc');
         })
         ->when(isset($order_wise) && $order_wise == 'latest' , function ($query) {
             $query->latest();
         })
         ->when(!$order_wise, function ($query) {
-            $query->orderBy('order_count', 'desc');
+            $query->orderBy('orders_count', 'desc');
         })
 
 
             ->paginate(config('default_pagination'));
+
         return view('admin-views.customer.list', compact('customers'));
     }
 
