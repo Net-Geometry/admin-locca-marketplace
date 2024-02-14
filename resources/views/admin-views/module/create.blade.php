@@ -24,7 +24,7 @@
                 <img src="{{asset('/public/assets/admin/img/icons/intel.png')}}" width="22" alt="">
             </div>
             <div class="w-0 flex-grow-1 pl-3">
-                <strong>Holy guacamole!</strong> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
+                <strong>{{ translate('Attention!') }}</strong> {{ translate('Don’t_forget_to_click_the_‘Add_Module’_button_below_to_save_the_new_business_module') }}
             </div>
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
@@ -79,7 +79,7 @@
                             data-original-title="{{ translate('messages.Write_a_short_description_of_your_new_business_module_within_100_words_(550_characters)') }}"><img
                                 src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
                                 alt="{{ translate('messages.veg_non_veg') }}"></span></label>
-                        <textarea class="ckeditor form-control" name="description[]"></textarea>
+                        <textarea id="description" class="ckeditor form-control" name="description[]"></textarea>
                     </div>
                 </div>
 
@@ -96,7 +96,7 @@
                             data-original-title="{{ translate('messages.Write_a_short_description_of_your_new_business_module_within_100_words_(550_characters)')}}"><img
                                 src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
                                 alt="{{ translate('messages.veg_non_veg') }}"></span></label>
-                        <textarea class="ckeditor form-control" name="description[]"></textarea>
+                        <textarea id="description{{ $lang }}" class="ckeditor form-control" name="description[]"></textarea>
                     </div>
                 </div>
 
@@ -109,7 +109,7 @@
                 </div>
                 <div class="form-group">
                     <label class="input-label">{{ translate('Business_Module_description')}}</label>
-                    <textarea class="ckeditor form-control" name="description"></textarea>
+                    <textarea id="description" class="ckeditor form-control" name="description"></textarea>
                 </div>
                 <input type="hidden" name="lang[]" value="default">
                 @endif
@@ -282,6 +282,9 @@
     });
 
         $('#reset_btn').click(function(){
+            $('.ckeditor').each(function() {
+                CKEDITOR.instances[$(this).attr('id')].setData('');
+            });
             $('#viewer').attr('src','{{asset('public/assets/admin/img/400x400/img2.jpg')}}');
             $('#viewer2').attr('src','{{asset('public/assets/admin/img/400x400/img2.jpg')}}');
         })

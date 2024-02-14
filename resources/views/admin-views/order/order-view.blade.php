@@ -2563,11 +2563,11 @@
                     return function() {
                         @if ($parcel_order)
                             infowindow.setContent(
-                                "<div style='float:left'><img style='max-height:40px;wide:auto;' src='{{ asset('storage/app/public/profile/' . $order->customer->image) }}'></div><div style='float:right; padding: 10px;'><b>{{ $order->customer->f_name }}{{ $order->customer->l_name }}</b><br />{{ $address['address'] }}</div>"
+                                "<div style='float:left'><img style='max-height:40px;wide:auto;' src='{{\App\CentralLogics\Helpers::onerror_image_helper($order?->customer?->image, asset('storage/app/public/profile/').'/'. $order?->customer?->image, asset('public/assets/admin/img/160x160/img1.jpg') , 'profile/') }}'></div><div style='float:right; padding: 10px;'><b>{{ $order->customer->f_name }}{{ $order->customer->l_name }}</b><br />{{ $address['address'] }}</div>"
                             );
                         @else
                             infowindow.setContent(
-                                "<div style='float:left'><img style='max-height:40px;wide:auto;' src='{{ asset('storage/app/public/restaurant/' . $order->store->logo) }}'></div><div class='text-break' style='float:right; padding: 10px;'><b>{{ Str::limit($order?->store?->name, 15, '...') }}</b><br /> {{ $order->store->address }}</div>"
+                                "<div style='float:left'><img style='max-height:40px;wide:auto;' src='{{\App\CentralLogics\Helpers::onerror_image_helper($order?->store?->logo, asset('storage/app/public/restaurant/').'/'. $order?->store?->logo, asset('public/assets/admin/img/160x160/img1.jpg') , 'restaurant/') }}'></div><div class='text-break' style='float:right; padding: 10px;'><b>{{ Str::limit($order?->store?->name, 15, '...') }}</b><br /> {{ $order->store->address }}</div>"
                             );
                         @endif
                         infowindow.open(map, Restaurantmarker);
@@ -2592,10 +2592,7 @@
                     google.maps.event.addListener(marker, 'click', (function(marker, i) {
                         return function() {
                             infowindow.setContent(
-                                "<div style='float:left'><img style='max-height:40px;wide:auto;' src='{{ asset('storage/app/public/delivery-man') }}/" +
-                                deliveryMan[i].image +
-                                "'></div><div style='float:right; padding: 10px;'><b>" + deliveryMan[i]
-                                .name + "</b><br/> " + deliveryMan[i].location + "</div>");
+                                "<div style='float:left'><img style='max-height:40px;wide:auto;' src='{{\App\CentralLogics\Helpers::onerror_image_helper(" + deliveryMan[i].image + ", asset('storage/app/public/delivery-man/').'/'. " + deliveryMan[i].image + ", asset('public/assets/admin/img/160x160/img1.jpg') , 'delivery-man/') }}'></div><div style='float:right; padding: 10px;'><b>" + deliveryMan[i].name + "</b><br/> " + deliveryMan[i].location + "</div>");
                             infowindow.open(map, marker);
                         }
                     })(marker, i));
@@ -2786,7 +2783,7 @@
                     google.maps.event.addListener(marker, 'click', (function(marker) {
                         return function() {
                             infowindow.setContent(
-                                "<div style='float:left'><img style='max-height:40px;wide:auto;' src='{{ asset('storage/app/public/profile/' . $order->customer->image) }}'></div><div style='float:right; padding: 10px;'><b>{{ $order->customer->f_name }} {{ $order->customer->l_name }}</b><br />{{ $address['address'] }}</div>"
+                                "<div style='float:left'><img style='max-height:40px;wide:auto;' src='{{\App\CentralLogics\Helpers::onerror_image_helper($order?->customer?->image, asset('storage/app/public/profile/').'/'. $order?->customer?->image, asset('public/assets/admin/img/160x160/img1.jpg') , 'profile/') }}'></div><div style='float:right; padding: 10px;'><b>{{ $order->customer->f_name }} {{ $order->customer->l_name }}</b><br />{{ $address['address'] }}</div>"
                             );
                             infowindow.open(map, marker);
                         }
@@ -2805,7 +2802,7 @@
                     google.maps.event.addListener(dmmarker, 'click', (function(dmmarker) {
                         return function() {
                             infowindow.setContent(
-                                "<div style='float:left'><img style='max-height:40px;wide:auto;' src='{{ asset('storage/app/public/delivery-man/' . $order->delivery_man->image) }}'></div> <div style='float:right; padding: 10px;'><b>{{ $order->delivery_man->f_name }} {{ $order->delivery_man->l_name }}</b><br /> {{ $order->dm_last_location['location'] }}</div>"
+                                "<div style='float:left'><img style='max-height:40px;wide:auto;' src='{{\App\CentralLogics\Helpers::onerror_image_helper($order?->delivery_man?->image, asset('storage/app/public/delivery-man/').'/'. $order?->delivery_man?->image, asset('public/assets/admin/img/160x160/img1.jpg') , 'delivery-man/') }}'></div> <div style='float:right; padding: 10px;'><b>{{ $order->delivery_man->f_name }} {{ $order->delivery_man->l_name }}</b><br /> {{ $order->dm_last_location['location'] }}</div>"
                             );
                             infowindow.open(map, dmmarker);
                         }
@@ -2825,7 +2822,7 @@
                     google.maps.event.addListener(Retaurantmarker, 'click', (function(Retaurantmarker) {
                         return function() {
                             infowindow.setContent(
-                                "<div style='float:left'><img style='max-height:40px;wide:auto;' src='{{ asset('storage/app/public/restaurant/' . $order->store->logo) }}'></div> <div style='float:right; padding: 10px;'><b>{{ Str::limit($order?->store?->name, 15, '...') }}</b><br /> {{ $order->store->address }}</div>"
+                                "<div style='float:left'><img style='max-height:40px;wide:auto;' src='{{\App\CentralLogics\Helpers::onerror_image_helper($order?->store?->logo, asset('storage/app/public/restaurant/').'/'. $order?->store?->logo, asset('public/assets/admin/img/160x160/img1.jpg') , 'restaurant/') }}'></div> <div style='float:right; padding: 10px;'><b>{{ Str::limit($order?->store?->name, 15, '...') }}</b><br /> {{ $order->store->address }}</div>"
                             );
                             infowindow.open(map, Retaurantmarker);
                         }

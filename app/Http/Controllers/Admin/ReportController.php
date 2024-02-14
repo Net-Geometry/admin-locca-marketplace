@@ -2669,9 +2669,9 @@ class ReportController extends Controller
             'filter'=>$filter,
         ];
 
-        if ($request->type == 'excel') {
+        if ($request->export_type == 'excel') {
             return Excel::download(new ExpenseReportExport($data), 'ExpenseReport.xlsx');
-        } else if ($request->type == 'csv') {
+        } else if ($request->export_type == 'csv') {
             return Excel::download(new ExpenseReportExport($data), 'ExpenseReport.csv');
         }
     }

@@ -51,7 +51,7 @@
                                     data-original-title="{{ translate('messages.Write_a_short_description_of_your_new_business_module_within_100_words_(550_characters)')}}"><img
                                         src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
                                         alt="{{ translate('messages.veg_non_veg') }}"></span></label>
-                                <textarea class="ckeditor form-control" name="description[]">{!! $module?->getRawOriginal('description') !!}</textarea>
+                                <textarea  data-value="{!! $module->description !!}" id="description"  class="ckeditor form-control" name="description[]">{!! $module?->getRawOriginal('description') !!}</textarea>
                             </div>
                         </div>
 
@@ -83,7 +83,7 @@
                                         data-original-title="{{ translate('messages.Write_a_short_description_of_your_new_business_module_within_100_words_(550_characters)')}}"><img
                                             src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
                                             alt="{{ translate('messages.veg_non_veg') }}"></span></label>
-                                    <textarea class="ckeditor form-control" name="description[]">{!! $translate[$lang]['description']??'' !!}</textarea>
+                                    <textarea  data-value="{!! $translate[$lang]['description']??'' !!}" id="description{{ $lang }}" class="ckeditor form-control" name="description[]">{!! $translate[$lang]['description']??'' !!}</textarea>
                                 </div>
                             </div>
 
@@ -96,7 +96,7 @@
                         </div>
                         <div class="form-group">
                             <label class="input-label" for="module_type">{{translate('messages.description')}}</label>
-                            <textarea class="ckeditor form-control" name="description">{!! $module->description !!}</textarea>
+                            <textarea  data-value="{!! $module->description !!}" id="description" class="ckeditor form-control" name="description">{!! $module->description !!}</textarea>
                         </div>
                         <input type="hidden" name="lang[]" value="default">
                     @endif
@@ -263,8 +263,12 @@
         });
 
         $('#reset_btn').click(function(){
-            $('#viewer').attr('src','{{asset('storage/app/public/module/'.$module['icon'])}}');
-            $('#viewer2').attr('src','{{asset('storage/app/public/module/'.$module['thumbnail'])}}');
+            $('.ckeditor').each(function() {
+                CKEDITOR.instances[$(this).attr('id')].setData($(this).data('value'));
+            });
+
+            $('#viewer').attr('src','{{\App\CentralLogics\Helpers::onerror_image_helper($module['icon'], asset('storage/app/public/module/').'/'.$module['icon'], asset('public/assets/admin/img/upload-img.png'), 'module/') }}');
+            $('#viewer2').attr('src','{{\App\CentralLogics\Helpers::onerror_image_helper($module['thumbnail'], asset('storage/app/public/module/').'/'.$module['thumbnail'], asset('public/assets/admin/img/upload-img.png'), 'module/') }}');
         })
 </script>
 @endpush

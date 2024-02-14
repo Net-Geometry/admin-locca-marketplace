@@ -179,13 +179,13 @@
                             class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right hs-unfold-content-initialized hs-unfold-css-animation animated hs-unfold-reverse-y hs-unfold-hidden">
 
                             <span class="dropdown-header">{{ translate('download_options') }}</span>
-                            <a id="export-excel" class="dropdown-item" href="{{route('admin.transactions.report.expense-export', ['type'=>'excel',request()->getQueryString()])}}">
+                            <a id="export-excel" class="dropdown-item" href="{{route('admin.transactions.report.expense-export', ['export_type'=>'excel',request()->getQueryString()])}}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{ asset('public/assets/admin') }}/svg/components/excel.svg"
                                     alt="Image Description">
                                 {{ translate('messages.excel') }}
                             </a>
-                            <a id="export-csv" class="dropdown-item" href="{{route('admin.transactions.report.expense-export', ['type'=>'csv',request()->getQueryString()])}}">
+                            <a id="export-csv" class="dropdown-item" href="{{route('admin.transactions.report.expense-export', ['export_type'=>'csv',request()->getQueryString()])}}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{ asset('public/assets/admin') }}/svg/components/placeholder-csv-format.svg"
                                     alt="Image Description">

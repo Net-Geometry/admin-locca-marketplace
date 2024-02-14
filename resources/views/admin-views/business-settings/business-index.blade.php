@@ -37,7 +37,7 @@
                     </label>
                 </div>
                 <div class="mt-2">
-                    {{ translate('messages.maintenance_txt') }}
+                    {{ translate('messages.By_turning_the_‘Maintenance_Mode’_ON,_all_your_apps_and_customer_website_will_be_disabled_temporarily._Only_the_Admin_Panel,_Admin_Landing_Page_&_Store_Panel_will_be_functional.') }}
                 </div>
             </div>
         </div>

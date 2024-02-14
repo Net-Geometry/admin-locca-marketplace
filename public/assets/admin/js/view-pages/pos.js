@@ -159,6 +159,12 @@ $(document).on('click', '.increase-button-cart', function () {
     if(  maxValue-1 >= currentValue ){
         addon_quantity_input.val(currentValue + 1);
         getVariantPrice();
+    } else{
+        Swal.fire({
+            icon: 'error',
+            title: 'Cart',
+            text: 'Sorry, stock limit exceeded.'
+        });
     }
 });
 
