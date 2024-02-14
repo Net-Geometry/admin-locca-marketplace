@@ -4035,4 +4035,8 @@
   'Other_Expenses' => 'Other Expenses',
   'expense_reports' => 'Expense reports',
   'all_time' => 'All time',
+  'your_account_has_been_blocked' => 'Your account has been blocked',
+  'Set_permission' => 'Set permission',
+  'Permissions' => 'Permissions',
+  'sell_count' => 'Sell count',
 );

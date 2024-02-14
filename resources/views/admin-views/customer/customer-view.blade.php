@@ -182,8 +182,11 @@
                                 <tr>
                                     <th class="border-0 pl-4">{{translate('SL')}}</th>
                                     <th class="border-0">{{translate('messages.order_ID')}}</th>
+                                    <th class="border-0">{{translate('messages.store')}}</th>
+                                    <th class="border-0">{{translate('messages.status')}}</th>
                                     <th class="border-0 text-center">{{translate('messages.total_Items')}}</th>
                                     <th class="border-0 text-center">{{translate('messages.total_amount')}}</th>
+                                    <th class="border-0 text-center">{{translate('messages.order_date')}}</th>
                                     <th class="border-0 text-center">{{translate('messages.action')}}</th>
                                 </tr>
                             </thead>
@@ -199,6 +202,61 @@
                                         <td>
                                             <a class="text-dark" href="{{route((isset($order) && $order->order_type=='parcel')?'admin.parcel.order.details':'admin.order.details',['id'=>$order['id'],'module_id'=>$order['module_id']])}}">{{$order['id']}}</a>
                                         </td>
+                                        <th>
+                                            @if ($order->store)
+                                            <div><a  class="text--title" href="{{route('admin.store.view', $order->store_id)}}" alt="view store">{{Str::limit($order->store?$order->store->name:translate('messages.store deleted!'),20,'...')}}</a></div>
+                                            @else
+                                                <div>{{Str::limit(translate('messages.not_found'),20,'...')}}</div>
+                                            @endif
+                                        </th>
+                                        <td class="text-capitalize text-center">
+                                            @if($order['order_status']=='pending')
+                                                <span class="badge badge-soft-info">
+                                      {{translate('messages.pending')}}
+                                    </span>
+                                            @elseif($order['order_status']=='confirmed')
+                                                <span class="badge badge-soft-info">
+                                      {{translate('messages.confirmed')}}
+                                    </span>
+                                            @elseif($order['order_status']=='processing')
+                                                <span class="badge badge-soft-warning">
+                                      {{translate('messages.processing')}}
+                                    </span>
+                                            @elseif($order['order_status']=='picked_up')
+                                                <span class="badge badge-soft-warning">
+                                      {{translate('messages.out_for_delivery')}}
+                                    </span>
+                                            @elseif($order['order_status']=='delivered')
+                                                <span class="badge badge-soft-success">
+                                      {{translate('messages.delivered')}}
+                                    </span>
+                                            @elseif($order['order_status']=='failed')
+                                                <span class="badge badge-soft-danger">
+                                      {{translate('messages.payment_failed')}}
+                                    </span>
+                                            @elseif($order['order_status']=='handover')
+                                                <span class="badge badge-soft-danger">
+                                      {{translate('messages.handover')}}
+                                    </span>
+                                            @elseif($order['order_status']=='canceled')
+                                                <span class="badge badge-soft-danger">
+                                      {{translate('messages.canceled')}}
+                                    </span>
+                                            @elseif($order['order_status']=='accepted')
+                                                <span class="badge badge-soft-danger">
+                                      {{translate('messages.accepted')}}
+                                    </span>
+                                            @elseif($order['order_status']=='refund_requested')
+                                                <span class="badge badge-soft-danger">
+                                      {{translate('messages.refund_requested')}}
+                                    </span>
+                                            @else
+                                                <span class="badge badge-soft-danger">
+                                      {{str_replace('_',' ',$order['order_status'])}}
+                                    </span>
+                                            @endif
+
+                                        </td>
                                         <td>
                                             <div class="text-center mw--85px mx-auto">
                                                 {{ $order?->details_count != 0  ?  $order?->details_count: translate('messages.N/A') }}
@@ -207,6 +265,16 @@
                                         <td>
                                             <div class="text-center">
                                                 {{\App\CentralLogics\Helpers::format_currency($order['order_amount'])}}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div>
+                                                <div>
+                                                    {{ \App\CentralLogics\Helpers::date_format($order->created_at) }}
+                                                </div>
+                                                <div class="d-block text-uppercase">
+                                                    {{ \App\CentralLogics\Helpers::time_format($order->created_at) }}
+                                                </div>
                                             </div>
                                         </td>
                                         <td>
