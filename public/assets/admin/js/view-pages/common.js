@@ -327,4 +327,10 @@ $(document).on('click', '.confirm-Toggle', function () {
 
 });
 
+$(document).on('click', '.location-reload-to-base', function () {
+    const url = $(this).data('url');
+    let nurl = new URL(url);
+    nurl.searchParams.delete('search');
+    location.href = nurl;
+});
 
