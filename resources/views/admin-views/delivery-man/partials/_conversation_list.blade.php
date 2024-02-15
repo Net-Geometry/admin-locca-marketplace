@@ -24,7 +24,7 @@
             <div class="d-flex justify-content-between gap-1" >
 
                 <div class="text-title fs-12">{{ $conv?->last_message?->message ?? ($conv?->last_message?->file ? translate('files_send') : '' )}}</div>
-                <span class="{{$unchecked ? 'badge badge-info' : ''}}">{{$unchecked ? $unchecked : ''}}</span>
+                <span class="{{$unchecked ? 'badge badge-primary' : ''}}">{{$unchecked ? $unchecked : ''}}</span>
             </div>
         </div>
     </div>

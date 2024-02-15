@@ -125,7 +125,7 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-lg-8">
-                        <div class="row h-100">
+                        <div class="row g-3 h-100">
                             @php
                                 $credit = $data[0]->total_credit;
                                 $debit = $data[0]->total_debit;

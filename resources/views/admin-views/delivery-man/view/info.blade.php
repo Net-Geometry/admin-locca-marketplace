@@ -255,14 +255,19 @@
                     <div class="d-flex flex-wrap gap-2">
 
                             <a href="javascript:"
-                                class="btn request-alert py-2 {{ $deliveryMan->status ? 'btn--danger' : 'btn-success' }}"
+                                class="btn py-2 btn-primary align-items-center d-flex">
+                                {{translate('Edit Information')}}
+                            </a>
+
+                            <a href="javascript:"
+                                class="btn request-alert py-2 {{ $deliveryMan->status ? 'btn--danger' : 'btn-success' }} align-items-center d-flex"
                                 data-url="{{ route('admin.users.delivery-man.status', [$deliveryMan['id'], $deliveryMan->status ? 0 : 1]) }}"
                                 data-message="{{ $deliveryMan->status ? translate('messages.you_want_to_suspend_this_deliveryman') : translate('messages.you_want_to_unsuspend_this_deliveryman') }}">
                                 {{ $deliveryMan->status ? translate('messages.suspend_this_delivery_man') : translate('messages.unsuspend_this_delivery_man') }}
                             </a>
                         <div class="hs-unfold">
                             <div class="dropdown">
-                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                                <button class="btn btn--primary dropdown-toggle" type="button" id="dropdownMenuButton"
                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     {{ translate('messages.type') }}
                                     ({{ $deliveryMan->earning ? translate('messages.freelancer') : translate('messages.salary_based') }})
@@ -299,11 +304,13 @@
                                 <div class="fs-12 text-muted d-flex justify-content-center justify-content-md-start">
                                     @if ($deliveryMan->application_status == 'approved')
                                         <a href="mailto:{{ $deliveryMan['email'] }}"> {{ $deliveryMan['email'] }}</a>
+                                        <span class="d-block mx-4">|</span>
+                                        <a href="mailto:{{ $deliveryMan['phone'] }}"> {{ $deliveryMan['phone'] }}</a>
                                     @endif
                                 </div>
                             </div>
 
-                            <div class="col-md-6 col-xl-4">
+                            <div class="col-md-6 col-xl-4 col-xxl-3">
                                 <div class="d-flex justify-content-center justify-content-md-start gap-3">
                                     <img class="rounded-circle"
                                         src="{{ asset('public/assets/admin/img/icons/job-type.png') }}" width="35"
@@ -316,7 +323,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6 col-xl-4">
+                            <div class="col-md-6 col-xl-4 col-xxl-3">
                                 <div class="d-flex justify-content-center justify-content-md-start gap-3">
                                     <img class="rounded-circle"
                                         src="{{ asset('public/assets/admin/img/icons/vehicle-type.png') }}"
@@ -327,7 +334,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6 col-xl-4">
+                            <div class="col-md-6 col-xl-4 col-xxl-3">
                                 <div class="d-flex justify-content-center justify-content-md-start gap-3">
                                     <img class="rounded-circle"
                                         src="{{ asset('public/assets/admin/img/icons/zone.png') }}" width="35"
@@ -507,7 +514,7 @@
 
                             <div class="key-val-list-item d-flex gap-3">
                                 <div>{{ translate('messages.Phone') }}</div>:
-                                <div>+{{ $deliveryMan->phone }}</div>
+                                <div>{{ $deliveryMan->phone }}</div>
                             </div>
                             <div class="key-val-list-item d-flex gap-3">
                                 <div>{{ translate('messages.Password') }}</div>:

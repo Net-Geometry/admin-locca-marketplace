@@ -6025,7 +6025,8 @@ a:hover .text-hover-primary {
     margin-inline-start: auto;
 }
 
-.conv-reply-1 *, .conv-reply-2 * {
+.conv-reply-1 *,
+.conv-reply-2 * {
     font-weight: 400;
 }
 
@@ -6054,7 +6055,8 @@ a:hover .text-hover-primary {
 }
 
 div.scroll-down {
-    max-height: 395px !important;
+    max-height: 455px !important;
+    min-height: 60dvh !important;
 }
 .quill-custom_ .file-upload-btn,
 .quill-custom_ .attc--img {

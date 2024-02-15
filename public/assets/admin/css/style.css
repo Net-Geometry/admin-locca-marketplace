@@ -4588,7 +4588,7 @@ td .amount--input {
 
 div.scroll-down {
     max-height: 300px;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 .iti {
@@ -6651,7 +6651,10 @@ strong {
 a:hover .text--title {
     color: var(--primary-clr) !important;
 }
-
+.btn-primary {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
 /* body .navbar-vertical-content *:not([class*="tio"]) {
     font-family: "Inter", sans-serif !important;
 } */
@@ -8241,8 +8244,12 @@ ul.delivery--information-single li:not(:last-child) {
     box-shadow: 0px 0px 15px rgba(0, 85, 85, 0.05);
     border-radius: 7.46793px;
     --theme-clr: #107980;
+    transition: all ease 0.3s;
 }
 
+.__user-dashboard-card:hover {
+    box-shadow: 0px 10px 15px rgba(0, 85, 85, 0.15);
+}
 .__user-dashboard-card .__user-dashboard-card-thumbs {
     display: flex;
     justify-content: flex-start;
@@ -8430,8 +8437,11 @@ ul.delivery--information-single li:not(:last-child) {
     box-shadow: 0px 10px 15px rgba(0, 85, 85, 0.05);
     border-radius: 7.46793px;
     min-height: 101px;
+    transition: all ease 0.3s;
 }
-
+.__customer-statistics-card:hover {
+    box-shadow: 0px 10px 15px rgba(0, 85, 85, 0.15);
+}
 .__customer-statistics-card .title {
     margin-bottom: 8px;
     display: flex;
@@ -9655,10 +9665,10 @@ body > .initial-38-1 {
 .how-it-works {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
+    gap: 24px;
 }
 .how-it-works .item {
-    width: calc(33.3333333333% - 12px);
+    width: calc(33.33% - 16px);
     flex-grow: 1;
     font-size: 12px;
     position: relative;
@@ -11805,10 +11815,17 @@ body > .initial-38-1 {
 }
 .bg-not-hover-primary-ash:not(:hover) {
     background: #f5feff !important;
-    --primary-clr: #107980 ;
+    --primary-clr: #107980;
     border: 1px solid rgba(16, 121, 128, 0.5) !important;
     box-shadow: 0px 2px 10px 0px rgba(0, 97, 97, 0.1);
 }
 label.position-relative {
     display: block;
+}
+.btn-number {
+    box-shadow: none !important;
+}
+.dropdown-toggle.btn--primary::after {
+    filter: brightness(1);
+    -webkit-filter: brightness(1);
 }

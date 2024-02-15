@@ -157,7 +157,7 @@
 
                 <!-- Quantity + Add to cart -->
                 @if ((isset($stock) && $stock > 0) || !isset($stock) )
-                <div class="d-flex justify-content-between">
+                <div class="d-flex justify-content-between mt-3">
                     <div class="product-description-label mt-2 text-dark h3">{{ translate('messages.quantity') }}:
                     </div>
                     <div class="product-quantity d-flex align-items-center">

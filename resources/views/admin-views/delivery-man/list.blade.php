@@ -22,11 +22,11 @@
         <div class="card">
             <!-- Header -->
             <div class="card-header py-2 border-0">
-                <div class="search--button-wrapper">
-                    <h5 class="card-title">
+                <div class="search--button-wrapper justify-content-end">
+                    <h5 class="card-title mr-auto">
                         {{translate('messages.deliveryman_list')}}<span class="badge badge-soft-dark ml-2" id="itemCount">{{$deliveryMen->total()}}</span>
                     </h5>
-                    <div class="col-sm-auto  min--240">
+                    <div class="min--200">
                         <select name="filter" class="form-control js-select2-custom set-filter" data-filter="filter"
                         data-url="{{ url()->full() }}">
                             <option  value="all">{{ translate('messages.All_Types') }}</option>
@@ -35,7 +35,7 @@
                             <option {{  request()?->get('filter') == 'blocked' ? 'selected' : '' }}  value="blocked">{{ translate('messages.Suspended') }}</option>
                         </select>
                     </div>
-                    <div class="col-sm-auto  min--240">
+                    <div class="min--200">
                         <select name="job_type" class="form-control js-select2-custom set-filter" data-filter="job_type"
                         data-url="{{ url()->full() }}">
                             <option  value="all">{{ translate('messages.All_Job_Types') }}</option>
@@ -44,7 +44,7 @@
                         </select>
                     </div>
                     @if(!isset(auth('admin')->user()->zone_id))
-                    <div class="col-sm-auto min--240">
+                    <div class="min--200">
                         <select name="zone_id" class="form-control js-select2-custom set-filter" data-filter="zone_id"
                         data-url="{{ url()->full() }}">
                             <option value="all">{{ translate('messages.All_Zones') }}</option>
