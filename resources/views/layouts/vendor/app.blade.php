@@ -463,25 +463,6 @@ fetch('https://iid.googleapis.com/iid/v1/' + token + '/rel/topics/' + topic, {
         }
 
 
-        $('.log-out').on('click',function (){
-
-            Swal.fire({
-            title: '{{ translate('Do you want to logout?') }}',
-            showDenyButton: true,
-            showCancelButton: true,
-            confirmButtonColor: '#FC6A57',
-            cancelButtonColor: '#363636',
-            confirmButtonText: `{{ translate('yes')}}`,
-            cancelButtonText: `{{ translate('Do_not_Logout')}}`,
-            }).then((result) => {
-            if (result.value) {
-            location.href='{{route('logout')}}';
-            } else{
-            Swal.fire('{{ translate('messages.canceled') }}', '', 'info')
-            }
-        })
-
-});
 
 
 </script>
