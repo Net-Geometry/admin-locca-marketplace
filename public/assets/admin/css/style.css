@@ -11023,8 +11023,11 @@ body > .initial-38-1 {
 .fs-12 {
     font-size: 12px !important;
 }
-.fs-16{
+.fs-16 {
     font-size: 16px !important;
+}
+.fs-20 {
+    font-size: 20px !important;
 }
 
 .select-product-item {
@@ -11796,4 +11799,16 @@ body > .initial-38-1 {
 }
 .h--42px {
     height: 42px !important;
+}
+.rounded-8 {
+    border-radius: 8px !important;
+}
+.bg-not-hover-primary-ash:not(:hover) {
+    background: #f5feff !important;
+    --primary-clr: #107980 ;
+    border: 1px solid rgba(16, 121, 128, 0.5) !important;
+    box-shadow: 0px 2px 10px 0px rgba(0, 97, 97, 0.1);
+}
+label.position-relative {
+    display: block;
 }

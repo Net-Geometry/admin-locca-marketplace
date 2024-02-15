@@ -26,25 +26,25 @@
                                     <a target="_blank" href="{{ route('admin.item.edit',['id' => $item->id , 'product_gellary' => true ]) }}" class="btn btn--sm btn-outline-primary">
                                             {{ translate('messages.use_this_product_info') }}
                                     </a>
-
-
                                 </div>
                             </div>
                             <table class="table table-borderless table-thead-bordered m-0">
-                                <thead>
-                                    <tr>
-                                        <th class="px-4 pb-0 border-0">
-                                            <h6 class="m-0 text-capitalize">{{ translate('General_Information') }}</h6>
-                                        </th>
-                                        <th class="px-4 pb-0 border-0">
-                                            <h6 class="m-0 text-capitalize">{{ translate('Available_Variations') }}</h6>
-                                        </th>
-                                        <th class="px-4 pb-0 border-0">
-                                            <h6 class="m-0 text-capitalize">{{ translate('tags') }}</h6>
-                                        </th>
-                                    </tr>
-                                </thead>
                                 <tbody>
+                                    <tr>
+                                        <td class="px-4 max-w--220px product-gallery-info">
+                                            <h6 class="m-0 text-capitalize">{{ translate('General_Information') }}</h6>
+                                        </td>
+                                        <td class="px-4 product-gallery-info">
+                                            <h6 class="m-0 text-capitalize">{{ translate('Available_Variations') }}</h6>
+                                        </td>
+                                        <td>
+                                            <h6 class="m-0 text-capitalize">{{ translate('tags') }}</h6>
+                                        </td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
                                     <tr>
                                         <td class="px-4 max-w--220px product-gallery-info">
                                             <span class="d-block mb-1">
@@ -142,6 +142,10 @@
                                                 @foreach($item->tags as $c) {{$c->tag.','}} @endforeach
                                         </td>
 
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
                                 </tr>
                             </tbody>
                             </table>

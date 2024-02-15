@@ -21,7 +21,10 @@
             </h1>
             <div class="d-flex align-items-end flex-wrap">
                 <div class="text--primary-2 d-flex flex-wrap align-items-center mr-2">
-                    <a href="{{ route('admin.item.product_gallery') }}" class="btn btn--primary font-regular">{{translate('messages.Add_From_Product_Gallery')}}</a>
+                    <a href="{{ route('admin.item.product_gallery') }}" class="btn btn-outline-primary btn--primary d-flex align-items-center bg-not-hover-primary-ash rounded-8 gap-2">
+                        <img src="{{ asset('public/assets/admin/img/product-gallery.png') }}" class="w--22" alt="">
+                        <span>{{translate('Add Info From Gallery')}}</span>
+                    </a>
                 </div>
 
                 @if(Config::get('module.current_module_type') == 'food')
@@ -355,8 +358,8 @@
                     <div class="card shadow--card-2 border-0">
                         <div class="card-header">
                             <h5 class="card-title">
-                                <span class="card-header-icon"><i class="tio-dollar-outlined"></i></span>
-                                <span>{{ translate('amount') }}</span>
+                                <span class="card-header-icon"><i class="tio-label-outlined"></i></span>
+                                <span>{{ translate('Price Information') }}</span>
                             </h5>
                         </div>
                         <div class="card-body">

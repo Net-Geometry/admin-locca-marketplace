@@ -64,9 +64,6 @@
             </div>
             <!-- End Header -->
         </div>
-{{--        <div>--}}
-{{--            <h4 class="text-center pb-2 pt-4">53434{{ translate('messages.products found') }}</h4>--}}
-{{--        </div>--}}
 
         <div class="row" id="set-rows">
                         @include('admin-views.product.partials._gallery', [

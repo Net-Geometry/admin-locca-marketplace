@@ -22,7 +22,7 @@
                             <div class="export-steps-item-2 h-100">
                                 <div class="top">
                                     <div>
-                                        <h3 class="font-regular">{{translate('Step_1')}}</h3>
+                                        <h3 class="fs-20">{{translate('Step_1')}}</h3>
                                         <div>
                                             {{translate('Download_Excel_File')}}
                                         </div>
@@ -48,7 +48,7 @@
                             <div class="export-steps-item-2 h-100">
                                 <div class="top">
                                     <div>
-                                        <h3 class="font-regular">{{translate('Step_2')}}</h3>
+                                        <h3 class="fs-20">{{translate('Step_2')}}</h3>
                                         <div>
                                             {{translate('Match_Spread_sheet_data_according_to_instruction')}}
                                         </div>
@@ -79,7 +79,7 @@
                             <div class="export-steps-item-2 h-100">
                                 <div class="top">
                                     <div>
-                                        <h3 class="font-regular">{{translate('Step_3')}}</h3>
+                                        <h3 class="fs-20">{{translate('Step_3')}}</h3>
                                         <div>
                                             {{translate('Validate_data_and_complete_import')}}
                                         </div>

@@ -22,7 +22,7 @@
                             <div class="export-steps-item-2 h-100">
                                 <div class="top">
                                     <div>
-                                        <h3 class="font-regular">{{translate('Step 1')}}</h3>
+                                        <h3 class="fs-20">{{translate('Step 1')}}</h3>
                                         <div>
                                             {{translate('Select Data Type')}}
                                         </div>
@@ -43,7 +43,7 @@
                             <div class="export-steps-item-2 h-100">
                                 <div class="top">
                                     <div>
-                                        <h3 class="font-regular">{{translate('Step 2')}}</h3>
+                                        <h3 class="fs-20">{{translate('Step 2')}}</h3>
                                         <div>
                                             {{translate('Select Data Range by Date or ID and Export')}}
                                         </div>
