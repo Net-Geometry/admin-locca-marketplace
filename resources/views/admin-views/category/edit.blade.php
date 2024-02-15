@@ -86,19 +86,19 @@
                                 <label class="mb-4">{{translate('messages.image')}}
                                     <small class="text-danger">* ( {{translate('messages.ratio')}} 1:1 )</small>
                                 </label>
-                                <div class="text-center my-auto position-relative d-inline-block">
+                                <label class="text-center my-auto position-relative d-inline-block">
                                     <img class="img--176 border" id="viewer"
                                     src="{{\App\CentralLogics\Helpers::onerror_image_helper($category['image'], asset('storage/app/public/category/').'/'.$category['image'], asset('public/assets/admin/img/upload-img.png'), 'category/') }}"
                                         data-onerror-image="{{asset('public/assets/admin/img/upload-img.png')}}"
                                         alt=""/>
                                     <div class="icon-file-group">
-                                        <label class="icon-file">
+                                        <div class="icon-file">
                                             <input type="file" name="image" id="customFileEg1" class="custom-file-input read-url"
                                                 accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
                                                 <i class="tio-edit"></i>
-                                        </label>
+                                        </div>
                                     </div>
-                                </div>
+                                </label>
                             </div>
                             @endif
                         </div>

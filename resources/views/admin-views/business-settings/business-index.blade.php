@@ -388,20 +388,20 @@
                                             <label class="form-label">
                                                 {{ translate('logo') }} <span class="text--primary">( {{ translate('3:1') }} )</span>
                                             </label>
-                                            <div class="text-center position-relative">
+                                            <label class="text-center position-relative">
                                                 <img class="img--vertical onerror-image image--border" id="viewer"
                                                     data-onerror-image="{{ asset('public/assets/admin/img/upload-img.png') }}"
                                                     src="{{ \App\CentralLogics\Helpers::onerror_image_helper($logo, asset('storage/app/public/business/').'/'.$logo, asset('public/assets/admin/img/upload-img.png'),'business/') }}"
                                                     alt="logo image" />
                                                 <div class="icon-file-group">
-                                                    <label class="icon-file">
+                                                    <div class="icon-file">
                                                         <input type="file" name="logo" id="customFileEg1"
                                                             class="custom-file-input"
                                                             accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
                                                             <i class="tio-edit"></i>
-                                                    </label>
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            </label>
                                         </div>
 
                                         <div class="__custom-upload-img">
@@ -410,25 +410,23 @@
                                             <label class="form-label">
                                                 {{ translate('Favicon') }}  <span class="text--primary">( {{ translate('1:1') }} )</span>
                                             </label>
-
-
-                                            <div class="text-center position-relative">
+                                            <label class="text-center position-relative">
                                                 <img class="img--133 onerror-image image--border" id="iconViewer"
                                                     data-onerror-image="{{ asset('public/assets/admin/img/upload-img.png') }}"
                                                     src="{{ \App\CentralLogics\Helpers::onerror_image_helper($icon, asset('storage/app/public/business/').'/'.$icon, asset('public/assets/admin/img/upload-img.png') , 'business/')}}"
                                                     alt="Fav icon" />
                                                 <div class="icon-file-group">
-                                                    <label class="icon-file">
+                                                    <div class="icon-file">
                                                         <input type="file" name="icon" id="favIconUpload"
                                                             class="custom-file-input"
                                                             accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
                                                             <i class="tio-edit"></i>
-                                                    </label>
+                                                    </div>
                                                     <button class="btn action-btn btn-outline-danger">
                                                         <i class="tio-delete-outlined"></i>
                                                     </button>
                                                 </div>
-                                            </div>
+                                            </label>
                                         </div>
                                     </div>
                                 </div>

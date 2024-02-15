@@ -140,7 +140,7 @@
                                     <label class="form-label">
                                         {{ translate('logo') }} <span class="text--primary">({{ translate('1:1') }})</span>
                                     </label>
-                                    <div class="text-center position-relative">
+                                    <label class="text-center position-relative">
                                         <img class="img--110 min-height-170px min-width-170px onerror-image image--border" id="viewer"
                                         data-onerror-image="{{ asset('public/assets/admin/img/upload-img.png') }}"
                                         src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
@@ -151,13 +151,13 @@
                                         ) }}"
                                             alt="logo image" />
                                         <div class="icon-file-group">
-                                            <label class="icon-file">
+                                            <div class="icon-file">
                                                 <i class="tio-edit"></i>
                                         <input type="file" name="logo" id="customFileEg1" class="custom-file-input"
                                         accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*" required>
-                                            </label>
+                                            </div>
                                         </div>
-                                    </div>
+                                    </label>
                                 </div>
 
                                 <div class="__custom-upload-img">
@@ -166,7 +166,7 @@
                                     <label class="form-label">
                                         {{ translate('Store Cover') }}  <span class="text--primary">({{ translate('2:1') }})</span>
                                     </label>
-                                    <div class="text-center position-relative">
+                                    <label class="text-center position-relative">
                                         <img class="img--vertical min-height-170px min-width-170px onerror-image image--border" id="coverImageViewer"
                                         data-onerror-image="{{ asset('public/assets/admin/img/upload-img.png') }}"
                                         src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
@@ -177,13 +177,13 @@
                                         ) }}"
                                             alt="Fav icon" />
                                         <div class="icon-file-group">
-                                            <label class="icon-file">
+                                            <div class="icon-file">
                                                 <i class="tio-edit"></i>
                                                 <input type="file" name="cover_photo" id="coverImageUpload"  class="custom-file-input"
                                                     accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
-                                            </label>
+                                            </div>
                                         </div>
-                                    </div>
+                                    </label>
                                 </div>
                             </div>
                         </div>

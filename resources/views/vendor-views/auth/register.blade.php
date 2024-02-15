@@ -222,18 +222,18 @@
                                 <label class="input-label pt-2">{{ translate('Upload Cover Photo') }}<small class="text-danger">
                                     * ({{ translate('messages.ratio') }} 2:1 )</small>
                                 </label>
-                                <div class="image--border position-relative">
+                                <label class="image--border position-relative">
                                     <img class="__register-img" id="coverImageViewer"
                                         src="{{ asset('public/assets/admin/img/upload-img.png') }}" alt="Product thumbnail" />
                                     <div class="icon-file-group">
-                                        <label class="icon-file">
+                                        <div class="icon-file">
                                             <input type="file" name="cover_photo" id="coverImageUpload"
                                             class="form-control __form-control"
                                             accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
                                             <img src="{{ asset('public/assets/admin/img/pen.png') }}" alt="">
-                                        </label>
+                                        </div>
                                     </div>
-                                </div>
+                                </label>
                             </div>
                             <div class="form-group w-140px d-flex flex-column justify-content-between">
                                 <label class="input-label pt-2">{{ translate('messages.store_logo') }}<small class="text-danger">
@@ -241,18 +241,18 @@
                                         {{ translate('messages.ratio') }}
                                         1:1
                                         )</small></label>
-                                <div class="image--border position-relative img--100px">
+                                <label class="image--border position-relative img--100px">
                                     <img class="__register-img" id="logoImageViewer"
                                         src="{{ asset('public/assets/admin/img/upload-img.png') }}" alt="Product thumbnail" />
 
                                     <div class="icon-file-group">
-                                        <label class="icon-file">
+                                        <div class="icon-file">
                                             <input type="file" name="logo" id="customFileEg1" class="form-control __form-control"
                                             accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*" required>
                                             <img src="{{ asset('public/assets/admin/img/pen.png') }}" alt="">
-                                        </label>
+                                        </div>
                                     </div>
-                                </div>
+                                </label>
                             </div>
                         </div>
                     </div>

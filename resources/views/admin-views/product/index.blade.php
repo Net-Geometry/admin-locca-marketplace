@@ -153,15 +153,15 @@
                                         <small class="text-danger">* ( {{ translate('messages.ratio') }} 1:1 )</small>
                                         @endif
                                     </label>
-                                    <div class="d-inline-block m-0 position-relative">
+                                    <label class="d-inline-block m-0 position-relative">
                                         <img class="img--176 border" id="viewer" src="{{ asset('public/assets/admin/img/upload-img.png') }}" alt="thumbnail" />
                                         <div class="icon-file-group">
-                                            <label class="icon-file"><input type="file" name="image" id="customFileEg1" class="custom-file-input d-none"
+                                            <div class="icon-file"><input type="file" name="image" id="customFileEg1" class="custom-file-input d-none"
                                             accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
                                                     <i class="tio-edit"></i>
-                                            </label>
+                                            </div>
                                         </div>
-                                    </div>
+                                    </label>
                                 </div>
                             </div>
                         </div>

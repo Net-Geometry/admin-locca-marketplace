@@ -141,16 +141,16 @@
                                                     {{translate('messages.icon')}}
                                                     <small class="text-danger">* ( {{translate('messages.ratio')}} 1:1)</small>
                                                 </label>
-                                                <div class="text-center my-auto position-relative">
+                                                <label class="text-center my-auto position-relative">
                                                     <img class="img--176 h-unset aspect-ratio-1 image--border" id="viewer" data-onerror-image="{{asset('public/assets/admin/img/upload-img.png')}}" src="{{\App\CentralLogics\Helpers::onerror_image_helper($module['icon'], asset('storage/app/public/module/').'/'.$module['icon'], asset('public/assets/admin/img/upload-img.png'), 'module/') }}"
                                                     alt="image" />
                                                     <div class="icon-file-group">
-                                                        <label class="icon-file">
+                                                        <div class="icon-file">
                                                             <input type="file" name="icon" id="customFileEg1" class="custom-file-input" accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
                                                             <i class="tio-edit"></i>
-                                                        </label>
+                                                        </div>
                                                     </div>
-                                                </div>
+                                                </label>
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
@@ -159,16 +159,16 @@
                                                     {{translate('messages.thumbnail')}}
                                                     <small class="text-danger">* ( {{translate('messages.ratio')}} 1:1)</small>
                                                 </label>
-                                                <div class="text-center my-auto position-relative">
+                                                <label class="text-center my-auto position-relative">
                                                     <img class="img--176 h-unset aspect-ratio-1 image--border" id="viewer2" data-onerror-image="{{asset('public/assets/admin/img/upload-img.png')}}" src="{{\App\CentralLogics\Helpers::onerror_image_helper($module['thumbnail'], asset('storage/app/public/module/').'/'.$module['thumbnail'], asset('public/assets/admin/img/upload-img.png'), 'module/') }}"
                                                     alt="image" />
                                                     <div class="icon-file-group">
-                                                        <label class="icon-file">
+                                                        <div class="icon-file">
                                                             <input type="file" name="thumbnail" id="customFileEg2" class="custom-file-input" accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
                                                             <i class="tio-edit"></i>
-                                                        </label>
+                                                        </div>
                                                     </div>
-                                                </div>
+                                                </label>
                                             </div>
                                         </div>
                                     </div>
