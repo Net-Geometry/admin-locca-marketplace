@@ -4039,4 +4039,10 @@
   'Set_permission' => 'Set permission',
   'Permissions' => 'Permissions',
   'sell_count' => 'Sell count',
+  'Search_by_product_name' => 'Search by product name',
+  'Unit_price' => 'Unit price',
+  'By_turning_the_‘Maintenance_Mode’_ON,_all_your_apps_and_customer_website_will_be_disabled_temporarily._Only_the_Admin_Panel,_Admin_Landing_Page_&_Store_Panel_will_be_functional.' => 'By turning the ‘Maintenance Mode’ ON  all your apps and customer website will be disabled temporarily. Only the Admin Panel  Admin Landing Page & Store Panel will be functional.',
+  'fewfwe' => 'Fewfwe',
+  'ex:_DM_name_email_or_phone' => 'Ex: DM name,email or phone',
+  'ex:_name_email_or_phone' => 'Ex: name, email or phone',
 );

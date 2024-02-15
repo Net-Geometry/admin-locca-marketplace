@@ -278,9 +278,15 @@ $(document).on('click', '.confirm-Toggle', function () {
     }
     if(toggle_id === 'product_approval'){
         if ($("#product_approval").is(':checked')) {
-            $(".access_product_approval").removeClass('d-none');
+            $("#inlineCheckbox1").removeAttr('disabled');
+            $("#inlineCheckbox2").removeAttr('disabled');
+            $("#inlineCheckbox3").removeAttr('disabled');
+            $("#inlineCheckbox4").removeAttr('disabled');
         } else {
-            $(".access_product_approval").addClass('d-none');
+            $("#inlineCheckbox1").attr('disabled', true);
+            $("#inlineCheckbox2").attr('disabled', true);
+            $("#inlineCheckbox3").attr('disabled', true);
+            $("#inlineCheckbox4").attr('disabled', true);
         }
     }
     if(toggle_id === 'additional_charge_status'){

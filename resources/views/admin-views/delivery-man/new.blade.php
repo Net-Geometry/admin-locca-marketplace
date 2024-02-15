@@ -56,7 +56,7 @@
                     <form  class="search-form">
                             <div class="input-group input--group">
                                 <input id="datatableSearch_" type="search" id="search" name="search_by" class="form-control"
-                                        placeholder="{{translate('ex_: search_delivery_man_,_email_or_phone')}}" value="{{request()?->search_by}}" aria-label="{{translate('messages.search')}}" >
+                                        placeholder="{{translate('ex:_DM_name_email_or_phone')}}" value="{{request()?->search_by}}" aria-label="{{translate('messages.search')}}" >
                                 <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
                             </div>
                         </form>
