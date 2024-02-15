@@ -29,6 +29,7 @@ class ParcelController extends Controller
         {
             $request = json_decode(session('order_filter'));
         }
+        // dd($request->zone);
         Order::withOutGlobalScope(ZoneScope::class)->where(['checked' => 0,'order_type'=>'parcel'])->update(['checked' => 1]);
 
         $orders = Order::withOutGlobalScope(ZoneScope::class)->with(['customer', 'store'])
@@ -42,7 +43,7 @@ class ParcelController extends Controller
             });
         })
         ->when(isset($request->zone), function($query)use($request){
-            return $query->where('zone_id',$request->zone);
+            return $query->whereIn('zone_id',$request->zone);
         })
         ->when($status == 'scheduled', function($query){
             return $query->whereRaw('created_at <> schedule_at');

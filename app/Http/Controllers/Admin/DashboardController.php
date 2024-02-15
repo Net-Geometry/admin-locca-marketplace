@@ -286,11 +286,6 @@ class DashboardController extends Controller
         $top_sell = $data['top_sell'];
         $delivery_commission = $data['delivery_commission'];
         $module_type = Config::get('module.current_module_type');
-        // if ($module_type == 'parcel') {
-        //     return response()->json([
-        //         'view' => view('admin-views.partials._user-overview-chart-parcel', compact('data'))->render()
-        //     ], 200);
-        // }
 
         return response()->json([
             'popular_restaurants' => view('admin-views.partials._popular-restaurants', compact('popular'))->render(),
@@ -365,7 +360,11 @@ class DashboardController extends Controller
             $new_items = Item::where('module_id', $module_id)->whereDate('created_at', Carbon::now());
             $new_stores = Store::where('module_id', $module_id)->whereDate('created_at', Carbon::now());
             $new_customers = User::whereDate('created_at', Carbon::now());
-            $total_orders = Order::where('module_id', $module_id);
+            if($module_type =='parcel'){
+                $total_orders = Order::where('module_id', $module_id)->whereDate('created_at', Carbon::now());
+            } else{
+                $total_orders = Order::where('module_id', $module_id);
+            }
             $total_items = Item::where('module_id', $module_id);
             $total_stores = Store::where('module_id', $module_id);
             $total_customers = User::all();
@@ -456,7 +455,7 @@ class DashboardController extends Controller
             $total_customers = User::all();
         }
 
-        if (is_numeric($zone_id) && $module_id && $module_type!='food') {
+        if (is_numeric($zone_id) && $module_id &&  !in_array($module_type ,['food','parcel']) ) {
             $searching_for_dm = $searching_for_dm->StoreOrder()->OrderScheduledIn(30)->where('zone_id', $zone_id)->count();
             $accepted_by_dm = $accepted_by_dm->StoreOrder()->where('zone_id', $zone_id)->count();
             $preparing_in_rs = $preparing_in_rs->StoreOrder()->where('zone_id', $zone_id)->count();
@@ -490,7 +489,25 @@ class DashboardController extends Controller
             $new_items = $new_items->count();
             $new_stores = $new_stores->count();
             $new_customers = $new_customers->count();
-        } elseif($module_id && $module_type =='parcel') {
+        } elseif(is_numeric($zone_id) && $module_id && $module_type =='parcel') {
+            $searching_for_dm = $searching_for_dm->ParcelOrder()->OrderScheduledIn(30)->where('zone_id', $zone_id)->count();
+            $accepted_by_dm = $accepted_by_dm->ParcelOrder()->where('zone_id', $zone_id)->count();
+            $preparing_in_rs = $preparing_in_rs->ParcelOrder()->where('zone_id', $zone_id)->count();
+            $picked_up = $picked_up->ParcelOrder()->where('zone_id', $zone_id)->count();
+            $delivered = $delivered->ParcelOrder()->where('zone_id', $zone_id)->count();
+            $canceled = $canceled->ParcelOrder()->where('zone_id', $zone_id)->count();
+            $refund_requested = $refund_requested->ParcelOrder()->where('zone_id', $zone_id)->count();
+            $refunded = $refunded->ParcelOrder()->where('zone_id', $zone_id)->count();
+            $total_orders = $total_orders->ParcelOrder()->where('zone_id', $zone_id)->count();
+            $total_items = $total_items->count();
+            $total_stores = $total_stores->where('zone_id', $zone_id)->count();
+            $total_customers = $total_customers->where('zone_id', $zone_id)->count();
+            $new_orders = $new_orders->ParcelOrder()->where('zone_id', $zone_id)->count();
+            $new_items = $new_items->count();
+            $new_stores = $new_stores->where('zone_id', $zone_id)->count();
+            $new_customers = $new_customers->where('zone_id', $zone_id)->count();
+        }
+        elseif($module_id && $module_type =='parcel') {
             $searching_for_dm = $searching_for_dm->ParcelOrder()->OrderScheduledIn(30)->count();
             $accepted_by_dm = $accepted_by_dm->ParcelOrder()->count();
             $preparing_in_rs = $preparing_in_rs->ParcelOrder()->count();
@@ -507,7 +524,9 @@ class DashboardController extends Controller
             $new_items = $new_items->count();
             $new_stores = $new_stores->count();
             $new_customers = $new_customers->count();
-        }else{
+        }
+
+        else{
             $searching_for_dm = $searching_for_dm->StoreOrder()->OrderScheduledIn(30)->count();
             $accepted_by_dm = $accepted_by_dm->StoreOrder()->count();
             $preparing_in_rs = $preparing_in_rs->StoreOrder()->count();

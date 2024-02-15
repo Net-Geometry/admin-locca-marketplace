@@ -22,7 +22,7 @@
 <!-- Body -->
 <div class="card-body">
     <div class="rated--products">
-        @foreach($top_rated_foods as $key=>$item)
+        @forelse($top_rated_foods as $key=>$item)
             <a href="{{route('admin.item.view',[$item['id']])}}">
                 <div class="rated-media d-flex align-items-center">
                     <img
@@ -44,7 +44,9 @@
                     </div>
                 </div>
             </a>
-        @endforeach
+            @empty
+
+            @endforelse
     </div>
 </div>
 <!-- End Body -->

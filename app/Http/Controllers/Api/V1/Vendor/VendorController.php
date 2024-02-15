@@ -830,7 +830,7 @@ class VendorController extends Controller
 
         if($vendor->wallet && $vendor->wallet->collected_cash > 0)
         {
-            return response()->json(['errors'=>[['code'=>'on-going', 'message'=>translate('messages.You_have_cash_in_hand,_you_have_to_pay_the_due_to_delete_your_account')]]],203);
+            return response()->json(['errors'=>[['code'=>'hand_in_cash', 'message'=>translate('messages.You_have_cash_in_hand,_you_have_to_pay_the_due_to_delete_your_account')]]],203);
         }
 
         if (Storage::disk('public')->exists('vendor/' . $vendor['image'])) {

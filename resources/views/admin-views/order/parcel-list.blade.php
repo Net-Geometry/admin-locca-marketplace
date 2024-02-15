@@ -528,14 +528,7 @@
                             <label class="custom-control-label"
                                    for="orderStatus8">{{translate('messages.canceled')}}</label>
                         </div>
-                        <hr class="my-4">
-
-                        <div class="custom-control custom-radio mb-2">
-                            <input type="checkbox" id="scheduled" name="scheduled" class="custom-control-input"
-                                   value="1" {{isset($scheduled)?($scheduled==1?'checked':''):''}}>
-                            <label class="custom-control-label text-uppercase"
-                                   for="scheduled">{{translate('messages.scheduled')}}</label>
-                        </div>
+                     
                     @endif
 
                     <hr class="my-4">
