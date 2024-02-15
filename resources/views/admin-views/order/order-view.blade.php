@@ -556,8 +556,7 @@
                                                                         class="avatar-status avatar-lg-status avatar-status-dark"><i
                                                                             class="tio-edit"></i></span>
                                                                     <img class="img-fluid rounded aspect-ratio-1 onerror-image"
-                                                                    src="{{\App\CentralLogics\Helpers::onerror_image_helper($detail->item['image'], asset('storage/app/public/product/').'/'. $detail->item['image'], asset('public/assets/admin/img/160x160/img2.jpg') , 'product/') }}"
-
+                                                                    src="{{\App\CentralLogics\Helpers::onerror_image_helper($detail?->item?->image, asset('storage/app/public/product/').'/'. $detail?->item?->image, asset('public/assets/admin/img/160x160/img2.jpg') , 'product/') }}"
                                                                         data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
                                                                         alt="Image Description">
                                                                 </div>
@@ -565,7 +564,7 @@
                                                                 <a class="avatar avatar-xl mr-3"
                                                                     href="{{ route('admin.item.view', [$detail->item['id'],'module_id' => $order->module_id]) }}">
                                                                     <img class="img-fluid rounded aspect-ratio-1 onerror-image"
-                                                                    src="{{\App\CentralLogics\Helpers::onerror_image_helper($detail->item['image'], asset('storage/app/public/product/').'/'. $detail->item['image'], asset('public/assets/admin/img/160x160/img2.jpg') , 'product/') }}"
+                                                                    src="{{\App\CentralLogics\Helpers::onerror_image_helper($detail?->item?->image, asset('storage/app/public/product/').'/'. $detail?->item?->image, asset('public/assets/admin/img/160x160/img2.jpg') , 'product/') }}"
                                                                         data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
                                                                         alt="Image Description">
                                                                 </a>

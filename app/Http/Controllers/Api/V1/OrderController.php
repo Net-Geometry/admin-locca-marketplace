@@ -186,11 +186,14 @@ class OrderController extends Controller
         $zone = null;
         if ($request->latitude && $request->longitude) {
             $point = new Point($request->latitude, $request->longitude);
-
-            if(isset($request->sender_zone_id) ){
-                $zone_id = $request->sender_zone_id;
+            if ($request->order_type == 'parcel') {
+            // if(isset($request->sender_zone_id) ){
+                // $zone_id = $request->sender_zone_id;
+                $zone_ids = $request->header('zoneId') ? json_decode($request->header('zoneId'), true) :[];
+                $zone = Zone::whereIn('id', $zone_ids)->whereContains('coordinates', new Point($request->latitude, $request->longitude, POINT_SRID))->wherehas('modules',function($q){
+                    $q->where('module_type','parcel');
+                })->first();
             } else{
-
                 $store = Store::with('discount')->selectRaw('*, IF(((select count(*) from `store_schedule` where `stores`.`id` = `store_schedule`.`store_id` and `store_schedule`.`day` = ' . $schedule_at->format('w') . ' and `store_schedule`.`opening_time` < "' . $schedule_at->format('H:i:s') . '" and `store_schedule`.`closing_time` >"' . $schedule_at->format('H:i:s') . '") > 0), true, false) as open')->where('id', $request->store_id)->first();
 
                 if (!$store) {
@@ -200,22 +203,19 @@ class OrderController extends Controller
                         ]
                     ], 404);
                 }
-
-
                 $zone_id = isset($store) ? [$store->zone_id] : json_decode($request->header('zoneId'), true);
+                $zone = Zone::where('id', $zone_id)->whereContains('coordinates', new Point($request->latitude, $request->longitude, POINT_SRID))->first();
             }
 
-
-            $zone = Zone::where('id', $zone_id)->whereContains('coordinates', new Point($request->latitude, $request->longitude, POINT_SRID))->first();
-            if (!$zone) {
-                $errors = [];
-                array_push($errors, ['code' => 'coordinates', 'message' => translate('messages.out_of_coverage')]);
-                return response()->json([
-                    'errors' => $errors
-                ], 403);
-            }
         }
 
+        if (!$zone) {
+            $errors = [];
+            array_push($errors, ['code' => 'coordinates', 'message' => translate('messages.out_of_coverage')]);
+            return response()->json([
+                'errors' => $errors
+            ], 403);
+        }
         if( $zone && $zone->increased_delivery_fee_status == 1){
             $increased=$zone->increased_delivery_fee ?? 0;
         }
@@ -388,10 +388,10 @@ class OrderController extends Controller
             'contact_person_number' => $request->contact_person_number ? ($request->user ? $request->contact_person_number :str_replace('+', '', $request->contact_person_number)) : ($request->user?$request->user->phone:''),
             'contact_person_email' => $request->contact_person_email ? $request->contact_person_email : ($request->user?$request->user->email:''),
             'address_type' => $request->address_type ? $request->address_type : 'Delivery',
-            'address' => $request->address??'',
-            'floor' => $request->floor??'',
-            'road' => $request->road??'',
-            'house' => $request->house??'',
+            'address' => $request?->address??'',
+            'floor' => $request?->floor??'',
+            'road' => $request?->road??'',
+            'house' => $request?->house??'',
             'longitude' => (string)$request->longitude,
             'latitude' => (string)$request->latitude,
         ];
@@ -1145,10 +1145,10 @@ class OrderController extends Controller
             'contact_person_name' => $request->contact_person_name ? $request->contact_person_name : $request->user->f_name . ' ' . $request->user->f_name,
             'contact_person_number' => $request->contact_person_number ? $request->contact_person_number : $request->user->phone,
             'address_type' => $request->address_type ? $request->address_type : 'Delivery',
-            'address' => $request->address??'',
-            'floor' => $request->floor??'',
-            'road' => $request->road??'',
-            'house' => $request->house??'',
+            'address' => $request?->address??'',
+            'floor' => $request?->floor??'',
+            'road' => $request?->road??'',
+            'house' => $request?->house??'',
             'longitude' => (string)$request->longitude,
             'latitude' => (string)$request->latitude,
         ];
