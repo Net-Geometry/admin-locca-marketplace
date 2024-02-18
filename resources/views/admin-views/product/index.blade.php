@@ -175,9 +175,9 @@
                         <div class="card-header">
                             <h5 class="card-title">
                                 <span class="card-header-icon mr-2">
-                                    <i class="tio-dashboard-outlined"></i>
+                                    <i class="tio-tune-horizontal"></i>
                                 </span>
-                                <span> {{ translate('item_details') }} </span>
+                                <span> {{ translate('Store_&_Category_Info') }} </span>
                             </h5>
                         </div>
                         <div class="card-body">
@@ -258,13 +258,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-sm-6 col-lg-3" id="stock_input">
-                                    <div class="form-group mb-0">
-                                        <label class="input-label"
-                                            for="total_stock">{{ translate('messages.total_stock') }}</label>
-                                        <input type="number" placeholder="{{ translate('messages.Ex:_10') }}" class="form-control" name="current_stock" min="0" id="quantity">
-                                    </div>
-                                </div>
+
                                 <div class="col-sm-6 col-lg-3" id="maximum_cart_quantity">
                                     <div class="form-group mb-0">
                                         <label class="input-label"
@@ -364,7 +358,7 @@
                         </div>
                         <div class="card-body">
                             <div class="row g-2">
-                                <div class="col-sm-4 col-6">
+                                <div class="col-sm-{{ Config::get('module.current_module_type') == 'food' ? '4' :'3' }} col-6">
                                     <div class="form-group mb-0">
                                         <label class="input-label"
                                             for="exampleFormControlInput1">{{ translate('messages.price') }} <span class="form-label-secondary text-danger"
@@ -376,7 +370,14 @@
                                             placeholder="{{ translate('messages.Ex:') }} 100" required>
                                     </div>
                                 </div>
-                                <div class="col-sm-4 col-6">
+                                <div class="col-sm-{{ Config::get('module.current_module_type') == 'food' ? '4' :'3' }} col-6" id="stock_input">
+                                    <div class="form-group mb-0">
+                                        <label class="input-label"
+                                            for="total_stock">{{ translate('messages.total_stock') }}</label>
+                                        <input type="number" placeholder="{{ translate('messages.Ex:_10') }}" class="form-control" name="current_stock" min="0" id="quantity">
+                                    </div>
+                                </div>
+                                <div class="col-sm-{{ Config::get('module.current_module_type') == 'food' ? '4' :'3' }} col-6">
                                     <div class="form-group mb-0">
                                         <label class="input-label"
                                             for="exampleFormControlInput1">{{ translate('messages.discount_type') }} <span class="form-label-secondary text-danger"
@@ -397,7 +398,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-sm-4 col-6">
+                                <div class="col-sm-{{ Config::get('module.current_module_type') == 'food' ? '4' :'3' }} col-6">
                                     <div class="form-group mb-0">
                                         <label class="input-label"
                                             for="exampleFormControlInput1">{{ translate('messages.discount') }}

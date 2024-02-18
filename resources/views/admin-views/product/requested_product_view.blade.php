@@ -12,7 +12,7 @@
             <div class="d-flex flex-wrap justify-content-between">
                 <h1 class="page-header-title text-break">
                     <span class="page-header-icon">
-                        <img src="{{ asset('public/assets/admin/img/temp_pro.png') }}" class="w--22" alt="">
+                        <img src="{{ asset('public/assets/admin/img/p_gal.png') }}" class="w--22" alt="">
                     </span>
                     <span>{{ translate('Product_Details') }}</span>
                 </h1>
@@ -33,7 +33,7 @@
                                 asset('storage/app/public/product').'/'.$product['image'] ?? '',
                                 asset('public/assets/admin/img/160x160/img2.jpg'),
                                 'product/'
-                            ) }}" 
+                            ) }}"
                                 data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
                                 alt="Image Description">
                                 @if ($product['is_rejected'] == 1 )
@@ -48,7 +48,7 @@
                         <div class="d-flex justify-content-end">
                             <div class="d-flex flex-wrap gap-2 align-items-start">
                                 <a href="{{ route('admin.item.edit', [$product['id'],'temp_product' => true]) }}" class="btn btn-sm btn-- btn-outline-primary">
-                                    {{ translate('messages.edit_info') }}
+                                    <i class="tio-redo font-weight-bold "></i>  {{ translate('messages.Edit_&_Approve') }}
                                 </a>
                                 @if($product->is_rejected == 0)
                                 <a data-toggle="tooltip" data-placement="top"
@@ -61,7 +61,7 @@
                                 data-original-title="{{ translate('messages.approve') }}"
                                     data-url="{{route('admin.item.approved',[ 'id'=> $product['id']])}}" data-message="{{translate('messages.you_want_to_approve_this_product')}}"
                                     href="javascript:" class="btn btn-sm btn--primary request_alert">
-                                    {{ translate('messages.approve') }}
+                                    {{ translate('messages.approve') }} <i class="tio-checkmark-circle-outlined font-weight-bold pr-1"></i>
                                 </a>
                             </div>
                         </div>
@@ -192,7 +192,7 @@
                                 @endif
                                 @if (config('module.' . $product->module->module_type)['item_available_time'])
                                 <span class="d-block mb-1">
-                                    <span>{{ translate('messages.available_time_starts') }}</span> 
+                                    <span>{{ translate('messages.available_time_starts') }}</span>
                                     <span>:</span>
                                     <strong>{{ date(config('timeformat'), strtotime($product['available_time_starts'])) }}</strong>
                                 </span>
@@ -289,7 +289,7 @@
                                 {{-- @if (config('module.' . $product->module->module_type)['add_on']) --}}
                                     @foreach (\App\Models\AddOn::whereIn('id', json_decode($product['add_ons'], true))->get() as $addon)
                                         <span class="d-block mb-1 text-capitalize">
-                                            <span>{{ $addon['name'] }}</span> 
+                                            <span>{{ $addon['name'] }}</span>
                                             <span>:</span>
                                             <strong>{{ \App\CentralLogics\Helpers::format_currency($addon['price']) }}</strong>
                                         </span>

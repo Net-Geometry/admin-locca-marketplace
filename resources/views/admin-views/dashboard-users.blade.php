@@ -577,6 +577,58 @@
                 },
             });
         });
+
+
+    let options = {
+          series: [{
+          name: '{{ translate('New_Customer_Growth') }}',
+          data: [{{$last_year_users > 0 ? number_format($user_data[1]/$last_year_users,2) : 0}},
+           {{$user_data[1] > 0 ? number_format($user_data[2]/$user_data[1],2) : 0}},
+           {{$user_data[2] > 0 ? number_format($user_data[3]/$user_data[2],2) : 0}},
+           {{$user_data[3] > 0 ? number_format($user_data[4]/$user_data[3],2) : 0}},
+           {{$user_data[4] > 0 ? number_format($user_data[5]/$user_data[4],2) : 0}},
+           {{$user_data[5] > 0 ? number_format($user_data[6]/$user_data[5],2) : 0}},
+           {{$user_data[6] > 0 ? number_format($user_data[7]/$user_data[6],2) : 0}},
+           {{$user_data[7] > 0 ? number_format($user_data[8]/$user_data[7],2) : 0}},
+           {{$user_data[8] > 0 ? number_format($user_data[9]/$user_data[8],2) : 0}},
+           {{$user_data[9] > 0 ? number_format($user_data[10]/$user_data[9],2) : 0}},
+           {{$user_data[10] > 0 ? number_format($user_data[11]/$user_data[10],2) : 0}},
+           {{$user_data[11] > 0 ? number_format($user_data[12]/$user_data[11],2) : 0}}]
+        }],
+          chart: {
+          height: 235,
+          type: 'area',
+          toolbar: {
+            show:false
+        }
+        },
+        dataLabels: {
+          enabled: false
+        },
+        stroke: {
+          curve: 'straight',
+          width: 2,
+        },
+        colors: ['#107980'],
+        fill: {
+            type: 'gradient',
+            colors: ['#107980'],
+        },
+        xaxis: {
+        //   type: 'datetime',
+          categories: ["{{ translate('Jan') }}", "{{ translate('Feb') }}", "{{ translate('Mar') }}", "{{ translate('Apr') }}", "{{ translate('May') }}", "{{ translate('Jun') }}", "{{ translate('Jul') }}", "{{ translate('Aug') }}", "{{ translate('Sep') }}", "{{ translate('Oct') }}", "{{ translate('Nov') }}", "{{ translate('Dec') }}" ]
+        },
+        tooltip: {
+          x: {
+            format: 'dd/MM/yy HH:mm'
+          },
+        },
+        };
+
+        let chart = new ApexCharts(document.querySelector("#customer-growth-chart"), options);
+        chart.render();
+
+
     </script>
 
 @endpush

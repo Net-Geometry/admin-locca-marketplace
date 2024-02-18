@@ -851,7 +851,7 @@ class ItemController extends Controller
                         'attributes' => $collection['Attributes'] ?($collection['Attributes']==""?json_encode([]):$collection['Attributes']): json_encode([]),
                         'store_id' => Helpers::get_store_id(),
                         'module_id' => Helpers::get_store_data()->module_id,
-                        'choice_options' => json_encode([]),
+                        'choice_options' => $module_type == 'food' ? json_encode([]) : $collection['ChoiceOptions'] ?? json_encode([]),
                         'status' => $collection['Status'] == 'active' ? 1 : 0,
                         'veg' => $collection['Veg'] == 'yes' ? 1 : 0,
                         'recommended' => $collection['Recommended'] == 'yes' ? 1 : 0,
@@ -880,7 +880,7 @@ class ItemController extends Controller
                             'item_id' => $data[$key]['id'],
                             'slug' => $slug,
                             'tag_ids' => json_encode([]),
-                            'choice_options' => json_encode([]),
+                            'choice_options' => $data[$key]['choice_options'],
                             'food_variations' => $data[$key]['food_variations'],
                             'variations' => $data[$key]['variations'],
                             'add_ons' =>  $data[$key]['add_ons'],
@@ -996,6 +996,7 @@ class ItemController extends Controller
                     'veg' => $collection['Veg'] == 'yes' ? 1 : 0,
                     'recommended' => $collection['Recommended'] == 'yes' ? 1 : 0,
                     'updated_at' => now(),
+                    'choice_options' => $module_type == 'food' ? json_encode([]) : $collection['ChoiceOptions'] ?? json_encode([]),
                 ]);
 
         if ($product_approval_active && ((data_get($product_approval_datas,'Update_anything_in_product_details',null) == 1) || (data_get($product_approval_datas,'Update_product_price',null) == 1) || ( data_get($product_approval_datas,'Update_product_variation',null) == 1)) )  {
@@ -1027,7 +1028,7 @@ class ItemController extends Controller
                             'item_id' => $data[$key]['id'],
                             // 'slug' => null,
                             'tag_ids' => json_encode([]),
-                            'choice_options' => json_encode([]),
+                            'choice_options' => $data[$key]['choice_options'],
 
                             'updated_at' => now()
                         ]);
@@ -1061,7 +1062,7 @@ class ItemController extends Controller
             } else {
                 $chunk_items= array_chunk($data,$chunkSize);
                 foreach($chunk_items as $key=> $chunk_item){
-                    DB::table('items')->upsert($chunk_item,['id','module_id'],['name','description','image','images','category_id','category_ids','unit_id','stock','price','discount','discount_type','available_time_starts','available_time_ends','variations','food_variations','add_ons','attributes','store_id','status','veg','recommended', 'updated_at']);
+                    DB::table('items')->upsert($chunk_item,['id','module_id'],['name','description','image','images','category_id','category_ids','unit_id','stock','price','discount','discount_type','available_time_starts','available_time_ends','variations','food_variations','add_ons','attributes','store_id','status','veg','recommended', 'updated_at','choice_options']);
                 }
             }
 
