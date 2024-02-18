@@ -211,28 +211,6 @@ $countryCode= strtolower($country?$country->value:'auto');
 
 
 
-const input = document.querySelector('input[type="tel"]');
-    window.intlTelInput(input, {
-    initialCountry: "{{$countryCode}}",
-    utilsScript: "{{ asset('public/assets/admin/intltelinput/js/utils.js') }}",
-    autoInsertDialCode: true,
-    nationalMode: false,
-    formatOnDisplay: false,
-    });
-
-
-    function keepNumbersAndPlus(inputString) {
-    let regex = /[0-9+]/g;
-    let filteredString = inputString.match(regex);
-    let result = filteredString ? filteredString.join('') : '';
-    return result;
-}
-
-    document.getElementById('phone').addEventListener('keyup', function(event) {
-        let input = event.target.value;
-        let result = keepNumbersAndPlus(input);
-        event.target.value = result;
-    });
 
 
     $(document).on('ready', function(){
@@ -467,6 +445,33 @@ fetch('https://iid.googleapis.com/iid/v1/' + token + '/rel/topics/' + topic, {
 
 </script>
 
+<script>
+    "use strict";
+
+    const input = document.querySelector('input[type="tel"]');
+    window.intlTelInput(input, {
+    initialCountry: "{{$countryCode}}",
+    utilsScript: "{{ asset('public/assets/admin/intltelinput/js/utils.js') }}",
+    autoInsertDialCode: true,
+    nationalMode: false,
+    formatOnDisplay: false,
+    });
+
+
+    function keepNumbersAndPlus(inputString) {
+    let regex = /[0-9+]/g;
+    let filteredString = inputString.match(regex);
+    let result = filteredString ? filteredString.join('') : '';
+    return result;
+}
+
+    document.getElementById('phone').addEventListener('keyup', function(event) {
+        let input = event.target.value;
+        let result = keepNumbersAndPlus(input);
+        event.target.value = result;
+    });
+
+</script>
 
 <!-- IE Support -->
 <script>

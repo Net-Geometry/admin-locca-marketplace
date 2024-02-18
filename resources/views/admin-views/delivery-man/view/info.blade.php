@@ -254,7 +254,7 @@
 
                     <div class="d-flex flex-wrap gap-2">
 
-                            <a href="javascript:"
+                            <a  href="{{route('admin.users.delivery-man.edit',[$deliveryMan->id])}}"
                                 class="btn py-2 btn-primary align-items-center d-flex">
                                 {{translate('Edit Information')}}
                             </a>
@@ -304,8 +304,8 @@
                                 <div class="fs-12 text-muted d-flex justify-content-center justify-content-md-start">
                                     @if ($deliveryMan->application_status == 'approved')
                                         <a href="mailto:{{ $deliveryMan['email'] }}"> {{ $deliveryMan['email'] }}</a>
-                                        <span class="d-block mx-4">|</span>
-                                        <a href="mailto:{{ $deliveryMan['phone'] }}"> {{ $deliveryMan['phone'] }}</a>
+                                        <span class="d-block mx-3">|</span>
+                                        <a href="tel:{{ $deliveryMan['phone'] }}"> {{ $deliveryMan['phone'] }}</a>
                                     @endif
                                 </div>
                             </div>

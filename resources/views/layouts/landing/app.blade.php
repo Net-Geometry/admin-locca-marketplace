@@ -352,32 +352,8 @@ $countryCode= strtolower($country?$country->value:'auto');
 
     @stack('script_2')
 
-    <script src="{{asset('public/assets/admin/intltelinput/js/intlTelInput.min.js')}}"></script>
-
     <script>
         "use strict";
-        const input = document.querySelector('input[type="tel"]');
-        window.intlTelInput(input, {
-        initialCountry: "{{$countryCode}}",
-        utilsScript: "{{ asset('public/assets/admin/intltelinput/js/utils.js') }}",
-        autoInsertDialCode: true,
-        nationalMode: false,
-        formatOnDisplay: false,
-        });
-
-        function keepNumbersAndPlus(inputString) {
-        let regex = /[0-9+]/g;
-        let filteredString = inputString.match(regex);
-        let result = filteredString ? filteredString.join('') : '';
-        return result;
-        }
-
-        document.getElementById('phone').addEventListener('keyup', function(event) {
-            let input = event.target.value;
-            let result = keepNumbersAndPlus(input);
-            event.target.value = result;
-        });
-
  $(".main-category-slider").owlCarousel({
             loop: true,
             nav: false,
@@ -511,7 +487,32 @@ $countryCode= strtolower($country?$country->value:'auto');
         sync1.owlCarousel();
 
     </script>
+        <script src="{{asset('public/assets/admin/intltelinput/js/intlTelInput.min.js')}}"></script>
 
+<script>
+            "use strict";
+            const input = document.querySelector('input[type="tel"]');
+        window.intlTelInput(input, {
+        initialCountry: "{{$countryCode}}",
+        utilsScript: "{{ asset('public/assets/admin/intltelinput/js/utils.js') }}",
+        autoInsertDialCode: true,
+        nationalMode: false,
+        formatOnDisplay: false,
+        });
+
+        function keepNumbersAndPlus(inputString) {
+        let regex = /[0-9+]/g;
+        let filteredString = inputString.match(regex);
+        let result = filteredString ? filteredString.join('') : '';
+        return result;
+        }
+
+        document.getElementById('phone').addEventListener('keyup', function(event) {
+            let input = event.target.value;
+            let result = keepNumbersAndPlus(input);
+            event.target.value = result;
+        });
+</script>
 
 </body>
 
