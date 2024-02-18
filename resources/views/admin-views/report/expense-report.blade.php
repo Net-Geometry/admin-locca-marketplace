@@ -79,7 +79,7 @@
                         </div>
                         <div class="col-sm-6 col-md-3">
                             <select class="form-control set-filter" data-url="{{ url()->full() }}" data-filter="type" name="type">
-                                <option value="all_time" {{ isset($type) && $type == 'all' ? 'selected' : '' }}>
+                                <option value="all" {{ isset($type) && $type == 'all' ? 'selected' : '' }}>
                                     {{ translate('messages.All Type') }}</option>
                                 <option value="add_fund_bonus" {{ isset($type) && $type == 'add_fund_bonus' ? 'selected' : '' }}>
                                     {{ translate('messages.add_fund_bonus') }}</option>

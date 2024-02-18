@@ -169,7 +169,7 @@
                                                 <img class="img--176 h-unset aspect-ratio-1 image--border" id="viewer" src="{{asset('public/assets/admin/img/upload-img.png')}}" alt="image" />
                                                 <div class="icon-file-group">
                                                     <div class="icon-file">
-                                                        <input type="file" name="icon" id="customFileEg1" class="custom-file-input" accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*" required>
+                                                        <input type="file" name="icon" id="customFileEg1" class="custom-file-input" accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
                                                         <i class="tio-edit"></i>
                                                     </div>
                                                 </div>
@@ -186,7 +186,7 @@
                                                 <img class="img--176 h-unset aspect-ratio-1 image--border" id="viewer2" src="{{asset('public/assets/admin/img/upload-img.png')}}" alt="image" />
                                                 <div class="icon-file-group">
                                                     <div class="icon-file">
-                                                        <input type="file" name="thumbnail" id="customFileEg2" class="custom-file-input" accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*" required>
+                                                        <input type="file" name="thumbnail" id="customFileEg2" class="custom-file-input" accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
                                                         <i class="tio-edit"></i>
                                                     </div>
                                                 </div>

@@ -64,6 +64,7 @@ class ItemController extends Controller
             'description.*.max' => translate('messages.description_length_warning'),
             'name.0.required' => translate('messages.item_name_required'),
             'category_id.required' => translate('messages.category_required'),
+            'image.required' => translate('messages.thumbnail image is required'),
             'name.0.required' => translate('default_name_is_required'),
             'description.0.required' => translate('default_description_is_required'),
         ]);
@@ -74,7 +75,8 @@ class ItemController extends Controller
         }
 
         if ($request['price'] <= $dis) {
-                $validator->getMessageBag()->add('unit_price', translate('messages.discount_can_not_be_more_than_or_equal_han_the_item_price'));
+                $validator->getMessageBag()->add('unit_price', translate("Discount amount can't be greater than 100%
+"));
         }
 
         if ($request['price'] <= $dis || $validator->fails()) {
@@ -342,7 +344,8 @@ class ItemController extends Controller
         }
 
         if ($request['price'] <= $dis) {
-            $validator->getMessageBag()->add('unit_price', translate('messages.discount_can_not_be_more_than_or_equal'));
+            $validator->getMessageBag()->add('unit_price', translate("Discount amount can't be greater than 100%
+"));
         }
 
         if ($request['price'] <= $dis || $validator->fails()) {

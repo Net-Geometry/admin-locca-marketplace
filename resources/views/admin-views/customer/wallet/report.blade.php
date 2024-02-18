@@ -137,7 +137,7 @@
                             @endphp
 
                                 <!--Debit earned-->
-                            <div class="col-sm-4">
+                            <div class="col-6">
                                 <div
                                     class="color-card flex-column align-items-center justify-content-center color-6 h-100">
                                     <div class="img-box">
@@ -154,7 +154,7 @@
                             <!--Debit earned End-->
 
                             <!--credit earned-->
-                            <div class="col-sm-4">
+                            <div class="col-6">
                                 <div
                                     class="color-card flex-column align-items-center justify-content-center color-4 h-100">
                                     <div class="img-box">
@@ -171,20 +171,20 @@
                             <!--credit earned end-->
 
                             <!--balance earned-->
-                            <div class="col-sm-4">
-                                <div
-                                    class="color-card flex-column align-items-center justify-content-center color-2 h-100">
-                                    <div class="img-box">
-                                        <img class="resturant-icon w--30"
-                                             src="{{asset('public/assets/admin/img/customer-loyality/3.png')}}"
-                                             alt="dashboard">
-                                    </div>
-                                    <div class="d-flex flex-column align-items-center">
-                                        <h2 class="title">{{Helpers::format_currency($balance)}} </h2>
-                                        <div class="subtitle">{{translate('messages.balance')}}</div>
-                                    </div>
-                                </div>
-                            </div>
+{{--                            <div class="col-sm-4">--}}
+{{--                                <div--}}
+{{--                                    class="color-card flex-column align-items-center justify-content-center color-2 h-100">--}}
+{{--                                    <div class="img-box">--}}
+{{--                                        <img class="resturant-icon w--30"--}}
+{{--                                             src="{{asset('public/assets/admin/img/customer-loyality/3.png')}}"--}}
+{{--                                             alt="dashboard">--}}
+{{--                                    </div>--}}
+{{--                                    <div class="d-flex flex-column align-items-center">--}}
+{{--                                        <h2 class="title">{{Helpers::format_currency($balance)}} </h2>--}}
+{{--                                        <div class="subtitle">{{translate('messages.balance')}}</div>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
                             <!--balance earned end-->
                         </div>
                     </div>
