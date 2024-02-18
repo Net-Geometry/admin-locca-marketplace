@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class AccountTransaction extends Model
+class   AccountTransaction extends Model
 {
     use HasFactory;
 
