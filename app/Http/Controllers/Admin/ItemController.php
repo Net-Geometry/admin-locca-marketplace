@@ -1496,7 +1496,7 @@ class ItemController extends Controller
         return response()->json([
             'choice_options' => json_encode($choice_options),
             'variation' => json_encode($variations),
-            'attributes' => json_encode($request->attribute_id)
+            'attributes' => $request->has('attribute_id') ? json_encode($request->attribute_id) : json_encode([])
         ]);
     }
 

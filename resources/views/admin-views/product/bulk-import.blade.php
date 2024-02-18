@@ -197,6 +197,9 @@
                             <button type="submit" class="btn btn--warning">{{translate('Generate Value')}}</button>
                         </div>
                         <textarea name="" id="food_variation_outpot" class="form-control" rows="5" readonly></textarea>
+                        <div class="btn--container justify-content-end mt-2 mb-2">
+                            <button type="reset" class="btn btn--reset">{{translate('Reset')}}</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -255,6 +258,12 @@
                                 <textarea name="" id="attributes" class="form-control" rows="5" readonly></textarea>
                             </div>
                         </div>
+
+                        <div class="btn--container justify-content-end mt-2 mb-2">
+                            <button type="reset" class="btn btn--reset">{{translate('Reset')}}</button>
+                        </div>
+
+
                     </div>
                 </div>
             </div>
@@ -271,7 +280,10 @@
     let upload_type = $('input[name="upload_type"]:checked').val();
     myFunction(upload_type)
 });
-
+$('#reset_btn').click(function(){
+    $('#products_file').val('');
+    $('.filename').text('{{translate('Must_be_Excel_files_using_our_Excel_template_above')}}');
+})
     $(".action-upload-section-dot-area").on("change", function () {
         if (this.files && this.files[0]) {
             let reader = new FileReader();
@@ -428,6 +440,7 @@
 
     $('#choice_attributes').on('change', function() {
         $('#customer_choice_options').html(null);
+        $('#variant_combination').html(null);
         $.each($("#choice_attributes option:selected"), function() {
             if ($(this).val().length > 50) {
                 toastr.error(

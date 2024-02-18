@@ -15,7 +15,7 @@
                                 asset('storage/app/public/product').'/'.$item['image'] ?? '',
                                 asset('public/assets/admin/img/160x160/img2.jpg'),
                                 'product/'
-                            ) }}" 
+                            ) }}"
                                 data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
                                 alt="Image Description">
                         </div>
@@ -139,7 +139,7 @@
                                     @endif
 
                                         <td>
-                                                @foreach($item->tags as $c) {{$c->tag.','}} @endforeach
+                                                @foreach($item->tags as $c) {{ $c->tag }}{{ !$loop->last ? ',' : '.'}} @endforeach
                                         </td>
 
                                         <td></td>

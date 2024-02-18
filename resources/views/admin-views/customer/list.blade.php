@@ -46,8 +46,8 @@
                         <select name="order_wise" class="form-control js-select2-custom set-filter"
                         data-filter="order_wise"
                                 data-url="{{ url()->full() }}">
-                            <option  {{ request()->get('order_wise')  == 'top'?'selected':''}}  value="top">{{ translate('messages.Top_Completed_Orderer_Customers') }}</option>
-                            <option {{ request()->get('order_wise')  == 'least'?'selected':''}}  value="least">{{ translate('messages.least_Orderer_customers') }}</option>
+                            <option  {{ request()->get('order_wise')  == 'top'?'selected':''}}  value="top">{{ translate('messages.Total_orders') }} ({{ translate('messages.High_to_Low') }})</option>
+                            <option {{ request()->get('order_wise')  == 'least'?'selected':''}}  value="least">{{ translate('messages.Total_orders') }} ({{ translate('messages.Low_to_High') }})</option>
                             <option {{ request()->get('order_wise')  == 'latest'?'selected':''}}  value="latest">{{ translate('messages.New_Customers') }}</option>
                         </select>
                     </div>

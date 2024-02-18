@@ -4104,4 +4104,7 @@
   'Import_Stores_file' => 'Import Stores file',
   'Out_of_Stock' => 'Out of Stock',
   'Stock_Out' => 'Stock Out',
+  'Total_orders' => 'Total orders',
+  'High_to_Low' => 'High to Low',
+  'Low_to_High' => 'Low to High',
 );

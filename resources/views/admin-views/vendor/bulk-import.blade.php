@@ -191,8 +191,11 @@
         $('#reset_btn').click(function(){
             $('#bulk__import').val(null);
         })
-    </script>
-        <script>
+        
+        $('#reset_btn').click(function(){
+        $('#products_file').val('');
+        $('.filename').text('{{translate('Must_be_Excel_files_using_our_Excel_template_above')}}');
+        })
 
 
     $(document).on("click", ".update_or_import", function(e){

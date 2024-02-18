@@ -173,7 +173,10 @@
     <script src="{{asset('public/assets/admin')}}/js/view-pages/category-import-export.js"></script>
 <script>
     "use strict";
-
+    $('#reset_btn').click(function(){
+    $('#products_file').val('');
+    $('.filename').text('{{translate('Must_be_Excel_files_using_our_Excel_template_above')}}');
+})
     function myFunction(data) {
     Swal.fire({
     title: '{{ translate('Are you sure?') }}' ,

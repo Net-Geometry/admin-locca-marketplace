@@ -84,7 +84,7 @@
                                     </label>
                                     <input type="text" name="name[]" id="default_name"
                                         class="form-control" placeholder="{{ translate('messages.new_item') }}"
-                                        
+
                                          >
                                 </div>
                                 <input type="hidden" name="lang[]" value="default">
@@ -400,7 +400,9 @@
                                 <div class="col-sm-4 col-6">
                                     <div class="form-group mb-0">
                                         <label class="input-label"
-                                            for="exampleFormControlInput1">{{ translate('messages.discount') }}<span class="form-label-secondary text-danger"
+                                            for="exampleFormControlInput1">{{ translate('messages.discount') }}
+                                        <span id=symble> (%) </span>
+                                            <span class="form-label-secondary text-danger"
                                             data-toggle="tooltip" data-placement="right"
                                             data-original-title="{{ translate('messages.Required.')}}"> *
                                             </span></label>
@@ -549,6 +551,18 @@
     <script src="{{asset('public/assets/admin')}}/js/view-pages/product-index.js"></script>
     <script>
         "use strict";
+
+        $(document).on('change', '#discount_type', function () {
+         let data =  document.getElementById("discount_type");
+         if(data.value === 'amount'){
+             $('#symble').text("({{ \App\CentralLogics\Helpers::currency_symbol() }})");
+            }
+            else{
+             $('#symble').text("(%)");
+         }
+     });
+
+
         $(document).ready(function() {
             $("#add_new_option_button").click(function(e) {
                 $('#empty-variation').hide();
@@ -871,6 +885,7 @@
                 return false;
             }
             $('#customer_choice_options').html(null);
+            $('#variant_combination').html(null);
             $.each($("#choice_attributes option:selected"), function() {
                 if ($(this).val().length > 50) {
                     toastr.error(

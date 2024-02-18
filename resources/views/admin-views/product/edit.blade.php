@@ -79,7 +79,10 @@
                                 <div class="lang_form" id="default-form">
                                     <div class="form-group">
                                         <label class="input-label" for="default_name">{{ translate('messages.name') }}
-                                            ({{ translate('messages.default') }})</label>
+                                            ({{ translate('messages.default') }})  <span class="form-label-secondary text-danger"
+                                            data-toggle="tooltip" data-placement="right"
+                                            data-original-title="{{ translate('messages.Required.')}}"> *
+                                            </span></label>
                                         <input type="text" name="name[]" id="default_name" class="form-control"
                                             placeholder="{{ translate('messages.new_food') }}"
                                             value="{{ $product?->getRawOriginal('name') }}" required
@@ -89,7 +92,10 @@
                                     <div class="form-group pt-2 mb-0">
                                         <label class="input-label"
                                             for="exampleFormControlInput1">{{ translate('messages.short_description') }}
-                                            ({{ translate('messages.default') }})</label>
+                                            ({{ translate('messages.default') }})  <span class="form-label-secondary text-danger"
+                                            data-toggle="tooltip" data-placement="right"
+                                            data-original-title="{{ translate('messages.Required.')}}"> *
+                                            </span></label>
                                         <textarea type="text" name="description[]" class="form-control ckeditor min--height-200">{!! $product?->getRawOriginal('description') !!}</textarea>
                                     </div>
                                 </div>
@@ -154,7 +160,7 @@
                                 <div class="flex-grow-1 mx-auto">
                                     <label class="text-dark d-block">
                                         {{ translate('messages.item_image') }}
-                                        <small class="text-danger">* ( {{ translate('messages.ratio') }} 1:1 )</small>
+                                        <small >( {{ translate('messages.ratio') }} 1:1 )</small>
                                     </label>
                                     <div class="d-flex flex-wrap __gap-12px __new-coba" id="coba">
 
@@ -224,7 +230,10 @@
                             <div class="row g-2">
                                 <div class="col-sm-6 col-lg-3">
                                     <div class="form-group mb-0">
-                                        <label class="input-label" for="store_id">{{ translate('messages.store') }}<span
+                                        <label class="input-label" for="store_id">{{ translate('messages.store') }}  <span class="form-label-secondary text-danger"
+                                            data-toggle="tooltip" data-placement="right"
+                                            data-original-title="{{ translate('messages.Required.')}}"> *
+                                            </span><span
                                                 class="input-label-secondary"></span></label>
                                         <select name="store_id"
                                             data-placeholder="{{ translate('messages.select_store') }}"
@@ -243,8 +252,10 @@
                                 <div class="col-sm-6 col-lg-3">
                                     <div class="form-group mb-0">
                                         <label class="input-label"
-                                            for="category_id">{{ translate('messages.category') }}<span
-                                                class="input-label-secondary">*</span></label>
+                                            for="category_id">{{ translate('messages.category') }} <span class="form-label-secondary text-danger"
+                                            data-toggle="tooltip" data-placement="right"
+                                            data-original-title="{{ translate('messages.Required.')}}"> *
+                                            </span></label>
                                         <select name="category_id" class="js-data-example-ajax form-control"
                                             id="category_id">
                                             @if ($category)
@@ -415,8 +426,8 @@
                     <div class="card shadow--card-2 border-0">
                         <div class="card-header">
                             <h5 class="card-title">
-                                <span class="card-header-icon"><i class="tio-dollar-outlined"></i></span>
-                                <span>{{ translate('amount') }}</span>
+                                <span class="card-header-icon"><i class="tio-label-outlined"></i></span>
+                                <span>{{ translate('Price Information') }}</span>
                             </h5>
                         </div>
                         <div class="card-body">
@@ -424,7 +435,10 @@
                                 <div class="col-sm-4 col-6">
                                     <div class="form-group mb-0">
                                         <label class="input-label"
-                                            for="exampleFormControlInput1">{{ translate('messages.price') }}</label>
+                                            for="exampleFormControlInput1">{{ translate('messages.price') }}  <span class="form-label-secondary text-danger"
+                                            data-toggle="tooltip" data-placement="right"
+                                            data-original-title="{{ translate('messages.Required.')}}"> *
+                                            </span></label>
                                         <input type="number" value="{{ $product->price }}" min="0"
                                             max="999999999999.99" name="price" class="form-control" step="0.01"
                                             placeholder="{{ translate('messages.Ex:') }} 100" required>
@@ -433,20 +447,23 @@
                                 <div class="col-sm-4 col-6">
                                     <div class="form-group mb-0">
                                         <label class="input-label"
-                                            for="exampleFormControlInput1">{{ translate('messages.discount_type') }}<span
+                                            for="exampleFormControlInput1">{{ translate('messages.discount_type') }} <span class="form-label-secondary text-danger"
+                                            data-toggle="tooltip" data-placement="right"
+                                            data-original-title="{{ translate('messages.Required.')}}"> *
+                                            </span><span
                                                 class="input-label-secondary text--title" data-toggle="tooltip"
                                                 data-placement="right"
                                                 data-original-title="{{ translate('Admin_shares_the_same_percentage/amount_on_discount_as_he_takes_commissions_from_stores.') }}">
                                                 <i class="tio-info-outined"></i>
                                             </span></label>
-                                        <select name="discount_type" class="form-control js-select2-custom">
+                                        <select name="discount_type" id="discount_type" class="form-control js-select2-custom">
                                             <option value="percent"
                                                 {{ $product['discount_type'] == 'percent' ? 'selected' : '' }}>
-                                                {{ translate('messages.percent') }}
+                                                {{ translate('messages.percent') }} (%)
                                             </option>
                                             <option value="amount"
                                                 {{ $product['discount_type'] == 'amount' ? 'selected' : '' }}>
-                                                {{ translate('messages.amount') }}
+                                                {{ translate('messages.amount') }} ({{ \App\CentralLogics\Helpers::currency_symbol() }})
                                             </option>
                                         </select>
                                     </div>
@@ -454,7 +471,12 @@
                                 <div class="col-sm-4 col-6">
                                     <div class="form-group mb-0">
                                         <label class="input-label"
-                                            for="exampleFormControlInput1">{{ translate('messages.discount') }}</label>
+                                            for="exampleFormControlInput1">{{ translate('messages.discount') }}
+                                        <span id=symble>  {{  $product['discount_type'] == 'amount' ? ( \App\CentralLogics\Helpers::currency_symbol()) : '(%)' }}</span>
+                                            <span class="form-label-secondary text-danger"
+                                            data-toggle="tooltip" data-placement="right"
+                                            data-original-title="{{ translate('messages.Required.')}}"> *
+                                            </span></label>
                                         <input type="number" min="0" value="{{ $product['discount'] }}"
                                             max="100000" name="discount" class="form-control"
                                             placeholder="{{ translate('messages.Ex:') }} 100">
@@ -669,6 +691,16 @@
      $(document).on('change', '.show_min_max', function () {
          let data = $(this).data('count');
          show_min_max(data);
+     });
+
+     $(document).on('change', '#discount_type', function () {
+         let data =  document.getElementById("discount_type");
+         if(data.value === 'amount'){
+             $('#symble').text("({{ \App\CentralLogics\Helpers::currency_symbol() }})");
+            }
+            else{
+             $('#symble').text("(%)");
+         }
      });
 
      $(document).on('change', '.hide_min_max', function () {
