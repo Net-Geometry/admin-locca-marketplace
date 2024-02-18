@@ -532,13 +532,14 @@
                 $('#loading').show();
             },
             success: function (data) {
-                $('#quick-view').modal('show');
+                // $('#quick-view').modal('show');
                 $('#quick-view-modal').empty().html(data.view);
             },
             complete: function () {
-                $('#loading').hide();
+                // $('#loading').hide();
             },
         });
+        // check_stock();
     });
 
 
@@ -716,7 +717,7 @@
                 url: '{{ route('admin.pos.item_stock_view') }}',
                 data: $('#' + form_id).serializeArray(),
                 beforeSend: function () {
-                    $('#loading').show();
+                    // $('#loading').show();
                 },
                 success: function (data) {
 
@@ -749,7 +750,7 @@
                 url: '{{ route('admin.pos.item_stock_view_update') }}',
                 data: $('#' + form_id).serializeArray(),
                 beforeSend: function () {
-                    $('#loading').show();
+                    // $('#loading').show();
                 },
                 success: function (data) {
                     $('#quick-view').modal('show');
@@ -858,8 +859,8 @@
 
         let key = element.data('key');
 
-        if (valueCurrent >= minValue && valueCurrent <= maxValue) {
-            $.post('{{ route('admin.pos.updateQuantity') }}', {_token: '{{ csrf_token() }}', key: key, quantity:valueCurrent}, function () {
+    if (valueCurrent >= minValue && valueCurrent <= maxValue) {
+    $.post('{{ route('admin.pos.updateQuantity') }}', {_token: '{{ csrf_token() }}', key: key, quantity:valueCurrent}, function () {
                 updateCart();
             });
         } else if(valueCurrent > maxValue){
@@ -868,7 +869,7 @@
                 title: 'Cart',
                 text: 'Sorry, cart limit exceeded.'
             });
-            element.val(element.data('oldValue'));
+            element.val(element.data('oldvalue'));
         }
         else {
             Swal.fire({
@@ -876,7 +877,7 @@
                 title: 'Cart',
                 text: '{{ translate('Sorry, the minimum value was reached') }}'
             });
-            element.val(element.data('oldValue'));
+            element.val(element.data('oldvalue'));
         }
 
 

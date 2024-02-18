@@ -227,7 +227,7 @@
 <script src="{{asset('public/assets/admin')}}/js/view-pages/common.js"></script>
 <script type="text/javascript">
     "use strict";
-    setTimeout(check_stock, 1000);
+    setTimeout(check_stock, 100);
     // cartQuantityInitialize();
     // getVariantPrice();
     // $('#add-to-cart-form input').on('change', function() {

@@ -18,8 +18,6 @@
                 $discount_on_product = 0;
                 $variation_price  = 0;
             ?>
-{{--            {{dd(session()->get('cart'))}}--}}
-
             @if(session()->has('cart') && count( session()->get('cart')) > 0)
                 <?php
                     $cart = session()->get('cart');
@@ -34,6 +32,7 @@
                     }
                 ?>
                 @foreach(session()->get('cart') as $key => $cartItem)
+
                 @if(is_array($cartItem))
                     <?php
                     $variation_price += $cartItem['variation_price'] ?? 0;
@@ -57,7 +56,8 @@
                         </div>
                     </td>
                     <td class="text-center middle-align">
-                        <input type="number"  data-key="{{$key}}" readonly class="amount--input form-control text-center update-Quantity" value="{{$cartItem['quantity']}}" min="1" max="{{$cartItem['maximum_cart_quantity']?? '9999999999'}}">
+                        <input type="number"  data-key="{{$key}}"  class="amount--input form-control text-center update-Quantity" data-oldvalue="{{$cartItem['quantity']}}" value="{{$cartItem['quantity']}}" min="1"
+                        max="{{ (isset($cartItem['stock_quantity']) && $cartItem['stock_quantity'] > 0) ?   ($cartItem['maximum_cart_quantity'] ?  min($cartItem['stock_quantity'], $cartItem['maximum_cart_quantity']) : $cartItem['stock_quantity'])  : $cartItem['maximum_cart_quantity'] ??  '9999999999' }}" >
                     </td>
                     <td class="text-right fs-14 font-medium">
                         {{\App\CentralLogics\Helpers::format_currency($product_subtotal)}}

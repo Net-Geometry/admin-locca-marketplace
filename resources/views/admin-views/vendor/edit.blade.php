@@ -546,7 +546,7 @@
             });
         }
         initMap();
-        $('.get_zone_data').on('click',function (){
+        $('.get_zone_data').on('change',function (){
             let id = $(this).val();
             $.get({
                 url: '{{url('/')}}/admin/zone/get-coordinates/'+id,

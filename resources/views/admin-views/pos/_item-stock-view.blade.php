@@ -17,7 +17,7 @@
         <span class="badge badge-danger position-absolute">{{ translate('messages.Out_of_Stock') }}</span>
         @endif
 
-
+{{-- {{ dd($stock) }} --}}
 
         <div class="d-flex align-items-center justify-content-center active">
             <img class="img-responsive initial--30 onerror-image"

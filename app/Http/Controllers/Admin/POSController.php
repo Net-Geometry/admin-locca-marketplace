@@ -211,7 +211,9 @@ class POSController extends Controller
 
     private function get_stocks($product,$selected_item){
         try {
-
+            if($product->module->module_type == 'food'){
+                return null;
+            }
             $choice_options=   json_decode($product?->choice_options, true);
             $variation=  json_decode($product?->variations, true);
 
@@ -234,6 +236,7 @@ class POSController extends Controller
         } catch (\Throwable $th) {
             info($th->getMessage());
         }
+
         return $stock ?? null ;
     }
 
@@ -290,7 +293,7 @@ class POSController extends Controller
             $data['add_ons'] = [];
             $data['add_on_qtys'] = [];
             $data['maximum_cart_quantity'] = $product->maximum_cart_quantity;
-
+            $data['stock_quantity'] = null;
             if ($request['addon_id']) {
                 foreach ($request['addon_id'] as $id) {
                     $addon_price += $request['addon-price' . $id] * $request['addon-quantity' . $id];
@@ -371,6 +374,7 @@ class POSController extends Controller
                 $price = $product->price;
             }
 
+            $data['stock_quantity'] = $stock;
             $data['quantity'] = $request['quantity'];
             $data['price'] = $price;
             $data['name'] = $product->name;
@@ -475,7 +479,7 @@ class POSController extends Controller
             }
 
 
-            
+
             $cart->forget($request->key);
             $request->session()->put('cart', $cart);
         }
