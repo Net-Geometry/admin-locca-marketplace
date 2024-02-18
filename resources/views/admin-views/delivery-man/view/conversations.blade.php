@@ -74,7 +74,7 @@
 @push('script_2')
 <script>
     "use strict";
-    let lastPage ={{ $conversations?->lastPage() ?? 1 }};
+    let lastPage ={{ is_object($conversations) ? $conversations?->lastPage() : 1 }};
 
     $(document).on('click', '.view-conv', function () {
     let url = $(this).data('url');
@@ -100,18 +100,8 @@
     let page = 1;
     let user_id =  {{ $deliveryMan->id }};
     $('#dm-conversation-list').scroll(function() {
-        // console.log($('#dm-conversation-list').scrollTop());
-        // console.log($('#dm-conversation-list').height());
-        // console.log($('#dm-conversation-list').height());
-        console.log(page);
-        console.log('lastPage');
-        console.log(lastPage);
-        console.log('---------------');
-        if ($('#dm-conversation-list').scrollTop() + $('#dm-conversation-list').height() >= $('#dm-conversation-list').height()  && lastPage >= page ) {
+        if ($('#dm-conversation-list').scrollTop() + $('#dm-conversation-list').height() >= $('#dm-conversation-list').height()  && lastPage > page ) {
             page++;
-
-            console.log(page);
-            console.log('************');
             loadMoreData(page);
         }
     });
