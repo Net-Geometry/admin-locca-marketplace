@@ -356,7 +356,7 @@
                 let suggestionText = $(this).text();
                 $searchInput.val(suggestionText);
                 hideSuggestions();
-                filterItems(suggestionText);
+                filterItems(suggestionText.toLowerCase());
                 updateSuggestions(suggestionText);
             };
             let filterItems = (val) => {
@@ -403,7 +403,7 @@
             });
             $suggestionsList.on('click', '.search-suggestion', clickSuggestion);
             $searchInput.keyup(function() {
-                filterItems($(this).val());
+                filterItems($(this).val().toLowerCase());
             });
             $searchInput.on('focusout', hideSuggestions);
             $searchInput.on('focus', showSuggestions);
