@@ -664,7 +664,7 @@
             const $suggestionsList = $('#search-suggestions');
             const $rows = $('#navbar-vertical-content li');
             const $subrows = $('#navbar-vertical-content li ul li');
-            const suggestions = ['{{strtolower(translate('messages.order'))  }}', '{{ strtolower(translate('messages.campaign'))  }}', '{{ strtolower(translate('messages.category')) }}', '{{ strtolower(translate('messages.product')) }}','{{ strtolower(translate('messages.store')) }}' ];
+            {{--const suggestions = ['{{strtolower(translate('messages.order'))  }}', '{{ strtolower(translate('messages.campaign'))  }}', '{{ strtolower(translate('messages.category')) }}', '{{ strtolower(translate('messages.product')) }}','{{ strtolower(translate('messages.store')) }}' ];--}}
             const focusInput = () => updateSuggestions($searchInput.val());
             const hideSuggestions = () => $suggestionsList.slideUp(700);
             const showSuggestions = () => $suggestionsList.slideDown(700);
@@ -672,7 +672,7 @@
                 let suggestionText = $(this).text();
                 $searchInput.val(suggestionText);
                 hideSuggestions();
-                filterItems(suggestionText);
+                filterItems(suggestionText.toLowerCase());
                 updateSuggestions(suggestionText);
             };
             let filterItems = (val) => {
@@ -719,7 +719,7 @@
             });
             $suggestionsList.on('click', '.search-suggestion', clickSuggestion);
             $searchInput.keyup(function() {
-                filterItems($(this).val());
+                filterItems($(this).val().toLowerCase());
             });
             $searchInput.on('focusout', hideSuggestions);
             $searchInput.on('focus', showSuggestions);

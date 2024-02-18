@@ -4104,4 +4104,9 @@
   'Import_Stores_file' => 'Import Stores file',
   'Out_of_Stock' => 'Out of Stock',
   'Stock_Out' => 'Stock Out',
+  'Payment_By' => 'Payment By',
+  'ssl_commerz_payment' => 'Ssl commerz payment',
+  'receiver' => 'Receiver',
+  'Sender' => 'Sender',
+  'Receiver' => 'Receiver',
 );
