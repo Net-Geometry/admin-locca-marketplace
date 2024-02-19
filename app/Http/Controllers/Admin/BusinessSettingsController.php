@@ -28,6 +28,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Mail;
 use App\Models\AdminPromotionalBanner;
 use App\Models\FlutterSpecialCriteria;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -451,15 +452,8 @@ class BusinessSettingsController extends Controller
             $image_name = $fav_icon['value'];
         }
 
-        if (session()->has('currency_symbol')) {
-            session()->forget('currency_symbol');
-        }
-        if (session()->has('currency_code')) {
-            session()->forget('currency_code');
-        }
-        if (session()->has('currency_symbol_position')) {
-            session()->forget('currency_symbol_position');
-        }
+        Config::set('currency', $request['currency']);
+        Config::set('currency_symbol_position', $request['currency_symbol_position']);
 
         DB::table('business_settings')->updateOrInsert(['key' => 'site_direction'], [
             'value' => $request['site_direction']
@@ -561,17 +555,6 @@ class BusinessSettingsController extends Controller
             'value' => $request['guest_checkout_status'] ? $request['guest_checkout_status'] : 0
         ]);
 
-        // $languages = $request['language'];
-
-        // if (in_array('en', $languages)) {
-        //     unset($languages[array_search('en', $languages)]);
-        // }
-        // array_unshift($languages, 'en');
-
-        // DB::table('business_settings')->updateOrInsert(['key' => 'language'], [
-        //     'value' => json_encode($languages),
-        // ]);
-
         DB::table('business_settings')->updateOrInsert(['key' => 'timeformat'], [
             'value' => $request['time_format']
         ]);
@@ -590,16 +573,6 @@ class BusinessSettingsController extends Controller
         DB::table('business_settings')->updateOrInsert(['key' => 'delivery_charge_comission'], [
             'value' => $request['admin_comission_in_delivery_charge']
         ]);
-
-        // DB::table('business_settings')->updateOrInsert(['key' => 'max_otp_hit'], [
-        //     'value' => $request['max_otp_hit']
-        // ]);
-        // DB::table('business_settings')->updateOrInsert(['key' => 'max_otp_hit_time'], [
-        //     'value' => $request['max_otp_hit_time']
-        // ]);
-        // DB::table('business_settings')->updateOrInsert(['key' => 'otp_interval_time'], [
-        //     'value' => $request['otp_interval_time']
-        // ]);
 
 
         Toastr::success(translate('messages.successfully_updated_to_changes_restart_app'));

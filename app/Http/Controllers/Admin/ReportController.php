@@ -2610,7 +2610,7 @@ class ReportController extends Controller
         $module = request()->module;
              $type = $request->query('type', 'all');
 
-        $expense = Expense::with('order', 'order.customer:id,f_name,l_name')->where('created_by', 'admin')
+        $expense = Expense::with('order', 'order.customer:id,f_name,l_name')->where('created_by', 'admin')->where('amount', '>' ,0)
             ->when($zone || $module || $customer || $store, function ($query) use ($zone, $module, $customer, $store) {
                 $query->whereHas('order', function ($query) use ($zone, $store, $customer, $module) {
                     $query->when($module, function ($query) use ($module) {
@@ -2695,7 +2695,7 @@ class ReportController extends Controller
         $filter = $request->query('filter', 'all_time');
              $type = $request->query('type', 'all');
 
-        $expense = Expense::with('order')
+        $expense = Expense::with('order')->where('amount', '>' ,0)
             ->whereHas('order', function ($query) use ($zone, $store, $customer) {
                 $query->when(request('module_id'), function ($query) {
                     return $query->module(request('module_id'));
@@ -3026,7 +3026,7 @@ class ReportController extends Controller
         $filter = $request->query('filter', 'all_time');
         $type = $request->query('type', 'all');
 
-        $expense = Expense::with('user','order', 'order.customer:id,f_name,l_name')
+        $expense = Expense::with('user','order', 'order.customer:id,f_name,l_name')->where('amount', '>' ,0)
             ->when(isset($zone) || isset($store) || isset($customer), function ($query) use ($zone, $store, $customer) {
                 return $query->whereHas('order', function ($query) use ($zone, $store, $customer) {
                     $query->when($zone, function ($query) use ($zone) {

@@ -4152,4 +4152,11 @@
   'If_you_enable_this,_any_store_can_duplicate_product_and_create_a_new_product_by_use_this.' => 'If you enable this  any store can duplicate product and create a new product by use this.',
   'If_you_enable_this_Stores_can_access_all_products_of_other_stores.' => 'If you enable this Stores can access all products of other stores.',
   'parcel45436534' => 'Parcel45436534',
+  'Schedule_Order' => 'Schedule Order',
+  'Scheduled Order?' => 'Scheduled Order ',
+  'If you disable this, the Scheduled Order feature will be hidden.' => 'If you disable this  the Scheduled Order feature will be hidden.',
+  'Password_Reset_Request' => 'Password Reset Request',
+  'New Password' => 'New Password',
+  'Change Password' => 'Change Password',
+  'invalid_customer' => 'Invalid customer',
 );

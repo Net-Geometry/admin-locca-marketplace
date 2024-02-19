@@ -182,7 +182,7 @@
                                                 class="toggle-switch h--45px toggle-switch-sm d-flex justify-content-between border rounded px-3 py-0 form-control">
                                                 <span class="pr-1 d-flex align-items-center switch--label">
                                                     <span class="line--limit-1">
-                                                        {{ translate('messages.Scheduled_Delivery') }}
+                                                        {{ translate('messages.Schedule_Order') }}
                                                     </span>
                                                     <span class="form-label-secondary text-danger d-flex"
                                                         data-toggle="tooltip" data-placement="right"
@@ -196,10 +196,10 @@
                                                        data-type="toggle"
                                                        data-image-on="{{ asset('/public/assets/admin/img/modal/schedule-on.png') }}"
                                                        data-image-off="{{ asset('/public/assets/admin/img/modal/schedule-off.png') }}"
-                                                       data-title-on="{{ translate('messages.Want_to_enable') }} <strong>{{ translate('messages.Scheduled Delivery?') }}</strong>"
-                                                       data-title-off="{{ translate('messages.Want_to_disable') }} <strong>{{ translate('messages.Scheduled Delivery?') }}</strong>"
+                                                       data-title-on="{{ translate('messages.Want_to_enable') }} <strong>{{ translate('messages.Scheduled Order?') }}</strong>"
+                                                       data-title-off="{{ translate('messages.Want_to_disable') }} <strong>{{ translate('messages.Scheduled Order?') }}</strong>"
                                                        data-text-on="<p>{{ translate('messages.If you enable this, customers can choose a suitable delivery schedule during checkout.') }}</p>"
-                                                       data-text-off="<p>{{ translate('messages.If you disable this, the Scheduled Delivery feature will be hidden.') }}</p>"
+                                                       data-text-off="<p>{{ translate('messages.If you disable this, the Scheduled Order feature will be hidden.') }}</p>"
                                                        class="status toggle-switch-input dynamic-checkbox-toggle"
                                                        value="1"
                                                     name="schedule_order" id="schedule_order"
