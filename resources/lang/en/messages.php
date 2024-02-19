@@ -4159,4 +4159,6 @@
   'New Password' => 'New Password',
   'Change Password' => 'Change Password',
   'invalid_customer' => 'Invalid customer',
+  'need_to_check_minimum_1_criteria_for_approval' => 'Need to check minimum 1 criteria for approval',
+  'need_to_check_minimum_1_criteria_for_product_approval' => 'Need to check minimum 1 criteria for product approval',
 );

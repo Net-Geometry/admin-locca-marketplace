@@ -155,6 +155,15 @@ class BusinessSettingsController extends Controller
         if ($request['product_approval'] == null){
             $this->product_approval_all();
         }
+        if ($request['product_approval'] == 1) {
+            if (!($request->Update_product_price || $request->Add_new_product || $request->Update_product_variation || $request->Update_anything_in_product_details)) {
+                DB::table('business_settings')->updateOrInsert(['key' => 'product_approval'], [
+                    'value' => 0
+                ]);
+                Toastr::error(translate('messages.need_to_check_minimum_1_criteria_for_product_approval'));
+                return back();
+            }
+        }
         BusinessSetting::updateOrInsert(['key' => 'cash_in_hand_overflow_store'], [
             'value' => $request['cash_in_hand_overflow_store'] ?? 0
         ]);
@@ -174,6 +183,7 @@ class BusinessSettingsController extends Controller
         DB::table('business_settings')->updateOrInsert(['key' => 'product_approval'], [
             'value' => $request['product_approval']
         ]);
+
         $values=[
             'Update_product_price'=> $request->Update_product_price ?? 0,
             'Add_new_product'=> $request->Add_new_product ?? 0,
