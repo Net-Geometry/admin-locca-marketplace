@@ -155,6 +155,7 @@ class DeliveryManController extends BaseController
     public function update(DeliveryManUpdateRequest $request, $id): Application|Redirector|RedirectResponse
     {
         $deliveryMan = $this->deliveryManRepo->getFirstWhere(params: ['id' => $id]);
+
         $deliveryMan = $this->deliveryManRepo->update(id: $id ,data: $this->deliveryManService->getUpdateData(request: $request, deliveryMan: $deliveryMan));
         if($deliveryMan->userinfo) {
             $this->userInfoRepo->update(id: $deliveryMan->userinfo->id,data: [

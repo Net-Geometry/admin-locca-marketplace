@@ -183,10 +183,10 @@
                                     <th class="border-0 pl-4">{{translate('SL')}}</th>
                                     <th class="border-0">{{translate('messages.order_ID')}}</th>
                                     <th class="border-0">{{translate('messages.store')}}</th>
-                                    <th class="border-0">{{translate('messages.status')}}</th>
-                                    <th class="border-0 text-center">{{translate('messages.total_Items')}}</th>
-                                    <th class="border-0 text-center">{{translate('messages.total_amount')}}</th>
-                                    <th class="border-0 text-center">{{translate('messages.order_date')}}</th>
+                                    <th class="border-0 ">{{translate('messages.status')}}</th>
+                                    <th class="border-0 text-center ">{{translate('messages.total_Items')}}</th>
+                                    <th class="border-0 ">{{translate('messages.total_amount')}}</th>
+                                    <th class="border-0 ">{{translate('messages.order_date')}}</th>
                                     <th class="border-0 text-center">{{translate('messages.action')}}</th>
                                 </tr>
                             </thead>
@@ -209,7 +209,7 @@
                                                 <div>{{Str::limit(translate('messages.not_found'),20,'...')}}</div>
                                             @endif
                                         </th>
-                                        <td class="text-capitalize text-center">
+                                        <td class="text-capitalize ">
                                             @if($order['order_status']=='pending')
                                                 <span class="badge badge-soft-info">
                                       {{translate('messages.pending')}}
@@ -263,7 +263,7 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <div class="text-center">
+                                            <div>
                                                 {{\App\CentralLogics\Helpers::format_currency($order['order_amount'])}}
                                             </div>
                                         </td>

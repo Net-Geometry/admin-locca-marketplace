@@ -236,7 +236,7 @@
                 <div class="d-flex justify-content-center mt-2">
                     <button class="btn btn--primary h--45px add-To-Cart" type="button">
                         <i class="tio-shopping-cart"></i>
-                        {{ translate('messages.update') }}
+                        {{ translate('messages.Update_To_Cart') }}
                     </button>
                 </div>
                 @else

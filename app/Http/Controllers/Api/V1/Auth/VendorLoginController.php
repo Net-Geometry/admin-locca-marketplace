@@ -42,14 +42,21 @@ class VendorLoginController extends Controller
             if (auth('vendor')->attempt($data)) {
                 $token = $this->genarate_token($request['email']);
                 $vendor = Vendor::where(['email' => $request['email']])->first();
-                if(!$vendor->stores[0]->status)
+                if($vendor->stores[0]->status == 0 && $vendor->status == 0)
                 {
                     return response()->json([
                         'errors' => [
                             ['code' => 'auth-002', 'message' => translate('messages.Your_registration_is_not_approved_yet._You_can_login_once_admin_approved_the_request')]
                         ]
                     ], 403);
+                } elseif($vendor->stores[0]->status == 0 && $vendor->status == 1){
+                    return response()->json([
+                        'errors' => [
+                            ['code' => 'auth-002', 'message' => translate('messages.Your_account_is_suspended')]
+                        ]
+                    ], 403);
                 }
+
                 $vendor->auth_token = $token;
                 $vendor->save();
                 return response()->json(['token' => $token, 'zone_wise_topic'=> $vendor->stores[0]->zone->store_wise_topic], 200);
@@ -65,11 +72,18 @@ class VendorLoginController extends Controller
             if (auth('vendor_employee')->attempt($data)) {
                 $token = $this->genarate_token($request['email']);
                 $vendor = VendorEmployee::where(['email' => $request['email']])->first();
-                if($vendor->store->status == 0)
+                if($vendor->stores[0]->status == 0 && $vendor->status == 0)
                 {
                     return response()->json([
                         'errors' => [
                             ['code' => 'auth-002', 'message' => translate('messages.Your_registration_is_not_approved_yet._You_can_login_once_admin_approved_the_request')]
+                        ]
+                    ], 403);
+                }
+                elseif($vendor->stores[0]->status == 0 && $vendor->status == 1){
+                    return response()->json([
+                        'errors' => [
+                            ['code' => 'auth-002', 'message' => translate('messages.Your_account_is_suspended')]
                         ]
                     ], 403);
                 }

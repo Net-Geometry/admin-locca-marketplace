@@ -175,7 +175,7 @@
 
             $('form').on('reset', function (event) {
                 if(counter > 1) {
-                    $('#custom-field-section').html("");
+                    // $('#custom-field-section').html(``);
                     $('#method_name').val("");
                 }
 
