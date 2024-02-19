@@ -259,6 +259,10 @@ class DashboardController extends Controller
             return response()->json([
                 'view' => view('admin-views.partials._dashboard-order-stats-parcel', compact('data'))->render()
             ], 200);
+        }elseif($module_type == 'food'){
+            return response()->json([
+                'view' => view('admin-views.partials._dashboard-order-stats-food', compact('data'))->render()
+            ], 200);
         }
         return response()->json([
             'view' => view('admin-views.partials._dashboard-order-stats', compact('data'))->render()
@@ -295,7 +299,12 @@ class DashboardController extends Controller
             'top_customers' => view('admin-views.partials._top-customer', compact('top_customers'))->render(),
             'top_selling_foods' => view('admin-views.partials._top-selling-foods', compact('top_sell'))->render(),
 
-            'order_stats' =>$module_type == 'parcel'? view('admin-views.partials._dashboard-order-stats-parcel', compact('data'))->render():view('admin-views.partials._dashboard-order-stats', compact('data'))->render(),
+            'order_stats' =>$module_type == 'parcel'? view('admin-views.partials._dashboard-order-stats-parcel', compact('data'))->render():
+
+            ($module_type == 'food'? view('admin-views.partials._dashboard-order-stats-food', compact('data'))->render():
+            view('admin-views.partials._dashboard-order-stats', compact('data'))->render()),
+
+
             'user_overview' => view('admin-views.partials._user-overview-chart', compact('data'))->render(),
             'monthly_graph' => view('admin-views.partials._monthly-earning-graph', compact('total_sell', 'commission', 'delivery_commission'))->render(),
             'stat_zone' => view('admin-views.partials._zone-change', compact('data'))->render(),
@@ -455,7 +464,7 @@ class DashboardController extends Controller
             $total_customers = User::all();
         }
 
-        if (is_numeric($zone_id) && $module_id &&  !in_array($module_type ,['food','parcel']) ) {
+        if (is_numeric($zone_id) && $module_id &&  !in_array($module_type ,['parcel']) ) {
             $searching_for_dm = $searching_for_dm->StoreOrder()->OrderScheduledIn(30)->where('zone_id', $zone_id)->count();
             $accepted_by_dm = $accepted_by_dm->StoreOrder()->where('zone_id', $zone_id)->count();
             $preparing_in_rs = $preparing_in_rs->StoreOrder()->where('zone_id', $zone_id)->count();
