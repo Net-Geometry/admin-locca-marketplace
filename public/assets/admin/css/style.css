@@ -717,7 +717,7 @@ a[class*="btn--"]:hover {
 .sidebar--search-form .search--form-group .btn {
     position: absolute;
     inset-inline-start: 5px;
-    top: 0;
+    top: 3px;
     color: #99a7ba !important;
     -webkit-padding-start: 12px !important;
     padding-inline-start: 12px !important;
