@@ -344,8 +344,7 @@ class ItemController extends Controller
         }
 
         if ($request['price'] <= $dis) {
-            $validator->getMessageBag()->add('unit_price', translate("Discount amount can't be greater than 100%
-"));
+            $validator->getMessageBag()->add('unit_price', translate("Discount amount can't be greater than 100%"));
         }
 
         if ($request['price'] <= $dis || $validator->fails()) {
