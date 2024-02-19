@@ -108,7 +108,7 @@
                                                 </span>
                                                 <span class="form-label-secondary text-danger d-flex"
                                                     data-toggle="tooltip" data-placement="right"
-                                                    data-original-title="{{ translate('messages.If_enabled,can_create_duplicate_products.')}}"><img
+                                                    data-original-title="{{ translate('messages.If_you_enable_this,_any_store_can_duplicate_product_and_create_a_new_product_by_use_this.')}}"><img
                                                         src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
                                                         alt="{{ translate('messages.Product_Gallery') }}"> *
                                                 </span>
@@ -144,7 +144,7 @@
                                                 </span>
                                                 <span class="form-label-secondary text-danger d-flex"
                                                     data-toggle="tooltip" data-placement="right"
-                                                    data-original-title="{{ translate('messages.If_enabled,can_create_duplicate_products.')}}"><img
+                                                    data-original-title="{{ translate('messages.If_you_enable_this_Stores_can_access_all_products_of_other_stores.')}}"><img
                                                         src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
                                                         alt="{{ translate('messages.access_all_products') }}"> *
                                                 </span>

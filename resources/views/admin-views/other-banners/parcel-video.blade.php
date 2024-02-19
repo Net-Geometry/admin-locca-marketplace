@@ -116,7 +116,9 @@
                                             <label class="form-check form--check mr-2 mr-md-4">
                                                 <input class="form-check-input" type="radio" value="video" name="banner_type" {{ $banner_type ? ($banner_type->value == 'video' ? 'checked' : '') : '' }}>
                                                 <span class="form-check-label">
-                                                    {{translate('YouTube_Video_URL')}}
+                                                    {{translate('YouTube_Video_URL')}} <span class="input-label-secondary"
+                                                    data-toggle="tooltip" data-placement="right" data-original-title="{{translate('Go_to_YouTube,_click_share_option_then_get_a_popup_of_share._Select_embed_&_get_a_embed_video_then_copy_the_generated_code_for_the_embedded_link')}}"><img src="{{asset('public/assets/admin/img/info-circle.svg')}}"
+                                                        alt="public/img"></span>
                                                 </span>
                                             </label>
                                             <label class="form-check form--check mr-2 mr-md-4">

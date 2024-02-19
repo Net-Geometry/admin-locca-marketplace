@@ -190,7 +190,9 @@
                                     <th class="border-0">{{ translate('messages.SL') }}</th>
                                     <th class="border-0">{{translate('messages.title')}}</th>
                                     <th class="border-0">{{translate('messages.type')}}</th>
-                                    <th class="border-0 text-center">{{translate('messages.featured')}}</th>
+                                    <th class="border-0 text-center">{{translate('messages.featured')}} <span class="input-label-secondary"
+                                        data-toggle="tooltip" data-placement="right" data-original-title="{{translate('if_you_turn/off_on_this_featured,_it_will_effect_on_website_&_user_app')}}"><img src="{{asset('public/assets/admin/img/info-circle.svg')}}"
+                                            alt="public/img"></span></th>
                                     <th class="border-0 text-center">{{translate('messages.status')}}</th>
                                     <th class="border-0 text-center">{{translate('messages.action')}}</th>
                                 </tr>
@@ -213,16 +215,30 @@
                                     </span>
                                     </td>
                                     <td>{{translate('messages.'.$banner['type'])}}</td>
-                                    <td>
+
+                                    <td  >
                                         <div class="d-flex justify-content-center">
                                             <label class="toggle-switch toggle-switch-sm" for="featuredCheckbox{{$banner->id}}">
-                                                <input type="checkbox" data-url="{{route('admin.banner.featured',[$banner['id'],$banner->featured?0:1])}}" class="toggle-switch-input redirect-url" id="featuredCheckbox{{$banner->id}}" {{$banner->featured?'checked':''}}>
-                                                <span class="toggle-switch-label">
-                                                    <span class="toggle-switch-indicator"></span>
-                                                </span>
-                                            </label>
+                                            <input type="checkbox"
+                                            data-id="featuredCheckbox{{$banner->id}}"
+                                            data-type="status"
+                                            data-image-on="{{ asset('/public/assets/admin/img/modal/basic_campaign_on.png') }}"
+                                            data-image-off="{{ asset('/public/assets/admin/img/modal/basic_campaign_off.png') }}"
+                                            data-title-on="{{ translate('By_Turning_ON_As_Featured!') }}"
+                                            data-title-off="{{ translate('By_Turning_OFF_As_Featured!') }}"
+                                            data-text-on="<p>{{ translate('If_you_turn_on_this_featured,_then_promotional_banner_will_show_on_website_and_user_app_with_store_or_item.') }}</p>"
+                                            data-text-off="<p>{{ translate('If_you_turn_off_this_featured,_then_promotional_banner_won’t_show_on_website_and_user_app') }}</p>"
+                                            class="toggle-switch-input  dynamic-checkbox" id="featuredCheckbox{{$banner->id}}" {{$banner->featured?'checked':''}}>
+                                            <span class="toggle-switch-label">
+                                                <span class="toggle-switch-indicator"></span>
+                                            </span>
+                                        </label>
                                         </div>
                                     </td>
+                                    <form action="{{route('admin.banner.featured',[$banner['id'],$banner->featured?0:1])}}"
+                                        method="get" id="featuredCheckbox{{$banner->id}}_form">
+                                        </form>
+
                                     <td  >
                                         <div class="d-flex justify-content-center">
                                             <label class="toggle-switch toggle-switch-sm" for="statusCheckbox{{$banner->id}}">
@@ -233,8 +249,8 @@
                                             data-image-off="{{ asset('/public/assets/admin/img/modal/basic_campaign_off.png') }}"
                                             data-title-on="{{ translate('By_Turning_ON_Banner!') }}"
                                             data-title-off="{{ translate('By_Turning_OFF_Banner!') }}"
-                                            data-text-on="<p>{{ translate('Turned_on_to_customer_website_and_apps._Are_you_sure_you_want_to_turn_on_the_Banner_already_inactive.') }}</p>"
-                                            data-text-off="<p>{{ translate('Turned_off_to_customer_website_and_apps._Are_you_sure_you_want_to_turn_off_the_Banner_already_active') }}</p>"
+                                            data-text-on="<p>{{ translate('If_you_turn_on_this_status,_it_will_show_on_user_website_and_app.') }}</p>"
+                                            data-text-off="<p>{{ translate('If_you_turn_off_this_status,_it_won’t_show_on_user_website_and_app') }}</p>"
                                             class="toggle-switch-input  dynamic-checkbox" id="statusCheckbox{{$banner->id}}" {{$banner->status?'checked':''}}>
                                             <span class="toggle-switch-label">
                                                 <span class="toggle-switch-indicator"></span>

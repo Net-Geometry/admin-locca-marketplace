@@ -119,8 +119,8 @@
                                     data-image-off="{{ asset('/public/assets/admin/img/modal/basic_campaign_off.png') }}"
                                     data-title-on="{{ translate('By_Turning_ON_Campaign!') }}"
                                     data-title-off="{{ translate('By_Turning_OFF_Campaign!') }}"
-                                    data-text-on="<p>{{ translate('Turned_on_to_customer_website_and_apps._Are_you_sure_you_want_to_turn_on_the_campaign_already_inactive.') }}</p>"
-                                    data-text-off="<p>{{ translate('Turned_off_to_customer_website_and_apps._Are_you_sure_you_want_to_turn_off_the_campaign_already_active') }}</p>"
+                                    data-text-on="<p>{{ translate('If_you_turn_on_this_status,_it_will_show_on_user_website_and_app.') }}</p>"
+                                    data-text-off="<p>{{ translate('If_you_turn_off_this_status,_it_won’t_show_on_user_website_and_app') }}</p>"
                                     class="toggle-switch-input dynamic-checkbox" id="stocksCheckbox{{$campaign->id}}" {{$campaign->status?'checked':''}}>
                                     <span class="toggle-switch-label">
                                         <span class="toggle-switch-indicator"></span>
