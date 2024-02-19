@@ -464,12 +464,11 @@ fetch('https://iid.googleapis.com/iid/v1/' + token + '/rel/topics/' + topic, {
     let result = filteredString ? filteredString.join('') : '';
     return result;
 }
+$(document).on('keyup', 'input[type="tel"]', function () {
+        let input = $(this).val();
+        $(this).val(keepNumbersAndPlus(input));
+        });
 
-    document.getElementById('phone').addEventListener('keyup', function(event) {
-        let input = event.target.value;
-        let result = keepNumbersAndPlus(input);
-        event.target.value = result;
-    });
 
 </script>
 
