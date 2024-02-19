@@ -255,7 +255,6 @@
 <script src="{{asset('public/assets/admin')}}/js/view-pages/common.js"></script>
 <script type="text/javascript">
     "use strict";
-    // cartQuantityInitialize();
     getVariantPrice();
     $('#add-to-cart-form input').on('change', function() {
         getVariantPrice();
