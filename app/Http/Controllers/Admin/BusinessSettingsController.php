@@ -1938,8 +1938,8 @@ class BusinessSettingsController extends Controller
 
     public function about_us()
     {
-        $about_us =DataSetting::withoutGlobalScope('translate')->where('type', 'admin_landing_page')->where('key', 'about_us')->first();
-        $about_title =DataSetting::withoutGlobalScope('translate')->where('type', 'admin_landing_page')->where('key', 'about_title')->first();
+        $about_us =DataSetting::withoutGlobalScope('translate')->with('translations')->where('type', 'admin_landing_page')->where('key', 'about_us')->first();
+        $about_title =DataSetting::withoutGlobalScope('translate')->with('translations')->where('type', 'admin_landing_page')->where('key', 'about_title')->first();
         return view('admin-views.business-settings.about-us', compact('about_us','about_title'));
     }
 
