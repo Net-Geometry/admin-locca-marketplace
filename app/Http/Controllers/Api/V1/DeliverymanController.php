@@ -592,6 +592,7 @@ class DeliverymanController extends Controller
         }
         $details = isset($order->details)?$order->details:null;
         if ($details != null && $details->count() > 0) {
+            $details[0]['vendor_id'] = $order?->store?->vendor_id;
             $details = $details = Helpers::order_details_data_formatting($details);
             return response()->json($details, 200);
         }
