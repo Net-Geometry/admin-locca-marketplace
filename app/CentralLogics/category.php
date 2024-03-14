@@ -50,8 +50,9 @@ class CategoryLogic
         ];
     }
 
-    public static function category_products($category_ids, $zone_id, int $limit,int $offset, $type)
+    public static function category_products($category_ids, $zone_id, int $limit,int $offset, $type, $filter=null, $min=false, $max=false, $rating_count=null)
     {
+        $filter = $filter?(is_array($filter)?$filter:str_getcsv(trim($filter, "[]"), ',')):'';
         $paginator = Item::
         whereHas('module.zones', function($query)use($zone_id){
             $query->whereIn('zones.id', json_decode($zone_id, true));
@@ -66,13 +67,88 @@ class CategoryLogic
             ->whereHas('category',function($q)use($category_ids){
                 return $q->whereIn('id',$category_ids)->orWhereIn('parent_id', $category_ids);
             })
-            ->active()->type($type)->latest()->paginate($limit, ['*'], 'page', $offset);
+            ->active()->type($type)
+            ->when($rating_count, function($query) use ($rating_count){
+                $query->where('avg_rating', '>=' , $rating_count);
+            })
+            ->when($min && $max, function($query)use($min,$max){
+                $query->whereBetween('price',[$min,$max]);
+            })
+            ->when($filter&&in_array('top_rated',$filter),function ($qurey){
+                $qurey->withCount('reviews')->orderBy('reviews_count','desc');
+            })
+            ->when($filter&&in_array('popular',$filter),function ($qurey){
+                $qurey->popular();
+            })
+            ->when($filter&&in_array('discounted',$filter),function ($qurey){
+                $qurey->Discounted()->orderBy('discount','desc');
+            })
+            ->when($filter&&in_array('high',$filter),function ($qurey){
+                $qurey->orderBy('price', 'desc');
+            })
+            ->when($filter&&in_array('low',$filter),function ($qurey){
+                $qurey->orderBy('price', 'asc');
+            })
+            ->latest()->paginate($limit, ['*'], 'page', $offset);
+
+
+            $item_categories = Item::
+            whereHas('module.zones', function($query)use($zone_id){
+                $query->whereIn('zones.id', json_decode($zone_id, true));
+            })
+                ->whereHas('store', function($query)use($zone_id){
+                    $query->whereIn('zone_id', json_decode($zone_id, true))->whereHas('zone.modules',function($query){
+                        $query->when(config('module.current_module_data'), function($query){
+                            $query->where('modules.id', config('module.current_module_data')['id']);
+                        });
+                    });
+                })
+                ->whereHas('category',function($q)use($category_ids){
+                    return $q->whereIn('id',$category_ids)->orWhereIn('parent_id', $category_ids);
+                })
+                ->active()->type($type)
+                ->when($rating_count, function($query) use ($rating_count){
+                    $query->where('avg_rating', '>=' , $rating_count);
+                })
+                ->when($min && $max, function($query)use($min,$max){
+                    $query->whereBetween('price',[$min,$max]);
+                })
+                ->when($filter&&in_array('top_rated',$filter),function ($qurey){
+                    $qurey->withCount('reviews')->orderBy('reviews_count','desc');
+                })
+                ->when($filter&&in_array('popular',$filter),function ($qurey){
+                    $qurey->popular();
+                })
+                ->when($filter&&in_array('discounted',$filter),function ($qurey){
+                    $qurey->Discounted()->orderBy('discount','desc');
+                })
+                ->when($filter&&in_array('high',$filter),function ($qurey){
+                    $qurey->orderBy('price', 'desc');
+                })
+                ->when($filter&&in_array('low',$filter),function ($qurey){
+                    $qurey->orderBy('price', 'asc');
+                })
+                ->latest()
+            ->pluck('category_id')->toArray();
+    
+            $item_categories = array_unique($item_categories);
+    
+            $categories = Category::withCount(['products','childes'])->with(['childes' => function($query)  {
+                $query->withCount(['products','childes']);
+            }])
+            ->where(['position'=>0,'status'=>1])
+            ->when(config('module.current_module_data'), function($query){
+                $query->module(config('module.current_module_data')['id']);
+            })
+            ->whereIn('id',$item_categories)
+            ->orderBy('priority','desc')->get();
 
         return [
             'total_size' => $paginator->total(),
             'limit' => $limit,
             'offset' => $offset,
-            'products' => $paginator->items()
+            'products' => $paginator->items(),
+            'categories' => $categories,
         ];
     }
 
