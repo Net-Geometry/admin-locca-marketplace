@@ -172,7 +172,7 @@ class ItemController extends Controller
         })
         ->when($min && $max, function($query)use($min,$max){
             $query->whereBetween('price',[$min,$max]);
-        })        
+        })
         ->orderByRaw("FIELD(name, ?) DESC", [$request['name']])
         ->when($filter&&in_array('top_rated',$filter),function ($qurey){
             $qurey->withCount('reviews')->orderBy('reviews_count','desc');
@@ -260,7 +260,7 @@ class ItemController extends Controller
         })
         ->when($min && $max, function($query)use($min,$max){
             $query->whereBetween('price',[$min,$max]);
-        })    
+        })
         ->pluck('category_id')->toArray();
 
         $item_categories = array_unique($item_categories);
@@ -880,13 +880,13 @@ class ItemController extends Controller
         }
 
         $data_type = $request->query('data_type', 'all');
-    
+
         $zone_id = $request->header('zoneId');
         $type = $request->query('type', 'all');
         $filter = $request->query('filter', '');
         $filter = $filter?(is_array($filter)?$filter:str_getcsv(trim($filter, "[]"), ',')):'';
         $category_ids = $request->query('category_ids', '');
-        
+
         // Common parameters for all product types
         $limit = $request->query('limit', 10);
         $offset = $request->query('offset', 1);
@@ -894,7 +894,7 @@ class ItemController extends Controller
         $max_price = $request->query('max_price');
         $rating_count = $request->query('rating_count');
         $product_id = $request->query('product_id');
-    
+
         switch ($data_type) {
             case 'searched':
                 return $this->get_searched_products($request);
@@ -909,11 +909,11 @@ class ItemController extends Controller
                 $validator = Validator::make($request->all(), [
                     'category_ids' => 'required',
                 ]);
-    
+
                 if ($validator->fails()) {
                     return response()->json(['errors' => Helpers::error_processor($validator)], 403);
                 }
-    
+
                 $items = CategoryLogic::category_products($category_ids, $zone_id, $limit, $offset, $type, $filter, $min_price, $max_price, $rating_count);
                 break;
             default:
@@ -925,10 +925,10 @@ class ItemController extends Controller
                 'categories' => [],
             ];
         }
-    
+
         $items['products'] = Helpers::product_data_formatting($items['products'], true, false, app()->getLocale());
         return response()->json($items, 200);
     }
-    
+
 
 }

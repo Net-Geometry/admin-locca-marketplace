@@ -381,7 +381,9 @@ Route::group(['namespace' => 'Api\V1', 'middleware'=>'localization'], function (
             Route::get('popular-items/{id}', 'StoreController@get_popular_store_items');
             Route::get('reviews', 'StoreController@reviews');
             Route::get('search', 'StoreController@get_searched_stores');
+            Route::get('get-data', 'StoreController@get_combined_data');
         });
+        Route::get('get-combined-data', 'SearchController@get_combined_data');
 
         Route::group(['prefix' => 'banners'], function () {
             Route::get('/', 'BannerController@get_banners');

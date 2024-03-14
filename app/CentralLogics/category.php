@@ -153,7 +153,7 @@ class CategoryLogic
     }
 
 
-    public static function category_stores($category_ids, $zone_id, int $limit,int $offset, $type,$longitude=0,$latitude=0)
+    public static function category_stores($category_ids, $zone_id, int $limit,int $offset, $type,$longitude=0,$latitude=0,$filter=null,$rating_count=null)
     {
         $paginator = Store::
         withOpen($longitude??0,$latitude??0)
@@ -169,7 +169,31 @@ class CategoryLogic
                     $query->whereIn('zone_id', json_decode($zone_id, true));
                 }
             })
-            ->active()->type($type)->latest()->paginate($limit, ['*'], 'page', $offset);
+            ->active()->type($type)
+            ->when($rating_count, function($query) use ($rating_count){
+                $query->selectSub(function ($query) use ($rating_count){
+                    $query->selectRaw('AVG(reviews.rating)')
+                        ->from('reviews')
+                        ->join('items', 'items.id', '=', 'reviews.item_id')
+                        ->whereColumn('items.store_id', 'stores.id')
+                        ->groupBy('items.store_id')
+                        ->havingRaw('AVG(reviews.rating) >= ?', [$rating_count]);
+                }, 'avg_r')->having('avg_r', '>=', $rating_count);
+            })
+            ->when($filter && in_array('top_rated',$filter),function ($qurey){
+                $qurey->whereNotNull('rating')->whereRaw("LENGTH(rating) > 0");
+            })
+            ->when($filter && in_array('popular',$filter),function ($qurey){
+                $qurey->withCount('orders')->orderBy('orders_count', 'desc');
+            })
+            ->when($filter && in_array('discounted',$filter),function ($qurey){
+                $qurey->where(function ($query) {
+                    $query->whereHas('items', function ($q) {
+                        $q->Discounted();
+                    });
+                });
+            })
+            ->latest()->paginate($limit, ['*'], 'page', $offset);
 
 
         $paginator->each(function ($store) {
@@ -234,7 +258,8 @@ class CategoryLogic
                     $query->whereIn('zone_id', json_decode($zone_id, true));
                 }
             })
-            ->active()->type($type)->latest()->paginate($limit, ['*'], 'page', $offset);
+            ->active()->type($type)
+            ->latest()->paginate($limit, ['*'], 'page', $offset);
 
 
         $paginator->each(function ($store) {
