@@ -54,7 +54,7 @@ class SearchController extends Controller
                 return $q->whereId($request->category_id)->orWhere('parent_id', $request->category_id);
             });
         })
-        ->when($category_ids, function($query)use($category_ids){
+        ->when($category_ids && (count($category_ids)>0), function($query)use($category_ids){
             $query->whereHas('category',function($q)use($category_ids){
                 return $q->whereIn('id',$category_ids)->orWhereIn('parent_id', $category_ids);
             });
@@ -142,7 +142,7 @@ class SearchController extends Controller
                 return $q->whereId($request->category_id)->orWhere('parent_id', $request->category_id);
             });
         })
-        ->when($category_ids, function($query)use($category_ids){
+        ->when($category_ids && (count($category_ids)>0), function($query)use($category_ids){
             $query->whereHas('category',function($q)use($category_ids){
                 return $q->whereIn('id',$category_ids)->orWhereIn('parent_id', $category_ids);
             });

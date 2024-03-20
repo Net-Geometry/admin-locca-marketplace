@@ -447,7 +447,7 @@ class ProductLogic
             whereHas('module.zones', function($query)use($zone_id){
                 $query->whereIn('zones.id', json_decode($zone_id, true));
             })
-            ->when(isset($category_ids), function($query)use($category_ids){
+            ->when(isset($category_ids) && (count($category_ids)>0), function($query)use($category_ids){
                 $query->whereHas('category',function($q)use($category_ids){
                     return $q->whereIn('id',$category_ids)->orWhereIn('parent_id', $category_ids);
                 });
@@ -485,7 +485,7 @@ class ProductLogic
             whereHas('module.zones', function($query)use($zone_id){
                 $query->whereIn('zones.id', json_decode($zone_id, true));
             })
-            ->when(isset($category_ids), function($query)use($category_ids){
+            ->when(isset($category_ids) && (count($category_ids)>0), function($query)use($category_ids){
                 $query->whereHas('category',function($q)use($category_ids){
                     return $q->whereIn('id',$category_ids)->orWhereIn('parent_id', $category_ids);
                 });
@@ -543,7 +543,7 @@ class ProductLogic
         ->whereHas('module.zones', function($query)use($zone_id){
             $query->whereIn('zones.id', json_decode($zone_id, true));
         })
-        ->when(isset($category_ids), function($query)use($category_ids){
+        ->when(isset($category_ids) && (count($category_ids)>0), function($query)use($category_ids){
             $query->whereHas('category',function($q)use($category_ids){
                 return $q->whereIn('id',$category_ids)->orWhereIn('parent_id', $category_ids);
             });
@@ -578,7 +578,7 @@ class ProductLogic
         ->whereHas('module.zones', function($query)use($zone_id){
             $query->whereIn('zones.id', json_decode($zone_id, true));
         })
-        ->when(isset($category_ids), function($query)use($category_ids){
+        ->when(isset($category_ids) && (count($category_ids)>0), function($query)use($category_ids){
             $query->whereHas('category',function($q)use($category_ids){
                 return $q->whereIn('id',$category_ids)->orWhereIn('parent_id', $category_ids);
             });
