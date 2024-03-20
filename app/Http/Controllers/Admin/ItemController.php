@@ -771,7 +771,7 @@ class ItemController extends Controller
             })
             ->when(is_numeric($condition_id), function ($query) use ($condition_id) {
                 return $query->whereHas('pharmacy_item_details', function ($q) use ($condition_id) {
-                    return $q->where('id'  , $condition_id);
+                    return $q->where('common_condition_id'  , $condition_id);
                 });
             })
             ->when($request['search'], function ($query) use ($key) {
