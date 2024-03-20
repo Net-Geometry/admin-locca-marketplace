@@ -156,6 +156,7 @@ class CategoryLogic
 
     public static function category_stores($category_ids, $zone_id, int $limit,int $offset, $type,$longitude=0,$latitude=0,$filter=null,$rating_count=null)
     {
+        $category_ids = isset($category_ids)?(is_array($category_ids)?$category_ids:json_decode($category_ids)):'';
         $paginator = Store::
         withOpen($longitude??0,$latitude??0)
             ->withCount(['items','campaigns'])
