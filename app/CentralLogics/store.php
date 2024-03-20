@@ -79,6 +79,13 @@ class StoreLogic
                     });
                 });
             })
+            ->when($filter && in_array('open',$filter),function ($qurey){
+                $qurey->orderBy('open', 'desc');
+            })
+            ->when($filter && in_array('nearby',$filter),function ($qurey){
+                $qurey->orderBy('distance');
+            })
+            ->orderBy('open', 'desc')
 
             ->paginate($limit, ['*'], 'page', $offset);
 
@@ -221,6 +228,13 @@ class StoreLogic
             ->when($filter && in_array('popular',$filter),function ($qurey){
                 $qurey->withCount('orders')->orderBy('orders_count', 'desc');
             })
+            ->when($filter && in_array('open',$filter),function ($qurey){
+                $qurey->orderBy('open', 'desc');
+            })
+            ->when($filter && in_array('nearby',$filter),function ($qurey){
+                $qurey->orderBy('distance');
+            })
+            ->orderBy('open', 'desc')
             ->paginate($limit??50, ['*'], 'page', $offset??1);
 
         $paginator->each(function ($store) {
@@ -387,7 +401,14 @@ class StoreLogic
                     });
                 });
             })
-            ->orderBy('open', 'desc')->orderBy('distance')->type($type)->paginate($limit, ['*'], 'page', $offset);
+            ->when($filter && in_array('open',$filter),function ($qurey){
+                $qurey->orderBy('open', 'desc');
+            })
+            ->when($filter && in_array('nearby',$filter),function ($qurey){
+                $qurey->orderBy('distance');
+            })
+            ->orderBy('open', 'desc')
+            ->type($type)->paginate($limit, ['*'], 'page', $offset);
 
 
         $paginator->each(function ($store) {

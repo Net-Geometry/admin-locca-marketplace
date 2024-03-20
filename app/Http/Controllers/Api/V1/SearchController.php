@@ -43,6 +43,8 @@ class SearchController extends Controller
         $max = $request->query('max_price');
         $rating_count = $request->query('rating_count');
 
+        // dd($filter&&in_array('high',$filter));
+
         $items = Item::active()->type($type)
         ->with('store', function($query){
             $query->withCount(['campaigns'=> function($query){
@@ -120,10 +122,10 @@ class SearchController extends Controller
             $qurey->popular();
         })
         ->when($filter&&in_array('discounted',$filter),function ($qurey){
-            $qurey->Discounted()->orderBy('discount','desc');
+            $qurey->Discounted();
         })
         ->when($filter&&in_array('high',$filter),function ($qurey){
-            $qurey->orderBy('price', 'desc');
+            $qurey->orderBy('price', 'DESC');
         })
         ->when($filter&&in_array('low',$filter),function ($qurey){
             $qurey->orderBy('price', 'asc');

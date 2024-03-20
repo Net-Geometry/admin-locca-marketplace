@@ -195,7 +195,15 @@ class CategoryLogic
                     });
                 });
             })
-            ->latest()->paginate($limit, ['*'], 'page', $offset);
+            ->when($filter && in_array('open',$filter),function ($qurey){
+                $qurey->orderBy('open', 'desc');
+            })
+            ->when($filter && in_array('nearby',$filter),function ($qurey){
+                $qurey->orderBy('distance');
+            })
+            ->orderBy('open', 'desc')
+            ->latest()
+            ->paginate($limit, ['*'], 'page', $offset);
 
 
         $paginator->each(function ($store) {
