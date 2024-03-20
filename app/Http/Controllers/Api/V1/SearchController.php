@@ -320,8 +320,7 @@ class SearchController extends Controller
 
             case 'category':
                 $validator = Validator::make($request->all(), [
-                    'category_ids' => 'required|array',
-                    'category_ids.*' => 'integer'
+                    'category_ids' => 'required',
                 ]);
 
                 if ($validator->fails()) {
