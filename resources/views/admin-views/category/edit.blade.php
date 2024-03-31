@@ -2,6 +2,14 @@
 
 @section('title',translate('messages.Update category'))
 
+@if($category->position ==  1)
+@section('sub_category')
+@else
+@section('main_category')
+@endif
+active
+@endsection
+
 @push('css_or_js')
 
 @endpush
@@ -129,6 +137,6 @@
         });
 
 
-        
+
     </script>
 @endpush

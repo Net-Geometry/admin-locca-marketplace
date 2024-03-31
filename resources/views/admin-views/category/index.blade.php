@@ -52,13 +52,13 @@
                                     </span>
 
                                 </label>
-                                <input type="text" name="name[]" class="form-control" placeholder="{{translate('messages.new_category')}}" maxlength="191">
+                                <input type="text" name="name[]"  value="{{ old('name.0') }}" class="form-control" placeholder="{{translate('messages.new_category')}}" maxlength="191">
                             </div>
                             <input type="hidden" name="lang[]" value="default">
-                                @foreach($language as $lang)
+                                @foreach($language as $key=> $lang)
                                     <div class="form-group d-none lang_form" id="{{$lang}}-form">
                                         <label class="input-label" for="exampleFormControlInput1">{{translate('messages.name')}} ({{strtoupper($lang)}})</label>
-                                        <input type="text" name="name[]" class="form-control" placeholder="{{translate('messages.new_category')}}" maxlength="191">
+                                        <input type="text" name="name[]"  value="{{ old('name.'.$key+1) }}" class="form-control" placeholder="{{translate('messages.new_category')}}" maxlength="191">
                                     </div>
                                     <input type="hidden" name="lang[]" value="{{$lang}}">
                                 @endforeach
