@@ -4205,4 +4205,6 @@
   'Store_settings_updated!' => 'Store settings updated!',
   'Want_to_enable_halal_tag_status_for_this_restaurant?' => 'Want to enable halal tag status for this restaurant ',
   'Want_to_disable_halal_tag_status_for_this_restaurant?' => 'Want to disable halal tag status for this restaurant ',
+  'is_prescription_required' => 'Is prescription required',
+  'all_conditions' => 'All conditions',
 );

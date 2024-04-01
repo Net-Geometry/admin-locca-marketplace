@@ -340,6 +340,16 @@
                                       </div>
                                 </div>
                                 @endif
+                                @if ($module_type == 'pharmacy')
+                                <div class="col-sm-6 col-lg-4" id="is_prescription_required">
+                                    <div class="form-check mb-0 p-6">
+                                        <input class="form-check-input" name="is_prescription_required" type="checkbox" value="1" id="flexCheckDefaultPrescription" {{ $product->pharmacy_item_details?->is_prescription_required == 1?'checked':'' }}>
+                                        <label class="form-check-label" for="flexCheckDefaultPrescription">
+                                          {{ translate('messages.is_prescription_required') }}
+                                        </label>
+                                      </div>
+                                </div>
+                                @endif
                                 @if ($module_data['halal'])
                                 <div class="col-sm-6 col-lg-4" id="halal">
                                     <div class="form-check mb-0 p-6">

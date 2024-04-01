@@ -287,6 +287,7 @@ class ItemController extends Controller
             $item_details->item_id = $food->id;
             $item_details->common_condition_id = $request->condition_id;
             $item_details->is_basic = $request->basic ?? 0;
+            $item_details->is_prescription_required = $request->is_prescription_required ?? 0;
             $item_details->save();
         }
 
@@ -584,6 +585,7 @@ class ItemController extends Controller
                     [
                         'common_condition_id' => $request->condition_id,
                         'is_basic' => $request->basic ?? 0,
+                        'is_prescription_required' => $request->is_prescription_required ?? 0,
                     ]
                 );
         }
@@ -1426,6 +1428,7 @@ class ItemController extends Controller
                     [
                         'common_condition_id' => $request->condition_id,
                         'is_basic' => $request->basic ?? 0,
+                        'is_prescription_required' => $request->is_prescription_required ?? 0,
                         'item_id' => null
                     ]
                 );

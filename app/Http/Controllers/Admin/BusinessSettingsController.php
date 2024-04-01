@@ -6489,6 +6489,7 @@ class BusinessSettingsController extends Controller
                         [
                             'common_condition_id' => $data->condition_id,
                             'is_basic' => $data->basic ?? 0,
+                            'is_prescription_required' => $data->is_prescription_required ?? 0,
                         ]
                     );
             }
