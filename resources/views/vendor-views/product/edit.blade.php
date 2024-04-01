@@ -340,6 +340,16 @@
                                       </div>
                                 </div>
                                 @endif
+                                @if ($module_data['halal'])
+                                <div class="col-sm-6 col-lg-4" id="halal">
+                                    <div class="form-check mb-0 p-6">
+                                        <input class="form-check-input" name="is_halal" type="checkbox" value="1" id="flexCheckDefaulthalal" {{ $product->is_halal == 1?'checked':'' }}>
+                                        <label class="form-check-label" for="flexCheckDefaulthalal">
+                                          {{ translate('messages.is_it_halal') }}
+                                        </label>
+                                      </div>
+                                </div>
+                                @endif
                             </div>
                         </div>
                     </div>

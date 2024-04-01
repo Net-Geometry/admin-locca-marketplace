@@ -257,6 +257,7 @@ class ItemController extends Controller
         }
         $item->stock = $request->current_stock ?? 0;
         $item->images = $images;
+        $item->is_halal =  $request->is_halal ?? 0;
         $item->save();
         $item->tags()->sync($tag_ids);
         if ($module_type == 'pharmacy') {
@@ -494,6 +495,7 @@ class ItemController extends Controller
         $item->maximum_cart_quantity = $request->maximum_cart_quantity;
         // $item->module_id= $request->module_id;
         $item->stock = $request->current_stock ?? 0;
+        $item->is_halal = $request->is_halal ?? 0;
         $item->organic = $request->organic ?? 0;
         $item->veg = $request->veg;
         $item->images = $images;
@@ -1625,6 +1627,7 @@ class ItemController extends Controller
         $item->veg = $data->veg;
 
         $item->organic = $data->organic;
+        $item->is_halal = $data->is_halal;
         $item->stock =  $data->stock;
         $item->is_approved = 1;
 

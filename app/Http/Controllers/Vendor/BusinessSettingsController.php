@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Vendor;
 
 use App\Http\Controllers\Controller;
+use App\Models\StoreConfig;
 use Illuminate\Http\Request;
 use App\Models\Store;
 use App\Models\StoreSchedule;
@@ -147,6 +148,19 @@ class BusinessSettingsController extends Controller
             Toastr::warning(translate('messages.You_need_to_add_announcement_message_first'));
             return back();
         }
+
+        if($request->menu == 'halal_tag_status' ){
+
+            $conf = StoreConfig::firstOrNew(
+                ['store_id' =>  $store->id]
+            );
+            $conf[$request->menu] = $request->status;
+            $conf->save();
+
+            Toastr::success(translate('messages.store settings updated!'));
+            return back();
+        }
+
 
         $store[$request->menu] = $request->status;
         $store->save();

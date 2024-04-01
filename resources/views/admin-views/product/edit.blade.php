@@ -363,6 +363,16 @@
                                         </label>
                                       </div>
                                 </div>
+                                @if(Config::get('module.current_module_type') == 'grocery' || Config::get('module.current_module_type') == 'food')
+                                    <div class="col-sm-6 col-lg-3" id="halal">
+                                        <div class="form-check mb-0 p-6">
+                                            <input class="form-check-input" name="is_halal" type="checkbox" value="1" id="flexCheckDefault1" {{ $product->is_halal == 1?'checked':((isset($temp_product) && $temp_product == 1 && $product->is_halal ==1)?'checked':'') }}>
+                                            <label class="form-check-label" for="flexCheckDefault1">
+                                                {{ translate('messages.Is_It_Halal') }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     </div>

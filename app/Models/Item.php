@@ -37,7 +37,8 @@ class Item extends Model
         "max_price" => 'float',
         'order_count'=>'integer',
         'rating_count'=>'integer',
-        'unit_id'=>'integer'
+        'unit_id'=>'integer',
+        'is_halal'=>'integer',
     ];
 
     protected $appends = ['unit_type'];

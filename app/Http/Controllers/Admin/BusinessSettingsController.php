@@ -5916,6 +5916,7 @@ class BusinessSettingsController extends Controller
         }
         $template->title = $request->title[array_search('default', $request->lang)];
         $template->body = $request->body[array_search('default', $request->lang)];
+        $template->body_2 = $request?->body_2 ? $request->body_2[array_search('default', $request->lang)] : null;
         $template->button_name = $request->button_name?$request->button_name[array_search('default', $request->lang)]:'';
         $template->footer_text = $request->footer_text[array_search('default', $request->lang)];
         $template->copyright_text = $request->copyright_text[array_search('default', $request->lang)];
@@ -5987,6 +5988,32 @@ class BusinessSettingsController extends Controller
                             'key'                   => 'body'
                         ],
                         ['value'                 => $request->body[$index]]
+                    );
+                }
+            }
+            if ($request?->body_2 && $default_lang == $key && !($request->body_2[$index])) {
+                if ($key != 'default') {
+                    Translation::updateOrInsert(
+                        [
+                            'translationable_type'  => 'App\Models\EmailTemplate',
+                            'translationable_id'    => $template->id,
+                            'locale'                => $key,
+                            'key'                   => 'body_2'
+                        ],
+                        ['value'                 => $template->body_2]
+                    );
+                }
+            } else {
+
+                if ($request?->body_2 && $request->body_2[$index] && $key != 'default') {
+                    Translation::updateOrInsert(
+                        [
+                            'translationable_type'  => 'App\Models\EmailTemplate',
+                            'translationable_id'    => $template->id,
+                            'locale'                => $key,
+                            'key'                   => 'body_2'
+                        ],
+                        ['value'                 => $request->body_2[$index]]
                     );
                 }
             }
