@@ -5807,6 +5807,8 @@ class BusinessSettingsController extends Controller
             return view('admin-views.business-settings.email-format-setting.'.$type.'-email-formats.offline-approved-format',compact('template'));
         } else if ($tab == 'offline-payment-deny') {
             return view('admin-views.business-settings.email-format-setting.'.$type.'-email-formats.offline-deny-format',compact('template'));
+        } else if ($tab == 'pos-registration') {
+            return view('admin-views.business-settings.email-format-setting.'.$type.'-email-formats.pos-registration-format',compact('template'));
         }
 
     }
@@ -5900,6 +5902,9 @@ class BusinessSettingsController extends Controller
         }elseif($tab == 'offline-payment-approve'){
             $email_type = 'offline_payment_approve';
             $template = EmailTemplate::where('type',$type)->where('email_type', 'offline_payment_approve')->first();
+        }elseif($tab == 'pos-registration'){
+            $email_type = 'pos_registration';
+            $template = EmailTemplate::where('type',$type)->where('email_type', 'pos_registration')->first();
         }
 
         if ($template == null) {
@@ -6184,6 +6189,10 @@ class BusinessSettingsController extends Controller
             ]);
         } else if ($tab == 'offline-payment-approve') {
             DB::table('business_settings')->updateOrInsert(['key' => 'offline_payment_approve_mail_status_'.$type], [
+                'value' => $status
+            ]);
+        } else if ($tab == 'pos-registration') {
+            DB::table('business_settings')->updateOrInsert(['key' => 'pos_registration_mail_status_'.$type], [
                 'value' => $status
             ]);
         }
