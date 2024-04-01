@@ -4162,4 +4162,5 @@
   'need_to_check_minimum_1_criteria_for_approval' => 'Need to check minimum 1 criteria for approval',
   'need_to_check_minimum_1_criteria_for_product_approval' => 'Need to check minimum 1 criteria for product approval',
   'No_Data_found' => 'No Data found',
+  'most popular' => 'Most popular',
 );

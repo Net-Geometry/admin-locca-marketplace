@@ -2,7 +2,7 @@
 <div class="card-header border-0 order-header-shadow">
     <h5 class="card-title d-flex justify-content-between">
         <span>
-            {{translate('top rated')}}@if (Config::get('module.current_module_type')== 'food')
+            {{translate('most rated')}}@if (Config::get('module.current_module_type')== 'food')
             {{ translate('messages.foods') }}
         @else
             {{ translate('messages.items') }}
