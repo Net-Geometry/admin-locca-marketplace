@@ -14,10 +14,12 @@ use App\Enums\ViewPaths\Admin\Module;
 use App\Enums\ViewPaths\Admin\Notification;
 use App\Enums\ViewPaths\Admin\Unit;
 use App\Enums\ViewPaths\Admin\WalletBonus;
+use App\Enums\ViewPaths\Admin\CashBack;
 use App\Enums\ViewPaths\Admin\Zone;
 use App\Http\Controllers\Admin\Banner\BannerController;
 use App\Http\Controllers\Admin\Coupon\CouponController;
 use App\Http\Controllers\Admin\Customer\WalletBonusController;
+use App\Http\Controllers\Admin\Promotion\CashBackController;
 use App\Http\Controllers\Admin\DeliveryMan\DeliveryManController;
 use App\Http\Controllers\Admin\DeliveryMan\DmVehicleController;
 use App\Http\Controllers\Admin\Employee\CustomRoleController;
@@ -115,6 +117,16 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::delete(Coupon::DELETE[URI].'/{id}', [CouponController::class, 'delete'])->name('delete');
             Route::get(Coupon::STATUS[URI].'/{id}/{status}', [CouponController::class,'updateStatus'])->name('status');
             Route::get(Coupon::EXPORT[URI], [CouponController::class, 'exportList'])->name('coupon_export');
+        });
+
+        Route::group(['prefix' => 'cashback', 'as' => 'cashback.'], function () {
+            Route::get(CashBack::INDEX[URI], [CashBackController::class,'index'])->name('add-new');
+            Route::post(CashBack::ADD[URI], [CashBackController::class,'add'])->name('store');
+            Route::get(CashBack::UPDATE[URI].'/{id}', [CashBackController::class,'getUpdateView'])->name('edit');
+            Route::post(CashBack::UPDATE[URI].'/{id}', [CashBackController::class,'update'])->name('update');
+            Route::delete(CashBack::DELETE[URI].'/{id}', [CashBackController::class,'delete'])->name('delete');
+            Route::get(CashBack::UPDATE_STATUS[URI].'/{id}/{status}', [CashBackController::class,'updateStatus'])->name('status');
+            // Route::post(CashBack::SEARCH[URI], [CashBackController::class,'getSearchList'])->name('search');
         });
 
         Route::group(['prefix' => 'notification', 'as' => 'notification.', 'middleware' => ['module:notification']], function () {
