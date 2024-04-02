@@ -17,7 +17,6 @@ class CashBack extends Model
         'min_purchase' => 'float',
         'max_discount' => 'float',
         'status' => 'boolean',
-        'customer_id' => 'array',
     ];
 
 
@@ -38,6 +37,29 @@ class CashBack extends Model
         }
 
         return $value;
+    }
+
+       /**
+     * @param $query
+     * @return mixed
+     */
+    public function scopeActive($query): mixed
+    {
+        return $query->where('status', 1);
+    }
+
+    /**
+     * @param $query
+     * @return mixed
+     */
+
+    public function scopeRunning($query): mixed
+    {
+        return $query->where(function($q){
+                $q->whereDate('end_date', '>=', date('Y-m-d'))->orWhereNull('end_date');
+            })->where(function($q){
+                $q->whereDate('start_date', '<=', date('Y-m-d'))->orWhereNull('start_date');
+            });
     }
 
     protected static function booted()

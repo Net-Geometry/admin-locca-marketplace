@@ -427,6 +427,10 @@ Route::group(['namespace' => 'Api\V1', 'middleware'=>'localization'], function (
         Route::group(['prefix' => 'coupon', 'middleware' => 'auth:api'], function () {
             Route::get('apply', 'CouponController@apply');
         });
+        Route::get('cashback/list', 'CashBackController@list');
+        Route::group(['prefix' => 'cashback', 'middleware' => 'auth:api'], function () {
+            Route::get('getCashback', 'CashBackController@getCashback');
+        });
 
         Route::get('parcel-category','ParcelCategoryController@index');
     });

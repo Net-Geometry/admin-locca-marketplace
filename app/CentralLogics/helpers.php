@@ -11,6 +11,7 @@ use App\Models\Module;
 use App\Models\Review;
 use App\Models\Expense;
 use App\Mail\PlaceOrder;
+use App\Models\CashBack;
 use App\Models\Category;
 use App\Models\Currency;
 use App\Models\DMReview;
@@ -3243,6 +3244,61 @@ class Helpers
             return $src;
         }
         return $error_src;
+    }
+
+
+    public static function getCalculatedCashBackAmount($amount,$customer_id){
+        $percent_bonus = CashBack::active()->where('cashback_type','percentage')
+        ->Running()
+        ->where('min_purchase','<=',$amount )
+        ->where(function($query)use($customer_id){
+            $query->whereJsonContains('customer_id', [$customer_id])->orWhereJsonContains('customer_id', ['all']);
+        })
+        ->orderBy('cashback_amount','desc')->first();
+        $amount_bonus = CashBack::active()->where('cashback_type','amount')
+        ->Running()
+        ->where(function($query)use($customer_id){
+            $query->whereJsonContains('customer_id', [$customer_id])->orWhereJsonContains('customer_id', ['all']);
+        })
+        ->where('min_purchase','<=',$amount )->orderBy('cashback_amount','desc')->first();
+
+        if($percent_bonus && ($amount >=$percent_bonus->min_purchase)){
+            $p_bonus = ($amount  * $percent_bonus->cashback_amount)/100;
+            $p_bonus = $p_bonus > $percent_bonus->max_discount ? $percent_bonus->max_discount : $p_bonus;
+            $p_bonus = number_format($p_bonus,3);
+        }else{
+            $p_bonus = 0;
+        }
+
+        if($amount_bonus && ($amount >=$amount_bonus->min_purchase)){
+            $a_bonus = $amount_bonus?$amount_bonus->cashback_amount: 0;
+            $a_bonus = number_format($a_bonus,3);
+        }else{
+            $a_bonus = 0;
+        }
+
+        $cashback_amount = max([$p_bonus,$a_bonus]);
+
+        if($p_bonus ==  $cashback_amount){
+            $data=[
+                'calculated_amount'=>$cashback_amount,
+                'cashback_amount'=>$percent_bonus?->cashback_amount,
+                'cashback_type'=>$percent_bonus?->cashback_type,
+                'min_purchase'=>$percent_bonus?->min_purchase,
+                'max_discount'=>$percent_bonus?->max_discount,
+            ];
+
+        } elseif($a_bonus == $cashback_amount){
+            $data=[
+                'calculated_amount'=>$cashback_amount,
+                'cashback_amount'=>$percent_bonus?->cashback_amount,
+                'cashback_type'=>$amount_bonus?->cashback_type,
+                'min_purchase'=>$amount_bonus?->min_purchase,
+                'max_discount'=>$amount_bonus?->max_discount,
+            ];
+        }
+
+        return $data ?? [];
     }
 
 }

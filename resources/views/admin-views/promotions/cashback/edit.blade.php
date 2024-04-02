@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('edit_bonus'))
+@section('title',translate('Edit_Cashback_Offe'))
 
 @section('content')
     <div class="content container-fluid">
@@ -8,18 +8,18 @@
         <div class="page-header">
             <h1 class="page-header-title">
                 <span class="page-header-icon">
-                    <img src="{{asset('public/assets/admin/img/edit.png')}}" class="w--26" alt="">
+                    <img src="{{asset('public/assets/admin/img/Create_Cashback_Offer.png')}}" class="w--26" alt="">
                 </span>
                 <span>
-                    {{translate('messages.wallet_bonus_update')}}
+                    {{translate('messages.Create_Cashback_Offer')}}
                 </span>
             </h1>
         </div>
         <!-- End Page Header -->
-
+{{-- {{ dd($cashback->max_discount) }} --}}
         <div class="card">
             <div class="card-body" id="form_data">
-                <form action="{{route('admin.cashback.store')}}" method="POST">
+                <form action="{{route('admin.cashback.update',['id'=>$cashback?->id ])}}" method="POST">
                     @csrf
                     <div class="row">
                         <div class="col-12">
@@ -117,7 +117,7 @@
                                     data-toggle="tooltip" data-placement="right"
                                     data-original-title="{{ translate('messages.Required.')}}"> *
                                     </span></label>
-                                <select name="cashback_type" class="form-control"  data-mas_discount="{{ $cashback->max_discount }}" id="cashback_type" required>
+                                <select name="cashback_type" class="form-control"  data-mas_discount="{{ $cashback?->max_discount ?? 0 }}" id="cashback_type" required>
                                     <option {{ $cashback->cashback_type ==  'percentage' ? 'selected'  : '' }} value="percentage">{{translate('messages.percentage')}} (%)</option>
                                     <option {{ $cashback->cashback_type ==  'amount' ? 'selected'  : '' }} value="amount">{{translate('messages.amount')}} {{ \App\CentralLogics\Helpers::currency_symbol() }}</option>
                                 </select>
@@ -157,7 +157,7 @@
                         <div class="col-md-4 col-lg-4 col-sm-6">
                             <div class="form-group">
                                 <label class="input-label" for="max_discount">{{translate('messages.Maximum_Discount')}} ({{ \App\CentralLogics\Helpers::currency_symbol() }})</label>
-                                <input type="number" step="0.01" min="0" value="0" max="999999999999.99"  {{ $cashback->cashback_type ==  'percentage' ? ''  : 'readonly' }}   value="{{ $cashback->max_discount }}" name="max_discount" id="max_discount" class="form-control" >
+                                <input type="number" step="0.01" min="0"  max="999999999999.99"  {{ $cashback->cashback_type ==  'percentage' ? ''  : 'readonly' }}   value="{{ $cashback->max_discount }}" name="max_discount" id="max_discount" class="form-control" >
                             </div>
                         </div>
 

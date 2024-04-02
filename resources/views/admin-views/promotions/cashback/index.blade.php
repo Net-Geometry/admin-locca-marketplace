@@ -55,12 +55,12 @@
                                                 for="default_title">{{ translate('messages.title') }}
                                                 ({{ translate('Default') }})
                                             </label>
-                                            <input type="text" name="title[]" id="default_title"
+                                            <input type="text" value="{{ old('title.0') }}" name="title[]" id="default_title"
                                                 class="form-control" placeholder="{{ translate('messages.Eid_Dhamaka') }}" >
                                         </div>
                                         <input type="hidden" name="lang[]" value="default">
                                     </div>
-                                        @foreach ($language as $lang)
+                                        @foreach ($language as $key => $lang)
                                             <div class="d-none lang_form"
                                                 id="{{ $lang }}-form">
                                                 <div class="form-group">
@@ -68,7 +68,7 @@
                                                         for="{{ $lang }}_title">{{ translate('messages.title') }}
                                                         ({{ strtoupper($lang) }})
                                                     </label>
-                                                    <input type="text" name="title[]" id="{{ $lang }}_title"
+                                                    <input type="text" name="title[]"  value="{{ old('title.'.$key+1) }}" id="{{ $lang }}_title"
                                                         class="form-control" placeholder="{{ translate('messages.Eid_Dhamaka') }}"
                                                          >
                                                 </div>
@@ -111,8 +111,8 @@
                                             data-original-title="{{ translate('messages.Required.')}}"> *
                                             </span></label>
                                         <select name="cashback_type" class="form-control" id="cashback_type" required>
-                                            <option value="percentage">{{translate('messages.percentage')}} (%)</option>
-                                            <option value="amount">{{translate('messages.amount')}} {{ \App\CentralLogics\Helpers::currency_symbol() }}</option>
+                                            <option {{ old('cashback_type')  == 'percentage' ? "selected": '' }} value="percentage">{{translate('messages.percentage')}} (%)</option>
+                                            <option {{ old('cashback_type')  == 'amount' ? "selected": '' }}  value="amount">{{translate('messages.amount')}} {{ \App\CentralLogics\Helpers::currency_symbol() }}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -120,9 +120,9 @@
                                     <div class="form-group">
                                         <label class="input-label" for="exampleFormControlInput1">{{translate('messages.Cashback_Amount')}}
 
-                                            <span  class="d-none" id='cuttency_symbol'>({{ \App\CentralLogics\Helpers::currency_symbol() }})
+                                            <span class="{{ old('cashback_type')  == 'percentage' ||  old('cashback_type') == null  ? '': 'd-none' }} " id="percentage">(%)</span>
+                                            <span  class=" {{ old('cashback_type')  == 'amount' && old('cashback_type') !== null ? '': 'd-none' }} " id='cuttency_symbol'>({{ \App\CentralLogics\Helpers::currency_symbol() }})
                                             </span>
-                                            <span id="percentage">(%)</span>
 
                                             <span
                                             class="input-label-secondary text--title" data-toggle="tooltip"
@@ -136,40 +136,40 @@
                                         </span>
 
                                         </label>
-                                        <input type="number" step="0.01" min="1" max="999999999999.99"  placeholder="{{ translate('messages.Ex:_100') }}"  name="cashback_amount" id="Cash_back_amount" class="form-control" required>
+                                        <input type="number" value="{{  old('cashback_amount') }}" step="0.01" min="1" max="999999999999.99"  placeholder="{{ translate('messages.Ex:_100') }}"  name="cashback_amount" id="Cash_back_amount" class="form-control" required>
                                     </div>
                                 </div>
 
                                 <div class="col-md-4 col-lg-4 col-sm-6">
                                     <div class="form-group">
                                         <label class="input-label" for="exampleFormControlInput1">{{translate('messages.Minimum_Purchase')}} ({{ \App\CentralLogics\Helpers::currency_symbol() }})</label>
-                                        <input type="number" step="0.01" name="min_purchase" value="0" min="0" max="999999999999.99" class="form-control"
+                                        <input type="number" step="0.01" value="{{  old('min_purchase') }}" name="min_purchase" value="0" min="0" max="999999999999.99" class="form-control"
                                             placeholder="100">
                                     </div>
                                 </div>
                                 <div class="col-md-4 col-lg-4 col-sm-6">
                                     <div class="form-group">
                                         <label class="input-label" for="max_discount">{{translate('messages.Maximum_Discount')}} ({{ \App\CentralLogics\Helpers::currency_symbol() }})</label>
-                                        <input type="number" step="0.01" min="0" value="0" max="999999999999.99" name="max_discount" id="max_discount" class="form-control" readonly>
+                                        <input type="number" step="0.01" min="0" value="{{  old('cashback_type')  == 'percentage' ?  old('max_discount') : 0 }}" max="999999999999.99" name="max_discount" id="max_discount" class="form-control">
                                     </div>
                                 </div>
 
                                 <div class="col-md-4 col-lg-4 col-sm-6">
                                     <div class="form-group">
                                         <label class="input-label" for="exampleFormControlInput1">{{translate('messages.Start_Date')}}</label>
-                                        <input type="date" name="start_date" class="form-control" id="date_from" required>
+                                        <input type="date" name="start_date" value="{{  old('start_date') }}" class="form-control" id="date_from" required>
                                     </div>
                                 </div>
                                 <div class="col-md-4 col-lg-4 col-sm-6">
                                     <div class="form-group">
                                         <label class="input-label" for="exampleFormControlInput1">{{translate('messages.End_Date')}}</label>
-                                        <input type="date" name="end_date" class="form-control" id="date_to" required>
+                                        <input type="date" name="end_date"  value="{{  old('end_date') }}" class="form-control" id="date_to" required>
                                     </div>
                                 </div>
                                 <div class="col-md-4 col-lg-4 col-sm-6">
                                     <div class="form-group">
                                         <label class="input-label" for="exampleFormControlInput1">{{translate('messages.Limit_for_Same_User')}}</label>
-                                        <input type="number" step="1" name="same_user_limit" value="0" min="0" max="9999999" class="form-control"
+                                        <input type="number" step="1"   value="{{  old('same_user_limit') }}" name="same_user_limit" value="0" min="0" max="9999999" class="form-control"
                                             placeholder="100">
                                     </div>
                                 </div>

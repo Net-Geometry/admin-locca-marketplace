@@ -5,13 +5,15 @@ $(document).ready(function() {
         if($('#cashback_type').val() == 'amount')
         {
             $('#max_discount').attr("readonly","true");
-            $('#max_discount').val(null);
+            $('#max_discount').removeAttr("required");
+            $('#max_discount').val(0);
             $('#percentage').addClass('d-none');
             $('#cuttency_symbol').removeClass('d-none');
         }
         else
         {
             $('#max_discount').removeAttr("readonly");
+            $('#max_discount').attr("required","true");
             $('#percentage').removeClass('d-none');
             $('#cuttency_symbol').addClass('d-none');
         }
