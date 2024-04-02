@@ -180,6 +180,7 @@ class Helpers
         $data['min_delivery_time'] =  (int) explode('-',$data->store->delivery_time)[0] ?? 0;
         $data['max_delivery_time'] =  (int) explode('-',$data->store->delivery_time)[1] ?? 0;
         $data['common_condition_id'] =  (int) $data->pharmacy_item_details?->common_condition_id ?? 0;
+        $data['brand_id'] =  (int) $data->ecommerce_item_details?->brand_id ?? 0;
         $data['is_basic'] =  (int) $data->pharmacy_item_details?->is_basic ?? 0;
         $data['is_prescription_required'] =  (int) $data->pharmacy_item_details?->is_prescription_required ?? 0;
         $data['halal_tag_status'] =  (int) $data->store->storeConfig?->halal_tag_status??0;
@@ -262,6 +263,7 @@ class Helpers
                 $item['min_delivery_time'] =  (int) explode('-',$item->store?->delivery_time)[0] ?? 0;
                 $item['max_delivery_time'] =  (int) explode('-',$item->store?->delivery_time)[1] ?? 0;
                 $item['common_condition_id'] =  (int) $item->pharmacy_item_details?->common_condition_id ?? 0;
+                $item['brand_id'] =  (int) $item->ecommerce_item_details?->brand_id ?? 0;
                 $item['is_basic'] =  (int) $item->pharmacy_item_details?->is_basic ?? 0;
                 $item['is_prescription_required'] =  (int) $item->pharmacy_item_details?->is_prescription_required ?? 0;
                 $item['halal_tag_status'] =  (int) $item->store->storeConfig?->halal_tag_status??0;
@@ -332,6 +334,7 @@ class Helpers
             $data['min_delivery_time'] =  (int) explode('-',$data->store->delivery_time)[0] ?? 0;
             $data['max_delivery_time'] =  (int) explode('-',$data->store->delivery_time)[1] ?? 0;
             $data['common_condition_id'] =  (int) $data->pharmacy_item_details?->common_condition_id ?? 0;
+            $data['brand_id'] =  (int) $data->ecommerce_item_details?->brand_id ?? 0;
             $data['is_basic'] =  (int) $data->pharmacy_item_details?->is_basic ?? 0;
             $data['is_prescription_required'] =  (int) $data->pharmacy_item_details?->is_prescription_required ?? 0;
             $data['halal_tag_status'] =  (int) $data->store->storeConfig?->halal_tag_status??0;

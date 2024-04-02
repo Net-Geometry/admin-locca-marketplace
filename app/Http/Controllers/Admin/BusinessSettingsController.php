@@ -6493,6 +6493,15 @@ class BusinessSettingsController extends Controller
                         ]
                     );
             }
+            if($item->module->module_type == 'ecommerce'){
+                DB::table('ecommerce_item_details')
+                    ->updateOrInsert(
+                        ['item_id' => $item->id],
+                        [
+                            'brand_id' => $data->brand_id,
+                        ]
+                    );
+            }
             $item?->translations()?->delete();
             Translation::where('translationable_type' , 'App\Models\TempProduct')->where('translationable_id' , $data->id)->update([
                 'translationable_type' => 'App\Models\Item',

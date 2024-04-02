@@ -248,6 +248,23 @@
                                     </div>
                                 </div>
                                 @endif
+                                @if ($module_data['brand'])
+                                <div class="col-sm-6 col-lg-4">
+                                    <div class="form-group mb-0">
+                                        <label class="input-label" for="brand_id">{{ translate('messages.Brand') }}<span
+                                                class="input-label-secondary"></span></label>
+                                        <select name="brand_id" id="brand_id"
+                                            data-placeholder="{{ translate('messages.Select_brand') }}"
+                                            id="brand_id" class="js-select2-custom form-control"
+                                            oninvalid="this.setCustomValidity('{{ translate('messages.Select_brand') }}')">
+                                            <option value="">---{{translate('messages.select')}}---</option>
+                                            @foreach($brands as $brand)
+                                                <option value="{{$brand['id']}}" {{ $product->ecommerce_item_details?->brand_id  == $brand['id'] ? 'selected' : '' }}>{{$brand['name']}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                @endif
                             @if ($module_data['unit'])
                                 <div class="col-sm-6 col-lg-4" id="unit_input">
                                     <div class="form-group mb-0">

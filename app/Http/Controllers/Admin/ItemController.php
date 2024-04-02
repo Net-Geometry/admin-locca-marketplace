@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 
+use App\Models\Brand;
+use App\Models\EcommerceItemDetails;
 use Carbon\Carbon;
 use App\Models\Tag;
 use App\Models\Item;
@@ -266,6 +268,12 @@ class ItemController extends Controller
             $item_details->common_condition_id = $request->condition_id;
             $item_details->is_basic = $request->basic ?? 0;
             $item_details->is_prescription_required = $request->is_prescription_required ?? 0;
+            $item_details->save();
+        }
+        if ($module_type == 'ecommerce') {
+            $item_details = new EcommerceItemDetails();
+            $item_details->item_id = $item->id;
+            $item_details->brand_id = $request->brand_id;
             $item_details->save();
         }
 
@@ -537,6 +545,15 @@ class ItemController extends Controller
                     ]
                 );
         }
+        if($item->module->module_type == 'ecommerce'){
+            DB::table('ecommerce_item_details')
+                ->updateOrInsert(
+                    ['item_id' => $item->id],
+                    [
+                        'brand_id' => $request->brand_id,
+                    ]
+                );
+        }
         Helpers::add_or_update_translations(request: $request, key_data: 'name', name_field: 'name', model_name: 'Item', data_id: $item->id, data_value: $item->name);
         Helpers::add_or_update_translations(request: $request, key_data: 'description', name_field: 'description', model_name: 'Item', data_id: $item->id, data_value: $item->description);
 
@@ -750,6 +767,7 @@ class ItemController extends Controller
         $sub_category_id = $request->query('sub_category_id', 'all');
         $zone_id = $request->query('zone_id', 'all');
         $condition_id = $request->query('condition_id', 'all');
+        $brand_id = $request->query('brand_id', 'all');
 
         $type = $request->query('type', 'all');
         $key = explode(' ', $request['search']);
@@ -778,6 +796,11 @@ class ItemController extends Controller
                     return $q->where('common_condition_id'  , $condition_id);
                 });
             })
+            ->when(is_numeric($brand_id), function ($query) use ($brand_id) {
+                return $query->whereHas('ecommerce_item_details', function ($q) use ($brand_id) {
+                    return $q->where('brand_id'  , $brand_id);
+                });
+            })
             ->when($request['search'], function ($query) use ($key) {
                 return $query->where(function ($q) use ($key) {
                     foreach ($key as $value) {
@@ -795,6 +818,7 @@ class ItemController extends Controller
         $category = $category_id != 'all' ? Category::findOrFail($category_id) : null;
         $sub_categories = $category_id != 'all' ? Category::where('parent_id', $category_id)->get(['id','name']) : [];
         $condition = $condition_id != 'all' ? CommonCondition::findOrFail($condition_id) : [];
+        $brand = $brand_id != 'all' ? Brand::findOrFail($brand_id) : [];
 
         return view('admin-views.product.list', compact('items', 'store', 'category', 'type','sub_categories', 'condition'));
     }

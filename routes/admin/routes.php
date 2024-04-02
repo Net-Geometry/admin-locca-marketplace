@@ -2,6 +2,7 @@
 
 use App\Enums\ViewPaths\Admin\Addon;
 use App\Enums\ViewPaths\Admin\Banner;
+use App\Enums\ViewPaths\Admin\Brand;
 use App\Enums\ViewPaths\Admin\Category;
 use App\Enums\ViewPaths\Admin\Attribute;
 use App\Enums\ViewPaths\Admin\CommonCondition;
@@ -19,6 +20,7 @@ use App\Enums\ViewPaths\Admin\Zone;
 use App\Http\Controllers\Admin\Banner\BannerController;
 use App\Http\Controllers\Admin\Coupon\CouponController;
 use App\Http\Controllers\Admin\Customer\WalletBonusController;
+use App\Http\Controllers\Admin\Item\BrandController;
 use App\Http\Controllers\Admin\Promotion\CashBackController;
 use App\Http\Controllers\Admin\DeliveryMan\DeliveryManController;
 use App\Http\Controllers\Admin\DeliveryMan\DmVehicleController;
@@ -147,6 +149,16 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::post(CommonCondition::UPDATE[URI].'/{id}', [CommonConditionController::class, 'update'])->name('update');
             Route::delete(CommonCondition::DELETE[URI].'/{id}', [CommonConditionController::class, 'delete'])->name('delete');
             Route::get(CommonCondition::STATUS[URI].'/{id}/{status}', [CommonConditionController::class,'updateStatus'])->name('status');
+        });
+
+        Route::group(['prefix' => 'brand', 'as' => 'brand.'], function () {
+            Route::get(Brand::DROPDOWN[URI], [BrandController::class, 'getDropdownList'])->name('get-all');
+            Route::get(Brand::INDEX[URI], [BrandController::class, 'index'])->name('add');
+            Route::post(Brand::ADD[URI], [BrandController::class, 'add'])->name('store');
+            Route::get(Brand::UPDATE[URI].'/{id}', [BrandController::class, 'getUpdateView'])->name('edit');
+            Route::post(Brand::UPDATE[URI].'/{id}', [BrandController::class, 'update'])->name('update');
+            Route::delete(Brand::DELETE[URI].'/{id}', [BrandController::class, 'delete'])->name('delete');
+            Route::get(Brand::STATUS[URI].'/{id}/{status}', [BrandController::class,'updateStatus'])->name('status');
         });
 
         Route::group(['prefix' => 'business-settings', 'as' => 'business-settings.'], function () {

@@ -166,6 +166,10 @@ class Item extends Model
     {
         return $this->hasOne(PharmacyItemDetails::class, 'item_id');
     }
+    public function ecommerce_item_details()
+    {
+        return $this->hasOne(EcommerceItemDetails::class, 'item_id');
+    }
 
     public function orders()
     {
