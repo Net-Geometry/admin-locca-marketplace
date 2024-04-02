@@ -286,6 +286,26 @@
                                       </div>
                                 </div>
                                 @endif
+                                @if ($module_type == 'pharmacy')
+                                <div class="col-sm-6 col-lg-4" id="is_prescription_required">
+                                    <div class="form-check mb-0 p-6">
+                                        <input class="form-check-input" name="is_prescription_required" type="checkbox" value="1" id="flexCheckDefaultPrescription" checked>
+                                        <label class="form-check-label" for="flexCheckDefault">
+                                          {{ translate('messages.is_prescription_required') }}
+                                        </label>
+                                      </div>
+                                </div>
+                                @endif
+                                @if ($module_data['halal'])
+                                <div class="col-sm-6 col-lg-4" id="halal">
+                                    <div class="form-check mb-0 p-6">
+                                        <input class="form-check-input" name="is_halal" type="checkbox" value="1" id="flexCheckDefault" checked>
+                                        <label class="form-check-label" for="flexCheckDefault">
+                                          {{ translate('messages.is_it_halal') }}
+                                        </label>
+                                      </div>
+                                </div>
+                                @endif
                             </div>
                         </div>
                     </div>

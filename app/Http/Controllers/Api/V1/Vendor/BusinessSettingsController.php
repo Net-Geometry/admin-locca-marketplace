@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1\Vendor;
 
 use App\Http\Controllers\Controller;
+use App\Models\StoreConfig;
 use Illuminate\Http\Request;
 use App\CentralLogics\Helpers;
 use Illuminate\Support\Facades\Validator;
@@ -90,7 +91,7 @@ class BusinessSettingsController extends Controller
         $store->address = $data[1]['value'];
         $store->phone = $request->contact_number;
         $store->order_place_to_schedule_interval = $request->order_place_to_schedule_interval;
-        
+
         $store->logo = $request->has('logo') ? Helpers::update('store/', $store->logo, 'png', $request->file('logo')) : $store->logo;
         $store->cover_photo = $request->has('cover_photo') ? Helpers::update('store/cover/', $store->cover_photo, 'png', $request->file('cover_photo')) : $store->cover_photo;
         $store->meta_title = $data[2]['value'];
@@ -99,8 +100,14 @@ class BusinessSettingsController extends Controller
 
         $store->save();
 
+        $conf = StoreConfig::firstOrNew(
+            ['store_id' =>  $store->id]
+        );
+        $conf->halal_tag_status = $request->halal_tag_status ?? 0;
+        $conf->save();
+
         foreach ($data as $key=>$i) {
-            
+
             Translation::updateOrInsert(
                 ['translationable_type'  => 'App\Models\Store',
                     'translationable_id'    => $store->id,

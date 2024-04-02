@@ -836,6 +836,16 @@ class VendorController extends Controller
             $store['free_delivery'] = 0;
         }
 
+        if($request->menu == 'halal_tag_status' ){
+            $conf = StoreConfig::firstOrNew(
+                ['store_id' =>  $store->id]
+            );
+            $conf[$request->menu] = $request->status;
+            $conf->save();
+            Toastr::success(translate('messages.Store_settings_updated!'));
+            return back();
+        }
+
         $store[$request->menu] = $request->status;
         $store->save();
         Toastr::success(translate('messages.store').translate('messages.settings_updated'));

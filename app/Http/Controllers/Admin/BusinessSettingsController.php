@@ -5807,6 +5807,8 @@ class BusinessSettingsController extends Controller
             return view('admin-views.business-settings.email-format-setting.'.$type.'-email-formats.offline-approved-format',compact('template'));
         } else if ($tab == 'offline-payment-deny') {
             return view('admin-views.business-settings.email-format-setting.'.$type.'-email-formats.offline-deny-format',compact('template'));
+        } else if ($tab == 'pos-registration') {
+            return view('admin-views.business-settings.email-format-setting.'.$type.'-email-formats.pos-registration-format',compact('template'));
         }
 
     }
@@ -5900,6 +5902,9 @@ class BusinessSettingsController extends Controller
         }elseif($tab == 'offline-payment-approve'){
             $email_type = 'offline_payment_approve';
             $template = EmailTemplate::where('type',$type)->where('email_type', 'offline_payment_approve')->first();
+        }elseif($tab == 'pos-registration'){
+            $email_type = 'pos_registration';
+            $template = EmailTemplate::where('type',$type)->where('email_type', 'pos_registration')->first();
         }
 
         if ($template == null) {
@@ -5911,6 +5916,7 @@ class BusinessSettingsController extends Controller
         }
         $template->title = $request->title[array_search('default', $request->lang)];
         $template->body = $request->body[array_search('default', $request->lang)];
+        $template->body_2 = $request?->body_2 ? $request->body_2[array_search('default', $request->lang)] : null;
         $template->button_name = $request->button_name?$request->button_name[array_search('default', $request->lang)]:'';
         $template->footer_text = $request->footer_text[array_search('default', $request->lang)];
         $template->copyright_text = $request->copyright_text[array_search('default', $request->lang)];
@@ -5982,6 +5988,32 @@ class BusinessSettingsController extends Controller
                             'key'                   => 'body'
                         ],
                         ['value'                 => $request->body[$index]]
+                    );
+                }
+            }
+            if ($request?->body_2 && $default_lang == $key && !($request->body_2[$index])) {
+                if ($key != 'default') {
+                    Translation::updateOrInsert(
+                        [
+                            'translationable_type'  => 'App\Models\EmailTemplate',
+                            'translationable_id'    => $template->id,
+                            'locale'                => $key,
+                            'key'                   => 'body_2'
+                        ],
+                        ['value'                 => $template->body_2]
+                    );
+                }
+            } else {
+
+                if ($request?->body_2 && $request->body_2[$index] && $key != 'default') {
+                    Translation::updateOrInsert(
+                        [
+                            'translationable_type'  => 'App\Models\EmailTemplate',
+                            'translationable_id'    => $template->id,
+                            'locale'                => $key,
+                            'key'                   => 'body_2'
+                        ],
+                        ['value'                 => $request->body_2[$index]]
                     );
                 }
             }
@@ -6184,6 +6216,10 @@ class BusinessSettingsController extends Controller
             ]);
         } else if ($tab == 'offline-payment-approve') {
             DB::table('business_settings')->updateOrInsert(['key' => 'offline_payment_approve_mail_status_'.$type], [
+                'value' => $status
+            ]);
+        } else if ($tab == 'pos-registration') {
+            DB::table('business_settings')->updateOrInsert(['key' => 'pos_registration_mail_status_'.$type], [
                 'value' => $status
             ]);
         }
@@ -6453,6 +6489,7 @@ class BusinessSettingsController extends Controller
                         [
                             'common_condition_id' => $data->condition_id,
                             'is_basic' => $data->basic ?? 0,
+                            'is_prescription_required' => $data->is_prescription_required ?? 0,
                         ]
                     );
             }

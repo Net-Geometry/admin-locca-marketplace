@@ -9,6 +9,12 @@
                 </a>
             </li>
             <li class="nav-item">
+                <a class="nav-link {{ Request::is('admin/business-settings/email-setup/user/pos-registration') ? 'active' : '' }}"
+                   href="{{ route('admin.business-settings.email-setup', ['user','pos-registration']) }}">
+                    {{translate('POS_New_Customer_Registration')}}
+                </a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/email-setup/user/registration-otp') ? 'active' : '' }}"
                 href="{{ route('admin.business-settings.email-setup', ['user','registration-otp']) }}">
                     {{translate('Registration OTP')}}

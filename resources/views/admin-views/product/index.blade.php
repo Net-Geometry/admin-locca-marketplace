@@ -289,6 +289,26 @@
                                         </label>
                                       </div>
                                 </div>
+                                @if(Config::get('module.current_module_type') == 'pharmacy')
+                                <div class="col-sm-6 col-lg-3" id="is_prescription_required">
+                                    <div class="form-check mb-0 p-6">
+                                        <input class="form-check-input" name="is_prescription_required" type="checkbox" value="1" id="flexCheckDefaultprescription" checked>
+                                        <label class="form-check-label" for="flexCheckDefaultprescription">
+                                          {{ translate('messages.is_prescription_required') }}
+                                        </label>
+                                      </div>
+                                </div>
+                                @endif
+                                @if(Config::get('module.current_module_type') == 'grocery' || Config::get('module.current_module_type') == 'food')
+                                    <div class="col-sm-6 col-lg-3" id="halal">
+                                        <div class="form-check mb-0 p-6">
+                                            <input class="form-check-input" name="is_halal" type="checkbox" value="1" id="flexCheckDefault1" checked>
+                                            <label class="form-check-label" for="flexCheckDefault1">
+                                                {{ translate('messages.Is_It_Halal') }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     </div>
