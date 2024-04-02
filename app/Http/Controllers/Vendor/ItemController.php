@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\DB;
 use App\CentralLogics\ProductLogic;
 use App\Models\PharmacyItemDetails;
 use App\Http\Controllers\Controller;
+use App\Models\EcommerceItemDetails;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\File;
 use Rap2hpoutre\FastExcel\FastExcel;
@@ -288,6 +289,13 @@ class ItemController extends Controller
             $item_details->common_condition_id = $request->condition_id;
             $item_details->is_basic = $request->basic ?? 0;
             $item_details->is_prescription_required = $request->is_prescription_required ?? 0;
+            $item_details->save();
+        }
+
+        if ($module_type == 'ecommerce') {
+            $item_details = new EcommerceItemDetails();
+            $item_details->item_id = $food->id;
+            $item_details->brand_id = $request->brand_id;
             $item_details->save();
         }
 
@@ -586,6 +594,16 @@ class ItemController extends Controller
                         'common_condition_id' => $request->condition_id,
                         'is_basic' => $request->basic ?? 0,
                         'is_prescription_required' => $request->is_prescription_required ?? 0,
+                    ]
+                );
+        }
+
+        if($p->module->module_type == 'ecommerce'){
+            DB::table('ecommerce_item_details')
+                ->updateOrInsert(
+                    ['item_id' => $p->id],
+                    [
+                        'brand_id' => $request->brand_id,
                     ]
                 );
         }
@@ -1351,11 +1369,15 @@ class ItemController extends Controller
         $temp_item->is_halal = $request->is_halal ?? 0;
         $temp_item->basic =  $data->basic ?? 0;
         $temp_item->common_condition_id =  $data->common_condition_id;
+        $temp_item->brand_id =  $request->brand_id ?? 0;
         $temp_item->stock =  $data->stock ?? 0;
         $module_type = Helpers::get_store_data()->module->module_type;
         if($module_type=='pharmacy'){
             $temp_item->common_condition_id =  $request->condition_id ?? 0;
             $temp_item->basic =  $request->basic ?? 0;
+        }
+        if($module_type=='ecommerce'){
+            $temp_item->brand_id =  $request->brand_id ?? 0;
         }
 
 
@@ -1429,6 +1451,16 @@ class ItemController extends Controller
                         'common_condition_id' => $request->condition_id,
                         'is_basic' => $request->basic ?? 0,
                         'is_prescription_required' => $request->is_prescription_required ?? 0,
+                        'item_id' => null
+                    ]
+                );
+        }
+        if($module_type=='ecommerce'){
+            DB::table('ecommerce_item_details')
+                ->updateOrInsert(
+                    ['temp_product_id' => $temp_item->id],
+                    [
+                        'brand_id' => $request->brand_id,
                         'item_id' => null
                     ]
                 );

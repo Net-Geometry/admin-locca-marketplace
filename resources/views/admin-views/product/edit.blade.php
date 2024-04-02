@@ -300,6 +300,25 @@
                                         </select>
                                     </div>
                                 </div>
+                                <div class="col-sm-6 col-lg-3" id="brand_input">
+                                    <div class="form-group mb-0">
+                                        <label class="input-label" for="brand_id">{{ translate('messages.Brand') }}<span
+                                                class="input-label-secondary"></span></label>
+                                        <select name="brand_id" id="brand_id"
+                                            data-placeholder="{{ translate('messages.Select_brand') }}"
+                                            id="brand_id" class="js-data-example-ajax form-control"
+                                            oninvalid="this.setCustomValidity('{{ translate('messages.Select_brand') }}')">
+                                            @if (isset($product->ecommerce_item_details?->brand_id))
+                                                <option value="{{ $product->ecommerce_item_details->brand_id }}" selected="selected">
+                                                    {{ $product->ecommerce_item_details?->brand->name }}</option>
+                                            @elseif((isset($temp_product) && $temp_product == 1 && $product->brand_id))
+                                            <option value="{{ $product->brand_id }}" selected="selected">
+                                                {{ $product->brand->name }}</option>
+                                            @endif
+
+                                        </select>
+                                    </div>
+                                </div>
                                 <div class="col-sm-6 col-lg-3" id="unit_input">
                                     <div class="form-group mb-0">
                                         <label class="input-label text-capitalize"
@@ -1011,6 +1030,11 @@
         } else {
             $('#condition_input').hide();
         }
+        if (module_data.brand) {
+            $('#brand_input').show();
+        } else {
+            $('#brand_input').hide();
+        }
         if (module_type == 'food') {
             $('#food_variation_section').show();
             $('#attribute_section').hide();
@@ -1062,6 +1086,31 @@
     $('#condition_id').select2({
             ajax: {
                 url: '{{ url('/') }}/admin/common-condition/get-all',
+                data: function(params) {
+                    return {
+                        q: params.term, // search term
+                        page: params.page,
+                    };
+                },
+                processResults: function(data) {
+                    return {
+                        results: data
+                    };
+                },
+                __port: function(params, success, failure) {
+                    let $request = $.ajax(params);
+
+                    $request.then(success);
+                    $request.fail(failure);
+
+                    return $request;
+                }
+            }
+        });
+
+    $('#brand_id').select2({
+            ajax: {
+                url: '{{ url('/') }}/admin/brand/get-all',
                 data: function(params) {
                     return {
                         q: params.term, // search term

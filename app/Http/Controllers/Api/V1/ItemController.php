@@ -821,6 +821,9 @@ class ItemController extends Controller
         ->whereHas('pharmacy_item_details',function($q){
             return $q->whereNotNull('common_condition_id');
         })
+        ->whereHas('ecommerce_item_details',function($q){
+            return $q->whereNotNull('brand_id');
+        })
         ->when(is_numeric($request->store_id),function ($qurey) use($request){
             $qurey->where('store_id', $request->store_id);
         })

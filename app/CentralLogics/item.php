@@ -518,9 +518,9 @@ class ProductLogic
                 $qurey->orderBy('price', 'asc');
             })
             ->pluck('category_id')->toArray();
-    
+
             $item_categories = array_unique($item_categories);
-    
+
             $categories = Category::withCount(['products','childes'])->with(['childes' => function($query)  {
                 $query->withCount(['products','childes']);
             }])
