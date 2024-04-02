@@ -32,6 +32,7 @@ use App\CentralLogics\ProductLogic;
 use App\Mail\OrderVerificationMail;
 use App\CentralLogics\CustomerLogic;
 use App\Http\Controllers\Controller;
+use App\Models\CashBackHistory;
 use App\Models\OfflinePaymentMethod;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
@@ -871,6 +872,10 @@ class OrderController extends Controller
                     OrderLogic::create_order_payment(order_id:$order->id, amount:$unpaid_amount, payment_status:'unpaid', payment_method:$request->payment_method);
                 }
             }
+            if($order->is_guest  == 0 && $order->user_id ){
+                $this->createCashBackHistory($order->order_amount, $order->user_id,$order->id);
+            }
+
             DB::commit();
 
 
@@ -1285,6 +1290,10 @@ class OrderController extends Controller
             if($customer){
                 $customer->zone_id = $order->zone_id;
                 $customer->save();
+            }
+
+            if($order->is_guest  == 0 && $order->user_id ){
+                $this->createCashBackHistory($order->order_amount, $order->user_id,$order->id);
             }
             DB::commit();
             if($order->payment_method != 'digital_payment'){
@@ -1856,5 +1865,23 @@ class OrderController extends Controller
 		});
 
         return response()->json(Helpers::store_data_formatting($data, true), 200);
+    }
+
+
+    private function createCashBackHistory($order_amount, $user_id,$order_id){
+        $cashBack =  Helpers::getCalculatedCashBackAmount(amount:$order_amount, customer_id:$user_id);
+        if(data_get($cashBack,'calculated_amount') > 0){
+            $CashBackHistory = new CashBackHistory();
+            $CashBackHistory->user_id = $user_id;
+            $CashBackHistory->order_id = $order_id;
+            $CashBackHistory->calculated_amount = data_get($cashBack,'calculated_amount');
+            $CashBackHistory->cashback_amount = data_get($cashBack,'cashback_amount');
+            $CashBackHistory->cash_back_id = data_get($cashBack,'id');
+            $CashBackHistory->cashback_type = data_get($cashBack,'cashback_type');
+            $CashBackHistory->min_purchase = data_get($cashBack,'min_purchase');
+            $CashBackHistory->max_discount = data_get($cashBack,'max_discount');
+            $CashBackHistory->save();
+        }
+        return true;
     }
 }

@@ -51,6 +51,12 @@ class Order extends Model
         $this->attributes['delivery_charge'] = round($value, 3);
     }
 
+    public function cashback_history()
+    {
+        return $this->hasOne(CashBackHistory::class, 'order_id');
+    }
+
+
     public function offline_payments()
     {
         return $this->belongsTo(OfflinePayments::class,'id','order_id');

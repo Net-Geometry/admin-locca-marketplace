@@ -76,6 +76,13 @@ class OrderLogic
             Helpers::expenseCreate(amount:$store_coupon_discount_subsidy,type:'coupon_discount',datetime:now(),created_by:$order->coupon_created_by, order_id:$order->id,store_id:$order->store->id);
         }
 
+        if($order?->cashback_history){
+            $refer_wallet_transaction = CustomerLogic::create_wallet_transaction($order?->cashback_history?->user_id, $order?->cashback_history?->calculated_amount, 'CashBack',$order->id);
+            if($refer_wallet_transaction != false){
+                Helpers::expenseCreate(amount:$order?->cashback_history?->calculated_amount,type:'CashBack',datetime:now(),created_by:'admin', order_id:$order->id);
+            }
+        }
+
         if($type=='parcel')
         {
             $comission = \App\Models\BusinessSetting::where('key','parcel_commission_dm')->first();
@@ -570,7 +577,6 @@ class OrderLogic
             }
 
         }
-
         return true;
     }
 }

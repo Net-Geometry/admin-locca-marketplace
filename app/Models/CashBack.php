@@ -20,6 +20,11 @@ class CashBack extends Model
     ];
 
 
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class,'cash_back_id')->where('is_guest',0);
+    }
     public function translations()
     {
         return $this->morphMany(Translation::class, 'translationable');
