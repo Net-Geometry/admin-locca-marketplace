@@ -37,6 +37,7 @@ class SearchController extends Controller
         $limit = $request['limit']??10;
         $offset = $request['offset']??1;
         $category_ids = $request['category_ids']?(is_array($request['category_ids'])?$request['category_ids']:json_decode($request['category_ids'])):'';
+        $brand_ids = $request['brand_ids']?(is_array($request['brand_ids'])?$request['brand_ids']:json_decode($request['brand_ids'])):'';
         $filter = $request['filter']?(is_array($request['filter'])?$request['filter']:str_getcsv(trim($request['filter'], "[]"), ',')):'';
         $type = $request->query('type', 'all');
         $min = $request->query('min_price');
@@ -59,6 +60,13 @@ class SearchController extends Controller
         ->when($category_ids && (count($category_ids)>0), function($query)use($category_ids){
             $query->whereHas('category',function($q)use($category_ids){
                 return $q->whereIn('id',$category_ids)->orWhereIn('parent_id', $category_ids);
+            });
+        })
+        ->when(isset($brand_ids) && (count($brand_ids)>0), function($query)use($brand_ids){
+            $query->whereHas('ecommerce_item_details',function($q)use($brand_ids){
+                return $q->whereHas('brand',function($q)use($brand_ids){
+                    return $q->whereIn('id',$brand_ids);
+                });
             });
         })
         ->when($request->store_id, function($query) use($request){
@@ -147,6 +155,13 @@ class SearchController extends Controller
         ->when($category_ids && (count($category_ids)>0), function($query)use($category_ids){
             $query->whereHas('category',function($q)use($category_ids){
                 return $q->whereIn('id',$category_ids)->orWhereIn('parent_id', $category_ids);
+            });
+        })
+        ->when(isset($brand_ids) && (count($brand_ids)>0), function($query)use($brand_ids){
+            $query->whereHas('ecommerce_item_details',function($q)use($brand_ids){
+                return $q->whereHas('brand',function($q)use($brand_ids){
+                    return $q->whereIn('id',$brand_ids);
+                });
             });
         })
         ->when($request->store_id, function($query) use($request){

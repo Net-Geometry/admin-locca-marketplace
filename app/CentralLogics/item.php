@@ -120,6 +120,7 @@ class ProductLogic
     public static function get_new_products($zone_id, $type, $min=false, $max=false,$product_id=null,$limit = null, $offset = null, $filter = null, $rating_count = null, $category_ids = null, $brand_ids = null)
     {
         $category_ids = isset($category_ids)?(is_array($category_ids)?$category_ids:json_decode($category_ids)):'';
+        $brand_ids = isset($brand_ids)?(is_array($brand_ids)?$brand_ids:json_decode($brand_ids)):'';
         $filter = $filter?(is_array($filter)?$filter:str_getcsv(trim($filter, "[]"), ',')):'';
         $paginator = Item::active()->type($type)
         ->when(isset($product_id), function($q)use($product_id){
@@ -128,6 +129,13 @@ class ProductLogic
         ->when(isset($category_ids) && (count($category_ids)>0), function($query)use($category_ids){
             $query->whereHas('category',function($q)use($category_ids){
                 return $q->whereIn('id',$category_ids)->orWhereIn('parent_id', $category_ids);
+            });
+        })
+        ->when(isset($brand_ids) && (count($brand_ids)>0), function($query)use($brand_ids){
+            $query->whereHas('ecommerce_item_details',function($q)use($brand_ids){
+                return $q->whereHas('brand',function($q)use($brand_ids){
+                    return $q->whereIn('id',$brand_ids);
+                });
             });
         })
         ->whereHas('module.zones', function($query)use($zone_id){
@@ -170,6 +178,13 @@ class ProductLogic
         ->when(isset($category_ids) && (count($category_ids)>0), function($query)use($category_ids){
             $query->whereHas('category',function($q)use($category_ids){
                 return $q->whereIn('id',$category_ids)->orWhereIn('parent_id', $category_ids);
+            });
+        })
+        ->when(isset($brand_ids) && (count($brand_ids)>0), function($query)use($brand_ids){
+            $query->whereHas('ecommerce_item_details',function($q)use($brand_ids){
+                return $q->whereHas('brand',function($q)use($brand_ids){
+                    return $q->whereIn('id',$brand_ids);
+                });
             });
         })
         ->whereHas('module.zones', function($query)use($zone_id){
@@ -451,6 +466,7 @@ class ProductLogic
     public static function discounted_products($zone_id, $limit = null, $offset = null, $type = 'all', $category_ids = null, $filter = null,$min=false, $max=false, $rating_count = null, $brand_ids = null)
     {
         $category_ids = isset($category_ids)?(is_array($category_ids)?$category_ids:json_decode($category_ids)):'';
+        $brand_ids = isset($brand_ids)?(is_array($brand_ids)?$brand_ids:json_decode($brand_ids)):'';
         $filter = $filter?(is_array($filter)?$filter:str_getcsv(trim($filter, "[]"), ',')):'';
         if($limit != null && $offset != null)
         {
@@ -461,6 +477,13 @@ class ProductLogic
             ->when(isset($category_ids) && (count($category_ids)>0), function($query)use($category_ids){
                 $query->whereHas('category',function($q)use($category_ids){
                     return $q->whereIn('id',$category_ids)->orWhereIn('parent_id', $category_ids);
+                });
+            })
+            ->when(isset($brand_ids) && (count($brand_ids)>0), function($query)use($brand_ids){
+                $query->whereHas('ecommerce_item_details',function($q)use($brand_ids){
+                    return $q->whereHas('brand',function($q)use($brand_ids){
+                        return $q->whereIn('id',$brand_ids);
+                    });
                 });
             })
             ->whereHas('store', function($query)use($zone_id){
@@ -499,6 +522,13 @@ class ProductLogic
             ->when(isset($category_ids) && (count($category_ids)>0), function($query)use($category_ids){
                 $query->whereHas('category',function($q)use($category_ids){
                     return $q->whereIn('id',$category_ids)->orWhereIn('parent_id', $category_ids);
+                });
+            })
+            ->when(isset($brand_ids) && (count($brand_ids)>0), function($query)use($brand_ids){
+                $query->whereHas('ecommerce_item_details',function($q)use($brand_ids){
+                    return $q->whereHas('brand',function($q)use($brand_ids){
+                        return $q->whereIn('id',$brand_ids);
+                    });
                 });
             })
             ->whereHas('store', function($query)use($zone_id){
@@ -559,6 +589,13 @@ class ProductLogic
                 return $q->whereIn('id',$category_ids)->orWhereIn('parent_id', $category_ids);
             });
         })
+        ->when(isset($brand_ids) && (count($brand_ids)>0), function($query)use($brand_ids){
+            $query->whereHas('ecommerce_item_details',function($q)use($brand_ids){
+                return $q->whereHas('brand',function($q)use($brand_ids){
+                    return $q->whereIn('id',$brand_ids);
+                });
+            });
+        })
         ->whereHas('store', function($query)use($zone_id){
             $query->when(config('module.current_module_data'), function($query){
                 $query->where('module_id', config('module.current_module_data')['id'])->whereHas('zone.modules',function($query){
@@ -592,6 +629,13 @@ class ProductLogic
         ->when(isset($category_ids) && (count($category_ids)>0), function($query)use($category_ids){
             $query->whereHas('category',function($q)use($category_ids){
                 return $q->whereIn('id',$category_ids)->orWhereIn('parent_id', $category_ids);
+            });
+        })
+        ->when(isset($brand_ids) && (count($brand_ids)>0), function($query)use($brand_ids){
+            $query->whereHas('ecommerce_item_details',function($q)use($brand_ids){
+                return $q->whereHas('brand',function($q)use($brand_ids){
+                    return $q->whereIn('id',$brand_ids);
+                });
             });
         })
         ->whereHas('store', function($query)use($zone_id){
