@@ -195,6 +195,46 @@
                             </div>
                         </div>
                     @endif
+                    @php($extra_packaging_data = \App\Models\BusinessSetting::where('key', 'extra_packaging_data')->first()?->value ?? '')
+                    @php($extra_packaging_data =json_decode($extra_packaging_data , true))
+                    @if($extra_packaging_data[$store->module->module_type]=='1')
+                        <div class="col-xl-4 col-md-4 col-sm-6">
+                            <div class="form-group mb-0">
+                                <label
+                                    class="toggle-switch toggle-switch-sm d-flex justify-content-between border  rounded px-3 form-control"
+                                    for="extra_packaging_status">
+                                <span class="pr-2 d-flex">
+                                    <span class="line--limit-1">
+                                        {{translate('messages.extra_packaging_status')}}
+                                    </span>
+                                    <span data-toggle="tooltip" data-placement="right"
+                                          data-original-title='{{translate("If_enabled,_customers_have_to_pay_extra_packaging_charge_on_order")}}'
+                                          class="input-label-secondary">
+                                        <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="i">
+                                    </span>
+                                </span>
+                                    <input type="checkbox"
+                                           data-id="extra_packaging_status"
+                                           data-type="status"
+                                           data-image-on="{{ asset('/public/assets/admin/img/modal/schedule-on.png') }}"
+                                           data-image-off="{{ asset('/public/assets/admin/img/modal/schedule-off.png') }}"
+                                           data-title-on="{{ translate('Want_to_enable_extra_packaging_status_for_this_restaurant?') }}"
+                                           data-title-off="{{ translate('Want_to_disable_extra_packaging_status_for_this_restaurant?') }}"
+                                           data-text-on="<p>{{ translate('If_enabled,_customers_have_to_pay_extra_packaging_charge_on_order') }}"
+                                           data-text-off="<p>{{ translate('If_disabled,_customers_do_not_have_to_pay_extra_packaging_charge_on_order.') }}</p>"
+                                           class="toggle-switch-input dynamic-checkbox"
+                                           id="extra_packaging_status" {{$store->storeConfig?->extra_packaging_status == 1?'checked':''}}>
+                                    <span class="toggle-switch-label">
+                                    <span class="toggle-switch-indicator"></span>
+                                </span>
+                                </label>
+                                <form
+                                    action="{{route('vendor.business-settings.toggle-settings',[$store->id,$store->storeConfig?->extra_packaging_status?0:1, 'extra_packaging_status'])}}"
+                                    method="get" id="extra_packaging_status_form">
+                                </form>
+                            </div>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -214,6 +254,12 @@
                     enctype="multipart/form-data">
                     @csrf
                     <div class="row">
+                        @if(($extra_packaging_data[$store->module->module_type]=='1') && ($store->storeConfig?->extra_packaging_status == 1))
+                            <div class="form-group mb-0 col-md-4">
+                                <label class="input-label text-capitalize" for="extra_packaging_amount">{{translate('messages.extra_packaging_charge_amount')}}</label>
+                                <input type="number" id="extra_packaging_amount" name="extra_packaging_amount" step="0.01" min="0" max="100000" class="form-control" placeholder="100" value="{{$store->storeConfig?->extra_packaging_amount>0?$store->storeConfig?->extra_packaging_amount :''}}">
+                            </div>
+                        @endif
                         <div class="form-group mb-0 col-md-4">
                             <label class="input-label text-capitalize" for="minimum_order">{{translate('messages.minimum_order_amount')}}<span class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('Specify_the_minimum_order_amount_required_for_customers_when_ordering_from_this_store.')}}"><img src="{{asset('/public/assets/admin/img/info-circle.svg')}}" alt="{{translate('messages.self_delivery_hint')}}"></span></label>
                             <input type="number" id="minimum_order" name="minimum_order" step="0.01" min="0" max="100000" class="form-control" placeholder="100" value="{{$store->minimum_order>0?$store->minimum_order :''}}">

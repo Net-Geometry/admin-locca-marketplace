@@ -242,6 +242,31 @@
                                             </div>
                                         </div>
                                     </div>
+                                    @php($extra_packaging_data = \App\Models\BusinessSetting::where('key', 'extra_packaging_data')->first()?->value ?? '')
+                                    @php($extra_packaging_data =json_decode($extra_packaging_data , true))
+                                    <div class="mt-4  mb-4 access_product_approval">
+                                        <label class="mb-2 input-label text-capitalize d-flex alig-items-center" for=""> {{ translate('Enable Extra Packaging Charge') }}</label>
+                                        <div class="justify-content-between border form-control">
+                                            @foreach (config('module.module_type') as $key => $value)
+                                            <div class="form-check form-check-inline mx-4  ">
+                                                <input class="mx-2 form-check-input" type="checkbox" {{  data_get($extra_packaging_data,$value,null) == 1 ? 'checked' :'' }} id="inlineCheckbox{{$key}}" value="1" name="{{ $value }}">
+                                                <label class=" form-check-label" for="inlineCheckbox{{$key}}">{{ translate($value) }}</label>
+                                            </div>
+                                            @endforeach
+{{--                                            <div class="form-check form-check-inline mx-4  ">--}}
+{{--                                                <input class="mx-2 form-check-input" type="checkbox"  {{  data_get($product_approval_datas,'Update_product_price',null) == 1 ? 'checked' :'' }} id="inlineCheckbox2" value="1" name="Update_product_price">--}}
+{{--                                                <label class=" form-check-label" for="inlineCheckbox2">{{ translate('Update_product_price') }}</label>--}}
+{{--                                            </div>--}}
+{{--                                            <div class="form-check form-check-inline mx-4  ">--}}
+{{--                                                <input class="mx-2 form-check-input" type="checkbox" {{  data_get($product_approval_datas,'Update_product_variation',null) == 1 ? 'checked' :'' }}  id="inlineCheckbox3" value="1" name="Update_product_variation">--}}
+{{--                                                <label class=" form-check-label" for="inlineCheckbox3">{{ translate('Update_product_variation') }}</label>--}}
+{{--                                            </div>--}}
+{{--                                            <div class="form-check form-check-inline mx-4  ">--}}
+{{--                                                <input class="mx-2 form-check-input" type="checkbox"  {{  data_get($product_approval_datas,'Update_anything_in_product_details',null) == 1 ? 'checked' :'' }} id="inlineCheckbox4" value="1" name="Update_anything_in_product_details">--}}
+{{--                                                <label class=" form-check-label" for="inlineCheckbox4">{{ translate('Update_anything_in_product_details') }}</label>--}}
+{{--                                            </div>--}}
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="btn--container justify-content-end mt-3">
                                     <button type="reset" class="btn btn--reset">{{ translate('messages.reset') }}</button>
