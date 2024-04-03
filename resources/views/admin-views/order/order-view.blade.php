@@ -282,10 +282,10 @@
                                 </h6>
                                 @endif
                                 @if ($order->order_attachment)
-                                    @if ($order->prescription_order)
                                         @php
                                             $order_images = json_decode($order->order_attachment);
                                         @endphp
+                                    @if (is_array($order_images))
                                         <h5 class="text-dark">
                                             <span>{{ translate('messages.prescription') }}</span> <span>:</span>
                                         </h5>

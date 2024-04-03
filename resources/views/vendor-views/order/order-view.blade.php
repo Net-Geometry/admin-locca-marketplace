@@ -203,10 +203,10 @@
                                     @endif
                                 </h6>
                                 @if ($order->order_attachment)
-                                    @if ($order->prescription_order)
                                         @php
                                             $order_images = json_decode($order->order_attachment);
                                         @endphp
+                                    @if (is_array($order_images))
                                         <h5 class="text-dark">
                                             {{ translate('messages.prescription') }}:
                                         </h5>
