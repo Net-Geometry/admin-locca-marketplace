@@ -254,7 +254,6 @@ class CustomerController extends Controller
 
     public function update_settings(Request $request)
     {
-// dd($request->all());
         if (env('APP_MODE') == 'demo') {
             Toastr::info(translate('messages.update_option_is_disable_for_demo'));
             return back();
@@ -294,6 +293,22 @@ class CustomerController extends Controller
         ]);
         BusinessSetting::updateOrInsert(['key' => 'add_fund_status'], [
             'value' => $request['add_fund_status']??0
+        ]);
+
+        BusinessSetting::updateOrInsert(['key' => 'new_customer_discount_status'], [
+            'value' => $request['new_customer_discount_status']??0
+        ]);
+        BusinessSetting::updateOrInsert(['key' => 'new_customer_discount_amount'], [
+            'value' => $request['new_customer_discount_amount']??0
+        ]);
+        BusinessSetting::updateOrInsert(['key' => 'new_customer_discount_amount_type'], [
+            'value' => $request['new_customer_discount_amount_type']?? 'percentage'
+        ]);
+        BusinessSetting::updateOrInsert(['key' => 'new_customer_discount_amount_validity'], [
+            'value' => $request['new_customer_discount_amount_validity']??0
+        ]);
+        BusinessSetting::updateOrInsert(['key' => 'new_customer_discount_validity_type'], [
+            'value' => $request['new_customer_discount_validity_type']??'day'
         ]);
 
         Toastr::success(translate('messages.customer_settings_updated_successfully'));

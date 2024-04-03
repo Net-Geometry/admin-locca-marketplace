@@ -14,6 +14,7 @@ use Illuminate\Support\Carbon;
 use App\Models\CustomerAddress;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\BusinessSetting;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
@@ -181,12 +182,13 @@ class CustomerController extends Controller
     $user->current_language_key = $current_language;
     $user->save();
 
-        $data = $request->user();
-        $data['userinfo'] = $data->userinfo;
-        $data['order_count'] =(integer)$request->user()->orders->count();
-        $data['member_since_days'] =(integer)$request->user()->created_at->diffInDays();
+    $data = $request->user();
+    $data['userinfo'] = $data->userinfo;
+    $data['order_count'] =(integer)$request->user()->orders->count();
+    $data['member_since_days'] =(integer)$request->user()->created_at->diffInDays();
+    $discount_data= Helpers::getCusromerFirstOrderDiscount(order_count:$data['order_count'] ,user_creation_date:$request->user()->created_at);
         unset($data['orders']);
-        return response()->json($data, 200);
+        return response()->json(array_merge($data,$discount_data), 200);
     }
 
     public function update_profile(Request $request)

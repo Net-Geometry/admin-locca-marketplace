@@ -2,6 +2,7 @@
 
 namespace App\CentralLogics;
 
+use DateTime;
 use App\Models\User;
 use App\Models\Zone;
 use App\Models\AddOn;
@@ -3341,6 +3342,62 @@ class Helpers
             return [];
         }
 
+    }
+
+
+
+     public static function getCusromerFirstOrderDiscount($order_count, $user_creation_date,$price = null){
+
+    $settings =  array_column(BusinessSetting::whereIn('key',['new_customer_discount_status','new_customer_discount_amount','new_customer_discount_amount_type','new_customer_discount_amount_validity','new_customer_discount_validity_type',])->get()->toArray(), 'value', 'key');
+
+        $validity_value = data_get($settings,'new_customer_discount_amount_validity');
+        $validity_unit = data_get($settings,'new_customer_discount_validity_type');
+
+        if($validity_unit == 'day'){
+            $validity_end_date = (new DateTime($user_creation_date))->modify("+$validity_value day");
+
+        } elseif($validity_unit == 'month'){
+            $validity_end_date = (new DateTime($user_creation_date))->modify("+$validity_value month");
+
+        } elseif($validity_unit == 'year'){
+            $validity_end_date = (new DateTime($user_creation_date))->modify("+$validity_value year");
+        }
+        else{
+            $validity_end_date = (new DateTime($user_creation_date))->modify("-1 day");
+        }
+
+        $is_valid=false;
+        $current_date = new DateTime();
+        if($validity_end_date >= $current_date){
+        $is_valid=true;
+        }
+
+        $data=[
+            'is_valid' => false,
+            'discount_amount' => 0,
+            'discount_amount_type' => '',
+            'validity' => '',
+            'calculated_amount' => 0,
+        ];
+
+    if($order_count == 0 && $is_valid && data_get($settings,'new_customer_discount_status' ) == 1 && data_get($settings,'new_customer_discount_amount' ) > 0 ){
+        $calculated_amount=0;
+        if(data_get($settings,'new_customer_discount_amount_type' == 'percentage') && isset($price)){
+            $calculated_amount= ($price / 100) *data_get($settings,'new_customer_discount_amount');
+        } else{
+            $calculated_amount=data_get($settings,'new_customer_discount_amount');
+        }
+
+        $data=[
+            'is_valid' => $is_valid,
+            'discount_amount' => data_get($settings,'new_customer_discount_amount'),
+            'discount_amount_type' => data_get($settings,'new_customer_discount_amount_type'),
+            'validity' => data_get($settings,'new_customer_discount_amount_validity') .' '. translate((data_get($settings,'new_customer_discount_validity_type') ?? 'day')),
+            'calculated_amount' => $calculated_amount,
+        ];
+    }
+
+    return $data?? [];
     }
 
 }
