@@ -243,6 +243,15 @@ class BusinessSettingsController extends Controller
             'value' => $request['schedule_order_slot_duration_time_format']
         ]);
 
+        $values=[];
+        foreach (config('module.module_type') as $key => $value){
+            $values[$value] = $request[$value] ?? 0;
+        }
+
+        DB::table('business_settings')->updateOrInsert(['key' => 'extra_packaging_data'], [
+            'value' => json_encode($values)
+        ]);
+
         Toastr::success(translate('messages.successfully_updated_to_changes_restart_app'));
         return back();
     }

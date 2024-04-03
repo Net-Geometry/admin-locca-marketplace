@@ -4267,4 +4267,12 @@
   'day' => 'Day',
   'month' => 'Month',
   'year' => 'Year',
+  'Enable Extra Packaging Charge' => 'Enable Extra Packaging Charge',
+  'wrv' => 'Wrv',
+  'extra_packaging_status' => 'Extra packaging status',
+  'If_enabled,_customers_have_to_pay_extra_packaging_charge_on_order' => 'If enabled  customers have to pay extra packaging charge on order',
+  'Want_to_enable_extra_packaging_status_for_this_restaurant?' => 'Want to enable extra packaging status for this restaurant ',
+  'Want_to_disable_extra_packaging_status_for_this_restaurant?' => 'Want to disable extra packaging status for this restaurant ',
+  'If_disabled,_customers_do_not_have_to_pay_extra_packaging_charge_on_order.' => 'If disabled  customers do not have to pay extra packaging charge on order.',
+  'extra_packaging_charge_amount' => 'Extra packaging charge amount',
 );

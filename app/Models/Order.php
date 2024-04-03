@@ -34,7 +34,7 @@ class Order extends Model
         'processing_time' => 'integer',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
-        'original_delivery_charge' => 'float',
+        'extra_packaging_amount' => 'float',
         'receiver_details' => 'array',
         'dm_tips' => 'float',
         'distance' => 'float',

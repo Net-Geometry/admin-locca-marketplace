@@ -104,6 +104,8 @@ class BusinessSettingsController extends Controller
             ['store_id' =>  $store->id]
         );
         $conf->halal_tag_status = $request->halal_tag_status ?? 0;
+        $conf->extra_packaging_status = $request->extra_packaging_status ?? 0;
+        $conf->extra_packaging_amount = $request->extra_packaging_amount;
         $conf->save();
 
         foreach ($data as $key=>$i) {

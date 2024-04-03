@@ -448,7 +448,22 @@ class OrderController extends Controller
         }
         $order->dm_vehicle_id = $vehicle_id;
         $order->pending = now();
-        $order->order_attachment = $request->has('order_attachment') ? Helpers::upload('order/', 'png', $request->file('order_attachment')) : null;
+        if (!empty($request->file('order_attachment')) && is_array($request->file('order_attachment'))) {
+            $img_names = [];
+            $images = [];
+            if (!empty($request->file('order_attachment'))) {
+                foreach ($request->order_attachment as $img) {
+                    $image_name = Helpers::upload('order/', 'png', $img);
+                    array_push($img_names, $image_name);
+                }
+                $images = $img_names;
+            } else {
+                $images = null;
+            }
+            $order->order_attachment = json_encode($images);
+        }else{
+            $order->order_attachment = $request->has('order_attachment') ? Helpers::upload('order/', 'png', $request->file('order_attachment')) : null;
+        }
         $order->distance = $request->distance;
         $order->created_at = now();
         $order->updated_at = now();
@@ -470,6 +485,12 @@ class OrderController extends Controller
         } else {
             $order->additional_charge = 0;
         }
+
+        // extra packaging charge
+        $extra_packaging_data = BusinessSetting::where('key', 'extra_packaging_data')->first()?->value ?? '';
+        $extra_packaging_data =json_decode($extra_packaging_data , true);
+        $order->extra_packaging_amount =  (!empty($extra_packaging_data) && ($extra_packaging_data[$store->module->module_type]=='1') && ($store?->storeConfig?->extra_packaging_status == '1'))?$store?->storeConfig?->extra_packaging_amount:0;
+
 
         $carts = Cart::where('user_id', $order->user_id)->where('is_guest',$order->is_guest)->where('module_id',$request->header('moduleId'))
         ->when(isset($request->is_buy_now) && $request->is_buy_now == 1 && $request->cart_id, function ($query) use ($request) {
@@ -599,6 +620,14 @@ class OrderController extends Controller
                             return response()->json([
                                 'errors' => [
                                     ['code' => 'different_stores', 'message' => translate('messages.Please_select_items_from_the_same_store')]
+                                ]
+                            ], 403);
+                        }
+
+                        if(($product->pharmacy_item_details?->is_prescription_required == '1') && empty($request->file('order_attachment'))){
+                            return response()->json([
+                                'errors' => [
+                                    ['code' => 'prescription', 'message' => translate('messages.prescription_is_required_for_this_order')]
                                 ]
                             ], 403);
                         }
@@ -801,7 +830,7 @@ class OrderController extends Controller
         $order->flash_store_discount_amount = round($flash_sale_vendor_discount_amount, config('round_up_to_digit'));
 
         //DM TIPS
-        $order->order_amount = $order->order_amount + $order->dm_tips + $order->additional_charge;
+        $order->order_amount = $order->order_amount + $order->dm_tips + $order->additional_charge + $order->extra_packaging_amount;
         if ($request->payment_method == 'wallet' && $request->user->wallet_balance < $order->order_amount) {
             return response()->json([
                 'errors' => [
