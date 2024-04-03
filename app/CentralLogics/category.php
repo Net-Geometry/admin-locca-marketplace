@@ -52,8 +52,8 @@ class CategoryLogic
 
     public static function category_products($category_ids, $zone_id, int $limit,int $offset, $type, $filter=null, $min=false, $max=false, $rating_count=null, $brand_ids = null)
     {
-        $category_ids = isset($category_ids)?(is_array($category_ids)?$category_ids:json_decode($category_ids)):'';
-        $brand_ids = isset($brand_ids)?(is_array($brand_ids)?$brand_ids:json_decode($brand_ids)):'';
+        $category_ids = isset($category_ids)?(is_array($category_ids)?$category_ids:json_decode($category_ids)):[];
+        $brand_ids = isset($brand_ids)?(is_array($brand_ids)?$brand_ids:json_decode($brand_ids)):[];
         $filter = $filter?(is_array($filter)?$filter:str_getcsv(trim($filter, "[]"), ',')):'';
         $paginator = Item::
         whereHas('module.zones', function($query)use($zone_id){
@@ -171,7 +171,7 @@ class CategoryLogic
 
     public static function category_stores($category_ids, $zone_id, int $limit,int $offset, $type,$longitude=0,$latitude=0,$filter=null,$rating_count=null)
     {
-        $category_ids = isset($category_ids)?(is_array($category_ids)?$category_ids:json_decode($category_ids)):'';
+        $category_ids = isset($category_ids)?(is_array($category_ids)?$category_ids:json_decode($category_ids)):[];
         $paginator = Store::
         withOpen($longitude??0,$latitude??0)
             ->withCount(['items','campaigns'])
