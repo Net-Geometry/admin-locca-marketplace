@@ -41,7 +41,8 @@ class Order extends Model
         'tax_percentage' => 'float',
         'prescription_order' => 'boolean',
         'cutlery' => 'boolean',
-        'is_guest' => 'boolean'
+        'is_guest' => 'boolean',
+        'ref_bonus_amount' => 'float',
     ];
 
     protected $appends = ['module_type'];

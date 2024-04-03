@@ -3309,14 +3309,14 @@ class Helpers
             if($percent_bonus && ($amount >=$percent_bonus->min_purchase)){
                 $p_bonus = ($amount  * $percent_bonus->cashback_amount)/100;
                 $p_bonus = $p_bonus > $percent_bonus->max_discount ? $percent_bonus->max_discount : $p_bonus;
-                $p_bonus = number_format($p_bonus,3);
+                $p_bonus = number_format($p_bonus,config('round_up_to_digit'));
             }else{
                 $p_bonus = 0;
             }
 
             if($amount_bonus && ($amount >=$amount_bonus->min_purchase)){
                 $a_bonus = $amount_bonus?$amount_bonus->cashback_amount: 0;
-                $a_bonus = number_format($a_bonus,3);
+                $a_bonus = number_format($a_bonus,config('round_up_to_digit'));
             }else{
                 $a_bonus = 0;
             }
@@ -3356,6 +3356,16 @@ class Helpers
 
      public static function getCusromerFirstOrderDiscount($order_count, $user_creation_date,$price = null){
 
+        $data=[
+            'is_valid' => false,
+            'discount_amount' => 0,
+            'discount_amount_type' => '',
+            'validity' => '',
+            'calculated_amount' => 0,
+        ];
+        if($order_count > 0 ){
+            return $data?? [];
+        }
     $settings =  array_column(BusinessSetting::whereIn('key',['new_customer_discount_status','new_customer_discount_amount','new_customer_discount_amount_type','new_customer_discount_amount_validity','new_customer_discount_validity_type',])->get()->toArray(), 'value', 'key');
 
         $validity_value = data_get($settings,'new_customer_discount_amount_validity');
@@ -3380,13 +3390,7 @@ class Helpers
         $is_valid=true;
         }
 
-        $data=[
-            'is_valid' => false,
-            'discount_amount' => 0,
-            'discount_amount_type' => '',
-            'validity' => '',
-            'calculated_amount' => 0,
-        ];
+
 
     if($order_count == 0 && $is_valid && data_get($settings,'new_customer_discount_status' ) == 1 && data_get($settings,'new_customer_discount_amount' ) > 0 ){
         $calculated_amount=0;
@@ -3401,7 +3405,7 @@ class Helpers
             'discount_amount' => data_get($settings,'new_customer_discount_amount'),
             'discount_amount_type' => data_get($settings,'new_customer_discount_amount_type'),
             'validity' => data_get($settings,'new_customer_discount_amount_validity') .' '. translate((data_get($settings,'new_customer_discount_validity_type') ?? 'day')),
-            'calculated_amount' => $calculated_amount,
+            'calculated_amount' => number_format($calculated_amount,config('round_up_to_digit')),
         ];
     }
 

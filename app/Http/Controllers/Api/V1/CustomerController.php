@@ -187,8 +187,14 @@ class CustomerController extends Controller
     $data['order_count'] =(integer)$request->user()->orders->count();
     $data['member_since_days'] =(integer)$request->user()->created_at->diffInDays();
     $discount_data= Helpers::getCusromerFirstOrderDiscount(order_count:$data['order_count'] ,user_creation_date:$request->user()->created_at);
+
+    $data['is_valid_for_discount'] = data_get($discount_data,'is_valid');
+    $data['discount_amount'] = (float) data_get($discount_data,'discount_amount');
+    $data['discount_amount_type'] = data_get($discount_data,'discount_amount_type');
+    $data['validity'] =(int) data_get($discount_data,'validity');
+
         unset($data['orders']);
-        return response()->json(array_merge($data,$discount_data), 200);
+        return response()->json($data, 200);
     }
 
     public function update_profile(Request $request)

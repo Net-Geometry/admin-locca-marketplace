@@ -34,6 +34,7 @@ use App\CentralLogics\CustomerLogic;
 use App\Http\Controllers\Controller;
 use App\Models\CashBackHistory;
 use App\Models\OfflinePaymentMethod;
+use App\Models\User;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use MatanYadaev\EloquentSpatial\Objects\Point;
@@ -489,7 +490,7 @@ class OrderController extends Controller
         // extra packaging charge
         $extra_packaging_data = BusinessSetting::where('key', 'extra_packaging_data')->first()?->value ?? '';
         $extra_packaging_data =json_decode($extra_packaging_data , true);
-        $order->extra_packaging_amount =  (!empty($extra_packaging_data) && ($extra_packaging_data[$store->module->module_type]=='1') && ($store?->storeConfig?->extra_packaging_status == '1'))?$store?->storeConfig?->extra_packaging_amount:0;
+        $order->extra_packaging_amount =  (!empty($extra_packaging_data) && $request->extra_packaging_amount > 0 && ($extra_packaging_data[$store->module->module_type]=='1') && ($store?->storeConfig?->extra_packaging_status == '1'))?$store?->storeConfig?->extra_packaging_amount:0;
 
 
         $carts = Cart::where('user_id', $order->user_id)->where('is_guest',$order->is_guest)->where('module_id',$request->header('moduleId'))
@@ -829,6 +830,14 @@ class OrderController extends Controller
         $order->flash_admin_discount_amount = round($flash_sale_admin_discount_amount, config('round_up_to_digit'));
         $order->flash_store_discount_amount = round($flash_sale_vendor_discount_amount, config('round_up_to_digit'));
 
+        if($order->is_guest  == 0 && $order->user_id ){
+            $user= User::withcount('orders')->find($order->user_id);
+            $discount_data= Helpers::getCusromerFirstOrderDiscount(order_count:$user->orders_count ,user_creation_date:$user->created_at,price: $order->order_amount);
+                if(data_get($discount_data,'is_valid') == true &&  data_get($discount_data,'calculated_amount') > 0){
+                    $order->order_amount = $order->order_amount - data_get($discount_data,'calculated_amount');
+                    $order->ref_bonus_amount = data_get($discount_data,'calculated_amount');
+                }
+        }
         //DM TIPS
         $order->order_amount = $order->order_amount + $order->dm_tips + $order->additional_charge + $order->extra_packaging_amount;
         if ($request->payment_method == 'wallet' && $request->user->wallet_balance < $order->order_amount) {
@@ -1309,6 +1318,19 @@ class OrderController extends Controller
         $order->total_tax_amount = round($total_tax_amount, config('round_up_to_digit'));
         $order->order_amount = round($total_price + $tax_a + $order->delivery_charge, config('round_up_to_digit'));
         $order->free_delivery_by = $free_delivery_by;
+
+
+        if($order->is_guest  == 0 && $order->user_id ){
+            $user= User::withcount('orders')->find($order->user_id);
+            $discount_data= Helpers::getCusromerFirstOrderDiscount(order_count:$user->orders_count ,user_creation_date:$user->created_at,price: $order->order_amount);
+                if(data_get($discount_data,'is_valid') == true &&  data_get($discount_data,'calculated_amount') > 0){
+                    $order->order_amount = $order->order_amount - data_get($discount_data,'calculated_amount');
+                    $order->ref_bonus_amount = data_get($discount_data,'calculated_amount');
+                }
+        }
+
+
+
         $order->order_amount = $order->order_amount + $order->dm_tips + $order->additional_charge;
 
         try {

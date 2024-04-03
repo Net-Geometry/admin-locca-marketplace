@@ -235,7 +235,7 @@
                         <tr>
                             <td>
                                 <div class="">
-                                    <p class="fz-14">{{translate('date')}} : 
+                                    <p class="fz-14">{{translate('date')}} :
                                         {{ date('d M Y ' . config('timeformat'), strtotime($order_transaction->order['created_at'])) }}
                                     </p>
                                     @if ($order_transaction->order->store)
@@ -300,12 +300,12 @@
                 <tr>
                     <td>1</td>
                     <td>{{translate('messages.total_item_amount')}}</td>
-                    <td>{{ \App\CentralLogics\Helpers::format_currency($order_transaction->order['order_amount'] - $order_transaction->order['dm_tips']-$order_transaction->order['delivery_charge'] - $order_transaction['tax'] - $order_transaction->additional_charge + $order_transaction->order['coupon_discount_amount'] + $order_transaction->order['store_discount_amount']+$order_transaction->order['flash_admin_discount_amount']+$order_transaction->order['flash_store_discount_amount']) }}</td>
+                    <td>{{ \App\CentralLogics\Helpers::format_currency($order_transaction->order['order_amount'] - $order_transaction->order['dm_tips']-$order_transaction->order['delivery_charge'] - $order_transaction['tax'] - $order_transaction->additional_charge + $order_transaction->order['coupon_discount_amount'] + $order_transaction->order['store_discount_amount']+$order_transaction->order['flash_admin_discount_amount'] +$order_transaction->order['ref_bonus_amount'] +$order_transaction->order['flash_store_discount_amount']) }}</td>
                 </tr>
                 <tr>
                     <td>2</td>
                     <td>{{translate('messages.item_discount')}}</td>
-                    <td>{{ \App\CentralLogics\Helpers::format_currency($order_transaction->order->details->sum('discount_on_item')+$order_transaction->order['flash_admin_discount_amount']+$order_transaction->order['flash_store_discount_amount']) }}</td>
+                    <td>{{ \App\CentralLogics\Helpers::format_currency($order_transaction->order->details->sum('discount_on_item')+$order_transaction->order['flash_admin_discount_amount'] +$order_transaction->order['ref_bonus_amount'] +$order_transaction->order['flash_store_discount_amount']) }}</td>
                 </tr>
                 <tr>
                     <td>3</td>
@@ -315,7 +315,7 @@
                 <tr>
                     <td>4</td>
                     <td>{{translate('messages.total_discounted_amount')}}</td>
-                    <td>{{ \App\CentralLogics\Helpers::number_format_short($order_transaction->order['coupon_discount_amount'] + $order_transaction->order['store_discount_amount']+$order_transaction->order['flash_admin_discount_amount']+$order_transaction->order['flash_store_discount_amount']) }}</td>
+                    <td>{{ \App\CentralLogics\Helpers::number_format_short($order_transaction->order['coupon_discount_amount'] + $order_transaction->order['store_discount_amount']+$order_transaction->order['ref_bonus_amount'] +$order_transaction->order['flash_admin_discount_amount'] +$order_transaction->order['flash_store_discount_amount']) }}</td>
                 </tr>
                 <tr>
                     <td>5</td>
@@ -354,7 +354,7 @@
                 </tr>
                 <tr>
                     <td>{{translate('messages.admin_commission')}}</td>
-                    <td>{{ \App\CentralLogics\Helpers::format_currency(($order_transaction->admin_commission + $order_transaction->admin_expense) - $order_transaction->delivery_fee_comission -$order_transaction->additional_charge - $order_transaction->order['flash_admin_discount_amount']) }}</td>
+                    <td>{{ \App\CentralLogics\Helpers::format_currency(($order_transaction->admin_commission + $order_transaction->admin_expense) - $order_transaction->delivery_fee_comission -$order_transaction->additional_charge - $order_transaction->order['ref_bonus_amount'] - $order_transaction->order['flash_admin_discount_amount']) }}</td>
                 </tr>
                 <tr>
                     <td>{{\App\CentralLogics\Helpers::get_business_data('additional_charge_name')??translate('messages.additional_charge')}}</td>
@@ -362,7 +362,7 @@
                 </tr>
                 <tr>
                     <td>{{translate('messages.admin_net_income')}}</td>
-                    <td>{{ \App\CentralLogics\Helpers::format_currency($order_transaction->admin_commission-$order_transaction->order['flash_admin_discount_amount']) }}</td>
+                    <td>{{ \App\CentralLogics\Helpers::format_currency($order_transaction->admin_commission-$order_transaction->order['flash_admin_discount_amount'] - $order_transaction->order['ref_bonus_amount']) }}</td>
                 </tr>
                 <tr>
                     <td>{{translate('messages.store_net_income')}}</td>

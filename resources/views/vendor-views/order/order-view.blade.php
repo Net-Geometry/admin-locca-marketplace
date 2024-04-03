@@ -302,6 +302,7 @@
                         $product_price = 0;
                         $store_discount_amount = 0;
                         $admin_flash_discount_amount = $order['flash_admin_discount_amount'];
+                        $ref_bonus_amount = $order['ref_bonus_amount'];
                         $store_flash_discount_amount = $order['flash_store_discount_amount'];
 
                         if ($order->prescription_order == 1) {
@@ -525,7 +526,7 @@
 
                         $coupon_discount_amount = $order['coupon_discount_amount'];
 
-                        $total_price = $product_price + $total_addon_price - $store_discount_amount - $coupon_discount_amount - $admin_flash_discount_amount -$store_flash_discount_amount;
+                        $total_price = $product_price + $total_addon_price - $store_discount_amount - $coupon_discount_amount - $admin_flash_discount_amount -$ref_bonus_amount -$store_flash_discount_amount;
 
                         $total_tax_amount = $order['total_tax_amount'];
                         if($order->tax_status == 'included'){
@@ -570,7 +571,7 @@
                                             <button class="btn btn-sm" type="button" data-toggle="modal"
                                                 data-target="#edit-discount-amount"><i class="tio-edit"></i></button>
                                         @endif
-                                        - {{ \App\CentralLogics\Helpers::format_currency($store_discount_amount + $admin_flash_discount_amount +$store_flash_discount_amount) }}
+                                        - {{ \App\CentralLogics\Helpers::format_currency($store_discount_amount + $admin_flash_discount_amount + $ref_bonus_amount +$store_flash_discount_amount) }}
                                     </dd>
                                     <dt class="col-6">{{ translate('messages.coupon_discount') }}:</dt>
                                     <dd class="col-6">
@@ -618,7 +619,7 @@
 
                                     <dt class="col-6">{{ translate('messages.total') }}:</dt>
                                     <dd class="col-6">
-                                        {{ \App\CentralLogics\Helpers::format_currency($product_price + $del_c + $total_tax_amount + $total_addon_price + $additional_charge - $coupon_discount_amount - $store_discount_amount - $admin_flash_discount_amount -$store_flash_discount_amount + $order->dm_tips) }}
+                                        {{ \App\CentralLogics\Helpers::format_currency($product_price + $del_c + $total_tax_amount + $total_addon_price + $additional_charge - $coupon_discount_amount - $store_discount_amount - $admin_flash_discount_amount  - $ref_bonus_amount-$store_flash_discount_amount + $order->dm_tips) }}
                                     </dd>
                                     @if ($order?->payments)
                                         @foreach ($order?->payments as $payment)

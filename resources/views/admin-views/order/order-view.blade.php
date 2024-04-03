@@ -153,7 +153,7 @@
 
                                 @if (  !$parcel_order &&  !$editing && in_array($order->order_status, ['pending', 'confirmed', 'processing', 'accepted']) &&
                                         isset($order->store) &&
-                                        $order->prescription_order == 0 && count($order?->payments) == 0 && $order?->flash_admin_discount_amount == 0 && ($order->payment_method == 'cash_on_delivery'))
+                                        $order->prescription_order == 0 && count($order?->payments) == 0 && $order?->ref_bonus_amount == 0 && $order?->flash_admin_discount_amount == 0 && ($order->payment_method == 'cash_on_delivery'))
                                     <button class="btn btn-sm btn--danger btn-outline-danger font-regular edit-order" type="button">
                                         <i class="tio-edit"></i> {{ translate('messages.edit') }}
                                     </button>
@@ -439,6 +439,7 @@
                             $product_price = 0;
                             $store_discount_amount = 0;
                             $admin_flash_discount_amount = $order['flash_admin_discount_amount'];
+                            $ref_bonus_amount = $order['ref_bonus_amount'];
                             $store_flash_discount_amount = $order['flash_store_discount_amount'];
                             $del_c = $order['delivery_charge'];
                             $additional_charge = $order['additional_charge'];
@@ -495,6 +496,7 @@
                             }
                             $store_discount_amount = 0;
                             $admin_flash_discount_amount = $order['flash_admin_discount_amount'];
+                            $ref_bonus_amount = $order['ref_bonus_amount'];
                             $store_flash_discount_amount = $order['flash_store_discount_amount'];
                             $additional_charge = $order['additional_charge'];
                             $del_c = $order['delivery_charge'];
@@ -811,7 +813,7 @@
                             <?php
                             $coupon_discount_amount = $order['coupon_discount_amount'];
 
-                            $total_price = $product_price + $total_addon_price - $store_discount_amount - $coupon_discount_amount - $admin_flash_discount_amount - $store_flash_discount_amount;
+                            $total_price = $product_price + $total_addon_price - $store_discount_amount - $coupon_discount_amount - $admin_flash_discount_amount - $ref_bonus_amount - $store_flash_discount_amount;
 
                             $total_tax_amount = $order['total_tax_amount'];
                             if($order->tax_status == 'included'){
@@ -893,7 +895,7 @@
                                         </dd>
                                         <dt class="col-6">{{ translate('messages.discount') }}:</dt>
                                         <dd class="col-6">
-                                            - {{ \App\CentralLogics\Helpers::format_currency($store_discount_amount + $admin_flash_discount_amount + $store_flash_discount_amount) }}
+                                            - {{ \App\CentralLogics\Helpers::format_currency($store_discount_amount + $admin_flash_discount_amount +$ref_bonus_amount + $store_flash_discount_amount) }}
                                         </dd>
                                         <dt class="col-6">{{ translate('messages.coupon_discount') }}:</dt>
                                         <dd class="col-6">
@@ -923,7 +925,7 @@
                                     <dt class="col-6">{{ translate('messages.total') }}:</dt>
                                     <dd class="col-6">
 
-                                        {{ \App\CentralLogics\Helpers::format_currency($product_price + $del_c + $total_tax_amount + $total_addon_price + $deliverman_tips + $additional_charge - $coupon_discount_amount - $store_discount_amount - $admin_flash_discount_amount - $store_flash_discount_amount) }}
+                                        {{ \App\CentralLogics\Helpers::format_currency($product_price + $del_c + $total_tax_amount + $total_addon_price + $deliverman_tips + $additional_charge - $coupon_discount_amount - $store_discount_amount - $admin_flash_discount_amount - $store_flash_discount_amount - $ref_bonus_amount) }}
                                     </dd>
                                     @if ($order?->payments)
                                         @foreach ($order?->payments as $payment)

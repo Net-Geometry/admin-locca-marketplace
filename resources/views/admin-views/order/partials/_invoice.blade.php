@@ -7,7 +7,7 @@
                 <a href="{{ url()->previous() }}"
                     class="btn btn-danger non-printable mt-3">{{ translate('messages.back') }}</a>
             </div>
-        
+
             <hr class="non-printable">
             <div class="print--invoice initial-38-1">
                 @if ($order->store)
@@ -217,7 +217,7 @@
                             <dt class="col-6">{{ translate('messages.discount') }}:</dt>
                             <dd class="col-6">
                                 -
-                                {{ \App\CentralLogics\Helpers::format_currency($order['store_discount_amount'] + $order['flash_admin_discount_amount'] + $order['flash_store_discount_amount']) }}
+                                {{ \App\CentralLogics\Helpers::format_currency($order['store_discount_amount'] + $order['flash_admin_discount_amount'] + $order['ref_bonus_amount'] + $order['flash_store_discount_amount']) }}
                             </dd>
                             <dt class="col-6">{{ translate('messages.coupon_discount') }}:</dt>
                             <dd class="col-6">

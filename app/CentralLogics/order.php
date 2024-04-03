@@ -50,6 +50,7 @@ class OrderLogic
         $flash_admin_discount_amount=0;
         $flash_store_discount_amount=0;
         $comission_on_store_amount=0;
+        $ref_bonus_amount=0;
 
         // free delivery by admin
         if($order->free_delivery_by == 'admin')
@@ -68,6 +69,12 @@ class OrderLogic
         {
             $admin_coupon_discount_subsidy = $order->coupon_discount_amount;
             Helpers::expenseCreate(amount:$admin_coupon_discount_subsidy,type:'coupon_discount',datetime:now(),created_by:$order->coupon_created_by,order_id:$order->id);
+        }
+        // 1st order discount by Admin
+        if($order->ref_bonus_amount > 0)
+        {
+            $ref_bonus_amount = $order->ref_bonus_amount;
+            Helpers::expenseCreate(amount:$ref_bonus_amount,type:'referral_discount',datetime:now(),created_by:'admin',order_id:$order->id);
         }
         // coupon discount by store
         if($order->coupon_created_by == 'vendor')
@@ -126,7 +133,7 @@ class OrderLogic
             }
 
 
-            $order_amount = $order->order_amount - $order->additional_charge - $order->extra_packaging_amount - $order->delivery_charge - $order->total_tax_amount - $dm_tips + $flash_admin_discount_amount + $order->coupon_discount_amount + $store_discount_amount + $flash_store_discount_amount;
+            $order_amount = $order->order_amount - $order->additional_charge - $order->extra_packaging_amount - $order->delivery_charge - $order->total_tax_amount - $dm_tips + $flash_admin_discount_amount + $order->coupon_discount_amount + $store_discount_amount + $flash_store_discount_amount + $ref_bonus_amount;
             // comission in delivery charge
             $delivery_charge_comission = BusinessSetting::where('key', 'delivery_charge_comission')->first();
             $delivery_charge_comission_percentage = $delivery_charge_comission ? $delivery_charge_comission->value : 0;
@@ -177,7 +184,7 @@ class OrderLogic
                 'received_by'=> $received_by?$received_by:'admin',
                 'zone_id'=>$order->zone_id,
                 'module_id'=>$order->module_id,
-                'admin_expense'=>$admin_subsidy + $admin_coupon_discount_subsidy + $store_discount_amount + $flash_admin_discount_amount + $amount_admin,
+                'admin_expense'=>$admin_subsidy + $admin_coupon_discount_subsidy + $store_discount_amount + $flash_admin_discount_amount + $amount_admin + $ref_bonus_amount,
                 'store_expense'=>$store_subsidy + $store_coupon_discount_subsidy + $flash_store_discount_amount,
                 'status'=> $status,
                 'dm_tips'=> $dm_tips,
@@ -187,12 +194,13 @@ class OrderLogic
                 'discount_amount_by_store' => $store_coupon_discount_subsidy + $store_d_amount + $store_subsidy,
                 'additional_charge' => $order->additional_charge,
                 'extra_packaging_amount' => $order->extra_packaging_amount,
+                'ref_bonus_amount' => $order->ref_bonus_amount,
             ]);
             $adminWallet = AdminWallet::firstOrNew(
                 ['admin_id' => Admin::where('role_id', 1)->first()->id]
             );
 
-            $adminWallet->total_commission_earning = $adminWallet->total_commission_earning + $comission_amount + $order->additional_charge - $admin_subsidy- $admin_coupon_discount_subsidy -$store_discount_amount - $flash_admin_discount_amount;
+            $adminWallet->total_commission_earning = $adminWallet->total_commission_earning + $comission_amount + $order->additional_charge - $admin_subsidy- $admin_coupon_discount_subsidy -$store_discount_amount - $flash_admin_discount_amount - $ref_bonus_amount;
 
             if($type != 'parcel')
             {
