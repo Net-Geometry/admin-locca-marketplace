@@ -50,7 +50,7 @@ class CategoryLogic
         ];
     }
 
-    public static function category_products($category_ids, $zone_id, int $limit,int $offset, $type, $filter=null, $min=false, $max=false, $rating_count=null)
+    public static function category_products($category_ids, $zone_id, int $limit,int $offset, $type, $filter=null, $min=false, $max=false, $rating_count=null, $brand_ids = null)
     {
         $category_ids = isset($category_ids)?(is_array($category_ids)?$category_ids:json_decode($category_ids)):'';
         $filter = $filter?(is_array($filter)?$filter:str_getcsv(trim($filter, "[]"), ',')):'';
@@ -81,14 +81,14 @@ class CategoryLogic
             ->when($filter&&in_array('popular',$filter),function ($qurey){
                 $qurey->popular();
             })
-            ->when($filter&&in_array('discounted',$filter),function ($qurey){
-                $qurey->Discounted()->orderBy('discount','desc');
-            })
             ->when($filter&&in_array('high',$filter),function ($qurey){
                 $qurey->orderBy('price', 'desc');
             })
             ->when($filter&&in_array('low',$filter),function ($qurey){
                 $qurey->orderBy('price', 'asc');
+            })
+            ->when($filter&&in_array('discounted',$filter),function ($qurey){
+                $qurey->Discounted()->orderBy('discount','desc');
             })
             ->latest()->paginate($limit, ['*'], 'page', $offset);
 
@@ -131,9 +131,9 @@ class CategoryLogic
                 })
                 ->latest()
             ->pluck('category_id')->toArray();
-    
+
             $item_categories = array_unique($item_categories);
-    
+
             $categories = Category::withCount(['products','childes'])->with(['childes' => function($query)  {
                 $query->withCount(['products','childes']);
             }])

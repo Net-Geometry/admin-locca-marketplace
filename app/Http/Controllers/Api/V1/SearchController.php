@@ -121,14 +121,14 @@ class SearchController extends Controller
         ->when($filter&&in_array('popular',$filter),function ($qurey){
             $qurey->popular();
         })
-        ->when($filter&&in_array('discounted',$filter),function ($qurey){
-            $qurey->Discounted();
-        })
         ->when($filter&&in_array('high',$filter),function ($qurey){
             $qurey->orderBy('price', 'DESC');
         })
         ->when($filter&&in_array('low',$filter),function ($qurey){
             $qurey->orderBy('price', 'asc');
+        })
+        ->when($filter&&in_array('discounted',$filter),function ($qurey){
+            $qurey->Discounted();
         })
         ->paginate($limit, ['*'], 'page', $offset);
 
@@ -250,6 +250,7 @@ class SearchController extends Controller
             $filter = $request->query('filter', '');
             $filter = $filter?(is_array($filter)?$filter:str_getcsv(trim($filter, "[]"), ',')):'';
             $category_ids = $request->query('category_ids', '');
+            $brand_ids = $request->query('brand_ids', '');
 
             // Common parameters for all product types
             $limit = $request->query('limit', 10);
@@ -264,10 +265,20 @@ class SearchController extends Controller
                     return $this->get_searched_products($request);
                     break;
                 case 'discounted':
-                    $items = ProductLogic::discounted_products($zone_id, $limit, $offset, $type, $category_ids, $filter, $min_price, $max_price, $rating_count);
+                    $items = ProductLogic::discounted_products($zone_id, $limit, $offset, $type, $category_ids, $filter, $min_price, $max_price, $rating_count,$brand_ids);
+                    break;
+                case 'brand':
+                    $validator = Validator::make($request->all(), [
+                        'brand_ids' => 'required',
+                    ]);
+
+                    if ($validator->fails()) {
+                        return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+                    }
+                    $items = ProductLogic::brand_products($zone_id, $limit, $offset, $type, $category_ids, $filter, $min_price, $max_price, $rating_count,$brand_ids);
                     break;
                 case 'new':
-                    $items = ProductLogic::get_new_products($zone_id, $type, $min_price, $max_price, $product_id, $limit, $offset, $filter, $rating_count);
+                    $items = ProductLogic::get_new_products($zone_id, $type, $min_price, $max_price, $product_id, $limit, $offset, $filter, $rating_count, $category_ids,$brand_ids);
                     break;
                 case 'category':
                     $validator = Validator::make($request->all(), [
@@ -278,7 +289,7 @@ class SearchController extends Controller
                         return response()->json(['errors' => Helpers::error_processor($validator)], 403);
                     }
 
-                    $items = CategoryLogic::category_products($category_ids, $zone_id, $limit, $offset, $type, $filter, $min_price, $max_price, $rating_count);
+                    $items = CategoryLogic::category_products($category_ids, $zone_id, $limit, $offset, $type, $filter, $min_price, $max_price, $rating_count,$brand_ids);
                     break;
                 default:
                     $items =  [
