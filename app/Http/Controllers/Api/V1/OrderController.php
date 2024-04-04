@@ -832,7 +832,7 @@ class OrderController extends Controller
 
         if($order->is_guest  == 0 && $order->user_id ){
             $user= User::withcount('orders')->find($order->user_id);
-            $discount_data= Helpers::getCusromerFirstOrderDiscount(order_count:$user->orders_count ,user_creation_date:$user->created_at,price: $order->order_amount);
+            $discount_data= Helpers::getCusromerFirstOrderDiscount(order_count:$user->orders_count ,user_creation_date:$user->created_at,  refby:$user->ref_by, price: $order->order_amount);
                 if(data_get($discount_data,'is_valid') == true &&  data_get($discount_data,'calculated_amount') > 0){
                     $order->order_amount = $order->order_amount - data_get($discount_data,'calculated_amount');
                     $order->ref_bonus_amount = data_get($discount_data,'calculated_amount');
@@ -1322,7 +1322,7 @@ class OrderController extends Controller
 
         if($order->is_guest  == 0 && $order->user_id ){
             $user= User::withcount('orders')->find($order->user_id);
-            $discount_data= Helpers::getCusromerFirstOrderDiscount(order_count:$user->orders_count ,user_creation_date:$user->created_at,price: $order->order_amount);
+            $discount_data= Helpers::getCusromerFirstOrderDiscount(order_count:$user->orders_count ,user_creation_date:$user->created_at, refby:$user->ref_by, price: $order->order_amount);
                 if(data_get($discount_data,'is_valid') == true &&  data_get($discount_data,'calculated_amount') > 0){
                     $order->order_amount = $order->order_amount - data_get($discount_data,'calculated_amount');
                     $order->ref_bonus_amount = data_get($discount_data,'calculated_amount');

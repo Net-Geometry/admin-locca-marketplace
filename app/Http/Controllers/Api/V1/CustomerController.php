@@ -186,8 +186,8 @@ class CustomerController extends Controller
     $data['userinfo'] = $data->userinfo;
     $data['order_count'] =(integer)$request->user()->orders->count();
     $data['member_since_days'] =(integer)$request->user()->created_at->diffInDays();
-    $discount_data= Helpers::getCusromerFirstOrderDiscount(order_count:$data['order_count'] ,user_creation_date:$request->user()->created_at);
-
+    $data['selected_modules_for_interest'] =$request->user()?->module_ids ? json_decode($user?->module_ids, true) :[];
+    $discount_data= Helpers::getCusromerFirstOrderDiscount(order_count:$data['order_count'] ,user_creation_date:$request->user()->created_at,refby:$request->user()->ref_by);
     $data['is_valid_for_discount'] = data_get($discount_data,'is_valid');
     $data['discount_amount'] = (float) data_get($discount_data,'discount_amount');
     $data['discount_amount_type'] = data_get($discount_data,'discount_amount_type');
