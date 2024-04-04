@@ -70,6 +70,18 @@
                     {{translate('Offline_Payment_Deny')}}
                 </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link {{ Request::is('admin/business-settings/email-setup/user/suspend') ? 'active' : '' }}"
+                href="{{ route('admin.business-settings.email-setup', ['user','suspend']) }}">
+                    {{translate('Account_Suspension')}}
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {{ Request::is('admin/business-settings/email-setup/user/unsuspend') ? 'active' : '' }}"
+                href="{{ route('admin.business-settings.email-setup', ['user','unsuspend']) }}">
+                    {{translate('Account_Unsuspension')}}
+                </a>
+            </li>
         </ul>
         <!-- End Nav -->
     </div>

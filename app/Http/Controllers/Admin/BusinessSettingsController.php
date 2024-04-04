@@ -5819,6 +5819,8 @@ class BusinessSettingsController extends Controller
             return view('admin-views.business-settings.email-format-setting.'.$type.'-email-formats.offline-deny-format',compact('template'));
         } else if ($tab == 'pos-registration') {
             return view('admin-views.business-settings.email-format-setting.'.$type.'-email-formats.pos-registration-format',compact('template'));
+        } else if ($tab == 'unsuspend') {
+            return view('admin-views.business-settings.email-format-setting.'.$type.'-email-formats.unsuspend-format',compact('template'));
         }
 
     }
@@ -5915,6 +5917,9 @@ class BusinessSettingsController extends Controller
         }elseif($tab == 'pos-registration'){
             $email_type = 'pos_registration';
             $template = EmailTemplate::where('type',$type)->where('email_type', 'pos_registration')->first();
+        }elseif($tab == 'unsuspend'){
+            $email_type = 'unsuspend';
+            $template = EmailTemplate::where('type',$type)->where('email_type', 'unsuspend')->first();
         }
 
         if ($template == null) {
@@ -6232,7 +6237,11 @@ class BusinessSettingsController extends Controller
             DB::table('business_settings')->updateOrInsert(['key' => 'pos_registration_mail_status_'.$type], [
                 'value' => $status
             ]);
-        }
+        } else if ($tab == 'unsuspend') {
+            BusinessSetting::query()->updateOrInsert(['key' => 'unsuspend_mail_status_'.$type], [
+                'value' => $status
+            ]);
+        } 
 
         Toastr::success(translate('messages.email_status_updated'));
         return back();

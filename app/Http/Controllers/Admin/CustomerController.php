@@ -11,11 +11,12 @@ use App\Models\BusinessSetting;
 use Illuminate\Support\Facades\DB;
 use App\Exports\CustomerListExport;
 use App\Exports\CustomerOrderExport;
-use App\Exports\SubscriberListExport;
 use App\Http\Controllers\Controller;
 use Brian2694\Toastr\Facades\Toastr;
+use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
 use Rap2hpoutre\FastExcel\FastExcel;
+use App\Exports\SubscriberListExport;
 
 class CustomerController extends Controller
 {
@@ -99,7 +100,18 @@ class CustomerController extends Controller
                         'updated_at' => now()
                     ]);
                 }
+
+                if ( config('mail.status') && Helpers::get_mail_status('suspend_mail_status_user') == '1') {
+                    Mail::to( $customer->email)->send(new \App\Mail\UserStatus('suspended', $customer->f_name.' '.$customer->l_name));
+                }
+
+            } else{
+                if ( config('mail.status') && Helpers::get_mail_status('unsuspend_mail_status_user')== '1') {
+                    Mail::to( $customer->email)->send(new \App\Mail\UserStatus('unsuspended', $customer->f_name.' '.$customer->l_name));
+                }
             }
+
+
         } catch (\Exception $e) {
             Toastr::warning(translate('messages.push_notification_faild'));
         }

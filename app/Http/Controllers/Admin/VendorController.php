@@ -802,6 +802,13 @@ class VendorController extends Controller
                     ]);
                 }
 
+                if ( config('mail.status') && Helpers::get_mail_status('suspend_mail_status_store') == '1') {
+                    Mail::to( $vendor?->email)->send(new \App\Mail\VendorStatus('suspended', $vendor?->f_name.' '.$vendor?->l_name));
+                }
+            } else{
+                if ( config('mail.status') && Helpers::get_mail_status('unsuspend_mail_status_store') == '1') {
+                    Mail::to( $vendor?->email)->send(new \App\Mail\VendorStatus('unsuspended', $vendor?->f_name.' '.$vendor?->l_name));
+                }
             }
 
         }
