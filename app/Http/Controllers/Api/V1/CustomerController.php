@@ -191,7 +191,7 @@ class CustomerController extends Controller
     $data['is_valid_for_discount'] = data_get($discount_data,'is_valid');
     $data['discount_amount'] = (float) data_get($discount_data,'discount_amount');
     $data['discount_amount_type'] = data_get($discount_data,'discount_amount_type');
-    $data['validity'] =(int) data_get($discount_data,'validity');
+    $data['validity'] =(string) data_get($discount_data,'validity');
 
         unset($data['orders']);
         return response()->json($data, 200);
@@ -256,11 +256,17 @@ class CustomerController extends Controller
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
 
-        $userDetails = [
-            'interest' => json_encode($request->interest),
-        ];
+        $user=User::where(['id' => $request->user()->id])->first();
+        $module_ids=$user?->module_ids ? json_decode($user?->module_ids, true) :[];
+        array_push($module_ids, $request->header('moduleId'));
+        $module_ids=  array_unique($module_ids);
 
-        User::where(['id' => $request->user()->id])->update($userDetails);
+        $interest=  $user?->interest ? json_decode($user?->interest, true) :[];
+        $interest = array_unique(array_merge($interest, $request->interest));
+        $user->interest = json_encode(array_values($interest));
+
+        $user->module_ids = json_encode($module_ids);
+        $user->save();
 
         return response()->json(['message' => translate('messages.interest_updated_successfully')], 200);
     }
