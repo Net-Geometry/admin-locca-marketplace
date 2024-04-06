@@ -197,7 +197,7 @@
                     @endif
                     @php($extra_packaging_data = \App\Models\BusinessSetting::where('key', 'extra_packaging_data')->first()?->value ?? '')
                     @php($extra_packaging_data =json_decode($extra_packaging_data , true))
-                    @if($extra_packaging_data[$store->module->module_type]=='1')
+                    @if( !empty($extra_packaging_data) && $extra_packaging_data[$store?->module?->module_type]=='1')
                         <div class="col-xl-4 col-md-4 col-sm-6">
                             <div class="form-group mb-0">
                                 <label
@@ -254,7 +254,7 @@
                     enctype="multipart/form-data">
                     @csrf
                     <div class="row">
-                        @if(($extra_packaging_data[$store->module->module_type]=='1') && ($store->storeConfig?->extra_packaging_status == 1))
+                        @if   ( !empty($extra_packaging_data) && ($extra_packaging_data[$store->module->module_type]=='1') && ($store->storeConfig?->extra_packaging_status == 1))
                             <div class="form-group mb-0 col-md-4">
                                 <label class="input-label text-capitalize" for="extra_packaging_amount">{{translate('messages.extra_packaging_charge_amount')}}</label>
                                 <input type="number" id="extra_packaging_amount" name="extra_packaging_amount" step="0.01" min="0" max="100000" class="form-control" placeholder="100" value="{{$store->storeConfig?->extra_packaging_amount>0?$store->storeConfig?->extra_packaging_amount :''}}">

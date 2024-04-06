@@ -547,8 +547,8 @@ class ItemController extends Controller
                 );
         }
 
-        if($request['vendor']->stores[0]->module->module_type == 'pharmacy'){
-            DB::table('pharmacy_item_details')
+        if($request['vendor']->stores[0]->module->module_type == 'ecommerce'){
+            DB::table('ecommerce_item_details')
                 ->updateOrInsert(
                     ['item_id' => $p->id],
                     [
