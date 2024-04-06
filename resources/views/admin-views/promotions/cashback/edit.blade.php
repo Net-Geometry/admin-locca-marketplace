@@ -11,12 +11,12 @@
                     <img src="{{asset('public/assets/admin/img/Create_Cashback_Offer.png')}}" class="w--26" alt="">
                 </span>
                 <span>
-                    {{translate('messages.Create_Cashback_Offer')}}
+                    {{translate('messages.Edit_Cashback_Offer')}}
                 </span>
             </h1>
         </div>
         <!-- End Page Header -->
-{{-- {{ dd($cashback->max_discount) }} --}}
+
         <div class="card">
             <div class="card-body" id="form_data">
                 <form action="{{route('admin.cashback.update',['id'=>$cashback?->id ])}}" method="POST">
@@ -47,7 +47,7 @@
                                         for="default_title">{{ translate('messages.title') }}
                                         ({{ translate('Default') }})
                                     </label>
-                                    <input type="text" name="title[]" value="{{$cashback?->getRawOriginal('title')}}" id="default_title"
+                                    <input type="text" name="title[]" maxlength="254" value="{{$cashback?->getRawOriginal('title')}}" id="default_title"
                                         class="form-control" placeholder="{{ translate('messages.Eid_Dhamaka') }}" >
                                 </div>
                                 <input type="hidden" name="lang[]" value="default">
@@ -74,7 +74,7 @@
                                                 for="{{ $lang }}_title">{{ translate('messages.title') }}
                                                 ({{ strtoupper($lang) }})
                                             </label>
-                                            <input type="text" name="title[]" id="{{ $lang }}_title" value="{{$translate[$lang]['title']??''}}"
+                                            <input type="text" name="title[]" maxlength="254" id="{{ $lang }}_title" value="{{$translate[$lang]['title']??''}}"
                                                 class="form-control" placeholder="{{ translate('messages.Eid_Dhamaka') }}"
                                                  >
                                         </div>
@@ -86,7 +86,7 @@
                                     <div class="form-group">
                                         <label class="input-label"
                                             for="exampleFormControlInput1">{{ translate('messages.title') }} ({{ translate('messages.default') }})</label>
-                                        <input type="text" name="title[]" class="form-control"
+                                        <input type="text" name="title[]" maxlength="254" class="form-control"
                                             placeholder="{{ translate('messages.Eid_Dhamaka') }}">
                                     </div>
                                     <input type="hidden" name="lang[]" value="default">
@@ -97,7 +97,7 @@
                         <div class="col-md-4 col-lg-4 col-sm-6" id="customer_wise">
                             <div class="form-group">
                                 <label class="input-label" for="select_customer">{{translate('messages.select_customer')}}</label>
-                                <select name="customer_id[]" id="select_customer"
+                                <select required name="customer_id[]" id="select_customer"
                                 class="form-control js-select2-custom"
                                 multiple="multiple" placeholder="{{translate('messages.select_customer')}}">
                                 <option value="all" {{in_array('all', json_decode($cashback->customer_id))?'selected':''}}>{{translate('messages.all')}} </option>
@@ -117,7 +117,7 @@
                                     data-toggle="tooltip" data-placement="right"
                                     data-original-title="{{ translate('messages.Required.')}}"> *
                                     </span></label>
-                                <select name="cashback_type" class="form-control"  data-mas_discount="{{ $cashback?->max_discount ?? 0 }}" id="cashback_type" required>
+                                <select name="cashback_type" class="form-control"  data-mas_discount="{{ $cashback?->max_discount ?? null }}" id="cashback_type" required>
                                     <option {{ $cashback->cashback_type ==  'percentage' ? 'selected'  : '' }} value="percentage">{{translate('messages.percentage')}} (%)</option>
                                     <option {{ $cashback->cashback_type ==  'amount' ? 'selected'  : '' }} value="amount">{{translate('messages.amount')}} {{ \App\CentralLogics\Helpers::currency_symbol() }}</option>
                                 </select>
@@ -143,21 +143,21 @@
                                 </span>
 
                                 </label>
-                                <input type="number" step="0.01" min="1" value="{{  $cashback->cashback_amount }}" max="999999999999.99"  placeholder="{{ translate('messages.Ex:_100') }}"  name="cashback_amount" id="Cash_back_amount" class="form-control" required>
+                                <input type="number"   step="0.01" min="1" value="{{  $cashback->cashback_amount }}" max="{{ $cashback->cashback_type ==  'percentage' ? '100'  : '999999999.99' }}"  placeholder="{{ translate('messages.Ex:_100') }}"  name="cashback_amount" id="Cash_back_amount" class="form-control" required>
                             </div>
                         </div>
 
                         <div class="col-md-4 col-lg-4 col-sm-6">
                             <div class="form-group">
                                 <label class="input-label" for="exampleFormControlInput1">{{translate('messages.Minimum_Purchase')}} ({{ \App\CentralLogics\Helpers::currency_symbol() }})</label>
-                                <input type="number" step="0.01" name="min_purchase" value="{{ $cashback->min_purchase }}" min="0" max="999999999999.99" class="form-control"
-                                    placeholder="100">
+                                <input type="number" step="0.01" id="min_purchase" required name="min_purchase" value="{{ $cashback->min_purchase }}" min="0" max="999999999999.99" class="form-control"
+                                placeholder="{{ translate('messages.Ex:_100') }}">
                             </div>
                         </div>
                         <div class="col-md-4 col-lg-4 col-sm-6">
                             <div class="form-group">
                                 <label class="input-label" for="max_discount">{{translate('messages.Maximum_Discount')}} ({{ \App\CentralLogics\Helpers::currency_symbol() }})</label>
-                                <input type="number" step="0.01" min="0"  max="999999999999.99"  {{ $cashback->cashback_type ==  'percentage' ? ''  : 'readonly' }}   value="{{ $cashback->max_discount }}" name="max_discount" id="max_discount" class="form-control" >
+                                <input type="number" step="0.01" min="0" placeholder="{{ translate('messages.Ex:_100') }}"  max="999999999999.99"  {{ $cashback->cashback_type ==  'percentage' ? 'required'  : 'readonly' }}   value="{{ $cashback->max_discount }}" name="max_discount" id="max_discount" class="form-control" >
                             </div>
                         </div>
 
@@ -176,8 +176,8 @@
                         <div class="col-md-4 col-lg-4 col-sm-6">
                             <div class="form-group">
                                 <label class="input-label" for="exampleFormControlInput1">{{translate('messages.Limit_for_Same_User')}}</label>
-                                <input type="number" step="1" name="same_user_limit" value="{{ $cashback->same_user_limit }}"  value="0" min="0" max="9999999" class="form-control"
-                                    placeholder="100">
+                                <input type="number" step="1" name="same_user_limit" value="{{ $cashback->same_user_limit }}"  value="0" min="0" max="9999999" class="form-control" required
+                                placeholder="{{ translate('messages.Ex:_5') }}">
                             </div>
                         </div>
 
@@ -194,9 +194,30 @@
 @endsection
 
 @push('script_2')
-<script src="{{asset('public/assets/admin')}}/js/view-pages/cashback-index.js"></script>
     <script>
+
+
         "use strict";
+        $('#reset_btn').click(function(){
+            setTimeout(reset_select, 100);
+        })
+        function reset_select(){
+            $('#select_customer').trigger('change');
+            if($('#cashback_type').val() == 'amount')
+                    {
+                        $('#max_discount').attr("readonly","true");
+                        $('#max_discount').removeAttr("required");
+                        $('#percentage').addClass('d-none');
+                        $('#cuttency_symbol').removeClass('d-none');
+                        $('#Cash_back_amount').attr('max',99999999999);
+                    }else{
+                        $('#max_discount').removeAttr("readonly");
+                        $('#max_discount').attr("required","true");
+                        $('#percentage').removeClass('d-none');
+                        $('#cuttency_symbol').addClass('d-none');
+                        $('#Cash_back_amount').attr('max',100);
+                    }
+        }
         $(document).on('ready', function () {
             $('#date_from').attr('min',(new Date()).toISOString().split('T')[0]);
             $('#date_from').attr('max','{{date("Y-m-d",strtotime($cashback["end_date"]))}}');
@@ -213,15 +234,20 @@
                     if($('#cashback_type').val() == 'amount')
                     {
                         $('#max_discount').attr("readonly","true");
+                        $('#max_discount').removeAttr("required");
                         $('#max_discount').val( $(this).data("max_discount"));
                         $('#percentage').addClass('d-none');
                         $('#cuttency_symbol').removeClass('d-none');
+                        $('#Cash_back_amount').attr('max',99999999999);
                     }
                     else
                     {
                         $('#max_discount').removeAttr("readonly");
+                        $('#max_discount').attr("required","true");
                         $('#percentage').removeClass('d-none');
                         $('#cuttency_symbol').addClass('d-none');
+                        $('#Cash_back_amount').attr('max',100);
+
                     }
                 });
 
@@ -242,10 +268,7 @@
             $("#date_to").on("change", function () {
                 $('#date_from').attr('max',$(this).val());
             });
-            $('#reset_btn').click(function(){
-                $('#select_customer').val(null).trigger('change');
 
-            })
 
 
 

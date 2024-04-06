@@ -27,7 +27,7 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body" id="form_data">
-                        <form action="{{route('admin.cashback.store')}}" method="POST">
+                        <form id="cashback-submit" action="{{route('admin.cashback.store')}}" method="POST">
                             @csrf
                             <div class="row">
                                 <div class="col-12">
@@ -55,7 +55,7 @@
                                                 for="default_title">{{ translate('messages.title') }}
                                                 ({{ translate('Default') }})
                                             </label>
-                                            <input type="text" value="{{ old('title.0') }}" name="title[]" id="default_title"
+                                            <input type="text" value="{{ old('title.0') }}" name="title[]" maxlength="254" id="default_title"
                                                 class="form-control" placeholder="{{ translate('messages.Eid_Dhamaka') }}" >
                                         </div>
                                         <input type="hidden" name="lang[]" value="default">
@@ -68,7 +68,7 @@
                                                         for="{{ $lang }}_title">{{ translate('messages.title') }}
                                                         ({{ strtoupper($lang) }})
                                                     </label>
-                                                    <input type="text" name="title[]"  value="{{ old('title.'.$key+1) }}" id="{{ $lang }}_title"
+                                                    <input type="text" name="title[]" maxlength="254"  value="{{ old('title.'.$key+1) }}" id="{{ $lang }}_title"
                                                         class="form-control" placeholder="{{ translate('messages.Eid_Dhamaka') }}"
                                                          >
                                                 </div>
@@ -80,7 +80,7 @@
                                             <div class="form-group">
                                                 <label class="input-label"
                                                     for="exampleFormControlInput1">{{ translate('messages.title') }} ({{ translate('messages.default') }})</label>
-                                                <input type="text" name="title[]" class="form-control"
+                                                <input type="text" name="title[]" maxlength="254" class="form-control"
                                                     placeholder="{{ translate('messages.Eid_Dhamaka') }}">
                                             </div>
                                             <input type="hidden" name="lang[]" value="default">
@@ -91,10 +91,10 @@
                                 <div class="col-md-4 col-lg-4 col-sm-6" id="customer_wise">
                                     <div class="form-group">
                                         <label class="input-label" for="select_customer">{{translate('messages.select_customer')}}</label>
-                                        <select name="customer_id[]" id="select_customer"
+                                        <select required name="customer_id[]" id="select_customer"
                                             class="form-control js-select2-custom"
                                             multiple="multiple" data-placeholder="{{translate('messages.select_customer')}}">
-                                            <option  value="all">{{translate('messages.all')}} </option>
+                                            <option   value="all">{{translate('messages.all')}} </option>
                                         @foreach(\App\Models\User::get(['id','f_name','l_name']) as $user)
                                             <option class="select_customer_option" value="{{$user->id}}" {{ (isset($customer) && is_numeric($customer) && ($customer == $user->id))?'selected':'' }}>{{$user->f_name.' '.$user->l_name}}</option>
                                         @endforeach
@@ -136,21 +136,21 @@
                                         </span>
 
                                         </label>
-                                        <input type="number" value="{{  old('cashback_amount') }}" step="0.01" min="1" max="999999999999.99"  placeholder="{{ translate('messages.Ex:_100') }}"  name="cashback_amount" id="Cash_back_amount" class="form-control" required>
+                                        <input type="number" value="{{  old('cashback_amount') }}" step="0.01" min="1" max="100"  placeholder="{{ translate('messages.Ex:_100') }}"  name="cashback_amount" id="Cash_back_amount" class="form-control" required>
                                     </div>
                                 </div>
 
                                 <div class="col-md-4 col-lg-4 col-sm-6">
                                     <div class="form-group">
                                         <label class="input-label" for="exampleFormControlInput1">{{translate('messages.Minimum_Purchase')}} ({{ \App\CentralLogics\Helpers::currency_symbol() }})</label>
-                                        <input type="number" step="0.01" value="{{  old('min_purchase') }}" name="min_purchase" value="0" min="0" max="999999999999.99" class="form-control"
-                                            placeholder="100">
+                                        <input type="number" step="0.01" id="min_purchase" value="{{  old('min_purchase') }}" required name="min_purchase" value="0" min="0" max="999999999999.99" class="form-control"
+                                             placeholder="{{ translate('messages.Ex:_100') }}">
                                     </div>
                                 </div>
                                 <div class="col-md-4 col-lg-4 col-sm-6">
                                     <div class="form-group">
                                         <label class="input-label" for="max_discount">{{translate('messages.Maximum_Discount')}} ({{ \App\CentralLogics\Helpers::currency_symbol() }})</label>
-                                        <input type="number" step="0.01" min="0" value="{{  old('cashback_type')  == 'percentage' ?  old('max_discount') : 0 }}" max="999999999999.99" name="max_discount" id="max_discount" class="form-control">
+                                        <input type="number"   placeholder="{{ translate('messages.Ex:_100') }}" step="0.01" min="0" value="{{  old('cashback_type')  == 'percentage' ?  old('max_discount') : null }}" max="999999999999.99" name="max_discount" id="max_discount" class="form-control">
                                     </div>
                                 </div>
 
@@ -169,15 +169,15 @@
                                 <div class="col-md-4 col-lg-4 col-sm-6">
                                     <div class="form-group">
                                         <label class="input-label" for="exampleFormControlInput1">{{translate('messages.Limit_for_Same_User')}}</label>
-                                        <input type="number" step="1"   value="{{  old('same_user_limit') }}" name="same_user_limit" value="0" min="0" max="9999999" class="form-control"
-                                            placeholder="100">
+                                        <input type="number" step="1" required  value="{{  old('same_user_limit') }}" name="same_user_limit" value="0" min="0" max="9999999" class="form-control"
+                                             placeholder="{{ translate('messages.Ex:_5') }}">
                                     </div>
                                 </div>
 
                             </div>
                             <div class="btn--container justify-content-end">
                                 <button type="reset" id="reset_btn" class="btn btn--reset">{{translate('messages.reset')}}</button>
-                                <button type="submit" class="btn btn--primary">{{translate('messages.submit')}}</button>
+                                <button type="submit" class="btn btn--primary cashback-submit">{{translate('messages.submit')}}</button>
                             </div>
                         </form>
                     </div>
@@ -219,7 +219,7 @@
                                 <th class="border-0">{{translate('messages.CashBack_Type')}}</th>
                                 <th class="border-0">{{translate('messages.Amount')}}</th>
                                 <th class="border-0">{{translate('messages.Duration')}}</th>
-                                <th class="border-0">{{translate('messages.Total_Used')}}</th>
+                                <th class="border-0 text-center">{{translate('messages.Total_Used')}}</th>
                                 <th class="border-0">{{translate('messages.status')}}</th>
                                 <th class="border-0 text-center">{{translate('messages.action')}}</th>
                             </tr>
@@ -240,7 +240,7 @@
                                     <td> {{\App\CentralLogics\Helpers::format_currency($bonus['cashback_amount'])}}</td>
                                     <td> {{\App\CentralLogics\Helpers::date_format($bonus->start_date)}} -  {{\App\CentralLogics\Helpers::date_format($bonus->end_date)  }}</td>
 
-                                    <td>{{ $bonus['total_used']  }}</td>
+                                    <td class="text-center">{{ $bonus['total_used']  }}</td>
                                     <td>
                                         <label class="toggle-switch toggle-switch-sm" for="bonusCheckbox{{$bonus->id}}">
                                             <input type="checkbox" data-url="{{route('admin.cashback.status',[$bonus['id'],$bonus->status?0:1])}}" class="toggle-switch-input redirect-url" id="bonusCheckbox{{$bonus->id}}" {{$bonus->status?'checked':''}}>

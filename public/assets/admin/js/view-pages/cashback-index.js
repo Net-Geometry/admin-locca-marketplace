@@ -1,14 +1,15 @@
 "use strict";
 $(document).ready(function() {
-
+    check_function();
     $('#cashback_type').on('change', function() {
         if($('#cashback_type').val() == 'amount')
         {
             $('#max_discount').attr("readonly","true");
             $('#max_discount').removeAttr("required");
-            $('#max_discount').val(0);
+            $('#max_discount').val(null);
             $('#percentage').addClass('d-none');
             $('#cuttency_symbol').removeClass('d-none');
+            $('#Cash_back_amount').attr('max',99999999999);
         }
         else
         {
@@ -16,6 +17,8 @@ $(document).ready(function() {
             $('#max_discount').attr("required","true");
             $('#percentage').removeClass('d-none');
             $('#cuttency_symbol').addClass('d-none');
+            $('#Cash_back_amount').attr('max',100);
+
         }
     });
 
@@ -27,6 +30,30 @@ $(document).ready(function() {
     $('.js-select2-custom').each(function () {
         let select2 = $.HSCore.components.HSSelect2.init($(this));
     });
+    $('#reset_btn').click(function(){
+        setTimeout(reset_select, 100);
+    })
+    function reset_select(){
+        $('#select_customer').trigger('change');
+        check_function();
+    }
+
+   function check_function(){
+        if($('#cashback_type').val() == 'amount')
+        {
+            $('#max_discount').attr("readonly","true");
+            $('#max_discount').removeAttr("required");
+            $('#percentage').addClass('d-none');
+            $('#cuttency_symbol').removeClass('d-none');
+            $('#Cash_back_amount').attr('max',99999999999);
+        }else{
+            $('#max_discount').removeAttr("readonly");
+            $('#max_discount').attr("required","true");
+            $('#percentage').removeClass('d-none');
+            $('#cuttency_symbol').addClass('d-none');
+            $('#Cash_back_amount').attr('max',100);
+        }
+    }
 });
 
 $("#date_from").on("change", function () {

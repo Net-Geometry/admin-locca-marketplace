@@ -5,7 +5,7 @@ class CashBackService
 {
     public function getAddData(Object $request): array
     {
-        $customerId  = $request->customer_id ?? 'all';
+        $customerId  = $request->customer_id ?? ['all'];
         return [
             "title" => $request->title[array_search('default', $request->lang)],
             'customer_id' =>  json_encode($customerId),
@@ -21,7 +21,7 @@ class CashBackService
 
     public function getUpdateData(Object $request): array
     {
-        $customerId  = $request->customer_id ?? 'all';
+        $customerId  = $request->customer_id ?? ['all'];
         return [
             "title" => $request->title[array_search('default', $request->lang)],
             'customer_id' =>  json_encode($customerId),

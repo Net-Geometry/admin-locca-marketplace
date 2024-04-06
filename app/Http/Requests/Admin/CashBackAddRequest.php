@@ -45,7 +45,17 @@ class CashBackAddRequest extends FormRequest
             'end_date' => 'required',
             'cashback_type' => 'required|in:percentage,amount',
             'cashback_amount' => 'required',
-            'min_purchase' => 'required',
+            'min_purchase' => [
+                'required',
+                function ($attribute, $value, $fail) {
+                    $cashbackType = $this->input('cashback_type');
+                    $cashbackAmount = $this->input('cashback_amount');
+
+                    if ($cashbackType === 'amount' && $cashbackAmount >= $value) {
+                        $fail(translate('The_cashback_amount_should_not_be_greater_or_equal_than_the_minimum_purchase_value.'));
+                    }
+                }
+            ],
             'max_discount' => 'required_if:cashback_type,percentage',
             'title.0' => 'required',
         ];
