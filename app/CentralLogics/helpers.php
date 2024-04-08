@@ -402,17 +402,23 @@ class Helpers
                 $running_flash_sale = FlashSaleItem::Active()->whereHas('flashSale', function ($query) {
                     $query->Active()->Running();
                 })
-                    ->where(['item_id' => $data['id']])->first();
-                $data['flash_sale'] =(int) (($running_flash_sale) ? 1 :0);
-                $data['stock'] = ($running_flash_sale && ($running_flash_sale->available_stock > 0)) ? $running_flash_sale->available_stock : $data['stock'];
-                $data['discount'] = ($running_flash_sale && ($running_flash_sale->available_stock > 0)) ? $running_flash_sale->discount : $data['discount'];
-                $data['discount_type'] = ($running_flash_sale && ($running_flash_sale->available_stock > 0)) ? $running_flash_sale->discount_type : $data['discount_type'];
-                $data['store_discount'] = ($running_flash_sale && ($running_flash_sale->available_stock > 0)) ? 0 : (self::get_store_discount($data->store) ? $data->store?->discount->discount : 0);
+                    ->where(['item_id' => $item['id']])->first();
+                $item['flash_sale'] =(int) (($running_flash_sale) ? 1 :0);
+                $item['stock'] = ($running_flash_sale && ($running_flash_sale->available_stock > 0)) ? $running_flash_sale->available_stock : $item['stock'];
+                $item['discount'] = ($running_flash_sale && ($running_flash_sale->available_stock > 0)) ? $running_flash_sale->discount : $item['discount'];
+                $item['discount_type'] = ($running_flash_sale && ($running_flash_sale->available_stock > 0)) ? $running_flash_sale->discount_type : $item['discount_type'];
+                $item['store_discount'] = ($running_flash_sale && ($running_flash_sale->available_stock > 0)) ? 0 : (self::get_store_discount($item->store) ? $item->store?->discount->discount : 0);
                 $item['schedule_order'] = $item->store->schedule_order;
                 $item['tax'] = $item->store->tax;
                 $item['rating_count'] = (int)($item->rating ? array_sum(json_decode($item->rating, true)) : 0);
                 $item['avg_rating'] = (float)($item->avg_rating ? $item->avg_rating : 0);
                 $item['recommended'] =(int) $item->recommended;
+
+                $item['common_condition_id'] =  (int) $item->pharmacy_item_details?->common_condition_id ?? 0;
+                $item['brand_id'] =  (int) $item->ecommerce_item_details?->brand_id ?? 0;
+                $item['is_basic'] =  (int) $item->pharmacy_item_details?->is_basic ?? 0;
+                $item['is_prescription_required'] =  (int) $item->pharmacy_item_details?->is_prescription_required ?? 0;
+                $item['halal_tag_status'] =  (int) $item->store->storeConfig?->halal_tag_status??0;
 
                 if ($trans) {
                     $item['translations'][] = [
@@ -452,7 +458,8 @@ class Helpers
                 if (!$trans) {
                     unset($item['translations']);
                 }
-
+                unset($item['ecommerce_item_details']);
+                unset($item['pharmacy_item_details']);
                 unset($item['store']);
                 unset($item['rating']);
                 array_push($storage, $item);
@@ -514,6 +521,12 @@ class Helpers
             $data['rating_count'] = (int)($data->rating ? array_sum(json_decode($data->rating, true)) : 0);
             $data['avg_rating'] = (float)($data->avg_rating ? $data->avg_rating : 0);
 
+            $data['common_condition_id'] =  (int) $data->pharmacy_item_details?->common_condition_id ?? 0;
+            $data['brand_id'] =  (int) $data->ecommerce_item_details?->brand_id ?? 0;
+            $data['is_basic'] =  (int) $data->pharmacy_item_details?->is_basic ?? 0;
+            $data['is_prescription_required'] =  (int) $data->pharmacy_item_details?->is_prescription_required ?? 0;
+            $data['halal_tag_status'] =  (int) $data->store->storeConfig?->halal_tag_status??0;
+
             if ($trans) {
                 $data['translations'][] = [
                     'translationable_type' => 'App\Models\Item',
@@ -552,7 +565,8 @@ class Helpers
             if (!$trans) {
                 unset($data['translations']);
             }
-
+            unset($data['ecommerce_item_details']);
+            unset($data['pharmacy_item_details']);
             unset($data['store']);
             unset($data['rating']);
         }
