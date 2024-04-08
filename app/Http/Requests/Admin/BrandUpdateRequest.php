@@ -15,7 +15,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null created_at
  * @property Carbon|null updated_at
  */
-class BrandAddRequest extends FormRequest
+class BrandUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -33,9 +33,8 @@ class BrandAddRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|unique:brands|max:100',
+            'name' => 'required|max:100|unique:brands,name,'.$this->id,
             'name.0' => 'required',
-            'image' => 'required',
         ];
     }
 

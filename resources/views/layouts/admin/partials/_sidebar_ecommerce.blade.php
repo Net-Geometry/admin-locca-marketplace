@@ -411,7 +411,7 @@
 
                 <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/brand*') ? 'active' : '' }}">
                     <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.brand.add') }}" title="{{ translate('messages.Brands') }}">
-                        <i class="tio-ruler nav-icon"></i>
+                        <i class="tio-medal nav-icon"></i>
                         <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate text-capitalize">
                         {{ translate('messages.Brands') }}
                     </span>

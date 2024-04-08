@@ -47,13 +47,13 @@
                             @if($language)
                                 <div class="form-group lang_form" id="default-form">
                                     <label class="input-label" for="exampleFormControlInput1">{{translate('messages.name')}} ({{ translate('messages.default') }})</label>
-                                    <input type="text" name="name[]" class="form-control" placeholder="{{translate('messages.new_brand')}}" maxlength="191">
+                                    <input type="text" name="name[]" value="{{ old('name.0') }}"  class="form-control" placeholder="{{translate('messages.new_brand')}}" maxlength="191">
                                 </div>
                                 <input type="hidden" name="lang[]" value="default">
-                                @foreach($language as $lang)
+                                @foreach($language as $key => $lang)
                                     <div class="form-group d-none lang_form" id="{{$lang}}-form">
                                         <label class="input-label" for="exampleFormControlInput1">{{translate('messages.name')}} ({{strtoupper($lang)}})</label>
-                                        <input type="text" name="name[]" class="form-control" placeholder="{{translate('messages.new_brand')}}" maxlength="191">
+                                        <input type="text" name="name[]" value="{{ old('name.'.$key+1) }}"  class="form-control" placeholder="{{translate('messages.new_brand')}}" maxlength="191">
                                     </div>
                                     <input type="hidden" name="lang[]" value="{{$lang}}">
                                 @endforeach
@@ -191,4 +191,10 @@
 
 @push('script_2')
     <script src="{{asset('public/assets/admin')}}/js/view-pages/brand-index.js"></script>
+    <script>
+        "use strict";
+        $('#reset_btn').click(function(){
+            $('#viewer').attr('src', "{{asset('public/assets/admin/img/upload-img.png')}}");
+        })
+    </script>
 @endpush

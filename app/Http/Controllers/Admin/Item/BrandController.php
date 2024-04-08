@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers\Admin\Item;
 
-use App\Contracts\Repositories\BrandRepositoryInterface;
-use App\Contracts\Repositories\TranslationRepositoryInterface;
-use App\Enums\ViewPaths\Admin\Brand as BrandViewPath;
+use Illuminate\View\View;
+use Illuminate\Http\Request;
+use App\Services\BrandService;
+use Illuminate\Http\JsonResponse;
+use Brian2694\Toastr\Facades\Toastr;
+use Illuminate\Http\RedirectResponse;
 use App\Http\Controllers\BaseController;
 use App\Http\Requests\Admin\BrandAddRequest;
-use App\Services\BrandService;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Brian2694\Toastr\Facades\Toastr;
+use App\Http\Requests\Admin\BrandUpdateRequest;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\View\View;
+use App\Enums\ViewPaths\Admin\Brand as BrandViewPath;
+use App\Contracts\Repositories\BrandRepositoryInterface;
+use App\Contracts\Repositories\TranslationRepositoryInterface;
 
 class BrandController extends BaseController
 {
@@ -58,7 +59,7 @@ class BrandController extends BaseController
         return view(BrandViewPath::UPDATE[VIEW], compact('brand','language','defaultLang'));
     }
 
-    public function update(BrandAddRequest $request, $id): RedirectResponse
+    public function update(BrandUpdateRequest $request, $id): RedirectResponse
     {
         $brand = $this->brandRepo->getFirstWithoutGlobalScopeWhere(params: ['id' => $id]);
         $brand = $this->brandRepo->update(id: $id ,data: $this->brandService->getUpdateData(request: $request,brand: $brand));
