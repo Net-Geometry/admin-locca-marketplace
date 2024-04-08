@@ -110,7 +110,7 @@
                 <td>{{ \App\CentralLogics\Helpers::format_currency($ot->order['order_amount'] - $ot->order['dm_tips']-$ot->order['delivery_charge'] - $ot['tax'] + $ot->order['coupon_discount_amount'] + $ot->order['store_discount_amount']) }}</td>
                 <td>{{ \App\CentralLogics\Helpers::format_currency($ot->order->details->sum('discount_on_item')) }}</td>
                 <td>{{ \App\CentralLogics\Helpers::format_currency($ot->order['coupon_discount_amount']) }}</td>
-                <td>  {{ \App\CentralLogics\Helpers::number_format_short($ot->order['coupon_discount_amount'] + $ot->order['store_discount_amount']) }}</td>
+                <td>  {{ \App\CentralLogics\Helpers::number_format_short($ot->order['coupon_discount_amount']  + $ot->order['ref_bonus_amount'] + $ot->order['store_discount_amount']) }}</td>
                 <td>{{ \App\CentralLogics\Helpers::format_currency($ot->tax) }}</td>
                 <td>{{ \App\CentralLogics\Helpers::format_currency($ot->delivery_charge) }}</td>
                 <td>{{ \App\CentralLogics\Helpers::format_currency($ot->order_amount) }}</td>

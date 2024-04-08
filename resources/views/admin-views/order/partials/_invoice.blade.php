@@ -217,8 +217,16 @@
                             <dt class="col-6">{{ translate('messages.discount') }}:</dt>
                             <dd class="col-6">
                                 -
-                                {{ \App\CentralLogics\Helpers::format_currency($order['store_discount_amount'] + $order['flash_admin_discount_amount'] + $order['ref_bonus_amount'] + $order['flash_store_discount_amount']) }}
+                                {{ \App\CentralLogics\Helpers::format_currency($order['store_discount_amount'] + $order['flash_admin_discount_amount']  + $order['flash_store_discount_amount']) }}
                             </dd>
+
+                            @if ($order['ref_bonus_amount'] > 0)
+                            <dt class="col-6">{{ translate('messages.Referral_Discount') }}:</dt>
+                            <dd class="col-6">
+                                -
+                                {{ \App\CentralLogics\Helpers::format_currency($order['ref_bonus_amount']) }}
+                            </dd>
+                            @endif
                             <dt class="col-6">{{ translate('messages.coupon_discount') }}:</dt>
                             <dd class="col-6">
                                 -

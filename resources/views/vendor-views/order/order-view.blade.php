@@ -571,18 +571,26 @@
                                             <button class="btn btn-sm" type="button" data-toggle="modal"
                                                 data-target="#edit-discount-amount"><i class="tio-edit"></i></button>
                                         @endif
-                                        - {{ \App\CentralLogics\Helpers::format_currency($store_discount_amount + $admin_flash_discount_amount + $ref_bonus_amount +$store_flash_discount_amount) }}
+                                        - {{ \App\CentralLogics\Helpers::format_currency($store_discount_amount + $admin_flash_discount_amount  +$store_flash_discount_amount) }}
                                     </dd>
+
+
+                                    @if ($ref_bonus_amount > 0)
+                                    <dt class="col-6">{{ translate('messages.Referral_Discount') }}:</dt>
+                                    <dd class="col-6">
+                                        - {{ \App\CentralLogics\Helpers::format_currency($ref_bonus_amount) }}</dd>
+
+                                    @endif
                                     <dt class="col-6">{{ translate('messages.coupon_discount') }}:</dt>
                                     <dd class="col-6">
                                         - {{ \App\CentralLogics\Helpers::format_currency($coupon_discount_amount) }}</dd>
-                                        @if ($order->tax_status == 'excluded' || $order->tax_status == null  )
-                                        <dt class="col-sm-6">{{ translate('messages.vat/tax') }}:</dt>
-                                        <dd class="col-sm-6">
-                                            +
-                                            {{ \App\CentralLogics\Helpers::format_currency($total_tax_amount) }}
-                                        </dd>
-                                        @endif
+                                    @if ($order->tax_status == 'excluded' || $order->tax_status == null  )
+                                    <dt class="col-sm-6">{{ translate('messages.vat/tax') }}:</dt>
+                                    <dd class="col-sm-6">
+                                        +
+                                        {{ \App\CentralLogics\Helpers::format_currency($total_tax_amount) }}
+                                    </dd>
+                                    @endif
                                     <dt class="col-6">{{ translate('messages.delivery_man_tips') }}</dt>
                                     <dd class="col-6">
                                         + {{ \App\CentralLogics\Helpers::format_currency($order->dm_tips) }}</dd>
