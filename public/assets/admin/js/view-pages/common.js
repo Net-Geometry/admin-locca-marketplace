@@ -347,6 +347,20 @@ $(document).on("click", ".confirm-Toggle", function () {
             $("#apple_store_url").attr("readonly", true).removeAttr("required");
         }
     }
+    if (toggle_id === "new_customer_discount_status") {
+        if ($("#new_customer_discount_status").is(":checked")) {
+
+            $("#new_customer_discount_amount").removeAttr("readonly").attr("required", true);
+            $("#new_customer_discount_amount_validity").removeAttr("readonly").attr("required", true);
+            $("#new_customer_discount_amount_type").removeAttr("disabled").attr("required", true);
+            $("#new_customer_discount_validity_type").removeAttr("disabled").attr("required", true);
+        } else {
+            $("#new_customer_discount_amount").attr("readonly", true).removeAttr("required");
+            $("#new_customer_discount_amount_validity").attr("readonly", true).removeAttr("required");
+            $("#new_customer_discount_amount_type").attr("disabled", true).removeAttr("required");
+            $("#new_customer_discount_validity_type").attr("disabled", true).removeAttr("required");
+        }
+    }
 });
 
 $(document).on("click", ".location-reload-to-base", function () {

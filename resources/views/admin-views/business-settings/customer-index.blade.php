@@ -397,13 +397,17 @@
                                                                 </span>
                                                             </label>
                                                             <input id="new_customer_discount_amount" type="number" step=".001" min="0"
+                                                            {{ data_get($data, 'new_customer_discount_status') == 1 ? 'required' : 'readonly' }}
                                                                 class="form-control" name="new_customer_discount_amount" max='{{  data_get($data, 'new_customer_discount_amount_type') != 'amount'  ? '100': '9999999999' }}'
                                                                 value="{{data_get($data, 'new_customer_discount_amount') ?? '0' }}">
                                                         </div>
                                                     </div>
                                                     <div class="col-4  mt-3">
                                                         <div class="form-group mb-0">
-                                                            <select name="new_customer_discount_amount_type" class="form-control mt-5" id="new_customer_discount_amount_type" required>
+                                                            <select name="new_customer_discount_amount_type"  class="form-control mt-5"  id="new_customer_discount_amount_type"
+                                                            {{ data_get($data, 'new_customer_discount_status') == 1 ? 'required' : 'disabled' }}
+
+                                                            >
                                                                 <option {{ data_get($data, 'new_customer_discount_amount_type') == 'percentage' ? "selected": '' }} value="percentage">{{translate('messages.percentage')}} (%)</option>
                                                                 <option {{ data_get($data, 'new_customer_discount_amount_type') == 'amount' ? "selected": '' }}  value="amount">{{translate('messages.amount')}} {{ \App\CentralLogics\Helpers::currency_symbol() }}</option>
                                                             </select>
@@ -424,13 +428,14 @@
                                                                 </span>
                                                             </label>
                                                             <input id="new_customer_discount_amount_validity" type="number" step="1" min="0" max="999"
+                                                            {{ data_get($data, 'new_customer_discount_status') == 1 ? 'required' : 'readonly' }}
                                                                 class="form-control" name="new_customer_discount_amount_validity"
                                                                 value="{{ data_get($data, 'new_customer_discount_amount_validity') ?? '0' }}">
                                                         </div>
                                                     </div>
                                                     <div class="col-4 mt-3">
                                                         <div class="form-group  mb-0">
-                                                            <select name="new_customer_discount_validity_type" class="form-control mt-5" id="new_customer_discount_validity_type" required>
+                                                            <select name="new_customer_discount_validity_type" class="form-control mt-5" id="new_customer_discount_validity_type"  {{ data_get($data, 'new_customer_discount_status') == 1 ? 'required' : 'disabled' }}>
                                                                 <option {{ data_get($data, 'new_customer_discount_validity_type') == 'day' ? "selected": '' }} value="day">{{translate('messages.day')}}</option>
                                                                 <option {{ data_get($data, 'new_customer_discount_validity_type') == 'month' ? "selected": '' }}  value="month">{{translate('messages.month')}} </option>
                                                                 <option {{ data_get($data, 'new_customer_discount_validity_type') == 'year' ? "selected": '' }}  value="year">{{translate('messages.year')}} </option>
