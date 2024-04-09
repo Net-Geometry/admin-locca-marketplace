@@ -259,6 +259,14 @@
                                 @php($additional_charge = $order['additional_charge'])
                                 + {{ \App\CentralLogics\Helpers::format_currency($additional_charge) }}
                             </dd>
+
+                            @if ($order['extra_packaging_amount'] > 0)
+                            <dt class="col-6">{{ translate('messages.Extra_Packaging_Amount') }}:</dt>
+                            <dd class="col-6">
+                                +
+                                {{ \App\CentralLogics\Helpers::format_currency($order['extra_packaging_amount']) }}
+                            </dd>
+                            @endif
                         <dt class="col-6 total">{{ translate('messages.total') }}:</dt>
                         <dd class="col-6 total">
                             {{ \App\CentralLogics\Helpers::format_currency($order->order_amount) }}</dd>

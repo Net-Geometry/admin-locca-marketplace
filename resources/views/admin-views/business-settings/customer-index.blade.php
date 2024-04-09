@@ -317,7 +317,7 @@
                                                         {{ translate('Earning Per Referral') }}
                                                         {{ \App\CentralLogics\Helpers::currency_code() }}
                                                     </label>
-                                                    <input id="ref_earning_exchange_rate" type="number" step=".001" min="0"
+                                                    <input id="ref_earning_exchange_rate" type="number" step=".001" min="0" max="99999999999"
                                                         class="form-control" name="ref_earning_exchange_rate"
                                                         value="{{ $data['ref_earning_exchange_rate'] ?? '0' }}">
                                                 </div>
@@ -397,7 +397,7 @@
                                                                 </span>
                                                             </label>
                                                             <input id="new_customer_discount_amount" type="number" step=".001" min="0"
-                                                                class="form-control" name="new_customer_discount_amount"
+                                                                class="form-control" name="new_customer_discount_amount" max='{{  data_get($data, 'new_customer_discount_amount_type') != 'amount'  ? '100': '9999999999' }}'
                                                                 value="{{data_get($data, 'new_customer_discount_amount') ?? '0' }}">
                                                         </div>
                                                     </div>
@@ -481,11 +481,15 @@
         {
             $('#percentage').addClass('d-none');
             $('#cuttency_symbol').removeClass('d-none');
+            $('#new_customer_discount_amount').attr('max',99999999999);
+
         }
         else
         {
             $('#percentage').removeClass('d-none');
             $('#cuttency_symbol').addClass('d-none');
+            $('#new_customer_discount_amount').attr('max',100);
+
         }
     });
 

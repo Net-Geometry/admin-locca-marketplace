@@ -440,6 +440,7 @@
                             $store_discount_amount = 0;
                             $admin_flash_discount_amount = $order['flash_admin_discount_amount'];
                             $ref_bonus_amount = $order['ref_bonus_amount'];
+                            $extra_packaging_amount = $order['extra_packaging_amount'];
                             $store_flash_discount_amount = $order['flash_store_discount_amount'];
                             $del_c = $order['delivery_charge'];
                             $additional_charge = $order['additional_charge'];
@@ -497,6 +498,7 @@
                             $store_discount_amount = 0;
                             $admin_flash_discount_amount = $order['flash_admin_discount_amount'];
                             $ref_bonus_amount = $order['ref_bonus_amount'];
+                            $extra_packaging_amount = $order['extra_packaging_amount'];
                             $store_flash_discount_amount = $order['flash_store_discount_amount'];
                             $additional_charge = $order['additional_charge'];
                             $del_c = $order['delivery_charge'];
@@ -813,7 +815,7 @@
                             <?php
                             $coupon_discount_amount = $order['coupon_discount_amount'];
 
-                            $total_price = $product_price + $total_addon_price - $store_discount_amount - $coupon_discount_amount - $admin_flash_discount_amount - $ref_bonus_amount - $store_flash_discount_amount;
+                            $total_price = $product_price + $total_addon_price - $store_discount_amount - $coupon_discount_amount - $admin_flash_discount_amount - $ref_bonus_amount - $store_flash_discount_amount - $extra_packaging_amount;
 
                             $total_tax_amount = $order['total_tax_amount'];
                             if($order->tax_status == 'included'){
@@ -904,6 +906,7 @@
                                             </dd>
                                             @endif
 
+
                                         <dt class="col-6">{{ translate('messages.coupon_discount') }}:</dt>
                                         <dd class="col-6">
                                             - {{ \App\CentralLogics\Helpers::format_currency($coupon_discount_amount) }}
@@ -927,12 +930,18 @@
                                     <dd class="col-6">
                                         + {{ \App\CentralLogics\Helpers::format_currency($deliverman_tips) }}</dd>
                                     <dt class="col-6">{{ \App\CentralLogics\Helpers::get_business_data('additional_charge_name')??\App\CentralLogics\Helpers::get_business_data('additional_charge_name')??translate('messages.additional_charge') }}</dt>
+                                    @if ($extra_packaging_amount > 0)
+                                    <dt class="col-6">{{ translate('messages.Extra_Packaging_Amount') }}:</dt>
+                                    <dd class="col-6">
+                                        + {{ \App\CentralLogics\Helpers::format_currency($extra_packaging_amount) }}
+                                    </dd>
+                                    @endif
                                     <dd class="col-6">
                                         + {{ \App\CentralLogics\Helpers::format_currency($additional_charge) }}</dd>
                                     <dt class="col-6">{{ translate('messages.total') }}:</dt>
                                     <dd class="col-6">
 
-                                        {{ \App\CentralLogics\Helpers::format_currency($product_price + $del_c + $total_tax_amount + $total_addon_price + $deliverman_tips + $additional_charge - $coupon_discount_amount - $store_discount_amount - $admin_flash_discount_amount - $store_flash_discount_amount - $ref_bonus_amount) }}
+                                        {{ \App\CentralLogics\Helpers::format_currency($product_price + $del_c + $total_tax_amount + $total_addon_price + $deliverman_tips + $additional_charge - $coupon_discount_amount - $store_discount_amount - $admin_flash_discount_amount - $store_flash_discount_amount - $ref_bonus_amount - $extra_packaging_amount )  }}
                                     </dd>
                                     @if ($order?->payments)
                                         @foreach ($order?->payments as $payment)

@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('Edit_Cashback_Offe'))
+@section('title',translate('Edit_Cashback_Offer'))
 
 @section('content')
     <div class="content container-fluid">
