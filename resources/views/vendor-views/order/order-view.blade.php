@@ -633,7 +633,7 @@
 
                                     <dt class="col-6">{{ translate('messages.total') }}:</dt>
                                     <dd class="col-6">
-                                        {{ \App\CentralLogics\Helpers::format_currency($product_price + $del_c + $total_tax_amount + $total_addon_price + $additional_charge - $coupon_discount_amount - $store_discount_amount - $admin_flash_discount_amount  - $ref_bonus_amount - $extra_packaging_amount-$store_flash_discount_amount + $order->dm_tips) }}
+                                        {{ \App\CentralLogics\Helpers::format_currency($product_price + $del_c + $total_tax_amount + $total_addon_price + $additional_charge - $coupon_discount_amount - $store_discount_amount - $admin_flash_discount_amount  - $ref_bonus_amount + $extra_packaging_amount-$store_flash_discount_amount + $order->dm_tips) }}
                                     </dd>
                                     @if ($order?->payments)
                                         @foreach ($order?->payments as $payment)
