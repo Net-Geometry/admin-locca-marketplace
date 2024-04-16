@@ -759,7 +759,25 @@ class OrderController extends Controller
                 }
             }
             $coupon_discount_amount = $coupon ? CouponLogic::get_discount($coupon, $product_price + $total_addon_price - $store_discount_amount - $flash_sale_admin_discount_amount - $flash_sale_vendor_discount_amount) : 0;
+
+
+
+
             $total_price = $product_price + $total_addon_price - $store_discount_amount - $flash_sale_admin_discount_amount - $flash_sale_vendor_discount_amount  - $coupon_discount_amount;
+
+
+
+            if($order->is_guest  == 0 && $order->user_id ){
+                $user= User::withcount('orders')->find($order->user_id);
+                $discount_data= Helpers::getCusromerFirstOrderDiscount(order_count:$user->orders_count ,user_creation_date:$user->created_at,  refby:$user->ref_by, price: $total_price);
+                    if(data_get($discount_data,'is_valid') == true &&  data_get($discount_data,'calculated_amount') > 0){
+                        $total_price = $total_price - data_get($discount_data,'calculated_amount');
+                        $order->ref_bonus_amount = data_get($discount_data,'calculated_amount');
+                    }
+            }
+
+
+
 
             $tax = ($store->tax > 0) ? $store->tax : 0;
             $order->tax_status = 'excluded';
@@ -830,14 +848,6 @@ class OrderController extends Controller
         $order->flash_admin_discount_amount = round($flash_sale_admin_discount_amount, config('round_up_to_digit'));
         $order->flash_store_discount_amount = round($flash_sale_vendor_discount_amount, config('round_up_to_digit'));
 
-        if($order->is_guest  == 0 && $order->user_id ){
-            $user= User::withcount('orders')->find($order->user_id);
-            $discount_data= Helpers::getCusromerFirstOrderDiscount(order_count:$user->orders_count ,user_creation_date:$user->created_at,  refby:$user->ref_by, price: $order->order_amount);
-                if(data_get($discount_data,'is_valid') == true &&  data_get($discount_data,'calculated_amount') > 0){
-                    $order->order_amount = $order->order_amount - data_get($discount_data,'calculated_amount');
-                    $order->ref_bonus_amount = data_get($discount_data,'calculated_amount');
-                }
-        }
         //DM TIPS
         $order->order_amount = $order->order_amount + $order->dm_tips + $order->additional_charge + $order->extra_packaging_amount;
         if ($request->payment_method == 'wallet' && $request->user->wallet_balance < $order->order_amount) {
@@ -1274,6 +1284,18 @@ class OrderController extends Controller
         $coupon_discount_amount = $coupon ? CouponLogic::get_discount($coupon, $product_price + $total_addon_price - $store_discount_amount) : 0;
         $total_price = $product_price + $total_addon_price - $store_discount_amount - $coupon_discount_amount;
 
+
+        if($order->is_guest  == 0 && $order->user_id ){
+            $user= User::withcount('orders')->find($order->user_id);
+            $discount_data= Helpers::getCusromerFirstOrderDiscount(order_count:$user->orders_count ,user_creation_date:$user->created_at, refby:$user->ref_by, price:  $total_price);
+                if(data_get($discount_data,'is_valid') == true &&  data_get($discount_data,'calculated_amount') > 0){
+                    $total_price =  $total_price - data_get($discount_data,'calculated_amount');
+                    $order->ref_bonus_amount = data_get($discount_data,'calculated_amount');
+                }
+        }
+
+
+
         $tax = ($store->tax > 0) ? $store->tax : 0;
         $order->tax_status = 'excluded';
 
@@ -1320,14 +1342,7 @@ class OrderController extends Controller
         $order->free_delivery_by = $free_delivery_by;
 
 
-        if($order->is_guest  == 0 && $order->user_id ){
-            $user= User::withcount('orders')->find($order->user_id);
-            $discount_data= Helpers::getCusromerFirstOrderDiscount(order_count:$user->orders_count ,user_creation_date:$user->created_at, refby:$user->ref_by, price: $order->order_amount);
-                if(data_get($discount_data,'is_valid') == true &&  data_get($discount_data,'calculated_amount') > 0){
-                    $order->order_amount = $order->order_amount - data_get($discount_data,'calculated_amount');
-                    $order->ref_bonus_amount = data_get($discount_data,'calculated_amount');
-                }
-        }
+
 
 
 

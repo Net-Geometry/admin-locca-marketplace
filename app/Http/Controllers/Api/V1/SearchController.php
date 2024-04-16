@@ -41,6 +41,7 @@ class SearchController extends Controller
         $filter = $request['filter']?(is_array($request['filter'])?$request['filter']:str_getcsv(trim($request['filter'], "[]"), ',')):'';
         $type = $request->query('type', 'all');
         $min = $request->query('min_price');
+        $min = ($min == 0) ? 0.0001 : $min;
         $max = $request->query('max_price');
         $rating_count = $request->query('rating_count');
 
@@ -271,6 +272,7 @@ class SearchController extends Controller
             $limit = $request->query('limit', 10);
             $offset = $request->query('offset', 1);
             $min_price = $request->query('min_price');
+            $min_price = ($min_price == 0) ? 0.0001 : $min_price;
             $max_price = $request->query('max_price');
             $rating_count = $request->query('rating_count');
             $product_id = $request->query('product_id');

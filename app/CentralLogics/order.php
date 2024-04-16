@@ -84,11 +84,7 @@ class OrderLogic
         }
 
         if($order?->cashback_history){
-            $refer_wallet_transaction = CustomerLogic::create_wallet_transaction($order?->cashback_history?->user_id, $order?->cashback_history?->calculated_amount, 'CashBack',$order->id);
-            if($refer_wallet_transaction != false){
-                Helpers::expenseCreate(amount:$order?->cashback_history?->calculated_amount,type:'CashBack',datetime:now(),created_by:'admin', order_id:$order->id);
-                $order?->cashback_history?->cashBack?->increment('total_used');
-            }
+            self::cashbackToWallet($order);
         }
 
         if($type=='parcel')
@@ -589,4 +585,36 @@ class OrderLogic
         }
         return true;
     }
+
+
+    public static function cashbackToWallet($order){
+
+        $refer_wallet_transaction = CustomerLogic::create_wallet_transaction($order?->cashback_history?->user_id, $order?->cashback_history?->calculated_amount, 'CashBack',$order->id);
+        if($refer_wallet_transaction != false){
+            Helpers::expenseCreate(amount:$order?->cashback_history?->calculated_amount,type:'CashBack',datetime:now(),created_by:'admin', order_id:$order->id);
+            $order?->cashback_history?->cashBack?->increment('total_used');
+
+            $notification_data = [
+                'title' => translate('messages.Congratulation_you_have_received').' '.$order?->cashback_history?->calculated_amount.' '.translate('cashback'),
+                'description' => translate('The_cashback_amount_successfully_added_to_your_wallet') ,
+                'order_id' => $order->id,
+                'image' => '',
+                'type' => 'csahback',
+            ];
+
+            if($order->customer?->cm_firebase_token){
+                Helpers::send_push_notif_to_device($order->customer?->cm_firebase_token, $notification_data);
+                DB::table('user_notifications')->insert([
+                    'data' => json_encode($notification_data),
+                    'user_id' => $order->customer?->id,
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ]);
+            }
+
+        }
+
+        return true;
+    }
+
 }
