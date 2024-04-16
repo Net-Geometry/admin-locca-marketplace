@@ -1932,6 +1932,10 @@ class OrderController extends Controller
             $CashBackHistory->min_purchase = data_get($cashBack,'min_purchase');
             $CashBackHistory->max_discount = data_get($cashBack,'max_discount');
             $CashBackHistory->save();
+
+            $CashBackHistory?->order()->update([
+                'cash_back_id'=> $CashBackHistory->id
+            ]);
         }
         return true;
     }
