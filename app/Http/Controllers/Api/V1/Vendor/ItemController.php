@@ -233,6 +233,7 @@ class ItemController extends Controller
         $item->images = $images;
         $item->unit_id = $request->unit;
         $item->organic = $request->organic??0;
+        $item->is_halal =  $request->is_halal ?? 0;
         $item->save();
         $item->tags()->sync($tag_ids);
 
@@ -521,8 +522,7 @@ class ItemController extends Controller
         $p->images = array_values($images);
         $p->unit_id = $request->unit;
         $p->organic = $request->organic??0;
-
-
+        $p->is_halal =  $request->is_halal ?? 0;
 
         $product_approval_datas = \App\Models\BusinessSetting::where('key', 'product_approval_datas')->first()?->value ?? '';
         $product_approval_datas =json_decode($product_approval_datas , true);

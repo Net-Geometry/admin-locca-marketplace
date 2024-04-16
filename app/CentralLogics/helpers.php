@@ -3283,6 +3283,14 @@ class Helpers
 
 
     public static function getCalculatedCashBackAmount($amount,$customer_id){
+        $data=[
+            'calculated_amount'=> (float) 0,
+            'cashback_amount'=>0,
+            'cashback_type'=>'',
+            'min_purchase'=>0,
+            'max_discount'=>0,
+            'id'=>0,
+        ];
 
         try {
             $percent_bonus = CashBack::active()
@@ -3358,10 +3366,10 @@ class Helpers
                 ];
             }
 
-            return $data ?? [];
+            return $data ;
         } catch (\Exception $exception) {
             info([$exception->getFile(),$exception->getLine(),$exception->getMessage()]);
-            return [];
+            return $data ;
         }
 
     }
@@ -3418,7 +3426,7 @@ class Helpers
             'is_valid' => $is_valid,
             'discount_amount' => data_get($settings,'new_customer_discount_amount'),
             'discount_amount_type' => data_get($settings,'new_customer_discount_amount_type'),
-            'validity' => data_get($settings,'new_customer_discount_amount_validity') .' '. translate((data_get($settings,'new_customer_discount_validity_type') ?? 'day')),
+            'validity' => data_get($settings,'new_customer_discount_amount_validity') .' '. translate(Str::plural((data_get($settings,'new_customer_discount_validity_type') ?? 'day'),data_get($settings,'new_customer_discount_amount_validity'))),
             'calculated_amount' => round($calculated_amount,config('round_up_to_digit')),
         ];
     }
