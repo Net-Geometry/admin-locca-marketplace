@@ -632,6 +632,7 @@ class POSController extends Controller
         $order->original_delivery_charge = isset($address)?$address['delivery_fee']+$extra_charges:0;
         $order->delivery_address = isset($address)?json_encode($address):null;
         $order->checked = 1;
+        $order->zone_id = $store->zone_id;
         $order->schedule_at = now();
         $order->created_at = now();
         $order->updated_at = now();

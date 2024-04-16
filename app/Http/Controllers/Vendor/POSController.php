@@ -2,23 +2,24 @@
 
 namespace App\Http\Controllers\Vendor;
 
-use App\Http\Controllers\Controller;
-use App\Models\Category;
 use App\Models\Item;
 use App\Models\User;
 use App\Models\Order;
 use App\Models\Store;
+use App\Mail\PlaceOrder;
+use App\Models\Category;
+use App\Models\DMVehicle;
+use App\Scopes\StoreScope;
 use App\Models\OrderDetail;
-use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\Request;
 use App\CentralLogics\Helpers;
-use App\CentralLogics\ProductLogic;
-use App\Mail\PlaceOrder;
 use App\Models\BusinessSetting;
-use App\Models\DMVehicle;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
+use App\CentralLogics\ProductLogic;
+use App\Http\Controllers\Controller;
+use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Validator;
 
 class POSController extends Controller
 {
@@ -506,6 +507,7 @@ class POSController extends Controller
         $order->created_at = now();
         $order->schedule_at = now();
         $order->updated_at = now();
+        $order->zone_id = $store->zone_id;
         $order->otp = rand(1000, 9999);
         foreach ($cart as $c) {
             if(is_array($c))

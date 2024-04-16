@@ -747,14 +747,14 @@
          hide_min_max(data);
      });
 
-    let count = {{ isset($product->food_variations) ? count(json_decode($product->food_variations, true)) : 0 }};
+    let count =   $('.count_div').length;
 
     $(document).ready(function() {
         $("#add_new_option_button").click(function(e) {
             $('#empty-variation').hide();
             count++;
             let add_option_view = `
-                    <div class="__bg-F8F9FC-card view_new_option mb-2">
+                    <div class="__bg-F8F9FC-card count_div view_new_option mb-2">
                         <div>
                             <div class="d-flex align-items-center justify-content-between mb-3">
                                 <label class="form-check form--check">
@@ -876,19 +876,19 @@
     let countRow = 0;
 
     function add_new_row_button(data) {
-        count = data;
+        // count = data;
         countRow = 1 + $('#option_price_view_' + data).children('.add_new_view_row_class').length;
         let add_new_row_view = `
             <div class="row add_new_view_row_class mb-3 position-relative pt-3 pt-sm-0">
                 <div class="col-md-4 col-sm-5">
                         <label for="">{{ translate('Option_name') }}</label>
-                        <input class="form-control" required type="text" name="options[` + count + `][values][` +
+                        <input class="form-control" required type="text" name="options[` + data + `][values][` +
             countRow + `][label]" id="">
                     </div>
                     <div class="col-md-4 col-sm-5">
                         <label for="">{{ translate('Additional_price') }}</label>
                         <input class="form-control"  required type="number" min="0" step="0.01" name="options[` +
-            count +
+                        data +
             `][values][` + countRow + `][optionPrice]" id="">
                     </div>
                     <div class="col-sm-2 max-sm-absolute">
