@@ -393,6 +393,15 @@ width: 24px;
                                                                         <td class="p-1 px-3">{{ translate('messages.coupon_discount') }}</td>
                                                                         <td class="text-right p-1 px-3">{{ \App\CentralLogics\Helpers::format_currency($order->coupon_discount_amount) }}</td>
                                                                     </tr>
+
+                                                                    @if ($order?->extra_packaging_amount > 0 )
+                                                                    <tr>
+                                                                        <td style="width: 40%"></td>
+                                                                        <td class="p-1 px-3">{{ translate('messages.Extra_Packaging_Amount') }}</td>
+                                                                        <td class="text-right p-1 px-3">{{ \App\CentralLogics\Helpers::format_currency($order->extra_packaging_amount) }}</td>
+                                                                    </tr>
+                                                                    @endif
+                                                                    
                                                                     @if ($order->tax_status == 'excluded' || $order->tax_status == null  )
                                                                     <tr>
                                                                         <td style="width: 40%"></td>
