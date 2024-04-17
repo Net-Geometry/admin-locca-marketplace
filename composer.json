@@ -16,6 +16,7 @@
         "gregwar/captcha": "^1.1",
         "guzzlehttp/guzzle": "^7.0.1",
         "intervention/image": "^2.5",
+        "iyzico/iyzipay-php": "^2.0",
         "laravel/framework": "^10.0",
         "laravel/passport": "^11.0",
         "laravel/tinker": "^2.5",
