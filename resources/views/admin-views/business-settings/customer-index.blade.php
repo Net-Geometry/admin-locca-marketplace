@@ -81,65 +81,16 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-6 col-lg-4">
-                                        <div class="form-group mb-0">
-                                            <label
-                                                class="toggle-switch toggle-switch-sm d-flex justify-content-between border border-secondary rounded px-4 form-control">
-                                                <span
-                                                    class="pr-2">{{ translate('Customer Can Earn & Buy From Referral') }}</span>
-                                                <input type="checkbox" data-id="ref_earning_status" data-type="toggle"
-                                                    data-image-on="{{ asset('/public/assets/admin/img/modal/referral-on.png') }}"
-                                                    data-image-off="{{ asset('/public/assets/admin/img/modal/referral-off.png') }}"
-                                                    data-title-on="{{ translate('messages.Want_to_enable') }} <strong>{{ translate('messages.Referral_Earning?') }}</strong>"
-                                                    data-title-off="{{ translate('messages.Want_to_disable') }} <strong>{{ translate('messages.Referral_Earning?') }}</strong>"
-                                                    data-text-on="<p>{{ translate('messages.If_you_enable_this,_Customers_can_earn_points_by_referring_others_to_sign_up_&_purchase_from_your_business.') }}</p>"
-                                                    data-text-off="<p>{{ translate('messages.If_you_disable_this,_the_referral-earning_feature_will_be_hidden_from_the_Customer_App_&_Website.') }}</p>"
-                                                    class="status toggle-switch-input dynamic-checkbox-toggle"
-                                                    name="ref_earning_status" id="ref_earning_status"
-                                                    data-section="referrer-earning" value="1"
-                                                    {{ isset($data['ref_earning_status']) && $data['ref_earning_status'] == 1 ? 'checked' : '' }}>
-                                                <span class="toggle-switch-label text">
-                                                    <span class="toggle-switch-indicator"></span>
-                                                </span>
-                                            </label>
-                                        </div>
-                                    </div>
 
                                     <div class="col-sm-6 col-lg-4">
                                         <div class="form-group mb-0">
                                             <label
                                                 class="toggle-switch toggle-switch-sm d-flex justify-content-between border border-secondary rounded px-4 form-control">
-                                                <span class="pr-2">{{ translate('messages.refund_to_wallet') }}<span
-                                                        class="input-label-secondary" data-toggle="tooltip"
-                                                        data-placement="right"
-                                                        data-original-title="{{ translate('messages.If_it’s_enabled,_Customers_will_automatically_receive_the_refunded_amount_in_their_wallets._But_if_it’s_disabled,_the_Admin_will_handle_the_Refund_Request_in_his_convenient_transaction_channel.') }}"><img
-                                                            src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
-                                                            alt="{{ translate('messages.show_hide_food_menu') }}"></span></span>
-                                                <input type="checkbox" data-id="refund_to_wallet" data-type="toggle"
-                                                    data-image-on="{{ asset('/public/assets/admin/img/modal/refund-on.png') }}"
-                                                    data-image-off="{{ asset('/public/assets/admin/img/modal/refund-off.png') }}"
-                                                    data-title-on="{{ translate('messages.Want_to_enable') }} <strong>{{ translate('messages.Refund_to_Wallet_feature?') }}</strong>"
-                                                    data-title-off="{{ translate('messages.Want_to_disable') }} <strong>{{ translate('messages.Refund_to_Wallet_feature?') }}</strong>"
-                                                    data-text-on="<p>{{ translate('messages.If_you_enable_this,_Customers_will_automatically_receive_the_refunded_amount_in_their_wallets.') }}</p>"
-                                                    data-text-off="<p>{{ translate('messages.If_you_disable_this,_the_Admin_will_handle_the_Refund_Request_in_his_convenient_transaction_channel.') }}</p>"
-                                                    class="status toggle-switch-input dynamic-checkbox-toggle"
-                                                    name="refund_to_wallet" id="refund_to_wallet" value="1"
-                                                    {{ isset($data['wallet_add_refund']) && $data['wallet_add_refund'] == 1 ? 'checked' : '' }}>
-                                                <span class="toggle-switch-label text">
-                                                    <span class="toggle-switch-indicator"></span>
-                                                </span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-6 col-lg-4">
-                                        <div class="form-group mb-0">
-                                            <label
-                                                class="toggle-switch toggle-switch-sm d-flex justify-content-between border border-secondary rounded px-4 form-control">
                                                 <span
-                                                    class="pr-2">{{ translate('Customer Can Earn & Buy From Wallet') }}
+                                                    class="pr-2">{{ translate('Customer_Wallet') }}
                                                     <span class="input-label-secondary" data-toggle="tooltip"
                                                         data-placement="right"
-                                                        data-original-title="{{ translate('messages.With_this_feature,_customers_can_have_virtual_wallets_in_their_account_via_Customer_App_&_Website._They_can_also_earn_(via_referral,_refund,_or_loyalty_points)_and_buy_with_the_wallet’s_amount.') }}">
+                                                        data-original-title="{{ translate('messages.With_this_feature,_customers_can_have_virtual_wallets_in_their_account_via_Customer_App_&_Website._They_can_also_earn_(via_referral,_refund,_loyalty_points,_or_cashback)_and_buy_with_the_wallet’s_amount.') }}">
                                                         <img src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
                                                             alt="{{ translate('messages.show_hide_food_menu') }}">
                                                     </span>
@@ -161,11 +112,66 @@
                                         </div>
                                     </div>
 
+                                    <div class="col-sm-6 col-lg-4">
+                                        <div class="form-group mb-0">
+                                            <label
+                                                class="toggle-switch toggle-switch-sm d-flex justify-content-between border border-secondary rounded px-4 form-control {{ isset($data['wallet_status']) && $data['wallet_status'] == 1 ? '' : 'text-muted' }}">
+                                                <span
+                                                    class="pr-2">{{ translate('Customer Can Earn & Buy From Referral') }}</span>
+                                                <input {{ isset($data['wallet_status']) && $data['wallet_status'] == 1 ? '' : 'disabled' }}
+                                                 type="checkbox" data-id="ref_earning_status" data-type="toggle"
+                                                    data-image-on="{{ asset('/public/assets/admin/img/modal/referral-on.png') }}"
+                                                    data-image-off="{{ asset('/public/assets/admin/img/modal/referral-off.png') }}"
+                                                    data-title-on="{{ translate('messages.Want_to_enable') }} <strong>{{ translate('messages.Referral_Earning?') }}</strong>"
+                                                    data-title-off="{{ translate('messages.Want_to_disable') }} <strong>{{ translate('messages.Referral_Earning?') }}</strong>"
+                                                    data-text-on="<p>{{ translate('messages.If_you_enable_this,_Customers_can_earn_points_by_referring_others_to_sign_up_&_purchase_from_your_business.') }}</p>"
+                                                    data-text-off="<p>{{ translate('messages.If_you_disable_this,_the_referral-earning_feature_will_be_hidden_from_the_Customer_App_&_Website.') }}</p>"
+                                                    class="status toggle-switch-input dynamic-checkbox-toggle "
+                                                    name="ref_earning_status" id="ref_earning_status"
+                                                    data-section="referrer-earning" value="1"
+                                                    {{ isset($data['ref_earning_status']) && $data['ref_earning_status'] == 1 ? 'checked' : '' }}>
+                                                <span class="toggle-switch-label text">
+                                                    <span class="toggle-switch-indicator"></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
 
                                     <div class="col-sm-6 col-lg-4">
                                         <div class="form-group mb-0">
                                             <label
-                                                class="toggle-switch toggle-switch-sm d-flex justify-content-between border border-secondary rounded px-4 form-control">
+                                                class="toggle-switch toggle-switch-sm d-flex justify-content-between border border-secondary rounded px-4 form-control {{ isset($data['wallet_status']) && $data['wallet_status'] == 1 ? '' : 'text-muted' }}">
+                                                <span class="pr-2">{{ translate('messages.refund_to_wallet') }}<span
+                                                        class="input-label-secondary" data-toggle="tooltip"
+                                                        data-placement="right"
+                                                        data-original-title="{{ translate('messages.If_it’s_enabled,_Customers_will_automatically_receive_the_refunded_amount_in_their_wallets._But_if_it’s_disabled,_the_Admin_will_handle_the_Refund_Request_in_his_convenient_transaction_channel.') }}"><img
+                                                            src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
+                                                            alt="{{ translate('messages.show_hide_food_menu') }}"></span></span>
+                                                <input type="checkbox"
+                                                {{ isset($data['wallet_status']) && $data['wallet_status'] == 1 ? '' : 'disabled' }}
+                                                data-id="refund_to_wallet" data-type="toggle"
+                                                    data-image-on="{{ asset('/public/assets/admin/img/modal/refund-on.png') }}"
+                                                    data-image-off="{{ asset('/public/assets/admin/img/modal/refund-off.png') }}"
+                                                    data-title-on="{{ translate('messages.Want_to_enable') }} <strong>{{ translate('messages.Refund_to_Wallet_feature?') }}</strong>"
+                                                    data-title-off="{{ translate('messages.Want_to_disable') }} <strong>{{ translate('messages.Refund_to_Wallet_feature?') }}</strong>"
+                                                    data-text-on="<p>{{ translate('messages.If_you_enable_this,_Customers_will_automatically_receive_the_refunded_amount_in_their_wallets.') }}</p>"
+                                                    data-text-off="<p>{{ translate('messages.If_you_disable_this,_the_Admin_will_handle_the_Refund_Request_in_his_convenient_transaction_channel.') }}</p>"
+                                                    class="status toggle-switch-input dynamic-checkbox-toggle "
+                                                    name="refund_to_wallet" id="refund_to_wallet" value="1"
+                                                    {{ isset($data['wallet_add_refund']) && $data['wallet_add_refund'] == 1 ? 'checked' : '' }}>
+                                                <span class="toggle-switch-label text">
+                                                    <span class="toggle-switch-indicator"></span>
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="col-sm-6 col-lg-4">
+                                        <div class="form-group mb-0">
+                                            <label
+                                                class="toggle-switch toggle-switch-sm d-flex justify-content-between border border-secondary rounded px-4 form-control {{ isset($data['wallet_status']) && $data['wallet_status'] == 1 ? '' : 'text-muted' }}">
                                                 <span class="pr-2">{{ translate('customer_can_add_fund_to_wallet') }}
                                                     <span class="input-label-secondary" data-toggle="tooltip"
                                                         data-placement="right"
@@ -174,14 +180,15 @@
                                                             alt="{{ translate('messages.add_fund_status') }}">
                                                     </span>
                                                 </span>
-                                                <input type="checkbox" data-id="add_fund_status" data-type="toggle"
+                                                <input {{ isset($data['wallet_status']) && $data['wallet_status'] == 1 ? '' : 'disabled' }}
+                                                type="checkbox" data-id="add_fund_status" data-type="toggle"
                                                     data-image-on="{{ asset('/public/assets/admin/img/modal/wallet-on.png') }}"
                                                     data-image-off="{{ asset('/public/assets/admin/img/modal/wallet-off.png') }}"
                                                     data-title-on="{{ translate('messages.Want_to_enable') }} <strong>{{ translate('add_fund_to_Wallet_feature?') }}</strong>"
                                                     data-title-off="{{ translate('messages.Want_to_disable') }} <strong>{{ translate('add_fund_to_Wallet_feature?') }}</strong>"
                                                     data-text-on="<p>{{ translate('messages.If_you_enable_this,_Customers_can_add_fund_to_wallet_using_payment_module') }}</p>"
                                                     data-text-off="<p>{{ translate('messages.If_you_disable_this,_add_fund_to_wallet_will_be_hidden_from_the_Customer_App_&_Website.') }}</p>"
-                                                    class="status toggle-switch-input dynamic-checkbox-toggle"
+                                                    class="status toggle-switch-input dynamic-checkbox-toggle "
                                                     name="add_fund_status" id="add_fund_status" value="1"
                                                     {{ isset($data['add_fund_status']) && $data['add_fund_status'] == 1 ? 'checked' : '' }}>
                                                 <span class="toggle-switch-label text">
@@ -239,7 +246,8 @@
                                             <label class="input-label" for="loyalty_point_exchange_rate">1
                                                 {{ \App\CentralLogics\Helpers::currency_code() }}
                                                 {{ translate('equivalent point amount') }}</label>
-                                            <input id="loyalty_point_exchange_rate" type="number" class="form-control"
+                                            <input {{ isset($data['loyalty_point_status']) && $data['loyalty_point_status'] == 1 ? 'required' : 'readonly' }}
+                                            id="loyalty_point_exchange_rate" type="number" class="form-control"
                                                 name="loyalty_point_exchange_rate" step=".001" min="0"
                                                 value="{{ $data['loyalty_point_exchange_rate'] ?? '0' }}">
                                         </div>
@@ -255,7 +263,7 @@
                                                             alt="{{ translate('messages.On_every_purchase_this_percent_of_amount_will_be_added_as_loyalty_point_on_his_account') }}"></span>
                                                     *</small>
                                             </label>
-                                            <input id="item_purchase_point" type="number" class="form-control"
+                                            <input {{ isset($data['loyalty_point_status']) && $data['loyalty_point_status'] == 1 ? 'required' : 'readonly' }} id="item_purchase_point" type="number" class="form-control"
                                                 name="item_purchase_point" step=".001" min="0"
                                                 value="{{ $data['loyalty_point_item_purchase_point'] ?? '0' }}">
                                         </div>
@@ -265,7 +273,7 @@
                                             <label class="input-label" for="minimum_transfer_point">
                                                 {{ translate('Minimum_Point_Required_To_Convert') }}
                                             </label>
-                                            <input id="minimum_transfer_point" type="number" class="form-control"
+                                            <input {{ isset($data['loyalty_point_status']) && $data['loyalty_point_status'] == 1 ? 'required' : 'readonly' }} id="minimum_transfer_point" type="number" class="form-control"
                                                 name="minimun_transfer_point" min="0" step=".001"
                                                 value="{{ $data['loyalty_point_minimum_point'] ?? '0' }}">
                                         </div>
@@ -317,7 +325,8 @@
                                                         {{ translate('Earning Per Referral') }}
                                                         {{ \App\CentralLogics\Helpers::currency_code() }}
                                                     </label>
-                                                    <input id="ref_earning_exchange_rate" type="number" step=".001" min="0" max="99999999999"
+                                                    <input {{ isset($data['wallet_status']) && $data['wallet_status'] == 1 ? '' : 'readonly' }}
+                                                    id="ref_earning_exchange_rate" type="number" step=".001" min="0" max="99999999999"
                                                         class="form-control" name="ref_earning_exchange_rate"
                                                         value="{{ $data['ref_earning_exchange_rate'] ?? '0' }}">
                                                 </div>
@@ -348,7 +357,7 @@
                                                 <div>
                                                     <div class="form-group mb-0">
                                                         <label
-                                                            class="toggle-switch toggle-switch-sm d-flex justify-content-between border border-secondary rounded px-4 form-control">
+                                                            class="toggle-switch toggle-switch-sm d-flex justify-content-between border border-secondary rounded px-4 form-control {{ isset($data['wallet_status']) && $data['wallet_status'] == 1 ? '' : 'text-muted' }}">
                                                             <span
                                                                 class="pr-2">{{ translate('Customer_will_get_Discount_on_first_order ') }}
                                                                 <span class="input-label-secondary" data-toggle="tooltip"
@@ -358,7 +367,8 @@
                                                                         alt="{{ translate('messages.show_hide_food_menu') }}">
                                                                 </span>
                                                             </span>
-                                                            <input type="checkbox" data-id="new_customer_discount_status"
+                                                            <input {{ isset($data['wallet_status']) && $data['wallet_status'] == 1 ? '' : 'disabled' }}
+                                                            type="checkbox" data-id="new_customer_discount_status"
                                                                 data-type="toggle"
                                                                 data-image-on="{{ asset('/public/assets/admin/img/modal/basic_campaign_on.png') }}"
                                                                 data-image-off="{{ asset('/public/assets/admin/img/modal/basic_campaign_off.png') }}"
@@ -366,7 +376,7 @@
                                                                 data-title-off="{{ translate('messages.Want_to_disable') }} <strong>{{ translate('messages.new_customer_discount?') }}</strong>"
                                                                 data-text-on="<p>{{ translate('messages.If_you_enable_this,_Customers_will_get_discount_on_first_order.') }}</p>"
                                                                 data-text-off="<p>{{ translate('mo.If_you_disable_this,_Customers_won’t_get_any_discount_on_first_order.') }}</p>"
-                                                                class="status toggle-switch-input dynamic-checkbox-toggle"
+                                                                class="status toggle-switch-input dynamic-checkbox-toggle "
                                                                 name="new_customer_discount_status"
                                                                 id="new_customer_discount_status" value="1"
                                                                 {{ data_get($data, 'new_customer_discount_status') == 1 ? 'checked' : '' }}>
@@ -397,15 +407,15 @@
                                                                 </span>
                                                             </label>
                                                             <input id="new_customer_discount_amount" type="number" step=".001" min="0"
-                                                            {{ data_get($data, 'new_customer_discount_status') == 1 ? 'required' : 'readonly' }}
+                                                            {{  isset($data['wallet_status']) && $data['wallet_status'] == 1 && data_get($data, 'new_customer_discount_status') == 1 ? 'required' : 'readonly' }}
                                                                 class="form-control" name="new_customer_discount_amount" max='{{  data_get($data, 'new_customer_discount_amount_type') != 'amount'  ? '100': '9999999999' }}'
                                                                 value="{{data_get($data, 'new_customer_discount_amount') ?? '0' }}">
                                                         </div>
                                                     </div>
                                                     <div class="col-4  mt-3">
                                                         <div class="form-group mb-0">
-                                                            <select name="new_customer_discount_amount_type"  class="form-control mt-5"  id="new_customer_discount_amount_type"
-                                                            {{ data_get($data, 'new_customer_discount_status') == 1 ? 'required' : 'disabled' }}
+                                                            <select   name="new_customer_discount_amount_type"  class="form-control mt-5"  id="new_customer_discount_amount_type"
+                                                            {{ isset($data['wallet_status']) && $data['wallet_status'] == 1 && data_get($data, 'new_customer_discount_status') == 1 ? 'required' : 'disabled' }}
 
                                                             >
                                                                 <option {{ data_get($data, 'new_customer_discount_amount_type') == 'percentage' ? "selected": '' }} value="percentage">{{translate('messages.percentage')}} (%)</option>
@@ -428,14 +438,14 @@
                                                                 </span>
                                                             </label>
                                                             <input id="new_customer_discount_amount_validity" type="number" step="1" min="0" max="999"
-                                                            {{ data_get($data, 'new_customer_discount_status') == 1 ? 'required' : 'readonly' }}
+                                                            {{ isset($data['wallet_status']) && $data['wallet_status'] == 1 && data_get($data, 'new_customer_discount_status') == 1 ? 'required' : 'readonly' }}
                                                                 class="form-control" name="new_customer_discount_amount_validity"
                                                                 value="{{ data_get($data, 'new_customer_discount_amount_validity') ?? '0' }}">
                                                         </div>
                                                     </div>
                                                     <div class="col-4 mt-3">
                                                         <div class="form-group  mb-0">
-                                                            <select name="new_customer_discount_validity_type" class="form-control mt-5" id="new_customer_discount_validity_type"  {{ data_get($data, 'new_customer_discount_status') == 1 ? 'required' : 'disabled' }}>
+                                                            <select name="new_customer_discount_validity_type" class="form-control mt-5" id="new_customer_discount_validity_type"  {{ isset($data['wallet_status']) && $data['wallet_status'] == 1 &&  data_get($data, 'new_customer_discount_status') == 1 ? 'required' : 'disabled' }}>
                                                                 <option {{ data_get($data, 'new_customer_discount_validity_type') == 'day' ? "selected": '' }} value="day">{{translate('messages.day')}}</option>
                                                                 <option {{ data_get($data, 'new_customer_discount_validity_type') == 'month' ? "selected": '' }}  value="month">{{translate('messages.month')}} </option>
                                                                 <option {{ data_get($data, 'new_customer_discount_validity_type') == 'year' ? "selected": '' }}  value="year">{{translate('messages.year')}} </option>
@@ -466,12 +476,6 @@
                 </div>
             </div>
         </form>
-
-
-
-
-
-
 
         <!-- End Table -->
     </div>

@@ -349,12 +349,50 @@ $(document).on("click", ".confirm-Toggle", function () {
     }
     if (toggle_id === "new_customer_discount_status") {
         if ($("#new_customer_discount_status").is(":checked")) {
-
             $("#new_customer_discount_amount").removeAttr("readonly").attr("required", true);
             $("#new_customer_discount_amount_validity").removeAttr("readonly").attr("required", true);
             $("#new_customer_discount_amount_type").removeAttr("disabled").attr("required", true);
             $("#new_customer_discount_validity_type").removeAttr("disabled").attr("required", true);
         } else {
+            $("#new_customer_discount_amount").attr("readonly", true).removeAttr("required");
+            $("#new_customer_discount_amount_validity").attr("readonly", true).removeAttr("required");
+            $("#new_customer_discount_amount_type").attr("disabled", true).removeAttr("required");
+            $("#new_customer_discount_validity_type").attr("disabled", true).removeAttr("required");
+        }
+    }
+    if (toggle_id === "customer_loyalty_point") {
+        if ($("#customer_loyalty_point").is(":checked")) {
+            $("#loyalty_point_exchange_rate").removeAttr("readonly").attr("required", true);
+            $("#item_purchase_point").removeAttr("readonly").attr("required", true);
+            $("#minimum_transfer_point").removeAttr("readonly").attr("required", true);
+
+        } else {
+            $("#loyalty_point_exchange_rate").attr("readonly", true).removeAttr("required");
+            $("#item_purchase_point").attr("readonly", true).removeAttr("required");
+            $("#minimum_transfer_point").attr("readonly", true).removeAttr("required");
+
+        }
+    }
+    if (toggle_id === "wallet_status") {
+        if ($("#wallet_status").is(":checked")) {
+            $(".text-muted").removeClass("text-muted");
+            $("#new_customer_discount_status").removeAttr("disabled");
+            $("#add_fund_status").removeAttr("disabled");
+            $("#ref_earning_status").removeAttr("disabled");
+            $("#refund_to_wallet").removeAttr("disabled");
+
+            $("#ref_earning_exchange_rate").removeAttr("readonly").attr("required", true);
+            $("#new_customer_discount_amount").removeAttr("readonly").attr("required", true);
+            $("#new_customer_discount_amount_validity").removeAttr("readonly").attr("required", true);
+            $("#new_customer_discount_amount_type").removeAttr("disabled").attr("required", true);
+            $("#new_customer_discount_validity_type").removeAttr("disabled").attr("required", true);
+        } else {
+            $("#new_customer_discount_status").attr("disabled", true).parent("label").addClass("text-muted");
+            $("#add_fund_status").attr("disabled", true).parent("label").addClass("text-muted");
+            $("#ref_earning_status").attr("disabled", true).parent("label").addClass("text-muted");
+            $("#refund_to_wallet").attr("disabled", true).parent("label").addClass("text-muted");
+
+            $("#ref_earning_exchange_rate").attr("readonly", true).removeAttr("required");
             $("#new_customer_discount_amount").attr("readonly", true).removeAttr("required");
             $("#new_customer_discount_amount_validity").attr("readonly", true).removeAttr("required");
             $("#new_customer_discount_amount_type").attr("disabled", true).removeAttr("required");
