@@ -78,7 +78,7 @@
                             </select>
                         </div>
                         <div class="col-sm-6 col-md-3">
-                            <select class="form-control set-filter" data-url="{{ url()->full() }}" data-filter="type" name="type">
+                            <select class="form-control js-select2-custom set-filter" data-url="{{ url()->full() }}" data-filter="type" name="type">
                                 <option value="all" {{ isset($type) && $type == 'all' ? 'selected' : '' }}>
                                     {{ translate('messages.All Type') }}</option>
                                 <option value="add_fund_bonus" {{ isset($type) && $type == 'add_fund_bonus' ? 'selected' : '' }}>
@@ -98,7 +98,7 @@
                             </select>
                         </div>
                         <div class="col-sm-6 col-md-3">
-                            <select class="form-control set-filter" data-url="{{ url()->full() }}" data-filter="filter" name="filter">
+                            <select class="form-control js-select2-custom set-filter" data-url="{{ url()->full() }}" data-filter="filter" name="filter">
                                 <option value="all_time" {{ isset($filter) && $filter == 'all_time' ? 'selected' : '' }}>
                                     {{ translate('messages.All Time') }}</option>
                                 <option value="this_year" {{ isset($filter) && $filter == 'this_year' ? 'selected' : '' }}>
