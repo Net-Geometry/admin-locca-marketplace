@@ -397,7 +397,7 @@
                 </div>
             </div>
             <!-- End Header -->
-
+{{ dd($ot->order['order_amount'] ,$ot->additional_charge ,$ot->order['dm_tips']-$ot->order['delivery_charge'] ,$ot['tax'] , $ot->order['coupon_discount_amount'] , $ot->order['store_discount_amount'] ,$ot->order['ref_bonus_amount'] ,$ot->order['extra_packaging_amount'] ,$ot->order['flash_admin_discount_amount'] ,$ot->order['flash_store_discount_amount']) }}
             <!-- Body -->
             <div class="card-body p-0">
                 <div class="table-responsive">
@@ -461,7 +461,7 @@
                                         @endif
                                     </td>
                                     {{-- total_item_amount --}}
-                                    <td class="white-space-nowrap">{{ \App\CentralLogics\Helpers::format_currency($ot->order['order_amount'] - $ot->additional_charge - $ot->order['dm_tips']-$ot->order['delivery_charge'] - $ot['tax'] + $ot->order['coupon_discount_amount'] + $ot->order['store_discount_amount'] - $ot->order['ref_bonus_amount'] - $ot->order['extra_packaging_amount'] +$ot->order['flash_admin_discount_amount'] +$ot->order['flash_store_discount_amount']) }}</td>
+                                    <td class="white-space-nowrap">{{ \App\CentralLogics\Helpers::format_currency($ot->order['order_amount'] - $ot->additional_charge - $ot->order['dm_tips']-$ot->order['delivery_charge']  - $ot['tax'] - $ot->order['extra_packaging_amount'] + $ot->order['coupon_discount_amount'] + $ot->order['store_discount_amount'] + $ot->order['ref_bonus_amount']  +$ot->order['flash_admin_discount_amount'] +$ot->order['flash_store_discount_amount']) }}</td>
 
                                     {{-- item_discount --}}
                                     <td class="white-space-nowrap">{{ \App\CentralLogics\Helpers::format_currency($ot->order->details()->sum(DB::raw('discount_on_item * quantity')) + $ot->order['flash_admin_discount_amount'] +$ot->order['flash_store_discount_amount']) }}</td>
