@@ -208,7 +208,7 @@
                                         {{translate('messages.extra_packaging_status')}}
                                     </span>
                                     <span data-toggle="tooltip" data-placement="right"
-                                          data-original-title='{{translate("If_enabled,_customers_have_to_pay_extra_packaging_charge_on_order")}}'
+                                          data-original-title='{{translate("By_enabling_the_status_customer_will_get_the_option_for_choosing_extra_packaging_charge_when_placing_order._for_extra_package_offer")}}'
                                           class="input-label-secondary">
                                         <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="i">
                                     </span>
@@ -257,7 +257,7 @@
                         @if   ( !empty($extra_packaging_data) && ($extra_packaging_data[$store->module->module_type]=='1') && ($store->storeConfig?->extra_packaging_status == 1))
                             <div class="form-group mb-0 col-md-4">
                                 <label class="input-label text-capitalize" for="extra_packaging_amount">{{translate('messages.extra_packaging_charge_amount')}}</label>
-                                <input type="number" id="extra_packaging_amount" name="extra_packaging_amount" step="0.01" min="0" max="100000" class="form-control" placeholder="100" value="{{$store->storeConfig?->extra_packaging_amount>0?$store->storeConfig?->extra_packaging_amount :''}}">
+                                <input type="number" id="extra_packaging_amount" name="extra_packaging_amount" step="0.01" min="0.001" max="100000" class="form-control" placeholder="100" value="{{$store->storeConfig?->extra_packaging_amount>0?$store->storeConfig?->extra_packaging_amount :''}}">
                             </div>
                         @endif
                         <div class="form-group mb-0 col-md-4">

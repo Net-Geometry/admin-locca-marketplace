@@ -127,7 +127,7 @@
                                             <span
                                             class="input-label-secondary text--title" data-toggle="tooltip"
                                             data-placement="right"
-                                            data-original-title="{{ translate('Set_the_Cash_back_amount/percentage_a_customer_will_receive_after_a_successfull_order.') }}">
+                                            data-original-title="{{ translate('Set_the_value_of_Cashback_percentage/_amount_which_will_transfer_to_the_customer_wallet_when_the__order_is_completed.') }}">
                                             <i class="tio-info-outined"></i>
                                         </span>
                                         <span class="form-label-secondary text-danger"

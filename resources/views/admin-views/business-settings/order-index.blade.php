@@ -251,7 +251,7 @@
 
                                             <span class="form-label-secondary text-danger"
                                             data-toggle="tooltip" data-placement="right"
-                                            data-original-title="{{ translate('messages.After_save_information,_seller_will_be_able_to_choose_and_give_extra_packaging_offer_to_customer.') }}"><img
+                                            data-original-title="{{ translate('messages.After_saving_information,_sellers_will_get_the_option_to_offer_extra_packaging_charge_to_the_customer') }}"><img
                                                 src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
                                                 alt="{{ translate('Extra_Packaging_Charge') }}"></span>
 
