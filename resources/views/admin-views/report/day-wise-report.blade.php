@@ -397,7 +397,7 @@
                 </div>
             </div>
             <!-- End Header -->
-{{ dd($ot->order['order_amount'] ,$ot->additional_charge ,$ot->order['dm_tips']-$ot->order['delivery_charge'] ,$ot['tax'] , $ot->order['coupon_discount_amount'] , $ot->order['store_discount_amount'] ,$ot->order['ref_bonus_amount'] ,$ot->order['extra_packaging_amount'] ,$ot->order['flash_admin_discount_amount'] ,$ot->order['flash_store_discount_amount']) }}
+
             <!-- Body -->
             <div class="card-body p-0">
                 <div class="table-responsive">
