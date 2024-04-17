@@ -93,6 +93,8 @@
                                     {{ translate('messages.flash_sale_discount') }}</option>
                                 <option value="CashBack" {{ isset($type) && $type == 'CashBack' ? 'selected' : '' }}>
                                     {{ translate('messages.CashBack') }}</option>
+                                <option value="referral_discount" {{ isset($type) && $type == 'referral_discount' ? 'selected' : '' }}>
+                                    {{ translate('messages.Referral_Discount') }}</option>
                             </select>
                         </div>
                         <div class="col-sm-6 col-md-3">
