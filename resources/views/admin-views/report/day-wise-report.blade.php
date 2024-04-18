@@ -294,7 +294,7 @@
                                         alt="">
                                     <h4 class="name">{{ translate('Admin Earning') }}</h4>
                                     <div class="info-icon" data-toggle="tooltip" data-placement="right"
-                                        data-original-title="{{ translate('Deducting the admin discount from the admin net income amount goes to this section.') }}">
+                                        data-original-title="{{ translate('Deducting the admin discount from the admin earning amount and goes to this section.') }}">
                                         <img src="{{ asset('/public/assets/admin/img/report/new/info1.png') }}"
                                             alt="report/new">
                                     </div>
@@ -311,7 +311,7 @@
                                         alt="">
                                     <h4 class="name">{{ translate('Store Earning') }}</h4>
                                     <div class="info-icon" data-toggle="tooltip" data-placement="right"
-                                        data-original-title="{{ translate('If self-delivery is off, deducting delivery man earnings & admin commission order amount goes to store earnings otherwise deducting admin commission all order amount goes to this section.') }}">
+                                        data-original-title="{{ translate('Adding_store_earning_amount_with_vat/tax_amount') }}">
                                         <img src="{{ asset('/public/assets/admin/img/report/new/info2.png') }}"
                                             alt="report/new">
                                     </div>
