@@ -237,7 +237,7 @@
 
 
                                     <td>{{ translate($bonus['cashback_type']) }}</td>
-                                    <td> {{\App\CentralLogics\Helpers::format_currency($bonus['cashback_amount'])}}</td>
+                                    <td> {{  $bonus['cashback_type'] == 'amount' ? \App\CentralLogics\Helpers::format_currency($bonus['cashback_amount']) : $bonus['cashback_amount'] .' %' }}</td>
                                     <td> {{\App\CentralLogics\Helpers::date_format($bonus->start_date)}} -  {{\App\CentralLogics\Helpers::date_format($bonus->end_date)  }}</td>
 
                                     <td class="text-center">{{ $bonus['total_used']  }}</td>
