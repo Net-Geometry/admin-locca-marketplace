@@ -173,7 +173,7 @@ class OrderLogic
                 'order_amount'=>$order->order_amount,
                 'store_amount'=>$type=='parcel' ? 0 : $store_amount,
                 // 'store_amount'=>$type=='parcel' ? 0 : $order_amount + $order->total_tax_amount - $comission_on_store_amount,
-                'admin_commission'=>$comission_amount + $order->additional_charge - $admin_subsidy - $admin_coupon_discount_subsidy,
+                'admin_commission'=>$comission_amount + $order->additional_charge - $admin_subsidy - $admin_coupon_discount_subsidy - $ref_bonus_amount,
                 'delivery_charge'=>$order->delivery_charge,
                 'original_delivery_charge'=>$dm_commission,
                 'tax'=>$order->total_tax_amount,
