@@ -2,9 +2,9 @@
 -- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Generation Time: Apr 18, 2024 at 02:25 PM
--- Server version: 10.4.27-MariaDB
+-- Host: localhost:8889
+-- Generation Time: Jan 30, 2024 at 11:42 AM
+-- Server version: 5.7.39
 -- PHP Version: 8.2.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -29,16 +29,16 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `account_transactions` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `from_type` varchar(255) NOT NULL,
+  `from_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `from_id` bigint(20) NOT NULL,
   `current_balance` decimal(24,2) NOT NULL,
   `amount` decimal(24,2) NOT NULL,
-  `method` varchar(255) NOT NULL,
-  `ref` varchar(255) DEFAULT NULL,
+  `method` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `ref` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `type` varchar(20) NOT NULL DEFAULT 'collected',
-  `created_by` varchar(20) NOT NULL DEFAULT 'admin'
+  `type` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'collected',
+  `created_by` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'admin'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -48,16 +48,16 @@ CREATE TABLE `account_transactions` (
 --
 
 CREATE TABLE `addon_settings` (
-  `id` char(36) NOT NULL,
-  `key_name` varchar(191) DEFAULT NULL,
-  `live_values` longtext DEFAULT NULL,
-  `test_values` longtext DEFAULT NULL,
-  `settings_type` varchar(255) DEFAULT NULL,
-  `mode` varchar(20) NOT NULL DEFAULT 'live',
-  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `id` char(36) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `key_name` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `live_values` longtext COLLATE utf8mb4_unicode_ci,
+  `test_values` longtext COLLATE utf8mb4_unicode_ci,
+  `settings_type` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `mode` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'live',
+  `is_active` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `additional_data` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL
+  `additional_data` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -121,12 +121,12 @@ INSERT INTO `addon_settings` (`id`, `key_name`, `live_values`, `test_values`, `s
 
 CREATE TABLE `add_ons` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(191) DEFAULT NULL,
-  `price` decimal(24,2) NOT NULL DEFAULT 0.00,
+  `name` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `price` decimal(24,2) NOT NULL DEFAULT '0.00',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `store_id` bigint(20) UNSIGNED NOT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 1
+  `status` tinyint(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -137,18 +137,18 @@ CREATE TABLE `add_ons` (
 
 CREATE TABLE `admins` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `f_name` varchar(100) DEFAULT NULL,
-  `l_name` varchar(100) DEFAULT NULL,
-  `phone` varchar(20) DEFAULT NULL,
-  `email` varchar(100) NOT NULL,
-  `image` varchar(100) DEFAULT NULL,
-  `password` varchar(100) NOT NULL,
-  `remember_token` varchar(100) DEFAULT NULL,
+  `f_name` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `l_name` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `phone` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `email` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `image` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `password` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `role_id` bigint(20) UNSIGNED NOT NULL,
   `zone_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `is_logged_in` tinyint(1) NOT NULL DEFAULT 1
+  `is_logged_in` tinyint(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -166,10 +166,10 @@ INSERT INTO `admins` (`id`, `f_name`, `l_name`, `phone`, `email`, `image`, `pass
 
 CREATE TABLE `admin_features` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `title` varchar(100) DEFAULT NULL,
-  `sub_title` varchar(100) DEFAULT NULL,
-  `image` varchar(100) DEFAULT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 1,
+  `title` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `sub_title` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `image` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -189,10 +189,10 @@ INSERT INTO `admin_features` (`id`, `title`, `sub_title`, `image`, `status`, `cr
 
 CREATE TABLE `admin_promotional_banners` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `title` varchar(100) DEFAULT NULL,
-  `sub_title` varchar(100) DEFAULT NULL,
-  `image` varchar(100) DEFAULT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 1,
+  `title` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `sub_title` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `image` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -212,9 +212,9 @@ INSERT INTO `admin_promotional_banners` (`id`, `title`, `sub_title`, `image`, `s
 
 CREATE TABLE `admin_roles` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(100) NOT NULL,
-  `modules` text DEFAULT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 1,
+  `name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `modules` text COLLATE utf8mb4_unicode_ci,
+  `status` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -234,9 +234,9 @@ INSERT INTO `admin_roles` (`id`, `name`, `modules`, `status`, `created_at`, `upd
 
 CREATE TABLE `admin_special_criterias` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `title` varchar(100) DEFAULT NULL,
-  `image` varchar(100) DEFAULT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 1,
+  `title` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `image` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -256,12 +256,12 @@ INSERT INTO `admin_special_criterias` (`id`, `title`, `image`, `status`, `create
 
 CREATE TABLE `admin_testimonials` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(100) DEFAULT NULL,
-  `designation` varchar(100) DEFAULT NULL,
-  `review` text DEFAULT NULL,
-  `reviewer_image` varchar(255) DEFAULT NULL,
-  `company_image` varchar(255) DEFAULT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 1,
+  `name` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `designation` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `review` text COLLATE utf8mb4_unicode_ci,
+  `reviewer_image` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `company_image` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -282,12 +282,12 @@ INSERT INTO `admin_testimonials` (`id`, `name`, `designation`, `review`, `review
 CREATE TABLE `admin_wallets` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `admin_id` bigint(20) UNSIGNED NOT NULL,
-  `total_commission_earning` decimal(24,2) NOT NULL DEFAULT 0.00,
-  `digital_received` decimal(24,2) NOT NULL DEFAULT 0.00,
-  `manual_received` decimal(24,2) NOT NULL DEFAULT 0.00,
+  `total_commission_earning` decimal(24,2) NOT NULL DEFAULT '0.00',
+  `digital_received` decimal(24,2) NOT NULL DEFAULT '0.00',
+  `manual_received` decimal(24,2) NOT NULL DEFAULT '0.00',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `delivery_charge` decimal(24,3) NOT NULL DEFAULT 0.000
+  `delivery_charge` decimal(24,3) NOT NULL DEFAULT '0.000'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -298,7 +298,7 @@ CREATE TABLE `admin_wallets` (
 
 CREATE TABLE `attributes` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(100) DEFAULT NULL,
+  `name` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -311,34 +311,18 @@ CREATE TABLE `attributes` (
 
 CREATE TABLE `banners` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `title` varchar(255) DEFAULT NULL,
-  `type` varchar(255) NOT NULL,
-  `image` varchar(255) DEFAULT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 1,
-  `data` varchar(255) NOT NULL,
+  `title` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `image` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '1',
+  `data` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `zone_id` bigint(20) UNSIGNED NOT NULL,
   `module_id` bigint(20) UNSIGNED NOT NULL,
-  `featured` tinyint(1) NOT NULL DEFAULT 0,
-  `default_link` varchar(255) DEFAULT NULL,
-  `created_by` varchar(255) NOT NULL DEFAULT 'admin'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `brands`
---
-
-CREATE TABLE `brands` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `slug` varchar(255) DEFAULT NULL,
-  `image` varchar(100) DEFAULT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 1,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `featured` tinyint(1) NOT NULL DEFAULT '0',
+  `default_link` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_by` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'admin'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -349,8 +333,8 @@ CREATE TABLE `brands` (
 
 CREATE TABLE `business_settings` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `key` varchar(255) NOT NULL,
-  `value` text DEFAULT NULL,
+  `key` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `value` text COLLATE utf8mb4_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -503,10 +487,10 @@ INSERT INTO `business_settings` (`id`, `key`, `value`, `created_at`, `updated_at
 
 CREATE TABLE `campaigns` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `title` varchar(191) DEFAULT NULL,
-  `image` varchar(100) DEFAULT NULL,
-  `description` text DEFAULT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 1,
+  `title` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `image` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `description` text COLLATE utf8mb4_unicode_ci,
+  `status` tinyint(1) NOT NULL DEFAULT '1',
   `admin_id` bigint(20) UNSIGNED DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -526,7 +510,7 @@ CREATE TABLE `campaigns` (
 CREATE TABLE `campaign_store` (
   `campaign_id` bigint(20) UNSIGNED NOT NULL,
   `store_id` bigint(20) UNSIGNED NOT NULL,
-  `campaign_status` varchar(10) DEFAULT 'pending'
+  `campaign_status` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT 'pending'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -540,56 +524,13 @@ CREATE TABLE `carts` (
   `user_id` bigint(20) UNSIGNED NOT NULL,
   `module_id` bigint(20) UNSIGNED NOT NULL,
   `item_id` bigint(20) UNSIGNED NOT NULL,
-  `is_guest` tinyint(1) NOT NULL DEFAULT 0,
-  `add_on_ids` text DEFAULT NULL,
-  `add_on_qtys` text DEFAULT NULL,
-  `item_type` varchar(255) NOT NULL,
+  `is_guest` tinyint(1) NOT NULL DEFAULT '0',
+  `add_on_ids` text COLLATE utf8mb4_unicode_ci,
+  `add_on_qtys` text COLLATE utf8mb4_unicode_ci,
+  `item_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `price` double(24,3) NOT NULL,
   `quantity` int(11) NOT NULL,
-  `variation` text DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `cash_backs`
---
-
-CREATE TABLE `cash_backs` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `title` varchar(255) NOT NULL,
-  `customer_id` varchar(255) DEFAULT '["all"]',
-  `cashback_type` varchar(255) NOT NULL,
-  `same_user_limit` int(11) NOT NULL DEFAULT 1,
-  `total_used` int(11) NOT NULL DEFAULT 0,
-  `cashback_amount` double(23,3) NOT NULL DEFAULT 0.000,
-  `min_purchase` double(23,3) NOT NULL DEFAULT 0.000,
-  `max_discount` double(23,3) NOT NULL DEFAULT 0.000,
-  `start_date` date DEFAULT NULL,
-  `end_date` date DEFAULT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 1,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `cash_back_histories`
---
-
-CREATE TABLE `cash_back_histories` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `cash_back_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `order_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `user_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `cashback_type` varchar(255) NOT NULL,
-  `calculated_amount` double(23,3) NOT NULL DEFAULT 0.000,
-  `cashback_amount` double(23,3) NOT NULL DEFAULT 0.000,
-  `min_purchase` double(23,3) NOT NULL DEFAULT 0.000,
-  `max_discount` double(23,3) NOT NULL DEFAULT 0.000,
+  `variation` text COLLATE utf8mb4_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -602,17 +543,17 @@ CREATE TABLE `cash_back_histories` (
 
 CREATE TABLE `categories` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(191) NOT NULL,
-  `image` varchar(255) NOT NULL DEFAULT 'def.png',
+  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `image` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'def.png',
   `parent_id` int(11) NOT NULL,
   `position` int(11) NOT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 1,
+  `status` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `priority` int(11) NOT NULL DEFAULT 0,
+  `priority` int(11) NOT NULL DEFAULT '0',
   `module_id` bigint(20) UNSIGNED NOT NULL,
-  `slug` varchar(255) DEFAULT NULL,
-  `featured` tinyint(1) NOT NULL DEFAULT 0
+  `slug` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `featured` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -631,9 +572,9 @@ INSERT INTO `categories` (`id`, `name`, `image`, `parent_id`, `position`, `statu
 
 CREATE TABLE `common_conditions` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `slug` varchar(255) DEFAULT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 1,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `slug` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -646,13 +587,13 @@ CREATE TABLE `common_conditions` (
 
 CREATE TABLE `contacts` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(100) NOT NULL,
-  `email` varchar(100) NOT NULL,
-  `subject` text NOT NULL,
-  `message` text NOT NULL,
-  `seen` tinyint(4) NOT NULL DEFAULT 0,
-  `feedback` varchar(255) NOT NULL DEFAULT '0',
-  `reply` longtext DEFAULT NULL,
+  `name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `subject` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `message` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `seen` tinyint(4) NOT NULL DEFAULT '0',
+  `feedback` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '0',
+  `reply` longtext COLLATE utf8mb4_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -666,12 +607,12 @@ CREATE TABLE `contacts` (
 CREATE TABLE `conversations` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `sender_id` bigint(20) UNSIGNED NOT NULL,
-  `sender_type` varchar(255) NOT NULL,
+  `sender_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `receiver_id` bigint(20) UNSIGNED NOT NULL,
-  `receiver_type` varchar(255) NOT NULL,
+  `receiver_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `last_message_id` bigint(20) UNSIGNED DEFAULT NULL,
   `last_message_time` timestamp NULL DEFAULT NULL,
-  `unread_message_count` int(11) NOT NULL DEFAULT 0,
+  `unread_message_count` int(11) NOT NULL DEFAULT '0',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -684,25 +625,25 @@ CREATE TABLE `conversations` (
 
 CREATE TABLE `coupons` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `title` varchar(191) DEFAULT NULL,
-  `code` varchar(100) DEFAULT NULL,
+  `title` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `code` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `start_date` date DEFAULT NULL,
   `expire_date` date DEFAULT NULL,
-  `min_purchase` decimal(24,2) NOT NULL DEFAULT 0.00,
-  `max_discount` decimal(24,2) NOT NULL DEFAULT 0.00,
-  `discount` decimal(24,2) NOT NULL DEFAULT 0.00,
-  `discount_type` varchar(15) NOT NULL DEFAULT 'percentage',
-  `coupon_type` varchar(255) NOT NULL DEFAULT 'default',
+  `min_purchase` decimal(24,2) NOT NULL DEFAULT '0.00',
+  `max_discount` decimal(24,2) NOT NULL DEFAULT '0.00',
+  `discount` decimal(24,2) NOT NULL DEFAULT '0.00',
+  `discount_type` varchar(15) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'percentage',
+  `coupon_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'default',
   `limit` int(11) DEFAULT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 1,
+  `status` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `data` varchar(255) DEFAULT NULL,
-  `total_uses` bigint(20) DEFAULT 0,
+  `data` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `total_uses` bigint(20) DEFAULT '0',
   `module_id` bigint(20) UNSIGNED NOT NULL,
-  `created_by` varchar(50) DEFAULT 'admin',
-  `customer_id` varchar(255) DEFAULT '["all"]',
-  `slug` varchar(255) DEFAULT NULL,
+  `created_by` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT 'admin',
+  `customer_id` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '["all"]',
+  `slug` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `store_id` bigint(20) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -714,9 +655,9 @@ CREATE TABLE `coupons` (
 
 CREATE TABLE `currencies` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `country` varchar(255) DEFAULT NULL,
-  `currency_code` varchar(255) DEFAULT NULL,
-  `currency_symbol` varchar(255) DEFAULT NULL,
+  `country` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `currency_code` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `currency_symbol` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `exchange_rate` decimal(8,2) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -855,19 +796,19 @@ INSERT INTO `currencies` (`id`, `country`, `currency_code`, `currency_symbol`, `
 
 CREATE TABLE `customer_addresses` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `address_type` varchar(100) NOT NULL,
-  `contact_person_number` varchar(20) NOT NULL,
-  `address` text DEFAULT NULL,
-  `latitude` varchar(255) DEFAULT NULL,
-  `longitude` varchar(255) DEFAULT NULL,
+  `address_type` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `contact_person_number` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `address` text COLLATE utf8mb4_unicode_ci,
+  `latitude` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `longitude` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `user_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `contact_person_name` varchar(100) DEFAULT NULL,
+  `contact_person_name` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `zone_id` bigint(20) UNSIGNED NOT NULL,
-  `floor` varchar(255) DEFAULT NULL,
-  `road` varchar(255) DEFAULT NULL,
-  `house` varchar(255) DEFAULT NULL
+  `floor` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `road` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `house` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -878,9 +819,9 @@ CREATE TABLE `customer_addresses` (
 
 CREATE TABLE `data_settings` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `key` varchar(255) DEFAULT NULL,
-  `value` text DEFAULT NULL,
-  `type` varchar(255) DEFAULT NULL,
+  `key` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `value` text COLLATE utf8mb4_unicode_ci,
+  `type` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -987,9 +928,9 @@ CREATE TABLE `delivery_histories` (
   `order_id` bigint(20) UNSIGNED DEFAULT NULL,
   `delivery_man_id` bigint(20) UNSIGNED DEFAULT NULL,
   `time` datetime DEFAULT NULL,
-  `longitude` varchar(255) DEFAULT NULL,
-  `latitude` varchar(255) DEFAULT NULL,
-  `location` varchar(255) DEFAULT NULL,
+  `longitude` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `latitude` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `location` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1003,12 +944,12 @@ CREATE TABLE `delivery_histories` (
 CREATE TABLE `delivery_man_wallets` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `delivery_man_id` bigint(20) UNSIGNED NOT NULL,
-  `collected_cash` decimal(24,2) NOT NULL DEFAULT 0.00,
+  `collected_cash` decimal(24,2) NOT NULL DEFAULT '0.00',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `total_earning` decimal(24,2) NOT NULL DEFAULT 0.00,
-  `total_withdrawn` decimal(24,2) NOT NULL DEFAULT 0.00,
-  `pending_withdraw` decimal(24,2) NOT NULL DEFAULT 0.00
+  `total_earning` decimal(24,2) NOT NULL DEFAULT '0.00',
+  `total_withdrawn` decimal(24,2) NOT NULL DEFAULT '0.00',
+  `pending_withdraw` decimal(24,2) NOT NULL DEFAULT '0.00'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -1019,29 +960,29 @@ CREATE TABLE `delivery_man_wallets` (
 
 CREATE TABLE `delivery_men` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `f_name` varchar(100) DEFAULT NULL,
-  `l_name` varchar(100) DEFAULT NULL,
-  `phone` varchar(20) NOT NULL,
-  `email` varchar(100) DEFAULT NULL,
-  `identity_number` varchar(30) DEFAULT NULL,
-  `identity_type` varchar(50) DEFAULT NULL,
-  `identity_image` varchar(255) DEFAULT NULL,
-  `image` varchar(100) DEFAULT NULL,
-  `password` varchar(100) NOT NULL,
-  `auth_token` varchar(255) DEFAULT NULL,
-  `fcm_token` varchar(255) DEFAULT NULL,
+  `f_name` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `l_name` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `phone` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `identity_number` varchar(30) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `identity_type` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `identity_image` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `image` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `password` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `auth_token` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `fcm_token` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `zone_id` bigint(20) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 1,
-  `active` tinyint(1) NOT NULL DEFAULT 1,
-  `earning` tinyint(1) NOT NULL DEFAULT 1,
-  `current_orders` int(11) NOT NULL DEFAULT 0,
-  `type` varchar(191) NOT NULL DEFAULT 'zone_wise',
+  `status` tinyint(1) NOT NULL DEFAULT '1',
+  `active` tinyint(1) NOT NULL DEFAULT '1',
+  `earning` tinyint(1) NOT NULL DEFAULT '1',
+  `current_orders` int(11) NOT NULL DEFAULT '0',
+  `type` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'zone_wise',
   `store_id` bigint(20) DEFAULT NULL,
-  `application_status` enum('approved','denied','pending') NOT NULL DEFAULT 'approved',
-  `order_count` int(10) UNSIGNED NOT NULL DEFAULT 0,
-  `assigned_order_count` int(10) UNSIGNED NOT NULL DEFAULT 0,
+  `application_status` enum('approved','denied','pending') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'approved',
+  `order_count` int(10) UNSIGNED NOT NULL DEFAULT '0',
+  `assigned_order_count` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `vehicle_id` bigint(20) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -1053,11 +994,11 @@ CREATE TABLE `delivery_men` (
 
 CREATE TABLE `disbursements` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `title` varchar(255) NOT NULL,
-  `description` text DEFAULT NULL,
-  `total_amount` double(23,3) NOT NULL DEFAULT 0.000,
-  `status` varchar(255) NOT NULL DEFAULT 'pending',
-  `created_for` varchar(255) NOT NULL,
+  `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` text COLLATE utf8mb4_unicode_ci,
+  `total_amount` double(23,3) NOT NULL DEFAULT '0.000',
+  `status` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'pending',
+  `created_for` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1073,9 +1014,9 @@ CREATE TABLE `disbursement_details` (
   `disbursement_id` bigint(20) UNSIGNED NOT NULL,
   `store_id` bigint(20) UNSIGNED DEFAULT NULL,
   `delivery_man_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `disbursement_amount` double(23,3) NOT NULL DEFAULT 0.000,
+  `disbursement_amount` double(23,3) NOT NULL DEFAULT '0.000',
   `payment_method` bigint(20) UNSIGNED NOT NULL,
-  `status` varchar(255) NOT NULL DEFAULT 'pending',
+  `status` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'pending',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1091,9 +1032,9 @@ CREATE TABLE `disbursement_withdrawal_methods` (
   `store_id` bigint(20) UNSIGNED DEFAULT NULL,
   `delivery_man_id` bigint(20) UNSIGNED DEFAULT NULL,
   `withdrawal_method_id` bigint(20) UNSIGNED NOT NULL,
-  `method_name` varchar(255) NOT NULL,
-  `method_fields` text NOT NULL,
-  `is_default` tinyint(4) NOT NULL DEFAULT 0,
+  `method_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `method_fields` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `is_default` tinyint(4) NOT NULL DEFAULT '0',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1110,10 +1051,10 @@ CREATE TABLE `discounts` (
   `end_date` date DEFAULT NULL,
   `start_time` time DEFAULT NULL,
   `end_time` time DEFAULT NULL,
-  `min_purchase` decimal(24,2) NOT NULL DEFAULT 0.00,
-  `max_discount` decimal(24,2) NOT NULL DEFAULT 0.00,
-  `discount` decimal(24,2) NOT NULL DEFAULT 0.00,
-  `discount_type` varchar(15) NOT NULL DEFAULT 'percentage',
+  `min_purchase` decimal(24,2) NOT NULL DEFAULT '0.00',
+  `max_discount` decimal(24,2) NOT NULL DEFAULT '0.00',
+  `discount` decimal(24,2) NOT NULL DEFAULT '0.00',
+  `discount_type` varchar(15) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'percentage',
   `store_id` bigint(20) UNSIGNED NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -1130,12 +1071,12 @@ CREATE TABLE `d_m_reviews` (
   `delivery_man_id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
   `order_id` bigint(20) UNSIGNED NOT NULL,
-  `comment` mediumtext DEFAULT NULL,
-  `attachment` varchar(255) DEFAULT NULL,
-  `rating` int(11) NOT NULL DEFAULT 0,
+  `comment` mediumtext COLLATE utf8mb4_unicode_ci,
+  `attachment` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `rating` int(11) NOT NULL DEFAULT '0',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `status` tinyint(1) DEFAULT 1
+  `status` tinyint(1) DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -1146,25 +1087,11 @@ CREATE TABLE `d_m_reviews` (
 
 CREATE TABLE `d_m_vehicles` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `type` varchar(255) NOT NULL,
+  `type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `starting_coverage_area` double(16,2) NOT NULL,
   `maximum_coverage_area` double(16,2) NOT NULL,
   `extra_charges` double(16,2) NOT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 0,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `ecommerce_item_details`
---
-
-CREATE TABLE `ecommerce_item_details` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `item_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `brand_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '0',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1177,69 +1104,68 @@ CREATE TABLE `ecommerce_item_details` (
 
 CREATE TABLE `email_templates` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `title` varchar(100) DEFAULT NULL,
-  `body` text DEFAULT NULL,
-  `background_image` varchar(100) DEFAULT NULL,
-  `image` varchar(100) DEFAULT NULL,
-  `logo` varchar(100) DEFAULT NULL,
-  `icon` varchar(100) DEFAULT NULL,
-  `button_name` varchar(100) DEFAULT NULL,
-  `button_url` varchar(255) DEFAULT NULL,
-  `footer_text` varchar(255) DEFAULT NULL,
-  `copyright_text` varchar(255) DEFAULT NULL,
-  `type` varchar(255) DEFAULT NULL,
-  `email_type` varchar(255) DEFAULT NULL,
-  `email_template` varchar(255) DEFAULT NULL,
-  `privacy` tinyint(1) NOT NULL DEFAULT 0,
-  `refund` tinyint(1) NOT NULL DEFAULT 0,
-  `cancelation` tinyint(1) NOT NULL DEFAULT 0,
-  `contact` tinyint(1) NOT NULL DEFAULT 0,
-  `facebook` tinyint(1) NOT NULL DEFAULT 0,
-  `instagram` tinyint(1) NOT NULL DEFAULT 0,
-  `twitter` tinyint(1) NOT NULL DEFAULT 0,
-  `linkedin` tinyint(1) NOT NULL DEFAULT 0,
-  `pinterest` tinyint(1) NOT NULL DEFAULT 0,
-  `status` tinyint(1) NOT NULL DEFAULT 1,
+  `title` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `body` text COLLATE utf8mb4_unicode_ci,
+  `background_image` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `image` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `logo` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `icon` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `button_name` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `button_url` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `footer_text` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `copyright_text` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `type` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `email_type` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `email_template` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `privacy` tinyint(1) NOT NULL DEFAULT '0',
+  `refund` tinyint(1) NOT NULL DEFAULT '0',
+  `cancelation` tinyint(1) NOT NULL DEFAULT '0',
+  `contact` tinyint(1) NOT NULL DEFAULT '0',
+  `facebook` tinyint(1) NOT NULL DEFAULT '0',
+  `instagram` tinyint(1) NOT NULL DEFAULT '0',
+  `twitter` tinyint(1) NOT NULL DEFAULT '0',
+  `linkedin` tinyint(1) NOT NULL DEFAULT '0',
+  `pinterest` tinyint(1) NOT NULL DEFAULT '0',
+  `status` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `body_2` text DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `email_templates`
 --
 
-INSERT INTO `email_templates` (`id`, `title`, `body`, `background_image`, `image`, `logo`, `icon`, `button_name`, `button_url`, `footer_text`, `copyright_text`, `type`, `email_type`, `email_template`, `privacy`, `refund`, `cancelation`, `contact`, `facebook`, `instagram`, `twitter`, `linkedin`, `pinterest`, `status`, `created_at`, `updated_at`, `body_2`) VALUES
-(1, 'Change Password Request', '<p>The following user has forgotten his password &amp; requested to change/reset their password.&nbsp;</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p><strong>User Name: {userName}</strong></p>', NULL, NULL, NULL, '2023-06-12-6486f303174e0.png', '', '', 'Please contact us for any queries; we’re always happy to help.', '© 2023 6amMart. All rights reserved.', 'admin', 'forget_password', '5', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2023-06-12 16:26:24', '2023-06-12 19:40:28', NULL),
-(2, 'New Store Registration Request', '<p>Please find below the details of the new Store registration:</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p><strong>Store Name: {storeName}</strong></p>\r\n\r\n<p>To review the store from the respective Module, go to:&nbsp;</p>\r\n\r\n<p><strong>Module Section</strong><strong>&rarr;Store Management&rarr;New Stores</strong></p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>Or you can directly review the store here &rarr;</p>\r\n\r\n<p>&nbsp;</p>', NULL, '2023-06-12-6486f4420b5c1.png', '2023-06-12-6486f4420d61d.png', NULL, 'Review Request', 'https://www.facebook.com/', 'Please contact us for any queries; we’re always happy to help.', '© 2023 6amMart. All rights reserved.', 'admin', 'store_registration', '1', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2023-06-12 16:32:34', '2023-06-12 19:59:26', NULL),
-(3, 'New Deliveryman Registration Request', '<p>Please find below the details of the new Deliveryman registration:</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p><strong>Deliveryman Name: {deliveryManName}</strong></p>\r\n\r\n<p>To review the store from the respective Module, go to:&nbsp;</p>\r\n\r\n<p><strong>Users</strong><strong>&rarr;Deliveryman Management&rarr;New Deliveryman</strong></p>\r\n\r\n<p>&nbsp;</p>', NULL, '2023-06-12-6486f4fe20b2c.png', '2023-06-12-6486f528877fe.png', NULL, 'Review Request', 'https://www.facebook.com/', 'Please contact us for any queries; we’re always happy to help.', '© 2023 6amMart. All rights reserved.', 'admin', 'dm_registration', '1', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2023-06-12 16:35:42', '2023-06-12 20:04:49', NULL),
-(4, 'New Withdraw Request', '<p>Please find below the details of the new Withdraw Request:</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p><strong>Store Name: {storeName}</strong></p>\r\n\r\n<p>To review the Refund Request, go to:&nbsp;</p>\r\n\r\n<p><strong>Transactions &amp; Reports</strong><strong>&rarr;Withdraw Requests</strong></p>\r\n\r\n<p>&nbsp;</p>', NULL, NULL, NULL, '2023-06-12-6486f5b6a24a4.png', 'Review Request', '', 'Please contact us for any queries; we’re always happy to help.', '© 2023 6amMart. All rights reserved.', 'admin', 'withdraw_request', '6', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2023-06-12 16:38:46', '2023-06-12 20:04:17', NULL),
-(5, '“BUY ONE GET ONE” Campaign Join Request', '<p>Please find below the details of the new Campaign Join Request:</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p><strong>Store Name: {storeName}</strong></p>\r\n\r\n<p>To review the Refund Request, go to:&nbsp;</p>\r\n\r\n<p><strong>Module Section</strong><strong>&rarr;Choose Module&rarr;Promotion Management&rarr;Campaigns&rarr;Basic Campaigns&rarr;Buy One Get One</strong></p>\r\n\r\n<p>&nbsp;</p>', NULL, '2023-06-12-6486f611cfb9b.png', '2023-06-12-6486f611cfdf0.png', NULL, 'Review Request', '', 'Please contact us for any queries; we’re always happy to help.', '© 2023 6amMart. All rights reserved.', 'admin', 'campaign_request', '1', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2023-06-12 16:40:17', '2023-06-12 20:06:04', NULL),
-(6, 'You Have A Refund Request.', '<p>Please find below the details of the new Refund Request:</p>\r\n\r\n<p><strong>Customer Name: {userName}</strong></p>\r\n\r\n<p><strong>Order ID: {orderId}</strong></p>\r\n\r\n<p>&nbsp;</p>', NULL, NULL, '2023-06-12-6486fb27a6a00.png', NULL, 'Review Request', '', 'Please contact us for any queries; we’re always happy to help.', '© 2023 6amMart. All rights reserved.', 'admin', 'refund_request', '2', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2023-06-12 17:01:59', '2023-06-12 20:14:43', NULL),
-(7, 'Mart Morning [ID 1234] Just Signed In', '<p>Mart Morning [ID 1234] just signed in from the Store Panel.&nbsp;</p>\r\n\r\n<p><br />\r\n<strong>Login Time:</strong> 12.00pm</p>', NULL, NULL, '2023-06-12-6486fbdeb92d6.png', NULL, 'Check Status', '', 'Please contact us for any queries; we’re always happy to help.', '© 2023 6amMart. All rights reserved.', 'admin', 'login', '2', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2023-06-12 17:05:02', '2023-06-12 17:05:02', NULL),
-(8, 'Your Registration is Submitted Successfully!', '<p>Dear User,</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>We&rsquo;ve received your Store Registration Request.&nbsp;</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>Soon you&rsquo;ll know if your store registration is accepted or declined by the Admin.&nbsp;</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>Stay Tuned!</p>\r\n\r\n<p>&nbsp;</p>', NULL, NULL, NULL, '2023-06-12-6487024230762.png', '', '', 'Please contact us for any queries; we’re always happy to help.', '© 2023 6amMart. All rights reserved.', 'store', 'registration', '5', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2023-06-12 17:32:18', '2023-06-12 17:32:18', NULL),
-(9, 'Congratulations! Your Registration is Approved!', '<p>Dear User,</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>Your registration is approved by the Admin.&nbsp;</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p><strong>First</strong>, you need to log in to your store panel.&nbsp;</p>\r\n\r\n<p><strong>After that,</strong> please set up your store and start selling!&nbsp;</p>\r\n\r\n<p><br />\r\n<strong>Click here</strong><strong> &rarr; </strong><a href=\"https://6ammart-admin.6amtech.com/store-panel/business-settings/store-setup\">https://6ammart-admin.6amtech.com/store-panel/business-settings/store-setup</a></p>', NULL, NULL, NULL, '2023-06-12-648702fb014dd.png', '', '', 'Please contact us for any queries; we’re always happy to help.', '© 2023 6amMart. All rights reserved.', 'store', 'approve', '5', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2023-06-12 17:35:23', '2023-06-12 20:01:31', NULL),
-(10, 'Your Registration is Rejected', '<p>Dear User,&nbsp;</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>We&rsquo;re sorry to announce that your store registration was rejected by the Admin.&nbsp;</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>To find out more please contact us.</p>\r\n\r\n<p>&nbsp;</p>', NULL, NULL, NULL, '2023-06-12-648706ce4d5fb.png', '', '', 'Please contact us for any queries; we’re always happy to help.', '© 2023 6amMart. All rights reserved.', 'store', 'deny', '5', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2023-06-12 17:47:03', '2023-06-12 17:51:42', NULL),
-(11, 'Congratulations! Your Withdrawal is Approved!', '<p>Dear User,</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>The amount you requested to withdraw is approved by the Admin and transferred to you bank account.</p>\r\n\r\n<p>&nbsp;</p>', NULL, NULL, NULL, '2023-06-12-64870788562d9.png', 'See details', '', 'Please contact us for any queries; we’re always happy to help.', '© 2023 6amMart. All rights reserved.', 'store', 'withdraw_approve', '6', 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, '2023-06-12 17:54:48', '2023-06-12 17:54:48', NULL),
-(12, 'Your Withdraw Request was Rejected.', '<p>Dear User,</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>The amount you requested to withdraw is rejected by the Admin.</p>\r\n\r\n<p>Reason: Insufficient Balance.&nbsp;</p>\r\n\r\n<p>&nbsp;</p>', NULL, NULL, NULL, '2023-06-12-648708244930a.png', 'See Details', '', 'Please contact us for any queries; we’re always happy to help.', '© 2023 6amMart. All rights reserved.', 'store', 'withdraw_deny', '6', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2023-06-12 17:57:24', '2023-06-12 17:57:24', NULL),
-(13, 'Your Request is Completed!', '<p>Dear User,</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>We&rsquo;ve received your Campaign Request.&nbsp;</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>Soon you&rsquo;ll know if your request is approved or rejected by the Admin.&nbsp;</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>Stay Tuned!</p>\r\n\r\n<p>&nbsp;</p>', NULL, '2023-06-12-648708d132665.png', '2023-06-12-6487088da18cb.png', NULL, 'See Status', '', 'Please contact us for any queries; we’re always happy to help.', '© 2023 6amMart. All rights reserved.', 'store', 'campaign_request', '1', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2023-06-12 17:59:09', '2023-06-12 18:00:17', NULL),
-(14, 'Congratulations! Your Campaign Request is Approved!', '<p>Dear User,</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>Your request to join campaign is approved by the Admin.</p>\r\n\r\n<p>&nbsp;</p>', NULL, '2023-06-12-6487091d3ee5a.png', '2023-06-12-6487091d3f0b3.png', NULL, 'View Status', '', 'Please contact us for any queries; we’re always happy to help.', '© 2023 6amMart. All rights reserved.', 'store', 'campaign_approve', '1', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2023-06-12 18:01:33', '2023-06-12 20:04:45', NULL),
-(15, 'Your Campaign Join Request Was Rejected.', '<p>Dear User,</p>\r\n\r\n<p>Your request to join the&nbsp;campaign was rejected by the admin.&nbsp;</p>\r\n\r\n<p>&nbsp;</p>', NULL, '2023-06-12-648709ce3e893.png', '2023-06-12-648709ce3ead2.png', NULL, '', '', 'Please contact us for any queries; we’re always happy to help.', '© 2023 6amMart. All rights reserved.', 'store', 'campaign_deny', '7', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2023-06-12 18:04:30', '2023-06-12 20:06:55', NULL),
-(16, 'Your Registration is Completed!', '<p>Dear User,</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>We&rsquo;ve received your Deliveryman Registration Request.</p>\r\n\r\n<p>Soon you&rsquo;ll know if your Deliveryman registration is accepted or declined by the Admin.&nbsp;</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>Stay Tuned!</p>\r\n\r\n<p>&nbsp;</p>', NULL, NULL, NULL, '2023-06-12-64870c80bb7bb.png', '', '', 'Please contact us for any queries; we’re always happy to help.', '© 2023 6amMart. All rights reserved.', 'dm', 'registration', '5', 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, '2023-06-12 18:16:00', '2023-06-12 18:16:00', NULL),
-(17, 'Congratulations! Your Registration is Approved!', '<p>Dear User,</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>Your registration is approved by the Admin.&nbsp;</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p><strong>Here&rsquo;s what to do next:&nbsp;</strong></p>\r\n\r\n<ol>\r\n	<li>Download the Deliveryman app</li>\r\n	<li>Login with below credentials.</li>\r\n</ol>\r\n\r\n<p><strong>After that,</strong> please set up your account and start delivery!&nbsp;</p>\r\n\r\n<p><br />\r\n<strong>Click here</strong><strong> to download the app&rarr; </strong><a href=\"https://play.google.com/store/apps/details?id=com.sixamtech.sixam_mart_delivery_app&amp;pli=1\">https://play.google.com/store/apps/details?id=com.sixamtech.sixam_mart_delivery_app&amp;pli=1</a></p>\r\n\r\n<p>&nbsp;</p>', NULL, NULL, NULL, '2023-06-12-64870cebc5fc6.png', '', '', 'Please contact us for any queries; we’re always happy to help.', '© 2023 6amMart. All rights reserved.', 'dm', 'approve', '5', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2023-06-12 18:17:47', '2023-06-12 20:09:23', NULL),
-(18, 'Your Registration is Rejected', '<p>Dear User,&nbsp;</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>We&rsquo;re sorry to announce that your Deliveryman registration was rejected by the Admin.&nbsp;</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>To find out more please contact us.</p>\r\n\r\n<p>&nbsp;</p>', NULL, NULL, NULL, '2023-06-12-64870da0bf819.png', '', '', 'Please contact us for any queries; we’re always happy to help.', '© 2023 6amMart. All rights reserved.', 'dm', 'deny', '5', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2023-06-12 18:20:48', '2023-06-12 18:20:48', NULL),
-(19, 'Your Account is Suspended.', '<p>Dear User,</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>Your Deliveryman account has been suspended by the Admin/Store.&nbsp;</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>Please contact related person to know more.</p>\r\n\r\n<p>&nbsp;</p>', NULL, '2023-06-12-64870e1ba4908.png', '2023-06-12-64870e1ba4cd1.png', NULL, '', '', 'Please contact us for any queries; we’re always happy to help.', '© 2023 6amMart. All rights reserved.', 'dm', 'suspend', '7', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2023-06-12 18:22:51', '2023-06-12 18:22:51', NULL),
-(20, 'Cash Collected.', '<p>Dear User,</p>\r\n\r\n<p>The Admin has collected cash from you.&nbsp;</p>\r\n\r\n<p>&nbsp;</p>', NULL, NULL, NULL, '2023-06-12-64870ecf8ef10.png', 'See Details', '', 'Please contact us for any queries; we’re always happy to help.', '© 2023 6amMart. All rights reserved.', 'dm', 'cash_collect', '6', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2023-06-12 18:25:51', '2023-06-12 20:11:22', NULL),
-(21, 'Reset Your Password', '<p>Please use this OTP to reset your Password&nbsp;&rarr;</p>\r\n\r\n<p>&nbsp;</p>', NULL, NULL, NULL, '2023-06-12-64870f8dcfcc5.png', '', '', 'Please contact us for any queries; we’re always happy to help.', 'Copyright 2023 6amMart. All right reserved.', 'dm', 'forget_password', '4', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2023-06-12 18:29:01', '2023-06-12 20:12:27', NULL),
-(22, 'Your Registration is Successful!', '<p>Congratulations!</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>You&rsquo;ve successfully registered.</p>\r\n\r\n<p>&nbsp;</p>', NULL, NULL, NULL, '2023-06-12-64871218e4c0e.png', '', '', 'Please contact us for any queries; we’re always happy to help.', '© 2023 6amMart. All rights reserved.', 'user', 'registration', '5', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2023-06-12 18:39:52', '2023-06-12 18:39:52', NULL),
-(23, 'Please Register with The OTP', '<p>ONE MORE STEP:&nbsp;</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>Please copy the following OTP &amp; paste in on your sign-up page to complete your registration.</p>\r\n\r\n<p>&nbsp;</p>', NULL, NULL, NULL, '2023-06-12-648712f6a5196.png', '', '', 'Please contact us for any queries; we’re always happy to help.', '© 2023 6amMart. All rights reserved.', 'user', 'registration_otp', '4', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2023-06-12 18:43:34', '2023-06-12 20:13:03', NULL),
-(24, 'Confirm Your Login.', '<p>Please copy the following OTP &amp; paste in on your Log in page to confirm your account.</p>\r\n\r\n<p>&nbsp;</p>', NULL, NULL, NULL, '2023-06-12-648713d7b9612.png', '', '', 'Please contact us for any queries; we’re always happy to help.', '© 2023 6amMart. All rights reserved.', 'user', 'login_otp', '4', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2023-06-12 18:46:46', '2023-06-12 20:13:41', NULL),
-(25, 'Please Verify Your Delivery.', '<p>Please give the following OTP to your Deliveryman to ensure your order.</p>\r\n\r\n<p><strong>7 5 8 9 4 3 </strong></p>\r\n\r\n<p>&nbsp;</p>', NULL, NULL, NULL, '2023-06-12-648714cf7f15a.png', '', '', 'Please contact us for any queries; we’re always happy to help.', '© 2023 6amMart. All rights reserved.', 'user', 'order_verification', '4', 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, '2023-06-12 18:51:27', '2023-06-12 18:51:27', NULL),
-(26, 'Your Order is Successful', '<p>Hi <strong>{userName}</strong>,</p>\r\n\r\n<p>Your order is successful. Please find your invoice below.</p>\r\n\r\n<p>&nbsp;</p>', NULL, NULL, NULL, NULL, 'Track Order', '', 'Please contact us for any queries; we’re always happy to help.', '© 2023 6amMart. All rights reserved.', 'user', 'new_order', '3', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2023-06-12 18:52:36', '2023-06-12 20:16:37', NULL),
-(27, 'Refund Order', '<p>Hi <strong>{userName}</strong>,</p>\r\n\r\n<p>We&rsquo;ve refunded your requested amount. Please find your refund invoice below.</p>\r\n\r\n<p>&nbsp;</p>', NULL, NULL, NULL, NULL, '', '', 'Please contact us for any queries; we’re always happy to help.', '© 2023 6amMart. All rights reserved.', 'user', 'refund_order', '9', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2023-06-12 18:53:40', '2023-06-12 20:18:12', NULL),
-(28, 'Reset Your Password', '<p>Please copy the following OTP &amp; paste in on your Log in page to&nbsp;reset your Password.</p>', NULL, NULL, NULL, '2023-06-12-64872af38ecfb.png', '', '', 'Please contact us for any queries; we’re always happy to help.', '© 2023 6amMart. All rights reserved..', 'user', 'forget_password', '4', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2023-06-12 18:54:59', '2023-06-12 20:25:55', NULL),
-(29, 'Your Refund Request was Rejected.', '<p>Dear User,</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>The amount you request for a refund was rejected by the Admin.&nbsp;</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>To know more please contact us.</p>\r\n\r\n<p>&nbsp;</p>', NULL, NULL, '2023-06-12-648716141b3fd.png', NULL, '', '', 'Please contact us for any queries; we’re always happy to help.', '© 2023 6amMart. All rights reserved.', 'user', 'refund_request_deny', '8', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2023-06-12 18:56:52', '2023-06-12 18:56:52', NULL),
-(30, 'Fund Added to your Wallet.', '<p>Dear <strong>{userName}</strong>,</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>The Admin has sent fund to your Wallet. Please check your wallet.</p>\r\n\r\n<p>&nbsp;</p>', NULL, NULL, NULL, '2023-06-12-64871653198e0.png', 'Check Status', '', 'Please contact us for any queries; we’re always happy to help.', '© 2023 6amMart. All rights reserved.', 'user', 'add_fund', '6', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2023-06-12 18:57:55', '2023-06-12 20:23:47', NULL);
+INSERT INTO `email_templates` (`id`, `title`, `body`, `background_image`, `image`, `logo`, `icon`, `button_name`, `button_url`, `footer_text`, `copyright_text`, `type`, `email_type`, `email_template`, `privacy`, `refund`, `cancelation`, `contact`, `facebook`, `instagram`, `twitter`, `linkedin`, `pinterest`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'Change Password Request', '<p>The following user has forgotten his password &amp; requested to change/reset their password.&nbsp;</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p><strong>User Name: {userName}</strong></p>', NULL, NULL, NULL, '2023-06-12-6486f303174e0.png', '', '', 'Please contact us for any queries; we’re always happy to help.', '© 2023 6amMart. All rights reserved.', 'admin', 'forget_password', '5', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2023-06-12 16:26:24', '2023-06-12 19:40:28'),
+(2, 'New Store Registration Request', '<p>Please find below the details of the new Store registration:</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p><strong>Store Name: {storeName}</strong></p>\r\n\r\n<p>To review the store from the respective Module, go to:&nbsp;</p>\r\n\r\n<p><strong>Module Section</strong><strong>&rarr;Store Management&rarr;New Stores</strong></p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>Or you can directly review the store here &rarr;</p>\r\n\r\n<p>&nbsp;</p>', NULL, '2023-06-12-6486f4420b5c1.png', '2023-06-12-6486f4420d61d.png', NULL, 'Review Request', 'https://www.facebook.com/', 'Please contact us for any queries; we’re always happy to help.', '© 2023 6amMart. All rights reserved.', 'admin', 'store_registration', '1', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2023-06-12 16:32:34', '2023-06-12 19:59:26'),
+(3, 'New Deliveryman Registration Request', '<p>Please find below the details of the new Deliveryman registration:</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p><strong>Deliveryman Name: {deliveryManName}</strong></p>\r\n\r\n<p>To review the store from the respective Module, go to:&nbsp;</p>\r\n\r\n<p><strong>Users</strong><strong>&rarr;Deliveryman Management&rarr;New Deliveryman</strong></p>\r\n\r\n<p>&nbsp;</p>', NULL, '2023-06-12-6486f4fe20b2c.png', '2023-06-12-6486f528877fe.png', NULL, 'Review Request', 'https://www.facebook.com/', 'Please contact us for any queries; we’re always happy to help.', '© 2023 6amMart. All rights reserved.', 'admin', 'dm_registration', '1', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2023-06-12 16:35:42', '2023-06-12 20:04:49'),
+(4, 'New Withdraw Request', '<p>Please find below the details of the new Withdraw Request:</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p><strong>Store Name: {storeName}</strong></p>\r\n\r\n<p>To review the Refund Request, go to:&nbsp;</p>\r\n\r\n<p><strong>Transactions &amp; Reports</strong><strong>&rarr;Withdraw Requests</strong></p>\r\n\r\n<p>&nbsp;</p>', NULL, NULL, NULL, '2023-06-12-6486f5b6a24a4.png', 'Review Request', '', 'Please contact us for any queries; we’re always happy to help.', '© 2023 6amMart. All rights reserved.', 'admin', 'withdraw_request', '6', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2023-06-12 16:38:46', '2023-06-12 20:04:17'),
+(5, '“BUY ONE GET ONE” Campaign Join Request', '<p>Please find below the details of the new Campaign Join Request:</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p><strong>Store Name: {storeName}</strong></p>\r\n\r\n<p>To review the Refund Request, go to:&nbsp;</p>\r\n\r\n<p><strong>Module Section</strong><strong>&rarr;Choose Module&rarr;Promotion Management&rarr;Campaigns&rarr;Basic Campaigns&rarr;Buy One Get One</strong></p>\r\n\r\n<p>&nbsp;</p>', NULL, '2023-06-12-6486f611cfb9b.png', '2023-06-12-6486f611cfdf0.png', NULL, 'Review Request', '', 'Please contact us for any queries; we’re always happy to help.', '© 2023 6amMart. All rights reserved.', 'admin', 'campaign_request', '1', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2023-06-12 16:40:17', '2023-06-12 20:06:04'),
+(6, 'You Have A Refund Request.', '<p>Please find below the details of the new Refund Request:</p>\r\n\r\n<p><strong>Customer Name: {userName}</strong></p>\r\n\r\n<p><strong>Order ID: {orderId}</strong></p>\r\n\r\n<p>&nbsp;</p>', NULL, NULL, '2023-06-12-6486fb27a6a00.png', NULL, 'Review Request', '', 'Please contact us for any queries; we’re always happy to help.', '© 2023 6amMart. All rights reserved.', 'admin', 'refund_request', '2', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2023-06-12 17:01:59', '2023-06-12 20:14:43'),
+(7, 'Mart Morning [ID 1234] Just Signed In', '<p>Mart Morning [ID 1234] just signed in from the Store Panel.&nbsp;</p>\r\n\r\n<p><br />\r\n<strong>Login Time:</strong> 12.00pm</p>', NULL, NULL, '2023-06-12-6486fbdeb92d6.png', NULL, 'Check Status', '', 'Please contact us for any queries; we’re always happy to help.', '© 2023 6amMart. All rights reserved.', 'admin', 'login', '2', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2023-06-12 17:05:02', '2023-06-12 17:05:02'),
+(8, 'Your Registration is Submitted Successfully!', '<p>Dear User,</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>We&rsquo;ve received your Store Registration Request.&nbsp;</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>Soon you&rsquo;ll know if your store registration is accepted or declined by the Admin.&nbsp;</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>Stay Tuned!</p>\r\n\r\n<p>&nbsp;</p>', NULL, NULL, NULL, '2023-06-12-6487024230762.png', '', '', 'Please contact us for any queries; we’re always happy to help.', '© 2023 6amMart. All rights reserved.', 'store', 'registration', '5', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2023-06-12 17:32:18', '2023-06-12 17:32:18'),
+(9, 'Congratulations! Your Registration is Approved!', '<p>Dear User,</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>Your registration is approved by the Admin.&nbsp;</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p><strong>First</strong>, you need to log in to your store panel.&nbsp;</p>\r\n\r\n<p><strong>After that,</strong> please set up your store and start selling!&nbsp;</p>\r\n\r\n<p><br />\r\n<strong>Click here</strong><strong> &rarr; </strong><a href=\"https://6ammart-admin.6amtech.com/store-panel/business-settings/store-setup\">https://6ammart-admin.6amtech.com/store-panel/business-settings/store-setup</a></p>', NULL, NULL, NULL, '2023-06-12-648702fb014dd.png', '', '', 'Please contact us for any queries; we’re always happy to help.', '© 2023 6amMart. All rights reserved.', 'store', 'approve', '5', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2023-06-12 17:35:23', '2023-06-12 20:01:31'),
+(10, 'Your Registration is Rejected', '<p>Dear User,&nbsp;</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>We&rsquo;re sorry to announce that your store registration was rejected by the Admin.&nbsp;</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>To find out more please contact us.</p>\r\n\r\n<p>&nbsp;</p>', NULL, NULL, NULL, '2023-06-12-648706ce4d5fb.png', '', '', 'Please contact us for any queries; we’re always happy to help.', '© 2023 6amMart. All rights reserved.', 'store', 'deny', '5', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2023-06-12 17:47:03', '2023-06-12 17:51:42'),
+(11, 'Congratulations! Your Withdrawal is Approved!', '<p>Dear User,</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>The amount you requested to withdraw is approved by the Admin and transferred to you bank account.</p>\r\n\r\n<p>&nbsp;</p>', NULL, NULL, NULL, '2023-06-12-64870788562d9.png', 'See details', '', 'Please contact us for any queries; we’re always happy to help.', '© 2023 6amMart. All rights reserved.', 'store', 'withdraw_approve', '6', 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, '2023-06-12 17:54:48', '2023-06-12 17:54:48'),
+(12, 'Your Withdraw Request was Rejected.', '<p>Dear User,</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>The amount you requested to withdraw is rejected by the Admin.</p>\r\n\r\n<p>Reason: Insufficient Balance.&nbsp;</p>\r\n\r\n<p>&nbsp;</p>', NULL, NULL, NULL, '2023-06-12-648708244930a.png', 'See Details', '', 'Please contact us for any queries; we’re always happy to help.', '© 2023 6amMart. All rights reserved.', 'store', 'withdraw_deny', '6', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2023-06-12 17:57:24', '2023-06-12 17:57:24'),
+(13, 'Your Request is Completed!', '<p>Dear User,</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>We&rsquo;ve received your Campaign Request.&nbsp;</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>Soon you&rsquo;ll know if your request is approved or rejected by the Admin.&nbsp;</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>Stay Tuned!</p>\r\n\r\n<p>&nbsp;</p>', NULL, '2023-06-12-648708d132665.png', '2023-06-12-6487088da18cb.png', NULL, 'See Status', '', 'Please contact us for any queries; we’re always happy to help.', '© 2023 6amMart. All rights reserved.', 'store', 'campaign_request', '1', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2023-06-12 17:59:09', '2023-06-12 18:00:17'),
+(14, 'Congratulations! Your Campaign Request is Approved!', '<p>Dear User,</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>Your request to join campaign is approved by the Admin.</p>\r\n\r\n<p>&nbsp;</p>', NULL, '2023-06-12-6487091d3ee5a.png', '2023-06-12-6487091d3f0b3.png', NULL, 'View Status', '', 'Please contact us for any queries; we’re always happy to help.', '© 2023 6amMart. All rights reserved.', 'store', 'campaign_approve', '1', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2023-06-12 18:01:33', '2023-06-12 20:04:45'),
+(15, 'Your Campaign Join Request Was Rejected.', '<p>Dear User,</p>\r\n\r\n<p>Your request to join the&nbsp;campaign was rejected by the admin.&nbsp;</p>\r\n\r\n<p>&nbsp;</p>', NULL, '2023-06-12-648709ce3e893.png', '2023-06-12-648709ce3ead2.png', NULL, '', '', 'Please contact us for any queries; we’re always happy to help.', '© 2023 6amMart. All rights reserved.', 'store', 'campaign_deny', '7', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2023-06-12 18:04:30', '2023-06-12 20:06:55'),
+(16, 'Your Registration is Completed!', '<p>Dear User,</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>We&rsquo;ve received your Deliveryman Registration Request.</p>\r\n\r\n<p>Soon you&rsquo;ll know if your Deliveryman registration is accepted or declined by the Admin.&nbsp;</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>Stay Tuned!</p>\r\n\r\n<p>&nbsp;</p>', NULL, NULL, NULL, '2023-06-12-64870c80bb7bb.png', '', '', 'Please contact us for any queries; we’re always happy to help.', '© 2023 6amMart. All rights reserved.', 'dm', 'registration', '5', 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, '2023-06-12 18:16:00', '2023-06-12 18:16:00'),
+(17, 'Congratulations! Your Registration is Approved!', '<p>Dear User,</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>Your registration is approved by the Admin.&nbsp;</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p><strong>Here&rsquo;s what to do next:&nbsp;</strong></p>\r\n\r\n<ol>\r\n	<li>Download the Deliveryman app</li>\r\n	<li>Login with below credentials.</li>\r\n</ol>\r\n\r\n<p><strong>After that,</strong> please set up your account and start delivery!&nbsp;</p>\r\n\r\n<p><br />\r\n<strong>Click here</strong><strong> to download the app&rarr; </strong><a href=\"https://play.google.com/store/apps/details?id=com.sixamtech.sixam_mart_delivery_app&amp;pli=1\">https://play.google.com/store/apps/details?id=com.sixamtech.sixam_mart_delivery_app&amp;pli=1</a></p>\r\n\r\n<p>&nbsp;</p>', NULL, NULL, NULL, '2023-06-12-64870cebc5fc6.png', '', '', 'Please contact us for any queries; we’re always happy to help.', '© 2023 6amMart. All rights reserved.', 'dm', 'approve', '5', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2023-06-12 18:17:47', '2023-06-12 20:09:23'),
+(18, 'Your Registration is Rejected', '<p>Dear User,&nbsp;</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>We&rsquo;re sorry to announce that your Deliveryman registration was rejected by the Admin.&nbsp;</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>To find out more please contact us.</p>\r\n\r\n<p>&nbsp;</p>', NULL, NULL, NULL, '2023-06-12-64870da0bf819.png', '', '', 'Please contact us for any queries; we’re always happy to help.', '© 2023 6amMart. All rights reserved.', 'dm', 'deny', '5', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2023-06-12 18:20:48', '2023-06-12 18:20:48'),
+(19, 'Your Account is Suspended.', '<p>Dear User,</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>Your Deliveryman account has been suspended by the Admin/Store.&nbsp;</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>Please contact related person to know more.</p>\r\n\r\n<p>&nbsp;</p>', NULL, '2023-06-12-64870e1ba4908.png', '2023-06-12-64870e1ba4cd1.png', NULL, '', '', 'Please contact us for any queries; we’re always happy to help.', '© 2023 6amMart. All rights reserved.', 'dm', 'suspend', '7', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2023-06-12 18:22:51', '2023-06-12 18:22:51'),
+(20, 'Cash Collected.', '<p>Dear User,</p>\r\n\r\n<p>The Admin has collected cash from you.&nbsp;</p>\r\n\r\n<p>&nbsp;</p>', NULL, NULL, NULL, '2023-06-12-64870ecf8ef10.png', 'See Details', '', 'Please contact us for any queries; we’re always happy to help.', '© 2023 6amMart. All rights reserved.', 'dm', 'cash_collect', '6', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2023-06-12 18:25:51', '2023-06-12 20:11:22'),
+(21, 'Reset Your Password', '<p>Please use this OTP to reset your Password&nbsp;&rarr;</p>\r\n\r\n<p>&nbsp;</p>', NULL, NULL, NULL, '2023-06-12-64870f8dcfcc5.png', '', '', 'Please contact us for any queries; we’re always happy to help.', 'Copyright 2023 6amMart. All right reserved.', 'dm', 'forget_password', '4', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2023-06-12 18:29:01', '2023-06-12 20:12:27'),
+(22, 'Your Registration is Successful!', '<p>Congratulations!</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>You&rsquo;ve successfully registered.</p>\r\n\r\n<p>&nbsp;</p>', NULL, NULL, NULL, '2023-06-12-64871218e4c0e.png', '', '', 'Please contact us for any queries; we’re always happy to help.', '© 2023 6amMart. All rights reserved.', 'user', 'registration', '5', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2023-06-12 18:39:52', '2023-06-12 18:39:52'),
+(23, 'Please Register with The OTP', '<p>ONE MORE STEP:&nbsp;</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>Please copy the following OTP &amp; paste in on your sign-up page to complete your registration.</p>\r\n\r\n<p>&nbsp;</p>', NULL, NULL, NULL, '2023-06-12-648712f6a5196.png', '', '', 'Please contact us for any queries; we’re always happy to help.', '© 2023 6amMart. All rights reserved.', 'user', 'registration_otp', '4', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2023-06-12 18:43:34', '2023-06-12 20:13:03'),
+(24, 'Confirm Your Login.', '<p>Please copy the following OTP &amp; paste in on your Log in page to confirm your account.</p>\r\n\r\n<p>&nbsp;</p>', NULL, NULL, NULL, '2023-06-12-648713d7b9612.png', '', '', 'Please contact us for any queries; we’re always happy to help.', '© 2023 6amMart. All rights reserved.', 'user', 'login_otp', '4', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2023-06-12 18:46:46', '2023-06-12 20:13:41'),
+(25, 'Please Verify Your Delivery.', '<p>Please give the following OTP to your Deliveryman to ensure your order.</p>\r\n\r\n<p><strong>7 5 8 9 4 3 </strong></p>\r\n\r\n<p>&nbsp;</p>', NULL, NULL, NULL, '2023-06-12-648714cf7f15a.png', '', '', 'Please contact us for any queries; we’re always happy to help.', '© 2023 6amMart. All rights reserved.', 'user', 'order_verification', '4', 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, '2023-06-12 18:51:27', '2023-06-12 18:51:27'),
+(26, 'Your Order is Successful', '<p>Hi <strong>{userName}</strong>,</p>\r\n\r\n<p>Your order is successful. Please find your invoice below.</p>\r\n\r\n<p>&nbsp;</p>', NULL, NULL, NULL, NULL, 'Track Order', '', 'Please contact us for any queries; we’re always happy to help.', '© 2023 6amMart. All rights reserved.', 'user', 'new_order', '3', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2023-06-12 18:52:36', '2023-06-12 20:16:37'),
+(27, 'Refund Order', '<p>Hi <strong>{userName}</strong>,</p>\r\n\r\n<p>We&rsquo;ve refunded your requested amount. Please find your refund invoice below.</p>\r\n\r\n<p>&nbsp;</p>', NULL, NULL, NULL, NULL, '', '', 'Please contact us for any queries; we’re always happy to help.', '© 2023 6amMart. All rights reserved.', 'user', 'refund_order', '9', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2023-06-12 18:53:40', '2023-06-12 20:18:12'),
+(28, 'Reset Your Password', '<p>Please copy the following OTP &amp; paste in on your Log in page to&nbsp;reset your Password.</p>', NULL, NULL, NULL, '2023-06-12-64872af38ecfb.png', '', '', 'Please contact us for any queries; we’re always happy to help.', '© 2023 6amMart. All rights reserved..', 'user', 'forget_password', '4', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2023-06-12 18:54:59', '2023-06-12 20:25:55'),
+(29, 'Your Refund Request was Rejected.', '<p>Dear User,</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>The amount you request for a refund was rejected by the Admin.&nbsp;</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>To know more please contact us.</p>\r\n\r\n<p>&nbsp;</p>', NULL, NULL, '2023-06-12-648716141b3fd.png', NULL, '', '', 'Please contact us for any queries; we’re always happy to help.', '© 2023 6amMart. All rights reserved.', 'user', 'refund_request_deny', '8', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2023-06-12 18:56:52', '2023-06-12 18:56:52'),
+(30, 'Fund Added to your Wallet.', '<p>Dear <strong>{userName}</strong>,</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>The Admin has sent fund to your Wallet. Please check your wallet.</p>\r\n\r\n<p>&nbsp;</p>', NULL, NULL, NULL, '2023-06-12-64871653198e0.png', 'Check Status', '', 'Please contact us for any queries; we’re always happy to help.', '© 2023 6amMart. All rights reserved.', 'user', 'add_fund', '6', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, '2023-06-12 18:57:55', '2023-06-12 20:23:47');
 
 -- --------------------------------------------------------
 
@@ -1249,8 +1175,8 @@ INSERT INTO `email_templates` (`id`, `title`, `body`, `background_image`, `image
 
 CREATE TABLE `email_verifications` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `email` varchar(255) DEFAULT NULL,
-  `token` varchar(255) DEFAULT NULL,
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `token` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1263,9 +1189,9 @@ CREATE TABLE `email_verifications` (
 
 CREATE TABLE `employee_roles` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(100) NOT NULL,
-  `modules` text DEFAULT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 1,
+  `name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `modules` text COLLATE utf8mb4_unicode_ci,
+  `status` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `store_id` bigint(20) UNSIGNED DEFAULT NULL
@@ -1279,13 +1205,13 @@ CREATE TABLE `employee_roles` (
 
 CREATE TABLE `expenses` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `type` varchar(255) NOT NULL DEFAULT 'custom',
-  `amount` decimal(23,3) NOT NULL DEFAULT 0.000,
+  `type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'custom',
+  `amount` decimal(23,3) NOT NULL DEFAULT '0.000',
   `order_id` bigint(20) UNSIGNED DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `description` text DEFAULT NULL,
-  `created_by` varchar(50) DEFAULT 'admin',
+  `description` text COLLATE utf8mb4_unicode_ci,
+  `created_by` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT 'admin',
   `store_id` bigint(20) UNSIGNED DEFAULT NULL,
   `delivery_man_id` bigint(20) UNSIGNED DEFAULT NULL,
   `user_id` bigint(20) UNSIGNED DEFAULT NULL
@@ -1299,12 +1225,12 @@ CREATE TABLE `expenses` (
 
 CREATE TABLE `failed_jobs` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `uuid` varchar(255) NOT NULL,
-  `connection` text NOT NULL,
-  `queue` text NOT NULL,
-  `payload` longtext NOT NULL,
-  `exception` longtext NOT NULL,
-  `failed_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `uuid` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `connection` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `queue` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `exception` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `failed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -1316,8 +1242,8 @@ CREATE TABLE `failed_jobs` (
 CREATE TABLE `flash_sales` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `module_id` bigint(20) UNSIGNED NOT NULL,
-  `title` varchar(100) DEFAULT NULL,
-  `is_publish` tinyint(1) NOT NULL DEFAULT 1,
+  `title` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `is_publish` tinyint(1) NOT NULL DEFAULT '1',
   `admin_discount_percentage` double(24,3) NOT NULL,
   `vendor_discount_percentage` double(24,3) NOT NULL,
   `start_date` datetime DEFAULT NULL,
@@ -1337,13 +1263,13 @@ CREATE TABLE `flash_sale_items` (
   `flash_sale_id` bigint(20) UNSIGNED NOT NULL,
   `item_id` bigint(20) UNSIGNED NOT NULL,
   `stock` int(11) NOT NULL,
-  `sold` int(11) NOT NULL DEFAULT 0,
+  `sold` int(11) NOT NULL DEFAULT '0',
   `available_stock` int(11) NOT NULL,
-  `discount_type` varchar(255) NOT NULL,
-  `discount` double(23,3) NOT NULL DEFAULT 0.000,
-  `discount_amount` double(23,3) NOT NULL DEFAULT 0.000,
-  `price` double(23,3) NOT NULL DEFAULT 0.000,
-  `status` tinyint(1) NOT NULL DEFAULT 1,
+  `discount_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `discount` double(23,3) NOT NULL DEFAULT '0.000',
+  `discount_amount` double(23,3) NOT NULL DEFAULT '0.000',
+  `price` double(23,3) NOT NULL DEFAULT '0.000',
+  `status` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1356,9 +1282,9 @@ CREATE TABLE `flash_sale_items` (
 
 CREATE TABLE `flutter_special_criterias` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `title` varchar(100) DEFAULT NULL,
-  `image` varchar(100) DEFAULT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 1,
+  `title` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `image` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1378,8 +1304,8 @@ INSERT INTO `flutter_special_criterias` (`id`, `title`, `image`, `status`, `crea
 
 CREATE TABLE `guests` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `ip_address` varchar(255) DEFAULT NULL,
-  `fcm_token` varchar(255) DEFAULT NULL,
+  `ip_address` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `fcm_token` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1392,50 +1318,49 @@ CREATE TABLE `guests` (
 
 CREATE TABLE `items` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `description` text DEFAULT NULL,
-  `image` varchar(30) DEFAULT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `description` text COLLATE utf8mb4_unicode_ci,
+  `image` varchar(30) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `category_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `category_ids` varchar(255) DEFAULT NULL,
-  `variations` text DEFAULT NULL,
-  `add_ons` varchar(255) DEFAULT NULL,
-  `attributes` varchar(255) DEFAULT NULL,
-  `choice_options` text DEFAULT NULL,
-  `price` decimal(24,2) NOT NULL DEFAULT 0.00,
-  `tax` decimal(24,2) NOT NULL DEFAULT 0.00,
-  `tax_type` varchar(20) NOT NULL DEFAULT 'percent',
-  `discount` decimal(24,2) NOT NULL DEFAULT 0.00,
-  `discount_type` varchar(20) NOT NULL DEFAULT 'percent',
+  `category_ids` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `variations` text COLLATE utf8mb4_unicode_ci,
+  `add_ons` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `attributes` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `choice_options` text COLLATE utf8mb4_unicode_ci,
+  `price` decimal(24,2) NOT NULL DEFAULT '0.00',
+  `tax` decimal(24,2) NOT NULL DEFAULT '0.00',
+  `tax_type` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'percent',
+  `discount` decimal(24,2) NOT NULL DEFAULT '0.00',
+  `discount_type` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'percent',
   `available_time_starts` time DEFAULT NULL,
   `available_time_ends` time DEFAULT NULL,
-  `veg` tinyint(1) NOT NULL DEFAULT 0,
-  `status` tinyint(1) NOT NULL DEFAULT 1,
+  `veg` tinyint(1) NOT NULL DEFAULT '0',
+  `status` tinyint(1) NOT NULL DEFAULT '1',
   `store_id` bigint(20) UNSIGNED NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `order_count` int(11) NOT NULL DEFAULT 0,
-  `avg_rating` double(16,14) NOT NULL DEFAULT 0.00000000000000,
-  `rating_count` int(11) NOT NULL DEFAULT 0,
-  `rating` varchar(255) DEFAULT NULL,
+  `order_count` int(11) NOT NULL DEFAULT '0',
+  `avg_rating` double(16,14) NOT NULL DEFAULT '0.00000000000000',
+  `rating_count` int(11) NOT NULL DEFAULT '0',
+  `rating` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `module_id` bigint(20) UNSIGNED NOT NULL,
-  `stock` int(11) DEFAULT 0,
+  `stock` int(11) DEFAULT '0',
   `unit_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `images` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `food_variations` text DEFAULT NULL,
-  `slug` varchar(255) DEFAULT NULL,
-  `recommended` tinyint(1) NOT NULL DEFAULT 0,
-  `organic` tinyint(1) NOT NULL DEFAULT 0,
+  `images` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
+  `food_variations` text COLLATE utf8mb4_unicode_ci,
+  `slug` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `recommended` tinyint(1) NOT NULL DEFAULT '0',
+  `organic` tinyint(1) NOT NULL DEFAULT '0',
   `maximum_cart_quantity` int(11) DEFAULT NULL,
-  `is_approved` tinyint(1) NOT NULL DEFAULT 1,
-  `is_halal` tinyint(1) NOT NULL DEFAULT 0
+  `is_approved` tinyint(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `items`
 --
 
-INSERT INTO `items` (`id`, `name`, `description`, `image`, `category_id`, `category_ids`, `variations`, `add_ons`, `attributes`, `choice_options`, `price`, `tax`, `tax_type`, `discount`, `discount_type`, `available_time_starts`, `available_time_ends`, `veg`, `status`, `store_id`, `created_at`, `updated_at`, `order_count`, `avg_rating`, `rating_count`, `rating`, `module_id`, `stock`, `unit_id`, `images`, `food_variations`, `slug`, `recommended`, `organic`, `maximum_cart_quantity`, `is_approved`, `is_halal`) VALUES
-(1, 'Demo Product', 'Demo Product Description', '2023-08-16-64dca91404b64.png', 2, '[{\"id\":\"1\",\"position\":1},{\"id\":\"2\",\"position\":2}]', '[]', '[]', '[]', '[]', '10.00', '0.00', 'percent', '0.00', 'percent', '00:00:00', '23:59:59', 0, 1, 1, '2023-08-15 23:46:44', '2023-08-16 00:00:05', 0, 0.00000000000000, 0, NULL, 1, 10, NULL, '[\"2023-08-16-64dca9140233e.png\",\"2023-08-16-64dcac358a7ea.png\"]', '[]', 'demo-product', 0, 1, 2, 1, 0);
+INSERT INTO `items` (`id`, `name`, `description`, `image`, `category_id`, `category_ids`, `variations`, `add_ons`, `attributes`, `choice_options`, `price`, `tax`, `tax_type`, `discount`, `discount_type`, `available_time_starts`, `available_time_ends`, `veg`, `status`, `store_id`, `created_at`, `updated_at`, `order_count`, `avg_rating`, `rating_count`, `rating`, `module_id`, `stock`, `unit_id`, `images`, `food_variations`, `slug`, `recommended`, `organic`, `maximum_cart_quantity`, `is_approved`) VALUES
+(1, 'Demo Product', 'Demo Product Description', '2023-08-16-64dca91404b64.png', 2, '[{\"id\":\"1\",\"position\":1},{\"id\":\"2\",\"position\":2}]', '[]', '[]', '[]', '[]', '10.00', '0.00', 'percent', '0.00', 'percent', '00:00:00', '23:59:59', 0, 1, 1, '2023-08-15 23:46:44', '2023-08-16 00:00:05', 0, 0.00000000000000, 0, NULL, 1, 10, NULL, '[\"2023-08-16-64dca9140233e.png\",\"2023-08-16-64dcac358a7ea.png\"]', '[]', 'demo-product', 0, 1, 2, 1);
 
 -- --------------------------------------------------------
 
@@ -1445,35 +1370,35 @@ INSERT INTO `items` (`id`, `name`, `description`, `image`, `category_id`, `categ
 
 CREATE TABLE `item_campaigns` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `title` varchar(191) DEFAULT NULL,
-  `image` varchar(100) DEFAULT NULL,
-  `description` text DEFAULT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 1,
+  `title` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `image` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `description` text COLLATE utf8mb4_unicode_ci,
+  `status` tinyint(1) NOT NULL DEFAULT '1',
   `admin_id` bigint(20) UNSIGNED NOT NULL,
   `start_date` date DEFAULT NULL,
   `end_date` date DEFAULT NULL,
   `start_time` time DEFAULT NULL,
   `end_time` time DEFAULT NULL,
   `category_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `category_ids` varchar(255) DEFAULT NULL,
-  `variations` text DEFAULT NULL,
-  `add_ons` varchar(255) DEFAULT NULL,
-  `attributes` varchar(255) DEFAULT NULL,
-  `choice_options` text DEFAULT NULL,
-  `price` decimal(24,2) NOT NULL DEFAULT 0.00,
-  `tax` decimal(24,2) NOT NULL DEFAULT 0.00,
-  `tax_type` varchar(20) NOT NULL DEFAULT 'percent',
-  `discount` decimal(24,2) NOT NULL DEFAULT 0.00,
-  `discount_type` varchar(20) NOT NULL DEFAULT 'percent',
+  `category_ids` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `variations` text COLLATE utf8mb4_unicode_ci,
+  `add_ons` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `attributes` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `choice_options` text COLLATE utf8mb4_unicode_ci,
+  `price` decimal(24,2) NOT NULL DEFAULT '0.00',
+  `tax` decimal(24,2) NOT NULL DEFAULT '0.00',
+  `tax_type` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'percent',
+  `discount` decimal(24,2) NOT NULL DEFAULT '0.00',
+  `discount_type` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'percent',
   `store_id` bigint(20) UNSIGNED NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `veg` tinyint(1) NOT NULL DEFAULT 0,
+  `veg` tinyint(1) NOT NULL DEFAULT '0',
   `module_id` bigint(20) UNSIGNED NOT NULL,
-  `stock` int(11) DEFAULT 0,
+  `stock` int(11) DEFAULT '0',
   `unit_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `food_variations` text DEFAULT NULL,
-  `slug` varchar(255) DEFAULT NULL,
+  `food_variations` text COLLATE utf8mb4_unicode_ci,
+  `slug` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `maximum_cart_quantity` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -1497,8 +1422,8 @@ CREATE TABLE `item_tag` (
 
 CREATE TABLE `jobs` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `queue` varchar(255) NOT NULL,
-  `payload` longtext NOT NULL,
+  `queue` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   `attempts` tinyint(3) UNSIGNED NOT NULL,
   `reserved_at` int(10) UNSIGNED DEFAULT NULL,
   `available_at` int(10) UNSIGNED NOT NULL,
@@ -1514,12 +1439,12 @@ CREATE TABLE `jobs` (
 CREATE TABLE `loyalty_point_transactions` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `transaction_id` char(36) NOT NULL,
-  `credit` decimal(24,3) NOT NULL DEFAULT 0.000,
-  `debit` decimal(24,3) NOT NULL DEFAULT 0.000,
-  `balance` decimal(24,3) NOT NULL DEFAULT 0.000,
-  `reference` varchar(191) DEFAULT NULL,
-  `transaction_type` varchar(191) DEFAULT NULL,
+  `transaction_id` char(36) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `credit` decimal(24,3) NOT NULL DEFAULT '0.000',
+  `debit` decimal(24,3) NOT NULL DEFAULT '0.000',
+  `balance` decimal(24,3) NOT NULL DEFAULT '0.000',
+  `reference` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `transaction_type` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1534,9 +1459,9 @@ CREATE TABLE `messages` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `conversation_id` bigint(20) UNSIGNED DEFAULT NULL,
   `sender_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `message` text DEFAULT NULL,
-  `file` varchar(100) DEFAULT NULL,
-  `is_seen` tinyint(1) NOT NULL DEFAULT 0,
+  `message` text COLLATE utf8mb4_unicode_ci,
+  `file` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `is_seen` tinyint(1) NOT NULL DEFAULT '0',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1549,7 +1474,7 @@ CREATE TABLE `messages` (
 
 CREATE TABLE `migrations` (
   `id` int(10) UNSIGNED NOT NULL,
-  `migration` varchar(255) NOT NULL,
+  `migration` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `batch` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -1689,19 +1614,7 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (131, '2023_11_21_124049_create_disbursement_details_table', 45),
 (132, '2023_11_21_160728_add_created_by_col_to_account_transactions_table', 45),
 (133, '2023_11_23_093859_create_parcel_delivery_instructions_table', 45),
-(134, '2024_01_17_105010_create_order_references_table', 46),
-(135, '2024_04_01_124630_create_cash_backs_table', 47),
-(136, '2024_04_01_130213_add_is_halal_col_to_items_table', 47),
-(137, '2024_04_01_130644_add_body_2_col_to_email_templates_table', 47),
-(138, '2024_04_01_142631_add_is_prescription_required_col_to_pharmacy_item_details_table', 47),
-(139, '2024_04_02_112611_create_brands_table', 47),
-(140, '2024_04_02_122002_create_ecommerce_item_details_table', 47),
-(141, '2024_04_02_133855_create_cash_back_histories_table', 47),
-(142, '2024_04_04_085842_add_interested_module_ids_col_to_users_table', 47),
-(143, '2024_04_18_171021_add_halal_extra_packaging_cols_to_store_configs_table', 47),
-(144, '2024_04_18_171206_add_halal_brand_cols_to_temp_products_table', 47),
-(145, '2024_04_18_171851_add_cashback_ref_amount_cols_to_temp_orders_table', 47),
-(146, '2024_04_18_172145_add_extrapackaging_ref_amount_cols_to_temp_order_transactions_table', 47);
+(134, '2024_01_17_105010_create_order_references_table', 46);
 
 -- --------------------------------------------------------
 
@@ -1711,17 +1624,17 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 
 CREATE TABLE `modules` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `module_name` varchar(191) NOT NULL,
-  `module_type` varchar(191) NOT NULL,
-  `thumbnail` varchar(255) DEFAULT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 1,
-  `stores_count` int(11) NOT NULL DEFAULT 0,
+  `module_name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `module_type` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `thumbnail` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '1',
+  `stores_count` int(11) NOT NULL DEFAULT '0',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `icon` varchar(191) DEFAULT NULL,
-  `theme_id` int(11) NOT NULL DEFAULT 1,
-  `description` text DEFAULT NULL,
-  `all_zone_service` tinyint(1) NOT NULL DEFAULT 0
+  `icon` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `theme_id` int(11) NOT NULL DEFAULT '1',
+  `description` text COLLATE utf8mb4_unicode_ci,
+  `all_zone_service` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -1739,8 +1652,8 @@ INSERT INTO `modules` (`id`, `module_name`, `module_type`, `thumbnail`, `status`
 
 CREATE TABLE `module_types` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `type` varchar(191) DEFAULT NULL,
-  `description` text DEFAULT NULL,
+  `type` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `description` text COLLATE utf8mb4_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1754,10 +1667,10 @@ CREATE TABLE `module_types` (
 CREATE TABLE `module_wise_banners` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `module_id` bigint(20) UNSIGNED NOT NULL,
-  `key` varchar(255) DEFAULT NULL,
-  `value` text DEFAULT NULL,
-  `type` varchar(255) DEFAULT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 1,
+  `key` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `value` text COLLATE utf8mb4_unicode_ci,
+  `type` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1771,10 +1684,10 @@ CREATE TABLE `module_wise_banners` (
 CREATE TABLE `module_wise_why_chooses` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `module_id` bigint(20) UNSIGNED NOT NULL,
-  `title` varchar(100) DEFAULT NULL,
-  `short_description` varchar(100) DEFAULT NULL,
-  `image` varchar(100) DEFAULT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 1,
+  `title` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `short_description` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `image` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1810,7 +1723,7 @@ INSERT INTO `module_zone` (`id`, `module_id`, `zone_id`, `per_km_shipping_charge
 
 CREATE TABLE `newsletters` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `email` varchar(255) NOT NULL COMMENT 'Subscribers email',
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL COMMENT 'Subscribers email',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1823,13 +1736,13 @@ CREATE TABLE `newsletters` (
 
 CREATE TABLE `notifications` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `title` varchar(191) DEFAULT NULL,
-  `description` text DEFAULT NULL,
-  `image` varchar(50) DEFAULT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 1,
+  `title` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `description` text COLLATE utf8mb4_unicode_ci,
+  `image` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `tergat` varchar(255) DEFAULT NULL,
+  `tergat` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `zone_id` bigint(20) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -1841,10 +1754,10 @@ CREATE TABLE `notifications` (
 
 CREATE TABLE `notification_messages` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `module_type` varchar(255) DEFAULT NULL,
-  `key` varchar(255) DEFAULT NULL,
-  `message` text DEFAULT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 1,
+  `module_type` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `key` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `message` text COLLATE utf8mb4_unicode_ci,
+  `status` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1913,11 +1826,11 @@ INSERT INTO `notification_messages` (`id`, `module_type`, `key`, `message`, `sta
 --
 
 CREATE TABLE `oauth_access_tokens` (
-  `id` varchar(100) NOT NULL,
+  `id` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `user_id` bigint(20) UNSIGNED DEFAULT NULL,
   `client_id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `scopes` text DEFAULT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `scopes` text COLLATE utf8mb4_unicode_ci,
   `revoked` tinyint(1) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -1931,10 +1844,10 @@ CREATE TABLE `oauth_access_tokens` (
 --
 
 CREATE TABLE `oauth_auth_codes` (
-  `id` varchar(100) NOT NULL,
+  `id` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
   `client_id` bigint(20) UNSIGNED NOT NULL,
-  `scopes` text DEFAULT NULL,
+  `scopes` text COLLATE utf8mb4_unicode_ci,
   `revoked` tinyint(1) NOT NULL,
   `expires_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1948,10 +1861,10 @@ CREATE TABLE `oauth_auth_codes` (
 CREATE TABLE `oauth_clients` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `name` varchar(255) NOT NULL,
-  `secret` varchar(100) DEFAULT NULL,
-  `provider` varchar(255) DEFAULT NULL,
-  `redirect` text NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `secret` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `provider` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `redirect` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `personal_access_client` tinyint(1) NOT NULL,
   `password_client` tinyint(1) NOT NULL,
   `revoked` tinyint(1) NOT NULL,
@@ -1997,8 +1910,8 @@ INSERT INTO `oauth_personal_access_clients` (`id`, `client_id`, `created_at`, `u
 --
 
 CREATE TABLE `oauth_refresh_tokens` (
-  `id` varchar(100) NOT NULL,
-  `access_token_id` varchar(100) NOT NULL,
+  `id` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `access_token_id` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `revoked` tinyint(1) NOT NULL,
   `expires_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -2012,11 +1925,11 @@ CREATE TABLE `oauth_refresh_tokens` (
 CREATE TABLE `offline_payments` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `order_id` bigint(20) UNSIGNED NOT NULL,
-  `payment_info` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `status` varchar(10) NOT NULL DEFAULT 'pending',
-  `note` text DEFAULT NULL,
-  `customer_note` text DEFAULT NULL,
-  `method_fields` text DEFAULT NULL,
+  `payment_info` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
+  `status` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'pending',
+  `note` text COLLATE utf8mb4_unicode_ci,
+  `customer_note` text COLLATE utf8mb4_unicode_ci,
+  `method_fields` text COLLATE utf8mb4_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -2029,10 +1942,10 @@ CREATE TABLE `offline_payments` (
 
 CREATE TABLE `offline_payment_methods` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `method_name` varchar(255) NOT NULL,
-  `method_fields` text NOT NULL,
-  `method_informations` text NOT NULL,
-  `status` tinyint(4) NOT NULL DEFAULT 0,
+  `method_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `method_fields` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `method_informations` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT '0',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -2046,27 +1959,27 @@ CREATE TABLE `offline_payment_methods` (
 CREATE TABLE `orders` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `order_amount` decimal(24,2) NOT NULL DEFAULT 0.00,
-  `coupon_discount_amount` decimal(24,2) NOT NULL DEFAULT 0.00,
-  `coupon_discount_title` varchar(255) DEFAULT NULL,
-  `payment_status` varchar(255) NOT NULL DEFAULT 'unpaid',
-  `order_status` varchar(255) NOT NULL DEFAULT 'pending',
-  `total_tax_amount` decimal(24,2) NOT NULL DEFAULT 0.00,
-  `payment_method` varchar(30) DEFAULT NULL,
-  `transaction_reference` varchar(30) DEFAULT NULL,
+  `order_amount` decimal(24,2) NOT NULL DEFAULT '0.00',
+  `coupon_discount_amount` decimal(24,2) NOT NULL DEFAULT '0.00',
+  `coupon_discount_title` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `payment_status` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'unpaid',
+  `order_status` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'pending',
+  `total_tax_amount` decimal(24,2) NOT NULL DEFAULT '0.00',
+  `payment_method` varchar(30) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `transaction_reference` varchar(30) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `delivery_address_id` bigint(20) DEFAULT NULL,
   `delivery_man_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `coupon_code` varchar(255) DEFAULT NULL,
-  `order_note` text DEFAULT NULL,
-  `order_type` varchar(255) NOT NULL DEFAULT 'delivery',
-  `checked` tinyint(1) NOT NULL DEFAULT 0,
+  `coupon_code` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `order_note` text COLLATE utf8mb4_unicode_ci,
+  `order_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'delivery',
+  `checked` tinyint(1) NOT NULL DEFAULT '0',
   `store_id` bigint(20) UNSIGNED DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `delivery_charge` decimal(24,2) NOT NULL DEFAULT 0.00,
+  `delivery_charge` decimal(24,2) NOT NULL DEFAULT '0.00',
   `schedule_at` timestamp NULL DEFAULT NULL,
-  `callback` varchar(255) DEFAULT NULL,
-  `otp` varchar(255) DEFAULT NULL,
+  `callback` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `otp` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `pending` timestamp NULL DEFAULT NULL,
   `accepted` timestamp NULL DEFAULT NULL,
   `confirmed` timestamp NULL DEFAULT NULL,
@@ -2077,45 +1990,42 @@ CREATE TABLE `orders` (
   `canceled` timestamp NULL DEFAULT NULL,
   `refund_requested` timestamp NULL DEFAULT NULL,
   `refunded` timestamp NULL DEFAULT NULL,
-  `delivery_address` text DEFAULT NULL,
-  `scheduled` tinyint(1) NOT NULL DEFAULT 0,
-  `store_discount_amount` decimal(24,2) NOT NULL DEFAULT 0.00,
-  `original_delivery_charge` decimal(24,2) NOT NULL DEFAULT 0.00,
+  `delivery_address` text COLLATE utf8mb4_unicode_ci,
+  `scheduled` tinyint(1) NOT NULL DEFAULT '0',
+  `store_discount_amount` decimal(24,2) NOT NULL DEFAULT '0.00',
+  `original_delivery_charge` decimal(24,2) NOT NULL DEFAULT '0.00',
   `failed` timestamp NULL DEFAULT NULL,
-  `adjusment` decimal(24,2) NOT NULL DEFAULT 0.00,
-  `edited` tinyint(1) NOT NULL DEFAULT 0,
-  `delivery_time` varchar(255) DEFAULT NULL,
+  `adjusment` decimal(24,2) NOT NULL DEFAULT '0.00',
+  `edited` tinyint(1) NOT NULL DEFAULT '0',
+  `delivery_time` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `zone_id` bigint(20) UNSIGNED DEFAULT NULL,
   `module_id` bigint(20) UNSIGNED NOT NULL,
-  `order_attachment` varchar(191) DEFAULT NULL,
+  `order_attachment` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `parcel_category_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `receiver_details` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `charge_payer` enum('sender','receiver') DEFAULT NULL,
-  `distance` double(16,3) NOT NULL DEFAULT 0.000,
-  `dm_tips` double(24,2) NOT NULL DEFAULT 0.00,
-  `free_delivery_by` varchar(255) DEFAULT NULL,
+  `receiver_details` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
+  `charge_payer` enum('sender','receiver') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `distance` double(16,3) NOT NULL DEFAULT '0.000',
+  `dm_tips` double(24,2) NOT NULL DEFAULT '0.00',
+  `free_delivery_by` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `refund_request_canceled` timestamp NULL DEFAULT NULL,
-  `prescription_order` tinyint(1) NOT NULL DEFAULT 0,
-  `tax_status` varchar(50) DEFAULT NULL,
+  `prescription_order` tinyint(1) NOT NULL DEFAULT '0',
+  `tax_status` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `dm_vehicle_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `cancellation_reason` varchar(255) DEFAULT NULL,
-  `canceled_by` varchar(50) DEFAULT NULL,
-  `coupon_created_by` varchar(50) DEFAULT NULL,
-  `discount_on_product_by` varchar(50) NOT NULL DEFAULT 'vendor',
-  `processing_time` varchar(10) DEFAULT NULL,
-  `unavailable_item_note` varchar(255) DEFAULT NULL,
-  `cutlery` tinyint(1) NOT NULL DEFAULT 0,
-  `delivery_instruction` text DEFAULT NULL,
+  `cancellation_reason` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `canceled_by` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `coupon_created_by` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `discount_on_product_by` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'vendor',
+  `processing_time` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `unavailable_item_note` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `cutlery` tinyint(1) NOT NULL DEFAULT '0',
+  `delivery_instruction` text COLLATE utf8mb4_unicode_ci,
   `tax_percentage` double(24,3) DEFAULT NULL,
-  `additional_charge` double(23,3) NOT NULL DEFAULT 0.000,
-  `order_proof` varchar(255) DEFAULT NULL,
-  `partially_paid_amount` double(23,3) NOT NULL DEFAULT 0.000,
-  `is_guest` tinyint(1) NOT NULL DEFAULT 0,
-  `flash_admin_discount_amount` double(24,3) NOT NULL DEFAULT 0.000,
-  `flash_store_discount_amount` double(24,3) NOT NULL DEFAULT 0.000,
-  `cash_back_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `extra_packaging_amount` double(23,3) NOT NULL DEFAULT 0.000,
-  `ref_bonus_amount` double(23,3) NOT NULL DEFAULT 0.000
+  `additional_charge` double(23,3) NOT NULL DEFAULT '0.000',
+  `order_proof` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `partially_paid_amount` double(23,3) NOT NULL DEFAULT '0.000',
+  `is_guest` tinyint(1) NOT NULL DEFAULT '0',
+  `flash_admin_discount_amount` double(24,3) NOT NULL DEFAULT '0.000',
+  `flash_store_discount_amount` double(24,3) NOT NULL DEFAULT '0.000'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -2126,9 +2036,9 @@ CREATE TABLE `orders` (
 
 CREATE TABLE `order_cancel_reasons` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `reason` varchar(255) NOT NULL,
-  `user_type` varchar(50) NOT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 1,
+  `reason` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `user_type` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -2145,8 +2055,8 @@ CREATE TABLE `order_delivery_histories` (
   `delivery_man_id` bigint(20) UNSIGNED DEFAULT NULL,
   `start_time` datetime DEFAULT NULL,
   `end_time` datetime DEFAULT NULL,
-  `start_location` varchar(255) DEFAULT NULL,
-  `end_location` varchar(255) DEFAULT NULL,
+  `start_location` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `end_location` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -2161,19 +2071,19 @@ CREATE TABLE `order_details` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `item_id` bigint(20) UNSIGNED DEFAULT NULL,
   `order_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `price` decimal(24,2) NOT NULL DEFAULT 0.00,
-  `item_details` text DEFAULT NULL,
-  `variation` text DEFAULT NULL,
-  `add_ons` text DEFAULT NULL,
+  `price` decimal(24,2) NOT NULL DEFAULT '0.00',
+  `item_details` text COLLATE utf8mb4_unicode_ci,
+  `variation` text COLLATE utf8mb4_unicode_ci,
+  `add_ons` text COLLATE utf8mb4_unicode_ci,
   `discount_on_item` decimal(24,2) DEFAULT NULL,
-  `discount_type` varchar(20) NOT NULL DEFAULT 'amount',
-  `quantity` int(11) NOT NULL DEFAULT 1,
-  `tax_amount` decimal(24,2) NOT NULL DEFAULT 1.00,
-  `variant` varchar(255) DEFAULT NULL,
+  `discount_type` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'amount',
+  `quantity` int(11) NOT NULL DEFAULT '1',
+  `tax_amount` decimal(24,2) NOT NULL DEFAULT '1.00',
+  `variant` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `item_campaign_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `total_add_on_price` decimal(24,2) NOT NULL DEFAULT 0.00
+  `total_add_on_price` decimal(24,2) NOT NULL DEFAULT '0.00'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -2185,10 +2095,10 @@ CREATE TABLE `order_details` (
 CREATE TABLE `order_payments` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `order_id` bigint(20) UNSIGNED NOT NULL,
-  `transaction_ref` varchar(255) DEFAULT NULL,
-  `amount` decimal(8,2) NOT NULL DEFAULT 0.00,
-  `payment_status` varchar(50) NOT NULL,
-  `payment_method` varchar(100) NOT NULL,
+  `transaction_ref` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `amount` decimal(8,2) NOT NULL DEFAULT '0.00',
+  `payment_status` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `payment_method` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -2202,8 +2112,8 @@ CREATE TABLE `order_payments` (
 CREATE TABLE `order_references` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `order_id` bigint(20) UNSIGNED NOT NULL,
-  `is_reviewed` tinyint(1) NOT NULL DEFAULT 0,
-  `is_review_canceled` tinyint(1) NOT NULL DEFAULT 0,
+  `is_reviewed` tinyint(1) NOT NULL DEFAULT '0',
+  `is_review_canceled` tinyint(1) NOT NULL DEFAULT '0',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -2220,26 +2130,24 @@ CREATE TABLE `order_transactions` (
   `delivery_man_id` bigint(20) UNSIGNED DEFAULT NULL,
   `order_id` bigint(20) UNSIGNED NOT NULL,
   `order_amount` decimal(24,2) NOT NULL,
-  `store_amount` decimal(24,2) NOT NULL DEFAULT 0.00,
+  `store_amount` decimal(24,2) NOT NULL DEFAULT '0.00',
   `admin_commission` decimal(24,2) NOT NULL,
-  `received_by` varchar(255) NOT NULL,
-  `status` varchar(255) DEFAULT NULL,
+  `received_by` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `delivery_charge` decimal(24,2) NOT NULL DEFAULT 0.00,
-  `original_delivery_charge` decimal(24,2) NOT NULL DEFAULT 0.00,
-  `tax` decimal(24,2) NOT NULL DEFAULT 0.00,
+  `delivery_charge` decimal(24,2) NOT NULL DEFAULT '0.00',
+  `original_delivery_charge` decimal(24,2) NOT NULL DEFAULT '0.00',
+  `tax` decimal(24,2) NOT NULL DEFAULT '0.00',
   `zone_id` bigint(20) UNSIGNED DEFAULT NULL,
   `module_id` bigint(20) UNSIGNED NOT NULL,
   `parcel_catgory_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `dm_tips` double(24,2) NOT NULL DEFAULT 0.00,
-  `delivery_fee_comission` double(24,2) NOT NULL DEFAULT 0.00,
-  `admin_expense` decimal(23,3) DEFAULT 0.000,
-  `store_expense` double(23,3) DEFAULT 0.000,
-  `discount_amount_by_store` double(23,3) DEFAULT 0.000,
-  `additional_charge` double(23,3) NOT NULL DEFAULT 0.000,
-  `extra_packaging_amount` double(23,3) NOT NULL DEFAULT 0.000,
-  `ref_bonus_amount` double(23,3) NOT NULL DEFAULT 0.000
+  `dm_tips` double(24,2) NOT NULL DEFAULT '0.00',
+  `delivery_fee_comission` double(24,2) NOT NULL DEFAULT '0.00',
+  `admin_expense` decimal(23,3) DEFAULT '0.000',
+  `store_expense` double(23,3) DEFAULT '0.000',
+  `discount_amount_by_store` double(23,3) DEFAULT '0.000',
+  `additional_charge` double(23,3) NOT NULL DEFAULT '0.000'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -2250,11 +2158,11 @@ CREATE TABLE `order_transactions` (
 
 CREATE TABLE `parcel_categories` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `image` varchar(191) DEFAULT NULL,
-  `name` varchar(191) NOT NULL,
-  `description` text NOT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 1,
-  `orders_count` int(11) NOT NULL DEFAULT 0,
+  `image` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '1',
+  `orders_count` int(11) NOT NULL DEFAULT '0',
   `module_id` bigint(20) UNSIGNED NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -2270,8 +2178,8 @@ CREATE TABLE `parcel_categories` (
 
 CREATE TABLE `parcel_delivery_instructions` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `instruction` varchar(255) NOT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 1,
+  `instruction` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -2283,14 +2191,14 @@ CREATE TABLE `parcel_delivery_instructions` (
 --
 
 CREATE TABLE `password_resets` (
-  `email` varchar(255) NOT NULL,
-  `token` varchar(255) NOT NULL,
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `token` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `otp_hit_count` tinyint(4) NOT NULL DEFAULT 0,
-  `is_blocked` tinyint(1) NOT NULL DEFAULT 0,
-  `is_temp_blocked` tinyint(1) NOT NULL DEFAULT 0,
+  `otp_hit_count` tinyint(4) NOT NULL DEFAULT '0',
+  `is_blocked` tinyint(1) NOT NULL DEFAULT '0',
+  `is_temp_blocked` tinyint(1) NOT NULL DEFAULT '0',
   `temp_block_time` timestamp NULL DEFAULT NULL,
-  `created_by` varchar(50) DEFAULT 'user'
+  `created_by` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT 'user'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -2300,26 +2208,26 @@ CREATE TABLE `password_resets` (
 --
 
 CREATE TABLE `payment_requests` (
-  `id` char(36) NOT NULL,
-  `payer_id` varchar(64) DEFAULT NULL,
-  `receiver_id` varchar(64) DEFAULT NULL,
-  `payment_amount` decimal(24,2) NOT NULL DEFAULT 0.00,
-  `gateway_callback_url` varchar(191) DEFAULT NULL,
-  `success_hook` varchar(100) DEFAULT NULL,
-  `failure_hook` varchar(100) DEFAULT NULL,
-  `transaction_id` varchar(100) DEFAULT NULL,
-  `currency_code` varchar(20) NOT NULL DEFAULT 'USD',
-  `payment_method` varchar(50) DEFAULT NULL,
-  `additional_data` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `is_paid` tinyint(1) NOT NULL DEFAULT 0,
+  `id` char(36) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `payer_id` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `receiver_id` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `payment_amount` decimal(24,2) NOT NULL DEFAULT '0.00',
+  `gateway_callback_url` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `success_hook` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `failure_hook` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `transaction_id` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `currency_code` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'USD',
+  `payment_method` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `additional_data` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
+  `is_paid` tinyint(1) NOT NULL DEFAULT '0',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `payer_information` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `external_redirect_link` varchar(255) DEFAULT NULL,
-  `receiver_information` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `attribute_id` varchar(64) DEFAULT NULL,
-  `attribute` varchar(255) DEFAULT NULL,
-  `payment_platform` varchar(255) DEFAULT NULL
+  `payer_information` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
+  `external_redirect_link` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `receiver_information` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
+  `attribute_id` varchar(64) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `attribute` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `payment_platform` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -2332,11 +2240,10 @@ CREATE TABLE `pharmacy_item_details` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `item_id` bigint(20) UNSIGNED DEFAULT NULL,
   `common_condition_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `is_basic` tinyint(1) NOT NULL DEFAULT 0,
+  `is_basic` tinyint(1) NOT NULL DEFAULT '0',
   `temp_product_id` bigint(20) UNSIGNED DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `is_prescription_required` tinyint(1) NOT NULL DEFAULT 0
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -2347,13 +2254,13 @@ CREATE TABLE `pharmacy_item_details` (
 
 CREATE TABLE `phone_verifications` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `phone` varchar(255) NOT NULL,
-  `token` varchar(255) NOT NULL,
+  `phone` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `token` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `otp_hit_count` tinyint(4) NOT NULL DEFAULT 0,
-  `is_blocked` tinyint(1) NOT NULL DEFAULT 0,
-  `is_temp_blocked` tinyint(1) NOT NULL DEFAULT 0,
+  `otp_hit_count` tinyint(4) NOT NULL DEFAULT '0',
+  `is_blocked` tinyint(1) NOT NULL DEFAULT '0',
+  `is_temp_blocked` tinyint(1) NOT NULL DEFAULT '0',
   `temp_block_time` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -2366,9 +2273,9 @@ CREATE TABLE `phone_verifications` (
 CREATE TABLE `provide_d_m_earnings` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `delivery_man_id` bigint(20) UNSIGNED NOT NULL,
-  `amount` decimal(24,2) NOT NULL DEFAULT 0.00,
-  `method` varchar(255) DEFAULT NULL,
-  `ref` varchar(255) DEFAULT NULL,
+  `amount` decimal(24,2) NOT NULL DEFAULT '0.00',
+  `method` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `ref` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -2381,12 +2288,12 @@ CREATE TABLE `provide_d_m_earnings` (
 
 CREATE TABLE `react_testimonials` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(100) DEFAULT NULL,
-  `designation` varchar(100) DEFAULT NULL,
-  `review` text DEFAULT NULL,
-  `reviewer_image` varchar(255) DEFAULT NULL,
-  `company_image` varchar(255) DEFAULT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 1,
+  `name` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `designation` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `review` text COLLATE utf8mb4_unicode_ci,
+  `reviewer_image` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `company_image` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -2408,14 +2315,14 @@ CREATE TABLE `refunds` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `order_id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
-  `order_status` varchar(50) NOT NULL,
-  `image` varchar(255) DEFAULT NULL,
-  `customer_reason` varchar(255) DEFAULT NULL,
-  `customer_note` text DEFAULT NULL,
-  `admin_note` text DEFAULT NULL,
-  `refund_amount` decimal(23,3) NOT NULL DEFAULT 0.000,
-  `refund_status` varchar(50) NOT NULL,
-  `refund_method` varchar(100) NOT NULL,
+  `order_status` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `image` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `customer_reason` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `customer_note` text COLLATE utf8mb4_unicode_ci,
+  `admin_note` text COLLATE utf8mb4_unicode_ci,
+  `refund_amount` decimal(23,3) NOT NULL DEFAULT '0.000',
+  `refund_status` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `refund_method` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -2428,8 +2335,8 @@ CREATE TABLE `refunds` (
 
 CREATE TABLE `refund_reasons` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `reason` varchar(255) NOT NULL,
-  `status` tinyint(1) DEFAULT 1,
+  `reason` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` tinyint(1) DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -2451,14 +2358,14 @@ CREATE TABLE `reviews` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `item_id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
-  `comment` mediumtext DEFAULT NULL,
-  `attachment` varchar(255) DEFAULT NULL,
-  `rating` int(11) NOT NULL DEFAULT 0,
+  `comment` mediumtext COLLATE utf8mb4_unicode_ci,
+  `attachment` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `rating` int(11) NOT NULL DEFAULT '0',
   `order_id` bigint(20) UNSIGNED DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `item_campaign_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `status` tinyint(1) DEFAULT 1,
+  `status` tinyint(1) DEFAULT '1',
   `module_id` bigint(20) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -2470,9 +2377,9 @@ CREATE TABLE `reviews` (
 
 CREATE TABLE `social_media` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `link` varchar(255) NOT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 1,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `link` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -2485,8 +2392,8 @@ CREATE TABLE `social_media` (
 
 CREATE TABLE `soft_credentials` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `key` varchar(255) DEFAULT NULL,
-  `value` longtext DEFAULT NULL,
+  `key` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `value` longtext COLLATE utf8mb4_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -2499,54 +2406,54 @@ CREATE TABLE `soft_credentials` (
 
 CREATE TABLE `stores` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `phone` varchar(20) NOT NULL,
-  `email` varchar(100) DEFAULT NULL,
-  `logo` varchar(255) DEFAULT NULL,
-  `latitude` varchar(255) DEFAULT NULL,
-  `longitude` varchar(255) DEFAULT NULL,
-  `address` text DEFAULT NULL,
-  `footer_text` text DEFAULT NULL,
-  `minimum_order` decimal(24,2) NOT NULL DEFAULT 0.00,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `phone` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `logo` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `latitude` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `longitude` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `address` text COLLATE utf8mb4_unicode_ci,
+  `footer_text` text COLLATE utf8mb4_unicode_ci,
+  `minimum_order` decimal(24,2) NOT NULL DEFAULT '0.00',
   `comission` decimal(24,2) DEFAULT NULL,
-  `schedule_order` tinyint(1) NOT NULL DEFAULT 0,
-  `status` tinyint(1) NOT NULL DEFAULT 1,
+  `schedule_order` tinyint(1) NOT NULL DEFAULT '0',
+  `status` tinyint(1) NOT NULL DEFAULT '1',
   `vendor_id` bigint(20) UNSIGNED NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `free_delivery` tinyint(1) NOT NULL DEFAULT 0,
-  `rating` varchar(255) DEFAULT NULL,
-  `cover_photo` varchar(255) DEFAULT NULL,
-  `delivery` tinyint(1) NOT NULL DEFAULT 1,
-  `take_away` tinyint(1) NOT NULL DEFAULT 1,
-  `item_section` tinyint(1) NOT NULL DEFAULT 1,
-  `tax` decimal(24,2) NOT NULL DEFAULT 0.00,
+  `free_delivery` tinyint(1) NOT NULL DEFAULT '0',
+  `rating` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `cover_photo` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `delivery` tinyint(1) NOT NULL DEFAULT '1',
+  `take_away` tinyint(1) NOT NULL DEFAULT '1',
+  `item_section` tinyint(1) NOT NULL DEFAULT '1',
+  `tax` decimal(24,2) NOT NULL DEFAULT '0.00',
   `zone_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `reviews_section` tinyint(1) NOT NULL DEFAULT 1,
-  `active` tinyint(1) NOT NULL DEFAULT 1,
-  `off_day` varchar(191) NOT NULL DEFAULT ' ',
-  `gst` varchar(191) DEFAULT NULL,
-  `self_delivery_system` tinyint(1) NOT NULL DEFAULT 0,
-  `pos_system` tinyint(1) NOT NULL DEFAULT 0,
-  `minimum_shipping_charge` decimal(24,2) NOT NULL DEFAULT 0.00,
-  `delivery_time` varchar(100) DEFAULT '30-40',
-  `veg` tinyint(1) NOT NULL DEFAULT 1,
-  `non_veg` tinyint(1) NOT NULL DEFAULT 1,
-  `order_count` int(10) UNSIGNED NOT NULL DEFAULT 0,
-  `total_order` int(10) UNSIGNED NOT NULL DEFAULT 0,
+  `reviews_section` tinyint(1) NOT NULL DEFAULT '1',
+  `active` tinyint(1) NOT NULL DEFAULT '1',
+  `off_day` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT ' ',
+  `gst` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `self_delivery_system` tinyint(1) NOT NULL DEFAULT '0',
+  `pos_system` tinyint(1) NOT NULL DEFAULT '0',
+  `minimum_shipping_charge` decimal(24,2) NOT NULL DEFAULT '0.00',
+  `delivery_time` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT '30-40',
+  `veg` tinyint(1) NOT NULL DEFAULT '1',
+  `non_veg` tinyint(1) NOT NULL DEFAULT '1',
+  `order_count` int(10) UNSIGNED NOT NULL DEFAULT '0',
+  `total_order` int(10) UNSIGNED NOT NULL DEFAULT '0',
   `module_id` bigint(20) UNSIGNED NOT NULL,
-  `order_place_to_schedule_interval` int(11) DEFAULT 0,
-  `featured` tinyint(1) NOT NULL DEFAULT 0,
-  `per_km_shipping_charge` double(16,3) UNSIGNED NOT NULL DEFAULT 0.000,
-  `prescription_order` tinyint(1) NOT NULL DEFAULT 0,
-  `slug` varchar(255) DEFAULT NULL,
+  `order_place_to_schedule_interval` int(11) DEFAULT '0',
+  `featured` tinyint(1) NOT NULL DEFAULT '0',
+  `per_km_shipping_charge` double(16,3) UNSIGNED NOT NULL DEFAULT '0.000',
+  `prescription_order` tinyint(1) NOT NULL DEFAULT '0',
+  `slug` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `maximum_shipping_charge` double(23,3) DEFAULT NULL,
-  `cutlery` tinyint(1) NOT NULL DEFAULT 0,
-  `meta_title` varchar(100) DEFAULT NULL,
-  `meta_description` text DEFAULT NULL,
-  `meta_image` varchar(100) DEFAULT NULL,
-  `announcement` tinyint(1) NOT NULL DEFAULT 0,
-  `announcement_message` varchar(255) DEFAULT NULL
+  `cutlery` tinyint(1) NOT NULL DEFAULT '0',
+  `meta_title` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `meta_description` text COLLATE utf8mb4_unicode_ci,
+  `meta_image` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `announcement` tinyint(1) NOT NULL DEFAULT '0',
+  `announcement_message` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -2565,13 +2472,10 @@ INSERT INTO `stores` (`id`, `name`, `phone`, `email`, `logo`, `latitude`, `longi
 CREATE TABLE `store_configs` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `store_id` bigint(20) UNSIGNED NOT NULL,
-  `is_recommended` tinyint(1) NOT NULL DEFAULT 0,
-  `is_recommended_deleted` tinyint(1) NOT NULL DEFAULT 0,
+  `is_recommended` tinyint(1) NOT NULL DEFAULT '0',
+  `is_recommended_deleted` tinyint(1) NOT NULL DEFAULT '0',
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `halal_tag_status` tinyint(1) NOT NULL DEFAULT 0,
-  `extra_packaging_status` tinyint(1) NOT NULL DEFAULT 0,
-  `extra_packaging_amount` double(23,3) NOT NULL DEFAULT 0.000
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -2599,10 +2503,10 @@ CREATE TABLE `store_schedule` (
 CREATE TABLE `store_wallets` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `vendor_id` bigint(20) UNSIGNED NOT NULL,
-  `total_earning` decimal(24,2) NOT NULL DEFAULT 0.00,
-  `total_withdrawn` decimal(24,2) NOT NULL DEFAULT 0.00,
-  `pending_withdraw` decimal(24,2) NOT NULL DEFAULT 0.00,
-  `collected_cash` decimal(24,2) NOT NULL DEFAULT 0.00,
+  `total_earning` decimal(24,2) NOT NULL DEFAULT '0.00',
+  `total_withdrawn` decimal(24,2) NOT NULL DEFAULT '0.00',
+  `pending_withdraw` decimal(24,2) NOT NULL DEFAULT '0.00',
+  `collected_cash` decimal(24,2) NOT NULL DEFAULT '0.00',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -2615,7 +2519,7 @@ CREATE TABLE `store_wallets` (
 
 CREATE TABLE `tags` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `tag` varchar(255) NOT NULL,
+  `tag` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -2628,45 +2532,42 @@ CREATE TABLE `tags` (
 
 CREATE TABLE `temp_products` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `description` text DEFAULT NULL,
-  `image` varchar(30) DEFAULT NULL,
-  `images` longtext DEFAULT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `description` text COLLATE utf8mb4_unicode_ci,
+  `image` varchar(30) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `images` longtext COLLATE utf8mb4_unicode_ci,
   `store_id` bigint(20) UNSIGNED NOT NULL,
   `module_id` bigint(20) UNSIGNED NOT NULL,
   `unit_id` bigint(20) UNSIGNED DEFAULT NULL,
   `item_id` bigint(20) UNSIGNED DEFAULT NULL,
   `category_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `category_ids` varchar(255) DEFAULT NULL,
-  `tag_ids` varchar(255) DEFAULT NULL,
-  `slug` varchar(255) DEFAULT NULL,
-  `variations` text DEFAULT NULL,
-  `food_variations` text DEFAULT NULL,
-  `add_ons` varchar(255) DEFAULT NULL,
-  `attributes` varchar(255) DEFAULT NULL,
-  `choice_options` text DEFAULT NULL,
-  `price` decimal(24,2) NOT NULL DEFAULT 0.00,
-  `tax` decimal(24,2) NOT NULL DEFAULT 0.00,
-  `tax_type` varchar(20) NOT NULL DEFAULT 'percent',
-  `discount` decimal(8,2) NOT NULL DEFAULT 0.00,
-  `discount_type` varchar(20) NOT NULL DEFAULT 'percent',
-  `veg` tinyint(1) NOT NULL DEFAULT 0,
-  `recommended` tinyint(1) NOT NULL DEFAULT 0,
-  `organic` tinyint(1) NOT NULL DEFAULT 0,
+  `category_ids` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `tag_ids` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `slug` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `variations` text COLLATE utf8mb4_unicode_ci,
+  `food_variations` text COLLATE utf8mb4_unicode_ci,
+  `add_ons` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `attributes` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `choice_options` text COLLATE utf8mb4_unicode_ci,
+  `price` decimal(24,2) NOT NULL DEFAULT '0.00',
+  `tax` decimal(24,2) NOT NULL DEFAULT '0.00',
+  `tax_type` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'percent',
+  `discount` decimal(8,2) NOT NULL DEFAULT '0.00',
+  `discount_type` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'percent',
+  `veg` tinyint(1) NOT NULL DEFAULT '0',
+  `recommended` tinyint(1) NOT NULL DEFAULT '0',
+  `organic` tinyint(1) NOT NULL DEFAULT '0',
   `common_condition_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `basic` tinyint(1) NOT NULL DEFAULT 0,
-  `status` tinyint(1) NOT NULL DEFAULT 1,
-  `stock` int(11) DEFAULT 0,
+  `basic` tinyint(1) NOT NULL DEFAULT '0',
+  `status` tinyint(1) NOT NULL DEFAULT '1',
+  `stock` int(11) DEFAULT '0',
   `maximum_cart_quantity` int(11) DEFAULT NULL,
-  `note` text DEFAULT NULL,
-  `is_rejected` tinyint(1) NOT NULL DEFAULT 0,
+  `note` text COLLATE utf8mb4_unicode_ci,
+  `is_rejected` tinyint(1) NOT NULL DEFAULT '0',
   `available_time_ends` time DEFAULT NULL,
   `available_time_starts` time DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `is_halal` tinyint(1) NOT NULL DEFAULT 0,
-  `brand_id` tinyint(1) NOT NULL DEFAULT 0,
-  `is_prescription_required` tinyint(1) NOT NULL DEFAULT 0
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -2679,8 +2580,8 @@ CREATE TABLE `track_deliverymen` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `order_id` bigint(20) UNSIGNED DEFAULT NULL,
   `delivery_man_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `longitude` varchar(20) DEFAULT NULL,
-  `latitude` varchar(20) DEFAULT NULL,
+  `longitude` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `latitude` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -2693,11 +2594,11 @@ CREATE TABLE `track_deliverymen` (
 
 CREATE TABLE `translations` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `translationable_type` varchar(255) NOT NULL,
+  `translationable_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `translationable_id` bigint(20) UNSIGNED NOT NULL,
-  `locale` varchar(255) NOT NULL,
-  `key` varchar(255) DEFAULT NULL,
-  `value` text DEFAULT NULL,
+  `locale` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `key` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `value` text COLLATE utf8mb4_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -2745,7 +2646,7 @@ INSERT INTO `translations` (`id`, `translationable_type`, `translationable_id`, 
 
 CREATE TABLE `units` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `unit` varchar(191) NOT NULL,
+  `unit` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -2758,31 +2659,30 @@ CREATE TABLE `units` (
 
 CREATE TABLE `users` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `f_name` varchar(100) DEFAULT NULL,
-  `l_name` varchar(100) DEFAULT NULL,
-  `phone` varchar(255) DEFAULT NULL,
-  `email` varchar(100) DEFAULT NULL,
-  `image` varchar(100) DEFAULT NULL,
-  `is_phone_verified` tinyint(1) NOT NULL DEFAULT 0,
+  `f_name` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `l_name` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `phone` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `email` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `image` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `is_phone_verified` tinyint(1) NOT NULL DEFAULT '0',
   `email_verified_at` timestamp NULL DEFAULT NULL,
-  `password` varchar(100) DEFAULT NULL,
-  `remember_token` varchar(100) DEFAULT NULL,
+  `password` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `interest` varchar(255) DEFAULT NULL,
-  `cm_firebase_token` varchar(255) DEFAULT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 1,
-  `order_count` int(11) NOT NULL DEFAULT 0,
-  `login_medium` varchar(255) DEFAULT NULL,
-  `social_id` varchar(255) DEFAULT NULL,
+  `interest` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `cm_firebase_token` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '1',
+  `order_count` int(11) NOT NULL DEFAULT '0',
+  `login_medium` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `social_id` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `zone_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `wallet_balance` decimal(24,3) NOT NULL DEFAULT 0.000,
-  `loyalty_point` decimal(24,3) NOT NULL DEFAULT 0.000,
-  `ref_code` varchar(10) DEFAULT NULL,
-  `current_language_key` varchar(255) DEFAULT 'en',
+  `wallet_balance` decimal(24,3) NOT NULL DEFAULT '0.000',
+  `loyalty_point` decimal(24,3) NOT NULL DEFAULT '0.000',
+  `ref_code` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `current_language_key` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT 'en',
   `ref_by` bigint(20) UNSIGNED DEFAULT NULL,
-  `temp_token` varchar(255) DEFAULT NULL,
-  `module_ids` varchar(255) DEFAULT NULL
+  `temp_token` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -2793,11 +2693,11 @@ CREATE TABLE `users` (
 
 CREATE TABLE `user_infos` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `f_name` varchar(100) DEFAULT NULL,
-  `l_name` varchar(100) DEFAULT NULL,
-  `phone` varchar(20) DEFAULT NULL,
-  `email` varchar(100) DEFAULT NULL,
-  `image` varchar(100) DEFAULT NULL,
+  `f_name` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `l_name` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `phone` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `email` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `image` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `admin_id` bigint(20) UNSIGNED DEFAULT NULL,
   `user_id` bigint(20) UNSIGNED DEFAULT NULL,
   `vendor_id` bigint(20) UNSIGNED DEFAULT NULL,
@@ -2814,8 +2714,8 @@ CREATE TABLE `user_infos` (
 
 CREATE TABLE `user_notifications` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `data` text DEFAULT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 1,
+  `data` text COLLATE utf8mb4_unicode_ci,
+  `status` tinyint(1) NOT NULL DEFAULT '1',
   `user_id` bigint(20) UNSIGNED DEFAULT NULL,
   `vendor_id` bigint(20) UNSIGNED DEFAULT NULL,
   `delivery_man_id` bigint(20) UNSIGNED DEFAULT NULL,
@@ -2831,23 +2731,23 @@ CREATE TABLE `user_notifications` (
 
 CREATE TABLE `vendors` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `f_name` varchar(100) NOT NULL,
-  `l_name` varchar(100) DEFAULT NULL,
-  `phone` varchar(20) NOT NULL,
-  `email` varchar(100) NOT NULL,
+  `f_name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `l_name` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `phone` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `email_verified_at` timestamp NULL DEFAULT NULL,
-  `password` varchar(100) NOT NULL,
-  `remember_token` varchar(100) DEFAULT NULL,
+  `password` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `bank_name` varchar(255) DEFAULT NULL,
-  `branch` varchar(255) DEFAULT NULL,
-  `holder_name` varchar(255) DEFAULT NULL,
-  `account_no` varchar(255) DEFAULT NULL,
-  `image` varchar(255) DEFAULT NULL,
-  `status` tinyint(1) DEFAULT 1,
-  `firebase_token` varchar(255) DEFAULT NULL,
-  `auth_token` varchar(255) DEFAULT NULL
+  `bank_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `branch` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `holder_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `account_no` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `image` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status` tinyint(1) DEFAULT '1',
+  `firebase_token` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `auth_token` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -2865,22 +2765,22 @@ INSERT INTO `vendors` (`id`, `f_name`, `l_name`, `phone`, `email`, `email_verifi
 
 CREATE TABLE `vendor_employees` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `f_name` varchar(100) DEFAULT NULL,
-  `l_name` varchar(100) DEFAULT NULL,
-  `phone` varchar(20) DEFAULT NULL,
-  `email` varchar(100) NOT NULL,
-  `image` varchar(100) DEFAULT NULL,
+  `f_name` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `l_name` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `phone` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `email` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `image` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `employee_role_id` bigint(20) UNSIGNED NOT NULL,
   `vendor_id` bigint(20) UNSIGNED NOT NULL,
   `store_id` bigint(20) UNSIGNED NOT NULL,
-  `password` varchar(100) NOT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 1,
-  `remember_token` varchar(100) DEFAULT NULL,
-  `firebase_token` varchar(255) DEFAULT NULL,
-  `auth_token` varchar(255) DEFAULT NULL,
+  `password` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '1',
+  `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `firebase_token` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `auth_token` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `is_logged_in` tinyint(1) NOT NULL DEFAULT 1
+  `is_logged_in` tinyint(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -2891,15 +2791,15 @@ CREATE TABLE `vendor_employees` (
 
 CREATE TABLE `wallet_bonuses` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `title` varchar(255) NOT NULL,
-  `description` text DEFAULT NULL,
-  `bonus_type` varchar(255) NOT NULL,
-  `bonus_amount` double(23,3) NOT NULL DEFAULT 0.000,
-  `minimum_add_amount` double(23,3) NOT NULL DEFAULT 0.000,
-  `maximum_bonus_amount` double(23,3) NOT NULL DEFAULT 0.000,
+  `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` text COLLATE utf8mb4_unicode_ci,
+  `bonus_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `bonus_amount` double(23,3) NOT NULL DEFAULT '0.000',
+  `minimum_add_amount` double(23,3) NOT NULL DEFAULT '0.000',
+  `maximum_bonus_amount` double(23,3) NOT NULL DEFAULT '0.000',
   `start_date` date DEFAULT NULL,
   `end_date` date DEFAULT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 1,
+  `status` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -2913,10 +2813,10 @@ CREATE TABLE `wallet_bonuses` (
 CREATE TABLE `wallet_payments` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED NOT NULL,
-  `transaction_ref` varchar(255) DEFAULT NULL,
-  `amount` decimal(8,2) NOT NULL DEFAULT 0.00,
-  `payment_status` varchar(50) NOT NULL,
-  `payment_method` varchar(100) NOT NULL,
+  `transaction_ref` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `amount` decimal(8,2) NOT NULL DEFAULT '0.00',
+  `payment_status` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `payment_method` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -2930,13 +2830,13 @@ CREATE TABLE `wallet_payments` (
 CREATE TABLE `wallet_transactions` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `user_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `transaction_id` char(36) NOT NULL,
-  `credit` decimal(24,3) NOT NULL DEFAULT 0.000,
-  `debit` decimal(24,3) NOT NULL DEFAULT 0.000,
-  `admin_bonus` decimal(24,3) NOT NULL DEFAULT 0.000,
-  `balance` decimal(24,3) NOT NULL DEFAULT 0.000,
-  `transaction_type` varchar(191) DEFAULT NULL,
-  `reference` varchar(191) DEFAULT NULL,
+  `transaction_id` char(36) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `credit` decimal(24,3) NOT NULL DEFAULT '0.000',
+  `debit` decimal(24,3) NOT NULL DEFAULT '0.000',
+  `admin_bonus` decimal(24,3) NOT NULL DEFAULT '0.000',
+  `balance` decimal(24,3) NOT NULL DEFAULT '0.000',
+  `transaction_type` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `reference` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -2949,7 +2849,7 @@ CREATE TABLE `wallet_transactions` (
 
 CREATE TABLE `websockets_statistics_entries` (
   `id` int(10) UNSIGNED NOT NULL,
-  `app_id` varchar(255) NOT NULL,
+  `app_id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `peak_connection_count` int(11) NOT NULL,
   `websocket_message_count` int(11) NOT NULL,
   `api_message_count` int(11) NOT NULL,
@@ -2980,10 +2880,10 @@ CREATE TABLE `wishlists` (
 
 CREATE TABLE `withdrawal_methods` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `method_name` varchar(255) NOT NULL,
-  `method_fields` text NOT NULL,
-  `is_default` tinyint(4) NOT NULL DEFAULT 0,
-  `is_active` tinyint(4) NOT NULL DEFAULT 1,
+  `method_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `method_fields` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `is_default` tinyint(4) NOT NULL DEFAULT '0',
+  `is_active` tinyint(4) NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -2998,15 +2898,15 @@ CREATE TABLE `withdraw_requests` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `vendor_id` bigint(20) UNSIGNED DEFAULT NULL,
   `admin_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `transaction_note` varchar(255) DEFAULT NULL,
-  `amount` decimal(23,3) NOT NULL DEFAULT 0.000,
-  `approved` tinyint(1) NOT NULL DEFAULT 0,
+  `transaction_note` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `amount` decimal(23,3) NOT NULL DEFAULT '0.000',
+  `approved` tinyint(1) NOT NULL DEFAULT '0',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `delivery_man_id` bigint(20) UNSIGNED DEFAULT NULL,
   `withdrawal_method_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `withdrawal_method_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `type` varchar(20) NOT NULL DEFAULT 'manual'
+  `withdrawal_method_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
+  `type` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'manual'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -3017,20 +2917,20 @@ CREATE TABLE `withdraw_requests` (
 
 CREATE TABLE `zones` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(255) NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `coordinates` polygon NOT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 1,
+  `status` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `store_wise_topic` varchar(255) DEFAULT NULL,
-  `customer_wise_topic` varchar(255) DEFAULT NULL,
-  `deliveryman_wise_topic` varchar(255) DEFAULT NULL,
-  `cash_on_delivery` tinyint(1) NOT NULL DEFAULT 0,
-  `digital_payment` tinyint(1) NOT NULL DEFAULT 0,
-  `increased_delivery_fee` double(8,2) NOT NULL DEFAULT 0.00,
-  `increased_delivery_fee_status` tinyint(1) NOT NULL DEFAULT 0,
-  `increase_delivery_charge_message` varchar(255) DEFAULT NULL,
-  `offline_payment` tinyint(1) NOT NULL DEFAULT 0
+  `store_wise_topic` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `customer_wise_topic` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `deliveryman_wise_topic` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `cash_on_delivery` tinyint(1) NOT NULL DEFAULT '0',
+  `digital_payment` tinyint(1) NOT NULL DEFAULT '0',
+  `increased_delivery_fee` double(8,2) NOT NULL DEFAULT '0.00',
+  `increased_delivery_fee_status` tinyint(1) NOT NULL DEFAULT '0',
+  `increase_delivery_charge_message` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `offline_payment` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -3120,12 +3020,6 @@ ALTER TABLE `banners`
   ADD KEY `banners_module_id_foreign` (`module_id`);
 
 --
--- Indexes for table `brands`
---
-ALTER TABLE `brands`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indexes for table `business_settings`
 --
 ALTER TABLE `business_settings`
@@ -3142,18 +3036,6 @@ ALTER TABLE `campaigns`
 -- Indexes for table `carts`
 --
 ALTER TABLE `carts`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `cash_backs`
---
-ALTER TABLE `cash_backs`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `cash_back_histories`
---
-ALTER TABLE `cash_back_histories`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -3260,12 +3142,6 @@ ALTER TABLE `d_m_reviews`
 -- Indexes for table `d_m_vehicles`
 --
 ALTER TABLE `d_m_vehicles`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `ecommerce_item_details`
---
-ALTER TABLE `ecommerce_item_details`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -3799,12 +3675,6 @@ ALTER TABLE `banners`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `brands`
---
-ALTER TABLE `brands`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `business_settings`
 --
 ALTER TABLE `business_settings`
@@ -3820,18 +3690,6 @@ ALTER TABLE `campaigns`
 -- AUTO_INCREMENT for table `carts`
 --
 ALTER TABLE `carts`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `cash_backs`
---
-ALTER TABLE `cash_backs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `cash_back_histories`
---
-ALTER TABLE `cash_back_histories`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
@@ -3937,12 +3795,6 @@ ALTER TABLE `d_m_vehicles`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `ecommerce_item_details`
---
-ALTER TABLE `ecommerce_item_details`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `email_templates`
 --
 ALTER TABLE `email_templates`
@@ -4036,7 +3888,7 @@ ALTER TABLE `messages`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=147;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=135;
 
 --
 -- AUTO_INCREMENT for table `modules`
