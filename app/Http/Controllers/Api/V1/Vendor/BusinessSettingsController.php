@@ -63,11 +63,11 @@ class BusinessSettingsController extends Controller
             ],403);
         }
 
-        if(!$request->veg && !$request->non_veg)
+        if( \App\Models\BusinessSetting::where('key', 'toggle_veg_non_veg')->first()?->value == 1 && !$request->veg && !$request->non_veg)
         {
             return response()->json([
                 'errors'=>[
-                    ['code'=>'veg_non_veg', 'message'=>translate('messages.veg_non_veg_disable_warning')]
+                    ['code'=>'veg_non_veg', 'message'=>translate('messages.veg_non_veg_disable_by_admin')]
                 ]
             ],403);
         }
@@ -76,8 +76,8 @@ class BusinessSettingsController extends Controller
         $store->prescription_order = $request->prescription_order;
         $store->take_away = $request->take_away;
         $store->schedule_order = $request->schedule_order;
-        $store->veg = $request->veg;
-        $store->non_veg = $request->non_veg;
+        $store->veg = $request?->veg??0;
+        $store->non_veg = $request?->non_veg ?? 0;
         $store->cutlery = $request->cutlery??0;
         $store->free_delivery = $request->free_delivery??0;
         $store->minimum_order = $request->minimum_order;
