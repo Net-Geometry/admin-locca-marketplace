@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::table('temp_products', function (Blueprint $table) {
             $table->boolean('is_halal')->default(0);
+            $table->boolean('brand_id')->default(0);
+            $table->boolean('is_prescription_required')->default(0);
         });
     }
 
@@ -23,6 +25,8 @@ return new class extends Migration
     {
         Schema::table('temp_products', function (Blueprint $table) {
             $table->dropColumn('is_halal');
+            $table->dropColumn('brand_id');
+            $table->dropColumn('is_prescription_required');
         });
     }
 };

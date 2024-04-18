@@ -11,8 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('order_transactions', function (Blueprint $table) {
+        Schema::table('temp_orders', function (Blueprint $table) {
+            $table->foreignId('cash_back_id')->nullable();
             $table->double('extra_packaging_amount',23, 3)->default(0);
+            $table->double('ref_bonus_amount',23, 3)->default(0);
         });
     }
 
@@ -21,8 +23,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('order_transactions', function (Blueprint $table) {
+        Schema::table('temp_orders', function (Blueprint $table) {
+            $table->dropColumn('cash_back_id');
             $table->dropColumn('extra_packaging_amount');
+            $table->dropColumn('ref_bonus_amount');
         });
     }
 };
