@@ -28,10 +28,12 @@ class BusinessSettingsController extends Controller
     {
         $request->validate([
             'gst' => 'required_if:gst_status,1',
+            'extra_packaging_amount' => 'required_if:extra_packaging_status,1',
             'per_km_delivery_charge'=>'required_with:minimum_delivery_charge',
             'minimum_delivery_charge'=>'required_with:per_km_delivery_charge'
         ], [
             'gst.required_if' => translate('messages.gst_can_not_be_empty'),
+            'extra_packaging_amount.required_if' => translate('messages.extra_packaging_amount_can_not_be_empty'),
         ]);
 
         if(isset($request->maximum_shipping_charge) && ($request->minimum_delivery_charge > $request->maximum_shipping_charge)){
@@ -50,11 +52,11 @@ class BusinessSettingsController extends Controller
         $store->delivery_time = $request->minimum_delivery_time .'-'. $request->maximum_delivery_time.' '.$request->delivery_time_type;
         $store->save();
         if($request->extra_packaging_amount){
-
             $conf = StoreConfig::firstOrNew(
                 ['store_id' =>  $store->id]
             );
             $conf->extra_packaging_amount = $request->extra_packaging_amount;
+            $conf->extra_packaging_status = $request->extra_packaging_status ?? 0;
             $conf->save();
         }
         Toastr::success(translate('messages.store_settings_updated'));

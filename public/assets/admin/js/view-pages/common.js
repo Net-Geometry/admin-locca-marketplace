@@ -399,6 +399,14 @@ $(document).on("click", ".confirm-Toggle", function () {
             $("#new_customer_discount_validity_type").attr("disabled", true).removeAttr("required");
         }
     }
+
+    if (toggle_id === "extra_packaging_status") {
+        if ($("#extra_packaging_status").is(":checked")) {
+            $("#extra_packaging_amount").removeAttr("readonly").attr("required", true);
+        } else {
+            $("#extra_packaging_amount").attr("readonly", true).removeAttr("required");
+        }
+    }
 });
 
 $(document).on("click", ".location-reload-to-base", function () {

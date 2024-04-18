@@ -3303,7 +3303,7 @@ class Helpers
                 ->when(is_numeric($customer_id), function($q) use ($customer_id){
                 $q->where('same_user_limit', '>', function($query) use ($customer_id) {
                     $query->select(DB::raw('COUNT(*)'))
-                            ->from('orders')
+                            ->from('cash_back_histories')
                             ->where('user_id', $customer_id)
                             ->whereColumn('cash_back_id', 'cash_backs.id');
                     });
@@ -3321,7 +3321,7 @@ class Helpers
             ->when(is_numeric($customer_id), function($q) use ($customer_id){
                 $q->where('same_user_limit', '>', function($query) use ($customer_id) {
                     $query->select(DB::raw('COUNT(*)'))
-                            ->from('orders')
+                            ->from('cash_back_histories')
                             ->where('user_id', $customer_id)
                             ->whereColumn('cash_back_id', 'cash_backs.id');
                     });
@@ -3348,20 +3348,20 @@ class Helpers
             if($p_bonus ==  $cashback_amount){
                 $data=[
                     'calculated_amount'=> (float)$cashback_amount,
-                    'cashback_amount'=>$percent_bonus?->cashback_amount,
-                    'cashback_type'=>$percent_bonus?->cashback_type,
-                    'min_purchase'=>$percent_bonus?->min_purchase,
-                    'max_discount'=>$percent_bonus?->max_discount,
+                    'cashback_amount'=>$percent_bonus?->cashback_amount ?? 0,
+                    'cashback_type'=>$percent_bonus?->cashback_type ?? '',
+                    'min_purchase'=>$percent_bonus?->min_purchase ?? 0,
+                    'max_discount'=>$percent_bonus?->max_discount ?? 0,
                     'id'=>$percent_bonus?->id,
                 ];
 
             } elseif($a_bonus == $cashback_amount){
                 $data=[
                     'calculated_amount'=> (float)$cashback_amount,
-                    'cashback_amount'=>$amount_bonus?->cashback_amount,
-                    'cashback_type'=>$amount_bonus?->cashback_type,
-                    'min_purchase'=>$amount_bonus?->min_purchase,
-                    'max_discount'=>$amount_bonus?->max_discount,
+                    'cashback_amount'=>$amount_bonus?->cashback_amount ?? 0,
+                    'cashback_type'=>$amount_bonus?->cashback_type ?? '',
+                    'min_purchase'=>$amount_bonus?->min_purchase ?? 0,
+                    'max_discount'=>$amount_bonus?->max_discount ?? 0,
                     'id'=>$amount_bonus?->id,
                 ];
             }
