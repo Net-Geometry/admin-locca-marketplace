@@ -3434,6 +3434,44 @@ class Helpers
     return $data?? [];
     }
 
+
+    public static function send_push_notif_for_demo_reset($data, $topic, $type,)
+    {
+        $key = BusinessSetting::where(['key' => 'push_notification_key'])->first()->value;
+
+        $url = "https://fcm.googleapis.com/fcm/send";
+        $header = array(
+            "authorization: key=" . $key . "",
+            "content-type: application/json"
+        );
+        $postdata = '{
+            "to" : "/topics/' . $topic . '",
+            "mutable_content": true,
+               "data" : {
+                    "title":"' . $data['title'] . '",
+                    "body" : "' . $data['description'] . '",
+                    "image" : "' . $data['image'] . '",
+                    "is_read": 0,
+                    "type":"' . $type . '",
+                }
+
+        }';
+
+        $ch = curl_init();
+        $timeout = 120;
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+
+        $result = curl_exec($ch);
+        curl_close($ch);
+
+        return $result;
+    }
+
 }
 
 
