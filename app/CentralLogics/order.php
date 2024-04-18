@@ -205,7 +205,7 @@ class OrderLogic
                 );
                 if($order->store->self_delivery_system)
                 {
-                    $vendorWallet->total_earning = $vendorWallet->total_earning + $order->delivery_charge + $dm_tips + $order->extra_packaging_amount;
+                    $vendorWallet->total_earning = $vendorWallet->total_earning + $order->delivery_charge + $dm_tips;
                 }
                 else{
                     $adminWallet->delivery_charge = $adminWallet->delivery_charge+$order->delivery_charge;
