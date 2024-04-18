@@ -320,7 +320,7 @@
                 <tr>
                     <td>5</td>
                     <td>{{translate('messages.total_discounted_amount')}}</td>
-                    <td>{{ \App\CentralLogics\Helpers::number_format_short($order_transaction->order['coupon_discount_amount'] + $order_transaction->order['store_discount_amount']+$order_transaction->order['ref_bonus_amount'] +$order_transaction->order['flash_admin_discount_amount'] +$order_transaction->order['flash_store_discount_amount']) }}</td>
+                    <td>{{ \App\CentralLogics\Helpers::format_currency($order_transaction->order['coupon_discount_amount'] + $order_transaction->order['store_discount_amount']+$order_transaction->order['ref_bonus_amount'] +$order_transaction->order['flash_admin_discount_amount'] +$order_transaction->order['flash_store_discount_amount']) }}</td>
                 </tr>
                 <tr>
                     <td>6</td>
@@ -370,11 +370,11 @@
                 </tr>
                 <tr>
                     <td>{{translate('messages.admin_commission')}}</td>
-                    <td>{{ \App\CentralLogics\Helpers::format_currency(($order_transaction->admin_commission + $order_transaction->admin_expense) - $order_transaction->delivery_fee_comission -$order_transaction->additional_charge - $order_transaction->order['ref_bonus_amount'] - $order_transaction->order['flash_admin_discount_amount']) }}</td>
+                    <td>{{ \App\CentralLogics\Helpers::format_currency(($order_transaction->admin_commission + $order_transaction->admin_expense) - $order_transaction->delivery_fee_comission -$order_transaction->additional_charge  - $order_transaction->order['flash_admin_discount_amount']) }}</td>
                 </tr>
                 <tr>
                     <td>{{translate('messages.admin_net_income')}}</td>
-                    <td>{{ \App\CentralLogics\Helpers::format_currency($order_transaction->admin_commission-$order_transaction->order['flash_admin_discount_amount'] - $order_transaction->order['ref_bonus_amount']) }}</td>
+                    <td>{{ \App\CentralLogics\Helpers::format_currency($order_transaction->admin_commission-$order_transaction->order['flash_admin_discount_amount']) }}</td>
                 </tr>
                 <tr>
                     <td>{{translate('messages.store_net_income')}}</td>
