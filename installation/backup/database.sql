@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Apr 18, 2024 at 02:25 PM
--- Server version: 10.4.27-MariaDB
--- PHP Version: 8.2.0
+-- Generation Time: Apr 20, 2024 at 10:47 AM
+-- Server version: 10.6.15-MariaDB
+-- PHP Version: 8.1.24
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `mart_install`
+-- Database: `admin_6ammart_install`
 --
 
 -- --------------------------------------------------------
@@ -179,7 +179,10 @@ CREATE TABLE `admin_features` (
 --
 
 INSERT INTO `admin_features` (`id`, `title`, `sub_title`, `image`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'Demo Feature Title', 'Demo Feature  Sub Title', '2023-08-16-64dcaa268d2d0.png', 1, '2023-08-15 23:51:18', '2023-08-15 23:51:18');
+(1, 'Trusted', 'Trusted by customers and store owners', '2024-04-20-6623933f81d5b.png', 1, '2023-08-15 23:51:18', '2024-04-20 05:04:47'),
+(2, 'Delivery', 'Flexible delivery system', '2024-04-20-6623936914978.png', 1, '2024-04-20 05:05:29', '2024-04-20 05:05:29'),
+(3, 'Shopping', 'Best shopping experience', '2024-04-20-662393a8a1d27.png', 1, '2024-04-20 05:06:32', '2024-04-20 05:06:32'),
+(4, 'Location', 'Location tracking system', '2024-04-20-662393d85bae9.png', 1, '2024-04-20 05:07:20', '2024-04-20 05:07:20');
 
 -- --------------------------------------------------------
 
@@ -202,7 +205,7 @@ CREATE TABLE `admin_promotional_banners` (
 --
 
 INSERT INTO `admin_promotional_banners` (`id`, `title`, `sub_title`, `image`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'Demo Title', 'Demo Promotional Subtitle', '2023-08-16-64dca9d76d4f4.png', 1, '2023-08-15 23:49:59', '2023-08-15 23:49:59');
+(1, 'Find', 'Your daily grocery item', '2024-04-20-66239166962bd.png', 1, '2023-08-15 23:49:59', '2024-04-20 04:56:54');
 
 -- --------------------------------------------------------
 
@@ -246,7 +249,11 @@ CREATE TABLE `admin_special_criterias` (
 --
 
 INSERT INTO `admin_special_criterias` (`id`, `title`, `image`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'Demo Title', '2023-08-16-64dcaaa5b0d37.png', 1, '2023-08-15 23:53:25', '2023-08-15 23:53:25');
+(2, 'Easy to Manage Multiple Store', '2024-04-20-6623950467b0a.png', 1, '2024-04-20 05:12:20', '2024-04-20 05:12:20'),
+(3, 'Easy to Manage E-Commerce', '2024-04-20-662395134788d.png', 1, '2024-04-20 05:12:35', '2024-04-20 05:12:35'),
+(4, 'Easy to Manage Parcel Delivery', '2024-04-20-66239522279f6.png', 1, '2024-04-20 05:12:50', '2024-04-20 05:12:50'),
+(5, 'Easy to Manage Location Tracking', '2024-04-20-6623953ab1ccb.png', 1, '2024-04-20 05:13:14', '2024-04-20 05:13:14'),
+(6, 'Easy to Manage Grocery Business', '2024-04-20-6623954d187f8.png', 1, '2024-04-20 05:13:33', '2024-04-20 05:13:33');
 
 -- --------------------------------------------------------
 
@@ -271,7 +278,7 @@ CREATE TABLE `admin_testimonials` (
 --
 
 INSERT INTO `admin_testimonials` (`id`, `name`, `designation`, `review`, `reviewer_image`, `company_image`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'John Doe', 'CTO', 'Very good service.', '2023-08-16-64dcaae2e5bc0.png', '2023-08-16-64dcaae2eae2a.png', 1, '2023-08-15 23:54:26', '2023-08-15 23:54:26');
+(1, 'John Doe', 'CTO', 'Very good service.', '2024-04-20-662399c21315a.png', '2024-04-20-662399c213676.png', 1, '2023-08-15 23:54:26', '2024-04-20 05:32:34');
 
 -- --------------------------------------------------------
 
@@ -374,15 +381,15 @@ INSERT INTO `business_settings` (`id`, `key`, `value`, `created_at`, `updated_at
 (13, 'delivery_boy_start_message', '{\"status\":1,\"message\":\"Your order is picked up by delivery man\"}', NULL, NULL),
 (14, 'delivery_boy_delivered_message', '{\"status\":1,\"message\":\"Order delivered successfully\"}', NULL, NULL),
 (15, 'terms_and_conditions', '<p>This is a test Teams &amp; Conditions<br />\r\n<br />\r\nThese terms of use (the &quot;Terms of Use&quot;) govern your use of our website www.evaly.com.bd (the &quot;Website&quot;) and our &quot;StackFood&quot; application for mobile and handheld devices (the &quot;App&quot;). The Website and the App are jointly referred to as the &quot;Platform&quot;. Please read these Terms of Use carefully before you use the services. If you do not agree to these Terms of Use, you may not use the services on the Platform, and we request you to uninstall the App. By installing, downloading and/or even merely using the Platform, you shall be contracting with StackFood and you provide your acceptance to the Terms of Use and other StackFood policies (including but not limited to the Cancellation &amp; Refund Policy, Privacy Policy etc.) as posted on the Platform from time to time, which takes effect on the date on which you download, install or use the Services, and create a legally binding arrangement to abide by the same. The Platforms will be used by (i) natural persons who have reached 18 years of age and (ii) corporate legal entities, e.g companies. Where applicable, these Terms shall be subject to country-specific provisions as set out herein.</p>\r\n\r\n<h3>USE OF PLATFORM AND SERVICES</h3>\r\n\r\n<p>All commercial/contractual terms are offered by and agreed to between Buyers and Merchants alone. The commercial/contractual terms include without limitation to price, taxes, shipping costs, payment methods, payment terms, date, period and mode of delivery, warranties related to products and services and after sales services related to products and services. StackFood does not have any kind of control or does not determine or advise or in any way involve itself in the offering or acceptance of such commercial/contractual terms between the Buyers and Merchants. StackFood may, however, offer support services to Merchants in respect to order fulfilment, payment collection, call centre, and other services, pursuant to independent contracts executed by it with the Merchants. eFood is not responsible for any non-performance or breach of any contract entered into between Buyers and Merchants on the Platform. eFood cannot and does not guarantee that the concerned Buyers and/or Merchants shall perform any transaction concluded on the Platform. eFood is not responsible for unsatisfactory services or non-performance of services or damages or delays as a result of products which are out of stock, unavailable or back ordered.</p>\r\n\r\n<p>StackFood&nbsp;is operating an e-commerce platform and assumes and operates the role of facilitator, and does not at any point of time during any transaction between Buyer and Merchant on the Platform come into or take possession of any of the products or services offered by Merchant. At no time shall StackFood hold any right, title or interest over the products nor shall StackFood have any obligations or liabilities in respect of such contract entered into between Buyer and Merchant. You agree and acknowledge that we shall not be responsible for:</p>\r\n\r\n<ul>\r\n	<li>The goods provided by the shops or restaurants including, but not limited, serving of food orders suiting your requirements and needs;</li>\r\n	<li>The Merchant&quot;s goods not being up to your expectations or leading to any loss, harm or damage to you;</li>\r\n	<li>The availability or unavailability of certain items on the menu;</li>\r\n	<li>The Merchant serving the incorrect orders.</li>\r\n</ul>\r\n\r\n<p>The details of the menu and price list available on the Platform are based on the information provided by the Merchants and we shall not be responsible for any change or cancellation or unavailability. All Menu &amp; Food Images used on our platforms are only representative and shall/might not match with the actual Menu/Food Ordered, StackFood shall not be responsible or Liable for any discrepancies or variations on this aspect.</p>\r\n\r\n<h3>Personal Information that you provide</h3>\r\n\r\n<p>If you want to use our service, you must create an account on our Site. To establish your account, we will ask for personally identifiable information that can be used to contact or identify you, which may include your name, phone number, and e-mail address. We may also collect demographic information about you, such as your zip code, and allow you to submit additional information that will be part of your profile. Other than basic information that we need to establish your account, it will be up to you to decide how much information to share as part of your profile. We encourage you to think carefully about the information that you share and we recommend that you guard your identity and your sensitive information. Of course, you can review and revise your profile at any time.</p>\r\n\r\n<p>You understand that delivery periods quoted to you at the time of confirming the order is an approximate estimate and may vary. We shall not be responsible for any delay in the delivery of your order due to the delay at seller/merchant end for order processing or any other unavoidable circumstances.</p>\r\n\r\n<p>Your order shall be only delivered to the address designated by you at the time of placing the order on the Platform. We reserve the right to cancel the order, in our sole discretion, in the event of any change to the place of delivery and you shall not be entitled to any refund for the same. Delivery in the event of change of the delivery location shall be at our sole discretion and reserve the right to charge with additional delivery fee if required.</p>\r\n\r\n<p>You shall undertake to provide adequate directions, information and authorizations to accept delivery. In the event of any failure to accept delivery, failure to deliver within the estimated time due to your failure to provide appropriate instructions, or authorizations, then such goods shall be deemed to have been delivered to you and all risk and responsibility in relation to such goods shall pass to you and you shall not be entitled to any refund for the same. Our decision in relation to this shall be final and binding. You understand that our liability ends once your order has been delivered to you.</p>\r\n\r\n<p>You might be required to provide your credit or debit card details to the approved payment gateways while making the payment. In this regard, you agree to provide correct and accurate credit/ debit card details to the approved payment gateways for availing the Services. You shall not use the credit/ debit card which is not lawfully owned by you, i.e. in any transaction, you must use your own credit/ debit card. The information provided by you shall not be utilized or shared with any third party unless required in relation to fraud verifications or by law, regulation or court order. You shall be solely responsible for the security and confidentiality of your credit/ debit card details. We expressly disclaim all liabilities that may arise as a consequence of any unauthorized use of your credit/ debit card. You agree that the Services shall be provided by us only during the working hours of the relevant Merchants.</p>\r\n\r\n<h3>ACTIVITIES PROHIBITED ON THE PLATFORM</h3>\r\n\r\n<p>The following is a partial list of the kinds of conduct that are illegal or prohibited on the Websites. StackFood reserves the right to investigate and take appropriate legal action/s against anyone who, in StackFood sole discretion, engages in any of the prohibited activities. Prohibited activities include &mdash; but are not limited to &mdash; the following:</p>\r\n\r\n<ul>\r\n	<li>Using the Websites for any purpose in violation of laws or regulations;</li>\r\n	<li>Posting Content that infringes the intellectual property rights, privacy rights, publicity rights, trade secret rights, or any other rights of any party;</li>\r\n	<li>Posting Content that is unlawful, obscene, defamatory, threatening, harassing, abusive, slanderous, hateful, or embarrassing to any other person or entity as determined by StackFood in its sole discretion or pursuant to local community standards;</li>\r\n	<li>Posting Content that constitutes cyber-bullying, as determined by StackFood in its sole discretion;</li>\r\n	<li>Posting Content that depicts any dangerous, life-threatening, or otherwise risky behavior;</li>\r\n	<li>Posting telephone numbers, street addresses, or last names of any person;</li>\r\n	<li>Posting URLs to external websites or any form of HTML or programming code;</li>\r\n	<li>Posting anything that may be &quot;spam,&quot; as determined by StackFood in its sole discretion;</li>\r\n	<li>Impersonating another person when posting Content;</li>\r\n	<li>Harvesting or otherwise collecting information about others, including email addresses, without their consent;</li>\r\n	<li>Allowing any other person or entity to use your identification for posting or viewing comments;</li>\r\n	<li>Harassing, threatening, stalking, or abusing any person;</li>\r\n	<li>Engaging in any other conduct that restricts or inhibits any other person from using or enjoying the Websites, or which, in the sole discretion of StackFood , exposes eFood or any of its customers, suppliers, or any other parties to any liability or detriment of any type; or</li>\r\n	<li>Encouraging other people to engage in any prohibited activities as described herein.</li>\r\n</ul>\r\n\r\n<p>StackFood&nbsp;reserves the right but is not obligated to do any or all of the following:</p>\r\n\r\n<ul>\r\n	<li>Investigate an allegation that any Content posted on the Websites does not conform to these Terms of Use and determine in its sole discretion to remove or request the removal of the Content;</li>\r\n	<li>Remove Content which is abusive, illegal, or disruptive, or that otherwise fails to conform with these Terms of Use;</li>\r\n	<li>Terminate a user&#39;s access to the Websites upon any breach of these Terms of Use;</li>\r\n	<li>Monitor, edit, or disclose any Content on the Websites; and</li>\r\n	<li>Edit or delete any Content posted on the Websites, regardless of whether such Content violates these standards.</li>\r\n</ul>\r\n\r\n<h3>AMENDMENTS</h3>\r\n\r\n<p>StackFood&nbsp;reserves the right to change or modify these Terms (including our policies which are incorporated into these Terms) at any time by posting changes on the Platform. You are strongly recommended to read these Terms regularly. You will be deemed to have agreed to the amended Terms by your continued use of the Platforms following the date on which the amended Terms are posted.</p>\r\n\r\n<h3>PAYMENT</h3>\r\n\r\n<p>StackFood&nbsp;reserves the right to offer additional payment methods and/or remove existing payment methods at any time in its sole discretion. If you choose to pay using an online payment method, the payment shall be processed by our third party payment service provider(s). With your consent, your credit card / payment information will be stored with our third party payment service provider(s) for future orders. StackFood does not store your credit card or payment information. You must ensure that you have sufficient funds on your credit and debit card to fulfil payment of an Order. Insofar as required, StackFood takes responsibility for payments made on our Platforms including refunds, chargebacks, cancellations and dispute resolution, provided if reasonable and justifiable and in accordance with these Terms.</p>\r\n\r\n<h3>CANCELLATION</h3>\r\n\r\n<p>StackFood&nbsp;can cancel any order anytime due to the foods/products unavailability, out of coverage area and any other unavoidable circumstances.</p>', NULL, '2021-08-22 01:48:01'),
-(16, 'business_name', '6ammart 3.0', NULL, NULL),
+(16, 'business_name', '6ammart', NULL, NULL),
 (17, 'currency', 'USD', NULL, NULL),
 (18, 'logo', '2023-08-16-64dca5f543996.png', NULL, NULL),
-(19, 'phone', NULL, NULL, NULL),
-(20, 'email_address', NULL, NULL, NULL),
-(21, 'address', NULL, NULL, NULL),
+(19, 'phone', '+8801500000000', NULL, NULL),
+(20, 'email_address', 'admin@admin.com', NULL, NULL),
+(21, 'address', '28HX+JM8, Bangladesh', NULL, NULL),
 (22, 'footer_text', 'Demo footer text @ 2021', NULL, NULL),
 (23, 'customer_verification', '0', NULL, NULL),
-(24, 'map_api_key', NULL, NULL, NULL),
+(24, 'map_api_key', 'AIzaSyDiDGVR1GnClPIXcsOOvAniamtAmS-MHjY', NULL, NULL),
 (25, 'about_us', '<p>Lorem <strong>ipsum </strong>dolor sit amet, <em><strong>consectetur </strong></em>adipiscing elit. <em>Cras </em>dictum massa et dolor porta, rhoncus faucibus magna elementum. Sed porta mattis mollis. Donec ut est pretium, pretium nibh porttitor, <a href=\"http://google.com\">suscipit </a>metus. Sed viverra felis sed elit vehicula sodales. Nullam ante ante, tristique vel tincidunt ac, egestas eget sem. Sed lorem nunc, pellentesque vel ipsum venenatis, pellentesque interdum orci. Suspendisse mauris dui, accumsan at dapibus sed, volutpat quis erat. Nam fringilla nisl eu nunc lobortis, feugiat posuere libero venenatis. Nunc risus lorem, ornare eget congue in, pretium quis enim. Pellentesque elit elit, pharetra eget nunc at, maximus pellentesque diam.</p>\r\n\r\n<p>Praesent fermentum finibus lacus. Nulla tincidunt lectus sed purus facilisis hendrerit. Maecenas volutpat elementum orci, tincidunt euismod ante facilisis ac. Integer dignissim iaculis varius. Mauris iaculis elit vel posuere pellentesque. Praesent a mi sed neque ullamcorper dignissim sed ut nibh. Sed purus dui, sodales in varius in, accumsan at libero. Vestibulum posuere dui et orci tincidunt, ac consequat felis venenatis.</p>\r\n\r\n<p>Morbi sodales, nisl iaculis fringilla imperdiet, metus tortor semper quam, a fringilla nulla dui nec dolor. Phasellus lacinia aliquam ligula sed porttitor. Cras feugiat eros ut arcu commodo dictum. Integer tincidunt nisl id nisl consequat molestie. Integer elit tortor, ultrices sit amet nunc vitae, feugiat tempus mauris. Morbi volutpat consectetur felis sed porttitor. Praesent in urna erat.</p>\r\n\r\n<p>Aenean mollis luctus dolor, eu interdum velit faucibus eu. Suspendisse vitae efficitur erat. In facilisis nisi id arcu scelerisque bibendum. Nunc a placerat enim. Donec pharetra, velit quis facilisis tempus, lectus est imperdiet nisl, in tempus tortor dolor iaculis dolor. Nunc vitae molestie turpis. Nam vitae lobortis massa. Nam pharetra non felis in porta.</p>\r\n\r\n<p>Vivamus pulvinar diam vel felis dignissim tincidunt. Donec hendrerit non est sed volutpat. In egestas ex tortor, at convallis nunc porttitor at. Fusce sed cursus risus. Nam metus sapien, viverra eget felis id, maximus convallis lacus. Donec nec lacus vitae ex hendrerit ultricies non vel risus. Morbi malesuada ipsum iaculis augue convallis vehicula. Proin eget dolor dignissim, volutpat purus ac, ultricies risus. Pellentesque semper, mauris et pharetra accumsan, ante velit faucibus ex, a mattis metus odio vel ligula. Pellentesque elementum suscipit laoreet. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Integer a turpis sed massa blandit iaculis. Sed aliquet, justo vestibulum euismod rhoncus, nisi dui fringilla sapien, non tempor nunc lectus vitae dolor. Suspendisse potenti.</p>\r\n\r\n<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras dictum massa et dolor porta, rhoncus faucibus magna elementum. Sed porta mattis mollis. Donec ut est pretium, pretium nibh porttitor, suscipit metus. Sed viverra felis sed elit vehicula sodales. Nullam ante ante, tristique vel tincidunt ac, egestas eget sem. Sed lorem nunc, pellentesque vel ipsum venenatis, pellentesque interdum orci. Suspendisse mauris dui, accumsan at dapibus sed, volutpat quis erat. Nam fringilla nisl eu nunc lobortis, feugiat posuere libero venenatis. Nunc risus lorem, ornare eget congue in, pretium quis enim. Pellentesque elit elit, pharetra eget nunc at, maximus pellentesque diam.</p>\r\n\r\n<p>Praesent fermentum finibus lacus. Nulla tincidunt lectus sed purus facilisis hendrerit. Maecenas volutpat elementum orci, tincidunt euismod ante facilisis ac. Integer dignissim iaculis varius. Mauris iaculis elit vel posuere pellentesque. Praesent a mi sed neque ullamcorper dignissim sed ut nibh. Sed purus dui, sodales in varius in, accumsan at libero. Vestibulum posuere dui et orci tincidunt, ac consequat felis venenatis.</p>\r\n\r\n<p>Morbi sodales, nisl iaculis fringilla imperdiet, metus tortor semper quam, a fringilla nulla dui nec dolor. Phasellus lacinia aliquam ligula sed porttitor. Cras feugiat eros ut arcu commodo dictum. Integer tincidunt nisl id nisl consequat molestie. Integer elit tortor, ultrices sit amet nunc vitae, feugiat tempus mauris. Morbi volutpat consectetur felis sed porttitor. Praesent in urna erat.</p>\r\n\r\n<p>Aenean mollis luctus dolor, eu interdum velit faucibus eu. Suspendisse vitae efficitur erat. In facilisis nisi id arcu scelerisque bibendum. Nunc a placerat enim. Donec pharetra, velit quis facilisis tempus, lectus est imperdiet nisl, in tempus tortor dolor iaculis dolor. Nunc vitae molestie turpis. Nam vitae lobortis massa. Nam pharetra non felis in porta.</p>\r\n\r\n<p>Vivamus pulvinar diam vel felis dignissim tincidunt. Donec hendrerit non est sed volutpat. In egestas ex tortor, at convallis nunc porttitor at. Fusce sed cursus risus. Nam metus sapien, viverra eget felis id, maximus convallis lacus. Donec nec lacus vitae ex hendrerit ultricies non vel risus. Morbi malesuada ipsum iaculis augue convallis vehicula. Proin eget dolor dignissim, volutpat purus ac, ultricies risus. Pellentesque semper, mauris et pharetra accumsan, ante velit faucibus ex, a mattis metus odio vel ligula. Pellentesque elementum suscipit laoreet. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Integer a turpis sed massa blandit iaculis. Sed aliquet, justo vestibulum euismod rhoncus, nisi dui fringilla sapien, non tempor nunc lectus vitae dolor. Suspendisse potenti.</p>\r\n\r\n<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras dictum massa et dolor porta, rhoncus faucibus magna elementum. Sed porta mattis mollis. Donec ut est pretium, pretium nibh porttitor, suscipit metus. Sed viverra felis sed elit vehicula sodales. Nullam ante ante, tristique vel tincidunt ac, egestas eget sem. Sed lorem nunc, pellentesque vel ipsum venenatis, pellentesque interdum orci. Suspendisse mauris dui, accumsan at dapibus sed, volutpat quis erat. Nam fringilla nisl eu nunc lobortis, feugiat posuere libero venenatis. Nunc risus lorem, ornare eget congue in, pretium quis enim. Pellentesque elit elit, pharetra eget nunc at, maximus pellentesque diam.</p>\r\n\r\n<p>Praesent fermentum finibus lacus. Nulla tincidunt lectus sed purus facilisis hendrerit. Maecenas volutpat elementum orci, tincidunt euismod ante facilisis ac. Integer dignissim iaculis varius. Mauris iaculis elit vel posuere pellentesque. Praesent a mi sed neque ullamcorper dignissim sed ut nibh. Sed purus dui, sodales in varius in, accumsan at libero. Vestibulum posuere dui et orci tincidunt, ac consequat felis venenatis.</p>\r\n\r\n<p>Morbi sodales, nisl iaculis fringilla imperdiet, metus tortor semper quam, a fringilla nulla dui nec dolor. Phasellus lacinia aliquam ligula sed porttitor. Cras feugiat eros ut arcu commodo dictum. Integer tincidunt nisl id nisl consequat molestie. Integer elit tortor, ultrices sit amet nunc vitae, feugiat tempus mauris. Morbi volutpat consectetur felis sed porttitor. Praesent in urna erat.</p>\r\n\r\n<p>Aenean mollis luctus dolor, eu interdum velit faucibus eu. Suspendisse vitae efficitur erat. In facilisis nisi id arcu scelerisque bibendum. Nunc a placerat enim. Donec pharetra, velit quis facilisis tempus, lectus est imperdiet nisl, in tempus tortor dolor iaculis dolor. Nunc vitae molestie turpis. Nam vitae lobortis massa. Nam pharetra non felis in porta.</p>\r\n\r\n<p>Vivamus pulvinar diam vel felis dignissim tincidunt. Donec hendrerit non est sed volutpat. In egestas ex tortor, at convallis nunc porttitor at. Fusce sed cursus risus. Nam metus sapien, viverra eget felis id, maximus convallis lacus. Donec nec lacus vitae ex hendrerit ultricies non vel risus. Morbi malesuada ipsum iaculis augue convallis vehicula. Proin eget dolor dignissim, volutpat purus ac, ultricies risus. Pellentesque semper, mauris et pharetra accumsan, ante velit faucibus ex, a mattis metus odio vel ligula. Pellentesque elementum suscipit laoreet. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Integer a turpis sed massa blandit iaculis. Sed aliquet, justo vestibulum euismod rhoncus, nisi dui fringilla sapien, non tempor nunc lectus vitae dolor. Suspendisse potenti.</p>\r\n\r\n<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras dictum massa et dolor porta, rhoncus faucibus magna elementum. Sed porta mattis mollis. Donec ut est pretium, pretium nibh porttitor, suscipit metus. Sed viverra felis sed elit vehicula sodales. Nullam ante ante, tristique vel tincidunt ac, egestas eget sem. Sed lorem nunc, pellentesque vel ipsum venenatis, pellentesque interdum orci. Suspendisse mauris dui, accumsan at dapibus sed, volutpat quis erat. Nam fringilla nisl eu nunc lobortis, feugiat posuere libero venenatis. Nunc risus lorem, ornare eget congue in, pretium quis enim. Pellentesque elit elit, pharetra eget nunc at, maximus pellentesque diam.</p>\r\n\r\n<p>Praesent fermentum finibus lacus. Nulla tincidunt lectus sed purus facilisis hendrerit. Maecenas volutpat elementum orci, tincidunt euismod ante facilisis ac. Integer dignissim iaculis varius. Mauris iaculis elit vel posuere pellentesque. Praesent a mi sed neque ullamcorper dignissim sed ut nibh. Sed purus dui, sodales in varius in, accumsan at libero. Vestibulum posuere dui et orci tincidunt, ac consequat felis venenatis.</p>\r\n\r\n<p>Morbi sodales, nisl iaculis fringilla imperdiet, metus tortor semper quam, a fringilla nulla dui nec dolor. Phasellus lacinia aliquam ligula sed porttitor. Cras feugiat eros ut arcu commodo dictum. Integer tincidunt nisl id nisl consequat molestie. Integer elit tortor, ultrices sit amet nunc vitae, feugiat tempus mauris. Morbi volutpat consectetur felis sed porttitor. Praesent in urna erat.</p>\r\n\r\n<p>Aenean mollis luctus dolor, eu interdum velit faucibus eu. Suspendisse vitae efficitur erat. In facilisis nisi id arcu scelerisque bibendum. Nunc a placerat enim. Donec pharetra, velit quis facilisis tempus, lectus est imperdiet nisl, in tempus tortor dolor iaculis dolor. Nunc vitae molestie turpis. Nam vitae lobortis massa. Nam pharetra non felis in porta.</p>\r\n\r\n<p>Vivamus pulvinar diam vel felis dignissim tincidunt. Donec hendrerit non est sed volutpat. In egestas ex tortor, at convallis nunc porttitor at. Fusce sed cursus risus. Nam metus sapien, viverra eget felis id, maximus convallis lacus. Donec nec lacus vitae ex hendrerit ultricies non vel risus. Morbi malesuada ipsum iaculis augue convallis vehicula. Proin eget dolor dignissim, volutpat purus ac, ultricies risus. Pellentesque semper, mauris et pharetra accumsan, ante velit faucibus ex, a mattis metus odio vel ligula. Pellentesque elementum suscipit laoreet. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Integer a turpis sed massa blandit iaculis. Sed aliquet, justo vestibulum euismod rhoncus, nisi dui fringilla sapien, non tempor nunc lectus vitae dolor. Suspendisse potenti.</p>', NULL, '2021-07-28 07:09:19'),
 (26, 'privacy_policy', '<h2>This is a Demo Privacy Policy</h2>\r\n\r\n<p>This policy explains how StackFood&nbsp;website and related applications (the &ldquo;Site&rdquo;, &ldquo;we&rdquo; or &ldquo;us&rdquo;) collects, uses, shares and protects the personal information that we collect through this site or different channels. StackFood has established the site to link up the users who need foods or grocery items to be shipped or delivered by the riders from the affiliated restaurants or shops to the desired location. This policy also applies to any mobile applications that we develop for use with our services on the Site, and references to this &ldquo;Site&rdquo;, &ldquo;we&rdquo; or &ldquo;us&rdquo; is intended to also include these mobile applications. Please read below to learn more about our information policies. By using this Site, you agree to these policies.</p>\r\n\r\n<h2>How the Information is collected</h2>\r\n\r\n<h3>Information provided by web browser</h3>\r\n\r\n<p>You have to provide us with personal information like your name, contact no, mailing address and email id, our app will also fetch your location information in order to give you the best service. Like many other websites, we may record information that your web browser routinely shares, such as your browser type, browser language, software and hardware attributes, the date and time of your visit, the web page from which you came, your Internet Protocol address and the geographic location associated with that address, the pages on this Site that you visit and the time you spent on those pages. This will generally be anonymous data that we collect on an aggregate basis.</p>\r\n\r\n<h3>Personal Information that you provide</h3>\r\n\r\n<p>If you want to use our service, you must create an account on our Site. To establish your account, we will ask for personally identifiable information that can be used to contact or identify you, which may include your name, phone number, and e-mail address. We may also collect demographic information about you, such as your zip code, and allow you to submit additional information that will be part of your profile. Other than basic information that we need to establish your account, it will be up to you to decide how much information to share as part of your profile. We encourage you to think carefully about the information that you share and we recommend that you guard your identity and your sensitive information. Of course, you can review and revise your profile at any time.</p>\r\n\r\n<h3>Payment Information</h3>\r\n\r\n<p>To make the payment online for availing our services, you have to provide the bank account, mobile financial service (MFS), debit card, credit card information to the StackFood platform.</p>\r\n\r\n<h2>How the Information is collected</h2>\r\n\r\n<h3>Session and Persistent Cookies</h3>\r\n\r\n<p>Cookies are small text files that are placed on your computer by websites that you visit. They are widely used in order to make websites work, or work more efficiently, as well as to provide information to the owners of the site. As is commonly done on websites, we may use cookies and similar technology to keep track of our users and the services they have elected. We use both &ldquo;session&rdquo; and &ldquo;persistent&rdquo; cookies. Session cookies are deleted after you leave our website and when you close your browser. We use data collected with session cookies to enable certain features on our Site, to help us understand how users interact with our Site, and to monitor at an aggregate level Site usage and web traffic routing. We may allow business partners who provide services to our Site to place cookies on your computer that assist us in analyzing usage data. We do not allow these business partners to collect your personal information from our website except as may be necessary for the services that they provide.</p>\r\n\r\n<h3>Web Beacons</h3>\r\n\r\n<p>We may also use web beacons or similar technology to help us track the effectiveness of our communications.</p>\r\n\r\n<h3>Advertising Cookies</h3>\r\n\r\n<p>We may use third parties, such as Google, to serve ads about our website over the internet. These third parties may use cookies to identify ads that may be relevant to your interest (for example, based on your recent visit to our website), to limit the number of times that you see an ad, and to measure the effectiveness of the ads.</p>\r\n\r\n<h3>Google Analytics</h3>\r\n\r\n<p>We may also use Google Analytics or a similar service to gather statistical information about the visitors to this Site and how they use the Site. This, also, is done on an anonymous basis. We will not try to associate anonymous data with your personally identifiable data. If you would like to learn more about Google Analytics, please click here.</p>', NULL, '2021-08-22 01:49:58'),
 (27, 'minimum_shipping_charge', '10', NULL, NULL),
@@ -404,7 +411,7 @@ INSERT INTO `business_settings` (`id`, `key`, `value`, `created_at`, `updated_at
 (43, 'admin_commission', '10', NULL, NULL),
 (44, 'country', 'US', NULL, NULL),
 (45, 'app_url', 'https://www.google.com', NULL, NULL),
-(46, 'default_location', '{\"lat\":\"0\",\"lng\":\"0\"}', NULL, NULL),
+(46, 'default_location', '{\"lat\":\"23.02918734674459\",\"lng\":\"90.3515625\"}', NULL, NULL),
 (47, 'twilio_sms', '{\"status\":\"0\",\"sid\":null,\"messaging_service_id\":null,\"token\":null,\"from\":null,\"otp_template\":\"Your otp is #OTP#.\"}', '2022-03-23 15:16:08', '2022-03-23 15:16:08'),
 (48, 'nexmo_sms', '{\"status\":\"0\",\"api_key\":null,\"api_secret\":null,\"signature_secret\":\"\",\"private_key\":\"\",\"application_id\":\"\",\"from\":null,\"otp_template\":\"Your otp is #OTP#.\"}', '2022-03-23 15:16:18', '2022-03-23 15:16:18'),
 (49, '2factor_sms', '{\"status\":\"0\",\"api_key\":null}', '2022-03-23 15:16:26', '2022-03-23 15:16:26'),
@@ -422,7 +429,7 @@ INSERT INTO `business_settings` (`id`, `key`, `value`, `created_at`, `updated_at
 (61, 'popular_restaurant', '1', '2021-10-17 00:05:08', '2021-10-17 00:05:08'),
 (62, 'new_restaurant', '1', '2021-10-17 00:05:08', '2021-10-17 00:05:08'),
 (63, 'mercadopago', '{\"status\":1,\"public_key\":\"\",\"access_token\":\"\"}', '2021-10-17 00:05:08', '2021-10-17 00:05:08'),
-(64, 'map_api_key_server', NULL, NULL, NULL),
+(64, 'map_api_key_server', 'AIzaSyDGFRelTRtPB6QNGOQcT6xE1eMLHHLylY0', NULL, NULL),
 (66, 'most_reviewed_foods', '1', '2021-11-15 15:55:37', '2021-11-15 15:55:37'),
 (67, 'landing_page_text', '{\"header_title_1\":\"Food App\",\"header_title_2\":\"Why stay hungry when you can order from StackFood\",\"header_title_3\":\"Get 10% OFF on your first order\",\"about_title\":\"StackFood is Best Delivery Service Near You\",\"why_choose_us\":\"Why Choose Us?\",\"why_choose_us_title\":\"Lorem ipsum dolor sit amet, consectetur adipiscing elit.\",\"testimonial_title\":\"Trusted by Customer & Restaurant Owner\",\"footer_article\":\"Suspendisse ultrices at diam lectus nullam. Nisl, sagittis viverra enim erat tortor ultricies massa turpis. Arcu pulvinar.\"}', '2021-11-15 15:55:37', '2021-11-15 15:55:37'),
 (68, 'landing_page_links', '{\"app_url_android_status\":\"1\",\"app_url_android\":\"https:\\/\\/play.google.com\",\"app_url_ios_status\":\"1\",\"app_url_ios\":\"https:\\/\\/www.apple.com\\/app-store\",\"web_app_url_status\":\"1\",\"web_app_url\":\"https:\\/\\/stackfood.6amtech.com\\/\"}', '2021-11-15 15:55:37', '2021-11-15 15:55:37'),
@@ -493,7 +500,8 @@ INSERT INTO `business_settings` (`id`, `key`, `value`, `created_at`, `updated_at
 (134, 'home_delivery_status', '1', '2023-08-17 00:26:56', '2023-08-17 00:26:56'),
 (135, 'takeaway_status', '1', '2023-08-17 00:26:56', '2023-08-17 00:26:56'),
 (136, 'dm_picture_upload_status', '1', NULL, NULL),
-(137, 'offline_payment_status', NULL, NULL, '2023-10-16 20:16:58');
+(137, 'offline_payment_status', NULL, NULL, '2023-10-16 20:16:58'),
+(138, 'guest_checkout_status', '0', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -727,125 +735,125 @@ CREATE TABLE `currencies` (
 --
 
 INSERT INTO `currencies` (`id`, `country`, `currency_code`, `currency_symbol`, `exchange_rate`, `created_at`, `updated_at`) VALUES
-(1, 'US Dollar', 'USD', '$', '1.00', NULL, NULL),
-(2, 'Canadian Dollar', 'CAD', 'CA$', '1.00', NULL, NULL),
-(3, 'Euro', 'EUR', '€', '1.00', NULL, NULL),
-(4, 'United Arab Emirates Dirham', 'AED', 'د.إ.‏', '1.00', NULL, NULL),
-(5, 'Afghan Afghani', 'AFN', '؋', '1.00', NULL, NULL),
-(6, 'Albanian Lek', 'ALL', 'L', '1.00', NULL, NULL),
-(7, 'Armenian Dram', 'AMD', '֏', '1.00', NULL, NULL),
-(8, 'Argentine Peso', 'ARS', '$', '1.00', NULL, NULL),
-(9, 'Australian Dollar', 'AUD', '$', '1.00', NULL, NULL),
-(10, 'Azerbaijani Manat', 'AZN', '₼', '1.00', NULL, NULL),
-(11, 'Bosnia-Herzegovina Convertible Mark', 'BAM', 'KM', '1.00', NULL, NULL),
-(12, 'Bangladeshi Taka', 'BDT', '৳', '1.00', NULL, NULL),
-(13, 'Bulgarian Lev', 'BGN', 'лв.', '1.00', NULL, NULL),
-(14, 'Bahraini Dinar', 'BHD', 'د.ب.‏', '1.00', NULL, NULL),
-(15, 'Burundian Franc', 'BIF', 'FBu', '1.00', NULL, NULL),
-(16, 'Brunei Dollar', 'BND', 'B$', '1.00', NULL, NULL),
-(17, 'Bolivian Boliviano', 'BOB', 'Bs', '1.00', NULL, NULL),
-(18, 'Brazilian Real', 'BRL', 'R$', '1.00', NULL, NULL),
-(19, 'Botswanan Pula', 'BWP', 'P', '1.00', NULL, NULL),
-(20, 'Belarusian Ruble', 'BYN', 'Br', '1.00', NULL, NULL),
-(21, 'Belize Dollar', 'BZD', '$', '1.00', NULL, NULL),
-(22, 'Congolese Franc', 'CDF', 'FC', '1.00', NULL, NULL),
-(23, 'Swiss Franc', 'CHF', 'CHf', '1.00', NULL, NULL),
-(24, 'Chilean Peso', 'CLP', '$', '1.00', NULL, NULL),
-(25, 'Chinese Yuan', 'CNY', '¥', '1.00', NULL, NULL),
-(26, 'Colombian Peso', 'COP', '$', '1.00', NULL, NULL),
-(27, 'Costa Rican Colón', 'CRC', '₡', '1.00', NULL, NULL),
-(28, 'Cape Verdean Escudo', 'CVE', '$', '1.00', NULL, NULL),
-(29, 'Czech Republic Koruna', 'CZK', 'Kč', '1.00', NULL, NULL),
-(30, 'Djiboutian Franc', 'DJF', 'Fdj', '1.00', NULL, NULL),
-(31, 'Danish Krone', 'DKK', 'Kr.', '1.00', NULL, NULL),
-(32, 'Dominican Peso', 'DOP', 'RD$', '1.00', NULL, NULL),
-(33, 'Algerian Dinar', 'DZD', 'د.ج.‏', '1.00', NULL, NULL),
-(34, 'Estonian Kroon', 'EEK', 'kr', '1.00', NULL, NULL),
-(35, 'Egyptian Pound', 'EGP', 'E£‏', '1.00', NULL, NULL),
-(36, 'Eritrean Nakfa', 'ERN', 'Nfk', '1.00', NULL, NULL),
-(37, 'Ethiopian Birr', 'ETB', 'Br', '1.00', NULL, NULL),
-(38, 'British Pound Sterling', 'GBP', '£', '1.00', NULL, NULL),
-(39, 'Georgian Lari', 'GEL', 'GEL', '1.00', NULL, NULL),
-(40, 'Ghanaian Cedi', 'GHS', 'GH¢', '1.00', NULL, NULL),
-(41, 'Guinean Franc', 'GNF', 'FG', '1.00', NULL, NULL),
-(42, 'Guatemalan Quetzal', 'GTQ', 'Q', '1.00', NULL, NULL),
-(43, 'Hong Kong Dollar', 'HKD', 'HK$', '1.00', NULL, NULL),
-(44, 'Honduran Lempira', 'HNL', 'L', '1.00', NULL, NULL),
-(45, 'Croatian Kuna', 'HRK', 'kn', '1.00', NULL, NULL),
-(46, 'Hungarian Forint', 'HUF', 'Ft', '1.00', NULL, NULL),
-(47, 'Indonesian Rupiah', 'IDR', 'Rp', '1.00', NULL, NULL),
-(48, 'Israeli New Sheqel', 'ILS', '₪', '1.00', NULL, NULL),
-(49, 'Indian Rupee', 'INR', '₹', '1.00', NULL, NULL),
-(50, 'Iraqi Dinar', 'IQD', 'ع.د', '1.00', NULL, NULL),
-(51, 'Iranian Rial', 'IRR', '﷼', '1.00', NULL, NULL),
-(52, 'Icelandic Króna', 'ISK', 'kr', '1.00', NULL, NULL),
-(53, 'Jamaican Dollar', 'JMD', '$', '1.00', NULL, NULL),
-(54, 'Jordanian Dinar', 'JOD', 'د.ا‏', '1.00', NULL, NULL),
-(55, 'Japanese Yen', 'JPY', '¥', '1.00', NULL, NULL),
-(56, 'Kenyan Shilling', 'KES', 'Ksh', '1.00', NULL, NULL),
-(57, 'Cambodian Riel', 'KHR', '៛', '1.00', NULL, NULL),
-(58, 'Comorian Franc', 'KMF', 'FC', '1.00', NULL, NULL),
-(59, 'South Korean Won', 'KRW', 'CF', '1.00', NULL, NULL),
-(60, 'Kuwaiti Dinar', 'KWD', 'د.ك.‏', '1.00', NULL, NULL),
-(61, 'Kazakhstani Tenge', 'KZT', '₸.', '1.00', NULL, NULL),
-(62, 'Lebanese Pound', 'LBP', 'ل.ل.‏', '1.00', NULL, NULL),
-(63, 'Sri Lankan Rupee', 'LKR', 'Rs', '1.00', NULL, NULL),
-(64, 'Lithuanian Litas', 'LTL', 'Lt', '1.00', NULL, NULL),
-(65, 'Latvian Lats', 'LVL', 'Ls', '1.00', NULL, NULL),
-(66, 'Libyan Dinar', 'LYD', 'د.ل.‏', '1.00', NULL, NULL),
-(67, 'Moroccan Dirham', 'MAD', 'د.م.‏', '1.00', NULL, NULL),
-(68, 'Moldovan Leu', 'MDL', 'L', '1.00', NULL, NULL),
-(69, 'Malagasy Ariary', 'MGA', 'Ar', '1.00', NULL, NULL),
-(70, 'Macedonian Denar', 'MKD', 'Ден', '1.00', NULL, NULL),
-(71, 'Myanma Kyat', 'MMK', 'K', '1.00', NULL, NULL),
-(72, 'Macanese Pataca', 'MOP', 'MOP$', '1.00', NULL, NULL),
-(73, 'Mauritian Rupee', 'MUR', 'Rs', '1.00', NULL, NULL),
-(74, 'Mexican Peso', 'MXN', '$', '1.00', NULL, NULL),
-(75, 'Malaysian Ringgit', 'MYR', 'RM', '1.00', NULL, NULL),
-(76, 'Mozambican Metical', 'MZN', 'MT', '1.00', NULL, NULL),
-(77, 'Namibian Dollar', 'NAD', 'N$', '1.00', NULL, NULL),
-(78, 'Nigerian Naira', 'NGN', '₦', '1.00', NULL, NULL),
-(79, 'Nicaraguan Córdoba', 'NIO', 'C$', '1.00', NULL, NULL),
-(80, 'Norwegian Krone', 'NOK', 'kr', '1.00', NULL, NULL),
-(81, 'Nepalese Rupee', 'NPR', 'Re.', '1.00', NULL, NULL),
-(82, 'New Zealand Dollar', 'NZD', '$', '1.00', NULL, NULL),
-(83, 'Omani Rial', 'OMR', 'ر.ع.‏', '1.00', NULL, NULL),
-(84, 'Panamanian Balboa', 'PAB', 'B/.', '1.00', NULL, NULL),
-(85, 'Peruvian Nuevo Sol', 'PEN', 'S/', '1.00', NULL, NULL),
-(86, 'Philippine Peso', 'PHP', '₱', '1.00', NULL, NULL),
-(87, 'Pakistani Rupee', 'PKR', 'Rs', '1.00', NULL, NULL),
-(88, 'Polish Zloty', 'PLN', 'zł', '1.00', NULL, NULL),
-(89, 'Paraguayan Guarani', 'PYG', '₲', '1.00', NULL, NULL),
-(90, 'Qatari Rial', 'QAR', 'ر.ق.‏', '1.00', NULL, NULL),
-(91, 'Romanian Leu', 'RON', 'lei', '1.00', NULL, NULL),
-(92, 'Serbian Dinar', 'RSD', 'din.', '1.00', NULL, NULL),
-(93, 'Russian Ruble', 'RUB', '₽.', '1.00', NULL, NULL),
-(94, 'Rwandan Franc', 'RWF', 'FRw', '1.00', NULL, NULL),
-(95, 'Saudi Riyal', 'SAR', 'ر.س.‏', '1.00', NULL, NULL),
-(96, 'Sudanese Pound', 'SDG', 'ج.س.', '1.00', NULL, NULL),
-(97, 'Swedish Krona', 'SEK', 'kr', '1.00', NULL, NULL),
-(98, 'Singapore Dollar', 'SGD', '$', '1.00', NULL, NULL),
-(99, 'Somali Shilling', 'SOS', 'Sh.so.', '1.00', NULL, NULL),
-(100, 'Syrian Pound', 'SYP', 'LS‏', '1.00', NULL, NULL),
-(101, 'Thai Baht', 'THB', '฿', '1.00', NULL, NULL),
-(102, 'Tunisian Dinar', 'TND', 'د.ت‏', '1.00', NULL, NULL),
-(103, 'Tongan Paʻanga', 'TOP', 'T$', '1.00', NULL, NULL),
-(104, 'Turkish Lira', 'TRY', '₺', '1.00', NULL, NULL),
-(105, 'Trinidad and Tobago Dollar', 'TTD', '$', '1.00', NULL, NULL),
-(106, 'New Taiwan Dollar', 'TWD', 'NT$', '1.00', NULL, NULL),
-(107, 'Tanzanian Shilling', 'TZS', 'TSh', '1.00', NULL, NULL),
-(108, 'Ukrainian Hryvnia', 'UAH', '₴', '1.00', NULL, NULL),
-(109, 'Ugandan Shilling', 'UGX', 'USh', '1.00', NULL, NULL),
-(110, 'Uruguayan Peso', 'UYU', '$', '1.00', NULL, NULL),
-(111, 'Uzbekistan Som', 'UZS', 'so\'m', '1.00', NULL, NULL),
-(112, 'Venezuelan Bolívar', 'VEF', 'Bs.F.', '1.00', NULL, NULL),
-(113, 'Vietnamese Dong', 'VND', '₫', '1.00', NULL, NULL),
-(114, 'CFA Franc BEAC', 'XAF', 'FCFA', '1.00', NULL, NULL),
-(115, 'CFA Franc BCEAO', 'XOF', 'CFA', '1.00', NULL, NULL),
-(116, 'Yemeni Rial', 'YER', '﷼‏', '1.00', NULL, NULL),
-(117, 'South African Rand', 'ZAR', 'R', '1.00', NULL, NULL),
-(118, 'Zambian Kwacha', 'ZMK', 'ZK', '1.00', NULL, NULL),
-(119, 'Zimbabwean Dollar', 'ZWL', 'Z$', '1.00', NULL, NULL);
+(1, 'US Dollar', 'USD', '$', 1.00, NULL, NULL),
+(2, 'Canadian Dollar', 'CAD', 'CA$', 1.00, NULL, NULL),
+(3, 'Euro', 'EUR', '€', 1.00, NULL, NULL),
+(4, 'United Arab Emirates Dirham', 'AED', 'د.إ.‏', 1.00, NULL, NULL),
+(5, 'Afghan Afghani', 'AFN', '؋', 1.00, NULL, NULL),
+(6, 'Albanian Lek', 'ALL', 'L', 1.00, NULL, NULL),
+(7, 'Armenian Dram', 'AMD', '֏', 1.00, NULL, NULL),
+(8, 'Argentine Peso', 'ARS', '$', 1.00, NULL, NULL),
+(9, 'Australian Dollar', 'AUD', '$', 1.00, NULL, NULL),
+(10, 'Azerbaijani Manat', 'AZN', '₼', 1.00, NULL, NULL),
+(11, 'Bosnia-Herzegovina Convertible Mark', 'BAM', 'KM', 1.00, NULL, NULL),
+(12, 'Bangladeshi Taka', 'BDT', '৳', 1.00, NULL, NULL),
+(13, 'Bulgarian Lev', 'BGN', 'лв.', 1.00, NULL, NULL),
+(14, 'Bahraini Dinar', 'BHD', 'د.ب.‏', 1.00, NULL, NULL),
+(15, 'Burundian Franc', 'BIF', 'FBu', 1.00, NULL, NULL),
+(16, 'Brunei Dollar', 'BND', 'B$', 1.00, NULL, NULL),
+(17, 'Bolivian Boliviano', 'BOB', 'Bs', 1.00, NULL, NULL),
+(18, 'Brazilian Real', 'BRL', 'R$', 1.00, NULL, NULL),
+(19, 'Botswanan Pula', 'BWP', 'P', 1.00, NULL, NULL),
+(20, 'Belarusian Ruble', 'BYN', 'Br', 1.00, NULL, NULL),
+(21, 'Belize Dollar', 'BZD', '$', 1.00, NULL, NULL),
+(22, 'Congolese Franc', 'CDF', 'FC', 1.00, NULL, NULL),
+(23, 'Swiss Franc', 'CHF', 'CHf', 1.00, NULL, NULL),
+(24, 'Chilean Peso', 'CLP', '$', 1.00, NULL, NULL),
+(25, 'Chinese Yuan', 'CNY', '¥', 1.00, NULL, NULL),
+(26, 'Colombian Peso', 'COP', '$', 1.00, NULL, NULL),
+(27, 'Costa Rican Colón', 'CRC', '₡', 1.00, NULL, NULL),
+(28, 'Cape Verdean Escudo', 'CVE', '$', 1.00, NULL, NULL),
+(29, 'Czech Republic Koruna', 'CZK', 'Kč', 1.00, NULL, NULL),
+(30, 'Djiboutian Franc', 'DJF', 'Fdj', 1.00, NULL, NULL),
+(31, 'Danish Krone', 'DKK', 'Kr.', 1.00, NULL, NULL),
+(32, 'Dominican Peso', 'DOP', 'RD$', 1.00, NULL, NULL),
+(33, 'Algerian Dinar', 'DZD', 'د.ج.‏', 1.00, NULL, NULL),
+(34, 'Estonian Kroon', 'EEK', 'kr', 1.00, NULL, NULL),
+(35, 'Egyptian Pound', 'EGP', 'E£‏', 1.00, NULL, NULL),
+(36, 'Eritrean Nakfa', 'ERN', 'Nfk', 1.00, NULL, NULL),
+(37, 'Ethiopian Birr', 'ETB', 'Br', 1.00, NULL, NULL),
+(38, 'British Pound Sterling', 'GBP', '£', 1.00, NULL, NULL),
+(39, 'Georgian Lari', 'GEL', 'GEL', 1.00, NULL, NULL),
+(40, 'Ghanaian Cedi', 'GHS', 'GH¢', 1.00, NULL, NULL),
+(41, 'Guinean Franc', 'GNF', 'FG', 1.00, NULL, NULL),
+(42, 'Guatemalan Quetzal', 'GTQ', 'Q', 1.00, NULL, NULL),
+(43, 'Hong Kong Dollar', 'HKD', 'HK$', 1.00, NULL, NULL),
+(44, 'Honduran Lempira', 'HNL', 'L', 1.00, NULL, NULL),
+(45, 'Croatian Kuna', 'HRK', 'kn', 1.00, NULL, NULL),
+(46, 'Hungarian Forint', 'HUF', 'Ft', 1.00, NULL, NULL),
+(47, 'Indonesian Rupiah', 'IDR', 'Rp', 1.00, NULL, NULL),
+(48, 'Israeli New Sheqel', 'ILS', '₪', 1.00, NULL, NULL),
+(49, 'Indian Rupee', 'INR', '₹', 1.00, NULL, NULL),
+(50, 'Iraqi Dinar', 'IQD', 'ع.د', 1.00, NULL, NULL),
+(51, 'Iranian Rial', 'IRR', '﷼', 1.00, NULL, NULL),
+(52, 'Icelandic Króna', 'ISK', 'kr', 1.00, NULL, NULL),
+(53, 'Jamaican Dollar', 'JMD', '$', 1.00, NULL, NULL),
+(54, 'Jordanian Dinar', 'JOD', 'د.ا‏', 1.00, NULL, NULL),
+(55, 'Japanese Yen', 'JPY', '¥', 1.00, NULL, NULL),
+(56, 'Kenyan Shilling', 'KES', 'Ksh', 1.00, NULL, NULL),
+(57, 'Cambodian Riel', 'KHR', '៛', 1.00, NULL, NULL),
+(58, 'Comorian Franc', 'KMF', 'FC', 1.00, NULL, NULL),
+(59, 'South Korean Won', 'KRW', 'CF', 1.00, NULL, NULL),
+(60, 'Kuwaiti Dinar', 'KWD', 'د.ك.‏', 1.00, NULL, NULL),
+(61, 'Kazakhstani Tenge', 'KZT', '₸.', 1.00, NULL, NULL),
+(62, 'Lebanese Pound', 'LBP', 'ل.ل.‏', 1.00, NULL, NULL),
+(63, 'Sri Lankan Rupee', 'LKR', 'Rs', 1.00, NULL, NULL),
+(64, 'Lithuanian Litas', 'LTL', 'Lt', 1.00, NULL, NULL),
+(65, 'Latvian Lats', 'LVL', 'Ls', 1.00, NULL, NULL),
+(66, 'Libyan Dinar', 'LYD', 'د.ل.‏', 1.00, NULL, NULL),
+(67, 'Moroccan Dirham', 'MAD', 'د.م.‏', 1.00, NULL, NULL),
+(68, 'Moldovan Leu', 'MDL', 'L', 1.00, NULL, NULL),
+(69, 'Malagasy Ariary', 'MGA', 'Ar', 1.00, NULL, NULL),
+(70, 'Macedonian Denar', 'MKD', 'Ден', 1.00, NULL, NULL),
+(71, 'Myanma Kyat', 'MMK', 'K', 1.00, NULL, NULL),
+(72, 'Macanese Pataca', 'MOP', 'MOP$', 1.00, NULL, NULL),
+(73, 'Mauritian Rupee', 'MUR', 'Rs', 1.00, NULL, NULL),
+(74, 'Mexican Peso', 'MXN', '$', 1.00, NULL, NULL),
+(75, 'Malaysian Ringgit', 'MYR', 'RM', 1.00, NULL, NULL),
+(76, 'Mozambican Metical', 'MZN', 'MT', 1.00, NULL, NULL),
+(77, 'Namibian Dollar', 'NAD', 'N$', 1.00, NULL, NULL),
+(78, 'Nigerian Naira', 'NGN', '₦', 1.00, NULL, NULL),
+(79, 'Nicaraguan Córdoba', 'NIO', 'C$', 1.00, NULL, NULL),
+(80, 'Norwegian Krone', 'NOK', 'kr', 1.00, NULL, NULL),
+(81, 'Nepalese Rupee', 'NPR', 'Re.', 1.00, NULL, NULL),
+(82, 'New Zealand Dollar', 'NZD', '$', 1.00, NULL, NULL),
+(83, 'Omani Rial', 'OMR', 'ر.ع.‏', 1.00, NULL, NULL),
+(84, 'Panamanian Balboa', 'PAB', 'B/.', 1.00, NULL, NULL),
+(85, 'Peruvian Nuevo Sol', 'PEN', 'S/', 1.00, NULL, NULL),
+(86, 'Philippine Peso', 'PHP', '₱', 1.00, NULL, NULL),
+(87, 'Pakistani Rupee', 'PKR', 'Rs', 1.00, NULL, NULL),
+(88, 'Polish Zloty', 'PLN', 'zł', 1.00, NULL, NULL),
+(89, 'Paraguayan Guarani', 'PYG', '₲', 1.00, NULL, NULL),
+(90, 'Qatari Rial', 'QAR', 'ر.ق.‏', 1.00, NULL, NULL),
+(91, 'Romanian Leu', 'RON', 'lei', 1.00, NULL, NULL),
+(92, 'Serbian Dinar', 'RSD', 'din.', 1.00, NULL, NULL),
+(93, 'Russian Ruble', 'RUB', '₽.', 1.00, NULL, NULL),
+(94, 'Rwandan Franc', 'RWF', 'FRw', 1.00, NULL, NULL),
+(95, 'Saudi Riyal', 'SAR', 'ر.س.‏', 1.00, NULL, NULL),
+(96, 'Sudanese Pound', 'SDG', 'ج.س.', 1.00, NULL, NULL),
+(97, 'Swedish Krona', 'SEK', 'kr', 1.00, NULL, NULL),
+(98, 'Singapore Dollar', 'SGD', '$', 1.00, NULL, NULL),
+(99, 'Somali Shilling', 'SOS', 'Sh.so.', 1.00, NULL, NULL),
+(100, 'Syrian Pound', 'SYP', 'LS‏', 1.00, NULL, NULL),
+(101, 'Thai Baht', 'THB', '฿', 1.00, NULL, NULL),
+(102, 'Tunisian Dinar', 'TND', 'د.ت‏', 1.00, NULL, NULL),
+(103, 'Tongan Paʻanga', 'TOP', 'T$', 1.00, NULL, NULL),
+(104, 'Turkish Lira', 'TRY', '₺', 1.00, NULL, NULL),
+(105, 'Trinidad and Tobago Dollar', 'TTD', '$', 1.00, NULL, NULL),
+(106, 'New Taiwan Dollar', 'TWD', 'NT$', 1.00, NULL, NULL),
+(107, 'Tanzanian Shilling', 'TZS', 'TSh', 1.00, NULL, NULL),
+(108, 'Ukrainian Hryvnia', 'UAH', '₴', 1.00, NULL, NULL),
+(109, 'Ugandan Shilling', 'UGX', 'USh', 1.00, NULL, NULL),
+(110, 'Uruguayan Peso', 'UYU', '$', 1.00, NULL, NULL),
+(111, 'Uzbekistan Som', 'UZS', 'so\'m', 1.00, NULL, NULL),
+(112, 'Venezuelan Bolívar', 'VEF', 'Bs.F.', 1.00, NULL, NULL),
+(113, 'Vietnamese Dong', 'VND', '₫', 1.00, NULL, NULL),
+(114, 'CFA Franc BEAC', 'XAF', 'FCFA', 1.00, NULL, NULL),
+(115, 'CFA Franc BCEAO', 'XOF', 'CFA', 1.00, NULL, NULL),
+(116, 'Yemeni Rial', 'YER', '﷼‏', 1.00, NULL, NULL),
+(117, 'South African Rand', 'ZAR', 'R', 1.00, NULL, NULL),
+(118, 'Zambian Kwacha', 'ZMK', 'ZK', 1.00, NULL, NULL),
+(119, 'Zimbabwean Dollar', 'ZWL', 'Z$', 1.00, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -907,9 +915,9 @@ INSERT INTO `data_settings` (`id`, `key`, `value`, `type`, `created_at`, `update
 (15, 'feature_short_description', 'Jam-packed with outstanding features to elevate your online ordering and delivery easier, and smarter than ever before. It\'s time to empower your multivendor online business with 6amMart\'s powerful features!', 'admin_landing_page', '2023-06-11 15:14:25', '2023-06-11 15:14:25'),
 (16, 'earning_title', 'Earn Money', 'admin_landing_page', '2023-06-11 15:26:01', '2023-06-11 15:26:01'),
 (17, 'earning_sub_title', 'Earn money  by using different platform', 'admin_landing_page', '2023-06-11 15:26:01', '2023-06-11 15:26:01'),
-(18, 'earning_seller_image', '2023-08-16-64dcaa6634ab5.png', 'admin_landing_page', '2023-06-11 15:27:29', '2023-08-15 23:52:22'),
+(18, 'earning_seller_image', '2024-04-20-66239442684d3.png', 'admin_landing_page', '2023-06-11 15:27:29', '2024-04-20 05:09:06'),
 (19, 'seller_app_earning_links', '{\"playstore_url_status\":null,\"playstore_url\":null,\"apple_store_url_status\":null,\"apple_store_url\":null}', 'admin_landing_page', NULL, NULL),
-(20, 'earning_delivery_image', '2023-08-16-64dcaa7ba5b80.png', 'admin_landing_page', '2023-06-11 15:28:48', '2023-08-15 23:52:43'),
+(20, 'earning_delivery_image', '2024-04-20-66239451975d2.png', 'admin_landing_page', '2023-06-11 15:28:48', '2024-04-20 05:09:21'),
 (21, 'dm_app_earning_links', '{\"playstore_url_status\":null,\"playstore_url\":null,\"apple_store_url_status\":null,\"apple_store_url\":null}', 'admin_landing_page', NULL, NULL),
 (22, 'why_choose_title', 'What so Special About 6amMart ?', 'admin_landing_page', '2023-06-11 15:30:30', '2023-06-11 15:32:08'),
 (23, 'counter_section', '{\"app_download_count_numbers\":\"300\",\"seller_count_numbers\":\"85\",\"deliveryman_count_numbers\":\"150\",\"customer_count_numbers\":\"10000\",\"status\":\"1\"}', 'admin_landing_page', NULL, NULL),
@@ -926,8 +934,8 @@ INSERT INTO `data_settings` (`id`, `key`, `value`, `type`, `created_at`, `update
 (34, 'header_title', '$Your e-Commerce!$', 'react_landing_page', '2023-06-12 16:30:53', '2023-06-12 19:41:19'),
 (35, 'header_sub_title', 'Venture Starts Here', 'react_landing_page', '2023-06-12 16:30:53', '2023-06-12 17:55:14'),
 (36, 'header_tag_line', 'More than just a reliable $eCommerce$ platform', 'react_landing_page', '2023-06-12 16:30:53', '2023-06-12 17:45:24'),
-(37, 'header_icon', '2023-08-16-64dcac0088f46.png', 'react_landing_page', '2023-06-12 16:30:53', '2023-08-15 23:59:12'),
-(38, 'header_banner', '2023-08-20-64e1e31738bbc.png', 'react_landing_page', '2023-06-12 16:30:53', '2023-08-19 22:55:35'),
+(37, 'header_icon', '2024-04-20-66239402e2913.png', 'react_landing_page', '2023-06-12 16:30:53', '2024-04-20 05:08:02'),
+(38, 'header_banner', '2024-04-20-66239402e5470.png', 'react_landing_page', '2023-06-12 16:30:53', '2024-04-20 05:08:02'),
 (39, 'company_title', '$6amMart$', 'react_landing_page', '2023-06-12 16:35:07', '2023-06-12 17:46:19'),
 (40, 'company_sub_title', 'is Best Delivery Service Near You', 'react_landing_page', '2023-06-12 16:35:07', '2023-06-12 16:35:07'),
 (41, 'company_description', '6amMart is a one-stop shop for all your daily necessities. You can shop for groceries, and pharmacy items, order food, and send important parcels from one place to another from the comfort of your home.', 'react_landing_page', '2023-06-12 16:35:07', '2023-06-12 16:35:07'),
@@ -947,19 +955,19 @@ INSERT INTO `data_settings` (`id`, `key`, `value`, `type`, `created_at`, `update
 (55, 'earning_dm_sub_title', 'Register as delivery man and earn money', 'react_landing_page', '2023-06-12 16:45:55', '2023-06-12 16:45:55'),
 (56, 'earning_dm_button_name', 'Register', 'react_landing_page', '2023-06-12 16:45:55', '2023-06-12 16:45:55'),
 (57, 'earning_dm_button_url', 'https://6ammart-admin.6amtech.com/deliveryman/apply', 'react_landing_page', '2023-06-12 16:45:55', '2023-06-12 16:45:55'),
-(58, 'promotion_banner', '[{\"img\":\"2023-08-16-64dcac89cd0fa.png\"},{\"img\":\"2023-08-16-64dcac93a324a.png\"},{\"img\":\"2023-08-16-64dcad5a24940.png\"}]', 'react_landing_page', NULL, '2023-08-16 00:01:02'),
+(58, 'promotion_banner', '[{\"img\":\"2023-08-16-64dcac89cd0fa.png\"},{\"img\":\"2023-08-16-64dcac93a324a.png\"},{\"img\":\"2023-08-16-64dcad5a24940.png\"},{\"img\":\"2024-04-20-6623944c31c97.png\"}]', 'react_landing_page', NULL, '2023-08-16 00:01:02'),
 (59, 'business_title', '$Let’s$', 'react_landing_page', '2023-06-12 16:52:29', '2023-06-12 16:52:29'),
 (60, 'business_sub_title', 'Manage your business  Smartly', 'react_landing_page', '2023-06-12 16:52:29', '2023-06-12 17:54:18'),
 (61, 'business_image', '2023-08-16-64dcad66585e9.png', 'react_landing_page', '2023-06-12 16:52:29', '2023-08-16 00:05:10'),
 (62, 'download_business_app_links', '{\"seller_playstore_url_status\":\"1\",\"seller_playstore_url\":\"https:\\/\\/play.google.com\\/store\",\"seller_appstore_url_status\":\"1\",\"seller_appstore_url\":\"https:\\/\\/www.apple.com\\/app-store\\/\",\"dm_playstore_url_status\":\"1\",\"dm_playstore_url\":\"https:\\/\\/play.google.com\\/store\",\"dm_appstore_url_status\":\"1\",\"dm_appstore_url\":\"https:\\/\\/www.apple.com\\/app-store\\/\"}', 'react_landing_page', NULL, NULL),
 (63, 'testimonial_title', 'We $satisfied$ some Customer & Restaurant Owners', 'react_landing_page', '2023-06-12 16:53:04', '2023-06-12 16:53:04'),
-(64, 'fixed_promotional_banner', '2023-08-16-64dcadedb4fac.png', 'react_landing_page', '2023-06-12 17:18:24', '2023-08-16 00:07:25'),
+(64, 'fixed_promotional_banner', '2024-04-20-662394ec1e6b7.png', 'react_landing_page', '2023-06-12 17:18:24', '2024-04-20 05:11:56'),
 (65, 'fixed_footer_description', 'Connect with our social media and other sites to keep up to date', 'react_landing_page', '2023-06-12 17:21:12', '2023-06-12 17:21:12'),
 (66, 'fixed_newsletter_title', 'Join Us!', 'react_landing_page', '2023-06-12 17:23:45', '2023-06-12 17:23:45'),
 (67, 'fixed_newsletter_sub_title', 'Subscribe to our weekly newsletter and be a part of our journey to self discovery and love.', 'react_landing_page', '2023-06-12 17:23:45', '2023-06-12 17:23:45'),
 (68, 'fixed_header_title', '6amMart', 'flutter_landing_page', '2023-06-12 17:31:35', '2023-06-12 17:31:35'),
 (69, 'fixed_header_sub_title', 'More than just reliable eCommerce platform', 'flutter_landing_page', '2023-06-12 17:31:35', '2023-06-12 17:32:30'),
-(70, 'fixed_header_image', '2023-08-16-64dcae3571b9a.png', 'flutter_landing_page', '2023-06-12 17:31:35', '2023-08-16 00:08:37'),
+(70, 'fixed_header_image', '2024-04-20-6623929a88ded.png', 'flutter_landing_page', '2023-06-12 17:31:35', '2024-04-20 05:02:02'),
 (71, 'fixed_location_title', 'Choose your location', 'flutter_landing_page', '2023-06-12 17:35:02', '2023-06-12 17:35:02'),
 (72, 'fixed_module_title', 'Your eCommerce venture starts here !', 'flutter_landing_page', '2023-06-12 17:37:29', '2023-06-12 17:37:29'),
 (73, 'fixed_module_sub_title', 'Enjoy all services in one platform', 'flutter_landing_page', '2023-06-12 17:37:29', '2023-06-12 17:37:29'),
@@ -973,7 +981,7 @@ INSERT INTO `data_settings` (`id`, `key`, `value`, `type`, `created_at`, `update
 (81, 'join_delivery_man_button_url', 'https://6ammart-admin.6amtech.com/deliveryman/apply', 'flutter_landing_page', '2023-06-12 18:16:03', '2023-06-12 18:16:03'),
 (82, 'download_user_app_title', 'Download app and enjoy more!', 'flutter_landing_page', '2023-06-12 18:17:56', '2023-06-12 18:17:56'),
 (83, 'download_user_app_sub_title', 'Download app from', 'flutter_landing_page', '2023-06-12 18:17:56', '2023-06-12 18:17:56'),
-(84, 'download_user_app_image', '2023-08-16-64dcae82675b2.png', 'flutter_landing_page', '2023-06-12 18:17:56', '2023-08-16 00:09:54'),
+(84, 'download_user_app_image', '2024-04-20-6623936184033.png', 'flutter_landing_page', '2023-06-12 18:17:56', '2024-04-20 05:05:21'),
 (85, 'download_user_app_links', '{\"playstore_url_status\":\"1\",\"playstore_url\":\"https:\\/\\/play.google.com\\/store\\/\",\"apple_store_url_status\":\"1\",\"apple_store_url\":\"https:\\/\\/www.apple.com\\/app-store\\/\"}', 'flutter_landing_page', NULL, NULL);
 
 -- --------------------------------------------------------
@@ -1368,7 +1376,9 @@ CREATE TABLE `flutter_special_criterias` (
 --
 
 INSERT INTO `flutter_special_criterias` (`id`, `title`, `image`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'Demo Feature Title', '2023-08-16-64dcae4ca0594.png', 1, '2023-08-16 00:09:00', '2023-08-16 00:09:00');
+(1, 'Easy Checkout & Payment system', '2024-04-20-662392f3a50ea.png', 1, '2023-08-16 00:09:00', '2024-04-20 05:44:06'),
+(2, 'Excellent Shopping Experience', '2024-04-20-66239c9904a21.png', 1, '2024-04-20 05:44:41', '2024-04-20 05:44:41'),
+(3, 'Thousands of stores', '2024-04-20-66239cb4406a9.png', 1, '2024-04-20 05:45:08', '2024-04-20 05:45:08');
 
 -- --------------------------------------------------------
 
@@ -1383,6 +1393,21 @@ CREATE TABLE `guests` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `guests`
+--
+
+INSERT INTO `guests` (`id`, `ip_address`, `fcm_token`, `created_at`, `updated_at`) VALUES
+(1, '66.249.80.99', 'BLACKLISTED', '2024-04-19 23:59:46', '2024-04-19 23:59:46'),
+(2, '61.247.177.142', NULL, '2024-04-20 00:16:22', '2024-04-20 00:16:22'),
+(3, '74.125.215.160', '@', '2024-04-20 00:30:17', '2024-04-20 00:30:17'),
+(4, '61.247.177.142', '@', '2024-04-20 00:35:00', '2024-04-20 00:35:00'),
+(5, '66.102.8.36', '@', '2024-04-20 00:38:01', '2024-04-20 00:38:01'),
+(6, '61.247.177.142', '@', '2024-04-20 00:39:09', '2024-04-20 00:39:09'),
+(7, '61.247.177.142', '@', '2024-04-20 01:26:20', '2024-04-20 01:26:20'),
+(8, '61.247.177.142', '@', '2024-04-20 01:26:20', '2024-04-20 01:26:20'),
+(9, '61.247.177.142', NULL, '2024-04-20 01:27:30', '2024-04-20 01:27:30');
 
 -- --------------------------------------------------------
 
@@ -1435,7 +1460,7 @@ CREATE TABLE `items` (
 --
 
 INSERT INTO `items` (`id`, `name`, `description`, `image`, `category_id`, `category_ids`, `variations`, `add_ons`, `attributes`, `choice_options`, `price`, `tax`, `tax_type`, `discount`, `discount_type`, `available_time_starts`, `available_time_ends`, `veg`, `status`, `store_id`, `created_at`, `updated_at`, `order_count`, `avg_rating`, `rating_count`, `rating`, `module_id`, `stock`, `unit_id`, `images`, `food_variations`, `slug`, `recommended`, `organic`, `maximum_cart_quantity`, `is_approved`, `is_halal`) VALUES
-(1, 'Demo Product', 'Demo Product Description', '2023-08-16-64dca91404b64.png', 2, '[{\"id\":\"1\",\"position\":1},{\"id\":\"2\",\"position\":2}]', '[]', '[]', '[]', '[]', '10.00', '0.00', 'percent', '0.00', 'percent', '00:00:00', '23:59:59', 0, 1, 1, '2023-08-15 23:46:44', '2023-08-16 00:00:05', 0, 0.00000000000000, 0, NULL, 1, 10, NULL, '[\"2023-08-16-64dca9140233e.png\",\"2023-08-16-64dcac358a7ea.png\"]', '[]', 'demo-product', 0, 1, 2, 1, 0);
+(1, 'Demo Product', 'Demo Product Description', '2023-08-16-64dca91404b64.png', 2, '[{\"id\":\"1\",\"position\":1},{\"id\":\"2\",\"position\":2}]', '[]', '[]', '[]', '[]', 10.00, 0.00, 'percent', 0.00, 'percent', '00:00:00', '23:59:59', 0, 1, 1, '2023-08-15 23:46:44', '2023-08-16 00:00:05', 0, 0.00000000000000, 0, NULL, 1, 10, NULL, '[\"2023-08-16-64dca9140233e.png\",\"2023-08-16-64dcac358a7ea.png\"]', '[]', 'demo-product', 0, 1, 2, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -1729,7 +1754,7 @@ CREATE TABLE `modules` (
 --
 
 INSERT INTO `modules` (`id`, `module_name`, `module_type`, `thumbnail`, `status`, `stores_count`, `created_at`, `updated_at`, `icon`, `theme_id`, `description`, `all_zone_service`) VALUES
-(1, 'Demo Module', 'grocery', '2023-08-16-64dca575bf3a9.png', 1, 1, '2023-08-15 23:31:17', '2023-08-15 23:45:01', '2023-08-16-64dca575bc1c2.png', 1, '<p>Demo module description.</p>', 0);
+(1, 'Demo Module', 'grocery', '2024-04-20-662398cb7f5ef.png', 1, 1, '2023-08-15 23:31:17', '2024-04-20 05:28:27', '2024-04-20-662398cb7f2e7.png', 1, '<p><strong>We make grocery shopping more interesting.</strong><br />\r\nFind the greatest deals from the grocery stores near you.<br />\r\n<br />\r\n<strong>Nature &amp; Organic Products</strong><br />\r\nBring Nature into your home.<br />\r\n<br />\r\n<strong>Stay home &amp; get your daily needs from our shop</strong><br />\r\nStart You&#39;r Daily Shopping with 6amMart</p>', 0);
 
 -- --------------------------------------------------------
 
@@ -2396,7 +2421,7 @@ CREATE TABLE `react_testimonials` (
 --
 
 INSERT INTO `react_testimonials` (`id`, `name`, `designation`, `review`, `reviewer_image`, `company_image`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'John Doe', 'CTO', 'Very good Service.', '2023-08-16-64dcad86217a2.png', 'def.png', 1, '2023-08-16 00:05:42', '2023-08-16 00:05:42');
+(1, 'John Doe', 'CTO', 'Very good Service.', '2024-04-20-6623949d88131.png', 'def.png', 1, '2023-08-16 00:05:42', '2024-04-20 05:10:37');
 
 -- --------------------------------------------------------
 
@@ -2554,7 +2579,7 @@ CREATE TABLE `stores` (
 --
 
 INSERT INTO `stores` (`id`, `name`, `phone`, `email`, `logo`, `latitude`, `longitude`, `address`, `footer_text`, `minimum_order`, `comission`, `schedule_order`, `status`, `vendor_id`, `created_at`, `updated_at`, `free_delivery`, `rating`, `cover_photo`, `delivery`, `take_away`, `item_section`, `tax`, `zone_id`, `reviews_section`, `active`, `off_day`, `gst`, `self_delivery_system`, `pos_system`, `minimum_shipping_charge`, `delivery_time`, `veg`, `non_veg`, `order_count`, `total_order`, `module_id`, `order_place_to_schedule_interval`, `featured`, `per_km_shipping_charge`, `prescription_order`, `slug`, `maximum_shipping_charge`, `cutlery`, `meta_title`, `meta_description`, `meta_image`, `announcement`, `announcement_message`) VALUES
-(1, 'Demo Store', '+101511111111', 'demo.store@gmail.com', '2023-08-16-64dca8ad238c4.png', '23.81695886557418', '90.36934144046135', 'House, road', NULL, '0.00', NULL, 0, 1, 1, '2023-08-15 23:45:01', '2023-08-15 23:45:19', 0, NULL, '2023-08-16-64dca8ad263f6.png', 1, 1, 1, '5.00', 1, 1, 1, ' ', NULL, 0, 0, '0.00', '30-40 min', 1, 1, 0, 0, 1, 0, 1, 0.000, 0, 'demo-store', NULL, 0, NULL, NULL, NULL, 0, NULL);
+(1, 'Demo Store', '+101511111111', 'demo.store@gmail.com', '2023-08-16-64dca8ad238c4.png', '23.81695886557418', '90.36934144046135', 'House, road', NULL, 0.00, NULL, 0, 1, 1, '2023-08-15 23:45:01', '2023-08-15 23:45:19', 0, NULL, '2023-08-16-64dca8ad263f6.png', 1, 1, 1, 5.00, 1, 1, 1, ' ', NULL, 0, 0, 0.00, '30-40 min', 1, 1, 0, 0, 1, 0, 1, 0.000, 0, 'demo-store', NULL, 0, NULL, NULL, NULL, 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -2708,7 +2733,7 @@ CREATE TABLE `translations` (
 
 INSERT INTO `translations` (`id`, `translationable_type`, `translationable_id`, `locale`, `key`, `value`, `created_at`, `updated_at`) VALUES
 (1, 'App\\Models\\Module', 1, 'en', 'module_name', 'Demo Module', NULL, NULL),
-(2, 'App\\Models\\Module', 1, 'en', 'description', '<p>Demo module description.</p>', NULL, NULL),
+(2, 'App\\Models\\Module', 1, 'en', 'description', '<p><strong>We make grocery shopping more interesting.</strong><br />\r\nFind the greatest deals from the grocery stores near you.<br />\r\n<br />\r\n<strong>Nature &amp; Organic Products</strong><br />\r\nBring Nature into your home.<br />\r\n<br />\r\n<strong>Stay home &amp; get your daily needs from our shop</strong><br />\r\nStart You&#39;r Daily Shopping with 6amMart</p>', NULL, NULL),
 (3, 'App\\Models\\Zone', 1, 'en', 'name', 'Demo Zone', NULL, NULL),
 (4, 'App\\Models\\Category', 1, 'en', 'name', 'Demo category', NULL, NULL),
 (5, 'App\\Models\\Category', 2, 'en', 'name', 'Demo sub category', NULL, NULL),
@@ -2716,10 +2741,10 @@ INSERT INTO `translations` (`id`, `translationable_type`, `translationable_id`, 
 (7, 'App\\Models\\Store', 1, 'en', 'address', 'House, road', NULL, NULL),
 (8, 'App\\Models\\Item', 1, 'en', 'name', 'Demo Product', NULL, NULL),
 (9, 'App\\Models\\Item', 1, 'en', 'description', 'Demo Product Description', NULL, NULL),
-(10, 'App\\Models\\AdminPromotionalBanner', 1, 'en', 'title', 'Demo Title', NULL, NULL),
-(11, 'App\\Models\\AdminPromotionalBanner', 1, 'en', 'sub_title', 'Demo Promotional Subtitle', NULL, NULL),
-(12, 'App\\Models\\AdminFeature', 1, 'en', 'title', 'Demo Feature Title', NULL, NULL),
-(13, 'App\\Models\\AdminFeature', 1, 'en', 'sub_title', 'Demo Feature  Sub Title', NULL, NULL),
+(10, 'App\\Models\\AdminPromotionalBanner', 1, 'en', 'title', 'Find', NULL, NULL),
+(11, 'App\\Models\\AdminPromotionalBanner', 1, 'en', 'sub_title', 'Your daily grocery item', NULL, NULL),
+(12, 'App\\Models\\AdminFeature', 1, 'en', 'title', 'Trusted', NULL, NULL),
+(13, 'App\\Models\\AdminFeature', 1, 'en', 'sub_title', 'Trusted by customers and store owners', NULL, NULL),
 (14, 'App\\Models\\AdminSpecialCriteria', 1, 'en', 'title', 'Demo Title', NULL, NULL),
 (15, 'App\\Models\\DataSetting', 24, 'en', 'download_user_app_title', 'Let’s  Manage', NULL, NULL),
 (16, 'App\\Models\\DataSetting', 25, 'en', 'download_user_app_sub_title', 'Your business  Smartly or Earn.', NULL, NULL),
@@ -2732,10 +2757,23 @@ INSERT INTO `translations` (`id`, `translationable_type`, `translationable_id`, 
 (23, 'App\\Models\\DataSetting', 60, 'en', 'business_sub_title', 'Manage your business  Smartly', NULL, NULL),
 (24, 'App\\Models\\DataSetting', 68, 'en', 'fixed_header_title', '6amMart', NULL, NULL),
 (25, 'App\\Models\\DataSetting', 69, 'en', 'fixed_header_sub_title', 'More than just reliable eCommerce platform', NULL, NULL),
-(26, 'App\\Models\\FlutterSpecialCriteria', 1, 'en', 'title', 'Demo Feature Title', NULL, NULL),
+(26, 'App\\Models\\FlutterSpecialCriteria', 1, 'en', 'title', 'Easy Checkout & Payment system', NULL, NULL),
 (27, 'App\\Models\\DataSetting', 82, 'en', 'download_user_app_title', 'Download app and enjoy more!', NULL, NULL),
 (28, 'App\\Models\\DataSetting', 83, 'en', 'download_user_app_sub_title', 'Download app from', NULL, NULL),
-(29, 'App\\Models\\RefundReason', 1, 'en', 'reason', 'I ordered the wrong food', NULL, NULL);
+(29, 'App\\Models\\RefundReason', 1, 'en', 'reason', 'I ordered the wrong food', NULL, NULL),
+(30, 'App\\Models\\AdminFeature', 2, 'en', 'title', 'Delivery', NULL, NULL),
+(31, 'App\\Models\\AdminFeature', 2, 'en', 'sub_title', 'Flexible delivery system', NULL, NULL),
+(32, 'App\\Models\\AdminFeature', 3, 'en', 'title', 'Shopping', NULL, NULL),
+(33, 'App\\Models\\AdminFeature', 3, 'en', 'sub_title', 'Best shopping experience', NULL, NULL),
+(34, 'App\\Models\\AdminFeature', 4, 'en', 'title', 'Location', NULL, NULL),
+(35, 'App\\Models\\AdminFeature', 4, 'en', 'sub_title', 'Location tracking system', NULL, NULL),
+(36, 'App\\Models\\AdminSpecialCriteria', 2, 'en', 'title', 'Easy to Manage Multiple Store', NULL, NULL),
+(37, 'App\\Models\\AdminSpecialCriteria', 3, 'en', 'title', 'Easy to Manage E-Commerce', NULL, NULL),
+(38, 'App\\Models\\AdminSpecialCriteria', 4, 'en', 'title', 'Easy to Manage Parcel Delivery', NULL, NULL),
+(39, 'App\\Models\\AdminSpecialCriteria', 5, 'en', 'title', 'Easy to Manage Location Tracking', NULL, NULL),
+(40, 'App\\Models\\AdminSpecialCriteria', 6, 'en', 'title', 'Easy to Manage Grocery Business', NULL, NULL),
+(41, 'App\\Models\\FlutterSpecialCriteria', 2, 'en', 'title', 'Excellent Shopping Experience', NULL, NULL),
+(42, 'App\\Models\\FlutterSpecialCriteria', 3, 'en', 'title', 'Thousands of stores', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -3748,13 +3786,13 @@ ALTER TABLE `add_ons`
 -- AUTO_INCREMENT for table `admins`
 --
 ALTER TABLE `admins`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `admin_features`
 --
 ALTER TABLE `admin_features`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `admin_promotional_banners`
@@ -3772,7 +3810,7 @@ ALTER TABLE `admin_roles`
 -- AUTO_INCREMENT for table `admin_special_criterias`
 --
 ALTER TABLE `admin_special_criterias`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `admin_testimonials`
@@ -3808,7 +3846,7 @@ ALTER TABLE `brands`
 -- AUTO_INCREMENT for table `business_settings`
 --
 ALTER TABLE `business_settings`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=138;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=139;
 
 --
 -- AUTO_INCREMENT for table `campaigns`
@@ -3988,13 +4026,13 @@ ALTER TABLE `flash_sale_items`
 -- AUTO_INCREMENT for table `flutter_special_criterias`
 --
 ALTER TABLE `flutter_special_criterias`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `guests`
 --
 ALTER TABLE `guests`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `items`
@@ -4264,7 +4302,7 @@ ALTER TABLE `track_deliverymen`
 -- AUTO_INCREMENT for table `translations`
 --
 ALTER TABLE `translations`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
 -- AUTO_INCREMENT for table `units`
