@@ -66,8 +66,10 @@ class CategoryLogic
                     });
                 });
             })
-            ->whereHas('category',function($q)use($category_ids){
-                return $q->whereIn('id',$category_ids)->orWhereIn('parent_id', $category_ids);
+            ->when(isset($category_ids) && (count($category_ids)>0), function($query)use($category_ids){
+                $query->whereHas('category',function($q)use($category_ids){
+                    return $q->whereIn('id',$category_ids)->orWhereIn('parent_id', $category_ids);
+                });
             })
             ->when(isset($brand_ids) && (count($brand_ids)>0), function($query)use($brand_ids){
                 $query->whereHas('ecommerce_item_details',function($q)use($brand_ids){
@@ -112,8 +114,10 @@ class CategoryLogic
                         });
                     });
                 })
-                ->whereHas('category',function($q)use($category_ids){
-                    return $q->whereIn('id',$category_ids)->orWhereIn('parent_id', $category_ids);
+                ->when(isset($category_ids) && (count($category_ids)>0), function($query)use($category_ids){
+                    $query->whereHas('category',function($q)use($category_ids){
+                        return $q->whereIn('id',$category_ids)->orWhereIn('parent_id', $category_ids);
+                    });
                 })
                 ->when(isset($brand_ids) && (count($brand_ids)>0), function($query)use($brand_ids){
                     $query->whereHas('ecommerce_item_details',function($q)use($brand_ids){
