@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Vendor;
 
+use App\Models\Brand;
 use DateTime;
 use Carbon\Carbon;
 use App\Models\Tag;
@@ -40,8 +41,9 @@ class ItemController extends Controller
         }
         $categories = Category::where(['position' => 0])->module(Helpers::get_store_data()->module_id)->get();
         $conditions = CommonCondition::all();
+        $brands = Brand::all();
         $module_data = config('module.'. Helpers::get_store_data()->module->module_type);
-        return view('vendor-views.product.index', compact('categories','module_data','conditions'));
+        return view('vendor-views.product.index', compact('categories','module_data','conditions','brands'));
     }
 
     public function store(Request $request)
@@ -346,7 +348,8 @@ class ItemController extends Controller
         $categories = Category::where(['parent_id' => 0])->module(Helpers::get_store_data()->module_id)->get();
         $module_data = config('module.'. Helpers::get_store_data()->module->module_type);
         $conditions = CommonCondition::all();
-        return view('vendor-views.product.edit', compact('product', 'product_category', 'categories','module_data', 'temp_product','conditions'));
+        $brands = Brand::all();
+        return view('vendor-views.product.edit', compact('product', 'product_category', 'categories','module_data', 'temp_product','conditions','brands'));
     }
 
     public function status(Request $request)
