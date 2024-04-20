@@ -860,7 +860,7 @@ class POSController extends Controller
                 Toastr::success(translate('mail_sent_to_the_user'));
             }
         } catch (\Exception $ex) {
-            dd($ex->getMessage());
+            info($ex->getMessage());
         }
         Toastr::success(translate('customer_added_successfully'));
         return back();

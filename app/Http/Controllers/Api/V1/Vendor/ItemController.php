@@ -813,10 +813,9 @@ class ItemController extends Controller
         if($request['vendor']->stores[0]->module->module_type == 'ecommerce'){
             DB::table('ecommerce_item_details')
                 ->updateOrInsert(
-                    ['temp_product_id' => $item->id],
+                    ['item_id' => $item->id],
                     [
                         'brand_id' => $request->brand_id,
-                        'item_id' => null
                     ]
                 );
         }

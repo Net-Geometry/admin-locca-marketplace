@@ -216,6 +216,10 @@
             let module_id = 0;
             $('#date_from').attr('max','{{date("Y-m-d",strtotime($coupon["expire_date"]))}}');
             $('#date_to').attr('min','{{date("Y-m-d",strtotime($coupon["start_date"]))}}');
+            @if($coupon['discount_type']=='amount')
+            $('#max_discount').attr("readonly","true");
+            $('#max_discount').val(0);
+            @endif
 
 
             $('.js-data-example-ajax').select2({
