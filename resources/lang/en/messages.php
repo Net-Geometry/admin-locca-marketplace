@@ -4291,4 +4291,11 @@
   'If_enabled,_Store_will_receive_an_email_for_account_suspension.' => 'If enabled  Store will receive an email for account suspension.',
   'If_disabled,_Store_will_not_receive_an_email_for_account_suspension.' => 'If disabled  Store will not receive an email for account suspension.',
   'If_disabled,_Stores_will_not_receive_an_email_when_Admin_approves_their_Campaign_Join_Request.' => 'If disabled  Stores will not receive an email when Admin approves their Campaign Join Request.',
+  'TEst food' => 'TEst food',
+  'sdcfsfc' => 'Sdcfsfc',
+  'ywru' => 'Ywru',
+  'Iyzipay Payment' => 'Iyzipay Payment',
+  'zipcode' => 'Zipcode',
+  'city' => 'City',
+  'Next' => 'Next',
 );
