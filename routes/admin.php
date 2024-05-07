@@ -222,6 +222,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::get('message/list', 'VendorController@conversation_list')->name('message-list');
         });
 
+
         Route::get('addon/system-addons', function (){
             return to_route('admin.system-addon.index');
         })->name('addon.index');
