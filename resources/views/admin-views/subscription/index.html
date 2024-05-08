@@ -1,120 +1,222 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>{{ translate('Add_Fund_Transaction_Status') }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Helvetica:700,400');
+
+        body {
+            font-family: 'Helvetica', sans-serif;
+            font-style: normal;
+            background-color: #ececec;
+            -ms-text-size-adjust: 100%;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        .congrats-box {
+            margin-top: 10px;
+            margin-bottom: 38px;
+        }
+
+        .col {
+            padding: 11px 0 11px 0;
+        }
+
+        .d-flex {
+            display: flex
+        }
+
+        .d-block {
+            display: block
+        }
+
+        .align-items-center {
+            align-items: center
+        }
+
+        .justify-content-center {
+            justify-content: center
+        }
+
+        .gap-1 {
+            gap: .5rem
+        }
+
+        .gap-2 {
+            gap: 1rem
+        }
+
+        .m-auto {
+            margin: auto
+        }
+
+        .width-auto {
+            width: auto
+        }
+
+        .bg-white {
+            background-color: white
+        }
+
+        .pb-40px {
+            padding-bottom: 40px
+        }
+
+        .pt-40px {
+            padding-top: 40px
+        }
+
+        .text-center {
+            text-align: center
+        }
+
+        .fs-14px {
+            font-size: 14px
+        }
+
+        .fs-16px {
+            font-size: 16px
+        }
+    </style>
+
 </head>
 
 <body>
 
-
-    <div>
-
-
-
-
-        <div class="table-responsive datatable-custom">
-            <div id="columnSearchDatatable_wrapper" class="dataTables_wrapper no-footer">
-                <div id="columnSearchDatatable_filter" class="dataTables_filter"><label>Search:<input type="search"
-                            class="" placeholder="" aria-controls="columnSearchDatatable"></label></div>
-                <table id="columnSearchDatatable"
-                    class="font-size-sm table table-borderless table-thead-bordered table-nowrap table-align-middle card-table dataTable no-footer"
-                    data-hs-datatables-options="{
-                            &quot;order&quot;: [],
-                            &quot;orderCellsTop&quot;: true,
-                            &quot;paging&quot;:false
-                        }" role="grid" aria-describedby="columnSearchDatatable_info">
-                    <thead class="thead-light">
-                        <tr role="row">
-                            <th class="border-0 sorting" tabindex="0" aria-controls="columnSearchDatatable" rowspan="1"
-                                colspan="1" aria-label="Sl: activate to sort column ascending" style="width: 85.391px;">
-                                Sl</th>
-                            <th class="border-0 sorting" tabindex="0" aria-controls="columnSearchDatatable" rowspan="1"
-                                colspan="1" aria-label="Title: activate to sort column ascending"
-                                style="width: 321.234px;">
-                                Title</th>
-                            <th class="border-0 sorting" tabindex="0" aria-controls="columnSearchDatatable" rowspan="1"
-                                colspan="1" aria-label="Date: activate to sort column ascending"
-                                style="width: 334.203px;">Date
-                            </th>
-                            <th class="border-0 sorting" tabindex="0" aria-controls="columnSearchDatatable" rowspan="1"
-                                colspan="1" aria-label="Time: activate to sort column ascending"
-                                style="width: 176.188px;">Time
-                            </th>
-                            <th class="border-0 sorting" tabindex="0" aria-controls="columnSearchDatatable" rowspan="1"
-                                colspan="1" aria-label="Price: activate to sort column ascending"
-                                style="width: 129.641px;">
-                                Price</th>
-                            <th class="border-0 text-center sorting" tabindex="0" aria-controls="columnSearchDatatable"
-                                rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending"
-                                style="width: 136.016px;">Status</th>
-                            <th class="border-0 text-center sorting" tabindex="0" aria-controls="columnSearchDatatable"
-                                rowspan="1" colspan="1" aria-label="Action: activate to sort column ascending"
-                                style="width: 187.328px;">Action</th>
-                        </tr>
-
-                    </thead>
-
-                    <tbody id="set-rows">
-                        <tr role="row" class="odd">
-                            <td>1</td>
-                            <td>
-                                <a href="http://localhost/Backend-6amMart/admin/campaign/item/view/20" title="vbkjjhol"
-                                    class="d-block text-body">vbkjjhol</a>
-                            </td>
-                            <td>
-                                <span class="bg-gradient-light text-dark">11 Nov 2028-11 Nov 2028</span>
-                            </td>
-                            <td>
-                                <span class="bg-gradient-light text-dark">08:58-23:58</span>
-                            </td>
-                            <td>৳ 100.00</td>
-                            <td>
-                                <div class="d-flex flex-wrap justify-content-center">
-                                    <label class="toggle-switch toggle-switch-sm" for="campaignCheckbox20">
-                                        <input type="checkbox" class="toggle-switch-input  dynamic-checkbox"
-                                            data-id="campaignCheckbox20" data-type="status"
-                                            data-image-on="http://localhost/Backend-6amMart/public/assets/admin/img/modal/basic_campaign_on.png"
-                                            data-image-off="http://localhost/Backend-6amMart/public/assets/admin/img/modal/basic_campaign_off.png"
-                                            data-title-on="By Turning ON Campaign!"
-                                            data-title-off="By Turning OFF Campaign!"
-                                            data-text-on="<p>Turned on to customer website and apps. Are you sure you want to turn on the campaign already inactive.</p>"
-                                            data-text-off="<p>Turned off to customer website and apps. Are you sure you want to turn off the campaign already active</p>"
-                                            id="campaignCheckbox20" checked="">
-                                        <span class="toggle-switch-label">
-                                            <span class="toggle-switch-indicator"></span>
-                                        </span>
-                                    </label>
-                                </div>
-                            </td>
-
-                            <form action="http://localhost/Backend-6amMart/admin/campaign/status/item/20/0" method="get"
-                                id="campaignCheckbox20_form"></form>
-
-                            <td>
-                                <div class="btn--container justify-content-center">
-                                    <a class="btn action-btn btn--primary btn-outline-primary"
-                                        href="http://localhost/Backend-6amMart/admin/campaign/item/edit/20"
-                                        title="Edit campaign"><i class="tio-edit"></i>
-                                    </a>
-                                    <a class="btn action-btn btn--danger btn-outline-danger form-alert"
-                                        href="javascript:" data-id="campaign-20"
-                                        data-message="Want to delete this item ?" title="Delete campaign"><i
-                                            class="tio-delete-outlined"></i>
-                                    </a>
-                                    <form action="http://localhost/Backend-6amMart/admin/campaign/item/delete/20"
-                                        method="post" id="campaign-20">
-                                        <input type="hidden" name="_token"
-                                            value="JrnwXTocszjG0NABtwR9pazJcqlRTIKS4cWADuyQ" autocomplete="off"> <input
-                                            type="hidden" name="_method" value="delete">
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+    <div class="content container-fluid initial-38">
+        <div class="row justify-content-center" id="printableArea">
+            <div class="col-md-12">
+                <center>
+                    <input type="button" class="btn btn-primary non-printable" onclick="printDiv('printableArea')"
+                        value="Proceed  If printer is ready.">
+                    <a href="https://stackfood-admin.6amtech.com/admin/restaurant/view/4/subscriptions-transactions"
+                        class="btn btn-danger non-printable">Back</a>
+                </center>
+                <hr class="non-printable">
+                <div class="initial-38-1 __trx-print">
+                    <div class="pt-3 text-center">
+                        <img src="https://stackfood-admin.6amtech.com/storage/app/public/business/2022-04-17-625c012c3c07d.png"
+                            alt="StackFood" class="initial-38-2">
+                    </div>
+                    <div class="pt-3 text-center mb-3 pb-1">
+                        <img src="https://stackfood-admin.6amtech.com/public/assets/admin/img/success_image 2.png"
+                            class="initial-38-2" alt="">
+                    </div>
+                    <div class="text-center pt-2 mb-3">
+                        <h1 class="initial-38-3">Transaction Sucessfull</h1>
+                        <h4 class="initial-38-4"> For
+                            Pro Package</h4>
+                        <h4> <span class="text--base">Purches Status: </span> Subscribed.</h4>
+                        <h3 class="initial-38-3 name my-3">Dear Jakatta Potin</h3>
+                        <h5 class="pb-4 pt-2 mv-2">
+                            Thank You for transcation with &nbsp; <span class="text--base">StackFood</span> &nbsp; In
+                            Pro Package
+                        </h5>
+                    </div>
+                    <table class="table __subscribe-table table-borderless mt-3" style="color: rgb(105, 101, 101)">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <span>Transaction ID</span>
+                                </th>
+                                <th>
+                                    <span>Package Name</span>
+                                </th>
+                                <th>
+                                    <span>Transaction Time</span>
+                                </th>
+                                <th>
+                                    <span>Validity Time</span>
+                                </th>
+                                <th>
+                                    <span>Amount</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <span>214c6862-1f74-4499-ab4f-54518b3efd19</span>
+                                </td>
+                                <td>
+                                    <span>Pro</span>
+                                </td>
+                                <td>
+                                    <span>24 Nov 2022</span>
+                                </td>
+                                <td>
+                                    <span>365 Days</span>
+                                </td>
+                                <td>
+                                    <span class="__txt-nowrap">
+                                        $ 1,199.00
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="text-center my-5 py-4">
+                        If you require any assistance or have feedback or suggestions about our site you can email us at
+                        <a href="mailto:admin@gmail.com" style="text-decoration: none; color: inherit;">Email:
+                            a**********@gmail.com</a>
+                    </div>
+                    <div class="d-block text-center mt-3">
+                        <div style="display: inline-block;">
+                            <a href="https://www.instagram.com/?hl=en" target="”_blank”">
+                                <img src="https://stackfood-admin.6amtech.com/public/assets/admin/img/instagram.png"
+                                    alt="" style="height: 14px; width:14px;object-fit:contain">
+                            </a>
+                        </div>
+                        <div style="display: inline-block;">
+                            <a href="https://www.facebook.com/" target="”_blank”">
+                                <img src="https://stackfood-admin.6amtech.com/public/assets/admin/img/facebook.png"
+                                    alt="" style="height: 14px; width:14px;object-fit:contain">
+                            </a>
+                        </div>
+                        <div style="display: inline-block;">
+                            <a href="https://twitter.com/?lang=en" target="”_blank”">
+                                <img src="https://stackfood-admin.6amtech.com/public/assets/admin/img/twitter.png"
+                                    alt="" style="height: 14px; width:14px;object-fit:contain">
+                            </a>
+                        </div>
+                        <div style="display: inline-block;">
+                            <a href="https://bd.linkedin.com/" target="”_blank”">
+                                <img src="https://stackfood-admin.6amtech.com/public/assets/admin/img/linkedin.png"
+                                    alt="" style="height: 14px; width:14px;object-fit:contain">
+                            </a>
+                        </div>
+                        <div style="display: inline-block;">
+                            <a href="https://www.pinterest.com/" target="”_blank”">
+                                <img src="https://stackfood-admin.6amtech.com/public/assets/admin/img/pinterest.png"
+                                    alt="" style="height: 14px; width:14px;object-fit:contain">
+                            </a>
+                        </div>
+                        <div class="mb-3 mt-2"
+                            style="font-weight: 400;font-size: 11px;line-height: 22px;color: #242A30;">
+                            <a href="https://stackfood-web.6amtech.com/"
+                                style="text-decoration: none; color: inherit;">https://stackfood-web.6amtech.com/</a>
+                        </div>
+                        <div style="font-weight: 400;font-size: 11px;line-height: 22px;color: #242A30;">
+                            <span style="margin-inline-end:5px;">
+                                <a href="tel:01700000000" style="text-decoration: none; color: inherit;">Phone:
+                                    0**********</a>
+                            </span>
+                            <span>
+                                <a href="mailto:admin@gmail.com" style="text-decoration: none; color: inherit;">Email:
+                                    a**********@gmail.com</a>
+                            </span>
+                        </div>
+                        <div style="font-weight: 400;font-size: 11px;line-height: 22px;color: #242A30;">House: 00, Road:
+                            00,
+                            City-0000, Country</div>
+                        <span style="font-weight: 400;font-size: 10px;line-height: 22px;color: #242A30;">All copy right
+                            reserved</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
