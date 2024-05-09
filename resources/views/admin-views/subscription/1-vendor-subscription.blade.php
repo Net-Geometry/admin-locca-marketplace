@@ -15,21 +15,21 @@
                     <div class="d-flex align-items-start">
                         <img src="{{asset('/public/assets/admin/img/store.png')}}" width="24" alt="img">
                         <div class="w-0 flex-grow pl-2">
-                            <h1 class="page-header-title">{{translate('Subscribed Store List')}}</h1>
+                            <h1 class="page-header-title">{{translate('Green Mart Subscription')}}</h1>
                         </div>
                     </div>
                 </div>
+                <div class="min--200">
+                    <select name="zone_id" class="form-control js-select2-custom set-filter" data-url="{{ url()->full() }}" data-filter="zone_id" id="zone">
+                        <option value="all">{{translate('All Zones')}}</option>
+                        @foreach(\App\Models\Zone::orderBy('name')->get() as $z)
+                            <option value="{{$z['id']}}" {{isset($zone) && $zone->id == $z['id']?'selected':''}}>
+                                {{($z['name'])}}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
             </div>
-        </div>
-        <div class="js-nav-scroller hs-nav-scroller-horizontal mb-4">
-            <ul class="nav nav-tabs border-0 nav--tabs nav--pills">
-                <li class="nav-item">
-                    <a href="" class="nav-link active">Subscription Details</a>
-                </li>
-                <li class="nav-item">
-                    <a href="" class="nav-link">Transactions</a>
-                </li>
-            </ul>
         </div>
         <div class="mb-20">
             <div class="row g-3">
