@@ -24,33 +24,95 @@
         <div class="js-nav-scroller hs-nav-scroller-horizontal mb-4">
             <ul class="nav nav-tabs border-0 nav--tabs nav--pills">
                 <li class="nav-item">
-                    <a href="" class="nav-link">Overview</a>
-                </li>
-                <li class="nav-item">
-                    <a href="" class="nav-link">Orders</a>
-                </li>
-                <li class="nav-item">
-                    <a href="" class="nav-link">Foods</a>
-                </li>
-                <li class="nav-item">
-                    <a href="" class="nav-link">Reviews</a>
-                </li>
-                <li class="nav-item">
-                    <a href="" class="nav-link">Discounts</a>
+                    <a href="" class="nav-link active">Subscription Details</a>
                 </li>
                 <li class="nav-item">
                     <a href="" class="nav-link">Transactions</a>
                 </li>
-                <li class="nav-item">
-                    <a href="" class="nav-link">Disbursements</a>
-                </li>
-                <li class="nav-item">
-                    <a href="" class="nav-link active">Subscription</a>
-                </li>
-                <li class="nav-item">
-                    <a href="" class="nav-link">Settings</a>
-                </li>
             </ul>
+        </div>
+        <div class="card mb-20">
+            <div class="card-header border-0 align-items-center">
+                <h4 class="card-title align-items-center gap-2">
+                    <span class="card-header-icon">
+                        <img src="{{asset('public/assets/admin/img/store-3.png')}}" alt="">
+                    </span>
+                    <span class="text-title">Store Info</span>
+                </h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <div class="resturant--info-address">
+                                    <div class="logo">
+                                        <img class="onerror-image" src="">
+                                    </div>
+                                    <ul class="address-info list-unstyled list-unstyled-py-3 text-dark">
+                                        <li>
+                                            <h5 class="name">
+                                                Farmers Market
+                                            </h5>
+                                        </li>
+        
+                                        <li>
+                                            <i class="tio-call-talking nav-icon"></i>
+                                            <span class="pl-1">
+                                                +880372786552
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <i class="tio-email nav-icon"></i>
+                                            <span class="pl-1">
+                                                example@email.com
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <i class="tio-city nav-icon"></i>
+                                            <span class="pl-1">
+                                                Avenue-10, House# 12, Road# 12, Mirpur DOSH, Dhaka- 1216
+                                            </span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <div class="resturant--info-address">
+                                    <ul class="address-info list-unstyled list-unstyled-py-3 text-dark pl-0">
+                                        <li>
+                                            <h5 class="name">
+                                                Owner Info
+                                            </h5>
+                                        </li>
+                                        <li>
+                                            <h5 class="name text-title">
+                                                John Doe
+                                            </h5>
+                                        </li>
+                                        <li>
+                                            <i class="tio-call-talking nav-icon"></i>
+                                            <span class="pl-1">
+                                                +880372786552
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <i class="tio-email nav-icon"></i>
+                                            <span class="pl-1">
+                                                example@email.com
+                                            </span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="card mb-20">
             <div class="card-header border-0 align-items-center">

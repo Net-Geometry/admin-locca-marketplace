@@ -4335,4 +4335,12 @@
   'invalid' => 'Invalid',
   'Add_Fund_Transaction_Status' => 'Add Fund Transaction Status',
   'Subscribed Store List' => 'Subscribed Store List',
+  'Green Mart Subscription' => 'Green Mart Subscription',
+  'After_saving_information,_sellers_will_get_the_option_to_offer_extra_packaging_charge_to_the_customer' => 'After saving information  sellers will get the option to offer extra packaging charge to the customer',
+  'Extra_Packaging_Charge' => 'Extra Packaging Charge',
+  '*Customers_cannot_request_a_Refund_if_the_Admin_does_not_specify_a_cause_for_refund_even_though_they_see_the_Refund_option._So_Admin_MUST_provide_a_proper_Refund_Reason._At_least_one_reason_Must_be_ON_in_the_reason_list.' => '*Customers cannot request a Refund if the Admin does not specify a cause for refund even though they see the Refund option. So Admin MUST provide a proper Refund Reason. At least one reason Must be ON in the reason list.',
+  'Customer_can_give_tips_to_deliveryman_during_checkout_from_the_customer_app_&_website._From_this,_admin_has_no_commission.' => 'Customer can give tips to deliveryman during checkout from the customer app & website. From this  admin has no commission.',
+  'Customer_Wallet' => 'Customer Wallet',
+  'With_this_feature,_customers_can_have_virtual_wallets_in_their_account_via_Customer_App_&_Website._They_can_also_earn_(via_referral,_refund,_loyalty_points,_or_cashback)_and_buy_with_the_wallet’s_amount.' => 'With this feature  customers can have virtual wallets in their account via Customer App & Website. They can also earn (via referral  refund  loyalty points  or cashback) and buy with the wallet’s amount.',
+  'Subscription Settings' => 'Subscription Settings',
 );
