@@ -8,6 +8,20 @@
 
 @section('content')
     <div class="content container-fluid">
+        <!-- Renew -->
+        <div class="renew-badge mb-20">
+            <div class="renew-content d-flex align-items-center">
+                <img src="{{asset('/public/assets/admin/img/timer.svg')}}" alt="">
+                <div class="txt">
+                    Your subscription ending soon. Please renew to continue access
+                </div>
+            </div>
+            <div>
+                <a href="" class="btn btn--danger">Renew</a>
+            </div>
+        </div>
+        <!-- Renew -->
+
         @if(auth('vendor')->check())
         <!-- Page Header -->
         <div class="page-header">
@@ -198,6 +212,53 @@
         <!-- End Page Header -->
         @endif
     </div>
+
+    <div class="free-trial trial success-bg">
+        <div class="inner-div">
+            <div class="left">
+                <img src="{{asset('/public/assets/admin/img/icon-puck.svg')}}" alt="">
+                <div class="left-content">
+                    <h6>Get the best experience of on demand service business</h6>
+                    <div>Run your on demand business with the most popular platform</div>
+                </div>
+            </div>
+            <div class="right">
+                <a href="" class="btn btn-2">
+                    <span class="circle-progress-container">
+                        <svg width="40" viewBox="0 0 160 160">
+                            <circle r="70" cx="80" cy="80" fill="transparent" stroke="#ffffff20" stroke-width="12px"></circle>
+                            <circle r="70" cx="80" cy="80" fill="transparent" stroke="#ffffff" stroke-width="12px" stroke-dasharray="439.6px" stroke-dashoffset="50px"></circle>
+                        </svg>
+                        7
+                    </span>
+                    Days left in free trial
+                </a>
+                <a href="" class="btn btn-light">Choose Subscription Plan <i class="tio-arrow-forward"></i></a>
+            </div>
+            <button type="button" class="trial-close">
+                <i class="tio-clear-circle"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="free-trial trial danger-bg">
+        <div class="inner-div">
+            <div class="left">
+                <img src="{{asset('/public/assets/admin/img/timer-2.svg')}}" alt="">
+                <div class="left-content">
+                    <h6>Free Trial Has Been Ended</h6>
+                    <div>Get a subscription plan to continue with your business</div>
+                </div>
+            </div>
+            <div class="right">
+                <a href="" class="btn btn-light">Choose Subscription Plan <i class="tio-arrow-forward"></i></a>
+            </div>
+            <button type="button" class="trial-close">
+                <i class="tio-clear-circle"></i>
+            </button>
+        </div>
+    </div>
+
 @endsection
 
 @push('script')

@@ -4356,4 +4356,7 @@
   'Congratulations!' => 'Congratulations!',
   'Transaction Failed!' => 'Transaction Failed!',
   'Continue with 7 Days Free Trial' => 'Continue with 7 Days Free Trial',
+  'gst_status' => 'Gst status',
+  'you_want_to_open_this_store' => 'You want to open this store',
+  'Adjusted_Amount' => 'Adjusted Amount',
 );
