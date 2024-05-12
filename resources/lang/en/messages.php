@@ -4353,4 +4353,7 @@
   'Back' => 'Back',
   'ReCAPTCHA Failed' => 'ReCAPTCHA Failed',
   'Choose Subscription Package' => 'Choose Subscription Package',
+  'Congratulations!' => 'Congratulations!',
+  'Transaction Failed!' => 'Transaction Failed!',
+  'Continue with 7 Days Free Trial' => 'Continue with 7 Days Free Trial',
 );
