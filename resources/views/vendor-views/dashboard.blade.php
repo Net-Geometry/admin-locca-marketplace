@@ -264,7 +264,7 @@
             <div class="modal-content">
                 <div class="modal-body p-0">
                     <div class="trial-ended-modal-wrapper">
-                        <button type="button" class="trial-ended-close-btn text-md-white">
+                        <button type="button" class="trial-ended-close-btn text-md-white" data-dismiss="modal">
                             <i class="tio-clear-circle"></i>
                         </button>
                         <div class="trial-ended-modal-content align-self-center">
