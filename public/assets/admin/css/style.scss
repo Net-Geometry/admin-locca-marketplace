@@ -12488,3 +12488,57 @@ label.position-relative {
     align-items: center;
     justify-content: center;
 }
+.blocked-subscription {
+    border-radius: 5px;
+    background: rgba(255, 103, 103, 0.05);
+    padding: 12px 20px;
+    display: flex;
+    gap: 10px;
+    color: #ff6767;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 150%;
+}
+.trial-ended-modal {
+    .modal-dialog {
+        @media screen and (min-width: 768px) {
+            max-width: 740px;
+        }
+    }
+}
+.trial-ended-modal-wrapper {
+    display: flex;
+    .trial-ended-modal-content {
+        width: calc(100% - 286px);
+        flex-grow: 1;
+        padding: 80px 60px;
+        @media screen and (max-width: 480px) {
+            padding: 40px 20px;
+        }
+    }
+    .trial-ended-modal-img {
+        width: 286px;
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+}
+.trial-ended-close-btn {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    z-index: 1;
+    background: transparent;
+    outline: none;
+    border: none;
+    box-shadow: none;
+    outline: none;
+    font-size: 24px;
+}
+@media screen and (min-width: 768px) {
+    .text-md-white {
+        color: #ffffff50;
+    }
+}

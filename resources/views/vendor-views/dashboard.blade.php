@@ -259,6 +259,34 @@
         </div>
     </div>
 
+    <div class="modal fade show trial-ended-modal" id="free-trial-modal">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body p-0">
+                    <div class="trial-ended-modal-wrapper">
+                        <button type="button" class="trial-ended-close-btn text-md-white">
+                            <i class="tio-clear-circle"></i>
+                        </button>
+                        <div class="trial-ended-modal-content align-self-center">
+                            <h3 class="title">Your Free Trial Has Been Ended</h3>
+                            <p class="mb-4">
+                                Purchase a subscription plan or contact with the admin to settle the payment and unblock the access to service.
+                            </p>
+                            <a href="" class="btn btn--primary">Choose Subscription Plan <i class="tio-arrow-forward"></i></a>
+                            <div class="blocked-subscription mt-5">
+                                <img src="{{asset('/public/assets/admin/img/WarningOctagon.svg')}}" alt="">
+                                <span>All Access to service has been blocked due to no active subscription.</span>
+                            </div>
+                        </div>
+                        <div class="trial-ended-modal-img d-none d-md-block">
+                            <img src="{{asset('/public/assets/admin/img/trial-ended-bg.png')}}" alt="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 @endsection
 
 @push('script')
@@ -271,6 +299,9 @@
 
 @push('script_2')
     <script>
+
+        $('#free-trial-modal').modal('show');
+
         // INITIALIZATION OF CHARTJS
         // =======================================================
         Chart.plugins.unregister(ChartDataLabels);
