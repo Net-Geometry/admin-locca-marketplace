@@ -49,7 +49,7 @@
                     <small class="nav-subtitle" title="{{ translate('messages.business_settings') }}">{{ translate('messages.business_management') }}</small>
                     <small class="tio-more-horizontal nav-subtitle-replacer"></small>
                 </li>
-                <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/subscription/*') ? 'active' : '' }}">
+                <li class="navbar-vertical-aside-has-menu @yield('subscription_index')">
                     <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.subscription.subscription_index') }}" title="{{ translate('messages.subscription') }}">
                         <i class="tio-city nav-icon"></i>
                         <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">

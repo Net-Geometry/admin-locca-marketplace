@@ -218,6 +218,36 @@ class Store extends Model
     }
 
     /**
+     * @return HasOne
+     */
+
+    public function store_sub(): HasOne
+    {
+        return $this->hasOne(StoreSubscription::class)->where('status',1)->latest();
+    }
+    /**
+     * @return HasMany
+     */
+    public function store_subs(): HasMany
+    {
+        return $this->hasMany(StoreSubscription::class,'store_id');
+    }
+    /**
+     * @return HasOne
+     */
+    public function store_sub_trans(): HasOne
+    {
+        return $this->hasOne(SubscriptionTransaction::class)->latest();
+    }
+    /**
+     * @return HasOne
+     */
+    public function store_sub_update_application(): HasOne
+    {
+        return $this->hasOne(StoreSubscription::class)->latest();
+    }
+
+    /**
      * @return BelongsTo
      */
     public function vendor(): BelongsTo
@@ -520,5 +550,31 @@ class Store extends Model
     public function storeConfig(): HasOne
     {
         return $this->hasOne(StoreConfig::class);
+    }
+
+        /**
+     * @param $query
+     * @param $type
+     * @return mixed
+     */
+    public function scopeStoreModel($query, $type) : mixed
+    {
+        if($type == 'commission')
+        {
+            return $query->where('store_business_model', 'commission');
+        }
+        else if($type == 'subscribed')
+        {
+            return $query->where('store_business_model', 'subscription');
+        }
+        else if($type == 'unsubscribed')
+        {
+            return $query->where('store_business_model', 'unsubscribed');
+        }
+        else if($type == 'none')
+        {
+            return $query->where('store_business_model', 'none');
+        }
+        return $query;
     }
 }
