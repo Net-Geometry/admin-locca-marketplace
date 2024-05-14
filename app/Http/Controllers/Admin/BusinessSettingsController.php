@@ -175,9 +175,14 @@ class BusinessSettingsController extends Controller
             'value' => $request['min_amount_to_pay_store']
         ]);
 
+        BusinessSetting::updateOrInsert(['key' => 'store_review_reply'], [
+            'value' => $request['store_review_reply']
+        ]);
+
         DB::table('business_settings')->updateOrInsert(['key' => 'canceled_by_store'], [
             'value' => $request['canceled_by_store']
         ]);
+
         DB::table('business_settings')->updateOrInsert(['key' => 'toggle_store_registration'], [
             'value' => $request['store_self_registration']
         ]);
@@ -6241,7 +6246,7 @@ class BusinessSettingsController extends Controller
             BusinessSetting::query()->updateOrInsert(['key' => 'unsuspend_mail_status_'.$type], [
                 'value' => $status
             ]);
-        } 
+        }
 
         Toastr::success(translate('messages.email_status_updated'));
         return back();
