@@ -220,7 +220,9 @@ class VendorLoginController extends Controller
             info($ex->getMessage());
         }
 
-        return response()->json(['message'=>translate('messages.application_placed_successfully')],200);
+        return response()->json([
+            'store_id'=> $store->id,
+            'message'=>translate('messages.application_placed_successfully')],200);
     }
 
 

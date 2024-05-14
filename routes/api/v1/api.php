@@ -53,7 +53,7 @@ Route::group(['namespace' => 'Api\V1', 'middleware'=>'localization'], function (
     });
 
     //Store Subscription
-    Route::group(['prefix' => 'vendor','namespace' => 'vendor'], function () {
+    Route::group(['prefix' => 'vendor','namespace' => 'Vendor'], function () {
         Route::get('package-view', 'SubscriptionController@package_view');
         Route::post('business_plan', 'SubscriptionController@business_plan');
         Route::post('subscription/payment/api', 'SubscriptionController@subscription_payment_api')->name('subscription_payment_api');
