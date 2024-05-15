@@ -4367,4 +4367,10 @@
   'Review_Id' => 'Review Id',
   'restaurant_reply' => 'Restaurant reply',
   'reviewer_info' => 'Reviewer info',
+  'give_reply' => 'Give reply',
+  'Write_your_reply_here' => 'Write your reply here',
+  'send_reply' => 'Send reply',
+  'review_reply_updated' => 'Review reply updated',
+  'view_reply' => 'View reply',
+  'update_reply' => 'Update reply',
 );

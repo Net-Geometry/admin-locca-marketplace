@@ -47,15 +47,17 @@ class Review extends Model
     protected static function boot()
     {
         parent::boot();
-        static::created(function ($review) {
-            $review->review_id = $review->generateReviewId($review->order_id);
-            $review->save();
+        static::saved(function ($review) {
+            if($review->review_id == null){
+                $review->review_id = $review->generateReviewId($review->order_id);
+                $review->save();
+            }
         });
     }
     private function generateReviewId($id)
     {
         $review_id = Str::slug($id);
-        if ($max_review_id = static::where('slug', 'like',"{$review_id}%")->latest('id')->value('review_id')) {
+        if ($max_review_id = static::where('review_id', 'like',"{$review_id}%")->latest('id')->value('review_id')) {
 
             if($max_review_id == $review_id) return "{$review_id}-2";
 
