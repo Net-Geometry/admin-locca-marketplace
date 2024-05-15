@@ -24,13 +24,16 @@ use App\Models\FlashSaleItem;
 use Illuminate\Support\Carbon;
 use App\Models\BusinessSetting;
 use App\CentralLogics\StoreLogic;
+use App\Models\StoreSubscription;
 use Illuminate\Support\Facades\DB;
 use App\Mail\OrderVerificationMail;
 use App\Models\NotificationMessage;
+use App\Models\SubscriptionPackage;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Config;
+use App\Models\SubscriptionTransaction;
 use Illuminate\Support\Facades\Storage;
 use MatanYadaev\EloquentSpatial\Objects\Point;
 use Laravelpkg\Laravelchk\Http\Controllers\LaravelchkController;
@@ -3470,6 +3473,144 @@ class Helpers
         curl_close($ch);
 
         return $result;
+    }
+
+    public static function subscription_plan_chosen($store_id ,$package_id, $payment_method  ,$discount,$reference=null ,$type=null){
+        $store=Store::findOrFail($store_id);
+        $package = SubscriptionPackage::withoutGlobalScope('translate')->findOrFail($package_id);
+        $add_days=0;
+        $add_orders=0;
+        $total_food= $store->items()->withoutGlobalScope(\App\Scopes\StoreScope::class)->count();
+        if ($package->max_product != 'unlimited' &&  $total_food >= $package->max_product  ){
+            return 'downgrade_error';
+        }
+        try {
+            $store_subscription=$store->store_sub;
+            if (isset($store_subscription) && $type == 'renew') {
+                $store_subscription->total_package_renewed= $store_subscription->total_package_renewed + 1;
+                $day_left=$store_subscription->expiry_date->format('Y-m-d');
+                if (Carbon::now()->subDays(1)->diffInDays($day_left, false) > 0) {
+                    $add_days= Carbon::now()->subDays(1)->diffInDays($day_left, false);
+                }
+                if ($store_subscription->max_order != 'unlimited' && $store_subscription->max_order > 0) {
+                    $add_orders=$store_subscription->max_order;
+                }
+            } else{
+                StoreSubscription::where('store_id',$store->id)->update([
+                    'status' => 0,
+                ]);
+                $store_subscription =new StoreSubscription();
+                $store_subscription->total_package_renewed= 0;
+
+            }
+
+            $store_subscription->package_id=$package->id;
+            $store_subscription->store_id=$store->id;
+            if ($payment_method  == 'free_trial' ) {
+                $free_trial_period_data = BusinessSetting::where(['key' => 'free_trial_period'])->first();
+                if ($free_trial_period_data == false) {
+                    $values= [
+                        'data' => 7,
+                        'status' => 1,
+                    ];
+                    Helpers::insert_business_settings_key('free_trial_period',  json_encode($values) );
+                }
+                $free_trial_period_data = json_decode(BusinessSetting::where(['key' => 'free_trial_period'])->first()->value,true);
+                $free_trial_period= $free_trial_period_data['data'];
+                $store_subscription->expiry_date= Carbon::now()->addDays($free_trial_period)->format('Y-m-d');
+            }
+            else{
+                $store_subscription->expiry_date= Carbon::now()->addDays($package->validity+$add_days)->format('Y-m-d');
+            }
+            if($package->max_order != 'unlimited'){
+                $store_subscription->max_order=$package->max_order + $add_orders;
+            } else{
+                $store_subscription->max_order=$package->max_order;
+            }
+
+
+            $store_subscription->max_product=$package->max_product;
+            $store_subscription->pos=$package->pos;
+            $store_subscription->mobile_app=$package->mobile_app;
+            $store_subscription->chat=$package->chat;
+            $store_subscription->review=$package->review;
+            $store_subscription->self_delivery=$package->self_delivery;
+
+            $store->item_section= 1;
+            $store->pos_system= 1;
+            if ($type == 'new_join' && $store->vendor?->status == 0 ) {
+                $store->status= 0;
+                $store_subscription->status= 0;
+
+            }else{
+                $store->status= 1;
+                $store_subscription->status= 1;
+
+            }
+
+            // For Store Free Delivery
+            if($store->free_delivery == 1 && $package->self_delivery == 1){
+                $store->free_delivery = 1 ;
+            } else{
+                $store->free_delivery = 0 ;
+                $store->coupon()->where('created_by','vendor')->where('coupon_type','free_delivery')->delete();
+            }
+
+
+            $store->reviews_section= 1;
+            $store->self_delivery_system= 1;
+            $store->store_business_model= 'subscription';
+
+            $subscription_transaction= new SubscriptionTransaction();
+            $subscription_transaction_ID= Str::uuid();
+            $subscription_transaction->id=  $subscription_transaction_ID;
+            $subscription_transaction->package_id=$package->id;
+            $subscription_transaction->store_id=$store->id;
+            $subscription_transaction->price=$package->price;
+
+            $subscription_transaction->validity=$package->validity;
+            $subscription_transaction->paid_amount= $package->price - (($package->price*$discount)/100);
+
+            if ($payment_method  == 'free_trial') {
+                $subscription_transaction->validity= $free_trial_period;
+                $subscription_transaction->paid_amount= 0;
+            }
+            elseif($payment_method  == 'pay_now'){
+                $subscription_transaction->payment_status ='on_hold';
+                $subscription_transaction->transaction_status = 0;
+                $store_subscription->status= 0;
+            }
+
+            $subscription_transaction->payment_method=$payment_method;
+            $subscription_transaction->reference=$reference ?? null;
+            $subscription_transaction->discount=$discount ?? 0;
+            if( $payment_method == 'manual_payment_admin'){
+                $subscription_transaction->created_by= 'Admin';
+            } else{
+                $subscription_transaction->created_by= 'Store';
+            }
+
+            $subscription_transaction->package_details=[
+                'pos'=>$package->pos,
+                'review'=>$package->review,
+                'self_delivery'=>$package->self_delivery,
+                'chat'=>$package->chat,
+                'mobile_app'=>$package->mobile_app,
+                'max_order'=>$package->max_order,
+                'max_product'=>$package->max_product,
+            ];
+
+            DB::beginTransaction();
+            $store->save();
+            $subscription_transaction->save();
+            $store_subscription->save();
+            DB::commit();
+        } catch(\Exception $e){
+            DB::rollBack();
+            info(["line___{$e->getLine()}",$e->getMessage()]);
+            return false;
+        }
+        return  $subscription_transaction_ID;
     }
 
 }

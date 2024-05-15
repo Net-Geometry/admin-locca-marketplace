@@ -16,7 +16,7 @@ active
                         <img src="{{asset('/public/assets/admin/img/create-package-icon.png')}}" width="24" alt="img">
                         <div class="w-0 flex-grow pl-2">
                             <h1 class="page-header-title">{{translate('Subscription Package')}}</h1>
-                            <div class="page-header-text">{{ translate('Create_Subscriptions_Packages_for_Subscription_Business_Model') }}</div>
+                            <div class="page-header-text">{{ translate('Update_Subscriptions_Packages_for_Subscription_Business_Model') }}</div>
                         </div>
                     </div>
                 </div>
@@ -33,9 +33,9 @@ active
                 </div>
             </div>
 
-    <form action="{{ route('admin.business-settings.subscriptionackage.create') }}" method="post">
+    <form action="{{ route('admin.business-settings.subscriptionackage.update',$subscriptionackage->id) }}" method="post">
         @csrf
-        @method('post')
+        @method('put')
 
                 <div class="card-body">
                         @if ($language)
@@ -61,7 +61,7 @@ active
                             <div class="form-group mb-0">
                                 <label class="form-label input-label"
                                 for="name">{{ translate('Package_Name') }} ({{ translate('Default') }})</label>
-                                <input type="text" name="package_name[]" class="form-control" id="name" maxlength="191"  value="{{ old('package_name.0') }}"
+                                <input type="text" name="package_name[]" class="form-control" id="name" maxlength="191"  value="{{ $subscriptionackage?->getRawOriginal('package_name') }}"
                                 placeholder="{{ translate('Package_Name') }}"
                                 >
                             <input type="hidden" name="lang[]" value="default">
@@ -70,11 +70,25 @@ active
 
                         @if($language)
                                 @foreach($language as $key => $lang)
+
+                                <?php
+                                if(count($subscriptionackage['translations'])){
+                                    $translate = [];
+                                    foreach($subscriptionackage['translations'] as $t)
+                                    {
+                                        if($t->locale == $lang && $t->key=="package_name"){
+                                            $translate[$lang]['package_name'] = $t->value;
+                                        }
+                                    }
+                                }
+                            ?>
+
+
                                 <div class="col-lg-4 col-sm-6  d-none lang_form" id="{{$lang}}-form">
                                     <div class="form-group mb-0">
                                         <label class="form-label input-label"
                                         for="{{$lang}}_title">{{ translate('Package_Name') }} ({{strtoupper($lang)}})</label>
-                                        <input type="text" name="package_name[]" class="form-control" id="{{$lang}}_title" maxlength="191"  value="{{ old('package_name.'.$key+1) }}"
+                                        <input type="text" name="package_name[]" class="form-control" id="{{$lang}}_title" maxlength="191"  value="{{ $translate[$lang]['package_name']??'' }}"
                                         placeholder="{{ translate('Package_Name') }}"
                                         >
                                         <input type="hidden" name="lang[]" value="{{$lang}}">
@@ -87,13 +101,13 @@ active
                         <div class="col-lg-4 col-sm-6">
                             <div class="form-group">
                                 <label class="input-label">{{ translate('Package_Price') }} ({{ \App\CentralLogics\Helpers::currency_symbol() }})</label>
-                                <input type="number" name="package_price" value="{{ old('package_price') }}" required  min="0" step="0.01" max="999999999" class="form-control" placeholder="{{ translate('Ex: 300') }}">
+                                <input type="number" value="{{ $subscriptionackage->price }}" name="package_price" required  min="0" step="0.01" max="999999999" class="form-control" placeholder="{{ translate('Ex: 300') }}">
                             </div>
                         </div>
                         <div class="col-lg-4 col-sm-6">
                             <div class="form-group">
                                 <label class="input-label">{{ translate('Package_Validity') }} {{ translate('Days') }}</label>
-                                <input type="number"   min="0" max="999999999"  value="{{ old('package_validity') }}"  required name="package_validity"  class="form-control" placeholder="{{ translate('Ex: 365') }}">
+                                <input type="number"   min="0" max="999999999"  value="{{ $subscriptionackage->validity }}"  required name="package_validity"  class="form-control" placeholder="{{ translate('Ex: 365') }}">
                             </div>
                         </div>
 
@@ -102,17 +116,28 @@ active
                             <div class="form-group m-0">
                                 <label class="form-label input-label   text-capitalize"
                                     for="package_info">{{ translate('messages.package_info') }}</label>
-                                <textarea class="form-control" placeholder="{{ translate('EX:_Value_for_money') }}"  name="text[]" id="package_info">{{ old('text.0') }}</textarea>
+                                <textarea class="form-control" placeholder="{{ translate('EX:_Value_for_money') }}"  name="text[]" id="package_info">{{ $subscriptionackage?->getRawOriginal('text')  }}</textarea>
                             </div>
                         </div>
 
                         @if($language)
                         @foreach($language as $lang)
+                        <?php
+                        if(count($subscriptionackage['translations'])){
+                            $text = [];
+                            foreach($subscriptionackage['translations'] as $t)
+                            {
+                                if($t->locale == $lang && $t->key=="text"){
+                                    $text[$lang]['text'] = $t->value;
+                                }
+                            }
+                        }
+                    ?>
                         <div class="col-lg-4 col-sm-6 d-none lang_form" id="{{$lang}}-form1">
                             <div class="form-group m-0">
                                 <label class="form-label input-label   text-capitalize"
                                     for="package_info">{{ translate('messages.package_info') }} ({{strtoupper($lang)}})</label>
-                                <textarea class="form-control" name="text[]" placeholder="{{ translate('EX:_Value_for_money') }}" id="package_info">{{ old('text.'.$key+1) }}</textarea>
+                                <textarea class="form-control" name="text[]" placeholder="{{ translate('EX:_Value_for_money') }}" id="package_info">{{ $text[$lang]['text']??''}}</textarea>
                             </div>
                         </div>
                         @endforeach
@@ -143,31 +168,31 @@ active
                     <div class="check--item-wrapper check--item-wrapper-2 mt-0">
                         <div class="check-item">
                             <label class="form-group form-check form--check">
-                                <input type="checkbox" class="form-check-input package-available-feature"  {{ old('pos_system') == 1 ? 'checked' : '' }} name="pos_system" value="1">
+                                <input type="checkbox" class="form-check-input package-available-feature"  {{ $subscriptionackage->pos_system == 1 ? 'checked' : '' }} name="pos_system" value="1">
                                 <span class="form-check-label text-dark">{{ translate('messages.pos_system') }}</span>
                             </label>
                         </div>
                         <div class="check-item">
                             <label class="form-group form-check form--check">
-                                <input type="checkbox" class="form-check-input package-available-feature" {{ old('self_delivery') == 1 ? 'checked' : '' }}  name="self_delivery" value="1">
+                                <input type="checkbox" class="form-check-input package-available-feature" {{ $subscriptionackage->self_delivery == 1 ? 'checked' : '' }}  name="self_delivery" value="1">
                                 <span class="form-check-label text-dark">{{ translate('messages.self_delivery') }}</span>
                             </label>
                         </div>
                         <div class="check-item">
                             <label class="form-group form-check form--check">
-                                <input type="checkbox" class="form-check-input package-available-feature" {{ old('mobile_app') == 1 ? 'checked' : '' }}  name="mobile_app" value="1" >
+                                <input type="checkbox" class="form-check-input package-available-feature" {{ $subscriptionackage->mobile_app == 1 ? 'checked' : '' }}  name="mobile_app" value="1" >
                                 <span class="form-check-label text-dark">{{ translate('messages.Mobile_App') }}</span>
                             </label>
                         </div>
                         <div class="check-item">
                             <label class="form-group form-check form--check">
-                                <input type="checkbox" class="form-check-input package-available-feature" {{ old('review') == 1 ? 'checked' : '' }}  name="review" value="1" >
+                                <input type="checkbox" class="form-check-input package-available-feature" {{ $subscriptionackage->review == 1 ? 'checked' : '' }}  name="review" value="1" >
                                 <span class="form-check-label text-dark">{{ translate('messages.review') }}</span>
                             </label>
                         </div>
                         <div class="check-item">
                             <label class="form-group form-check form--check">
-                                <input type="checkbox" class="form-check-input package-available-feature" {{ old('chat') == 1 ? 'checked' : '' }}  name="chat" value="1" >
+                                <input type="checkbox" class="form-check-input package-available-feature" {{ $subscriptionackage->chat == 1 ? 'checked' : '' }}  name="chat" value="1" >
                                 <span class="form-check-label text-dark">{{ translate('messages.chat') }}</span>
                             </label>
                         </div>
@@ -199,20 +224,20 @@ active
                                         <div class="d-flex flex-wrap items-center gap-2">
                                             <div class="resturant-type-group p-0">
                                                 <label class="form-check form--check mr-2 mr-md-4">
-                                                    <input class="form-check-input limit-input" type="radio" checked name="minimum_order_limit" >
+                                                    <input class="form-check-input limit-input" type="radio" {{ $subscriptionackage->max_order == 'unlimited' ? 'checked' : '' }}  name="minimum_order_limit" >
                                                     <span class="form-check-label">
                                                         {{ translate('Unlimited') }} ({{ translate('Default') }})
                                                     </span>
                                                 </label>
                                                 <label class="form-check form--check mr-2 mr-md-4">
-                                                    <input class="form-check-input limit-input" type="radio" name="minimum_order_limit" value="Use_Limit">
+                                                    <input class="form-check-input limit-input"  {{ $subscriptionackage->max_order != 'unlimited' ? 'checked' : '' }}  type="radio" name="minimum_order_limit" value="Use_Limit">
                                                     <span class="form-check-label">
                                                         {{ translate('Use_Limit') }}
                                                     </span>
                                                 </label>
                                             </div>
                                             <div class="custom-limit-box">
-                                                <input id="max_order" type="number" name="max_order" min="1" step="1" max="999999999" class="form-control max_required" placeholder="{{ translate('Ex: 1000') }}">
+                                                <input id="max_order" type="number" value="{{ $subscriptionackage->max_order == 'unlimited' ? null : $subscriptionackage->max_order }}" name="max_order" min="1" step="1" max="999999999" class="form-control max_required" placeholder="{{ translate('Ex: 1000') }}">
                                             </div>
                                         </div>
                                     </div>
@@ -227,20 +252,20 @@ active
                                         <div class="d-flex flex-wrap items-center gap-2">
                                             <div class="resturant-type-group p-0">
                                                 <label class="form-check form--check mr-2 mr-md-4">
-                                                    <input class="form-check-input limit-input" type="radio" checked name="maximum_item_limit" >
+                                                    <input class="form-check-input limit-input" type="radio" {{ $subscriptionackage->max_product == 'unlimited' ? 'checked' : '' }} name="maximum_item_limit" >
                                                     <span class="form-check-label">
                                                         {{ translate('Unlimited') }} ({{ translate('Default') }})
                                                     </span>
                                                 </label>
                                                 <label class="form-check form--check mr-2 mr-md-4">
-                                                    <input class="form-check-input limit-input" type="radio" name="maximum_item_limit" value="Use_Limit" >
+                                                    <input class="form-check-input limit-input" {{ $subscriptionackage->max_product != 'unlimited' ? 'checked' : '' }} type="radio" name="maximum_item_limit" value="Use_Limit" >
                                                     <span class="form-check-label">
                                                         {{ translate('Use_Limit') }}
                                                     </span>
                                                 </label>
                                             </div>
                                             <div class="custom-limit-box">
-                                                <input  id="max_product" type="number" name="max_product" min="1" step="1" max="999999999" class="form-control max_required" placeholder="{{ translate('Ex: 1000') }}">
+                                                <input  id="max_product" type="number" {{ $subscriptionackage->max_product == 'unlimited' ? null : $subscriptionackage->max_product }} name="max_product" min="1" step="1" max="999999999" class="form-control max_required" placeholder="{{ translate('Ex: 1000') }}">
                                             </div>
                                         </div>
                                     </div>
@@ -259,37 +284,7 @@ active
 
         </form>
 
-        <div class="modal fade show" id="initial-modal">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header pt-4">
-                        <button type="button" class="close" data-dismiss="modal">
-                            <span aria-hidden="true" class="tio-clear"></span>
-                        </button>
-                    </div>
-                    <div class="modal-body px-4 pb-4 pt-0">
-                        <div>
-                            <div>
-                                <div class="text-center">
-                                    <h2 class="modal-title">{{ translate('Subscription_Packages') }}</h2>
-                                </div>
-                                <div class="text-center text-14 mb-4">
-                                    {{ translate('Here_you_can_view_all_the_data_placements_in_a_package_card_in_the_subscription_UI_in_the_user_app_and_website') }}
-                                </div>
-                                <div class="text-center pt-2">
-                                    <img class="mb-20" src="{{asset('public/assets/admin/img/plan/plan-details.svg')}}" alt="">
-                                </div>
-                            </div>
-                            <div class="btn--container justify-content-end">
-                                <button type="reset" class="btn btn--primary" data-dismiss="modal">
-                                    {{ translate('Okay') }}
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+
     </div>
 
 
@@ -329,9 +324,7 @@ active
             }
         }
     })
-    $(window).on('load', function(){
-        $('#initial-modal').modal('show');
-    })
+
 
 </script>
 

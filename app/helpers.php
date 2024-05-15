@@ -14,6 +14,7 @@ use App\Mail\OrderVerificationMail;
 use Illuminate\Support\Facades\App;
 use App\CentralLogics\CustomerLogic;
 use Illuminate\Support\Facades\Mail;
+use App\Models\SubscriptionTransaction;
 
 if (! function_exists('translate')) {
     function translate($key, $replace = [])
@@ -210,4 +211,31 @@ if (!function_exists('config_settings')) {
         }
         return (isset($config)) ? $config : null;
     }
+
+
+    if (! function_exists('sub_success')) {
+        function sub_success($data){
+            $subscription_transaction= SubscriptionTransaction::where('id',$data->attribute_id)->with('store','store.store_sub_update_application')->first();
+            $subscription_transaction->payment_status ='success';
+            $subscription_transaction->reference = $data->transaction_id;
+            $subscription_transaction->payment_method = $data->payment_method;
+            $subscription_transaction->transaction_status = 1;
+            $subscription_transaction->store->store_sub_update_application->update([
+                // 'expiry_date'=> Carbon::now()->addDays($subscription_transaction->validity)->format('Y-m-d'),
+                'status'=>1
+            ]);
+            $subscription_transaction->save();
+        }
+    }
+
+    if (! function_exists('sub_fail')) {
+        function sub_fail($data){
+            $subscription_transaction= SubscriptionTransaction::where('id',$data->attribute_id)->with('store')->first();
+            $subscription_transaction->payment_status ='failed';
+            $subscription_transaction->reference = $data?->transaction_id ?? null;
+            $subscription_transaction->payment_method = $data->payment_method;
+            $subscription_transaction->save();
+        }
+    }
+
 }
