@@ -21,7 +21,7 @@ class SubscriptionController extends Controller
     }
     public function index()
     {
-        $packages=  SubscriptionPackage::withcount('currentSubscribers')->latest()->withoutGlobalScopes()->paginate(config('default_pagination'));
+        $packages=  SubscriptionPackage::withcount('currentSubscribers')->latest()->paginate(config('default_pagination'));
         return view('admin-views.subscription.1-subscription',compact('packages'));
     }
     public function create()
@@ -96,8 +96,42 @@ class SubscriptionController extends Controller
 
     public function update(SubscriptionPackage $subscriptionackage, Request $request)
     {
-        $subscriptionackage->load('translations')->withoutGlobalScope('translate');
-        dd($subscriptionackage,$request->all());
+        $request->validate([
+            'package_name' => 'max:191|unique:subscription_packages,package_name,'.$subscriptionackage->id,
+            'package_name.0' => 'required',
+
+            'package_price' => 'required|numeric|between:0,999999999999.999',
+            'package_validity' => 'required|integer|between:0,999999999',
+            'max_order' => 'nullable|integer|between:0,999999999',
+            'max_product' => 'nullable|integer|between:0,999999999',
+            'pos_system' => 'nullable|boolean',
+            'mobile_app' => 'nullable|boolean',
+            'self_delivery' => 'nullable|boolean',
+            'chat' => 'nullable|boolean',
+            'review' => 'nullable|boolean',
+            'text' => 'nullable|max:1000',
+        ], [
+            'price.required' => translate('Must enter Price for the Package'),
+            'validity.required' => translate('Must enter a validity period for the Package in days'),
+            'package_name.0.required'=>translate('default_package_name_is_required'),
+        ]);
+        $subscriptionackage->package_name = $request->package_name[array_search('default', $request->lang)];
+        $subscriptionackage->text = $request->text[array_search('default', $request->lang)];
+        $subscriptionackage->price = $request->package_price;
+        $subscriptionackage->validity = $request->package_validity;
+        $subscriptionackage->max_order = $request->max_order  ?? 'unlimited';
+        $subscriptionackage->max_product = $request->max_product ?? 'unlimited';
+        $subscriptionackage->pos = $request->pos_system ?? 0;
+        $subscriptionackage->mobile_app = $request->mobile_app ?? 0;
+        $subscriptionackage->self_delivery = $request->self_delivery ?? 0;
+        $subscriptionackage->chat = $request->chat ?? 0;
+        $subscriptionackage->review = $request->review ?? 0;
+        $subscriptionackage->colour = $request?->colour;
+        $subscriptionackage->save();
+        $this->translationRepo->updateByModel(request: $request, model: $subscriptionackage, modelPath: 'App\Models\SubscriptionPackage', attribute: 'package_name');
+        $this->translationRepo->updateByModel(request: $request, model: $subscriptionackage, modelPath: 'App\Models\SubscriptionPackage', attribute: 'text');
+        Toastr::success(translate('messages.Package_Updated_successfully'));
+        return redirect()->route('admin.business-settings.subscriptionackage.show',$subscriptionackage->id);
     }
     public function overView(SubscriptionPackage $subscriptionackage, Request $request)
     {

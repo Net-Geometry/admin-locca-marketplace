@@ -258,14 +258,14 @@ active
                                                     </span>
                                                 </label>
                                                 <label class="form-check form--check mr-2 mr-md-4">
-                                                    <input class="form-check-input limit-input" {{ $subscriptionackage->max_product != 'unlimited' ? 'checked' : '' }} type="radio" name="maximum_item_limit" value="Use_Limit" >
+                                                    <input class="form-check-input limit-input" {{ $subscriptionackage->max_product != 'unlimited' ? 'checked' : '' }}  type="radio" name="maximum_item_limit" value="Use_Limit" >
                                                     <span class="form-check-label">
                                                         {{ translate('Use_Limit') }}
                                                     </span>
                                                 </label>
                                             </div>
                                             <div class="custom-limit-box">
-                                                <input  id="max_product" type="number" {{ $subscriptionackage->max_product == 'unlimited' ? null : $subscriptionackage->max_product }} name="max_product" min="1" step="1" max="999999999" class="form-control max_required" placeholder="{{ translate('Ex: 1000') }}">
+                                                <input  id="max_product" type="number" value="{{ $subscriptionackage->max_product == 'unlimited' ? null : $subscriptionackage->max_product }}" name="max_product" min="1" step="1" max="999999999" class="form-control max_required" placeholder="{{ translate('Ex: 1000') }}">
                                             </div>
                                         </div>
                                     </div>
@@ -313,19 +313,20 @@ active
         }
     })
 
-    $('.limit-input').on('change', function(){
-            if($(this).is(':checked')){
-                if($(this).val() == 'Use_Limit'){
-                $(this).closest('.limit-item-card').find('.custom-limit-box').show();
-                $(this).closest('.limit-item-card').find('.max_required').prop('required', true);
-            } else {
-                $(this).closest('.limit-item-card').find('.custom-limit-box').hide();
-                $(this).closest('.limit-item-card').find('.max_required').removeAttr('required');
-            }
+    $('.limit-input').on('change', function() {
+
+    var closestLimitItemCard = $(this).closest('.limit-item-card');
+    var isChecked = $(this).is(':checked');
+    if (isChecked) {
+        if ($(this).val() == 'Use_Limit') {
+            closestLimitItemCard.find('.custom-limit-box').show();
+            closestLimitItemCard.find('.max_required').prop('required', true);
+        } else {
+            closestLimitItemCard.find('.custom-limit-box').hide();
+            closestLimitItemCard.find('.max_required').removeAttr('required');
         }
-    })
-
-
+    }
+}).trigger('change');
 </script>
 
 @endpush
