@@ -405,6 +405,9 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                 //recaptcha
                 Route::get('recaptcha', 'BusinessSettingsController@recaptcha_index')->name('recaptcha_index');
                 Route::post('recaptcha-update', 'BusinessSettingsController@recaptcha_update')->name('recaptcha_update');
+                //file_system
+                Route::get('storage-connection', 'BusinessSettingsController@storage_connection_index')->name('storage_connection_index');
+                Route::post('storage-connection-update', 'BusinessSettingsController@storage_connection_update')->name('storage_connection_update');
             });
             // Offline payment Methods
             Route::get('/offline-payment', 'OfflinePaymentMethodController@index')->name('offline');

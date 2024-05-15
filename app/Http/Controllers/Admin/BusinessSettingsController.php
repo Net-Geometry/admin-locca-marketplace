@@ -2465,6 +2465,84 @@ class BusinessSettingsController extends Controller
         Toastr::success(translate('messages.updated_successfully'));
         return back();
     }
+    //recaptcha
+    public function storage_connection_index(Request $request)
+    {
+        return view('admin-views.business-settings.storage-connection-index');
+    }
+
+    public function storage_connection_update(Request $request)
+    {
+        DB::table('business_settings')->updateOrInsert(['key' => 's3_credential'], [
+            'key' => 's3_credential',
+            'value' => json_encode([
+                'key' => $request['key'],
+                'secret' => $request['secret'],
+                'region' => $request['region'],
+                'bucket' => $request['bucket'],
+                'url' => $request['url'],
+                'end_point' => $request['end_point']
+            ]),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        $credentials=\App\CentralLogics\Helpers::get_business_settings('s3_credential');
+
+        $s3Credentials = [
+            'FILESYSTEM_DRIVER' => 's3',
+            'AWS_ACCESS_KEY_ID' => $credentials['key'],
+            'AWS_SECRET_ACCESS_KEY' => $credentials['secret'],
+            'AWS_DEFAULT_REGION' => $credentials['region'],
+            'AWS_BUCKET' => $credentials['bucket'],
+            'AWS_URL' => $credentials['url'],
+            'AWS_ENDPOINT' => $credentials['end_point']
+        ];
+
+        // Load existing environment file into an array
+        $envFile = file(base_path('.env'), FILE_IGNORE_NEW_LINES);
+        $data = [];
+        foreach ($envFile as $line) {
+            if (!empty(trim($line))) {
+                list($key, $value) = explode('=', $line, 2);
+                $data[$key] = $value;
+            } else {
+                // Preserve empty lines
+                $data[] = '';
+            }
+        }
+
+        // Update existing keys
+        foreach ($s3Credentials as $key => $value) {
+            if (isset($data[$key])) {
+                // Update the value
+                $data[$key] = $value;
+            }
+        }
+
+        // Append any new keys that were not present in the original file
+        foreach ($s3Credentials as $key => $value) {
+            if (!isset($data[$key])) {
+                $data[$key] = $value;
+            }
+        }
+
+        // Write the updated environment file
+        $lines = [];
+        foreach ($data as $key => $value) {
+            if (is_numeric($key)) {
+                // Preserve empty lines
+                $lines[] = '';
+            } else {
+                $lines[] = $key . '=' . $value;
+            }
+        }
+
+        file_put_contents(base_path('.env'), implode(PHP_EOL, $lines) . PHP_EOL);
+
+        Toastr::success(translate('messages.updated_successfully'));
+        return back();
+    }
     //Send Mail
     public function send_mail(Request $request)
     {
