@@ -26,6 +26,7 @@ return new class extends Migration
             $table->boolean('status')->default(true);
             $table->boolean('is_trial')->default(false);
             $table->tinyInteger('total_package_renewed')->default(0);
+            $table->dateTime('renewed_at')->nullable();
             $table->timestamps();
         });
     }

@@ -33,7 +33,7 @@ active
                 </div>
             </div>
 
-    <form action="{{ route('admin.business-settings.subscriptionackage.create') }}" method="post">
+    <form action="{{ route('admin.business-settings.subscriptionackage.store') }}" method="post">
         @csrf
         @method('post')
 

@@ -6,7 +6,9 @@ use Illuminate\Http\Request;
 use App\Models\SubscriptionPackage;
 use App\Http\Controllers\Controller;
 use App\Contracts\Repositories\TranslationRepositoryInterface;
+use App\Models\BusinessSetting;
 use Brian2694\Toastr\Facades\Toastr;
+use Illuminate\Support\Carbon;
 
 
 class SubscriptionController extends Controller
@@ -67,11 +69,12 @@ class SubscriptionController extends Controller
 
         $this->translationRepo->addByModel(request: $request, model: $package, modelPath: 'App\Models\SubscriptionPackage', attribute: 'package_name');
         $this->translationRepo->addByModel(request: $request, model: $package, modelPath: 'App\Models\SubscriptionPackage', attribute: 'text');
-
-        return redirect()->route('admin.business-settings.subscription.subscription_index');
+        Toastr::success(translate('messages.Package_successfully_Added'));
+        return redirect()->route('admin.business-settings.subscriptionackage.index');
     }
 
     public function statusChange(SubscriptionPackage $subscriptionackage){
+
         $subscriptionackage->status =!$subscriptionackage->status;
         $subscriptionackage->save();
         Toastr::success($subscriptionackage->status == 1 ? translate('messages.Package_Acitvated_successfully') : translate('Package_Deacitvated_successfully'));
@@ -80,10 +83,12 @@ class SubscriptionController extends Controller
 
     public function show(SubscriptionPackage $subscriptionackage)
     {
-        return view('admin-views.subscription.edit', compact('language','defaultLang','subscriptionackage'));
+        $over_view_data= $this->packageOverview($subscriptionackage);
+        return view('admin-views.subscription.package-details', compact('subscriptionackage','over_view_data'));
     }
     public function edit(SubscriptionPackage $subscriptionackage)
     {
+        $subscriptionackage->load('translations')->withoutGlobalScope('translate');
         $language = getWebConfig('language');
         $defaultLang = str_replace('_', '-', app()->getLocale());
         return view('admin-views.subscription.edit', compact('language','defaultLang','subscriptionackage'));
@@ -91,6 +96,64 @@ class SubscriptionController extends Controller
 
     public function update(SubscriptionPackage $subscriptionackage, Request $request)
     {
-        dd($request->all());
+        $subscriptionackage->load('translations')->withoutGlobalScope('translate');
+        dd($subscriptionackage,$request->all());
+    }
+    public function overView(SubscriptionPackage $subscriptionackage, Request $request)
+    {
+        $over_view_data= $this->packageOverview($subscriptionackage,$request?->type);
+            return response()->json([
+            'view'=>view('admin-views.subscription.package.partial._over-view-data',compact('over_view_data'))->render(),
+
+            ]);
+    }
+
+    private function packageOverview($subscriptionackage,$type ='all'){
+        $data=[];
+        $subscription_deadline_warning_days = BusinessSetting::where('key','subscription_deadline_warning_days')->first()?->value ?? 7;
+
+        $totalSubscribersData = $subscriptionackage->subscribers()
+        ->when($type == 'this_month' ,function($query){
+            $query->whereMonth('renewed_at', Carbon::now()->month );
+        })
+        ->when($type == 'this_year' ,function($query){
+            $query->whereYear('renewed_at', Carbon::now()->year );
+        })
+        ->when($type == 'this_week' ,function($query){
+            $query->whereBetween('renewed_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()] );
+        })
+        ->selectRaw('COUNT(DISTINCT store_id) AS total_subscribers,
+                    COUNT(DISTINCT CASE WHEN status = 1 THEN store_id END) AS active_subscriptions,
+                    COUNT(DISTINCT CASE WHEN status = 0 THEN store_id END) AS expired_subscriptions,
+                    COUNT(DISTINCT CASE WHEN status = 1 AND expiry_date <= ? THEN store_id END) AS expired_soon',
+                    [Carbon::today()->addDays($subscription_deadline_warning_days)])
+        ->first();
+
+        $data['total_subscribed_user']= $totalSubscribersData['total_subscribers'];
+        $data['active_subscription']= $totalSubscribersData['active_subscriptions'];
+        $data['expired_subscription']= $totalSubscribersData['expired_subscriptions'];
+        $data['expired_soon']= $totalSubscribersData['expired_soon'];
+
+        $totals = $subscriptionackage->transactions()
+        ->when($type == 'this_month' ,function($query){
+            $query->whereMonth('created_at', Carbon::now()->month );
+        })
+        ->when($type == 'this_year' ,function($query){
+            $query->whereYear('created_at', Carbon::now()->year );
+        })
+        ->when($type == 'this_week' ,function($query){
+            $query->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()] );
+        })
+        ->selectRaw('COUNT(DISTINCT CASE WHEN is_trial = 1 THEN store_id END) AS total_free_trials,
+                    COUNT(DISTINCT CASE WHEN is_trial = 0 THEN store_id END) AS total_renewed,
+                    SUM(CASE WHEN is_trial = 0 THEN paid_amount ELSE 0 END) AS total_amount')
+        ->first();
+
+        $data['total_free_trials']= $totals['total_free_trials'];
+        $data['total_renewed']= $totals['total_renewed'];
+        $data['total_amount']= $totals['total_amount'];
+
+        return $data;
+
     }
 }

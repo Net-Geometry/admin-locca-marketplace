@@ -725,6 +725,7 @@ class Helpers
             foreach ($data as $item) {
                 $item->load('storeConfig');
                 $ratings = StoreLogic::calculate_store_rating($item['rating']);
+                $item['ratings'] = $item?->rating ?? [];
                 unset($item['rating']);
                 $item['avg_rating'] = $ratings['rating'];
                 $item['rating_count'] = $ratings['total'];
@@ -760,6 +761,7 @@ class Helpers
                 $data['is_recommended'] = $data->storeConfig->is_recommended;
             }
             $ratings = StoreLogic::calculate_store_rating($data['rating']);
+            $data['ratings'] = $data?->rating ?? [];
             unset($data['rating']);
             $data['avg_rating'] = $ratings['rating'];
             $data['rating_count'] = $ratings['total'];
@@ -3488,6 +3490,7 @@ class Helpers
             $store_subscription=$store->store_sub;
             if (isset($store_subscription) && $type == 'renew') {
                 $store_subscription->total_package_renewed= $store_subscription->total_package_renewed + 1;
+
                 $day_left=$store_subscription->expiry_date->format('Y-m-d');
                 if (Carbon::now()->subDays(1)->diffInDays($day_left, false) > 0) {
                     $add_days= Carbon::now()->subDays(1)->diffInDays($day_left, false);
@@ -3504,6 +3507,7 @@ class Helpers
 
             }
 
+            $store_subscription->renewed_at=now();
             $store_subscription->package_id=$package->id;
             $store_subscription->store_id=$store->id;
             if ($payment_method  == 'free_trial' ) {
