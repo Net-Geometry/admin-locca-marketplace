@@ -368,6 +368,10 @@
 {{--                    @endif--}}
 {{--                </div>--}}
 
+                            @php($reviews = $store->reviews()->with('item',function($query){
+                                $query->withoutGlobalScope(\App\Scopes\StoreScope::class);
+                            })->with('customer')
+                            ->latest()->paginate(25))
                 <div class="card-body p-0 verticle-align-middle-table">
                     <div class="table-responsive datatable-custom">
                         <table id="columnSearchDatatable"
@@ -391,10 +395,6 @@
                             </thead>
 
                             <tbody id="set-rows">
-                            @php($reviews = $store->reviews()->with('item',function($query){
-                                $query->withoutGlobalScope(\App\Scopes\StoreScope::class);
-                            })->with('customer')
-                            ->latest()->paginate(25))
 
                             @foreach($reviews as $key=>$review)
                                 <tr>
@@ -571,5 +571,26 @@
                 },
             });
         });
+
+        $(".status_form_alert").on("click", function (e) {
+            const id = $(this).data('id');
+            const message = $(this).data('message');
+            e.preventDefault();
+            Swal.fire({
+                title: '{{ translate('messages.are_you_sure') }}',
+                text: message,
+                type: 'warning',
+                showCancelButton: true,
+                cancelButtonColor: 'default',
+                confirmButtonColor: '#FC6A57',
+                cancelButtonText: '{{translate('messages.no')}}',
+                confirmButtonText: '{{translate('messages.yes')}}',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.value) {
+                    $('#' + id).submit()
+                }
+            })
+        })
     </script>
 @endpush

@@ -227,6 +227,7 @@ Route::group(['namespace' => 'Api\V1', 'middleware'=>'localization'], function (
             Route::get('details/{id}', 'ItemController@get_item');
             Route::POST('search', 'ItemController@search');
             Route::get('reviews', 'ItemController@reviews');
+            Route::put('reply-update', 'ItemController@update_reply');
             Route::get('recommended', 'ItemController@recommended');
             Route::get('organic', 'ItemController@organic');
             Route::get('pending/item/list', 'ItemController@pending_item_list');
