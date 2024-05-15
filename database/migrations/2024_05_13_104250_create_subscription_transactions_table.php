@@ -27,6 +27,7 @@ return new class extends Migration
             $table->json('package_details');
             $table->string('created_by', 50);
             $table->boolean('is_trial')->default(false);
+            $table->boolean('transaction_status')->default(1);
             $table->timestamps();
         });
     }

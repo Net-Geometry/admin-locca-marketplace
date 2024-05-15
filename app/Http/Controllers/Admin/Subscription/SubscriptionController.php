@@ -5,8 +5,9 @@ namespace App\Http\Controllers\Admin\Subscription;
 use Illuminate\Http\Request;
 use App\Models\SubscriptionPackage;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\SubscriptionPackageRequest;
 use App\Contracts\Repositories\TranslationRepositoryInterface;
+use Brian2694\Toastr\Facades\Toastr;
+
 
 class SubscriptionController extends Controller
 {
@@ -18,16 +19,16 @@ class SubscriptionController extends Controller
     }
     public function index()
     {
-        $packages=  SubscriptionPackage::latest()->paginate(config('default_pagination'));
+        $packages=  SubscriptionPackage::withcount('currentSubscribers')->latest()->withoutGlobalScopes()->paginate(config('default_pagination'));
         return view('admin-views.subscription.1-subscription',compact('packages'));
     }
-    public function add()
+    public function create()
     {
         $language = getWebConfig('language');
         $defaultLang = str_replace('_', '-', app()->getLocale());
         return view('admin-views.subscription.3-subscription', compact('language','defaultLang'));
     }
-    public function packageAdd(Request $request)
+    public function store(Request $request)
     {
         $request->validate([
             'package_name' => 'max:191|unique:subscription_packages',
@@ -67,8 +68,29 @@ class SubscriptionController extends Controller
         $this->translationRepo->addByModel(request: $request, model: $package, modelPath: 'App\Models\SubscriptionPackage', attribute: 'package_name');
         $this->translationRepo->addByModel(request: $request, model: $package, modelPath: 'App\Models\SubscriptionPackage', attribute: 'text');
 
-        return redirect()->route('admin.subscription.subscription_index');
+        return redirect()->route('admin.business-settings.subscription.subscription_index');
     }
 
+    public function statusChange(SubscriptionPackage $subscriptionackage){
+        $subscriptionackage->status =!$subscriptionackage->status;
+        $subscriptionackage->save();
+        Toastr::success($subscriptionackage->status == 1 ? translate('messages.Package_Acitvated_successfully') : translate('Package_Deacitvated_successfully'));
+        return back();
+    }
 
+    public function show(SubscriptionPackage $subscriptionackage)
+    {
+        return view('admin-views.subscription.edit', compact('language','defaultLang','subscriptionackage'));
+    }
+    public function edit(SubscriptionPackage $subscriptionackage)
+    {
+        $language = getWebConfig('language');
+        $defaultLang = str_replace('_', '-', app()->getLocale());
+        return view('admin-views.subscription.edit', compact('language','defaultLang','subscriptionackage'));
+    }
+
+    public function update(SubscriptionPackage $subscriptionackage, Request $request)
+    {
+        dd($request->all());
+    }
 }

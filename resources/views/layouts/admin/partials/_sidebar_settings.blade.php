@@ -50,7 +50,7 @@
                     <small class="tio-more-horizontal nav-subtitle-replacer"></small>
                 </li>
                 <li class="navbar-vertical-aside-has-menu @yield('subscription_index')">
-                    <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.subscription.subscription_index') }}" title="{{ translate('messages.subscription') }}">
+                    <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.business-settings.subscriptionackage.index') }}" title="{{ translate('messages.subscription') }}">
                         <i class="tio-city nav-icon"></i>
                         <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
                             {{ translate('messages.subscription') }} </span>

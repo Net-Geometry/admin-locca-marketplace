@@ -33,6 +33,10 @@ class SubscriptionPackage extends Model
     {
         return $this->hasMany(SubscriptionTransaction::class, 'package_id');
     }
+    public function currentSubscribers()
+    {
+        return $this->hasMany(StoreSubscription::class, 'package_id')->where('status' ,1);
+    }
 
     public function translations()
     {

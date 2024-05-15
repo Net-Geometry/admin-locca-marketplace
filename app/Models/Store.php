@@ -286,6 +286,10 @@ class Store extends Model
     {
         return $this->hasMany(Coupon::class)->where('status', '=', 1)->whereDate('expire_date', '>=', date('Y-m-d'))->whereDate('start_date', '<=', date('Y-m-d'));
     }
+    public function coupon(): HasMany
+    {
+        return $this->hasMany(Coupon::class);
+    }
 
     /**
      * @return HasMany

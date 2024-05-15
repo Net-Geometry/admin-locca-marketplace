@@ -129,7 +129,7 @@ active
 
                                 </div>
                             </div>
-                            <a href="{{ route('admin.subscription.subscription_add') }}" class="btn btn--primary border-0"><i class="tio-add"></i> {{translate('Add Subcription Package')}}</a>
+                            <a href="{{ route('admin.business-settings.subscriptionackage.create') }}" class="btn btn--primary border-0"><i class="tio-add"></i> {{translate('Add Subcription Package')}}</a>
                             <!-- Static Export Button -->
                         </div>
                     </div>
@@ -151,7 +151,7 @@ active
                                     <tr>
                                         <td class="text-center"> {{$key+$packages->firstItem()}}</td>
                                         <td>
-                                            <div title="{{ $package->package_name }}" class="text-title">  <a class="text-dark" href="{{route('admin.subscription.package_details',[$package['id']])}}">{{ Str::limit($package->package_name, 20, '...')   }}</a> </div>
+                                            <div title="{{ $package->package_name }}" class="text-title">  <a class="text-dark" href="{{route('admin.business-settings.subscriptionackage.show',[$package['id']])}}">{{ Str::limit($package->package_name, 20, '...')   }}</a> </div>
                                         </td>
                                         <td>
                                             <div class="w--120px text-title text-right pr-5">{{ \App\CentralLogics\Helpers::format_currency($package->price) }}</div>
@@ -160,11 +160,11 @@ active
                                             <div class="text-title">{{$package->validity}} {{ translate('days') }}</div>
                                         </td>
                                         <td>
-                                            <div class="text-title text-center">{{$package->transactions_count ?? 0}}</div>
+                                            <div class="text-title text-center">{{$package->current_subscribers_count ?? 0}}</div>
                                         </td>
                                         <td>
                                                 <label class="toggle-switch toggle-switch-sm" for="stocksCheckbox{{$package->id}}">
-                                                    <input type="checkbox" data-url="{{route('admin.subscription.package_status',[$package->id,$package->status?0:1])}}" data-message="{{$package->status?translate('Do_You_Want_To_Disable_This_Package'):translate('Do_you_want_to_Active_This_Package')}}"
+                                                    <input type="checkbox" data-url="{{route('admin.business-settings.subscriptionackage.status',[$package->id,$package->status?0:1])}}" data-message="{{$package->status?translate('Do_You_Want_To_Disable_This_Package'):translate('Do_you_want_to_Active_This_Package')}}"
                                                     class="toggle-switch-input status_change_alert" id="stocksCheckbox{{$package->id}}" {{$package->status?'checked':''}}>
                                                     <span class="toggle-switch-label">
                                                         <span class="toggle-switch-indicator"></span>
@@ -173,10 +173,10 @@ active
                                         </td>
                                         <td>
                                             <div class="btn--container justify-content-center">
-                                                <a class="btn action-btn btn--primary btn-outline-primary" href="{{ route('admin.subscription.package_edit',$package->id) }}">
+                                                <a class="btn action-btn btn--primary btn-outline-primary" href="{{ route('admin.business-settings.subscriptionackage.edit',$package->id) }}">
                                                     <i class="tio-edit"></i>
                                                 </a>
-                                                <a class="btn action-btn btn--warning btn-outline-warning" href="{{route('admin.subscription.package_details',[$package['id']])}}">
+                                                <a class="btn action-btn btn--warning btn-outline-warning" href="{{route('admin.business-settings.subscriptionackage.show',[$package['id']])}}">
                                                     <i class="tio-invisible"></i>
                                                 </a>
                                             </div>
@@ -199,7 +199,7 @@ active
                             <p class="mb-4">
                                 {{translate('Add new subscription packages to the list. So that Providers get more options to join the business for the growth and success.')}}<br>
                             </p>
-                            <a href="{{ route('admin.subscription.subscription_add') }}" class="btn btn--primary border-0"><i class="tio-add"></i> {{translate('Add Subcription Package')}}</a>
+                            <a href="{{ route('admin.business-settings.subscriptionackage.create') }}" class="btn btn--primary border-0"><i class="tio-add"></i> {{translate('Add Subcription Package')}}</a>
                         </div>
                     </div>
                 </div>
@@ -214,6 +214,32 @@ active
 @endsection
 
 @push('script_2')
+<script>
+     "use strict";
+            $('.status_change_alert').on('click', function (event) {
+            let url = $(this).data('url');
+            let message = $(this).data('message');
+            status_change_alert(url, message, event)
+        })
 
+        function status_change_alert(url, message, e) {
+            e.preventDefault();
+            Swal.fire({
+                title: '{{ translate('Are_you_sure?') }}',
+                text: message,
+                type: 'warning',
+                showCancelButton: true,
+                cancelButtonColor: 'default',
+                confirmButtonColor: '#FC6A57',
+                cancelButtonText: '{{ translate('no') }}',
+                confirmButtonText: '{{ translate('yes') }}',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.value) {
+                    location.href=url;
+                }
+            })
+        }
+</script>
 @endpush
 

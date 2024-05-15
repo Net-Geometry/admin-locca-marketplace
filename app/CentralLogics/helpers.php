@@ -3480,7 +3480,7 @@ class Helpers
         $package = SubscriptionPackage::withoutGlobalScope('translate')->findOrFail($package_id);
         $add_days=0;
         $add_orders=0;
-        $total_food= $store->foods()->withoutGlobalScope(\App\Scopes\StoreScope::class)->count();
+        $total_food= $store->items()->withoutGlobalScope(\App\Scopes\StoreScope::class)->count();
         if ($package->max_product != 'unlimited' &&  $total_food >= $package->max_product  ){
             return 'downgrade_error';
         }
@@ -3536,7 +3536,7 @@ class Helpers
             $store_subscription->review=$package->review;
             $store_subscription->self_delivery=$package->self_delivery;
 
-            $store->food_section= 1;
+            $store->item_section= 1;
             $store->pos_system= 1;
             if ($type == 'new_join' && $store->vendor?->status == 0 ) {
                 $store->status= 0;
@@ -3559,7 +3559,7 @@ class Helpers
 
             $store->reviews_section= 1;
             $store->self_delivery_system= 1;
-            $store->store_model= 'subscription';
+            $store->store_business_model= 'subscription';
 
             $subscription_transaction= new SubscriptionTransaction();
             $subscription_transaction_ID= Str::uuid();
