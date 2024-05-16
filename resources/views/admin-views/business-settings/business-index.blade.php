@@ -384,14 +384,13 @@
                                     <div class="d-flex __gap-12px mt-4">
                                         <div class="__custom-upload-img mr-lg-5">
                                             @php($logo = \App\Models\BusinessSetting::where('key', 'logo')->first())
-                                            @php($logo = $logo->value ?? '')
                                             <label class="form-label">
                                                 {{ translate('logo') }} <span class="text--primary">( {{ translate('3:1') }} )</span>
                                             </label>
                                             <label class="text-center position-relative">
                                                 <img class="img--vertical onerror-image image--border" id="viewer"
                                                     data-onerror-image="{{ asset('public/assets/admin/img/upload-img.png') }}"
-                                                    src="{{ \App\CentralLogics\Helpers::onerror_image_helper($logo, asset('storage/app/public/business/').'/'.$logo, asset('public/assets/admin/img/upload-img.png'),'business/') }}"
+                                                    src="{{ \App\CentralLogics\Helpers::get_image_helper($logo,'value', asset('storage/app/public/business/').'/'.$logo->value??'', asset('public/assets/admin/img/upload-img.png'),'business/') }}"
                                                     alt="logo image" />
                                                 <div class="icon-file-group">
                                                     <div class="icon-file">
@@ -406,14 +405,13 @@
 
                                         <div class="__custom-upload-img">
                                             @php($icon = \App\Models\BusinessSetting::where('key', 'icon')->first())
-                                            @php($icon = $icon->value ?? '')
                                             <label class="form-label">
                                                 {{ translate('Favicon') }}  <span class="text--primary">( {{ translate('1:1') }} )</span>
                                             </label>
                                             <label class="text-center position-relative">
                                                 <img class="img--133 onerror-image image--border" id="iconViewer"
                                                     data-onerror-image="{{ asset('public/assets/admin/img/upload-img.png') }}"
-                                                    src="{{ \App\CentralLogics\Helpers::onerror_image_helper($icon, asset('storage/app/public/business/').'/'.$icon, asset('public/assets/admin/img/upload-img.png') , 'business/')}}"
+                                                    src="{{ \App\CentralLogics\Helpers::get_image_helper($icon,'value', asset('storage/app/public/business/').'/'.$icon->value??'', asset('public/assets/admin/img/upload-img.png') , 'business/')}}"
                                                     alt="Fav icon" />
                                                 <div class="icon-file-group">
                                                     <div class="icon-file">

@@ -6,8 +6,8 @@ $company_name = App\Models\BusinessSetting::where('key', 'business_name')->first
         <td class="email-template-table-td-style">
             <img class="mail-img-2 onerror-image" data-onerror-image="{{ asset('/public/assets/admin/img/blank3.png') }}"
 
-            src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
-                data_get($data, 'icon' , null),
+            src="{{ \App\CentralLogics\Helpers::get_image_helper(
+                $data, 'icon',
                 asset('storage/app/public/email_template').'/'.data_get($data, 'icon' , null),
                 asset('/public/assets/admin/img/blank3.png'),
                 'email_template/'
@@ -37,8 +37,8 @@ $company_name = App\Models\BusinessSetting::where('key', 'business_name')->first
             @php($store_logo = \App\Models\BusinessSetting::where(['key' => 'logo'])->first()->value)
             <img class="email-template-img onerror-image" data-onerror-image="{{ asset('storage/app/public/business/' . $store_logo) }}"
 
-            src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
-                data_get($data, 'logo' , null),
+            src="{{ \App\CentralLogics\Helpers::get_image_helper(
+                $data, 'logo',
                 asset('storage/app/public/email_template').'/'.data_get($data, 'logo' , null),
                 asset('storage/app/public/business/' . $store_logo),
                 'email_template/'

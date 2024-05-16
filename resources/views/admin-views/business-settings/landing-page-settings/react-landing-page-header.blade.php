@@ -182,8 +182,8 @@
                                     <div class="position-relative">
                                     <div class="img">
                                         <img
-                                        src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
-                                            $header_icon['value'] ?? '',
+                                        src="{{ \App\CentralLogics\Helpers::get_image_helper(
+                                            $header_icon,'value',
                                             asset('storage/app/public/header_icon').'/'.$header_icon['value'] ?? '',
                                             asset('/public/assets/admin/img/aspect-1.png'),
                                             'header_icon/'

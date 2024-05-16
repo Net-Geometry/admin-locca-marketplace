@@ -12,13 +12,13 @@
         @php($landing_page_images = \App\Models\BusinessSetting::where(['key' => 'landing_page_images'])->first())
         @php($landing_page_images = isset($landing_page_images->value) ? json_decode($landing_page_images->value, true) : null)
     <!-- ==== Banner Section Starts Here ==== -->
-    @php($logo = \App\Models\BusinessSetting::where(['key' => 'logo'])->first()->value ?? '')
+    @php($logo = \App\Models\BusinessSetting::where(['key' => 'logo'])->first())
     <section class="banner-section position-relative">
         <div class="container">
             <div class="banner-content wow fadeInUp">
                 <h1 class="title">{{ $landing_data['fixed_header_title'] }}</h1>
                 <img class="w-100 onerror-image"  data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
-                src="{{\App\CentralLogics\Helpers::onerror_image_helper($logo, asset('storage/app/public/business/').'/' . $logo, asset('public/assets/admin/img/160x160/img2.jpg') ,'business/')}}"
+                src="{{\App\CentralLogics\Helpers::get_image_helper($logo,'value', asset('storage/app/public/business/').'/' . $logo?->value, asset('public/assets/admin/img/160x160/img2.jpg') ,'business/')}}"
 
                 alt="">
                 <div class="text">
@@ -1899,7 +1899,7 @@
                         @foreach ($modules as $key => $item)
                         <div class="item">
                             <img class="__img-50 onerror-image"  data-onerror-image="{{asset('public/assets/admin/img/100x100/2.png')}}"
-                            src="{{\App\CentralLogics\Helpers::onerror_image_helper($item['icon'] ?? '', asset('storage/app/public/module/').'/' . $item['icon']??'', asset('public/assets/admin/img/100x100/2.png') ,'module/')}}"
+                            src="{{\App\CentralLogics\Helpers::get_image_helper($item,'icon', asset('storage/app/public/module/').'/' . $item['icon']??'', asset('public/assets/admin/img/100x100/2.png') ,'module/')}}"
 
                             alt="image">
                             <div class="txt d-block">{{translate("messages.{$item->module_name}")}}</div>
@@ -1920,7 +1920,7 @@
                         </div>
                         <div class="col-lg-6 col-md-8">
                             <div class="venture-img mx-1">
-                                <img  src="{{\App\CentralLogics\Helpers::onerror_image_helper($item['thumbnail']?? '', asset('storage/app/public/module/').'/' . $item['thumbnail']?? '', asset('public/assets/admin/img/100x100/2.png') ,'module/')}}"
+                                <img  src="{{\App\CentralLogics\Helpers::get_image_helper($item, 'thumbnail', asset('storage/app/public/module/').'/' . $item['thumbnail']?? '', asset('public/assets/admin/img/100x100/2.png') ,'module/')}}"
 
                                 class="onerror-image"  data-onerror-image="{{asset('public/assets/admin/img/100x100/2.png')}}"
                                 alt="image">
@@ -1987,7 +1987,7 @@
                                         <div class="learn-feature-item">
                                             <div class="learn-feature-icon">
                                                 <img
-                                                src="{{\App\CentralLogics\Helpers::onerror_image_helper(data_get($item,'image'), asset('storage/app/public/admin_feature/').'/' .data_get($item,'image'), asset('public/assets/admin/img/100x100/2.jpg'),'admin_feature/')}}"
+                                                src="{{\App\CentralLogics\Helpers::get_image_helper($item,'image', asset('storage/app/public/admin_feature/').'/' .data_get($item,'image'), asset('public/assets/admin/img/100x100/2.jpg'),'admin_feature/')}}"
                                                 alt="{{$item['title'] ?? ''}}">
                                             </div>
                                             <div class="learn-feature-item-content">
@@ -2010,7 +2010,7 @@
                                         <div class="learn-feature-item">
                                             <div class="learn-feature-icon">
                                                 <img
-                                                src="{{\App\CentralLogics\Helpers::onerror_image_helper(data_get($item,'image'), asset('storage/app/public/admin_feature/').'/' .data_get($item,'image'), asset('public/assets/admin/img/100x100/2.jpg'),'admin_feature/')}}"
+                                                src="{{\App\CentralLogics\Helpers::get_image_helper($item,'image', asset('storage/app/public/admin_feature/').'/' .data_get($item,'image'), asset('public/assets/admin/img/100x100/2.jpg'),'admin_feature/')}}"
                                                 alt="{{$item['title'] ?? ''}}">
                                             </div>
                                             <div class="learn-feature-item-content">
@@ -3368,7 +3368,7 @@
 
                 <div class="feature-card">
                     <div class="feature-card-icon">
-                        <img  src="{{\App\CentralLogics\Helpers::onerror_image_helper($item['image'] ?? '', asset('storage/app/public/special_criteria/').'/' .$item['image']?? '', asset('public/assets/admin/img/160x160/img2.jpg'),'special_criteria/')}}"
+                        <img  src="{{\App\CentralLogics\Helpers::get_image_helper($item,'image', asset('storage/app/public/special_criteria/').'/' .$item['image']?? '', asset('public/assets/admin/img/160x160/img2.jpg'),'special_criteria/')}}"
                         alt="{{$item['title']}}"
                         class="onerror-image"  data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}">
                     </div>
@@ -3569,11 +3569,11 @@
                             <div class="text">{{translate("messages.customer")}}</div>
                         </div>
                     </div>
-                    @php($fav = \App\Models\BusinessSetting::where(['key' => 'icon'])->first()->value ?? '')
+                    @php($fav = \App\Models\BusinessSetting::where(['key' => 'icon'])->first())
                     <div class="right-side d-flex word-nowrap align-items-center">
                         <img class="onerror-image"  data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
                         src="{{ asset('storage/app/public/business/' . $fav) }}"
-                        src="{{\App\CentralLogics\Helpers::onerror_image_helper($fav, asset('storage/app/public/business/').'/' . $fav, asset('public/assets/admin/img/160x160/img2.jpg'),'business/')}}"
+                        src="{{\App\CentralLogics\Helpers::get_image_helper($fav,'value', asset('storage/app/public/business/').'/' . $fav?->value, asset('public/assets/admin/img/160x160/img2.jpg'),'business/')}}"
 
 
                         alt="image">
@@ -3640,7 +3640,7 @@
                                 <img
 
 
-                                src="{{\App\CentralLogics\Helpers::onerror_image_helper($data['reviewer_image'] , asset('storage/app/public/reviewer_image/').'/'.$data['reviewer_image'], asset('public/assets/admin/img/160x160/img2.jpg'),'reviewer_image/')}}"
+                                src="{{\App\CentralLogics\Helpers::get_image_helper($data,'reviewer_image' , asset('storage/app/public/reviewer_image/').'/'.$data['reviewer_image'], asset('public/assets/admin/img/160x160/img2.jpg'),'reviewer_image/')}}"
 
                                 alt="image">
                                 <div>
@@ -3650,7 +3650,7 @@
                             </div>
                             @if (isset($data['company_image']))
                             <img style="max-height: 35px; max-width:75px"
-                            src="{{\App\CentralLogics\Helpers::onerror_image_helper($data['company_image'] , asset('storage/app/public/reviewer_company_image/').'/'.$data['company_image'], asset('public/assets/admin/img/160x160/img2.jpg'),'reviewer_company_image/')}}"
+                            src="{{\App\CentralLogics\Helpers::get_image_helper($data, 'company_image' , asset('storage/app/public/reviewer_company_image/').'/'.$data['company_image'], asset('public/assets/admin/img/160x160/img2.jpg'),'reviewer_company_image/')}}"
                             alt="image">
                             @endif
                         </div>

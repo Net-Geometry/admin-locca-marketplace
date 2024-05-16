@@ -3285,7 +3285,7 @@ class Helpers
     public static function get_image_helper($data, $key, $src, $error_src ,$path){
 
         $image = $data[$key];
-        $storage = $data?->storage?->storage ?? 'public';
+        $storage = $data?->storage?->value ?? 'public';
 
         if(($storage  == 'public') && isset($image) && strlen($image) >1 && Storage::disk($storage)->exists($path.$image)){
             return $src;
