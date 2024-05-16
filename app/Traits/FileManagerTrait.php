@@ -11,10 +11,10 @@ trait FileManagerTrait
     {
         if ($image != null) {
             $imageName = Carbon::now()->toDateString() . "-" . uniqid() . "." . $format;
-            if (!Storage::disk('public')->exists($dir)) {
-                Storage::disk('public')->makeDirectory($dir);
+            if (!Storage::disk(self::getDisk())->exists($dir)) {
+                Storage::disk(self::getDisk())->makeDirectory($dir);
             }
-            Storage::disk('public')->putFileAs($dir, $image, $imageName);
+            Storage::disk(self::getDisk())->putFileAs($dir, $image, $imageName);
         } else {
             $imageName = 'def.png';
         }
@@ -27,9 +27,16 @@ trait FileManagerTrait
         if ($image == null) {
             return $old_image;
         }
-        if (Storage::disk('public')->exists($dir . $old_image)) {
-            Storage::disk('public')->delete($dir . $old_image);
+        if (Storage::disk(self::getDisk())->exists($dir . $old_image)) {
+            Storage::disk(self::getDisk())->delete($dir . $old_image);
         }
         return self::upload($dir, $format, $image);
+    }
+
+    public static function getDisk(): string
+    {
+        $config=\App\CentralLogics\Helpers::get_business_settings('local_storage');
+
+        return isset($config)?($config==0?'s3':'public'):'public';
     }
 }

@@ -4389,4 +4389,5 @@
   'The_Access_Key_ID_is_a_publicly_accessible_identifier_used_to_authenticate_requests_to_S3.' => 'The Access Key ID is a publicly accessible identifier used to authenticate requests to S3.',
   'Learn_More' => 'Learn More',
   'Learn_how_to_get_it.' => 'Learn how to get it.',
+  'Local Storage' => 'Local Storage',
 );

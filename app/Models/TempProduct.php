@@ -2,10 +2,14 @@
 
 namespace App\Models;
 
+use App\CentralLogics\Helpers;
 use App\Scopes\ZoneScope;
 use App\Scopes\StoreScope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Illuminate\Support\Facades\DB;
 
 class TempProduct extends Model
 {
@@ -93,6 +97,11 @@ class TempProduct extends Model
         return $this->belongsTo(Category::class, 'category_id');
     }
 
+    public function storage(): MorphOne
+    {
+        return $this->morphOne(Storage::class, 'data');
+    }
+
     protected static function booted()
     {
         if(auth('vendor')->check() || auth('vendor_employee')->check())
@@ -100,6 +109,19 @@ class TempProduct extends Model
             static::addGlobalScope(new StoreScope);
         }
         static::addGlobalScope(new ZoneScope);
+
+        static::saved(function ($model) {
+            $value = Helpers::getDisk();
+
+            DB::table('storages')->updateOrInsert([
+                'data_type' => get_class($model),
+                'data_id' => $model->id,
+            ], [
+                'value' => $value,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        });
 
     }
 }
