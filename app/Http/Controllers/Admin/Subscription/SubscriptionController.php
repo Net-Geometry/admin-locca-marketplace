@@ -7,6 +7,7 @@ use App\Models\SubscriptionPackage;
 use App\Http\Controllers\Controller;
 use App\Contracts\Repositories\TranslationRepositoryInterface;
 use App\Models\BusinessSetting;
+use App\Models\SubscriptionTransaction;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Carbon;
 
@@ -203,7 +204,47 @@ class SubscriptionController extends Controller
     }
 
 
-    public function transctions(){
+    public function transaction($id, Request $request){
+
+        $filter= $request['filter'];
+        $plan_type= $request['plan_type'];
+        $from =$request['start_date'] ?? Carbon::now()->format('Y-m-d');
+        $to =$request['expire_date'] ?? Carbon::now()->format('Y-m-d');
+
+        $key = explode(' ', $request['search']);
+        $transactions= SubscriptionTransaction::where('package_id',$id)
+        ->when(isset($key), function($query) use($key){
+            $query->where(function ($q) use ($key) {
+                foreach ($key as $value) {
+                    $q->Where('id', 'like', "%{$value}%");
+                }
+                $q->orWhereHas('store' , function ($q) use ($key) {
+                    foreach ($key as $value) {
+                    $q->where('name', 'like', "%{$value}%");
+                }
+                });
+            });
+        })
+        ->when($filter == 'this_year' , function($query){
+            $query->whereYear('created_at', Carbon::now()->year );
+        })
+        ->when($filter == 'this_month' , function($query){
+            $query->whereMonth('created_at', Carbon::now()->month );
+        })
+        ->when($filter == 'this_week' , function($query){
+            $query->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()] );
+        })
+        ->when($filter == 'custom' , function($query) use($from,$to) {
+            $query->whereBetween('created_at', [$from . " 00:00:00", $to . " 23:59:59"]);
+        })
+
+        ->when( in_array( $plan_type,['renew','new_plan','first_purchased','free_trial'])  , function($query) use($plan_type){
+            $query->where('plan_type', $plan_type );
+        })
+
+        ->latest()->paginate(config('default_pagination'));
+            $subscription_deadline_warning_days = BusinessSetting::where('key','subscription_deadline_warning_days')->first()?->value ?? 7;
+        return view('admin-views.subscription.package.transaction', compact('transactions','id','filter','subscription_deadline_warning_days'));
 
     }
     public function settings(){
@@ -249,4 +290,8 @@ class SubscriptionController extends Controller
         Toastr::success( translate('messages.Settings_Saved_Successfully'));
         return back();
     }
+    public function invoice($id){
+        return view('admin-views.subscription.subscription-invoice');
+    }
+
 }

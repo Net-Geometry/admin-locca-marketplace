@@ -27,6 +27,8 @@ return new class extends Migration
             $table->boolean('is_trial')->default(false);
             $table->tinyInteger('total_package_renewed')->default(0);
             $table->dateTime('renewed_at')->nullable();
+            $table->boolean('is_cancaled')->default(false);
+            $table->enum('canceled_by',['none','admin','store'])->default('none');
             $table->timestamps();
         });
     }

@@ -12,12 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('subscription_transactions', function (Blueprint $table) {
-            // $table->id();
-            $table->uuid('id')->primary();
+            $table->increments('id')->startFrom(1000000);
             $table->foreignId('package_id');
             $table->foreignId('store_id');
             $table->foreignId('store_subscription_id')->nullable();
             $table->double('price', 24, 3)->default(0);
+            $table->double('previous_due', 24, 3)->default(0);
             $table->integer('validity')->default(0);
             $table->string('payment_method', 191);
             $table->string('payment_status', 191);
@@ -28,6 +28,7 @@ return new class extends Migration
             $table->string('created_by', 50);
             $table->boolean('is_trial')->default(false);
             $table->boolean('transaction_status')->default(1);
+            $table->enum('plan_type',['renew','new_plan','first_purchased','free_trial'])->default('first_purchased');
             $table->timestamps();
         });
     }

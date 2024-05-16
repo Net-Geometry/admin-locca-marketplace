@@ -3566,8 +3566,9 @@ class Helpers
             $store->store_business_model= 'subscription';
 
             $subscription_transaction= new SubscriptionTransaction();
-            $subscription_transaction_ID= Str::uuid();
-            $subscription_transaction->id=  $subscription_transaction_ID;
+            // $subscription_transaction_ID= Str::uuid();
+            // $subscription_transaction->id=  $subscription_transaction_ID;
+            $subscription_transaction->store_subscription_id= $store_subscription->id;
             $subscription_transaction->package_id=$package->id;
             $subscription_transaction->store_id=$store->id;
             $subscription_transaction->price=$package->price;
@@ -3614,7 +3615,7 @@ class Helpers
             info(["line___{$e->getLine()}",$e->getMessage()]);
             return false;
         }
-        return  $subscription_transaction_ID;
+        return  $subscription_transaction->id;
     }
 
 }

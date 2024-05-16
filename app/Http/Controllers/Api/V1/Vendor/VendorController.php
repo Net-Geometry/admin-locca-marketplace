@@ -2,38 +2,40 @@
 
 namespace App\Http\Controllers\Api\V1\Vendor;
 
-use App\Models\AccountTransaction;
-use App\Models\Admin;
 use App\Models\Item;
+use App\Models\Admin;
 use App\Models\Order;
 use App\Models\Store;
+use App\Library\Payer;
 use App\Models\Coupon;
-use App\Models\StoreWallet;
 use App\Models\Vendor;
+use App\Traits\Payment;
 use App\Models\Campaign;
+use App\Library\Receiver;
+use App\Models\StoreWallet;
 use App\Models\Notification;
-use App\Models\WithdrawalMethod;
+use App\Models\OrderPayment;
 use Illuminate\Http\Request;
 use App\CentralLogics\Helpers;
 use App\Models\VendorEmployee;
 use App\Models\BusinessSetting;
 use App\Models\WithdrawRequest;
 use App\Models\UserNotification;
+use App\Models\WithdrawalMethod;
 use App\CentralLogics\OrderLogic;
 use App\CentralLogics\StoreLogic;
+use App\Models\StoreSubscription;
 use App\CentralLogics\CouponLogic;
+use App\Models\AccountTransaction;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Models\OrderPayment;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Config;
+use App\Library\Payment as PaymentInfo;
+use App\Models\SubscriptionTransaction;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
-use App\Library\Payment as PaymentInfo;
-use App\Library\Receiver;
-use App\Traits\Payment;
-use App\Library\Payer;
 
 class VendorController extends Controller
 {
@@ -138,7 +140,25 @@ class VendorController extends Controller
         unset($vendor['todaysorders']);
         unset($vendor['this_week_orders']);
         unset($vendor['this_month_orders']);
-
+        if($st->store_business_model == 'subscription'){
+            if(isset($st?->store_sub)){
+                if($st->store_sub->max_product== 'unlimited' ){
+                    $max_product_uploads= -1;
+                }
+                else{
+                    $max_product_uploads= $st?->store_sub?->max_product - $st?->item?->count();
+                    if($max_product_uploads > 0){
+                        $max_product_uploads ?? 0;
+                    }elseif($max_product_uploads < 0) {
+                        $max_product_uploads = 0;
+                    }
+                }
+                $vendor['subscription'] =StoreSubscription::where('store_id',$store->id)->with('package')->latest()->first();
+                $vendor['subscription_other_data'] =  [
+                    'total_bill'=>  (float) SubscriptionTransaction::where('store_id', $store->id)->where('package_id', $vendor['subscription']?->package?->id)->sum('paid_amount'),
+                    'max_product_uploads' => (int) $max_product_uploads];
+                }
+            }
         return response()->json($vendor, 200);
     }
 

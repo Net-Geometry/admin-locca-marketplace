@@ -1,7 +1,10 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.disbursement'))
+@section('title',translate('messages.Subscription'))
 
+@section('subscription_settings')
+active
+@endsection
 @push('css_or_js')
 
 @endpush

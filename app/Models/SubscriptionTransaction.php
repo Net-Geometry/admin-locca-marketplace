@@ -39,6 +39,10 @@ class SubscriptionTransaction extends Model
     {
         return $this->belongsTo(SubscriptionPackage::class, 'package_id', 'id');
     }
+    public function subscription()
+    {
+        return $this->belongsTo(StoreSubscription::class, 'store_subscription_id');
+    }
     protected static function booted()
     {
         static::addGlobalScope(new ZoneScope);
