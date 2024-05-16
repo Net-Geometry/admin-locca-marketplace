@@ -170,6 +170,10 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                 Route::resource('subscriptionackage', SubscriptionController::class);
                 Route::get('/status/{subscriptionackage}',  [SubscriptionController::class, 'statusChange'])->name('subscriptionackage.status');
                 Route::get('/overView/{subscriptionackage}',  [SubscriptionController::class, 'overView'])->name('subscriptionackage.overView');
+                Route::get('/transctions/{subscriptionackage}',  [SubscriptionController::class, 'transctions'])->name('subscriptionackage.transctions');
+                Route::get('/settings',  [SubscriptionController::class, 'settings'])->name('subscriptionackage.settings');
+                Route::get('/trial-status',  [SubscriptionController::class, 'trialStatus'])->name('subscriptionackage.trialStatus');
+                Route::post('/setting-update',  [SubscriptionController::class, 'settingUpdate'])->name('subscriptionackage.settingUpdate');
             });
 
 

@@ -17,6 +17,7 @@ use BeyondCode\LaravelWebSockets\Facades\WebSocketsRouter;
 
 Route::group(['namespace' => 'Api\V1', 'middleware'=>'localization'], function () {
     Route::get('zone/list', 'ZoneController@get_zones');
+    Route::get('zone/check', 'ZoneController@zonesCheck');
     Route::get('offline_payment_method_list', 'ConfigController@offline_payment_method_list');
     Route::group(['prefix' => 'auth', 'namespace' => 'Auth'], function () {
         Route::post('sign-up', 'CustomerAuthController@register');

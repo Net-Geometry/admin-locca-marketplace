@@ -49,13 +49,45 @@
                     <small class="nav-subtitle" title="{{ translate('messages.business_settings') }}">{{ translate('messages.business_management') }}</small>
                     <small class="tio-more-horizontal nav-subtitle-replacer"></small>
                 </li>
-                <li class="navbar-vertical-aside-has-menu @yield('subscription_index')">
-                    <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.business-settings.subscriptionackage.index') }}" title="{{ translate('messages.subscription') }}">
-                        <i class="tio-city nav-icon"></i>
-                        <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                            {{ translate('messages.subscription') }} </span>
+
+
+                <li class="navbar-vertical-aside-has-menu @yield('subscription')">
+                    <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" id="tourb-3" href="javascript:" title="{{ translate('messages.subscription_management') }}">
+                        <i class="tio-globe nav-icon"></i>
+                        <span class="text-truncate">{{ translate('messages.subscription_management') }}</span>
                     </a>
+                    <ul class="js-navbar-vertical-aside-submenu nav nav-sub" style="display:{{ Request::is('admin/business-settings/subscription*') ? 'block' : 'none' }}">
+                        <li class="navbar-vertical-aside-has-menu @yield('subscription_index')">
+                            <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{  route('admin.business-settings.subscriptionackage.index') }}" title="{{ translate('messages.subscription_Package') }}">
+                                <span class="tio-circle nav-indicator-icon"></span>
+                                <span class="text-truncate">
+                                    {{ translate('messages.subscription_Package') }}
+                                </span>
+                            </a>
+                        </li>
+                        <li class="navbar-vertical-aside-has-menu  @yield('subscription_settings')">
+                            <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.business-settings.subscriptionackage.settings') }}" title="{{ translate('messages.settings') }}">
+                                <span class="tio-circle nav-indicator-icon"></span>
+                                <span class="text-truncate">
+                                    {{ translate('messages.settings') }}
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
+
+
+
+
+
+
+
+
+
+
+
+
+
                 @if (\App\CentralLogics\Helpers::module_permission_check('zone'))
                 <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/zone*') ? 'active' : '' }}">
                     <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.business-settings.zone.home') }}" title="{{ translate('messages.zone_setup') }}">

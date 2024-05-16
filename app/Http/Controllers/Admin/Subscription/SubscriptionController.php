@@ -19,16 +19,27 @@ class SubscriptionController extends Controller
     )
     {
     }
-    public function index()
+    public function index(Request $request)
     {
-        $packages=  SubscriptionPackage::withcount('currentSubscribers')->latest()->paginate(config('default_pagination'));
-        return view('admin-views.subscription.1-subscription',compact('packages'));
+        $key = explode(' ', $request['search']);
+        $packages=  SubscriptionPackage::withcount('currentSubscribers')
+        ->when(isset($key), function($q) use($key){
+            $q->where(function ($q) use ($key) {
+                foreach ($key as $value) {
+                    $q->orWhere('package_name', 'like', "%{$value}%")
+                        ->orWhere('price', 'like', "%{$value}%")
+                        ->orWhere('validity', 'like', "%{$value}%");
+                }
+            });
+        })
+        ->latest()->paginate(config('default_pagination'));
+        return view('admin-views.subscription.package.index',compact('packages'));
     }
     public function create()
     {
         $language = getWebConfig('language');
         $defaultLang = str_replace('_', '-', app()->getLocale());
-        return view('admin-views.subscription.3-subscription', compact('language','defaultLang'));
+        return view('admin-views.subscription.package.create', compact('language','defaultLang'));
     }
     public function store(Request $request)
     {
@@ -84,14 +95,14 @@ class SubscriptionController extends Controller
     public function show(SubscriptionPackage $subscriptionackage)
     {
         $over_view_data= $this->packageOverview($subscriptionackage);
-        return view('admin-views.subscription.package-details', compact('subscriptionackage','over_view_data'));
+        return view('admin-views.subscription.package.package-details', compact('subscriptionackage','over_view_data'));
     }
     public function edit(SubscriptionPackage $subscriptionackage)
     {
         $subscriptionackage->load('translations')->withoutGlobalScope('translate');
         $language = getWebConfig('language');
         $defaultLang = str_replace('_', '-', app()->getLocale());
-        return view('admin-views.subscription.edit', compact('language','defaultLang','subscriptionackage'));
+        return view('admin-views.subscription.package.edit', compact('language','defaultLang','subscriptionackage'));
     }
 
     public function update(SubscriptionPackage $subscriptionackage, Request $request)
@@ -189,5 +200,53 @@ class SubscriptionController extends Controller
 
         return $data;
 
+    }
+
+
+    public function transctions(){
+
+    }
+    public function settings(){
+
+        $key=['subscription_deadline_warning_days','subscription_deadline_warning_message','subscription_free_trial_days','subscription_free_trial_type','subscription_free_trial_status'];
+        $settings=BusinessSetting::whereIn('key', $key)->pluck('value','key');
+        return view('admin-views.subscription.settings.setting', compact('settings'));
+
+    }
+    public function trialStatus(){
+        $status = BusinessSetting::firstOrNew([
+            'key' => 'subscription_free_trial_status'
+        ]);
+        $status->value =  $status->value != 1 ?  1 : 0;
+        $status->save();
+        Toastr::success($status->value == 1 ? translate('messages.Free_Trial_Activated_Successfully') : translate('messages.Free_Trial_Disabled_Successfully'));
+        return back();
+    }
+    public function settingUpdate(Request $request){
+
+        $key=['subscription_deadline_warning_days','subscription_deadline_warning_message','subscription_free_trial_days','subscription_free_trial_type','subscription_free_trial_status'];
+            foreach ($request->all() as $k => $value) {
+
+                if(in_array($k, $key) ){
+                    $status = BusinessSetting::firstOrNew([
+                        'key' => $k
+                    ]);
+                    if( $k == 'subscription_free_trial_days'){
+                        if($request->subscription_free_trial_type == 'year'){
+                            $value = $value * 365;
+                        } else if($request->subscription_free_trial_type == 'month'){
+                            $value = $value * 30;
+                        } else{
+                            $value = $value;
+                        }
+                    }
+
+                    $status->value =  $value;
+                    $status->save();
+                }
+            }
+
+        Toastr::success( translate('messages.Settings_Saved_Successfully'));
+        return back();
     }
 }

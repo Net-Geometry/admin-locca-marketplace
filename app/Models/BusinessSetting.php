@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class BusinessSetting extends Model
 {
+    protected $guarded = ['id'];
     public function translations()
     {
         return $this->morphMany(Translation::class, 'translationable');
