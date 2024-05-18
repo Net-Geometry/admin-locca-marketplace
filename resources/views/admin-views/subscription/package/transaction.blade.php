@@ -86,7 +86,7 @@ active
             <div class="card-header flex-wrap py-2 border-0">
                 <div class="d-flex align-items-center gap-2 mb-2">
                     <h4 class="mb-0">{{ translate('Transaction_History') }}</h4>
-                    <span class="badge badge-soft-dark rounded-circle">75</span>
+                    <span class="badge badge-soft-dark rounded-circle">{{ $transactions->total() }}</span>
                 </div>
                 <div class="search--button-wrapper justify-content-end">
                     <div class="max-sm-flex-1">
@@ -108,7 +108,7 @@ active
                     </div>
                     <form class="search-form">
                         <div class="input-group input--group">
-                            <input name="search" type="search" value="" class="form-control h--40px" placeholder="Ex : Search by ID or store name" aria-label="Search here">
+                            <input name="search" type="search" value="{{ request()?->search }}" class="form-control h--40px" placeholder="{{ translate('Ex : Search by ID or store name') }}" aria-label="Search here">
                             <button type="submit" class="btn btn--secondary h--40px"><i class="tio-search"></i></button>
                         </div>
                     </form>
@@ -228,6 +228,20 @@ active
                         </tbody>
                     </table>
                 </div>
+                @if(count($transaction) !== 0)
+                <hr>
+                @endif
+                <div class="page-area">
+                    {!! $transaction->withQueryString()->links() !!}
+                </div>
+                @if(count($transaction) === 0)
+                <div class="empty--data">
+                    <img src="{{asset('/public/assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
+                    <h5>
+                        {{translate('no_data_found')}}
+                    </h5>
+                </div>
+                @endif
             </div>
         </div>
     </div>

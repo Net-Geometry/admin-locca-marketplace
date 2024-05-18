@@ -175,6 +175,14 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                 Route::get('/trial-status',  [SubscriptionController::class, 'trialStatus'])->name('subscriptionackage.trialStatus');
                 Route::post('/setting-update',  [SubscriptionController::class, 'settingUpdate'])->name('subscriptionackage.settingUpdate');
                 Route::get('/invoice/{id}',  [SubscriptionController::class, 'invoice'])->name('subscriptionackage.invoice');
+
+                Route::get('/subscriber-list',  [SubscriptionController::class, 'subscriberList'])->name('subscriptionackage.subscriberList');
+                Route::post('/cancel-subscription/{id}',  [SubscriptionController::class, 'cancelSubscription'])->name('subscriptionackage.cancelSubscription');
+                Route::post('/switch-to-commission/{id}',  [SubscriptionController::class, 'switchToCommission'])->name('subscriptionackage.switchToCommission');
+                Route::get('/subscriber-detail/{id}',  [SubscriptionController::class, 'subscriberDetail'])->name('subscriptionackage.subscriberDetail');
+                Route::get('/package-view/{id}/{store_id}',  [SubscriptionController::class, 'packageView'])->name('subscriptionackage.packageView');
+
+                Route::post('/package-buy',  [SubscriptionController::class, 'packageBuy'])->name('subscriptionackage.packageBuy');
             });
 
 

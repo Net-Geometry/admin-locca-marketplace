@@ -33,11 +33,11 @@ class SubscriptionTransaction extends Model
 
     public function store()
     {
-        return $this->hasOne(Store::class,'id', 'store_id');
+        return $this->hasOne(Store::class,'id', 'store_id')->withoutGlobalScopes();
     }
     public function package()
     {
-        return $this->belongsTo(SubscriptionPackage::class, 'package_id', 'id');
+        return $this->belongsTo(SubscriptionPackage::class, 'package_id', 'id')->withoutGlobalScopes();
     }
     public function subscription()
     {

@@ -65,6 +65,14 @@
                                 </span>
                             </a>
                         </li>
+                        <li class="navbar-vertical-aside-has-menu  @yield('subscriberList')">
+                            <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.business-settings.subscriptionackage.subscriberList') }}" title="{{ translate('messages.Subscriber_List') }}">
+                                <span class="tio-circle nav-indicator-icon"></span>
+                                <span class="text-truncate">
+                                    {{ translate('messages.Subscriber_List') }}
+                                </span>
+                            </a>
+                        </li>
                         <li class="navbar-vertical-aside-has-menu  @yield('subscription_settings')">
                             <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.business-settings.subscriptionackage.settings') }}" title="{{ translate('messages.settings') }}">
                                 <span class="tio-circle nav-indicator-icon"></span>

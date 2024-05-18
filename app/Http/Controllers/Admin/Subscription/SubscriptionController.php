@@ -2,15 +2,19 @@
 
 namespace App\Http\Controllers\Admin\Subscription;
 
+use App\Models\Store;
+use App\Models\StoreWallet;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use App\Models\BusinessSetting;
+use App\Models\StoreSubscription;
+use Illuminate\Support\Facades\DB;
 use App\Models\SubscriptionPackage;
 use App\Http\Controllers\Controller;
-use App\Contracts\Repositories\TranslationRepositoryInterface;
-use App\Models\BusinessSetting;
-use App\Models\SubscriptionTransaction;
 use Brian2694\Toastr\Facades\Toastr;
-use Illuminate\Support\Carbon;
-
+use Illuminate\Support\Facades\Schema;
+use App\Models\SubscriptionTransaction;
+use App\Contracts\Repositories\TranslationRepositoryInterface;
 
 class SubscriptionController extends Controller
 {
@@ -292,6 +296,173 @@ class SubscriptionController extends Controller
     }
     public function invoice($id){
         return view('admin-views.subscription.subscription-invoice');
+    }
+
+
+    public function subscriberList(Request $request){
+        $key = explode(' ', $request['search']);
+
+        $subscribers= Store::whereIn('store_business_model' ,['subscription','unsubscribed'])->with([
+            'store_sub_update_application.package'
+        ])
+
+        ->when(isset($key), function($query) use($key){
+            $query->where(function ($q) use ($key) {
+                foreach ($key as $value) {
+                    $q->Where('name', 'like', "%{$value}%");
+                }
+                $q->orWhereHas('store_sub_update_application.package' , function ($q) use ($key) {
+                    foreach ($key as $value) {
+                    $q->where('package_name', 'like', "%{$value}%");
+                }
+                });
+            });
+        })
+        ->when(isset($request->zone_id) && is_numeric($request->zone_id), function ($query) use ($request) {
+            return $query->where('zone_id', $request->zone_id);
+        })
+
+
+        ->when(isset($request->subscription_type) && $request->subscription_type == 'active', function ($query) use ($request) {
+            return $query->whereHas('store_sub_update_application', function ($q) use ($request) {
+                return $q->where('status',1);
+            });
+        })
+        ->when(isset($request->subscription_type) && $request->subscription_type == 'expired', function ($query) use ($request) {
+            return $query->whereHas('store_sub_update_application', function ($q) use ($request) {
+                return $q->where('status',0);
+            });
+        })
+        ->when(isset($request->subscription_type) && $request->subscription_type == 'cancaled', function ($query) use ($request) {
+            return $query->whereHas('store_sub_update_application', function ($q) use ($request) {
+                return $q->where('is_cancaled',1);
+            });
+        })
+        ->when(isset($request->subscription_type) && $request->subscription_type == 'free_trial', function ($query) use ($request) {
+            return $query->whereHas('store_sub_update_application', function ($q) use ($request) {
+                return $q->where('is_trial',1);
+            });
+        })
+        ->latest()->paginate(config('default_pagination'));
+
+        $data=[];
+        $subscription_deadline_warning_days = BusinessSetting::where('key','subscription_deadline_warning_days')->first()?->value ?? 7;
+
+        $totalSubscribersData= StoreSubscription::when(isset($request->zone_id) && is_numeric($request->zone_id), function ($query) use ($request) {
+            return $query->whereHas('store', function ($q) use ($request) {
+                return $q->where('zone_id', $request->zone_id);
+            });
+        })
+        ->selectRaw('COUNT(DISTINCT store_id) AS total_subscribers,
+        COUNT(DISTINCT CASE WHEN status = 1 THEN store_id END) AS active_subscriptions,
+        COUNT(DISTINCT CASE WHEN status = 0 THEN store_id END) AS expired_subscriptions,
+        COUNT(DISTINCT CASE WHEN status = 1 AND expiry_date <= ? THEN store_id END) AS expired_soon',
+        [Carbon::today()->addDays($subscription_deadline_warning_days)])
+        ->first();
+
+            $data['total_subscribed_user']= $totalSubscribersData['total_subscribers'];
+            $data['active_subscription']= $totalSubscribersData['active_subscriptions'];
+            $data['expired_subscription']= $totalSubscribersData['expired_subscriptions'];
+            $data['expired_soon']= $totalSubscribersData['expired_soon'];
+
+
+
+            $totals= SubscriptionTransaction::where('is_trial',0)
+            ->when(isset($request->zone_id) && is_numeric($request->zone_id), function ($query) use ($request) {
+                return $query->whereHas('store', function ($q) use ($request) {
+                    return $q->where('zone_id', $request->zone_id);
+                });
+            })
+            ->selectRaw('  COUNT(*) as total_transactions,
+                SUM(paid_amount) as total_paid_amount,
+                SUM(CASE WHEN MONTH(created_at) = ? AND YEAR(created_at) = ? THEN paid_amount ELSE 0 END) as current_month_paid_amount ', [Carbon::now()->month, Carbon::now()->year])
+            ->first();
+
+            $data['total_transactions']= $totals['total_transactions'];
+            $data['total_paid_amount']= $totals['total_paid_amount'];
+            $data['current_month_paid_amount']= $totals['current_month_paid_amount'];
+
+        return view('admin-views.subscription.subscriber.list',compact('subscribers','data'));
+
+    }
+    public function subscriberDetail($id){
+        $store= Store::where('id',$id)->with([
+            'store_sub_update_application.package','vendor','store_sub_update_application.last_transcations'
+        ])
+        ->first();
+        $packages = SubscriptionPackage::where('status',1)->latest()->get();
+        $admin_commission=BusinessSetting::where('key', 'admin_commission')->first()?->value ;
+        $business_name=BusinessSetting::where('key', 'business_name')->first()?->value ;
+
+        return view('admin-views.subscription.subscriber.vendor-subscription',compact('store','packages','business_name','admin_commission'));
+    }
+    public function cancelSubscription(Request $request, $id){
+
+        StoreSubscription::where(['store_id' => $id, 'id'=>$request->subscription_id])->update([
+            'is_cancaled' => 1,
+            'canceled_by' => 'admin',
+        ]);
+        return response()->json(200);
+
+    }
+    public function switchToCommission($id){
+
+        StoreSubscription::where(['store_id' => $id])->update([
+            'status' => 0,
+        ]);
+        Store::where('id',$id)->update([
+            'store_business_model' => 'commission',
+        ]);
+        return response()->json(200);
+
+    }
+    public function packageView($id,$store_id){
+        $store_subscription= StoreSubscription::where('store_id', $store_id)->with(['package'])->latest()->first();
+        $package = SubscriptionPackage::where('status',1)->where('id',$id)->first();
+
+        $store= Store::Where('id',$store_id)->first(['id','vendor_id']);
+
+        $balance = BusinessSetting::where('key', 'wallet_status')->first()?->value == 1 ? StoreWallet::where('vendor_id',$store->vendor_id)->first()?->balance ?? 0 : 0;
+        $payment_methods = $this->getDefaultPaymentMethods();
+        return response()->json([
+            'view' => view('admin-views.subscription.subscriber.partials._package_selected', compact('store_subscription','package','store_id','balance','payment_methods'))->render()
+        ]);
+
+    }
+    public function packageBuy(Request $request){
+        dd($request->all());
+    }
+
+
+
+
+
+
+
+
+    private function getDefaultPaymentMethods()
+    {
+        if (!Schema::hasTable('addon_settings')) {
+            return [];
+        }
+
+        $methods = DB::table('addon_settings')->where('is_active',1)->whereIn('settings_type', ['payment_config'])->whereIn('key_name', ['ssl_commerz','paypal','stripe','razor_pay','senang_pay','paytabs','paystack','paymob_accept','paytm','flutterwave','liqpay','bkash','mercadopago'])->get();
+        $env = env('APP_ENV') == 'live' ? 'live' : 'test';
+        $credentials = $env . '_values';
+
+        $data = [];
+        foreach ($methods as $method) {
+            $credentialsData = json_decode($method->$credentials);
+            $additional_data = json_decode($method->additional_data);
+            if ($credentialsData->status == 1) {
+                $data[] = [
+                    'gateway' => $method->key_name,
+                    'gateway_title' => $additional_data?->gateway_title,
+                    'gateway_image' => $additional_data?->gateway_image
+                ];
+            }
+        }
+        return $data;
     }
 
 }

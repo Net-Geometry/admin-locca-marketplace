@@ -70,7 +70,7 @@ class SubscriptionController extends Controller
                 return response()->json(['id'=>$status],200);
             }
             $data=[
-            'store_model' => 'subscription',
+            'store_business_model' => 'subscription',
             'logo'=> $store->logo,
             'message' => translate('messages.application_placed_successfully')
             ];
@@ -78,10 +78,10 @@ class SubscriptionController extends Controller
         }
 
         elseif($request->business_plan == 'commission' ){
-            $store->store_model = 'commission';
+            $store->store_business_model = 'commission';
             $store->save();
 
-        $data=['store_model' => 'commission',
+        $data=['store_business_model' => 'commission',
         'logo'=> $store->logo,
         'message' => translate('messages.application_placed_successfully')
         ];
@@ -133,5 +133,55 @@ class SubscriptionController extends Controller
             // 'type'=> 'subscription'
         ];
         return response()->json($data, 200);
+    }
+
+
+    public function transaction(Request $request)
+    {
+
+        $validator = Validator::make($request->all(), [
+            'limit' => 'required',
+            'offset' => 'required',
+            'from' => 'required',
+            'to' => 'required',
+        ]);
+
+        $key = explode(' ', $request['search']);
+        if ($validator->fails()) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        }
+        $limit = $request['limite']??25;
+        $offset = $request['offset']??1;
+        $from = $request->from;
+        $to = $request->to;
+        $store_id = $request->vendor->stores[0]->id;
+
+        $transactions=  SubscriptionTransaction::where('store_id', $store_id)->latest()
+        ->with('store:id,name','package:id,package_name')
+        ->when(isset($key), function($query) use($key){
+            $query->where(function ($q) use ($key) {
+                foreach ($key as $value) {
+                    $q->Where('id', 'like', "%{$value}%");
+                }
+                $q->orWhereHas('store' , function ($q) use ($key) {
+                    foreach ($key as $value) {
+                    $q->where('name', 'like', "%{$value}%");
+                }
+                });
+            });
+        })
+        ->when(isset($from) &&  isset($to) ,function($query) use($from,$to){
+            $query->whereBetween('created_at', [$from.' 00:00:00', $to.' 23:59:29']);
+        })
+
+        ->paginate($limit, ['*'], 'page', $offset);
+
+            $data = [
+                'total_size' => $transactions->total(),
+                'limit' => $limit,
+                'offset' => $offset,
+                'transactions' => $transactions->items()
+            ];
+            return response()->json($data,200);
     }
 }

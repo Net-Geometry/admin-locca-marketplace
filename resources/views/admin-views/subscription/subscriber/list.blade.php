@@ -1,6 +1,10 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.disbursement'))
+@section('title',translate('messages.Subscriber_List'))
+
+@section('subscriberList')
+active
+@endsection
 
 @push('css_or_js')
 
@@ -22,8 +26,8 @@
                 <div class="min--200">
                     <select name="zone_id" class="form-control js-select2-custom set-filter" data-url="{{ url()->full() }}" data-filter="zone_id" id="zone">
                         <option value="all">{{translate('All Zones')}}</option>
-                        @foreach(\App\Models\Zone::orderBy('name')->get() as $z)
-                            <option value="{{$z['id']}}" {{isset($zone) && $zone->id == $z['id']?'selected':''}}>
+                        @foreach(\App\Models\Zone::orderBy('name')->get(['id','name']) as $z)
+                            <option value="{{$z['id']}}" {{ request()?->zone_id == $z['id']?'selected':''}}>
                                 {{($z['name'])}}
                             </option>
                         @endforeach
@@ -35,29 +39,29 @@
             <div class="row g-3">
                 <div class="col-sm-6 col-lg-3">
                     <a class="__card-2 __bg-1" href="#">
-                        <h4 class="title text--title">2,324</h4>
-                        <span class="subtitle">Total Subscribed User</span>
+                        <h4 class="title text--title">{{ $data['total_subscribed_user'] }}</h4>
+                        <span class="subtitle">{{ translate('Total_Subscribed_User') }}</span>
                         <img src="{{asset('public/assets/admin/img/subscription-plan/subscribed-user.png')}}" alt="report/new" class="card-icon" width="35px">
                     </a>
                 </div>
                 <div class="col-sm-6 col-lg-3">
                     <a class="__card-2 __bg-3" href="#">
-                        <h4 class="title text--title">2,000</h4>
-                        <span class="subtitle">Active Subscriptions</span>
+                        <h4 class="title text--title">{{ $data['active_subscription'] }}</h4>
+                        <span class="subtitle">{{ translate('Active_Subscriptions') }}</span>
                         <img src="{{asset('public/assets/admin/img/subscription-plan/active-user.png')}}" alt="report/new" class="card-icon" width="35px">
                     </a>
                 </div>
                 <div class="col-sm-6 col-lg-3">
                     <a class="__card-2 __bg-6" href="#">
-                        <h4 class="title text--title">324</h4>
-                        <span class="subtitle">Expired Subscription</span>
+                        <h4 class="title text--title">{{ $data['expired_subscription'] }}</h4>
+                        <span class="subtitle">{{ translate('Expired_Subscription') }}</span>
                         <img src="{{asset('public/assets/admin/img/subscription-plan/expired-user.png')}}" alt="report/new" class="card-icon" width="35px">
                     </a>
                 </div>
                 <div class="col-sm-6 col-lg-3">
                     <a class="__card-2 __bg-4" href="#">
-                        <h4 class="title text--title">324</h4>
-                        <span class="subtitle">Expiring Soon </span>
+                        <h4 class="title text--title">{{ $data['expired_soon'] }}</h4>
+                        <span class="subtitle">{{ translate('Expiring_Soon') }} </span>
                         <img src="{{asset('public/assets/admin/img/subscription-plan/expired-soon.png')}}" alt="report/new" class="card-icon" width="35px">
                     </a>
                 </div>
@@ -67,51 +71,54 @@
             <li class="text--info">
                 <i class="tio-document-text-outlined"></i>
                 <div>
-                    <span>Total transactions</span> <strong>0</strong>
+                    <span> {{ translate('Total_transactions') }} </span> <strong> {{ $data['total_transactions']  }}</strong>
                 </div>
             </li>
             <li class="seperator"></li>
             <li class="text--success">
                 <i class="tio-checkmark-circle-outlined success--icon"></i>
                 <div>
-                    <span>Total earning</span> <strong>0.00 ৳</strong>
+                    <span> {{ translate('Total_earning') }} </span> <strong> {{ \App\CentralLogics\Helpers::format_currency($data['total_paid_amount'])  }}</strong>
                 </div>
             </li>
             <li class="seperator"></li>
             <li class="text--warning">
                 <i class="tio-atm"></i>
                 <div>
-                    <span>EARNED THIS MONTH</span> <strong>0.00 ৳</strong>
+                    <span> {{ translate('EARNED_THIS_MONTH') }} </span> <strong> {{ \App\CentralLogics\Helpers::format_currency($data['current_month_paid_amount'])  }}</strong>
                 </div>
             </li>
         </ul>
         <div class="card">
             <div class="card-header flex-wrap py-2 border-0">
                 <div class="d-flex align-items-center gap-2 mb-2">
-                    <h4 class="mb-0">Store List</h4>
-                    <span class="badge badge-soft-dark rounded-circle">75</span>
+                    <h4 class="mb-0">{{ translate('Store_List') }}</h4>
+                    <span class="badge badge-soft-dark rounded-circle">{{ $subscribers->total() }}</span>
                 </div>
                 <div class="search--button-wrapper justify-content-end">
                     <div class="max-sm-flex-1">
-                        <select class="custom-select h--40px py-0 status-filter">
-                            <option value="all">
-                                All Subscription
+                        <select   name="subscription_type"  data-url="{{ url()->full() }}" data-filter="subscription_type" class="custom-select h--40px py-0 status-filter set-filter" >
+                            <option {{ request()?->subscription_type == 'all' ? 'selected' : '' }}  value="all">
+                                {{ translate('all') }}
                             </option>
-                            <option value="approved">
-                                Approved Subscription
+                            <option {{ request()?->subscription_type == 'active' ? 'selected' : '' }}  value="active">
+                                {{ translate('active') }}
                             </option>
-                            <option value="denied">
-                                Denied Subscription
+                            <option {{ request()?->subscription_type == 'expired' ? 'selected' : '' }}  value="expired">
+                                {{ translate('expired') }}
                             </option>
-                            <option value="pending">
-                                Pending Subscription
+                            <option {{ request()?->subscription_type == 'cancaled' ? 'selected' : '' }}  value="cancaled">
+                                {{ translate('cancaled') }}
+                            </option>
+                            <option {{ request()?->subscription_type == 'is_trial' ? 'selected' : '' }}  value="is_trial">
+                                {{ translate('Free_trial') }}
                             </option>
 
                         </select>
                     </div>
                     <form class="search-form">
                         <div class="input-group input--group">
-                            <input name="search" type="search" value="" class="form-control h--40px" placeholder="Ex :Search by name & package name" aria-label="Search here">
+                            <input name="search" type="search" value="{{ request()?->search }}" class="form-control h--40px" placeholder="{{ translate('Ex :Search by name & package name') }}" aria-label="Search here">
                             <button type="submit" class="btn btn--secondary h--40px"><i class="tio-search"></i></button>
                         </div>
                     </form>
@@ -156,133 +163,87 @@
                 <div class="table-responsive">
                     <table class="table table-borderless middle-align __txt-14px">
                         <thead class="thead-light white--space-false">
-                            <th class="border-top px-4 border-bottom text-center">SL</th>
-                            <th class="border-top px-4 border-bottom">Store Info</th>
-                            <th class="border-top px-4 border-bottom">Package Name</th>
-                            <th class="border-top px-4 border-bottom">Package Price</th>
-                            <th class="border-top px-4 border-bottom">Exp Date</th>
-                            <th class="border-top px-4 border-bottom">Used</th>
-                            <th class="border-top px-4 border-bottom text-center">Status</th>
-                            <th class="border-top px-4 border-bottom text-center">Action</th>
+                            <th class="border-top px-4 border-bottom text-center">{{ translate('sl') }}</th>
+                            <th class="border-top px-4 border-bottom"> {{ translate('Store Info') }}  </th>
+                            <th class="border-top px-4 border-bottom"> {{ translate('Package Name') }} </th>
+                            <th class="border-top px-4 border-bottom"> {{ translate('Package Price') }}  </th>
+                            <th class="border-top px-4 border-bottom"> {{ translate('Exp Date') }}  </th>
+                            <th class="border-top px-4 border-bottom"> {{ translate('Used') }}  </th>
+                            <th class="border-top px-4 border-bottom text-center">{{ translate('Status') }} </th>
+                            <th class="border-top px-4 border-bottom text-center">{{ translate('Action') }} </th>
                         </thead>
                         <tbody>
+                            @foreach ($subscribers as $k=> $subscriber)
+
                             <tr>
-                                <td class="px-4 text-center">1</td>
+                                <td class="px-4 text-center">{{ $k + $subscribers->firstItem() }}</td>
                                 <td class="px-4">
-                                    <a href="" alt="view restaurant" class="table-rest-info">
-                                        <img src="">
+                                    <a href="{{route('admin.store.view', $subscriber->id)}}" alt="view restaurant" class="table-rest-info">
+                                        <img src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
+                                            $subscriber['logo'] ?? '',
+                                            asset('storage/app/public/store').'/'.$subscriber['logo'] ?? '',
+                                            asset('public/assets/admin/img/160x160/img1.jpg'),
+                                            'store/'
+                                        ) }}">
                                         <div class="info">
                                             <span class="d-block text-title">
-                                                Green Mart<br>
+                                                {{ $subscriber->name }}<br>
                                                 <span class="rating text-star"><i class="tio-star"></i> 0</span>
                                             </span>
                                         </div>
                                     </a>
                                 </td>
                                 <td class="px-4">
-                                    <div>Standard</div>
+                                    <div>{{ $subscriber?->store_sub_update_application?->package?->package_name }}</div>
                                 </td>
                                 <td class="px-4">
-                                    <div class="text-title">$399</div>
+                                    <div class="text-title">{{  \App\CentralLogics\Helpers::format_currency($subscriber?->store_sub_update_application?->package?->price) }}</div>
                                 </td>
                                 <td class="px-4">
-                                    <div class="text-title">01-Jul-2023</div>
+                                    <div class="text-title">{{  \App\CentralLogics\Helpers::date_format($subscriber?->store_sub_update_application?->expiry_date) }}</div>
                                 </td>
                                 <td class="px-4">
-                                    <div class="text-title pl-3">02</div>
+                                    <div class="text-title pl-3">{{ $subscriber?->store_sub_update_application?->total_package_renewed + 1 }}</div>
                                 </td>
                                 <td class="px-4 text-center">
                                     <div>
-                                        <span class="badge badge-soft-success">Active</span>
+                                        @if ($subscriber?->store_sub_update_application?->is_cancaled == 1)
+                                        <span class="badge badge-soft-warning">{{ translate('canceled') }}</span>
+                                        @elseif($subscriber?->store_sub_update_application?->status == 0)
+                                        <span class="badge badge-soft-danger">{{ translate('Expired') }}</span>
+                                        @elseif($subscriber?->store_sub_update_application?->status == 1)
+                                        <span class="badge badge-soft-success">{{ translate('Active') }}</span>
+                                        @endif
                                     </div>
                                 </td>
                                 <td class="px-4">
                                     <div class="btn--container justify-content-center">
-                                        <a class="btn action-btn btn--warning btn-outline-warning" href="">
+                                        <a class="btn action-btn btn--warning btn-outline-warning" href="{{ route('admin.business-settings.subscriptionackage.subscriberDetail',$subscriber->id) }}">
                                             <i class="tio-invisible"></i>
                                         </a>
                                     </div>
                                 </td>
                             </tr>
-                            <tr>
-                                <td class="px-4 text-center">2</td>
-                                <td class="px-4">
-                                    <a href="" alt="view restaurant" class="table-rest-info">
-                                        <img src="">
-                                        <div class="info">
-                                            <span class="d-block text-title">
-                                                Green Mart<br>
-                                                <span class="rating text-star"><i class="tio-star"></i> 0</span>
-                                            </span>
-                                        </div>
-                                    </a>
-                                </td>
-                                <td class="px-4">
-                                    <div>Standard</div>
-                                </td>
-                                <td class="px-4">
-                                    <div class="text-title">$399</div>
-                                </td>
-                                <td class="px-4">
-                                    <div class="text-title">01-Jul-2023</div>
-                                </td>
-                                <td class="px-4">
-                                    <div class="text-title pl-3">02</div>
-                                </td>
-                                <td class="px-4 text-center">
-                                    <div>
-                                        <span class="badge badge-soft-success">Active</span>
-                                    </div>
-                                </td>
-                                <td class="px-4">
-                                    <div class="btn--container justify-content-center">
-                                        <a class="btn action-btn btn--warning btn-outline-warning" href="">
-                                            <i class="tio-invisible"></i>
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="px-4 text-center">3</td>
-                                <td class="px-4">
-                                    <a href="" alt="view restaurant" class="table-rest-info">
-                                        <img src="">
-                                        <div class="info">
-                                            <span class="d-block text-title">
-                                                Green Mart<br>
-                                                <span class="rating text-star"><i class="tio-star"></i> 0</span>
-                                            </span>
-                                        </div>
-                                    </a>
-                                </td>
-                                <td class="px-4">
-                                    <div>Standard</div>
-                                </td>
-                                <td class="px-4">
-                                    <div class="text-title">$399</div>
-                                </td>
-                                <td class="px-4">
-                                    <div class="text-title">01-Jul-2023</div>
-                                </td>
-                                <td class="px-4">
-                                    <div class="text-title pl-3">02</div>
-                                </td>
-                                <td class="px-4 text-center">
-                                    <div>
-                                        <span class="badge badge-soft-success">Active</span>
-                                    </div>
-                                </td>
-                                <td class="px-4">
-                                    <div class="btn--container justify-content-center">
-                                        <a class="btn action-btn btn--warning btn-outline-warning" href="">
-                                            <i class="tio-invisible"></i>
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
+
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
+
+                @if(count($subscribers) !== 0)
+                <hr>
+                @endif
+                <div class="page-area">
+                    {!! $subscribers->withQueryString()->links() !!}
+                </div>
+                @if(count($subscribers) === 0)
+                <div class="empty--data">
+                    <img src="{{asset('/public/assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
+                    <h5>
+                        {{translate('no_data_found')}}
+                    </h5>
+                </div>
+                @endif
             </div>
         </div>
     </div>

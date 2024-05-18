@@ -38,6 +38,10 @@ class StoreSubscription extends Model
     {
         return $this->hasMany(SubscriptionTransaction::class,'store_id');
     }
+    public function last_transcations()
+    {
+        return $this->hasOne(SubscriptionTransaction::class,'store_subscription_id')->latestOfMany();
+    }
     public function store()
     {
         return $this->belongsTo(Store::class);

@@ -73,7 +73,7 @@
                         <span>{{ translate('Total Earning') }}</span>
                     </h6>
                     <span class="card-title text-danger">
-                        $ {{ \App\CentralLogics\Helpers::format_currency($over_view_data['total_amount'])  }}
+                        {{ \App\CentralLogics\Helpers::format_currency($over_view_data['total_amount'])  }}
                     </span>
                 </div>
             </a>
