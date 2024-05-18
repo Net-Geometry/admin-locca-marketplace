@@ -3291,7 +3291,7 @@ class Helpers
             $image = $data->$key;
         }elseif ((is_array($data) && array_key_exists($key, $data))) {
             $image = $data[$key] ?? '';
-        }else {
+        }elseif(!(is_array($data)) && (get_class($data) != 'stdClass')) {
             $image = is_object($data) ? $data->$key : ($data[$key] ?? '');
         }
 
@@ -3299,7 +3299,7 @@ class Helpers
             $storage = $data->storage->value;
         } elseif (is_array($data) && array_key_exists('storage', $data) && is_array($data['storage']) && array_key_exists('value', $data['storage'])) {
             $storage = $data['storage']['value'];
-        }else{
+        }elseif(!(is_array($data)) && (get_class($data) != 'stdClass')) {
             $storage = is_object($data)?$data?->storage?->value:($data['storage']?$data['storage']['value']:'public');
         }
 
