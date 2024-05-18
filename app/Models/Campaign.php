@@ -95,11 +95,24 @@ class Campaign extends Model
 
     protected static function booted()
     {
+        static::addGlobalScope('storage', function ($builder) {
+            $builder->with('storage');
+        });
         static::addGlobalScope('translate', function (Builder $builder) {
             $builder->with(['translations' => function ($query) {
                 return $query->where('locale', app()->getLocale());
             }]);
         });
+    }
+
+    public function storage(): MorphOne
+    {
+        return $this->morphOne(Storage::class, 'data');
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
         static::saved(function ($model) {
             $value = Helpers::getDisk();
 
@@ -112,10 +125,5 @@ class Campaign extends Model
                 'updated_at' => now(),
             ]);
         });
-    }
-
-    public function storage(): MorphOne
-    {
-        return $this->morphOne(Storage::class, 'data');
     }
 }

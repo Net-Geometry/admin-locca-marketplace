@@ -81,6 +81,18 @@ class Brand extends Model
             $category->slug = $category->generateSlug($category->name);
             $category->save();
         });
+        static::saved(function ($model) {
+            $value = Helpers::getDisk();
+
+            DB::table('storages')->updateOrInsert([
+                'data_type' => get_class($model),
+                'data_id' => $model->id,
+            ], [
+                'value' => $value,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        });
     }
 
     /**
@@ -126,22 +138,13 @@ class Brand extends Model
     }
     protected static function booted()
     {
+        static::addGlobalScope('storage', function ($builder) {
+            $builder->with('storage');
+        });
         static::addGlobalScope('translate', function (Builder $builder) {
             $builder->with(['translations' => function($query){
                 return $query->where('locale', app()->getLocale());
             }]);
-        });
-        static::saved(function ($model) {
-            $value = Helpers::getDisk();
-
-            DB::table('storages')->updateOrInsert([
-                'data_type' => get_class($model),
-                'data_id' => $model->id,
-            ], [
-                'value' => $value,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
         });
     }
 

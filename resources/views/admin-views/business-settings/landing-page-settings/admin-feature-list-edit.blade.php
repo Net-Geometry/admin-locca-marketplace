@@ -148,7 +148,7 @@
                                         <div class="position-relative">
                                         <div class="img">
                                             <img class="onerror-image" src="{{ \App\CentralLogics\Helpers::get_image_helper(
-                                                $feature.'image',
+                                                $feature,'image',
                                                 asset('storage/app/public/admin_feature').'/'.$feature->image ?? '',
                                                 asset('/public/assets/admin/img/upload-3.png'),
                                                 'admin_feature/'

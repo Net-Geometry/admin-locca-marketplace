@@ -94,6 +94,14 @@ class Admin extends Authenticatable
     }
     protected static function booted()
     {
+        static::addGlobalScope('storage', function ($builder) {
+            $builder->with('storage');
+        });
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
         static::saved(function ($model) {
             $value = Helpers::getDisk();
 

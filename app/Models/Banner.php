@@ -142,13 +142,20 @@ class Banner extends Model
     protected static function booted(): void
     {
         static::addGlobalScope(new ZoneScope);
+        static::addGlobalScope('storage', function ($builder) {
+            $builder->with('storage');
+        });
 
         static::addGlobalScope('translate', function (Builder $builder) {
             $builder->with(['translations' => function ($query) {
                 return $query->where('locale', app()->getLocale());
             }]);
         });
+    }
 
+    protected static function boot()
+    {
+        parent::boot();
         static::saved(function ($model) {
             $value = Helpers::getDisk();
 

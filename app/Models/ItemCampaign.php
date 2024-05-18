@@ -114,6 +114,9 @@ class ItemCampaign extends Model
                 return $query->where('locale', app()->getLocale());
             }]);
         });
+        static::addGlobalScope('storage', function ($builder) {
+            $builder->with('storage');
+        });
     }
     public function storage(): MorphOne
     {

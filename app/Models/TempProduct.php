@@ -109,7 +109,13 @@ class TempProduct extends Model
             static::addGlobalScope(new StoreScope);
         }
         static::addGlobalScope(new ZoneScope);
-
+        static::addGlobalScope('storage', function ($builder) {
+            $builder->with('storage');
+        });
+    }
+    protected static function boot()
+    {
+        parent::boot();
         static::saved(function ($model) {
             $value = Helpers::getDisk();
 

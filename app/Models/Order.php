@@ -281,6 +281,9 @@ class Order extends Model
     protected static function booted()
     {
         static::addGlobalScope(new ZoneScope);
+        static::addGlobalScope('storage', function ($builder) {
+            $builder->with('storage');
+        });
     }
     public function storage(): MorphOne
     {

@@ -4396,4 +4396,5 @@
   'Set_the_value_of_Cashback_percentage/_amount_which_will_transfer_to_the_customer_wallet_when_the__order_is_completed.' => 'Set the value of Cashback percentage/ amount which will transfer to the customer wallet when the  order is completed.',
   'Ex:_5' => 'Ex: 5',
   'notification_updated_successfully' => 'Notification updated successfully',
+  'feature_updated_successfully' => 'Feature updated successfully',
 );
