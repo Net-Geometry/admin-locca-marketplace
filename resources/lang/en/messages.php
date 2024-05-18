@@ -4397,4 +4397,7 @@
   'Ex:_5' => 'Ex: 5',
   'notification_updated_successfully' => 'Notification updated successfully',
   'feature_updated_successfully' => 'Feature updated successfully',
+  '(3:1)' => '(3:1)',
+  'contact_section_updated' => 'Contact section updated',
+  'review_updated_successfully' => 'Review updated successfully',
 );

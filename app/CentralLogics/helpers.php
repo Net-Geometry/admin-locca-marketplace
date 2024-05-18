@@ -3286,17 +3286,23 @@ class Helpers
         $image = '';
         $storage = 'public';
 
-        if (is_object($data) || is_array($data)) {
-            if ((is_object($data) && property_exists($data, $key)) || (is_array($data) && array_key_exists($key, $data))) {
-                $image = is_object($data) ? $data->$key : ($data[$key] ?? '');
-            }
 
-            if (is_object($data) && property_exists($data, 'storage') && is_object($data->storage) && property_exists($data->storage, 'value')) {
-                $storage = $data->storage->value;
-            } elseif (is_array($data) && array_key_exists('storage', $data) && is_array($data['storage']) && array_key_exists('value', $data['storage'])) {
-                $storage = $data['storage']['value'];
-            }
+        if (!(is_array($data)) && (get_class($data) == 'stdClass' && property_exists($data, $key))) {
+            $image = $data->$key;
+        }elseif ((is_array($data) && array_key_exists($key, $data))) {
+            $image = $data[$key] ?? '';
+        }else {
+            $image = is_object($data) ? $data->$key : ($data[$key] ?? '');
         }
+
+        if (is_object($data) && property_exists($data, 'storage') && is_object($data->storage) && property_exists($data->storage, 'value')) {
+            $storage = $data->storage->value;
+        } elseif (is_array($data) && array_key_exists('storage', $data) && is_array($data['storage']) && array_key_exists('value', $data['storage'])) {
+            $storage = $data['storage']['value'];
+        }else{
+            $storage = is_object($data)?$data?->storage?->value:($data['storage']?$data['storage']['value']:'public');
+        }
+
 
 //        $image = (get_class($data) === 'stdClass' && property_exists($data, $key)) ? $data?->$key : ($data?->$key ?? '');
 //        $storage = $data?->storage?->value ?? 'public';

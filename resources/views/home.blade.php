@@ -1941,7 +1941,7 @@
             <div class="main-category-slider owl-theme owl-carousel">
                 @foreach ($promotion_banner as $item)
                 <div class="category-slide-item"
-                    style="background: url({{asset('storage/app/public/promotional_banner')}}/{{ isset($item['image']) ? $item['image'] : null }}) no-repeat center center / cover">
+                    style="background: url({{\App\CentralLogics\Helpers::get_image_helper($item,'image', asset('storage/app/public/promotional_banner').'/'. isset($item['image']) ? $item['image'] : null, asset('public/assets/admin/img/100x100/2.jpg'),'promotional_banner/')}}) no-repeat center center / cover">
                     <div>
                         <h2 class="title">{{$item['title'] ?? ''}}</h2>
                         <div class="text">{{$item['sub_title'] ?? ''}}</div>
@@ -2608,7 +2608,6 @@
         </div>
     </section>
     <!-- ==== Refer Section Ends Here ==== -->
-
     <!-- ==== Earn Money Section Starts Here ==== -->
     <section class="earn-money-section">
         <div class="container">
@@ -2622,7 +2621,7 @@
             @php($join_as_seller = $landing_data['seller_app_earning_links'])
             <div class="earn-item wow fadeInUp">
                 <div class="earn-item-img"
-                    style="background: url({{ asset('storage/app/public/earning') }}/{{ isset($landing_data['earning_seller_image']) ? $landing_data['earning_seller_image'] : null }}) no-repeat center center / cover;">
+                    style="background: url({{\App\CentralLogics\Helpers::onerror_image_helper(isset($landing_data['earning_seller_image']) ? $landing_data['earning_seller_image'] : null, asset('storage/app/public/earning').'/'. isset($landing_data['earning_seller_image']) ? $landing_data['earning_seller_image'] : null, asset('public/assets/admin/img/100x100/2.jpg'),'earning/',isset($landing_data['earning_seller_image_storage']) ? $landing_data['earning_seller_image_storage'] : 'public')}}) no-repeat center center / cover;">
                     <div class="position-relative">
                         <div class="d-flex flex-column flex-wrap gap-3">
                             @if (isset($join_as_seller['playstore_url_status']) && $join_as_seller['playstore_url_status'] == '1')
@@ -3572,7 +3571,7 @@
                     @php($fav = \App\Models\BusinessSetting::where(['key' => 'icon'])->first())
                     <div class="right-side d-flex word-nowrap align-items-center">
                         <img class="onerror-image"  data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
-                        src="{{ asset('storage/app/public/business/' . $fav) }}"
+{{--                        src="{{ asset('storage/app/public/business/' . $fav) }}"--}}
                         src="{{\App\CentralLogics\Helpers::get_image_helper($fav,'value', asset('storage/app/public/business/').'/' . $fav?->value, asset('public/assets/admin/img/160x160/img2.jpg'),'business/')}}"
 
 
@@ -3608,7 +3607,7 @@
                     </div>
                 </div>
                 <div class="col-lg-6 col-md-9">
-                    <img class="mw-100" src="{{ asset('storage/app/public/download_user_app_image') }}/{{ isset($landing_data['download_user_app_image']) ? $landing_data['download_user_app_image'] : null }}" alt="">
+                    <img class="mw-100" src="{{\App\CentralLogics\Helpers::onerror_image_helper(isset($landing_data['download_user_app_image']) ? $landing_data['download_user_app_image'] : null, asset('storage/app/public/download_user_app_image').'/'. isset($landing_data['download_user_app_image']) ? $landing_data['download_user_app_image'] : null, asset('public/assets/admin/img/100x100/2.jpg'),'download_user_app_image/',isset($landing_data['download_user_app_image_storage']) ? $landing_data['download_user_app_image_storage'] : 'public')}}" alt="">
                 </div>
             </div>
         </div>
