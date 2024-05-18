@@ -53,14 +53,14 @@ $countryCode= strtolower($country?$country->value:'auto');
         <div class="navbar-bottom">
             <div class="container">
                 <div class="navbar-bottom-wrapper">
-                    @php($fav = \App\Models\BusinessSetting::where(['key' => 'icon'])->first()->value ?? '')
-                    @php($logo = \App\Models\BusinessSetting::where(['key' => 'logo'])->first()->value ?? '')
+                    @php($fav = \App\Models\BusinessSetting::where(['key' => 'icon'])->first())
+                    @php($logo = \App\Models\BusinessSetting::where(['key' => 'logo'])->first())
                     <a href="{{route('home')}}" class="logo">
                         <img class="onerror-image"  data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
 
-                    src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
-                        $fav,
-                        asset('storage/app/public/business/').'/'. $fav,
+                    src="{{ \App\CentralLogics\Helpers::get_image_helper(
+                        $fav,'value',
+                        asset('storage/app/public/business/').'/'. $fav->value??'',
                         asset('public/assets/admin/img/160x160/img2.jpg'),
                         'business/'
                     ) }}"
@@ -214,7 +214,7 @@ $countryCode= strtolower($country?$country->value:'auto');
                     <div class="footer-widget">
                         <div class="footer-logo">
                             <a class="logo">
-                                <img  class="onerror-image"  data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}" src="{{ \App\CentralLogics\Helpers::onerror_image_helper($logo, asset('storage/app/public/business/') .'/'. $logo, asset('public/assets/admin/img/upload-img.png') , 'business/') }}" alt="image">
+                                <img  class="onerror-image"  data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}" src="{{ \App\CentralLogics\Helpers::get_image_helper($logo,'value', asset('storage/app/public/business/') .'/'. $logo->value??'', asset('public/assets/admin/img/upload-img.png') , 'business/') }}" alt="image">
                             </a>
                         </div>
                         <div class="txt">

@@ -3283,14 +3283,22 @@ class Helpers
     }
 
     public static function get_image_helper($data, $key, $src, $error_src ,$path){
+//        if (get_class($data) === 'stdClass') {
+//            $image = property_exists($data, $key)?$data?->{$key}:'';
+//        }else{
+//            $image = $data?->{$key};
+//        }
+        $image = (get_class($data) === 'stdClass' && property_exists($data, $key)) ? $data?->$key : ($data?->$key ?? '');
 
-        $image = $data[$key];
+//        dd($image);
+
         $storage = $data?->storage?->value ?? 'public';
 
         if(($storage  == 'public') && isset($image) && strlen($image) >1 && Storage::disk($storage)->exists($path.$image)){
             return $src;
         }
-        if(($storage  == 's3') && isset($image) && strlen($image) >1 && Storage::disk($storage)->exists($path.$image)){
+//        if(($storage  == 's3') && isset($image) && strlen($image) >1 && Storage::disk($storage)->exists($path.$image)){
+        if(($storage  == 's3') && isset($image) && strlen($image) >1){
             $awsUrl = config('filesystems.disks.s3.url');
             $awsBucket = config('filesystems.disks.s3.bucket');
             return rtrim($awsUrl, '/').'/'.ltrim($awsBucket.'/'.$path.$image, '/');

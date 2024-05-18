@@ -1082,7 +1082,7 @@
                                                 <img class="img__aspect-1 rounded border w-100 onerror-image" data-toggle="modal"
                                                     data-target="#imagemodal{{ $key }}"
                                                     data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
-                                                    src="{{\App\CentralLogics\Helpers::onerror_image_helper($img, asset('storage/app/public/refund/').'/'. $img, asset('public/assets/admin/img/160x160/img2.jpg') , 'refund/') }}">
+                                                    src="{{\App\CentralLogics\Helpers::onerror_image_helper($img, asset('storage/app/public/refund/').'/'. $img, asset('public/assets/admin/img/160x160/img2.jpg') , 'refund/',$order?->refund?->storage?->value ?? 'public') }}">
                                             </div>
                                             <div class="modal fade" id="imagemodal{{ $key }}" tabindex="-1"
                                                 role="dialog" aria-labelledby="myModalLabel{{ $key }}"
@@ -1521,7 +1521,7 @@
                                         <img class="img__aspect-1 rounded border w-100 onerror-image" data-toggle="modal"
                                             data-target="#imagemodal{{ $key }}"
                                             data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
-                                            src="{{\App\CentralLogics\Helpers::onerror_image_helper($img , asset('storage/app/public/order/') .'/'. $img , asset('public/assets/admin/img/160x160/img2.jpg'), 'order/') }}">
+                                            src="{{\App\CentralLogics\Helpers::onerror_image_helper($img , asset('storage/app/public/order/') .'/'. $img , asset('public/assets/admin/img/160x160/img2.jpg'), 'order/',$order?->storage?->value ?? 'public') }}">
                                     </div>
                                     <div class="modal fade" id="imagemodal{{ $key }}" tabindex="-1"
                                         role="dialog" aria-labelledby="order_proof_{{ $key }}"

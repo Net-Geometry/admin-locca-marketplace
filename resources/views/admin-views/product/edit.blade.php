@@ -172,7 +172,7 @@
                                                     $photo ?? '',
                                                     asset('storage/app/public/product').'/'.$photo ?? '',
                                                     asset('public/assets/admin/img/upload-img.png'),
-                                                    'product/'
+                                                    'product/',$product?->storage?->value ?? 'public'
                                                 ) }}"
                                                     data-onerror-image="{{ asset('public/assets/admin/img/upload-img.png') }}"
                                                     alt="Product image">
@@ -195,8 +195,8 @@
                                     </label>
                                     <label class="d-inline-block m-0 position-relative">
                                         <img class="img--176 border onerror-image" id="viewer"
-                                        src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
-                                            $product['image'] ?? '',
+                                        src="{{ \App\CentralLogics\Helpers::get_image_helper(
+                                            $product,'image',
                                             asset('storage/app/public/product').'/'.$product['image'] ?? '',
                                             asset('public/assets/admin/img/upload-img.png'),
                                             'product/'

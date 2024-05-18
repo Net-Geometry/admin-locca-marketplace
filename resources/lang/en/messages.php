@@ -4390,4 +4390,5 @@
   'Learn_More' => 'Learn More',
   'Learn_how_to_get_it.' => 'Learn how to get it.',
   'Local Storage' => 'Local Storage',
+  'not_editable' => 'Not editable',
 );

@@ -32,8 +32,8 @@
                             <div class="col-lg-5 col-md-6 mb-3 mb-md-0">
                                 <div class="d-flex flex-wrap align-items-center food--media">
                                     <img class="avatar avatar-xxl avatar-4by3 mr-4 onerror-image"
-                                    src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
-                                        $product['image'] ?? '',
+                                    src="{{ \App\CentralLogics\Helpers::get_image_helper(
+                                        $product,'image',
                                         asset('storage/app/public/product').'/'.$product['image'] ?? '',
                                         asset('public/assets/admin/img/160x160/img2.jpg'),
                                         'product/'
@@ -240,8 +240,8 @@
                                 <img class="img--120 rounded mx-auto mb-3 onerror-image"
                                 data-onerror-image="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}"
 
-                                    src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
-                                        $product->store->logo ?? '',
+                                    src="{{ \App\CentralLogics\Helpers::get_image_helper(
+                                        $product->store,'logo',
                                         asset('storage/app/public/store').'/'.$product->store->logo ?? '',
                                         asset('public/assets/admin/img/160x160/img1.jpg'),
                                         'store/'
@@ -594,8 +594,8 @@
                                         <img class="avatar-img onerror-image"
                                              data-onerror-image="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}"  width="75" height="75"
 
-                                             src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
-                                                    $review->customer->image ?? '',
+                                             src="{{ \App\CentralLogics\Helpers::get_image_helper(
+                                                    $review->customer,'image',
                                                     asset('storage/app/public/profile').'/'.$review->customer->image ?? '',
                                                     asset('public/assets/admin/img/160x160/img1.jpg'),
                                                     'profile/'

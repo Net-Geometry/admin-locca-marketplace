@@ -11,6 +11,7 @@ trait FileManagerTrait
     {
         if ($image != null) {
             $imageName = Carbon::now()->toDateString() . "-" . uniqid() . "." . $format;
+            dd(Storage::disk(self::getDisk()));
             if (!Storage::disk(self::getDisk())->exists($dir)) {
                 Storage::disk(self::getDisk())->makeDirectory($dir);
             }

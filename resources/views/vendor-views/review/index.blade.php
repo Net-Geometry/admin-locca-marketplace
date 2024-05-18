@@ -56,7 +56,7 @@
                                     <div class="position-relative media align-items-center">
                                         <a class=" text-hover-primary absolute--link" href="{{route('vendor.item.view',[$review->item['id']])}}">
                                             <img class="avatar avatar-lg mr-3  onerror-image"  data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
-                                                 src="{{\App\CentralLogics\Helpers::onerror_image_helper($review->item['image'], asset('storage/app/public/product/').'/'.$review->item['image'], asset('public/assets/admin/img/160x160/img1.jpg'), 'product/') }}" alt="{{$review->item->name}} image">
+                                                 src="{{\App\CentralLogics\Helpers::get_image_helper($review->item,'image', asset('storage/app/public/product/').'/'.$review->item['image'], asset('public/assets/admin/img/160x160/img1.jpg'), 'product/') }}" alt="{{$review->item->name}} image">
                                         </a>
                                         <div class="media-body">
                                             <h5 class="text-hover-primary important--link mb-0">{{Str::limit($review->item['name'],10)}}</h5>
@@ -121,7 +121,7 @@
                                                 <a class="absolute--link" href="{{route('vendor.item.view',[$review->item['id']])}}">
                                                 </a>
                                                 <img class="avatar avatar-lg mr-3  onerror-image"  data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
-                                                     src="{{\App\CentralLogics\Helpers::onerror_image_helper($review->item['image'], asset('storage/app/public/product/').'/'.$review->item['image'], asset('public/assets/admin/img/160x160/img1.jpg'), 'product/') }}" alt="{{$review->item->name}} image">
+                                                     src="{{\App\CentralLogics\Helpers::get_image_helper($review->item,'image', asset('storage/app/public/product/').'/'.$review->item['image'], asset('public/assets/admin/img/160x160/img1.jpg'), 'product/') }}" alt="{{$review->item->name}} image">
                                                 <div>
                                                     <h5 class="text-hover-primary mb-0">{{ $review->item['name'] }}</h5>
                                                     @if ($review->item['avg_rating'] == 5)
