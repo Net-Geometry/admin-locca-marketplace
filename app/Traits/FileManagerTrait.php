@@ -24,6 +24,7 @@ trait FileManagerTrait
 
     public static function updateAndUpload(string $dir, $old_image, string $format, $image = null): mixed
     {
+//        dd(self::getDisk());
         if ($image == null) {
             return $old_image;
         }

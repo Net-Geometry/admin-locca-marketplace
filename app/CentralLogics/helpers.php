@@ -3297,8 +3297,8 @@ class Helpers
         if(($storage  == 'public') && isset($image) && strlen($image) >1 && Storage::disk($storage)->exists($path.$image)){
             return $src;
         }
-//        if(($storage  == 's3') && isset($image) && strlen($image) >1 && Storage::disk($storage)->exists($path.$image)){
-        if(($storage  == 's3') && isset($image) && strlen($image) >1){
+        if(($storage  == 's3') && isset($image) && strlen($image) >1 && Storage::disk($storage)->exists($path.$image)){
+//        if(($storage  == 's3') && isset($image) && strlen($image) >1){
             $awsUrl = config('filesystems.disks.s3.url');
             $awsBucket = config('filesystems.disks.s3.bucket');
             return rtrim($awsUrl, '/').'/'.ltrim($awsBucket.'/'.$path.$image, '/');

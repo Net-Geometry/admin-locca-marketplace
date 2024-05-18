@@ -466,16 +466,16 @@ class BusinessSettingsController extends Controller
             $image_name = $curr_logo['value'];
         }
         $curr_logo->value = $image_name;
-        $curr_logo->value();
+        $curr_logo->save();
 
         $fav_icon = BusinessSetting::firstOrNew(['key' => 'icon']);
         if ($request->has('icon')) {
-            $image_name = Helpers::update('business/', $fav_icon->value, 'png', $request->file('icon'));
+            $image_name = Helpers::update('business/', $fav_icon->save, 'png', $request->file('icon'));
         } else {
             $image_name = $fav_icon['value'];
         }
         $fav_icon->value = $image_name;
-        $fav_icon->value();
+        $fav_icon->save();
 
         Config::set('currency', $request['currency']);
         Config::set('currency_symbol_position', $request['currency_symbol_position']);
@@ -2467,7 +2467,7 @@ class BusinessSettingsController extends Controller
     {
         if($name == 'local_storage'){
             BusinessSetting::where('key', 'local_storage')->update([
-                'value' => $request->status
+                'value' => $request->status??0
             ]);
         }
         if($name == 'storage_connection'){
