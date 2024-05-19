@@ -18,6 +18,7 @@ use App\Models\Currency;
 use App\Models\DMReview;
 use App\Models\DataSetting;
 use App\Models\Translation;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Str;
 use PayPal\Api\Transaction;
 use App\Models\FlashSaleItem;
@@ -3294,7 +3295,7 @@ class Helpers
         }elseif ((is_array($data) && array_key_exists($key, $data))) {
             $image = $data[$key] ?? '';
         }elseif(!(is_array($data)) && (get_class($data) != 'stdClass')) {
-            $image = is_object($data) ? $data->$key : ($data[$key] ?? '');
+            $image = (is_object($data) && ($data instanceof Collection)) ? $data->$key : ($data[$key] ?? '');
         }
 
         if (is_object($data) && property_exists($data, 'storage') && is_object($data->storage) && property_exists($data->storage, 'value')) {
@@ -3302,7 +3303,7 @@ class Helpers
         } elseif (is_array($data) && array_key_exists('storage', $data) && is_array($data['storage']) && array_key_exists('value', $data['storage'])) {
             $storage = $data['storage']['value'];
         }elseif(!(is_array($data)) && (get_class($data) != 'stdClass')) {
-            $storage = is_object($data)?$data?->storage?->value:($data['storage']?$data['storage']['value']:'public');
+            $storage = (is_object($data) && ($data instanceof Collection)) ?$data?->storage?->value:($data['storage']?$data['storage']['value']:'public');
         }
 
 
@@ -3326,9 +3327,9 @@ class Helpers
             return $src;
         }
         if(($storag  == 's3') && isset($data) && strlen($data) >1 && Storage::disk($storag)->exists($path.$data)){
-            $awsUrl = config('filesystems.disks.s3.url'); // Get the AWS URL from filesystem configuration
-            $awsBucket = config('filesystems.disks.s3.bucket'); // Get the AWS bucket name from filesystem configuration
-            return rtrim($awsUrl, '/').'/'.ltrim($awsBucket.'/'.$path.$data, '/'); // Concatenate URL parts
+            $awsUrl = config('filesystems.disks.s3.url');
+            $awsBucket = config('filesystems.disks.s3.bucket');
+            return rtrim($awsUrl, '/').'/'.ltrim($awsBucket.'/'.$path.$data, '/');
         }
         return $error_src;
     }

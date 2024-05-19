@@ -228,16 +228,18 @@ class Item extends Model
             $item->save();
         });
         static::saved(function ($model) {
-            $value = Helpers::getDisk();
+            if($model->isDirty('image') || $model->isDirty('images')){
+                $value = Helpers::getDisk();
 
-            DB::table('storages')->updateOrInsert([
-                'data_type' => get_class($model),
-                'data_id' => $model->id,
-            ], [
-                'value' => $value,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
+                DB::table('storages')->updateOrInsert([
+                    'data_type' => get_class($model),
+                    'data_id' => $model->id,
+                ], [
+                    'value' => $value,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
         });
     }
     private function generateSlug($name)
