@@ -32,7 +32,7 @@
             <!-- Stepper -->
         
 
-            <form class="js-validate" method="post" enctype="multipart/form-data">
+            <form class="reg-form js-validate" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="card __card mb-3">
                     <div class="card-header border-0">
@@ -84,16 +84,24 @@
                                             </div>
                                             <ul class="info">
                                                 <li>
-                                                    <i class="tio-checkmark-circle"></i> <span>Free Support 24/7</span>
+                                                    <img src="{{asset('/public/assets/landing/img/check-1.svg')}}" class="check" alt="">
+                                                    <img src="{{asset('/public/assets/landing/img/check-2.svg')}}" class="check-white" alt="">
+                                                    <span>Free Support 24/7</span>
                                                 </li>
                                                 <li>
-                                                    <i class="tio-checkmark-circle"></i> <span>Databases</span>
+                                                    <img src="{{asset('/public/assets/landing/img/check-1.svg')}}" class="check" alt="">
+                                                    <img src="{{asset('/public/assets/landing/img/check-2.svg')}}" class="check-white" alt="">
+                                                    <span>Databases</span>
                                                 </li>
                                                 <li>
-                                                    <i class="tio-checkmark-circle"></i> <span>Email</span>
+                                                    <img src="{{asset('/public/assets/landing/img/check-1.svg')}}" class="check" alt="">
+                                                    <img src="{{asset('/public/assets/landing/img/check-2.svg')}}" class="check-white" alt="">
+                                                    <span>Email</span>
                                                 </li>
                                                 <li>
-                                                    <i class="tio-checkmark-circle"></i> <span>Unlimited Traffic</span>
+                                                    <img src="{{asset('/public/assets/landing/img/check-1.svg')}}" class="check" alt="">
+                                                    <img src="{{asset('/public/assets/landing/img/check-2.svg')}}" class="check-white" alt="">
+                                                    <span>Unlimited Traffic</span>
                                                 </li>
                                             </ul>
                                         </div>
@@ -110,16 +118,24 @@
                                             </div>
                                             <ul class="info">
                                                 <li>
-                                                    <i class="tio-checkmark-circle"></i> <span>Free Support 24/7</span>
+                                                    <img src="{{asset('/public/assets/landing/img/check-1.svg')}}" class="check" alt="">
+                                                    <img src="{{asset('/public/assets/landing/img/check-2.svg')}}" class="check-white" alt="">
+                                                    <span>Free Support 24/7</span>
                                                 </li>
                                                 <li>
-                                                    <i class="tio-checkmark-circle"></i> <span>Databases</span>
+                                                    <img src="{{asset('/public/assets/landing/img/check-1.svg')}}" class="check" alt="">
+                                                    <img src="{{asset('/public/assets/landing/img/check-2.svg')}}" class="check-white" alt="">
+                                                    <span>Databases</span>
                                                 </li>
                                                 <li>
-                                                    <i class="tio-checkmark-circle"></i> <span>Email</span>
+                                                    <img src="{{asset('/public/assets/landing/img/check-1.svg')}}" class="check" alt="">
+                                                    <img src="{{asset('/public/assets/landing/img/check-2.svg')}}" class="check-white" alt="">
+                                                    <span>Email</span>
                                                 </li>
                                                 <li>
-                                                    <i class="tio-checkmark-circle"></i> <span>Unlimited Traffic</span>
+                                                    <img src="{{asset('/public/assets/landing/img/check-1.svg')}}" class="check" alt="">
+                                                    <img src="{{asset('/public/assets/landing/img/check-2.svg')}}" class="check-white" alt="">
+                                                    <span>Unlimited Traffic</span>
                                                 </li>
                                             </ul>
                                         </div>
@@ -136,15 +152,23 @@
                                             </div>
                                             <ul class="info">
                                                 <li>
+                                                    <img src="{{asset('/public/assets/landing/img/check-1.svg')}}" class="check" alt="">
+                                                    <img src="{{asset('/public/assets/landing/img/check-2.svg')}}" class="check-white" alt="">
                                                     <span>Free Support 24/7</span>
                                                 </li>
                                                 <li>
+                                                    <img src="{{asset('/public/assets/landing/img/check-1.svg')}}" class="check" alt="">
+                                                    <img src="{{asset('/public/assets/landing/img/check-2.svg')}}" class="check-white" alt="">
                                                     <span>Databases</span>
                                                 </li>
                                                 <li>
+                                                    <img src="{{asset('/public/assets/landing/img/check-1.svg')}}" class="check" alt="">
+                                                    <img src="{{asset('/public/assets/landing/img/check-2.svg')}}" class="check-white" alt="">
                                                     <span>Email</span>
                                                 </li>
                                                 <li>
+                                                    <img src="{{asset('/public/assets/landing/img/check-1.svg')}}" class="check" alt="">
+                                                    <img src="{{asset('/public/assets/landing/img/check-2.svg')}}" class="check-white" alt="">
                                                     <span>Unlimited Traffic</span>
                                                 </li>
                                             </ul>

@@ -3235,9 +3235,13 @@ input::-webkit-inner-spin-button {
           clip-path: polygon(calc(100% - 15px) 0%, 100% 50%, calc(100% - 15px) 100%, 0% 100%, 15px 50%, 0% 0%);
   background: var(--base-1);
   position: absolute;
+  opacity: 0.5;
 }
 .stepper .stepper-item.active .step-name {
   color: var(--base-1);
+}
+.stepper .stepper-item.error {
+  --base-1: #ff0000;
 }
 
 .plan-check-item {
@@ -3338,10 +3342,14 @@ input::-webkit-inner-spin-button {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  font-size: 14px;
   gap: 10px;
 }
 .__plan-item .info li:not(:last-child) {
   border-bottom: 1px solid var(--border-clr);
+}
+.__plan-item .info li img.check-white {
+  display: none;
 }
 .__plan-item .info li i {
   color: var(--success);
@@ -3365,10 +3373,99 @@ input::-webkit-inner-spin-button {
 .__plan-item.active .inner-div .price {
   color: #ffffff;
 }
+.__plan-item.active .inner-div .info li img.check {
+  display: none;
+}
+.__plan-item.active .inner-div .info li img.check-white {
+  display: inline-block;
+}
 .__plan-item.active .btn--primary {
   --primary-clr: #f99c4d;
 }
 
 #subscription-plan {
+  display: none;
+}
+
+.register-congrats-txt {
+  color: #686b78;
+  text-align: center;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  max-width: 518px;
+  margin: 0 auto;
+}
+
+.text-base {
+  color: var(--base-1);
+}
+
+.reg-form {
+  --base-1: #03c168;
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+.font-regular {
+  font-weight: 400;
+}
+
+.text-body {
+  color: var(--body-clr);
+}
+
+.font-semibold {
+  font-weight: 600;
+}
+
+.text-16 {
+  font-size: 16px;
+}
+
+.card-header-active {
+  border-radius: 10px !important;
+  border: 1px solid #2abb78 !important;
+  background: rgba(3, 157, 85, 0.05) !important;
+}
+.card-header-active .card-title {
+  color: #2abb78 !important;
+}
+
+.payment-item {
+  display: block;
+  cursor: pointer;
+  margin: 0;
+}
+.payment-item .payment-item-inner {
+  color: #4b5864;
+  padding: 16px 15px;
+  border-radius: 20px;
+  border: 1px solid rgba(147, 162, 174, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.payment-item .payment-item-inner .check {
+  width: 20px;
+  display: inline-flex;
+}
+.payment-item .payment-item-inner .check img {
+  width: 100%;
+}
+.payment-item .payment-item-inner .check .check {
+  display: none;
+}
+.payment-item input:checked ~ .payment-item-inner {
+  border: 1px solid #14b19e;
+  background: rgba(20, 177, 158, 0.1);
+}
+.payment-item input:checked ~ .payment-item-inner .check .check {
+  display: block;
+}
+.payment-item input:checked ~ .payment-item-inner .check .uncheck {
   display: none;
 }/*# sourceMappingURL=main.css.map */

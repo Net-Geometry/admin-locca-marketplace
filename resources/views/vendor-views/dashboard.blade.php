@@ -8,6 +8,20 @@
 
 @section('content')
     <div class="content container-fluid">
+        <!-- Renew -->
+        <div class="renew-badge mb-20">
+            <div class="renew-content d-flex align-items-center">
+                <img src="{{asset('/public/assets/admin/img/timer.svg')}}" alt="">
+                <div class="txt">
+                    Your subscription ending soon. Please renew to continue access
+                </div>
+            </div>
+            <div>
+                <a href="" class="btn btn--danger">Renew</a>
+            </div>
+        </div>
+        <!-- Renew -->
+
         @if(auth('vendor')->check())
         <!-- Page Header -->
         <div class="page-header">
@@ -198,6 +212,81 @@
         <!-- End Page Header -->
         @endif
     </div>
+
+    <div class="free-trial trial success-bg">
+        <div class="inner-div">
+            <div class="left">
+                <img src="{{asset('/public/assets/admin/img/icon-puck.svg')}}" alt="">
+                <div class="left-content">
+                    <h6>Get the best experience of on demand service business</h6>
+                    <div>Run your on demand business with the most popular platform</div>
+                </div>
+            </div>
+            <div class="right">
+                <a href="" class="btn btn-2">
+                    <span class="circle-progress-container">
+                        <svg width="40" viewBox="0 0 160 160">
+                            <circle r="70" cx="80" cy="80" fill="transparent" stroke="#ffffff20" stroke-width="12px"></circle>
+                            <circle r="70" cx="80" cy="80" fill="transparent" stroke="#ffffff" stroke-width="12px" stroke-dasharray="439.6px" stroke-dashoffset="50px"></circle>
+                        </svg>
+                        7
+                    </span>
+                    Days left in free trial
+                </a>
+                <a href="" class="btn btn-light">Choose Subscription Plan <i class="tio-arrow-forward"></i></a>
+            </div>
+            <button type="button" class="trial-close">
+                <i class="tio-clear-circle"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="free-trial trial danger-bg">
+        <div class="inner-div">
+            <div class="left">
+                <img src="{{asset('/public/assets/admin/img/timer-2.svg')}}" alt="">
+                <div class="left-content">
+                    <h6>Free Trial Has Been Ended</h6>
+                    <div>Get a subscription plan to continue with your business</div>
+                </div>
+            </div>
+            <div class="right">
+                <a href="" class="btn btn-light">Choose Subscription Plan <i class="tio-arrow-forward"></i></a>
+            </div>
+            <button type="button" class="trial-close">
+                <i class="tio-clear-circle"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="modal fade show trial-ended-modal" id="free-trial-modal">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body p-0">
+                    <div class="trial-ended-modal-wrapper">
+                        <button type="button" class="trial-ended-close-btn text-md-white" data-dismiss="modal">
+                            <i class="tio-clear-circle"></i>
+                        </button>
+                        <div class="trial-ended-modal-content align-self-center">
+                            <h3 class="title">Your Free Trial Has Been Ended</h3>
+                            <p class="mb-4">
+                                Purchase a subscription plan or contact with the admin to settle the payment and unblock the access to service.
+                            </p>
+                            <a href="" class="btn btn--primary">Choose Subscription Plan <i class="tio-arrow-forward"></i></a>
+                            <div class="blocked-subscription mt-5">
+                                <img src="{{asset('/public/assets/admin/img/WarningOctagon.svg')}}" alt="">
+                                <span>All Access to service has been blocked due to no active subscription.</span>
+                            </div>
+                        </div>
+                        <div class="trial-ended-modal-img d-none d-md-block">
+                            <img src="{{asset('/public/assets/admin/img/trial-ended-bg.png')}}" alt="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 @endsection
 
 @push('script')
@@ -210,6 +299,9 @@
 
 @push('script_2')
     <script>
+
+        $('#free-trial-modal').modal('show');
+
         // INITIALIZATION OF CHARTJS
         // =======================================================
         Chart.plugins.unregister(ChartDataLabels);
