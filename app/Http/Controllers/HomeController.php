@@ -33,7 +33,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $datas =  DataSetting::with('translations')->where('type','admin_landing_page')->get();
+        $datas =  DataSetting::with('translations','storage')->where('type','admin_landing_page')->get();
         $data = [];
         foreach ($datas as $key => $value) {
             if(count($value->translations)>0){
@@ -47,6 +47,13 @@ class HomeController extends Controller
                 ];
                 array_push($data,$cred);
             }
+            if (isset($value->storage)) {
+
+                $cred = [
+                    $value->key.'_storage' => $value->storage->value ?? 'public',
+                ];
+                array_push($data, $cred);
+            }
         }
         $settings = [];
         foreach($data as $single_data){
@@ -54,6 +61,7 @@ class HomeController extends Controller
                 $settings[$key] = $single_value;
             }
         }
+
         // $settings =  DataSetting::with('translations')->where('type','admin_landing_page')->pluck('value','key')->toArray();
         $opening_time = BusinessSetting::where('key', 'opening_time')->first();
         $closing_time = BusinessSetting::where('key', 'closing_time')->first();
@@ -79,15 +87,19 @@ class HomeController extends Controller
             'earning_title'=>(isset($settings['earning_title']) )  ? $settings['earning_title'] : null ,
             'earning_sub_title'=>(isset($settings['earning_sub_title']) )  ? $settings['earning_sub_title'] : null ,
             'earning_seller_image'=>(isset($settings['earning_seller_image']) )  ? $settings['earning_seller_image'] : null ,
+            'earning_seller_image_storage'=>(isset($settings['earning_seller_image_storage']) )  ? $settings['earning_seller_image_storage'] : null ,
             'earning_delivery_image'=>(isset($settings['earning_delivery_image']) )  ? $settings['earning_delivery_image'] : null ,
+            'earning_delivery_image_storage'=>(isset($settings['earning_delivery_image_storage']) )  ? $settings['earning_delivery_image_storage'] : null ,
             'why_choose_title'=>(isset($settings['why_choose_title']) )  ? $settings['why_choose_title'] : null ,
             'download_user_app_title'=>(isset($settings['download_user_app_title']) )  ? $settings['download_user_app_title'] : null ,
             'download_user_app_sub_title'=>(isset($settings['download_user_app_sub_title']) )  ? $settings['download_user_app_sub_title'] : null ,
             'download_user_app_image'=>(isset($settings['download_user_app_image']) )  ? $settings['download_user_app_image'] : null ,
+            'download_user_app_image_storage'=>(isset($settings['download_user_app_image_storage']) )  ? $settings['download_user_app_image_storage'] : null ,
             'testimonial_title'=>(isset($settings['testimonial_title']) )  ? $settings['testimonial_title'] : null ,
             'contact_us_title'=>(isset($settings['contact_us_title']) )  ? $settings['contact_us_title'] : null ,
             'contact_us_sub_title'=>(isset($settings['contact_us_sub_title']) )  ? $settings['contact_us_sub_title'] : null ,
             'contact_us_image'=>(isset($settings['contact_us_image']) )  ? $settings['contact_us_image'] : null ,
+            'contact_us_image_storage'=>(isset($settings['contact_us_image_storage']) )  ? $settings['contact_us_image_storage'] : null ,
             'opening_time'=> $opening_time ? $opening_time->value : null,
             'closing_time'=> $closing_time ? $closing_time->value : null,
             'opening_day'=> $opening_day ? $opening_day->value : null,
@@ -106,11 +118,11 @@ class HomeController extends Controller
             'fixed_link'=> (isset($settings['fixed_link']) )  ? json_decode($settings['fixed_link'], true) : null ,
         ];
 
-        
+
         $config = Helpers::get_business_settings('landing_page');
         $landing_integration_type = Helpers::get_business_data('landing_integration_type');
         $redirect_url = Helpers::get_business_data('landing_page_custom_url');
-        
+
         if(isset($config) && $config){
 
             return view('home',compact('landing_data'));
@@ -137,7 +149,7 @@ class HomeController extends Controller
         $config = Helpers::get_business_settings('landing_page');
         $landing_integration_type = Helpers::get_business_data('landing_integration_type');
         $redirect_url = Helpers::get_business_data('landing_page_custom_url');
-        
+
         if(isset($config) && $config){
             return view('terms-and-conditions', compact('data'));
         }elseif($landing_integration_type == 'file_upload' && File::exists('resources/views/layouts/landing/custom/index.blade.php')){
@@ -164,7 +176,7 @@ class HomeController extends Controller
         $config = Helpers::get_business_settings('landing_page');
         $landing_integration_type = Helpers::get_business_data('landing_integration_type');
         $redirect_url = Helpers::get_business_data('landing_page_custom_url');
-        
+
         if(isset($config) && $config){
             return view('about-us', compact('data','data_title'));
         }elseif($landing_integration_type == 'file_upload' && File::exists('resources/views/layouts/landing/custom/index.blade.php')){
@@ -181,7 +193,7 @@ class HomeController extends Controller
         $config = Helpers::get_business_settings('landing_page');
         $landing_integration_type = Helpers::get_business_data('landing_integration_type');
         $redirect_url = Helpers::get_business_data('landing_page_custom_url');
-        
+
         if(isset($config) && $config){
             return view('contact-us');
         }elseif($landing_integration_type == 'file_upload' && File::exists('resources/views/layouts/landing/custom/index.blade.php')){
@@ -227,7 +239,7 @@ class HomeController extends Controller
         $config = Helpers::get_business_settings('landing_page');
         $landing_integration_type = Helpers::get_business_data('landing_integration_type');
         $redirect_url = Helpers::get_business_data('landing_page_custom_url');
-        
+
         if(isset($config) && $config){
             return view('privacy-policy',compact('data'));
         }elseif($landing_integration_type == 'file_upload' && File::exists('resources/views/layouts/landing/custom/index.blade.php')){
@@ -255,7 +267,7 @@ class HomeController extends Controller
         $config = Helpers::get_business_settings('landing_page');
         $landing_integration_type = Helpers::get_business_data('landing_integration_type');
         $redirect_url = Helpers::get_business_data('landing_page_custom_url');
-        
+
         if(isset($config) && $config){
             return view('refund',compact('data'));
         }elseif($landing_integration_type == 'file_upload' && File::exists('resources/views/layouts/landing/custom/index.blade.php')){
@@ -283,7 +295,7 @@ class HomeController extends Controller
         $config = Helpers::get_business_settings('landing_page');
         $landing_integration_type = Helpers::get_business_data('landing_integration_type');
         $redirect_url = Helpers::get_business_data('landing_page_custom_url');
-        
+
         if(isset($config) && $config){
             return view('shipping-policy',compact('data'));
         }elseif($landing_integration_type == 'file_upload' && File::exists('resources/views/layouts/landing/custom/index.blade.php')){
@@ -311,7 +323,7 @@ class HomeController extends Controller
         $config = Helpers::get_business_settings('landing_page');
         $landing_integration_type = Helpers::get_business_data('landing_integration_type');
         $redirect_url = Helpers::get_business_data('landing_page_custom_url');
-        
+
         if(isset($config) && $config){
             return view('cancelation',compact('data'));
         }elseif($landing_integration_type == 'file_upload' && File::exists('resources/views/layouts/landing/custom/index.blade.php')){

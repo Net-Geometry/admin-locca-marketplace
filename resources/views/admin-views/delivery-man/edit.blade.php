@@ -122,7 +122,7 @@
                                 <label>{{translate('messages.deliveryman_image')}} <small class="text-danger">* ( {{translate('messages.ratio')}} 1:1 )</small></label>
                                 <div class="text-center py-3 my-auto">
                                     <img class="img--100 rounded onerror-image" id="viewer"
-                                    src="{{\App\CentralLogics\Helpers::onerror_image_helper($deliveryMan['image'], asset('storage/app/public/delivery-man/').'/'.$deliveryMan['image'], asset('public/assets/admin/img/admin.png'), 'delivery-man/') }}"
+                                    src="{{\App\CentralLogics\Helpers::get_image_helper($deliveryMan,'image', asset('storage/app/public/delivery-man/').'/'.$deliveryMan['image'], asset('public/assets/admin/img/admin.png'), 'delivery-man/') }}"
                                             data-onerror-image="{{asset('/public/assets/admin/img/admin.png')}}"
                                             alt="delivery-man image"/>
                                 </div>
@@ -186,7 +186,7 @@
                                         </div>
                                         @foreach(json_decode($deliveryMan['identity_image'],true) as $img)
                                         <div class="col-6 spartan_item_wrapper size--sm">
-                                            <img class="rounded border" src="{{\App\CentralLogics\Helpers::onerror_image_helper($img, asset('storage/app/public/delivery-man/').'/'.$img, asset('public/assets/admin/img/160x160/img1.jpg'), 'delivery-man/') }}">
+                                            <img class="rounded border" src="{{\App\CentralLogics\Helpers::onerror_image_helper($img, asset('storage/app/public/delivery-man/').'/'.$img, asset('public/assets/admin/img/160x160/img1.jpg'), 'delivery-man/',$deliveryMan?->storage?->value ?? 'public') }}">
                                         </div>
                                         @endforeach
                                     </div>

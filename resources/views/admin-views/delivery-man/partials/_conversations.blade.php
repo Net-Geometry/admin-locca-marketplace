@@ -4,7 +4,7 @@
         <div class="chat-user-info w-100 d-flex align-items-center">
             <div class="chat-user-info-img">
                 <img class="avatar-img onerror-image"
-                src="{{\App\CentralLogics\Helpers::onerror_image_helper($user['image'], asset('storage/app/public/profile/').'/'.$user['image'], asset('public/assets/admin/img/160x160/img1.jpg'), 'profile/') }}"
+                src="{{\App\CentralLogics\Helpers::get_image_helper($user,'image', asset('storage/app/public/profile/').'/'.$user['image'], asset('public/assets/admin/img/160x160/img1.jpg'), 'profile/') }}"
                     data-onerror-image="{{asset('public/assets/admin')}}/img/160x160/img1.jpg"
                     alt="Image Description">
             </div>
@@ -35,7 +35,7 @@
                 @if($con->sender_id == $user->id)
                     <div class="py-2 d-flex gap-2 align-items-end">
                         <div class="chat-user-conv-img">
-                            <img class="avatar-img onerror-image" width="28" height="28" src="{{\App\CentralLogics\Helpers::onerror_image_helper($user['image'], asset('storage/app/public/profile/').'/'.$user['image'], asset('public/assets/admin/img/160x160/img1.jpg'), 'profile/') }}" data-onerror-image="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}" alt="Image Description">
+                            <img class="avatar-img onerror-image" width="28" height="28" src="{{\App\CentralLogics\Helpers::get_image_helper($user,'image', asset('storage/app/public/profile/').'/'.$user['image'], asset('public/assets/admin/img/160x160/img1.jpg'), 'profile/') }}" data-onerror-image="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}" alt="Image Description">
                         </div>
 
                         <div class="conv-reply-1">
@@ -44,7 +44,7 @@
                             @foreach (json_decode($con->file) as $img)
                             <br>
                                 <img  width="50" height="50"
-                                src="{{\App\CentralLogics\Helpers::onerror_image_helper($img, asset('storage/app/public/conversation/').'/'.$img, asset('public/assets/admin/img/160x160/img1.jpg'), 'conversation/') }}" data-onerror-image="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}" alt="Image Description">
+                                src="{{\App\CentralLogics\Helpers::onerror_image_helper($img, asset('storage/app/public/conversation/').'/'.$img, asset('public/assets/admin/img/160x160/img1.jpg'), 'conversation/',$con?->storage?->value ?? 'public') }}" data-onerror-image="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}" alt="Image Description">
                                 @endforeach
                             @endif
                         </div>
@@ -57,7 +57,7 @@
                             @foreach (json_decode($con->file) as $img)
                             <br>
                                 <img  width="50" height="50"
-                                src="{{\App\CentralLogics\Helpers::onerror_image_helper($img, asset('storage/app/public/conversation/').'/'.$img, asset('public/assets/admin/img/160x160/img1.jpg'), 'conversation/') }}" data-onerror-image="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}" alt="Image Description">
+                                src="{{\App\CentralLogics\Helpers::onerror_image_helper($img, asset('storage/app/public/conversation/').'/'.$img, asset('public/assets/admin/img/160x160/img1.jpg'), 'conversation/',$con?->storage?->value ?? 'public') }}" data-onerror-image="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}" alt="Image Description">
                                 @endforeach
                             @endif
                         </div>

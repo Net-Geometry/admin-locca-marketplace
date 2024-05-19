@@ -2,8 +2,11 @@
 
 namespace App\Models;
 
+use App\CentralLogics\Helpers;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
 
 class VendorEmployee extends Authenticatable
 {
@@ -37,5 +40,34 @@ class VendorEmployee extends Authenticatable
 
     public function role(){
         return $this->belongsTo(EmployeeRole::class,'employee_role_id');
+    }
+
+    public function storage(): MorphOne
+    {
+        return $this->morphOne(Storage::class, 'data');
+    }
+
+    protected static function booted()
+    {
+        static::addGlobalScope('storage', function ($builder) {
+            $builder->with('storage');
+        });
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::saved(function ($model) {
+            $value = Helpers::getDisk();
+
+            DB::table('storages')->updateOrInsert([
+                'data_type' => get_class($model),
+                'data_id' => $model->id,
+            ], [
+                'value' => $value,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        });
     }
 }

@@ -1829,14 +1829,21 @@ class Helpers
         return auth('vendor')->user()->stores[0];
     }
 
+    public static function getDisk()
+    {
+        $config=\App\CentralLogics\Helpers::get_business_settings('local_storage');
+
+        return isset($config)?($config==0?'s3':'public'):'public';
+    }
+
     public static function upload(string $dir, string $format, $image = null)
     {
         if ($image != null) {
             $imageName = \Carbon\Carbon::now()->toDateString() . "-" . uniqid() . "." . $format;
-            if (!Storage::disk('public')->exists($dir)) {
-                Storage::disk('public')->makeDirectory($dir);
+            if (!Storage::disk(self::getDisk())->exists($dir)) {
+                Storage::disk(self::getDisk())->makeDirectory($dir);
             }
-            Storage::disk('public')->putFileAs($dir, $image, $imageName);
+            Storage::disk(self::getDisk())->putFileAs($dir, $image, $imageName);
         } else {
             $imageName = 'def.png';
         }
@@ -1849,8 +1856,8 @@ class Helpers
         if ($image == null) {
             return $old_image;
         }
-        if (Storage::disk('public')->exists($dir . $old_image)) {
-            Storage::disk('public')->delete($dir . $old_image);
+        if (Storage::disk(self::getDisk())->exists($dir . $old_image)) {
+            Storage::disk(self::getDisk())->delete($dir . $old_image);
         }
         $imageName = Helpers::upload($dir, $format, $image);
         return $imageName;
@@ -3277,13 +3284,63 @@ class Helpers
         return  Carbon::parse($data)->locale(app()->getLocale())->translatedFormat($time);
     }
 
+    public static function get_image_helper($data, $key, $src, $error_src ,$path){
+        $image = '';
+        $storage = 'public';
 
-    public static function onerror_image_helper($data, $src, $error_src ,$path){
 
-        if(isset($data) && strlen($data) >1 && Storage::disk('public')->exists($path.$data)){
+        if (!(is_array($data)) && (get_class($data) == 'stdClass' && property_exists($data, $key))) {
+            $image = $data->$key;
+        }elseif ((is_array($data) && array_key_exists($key, $data))) {
+            $image = $data[$key] ?? '';
+        }elseif(!(is_array($data)) && (get_class($data) != 'stdClass')) {
+            $image = is_object($data) ? $data->$key : ($data[$key] ?? '');
+        }
+
+        if (is_object($data) && property_exists($data, 'storage') && is_object($data->storage) && property_exists($data->storage, 'value')) {
+            $storage = $data->storage->value;
+        } elseif (is_array($data) && array_key_exists('storage', $data) && is_array($data['storage']) && array_key_exists('value', $data['storage'])) {
+            $storage = $data['storage']['value'];
+        }elseif(!(is_array($data)) && (get_class($data) != 'stdClass')) {
+            $storage = is_object($data)?$data?->storage?->value:($data['storage']?$data['storage']['value']:'public');
+        }
+
+
+//        $image = (get_class($data) === 'stdClass' && property_exists($data, $key)) ? $data?->$key : ($data?->$key ?? '');
+//        $storage = $data?->storage?->value ?? 'public';
+
+        if(($storage  == 'public') && isset($image) && strlen($image) >1 && Storage::disk($storage)->exists($path.$image)){
             return $src;
         }
+        if(($storage  == 's3') && isset($image) && strlen($image) >1 && Storage::disk($storage)->exists($path.$image)){
+            $awsUrl = config('filesystems.disks.s3.url');
+            $awsBucket = config('filesystems.disks.s3.bucket');
+            return rtrim($awsUrl, '/').'/'.ltrim($awsBucket.'/'.$path.$image, '/');
+        }
         return $error_src;
+    }
+
+    public static function onerror_image_helper($data, $src, $error_src ,$path, $storag = null){
+
+        if(($storag  == 'public') && isset($data) && strlen($data) >1 && Storage::disk($storag)->exists($path.$data)){
+            return $src;
+        }
+        if(($storag  == 's3') && isset($data) && strlen($data) >1 && Storage::disk($storag)->exists($path.$data)){
+            $awsUrl = config('filesystems.disks.s3.url'); // Get the AWS URL from filesystem configuration
+            $awsBucket = config('filesystems.disks.s3.bucket'); // Get the AWS bucket name from filesystem configuration
+            return rtrim($awsUrl, '/').'/'.ltrim($awsBucket.'/'.$path.$data, '/'); // Concatenate URL parts
+        }
+        return $error_src;
+    }
+
+    public static function create_storage($model,$data_id){
+        $config=self::get_business_settings('local_storage');
+        $value = isset($config)?($config==0?'s3':'public'):'public';
+           return DB::table('storages')->updateOrInsert(['data_type' => $model,'data_id' => $data_id], [
+                'value' => $value,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
     }
 
 
