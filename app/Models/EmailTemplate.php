@@ -98,7 +98,7 @@ class EmailTemplate extends Model
     {
         parent::boot();
         static::saved(function ($model) {
-            if($model->isDirty('background_image') || $model->isDirty('logo') || $model->isDirty('icon')){
+            if($model->isDirty('image') || $model->isDirty('logo') || $model->isDirty('icon') || $model->isDirty('icon')){
                 $value = Helpers::getDisk();
 
                 DB::table('storages')->updateOrInsert([

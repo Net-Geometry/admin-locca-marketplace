@@ -908,6 +908,7 @@ class Helpers
                 'lat' => $item->last_location ? $item->last_location->latitude : false,
                 'lng' => $item->last_location ? $item->last_location->longitude : false,
                 'location' => $item->last_location ? $item->last_location->location : '',
+                'storage' => $item->storage ? $item->storage->value: 'public'
             ];
         }
         $data = $storage;
@@ -3305,7 +3306,6 @@ class Helpers
         }elseif(!(is_array($data)) && (get_class($data) != 'stdClass')) {
             $storage = (is_object($data) && ($data instanceof Collection)) ?$data?->storage?->value:($data['storage']?$data['storage']['value']:'public');
         }
-
 
 //        $image = (get_class($data) === 'stdClass' && property_exists($data, $key)) ? $data?->$key : ($data?->$key ?? '');
 //        $storage = $data?->storage?->value ?? 'public';

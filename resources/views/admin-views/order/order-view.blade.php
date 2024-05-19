@@ -2615,7 +2615,7 @@
                     google.maps.event.addListener(marker, 'click', (function(marker, i) {
                         return function() {
                             infowindow.setContent(
-                                "<div style='float:left'><img style='max-height:40px;wide:auto;' src='{{\App\CentralLogics\Helpers::get_image_helper(" + deliveryMan[i] + ", 'image' ,asset('storage/app/public/delivery-man/').'/'. " + deliveryMan[i].image + ", asset('public/assets/admin/img/160x160/img1.jpg') , 'delivery-man/') }}'></div><div style='float:right; padding: 10px;'><b>" + deliveryMan[i].name + "</b><br/> " + deliveryMan[i].location + "</div>");
+                                "<div style='float:left'><img style='max-height:40px;wide:auto;' src='{{\App\CentralLogics\Helpers::onerror_image_helper(" + deliveryMan[i].image + ", asset('storage/app/public/delivery-man/').'/'. " + deliveryMan[i].image + ", asset('public/assets/admin/img/160x160/img1.jpg') , 'delivery-man/'," + deliveryMan[i].storage + ") }}'></div><div style='float:right; padding: 10px;'><b>" + deliveryMan[i].name + "</b><br/> " + deliveryMan[i].location + "</div>");
                             infowindow.open(map, marker);
                         }
                     })(marker, i));

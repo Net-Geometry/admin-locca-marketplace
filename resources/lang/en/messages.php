@@ -4531,4 +4531,5 @@
   'landing_page_promotion_banner_updated' => 'Landing page promotion banner updated',
   'business_section_updated' => 'Business section updated',
   'landing_page_header_updated' => 'Landing page header updated',
+  'max_cash_in_hand_exceeds' => 'Max cash in hand exceeds',
 );
