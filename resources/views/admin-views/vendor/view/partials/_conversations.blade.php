@@ -11,7 +11,7 @@
                     asset('storage/app/public/profile').'/'.$user['image'] ?? '',
                     asset('public/assets/admin/img/160x160/img1.jpg'),
                     'profile/'
-                ) }}" 
+                ) }}"
                     data-onerror-image="{{asset('public/assets/admin')}}/img/160x160/img1.jpg"
                     alt="Image Description">
             </div>
@@ -34,7 +34,12 @@
                             @foreach (json_decode($con->file) as $img)
                             <br>
                                 <img class="w-100-p"
-                                src="{{asset('storage/app/public/conversation').'/'.$img}}">
+                                           src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
+                                        $img,
+                                        asset('storage/app/public/conversation').'/'.$img,
+                                        asset('public/assets/admin/img/160x160/img1.jpg'),
+                                        'conversation/',$con?->storage?->value??'public'
+                                    ) }}">
                                 @endforeach
                             @endif
                         </div>
@@ -50,7 +55,12 @@
                             @foreach (json_decode($con->file) as $img)
                             <br>
                                 <img class="w-100-p"
-                                src="{{asset('storage/app/public/conversation').'/'.$img}}">
+                                           src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
+                                        $img,
+                                        asset('storage/app/public/conversation').'/'.$img,
+                                        asset('public/assets/admin/img/160x160/img1.jpg'),
+                                        'conversation/',$con?->storage?->value??'public'
+                                    ) }}">
                                 @endforeach
                             @endif
                         </div>

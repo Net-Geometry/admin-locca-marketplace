@@ -40,7 +40,12 @@
                                 @foreach (json_decode($con->file) as $img)
                                 <br>
                                     <img class="w-100 mb-3"
-                                    src="{{asset('storage/app/public/conversation').'/'.$img}}">
+                                         src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
+                                        $img,
+                                        asset('storage/app/public/conversation').'/'.$img,
+                                        asset('public/assets/admin/img/160x160/img1.jpg'),
+                                        'conversation/',$con?->storage?->value??'public'
+                                    ) }}">
                                     @endforeach
                                 @endif
                         </div>
@@ -56,7 +61,12 @@
                             @foreach (json_decode($con->file) as $img)
                             <br>
                                 <img class="w-100 mb-3"
-                                src="{{asset('storage/app/public/conversation').'/'.$img}}">
+                                     src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
+                                        $img,
+                                        asset('storage/app/public/conversation').'/'.$img,
+                                        asset('public/assets/admin/img/160x160/img1.jpg'),
+                                        'conversation/',$con?->storage?->value??'public'
+                                    ) }}">
                                 @endforeach
                             @endif
                         </div>

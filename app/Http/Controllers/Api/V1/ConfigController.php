@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Models\Setting;
 use App\Models\Zone;
 use App\Models\Order;
 use App\Models\Module;
@@ -44,6 +45,13 @@ class ConfigController extends Controller
     ];
 
         $settings =  array_column(BusinessSetting::whereIn('key',$key)->get()->toArray(), 'value', 'key');
+        $image_key = ['logo','icon','web_app_landing_page_settings'];
+        $data = [];
+
+        foreach ($image_key as $value){
+            $data[$value.'_storage'] = BusinessSetting::where('key',$value)->first()?->storage?->value ??'public';
+        }
+
 
         $DataSetting =  DataSetting::where('type','flutter_landing_page')->where('key','download_user_app_links')->pluck('value', 'key')->toArray();
         $DataSetting =  isset($DataSetting['download_user_app_links'])? json_decode($DataSetting['download_user_app_links'],true):[];
@@ -128,6 +136,7 @@ class ConfigController extends Controller
             // 'business_open_time' => $settings['business_open_time'],
             // 'business_close_time' => $settings['business_close_time'],
             'logo' => $settings['logo'],
+            'logo_storage' => $data['logo_storage']??'public',
             'address' => $settings['address'],
             'phone' => $settings['phone'],
             'email' => $settings['email_address'],
@@ -230,10 +239,12 @@ class ConfigController extends Controller
             'parcel_per_km_shipping_charge' => (float)$settings['parcel_per_km_shipping_charge'],
             'parcel_minimum_shipping_charge' => (float)$settings['parcel_minimum_shipping_charge'],
             'landing_page_settings'=> isset($settings['web_app_landing_page_settings'])?json_decode($settings['web_app_landing_page_settings'], true):null,
+            'landing_page_settings_storage'=> $data['web_app_landing_page_settings_storage']??'public',
             'social_media'=>SocialMedia::active()->get()->toArray(),
             'footer_text'=>isset($settings['footer_text'])?$settings['footer_text']:'',
             'cookies_text'=>isset($settings['cookies_text'])?$settings['cookies_text']:'',
             'fav_icon' => $settings['icon'],
+            'fav_icon_storage' => $data['icon_storage']??'public',
             'landing_page_links'=>$landing_page_links,
             //Added Business Setting
             'dm_tips_status' => (int)(isset($settings['dm_tips_status']) ? $settings['dm_tips_status'] : 0),
@@ -442,6 +453,13 @@ class ConfigController extends Controller
                 ];
                 array_push($data,$cred);
             }
+            if (isset($value->storage)) {
+
+                $cred = [
+                    $value->key.'_storage' => $value->storage->value ?? 'public',
+                ];
+                array_push($data, $cred);
+            }
         }
         $settings = [];
         foreach($data as $single_data){
@@ -477,7 +495,9 @@ class ConfigController extends Controller
                 'header_sub_title'=>(isset($settings['header_sub_title']) )  ? $settings['header_sub_title'] : null ,
                 'header_tag_line'=>(isset($settings['header_tag_line']) )  ? $settings['header_tag_line'] : null ,
                 'header_icon'=>(isset($settings['header_icon']) )  ? $settings['header_icon'] : null ,
+                'header_icon_storage'=>(isset($settings['header_icon_storage']) )  ? $settings['header_icon_storage'] : 'public' ,
                 'header_banner'=>(isset($settings['header_banner']) )  ? $settings['header_banner'] : null ,
+                'header_banner_storage'=>(isset($settings['header_banner_storage']) )  ? $settings['header_banner_storage'] : 'public' ,
                 'company_title'=>(isset($settings['company_title']) )  ? $settings['company_title'] : null ,
                 'company_sub_title'=>(isset($settings['company_sub_title']) )  ? $settings['company_sub_title'] : null ,
                 'company_description'=>(isset($settings['company_description']) )  ? $settings['company_description'] : null ,
@@ -498,16 +518,19 @@ class ConfigController extends Controller
                 'business_title'=>(isset($settings['business_title']) )  ? $settings['business_title'] : null ,
                 'business_sub_title'=>(isset($settings['business_sub_title']) )  ? $settings['business_sub_title'] : null ,
                 'business_image'=>(isset($settings['business_image']) )  ? $settings['business_image'] : null ,
+                'business_image_storage'=>(isset($settings['business_image_storage']) )  ? $settings['business_image_storage'] : 'public' ,
                 'testimonial_title'=>(isset($settings['testimonial_title']) )  ? $settings['testimonial_title'] : null ,
                 'testimonial_list'=>(isset($reviews) )  ? $reviews : null ,
                 'fixed_newsletter_title'=>(isset($settings['fixed_newsletter_title']) )  ? $settings['fixed_newsletter_title'] : null ,
                 'fixed_newsletter_sub_title'=>(isset($settings['fixed_newsletter_sub_title']) )  ? $settings['fixed_newsletter_sub_title'] : null ,
                 'fixed_footer_description'=>(isset($settings['fixed_footer_description']) )  ? $settings['fixed_footer_description'] : null ,
                 'fixed_promotional_banner'=>(isset($settings['fixed_promotional_banner']) )  ? $settings['fixed_promotional_banner'] : null ,
+                'fixed_promotional_banner_storage'=>(isset($settings['fixed_promotional_banner_storage']) )  ? $settings['fixed_promotional_banner_storage'] : 'public' ,
 
 
 
                 'promotion_banners'=> (isset($settings['promotion_banner']) )  ? json_decode($settings['promotion_banner'], true) : null ,
+                'promotion_banners_storage'=> (isset($settings['promotion_banner_storage']) )  ?$settings['promotion_banner_storage'] : 'public' ,
                 'download_user_app_links'=> (isset($settings['download_user_app_links']) )  ? json_decode($settings['download_user_app_links'], true) : null ,
                 'download_business_app_links'=> (isset($settings['download_business_app_links']) )  ? json_decode($settings['download_business_app_links'], true) : null ,
                 // 'dm_app_earning_links'=> (isset($settings['dm_app_earning_links']) )  ? json_decode($settings['dm_app_earning_links'], true) : null ,
@@ -530,6 +553,13 @@ class ConfigController extends Controller
                         $value->key => $value->value,
                     ];
                 array_push($data,$cred);
+            }
+            if (isset($value->storage)) {
+
+                $cred = [
+                    $value->key.'_storage' => $value->storage->value ?? 'public',
+                ];
+                array_push($data, $cred);
             }
         }
         $settings = [];
@@ -562,6 +592,7 @@ class ConfigController extends Controller
                 'fixed_header_title'=>(isset($settings['fixed_header_title']) )  ? $settings['fixed_header_title'] : null ,
                 'fixed_header_sub_title'=>(isset($settings['fixed_header_sub_title']) )  ? $settings['fixed_header_sub_title'] : null ,
                 'fixed_header_image'=>(isset($settings['fixed_header_image']) )  ? $settings['fixed_header_image'] : null ,
+                'fixed_header_image_storage'=>(isset($settings['fixed_header_image_storage']) )  ? $settings['fixed_header_image_storage'] : 'public' ,
                 'fixed_module_title'=>(isset($settings['fixed_module_title']) )  ? $settings['fixed_module_title'] : null ,
                 'fixed_module_sub_title'=>(isset($settings['fixed_module_sub_title']) )  ? $settings['fixed_module_sub_title'] : null ,
                 'fixed_location_title'=>(isset($settings['fixed_location_title']) )  ? $settings['fixed_location_title'] : null ,
@@ -576,6 +607,7 @@ class ConfigController extends Controller
                 'download_user_app_title'=>(isset($settings['download_user_app_title']) )  ? $settings['download_user_app_title'] : null ,
                 'download_user_app_sub_title'=>(isset($settings['download_user_app_sub_title']) )  ? $settings['download_user_app_sub_title'] : null ,
                 'download_user_app_image'=>(isset($settings['download_user_app_image']) )  ? $settings['download_user_app_image'] : null ,
+                'download_user_app_image_storage'=>(isset($settings['download_user_app_image_storage']) )  ? $settings['download_user_app_image_storage'] : 'public' ,
 
                 'special_criterias'=>(isset($criterias) )  ? $criterias : null ,
 
@@ -592,19 +624,20 @@ class ConfigController extends Controller
             return [];
         }
 
-        $methods = DB::table('addon_settings')->where('is_active',1)->where('settings_type', 'payment_config')->get();
+        $methods = Setting::where('is_active',1)->where('settings_type', 'payment_config')->get();
         $env = env('APP_ENV') == 'live' ? 'live' : 'test';
         $credentials = $env . '_values';
 
         $data = [];
         foreach ($methods as $method) {
-            $credentialsData = json_decode($method->$credentials);
+            $credentialsData = $method->$credentials;
             $additional_data = json_decode($method->additional_data);
-            if ($credentialsData->status == 1) {
+            if ($credentialsData['status'] == 1) {
                 $data[] = [
                     'gateway' => $method->key_name,
                     'gateway_title' => $additional_data?->gateway_title,
-                    'gateway_image' => $additional_data?->gateway_image
+                    'gateway_image' => $additional_data?->gateway_image,
+                    'storage' => $method?->storage?->value ?? 'public'
                 ];
             }
         }
@@ -618,19 +651,21 @@ class ConfigController extends Controller
             return [];
         }
 
-        $methods = DB::table('addon_settings')->where('is_active',1)->whereIn('settings_type', ['payment_config'])->whereIn('key_name', ['ssl_commerz','paypal','stripe','razor_pay','senang_pay','paytabs','paystack','paymob_accept','paytm','flutterwave','liqpay','bkash','mercadopago'])->get();
+        $methods = Setting::where('is_active',1)->whereIn('settings_type', ['payment_config'])->whereIn('key_name', ['ssl_commerz','paypal','stripe','razor_pay','senang_pay','paytabs','paystack','paymob_accept','paytm','flutterwave','liqpay','bkash','mercadopago'])->get();
+
         $env = env('APP_ENV') == 'live' ? 'live' : 'test';
         $credentials = $env . '_values';
 
         $data = [];
         foreach ($methods as $method) {
-            $credentialsData = json_decode($method->$credentials);
+            $credentialsData = $method->$credentials;
             $additional_data = json_decode($method->additional_data);
-            if ($credentialsData->status == 1) {
+            if ($credentialsData['status'] == 1) {
                 $data[] = [
                     'gateway' => $method->key_name,
                     'gateway_title' => $additional_data?->gateway_title,
-                    'gateway_image' => $additional_data?->gateway_image
+                    'gateway_image' => $additional_data?->gateway_image,
+                    'storage' => $method?->storage?->value ?? 'public'
                 ];
             }
         }

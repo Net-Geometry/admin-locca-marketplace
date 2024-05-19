@@ -44,7 +44,12 @@
                             @foreach (json_decode($con->file) as $img)
                             <br>
                                 <img  width="50" height="50"
-                                src="{{\App\CentralLogics\Helpers::onerror_image_helper($img, asset('storage/app/public/conversation/').'/'.$img, asset('public/assets/admin/img/160x160/img1.jpg'), 'conversation/',$con?->storage?->value ?? 'public') }}" data-onerror-image="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}" alt="Image Description">
+                                           src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
+                                        $img,
+                                        asset('storage/app/public/conversation').'/'.$img,
+                                        asset('public/assets/admin/img/160x160/img1.jpg'),
+                                        'conversation/',$con?->storage?->value??'public'
+                                    ) }}"> data-onerror-image="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}" alt="Image Description">
                                 @endforeach
                             @endif
                         </div>
@@ -57,7 +62,12 @@
                             @foreach (json_decode($con->file) as $img)
                             <br>
                                 <img  width="50" height="50"
-                                src="{{\App\CentralLogics\Helpers::onerror_image_helper($img, asset('storage/app/public/conversation/').'/'.$img, asset('public/assets/admin/img/160x160/img1.jpg'), 'conversation/',$con?->storage?->value ?? 'public') }}" data-onerror-image="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}" alt="Image Description">
+                                           src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
+                                        $img,
+                                        asset('storage/app/public/conversation').'/'.$img,
+                                        asset('public/assets/admin/img/160x160/img1.jpg'),
+                                        'conversation/',$con?->storage?->value??'public'
+                                    ) }}"> data-onerror-image="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}" alt="Image Description">
                                 @endforeach
                             @endif
                         </div>

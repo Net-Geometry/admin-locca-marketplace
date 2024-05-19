@@ -4557,4 +4557,9 @@
   'Setup the amount after which if any store change / migrate the subscription plan you won’t return any money back' => 'Setup the amount after which if any store change / migrate the subscription plan you won’t return any money back',
   'Select subscription usage time' => 'Select subscription usage time',
   'Settings_Saved_Successfully' => 'Settings Saved Successfully',
+  'You_must_provide_a_redirect_URL_when_setting_the_button_name' => 'You must provide a redirect URL when setting the button name',
+  'landing_page_promotion_banner_updated' => 'Landing page promotion banner updated',
+  'business_section_updated' => 'Business section updated',
+  'landing_page_header_updated' => 'Landing page header updated',
+  'max_cash_in_hand_exceeds' => 'Max cash in hand exceeds',
 );

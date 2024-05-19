@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('storages', function (Blueprint $table) {
             $table->id();
             $table->string('data_type');
-            $table->unsignedBigInteger('data_id')->index();
+            $table->string('data_id',100)->index();
             $table->string('value')->index();
             $table->timestamps();
         });

@@ -28,11 +28,17 @@ class OtherBannerController extends Controller
                 $key = $banner->key;
                 $value = $banner->value;
                 $bannerData[$key] = $value;
+                $bannerData[$key.'_storage'] = $banner?->storage?->value??'public';
             }
         }
 
+        $awsUrl = config('filesystems.disks.s3.url');
+        $awsBucket = config('filesystems.disks.s3.bucket');
+        $awsBaseURL = rtrim($awsUrl, '/').'/'.ltrim($awsBucket.'/');
+
         $data =  [
-            'promotional_banner_url' => asset('storage/app/public/promotional_banner')
+            'promotional_banner_url' => asset('storage/app/public/promotional_banner'),
+            'promotional_banner_s3_url' => $awsBaseURL."promotional_banner",
         ];
 
         $data = array_merge($data, $bannerData);

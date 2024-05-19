@@ -64,8 +64,8 @@
                     </div>
                     </div>
                 </form>
-                @php($banners = \App\Models\DataSetting::where(['key'=>'promotion_banner','type'=>'react_landing_page'])->first())
-                @php($banners = isset($banners->value)?json_decode($banners->value, true):[])
+                @php($banner_data = \App\Models\DataSetting::where(['key'=>'promotion_banner','type'=>'react_landing_page'])->first())
+                @php($banners = isset($banner_data->value)?json_decode($banner_data->value, true):[])
                     <div class="card-body p-0">
                         <!-- Table -->
                         <div class="table-responsive datatable-custom">
@@ -83,12 +83,12 @@
                                         <td>{{ $key+1 }}</td>
                                         <td>
                                             <img
-                                            src="{{ \App\CentralLogics\Helpers::get_image_helper(
-                                                $banner,'img',
+                                            src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
+                                                $banner['img'] ?? '',
                                                 asset('storage/app/public/promotional_banner').'/'.$banner['img'] ?? '',
                                                 asset('/public/assets/admin/img/upload-3.png'),
-                                                'promotional_banner/'
-                                            ) }}" 
+                                                'promotional_banner/',$banner_data?->storage?->value??'public'
+                                            ) }}"
                                             data-onerror-image="{{asset('/public/assets/admin/img/upload-3.png')}}" class="__size-105 mw-100 onerror-image" alt="">
                                         </td>
                                         <td>
