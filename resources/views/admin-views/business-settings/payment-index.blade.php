@@ -184,8 +184,8 @@
                                     data-onerror-image="{{asset('/public/assets/admin/img/payment/placeholder.png')}}"
 
                                 @if ($additional_data != null)
-                                    src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
-                                        $additional_data?->gateway_image,
+                                    src="{{ \App\CentralLogics\Helpers::get_image_helper(
+                                        $additional_data,'getway_image',
                                         asset('storage/app/public/payment_modules/gateway_image').'/'.$additional_data?->gateway_image,
                                         asset('/public/assets/admin/img/payment/placeholder.png'),
                                         'payment_modules/gateway_image/'

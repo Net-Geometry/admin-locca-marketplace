@@ -911,7 +911,7 @@ class ItemController extends Controller
                         foreach ($key as $value) {
                             $query->where('f_name', 'like', "%{$value}%")->orwhere('l_name', 'like', "%{$value}%");
                         }
-                    })->orwhere('rating', $request['search']);
+                    })->orwhere('rating', $request['search'])->orwhere('review_id', $request['search']);
                 });
 
             })

@@ -24,13 +24,16 @@ use App\Models\FlashSaleItem;
 use Illuminate\Support\Carbon;
 use App\Models\BusinessSetting;
 use App\CentralLogics\StoreLogic;
+use App\Models\StoreSubscription;
 use Illuminate\Support\Facades\DB;
 use App\Mail\OrderVerificationMail;
 use App\Models\NotificationMessage;
+use App\Models\SubscriptionPackage;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Config;
+use App\Models\SubscriptionTransaction;
 use Illuminate\Support\Facades\Storage;
 use MatanYadaev\EloquentSpatial\Objects\Point;
 use Laravelpkg\Laravelchk\Http\Controllers\LaravelchkController;
@@ -1824,14 +1827,21 @@ class Helpers
         return auth('vendor')->user()->stores[0];
     }
 
+    public static function getDisk()
+    {
+        $config=\App\CentralLogics\Helpers::get_business_settings('local_storage');
+
+        return isset($config)?($config==0?'s3':'public'):'public';
+    }
+
     public static function upload(string $dir, string $format, $image = null)
     {
         if ($image != null) {
             $imageName = \Carbon\Carbon::now()->toDateString() . "-" . uniqid() . "." . $format;
-            if (!Storage::disk('public')->exists($dir)) {
-                Storage::disk('public')->makeDirectory($dir);
+            if (!Storage::disk(self::getDisk())->exists($dir)) {
+                Storage::disk(self::getDisk())->makeDirectory($dir);
             }
-            Storage::disk('public')->putFileAs($dir, $image, $imageName);
+            Storage::disk(self::getDisk())->putFileAs($dir, $image, $imageName);
         } else {
             $imageName = 'def.png';
         }
@@ -1844,8 +1854,8 @@ class Helpers
         if ($image == null) {
             return $old_image;
         }
-        if (Storage::disk('public')->exists($dir . $old_image)) {
-            Storage::disk('public')->delete($dir . $old_image);
+        if (Storage::disk(self::getDisk())->exists($dir . $old_image)) {
+            Storage::disk(self::getDisk())->delete($dir . $old_image);
         }
         $imageName = Helpers::upload($dir, $format, $image);
         return $imageName;
@@ -3272,13 +3282,63 @@ class Helpers
         return  Carbon::parse($data)->locale(app()->getLocale())->translatedFormat($time);
     }
 
+    public static function get_image_helper($data, $key, $src, $error_src ,$path){
+        $image = '';
+        $storage = 'public';
 
-    public static function onerror_image_helper($data, $src, $error_src ,$path){
 
-        if(isset($data) && strlen($data) >1 && Storage::disk('public')->exists($path.$data)){
+        if (!(is_array($data)) && (get_class($data) == 'stdClass' && property_exists($data, $key))) {
+            $image = $data->$key;
+        }elseif ((is_array($data) && array_key_exists($key, $data))) {
+            $image = $data[$key] ?? '';
+        }elseif(!(is_array($data)) && (get_class($data) != 'stdClass')) {
+            $image = is_object($data) ? $data->$key : ($data[$key] ?? '');
+        }
+
+        if (is_object($data) && property_exists($data, 'storage') && is_object($data->storage) && property_exists($data->storage, 'value')) {
+            $storage = $data->storage->value;
+        } elseif (is_array($data) && array_key_exists('storage', $data) && is_array($data['storage']) && array_key_exists('value', $data['storage'])) {
+            $storage = $data['storage']['value'];
+        }elseif(!(is_array($data)) && (get_class($data) != 'stdClass')) {
+            $storage = is_object($data)?$data?->storage?->value:($data['storage']?$data['storage']['value']:'public');
+        }
+
+
+//        $image = (get_class($data) === 'stdClass' && property_exists($data, $key)) ? $data?->$key : ($data?->$key ?? '');
+//        $storage = $data?->storage?->value ?? 'public';
+
+        if(($storage  == 'public') && isset($image) && strlen($image) >1 && Storage::disk($storage)->exists($path.$image)){
             return $src;
         }
+        if(($storage  == 's3') && isset($image) && strlen($image) >1 && Storage::disk($storage)->exists($path.$image)){
+            $awsUrl = config('filesystems.disks.s3.url');
+            $awsBucket = config('filesystems.disks.s3.bucket');
+            return rtrim($awsUrl, '/').'/'.ltrim($awsBucket.'/'.$path.$image, '/');
+        }
         return $error_src;
+    }
+
+    public static function onerror_image_helper($data, $src, $error_src ,$path, $storag = null){
+
+        if(($storag  == 'public') && isset($data) && strlen($data) >1 && Storage::disk($storag)->exists($path.$data)){
+            return $src;
+        }
+        if(($storag  == 's3') && isset($data) && strlen($data) >1 && Storage::disk($storag)->exists($path.$data)){
+            $awsUrl = config('filesystems.disks.s3.url'); // Get the AWS URL from filesystem configuration
+            $awsBucket = config('filesystems.disks.s3.bucket'); // Get the AWS bucket name from filesystem configuration
+            return rtrim($awsUrl, '/').'/'.ltrim($awsBucket.'/'.$path.$data, '/'); // Concatenate URL parts
+        }
+        return $error_src;
+    }
+
+    public static function create_storage($model,$data_id){
+        $config=self::get_business_settings('local_storage');
+        $value = isset($config)?($config==0?'s3':'public'):'public';
+           return DB::table('storages')->updateOrInsert(['data_type' => $model,'data_id' => $data_id], [
+                'value' => $value,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
     }
 
 
@@ -3470,6 +3530,144 @@ class Helpers
         curl_close($ch);
 
         return $result;
+    }
+
+    public static function subscription_plan_chosen($store_id ,$package_id, $payment_method  ,$discount,$reference=null ,$type=null){
+        $store=Store::findOrFail($store_id);
+        $package = SubscriptionPackage::withoutGlobalScope('translate')->findOrFail($package_id);
+        $add_days=0;
+        $add_orders=0;
+        $total_food= $store->items()->withoutGlobalScope(\App\Scopes\StoreScope::class)->count();
+        if ($package->max_product != 'unlimited' &&  $total_food >= $package->max_product  ){
+            return 'downgrade_error';
+        }
+        try {
+            $store_subscription=$store->store_sub;
+            if (isset($store_subscription) && $type == 'renew') {
+                $store_subscription->total_package_renewed= $store_subscription->total_package_renewed + 1;
+                $day_left=$store_subscription->expiry_date->format('Y-m-d');
+                if (Carbon::now()->subDays(1)->diffInDays($day_left, false) > 0) {
+                    $add_days= Carbon::now()->subDays(1)->diffInDays($day_left, false);
+                }
+                if ($store_subscription->max_order != 'unlimited' && $store_subscription->max_order > 0) {
+                    $add_orders=$store_subscription->max_order;
+                }
+            } else{
+                StoreSubscription::where('store_id',$store->id)->update([
+                    'status' => 0,
+                ]);
+                $store_subscription =new StoreSubscription();
+                $store_subscription->total_package_renewed= 0;
+
+            }
+
+            $store_subscription->package_id=$package->id;
+            $store_subscription->store_id=$store->id;
+            if ($payment_method  == 'free_trial' ) {
+                $free_trial_period_data = BusinessSetting::where(['key' => 'free_trial_period'])->first();
+                if ($free_trial_period_data == false) {
+                    $values= [
+                        'data' => 7,
+                        'status' => 1,
+                    ];
+                    Helpers::insert_business_settings_key('free_trial_period',  json_encode($values) );
+                }
+                $free_trial_period_data = json_decode(BusinessSetting::where(['key' => 'free_trial_period'])->first()->value,true);
+                $free_trial_period= $free_trial_period_data['data'];
+                $store_subscription->expiry_date= Carbon::now()->addDays($free_trial_period)->format('Y-m-d');
+            }
+            else{
+                $store_subscription->expiry_date= Carbon::now()->addDays($package->validity+$add_days)->format('Y-m-d');
+            }
+            if($package->max_order != 'unlimited'){
+                $store_subscription->max_order=$package->max_order + $add_orders;
+            } else{
+                $store_subscription->max_order=$package->max_order;
+            }
+
+
+            $store_subscription->max_product=$package->max_product;
+            $store_subscription->pos=$package->pos;
+            $store_subscription->mobile_app=$package->mobile_app;
+            $store_subscription->chat=$package->chat;
+            $store_subscription->review=$package->review;
+            $store_subscription->self_delivery=$package->self_delivery;
+
+            $store->item_section= 1;
+            $store->pos_system= 1;
+            if ($type == 'new_join' && $store->vendor?->status == 0 ) {
+                $store->status= 0;
+                $store_subscription->status= 0;
+
+            }else{
+                $store->status= 1;
+                $store_subscription->status= 1;
+
+            }
+
+            // For Store Free Delivery
+            if($store->free_delivery == 1 && $package->self_delivery == 1){
+                $store->free_delivery = 1 ;
+            } else{
+                $store->free_delivery = 0 ;
+                $store->coupon()->where('created_by','vendor')->where('coupon_type','free_delivery')->delete();
+            }
+
+
+            $store->reviews_section= 1;
+            $store->self_delivery_system= 1;
+            $store->store_business_model= 'subscription';
+
+            $subscription_transaction= new SubscriptionTransaction();
+            $subscription_transaction_ID= Str::uuid();
+            $subscription_transaction->id=  $subscription_transaction_ID;
+            $subscription_transaction->package_id=$package->id;
+            $subscription_transaction->store_id=$store->id;
+            $subscription_transaction->price=$package->price;
+
+            $subscription_transaction->validity=$package->validity;
+            $subscription_transaction->paid_amount= $package->price - (($package->price*$discount)/100);
+
+            if ($payment_method  == 'free_trial') {
+                $subscription_transaction->validity= $free_trial_period;
+                $subscription_transaction->paid_amount= 0;
+            }
+            elseif($payment_method  == 'pay_now'){
+                $subscription_transaction->payment_status ='on_hold';
+                $subscription_transaction->transaction_status = 0;
+                $store_subscription->status= 0;
+            }
+
+            $subscription_transaction->payment_method=$payment_method;
+            $subscription_transaction->reference=$reference ?? null;
+            $subscription_transaction->discount=$discount ?? 0;
+            if( $payment_method == 'manual_payment_admin'){
+                $subscription_transaction->created_by= 'Admin';
+            } else{
+                $subscription_transaction->created_by= 'Store';
+            }
+
+            $subscription_transaction->package_details=[
+                'pos'=>$package->pos,
+                'review'=>$package->review,
+                'self_delivery'=>$package->self_delivery,
+                'chat'=>$package->chat,
+                'mobile_app'=>$package->mobile_app,
+                'max_order'=>$package->max_order,
+                'max_product'=>$package->max_product,
+            ];
+
+            DB::beginTransaction();
+            $store->save();
+            $subscription_transaction->save();
+            $store_subscription->save();
+            DB::commit();
+        } catch(\Exception $e){
+            DB::rollBack();
+            info(["line___{$e->getLine()}",$e->getMessage()]);
+            return false;
+        }
+        return  $subscription_transaction_ID;
     }
 
 }

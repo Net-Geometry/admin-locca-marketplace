@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\CentralLogics\Helpers;
 use App\Scopes\ZoneScope;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -9,7 +10,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
@@ -218,6 +221,36 @@ class Store extends Model
     }
 
     /**
+     * @return HasOne
+     */
+
+    public function store_sub(): HasOne
+    {
+        return $this->hasOne(StoreSubscription::class)->where('status',1)->latest();
+    }
+    /**
+     * @return HasMany
+     */
+    public function store_subs(): HasMany
+    {
+        return $this->hasMany(StoreSubscription::class,'store_id');
+    }
+    /**
+     * @return HasOne
+     */
+    public function store_sub_trans(): HasOne
+    {
+        return $this->hasOne(SubscriptionTransaction::class)->latest();
+    }
+    /**
+     * @return HasOne
+     */
+    public function store_sub_update_application(): HasOne
+    {
+        return $this->hasOne(StoreSubscription::class)->latest();
+    }
+
+    /**
      * @return BelongsTo
      */
     public function vendor(): BelongsTo
@@ -255,6 +288,10 @@ class Store extends Model
     public function activeCoupons(): HasMany
     {
         return $this->hasMany(Coupon::class)->where('status', '=', 1)->whereDate('expire_date', '>=', date('Y-m-d'))->whereDate('start_date', '<=', date('Y-m-d'));
+    }
+    public function coupon(): HasMany
+    {
+        return $this->hasMany(Coupon::class);
     }
 
     /**
@@ -457,6 +494,10 @@ class Store extends Model
                 return $query->where('locale', app()->getLocale());
             }]);
         });
+
+        static::addGlobalScope('storage', function ($builder) {
+            $builder->with('storage');
+        });
     }
 
     /**
@@ -499,6 +540,10 @@ class Store extends Model
         }
         return $slug;
     }
+    public function storage(): MorphOne
+    {
+        return $this->morphOne(Storage::class, 'data');
+    }
 
 
     /**
@@ -511,6 +556,18 @@ class Store extends Model
             $store->slug = $store->generateSlug($store->name);
             $store->save();
         });
+        static::saved(function ($model) {
+            $value = Helpers::getDisk();
+
+            DB::table('storages')->updateOrInsert([
+                'data_type' => get_class($model),
+                'data_id' => $model->id,
+            ], [
+                'value' => $value,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        });
     }
 
 
@@ -520,5 +577,31 @@ class Store extends Model
     public function storeConfig(): HasOne
     {
         return $this->hasOne(StoreConfig::class);
+    }
+
+        /**
+     * @param $query
+     * @param $type
+     * @return mixed
+     */
+    public function scopeStoreModel($query, $type) : mixed
+    {
+        if($type == 'commission')
+        {
+            return $query->where('store_business_model', 'commission');
+        }
+        else if($type == 'subscribed')
+        {
+            return $query->where('store_business_model', 'subscription');
+        }
+        else if($type == 'unsubscribed')
+        {
+            return $query->where('store_business_model', 'unsubscribed');
+        }
+        else if($type == 'none')
+        {
+            return $query->where('store_business_model', 'none');
+        }
+        return $query;
     }
 }

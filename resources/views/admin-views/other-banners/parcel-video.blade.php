@@ -141,8 +141,8 @@
                                         <div class="img">
                                             <img class="onerror-image"
 
-                                            src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
-                                                $banner_image?->value ?? '',
+                                            src="{{ \App\CentralLogics\Helpers::get_image_helper(
+                                                $banner_image,'value',
                                                 asset('storage/app/public/promotional_banner').'/'.$banner_image?->value ?? '',
                                                 asset('/public/assets/admin/img/upload-placeholder.png'),
                                                 'promotional_banner/'

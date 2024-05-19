@@ -44,11 +44,6 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
 
     Route::group(['middleware' => ['admin', 'current-module']], function () {
 
-        Route::group(['prefix' => 'subscription', 'as' => 'subscription.'], function () {
-            Route::get('/',  [SubscriptionController::class, 'index'])->name('subscription_index');
-        });
-
-
         Route::group(['prefix' => 'category', 'as' => 'category.'], function () {
             Route::get(Category::NAME_LIST[URI], [CategoryController::class, 'getNameList'])->name('get-all');
             Route::group(['middleware' => ['module:category']], function () {
@@ -169,6 +164,16 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
         });
 
         Route::group(['prefix' => 'business-settings', 'as' => 'business-settings.'], function () {
+
+            Route::group(['prefix' => 'subscription'], function () {
+
+                Route::resource('subscriptionackage', SubscriptionController::class);
+                Route::get('/status/{subscriptionackage}',  [SubscriptionController::class, 'statusChange'])->name('subscriptionackage.status');
+            });
+
+
+
+
             Route::group(['prefix' => 'zone', 'as' => 'zone.', 'middleware' => ['module:zone']], function () {
                 Route::get(Zone::INDEX[URI], [ZoneController::class, 'index'])->name('home');
                 Route::post(Zone::ADD[URI], [ZoneController::class, 'add'])->name('store');

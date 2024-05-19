@@ -2,9 +2,12 @@
 
 namespace App\Models;
 
+use App\CentralLogics\Helpers;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
@@ -67,6 +70,11 @@ class CommonCondition extends Model
         return $query->where('status', '=', 1);
     }
 
+    public function storage(): MorphOne
+    {
+        return $this->morphOne(Storage::class, 'data');
+    }
+
     /**
      * @return void
      */
@@ -76,6 +84,18 @@ class CommonCondition extends Model
         static::created(function ($category) {
             $category->slug = $category->generateSlug($category->name);
             $category->save();
+        });
+        static::saved(function ($model) {
+            $value = Helpers::getDisk();
+
+            DB::table('storages')->updateOrInsert([
+                'data_type' => get_class($model),
+                'data_id' => $model->id,
+            ], [
+                'value' => $value,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
         });
     }
 
@@ -122,6 +142,9 @@ class CommonCondition extends Model
      */
     protected static function booted(): void
     {
+        static::addGlobalScope('storage', function ($builder) {
+            $builder->with('storage');
+        });
         static::addGlobalScope('translate', function (Builder $builder) {
             $builder->with(['translations' => function ($query) {
                 return $query->where('locale', app()->getLocale());

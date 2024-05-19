@@ -902,4 +902,23 @@ class ItemController extends Controller
 
     }
 
+    public function update_reply(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'id' => 'required',
+            'reply' => 'required|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        }
+
+        $review = Review::findOrFail($request->id);
+        $review->reply = $request->reply;
+        $review->store_id = $request['vendor']?->stores[0]?->id;
+        $review->save();
+
+        return response()->json(['message'=>translate('messages.review_reply_updated_successfully')], 200);
+    }
+
 }

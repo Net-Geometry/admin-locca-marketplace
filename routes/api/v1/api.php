@@ -52,6 +52,14 @@ Route::group(['namespace' => 'Api\V1', 'middleware'=>'localization'], function (
         Route::post('social-register', 'SocialAuthController@social_register');
     });
 
+    //Store Subscription
+    Route::group(['prefix' => 'vendor','namespace' => 'Vendor'], function () {
+        Route::get('package-view', 'SubscriptionController@package_view');
+        Route::post('business_plan', 'SubscriptionController@business_plan');
+        Route::post('subscription/payment/api', 'SubscriptionController@subscription_payment_api')->name('subscription_payment_api');
+        Route::post('package-renew', 'SubscriptionController@package_renew_change_update_api');
+    });
+
     // Module
     Route::get('module', 'ModuleController@index');
 
@@ -227,6 +235,7 @@ Route::group(['namespace' => 'Api\V1', 'middleware'=>'localization'], function (
             Route::get('details/{id}', 'ItemController@get_item');
             Route::POST('search', 'ItemController@search');
             Route::get('reviews', 'ItemController@reviews');
+            Route::put('reply-update', 'ItemController@update_reply');
             Route::get('recommended', 'ItemController@recommended');
             Route::get('organic', 'ItemController@organic');
             Route::get('pending/item/list', 'ItemController@pending_item_list');

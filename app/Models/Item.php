@@ -2,8 +2,11 @@
 
 namespace App\Models;
 
+use App\CentralLogics\Helpers;
 use App\Scopes\ZoneScope;
 use App\Scopes\StoreScope;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
@@ -184,6 +187,9 @@ class Item extends Model
         }
 
         static::addGlobalScope(new ZoneScope);
+        static::addGlobalScope('storage', function ($builder) {
+            $builder->with('storage');
+        });
 
         static::addGlobalScope('translate', function (Builder $builder) {
             $builder->with(['translations' => function($query){
@@ -210,13 +216,28 @@ class Item extends Model
     {
         return $this->belongsToMany(Tag::class);
     }
-
+    public function storage(): MorphOne
+    {
+        return $this->morphOne(Storage::class, 'data');
+    }
     protected static function boot()
     {
         parent::boot();
         static::created(function ($item) {
             $item->slug = $item->generateSlug($item->name);
             $item->save();
+        });
+        static::saved(function ($model) {
+            $value = Helpers::getDisk();
+
+            DB::table('storages')->updateOrInsert([
+                'data_type' => get_class($model),
+                'data_id' => $model->id,
+            ], [
+                'value' => $value,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
         });
     }
     private function generateSlug($name)

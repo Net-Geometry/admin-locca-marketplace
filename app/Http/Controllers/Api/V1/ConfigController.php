@@ -40,7 +40,7 @@ class ConfigController extends Controller
     public function configuration()
     {
         $key = ['currency_code','cash_on_delivery','digital_payment','default_location','free_delivery_over','business_name','logo','address','phone','email_address','country','currency_symbol_position','app_minimum_version_android','app_url_android','app_minimum_version_ios','app_url_ios','app_url_android_store','app_minimum_version_ios_store','app_url_ios_store','app_minimum_version_ios_deliveryman','app_url_ios_deliveryman','app_minimum_version_android_deliveryman','app_minimum_version_android_store', 'app_url_android_deliveryman', 'customer_verification','schedule_order','order_delivery_verification','per_km_shipping_charge','minimum_shipping_charge','show_dm_earning','canceled_by_deliveryman','canceled_by_store','timeformat','toggle_veg_non_veg','toggle_dm_registration','toggle_store_registration','schedule_order_slot_duration','parcel_per_km_shipping_charge','parcel_minimum_shipping_charge','web_app_landing_page_settings','footer_text','landing_page_links','loyalty_point_exchange_rate', 'loyalty_point_item_purchase_point', 'loyalty_point_status', 'loyalty_point_minimum_point', 'wallet_status', 'dm_tips_status', 'ref_earning_status','ref_earning_exchange_rate','refund_active_status','refund','cancelation','shipping_policy','prescription_order_status','tax_included','icon','cookies_text','home_delivery_status','takeaway_status','additional_charge','additional_charge_status','additional_charge_name','dm_picture_upload_status','partial_payment_status','partial_payment_method','add_fund_status','offline_payment_status','websocket_url','websocket_port','websocket_status','guest_checkout_status','disbursement_type','restaurant_disbursement_waiting_time','dm_disbursement_waiting_time' , 'min_amount_to_pay_store' ,'min_amount_to_pay_dm' ,
-        'new_customer_discount_status','new_customer_discount_amount','new_customer_discount_amount_type','new_customer_discount_amount_validity','new_customer_discount_validity_type',
+        'new_customer_discount_status','new_customer_discount_amount','new_customer_discount_amount_type','new_customer_discount_amount_validity','new_customer_discount_validity_type','store_review_reply',
     ];
 
         $settings =  array_column(BusinessSetting::whereIn('key',$key)->get()->toArray(), 'value', 'key');
@@ -119,6 +119,9 @@ class ConfigController extends Controller
             'plugin_payment_gateways' =>  (boolean)($published_status ? true : false),
             'default_payment_gateways' =>  (boolean)($published_status ? false : true)
         );
+        $awsUrl = config('filesystems.disks.s3.url');
+        $awsBucket = config('filesystems.disks.s3.bucket');
+        $awsBaseURL = rtrim($awsUrl, '/').'/'.ltrim($awsBucket.'/');
 
         return response()->json([
             'business_name' => $settings['business_name'],
@@ -153,6 +156,31 @@ class ConfigController extends Controller
                 'react_landing_page_images' => asset('storage/app/public/react_landing') ,
                 'react_landing_page_feature_images' => asset('storage/app/public/react_landing/feature') ,
                 'gateway_image_url' => asset('storage/app/public/payment_modules/gateway_image'),
+            ],
+
+            's3_base_urls' => [
+                'item_image_url' => $awsBaseURL.'product',
+                'refund_image_url' => $awsBaseURL.'refund',
+                'customer_image_url' => $awsBaseURL.'profile',
+                'banner_image_url' => $awsBaseURL.'banner',
+                'category_image_url' => $awsBaseURL.'category',
+                'brand_image_url' => $awsBaseURL.'brand',
+                'review_image_url' => $awsBaseURL.'review',
+                'notification_image_url' => $awsBaseURL.'notification',
+                'store_image_url' => $awsBaseURL.'store',
+                'vendor_image_url' => $awsBaseURL.'vendor',
+                'store_cover_photo_url' => $awsBaseURL.'store/cover',
+                'delivery_man_image_url' => $awsBaseURL.'delivery-man',
+                'chat_image_url' => $awsBaseURL.'conversation',
+                'campaign_image_url' => $awsBaseURL.'campaign',
+                'business_logo_url' => $awsBaseURL.'business',
+                'order_attachment_url' => $awsBaseURL.'order',
+                'module_image_url' => $awsBaseURL.'module',
+                'parcel_category_image_url' => $awsBaseURL.'parcel_category',
+                'landing_page_image_url' => $awsBaseURL.'landing/image',
+                'react_landing_page_images' => $awsBaseURL.'react_landing',
+                'react_landing_page_feature_images' => $awsBaseURL.'react_landing/feature',
+                'gateway_image_url' => $awsBaseURL.'payment_modules/gateway_image',
             ],
             'country' => $settings['country'],
             'default_location'=> [ 'lat'=> $default_location?$default_location['lat']:'23.757989', 'lng'=> $default_location?$default_location['lng']:'90.360587' ],
@@ -246,6 +274,7 @@ class ConfigController extends Controller
             'new_customer_discount_amount_type' => (isset($settings['new_customer_discount_amount_type']) ? $settings['new_customer_discount_amount_type'] : 'amount'),
             'new_customer_discount_amount_validity' => (int)(isset($settings['new_customer_discount_amount_validity']) ? $settings['new_customer_discount_amount_validity'] : 0),
             'new_customer_discount_validity_type' => (isset($settings['new_customer_discount_validity_type']) ? $settings['new_customer_discount_validity_type'] : 'day'),
+            'store_review_reply' => (int)(isset($settings['store_review_reply']) ? $settings['store_review_reply'] : 0),
         ]);
     }
 
@@ -423,6 +452,10 @@ class ConfigController extends Controller
 
         $reviews = ReactTestimonial::get();
 
+        $awsUrl = config('filesystems.disks.s3.url');
+        $awsBucket = config('filesystems.disks.s3.bucket');
+        $awsBaseURL = rtrim($awsUrl, '/').'/'.ltrim($awsBucket.'/');
+
         return  response()->json(
             [
                 'base_urls' => [
@@ -431,6 +464,13 @@ class ConfigController extends Controller
                     'testimonial_image_url' => asset('storage/app/public/reviewer_image'),
                     'promotional_banner_url' => asset('storage/app/public/promotional_banner'),
                     'business_image_url' => asset('storage/app/public/business_image'),
+                ],
+                's3_base_urls' => [
+                    'header_icon_url' => $awsBaseURL.'header_icon',
+                    'header_banner_url' => $awsBaseURL.'header_banner',
+                    'testimonial_image_url' => $awsBaseURL.'reviewer_image',
+                    'promotional_banner_url' => $awsBaseURL.'promotional_banner',
+                    'business_image_url' => $awsBaseURL.'business_image',
                 ],
 
                 'header_title'=>(isset($settings['header_title']) )  ? $settings['header_title'] : null ,
@@ -501,12 +541,22 @@ class ConfigController extends Controller
 
         $criterias = FlutterSpecialCriteria::get();
 
+        $awsUrl = config('filesystems.disks.s3.url');
+        $awsBucket = config('filesystems.disks.s3.bucket');
+        $awsBaseURL = rtrim($awsUrl, '/').'/'.ltrim($awsBucket.'/');
+
         return  response()->json(
             [
                 'base_urls' => [
                     'fixed_header_image' => asset('storage/app/public/fixed_header_image'),
                     'special_criteria_image' => asset('storage/app/public/special_criteria'),
                     'download_user_app_image' => asset('storage/app/public/download_user_app_image'),
+                ],
+
+                's3_base_urls' => [
+                    'fixed_header_image' => $awsBaseURL.'fixed_header_image',
+                    'special_criteria_image' => $awsBaseURL.'special_criteria',
+                    'download_user_app_image' => $awsBaseURL.'download_user_app_image',
                 ],
 
                 'fixed_header_title'=>(isset($settings['fixed_header_title']) )  ? $settings['fixed_header_title'] : null ,
