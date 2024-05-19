@@ -4449,7 +4449,6 @@
   'application_status_updated_successfully' => 'Application status updated successfully',
   'Payment_Type' => 'Payment Type',
   'success' => 'Success',
-  'gst_status' => 'Gst status',
   'Subscriber_List' => 'Subscriber List',
   'Total_transactions' => 'Total transactions',
   'Total_earning' => 'Total earning',
@@ -4528,4 +4527,8 @@
   '(3:1)' => '(3:1)',
   'contact_section_updated' => 'Contact section updated',
   'review_updated_successfully' => 'Review updated successfully',
+  'You_must_provide_a_redirect_URL_when_setting_the_button_name' => 'You must provide a redirect URL when setting the button name',
+  'landing_page_promotion_banner_updated' => 'Landing page promotion banner updated',
+  'business_section_updated' => 'Business section updated',
+  'landing_page_header_updated' => 'Landing page header updated',
 );

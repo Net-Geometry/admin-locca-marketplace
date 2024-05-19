@@ -1118,15 +1118,13 @@ class BusinessSettingsController extends Controller
         $validator = Validator::make($request->all(), array_merge($validation, $additional_data));
 
 
-        Setting::updateOrCreate(['key_name' => $request['gateway'], 'settings_type' => 'payment_config'], [
-            'key_name' => $request['gateway'],
-            'live_values' => $validator->validate(),
-            'test_values' => $validator->validate(),
-            'settings_type' => 'payment_config',
-            'mode' => $request['mode'],
-            'is_active' => $request['status'],
-            'additional_data' => json_encode($payment_additional_data),
-        ]);
+        $settings = Setting::firstOrNew(['key_name' => $request['gateway'], 'settings_type' => 'payment_config']);
+        $settings->live_values  = $validator->validate();
+        $settings->test_values  = $validator->validate();
+        $settings->mode  = $request['mode'];
+        $settings->is_active  = $request['status'];
+        $settings->additional_data  = json_encode($payment_additional_data);
+        $settings->save();
 
         Toastr::success(GATEWAYS_DEFAULT_UPDATE_200['message']);
         return back();
@@ -2466,8 +2464,11 @@ class BusinessSettingsController extends Controller
     public function storage_connection_update(Request $request, $name)
     {
         if($name == 'local_storage'){
-            BusinessSetting::where('key', 'local_storage')->update([
-                'value' => $request->status??0
+            DB::table('business_settings')->updateOrInsert(['key' => 'local_storage'], [
+                'key' => 'local_storage',
+                'value' => $request->status??0,
+                'created_at' => now(),
+                'updated_at' => now(),
             ]);
         }
         if($name == 'storage_connection'){

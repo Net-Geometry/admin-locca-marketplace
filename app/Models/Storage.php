@@ -11,15 +11,10 @@ class Storage extends Model
 
     public $timestamps = false;
 
-
-    protected $casts = [
-        'data_id' => 'integer',
-    ];
-
     protected $fillable = [
         'data_type',
         'data_id',
-        'storage'
+        'value'
     ];
 
     public function data()
