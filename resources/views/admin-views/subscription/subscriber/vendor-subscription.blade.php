@@ -1,5 +1,5 @@
 @extends('layouts.admin.app')
-@section('title',translate('messages.store_Details'))
+@section('title',translate('messages.Store_Subscription'))
 @section('subscriberList')
 active
 @endsection
@@ -36,7 +36,7 @@ active
                     <a href="" class="nav-link active">{{ translate('Subscription_Details') }} </a>
                 </li>
                 <li class="nav-item">
-                    <a href="" class="nav-link">{{ translate('Transactions') }}</a>
+                    <a href="{{ route('admin.business-settings.subscriptionackage.subscriberTransactions',$store->id) }}" class="nav-link">{{ translate('Transactions') }}</a>
                 </li>
             </ul>
         </div>
@@ -195,7 +195,7 @@ active
                             <h3 class="name">{{ $store?->store_sub_update_application?->package?->package_name }}</h3>
                             <div class="font-medium text--title">{{ $store?->store_sub_update_application?->package?->text }}</div>
                         </div>
-                        <h3 class="right">{{ \App\CentralLogics\Helpers::format_currency($store?->store_sub_update_application?->last_transcations?->peice) }} /<small class="font-medium text--title">{{ $store?->store_sub_update_application?->last_transcations?->validity }} {{ translate('messages.Days') }}</small></h3>
+                        <h3 class="right">{{ \App\CentralLogics\Helpers::format_currency($store?->store_sub_update_application?->last_transcations?->price) }} /<small class="font-medium text--title">{{ $store?->store_sub_update_application?->last_transcations?->validity }} {{ translate('messages.Days') }}</small></h3>
                     </div>
 
 
@@ -415,137 +415,6 @@ active
                 </div>
             </div>
         </div>
-
-        <div class="modal fade show" id="shift-modal">
-            <div class="modal-dialog modal-lg modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header px-3 pt-3">
-                        <button type="button" class="close" data-dismiss="modal">
-                            <span aria-hidden="true" class="tio-clear"></span>
-                        </button>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-
-        <div class="modal fade show" id="renew-modal">
-            <div class="modal-dialog modal-lg modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header px-3 pt-3">
-                        <button type="button" class="close" data-dismiss="modal">
-                            <span aria-hidden="true" class="tio-clear"></span>
-                        </button>
-                    </div>
-                    <div class="modal-body px-4 pt-0">
-                        <div>
-                            <div class="text-center mb-4 pb-2">
-                                <h2 class="modal-title">Renew Subscription Plan</h2>
-                            </div>
-                            <div class="change-plan-wrapper align-items-center">
-                                <div class="__plan-item active">
-                                    <div class="inner-div">
-                                        <div class="text-center">
-                                            <h3 class="title">STANDARD</h3>
-                                            <h2 class="price">15%</h2>
-                                            <div class="day-count">60 days</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="mb-4 mb-lg-5 subscription__plan-info-wrapper bg-ECEEF1 rounded-20">
-                                <div class="row g-3">
-                                    <div class="col-md-4">
-                                        <div class="subscription__plan-info">
-                                            <div class="info">
-                                                Validity
-                                            </div>
-                                            <h4 class="subtitle">365 Days</h4>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="subscription__plan-info">
-                                            <div class="info">
-                                                Price
-                                            </div>
-                                            <h4 class="subtitle">$1,199.00</h4>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="subscription__plan-info">
-                                            <div class="info">
-                                                Bill status
-                                            </div>
-                                            <h4 class="subtitle">Renew</h4>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <h4 class="mb-4">Pay Via Online <span class="font-regular text-body">(Faster & secure way to pay bill)</span></h4>
-                            <div class="row g-3">
-                                <div class="col-md-6">
-                                    <label class="payment-item">
-                                        <input type="radio" class="d-none" name="payment">
-                                        <div class="payment-item-inner">
-                                            <div class="check">
-                                                <img src="{{asset('/public/assets/admin/img/check-1.png')}}" class="uncheck" alt="">
-                                                <img src="{{asset('/public/assets/admin/img/check-2.png')}}" class="check" alt="">
-                                            </div>
-                                            <span>Bkash</span>
-                                            <img class="ml-auto" src="{{asset('/public/assets/admin/img/bkash1.png')}}" width="30" alt="">
-                                        </div>
-                                    </label>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="payment-item">
-                                        <input type="radio" class="d-none" name="payment">
-                                        <div class="payment-item-inner">
-                                            <div class="check">
-                                                <img src="{{asset('/public/assets/admin/img/check-1.png')}}" class="uncheck" alt="">
-                                                <img src="{{asset('/public/assets/admin/img/check-2.png')}}" class="check" alt="">
-                                            </div>
-                                            <span>Marcado pago</span>
-                                            <img class="ml-auto" src="{{asset('/public/assets/admin/img/marcado1.png')}}" width="30" alt="">
-                                        </div>
-                                    </label>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="payment-item">
-                                        <input type="radio" class="d-none" name="payment">
-                                        <div class="payment-item-inner">
-                                            <div class="check">
-                                                <img src="{{asset('/public/assets/admin/img/check-1.png')}}" class="uncheck" alt="">
-                                                <img src="{{asset('/public/assets/admin/img/check-2.png')}}" class="check" alt="">
-                                            </div>
-                                            <span>SSL COMMERZ</span>
-                                            <img class="ml-auto" src="{{asset('/public/assets/admin/img/sslcomz1.png')}}" width="60" alt="">
-                                        </div>
-                                    </label>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="payment-item">
-                                        <input type="radio" class="d-none" name="payment">
-                                        <div class="payment-item-inner">
-                                            <div class="check">
-                                                <img src="{{asset('/public/assets/admin/img/check-1.png')}}" class="uncheck" alt="">
-                                                <img src="{{asset('/public/assets/admin/img/check-2.png')}}" class="check" alt="">
-                                            </div>
-                                            <span>PayStack</span>
-                                            <img class="ml-auto" src="{{asset('/public/assets/admin/img/paystack1.png')}}" width="30" alt="">
-                                        </div>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="btn--container justify-content-end mt-3">
-                                <button type="reset" data-dismiss="modal" class="btn btn--reset">Cancel</button>
-                                <button type="submit" class="btn btn--primary">Renew Subscription Plan</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
 
     </div>
 

@@ -38,7 +38,10 @@ use Illuminate\Support\Facades\Storage;
 use MatanYadaev\EloquentSpatial\Objects\Point;
 use Laravelpkg\Laravelchk\Http\Controllers\LaravelchkController;
 
-
+use App\Library\Payment as PaymentInfo;
+use App\Library\Payer;
+use App\Traits\Payment;
+use App\Library\Receiver;
 class Helpers
 {
     public static function error_processor($validator)
@@ -3534,15 +3537,23 @@ class Helpers
         return $result;
     }
 
-    public static function subscription_plan_chosen($store_id ,$package_id, $payment_method  ,$discount,$reference=null ,$type=null){
+
+    public static function subscriptionConditionsCheck($store_id ,$package_id,){
         $store=Store::findOrFail($store_id);
-        $package = SubscriptionPackage::withoutGlobalScope('translate')->findOrFail($package_id);
-        $add_days=0;
-        $add_orders=0;
+        $package = SubscriptionPackage::withoutGlobalScope('translate')->find($package_id);
+
         $total_food= $store->items()->withoutGlobalScope(\App\Scopes\StoreScope::class)->count();
         if ($package->max_product != 'unlimited' &&  $total_food >= $package->max_product  ){
             return 'downgrade_error';
         }
+        return null;
+    }
+    public static function subscription_plan_chosen($store_id ,$package_id, $payment_method  ,$discount = 0,$reference=null ,$type=null){
+        $store=Store::findOrFail($store_id);
+        $package = SubscriptionPackage::withoutGlobalScope('translate')->find($package_id);
+        $add_days=0;
+        $add_orders=0;
+
         try {
             $store_subscription=$store->store_sub;
             if (isset($store_subscription) && $type == 'renew') {
@@ -3625,13 +3636,16 @@ class Helpers
             $subscription_transaction= new SubscriptionTransaction();
             // $subscription_transaction_ID= Str::uuid();
             // $subscription_transaction->id=  $subscription_transaction_ID;
-            $subscription_transaction->store_subscription_id= $store_subscription->id;
+
             $subscription_transaction->package_id=$package->id;
             $subscription_transaction->store_id=$store->id;
             $subscription_transaction->price=$package->price;
 
             $subscription_transaction->validity=$package->validity;
             $subscription_transaction->paid_amount= $package->price - (($package->price*$discount)/100);
+
+            $subscription_transaction->payment_status = 'success';
+            $subscription_transaction->created_by=  in_array($payment_method,['wallet_payment_by_admin','manual_payment_by_admin'] )?'Admin': 'Store';
 
             if ($payment_method  == 'free_trial') {
                 $subscription_transaction->validity= $free_trial_period;
@@ -3643,14 +3657,19 @@ class Helpers
                 $store_subscription->status= 0;
             }
 
+
+
             $subscription_transaction->payment_method=$payment_method;
             $subscription_transaction->reference=$reference ?? null;
             $subscription_transaction->discount=$discount ?? 0;
-            if( $payment_method == 'manual_payment_admin'){
-                $subscription_transaction->created_by= 'Admin';
-            } else{
-                $subscription_transaction->created_by= 'Store';
+            if(in_array($type ,['renew','free_trial'])){
+
+                $subscription_transaction->plan_type=$type;
+            } elseif(StoreSubscription::where('store_id',$store->id)->where('is_trial',0)->count() > 0){
+                $subscription_transaction->plan_type='new_plan';
+
             }
+
 
             $subscription_transaction->package_details=[
                 'pos'=>$package->pos,
@@ -3667,12 +3686,48 @@ class Helpers
             $subscription_transaction->save();
             $store_subscription->save();
             DB::commit();
+            $subscription_transaction->store_subscription_id= $store_subscription->id;
+            $subscription_transaction->save();
+
         } catch(\Exception $e){
             DB::rollBack();
             info(["line___{$e->getLine()}",$e->getMessage()]);
             return false;
         }
         return  $subscription_transaction->id;
+    }
+    public static function subscriptionPayment($store_id,$package_id,$payment_gateway,$payment_platform='web',$url,$type='payment'){
+        $store = Store::where('id',$store_id)->first();
+        $package = SubscriptionPackage::where('id',$package_id)->first();
+
+        $payer = new Payer(
+            $store->name ,
+            $store->email,
+            $store->phone,
+            ''
+        );
+        $additional_data = [
+            'business_name' => BusinessSetting::where(['key'=>'business_name'])->first()?->value,
+            'business_logo' => asset('storage/app/public/business') . '/' .BusinessSetting::where(['key' => 'logo'])->first()?->value
+        ];
+        $payment_info = new PaymentInfo(
+            success_hook: 'sub_success',
+            failure_hook: 'sub_fail',
+            currency_code: Helpers::currency_code(),
+            payment_method: $payment_gateway,
+            payment_platform: $payment_platform,
+            payer_id: $store->id,
+            receiver_id:  $package->id,
+            additional_data: $additional_data,
+            payment_amount: $package->price ,
+            external_redirect_link: $url,
+            attribute: 'store_subscription_'.$type,
+            attribute_id: $package->id,
+        );
+        $receiver_info = new Receiver('Admin','example.png');
+        $redirect_link = Payment::generate_link($payer, $payment_info, $receiver_info);
+
+        return $redirect_link;
     }
 
 }

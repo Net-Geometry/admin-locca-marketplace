@@ -1,9 +1,9 @@
 
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.Subscription'))
+@section('title',translate('messages.Store_Transactions'))
 
-@section('subscription_index')
+@section('subscriberList')
 active
 @endsection
 @push('css_or_js')
@@ -15,12 +15,20 @@ active
 
     <div class="content container-fluid">
         <div class="page-header">
-            <div class="row align-items-center py-2">
-                <div class="col-sm">
+            <div class="d-flex flex-wrap justify-content-between align-items-center py-2">
+                <div class="flex-grow-1">
                     <div class="d-flex align-items-start">
                         <img src="{{asset('/public/assets/admin/img/store.png')}}" width="24" alt="img">
                         <div class="w-0 flex-grow pl-2">
-                            <h1 class="page-header-title">{{translate('Subscription Package')}}</h1>
+                            <h1 class="page-header-title">{{ $store->name }} {{translate('Subscription')}} &nbsp; &nbsp;
+                                @if ($store?->store_sub_update_application?->is_cancaled == 1)
+                                <span class=" badge badge-pill badge-warning">  &nbsp; {{ translate('canceled') }}  &nbsp; </span>
+                                @elseif($store?->store_sub_update_application?->status == 0)
+                                <span class=" badge badge-pill badge-danger">  &nbsp; {{ translate('Expired') }}  &nbsp; </span>
+                                @elseif($store?->store_sub_update_application?->status == 1)
+                                <span class=" badge badge-pill badge-success">  &nbsp; {{ translate('Active') }}  &nbsp; </span>
+                                @endif
+                            </h1>
                         </div>
                     </div>
                 </div>
@@ -29,7 +37,7 @@ active
         <div class="js-nav-scroller hs-nav-scroller-horizontal mb-4">
             <ul class="nav nav-tabs border-0 nav--tabs nav--pills">
                 <li class="nav-item">
-                    <a href="{{ route('admin.business-settings.subscriptionackage.show',$id) }}" class="nav-link">{{ translate('Package_Details') }}</a>
+                    <a href="{{ route('admin.business-settings.subscriptionackage.subscriberDetail',$id) }}" class="nav-link ">{{ translate('Subscription_Details') }} </a>
                 </li>
                 <li class="nav-item">
                     <a href="#" class="nav-link active">{{ translate('Transactions') }}</a>
@@ -40,7 +48,7 @@ active
             <div class="card-header border-0">
                 <h3 class="text--title card-title">{{ translate('Filter_Option') }}</h3>
             </div>
-            <form action="{{ route('admin.business-settings.subscriptionackage.transaction',$id) }}" method="get">
+            <form action="{{ route('admin.business-settings.subscriptionackage.subscriberTransactions',$id) }}" method="get">
                 <div class="card-body">
                     <div class="row">
                     <div class="col-lg-4 col-sm-4">
@@ -271,12 +279,12 @@ active
                 $('#date_to').attr('readonly',true).removeAttr('name', 'end_date').removeAttr('required');
             }
         });
-
         $(document).ready(function() {
             $('.printButton').click(function() {
                 window.open($(this).data('url'), '_blank');
             });
         });
+
 </script>
 @endpush
 

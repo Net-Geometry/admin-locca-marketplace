@@ -115,6 +115,37 @@ active
                     </div>
                 </div>
             </div>
+            <div class="card-header border-0 align-items-center">
+                <div class="w-100 d-flex flex-wrap align-items-center justify-content-between gap-2">
+                    <div>
+                        <h3 class="text--title card-title">{{ translate('Return Money Restriction') }}</h3>
+                        <div>{{ translate('Setup the amount after which if any store change / migrate the subscription plan you won’t return any money back') }}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body pt-2">
+                <div class="card">
+                    <div class="card-body">
+                        <form action="{{ route('admin.business-settings.subscriptionackage.settingUpdate') }}" method="post">
+                            @csrf
+                            @method("post")
+                            <div class="row g-3">
+                                <div class="col-sm-6 col-lg-8 col-xl-10">
+                                    <div class="pr-xl-4">
+                                        <label class="form-label">{{ translate('Select subscription usage time') }} (%)</label>
+                                        <input type="number" required name="subscription_usage_max_time" value="{{ data_get($settings, 'subscription_usage_max_time') ?? ' '  }}" min="1" max="99"  class="form-control" placeholder="120">
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-4 col-xl-2">
+                                    <label class="form-label d-none d-lg-block">&nbsp;</label>
+                                    <button type="submit" class="btn px-xl-5 btn--primary w-100 h--45px">{{ translate('Submit') }}</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 

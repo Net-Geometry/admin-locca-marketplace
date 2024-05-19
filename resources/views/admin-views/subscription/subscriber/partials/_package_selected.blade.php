@@ -74,6 +74,7 @@
             @method('POST')
                 <input type="hidden" value="{{ $package->id }}" name="package_id">
                 <input type="hidden" value="{{ $store_id }}" name="store_id">
+                <input type="hidden" value="{{ $store_subscription?->package_id ==  $package->id ? 'renew' : null }}" name="type">
 
 
 
@@ -84,8 +85,8 @@
 
             <div class="col-md-6">
                 <label class="payment-item">
-                    <input type="radio" {{ $balance >= $package?->price ? '' :'disabled'  }} value="wallet"  class="d-none" name="payment">
-                    <div class="payment-item-inner">
+                    <input type="radio" {{ $balance > $package?->price ? '' :'disabled'  }} value="wallet"  class="d-none" name="payment_gateway">
+                    <div  data-toggle="tooltip" data-placement="bottom" title="{{ translate('You have not sufficient balance on you wallet! please add money to your wallet to purchase the packages') }}"  class="payment-item-inner">
                         <div class="check">
                             <img src="{{asset('/public/assets/admin/img/check-1.png')}}" class="uncheck" alt="">
                             <img src="{{asset('/public/assets/admin/img/check-2.png')}}" class="check" alt="">
@@ -97,12 +98,25 @@
             </div>
             @endif
 
+            <div class="col-md-6">
+                <label class="payment-item">
+                    <input type="radio" value="manual_payment_by_admin"  class="d-none" name="payment_gateway">
+                    <div class="payment-item-inner">
+                        <div class="check">
+                            <img src="{{asset('/public/assets/admin/img/check-1.png')}}" class="uncheck" alt="">
+                            <img src="{{asset('/public/assets/admin/img/check-2.png')}}" class="check" alt="">
+                        </div>
+                        <span>{{ translate('manually_pay') }}</span>
+                        {{-- <span class="ml-auto" >{{ \App\CentralLogics\Helpers::format_currency($balance) }} </span> --}}
+                    </div>
+                </label>
+            </div>
 
             @foreach ($payment_methods as $item)
 
             <div class="col-md-6">
                 <label class="payment-item">
-                    <input type="radio" class="d-none" value="{{ $item['gateway'] }}" name="payment">
+                    <input type="radio" class="d-none" value="{{ $item['gateway'] }}" name="payment_gateway">
                     <div class="payment-item-inner">
                         <div class="check">
                             <img src="{{asset('/public/assets/admin/img/check-1.png')}}" class="uncheck" alt="">

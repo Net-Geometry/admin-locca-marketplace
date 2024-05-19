@@ -181,6 +181,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                 Route::post('/switch-to-commission/{id}',  [SubscriptionController::class, 'switchToCommission'])->name('subscriptionackage.switchToCommission');
                 Route::get('/subscriber-detail/{id}',  [SubscriptionController::class, 'subscriberDetail'])->name('subscriptionackage.subscriberDetail');
                 Route::get('/package-view/{id}/{store_id}',  [SubscriptionController::class, 'packageView'])->name('subscriptionackage.packageView');
+                Route::get('/subscriber-transactions/{id}',  [SubscriptionController::class, 'subscriberTransactions'])->name('subscriptionackage.subscriberTransactions');
 
                 Route::post('/package-buy',  [SubscriptionController::class, 'packageBuy'])->name('subscriptionackage.packageBuy');
             });

@@ -215,26 +215,22 @@ if (!function_exists('config_settings')) {
 
     if (! function_exists('sub_success')) {
         function sub_success($data){
-            $subscription_transaction= SubscriptionTransaction::where('id',$data->attribute_id)->with('store','store.store_sub_update_application')->first();
-            $subscription_transaction->payment_status ='success';
-            $subscription_transaction->reference = $data->transaction_id;
-            $subscription_transaction->payment_method = $data->payment_method;
-            $subscription_transaction->transaction_status = 1;
-            $subscription_transaction->store->store_sub_update_application->update([
-                // 'expiry_date'=> Carbon::now()->addDays($subscription_transaction->validity)->format('Y-m-d'),
-                'status'=>1
-            ]);
-            $subscription_transaction->save();
+            $type='renew';
+            if($data->attribute == 'store_subscription_payment'){
+                    $type='new_plan';
+                }
+            Helpers::subscription_plan_chosen(store_id:$data->payer_id,package_id:$data->attribute_id,payment_method:$data->payment_method,discount:0,reference:$data->attribute,type: $type);
+            return true;
         }
     }
 
     if (! function_exists('sub_fail')) {
         function sub_fail($data){
-            $subscription_transaction= SubscriptionTransaction::where('id',$data->attribute_id)->with('store')->first();
-            $subscription_transaction->payment_status ='failed';
-            $subscription_transaction->reference = $data?->transaction_id ?? null;
-            $subscription_transaction->payment_method = $data->payment_method;
-            $subscription_transaction->save();
+            // $subscription_transaction= SubscriptionTransaction::where('id',$data->attribute_id)->with('store')->first();
+            // $subscription_transaction->payment_status ='failed';
+            // $subscription_transaction->reference = $data?->transaction_id ?? null;
+            // $subscription_transaction->payment_method = $data->payment_method;
+            // $subscription_transaction->save();
         }
     }
 

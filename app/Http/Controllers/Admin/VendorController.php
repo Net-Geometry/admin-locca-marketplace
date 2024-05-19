@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Exports\DisbursementHistoryExport;
-use App\Models\DisbursementDetails;
 use App\Models\Item;
 use App\Models\Zone;
 use App\Models\AddOn;
@@ -24,12 +22,15 @@ use App\Models\Conversation;
 use Illuminate\Http\Request;
 use App\Models\StoreSchedule;
 use App\CentralLogics\Helpers;
+use App\Models\BusinessSetting;
 use App\Models\WithdrawRequest;
 use App\Exports\StoreListExport;
 use App\Models\OrderTransaction;
 use App\CentralLogics\StoreLogic;
 use App\Models\AccountTransaction;
 use Illuminate\Support\Facades\DB;
+use App\Models\DisbursementDetails;
+use App\Models\SubscriptionPackage;
 use App\Http\Controllers\Controller;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\Mail;
@@ -39,6 +40,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
+use App\Exports\DisbursementHistoryExport;
 use App\Exports\StoreWiseItemReviewExport;
 use App\Exports\StoreCashTransactionExport;
 use App\Exports\StoreOrderTransactionExport;
@@ -518,6 +520,20 @@ class VendorController extends Controller
                 })
                 ->latest()->paginate(config('default_pagination'));
             return view('admin-views.vendor.view.disbursement', compact('store','disbursements'));
+        } else if ($tab == 'subscription') {
+
+
+            $store= Store::where('id',$store->id)->with([
+                'store_sub_update_application.package','vendor','store_sub_update_application.last_transcations'
+            ])
+            ->first();
+            $packages = SubscriptionPackage::where('status',1)->latest()->get();
+            $admin_commission=BusinessSetting::where('key', 'admin_commission')->first()?->value ;
+            $business_name=BusinessSetting::where('key', 'business_name')->first()?->value ;
+
+            return view('admin-views.vendor.view.subscription',compact('store','packages','business_name','admin_commission'));
+
+
 
         }
         return view('admin-views.vendor.view.index', compact('store', 'wallet'));
