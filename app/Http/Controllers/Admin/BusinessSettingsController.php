@@ -1976,13 +1976,17 @@ class BusinessSettingsController extends Controller
 
     public function update_fcm(Request $request)
     {
+        DB::table('business_settings')->updateOrInsert(['key' => 'push_notification_service_file_content'], [
+            'value' => $request['push_notification_service_file_content'],
+        ]);
+
         DB::table('business_settings')->updateOrInsert(['key' => 'fcm_project_id'], [
             'value' => $request['projectId']
         ]);
 
-        DB::table('business_settings')->updateOrInsert(['key' => 'push_notification_key'], [
-            'value' => $request['push_notification_key']
-        ]);
+//        DB::table('business_settings')->updateOrInsert(['key' => 'push_notification_key'], [
+//            'value' => $request['push_notification_key']
+//        ]);
 
         DB::table('business_settings')->updateOrInsert(['key' => 'fcm_credentials'], [
             'value' => json_encode([
@@ -6241,7 +6245,7 @@ class BusinessSettingsController extends Controller
             BusinessSetting::query()->updateOrInsert(['key' => 'unsuspend_mail_status_'.$type], [
                 'value' => $status
             ]);
-        } 
+        }
 
         Toastr::success(translate('messages.email_status_updated'));
         return back();

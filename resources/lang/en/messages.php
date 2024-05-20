@@ -4298,4 +4298,6 @@
   'zipcode' => 'Zipcode',
   'city' => 'City',
   'Next' => 'Next',
+  'service_file_content' => 'Service file content',
+  'select and copy all the service file content and add here' => 'Select and copy all the service file content and add here',
 );
