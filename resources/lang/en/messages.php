@@ -4562,4 +4562,10 @@
   'business_section_updated' => 'Business section updated',
   'landing_page_header_updated' => 'Landing page header updated',
   'max_cash_in_hand_exceeds' => 'Max cash in hand exceeds',
+  'Discount amount can\'t be greater than 100%
+' => 'Discount amount can t be greater than 100%
+',
+  'By_enabling_the_status_customer_will_get_the_option_for_choosing_extra_packaging_charge_when_placing_order._for_extra_package_offer' => 'By enabling the status customer will get the option for choosing extra packaging charge when placing order. for extra package offer',
+  'is_it_halal' => 'Is it halal',
+  'cash' => 'Cash',
 );
