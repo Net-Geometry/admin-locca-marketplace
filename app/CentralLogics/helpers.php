@@ -3697,7 +3697,7 @@ class Helpers
         }
         return  $subscription_transaction->id;
     }
-    public static function subscriptionPayment($store_id,$package_id,$payment_gateway,$payment_platform='web',$url,$type='payment'){
+    public static function subscriptionPayment($store_id,$package_id,$payment_gateway,$url,$type='payment',$payment_platform='web'){
         $store = Store::where('id',$store_id)->first();
         $package = SubscriptionPackage::where('id',$package_id)->first();
 
