@@ -49,7 +49,8 @@ class BannerLogic
                     'image'=>$banner->image,
                     'link'=> null,
                     'store'=> $store?Helpers::store_data_formatting($store, false):null,
-                    'item'=>null
+                    'item'=>null,
+                    'storage' => $banner->storage
                 ];
             }
             if($banner->type=='item_wise')
@@ -69,6 +70,7 @@ class BannerLogic
                     'link'=> null,
                     'store'=> null,
                     'item'=> $item?Helpers::product_data_formatting($item, false, false, app()->getLocale()):null,
+                    'storage' => $banner->storage
                 ];
             }
             if($banner->type=='default')
@@ -81,6 +83,7 @@ class BannerLogic
                     'link'=>$banner->default_link,
                     'store'=> null,
                     'item'=> null,
+                    'storage' => $banner->storage
                 ];
             }
             if($banner->type == null)
@@ -93,6 +96,7 @@ class BannerLogic
                     'link'=> null,
                     'store'=> null,
                     'item'=> null,
+                    'storage' => $banner->storage
                 ];
             }
         }
