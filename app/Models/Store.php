@@ -226,7 +226,7 @@ class Store extends Model
 
     public function store_sub(): HasOne
     {
-        return $this->hasOne(StoreSubscription::class)->where('status',1)->latest();
+        return $this->hasOne(StoreSubscription::class)->where('status',1)->latestOfMany();
     }
     /**
      * @return HasMany
@@ -247,7 +247,7 @@ class Store extends Model
      */
     public function store_sub_update_application(): HasOne
     {
-        return $this->hasOne(StoreSubscription::class)->latest();
+        return $this->hasOne(StoreSubscription::class)->latestOfMany();
     }
 
     /**

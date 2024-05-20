@@ -200,14 +200,14 @@ active
                                     <div class="text-title">{{  \App\CentralLogics\Helpers::format_currency($subscriber?->store_sub_update_application?->package?->price) }}</div>
                                 </td>
                                 <td class="px-4">
-                                    <div class="text-title">{{  \App\CentralLogics\Helpers::date_format($subscriber?->store_sub_update_application?->expiry_date) }}</div>
+                                    <div class="text-title">{{  \App\CentralLogics\Helpers::date_format($subscriber?->store_sub_update_application?->expiry_date_parsed) }}</div>
                                 </td>
                                 <td class="px-4">
                                     <div class="text-title pl-3">{{ $subscriber?->store_sub_update_application?->total_package_renewed + 1 }}</div>
                                 </td>
                                 <td class="px-4 text-center">
                                     <div>
-                                        @if ($subscriber?->store_sub_update_application?->is_cancaled == 1)
+                                        @if ($subscriber?->store_sub_update_application?->is_canceled == 1)
                                         <span class="badge badge-soft-warning">{{ translate('canceled') }}</span>
                                         @elseif($subscriber?->store_sub_update_application?->status == 0)
                                         <span class="badge badge-soft-danger">{{ translate('Expired') }}</span>

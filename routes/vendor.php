@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Vendor\SubscriptionController;
 
 
 Route::group(['namespace' => 'Vendor', 'as' => 'vendor.'], function () {
@@ -40,6 +41,21 @@ Route::group(['namespace' => 'Vendor', 'as' => 'vendor.'], function () {
                 Route::get('data', 'POSController@extra_charge')->name('extra_charge');
             });
         });
+
+
+        Route::group(['prefix' => 'subscription' , 'as' => 'subscriptionackage.'], function () {
+            Route::get('/subscriber-detail',  [SubscriptionController::class, 'subscriberDetail'])->name('subscriberDetail');
+
+            Route::get('/invoice/{id}',  [SubscriptionController::class, 'invoice'])->name('invoice');
+            Route::get('/subscriber-list',  [SubscriptionController::class, 'subscriberList'])->name('subscriberList');
+            Route::post('/cancel-subscription/{id}',  [SubscriptionController::class, 'cancelSubscription'])->name('cancelSubscription');
+            Route::post('/switch-to-commission/{id}',  [SubscriptionController::class, 'switchToCommission'])->name('switchToCommission');
+            Route::get('/package-view/{id}/{store_id}',  [SubscriptionController::class, 'packageView'])->name('packageView');
+            Route::get('/subscriber-transactions/{id}',  [SubscriptionController::class, 'subscriberTransactions'])->name('subscriberTransactions');
+
+            Route::post('/package-buy',  [SubscriptionController::class, 'packageBuy'])->name('packageBuy');
+        });
+
 
         Route::group(['prefix' => 'dashboard', 'as' => 'dashboard.'], function () {
             Route::post('order-stats', 'DashboardController@order_stats')->name('order-stats');

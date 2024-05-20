@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('package_id');
             $table->foreignId('store_id');
             $table->date('expiry_date');
+            $table->integer('validity')->default(0);
             $table->string('max_order');
             $table->string('max_product');
             $table->boolean('pos')->default(false);
@@ -27,7 +28,7 @@ return new class extends Migration
             $table->boolean('is_trial')->default(false);
             $table->tinyInteger('total_package_renewed')->default(0);
             $table->dateTime('renewed_at')->nullable();
-            $table->boolean('is_cancaled')->default(false);
+            $table->boolean('is_canceled')->default(false);
             $table->enum('canceled_by',['none','admin','store'])->default('none');
             $table->timestamps();
         });

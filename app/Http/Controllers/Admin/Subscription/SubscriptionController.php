@@ -342,7 +342,7 @@ class SubscriptionController extends Controller
         })
         ->when(isset($request->subscription_type) && $request->subscription_type == 'cancaled', function ($query) use ($request) {
             return $query->whereHas('store_sub_update_application', function ($q) use ($request) {
-                return $q->where('is_cancaled',1);
+                return $q->where('is_canceled',1);
             });
         })
         ->when(isset($request->subscription_type) && $request->subscription_type == 'free_trial', function ($query) use ($request) {
@@ -406,7 +406,7 @@ class SubscriptionController extends Controller
     public function cancelSubscription(Request $request, $id){
 
         StoreSubscription::where(['store_id' => $id, 'id'=>$request->subscription_id])->update([
-            'is_cancaled' => 1,
+            'is_canceled' => 1,
             'canceled_by' => 'admin',
         ]);
         return response()->json(200);

@@ -28,7 +28,7 @@
                         <img src="{{asset('public/assets/admin/img/expiring.png')}}" alt="report/new" class="w-60px">
                         <div class="w-0 flex-grow-1 py-md-3">
                             <span class="text-body">{{ translate('Expire Date') }}</span>
-                            <h4 class="title m-0">{{  \App\CentralLogics\Helpers::date_format($store?->store_sub_update_application?->expiry_date) }}</h4>
+                            <h4 class="title m-0">{{  \App\CentralLogics\Helpers::date_format($store?->store_sub_update_application?->expiry_date_parsed) }}</h4>
                         </div>
                     </a>
                 </div>
@@ -159,7 +159,7 @@
                 </div>
             </div>
             <div class="btn--container justify-content-end mt-3">
-                @if ( $store?->store_sub_update_application?->is_cancaled == 0 )
+                @if ( $store?->store_sub_update_application?->is_canceled == 0 )
                     <button type="button"  data-url="{{route('admin.business-settings.subscriptionackage.cancelSubscription',$store?->id)}}" data-message="{{translate('Do_You_Want_To_This_subscription_?')}}"
                     class="btn btn--danger text-white status_change_alert">{{ translate('Cancel Subscription') }}</button>
                 @endif

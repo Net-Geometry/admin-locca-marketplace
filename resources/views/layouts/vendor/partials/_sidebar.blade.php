@@ -472,19 +472,17 @@
                         </a>
                     </li>
                     @endif
-                    @if(\App\CentralLogics\Helpers::employee_module_permission_check('bank_info'))
-                    <!-- Business Settings -->
-{{--                    <li class="navbar-vertical-aside-has-menu {{Request::is('store-panel/profile/bank-view')?'active':''}}">--}}
-{{--                        <a class="js-navbar-vertical-aside-menu-link nav-link"--}}
-{{--                            href="{{route('vendor.profile.bankView')}}"--}}
-{{--                            title="{{translate('messages.bank_info')}}">--}}
-{{--                            <i class="tio-shop nav-icon"></i>--}}
-{{--                            <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">--}}
-{{--                                {{translate('messages.bank_info')}}--}}
-{{--                            </span>--}}
-{{--                        </a>--}}
-{{--                    </li>--}}
-                    @endif
+
+                    <li class="navbar-vertical-aside-has-menu @yield('subscriberList')">
+                        <a class="js-navbar-vertical-aside-menu-link nav-link"
+                            href="{{route('vendor.subscriptionackage.subscriberDetail')}}"
+                            title="{{translate('messages.My_Subscription')}}">
+                            <i class="tio-home nav-icon"></i>
+                            <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
+                                {{translate('messages.My_Subscription')}}
+                            </span>
+                        </a>
+                    </li>
 
 
                     @if(\App\CentralLogics\Helpers::employee_module_permission_check('wallet'))

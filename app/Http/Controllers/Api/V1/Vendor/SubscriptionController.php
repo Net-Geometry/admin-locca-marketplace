@@ -4,16 +4,17 @@ namespace App\Http\Controllers\Api\V1\Vendor;
 
 use App\Models\Store;
 use App\Library\Payer;
+use App\Traits\Payment;
+use App\Library\Receiver;
+use App\Models\StoreWallet;
 use Illuminate\Http\Request;
 use App\CentralLogics\Helpers;
 use App\Models\BusinessSetting;
 use App\Models\SubscriptionPackage;
 use App\Http\Controllers\Controller;
+use App\Library\Payment as PaymentInfo;
 use App\Models\SubscriptionTransaction;
 use Illuminate\Support\Facades\Validator;
-use App\Library\Payment as PaymentInfo;
-use App\Traits\Payment;
-use App\Library\Receiver;
 
 class SubscriptionController extends Controller
 {
@@ -23,60 +24,67 @@ class SubscriptionController extends Controller
     }
     public function business_plan(Request $request){
 
+
         $validator = Validator::make($request->all(), [
             'store_id' => 'required',
             'payment' => 'nullable',
             'business_plan' => 'required|in:subscription,commission',
             'package_id' => 'nullable|required_if:business_plan,subscription',
+            'payment_gateway' => 'nullable|required_if:business_plan,subscription',
+            'callback' => 'nullable|required_if:business_plan,subscription',
 
         ]);
         if ($validator->fails()) {
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
-        $store=Store::findOrFail($request->store_id);
-
+        $store= Store::Where('id',$request->store_id)->first();
         if($request->business_plan == 'subscription' && $request->package_id != null ) {
-            $store_id=$store->id;
-            $package_id=$request->package_id;
-            $payment_method=$request->payment_method ?? 'free_trial';
-            $reference=$request->reference ?? null;
-            $discount=$request->discount ?? 0;
-            $store=Store::findOrFail($store_id);
-            $type=$request->type ?? 'new_join';
 
-            if($request->payment == 'free_trial' ){
-                $status=Helpers::subscription_plan_chosen(store_id:$store_id , package_id:$package_id,payment_method: $payment_method ,discount:$discount, reference:$reference ,type: $type);
+            // $type=$request->type ?? 'new_join';
+            if( Helpers::subscriptionConditionsCheck(store_id:$request->store_id,package_id:$request->package_id) == 'downgrade_error'){
 
-                if($status === 'downgrade_error'){
+                return response()->json([
+                    'errors' => ['message' => translate('messages.You_can_not_downgraded_to_this_package_please_choose_a_package_with_higher_upload_limits')]
+                ], 403);
+            }
+
+            $package = SubscriptionPackage::withoutGlobalScope('translate')->find($request->package_id);
+
+            if(!in_array($request->payment_gateway,['wallet'])){
+                $url= $request->has('callback')?$request['callback']:session('callback');
+                $data = [
+                    'redirect_link' => Helpers::subscriptionPayment(store_id:$store->id,package_id:$package->id,payment_gateway:$request->payment_gateway,payment_platform:'web',url:$url,type: $request?->type),
+                ];
+
+                return response()->json($data, 200);
+            }
+
+            if($request->payment_gateway == 'wallet'){
+            $wallet= StoreWallet::firstOrNew(['vendor_id'=> $store->vendor_id]);
+            $balance = BusinessSetting::where('key', 'wallet_status')->first()?->value == 1 ? $wallet?->balance ?? 0 : 0;
+
+                if($balance > $package?->price){
+                    $reference= 'wallet_payment_by_vendor';
+                    $plan_data=   Helpers::subscription_plan_chosen(store_id:$store->id,package_id:$package->id,payment_method:'wallet',discount:0,reference:$reference,type: $request?->type);
+                    if($plan_data != false){
+                        $wallet->total_withdrawn= $wallet?->total_withdrawn + $package->price;
+                        $wallet?->save();
+                    }
+                }
+                else{
                     return response()->json([
-                        'errors' => ['message' => translate('messages.You_can_not_downgraded_to_this_package_please_choose_a_package_with_higher_upload_limits')]
-                    ], 403);
+                    'errors' => ['message' => translate('messages.Insufficient_balance_in_wallet')]
+                ], 403);
                 }
             }
-            elseif($request->payment == 'paying_now'){
-                $digital_payment = Helpers::get_business_settings('digital_payment');
-                if( $digital_payment['status'] != 1){
-                    return response()->json([
-                        'errors' => ['message' => translate('messages.Digital_Payment_is_disable')]
-                    ], 403);
-                }
 
-                $status= Helpers::subscription_plan_chosen(store_id:$store_id , package_id:$package_id,payment_method: 'pay_now' ,discount:$discount, reference:$reference ,type: $type);
-                if($status === 'downgrade_error'){
-                    return response()->json([
-                        'errors' => ['message' => translate('messages.You_can_not_downgraded_to_this_package_please_choose_a_package_with_higher_upload_limits')]
-                    ], 403);
-                }
-                return response()->json(['id'=>$status],200);
-            }
             $data=[
-            'store_business_model' => 'subscription',
-            'logo'=> $store->logo,
-            'message' => translate('messages.application_placed_successfully')
-            ];
-            return response()->json($data,200);
-        }
-
+                'store_business_model' => 'subscription',
+                'logo'=> $store->logo,
+                'message' => translate('messages.application_placed_successfully')
+                ];
+                return response()->json($data,200);
+            }
         elseif($request->business_plan == 'commission' ){
             $store->store_business_model = 'commission';
             $store->save();
@@ -86,7 +94,10 @@ class SubscriptionController extends Controller
         'message' => translate('messages.application_placed_successfully')
         ];
         return response()->json($data,200);
-        }
+    }
+
+    return response()->json([],403);
+
     }
 
 

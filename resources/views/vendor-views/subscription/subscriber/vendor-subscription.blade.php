@@ -1,4 +1,4 @@
-@extends('layouts.admin.app')
+@extends('layouts.vendor.app')
 @section('title',translate('messages.Store_Subscription'))
 @section('subscriberList')
 active
@@ -33,111 +33,14 @@ active
         <div class="js-nav-scroller hs-nav-scroller-horizontal mb-4">
             <ul class="nav nav-tabs border-0 nav--tabs nav--pills">
                 <li class="nav-item">
-                    <a href="" class="nav-link active">{{ translate('Subscription_Details') }} </a>
+                    <a href="#" class="nav-link active">{{ translate('Subscription_Details') }} </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('admin.business-settings.subscriptionackage.subscriberTransactions',$store->id) }}" class="nav-link">{{ translate('Transactions') }}</a>
+                    <a href="{{ route('vendor.subscriptionackage.subscriberTransactions',$store->id) }}" class="nav-link">{{ translate('Transactions') }}</a>
                 </li>
             </ul>
         </div>
-        <div class="card mb-20">
-            <div class="card-header border-0 align-items-center">
-                <h4 class="card-title align-items-center gap-2">
-                    <span class="card-header-icon">
-                        <img src="{{asset('public/assets/admin/img/store-3.png')}}" alt="">
-                    </span>
-                    <span class="text-title">{{ translate('Store_Info') }}</span>
-                </h4>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <div class="resturant--info-address">
-                                    <div class="logo">
-                                        <a href="{{route('admin.store.view', $store->id)}}">
 
-                                            <img class="onerror-image" src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
-                                            $store['logo'] ?? '',
-                                            asset('storage/app/public/store').'/'.$store['logo'] ?? '',
-                                            asset('public/assets/admin/img/160x160/img1.jpg'),
-                                            'store/'
-                                        ) }}">
-                                    </div>
-                                        </a>
-                                    <ul class="address-info list-unstyled list-unstyled-py-3 text-dark">
-                                        <li>
-                                            <h5 class="name">
-                                                {{ $store->name }}
-                                            </h5>
-                                        </li>
-
-                                        <li>
-                                            <i class="tio-call-talking nav-icon"></i>
-                                            <span class="pl-1">
-                                                <a href="tel:{{ $store->phone }}">
-                                                    {{ $store->phone }}
-                                                </a>
-                                            </span>
-                                        </li>
-                                        <li>
-                                            <i class="tio-email nav-icon"></i>
-                                            <span class="pl-1">
-                                                <a href="mailto:{{ $store->email }}">
-                                                    {{ $store->email }}
-                                                </a>
-                                            </span>
-                                        </li>
-                                        <li>
-                                            <i class="tio-city nav-icon"></i>
-                                            <span class="pl-1">
-                                                {{ $store->address }}
-                                            </span>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <div class="resturant--info-address">
-                                    <ul class="address-info list-unstyled list-unstyled-py-3 text-dark pl-0">
-                                        <li>
-                                            <h5 class="name">
-                                                {{ translate('Owner Info') }}
-                                            </h5>
-                                        </li>
-                                        <li>
-                                            <h5 class="name text-title">
-                                                {{ $store?->vendor?->f_name  .' '. $store?->vendor?->l_name}}
-                                            </h5>
-                                        </li>
-                                        <li>
-                                            <i class="tio-call-talking nav-icon"></i>
-                                            <span class="pl-1">
-                                               <a href="tel:{{ $store?->vendor?->phone}}">
-                                                {{ $store?->vendor?->phone}}
-                                               </a>
-                                            </span>
-                                        </li>
-                                        <li>
-                                            <i class="tio-email nav-icon"></i>
-                                            <span class="pl-1">
-                                            <a href="mailto: {{ $store?->vendor?->email}}"></a>
-                                            {{ $store?->vendor?->email}}
-                                            </span>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
         <div class="card mb-20">
             <div class="card-header border-0 align-items-center">
                 <h4 class="card-title align-items-center gap-2">
@@ -286,7 +189,7 @@ active
                 </div>
                 <div class="btn--container justify-content-end mt-3">
                     @if ( $store?->store_sub_update_application?->is_canceled == 0 )
-                        <button type="button"  data-url="{{route('admin.business-settings.subscriptionackage.cancelSubscription',$store?->id)}}" data-message="{{translate('Do_You_Want_To_This_subscription_?')}}"
+                        <button type="button"  data-url="{{route('vendor.subscriptionackage.cancelSubscription',$store?->id)}}" data-message="{{translate('Do_You_Want_To_This_subscription_?')}}"
                         class="btn btn--danger text-white status_change_alert">{{ translate('Cancel Subscription') }}</button>
                     @endif
 
@@ -325,7 +228,7 @@ active
                                         </div>
                                         <div class="text-center">
                                             @if ($store->store_business_model == 'commission')
-                                            <button type="button" data-url="{{route('admin.business-settings.subscriptionackage.switchToCommission',$store->id)}}" data-message="{{translate('You_Want_To_Migrate_To_Commission')}}" class="btn btn--primary shift_to_commission">{{ translate('Shift in this plan') }}</button>
+                                            <button type="button" data-url="{{route('vendor.subscriptionackage.switchToCommission',$store->id)}}" data-message="{{translate('You_Want_To_Migrate_To_Commission')}}" class="btn btn--primary shift_to_commission">{{ translate('Shift in this plan') }}</button>
                                             @else
                                             <button type="button" class="btn btn--secondary">{{ translate('Current_Plan') }}</button>
                                             @endif
@@ -394,10 +297,10 @@ active
                                             {{-- <button type="button" class="btn btn--primary" data-dismiss="modal" data-toggle="modal" data-target="#shift-modal">Shift in this plan</button> --}}
 
                                             @if ($store?->store_sub_update_application?->package_id == $package->id)
-                                            <button data-id="{{ $package->id }}"  data-url="{{route('admin.business-settings.subscriptionackage.packageView',[$package->id,$store->id ])}}"
+                                            <button data-id="{{ $package->id }}"  data-url="{{route('vendor.subscriptionackage.packageView',[$package->id,$store->id ])}}"
                                                 data-target="#package_detail" id="package_detail" type="button" class="btn btn--warning text-white renew-btn package_detail">{{ translate('messages.Renew') }}</button>
                                             @else
-                                            <button data-id="{{ $package->id }}" data-url="{{route('admin.business-settings.subscriptionackage.packageView',[$package->id,$store->id ])}}"
+                                            <button data-id="{{ $package->id }}" data-url="{{route('vendor.subscriptionackage.packageView',[$package->id,$store->id ])}}"
                                                 data-target="#package_detail" id="package_detail" type="button" class="btn btn--primary shift-btn package_detail">{{ translate('messages.Shift_in_this_plan') }}</button>
                                             @endif
 

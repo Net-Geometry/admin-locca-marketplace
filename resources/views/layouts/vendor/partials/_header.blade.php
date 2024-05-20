@@ -164,6 +164,182 @@ $val= (string) ($cash_in_hand_overflow_store_amount - (($cash_in_hand_overflow_s
     </div>
 @endif
 
+
+
+
+    <?php
+    $store_data=\App\CentralLogics\Helpers::get_store_data();
+    $subscription_deadline_warning_days =  \App\Models\BusinessSetting::where('key','subscription_deadline_warning_days')->first()?->value ?? 7;
+    ?>
+
+
+
+
+
+@if ( !in_array($store_data->store_business_model, ['none','commission']) && !Request::is('store-panel/subscription/*') )
+
+        <?php
+            $pers=10;
+            if($store_data?->store_sub){
+                $validity=$store_data?->store_sub?->validity;
+                    $remaining_days= Carbon\Carbon::now()->subDays(1)->diffInDays($store_data?->store_sub?->expiry_date_parsed->format('Y-m-d'), false);
+                    $pers=  $validity-$remaining_days > 0  ? (($validity-$remaining_days) /$validity) *100 : 1;
+                    $pers=  439.6 * $pers / 100;
+            }
+        ?>
+        {{-- {{ dd($remaining_days) }} --}}
+        @if ($store_data?->store_sub?->expiry_date_parsed && $store_data?->store_sub->expiry_date_parsed->subDays($subscription_deadline_warning_days)->isBefore(now()))
+
+                <!-- Renew -->
+                <div class="renew-badge mb-20" id="renew-badge">
+                    <div class="renew-content d-flex align-items-center">
+                        <img src="{{asset('/public/assets/admin/img/timer.svg')}}" alt="">
+                        <div class="txt">
+                            {{ translate('Your subscription ending soon. Please renew to continue access') }}
+                        </div>
+                    </div>
+                    <div>
+                        <a href="{{route('vendor.subscriptionackage.subscriberDetail')}}" class="btn btn--danger">{{ translate('Renew') }}</a>
+                    </div>
+                </div>
+                <!-- Renew -->
+
+
+        @endif
+        @if ($store_data?->store_sub?->status == 1 && $store_data?->store_sub?->is_trial == 1 && $store_data?->store_sub?->is_canceled == 0)
+        <div class="free-trial trial success-bg">
+            <div class="inner-div">
+                <div class="left">
+                    <img src="{{asset('/public/assets/admin/img/icon-puck.svg')}}" alt="">
+                    <div class="left-content">
+                        <h6>{{ translate('Get the best experience of on demand service business') }}</h6>
+                        <div>{{ translate('Run your on demand business with the most popular platform') }}</div>
+                    </div>
+                </div>
+                <div class="right">
+                    <a href="#" class="btn btn-2">
+                        <span class="circle-progress-container">
+                            <svg width="40" viewBox="0 0 160 160">
+                                <circle r="70" cx="80" cy="80" fill="transparent" stroke="#ffffff20" stroke-width="12px"></circle>
+                                <circle r="70" cx="80" cy="80" fill="transparent" stroke="#ffffff" stroke-width="12px" stroke-dasharray="439.6px" stroke-dashoffset="{{ $pers }}px"></circle>
+                            </svg>
+                            {{ Carbon\Carbon::now()->subDays(1)->diffInDays($store_data?->store_sub?->expiry_date_parsed->format('Y-m-d'), false) }}
+                        </span>
+                        {{translate('Days_left_in_free_trial')}}
+                    </a>
+                    <a href="{{route('vendor.subscriptionackage.subscriberDetail')}}" class="btn btn-light">{{ translate('Choose_Subscription_Plan') }} <i class="tio-arrow-forward"></i></a>
+                </div>
+                <button type="button" class="trial-close">
+                    <i class="tio-clear-circle"></i>
+                </button>
+            </div>
+        </div>
+        @elseif ($store_data?->store_sub == null && $store_data?->store_sub_update_application?->is_trial == 1)
+
+
+
+        <div class="modal fade show trial-ended-modal" id="free-trial-modal">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-body p-0">
+                        <div class="trial-ended-modal-wrapper">
+                            {{-- <button type="button" class="trial-ended-close-btn text-md-white" data-dismiss="modal">
+                                <i class="tio-clear-circle"></i>
+                            </button> --}}
+                            <div class="trial-ended-modal-content align-self-center">
+                                <h3 class="title">{{ translate('Your_Free_Trial_Has_Been_Ended') }}</h3>
+                                <p class="mb-4">
+                                    {{ translate('Purchase a subscription plan or contact with the admin to settle the payment and unblock the access to service.') }}
+                                </p>
+                                <a href="{{route('vendor.subscriptionackage.subscriberDetail')}}" class="btn btn--primary">{{ translate('Choose Subscription Plan') }} <i class="tio-arrow-forward"></i></a>
+                                <div class="blocked-subscription mt-5">
+                                    <img src="{{asset('/public/assets/admin/img/WarningOctagon.svg')}}" alt="">
+                                    <span>{{ translate('All Access to service has been blocked due to no active subscription') }}</span>
+                                </div>
+                            </div>
+                            <div class="trial-ended-modal-img d-none d-md-block">
+                                <img src="{{asset('/public/assets/admin/img/trial-ended-bg.png')}}" alt="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="free-trial trial danger-bg">
+            <div class="inner-div">
+                <div class="left">
+                    <img src="{{asset('/public/assets/admin/img/timer-2.svg')}}" alt="">
+                    <div class="left-content">
+                        <h6>{{ translate('Free_Trial_Has_Been_Ended') }}</h6>
+                        <div>{{ translate('Get_a_subscription_plan_to_continue_with_your_business') }}</div>
+                    </div>
+                </div>
+                <div class="right">
+                    <a href="{{route('vendor.subscriptionackage.subscriberDetail')}}" class="btn btn-light">{{ translate('Choose_Subscription_Plan') }} <i class="tio-arrow-forward"></i></a>
+                </div>
+                {{-- <button type="button" class="trial-close">
+                    <i class="tio-clear-circle"></i>
+                </button> --}}
+            </div>
+        </div>
+        @elseif ($store_data?->store_sub  && $store_data?->store_sub?->is_canceled == 1)
+        <div class="free-trial trial danger-bg">
+            <div class="inner-div">
+                <div class="left">
+                    <img src="{{asset('/public/assets/admin/img/timer-2.svg')}}" alt="">
+                    <div class="left-content">
+                        <h6>{{ translate('Your_Subscription_Has_Been_Cnaceled_by') }} {{ $store_data?->store_sub?->canceled_by == 'admin' ? translate($store_data?->store_sub?->canceled_by) : translate('Yourself') }}</h6>
+                        <div>{{ translate('You_can_not_consume_your_subscription_after') }} {{ \App\CentralLogics\Helpers::date_format($store_data?->store_sub?->expiry_date_parsed) }}</div>
+                    </div>
+                </div>
+                <div class="right">
+                    <a href="" class="btn btn-2">
+                        <span class="circle-progress-container">
+                            <svg width="40" viewBox="0 0 160 160">
+                                <circle r="70" cx="80" cy="80" fill="transparent" stroke="#ffffff20" stroke-width="12px"></circle>
+                                <circle r="70" cx="80" cy="80" fill="transparent" stroke="#ffffff" stroke-width="12px" stroke-dasharray="439.6px" stroke-dashoffset="{{ $pers }}px"></circle>
+                            </svg>
+                            {{ Carbon\Carbon::now()->subDays(1)->diffInDays($store_data?->store_sub?->expiry_date_parsed->format('Y-m-d'), false) }}
+                        </span>
+                        {{translate('Days_left_in_this_subscription')}}
+                    </a>
+                    <a href="{{route('vendor.subscriptionackage.subscriberDetail')}}" class="btn btn-light">{{ translate('Choose_Subscription_Plan') }} <i class="tio-arrow-forward"></i></a>
+                </div>
+
+                <button type="button" class="trial-close">
+                    <i class="tio-clear-circle"></i>
+                </button>
+            </div>
+        </div>
+
+        @elseif ($store_data?->store_sub == null)
+        <div class="free-trial trial danger-bg">
+            <div class="inner-div">
+                <div class="left">
+                    <img src="{{asset('/public/assets/admin/img/timer-2.svg')}}" alt="">
+                    <div class="left-content">
+                        <h6>{{ translate('Your_Subscription_Has_Been_Expired_on') }} {{  \App\CentralLogics\Helpers::date_format($store_data?->store_sub_update_application?->expiry_date_parsed) }} </h6>
+                        <div>{{ translate('Purchase a subscription plan or contact with the admin to settle the payment and unblock the access to service') }} </div>
+                    </div>
+                </div>
+                <div class="right">
+
+                    <a href="{{route('vendor.subscriptionackage.subscriberDetail')}}" class="btn btn-light">{{ translate('Choose_Subscription_Plan') }} <i class="tio-arrow-forward"></i></a>
+                </div>
+{{--
+                <button type="button" class="trial-close">
+                    <i class="tio-clear-circle"></i>
+                </button> --}}
+            </div>
+        </div>
+
+        @endif
+
+@endif
+
 <script>
    document.addEventListener('DOMContentLoaded', function () {
             $(document).on('click', '.log-out', function () {
@@ -184,4 +360,5 @@ $val= (string) ($cash_in_hand_overflow_store_amount - (($cash_in_hand_overflow_s
         })
 });
 });
+
 </script>

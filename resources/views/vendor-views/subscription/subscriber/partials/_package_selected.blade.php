@@ -69,7 +69,7 @@
             </div>
         </div>
 
-        <form action="{{ route('admin.business-settings.subscriptionackage.packageBuy') }}" method="post">
+        <form action="{{ route('vendor.subscriptionackage.packageBuy') }}" method="post">
             @csrf
             @method('POST')
                 <input type="hidden" value="{{ $package->id }}" name="package_id">
@@ -98,19 +98,6 @@
             </div>
             @endif
 
-            <div class="col-md-6">
-                <label class="payment-item">
-                    <input type="radio" value="manual_payment_by_admin"  class="d-none" name="payment_gateway">
-                    <div class="payment-item-inner">
-                        <div class="check">
-                            <img src="{{asset('/public/assets/admin/img/check-1.png')}}" class="uncheck" alt="">
-                            <img src="{{asset('/public/assets/admin/img/check-2.png')}}" class="check" alt="">
-                        </div>
-                        <span>{{ translate('manually_pay') }}</span>
-                        {{-- <span class="ml-auto" >{{ \App\CentralLogics\Helpers::format_currency($balance) }} </span> --}}
-                    </div>
-                </label>
-            </div>
 
             @foreach ($payment_methods as $item)
 

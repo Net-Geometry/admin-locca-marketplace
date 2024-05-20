@@ -3560,7 +3560,7 @@ class Helpers
             if (isset($store_subscription) && $type == 'renew') {
                 $store_subscription->total_package_renewed= $store_subscription->total_package_renewed + 1;
 
-                $day_left=$store_subscription->expiry_date->format('Y-m-d');
+                $day_left=$store_subscription->expiry_date_parsed->format('Y-m-d');
                 if (Carbon::now()->subDays(1)->diffInDays($day_left, false) > 0) {
                     $add_days= Carbon::now()->subDays(1)->diffInDays($day_left, false);
                 }
@@ -3573,9 +3573,9 @@ class Helpers
                 ]);
                 $store_subscription =new StoreSubscription();
                 $store_subscription->total_package_renewed= 0;
+                $store_subscription->is_trial= 0;
 
             }
-
             $store_subscription->renewed_at=now();
             $store_subscription->package_id=$package->id;
             $store_subscription->store_id=$store->id;
@@ -3591,9 +3591,11 @@ class Helpers
                 $free_trial_period_data = json_decode(BusinessSetting::where(['key' => 'free_trial_period'])->first()->value,true);
                 $free_trial_period= $free_trial_period_data['data'];
                 $store_subscription->expiry_date= Carbon::now()->addDays($free_trial_period)->format('Y-m-d');
+                $store_subscription->validity= $free_trial_period;
             }
             else{
                 $store_subscription->expiry_date= Carbon::now()->addDays($package->validity+$add_days)->format('Y-m-d');
+                $store_subscription->validity=$package->validity+$add_days;
             }
             if($package->max_order != 'unlimited'){
                 $store_subscription->max_order=$package->max_order + $add_orders;
@@ -3608,6 +3610,8 @@ class Helpers
             $store_subscription->chat=$package->chat;
             $store_subscription->review=$package->review;
             $store_subscription->self_delivery=$package->self_delivery;
+            $store_subscription->is_canceled=0;
+            $store_subscription->canceled_by='none';
 
             $store->item_section= 1;
             $store->pos_system= 1;
@@ -3651,6 +3655,7 @@ class Helpers
             if ($payment_method  == 'free_trial') {
                 $subscription_transaction->validity= $free_trial_period;
                 $subscription_transaction->paid_amount= 0;
+                $subscription_transaction->is_trial= 0;
             }
             elseif($payment_method  == 'pay_now'){
                 $subscription_transaction->payment_status ='on_hold';
@@ -3681,7 +3686,7 @@ class Helpers
                 'max_order'=>$package->max_order,
                 'max_product'=>$package->max_product,
             ];
-
+// dd($store_subscription->expiry_date);
             DB::beginTransaction();
             $store->save();
             $subscription_transaction->save();
@@ -3697,9 +3702,10 @@ class Helpers
         }
         return  $subscription_transaction->id;
     }
-    public static function subscriptionPayment($store_id,$package_id,$payment_gateway,$payment_platform='web',$url,$type='payment'){
+    public static function subscriptionPayment($store_id,$package_id,$payment_gateway,$url,$payment_platform='web',$type='payment'){
         $store = Store::where('id',$store_id)->first();
         $package = SubscriptionPackage::where('id',$package_id)->first();
+        $type == null ? 'payment' :$type ;
 
         $payer = new Payer(
             $store->name ,

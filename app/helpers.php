@@ -219,6 +219,8 @@ if (!function_exists('config_settings')) {
             if($data->attribute == 'store_subscription_payment'){
                     $type='new_plan';
                 }
+
+                
             Helpers::subscription_plan_chosen(store_id:$data->payer_id,package_id:$data->attribute_id,payment_method:$data->payment_method,discount:0,reference:$data->attribute,type: $type);
             return true;
         }
