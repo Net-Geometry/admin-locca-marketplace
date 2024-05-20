@@ -59,6 +59,7 @@ class OtherBannerController extends Controller
             $key = $banner->key;
             $value = $banner->value;
             $bannerData[$key] = $value;
+            $bannerData[$key.'_storage'] = $banner?->storage?->value??'public';
         }
 
         $banner_contents=ModuleWiseBanner::Active()->where('module_id', $module_id)->where('type','video_banner_content')->whereIn('key', ['content1_title','content1_subtitle','content2_title','content2_subtitle','content3_title','content3_subtitle'])->get();
