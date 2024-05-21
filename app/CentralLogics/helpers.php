@@ -911,7 +911,8 @@ class Helpers
                 'lat' => $item->last_location ? $item->last_location->latitude : false,
                 'lng' => $item->last_location ? $item->last_location->longitude : false,
                 'location' => $item->last_location ? $item->last_location->location : '',
-                'storage' => $item->storage ? $item->storage->value: 'public'
+                'storage' => $item->storage ? $item->storage->value: 'public',
+                'image_link' => self::onerror_image_helper($item['image'], asset('storage/app/public/delivery-man/').'/'. $item['image'], asset('public/assets/admin/img/160x160/img1.jpg') , 'delivery-man/', $item->storage ? $item->storage->value: 'public')
             ];
         }
         $data = $storage;
@@ -3309,6 +3310,8 @@ class Helpers
         }elseif(!(is_array($data)) && (get_class($data) != 'stdClass')) {
             $storage = (is_object($data) && ($data instanceof Collection)) ?$data?->storage?->value:($data['storage']?$data['storage']['value']:'public');
         }
+
+//        dd($image,$storage);
 
 //        $image = (get_class($data) === 'stdClass' && property_exists($data, $key)) ? $data?->$key : ($data?->$key ?? '');
 //        $storage = $data?->storage?->value ?? 'public';

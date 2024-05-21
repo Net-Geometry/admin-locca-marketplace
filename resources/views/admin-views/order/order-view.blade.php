@@ -1866,7 +1866,7 @@
                                         <span class="dm_list" role='button' data-id="{{ $dm['id'] }}">
                                             <img class="avatar avatar-sm avatar-circle mr-1 onerror-image"
                                                 data-onerror-image="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}"
-                                                src="{{\App\CentralLogics\Helpers::get_image_helper($dm,'image', asset('storage/app/public/delivery-man/') .'/'. $dm['image'], asset('public/assets/admin/img/160x160/img1.jpg'), 'delivery-man/') }}"
+                                                src="{{\App\CentralLogics\Helpers::onerror_image_helper($dm['image'], asset('storage/app/public/delivery-man/') .'/'. $dm['image'], asset('public/assets/admin/img/160x160/img1.jpg'), 'delivery-man/',$dm['storage']??'public') }}"
                                                 alt="{{ $dm['name'] }}">
                                             {{ $dm['name'] }}
                                         </span>
@@ -2615,7 +2615,7 @@
                     google.maps.event.addListener(marker, 'click', (function(marker, i) {
                         return function() {
                             infowindow.setContent(
-                                "<div style='float:left'><img style='max-height:40px;wide:auto;' src='{{\App\CentralLogics\Helpers::onerror_image_helper(" + deliveryMan[i].image + ", asset('storage/app/public/delivery-man/').'/'. " + deliveryMan[i].image + ", asset('public/assets/admin/img/160x160/img1.jpg') , 'delivery-man/'," + deliveryMan[i].storage + ") }}'></div><div style='float:right; padding: 10px;'><b>" + deliveryMan[i].name + "</b><br/> " + deliveryMan[i].location + "</div>");
+                                "<div style='float:left'><img style='max-height:40px;wide:auto;' src='"+ deliveryMan[i].image_link +"'></div><div style='float:right; padding: 10px;'><b>" + deliveryMan[i].name + "</b><br/> " + deliveryMan[i].location + "</div>");
                             infowindow.open(map, marker);
                         }
                     })(marker, i));

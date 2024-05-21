@@ -2470,8 +2470,28 @@ class BusinessSettingsController extends Controller
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
+            DB::table('business_settings')->updateOrInsert(['key' => '3rd_party_storage'], [
+                'key' => '3rd_party_storage',
+                'value' => $request->status=='1'?0:1,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
         }
-        if($name == 'storage_connection'){
+        if($name == '3rd_party_storage'){
+            DB::table('business_settings')->updateOrInsert(['key' => '3rd_party_storage'], [
+                'key' => '3rd_party_storage',
+                'value' => $request->status??0,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+            DB::table('business_settings')->updateOrInsert(['key' => 'local_storage'], [
+                'key' => 'local_storage',
+                'value' => $request->status=='1'?0:1,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
+        if($name == 'storage_connection') {
             DB::table('business_settings')->updateOrInsert(['key' => 's3_credential'], [
                 'key' => 's3_credential',
                 'value' => json_encode([
@@ -2485,60 +2505,62 @@ class BusinessSettingsController extends Controller
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
-
-            $credentials=\App\CentralLogics\Helpers::get_business_settings('s3_credential');
-
-            $s3Credentials = [
-                'FILESYSTEM_DRIVER' => 's3',
-                'AWS_ACCESS_KEY_ID' => $credentials['key'],
-                'AWS_SECRET_ACCESS_KEY' => $credentials['secret'],
-                'AWS_DEFAULT_REGION' => $credentials['region'],
-                'AWS_BUCKET' => $credentials['bucket'],
-                'AWS_URL' => $credentials['url'],
-                'AWS_ENDPOINT' => $credentials['end_point']
-            ];
-
-            // Load existing environment file into an array
-            $envFile = file(base_path('.env'), FILE_IGNORE_NEW_LINES);
-            $data = [];
-            foreach ($envFile as $line) {
-                if (!empty(trim($line))) {
-                    list($key, $value) = explode('=', $line, 2);
-                    $data[$key] = $value;
-                } else {
-                    // Preserve empty lines
-                    $data[] = '';
-                }
-            }
-
-            // Update existing keys
-            foreach ($s3Credentials as $key => $value) {
-                if (isset($data[$key])) {
-                    // Update the value
-                    $data[$key] = $value;
-                }
-            }
-
-            // Append any new keys that were not present in the original file
-            foreach ($s3Credentials as $key => $value) {
-                if (!isset($data[$key])) {
-                    $data[$key] = $value;
-                }
-            }
-
-            // Write the updated environment file
-            $lines = [];
-            foreach ($data as $key => $value) {
-                if (is_numeric($key)) {
-                    // Preserve empty lines
-                    $lines[] = '';
-                } else {
-                    $lines[] = $key . '=' . $value;
-                }
-            }
-
-            file_put_contents(base_path('.env'), implode(PHP_EOL, $lines) . PHP_EOL);
         }
+
+        $credentials=\App\CentralLogics\Helpers::get_business_settings('s3_credential');
+        $config=\App\CentralLogics\Helpers::get_business_settings('local_storage');
+
+        $s3Credentials = [
+            'FILESYSTEM_DRIVER' => isset($config)?($config==0?'s3':'local'):'local',
+            'AWS_ACCESS_KEY_ID' => $credentials['key'],
+            'AWS_SECRET_ACCESS_KEY' => $credentials['secret'],
+            'AWS_DEFAULT_REGION' => $credentials['region'],
+            'AWS_BUCKET' => $credentials['bucket'],
+            'AWS_URL' => $credentials['url'],
+            'AWS_ENDPOINT' => $credentials['end_point']
+        ];
+
+        // Load existing environment file into an array
+        $envFile = file(base_path('.env'), FILE_IGNORE_NEW_LINES);
+        $data = [];
+        foreach ($envFile as $line) {
+            if (!empty(trim($line))) {
+                list($key, $value) = explode('=', $line, 2);
+                $data[$key] = $value;
+            } else {
+                // Preserve empty lines
+                $data[] = '';
+            }
+        }
+
+        // Update existing keys
+        foreach ($s3Credentials as $key => $value) {
+            if (isset($data[$key])) {
+                // Update the value
+                $data[$key] = $value;
+            }
+        }
+
+        // Append any new keys that were not present in the original file
+        foreach ($s3Credentials as $key => $value) {
+            if (!isset($data[$key])) {
+                $data[$key] = $value;
+            }
+        }
+
+        // Write the updated environment file
+        $lines = [];
+        foreach ($data as $key => $value) {
+            if (is_numeric($key)) {
+                // Preserve empty lines
+                $lines[] = '';
+            } else {
+                $lines[] = $key . '=' . $value;
+            }
+        }
+
+        file_put_contents(base_path('.env'), implode(PHP_EOL, $lines) . PHP_EOL);
+
 
         Toastr::success(translate('messages.updated_successfully'));
         return back();
