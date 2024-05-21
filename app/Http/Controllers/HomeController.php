@@ -123,9 +123,12 @@ class HomeController extends Controller
         $landing_integration_type = Helpers::get_business_data('landing_integration_type');
         $redirect_url = Helpers::get_business_data('landing_page_custom_url');
 
+        $new_user= request()?->new_user ?? null ;
+
+
         if(isset($config) && $config){
 
-            return view('home',compact('landing_data'));
+            return view('home',compact('landing_data' ,'new_user'));
         }elseif($landing_integration_type == 'file_upload' && File::exists('resources/views/layouts/landing/custom/index.blade.php')){
             return view('layouts.landing.custom.index');
         }elseif($landing_integration_type == 'url'){

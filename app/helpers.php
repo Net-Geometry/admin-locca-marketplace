@@ -217,10 +217,12 @@ if (!function_exists('config_settings')) {
         function sub_success($data){
             $type='renew';
             if($data->attribute == 'store_subscription_payment'){
-                    $type='new_plan';
+                $type='new_plan';
+                }
+                elseif($data->attribute == 'store_subscription_new_join'){
+                    $type='new_join';
                 }
 
-                
             Helpers::subscription_plan_chosen(store_id:$data->payer_id,package_id:$data->attribute_id,payment_method:$data->payment_method,discount:0,reference:$data->attribute,type: $type);
             return true;
         }
@@ -228,11 +230,7 @@ if (!function_exists('config_settings')) {
 
     if (! function_exists('sub_fail')) {
         function sub_fail($data){
-            // $subscription_transaction= SubscriptionTransaction::where('id',$data->attribute_id)->with('store')->first();
-            // $subscription_transaction->payment_status ='failed';
-            // $subscription_transaction->reference = $data?->transaction_id ?? null;
-            // $subscription_transaction->payment_method = $data->payment_method;
-            // $subscription_transaction->save();
+            return true;
         }
     }
 

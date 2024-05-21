@@ -189,6 +189,11 @@ Route::group(['prefix' => 'store', 'as' => 'restaurant.'], function () {
     Route::get('apply', 'VendorController@create')->name('create');
     Route::post('apply', 'VendorController@store')->name('store');
     Route::get('get-all-modules', 'VendorController@get_all_modules')->name('get-all-modules');
+
+    Route::get('back', 'VendorController@back')->name('back');
+    Route::post('business-plan', 'VendorController@business_plan')->name('business_plan');
+    Route::post('payment', 'VendorController@payment')->name('payment');
+    Route::get('final-step', 'VendorController@final_step')->name('final_step');
 });
 
 //Deliveryman Registration

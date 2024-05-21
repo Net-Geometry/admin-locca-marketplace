@@ -1,5 +1,6 @@
 @extends('layouts.landing.app')
-@section('title', translate("messages.landing_page") . ' | ' . \App\CentralLogics\Helpers::get_settings('business_name') != 'null' ? \App\CentralLogics\Helpers::get_settings('business_name') :'Sixam Mart')
+@php( $business_name= \App\CentralLogics\Helpers::get_settings('business_name'))
+@section('title', translate("messages.landing_page") . ' | ' . $business_name != 'null' ? $business_name :'Sixam Mart')
 @section('content')
 
         <!-- Basic Settings -->
@@ -3737,28 +3738,30 @@
     @endif
     <!-- ==== Testimonial Ends Here ==== -->
 
+        @if (isset($new_user) && $new_user ==  true)
 
-    <!-- Modal -->
-    <div class="modal fade show" id="welcome-modal">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0">
-                <div class="modal-header border-0 pt-4 px-4">
-                    <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body px-sm-5 pb-5">
-                    <div class="text-center">
-                        <img src="{{asset('/public/assets/landing/img/welcome.svg')}}" class="mw-100 mb-3" alt="">
-                        <h5 class="mb-3">Welcome to 6amMart!</h5>
-                        <p class="m-0 mb-4">Thanks for joining us! Your registration is under review. Hang tight, we'll notify you once approved!</p>
-                        <button type="button" class="border-0 outline-0 shadow-none cmn--btn" data-bs-dismiss="modal">
-                            okay
-                        </button>
+        <!-- Modal -->
+        <div class="modal fade show" id="welcome-modal">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-0">
+                    <div class="modal-header border-0 pt-4 px-4">
+                        <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body px-sm-5 pb-5">
+                        <div class="text-center">
+                            <img src="{{asset('/public/assets/landing/img/welcome.svg')}}" class="mw-100 mb-3" alt="">
+                            <h5 class="mb-3">{{ translate('Welcome_to') }} {{ $business_name }}!</h5>
+                            <p class="m-0 mb-4">{{ translate('Thanks for joining us! Your registration is under review. Hang tight, we’ll notify you once approved!') }}</p>
+                            <button type="button" class="border-0 outline-0 shadow-none cmn--btn" data-bs-dismiss="modal">
+                                {{ translate('okay') }}
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <!-- Modal -->
+        <!-- Modal -->
+        @endif
 
 @endsection
 @push('script_2')

@@ -3737,6 +3737,27 @@ class Helpers
         return $redirect_link;
     }
 
+    public Static function subscription_check()
+    {
+        $subscription_business_model=  BusinessSetting::where(['key'=>'subscription_business_model'])->first()?->value ?? null;
+        if($subscription_business_model == null ){
+            Helpers::insert_business_settings_key('subscription_business_model', '1');
+            $subscription_business_model=  BusinessSetting::where(['key'=>'subscription_business_model'])->first()?->value ?? null;
+        }
+
+    return $subscription_business_model ?? 1;
+
+    }
+    public Static function commission_check()
+    {
+        $commission_business_model=  BusinessSetting::where(['key'=>'commission_business_model'])->first()?->value ?? null;
+        if($commission_business_model == null ){
+            Helpers::insert_business_settings_key('commission_business_model', '1');
+            $commission_business_model=  BusinessSetting::where(['key'=>'commission_business_model'])->first()?->value ?? null;
+        }
+    return $commission_business_model ?? 1;
+    }
+
 }
 
 

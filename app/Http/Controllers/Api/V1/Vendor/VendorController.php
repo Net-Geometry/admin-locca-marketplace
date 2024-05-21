@@ -140,25 +140,26 @@ class VendorController extends Controller
         unset($vendor['todaysorders']);
         unset($vendor['this_week_orders']);
         unset($vendor['this_month_orders']);
-        if($st->store_business_model == 'subscription'){
-            if(isset($st?->store_sub)){
-                if($st->store_sub->max_product== 'unlimited' ){
+        // if($st->store_business_model == 'subscription'){
+            if(isset($st?->store_sub_update_application)){
+                $vendor['subscription'] =$st?->store_sub_update_application;
+
+                if($vendor['subscription']->max_product== 'unlimited' ){
                     $max_product_uploads= -1;
                 }
                 else{
-                    $max_product_uploads= $st?->store_sub?->max_product - $st?->item?->count();
+                    $max_product_uploads= $vendor['subscription']->max_product - $st?->item?->count();
                     if($max_product_uploads > 0){
                         $max_product_uploads ?? 0;
                     }elseif($max_product_uploads < 0) {
                         $max_product_uploads = 0;
                     }
                 }
-                $vendor['subscription'] =StoreSubscription::where('store_id',$store->id)->with('package')->latest()->first();
                 $vendor['subscription_other_data'] =  [
-                    'total_bill'=>  (float) SubscriptionTransaction::where('store_id', $store->id)->where('package_id', $vendor['subscription']?->package?->id)->sum('paid_amount'),
+                    'total_bill'=>  (float) $vendor['subscription']->package?->price * ($vendor['subscription']->total_package_renewed + 1),
                     'max_product_uploads' => (int) $max_product_uploads];
                 }
-            }
+            // }
         return response()->json($vendor, 200);
     }
 

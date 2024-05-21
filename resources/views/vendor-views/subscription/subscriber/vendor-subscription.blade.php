@@ -228,9 +228,9 @@ active
                                         </div>
                                         <div class="text-center">
                                             @if ($store->store_business_model == 'commission')
-                                            <button type="button" data-url="{{route('vendor.subscriptionackage.switchToCommission',$store->id)}}" data-message="{{translate('You_Want_To_Migrate_To_Commission')}}" class="btn btn--primary shift_to_commission">{{ translate('Shift in this plan') }}</button>
-                                            @else
                                             <button type="button" class="btn btn--secondary">{{ translate('Current_Plan') }}</button>
+                                            @else
+                                            <button type="button" data-url="{{route('vendor.subscriptionackage.switchToCommission',$store->id)}}" data-message="{{translate('You_Want_To_Migrate_To_Commission')}}" class="btn btn--primary shift_to_commission">{{ translate('Shift in this plan') }}</button>
                                             @endif
 
                                         </div>
