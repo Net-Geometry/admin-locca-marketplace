@@ -22,6 +22,7 @@ use App\Models\Conversation;
 use Illuminate\Http\Request;
 use App\Models\StoreSchedule;
 use App\CentralLogics\Helpers;
+use Illuminate\Support\Carbon;
 use App\Models\BusinessSetting;
 use App\Models\WithdrawRequest;
 use App\Exports\StoreListExport;
@@ -1005,6 +1006,20 @@ class VendorController extends Controller
         $store->vendor->status = $request->status;
         $store->vendor->save();
         if($request->status) $store->status = 1;
+
+        $add_days= 1;
+        if($store?->store_sub_update_application){
+            if($store?->store_sub_update_application && $store?->store_sub_update_application->is_trial == 1){
+                $add_days= BusinessSetting::where(['key' => 'subscription_free_trial_days'])->first()?->value ?? 1;
+            }elseif($store?->store_sub_update_application && $store?->store_sub_update_application->is_trial == 0){
+                $add_days=$store?->store_sub_update_application->validity;
+            }
+                $store?->store_sub_update_application->update([
+                    'expiry_date'=> Carbon::now()->addDays($add_days)->format('Y-m-d'),
+                    'status'=>1
+                ]);
+            $store->store_business_model= 'subscription';
+        }
         $store->save();
         try{
             if($request->status==1){

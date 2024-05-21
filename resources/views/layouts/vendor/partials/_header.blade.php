@@ -170,6 +170,7 @@ $val= (string) ($cash_in_hand_overflow_store_amount - (($cash_in_hand_overflow_s
     <?php
     $store_data=\App\CentralLogics\Helpers::get_store_data();
     $subscription_deadline_warning_days =  \App\Models\BusinessSetting::where('key','subscription_deadline_warning_days')->first()?->value ?? 7;
+    $subscription_deadline_warning_message =  \App\Models\BusinessSetting::where('key','subscription_deadline_warning_message')->first()?->value ?? null;
     ?>
 
 
@@ -187,7 +188,6 @@ $val= (string) ($cash_in_hand_overflow_store_amount - (($cash_in_hand_overflow_s
                     $pers=  439.6 * $pers / 100;
             }
         ?>
-        {{-- {{ dd($remaining_days) }} --}}
         @if ($store_data?->store_sub?->expiry_date_parsed && $store_data?->store_sub->expiry_date_parsed->subDays($subscription_deadline_warning_days)->isBefore(now()))
 
                 <!-- Renew -->
@@ -195,7 +195,7 @@ $val= (string) ($cash_in_hand_overflow_store_amount - (($cash_in_hand_overflow_s
                     <div class="renew-content d-flex align-items-center">
                         <img src="{{asset('/public/assets/admin/img/timer.svg')}}" alt="">
                         <div class="txt">
-                            {{ translate('Your subscription ending soon. Please renew to continue access') }}
+                            {{ $subscription_deadline_warning_message != null ?  $subscription_deadline_warning_message : translate('Your subscription ending soon. Please renew to continue access') }}
                         </div>
                     </div>
                     <div>
