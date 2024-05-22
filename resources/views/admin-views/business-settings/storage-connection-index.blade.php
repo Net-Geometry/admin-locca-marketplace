@@ -36,19 +36,50 @@
                                     <span class="line--limit-1">
                                         {{translate('Local Storage')}}
                                     </span>
-                                    <span class="form-label-secondary text-danger d-flex" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('If_enabled_Customers_will_be_able_to_select_COD_as_a_payment_method_during_checkout')}}"><img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="Veg/non-veg toggle"> * </span>
+                                    <span class="form-label-secondary text-danger d-flex" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('If_enabled_System_will_store_all_files_and_images_to_local_storage')}}"><img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="Veg/non-veg toggle"> * </span>
                                 </span>
                                 <input type="hidden" name="toggle_type" value="local_storage">
                                 <input
                                     type="checkbox" id="local_storage_status"
                                     data-id="local_storage_status"
                                     data-type="status"
-                                    data-image-on="{{ asset('/public/assets/admin/img/modal/digital-payment-on.png') }}"
-                                    data-image-off="{{ asset('/public/assets/admin/img/modal/digital-payment-off.png') }}"
-                                    data-title-on="{{ translate('By Turning ON Cash On Delivery Option') }}"
-                                    data-title-off="{{ translate('By Turning OFF Cash On Delivery Option') }}"
-                                    data-text-on="<p>{{ translate('Customers will not be able to select COD as a payment method during checkout. Please review your settings and enable COD if you wish to offer this payment option to customers.') }}</p>"
-                                    data-text-off="<p>{{ translate('Customers will be able to select COD as a payment method during checkout.') }}</p>"
+                                    data-image-on="{{ asset('/public/assets/admin/img/modal/local_storage.png') }}"
+                                    data-image-off="{{ asset('/public/assets/admin/img/modal/local_storage.png') }}"
+                                    data-title-on="{{ translate('By Turning ON Local Storage Option') }}"
+                                    data-title-off="{{ translate('By Turning OFF Local Storage Option') }}"
+                                    data-text-on="<p>{{ translate('System_will_store_all_files_and_images_to_local_storage') }}</p>"
+                                    data-text-off="<p>{{ translate('System_will_not_store_all_files_and_images_to_local_storage') }}</p>"
+                                    class="status toggle-switch-input dynamic-checkbox"
+                                    name="status" value="1" {{$config?($config==1?'checked':''):''}}>
+                                <span class="toggle-switch-label text">
+                                    <span class="toggle-switch-indicator"></span>
+                                </span>
+                            </label>
+                        </form>
+                    </div>
+                    <div class="col-md-4">
+                        @php($config=\App\CentralLogics\Helpers::get_business_settings('3rd_party_storage'))
+                        <form action="{{route('admin.business-settings.third-party.storage_connection_update',['3rd_party_storage'])}}"
+                              method="post" id="3rd_party_storage_status_form">
+                            @csrf
+                            <label class="toggle-switch h--45px toggle-switch-sm d-flex justify-content-between border rounded px-3 py-0 form-control">
+                                <span class="pr-1 d-flex align-items-center switch--label">
+                                    <span class="line--limit-1">
+                                        {{translate('3rd Party Storage')}}
+                                    </span>
+                                    <span class="form-label-secondary text-danger d-flex" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('If_enabled_System_will_store_all_files_and_images_to_3rd_party_storage')}}"><img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="Veg/non-veg toggle"> * </span>
+                                </span>
+                                <input type="hidden" name="toggle_type" value="3rd_party_storage">
+                                <input
+                                    type="checkbox" id="3rd_party_storage_status"
+                                    data-id="3rd_party_storage_status"
+                                    data-type="status"
+                                    data-image-on="{{ asset('/public/assets/admin/img/modal/3rd_party_storage.png') }}"
+                                    data-image-off="{{ asset('/public/assets/admin/img/modal/3rd_party_storage.png') }}"
+                                    data-title-on="{{ translate('By Turning ON 3rd Party Storage Option') }}"
+                                    data-title-off="{{ translate('By Turning OFF 3rd Party Storage Option') }}"
+                                    data-text-on="<p>{{ translate('System_will_store_all_files_and_images_to_3rd_party_storage') }}</p>"
+                                    data-text-off="<p>{{ translate('System_will_not_store_all_files_and_images_to_3rd_party_storage') }}</p>"
                                     class="status toggle-switch-input dynamic-checkbox"
                                     name="status" value="1" {{$config?($config==1?'checked':''):''}}>
                                 <span class="toggle-switch-label text">

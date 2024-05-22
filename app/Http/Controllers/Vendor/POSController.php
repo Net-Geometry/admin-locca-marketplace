@@ -218,6 +218,7 @@ class POSController extends Controller
         $data['name'] = $product->name;
         $data['discount'] = Helpers::product_discount_calculate($product, $price,Helpers::get_store_data())['discount_amount'];
         $data['image'] = $product->image;
+        $data['storage'] = $product->storage?->toArray();
         $data['add_ons'] = [];
         $data['add_on_qtys'] = [];
         $data['maximum_cart_quantity'] = $product->maximum_cart_quantity;
@@ -301,6 +302,7 @@ class POSController extends Controller
         $data['name'] = $product->name;
         $data['discount'] = Helpers::product_discount_calculate($product, $price,Helpers::get_store_data())['discount_amount'];
         $data['image'] = $product->image;
+        $data['storage'] = $product->storage?->toArray();
         $data['add_ons'] = [];
         $data['add_on_qtys'] = [];
         $data['maximum_cart_quantity'] = $product->maximum_cart_quantity;

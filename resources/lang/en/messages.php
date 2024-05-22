@@ -4605,4 +4605,22 @@
   'Successfully_Subscribed.' => 'Successfully Subscribed.',
   'Thank you for your subscription purchase! Your payment was successfully processed. Please note that your subscription will be activated once it has been approved by our Admin Team. To explore the site' => 'Thank you for your subscription purchase! Your payment was successfully processed. Please note that your subscription will be activated once it has been approved by our Admin Team. To explore the site',
   'failed_to_import_data' => 'Failed to import data',
+  'Discount amount can\'t be greater than 100%
+' => 'Discount amount can t be greater than 100%
+',
+  'By_enabling_the_status_customer_will_get_the_option_for_choosing_extra_packaging_charge_when_placing_order._for_extra_package_offer' => 'By enabling the status customer will get the option for choosing extra packaging charge when placing order. for extra package offer',
+  'is_it_halal' => 'Is it halal',
+  'cash' => 'Cash',
+  'If_enabled_System_will_store_all_files_and_images_to_local_storage' => 'If enabled System will store all files and images to local storage',
+  'By Turning ON Local Storage Option' => 'By Turning ON Local Storage Option',
+  'By Turning OFF Local Storage Option' => 'By Turning OFF Local Storage Option',
+  'System_will_store_all_files_and_images_to_local_storage' => 'System will store all files and images to local storage',
+  'System_will_not_store_all_files_and_images_to_local_storage' => 'System will not store all files and images to local storage',
+  '3rd Party Storage' => '3rd Party Storage',
+  'If_enabled_System_will_store_all_files_and_images_to_3rd_party_storage' => 'If enabled System will store all files and images to 3rd party storage',
+  'By Turning ON 3rd Party Storage Option' => 'By Turning ON 3rd Party Storage Option',
+  'By Turning OFF 3rd Party Storage Option' => 'By Turning OFF 3rd Party Storage Option',
+  'System_will_store_all_files_and_images_to_3rd_party_storage' => 'System will store all files and images to 3rd party storage',
+  'System_will_not_store_all_files_and_images_to_3rd_party_storage' => 'System will not store all files and images to 3rd party storage',
+  'Edit Information' => 'Edit Information',
 );
