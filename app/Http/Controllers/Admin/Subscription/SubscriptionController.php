@@ -30,6 +30,7 @@ class SubscriptionController extends Controller
     public function index(Request $request)
     {
         $key = explode(' ', $request['search']);
+        $filter = $request['statistics'];
         $packages=  SubscriptionPackage::withcount('currentSubscribers')
         ->when(isset($key), function($q) use($key){
             $q->where(function ($q) use ($key) {
@@ -41,7 +42,27 @@ class SubscriptionController extends Controller
             });
         })
         ->latest()->paginate(config('default_pagination'));
-        return view('admin-views.subscription.package.index',compact('packages'));
+
+
+     $package_sell_count= SubscriptionPackage::
+        withSum([
+            'transactions' => function ($query) use ($filter) {
+                $query->where('is_trial',0)
+                    ->when(isset($filter) && $filter == 'this_year', function ($query) {
+                        return $query->whereYear('created_at', now()->format('Y'));
+                    })
+
+                    ->when(isset($filter) && $filter == 'this_month', function ($query) {
+                        return $query->whereMonth('created_at', now()->format('m'))->whereYear('created_at', now()->format('Y'));
+                    })
+
+                    ->when(isset($filter) && $filter == 'this_week', function ($query) {
+                        return $query->whereBetween('created_at', [now()->startOfWeek()->format('Y-m-d H:i:s'), now()->endOfWeek()->format('Y-m-d H:i:s')]);
+                    });
+            },
+        ], 'paid_amount')->get();
+
+        return view('admin-views.subscription.package.index',compact('packages','package_sell_count'));
     }
     public function create()
     {
@@ -102,8 +123,9 @@ class SubscriptionController extends Controller
 
     public function show(SubscriptionPackage $subscriptionackage)
     {
+        $packages= SubscriptionPackage::where('status',1)->get();
         $over_view_data= $this->packageOverview($subscriptionackage);
-        return view('admin-views.subscription.package.package-details', compact('subscriptionackage','over_view_data'));
+        return view('admin-views.subscription.package.package-details', compact('subscriptionackage','over_view_data','packages'));
     }
     public function edit(SubscriptionPackage $subscriptionackage)
     {
@@ -525,6 +547,24 @@ class SubscriptionController extends Controller
             $subscription_deadline_warning_days = BusinessSetting::where('key','subscription_deadline_warning_days')->first()?->value ?? 7;
         return view('admin-views.subscription.subscriber.transaction',compact('store','transactions','id','filter','subscription_deadline_warning_days'));
 
+    }
+
+    public function switchPlan(Request $request){
+        $request->validate([
+            'package_id' => 'required',
+        ]);
+
+        SubscriptionPackage::where('id',$request->turn_off_package_id)->update([
+            'status' => 0
+        ]);
+
+        $stores=  StoreSubscription::where('package_id',$request->turn_off_package_id)->where('status',1)->where('is_canceled',0)->where('is_trial',0)->get(['id']);
+        foreach($stores as $store){
+            $reference= 'plan_shift_by_admin';
+            Helpers::subscription_plan_chosen(store_id:$store->id,package_id:$request->package_id,payment_method:$reference,discount:0,reference:$reference);
+        }
+        Toastr::success( translate('messages.Plan_Switch_Successful'));
+        return back();
     }
 
     private function getDefaultPaymentMethods()

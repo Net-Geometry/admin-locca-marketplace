@@ -8,17 +8,20 @@ use App\Models\Zone;
 use App\Models\AddOn;
 use App\Models\Order;
 use App\Models\Store;
+use App\Library\Payer;
 use App\Models\Module;
 use App\Models\Review;
 use App\Models\Expense;
+use App\Traits\Payment;
 use App\Mail\PlaceOrder;
 use App\Models\CashBack;
 use App\Models\Category;
 use App\Models\Currency;
 use App\Models\DMReview;
+use App\Library\Receiver;
 use App\Models\DataSetting;
+use App\Models\StoreWallet;
 use App\Models\Translation;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Str;
 use PayPal\Api\Transaction;
 use App\Models\FlashSaleItem;
@@ -34,15 +37,15 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Config;
+use App\Library\Payment as PaymentInfo;
+
 use App\Models\SubscriptionTransaction;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Collection;
 use MatanYadaev\EloquentSpatial\Objects\Point;
+use App\Models\SubscriptionBillingAndRefundHistory;
 use Laravelpkg\Laravelchk\Http\Controllers\LaravelchkController;
 
-use App\Library\Payment as PaymentInfo;
-use App\Library\Payer;
-use App\Traits\Payment;
-use App\Library\Receiver;
 class Helpers
 {
     public static function error_processor($validator)
@@ -3571,22 +3574,8 @@ class Helpers
                     $add_orders=$store_subscription->max_order;
                 }
 
-
-
-
-
-
-
-                    // if($add_days > 0){
-
-                    // }
-
-
-
-
-
-
             } else{
+                self::calculateSubscriptionRefundAmount($store);
                 StoreSubscription::where('store_id',$store->id)->update([
                     'status' => 0,
                 ]);
@@ -3660,7 +3649,7 @@ class Helpers
             $subscription_transaction->paid_amount= $package->price - (($package->price*$discount)/100);
 
             $subscription_transaction->payment_status = 'success';
-            $subscription_transaction->created_by=  in_array($payment_method,['wallet_payment_by_admin','manual_payment_by_admin'] )?'Admin': 'Store';
+            $subscription_transaction->created_by=  in_array($payment_method,['wallet_payment_by_admin','manual_payment_by_admin' ,'plan_shift_by_admin'] )?'Admin': 'Store';
 
             if ($payment_method  == 'free_trial') {
                 $subscription_transaction->validity= $free_trial_period;
@@ -3679,11 +3668,9 @@ class Helpers
             $subscription_transaction->reference=$reference ?? null;
             $subscription_transaction->discount=$discount ?? 0;
             if(in_array($type ,['renew','free_trial'])){
-
                 $subscription_transaction->plan_type=$type;
-            } elseif(StoreSubscription::where('store_id',$store->id)->where('is_trial',0)->count() > 0){
+            } elseif(StoreSubscription::where('store_id',$store->id)->where('is_trial',0)->count() > 0 || $reference == 'plan_shift_by_admin'){
                 $subscription_transaction->plan_type='new_plan';
-
             }
 
 
@@ -3703,6 +3690,18 @@ class Helpers
             DB::commit();
             $subscription_transaction->store_subscription_id= $store_subscription->id;
             $subscription_transaction->save();
+
+
+            if($reference == 'plan_shift_by_admin'){
+                $billing= new SubscriptionBillingAndRefundHistory();
+                $billing->store_id= $store->id;
+                $billing->subscription_id= $store_subscription->id;
+                $billing->transaction_type= 'pending_bill';
+                $billing->is_success= 0;
+                $billing->amount= $package->price;
+                $billing->save();
+            }
+
 
         } catch(\Exception $e){
             DB::rollBack();
@@ -3753,8 +3752,7 @@ class Helpers
             Helpers::insert_business_settings_key('subscription_business_model', '1');
             $subscription_business_model=  BusinessSetting::where(['key'=>'subscription_business_model'])->first()?->value ?? null;
         }
-
-    return $subscription_business_model ?? 1;
+        return $subscription_business_model ?? 1;
 
     }
     public Static function commission_check()
@@ -3764,7 +3762,43 @@ class Helpers
             Helpers::insert_business_settings_key('commission_business_model', '1');
             $commission_business_model=  BusinessSetting::where(['key'=>'commission_business_model'])->first()?->value ?? null;
         }
-    return $commission_business_model ?? 1;
+        return $commission_business_model ?? 1;
+    }
+
+    public static function calculateSubscriptionRefundAmount($store){
+
+        $store_subscription=$store->store_sub;
+        if($store_subscription){
+            $day_left=$store_subscription->expiry_date_parsed->format('Y-m-d');
+            if (Carbon::now()->subDays(1)->diffInDays($day_left, false) > 0) {
+                $add_days= Carbon::now()->subDays(1)->diffInDays($day_left, false);
+                $validity=$store_subscription?->validity;
+                $subscription_usage_max_time=BusinessSetting::where('key', 'subscription_usage_max_time')->first()?->value ?? 50 ;
+                $subscription_usage_max_time=  ($validity * $subscription_usage_max_time) /100 ;
+
+                if(($validity - $add_days) < $subscription_usage_max_time ){
+                        $per_day= $store->store_sub_trans->price / $store->store_sub_trans->validity;
+                        $back_amount= $per_day *  $add_days;
+                        $vendorWallet = StoreWallet::firstOrNew(
+                            ['vendor_id' => $store->vendor_id]
+                        );
+                        $vendorWallet->total_earning = $vendorWallet->total_earning+$back_amount;
+                        $vendorWallet->save();
+
+                        $refund=new SubscriptionBillingAndRefundHistory();
+                        $refund->store_id= $store->id;
+                        $refund->subscription_id= $store_subscription->id;
+                        $refund->transaction_type= 'refund';
+                        $refund->is_success= 1;
+                        $refund->amount= $back_amount;
+                        $refund->reference= 'validity_left_'.$add_days ;
+                        $refund->save();
+                    }
+            }
+
+        }
+
+        return true;
     }
 
 }
