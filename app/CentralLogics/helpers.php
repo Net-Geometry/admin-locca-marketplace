@@ -3567,6 +3567,22 @@ class Helpers
                 if ($store_subscription->max_order != 'unlimited' && $store_subscription->max_order > 0) {
                     $add_orders=$store_subscription->max_order;
                 }
+
+
+
+
+
+
+
+                    // if($add_days > 0){
+
+                    // }
+
+
+
+
+
+
             } else{
                 StoreSubscription::where('store_id',$store->id)->update([
                     'status' => 0,
@@ -3580,16 +3596,9 @@ class Helpers
             $store_subscription->package_id=$package->id;
             $store_subscription->store_id=$store->id;
             if ($payment_method  == 'free_trial' ) {
-                $free_trial_period_data = BusinessSetting::where(['key' => 'free_trial_period'])->first();
-                if ($free_trial_period_data == false) {
-                    $values= [
-                        'data' => 7,
-                        'status' => 1,
-                    ];
-                    Helpers::insert_business_settings_key('free_trial_period',  json_encode($values) );
-                }
-                $free_trial_period_data = json_decode(BusinessSetting::where(['key' => 'free_trial_period'])->first()->value,true);
-                $free_trial_period= $free_trial_period_data['data'];
+
+                $free_trial_period= BusinessSetting::where(['key' => 'subscription_free_trial_days'])->first()?->value ?? 1;
+
                 $store_subscription->expiry_date= Carbon::now()->addDays($free_trial_period)->format('Y-m-d');
                 $store_subscription->validity= $free_trial_period;
             }
@@ -3639,8 +3648,6 @@ class Helpers
             $store->store_business_model= 'subscription';
 
             $subscription_transaction= new SubscriptionTransaction();
-            // $subscription_transaction_ID= Str::uuid();
-            // $subscription_transaction->id=  $subscription_transaction_ID;
 
             $subscription_transaction->package_id=$package->id;
             $subscription_transaction->store_id=$store->id;
@@ -3686,7 +3693,6 @@ class Helpers
                 'max_order'=>$package->max_order,
                 'max_product'=>$package->max_product,
             ];
-// dd($store_subscription->expiry_date);
             DB::beginTransaction();
             $store->save();
             $subscription_transaction->save();
