@@ -27,7 +27,7 @@
             <div class="card-body">
                 <div class="row g-4">
                     <div class="col-md-4">
-                        @php($config=\App\CentralLogics\Helpers::get_business_settings('local_storage'))
+                        @php($config=\App\CentralLogics\Helpers::get_business_settings('local_storage')??1)
                         <form action="{{route('admin.business-settings.third-party.storage_connection_update',['local_storage'])}}"
                               method="post" id="local_storage_status_form">
                             @csrf

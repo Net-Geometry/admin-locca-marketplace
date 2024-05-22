@@ -11,6 +11,7 @@
         $campaign_order = $order->details[0]->campaign ? true : false;
     }
     $max_processing_time = explode('-', $order['store']['delivery_time'])[0];
+    $storage = $order?->storage?->value??'public';
     ?>
     <div class="content container-fluid">
         <!-- Page Header -->
@@ -217,7 +218,7 @@
                                                         data-target="#imagemodal{{ $key }}"
                                                         title="{{ translate('messages.order_attachment') }}">
                                                         <div class="gallary-card ml-auto">
-                                                            <img src="{{ asset('storage/app/' . 'public/order/' . $item) }}"
+                                                            <img src="{{\App\CentralLogics\Helpers::onerror_image_helper($item, asset('storage/app/public/order').'/'.$item, asset('public/assets/admin/img/160x160/img2.jpg'), 'order/', $order?->storage?->value??'public') }}"
                                                                 alt="{{ translate('messages.prescription') }}"
                                                                 class="initial--22 object-cover">
                                                         </div>
@@ -236,12 +237,13 @@
                                                                         class="sr-only">{{ translate('messages.cancel') }}</span></button>
                                                             </div>
                                                             <div class="modal-body">
-                                                                <img src="{{ asset('storage/app/' . 'public/order/' . $item) }}"
+                                                                <img src="{{\App\CentralLogics\Helpers::onerror_image_helper($item, asset('storage/app/public/order').'/'.$item, asset('public/assets/admin/img/160x160/img2.jpg'), 'order/', $order?->storage?->value??'public') }}"
                                                                     class="initial--22 w-100" alt="image">
                                                             </div>
+                                                            @php($file = $storage == 's3'?base64_encode('order/' . $item):base64_encode('public/order/' . $item))
                                                             <div class="modal-footer">
                                                                 <a class="btn btn-primary"
-                                                                    href="{{ route('admin.file-manager.download', base64_encode('public/order/' . $item)) }}"><i
+                                                                    href="{{ route('admin.file-manager.download', [$file,$storage]) }}"><i
                                                                         class="tio-download"></i>
                                                                     {{ translate('messages.download') }}
                                                                 </a>
@@ -258,7 +260,7 @@
                                     <button class="btn w-100 px-0" data-toggle="modal" data-target="#imagemodal"
                                         title="{{ translate('messages.order_attachment') }}">
                                         <div class="gallary-card ml-auto">
-                                            <img src="{{ asset('storage/app/' . 'public/order/' . $order->order_attachment) }}"
+                                            <img src="{{\App\CentralLogics\Helpers::onerror_image_helper($order->order_attachment, asset('storage/app/public/order').'/'.$order->order_attachment, asset('public/assets/admin/img/160x160/img2.jpg'), 'order/', $order?->storage?->value??'public') }}"
                                                 alt="{{ translate('messages.prescription') }}"
                                                 class="initial--22 object-cover">
                                         </div>
@@ -275,12 +277,13 @@
                                                             class="sr-only">{{ translate('messages.cancel') }}</span></button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <img src="{{ asset('storage/app/' . 'public/order/' . $order->order_attachment) }}"
+                                                    <img src="{{\App\CentralLogics\Helpers::onerror_image_helper($order->order_attachment, asset('storage/app/public/order').'/'.$order->order_attachment, asset('public/assets/admin/img/160x160/img2.jpg'), 'order/', $order?->storage?->value??'public') }}"
                                                         class="initial--22 w-100" alt="image">
                                                 </div>
+                                                @php($file = $storage == 's3'?base64_encode('order/' . $order->order_attachment):base64_encode('public/order/' . $order->order_attachment))
                                                 <div class="modal-footer">
                                                     <a class="btn btn-primary"
-                                                        href="{{ route('admin.file-manager.download', base64_encode('public/order/' . $order->order_attachment)) }}"><i
+                                                        href="{{ route('admin.file-manager.download', [$file,$storage]) }}"><i
                                                             class="tio-download"></i> {{ translate('messages.download') }}
                                                     </a>
                                                 </div>
@@ -900,12 +903,13 @@
                                                             class="sr-only">{{ translate('messages.cancel') }}</span></button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <img src="{{ asset('storage/app/' . 'public/order/' . $img) }}"
+                                                    <img src="{{\App\CentralLogics\Helpers::onerror_image_helper($img, asset('storage/app/public/order').'/'.$img, asset('public/assets/admin/img/160x160/img2.jpg'), 'order/', $order?->storage?->value??'public') }}"
                                                         class="initial--22 w-100" alt="img">
                                                 </div>
+                                                @php($file = $storage == 's3'?base64_encode('order/' . $img):base64_encode('public/order/' . $img))
                                                 <div class="modal-footer">
                                                     <a class="btn btn-primary"
-                                                        href="{{ route('admin.file-manager.download', base64_encode('public/order/' . $img)) }}"><i
+                                                        href="{{ route('admin.file-manager.download', [$file,$storage]) }}"><i
                                                             class="tio-download"></i>
                                                         {{ translate('messages.download') }}
                                                     </a>

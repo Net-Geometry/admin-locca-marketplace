@@ -4623,4 +4623,7 @@
   'System_will_store_all_files_and_images_to_3rd_party_storage' => 'System will store all files and images to 3rd party storage',
   'System_will_not_store_all_files_and_images_to_3rd_party_storage' => 'System will not store all files and images to 3rd party storage',
   'Edit Information' => 'Edit Information',
+  'credential_updated' => 'Credential updated',
+  'delivery_address_updated' => 'Delivery address updated',
+  'Go_to_YouTube,_click_share_option_then_get_a_popup_of_share._Select_embed_&_get_a_embed_video_then_copy_the_generated_code_for_the_embedded_link' => 'Go to YouTube  click share option then get a popup of share. Select embed & get a embed video then copy the generated code for the embedded link',
 );

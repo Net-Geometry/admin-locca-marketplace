@@ -378,7 +378,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::resource('pages/social-media', 'SocialMediaController');
 
             Route::group(['prefix' => 'file-manager', 'as' => 'file-manager.'], function () {
-                Route::get('/download/{file_name}', 'FileManagerController@download')->name('download');
+                Route::get('/download/{file_name}/{storage?}', 'FileManagerController@download')->name('download');
                 Route::get('/index/{folder_path?}', 'FileManagerController@index')->name('index');
                 Route::post('/image-upload', 'FileManagerController@upload')->name('image-upload');
                 Route::delete('/delete/{file_path}', 'FileManagerController@destroy')->name('destroy');
@@ -552,7 +552,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
 
 
         Route::group(['prefix' => 'file-manager', 'as' => 'file-manager.'], function () {
-            Route::get('/download/{file_name}', 'FileManagerController@download')->name('download');
+            Route::get('/download/{file_name}/{storage?}', 'FileManagerController@download')->name('download');
             Route::get('/index/{folder_path?}', 'FileManagerController@index')->name('index');
             Route::post('/image-upload', 'FileManagerController@upload')->name('image-upload');
             Route::delete('/delete/{file_path}', 'FileManagerController@destroy')->name('destroy');
