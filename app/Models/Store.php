@@ -2,20 +2,22 @@
 
 namespace App\Models;
 
-use App\CentralLogics\Helpers;
 use App\Scopes\ZoneScope;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
-use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Illuminate\Support\Str;
+use App\CentralLogics\Helpers;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Database\Eloquent\Model;
+use App\Mail\SubscriptionDeadLineWarning;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 /**
  * Class Store
@@ -498,6 +500,49 @@ class Store extends Model
         static::addGlobalScope('storage', function ($builder) {
             $builder->with('storage');
         });
+
+        static::retrieved(function () {
+            $current_date = date('Y-m-d');
+            $check_daily_subscription_validity_check= BusinessSetting::where('key', 'check_daily_subscription_validity_check')->first();
+            if(!$check_daily_subscription_validity_check){
+                Helpers::insert_business_settings_key('check_daily_subscription_validity_check', $current_date);
+                $check_daily_subscription_validity_check= BusinessSetting::where('key', 'check_daily_subscription_validity_check')->first();
+            }
+
+            if($check_daily_subscription_validity_check && $check_daily_subscription_validity_check?->value != $current_date){
+                Store::whereHas('store_subs',function ($query)use($current_date){
+                    $query->where('status',1)->where('expiry_date', '<', $current_date);
+                })->update(['status' => 0,
+                            'pos_system'=>1,
+                            'self_delivery_system'=>1,
+                            'reviews_section'=>1,
+                            'free_delivery'=>0,
+                            'store_business_model'=>'unsubscribed',
+                            ]);
+                StoreSubscription::where('status',1)->where('expiry_date', '<', $current_date)->update([
+                    'status' => 0
+                ]);
+
+                if (config('mail.status') && Helpers::get_mail_status('subscription_deadline_mail_status_store') == '1') {
+                    $subscription_deadline_warning_days = BusinessSetting::where('key','subscription_deadline_warning_days')->first()?->value ?? 7;
+
+                    $expire_soon= StoreSubscription::with('store:id,name,email')->where('status',1)->whereDate('expiry_date', '<=', Carbon::today()->addDays($subscription_deadline_warning_days))->get();
+
+                    try {
+                        foreach($expire_soon as $store){
+                            Mail::to($store->email)->send(new SubscriptionDeadLineWarning($store->name));
+                        }
+                    } catch (\Exception $ex) {
+                        info($ex->getMessage());
+                    }
+                }
+
+
+                $check_daily_subscription_validity_check->value = $current_date;
+                $check_daily_subscription_validity_check->save();
+            }
+        });
+
     }
 
     /**

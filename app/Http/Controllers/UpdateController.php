@@ -107,6 +107,8 @@ class UpdateController extends Controller
 
         Helpers::insert_business_settings_key('subscription_business_model', '1');
         Helpers::insert_business_settings_key('commission_business_model', '1');
+        Helpers::insert_business_settings_key('check_daily_subscription_validity_check', date('Y-m-d'));
+
         try {
             if (!Schema::hasTable('addon_settings')) {
                 $sql = file_get_contents('database/partial/addon_settings.sql');
