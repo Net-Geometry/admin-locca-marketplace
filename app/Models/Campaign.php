@@ -22,6 +22,8 @@ class Campaign extends Model
         'end_date' => 'datetime',
     ];
 
+    protected $appends = ['image_full_url'];
+
     public function translations()
     {
         return $this->morphMany(Translation::class, 'translationable');
@@ -70,6 +72,25 @@ class Campaign extends Model
         return $this->belongsToMany(Store::class)->withPivot('campaign_status');
     }
 
+    public function getImageFullUrlAttribute(){
+        $value = $this->image;
+        if (count($this->storage) > 0) {
+            foreach ($this->storage as $storage) {
+                if ($storage['key'] == 'image') {
+
+                    if($storage['value'] == 's3'){
+
+                        return Helpers::s3_storage_link('campaign',$value);
+                    }else{
+                        return Helpers::local_storage_link('campaign',$value);
+                    }
+                }
+            }
+        }
+
+        return Helpers::local_storage_link('campaign',$value);
+    }
+
     public function scopeActive($query)
     {
         return $query->where('status', 1);
@@ -105,9 +126,9 @@ class Campaign extends Model
         });
     }
 
-    public function storage(): MorphOne
+    public function storage()
     {
-        return $this->morphOne(Storage::class, 'data');
+        return $this->morphMany(Storage::class, 'data');
     }
 
     protected static function boot()
@@ -120,6 +141,7 @@ class Campaign extends Model
                 DB::table('storages')->updateOrInsert([
                     'data_type' => get_class($model),
                     'data_id' => $model->id,
+                    'key' => 'image',
                 ], [
                     'value' => $value,
                     'created_at' => now(),

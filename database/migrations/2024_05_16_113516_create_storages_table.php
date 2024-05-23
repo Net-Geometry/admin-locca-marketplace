@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('data_type');
             $table->string('data_id',100)->index();
+            $table->string('key')->nullable();
             $table->string('value')->index();
             $table->timestamps();
         });

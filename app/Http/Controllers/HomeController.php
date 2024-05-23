@@ -47,12 +47,16 @@ class HomeController extends Controller
                 ];
                 array_push($data,$cred);
             }
-            if (isset($value->storage)) {
-
+            if(count($value->storage)>0){
                 $cred = [
-                    $value->key.'_storage' => $value->storage->value ?? 'public',
+                    $value->key.'_storage' => $value->storage[0]['value'],
                 ];
-                array_push($data, $cred);
+                array_push($data,$cred);
+            }else{
+                $cred = [
+                    $value->key.'_storage' => 'public',
+                ];
+                array_push($data,$cred);
             }
         }
         $settings = [];

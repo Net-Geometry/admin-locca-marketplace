@@ -48,7 +48,40 @@ class Order extends Model
         'ref_bonus_amount' => 'float',
     ];
 
-    protected $appends = ['module_type'];
+    protected $appends = ['module_type','order_attachment_full_url','order_proof_full_url'];
+
+    public function getOrderAttachmentFullUrlAttribute(){
+        $images = [];
+        $value = $this->order_attachment;
+        if ($value){
+            foreach ($value as $item){
+                $item = is_array($item)?$item:['img' => $item, 'storage' => 'public'];
+                if($item['storage']=='s3'){
+                    $images[] = Helpers::s3_storage_link('order',$item['img']);
+                }else{
+                    $images[] = Helpers::local_storage_link('order',$item['img']);
+                }
+            }
+        }
+
+        return $images;
+    }
+    public function getOrderProofFullUrlAttribute(){
+        $images = [];
+        $value = $this->order_proof;
+        if ($value){
+            foreach ($value as $item){
+                $item = is_array($item)?$item:['img' => $item, 'storage' => 'public'];
+                if($item['storage']=='s3'){
+                    $images[] = Helpers::s3_storage_link('order',$item['img']);
+                }else{
+                    $images[] = Helpers::local_storage_link('order',$item['img']);
+                }
+            }
+        }
+
+        return $images;
+    }
 
     public function setDeliveryChargeAttribute($value)
     {
@@ -285,26 +318,12 @@ class Order extends Model
             $builder->with('storage');
         });
     }
-    public function storage(): MorphOne
+    public function storage()
     {
-        return $this->morphOne(Storage::class, 'data');
+        return $this->morphMany(Storage::class, 'data');
     }
     protected static function boot()
     {
         parent::boot();
-        static::saved(function ($model) {
-            if($model->isDirty('order_attachment') || $model->isDirty('order_proof')){
-                $value = Helpers::getDisk();
-
-                DB::table('storages')->updateOrInsert([
-                    'data_type' => get_class($model),
-                    'data_id' => $model->id,
-                ], [
-                    'value' => $value,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
-            }
-        });
     }
 }

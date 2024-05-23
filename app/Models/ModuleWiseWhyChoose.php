@@ -51,9 +51,9 @@ class ModuleWiseWhyChoose extends Model
         return $value;
     }
 
-    public function storage(): MorphOne
+    public function storage()
     {
-        return $this->morphOne(Storage::class, 'data');
+        return $this->morphMany(Storage::class, 'data');
     }
     protected static function booted()
     {
@@ -77,6 +77,7 @@ class ModuleWiseWhyChoose extends Model
                 DB::table('storages')->updateOrInsert([
                     'data_type' => get_class($model),
                     'data_id' => $model->id,
+                    'key' => 'image',
                 ], [
                     'value' => $value,
                     'created_at' => now(),

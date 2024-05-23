@@ -903,6 +903,14 @@ class Helpers
     {
         $storage = [];
         foreach ($data as $item) {
+            $storage_type = 'public';
+            if ($item->storage && count($item->storage) > 0) {
+                foreach ($item->storage as $value) {
+                    if ($value['key'] == 'image') {
+                        $storage_type = $value['value'];
+                    }
+                }
+            }
             $storage[] = [
                 'id' => $item['id'],
                 'name' => $item['f_name'] . ' ' . $item['l_name'],
@@ -911,8 +919,8 @@ class Helpers
                 'lat' => $item->last_location ? $item->last_location->latitude : false,
                 'lng' => $item->last_location ? $item->last_location->longitude : false,
                 'location' => $item->last_location ? $item->last_location->location : '',
-                'storage' => $item->storage ? $item->storage->value: 'public',
-                'image_link' => self::onerror_image_helper($item['image'], asset('storage/app/public/delivery-man/').'/'. $item['image'], asset('public/assets/admin/img/160x160/img1.jpg') , 'delivery-man/', $item->storage ? $item->storage->value: 'public')
+                'storage' => $storage_type,
+                'image_link' => self::onerror_image_helper($item['image'], asset('storage/app/public/delivery-man/').'/'. $item['image'], asset('public/assets/admin/img/160x160/img1.jpg') , 'delivery-man/', $storage_type)
             ];
         }
         $data = $storage;
@@ -3291,6 +3299,7 @@ class Helpers
     }
 
     public static function get_image_helper($data, $key, $src, $error_src ,$path){
+//        dd($data);
         $image = '';
         $storage = 'public';
 
@@ -3303,12 +3312,49 @@ class Helpers
             $image = (is_object($data) && ($data instanceof Collection)) ? $data->$key : ($data[$key] ?? '');
         }
 
-        if (is_object($data) && property_exists($data, 'storage') && is_object($data->storage) && property_exists($data->storage, 'value')) {
-            $storage = $data->storage->value;
+//        if (is_object($data) && property_exists($data, 'storage') && is_object($data->storage) && property_exists($data->storage, 'value')) {
+//            $storage = $data->storage->value;
+//        } elseif (is_array($data) && array_key_exists('storage', $data) && is_array($data['storage']) && array_key_exists('value', $data['storage'])) {
+//            $storage = $data['storage']['value'];
+//        }elseif(!(is_array($data)) && (get_class($data) != 'stdClass')) {
+//            $storage = (is_object($data) && ($data instanceof Collection)) ?$data?->storage?->value:($data['storage']?$data['storage']['value']:'public');
+//        }
+        if (is_object($data) && property_exists($data, 'storage') && is_object($data->storage)) {
+            if ($data->storage && count($data->storage) > 0) {
+                foreach ($data->storage as $value) {
+                    if ($value['key'] == $key || $value['data_type'] == 'App\Models\BusinessSetting' || $value['data_type'] == 'App\Models\DataSetting') {
+                        $storage = $value['value'];
+                    }
+                }
+            }
         } elseif (is_array($data) && array_key_exists('storage', $data) && is_array($data['storage']) && array_key_exists('value', $data['storage'])) {
-            $storage = $data['storage']['value'];
-        }elseif(!(is_array($data)) && (get_class($data) != 'stdClass')) {
-            $storage = (is_object($data) && ($data instanceof Collection)) ?$data?->storage?->value:($data['storage']?$data['storage']['value']:'public');
+            if ($data['storage'] && count($data['storage']) > 0) {
+                foreach ($data['storage'] as $value) {
+                    if ($value['key'] == $key || $value['data_type'] == 'App\Models\BusinessSetting' || $value['data_type'] == 'App\Models\DataSetting') {
+                        $storage = $value['value'];
+                    }
+                }
+            }
+        }
+        elseif(!(is_array($data)) && (get_class($data) != 'stdClass')) {
+
+            if(is_object($data) && ($data instanceof Collection)){
+                if ($data->storage && count($data->storage) > 0) {
+                    foreach ($data->storage as $value) {
+                        if ($value['key'] == $key || $value['data_type'] == 'App\Models\BusinessSetting' || $value['data_type'] == 'App\Models\DataSetting') {
+                            $storage = $value['value'];
+                        }
+                    }
+                }
+            }else{
+                if ($data['storage'] && count($data['storage']) > 0) {
+                    foreach ($data['storage'] as $value) {
+                        if ($value['key'] == $key || $value['data_type'] == 'App\Models\BusinessSetting' || $value['data_type'] == 'App\Models\DataSetting') {
+                            $storage = $value['value'];
+                        }
+                    }
+                }
+            }
         }
 
 //        dd($image,$storage);
@@ -3327,6 +3373,64 @@ class Helpers
         return $error_src;
     }
 
+//    public static function onerror_image_helper($data, $src, $error_src ,$path, $storages, $key='image'){
+//        $storage = 'public';
+//        if ($storages && count($storages) > 0) {
+//            foreach ($storages as $value) {
+//                if ($value['key'] == $key) {
+//                    $storage = $value['value'];
+//                }
+//            }
+//        }
+//
+//        if(($storage  == 'public') && isset($data) && strlen($data) >1 && Storage::disk($storage)->exists($path.$data)){
+//            return $src;
+//        }
+//        if(($storage  == 's3') && isset($data) && strlen($data) >1 && Storage::disk($storage)->exists($path.$data)){
+//            $awsUrl = config('filesystems.disks.s3.url');
+//            $awsBucket = config('filesystems.disks.s3.bucket');
+//            return rtrim($awsUrl, '/').'/'.ltrim($awsBucket.'/'.$path.$data, '/');
+//        }
+//        return $error_src;
+//    }
+
+//    public static function get_image_helper($data, $key, $src, $error_src ,$path){
+//        $image = '';
+//        $storage = 'public';
+//
+//
+//        if (!(is_array($data)) && (get_class($data) == 'stdClass' && property_exists($data, $key))) {
+//            $image = $data->$key;
+//        }elseif ((is_array($data) && array_key_exists($key, $data))) {
+//            $image = $data[$key] ?? '';
+//        }elseif(!(is_array($data)) && (get_class($data) != 'stdClass')) {
+//            $image = (is_object($data) && ($data instanceof Collection)) ? $data->$key : ($data[$key] ?? '');
+//        }
+//
+//        if (is_object($data) && property_exists($data, 'storage') && is_object($data->storage) && property_exists($data->storage, 'value')) {
+//            $storage = $data->storage->value;
+//        } elseif (is_array($data) && array_key_exists('storage', $data) && is_array($data['storage']) && array_key_exists('value', $data['storage'])) {
+//            $storage = $data['storage']['value'];
+//        }elseif(!(is_array($data)) && (get_class($data) != 'stdClass')) {
+//            $storage = (is_object($data) && ($data instanceof Collection)) ?$data?->storage?->value:($data['storage']?$data['storage']['value']:'public');
+//        }
+//
+////        dd($image,$storage);
+//
+////        $image = (get_class($data) === 'stdClass' && property_exists($data, $key)) ? $data?->$key : ($data?->$key ?? '');
+////        $storage = $data?->storage?->value ?? 'public';
+//
+//        if(($storage  == 'public') && isset($image) && strlen($image) >1 && Storage::disk($storage)->exists($path.$image)){
+//            return $src;
+//        }
+//        if(($storage  == 's3') && isset($image) && strlen($image) >1 && Storage::disk($storage)->exists($path.$image)){
+//            $awsUrl = config('filesystems.disks.s3.url');
+//            $awsBucket = config('filesystems.disks.s3.bucket');
+//            return rtrim($awsUrl, '/').'/'.ltrim($awsBucket.'/'.$path.$image, '/');
+//        }
+//        return $error_src;
+//    }
+//
     public static function onerror_image_helper($data, $src, $error_src ,$path, $storag = null){
 
         if(($storag  == 'public') && isset($data) && strlen($data) >1 && Storage::disk($storag)->exists($path.$data)){
@@ -3338,6 +3442,15 @@ class Helpers
             return rtrim($awsUrl, '/').'/'.ltrim($awsBucket.'/'.$path.$data, '/');
         }
         return $error_src;
+    }
+
+    public static function local_storage_link($path,$data){
+        return asset('storage/app/public').'/'.$path.'/'.$data;
+    }
+    public static function s3_storage_link($path,$data){
+        $awsUrl = config('filesystems.disks.s3.url');
+        $awsBucket = config('filesystems.disks.s3.bucket');
+        return rtrim($awsUrl, '/').'/'.ltrim($awsBucket.'/'.$path.'/'.$data, '/');
     }
 
     public static function create_storage($model,$data_id){
