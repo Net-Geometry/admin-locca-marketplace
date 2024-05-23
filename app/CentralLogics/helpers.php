@@ -3555,8 +3555,8 @@ class Helpers
         }
         return null;
     }
-    public static function subscription_plan_chosen($store_id ,$package_id, $payment_method  ,$discount = 0,$reference=null ,$type=null){
-        $store=Store::findOrFail($store_id);
+    public static function subscription_plan_chosen($store_id ,$package_id, $payment_method  ,$discount = 0,$pending_bill =0,$reference=null ,$type=null){
+        $store=Store::find($store_id);
         $package = SubscriptionPackage::withoutGlobalScope('translate')->find($package_id);
         $add_days=0;
         $add_orders=0;
@@ -3646,7 +3646,7 @@ class Helpers
             $subscription_transaction->price=$package->price;
 
             $subscription_transaction->validity=$package->validity;
-            $subscription_transaction->paid_amount= $package->price - (($package->price*$discount)/100);
+            $subscription_transaction->paid_amount= $package->price - (($package->price*$discount)/100) + $pending_bill;
 
             $subscription_transaction->payment_status = 'success';
             $subscription_transaction->created_by=  in_array($payment_method,['wallet_payment_by_admin','manual_payment_by_admin' ,'plan_shift_by_admin'] )?'Admin': 'Store';
@@ -3691,6 +3691,11 @@ class Helpers
             $subscription_transaction->store_subscription_id= $store_subscription->id;
             $subscription_transaction->save();
 
+            SubscriptionBillingAndRefundHistory::where(['store_id'=>$store->id,
+            'transaction_type'=>'pending_bill', 'is_success' =>0])->update([
+                'is_success'=> 1,
+                'reference'=> 'payment_via_'.$payment_method.' _transaction_id_'.$subscription_transaction->id
+            ]);
 
             if($reference == 'plan_shift_by_admin'){
                 $billing= new SubscriptionBillingAndRefundHistory();
@@ -3710,7 +3715,7 @@ class Helpers
         }
         return  $subscription_transaction->id;
     }
-    public static function subscriptionPayment($store_id,$package_id,$payment_gateway,$url,$type='payment',$payment_platform='web'){
+    public static function subscriptionPayment($store_id,$package_id,$payment_gateway,$url,$pending_bill=0,$type='payment',$payment_platform='web'){
         $store = Store::where('id',$store_id)->first();
         $package = SubscriptionPackage::where('id',$package_id)->first();
         $type == null ? 'payment' :$type ;
@@ -3734,7 +3739,7 @@ class Helpers
             payer_id: $store->id,
             receiver_id:  $package->id,
             additional_data: $additional_data,
-            payment_amount: $package->price ,
+            payment_amount: $package->price + $pending_bill,
             external_redirect_link: $url,
             attribute: 'store_subscription_'.$type,
             attribute_id: $package->id,

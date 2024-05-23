@@ -17,7 +17,7 @@ use App\Models\SubscriptionTransaction;
 use App\Contracts\Repositories\TranslationRepositoryInterface;
 use Illuminate\Support\Facades\Validator;
 use App\CentralLogics\Helpers;
-
+use App\Models\SubscriptionBillingAndRefundHistory;
 
 class SubscriptionController extends Controller
 {
@@ -450,11 +450,13 @@ class SubscriptionController extends Controller
         $package = SubscriptionPackage::where('status',1)->where('id',$id)->first();
 
         $store= Store::Where('id',$store_id)->first(['id','vendor_id']);
+        $pending_bill= SubscriptionBillingAndRefundHistory::where(['store_id'=>$store->id,
+                            'transaction_type'=>'pending_bill', 'is_success' =>0])->sum('amount') ;
 
         $balance = BusinessSetting::where('key', 'wallet_status')->first()?->value == 1 ? StoreWallet::where('vendor_id',$store->vendor_id)->first()?->balance ?? 0 : 0;
         $payment_methods = $this->getDefaultPaymentMethods();
         return response()->json([
-            'view' => view('admin-views.subscription.subscriber.partials._package_selected', compact('store_subscription','package','store_id','balance','payment_methods'))->render()
+            'view' => view('admin-views.subscription.subscriber.partials._package_selected', compact('store_subscription','package','store_id','balance','payment_methods','pending_bill'))->render()
         ]);
 
     }
@@ -473,22 +475,27 @@ class SubscriptionController extends Controller
         $store= Store::Where('id',$request->store_id)->first(['id','vendor_id']);
         $package = SubscriptionPackage::withoutGlobalScope('translate')->find($request->package_id);
 
+
+        $pending_bill= SubscriptionBillingAndRefundHistory::where(['store_id'=>$store->id,
+                            'transaction_type'=>'pending_bill', 'is_success' =>0])?->sum('amount')?? 0;
+
         if(!in_array($request->payment_gateway,['wallet','manual_payment_by_admin'])){
             $url= route('admin.business-settings.subscriptionackage.subscriberDetail',$store->id);
-            return redirect()->away(Helpers::subscriptionPayment(store_id:$store->id,package_id:$package->id,payment_gateway:$request->payment_gateway,payment_platform:'web',url:$url,type: $request?->type));
+            return redirect()->away(Helpers::subscriptionPayment(store_id:$store->id,package_id:$package->id,payment_gateway:$request->payment_gateway,payment_platform:'web',url:$url,pending_bill:$pending_bill,type: $request?->type));
         }
 
         if($request->payment_gateway == 'wallet'){
         $wallet= StoreWallet::firstOrNew(['vendor_id'=> $store->vendor_id]);
         $balance = BusinessSetting::where('key', 'wallet_status')->first()?->value == 1 ? $wallet?->balance ?? 0 : 0;
 
-            if($balance > $package?->price){
+            if($balance > ($package?->price + $pending_bill)){
                 $reference= 'wallet_payment_by_admin';
-                $plan_data=   Helpers::subscription_plan_chosen(store_id:$store->id,package_id:$package->id,payment_method:$reference,discount:0,reference:$reference,type: $request?->type);
+                $plan_data=   Helpers::subscription_plan_chosen(store_id:$store->id,package_id:$package->id,payment_method:$reference,discount:0,pending_bill:$pending_bill,reference:$reference,type: $request?->type);
                 if($plan_data != false){
-                    $wallet->total_withdrawn= $wallet?->total_withdrawn + $package->price;
+                    $wallet->total_withdrawn= $wallet?->total_withdrawn + $package->price + $pending_bill;
                     $wallet?->save();
                 }
+                
             }
             else{
                 Toastr::error( translate('messages.Insufficient_balance_in_wallet'));
@@ -497,7 +504,7 @@ class SubscriptionController extends Controller
             }
         } elseif($request->payment_gateway == 'manual_payment_by_admin'){
             $reference= 'manual_payment_by_admin';
-            $plan_data=   Helpers::subscription_plan_chosen(store_id:$store->id,package_id:$package->id,payment_method:$reference,discount:0,reference:$reference,type: $request?->type);
+            $plan_data=   Helpers::subscription_plan_chosen(store_id:$store->id,package_id:$package->id,payment_method:$reference,discount:0,pending_bill:$pending_bill,reference:$reference,type: $request?->type);
         }
 
         $plan_data != false ?  Toastr::success( translate('Successfully_Subscribed.')) : Toastr::error( translate('Something_went_wrong!.'));
@@ -560,8 +567,11 @@ class SubscriptionController extends Controller
 
         $stores=  StoreSubscription::where('package_id',$request->turn_off_package_id)->where('status',1)->where('is_canceled',0)->where('is_trial',0)->get(['id']);
         foreach($stores as $store){
+        $pending_bill=0;
+        $pending_bill= SubscriptionBillingAndRefundHistory::where(['store_id'=>$store->id,
+        'transaction_type'=>'pending_bill', 'is_success' =>0])?->sum('amount')?? 0;
             $reference= 'plan_shift_by_admin';
-            Helpers::subscription_plan_chosen(store_id:$store->id,package_id:$request->package_id,payment_method:$reference,discount:0,reference:$reference);
+            Helpers::subscription_plan_chosen(store_id:$store->id,package_id:$request->package_id,payment_method:$reference,discount:0,pending_bill:$pending_bill,reference:$reference);
         }
         Toastr::success( translate('messages.Plan_Switch_Successful'));
         return back();

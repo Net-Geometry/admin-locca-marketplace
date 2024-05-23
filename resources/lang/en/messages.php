@@ -4638,4 +4638,5 @@
   'Switch & Turn Of The Status' => 'Switch & Turn Of The Status',
   'Plan_Switch_Successful' => 'Plan Switch Successful',
   'See overview of all the packages' => 'See overview of all the packages',
+  'pending_bill' => 'Pending bill',
 );

@@ -90,7 +90,7 @@ active
                                                         @endif
 
 
-                                        <h6 class="subtitle">{{ $item->package_name }} {{ $key%2 }}</h6>
+                                        <h6 class="subtitle">{{ $item->package_name }} </h6>
                                         <h3 class="title">{{  \App\CentralLogics\Helpers::format_currency($item->transactions_sum_paid_amount)  }}</h3>
                                     </a>
                                 </div>

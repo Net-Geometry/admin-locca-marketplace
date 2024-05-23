@@ -44,7 +44,7 @@
 
         <div class="mb-4 mb-lg-5 subscription__plan-info-wrapper bg-ECEEF1 rounded-20">
             <div class="row g-3">
-                <div class="col-md-4">
+                <div class="col-md-{{ $pending_bill > 0 ? '3' :'4' }}">
                     <div class="subscription__plan-info">
                         <div class="info">
                             {{ translate('Validity') }}
@@ -52,7 +52,7 @@
                         <h4 class="subtitle">{{ $package?->validity }} {{ translate('days') }}</h4>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-{{ $pending_bill > 0 ? '3' :'4' }}">
                     <div class="subscription__plan-info">
                         <div class="info">
                             {{ translate('Price') }}
@@ -60,7 +60,18 @@
                         <h4 class="subtitle">{{ \App\CentralLogics\Helpers::format_currency($package?->price) }}</h4>
                     </div>
                 </div>
-                <div class="col-md-4">
+                @if ($pending_bill)
+                <div class="col-md-3">
+                    <div class="subscription__plan-info">
+                        <div class="info">
+                            {{ translate('pending_bill') }}
+                        </div>
+                        <h4 class="subtitle">{{ \App\CentralLogics\Helpers::format_currency($pending_bill) }}</h4>
+                    </div>
+                </div>
+
+                @endif
+                <div class="col-md-{{ $pending_bill > 0 ? '3' :'4' }}">
                     <div class="subscription__plan-info">
                         <div class="info">
                             {{ translate('Bill_status') }}

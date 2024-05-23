@@ -16,6 +16,7 @@ use App\Http\Controllers\Controller;
 use App\Library\Payment as PaymentInfo;
 use App\Models\SubscriptionTransaction;
 use Illuminate\Support\Facades\Validator;
+use App\Models\SubscriptionBillingAndRefundHistory;
 
 class SubscriptionController extends Controller
 {
@@ -50,11 +51,12 @@ class SubscriptionController extends Controller
             }
 
             $package = SubscriptionPackage::withoutGlobalScope('translate')->find($request->package_id);
-
+            $pending_bill= SubscriptionBillingAndRefundHistory::where(['store_id'=>$store->id,
+            'transaction_type'=>'pending_bill', 'is_success' =>0])?->sum('amount') ?? 0;
             if(!in_array($request->payment_gateway,['wallet'])){
                 $url= $request->has('callback')?$request['callback']:session('callback');
                 $data = [
-                    'redirect_link' => Helpers::subscriptionPayment(store_id:$store->id,package_id:$package->id,payment_gateway:$request->payment_gateway,payment_platform:$request->payment_platform ?? 'web',url:$url,type: $request?->type),
+                    'redirect_link' => Helpers::subscriptionPayment(store_id:$store->id,package_id:$package->id,payment_gateway:$request->payment_gateway,payment_platform:$request->payment_platform ?? 'web',url:$url,pending_bill:$pending_bill,type: $request?->type),
                 ];
 
                 return response()->json($data, 200);
@@ -66,7 +68,7 @@ class SubscriptionController extends Controller
 
                 if($balance > $package?->price){
                     $reference= 'wallet_payment_by_vendor';
-                    $plan_data=   Helpers::subscription_plan_chosen(store_id:$store->id,package_id:$package->id,payment_method:'wallet',discount:0,reference:$reference,type: $request?->type);
+                    $plan_data=   Helpers::subscription_plan_chosen(store_id:$store->id,package_id:$package->id,payment_method:'wallet',discount:0,pending_bill:$pending_bill,reference:$reference,type: $request?->type);
                     if($plan_data != false){
                         $wallet->total_withdrawn= $wallet?->total_withdrawn + $package->price;
                         $wallet?->save();
