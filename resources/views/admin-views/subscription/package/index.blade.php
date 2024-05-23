@@ -72,24 +72,21 @@ active
                     </div>
                     <div class="card-body pt-0">
                         <div class="w-100">
-                            <div class="row g-3">
+                            <div class="owl-theme owl-carousel created-package-slider">
 
                                 @foreach ($package_sell_count as $key =>  $item)
 
-                                <div class="col-sm-6 col-lg-4">
+                                <div class="created-package-slide-item">
                                     @if ($key%2 == 0)
                                     <a class="__card-1 h-100 __bg-1" href="#">
                                         <img src="{{asset('public/assets/admin/img/plan/basic.png')}}" class="icon" alt="report/new">
-                        @elseif ($key%3 == 1)
-                        <a class="__card-1 h-100 __bg-4" href="#">
-                            <img src="{{asset('public/assets/admin/img/plan/standard.png')}}" class="icon" alt="report/new">
-                        @else
-
-                        <a class="__card-1 h-100 __bg-8" href="#">
-                            <img src="{{asset('public/assets/admin/img/plan/pro.png')}}" class="icon" alt="report/new">
-                                                        @endif
-
-
+                                    @elseif ($key%3 == 1)
+                                    <a class="__card-1 h-100 __bg-4" href="#">
+                                        <img src="{{asset('public/assets/admin/img/plan/standard.png')}}" class="icon" alt="report/new">
+                                    @else
+                                    <a class="__card-1 h-100 __bg-8" href="#">
+                                        <img src="{{asset('public/assets/admin/img/plan/pro.png')}}" class="icon" alt="report/new">
+                                    @endif
                                         <h6 class="subtitle">{{ $item->package_name }} </h6>
                                         <h3 class="title">{{  \App\CentralLogics\Helpers::format_currency($item->transactions_sum_paid_amount)  }}</h3>
                                     </a>
@@ -356,7 +353,6 @@ active
             e.preventDefault();
             let url = $(this).data('url');
             $('#status_change_now2').attr("href",url);
-            // $('#status-chage-deactive').modal('hide');
             $('#status-chage-active').modal('show');
         });
 
@@ -381,6 +377,14 @@ active
                     }
             });
         });
+
+
+        $('.created-package-slider').owlCarousel({
+            loop: false,
+            margin: 30,
+            nav:false,
+            autoWidth:true,
+        })
 
 </script>
 @endpush
