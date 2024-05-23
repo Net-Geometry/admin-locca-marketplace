@@ -5925,6 +5925,24 @@ class BusinessSettingsController extends Controller
             return view('admin-views.business-settings.email-format-setting.'.$type.'-email-formats.pos-registration-format',compact('template'));
         } else if ($tab == 'unsuspend') {
             return view('admin-views.business-settings.email-format-setting.'.$type.'-email-formats.unsuspend-format',compact('template'));
+
+        } else if ($tab == 'subscription-successful') {
+            return view('admin-views.business-settings.email-format-setting.'.$type.'-email-formats.subscription-successful-format',compact('template'));
+        }
+        else if ($tab == 'subscription-renew') {
+            return view('admin-views.business-settings.email-format-setting.'.$type.'-email-formats.subscription-renew-format',compact('template'));
+        }
+        else if ($tab == 'subscription-shift') {
+            return view('admin-views.business-settings.email-format-setting.'.$type.'-email-formats.subscription-shift-format',compact('template'));
+        }
+        else if ($tab == 'subscription-cancel') {
+            return view('admin-views.business-settings.email-format-setting.'.$type.'-email-formats.subscription-cancel-format',compact('template'));
+        }
+        else if ($tab == 'subscription-deadline') {
+            return view('admin-views.business-settings.email-format-setting.'.$type.'-email-formats.subscription-deadline-format',compact('template'));
+        }
+        else if ($tab == 'subscription-plan_upadte') {
+            return view('admin-views.business-settings.email-format-setting.'.$type.'-email-formats.subscription-plan_upadte-format',compact('template'));
         }
 
     }
@@ -6024,6 +6042,24 @@ class BusinessSettingsController extends Controller
         }elseif($tab == 'unsuspend'){
             $email_type = 'unsuspend';
             $template = EmailTemplate::where('type',$type)->where('email_type', 'unsuspend')->first();
+        }elseif($tab == 'subscription-successful'){
+            $email_type = 'subscription-successful';
+            $template = EmailTemplate::where('type',$type)->where('email_type', 'subscription-successful')->first();
+        }elseif($tab == 'subscription-renew'){
+            $email_type = 'subscription-renew';
+            $template = EmailTemplate::where('type',$type)->where('email_type', 'subscription-renew')->first();
+        }elseif($tab == 'subscription-shift'){
+            $email_type = 'subscription-shift';
+            $template = EmailTemplate::where('type',$type)->where('email_type', 'subscription-shift')->first();
+        }elseif($tab == 'subscription-cancel'){
+            $email_type = 'subscription-cancel';
+            $template = EmailTemplate::where('type',$type)->where('email_type', 'subscription-cancel')->first();
+        }elseif($tab == 'subscription-deadline'){
+            $email_type = 'subscription-deadline';
+            $template = EmailTemplate::where('type',$type)->where('email_type', 'subscription-deadline')->first();
+        }elseif($tab == 'subscription-plan_upadte'){
+            $email_type = 'subscription-plan_upadte';
+            $template = EmailTemplate::where('type',$type)->where('email_type', 'subscription-plan_upadte')->first();
         }
 
         if ($template == null) {
@@ -6343,6 +6379,30 @@ class BusinessSettingsController extends Controller
             ]);
         } else if ($tab == 'unsuspend') {
             BusinessSetting::query()->updateOrInsert(['key' => 'unsuspend_mail_status_'.$type], [
+                'value' => $status
+            ]);
+        } else if ($tab == 'subscription-successful') {
+            BusinessSetting::query()->updateOrInsert(['key' => 'subscription_successful_mail_status_'.$type], [
+                'value' => $status
+            ]);
+        } else if ($tab == 'subscription-renew') {
+            BusinessSetting::query()->updateOrInsert(['key' => 'subscription_renew_mail_status_'.$type], [
+                'value' => $status
+            ]);
+        } else if ($tab == 'subscription-shift') {
+            BusinessSetting::query()->updateOrInsert(['key' => 'subscription_shift_mail_status_'.$type], [
+                'value' => $status
+            ]);
+        } else if ($tab == 'subscription-cancel') {
+            BusinessSetting::query()->updateOrInsert(['key' => 'subscription_cancel_mail_status_'.$type], [
+                'value' => $status
+            ]);
+        } else if ($tab == 'subscription-deadline') {
+            BusinessSetting::query()->updateOrInsert(['key' => 'subscription_deadline_mail_status_'.$type], [
+                'value' => $status
+            ]);
+        } else if ($tab == 'subscription-plan_upadte') {
+            BusinessSetting::query()->updateOrInsert(['key' => 'subscription_plan_upadte_mail_status_'.$type], [
                 'value' => $status
             ]);
         }

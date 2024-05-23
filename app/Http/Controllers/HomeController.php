@@ -3,16 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\Contact;
+use App\Models\DataSetting;
+use App\Models\AdminFeature;
 use Illuminate\Http\Request;
 use App\CentralLogics\Helpers;
-use App\Models\AdminFeature;
-use App\Models\AdminPromotionalBanner;
-use App\Models\AdminSpecialCriteria;
-use App\Models\AdminTestimonial;
 use App\Models\BusinessSetting;
-use App\Models\DataSetting;
+use App\Models\AdminTestimonial;
+use App\Models\AdminSpecialCriteria;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\File;
+use App\Models\AdminPromotionalBanner;
+use App\Models\SubscriptionTransaction;
 
 class HomeController extends Controller
 {
@@ -380,5 +381,16 @@ class HomeController extends Controller
         session()->put('landing_site_direction', $direction);
         session()->put('landing_local', $local);
         return redirect()->back();
+    }
+
+
+    public function subscription_invoice($id){
+
+        $id= base64_decode($id);
+        $BusinessData= ['admin_commission' ,'business_name','address','phone','logo','email_address'];
+        $transaction= SubscriptionTransaction::with(['store.vendor','package:id,package_name,price'])->findOrFail($id);
+        $BusinessData=BusinessSetting::whereIn('key', $BusinessData)->pluck('value' ,'key') ;
+        $logo=BusinessSetting::where('key', "logo")->first() ;
+        return view('subscription-invoice',compact('transaction','BusinessData','logo'))->render();
     }
 }

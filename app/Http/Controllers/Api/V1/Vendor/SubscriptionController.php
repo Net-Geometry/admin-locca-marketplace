@@ -10,9 +10,11 @@ use App\Models\StoreWallet;
 use Illuminate\Http\Request;
 use App\CentralLogics\Helpers;
 use App\Models\BusinessSetting;
+use App\Mail\SubscriptionCancel;
 use App\Models\StoreSubscription;
 use App\Models\SubscriptionPackage;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Mail;
 use App\Library\Payment as PaymentInfo;
 use App\Models\SubscriptionTransaction;
 use Illuminate\Support\Facades\Validator;
@@ -39,6 +41,7 @@ class SubscriptionController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
+
         $store= Store::Where('id',$request->store_id)->first();
         if($request->business_plan == 'subscription' && $request->package_id != null ) {
 
@@ -174,6 +177,16 @@ class SubscriptionController extends Controller
             'is_canceled' => 1,
             'canceled_by' => 'vendor',
         ]);
+
+        try {
+            $store=Store::where('id',$request->id)->select(['id','name'])->first();
+            if (config('mail.status') && Helpers::get_mail_status('subscription_cancel_mail_status_store') == '1') {
+                Mail::to($store->email)->send(new SubscriptionCancel($store->name));
+            }
+        } catch (\Exception $ex) {
+            info($ex->getMessage());
+        }
+
         return response()->json(['success'],200);
 
     }

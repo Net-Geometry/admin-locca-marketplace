@@ -37,6 +37,7 @@ Route::get('cancelation', 'HomeController@cancelation')->name('cancelation');
 Route::get('refund', 'HomeController@refund_policy')->name('refund');
 Route::get('shipping-policy', 'HomeController@shipping_policy')->name('shipping-policy');
 Route::post('newsletter/subscribe', 'NewsletterController@newsLetterSubscribe')->name('newsletter.subscribe');
+Route::get('subscription-invoice/{id}', 'HomeController@subscription_invoice')->name('subscription_invoice');
 
 Route::get('login/{tab}', 'LoginController@login')->name('login');
 Route::post('login_submit', 'LoginController@submit')->name('login_post')->middleware('actch');

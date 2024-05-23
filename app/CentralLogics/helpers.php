@@ -34,11 +34,13 @@ use App\Mail\OrderVerificationMail;
 use App\Models\NotificationMessage;
 use App\Models\SubscriptionPackage;
 use Illuminate\Support\Facades\App;
+use App\Mail\SubscriptionSuccessful;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\SubscriptionRenewOrShift;
+
 use Illuminate\Support\Facades\Config;
 use App\Library\Payment as PaymentInfo;
-
 use App\Models\SubscriptionTransaction;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Collection;
@@ -3713,6 +3715,25 @@ class Helpers
             info(["line___{$e->getLine()}",$e->getMessage()]);
             return false;
         }
+
+
+        try {
+
+            if (config('mail.status') && Helpers::get_mail_status('subscription_renew_mail_status_store') == '1' && $type == 'renew' ) {
+                Mail::to($store->email)->send(new SubscriptionRenewOrShift($type,$store->name));
+            }
+            if (config('mail.status') && Helpers::get_mail_status('subscription_shift_mail_status_store') == '1' && $type != 'renew' ) {
+                Mail::to($store->email)->send(new SubscriptionRenewOrShift($type,$store->name));
+            }
+            if (config('mail.status') && Helpers::get_mail_status('subscription_successful_mail_status_store') == '1' ) {
+                $url=route('subscription_invoice',['id' => base64_encode($subscription_transaction->id)]);
+                Mail::to($store->email)->send(new SubscriptionSuccessful($store->name,$url));
+            }
+
+        } catch (\Exception $ex) {
+            info($ex->getMessage());
+        }
+
         return  $subscription_transaction->id;
     }
     public static function subscriptionPayment($store_id,$package_id,$payment_gateway,$url,$pending_bill=0,$type='payment',$payment_platform='web'){

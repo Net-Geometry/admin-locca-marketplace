@@ -8,11 +8,13 @@ use Illuminate\Http\Request;
 use App\CentralLogics\Helpers;
 use Illuminate\Support\Carbon;
 use App\Models\BusinessSetting;
+use App\Mail\SubscriptionCancel;
 use App\Models\StoreSubscription;
 use Illuminate\Support\Facades\DB;
 use App\Models\SubscriptionPackage;
 use App\Http\Controllers\Controller;
 use Brian2694\Toastr\Facades\Toastr;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Schema;
 use App\Models\SubscriptionTransaction;
 use App\Models\SubscriptionBillingAndRefundHistory;
@@ -37,6 +39,16 @@ class SubscriptionController extends Controller
             'is_canceled' => 1,
             'canceled_by' => 'vendor',
         ]);
+
+        try {
+            $store=Store::where('id',$id)->select(['id','name'])->first();
+            if (config('mail.status') && Helpers::get_mail_status('subscription_cancel_mail_status_store') == '1') {
+                Mail::to($store->email)->send(new SubscriptionCancel($store->name));
+            }
+        } catch (\Exception $ex) {
+            info($ex->getMessage());
+        }
+
         return response()->json(200);
 
     }

@@ -207,7 +207,9 @@ active
                                 </td>
                                 <td class="px-4 text-center">
                                     <div>
-                                        @if ($subscriber?->store_sub_update_application?->is_canceled == 1)
+                                        @if($subscriber?->status == 0 &&  $subscriber?->vendor?->status == 0)
+                                        <span class="badge badge-soft-info">{{ translate('On_hold') }}</span>
+                                        @elseif ($subscriber?->store_sub_update_application?->is_canceled == 1)
                                         <span class="badge badge-soft-warning">{{ translate('canceled') }}</span>
                                         @elseif($subscriber?->store_sub_update_application?->status == 0)
                                         <span class="badge badge-soft-danger">{{ translate('Expired') }}</span>

@@ -5,19 +5,22 @@ namespace App\Http\Controllers\Admin\Subscription;
 use App\Models\Store;
 use App\Models\StoreWallet;
 use Illuminate\Http\Request;
+use App\CentralLogics\Helpers;
 use Illuminate\Support\Carbon;
 use App\Models\BusinessSetting;
+use App\Mail\SubscriptionCancel;
 use App\Models\StoreSubscription;
 use Illuminate\Support\Facades\DB;
 use App\Models\SubscriptionPackage;
 use App\Http\Controllers\Controller;
+use App\Mail\SubscriptionPlanUpdate;
 use Brian2694\Toastr\Facades\Toastr;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Schema;
 use App\Models\SubscriptionTransaction;
-use App\Contracts\Repositories\TranslationRepositoryInterface;
 use Illuminate\Support\Facades\Validator;
-use App\CentralLogics\Helpers;
 use App\Models\SubscriptionBillingAndRefundHistory;
+use App\Contracts\Repositories\TranslationRepositoryInterface;
 
 class SubscriptionController extends Controller
 {
@@ -172,6 +175,20 @@ class SubscriptionController extends Controller
         $this->translationRepo->updateByModel(request: $request, model: $subscriptionackage, modelPath: 'App\Models\SubscriptionPackage', attribute: 'package_name');
         $this->translationRepo->updateByModel(request: $request, model: $subscriptionackage, modelPath: 'App\Models\SubscriptionPackage', attribute: 'text');
         Toastr::success(translate('messages.Package_Updated_successfully'));
+
+
+        try {
+            if (config('mail.status') && Helpers::get_mail_status('subscription_plan_upadte_mail_status_store') == '1') {
+            $subscribers= StoreSubscription::with('store:id,name,email')->select(['store_id'])->where(['package_id' =>  $subscriptionackage->id,'status'=> 1])->get();
+                foreach ($subscribers as $subscriber){
+                    Mail::to($subscriber->email)->send(new SubscriptionPlanUpdate($subscriber->name));
+                }
+            }
+        } catch (\Exception $ex) {
+            info($ex->getMessage());
+        }
+
+
         return redirect()->route('admin.business-settings.subscriptionackage.show',$subscriptionackage->id);
     }
     public function overView(SubscriptionPackage $subscriptionackage, Request $request)
@@ -431,6 +448,15 @@ class SubscriptionController extends Controller
             'is_canceled' => 1,
             'canceled_by' => 'admin',
         ]);
+
+        try {
+            $store=Store::where('id',$id)->select(['id','name'])->first();
+            if (config('mail.status') && Helpers::get_mail_status('subscription_cancel_mail_status_store') == '1') {
+                Mail::to($store->email)->send(new SubscriptionCancel($store->name));
+            }
+        } catch (\Exception $ex) {
+            info($ex->getMessage());
+        }
         return response()->json(200);
 
     }
@@ -495,7 +521,7 @@ class SubscriptionController extends Controller
                     $wallet->total_withdrawn= $wallet?->total_withdrawn + $package->price + $pending_bill;
                     $wallet?->save();
                 }
-                
+
             }
             else{
                 Toastr::error( translate('messages.Insufficient_balance_in_wallet'));
