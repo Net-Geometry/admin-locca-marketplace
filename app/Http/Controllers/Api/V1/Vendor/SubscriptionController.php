@@ -33,7 +33,7 @@ class SubscriptionController extends Controller
             'business_plan' => 'required|in:subscription,commission',
             'package_id' => 'nullable|required_if:business_plan,subscription',
             'payment_gateway' => 'nullable|required_if:business_plan,subscription',
-            'callback' => 'nullable|required_if:business_plan,subscription',
+            // 'callback' => 'nullable|required_if:business_plan,subscription',
             'payment_platform'=>'nullable|in:app,web'
         ]);
         if ($validator->fails()) {
@@ -53,7 +53,7 @@ class SubscriptionController extends Controller
             $package = SubscriptionPackage::withoutGlobalScope('translate')->find($request->package_id);
             $pending_bill= SubscriptionBillingAndRefundHistory::where(['store_id'=>$store->id,
             'transaction_type'=>'pending_bill', 'is_success' =>0])?->sum('amount') ?? 0;
-            if(!in_array($request->payment_gateway,['wallet'])){
+            if(!in_array($request->payment_gateway,['wallet','free_trial'])){
                 $url= $request->has('callback')?$request['callback']:session('callback');
                 $data = [
                     'redirect_link' => Helpers::subscriptionPayment(store_id:$store->id,package_id:$package->id,payment_gateway:$request->payment_gateway,payment_platform:$request->payment_platform ?? 'web',url:$url,pending_bill:$pending_bill,type: $request?->type),
@@ -79,6 +79,10 @@ class SubscriptionController extends Controller
                     'errors' => ['message' => translate('messages.Insufficient_balance_in_wallet')]
                 ], 403);
                 }
+            }
+
+            if($request->payment_gateway == 'free_trial'){
+                $plan_data=   Helpers::subscription_plan_chosen(store_id:$store->id,package_id:$package->id,payment_method:'free_trial',discount:0,pending_bill:$pending_bill,reference:'free_trial',type: 'new_join');
             }
 
             $data=[

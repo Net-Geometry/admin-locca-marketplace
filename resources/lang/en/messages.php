@@ -4639,4 +4639,7 @@
   'Plan_Switch_Successful' => 'Plan Switch Successful',
   'See overview of all the packages' => 'See overview of all the packages',
   'pending_bill' => 'Pending bill',
+  'If_you_cancel_the_subscription,_after_' => 'If you cancel the subscription  after ',
+  'days_the_vendor_will_no_longer_be_able_to_run_the_business_before_subscribe_a_new_plan.' => 'Days the vendor will no longer be able to run the business before subscribe a new plan.',
+  'service_not_available_in_this_area' => 'Service not available in this area',
 );
