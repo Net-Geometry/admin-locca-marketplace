@@ -16,7 +16,7 @@ class DeliveryManController extends Controller
     public function __construct(Request $request)
     {
         $this->middleware(function ($request, $next) {
-            if(!$request->vendor->stores[0]->self_delivery_system)
+            if(!$request->vendor->stores[0]->sub_self_delivery)
             {
                 return response()->json([
                     'errors'=>[

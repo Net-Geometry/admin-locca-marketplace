@@ -4693,4 +4693,8 @@
   'If_disabled,_stores_will_not_get_a_subscription_plan_upadte_email_when_the_plan_updated.' => 'If disabled  stores will not get a subscription plan upadte email when the plan updated.',
   'on_hold' => 'On hold',
   'Subscription_renew_successful' => 'Subscription renew successful',
+  'Subscription_is_about_to_end' => 'Subscription is about to end',
+  'Subscription_successful' => 'Subscription successful',
+  'Subscription_Shift_successful' => 'Subscription Shift successful',
+  'days_the_you_will_no_longer_be_able_to_run_the_business_before_subscribe_a_new_plan.' => 'Days the you will no longer be able to run the business before subscribe a new plan.',
 );

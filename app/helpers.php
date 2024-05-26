@@ -123,6 +123,14 @@ if (! function_exists('order_place')) {
         $order->payment_status='paid';
         $order->confirmed=now();
         $order->save();
+
+
+
+        if( $order?->store?->is_valid_subscription == 1 && $order?->store?->store_sub?->max_order != "unlimited" && $order?->store?->store_sub?->max_order > 0){
+            $order?->store?->store_sub?->decrement('max_order' , 1);
+        }
+
+
         OrderLogic::update_unpaid_order_payment(order_id:$order->id, payment_method:$data->payment_method);
         try {
             Helpers::send_order_notification($order);

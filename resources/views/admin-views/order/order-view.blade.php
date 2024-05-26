@@ -1268,7 +1268,7 @@
                                     </div>
                                 </div>
                             @endif
-                                @if (!in_array($order->order_status, [ 'refunded','delivered', 'canceled']) &&  ( !$order->delivery_man && $order['order_type'] != 'take_away' && (($order->store && !$order?->store?->self_delivery_system) || $parcel_order)))
+                                @if (!in_array($order->order_status, [ 'refunded','delivered', 'canceled']) &&  ( !$order->delivery_man && $order['order_type'] != 'take_away' && (($order->store && !$order?->store?->sub_self_delivery) || $parcel_order)))
                                     <div class="w-100 text-center mt-3">
                                         <button type="button" class="btn btn--primary w-100" data-toggle="modal"
                                             data-target="#myModal" data-lat='21.03' data-lng='105.85'>
@@ -1291,11 +1291,11 @@
                                     <span>{{ translate('messages.deliveryman') }}</span>
 
 
-                                    @if ($order?->store?->self_delivery_system)
+                                    @if ($order?->store?->sub_self_delivery)
                                        &nbsp; ({{ translate('messages.store') }})
                                     @endif
 
-                                    @if (!isset($order->delivered) && !$order?->store?->self_delivery_system)
+                                    @if (!isset($order->delivered) && !$order?->store?->sub_self_delivery)
                                         <a type="button" href="#myModal" class="text--base cursor-pointer ml-auto"
                                             data-toggle="modal" data-target="#myModal">
                                             {{ translate('messages.change') }}
@@ -1303,7 +1303,7 @@
                                     @endif
                                 </h5>
                                 <a class="media align-items-center deco-none customer--information-single"
-                                    href="{{ !$order?->store?->self_delivery_system ?  route('admin.users.delivery-man.preview', [$order->delivery_man['id']]) : '#' }}">
+                                    href="{{ !$order?->store?->sub_self_delivery ?  route('admin.users.delivery-man.preview', [$order->delivery_man['id']]) : '#' }}">
                                     <div class="avatar avatar-circle">
                                         <img class="avatar-img onerror-image"
                                             data-onerror-image="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}"

@@ -223,7 +223,7 @@
             </div>
         </div>
         <!-- End Card -->
-        @if(\App\CentralLogics\Helpers::get_store_data()->reviews_section)
+        @if(\App\CentralLogics\Helpers::get_store_data()->review_permission)
         <!-- Description Card Start -->
         <div class="card mb-3">
             <div class="card-body p-0">

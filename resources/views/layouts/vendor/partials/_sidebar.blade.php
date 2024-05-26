@@ -89,7 +89,7 @@
                                         <span class="badge badge-soft-info badge-pill ml-1">
                                             {{\App\Models\Order::where('store_id', \App\CentralLogics\Helpers::get_store_id())
                                                 ->where(function($query){
-                                                    return $query->whereNotIn('order_status',(config('order_confirmation_model') == 'store'|| \App\CentralLogics\Helpers::get_store_data()->self_delivery_system)?['failed','canceled', 'refund_requested', 'refunded']:['pending','failed','canceled', 'refund_requested', 'refunded'])
+                                                    return $query->whereNotIn('order_status',(config('order_confirmation_model') == 'store'|| \App\CentralLogics\Helpers::get_store_data()->sub_self_delivery)?['failed','canceled', 'refund_requested', 'refunded']:['pending','failed','canceled', 'refund_requested', 'refunded'])
                                                     ->orWhere(function($query){
                                                         return $query->where('order_status','pending')->where('order_type', 'take_away');
                                                     });
@@ -102,9 +102,9 @@
                                 <a class="nav-link " href="{{route('vendor.order.list',['pending'])}}" title="{{translate('messages.pending_orders')}}">
                                     <span class="tio-circle nav-indicator-icon"></span>
                                     <span class="text-truncate sidebar--badge-container">
-                                        {{translate('messages.pending')}} {{(config('order_confirmation_model') == 'store' || \App\CentralLogics\Helpers::get_store_data()->self_delivery_system)?'':translate('messages.take_away')}}
+                                        {{translate('messages.pending')}} {{(config('order_confirmation_model') == 'store' || \App\CentralLogics\Helpers::get_store_data()->sub_self_delivery)?'':translate('messages.take_away')}}
                                             <span class="badge badge-soft-success badge-pill ml-1">
-                                            @if(config('order_confirmation_model') == 'store' || \App\CentralLogics\Helpers::get_store_data()->self_delivery_system)
+                                            @if(config('order_confirmation_model') == 'store' || \App\CentralLogics\Helpers::get_store_data()->sub_self_delivery)
                                             {{\App\Models\Order::where(['order_status'=>'pending','store_id'=>\App\CentralLogics\Helpers::get_store_id()])->StoreOrder()->OrderScheduledIn(30)->NotDigitalOrder()->count()}}
                                             @else
                                             {{\App\Models\Order::where(['order_status'=>'pending','store_id'=>\App\CentralLogics\Helpers::get_store_id(), 'order_type'=>'take_away'])->StoreOrder()->OrderScheduledIn(30)->NotDigitalOrder()->count()}}
@@ -192,7 +192,7 @@
                                         {{translate('messages.scheduled')}}
                                         <span class="badge badge-soft-info badge-pill ml-1">
                                             {{\App\Models\Order::where('store_id',\App\CentralLogics\Helpers::get_store_id())->StoreOrder()->Scheduled()->where(function($q){
-                                                if(config('order_confirmation_model') == 'store' || \App\CentralLogics\Helpers::get_store_data()->self_delivery_system)
+                                                if(config('order_confirmation_model') == 'store' || \App\CentralLogics\Helpers::get_store_data()->sub_self_delivery)
                                                 {
                                                     $q->whereNotIn('order_status',['failed','canceled', 'refund_requested', 'refunded']);
                                                 }

@@ -234,7 +234,7 @@ class VendorController extends Controller
         ->with('customer')
 
         ->where(function($query)use($vendor){
-            if(config('order_confirmation_model') == 'store' || $vendor->stores[0]->self_delivery_system)
+            if(config('order_confirmation_model') == 'store' || $vendor->stores[0]->sub_self_delivery)
             {
                 $query->whereIn('order_status', ['accepted','pending','confirmed', 'processing', 'handover','picked_up']);
             }
@@ -375,7 +375,7 @@ class VendorController extends Controller
             }
         }
 
-        if($request['status'] =="confirmed" && !$vendor->stores[0]->self_delivery_system && config('order_confirmation_model') == 'deliveryman' && $order->order_type != 'take_away')
+        if($request['status'] =="confirmed" && !$vendor->stores[0]->sub_self_delivery && config('order_confirmation_model') == 'deliveryman' && $order->order_type != 'take_away')
         {
             return response()->json([
                 'errors' => [
@@ -393,7 +393,7 @@ class VendorController extends Controller
             ], 403);
         }
 
-        if($request['status']=='delivered' && $order->order_type != 'take_away' && !$vendor->stores[0]->self_delivery_system)
+        if($request['status']=='delivered' && $order->order_type != 'take_away' && !$vendor->stores[0]->sub_self_delivery)
         {
             return response()->json([
                 'errors' => [
@@ -1048,7 +1048,7 @@ class VendorController extends Controller
         ->with('customer')
 
         ->where(function($query)use($vendor){
-            if(config('order_confirmation_model') == 'store' || $vendor->stores[0]->self_delivery_system)
+            if(config('order_confirmation_model') == 'store' || $vendor->stores[0]->sub_self_delivery)
             {
                 $query->whereIn('order_status', ['accepted','pending','confirmed', 'processing', 'handover','picked_up']);
             }

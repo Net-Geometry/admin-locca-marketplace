@@ -68,6 +68,37 @@ class ItemController extends Controller
             return response()->json(['errors' => Helpers::error_processor($validator)], 402);
         }
 
+
+
+        $store=$request['vendor']->stores[0];
+        if (  $store->store_business_model == 'subscription' ) {
+
+            $store_sub = $store?->store_sub;
+            if (isset($store_sub)) {
+                if ($store_sub?->max_product != "unlimited" && $store_sub?->max_product > 0 ) {
+                    $total_item= Item::where('store_id', $store->id)->count()+1;
+                    if ( $total_item >= $store_sub->max_product  ){
+                        $store->update(['item_section' => 0]);
+                    }
+                }
+            } else{
+                return response()->json([
+                    'unsubscribed'=>[
+                        ['code'=>'unsubscribed', 'message'=>translate('messages.you_are_not_subscribed_to_any_package')]
+                    ]
+                ]);
+            }
+        } elseif($store->store_business_model == 'unsubscribed'){
+            return response()->json([
+                'unsubscribed'=>[
+                    ['code'=>'unsubscribed', 'message'=>translate('messages.you_are_not_subscribed_to_any_package')]
+                ]
+            ]);
+        }
+
+
+
+
         $tag_ids = [];
         if ($request->tags != null) {
             $tags = explode(",", $request->tags);

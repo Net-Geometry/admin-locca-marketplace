@@ -221,6 +221,40 @@ class Store extends Model
 
         return $value;
     }
+    public function getSubSelfDeliveryAttribute(): mixed
+    {
+        if( $this->store_business_model == 'subscription' && isset($this->store_sub)){
+            return (int)   $this->store_sub?->self_delivery ;
+            unset($this->store_sub);
+        }
+        return $this->self_delivery_system;
+    }
+    public function getChatPermissionAttribute(): mixed
+    {
+        if( $this->store_business_model == 'subscription' && isset($this->store_sub)){
+            return (int)   $this->store_sub->chat ;
+            unset($this->store_sub);
+        }
+        return 0;
+    }
+    public function getReviewPermissionAttribute(): mixed
+    {
+        if( $this->store_business_model == 'subscription' && isset($this->store_sub)){
+            return (int)   $this->store_sub->review ;
+            unset($this->store_sub);
+        }
+        return $this->reviews_section;
+    }
+    public function getIsValidSubscriptionAttribute(): mixed
+    {
+        if( $this->store_business_model == 'subscription' && isset($this->store_sub)){
+            return (int)   1 ;
+            unset($this->store_sub);
+        }
+        return 0;
+    }
+
+
 
     /**
      * @return HasOne
@@ -523,19 +557,19 @@ class Store extends Model
                     'status' => 0
                 ]);
 
-                if (config('mail.status') && Helpers::get_mail_status('subscription_deadline_mail_status_store') == '1') {
-                    $subscription_deadline_warning_days = BusinessSetting::where('key','subscription_deadline_warning_days')->first()?->value ?? 7;
+                // if (config('mail.status') && Helpers::get_mail_status('subscription_deadline_mail_status_store') == '1') {
+                //     $subscription_deadline_warning_days = BusinessSetting::where('key','subscription_deadline_warning_days')->first()?->value ?? 7;
 
-                    $expire_soon= StoreSubscription::with('store:id,name,email')->where('status',1)->whereDate('expiry_date', '<=', Carbon::today()->addDays($subscription_deadline_warning_days))->get();
+                //     $expire_soon= StoreSubscription::with('store:id,name,email')->where('status',1)->whereDate('expiry_date', '<=', Carbon::today()->addDays($subscription_deadline_warning_days))->get();
 
-                    try {
-                        foreach($expire_soon as $store){
-                            Mail::to($store->email)->send(new SubscriptionDeadLineWarning($store->name));
-                        }
-                    } catch (\Exception $ex) {
-                        info($ex->getMessage());
-                    }
-                }
+                //     try {
+                //         foreach($expire_soon as $store){
+                //             Mail::to($store->email)->send(new SubscriptionDeadLineWarning($store->name));
+                //         }
+                //     } catch (\Exception $ex) {
+                //         info($ex->getMessage());
+                //     }
+                // }
 
 
                 $check_daily_subscription_validity_check->value = $current_date;

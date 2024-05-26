@@ -288,7 +288,10 @@
             <!-- End Body -->
         </div>
         <!-- End Card -->
+        @php($store=\App\CentralLogics\Helpers::get_store_data())
 
+
+        @if ($store->review_permission)
 
         <!-- Card -->
         <div class="card">
@@ -396,6 +399,8 @@
             <!-- End Footer -->
         </div>
         <!-- End Card -->
+
+        @endif
     </div>
 @endsection
 

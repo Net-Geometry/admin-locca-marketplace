@@ -282,6 +282,8 @@ class Helpers
                 $item['is_prescription_required'] =  (int) $item->pharmacy_item_details?->is_prescription_required ?? 0;
                 $item['halal_tag_status'] =  (int) $item->store->storeConfig?->halal_tag_status??0;
 
+                $item->store['self_delivery_system'] = (int) $item->store->sub_self_delivery;
+
                 unset($item['pharmacy_item_details']);
                 unset($item['store']);
                 unset($item['rating']);
@@ -355,6 +357,8 @@ class Helpers
             if($temp_product == true){
                 $data['tags']=\App\Models\Tag::whereIn('id',json_decode($data?->tag_ids) )->get(['tag','id']);
             }
+            $data->store['self_delivery_system'] = (int) $data->store->sub_self_delivery;
+
             unset($data['pharmacy_item_details']);
             unset($data['store']);
             unset($data['rating']);
@@ -732,6 +736,8 @@ class Helpers
         $storage = [];
         if ($multi_data == true) {
             foreach ($data as $item) {
+
+                dd($item);
                 $item->load('storeConfig');
                 $ratings = StoreLogic::calculate_store_rating($item['rating']);
                 $item['ratings'] = $item?->rating ?? [];
@@ -750,6 +756,8 @@ class Helpers
                 if($item->storeConfig && $item->storeConfig->is_recommended_deleted == 0 ){
                     $item['is_recommended'] = $item->storeConfig->is_recommended;
                 }
+                $item0['self_delivery_system'] = (int) $item->sub_self_delivery;
+
                 unset($item['items_count']);
                 unset($item['campaigns_count']);
                 unset($item['storeConfig']);
@@ -769,6 +777,7 @@ class Helpers
             if($data->storeConfig && $data->storeConfig->is_recommended_deleted == 0 ){
                 $data['is_recommended'] = $data->storeConfig->is_recommended;
             }
+            $data['self_delivery_system'] = (int) $data->sub_self_delivery;
             $ratings = StoreLogic::calculate_store_rating($data['rating']);
             $data['ratings'] = $data?->rating ?? [];
             unset($data['rating']);
@@ -827,6 +836,12 @@ class Helpers
                     $item['store_logo'] = $item['store']['logo'];
                     $item['min_delivery_time'] =  (int) explode('-',$item['store']['delivery_time'])[0] ?? 0;
                     $item['max_delivery_time'] =  (int) explode('-',$item['store']['delivery_time'])[1] ?? 0;
+
+                    $item['vendor_id'] = $item['store']['vendor_id'];
+                    $item['chat_permission'] = $item['store']['chat_permission']?? 0;
+                    $item['review_permission'] = $item['store']['review_permission'] ?? 0;
+                    $item['store_business_model'] = $item['store']['store_business_model'];
+
                     unset($item['store']);
                 } else {
                     $item['store_name'] = null;
@@ -837,6 +852,10 @@ class Helpers
                     $item['store_logo'] = null;
                     $item['min_delivery_time'] = null;
                     $item['max_delivery_time'] = null;
+                    $item['vendor_id'] = null;
+                    $item['chat_permission'] = null;
+                    $item['review_permission'] = null;
+                    $item['store_business_model'] = null;
                 }
                 $item['item_campaign'] = 0;
                 foreach ($item->details as $d) {
@@ -864,6 +883,11 @@ class Helpers
                 $data['store_logo'] = $data['store']['logo'];
                 $data['min_delivery_time'] =  $data['store']?(int) explode('-',$data['store']['delivery_time'])[0] ?? 0:0;
                 $data['max_delivery_time'] =  $data['store']?(int) explode('-',$data['store']['delivery_time'])[1] ?? 0:0;
+                $data['vendor_id'] = $data['store']['vendor_id'];
+                $data['chat_permission'] = $data['store']['chat_permission']?? 0;
+                $data['review_permission'] = $data['store']['review_permission'] ?? 0;
+                $data['store_business_model'] = $data['store']['store_business_model'];
+
                 unset($data['store']);
             } else {
                 $data['store_name'] = null;
@@ -874,6 +898,10 @@ class Helpers
                 $data['store_logo'] = null;
                 $data['min_delivery_time'] = null;
                 $data['max_delivery_time'] = null;
+                $item['vendor_id'] = null;
+                $item['chat_permission'] = null;
+                $item['review_permission'] = null;
+                $item['store_business_model'] = null;
             }
 
             $data['item_campaign'] = 0;
@@ -1528,7 +1556,7 @@ class Helpers
             }
 
             if ($order->order_type == 'delivery' && !$order->scheduled && $status == 'pending' && $order->payment_method == 'cash_on_delivery' && config('order_confirmation_model') == 'deliveryman') {
-                if ($order->store->self_delivery_system) {
+                if ($order->store->sub_self_delivery) {
                     $data = [
                         'title' => translate('messages.order_push_title'),
                         'description' => translate('messages.new_order_push_description'),
@@ -1641,7 +1669,7 @@ class Helpers
             }
 
             if ($order->order_status == 'confirmed' && $order->order_type != 'take_away' && config('order_confirmation_model') == 'deliveryman' && $order->payment_method == 'cash_on_delivery') {
-                if ($order->store->self_delivery_system) {
+                if ($order->store->sub_self_delivery) {
                     $data = [
                         'title' => translate('messages.order_push_title'),
                         'description' => translate('messages.new_order_push_description'),
@@ -1685,7 +1713,7 @@ class Helpers
                     'order_type' => $order->order_type,
                     'image' => '',
                 ];
-                if ($order->store->self_delivery_system) {
+                if ($order->store->sub_self_delivery) {
                     self::send_push_notif_to_topic($data, "restaurant_dm_" . $order->store_id, 'order_request');
                 } else
                 {if($order->zone){
@@ -3826,7 +3854,13 @@ class Helpers
 
         return true;
     }
-
+    public static function increment_order_count($store){
+        $store_sub=$store->store_sub;
+        if ( $store->store_business_model == 'subscription' && isset($store_sub) && $store_sub->max_order != "unlimited") {
+            $store_sub->increment('max_order', 1);
+        }
+        return true;
+    }
 }
 
 

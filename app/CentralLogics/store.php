@@ -310,7 +310,7 @@ class StoreLogic
     {
         return Store::withOpen($longitude??0,$latitude??0)->with(['discount'=>function($q){
             return $q->validate();
-        }, 'campaigns', 'schedules','activeCoupons'])
+        }, 'campaigns', 'schedules','activeCoupons','store_sub'])
             ->withCount(['items','campaigns'])
             ->when(config('module.current_module_data'), function($query){
                 $query->module(config('module.current_module_data')['id']);

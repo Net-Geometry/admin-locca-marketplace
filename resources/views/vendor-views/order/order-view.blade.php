@@ -722,7 +722,7 @@
                                     href="javascript:">{{ translate('messages.make_ready_for_handover') }}</a>
                                  @if($order['order_status'] == 'handover')
                                     <a class="btn  w-100
-                                    {{ ($order['order_type'] == 'take_away' || $order->store->self_delivery_system == 1)  ?  'btn--primary order-status-change-alert'  :  'btn--secondary  self-delivery-warning' }} "
+                                    {{ ($order['order_type'] == 'take_away' || $order->store->sub_self_delivery == 1)  ?  'btn--primary order-status-change-alert'  :  'btn--secondary  self-delivery-warning' }} "
                                        data-url="{{ route('vendor.order.status', ['id' => $order['id'], 'order_status' => 'delivered']) }}"
                                        data-message="{{ translate('messages.Change status to delivered (payment status will be paid if not)?') }}"
                                        data-verification="{{ $order_delivery_verification ? 'true' : 'false' }}"
@@ -863,7 +863,7 @@
                 <div class="card mb-2 mt-2">
                     <div class="card-header border-0 text-center pb-0">
                         <h4 class="m-0">{{ translate('messages.delivery_proof') }} </h4>
-                        @if ($order['store']['self_delivery_system'])
+                        @if ($order['store']['sub_self_delivery'])
 
                         <button class="btn btn-outline-primary btn-sm" data-toggle="modal"
                                             data-target=".order-proof-modal">
