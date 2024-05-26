@@ -17,7 +17,7 @@ class ModuleWiseWhyChoose extends Model
         'status' => 'integer',
     ];
 
-
+    protected $appends = ['image_full_url'];
     public function translations()
     {
         return $this->morphMany(Translation::class, 'translationable');
@@ -49,6 +49,25 @@ class ModuleWiseWhyChoose extends Model
         }
 
         return $value;
+    }
+
+    public function getImageFullUrlAttribute(){
+        $value = $this->image;
+        if (count($this->storage) > 0) {
+            foreach ($this->storage as $storage) {
+                if ($storage['key'] == 'image') {
+
+                    if($storage['value'] == 's3'){
+
+                        return Helpers::s3_storage_link('why_choose',$value);
+                    }else{
+                        return Helpers::local_storage_link('why_choose',$value);
+                    }
+                }
+            }
+        }
+
+        return Helpers::local_storage_link('why_choose',$value);
     }
 
     public function storage()

@@ -185,8 +185,9 @@
                                             </div>
                                         </div>
                                         @foreach(json_decode($deliveryMan['identity_image'],true) as $img)
+                                        @php($img = is_array($img)?$img:['img'=>$img,'storage'=>'public'])
                                         <div class="col-6 spartan_item_wrapper size--sm">
-                                            <img class="rounded border" src="{{\App\CentralLogics\Helpers::onerror_image_helper($img, asset('storage/app/public/delivery-man/').'/'.$img, asset('public/assets/admin/img/160x160/img1.jpg'), 'delivery-man/',$deliveryMan?->storage?->value ?? 'public') }}">
+                                            <img class="rounded border" src="{{\App\CentralLogics\Helpers::onerror_image_helper($img['img'], asset('storage/app/public/delivery-man/').'/'.$img['img'], asset('public/assets/admin/img/160x160/img1.jpg'), 'delivery-man/',$img['storage'] ?? 'public') }}">
                                         </div>
                                         @endforeach
                                     </div>

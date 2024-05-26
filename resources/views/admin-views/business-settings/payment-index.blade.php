@@ -188,7 +188,7 @@
                                         $additional_data?->gateway_image,
                                         asset('storage/app/public/payment_modules/gateway_image').'/'.$additional_data?->gateway_image,
                                         asset('/public/assets/admin/img/payment/placeholder.png'),
-                                        'payment_modules/gateway_image/',$payment?->storage?->value??'public'
+                                        'payment_modules/gateway_image/',$additional_data?->storage??'public'
                                     ) }}"
 
                                 @else

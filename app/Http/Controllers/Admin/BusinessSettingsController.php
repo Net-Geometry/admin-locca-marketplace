@@ -1113,6 +1113,7 @@ class BusinessSettingsController extends Controller
         $payment_additional_data = [
             'gateway_title' => $request['gateway_title'],
             'gateway_image' => $gateway_image,
+            'storage' => self::getDisk(),
         ];
 
         $validator = Validator::make($request->all(), array_merge($validation, $additional_data));
@@ -1524,7 +1525,7 @@ class BusinessSettingsController extends Controller
                 }
                 $imageName = \Carbon\Carbon::now()->toDateString() . "-" . uniqid() . ".png";
                 $request->top_content_image->move(public_path('assets/landing/image'), $imageName);
-                $data['top_content_image'] = $imageName;
+                $data['top_content_image'] = ['img' => $imageName, 'storage'=> Helpers::getDisk()];
             }
 
             if ($request->has('mobile_app_section_image')) {
@@ -1533,7 +1534,7 @@ class BusinessSettingsController extends Controller
                 }
                 $imageName = \Carbon\Carbon::now()->toDateString() . "-" . uniqid() . ".png";
                 $request->mobile_app_section_image->move(public_path('assets/landing/image'), $imageName);
-                $data['mobile_app_section_image'] = $imageName;
+                $data['mobile_app_section_image'] = ['img' => $imageName, 'storage'=> Helpers::getDisk()];
             }
             DB::table('business_settings')->updateOrInsert(['key' => 'web_app_landing_page_settings'], [
                 'value' => json_encode($data)
@@ -4948,7 +4949,7 @@ class BusinessSettingsController extends Controller
                 }
                 array_push($data, [
                     'img' => $imageName,
-                    // 'title' => $request->title,
+                     'storage' => Helpers::getDisk(),
                     // 'sub_title' => $request->sub_title,
                 ]);
                 $promotion_banner->value = json_encode($data);

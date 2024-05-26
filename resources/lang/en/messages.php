@@ -4626,4 +4626,6 @@
   'credential_updated' => 'Credential updated',
   'delivery_address_updated' => 'Delivery address updated',
   'Go_to_YouTube,_click_share_option_then_get_a_popup_of_share._Select_embed_&_get_a_embed_video_then_copy_the_generated_code_for_the_embedded_link' => 'Go to YouTube  click share option then get a popup of share. Select embed & get a embed video then copy the generated code for the embedded link',
+  'promotion_banner' => 'Promotion banner',
+  'deleted' => 'Deleted',
 );

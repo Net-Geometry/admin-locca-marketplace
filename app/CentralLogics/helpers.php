@@ -3300,6 +3300,7 @@ class Helpers
 
     public static function get_image_helper($data, $key, $src, $error_src ,$path){
 //        dd($data);
+//        dd(is_array($data) && array_key_exists('storage', $data) && is_array($data['storage']) && array_key_exists('value', $data['storage']));
         $image = '';
         $storage = 'public';
 
@@ -3327,7 +3328,7 @@ class Helpers
                     }
                 }
             }
-        } elseif (is_array($data) && array_key_exists('storage', $data) && is_array($data['storage']) && array_key_exists('value', $data['storage'])) {
+        } elseif (is_array($data) && array_key_exists('storage', $data) && is_array($data['storage'])) {
             if ($data['storage'] && count($data['storage']) > 0) {
                 foreach ($data['storage'] as $value) {
                     if ($value['key'] == $key || $value['data_type'] == 'App\Models\BusinessSetting' || $value['data_type'] == 'App\Models\DataSetting') {
@@ -3452,6 +3453,17 @@ class Helpers
         $awsBucket = config('filesystems.disks.s3.bucket');
         return rtrim($awsUrl, '/').'/'.ltrim($awsBucket.'/'.$path.'/'.$data, '/');
     }
+
+    public static function get_full_url($path,$data,$type){
+        if($type == 's3'){
+            $awsUrl = config('filesystems.disks.s3.url');
+            $awsBucket = config('filesystems.disks.s3.bucket');
+            return rtrim($awsUrl, '/').'/'.ltrim($awsBucket.'/'.$path.'/'.$data, '/');
+        }
+        return asset('storage/app/public').'/'.$path.'/'.$data;
+    }
+
+
 
     public static function create_storage($model,$data_id){
         $config=self::get_business_settings('local_storage');
