@@ -3457,7 +3457,7 @@ class Helpers
 //        return $error_src;
 //    }
 //
-    public static function onerror_image_helper($data, $src, $error_src ,$path, $storage = null){
+    public static function onerror_image_helper($image, $src, $error_src ,$path, $storage = null){
 
         try {
             if(($storage  == 'public') && isset($image) && strlen($image) >1 && Storage::disk($storage)->exists($path.$image)){
