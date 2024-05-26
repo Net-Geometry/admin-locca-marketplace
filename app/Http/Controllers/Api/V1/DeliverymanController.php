@@ -753,14 +753,13 @@ class DeliverymanController extends Controller
             return response()->json(['errors'=>[['code'=>'on-going', 'message'=>translate('messages.You_have_cash_in_hand,_you_have_to_pay_the_due_to_delete_your_account.')]]],203);
         }
 
-        if (Storage::disk('public')->exists('delivery-man/' . $dm['image'])) {
-            Storage::disk('public')->delete('delivery-man/' . $dm['image']);
-        }
+  
+        Helpers::check_and_delete('delivery-man/' , $dm['image']);
+        
 
         foreach (json_decode($dm['identity_image'], true) as $img) {
-            if (Storage::disk('public')->exists('delivery-man/' . $img)) {
-                Storage::disk('public')->delete('delivery-man/' . $img);
-            }
+            Helpers::check_and_delete('delivery-man/' , $img);
+            
         }
         if($dm->userinfo){
 

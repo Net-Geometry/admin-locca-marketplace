@@ -358,25 +358,24 @@ class VendorController extends Controller
             return back();
         }
 
-        if (Storage::disk('public')->exists('vendor/' . $store->vendor['image'])) {
-            Storage::disk('public')->delete('vendor/' . $store->vendor['image']);
-        }
-        if (Storage::disk('public')->exists('store/' . $store->logo)) {
-            Storage::disk('public')->delete('store/' . $store->logo);
-        }
 
-        if (Storage::disk('public')->exists('store/cover/' . $store->cover_photo)) {
-            Storage::disk('public')->delete('store/cover/' . $store->cover_photo);
-        }
+        Helpers::check_and_delete('vendor/' , $store->vendor['image']);
+        
+
+        Helpers::check_and_delete('store/' , $store->logo);
+        
+
+        Helpers::check_and_delete('store/cover/' , $store->cover_photo);
+        
         foreach($store->deliverymen as $dm) {
-            if (Storage::disk('public')->exists('delivery-man/' . $dm['image'])) {
-                Storage::disk('public')->delete('delivery-man/' . $dm['image']);
-            }
+ 
+            Helpers::check_and_delete('delivery-man/' , $dm['image']);
+            
 
             foreach (json_decode($dm['identity_image'], true) as $img) {
-                if (Storage::disk('public')->exists('delivery-man/' . $img)) {
-                    Storage::disk('public')->delete('delivery-man/' . $img);
-                }
+   
+                Helpers::check_and_delete('delivery-man/' , $img);
+                
             }
         }
 

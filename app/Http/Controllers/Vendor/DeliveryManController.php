@@ -199,9 +199,9 @@ class DeliveryManController extends Controller
 
         if ($request->has('identity_image')){
             foreach (json_decode($delivery_man['identity_image'], true) as $img) {
-                if (Storage::disk('public')->exists('delivery-man/' . $img)) {
-                    Storage::disk('public')->delete('delivery-man/' . $img);
-                }
+          
+                Helpers::check_and_delete('delivery-man/' , $img);
+                
             }
             $img_keeper = [];
             foreach ($request->identity_image as $img) {
@@ -242,14 +242,14 @@ class DeliveryManController extends Controller
     public function delete(Request $request)
     {
         $delivery_man = DeliveryMan::find($request->id);
-        if (Storage::disk('public')->exists('delivery-man/' . $delivery_man['image'])) {
-            Storage::disk('public')->delete('delivery-man/' . $delivery_man['image']);
-        }
+
+        Helpers::check_and_delete('delivery-man/' , $delivery_man['image']);
+        
 
         foreach (json_decode($delivery_man['identity_image'], true) as $img) {
-            if (Storage::disk('public')->exists('delivery-man/' . $img)) {
-                Storage::disk('public')->delete('delivery-man/' . $img);
-            }
+         
+            Helpers::check_and_delete('delivery-man/' , $img);
+            
         }
         if($delivery_man->userinfo){
 

@@ -751,9 +751,9 @@ class OrderController extends Controller
             Toastr::warning(translate('all_image_delete_warning'));
             return back();
         }
-        if (Storage::disk('public')->exists('order/' . $request['name'])) {
-            Storage::disk('public')->delete('order/' . $request['name']);
-        }
+     
+        Helpers::check_and_delete('order/' , $request['name']);
+        
         foreach ($proof as $image) {
             if ($image != $request['name']) {
                 array_push($array, $image);

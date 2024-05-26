@@ -1852,16 +1852,18 @@ class Helpers
 
     public static function upload(string $dir, string $format, $image = null)
     {
-        if ($image != null) {
-            $imageName = \Carbon\Carbon::now()->toDateString() . "-" . uniqid() . "." . $format;
-            if (!Storage::disk(self::getDisk())->exists($dir)) {
-                Storage::disk(self::getDisk())->makeDirectory($dir);
+        try {
+            if ($image != null) {
+                $imageName = \Carbon\Carbon::now()->toDateString() . "-" . uniqid() . "." . $format;
+                if (!Storage::disk(self::getDisk())->exists($dir)) {
+                    Storage::disk(self::getDisk())->makeDirectory($dir);
+                }
+                Storage::disk(self::getDisk())->putFileAs($dir, $image, $imageName);
+            } else {
+                $imageName = 'def.png';
             }
-            Storage::disk(self::getDisk())->putFileAs($dir, $image, $imageName);
-        } else {
-            $imageName = 'def.png';
+        } catch (\Exception $e) {
         }
-
         return $imageName;
     }
 
@@ -1870,11 +1872,30 @@ class Helpers
         if ($image == null) {
             return $old_image;
         }
-        if (Storage::disk(self::getDisk())->exists($dir . $old_image)) {
-            Storage::disk(self::getDisk())->delete($dir . $old_image);
+        try {
+            if (Storage::disk(self::getDisk())->exists($dir . $old_image)) {
+                Storage::disk(self::getDisk())->delete($dir . $old_image);
+            }
+        } catch (\Exception $e) {
         }
         $imageName = Helpers::upload($dir, $format, $image);
         return $imageName;
+    }
+
+    public static function check_and_delete(string $dir, $old_image)
+    {
+
+        try {
+            if (Storage::disk('public')->exists($dir . $old_image)) {
+                Storage::disk('public')->delete($dir . $old_image);
+            }
+            if (Storage::disk('s3')->exists($dir . $old_image)) {
+                Storage::disk('s3')->delete($dir . $old_image);
+            }
+        } catch (\Exception $e) {
+        }
+
+        return true;
     }
 
     public static function format_coordiantes($coordinates)
@@ -3363,13 +3384,17 @@ class Helpers
 //        $image = (get_class($data) === 'stdClass' && property_exists($data, $key)) ? $data?->$key : ($data?->$key ?? '');
 //        $storage = $data?->storage?->value ?? 'public';
 
-        if(($storage  == 'public') && isset($image) && strlen($image) >1 && Storage::disk($storage)->exists($path.$image)){
-            return $src;
-        }
-        if(($storage  == 's3') && isset($image) && strlen($image) >1 && Storage::disk($storage)->exists($path.$image)){
-            $awsUrl = config('filesystems.disks.s3.url');
-            $awsBucket = config('filesystems.disks.s3.bucket');
-            return rtrim($awsUrl, '/').'/'.ltrim($awsBucket.'/'.$path.$image, '/');
+        try {
+            if(($storage  == 'public') && isset($image) && strlen($image) >1 && Storage::disk($storage)->exists($path.$image)){
+                return $src;
+            }
+            if(($storage  == 's3') && isset($image) && strlen($image) >1 && Storage::disk($storage)->exists($path.$image)){
+                $awsUrl = config('filesystems.disks.s3.url');
+                $awsBucket = config('filesystems.disks.s3.bucket');
+                return rtrim($awsUrl, '/').'/'.ltrim($awsBucket.'/'.$path.$image, '/');
+            }
+        } catch (\Exception $e) {
+            return $error_src;
         }
         return $error_src;
     }
@@ -3432,15 +3457,19 @@ class Helpers
 //        return $error_src;
 //    }
 //
-    public static function onerror_image_helper($data, $src, $error_src ,$path, $storag = null){
+    public static function onerror_image_helper($data, $src, $error_src ,$path, $storage = null){
 
-        if(($storag  == 'public') && isset($data) && strlen($data) >1 && Storage::disk($storag)->exists($path.$data)){
-            return $src;
-        }
-        if(($storag  == 's3') && isset($data) && strlen($data) >1 && Storage::disk($storag)->exists($path.$data)){
-            $awsUrl = config('filesystems.disks.s3.url');
-            $awsBucket = config('filesystems.disks.s3.bucket');
-            return rtrim($awsUrl, '/').'/'.ltrim($awsBucket.'/'.$path.$data, '/');
+        try {
+            if(($storage  == 'public') && isset($image) && strlen($image) >1 && Storage::disk($storage)->exists($path.$image)){
+                return $src;
+            }
+            if(($storage  == 's3') && isset($image) && strlen($image) >1 && Storage::disk($storage)->exists($path.$image)){
+                $awsUrl = config('filesystems.disks.s3.url');
+                $awsBucket = config('filesystems.disks.s3.bucket');
+                return rtrim($awsUrl, '/').'/'.ltrim($awsBucket.'/'.$path.$image, '/');
+            }
+        } catch (\Exception $e) {
+            return $error_src;
         }
         return $error_src;
     }

@@ -56,9 +56,9 @@ class DeliveryManService
 
         if ($request->has('identity_image')){
             foreach (json_decode($deliveryMan['identity_image'], true) as $img) {
-                if (Storage::disk('public')->exists('delivery-man/' . $img)) {
-                    Storage::disk('public')->delete('delivery-man/' . $img);
-                }
+                
+                Helpers::check_and_delete('delivery-man/' , $img);
+                
             }
             $imgKeeper = [];
             foreach ($request->identity_image as $img) {

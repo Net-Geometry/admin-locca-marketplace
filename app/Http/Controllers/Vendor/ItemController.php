@@ -640,9 +640,9 @@ class ItemController extends Controller
 
         if($product->image)
         {
-            if (Storage::disk('public')->exists('product/' . $product['image'])) {
-                Storage::disk('public')->delete('product/' . $product['image']);
-            }
+ 
+            Helpers::check_and_delete('product/' , $product['image']);
+            
         }
         $product->translations()->delete();
         $product->delete();
@@ -755,9 +755,9 @@ class ItemController extends Controller
 
     public function remove_image(Request $request)
     {
-        if (Storage::disk('public')->exists('product/' . $request['name'])) {
-            Storage::disk('public')->delete('product/' . $request['name']);
-        }
+    
+        Helpers::check_and_delete('product/' , $request['name']);
+        
         if($request?->temp_product){
             $item = TempProduct::find($request['id']);
         }

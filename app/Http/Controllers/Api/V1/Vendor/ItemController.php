@@ -445,10 +445,9 @@ class ItemController extends Controller
 
         foreach ($p['images'] as $img) {
             if (!in_array($img, json_decode($request->images, true))) {
-                if(Storage::disk('public')->exists('product/' . $img))
-                {
-                    Storage::disk('public')->delete('product/' . $img);
-                }
+      
+                Helpers::check_and_delete('product/' , $img);
+                
                 $key = array_search($img, $images);
                 unset($images[$key]);
             }
@@ -598,9 +597,9 @@ class ItemController extends Controller
 
         if($product->image)
         {
-            if (Storage::disk('public')->exists('product/' . $product['image'])) {
-                Storage::disk('public')->delete('product/' . $product['image']);
-            }
+    
+                Helpers::check_and_delete('product/' , $product['image']);
+            
         }
         $product->translations()->delete();
         $product->delete();
