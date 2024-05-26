@@ -113,7 +113,7 @@ class DeliveryManLoginController extends Controller
         if (!empty($request->file('identity_image'))) {
             foreach ($request->identity_image as $img) {
                 $identity_image = Helpers::upload('delivery-man/', 'png', $img);
-                array_push($id_img_names, $identity_image);
+                array_push($id_img_names, ['img'=>$identity_image, 'storage'=> Helpers::getDisk()]);
             }
             $identity_image = json_encode($id_img_names);
         } else {

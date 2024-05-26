@@ -4697,4 +4697,9 @@
   'Subscription_successful' => 'Subscription successful',
   'Subscription_Shift_successful' => 'Subscription Shift successful',
   'days_the_you_will_no_longer_be_able_to_run_the_business_before_subscribe_a_new_plan.' => 'Days the you will no longer be able to run the business before subscribe a new plan.',
+  'credential_updated' => 'Credential updated',
+  'delivery_address_updated' => 'Delivery address updated',
+  'Go_to_YouTube,_click_share_option_then_get_a_popup_of_share._Select_embed_&_get_a_embed_video_then_copy_the_generated_code_for_the_embedded_link' => 'Go to YouTube  click share option then get a popup of share. Select embed & get a embed video then copy the generated code for the embedded link',
+  'promotion_banner' => 'Promotion banner',
+  'deleted' => 'Deleted',
 );

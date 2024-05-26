@@ -477,7 +477,7 @@ class OrderController extends Controller
             if (!empty($request->file('order_attachment'))) {
                 foreach ($request->order_attachment as $img) {
                     $image_name = Helpers::upload('order/', 'png', $img);
-                    array_push($img_names, $image_name);
+                    array_push($img_names, ['img'=>$image_name, 'storage'=> Helpers::getDisk()]);
                 }
                 $images = $img_names;
             } else {
@@ -485,7 +485,18 @@ class OrderController extends Controller
             }
             $order->order_attachment = json_encode($images);
         }else{
-            $order->order_attachment = $request->has('order_attachment') ? Helpers::upload('order/', 'png', $request->file('order_attachment')) : null;
+            $img_names = [];
+            $images = [];
+            if (!empty($request->file('order_attachment'))) {
+                $image_name = Helpers::upload('order/', 'png', $request->file('order_attachment'));
+                array_push($img_names, ['img'=>$image_name, 'storage'=> Helpers::getDisk()]);
+                
+                $images = $img_names;
+            } else {
+                $images = null;
+            }
+            $order->order_attachment = json_encode($images);
+            $order->order_attachment = $img_names;
         }
         $order->distance = $request->distance;
         $order->created_at = now();
@@ -1257,7 +1268,7 @@ class OrderController extends Controller
         if (!empty($request->file('order_attachment'))) {
             foreach ($request->order_attachment as $img) {
                 $image_name = Helpers::upload('order/', 'png', $img);
-                array_push($img_names, $image_name);
+                array_push($img_names, ['img'=>$image_name, 'storage'=> Helpers::getDisk()]);
             }
             $images = $img_names;
         } else {
@@ -1672,7 +1683,7 @@ class OrderController extends Controller
             if (!empty($request->file('image'))) {
                 foreach ($request->image as $img) {
                     $image = Helpers::upload('refund/', 'png', $img);
-                    array_push($id_img_names, $image);
+                    array_push($id_img_names, ['img'=>$image, 'storage'=> Helpers::getDisk()]);
                 }
                 $image = json_encode($id_img_names);
             } else {

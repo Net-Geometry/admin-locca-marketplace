@@ -249,7 +249,7 @@ class ItemController extends Controller
         if (!empty($request->file('item_images'))) {
             foreach ($request->item_images as $img) {
                 $image_name = Helpers::upload('product/', 'png', $img);
-                $images[]=$image_name;
+                $images[]=['img'=>$image_name, 'storage'=> Helpers::getDisk()];
             }
         }
 
@@ -613,7 +613,7 @@ class ItemController extends Controller
             if ($request->has('item_images')){
                 foreach ($request->item_images as $img) {
                     $image = Helpers::upload('product/', 'png', $img);
-                    array_push($images, $image);
+                    array_push($images, ['img'=>$image, 'storage'=> Helpers::getDisk()]);
                 }
             }
             $p->images = $images;
@@ -670,9 +670,9 @@ class ItemController extends Controller
 
         if($product->image)
         {
-            if (Storage::disk('public')->exists('product/' . $product['image'])) {
-                Storage::disk('public')->delete('product/' . $product['image']);
-            }
+ 
+            Helpers::check_and_delete('product/' , $product['image']);
+            
         }
         $product->translations()->delete();
         $product->delete();
@@ -785,9 +785,9 @@ class ItemController extends Controller
 
     public function remove_image(Request $request)
     {
-        if (Storage::disk('public')->exists('product/' . $request['name'])) {
-            Storage::disk('public')->delete('product/' . $request['name']);
-        }
+    
+        Helpers::check_and_delete('product/' , $request['name']);
+        
         if($request?->temp_product){
             $item = TempProduct::find($request['id']);
         }

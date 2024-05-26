@@ -619,7 +619,7 @@ class OrderController extends Controller
         if (!empty($request->file('order_proof'))) {
             foreach ($request->order_proof as $img) {
                 $image_name = Helpers::upload('order/', 'png', $img);
-                array_push($img_names, $image_name);
+                array_push($img_names, ['img'=>$image_name, 'storage'=> Helpers::getDisk()]);
             }
             $images = $img_names;
         }
@@ -641,9 +641,9 @@ class OrderController extends Controller
             Toastr::warning(translate('all_image_delete_warning'));
             return back();
         }
-        if (Storage::disk('public')->exists('order/' . $request['name'])) {
-            Storage::disk('public')->delete('order/' . $request['name']);
-        }
+      
+        Helpers::check_and_delete('order/' , $request['name']);
+        
         foreach ($proof as $image) {
             if ($image != $request['name']) {
                 array_push($array, $image);

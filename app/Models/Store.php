@@ -170,7 +170,7 @@ class Store extends Model
     /**
      * @var string[]
      */
-    protected $appends = ['gst_status','gst_code'];
+    protected $appends = ['gst_status','gst_code','logo_full_url','cover_photo_full_url','meta_image_full_url'];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -255,6 +255,60 @@ class Store extends Model
     }
 
 
+    public function getLogoFullUrlAttribute(){
+        $value = $this->logo;
+        if (count($this->storage) > 0) {
+            foreach ($this->storage as $storage) {
+                if ($storage['key'] == 'logo') {
+
+                    if($storage['value'] == 's3'){
+
+                        return Helpers::s3_storage_link('store',$value);
+                    }else{
+                        return Helpers::local_storage_link('store',$value);
+                    }
+                }
+            }
+        }
+
+        return Helpers::local_storage_link('store',$value);
+    }
+    public function getCoverPhotoFullUrlAttribute(){
+        $value = $this->cover_photo;
+        if (count($this->storage) > 0) {
+            foreach ($this->storage as $storage) {
+                if ($storage['key'] == 'cover_photo') {
+
+                    if($storage['value'] == 's3'){
+
+                        return Helpers::s3_storage_link('store/cover',$value);
+                    }else{
+                        return Helpers::local_storage_link('store/cover',$value);
+                    }
+                }
+            }
+        }
+
+        return Helpers::local_storage_link('store/cover',$value);
+    }
+    public function getMetaImageFullUrlAttribute(){
+        $value = $this->meta_image;
+        if (count($this->storage) > 0) {
+            foreach ($this->storage as $storage) {
+                if ($storage['key'] == 'meta_image') {
+
+                    if($storage['value'] == 's3'){
+
+                        return Helpers::s3_storage_link('store',$value);
+                    }else{
+                        return Helpers::local_storage_link('store',$value);
+                    }
+                }
+            }
+        }
+
+        return Helpers::local_storage_link('store',$value);
+    }
 
     /**
      * @return HasOne
@@ -619,9 +673,9 @@ class Store extends Model
         }
         return $slug;
     }
-    public function storage(): MorphOne
+    public function storage()
     {
-        return $this->morphOne(Storage::class, 'data');
+        return $this->morphMany(Storage::class, 'data');
     }
 
 
@@ -636,12 +690,39 @@ class Store extends Model
             $store->save();
         });
         static::saved(function ($model) {
-            if($model->isDirty('logo') || $model->isDirty('cover_photo') || $model->isDirty('meta_image')){
+            if($model->isDirty('logo')){
                 $value = Helpers::getDisk();
 
                 DB::table('storages')->updateOrInsert([
                     'data_type' => get_class($model),
                     'data_id' => $model->id,
+                    'key' => 'logo',
+                ], [
+                    'value' => $value,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+            if($model->isDirty('cover_photo')){
+                $value = Helpers::getDisk();
+
+                DB::table('storages')->updateOrInsert([
+                    'data_type' => get_class($model),
+                    'data_id' => $model->id,
+                    'key' => 'cover_photo',
+                ], [
+                    'value' => $value,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+            if($model->isDirty('meta_image')){
+                $value = Helpers::getDisk();
+
+                DB::table('storages')->updateOrInsert([
+                    'data_type' => get_class($model),
+                    'data_id' => $model->id,
+                    'key' => 'meta_image',
                 ], [
                     'value' => $value,
                     'created_at' => now(),

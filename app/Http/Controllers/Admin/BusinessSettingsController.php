@@ -1113,6 +1113,7 @@ class BusinessSettingsController extends Controller
         $payment_additional_data = [
             'gateway_title' => $request['gateway_title'],
             'gateway_image' => $gateway_image,
+            'storage' => self::getDisk(),
         ];
 
         $validator = Validator::make($request->all(), array_merge($validation, $additional_data));
@@ -1524,7 +1525,7 @@ class BusinessSettingsController extends Controller
                 }
                 $imageName = \Carbon\Carbon::now()->toDateString() . "-" . uniqid() . ".png";
                 $request->top_content_image->move(public_path('assets/landing/image'), $imageName);
-                $data['top_content_image'] = $imageName;
+                $data['top_content_image'] = ['img' => $imageName, 'storage'=> Helpers::getDisk()];
             }
 
             if ($request->has('mobile_app_section_image')) {
@@ -1533,7 +1534,7 @@ class BusinessSettingsController extends Controller
                 }
                 $imageName = \Carbon\Carbon::now()->toDateString() . "-" . uniqid() . ".png";
                 $request->mobile_app_section_image->move(public_path('assets/landing/image'), $imageName);
-                $data['mobile_app_section_image'] = $imageName;
+                $data['mobile_app_section_image'] = ['img' => $imageName, 'storage'=> Helpers::getDisk()];
             }
             DB::table('business_settings')->updateOrInsert(['key' => 'web_app_landing_page_settings'], [
                 'value' => json_encode($data)
@@ -1651,8 +1652,8 @@ class BusinessSettingsController extends Controller
             foreach ($request->banner_section_half  as $key => $value) {
 
                 if ($request->hasfile("banner_section_half.{$key}.img")) {
-                    if (isset($data[$key]['img']) && Storage::disk('public')->exists('react_landing/' . $data[$key]['img'])) {
-                        Storage::disk('public')->delete('react_landing/' . $data[$key]['img']);
+                    if (isset($data[$key]['img'])) {
+                        Helpers::check_and_delete('react_landing/' , $data[$key]['img']);
                     }
 
                     $value['img'] = Helpers::upload('react_landing/', 'png', $request->file("banner_section_half.{$key}.img"));
@@ -2507,59 +2508,59 @@ class BusinessSettingsController extends Controller
             ]);
         }
 
-        $credentials=\App\CentralLogics\Helpers::get_business_settings('s3_credential');
-        $config=\App\CentralLogics\Helpers::get_business_settings('local_storage');
+//        $credentials=\App\CentralLogics\Helpers::get_business_settings('s3_credential');
+//        $config=\App\CentralLogics\Helpers::get_business_data('local_storage');
+//
+//        $s3Credentials = [
+//            'FILESYSTEM_DRIVER' => isset($config)?($config==0?'s3':'local'):'local',
+//            'AWS_ACCESS_KEY_ID' => $credentials['key'],
+//            'AWS_SECRET_ACCESS_KEY' => $credentials['secret'],
+//            'AWS_DEFAULT_REGION' => $credentials['region'],
+//            'AWS_BUCKET' => $credentials['bucket'],
+//            'AWS_URL' => $credentials['url'],
+//            'AWS_ENDPOINT' => $credentials['end_point']
+//        ];
 
-        $s3Credentials = [
-            'FILESYSTEM_DRIVER' => isset($config)?($config==0?'s3':'local'):'local',
-            'AWS_ACCESS_KEY_ID' => $credentials['key'],
-            'AWS_SECRET_ACCESS_KEY' => $credentials['secret'],
-            'AWS_DEFAULT_REGION' => $credentials['region'],
-            'AWS_BUCKET' => $credentials['bucket'],
-            'AWS_URL' => $credentials['url'],
-            'AWS_ENDPOINT' => $credentials['end_point']
-        ];
-
-        // Load existing environment file into an array
-        $envFile = file(base_path('.env'), FILE_IGNORE_NEW_LINES);
-        $data = [];
-        foreach ($envFile as $line) {
-            if (!empty(trim($line))) {
-                list($key, $value) = explode('=', $line, 2);
-                $data[$key] = $value;
-            } else {
-                // Preserve empty lines
-                $data[] = '';
-            }
-        }
-
-        // Update existing keys
-        foreach ($s3Credentials as $key => $value) {
-            if (isset($data[$key])) {
-                // Update the value
-                $data[$key] = $value;
-            }
-        }
-
-        // Append any new keys that were not present in the original file
-        foreach ($s3Credentials as $key => $value) {
-            if (!isset($data[$key])) {
-                $data[$key] = $value;
-            }
-        }
-
-        // Write the updated environment file
-        $lines = [];
-        foreach ($data as $key => $value) {
-            if (is_numeric($key)) {
-                // Preserve empty lines
-                $lines[] = '';
-            } else {
-                $lines[] = $key . '=' . $value;
-            }
-        }
-
-        file_put_contents(base_path('.env'), implode(PHP_EOL, $lines) . PHP_EOL);
+//        // Load existing environment file into an array
+//        $envFile = file(base_path('.env'), FILE_IGNORE_NEW_LINES);
+//        $data = [];
+//        foreach ($envFile as $line) {
+//            if (!empty(trim($line))) {
+//                list($key, $value) = explode('=', $line, 2);
+//                $data[$key] = $value;
+//            } else {
+//                // Preserve empty lines
+//                $data[] = '';
+//            }
+//        }
+//
+//        // Update existing keys
+//        foreach ($s3Credentials as $key => $value) {
+//            if (isset($data[$key])) {
+//                // Update the value
+//                $data[$key] = $value;
+//            }
+//        }
+//
+//        // Append any new keys that were not present in the original file
+//        foreach ($s3Credentials as $key => $value) {
+//            if (!isset($data[$key])) {
+//                $data[$key] = $value;
+//            }
+//        }
+//
+//        // Write the updated environment file
+//        $lines = [];
+//        foreach ($data as $key => $value) {
+//            if (is_numeric($key)) {
+//                // Preserve empty lines
+//                $lines[] = '';
+//            } else {
+//                $lines[] = $key . '=' . $value;
+//            }
+//        }
+//
+//        file_put_contents(base_path('.env'), implode(PHP_EOL, $lines) . PHP_EOL);
 
 
         Toastr::success(translate('messages.updated_successfully'));
@@ -4948,7 +4949,7 @@ class BusinessSettingsController extends Controller
                 }
                 array_push($data, [
                     'img' => $imageName,
-                    // 'title' => $request->title,
+                     'storage' => Helpers::getDisk(),
                     // 'sub_title' => $request->sub_title,
                 ]);
                 $promotion_banner->value = json_encode($data);
@@ -5108,8 +5109,8 @@ class BusinessSettingsController extends Controller
         $item = DataSetting::where('type','react_landing_page')->where('key', $tab)->first();
         $data = $item ? json_decode($item->value, true) : null;
         if ($data && array_key_exists($key, $data)) {
-            if (isset($data[$key]['img']) && Storage::disk('public')->exists('promotion_banner/' . $data[$key]['img'])) {
-                Storage::disk('public')->delete('promotion_banner/' . $data[$key]['img']);
+            if (isset($data[$key]['img'])) {
+                Helpers::check_and_delete('promotion_banner/' , $data[$key]['img']);
             }
             array_splice($data, $key, 1);
 
@@ -6470,16 +6471,16 @@ class BusinessSettingsController extends Controller
 
                     if($request?->json == 1){
                         $data_value = json_decode($data?->value ,true);
-                        if (Storage::disk('public')->exists($request->image_path.'/'.$data_value[$request->field_name])) {
-                            Storage::disk('public')->delete($request->image_path.'/'.$data_value[$request->field_name]);
-                        }
+                        
+                            Helpers::check_and_delete($request->image_path.'/',$data_value[$request->field_name]);
+                        
                         $data_value[$request->field_name] = null;
                         $data->value = json_encode($data_value);
                     }
                     else{
-                        if (Storage::disk('public')->exists($request->image_path.'/'.$data_value)) {
-                            Storage::disk('public')->delete($request->image_path.'/'.$data_value);
-                        }
+                     
+                            Helpers::check_and_delete($request->image_path.'/',$data_value);
+                        
                         $data->{$request->field_name} = null;
                     }
 

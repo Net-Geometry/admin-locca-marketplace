@@ -60,7 +60,25 @@ class User extends Authenticatable
         'loyalty_point' => 'integer',
         'ref_by' => 'integer',
     ];
+    protected $appends = ['image_full_url'];
+    public function getImageFullUrlAttribute(){
+        $value = $this->image;
+        if (count($this->storage) > 0) {
+            foreach ($this->storage as $storage) {
+                if ($storage['key'] == 'image') {
 
+                    if($storage['value'] == 's3'){
+
+                        return Helpers::s3_storage_link('profile',$value);
+                    }else{
+                        return Helpers::local_storage_link('profile',$value);
+                    }
+                }
+            }
+        }
+
+        return Helpers::local_storage_link('profile',$value);
+    }
 
     public function orders()
     {
@@ -82,9 +100,9 @@ class User extends Authenticatable
         });
     }
 
-    public function storage(): MorphOne
+    public function storage()
     {
-        return $this->morphOne(Storage::class, 'data');
+        return $this->morphMany(Storage::class, 'data');
     }
 
     protected static function booted()
@@ -103,6 +121,7 @@ class User extends Authenticatable
                 DB::table('storages')->updateOrInsert([
                     'data_type' => get_class($model),
                     'data_id' => $model->id,
+                    'key' => 'image',
                 ], [
                     'value' => $value,
                     'created_at' => now(),

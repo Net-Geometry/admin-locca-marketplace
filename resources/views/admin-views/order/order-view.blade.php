@@ -283,20 +283,20 @@
                                 @endif
                                 @if ($order->order_attachment)
                                         @php
-                                            $order_images = json_decode($order->order_attachment);
+                                            $order_images = json_decode($order->order_attachment,true);
                                         @endphp
-                                    @if (is_array($order_images))
                                         <h5 class="text-dark">
                                             <span>{{ translate('messages.prescription') }}</span> <span>:</span>
                                         </h5>
                                         <div class="d-flex flex-wrap flex-md-row-reverse" style="gap:15px">
                                             @foreach ($order_images as $key => $item)
+                                            @php($item = is_array($item)?$item:['img'=>$item,'storage'=>'public'])
                                                 <div>
                                                     <button class="btn w-100 px-0" data-toggle="modal"
                                                         data-target="#imagemodal{{ $key }}"
                                                         title="{{ translate('messages.order_attachment') }}">
                                                         <div class="gallary-card ml-auto">
-                                                            <img src="{{ asset('storage/app/' . 'public/order/' . $item) }}"
+                                                            <img  src="{{\App\CentralLogics\Helpers::onerror_image_helper($item['img'], asset('storage/app/public/order').'/'.$item['img'], asset('public/assets/admin/img/160x160/img2.jpg'), 'order/', $item['storage']??'public') }}"
                                                                 alt="{{ translate('messages.prescription') }}"
                                                                 class="initial--22 object-cover">
                                                         </div>
@@ -315,12 +315,14 @@
                                                                         class="sr-only">{{ translate('messages.cancel') }}</span></button>
                                                             </div>
                                                             <div class="modal-body">
-                                                                <img src="{{ asset('storage/app/' . 'public/order/' . $item) }}"
+                                                                <img  src="{{\App\CentralLogics\Helpers::onerror_image_helper($item['img'], asset('storage/app/public/order').'/'.$item['img'], asset('public/assets/admin/img/160x160/img2.jpg'), 'order/', $item['storage']??'public') }}"
                                                                     class="initial--22 w-100">
                                                             </div>
+                                                            @php($storage = $item['storage']??'public')
+                                                            @php($file = $storage == 's3'?base64_encode('order/' . $item['img']):base64_encode('public/order/' . $item['img']))
                                                             <div class="modal-footer">
                                                                 <a class="btn btn-primary"
-                                                                    href="{{ route('admin.file-manager.download', base64_encode('public/order/' . $item)) }}"><i
+                                                                    href="{{ route('admin.file-manager.download', [$file,$storage]) }}"><i
                                                                         class="tio-download"></i>
                                                                     {{ translate('messages.download') }}
                                                                 </a>
@@ -330,14 +332,16 @@
                                                 </div>
                                             @endforeach
                                         </div>
-                                    @else
+                                    {{-- @else
                                     <h5 class="text-dark">
                                         <span>{{ translate('messages.prescription') }}</span> <span>:</span>
                                     </h5>
                                     <button class="btn w-100 px-0" data-toggle="modal" data-target="#imagemodal"
                                         title="{{ translate('messages.order_attachment') }}">
                                         <div class="gallary-card ml-auto">
-                                            <img src="{{ asset('storage/app/' . 'public/order/' . $order->order_attachment) }}"
+                                            <img
+                                            src="{{\App\CentralLogics\Helpers::get_image_helper($order,'order_attachment', asset('storage/app/public/order').'/'.$order->order_attachment, asset('public/assets/admin/img/160x160/img2.jpg'), 'order/') }}"
+
                                                 alt="{{ translate('messages.prescription') }}"
                                                 class="initial--22 object-cover">
                                         </div>
@@ -354,12 +358,13 @@
                                                             class="sr-only">{{ translate('messages.cancel') }}</span></button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <img src="{{ asset('storage/app/' . 'public/order/' . $order->order_attachment) }}"
+                                                    <img src="{{\App\CentralLogics\Helpers::get_image_helper($order,'order_attachment', asset('storage/app/public/order').'/'.$order->order_attachment, asset('public/assets/admin/img/160x160/img2.jpg'), 'order/') }}"
                                                         class="initial--22 w-100">
                                                 </div>
+                                                @php($file = $storage == 's3'?base64_encode('order/' . $order->order_attachment):base64_encode('public/order/' . $order->order_attachment))
                                                 <div class="modal-footer">
                                                     <a class="btn btn-primary"
-                                                        href="{{ route('admin.file-manager.download', base64_encode('public/order/' . $order->order_attachment)) }}"><i
+                                                        href="{{ route('admin.file-manager.download', [$file,$storage]) }}"><i
                                                             class="tio-download"></i> {{ translate('messages.download') }}
                                                     </a>
                                                 </div>
@@ -367,7 +372,7 @@
                                         </div>
                                     </div>
 
-                                    @endif
+                                    @endif --}}
                                 @endif
                             </div>
                         </div>
@@ -560,7 +565,7 @@
                                                                         class="avatar-status avatar-lg-status avatar-status-dark"><i
                                                                             class="tio-edit"></i></span>
                                                                     <img class="img-fluid rounded aspect-ratio-1 onerror-image"
-                                                                    src="{{\App\CentralLogics\Helpers::get_image_helper($detail?->item,'image', asset('storage/app/public/product/').'/'. data_get($detail?->item,'image'), asset('public/assets/admin/img/100x100/2.png') , 'product/') }}"
+                                                                    src="{{\App\CentralLogics\Helpers::onerror_image_helper(data_get($detail?->item,'image'), asset('storage/app/public/product/').'/'. data_get($detail?->item,'image'), asset('public/assets/admin/img/100x100/2.png') , 'product/',isset($detail?->item['storage'])?$detail?->item['storage']['value']:'public') }}"
                                                                         data-onerror-image="{{ asset('public/assets/admin/img/100x100/2.png') }}"
                                                                         alt="Image Description">
                                                                 </div>
@@ -568,7 +573,7 @@
                                                                 <a class="avatar avatar-xl mr-3"
                                                                     href="{{ route('admin.item.view', [$detail->item['id'],'module_id' => $order->module_id]) }}">
                                                                     <img class="img-fluid rounded aspect-ratio-1 onerror-image"
-                                                                    src="{{\App\CentralLogics\Helpers::get_image_helper($detail?->item,'image', asset('storage/app/public/product/').'/'. data_get($detail?->item,'image'), asset('public/assets/admin/img/100x100/2.png') , 'product/') }}"
+                                                                    src="{{\App\CentralLogics\Helpers::onerror_image_helper(data_get($detail?->item,'image'), asset('storage/app/public/product/').'/'. data_get($detail?->item,'image'), asset('public/assets/admin/img/100x100/2.png') , 'product/',isset($detail?->item['storage'])?$detail?->item['storage']['value']:'public') }}"
                                                                         data-onerror-image="{{ asset('public/assets/admin/img/100x100/2.png') }}"
                                                                         alt="Image Description">
                                                                 </a>
@@ -1078,11 +1083,12 @@
                                     @php($data = isset($order->refund->image) ? json_decode($order->refund->image, true) : 0)
                                     @if ($data)
                                         @foreach ($data as $key => $img)
+                                        @php($img = is_array($img)?$img:['img'=>$img,'storage'=>'public'])
                                             <div class="col-3">
                                                 <img class="img__aspect-1 rounded border w-100 onerror-image" data-toggle="modal"
                                                     data-target="#imagemodal{{ $key }}"
                                                     data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
-                                                    src="{{\App\CentralLogics\Helpers::onerror_image_helper($img, asset('storage/app/public/refund/').'/'. $img, asset('public/assets/admin/img/160x160/img2.jpg') , 'refund/',$order?->refund?->storage?->value ?? 'public') }}">
+                                                    src="{{\App\CentralLogics\Helpers::onerror_image_helper($img['img'], asset('storage/app/public/refund/').'/'. $img['img'], asset('public/assets/admin/img/160x160/img2.jpg') , 'refund/',$img['storage'] ?? 'public') }}">
                                             </div>
                                             <div class="modal fade" id="imagemodal{{ $key }}" tabindex="-1"
                                                 role="dialog" aria-labelledby="myModalLabel{{ $key }}"
@@ -1099,12 +1105,16 @@
                                                                     class="sr-only">{{ translate('messages.cancel') }}</span></button>
                                                         </div>
                                                         <div class="modal-body">
-                                                            <img src="{{ asset('storage/app/' . 'public/refund/' . $img) }}"
+                                                            <img
+                                                            src="{{\App\CentralLogics\Helpers::onerror_image_helper($img['img'], asset('storage/app/public/refund/').'/'. $img['img'], asset('public/assets/admin/img/160x160/img2.jpg') , 'refund/',$img['storage'] ?? 'public') }}"
+
                                                                 class="initial--22 w-100">
                                                         </div>
+                                                        @php($storage = $img['storage']??'public')
+                                                        @php($file = $storage == 's3'?base64_encode('refund/' . $img['img']):base64_encode('public/refund/' . $img['img']))
                                                         <div class="modal-footer">
                                                             <a class="btn btn-primary"
-                                                                href="{{ route('admin.file-manager.download', base64_encode('public/refund/' . $img)) }}"><i
+                                                                href="{{ route('admin.file-manager.download', [$file,$storage]) }}"><i
                                                                     class="tio-download"></i>
                                                                 {{ translate('messages.download') }}
                                                             </a>
@@ -1517,11 +1527,12 @@
                             for="order_proof">{{ translate('messages.image') }} : </label>
                         <div class="row g-3">
                                 @foreach ($data as $key => $img)
+                                @php($img = is_array($img)?$img:['img'=>$img,'storage'=>'public'])
                                     <div class="col-3">
                                         <img class="img__aspect-1 rounded border w-100 onerror-image" data-toggle="modal"
                                             data-target="#imagemodal{{ $key }}"
                                             data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
-                                            src="{{\App\CentralLogics\Helpers::onerror_image_helper($img , asset('storage/app/public/order/') .'/'. $img , asset('public/assets/admin/img/160x160/img2.jpg'), 'order/',$order?->storage?->value ?? 'public') }}">
+                                            src="{{\App\CentralLogics\Helpers::onerror_image_helper($img['img'] , asset('storage/app/public/order/') .'/'. $img['img'] , asset('public/assets/admin/img/160x160/img2.jpg'), 'order/',$img['storage'] ?? 'public') }}">
                                     </div>
                                     <div class="modal fade" id="imagemodal{{ $key }}" tabindex="-1"
                                         role="dialog" aria-labelledby="order_proof_{{ $key }}"
@@ -1538,12 +1549,14 @@
                                                             class="sr-only">{{ translate('messages.cancel') }}</span></button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <img src="{{ asset('storage/app/' . 'public/order/' . $img) }}"
+                                                    <img src="{{\App\CentralLogics\Helpers::onerror_image_helper($img['img'] , asset('storage/app/public/order/') .'/'. $img['img'] , asset('public/assets/admin/img/160x160/img2.jpg'), 'order/',$img['storage'] ?? 'public') }}"
                                                         class="initial--22 w-100">
                                                 </div>
+                                                @php($storage = $img['storage'] ?? 'public')
+                                                @php($file = $storage == 's3'?base64_encode('order/' . $img['img']):base64_encode('public/order/' . $img['img']))
                                                 <div class="modal-footer">
                                                     <a class="btn btn-primary"
-                                                        href="{{ route('admin.file-manager.download', base64_encode('public/order/' . $img)) }}"><i
+                                                        href="{{ route('admin.file-manager.download', [$file,$storage]) }}"><i
                                                             class="tio-download"></i>
                                                         {{ translate('messages.download') }}
                                                     </a>
@@ -1689,12 +1702,13 @@
                                 @if ($proof)
 
                                 @foreach ($proof as $key => $photo)
+                                        @php($photo = is_array($photo)?$photo:['img'=>$photo,'storage'=>'public'])
                                             <div class="spartan_item_wrapper min-w-176px max-w-176px">
                                                 <img class="img--square"
-                                                    src="{{ asset("storage/app/public/order/$photo") }}"
+                                                     src="{{\App\CentralLogics\Helpers::onerror_image_helper($photo['img'] , asset('storage/app/public/order/') .'/'. $photo['img'] , asset('public/assets/admin/img/160x160/img2.jpg'), 'order/',$photo['storage'] ?? 'public') }}"
                                                     alt="order image">
                                                 <div class="pen spartan_remove_row"><i class="tio-edit"></i></div>
-                                                <a href="{{ route('admin.order.remove-proof-image', ['id' => $order['id'], 'name' => $photo]) }}"
+                                                <a href="{{ route('admin.order.remove-proof-image', ['id' => $order['id'], 'name' => $photo['img']]) }}"
                                                     class="spartan_remove_row"><i class="tio-add-to-trash"></i></a>
                                             </div>
                                         @endforeach
@@ -2845,7 +2859,7 @@
                     google.maps.event.addListener(Retaurantmarker, 'click', (function(Retaurantmarker) {
                         return function() {
                             infowindow.setContent(
-                                "<div style='float:left'><img style='max-height:40px;wide:auto;' src='{{\App\CentralLogics\Helpers::get_image_helper($order?->store,'logo', asset('storage/app/public/restaurant/').'/'. $order?->store?->logo, asset('public/assets/admin/img/160x160/img1.jpg') , 'restaurant/') }}'></div> <div style='float:right; padding: 10px;'><b>{{ Str::limit($order?->store?->name, 15, '...') }}</b><br /> {{ $order->store->address }}</div>"
+                                "<div style='float:left'><img style='max-height:40px;wide:auto;' src='{{\App\CentralLogics\Helpers::get_image_helper($order?->store,'logo' , asset('storage/app/public/store/') .'/'. $order?->store?->logo , asset('public/assets/admin/img/100x100/1.png'), 'store/') }}'></div> <div style='float:right; padding: 10px;'><b>{{ Str::limit($order?->store?->name, 15, '...') }}</b><br /> {{ $order->store->address }}</div>"
                             );
                             infowindow.open(map, Retaurantmarker);
                         }

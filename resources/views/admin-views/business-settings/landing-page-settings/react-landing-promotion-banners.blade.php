@@ -87,7 +87,7 @@
                                                 $banner['img'] ?? '',
                                                 asset('storage/app/public/promotional_banner').'/'.$banner['img'] ?? '',
                                                 asset('/public/assets/admin/img/upload-3.png'),
-                                                'promotional_banner/',$banner_data?->storage?->value??'public'
+                                                'promotional_banner/',$banner['storage'] ??'public'
                                             ) }}"
                                             data-onerror-image="{{asset('/public/assets/admin/img/upload-3.png')}}" class="__size-105 mw-100 onerror-image" alt="">
                                         </td>

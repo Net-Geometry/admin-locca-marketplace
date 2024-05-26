@@ -82,7 +82,7 @@
                                             $item['gateway_image'],
                                             asset('storage/app/public/payment_modules/gateway_image').'/'. $item['gateway_image'],
                                             asset('/public/assets/admin/img/payment/placeholder.png'),
-                                            'payment_modules/gateway_image/'
+                                            'payment_modules/gateway_image/',$item['storage']??'public'
                                         ) }}" width="30" alt="">
                                     </div>
                                 </label>

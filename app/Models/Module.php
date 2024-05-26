@@ -62,6 +62,8 @@ class Module extends Model
         'all_zone_service'=>'integer'
     ];
 
+    protected $appends = ['icon_full_url','thumbnail_full_url'];
+
     /**
      * @return HasMany
      */
@@ -148,9 +150,46 @@ class Module extends Model
         return $query->where('status', '=', 1);
     }
 
-    public function storage(): MorphOne
+    public function getIconFullUrlAttribute(){
+        $value = $this->icon;
+        if (count($this->storage) > 0) {
+            foreach ($this->storage as $storage) {
+                if ($storage['key'] == 'icon') {
+
+                    if($storage['value'] == 's3'){
+
+                        return Helpers::s3_storage_link('module',$value);
+                    }else{
+                        return Helpers::local_storage_link('module',$value);
+                    }
+                }
+            }
+        }
+
+        return Helpers::local_storage_link('module',$value);
+    }
+    public function getThumbnailFullUrlAttribute(){
+        $value = $this->thumbnail;
+        if (count($this->storage) > 0) {
+            foreach ($this->storage as $storage) {
+                if ($storage['key'] == 'thumbnail') {
+
+                    if($storage['value'] == 's3'){
+
+                        return Helpers::s3_storage_link('module',$value);
+                    }else{
+                        return Helpers::local_storage_link('module',$value);
+                    }
+                }
+            }
+        }
+
+        return Helpers::local_storage_link('module',$value);
+    }
+
+    public function storage()
     {
-        return $this->morphOne(Storage::class, 'data');
+        return $this->morphMany(Storage::class, 'data');
     }
     protected static function booted()
     {
@@ -176,12 +215,26 @@ class Module extends Model
     {
         parent::boot();
         static::saved(function ($model) {
-            if($model->isDirty('icon') || $model->isDirty('thumbnail')){
+            if($model->isDirty('icon')){
                 $value = Helpers::getDisk();
 
                 DB::table('storages')->updateOrInsert([
                     'data_type' => get_class($model),
                     'data_id' => $model->id,
+                    'key' => 'icon',
+                ], [
+                    'value' => $value,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+            if($model->isDirty('thumbnail')){
+                $value = Helpers::getDisk();
+
+                DB::table('storages')->updateOrInsert([
+                    'data_type' => get_class($model),
+                    'data_id' => $model->id,
+                    'key' => 'thumbnail',
                 ], [
                     'value' => $value,
                     'created_at' => now(),

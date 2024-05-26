@@ -70,7 +70,7 @@ class ConversationController extends Controller
             foreach($request->images as $key=>$img)
             {
                 $name = Helpers::upload('conversation/', 'png', $img);
-                array_push($image_name,$name);
+                array_push($image_name,['img'=>$name, 'storage'=> Helpers::getDisk()]);
             }
         } else {
             $image_name = null;

@@ -9,14 +9,17 @@ trait FileManagerTrait
 {
     public static function upload(string $dir, string $format, $image = null): string
     {
-        if ($image != null) {
-            $imageName = Carbon::now()->toDateString() . "-" . uniqid() . "." . $format;
-            if (!Storage::disk(self::getDisk())->exists($dir)) {
-                Storage::disk(self::getDisk())->makeDirectory($dir);
+        try {
+            if ($image != null) {
+                $imageName = Carbon::now()->toDateString() . "-" . uniqid() . "." . $format;
+                if (!Storage::disk(self::getDisk())->exists($dir)) {
+                    Storage::disk(self::getDisk())->makeDirectory($dir);
+                }
+                Storage::disk(self::getDisk())->putFileAs($dir, $image, $imageName);
+            } else {
+                $imageName = 'def.png';
             }
-            Storage::disk(self::getDisk())->putFileAs($dir, $image, $imageName);
-        } else {
-            $imageName = 'def.png';
+        } catch (\Exception $e) {
         }
 
         return $imageName;
@@ -28,8 +31,11 @@ trait FileManagerTrait
         if ($image == null) {
             return $old_image;
         }
-        if (Storage::disk(self::getDisk())->exists($dir . $old_image)) {
-            Storage::disk(self::getDisk())->delete($dir . $old_image);
+        try {
+            if (Storage::disk(self::getDisk())->exists($dir . $old_image)) {
+                Storage::disk(self::getDisk())->delete($dir . $old_image);
+            }
+        } catch (\Exception $e) {
         }
         return self::upload($dir, $format, $image);
     }

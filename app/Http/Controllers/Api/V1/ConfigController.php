@@ -52,7 +52,7 @@ class ConfigController extends Controller
         $data = [];
 
         foreach ($image_key as $value){
-            $data[$value.'_storage'] = BusinessSetting::where('key',$value)->first()?->storage?->value ??'public';
+            $data[$value.'_storage'] = BusinessSetting::where('key',$value)->first()?->storage[0]?->value ??'public';
         }
 
 
@@ -139,7 +139,7 @@ class ConfigController extends Controller
             // 'business_open_time' => $settings['business_open_time'],
             // 'business_close_time' => $settings['business_close_time'],
             'logo' => $settings['logo'],
-            'logo_storage' => $data['logo_storage']??'public',
+            'logo_full_url' => Helpers::get_full_url('business',$settings['logo'],$data['logo_storage']??'public'),
             'address' => $settings['address'],
             'phone' => $settings['phone'],
             'email' => $settings['email_address'],
@@ -241,13 +241,13 @@ class ConfigController extends Controller
             'module'=>$module,
             'parcel_per_km_shipping_charge' => (float)$settings['parcel_per_km_shipping_charge'],
             'parcel_minimum_shipping_charge' => (float)$settings['parcel_minimum_shipping_charge'],
-            'landing_page_settings'=> isset($settings['web_app_landing_page_settings'])?json_decode($settings['web_app_landing_page_settings'], true):null,
-            'landing_page_settings_storage'=> $data['web_app_landing_page_settings_storage']??'public',
+//            'landing_page_settings'=> isset($settings['web_app_landing_page_settings'])?json_decode($settings['web_app_landing_page_settings'], true):null,
+//            'landing_page_settings_full_url'=> $data['web_app_landing_page_settings_storage']??'public',
             'social_media'=>SocialMedia::active()->get()->toArray(),
             'footer_text'=>isset($settings['footer_text'])?$settings['footer_text']:'',
             'cookies_text'=>isset($settings['cookies_text'])?$settings['cookies_text']:'',
             'fav_icon' => $settings['icon'],
-            'fav_icon_storage' => $data['icon_storage']??'public',
+            'fav_icon_full_url' => Helpers::get_full_url('business',$settings['icon'],$data['icon_storage']??'public'),
             'landing_page_links'=>$landing_page_links,
             //Added Business Setting
             'dm_tips_status' => (int)(isset($settings['dm_tips_status']) ? $settings['dm_tips_status'] : 0),
@@ -467,7 +467,7 @@ class ConfigController extends Controller
             if (isset($value->storage)) {
 
                 $cred = [
-                    $value->key.'_storage' => $value->storage->value ?? 'public',
+                    $value->key.'_storage' => $value?->storage[0]?->value ?? 'public',
                 ];
                 array_push($data, $cred);
             }
@@ -484,6 +484,11 @@ class ConfigController extends Controller
         $awsUrl = config('filesystems.disks.s3.url');
         $awsBucket = config('filesystems.disks.s3.bucket');
         $awsBaseURL = rtrim($awsUrl, '/').'/'.ltrim($awsBucket.'/');
+
+        $promotional_banners = [];
+        foreach (json_decode($settings['promotion_banner'], true) as $value){
+            $promotional_banners[] = Helpers::get_full_url('promotional_banner',$value['img'],$value['storage']??'public');
+        }
 
         return  response()->json(
             [
@@ -506,9 +511,9 @@ class ConfigController extends Controller
                 'header_sub_title'=>(isset($settings['header_sub_title']) )  ? $settings['header_sub_title'] : null ,
                 'header_tag_line'=>(isset($settings['header_tag_line']) )  ? $settings['header_tag_line'] : null ,
                 'header_icon'=>(isset($settings['header_icon']) )  ? $settings['header_icon'] : null ,
-                'header_icon_storage'=>(isset($settings['header_icon_storage']) )  ? $settings['header_icon_storage'] : 'public' ,
+                'header_icon_full_url'=>Helpers::get_full_url('header_icon',(isset($settings['header_icon']) )  ? $settings['header_icon'] : null,isset($settings['header_icon_storage'])   ? $settings['header_icon_storage'] : 'public') ,
                 'header_banner'=>(isset($settings['header_banner']) )  ? $settings['header_banner'] : null ,
-                'header_banner_storage'=>(isset($settings['header_banner_storage']) )  ? $settings['header_banner_storage'] : 'public' ,
+                'header_banner_full_url'=>Helpers::get_full_url('header_banner',(isset($settings['header_banner']) )  ? $settings['header_banner'] : null,isset($settings['header_banner_storage'])   ? $settings['header_banner_storage'] : 'public') ,
                 'company_title'=>(isset($settings['company_title']) )  ? $settings['company_title'] : null ,
                 'company_sub_title'=>(isset($settings['company_sub_title']) )  ? $settings['company_sub_title'] : null ,
                 'company_description'=>(isset($settings['company_description']) )  ? $settings['company_description'] : null ,
@@ -529,19 +534,19 @@ class ConfigController extends Controller
                 'business_title'=>(isset($settings['business_title']) )  ? $settings['business_title'] : null ,
                 'business_sub_title'=>(isset($settings['business_sub_title']) )  ? $settings['business_sub_title'] : null ,
                 'business_image'=>(isset($settings['business_image']) )  ? $settings['business_image'] : null ,
-                'business_image_storage'=>(isset($settings['business_image_storage']) )  ? $settings['business_image_storage'] : 'public' ,
+                'business_image_full_url'=>Helpers::get_full_url('business_image',isset($settings['business_image'])   ? $settings['business_image'] : null,isset($settings['business_image_storage'])  ? $settings['business_image_storage'] : 'public') ,
                 'testimonial_title'=>(isset($settings['testimonial_title']) )  ? $settings['testimonial_title'] : null ,
                 'testimonial_list'=>(isset($reviews) )  ? $reviews : null ,
                 'fixed_newsletter_title'=>(isset($settings['fixed_newsletter_title']) )  ? $settings['fixed_newsletter_title'] : null ,
                 'fixed_newsletter_sub_title'=>(isset($settings['fixed_newsletter_sub_title']) )  ? $settings['fixed_newsletter_sub_title'] : null ,
                 'fixed_footer_description'=>(isset($settings['fixed_footer_description']) )  ? $settings['fixed_footer_description'] : null ,
                 'fixed_promotional_banner'=>(isset($settings['fixed_promotional_banner']) )  ? $settings['fixed_promotional_banner'] : null ,
-                'fixed_promotional_banner_storage'=>(isset($settings['fixed_promotional_banner_storage']) )  ? $settings['fixed_promotional_banner_storage'] : 'public' ,
+                'fixed_promotional_banner_storage'=>Helpers::get_full_url('promotional_banner',(isset($settings['fixed_promotional_banner']) )  ? $settings['fixed_promotional_banner'] : null,(isset($settings['fixed_promotional_banner_storage']) )  ? $settings['fixed_promotional_banner_storage'] : 'public') ,
 
 
 
                 'promotion_banners'=> (isset($settings['promotion_banner']) )  ? json_decode($settings['promotion_banner'], true) : null ,
-                'promotion_banners_storage'=> (isset($settings['promotion_banner_storage']) )  ?$settings['promotion_banner_storage'] : 'public' ,
+                'promotion_banners_full_url'=> $promotional_banners ,
                 'download_user_app_links'=> (isset($settings['download_user_app_links']) )  ? json_decode($settings['download_user_app_links'], true) : null ,
                 'download_business_app_links'=> (isset($settings['download_business_app_links']) )  ? json_decode($settings['download_business_app_links'], true) : null ,
                 // 'dm_app_earning_links'=> (isset($settings['dm_app_earning_links']) )  ? json_decode($settings['dm_app_earning_links'], true) : null ,
@@ -568,7 +573,7 @@ class ConfigController extends Controller
             if (isset($value->storage)) {
 
                 $cred = [
-                    $value->key.'_storage' => $value->storage->value ?? 'public',
+                    $value->key.'_storage' => $value?->storage[0]?->value ?? 'public',
                 ];
                 array_push($data, $cred);
             }
@@ -603,7 +608,7 @@ class ConfigController extends Controller
                 'fixed_header_title'=>(isset($settings['fixed_header_title']) )  ? $settings['fixed_header_title'] : null ,
                 'fixed_header_sub_title'=>(isset($settings['fixed_header_sub_title']) )  ? $settings['fixed_header_sub_title'] : null ,
                 'fixed_header_image'=>(isset($settings['fixed_header_image']) )  ? $settings['fixed_header_image'] : null ,
-                'fixed_header_image_storage'=>(isset($settings['fixed_header_image_storage']) )  ? $settings['fixed_header_image_storage'] : 'public' ,
+                'fixed_header_image_full_url'=>Helpers::s3_storage_link('fixed_header_image',(isset($settings['fixed_header_image']) )  ? $settings['fixed_header_image'] : null,(isset($settings['fixed_header_image_storage']) )  ? $settings['fixed_header_image_storage'] : 'public') ,
                 'fixed_module_title'=>(isset($settings['fixed_module_title']) )  ? $settings['fixed_module_title'] : null ,
                 'fixed_module_sub_title'=>(isset($settings['fixed_module_sub_title']) )  ? $settings['fixed_module_sub_title'] : null ,
                 'fixed_location_title'=>(isset($settings['fixed_location_title']) )  ? $settings['fixed_location_title'] : null ,
@@ -618,7 +623,7 @@ class ConfigController extends Controller
                 'download_user_app_title'=>(isset($settings['download_user_app_title']) )  ? $settings['download_user_app_title'] : null ,
                 'download_user_app_sub_title'=>(isset($settings['download_user_app_sub_title']) )  ? $settings['download_user_app_sub_title'] : null ,
                 'download_user_app_image'=>(isset($settings['download_user_app_image']) )  ? $settings['download_user_app_image'] : null ,
-                'download_user_app_image_storage'=>(isset($settings['download_user_app_image_storage']) )  ? $settings['download_user_app_image_storage'] : 'public' ,
+                'download_user_app_image_full_url'=>Helpers::s3_storage_link('download_user_app_image',(isset($settings['download_user_app_image']) )  ? $settings['download_user_app_image'] : null,(isset($settings['download_user_app_image_storage']) )  ? $settings['download_user_app_image_storage'] : 'public') ,
 
                 'special_criterias'=>(isset($criterias) )  ? $criterias : null ,
 
@@ -648,7 +653,7 @@ class ConfigController extends Controller
                     'gateway' => $method->key_name,
                     'gateway_title' => $additional_data?->gateway_title,
                     'gateway_image' => $additional_data?->gateway_image,
-                    'storage' => $method?->storage?->value ?? 'public'
+                    'storage' => Helpers::get_full_url('payment_modules/gateway_image',$additional_data?->gateway_image,$additional_data?->storage ?? 'public')
                 ];
             }
         }
@@ -676,7 +681,7 @@ class ConfigController extends Controller
                     'gateway' => $method->key_name,
                     'gateway_title' => $additional_data?->gateway_title,
                     'gateway_image' => $additional_data?->gateway_image,
-                    'storage' => $method?->storage?->value ?? 'public'
+                    'storage' => Helpers::get_full_url('payment_modules/gateway_image',$additional_data?->gateway_image,$additional_data?->storage ?? 'public')
                 ];
             }
         }

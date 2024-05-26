@@ -19,6 +19,8 @@ class Message extends Model
         'is_seen' => 'integer'
     ];
 
+    protected $appends = ['file_full_url'];
+
     public function sender()
     {
         return $this->belongsTo(UserInfo::class, 'sender_id');
@@ -29,34 +31,20 @@ class Message extends Model
         return $this->belongsTo(Conversation::class);
     }
 
-    public function storage(): MorphOne
-    {
-        return $this->morphOne(Storage::class, 'data');
-    }
-    protected static function booted()
-    {
-        static::addGlobalScope('storage', function ($builder) {
-            $builder->with('storage');
-        });
-    }
-
-    protected static function boot()
-    {
-        parent::boot();
-        static::saved(function ($model) {
-            if($model->isDirty('file')){
-                $value = Helpers::getDisk();
-
-                DB::table('storages')->updateOrInsert([
-                    'data_type' => get_class($model),
-                    'data_id' => $model->id,
-                ], [
-                    'value' => $value,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
+    public function getFileFullUrlAttribute(){
+        $images = [];
+        $value = is_array($this->file)?$this->file:json_decode($this->file,true);
+        if ($value){
+            foreach ($value as $item){
+                $item = is_array($item)?$item:['img' => $item, 'storage' => 'public'];
+                if($item['storage']=='s3'){
+                    $images[] = Helpers::s3_storage_link('conversation',$item['img']);
+                }else{
+                    $images[] = Helpers::local_storage_link('conversation',$item['img']);
+                }
             }
-        });
+        }
 
+        return $images;
     }
 }

@@ -31,14 +31,15 @@
                         <div class="conv-reply-1">
                             <h6>{{$con->message}}</h6>
                             @if($con->file!=null)
-                            @foreach (json_decode($con->file) as $img)
+                            @foreach (json_decode($con->file,true) as $img)
+                            @php($img = is_array($img)?$img:['img'=>$img,'storage'=>'public'])
                             <br>
-                                <img class="w-100-p"
-                                           src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
-                                        $img,
-                                        asset('storage/app/public/conversation').'/'.$img,
+                                <img class="w-100 mb-3"
+                                     src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
+                                        $img['img'],
+                                        asset('storage/app/public/conversation').'/'.$img['img'],
                                         asset('public/assets/admin/img/160x160/img1.jpg'),
-                                        'conversation/',$con?->storage?->value??'public'
+                                        'conversation/',$img['storage']
                                     ) }}">
                                 @endforeach
                             @endif
@@ -52,14 +53,15 @@
                         <div class="conv-reply-2">
                             <h6>{{$con->message}}</h6>
                             @if($con->file!=null)
-                            @foreach (json_decode($con->file) as $img)
+                            @foreach (json_decode($con->file,true) as $img)
+                            @php($img = is_array($img)?$img:['img'=>$img,'storage'=>'public'])
                             <br>
-                                <img class="w-100-p"
-                                           src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
-                                        $img,
-                                        asset('storage/app/public/conversation').'/'.$img,
+                                <img class="w-100 mb-3"
+                                     src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
+                                        $img['img'],
+                                        asset('storage/app/public/conversation').'/'.$img['img'],
                                         asset('public/assets/admin/img/160x160/img1.jpg'),
-                                        'conversation/',$con?->storage?->value??'public'
+                                        'conversation/',$img['storage']
                                     ) }}">
                                 @endforeach
                             @endif

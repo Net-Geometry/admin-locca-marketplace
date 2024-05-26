@@ -19,6 +19,8 @@ class ModuleWiseBanner extends Model
 
     protected $fillable = ['module_id', 'key', 'type', 'value'];
 
+    protected $appends = ['value_full_url'];
+
     public function scopeModule($query, $module_id)
     {
         return $query->where('module_id', $module_id);
@@ -51,9 +53,28 @@ class ModuleWiseBanner extends Model
         return $value;
     }
 
-    public function storage(): MorphOne
+    public function getValueFullUrlAttribute(){
+        $value = $this->value;
+        if (count($this->storage) > 0) {
+            foreach ($this->storage as $storage) {
+                if ($storage['key'] == 'value') {
+
+                    if($storage['value'] == 's3'){
+
+                        return Helpers::s3_storage_link('promotional_banner',$value);
+                    }else{
+                        return Helpers::local_storage_link('promotional_banner',$value);
+                    }
+                }
+            }
+        }
+
+        return Helpers::local_storage_link('promotional_banner',$value);
+    }
+
+    public function storage()
     {
-        return $this->morphOne(Storage::class, 'data');
+        return $this->morphMany(Storage::class, 'data');
     }
     protected static function booted()
     {
@@ -76,6 +97,7 @@ class ModuleWiseBanner extends Model
             DB::table('storages')->updateOrInsert([
                 'data_type' => get_class($model),
                 'data_id' => $model->id,
+                'key' => 'value',
             ], [
                 'value' => $value,
                 'created_at' => now(),

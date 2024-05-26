@@ -23,16 +23,33 @@ class Refund extends Model
         'updated_at' => 'datetime',
 
     ];
-
+    protected $appends = ['image_full_url'];
 
     public function order()
     {
         return $this->belongsTo(Order::class);
     }
 
-    public function storage(): MorphOne
+    public function getImageFullUrlAttribute(){
+        $images = [];
+        $value = $this->image;
+        if ($value){
+            foreach ($value as $item){
+                $item = is_array($item)?$item:['img' => $item, 'storage' => 'public'];
+                if($item['storage']=='s3'){
+                    $images[] = Helpers::s3_storage_link('refund',$item['img']);
+                }else{
+                    $images[] = Helpers::local_storage_link('refund',$item['img']);
+                }
+            }
+        }
+
+        return $images;
+    }
+
+    public function storage()
     {
-        return $this->morphOne(Storage::class, 'data');
+        return $this->morphMany(Storage::class, 'data');
     }
     protected static function booted()
     {
@@ -43,20 +60,6 @@ class Refund extends Model
     protected static function boot()
     {
         parent::boot();
-        static::saved(function ($model) {
-            if($model->isDirty('image')){
-                $value = Helpers::getDisk();
-
-                DB::table('storages')->updateOrInsert([
-                    'data_type' => get_class($model),
-                    'data_id' => $model->id,
-                ], [
-                    'value' => $value,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
-            }
-        });
 
     }
 }
