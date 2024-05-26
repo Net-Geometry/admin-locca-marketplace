@@ -13,9 +13,9 @@
             <div class="__plan-item {{ !$store_subscription  || $store_subscription?->package_id ==  $package->id ?  'active' : '' }}">
                 <div class="inner-div">
                     <div class="text-center">
-                        <h3 class="title">{{ $package->package_name }}</h3>
-                        <h2 class="price">{{ \App\CentralLogics\Helpers::format_currency($package?->price) }}</h2>
-                        <div class="day-count">{{ $package?->validity }} {{ translate('days') }}</div>
+                        <h3 class="title">{{ $store_subscription?->package?->package_name  }}</h3>
+                        <h2 class="price">{{  \App\CentralLogics\Helpers::format_currency($store_subscription?->package?->price) }}</h2>
+                        <div class="day-count">{{ $store_subscription?->package?->validity }} {{ translate('days') }}</div>
                     </div>
                 </div>
             </div>
@@ -31,9 +31,9 @@
             <div class="__plan-item active">
                 <div class="inner-div">
                     <div class="text-center">
-                        <h3 class="title">{{ $store_subscription?->package?->package_name }}</h3>
-                        <h2 class="price">{{ \App\CentralLogics\Helpers::format_currency($store_subscription?->package?->price) }}</h2>
-                        <div class="day-count">{{ $store_subscription?->package?->validity }} {{ translate('days') }}</div>
+                        <h3 class="title">{{$package->package_name }}</h3>
+                        <h2 class="price">{{ \App\CentralLogics\Helpers::format_currency($package?->price) }}</h2>
+                        <div class="day-count">{{ $package?->validity }} {{ translate('days') }}</div>
                     </div>
                 </div>
             </div>
@@ -123,7 +123,7 @@
                 </label>
             </div>
 
-            @foreach ($payment_methods as $item)
+            {{-- @foreach ($payment_methods as $item)
 
             <div class="col-md-6">
                 <label class="payment-item">
@@ -144,12 +144,16 @@
                 </label>
             </div>
 
-            @endforeach
+            @endforeach --}}
 
         </div>
         <div class="btn--container justify-content-end mt-3">
             <button type="reset" data-dismiss="modal" class="btn btn--reset">{{ translate('Cancel') }}</button>
+            @if ($store_subscription?->package_id ==  $package->id)
             <button type="submit" class="btn btn--primary">{{ translate('Renew Subscription Plan') }}</button>
+            @else
+            <button type="submit" class="btn btn--primary">{{ translate('Change_Plan') }}</button>
+            @endif
         </div>
     </div>
 </form>
