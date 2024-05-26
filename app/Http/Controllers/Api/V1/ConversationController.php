@@ -26,7 +26,7 @@ class ConversationController extends Controller
             {
 
                 $name = Helpers::upload('conversation/', 'png', $img);
-                array_push($image_name,$name);
+                array_push($image_name,['img'=>$name, 'storage'=> Helpers::getDisk()]);
             }
         } else {
             $image_name = null;
@@ -430,7 +430,7 @@ class ConversationController extends Controller
             {
 
                 $name = Helpers::upload('conversation/', 'png', $img);
-                array_push($image_name,$name);
+                array_push($image_name,['img'=>$name, 'storage'=> Helpers::getDisk()]);
             }
         } else {
             $image_name = null;

@@ -185,7 +185,7 @@ class ItemController extends Controller
         if (!empty($request->file('item_images'))) {
             foreach ($request->item_images as $img) {
                 $image_name = Helpers::upload('product/', 'png', $img);
-                $images[]=$image_name;
+                $images[]=['img'=>$image_name, 'storage'=> Helpers::getDisk()];
             }
         }
 
@@ -456,7 +456,7 @@ class ItemController extends Controller
         if ($request->has('item_images')){
             foreach ($request->item_images as $img) {
                 $image = Helpers::upload('product/', 'png', $img);
-                array_push($images, $image);
+                array_push($images, ['img'=>$image, 'storage'=> Helpers::getDisk()]);
             }
         }
 

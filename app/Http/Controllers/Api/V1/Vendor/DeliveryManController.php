@@ -115,7 +115,7 @@ class DeliveryManController extends Controller
         if (!empty($request->file('identity_image'))) {
             foreach ($request->identity_image as $img) {
                 $identity_image = Helpers::upload('delivery-man/', 'png', $img);
-                array_push($id_img_names, $identity_image);
+                array_push($id_img_names, ['img'=>$identity_image, 'storage'=> Helpers::getDisk()]);
             }
             $identity_image = json_encode($id_img_names);
         } else {
@@ -237,7 +237,7 @@ class DeliveryManController extends Controller
             $img_keeper = [];
             foreach ($request->identity_image as $img) {
                 $identity_image = Helpers::upload('delivery-man/', 'png', $img);
-                array_push($img_keeper, $identity_image);
+                array_push($img_keeper, ['img'=>$identity_image, 'storage'=> Helpers::getDisk()]);
             }
             $identity_image = json_encode($img_keeper);
         } else {
