@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 return new class extends Migration
 {
@@ -12,7 +13,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('subscription_transactions', function (Blueprint $table) {
-            $table->increments('id')->startFrom(1000000);
+            $table->id();
             $table->foreignId('package_id');
             $table->foreignId('store_id');
             $table->foreignId('store_subscription_id')->nullable();
@@ -31,6 +32,7 @@ return new class extends Migration
             $table->enum('plan_type',['renew','new_plan','first_purchased','free_trial'])->default('first_purchased');
             $table->timestamps();
         });
+        DB::statement('ALTER TABLE subscription_transactions AUTO_INCREMENT = 1000000;');
     }
 
     /**

@@ -53,7 +53,7 @@
 
                 <li class="navbar-vertical-aside-has-menu @yield('subscription')">
                     <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" id="tourb-3" href="javascript:" title="{{ translate('messages.subscription_management') }}">
-                        <i class="tio-globe nav-icon"></i>
+                        <i class="tio-crown nav-icon"></i>
                         <span class="text-truncate">{{ translate('messages.subscription_management') }}</span>
                     </a>
                     <ul class="js-navbar-vertical-aside-submenu nav nav-sub" style="display:{{ Request::is('admin/business-settings/subscription*') ? 'block' : 'none' }}">
@@ -83,16 +83,6 @@
                         </li>
                     </ul>
                 </li>
-
-
-
-
-
-
-
-
-
-
 
 
 

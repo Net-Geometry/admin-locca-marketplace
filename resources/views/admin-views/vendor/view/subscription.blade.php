@@ -12,6 +12,9 @@
 <div class="content container-fluid">
     @include('admin-views.vendor.view.partials._header',['store'=>$store])
 
+    @if ($store?->store_sub_update_application)
+
+
     <div class="card mb-20">
         <div class="card-header border-0 align-items-center">
             <h4 class="card-title align-items-center gap-2">
@@ -159,8 +162,8 @@
                 </div>
             </div>
             <div class="btn--container justify-content-end mt-3">
-                @if ( $store?->store_sub_update_application?->is_canceled == 0 )
-                    <button type="button"  data-url="{{route('admin.business-settings.subscriptionackage.cancelSubscription',$store?->id)}}" data-message="{{translate('Do_You_Want_To_This_subscription_?')}}"
+                @if ( $store?->store_sub_update_application?->is_canceled == 0 && $store?->store_sub_update_application?->status == 1  )
+                <button type="button"  data-url="{{route('admin.business-settings.subscriptionackage.cancelSubscription',$store?->id)}}" data-message="{{translate('Do_You_Want_To_This_subscription_?')}}"
                     class="btn btn--danger text-white status_change_alert">{{ translate('Cancel Subscription') }}</button>
                 @endif
 
@@ -169,7 +172,20 @@
             </div>
         </div>
     </div>
-
+    @else
+    <div class="card">
+        <div class="card-body text-center py-5">
+            <div class="max-w-542 mx-auto py-sm-5 py-4">
+                <img class="mb-4" src="{{asset('/public/assets/admin/img/empty-subscription.svg')}}" alt="img">
+                <h4 class="mb-3">{{translate('Chose Subscription Plan')}}</h4>
+                <p class="mb-4">
+                    {{translate('Chose a subscription packages from the list. So that Providers get more options to join the business for the growth and success.')}}<br>
+                </p>
+                <button type="button" data-toggle="modal" data-target="#plan-modal" class="btn btn--primary">{{ translate('Chose Subscription Plan') }}</button>
+            </div>
+        </div>
+    </div>
+    @endif
 
     <div class="modal fade show" id="plan-modal">
         <div class="modal-dialog modal-xl modal-dialog-centered">

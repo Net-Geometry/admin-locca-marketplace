@@ -477,7 +477,7 @@
                         <a class="js-navbar-vertical-aside-menu-link nav-link"
                             href="{{route('vendor.subscriptionackage.subscriberDetail')}}"
                             title="{{translate('messages.My_Subscription')}}">
-                            <i class="tio-home nav-icon"></i>
+                            <i class="tio-crown nav-icon"></i>
                             <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
                                 {{translate('messages.My_Subscription')}}
                             </span>
