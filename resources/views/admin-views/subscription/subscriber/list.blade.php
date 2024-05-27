@@ -188,7 +188,10 @@ active
                                         <div class="info">
                                             <span class="d-block text-title">
                                                 {{ $subscriber->name }}<br>
-                                                <span class="rating text-star"><i class="tio-star"></i> 0</span>
+                                                @php($user_rating = null)
+                                                @php($store_reviews = \App\CentralLogics\StoreLogic::calculate_store_rating($subscriber['rating']))
+                                                @php($user_rating = $store_reviews['rating'])
+                                                <span class="rating text-star"><i class="tio-star"></i> {{ number_format($user_rating, 1) }}</span>
                                             </span>
                                         </div>
                                     </a>

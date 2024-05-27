@@ -3757,7 +3757,12 @@ class Helpers
                     $add_orders=$store_subscription->max_order;
                 }
 
-            } else{
+            } elseif($store->store_sub_update_application && $store->store_sub_update_application->package_id == $package->id && $type == 'renew' ){
+                $store_subscription=$store->store_sub_update_application;
+                $store_subscription->total_package_renewed= $store_subscription->total_package_renewed + 1;
+            }
+
+            else{
                 self::calculateSubscriptionRefundAmount($store);
                 StoreSubscription::where('store_id',$store->id)->update([
                     'status' => 0,
@@ -3767,6 +3772,8 @@ class Helpers
                 $store_subscription->is_trial= 0;
 
             }
+
+
             $store_subscription->renewed_at=now();
             $store_subscription->package_id=$package->id;
             $store_subscription->store_id=$store->id;
@@ -3837,7 +3844,7 @@ class Helpers
             if ($payment_method  == 'free_trial') {
                 $subscription_transaction->validity= $free_trial_period;
                 $subscription_transaction->paid_amount= 0;
-                $subscription_transaction->is_trial= 0;
+                $subscription_transaction->is_trial= 1;
             }
             elseif($payment_method  == 'pay_now'){
                 $subscription_transaction->payment_status ='on_hold';
