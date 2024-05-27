@@ -176,8 +176,12 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                 Route::post('/setting-update',  [SubscriptionController::class, 'settingUpdate'])->name('subscriptionackage.settingUpdate');
                 Route::get('/invoice/{id}',  [SubscriptionController::class, 'invoice'])->name('subscriptionackage.invoice');
                 Route::post('/switch-plan',  [SubscriptionController::class, 'switchPlan'])->name('subscriptionackage.switchPlan');
+                Route::get('/package-export',  [SubscriptionController::class, 'packageExport'])->name('subscriptionackage.packageExport');
+                Route::get('/transaction-export',  [SubscriptionController::class, 'TransactionExport'])->name('subscriptionackage.TransactionExport');
 
                 Route::get('/subscriber-list',  [SubscriptionController::class, 'subscriberList'])->name('subscriptionackage.subscriberList');
+                Route::get('/subscriber-list-export',  [SubscriptionController::class, 'subscriberListExport'])->name('subscriptionackage.subscriberListExport');
+                Route::get('/subscriber-transaction-export',  [SubscriptionController::class, 'subscriberTransactionExport'])->name('subscriptionackage.subscriberTransactionExport');
                 Route::post('/cancel-subscription/{id}',  [SubscriptionController::class, 'cancelSubscription'])->name('subscriptionackage.cancelSubscription');
                 Route::post('/switch-to-commission/{id}',  [SubscriptionController::class, 'switchToCommission'])->name('subscriptionackage.switchToCommission');
                 Route::get('/subscriber-detail/{id}',  [SubscriptionController::class, 'subscriberDetail'])->name('subscriptionackage.subscriberDetail');

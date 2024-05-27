@@ -239,7 +239,7 @@ active
 
                                 @forelse ($packages as $package)
 
-                                <div class="__plan-item hover">
+                                <div class="__plan-item hover {{ $store?->store_sub_update_application?->package_id == $package->id  ? 'active' : ''}}">
                                     <div class="inner-div">
                                         <div class="text-center">
                                             <h3 class="title">{{ $package->package_name }}</h3>
@@ -322,7 +322,7 @@ active
     </div>
 
 
-    <!-- Subscrition Plan Modal 2 -->
+    <!-- subscription Plan Modal 2 -->
     <div class="modal fade __modal" id="subscription-renew-modal">
         <div class="modal-dialog modal-xl modal-dialog-centered">
             <div class="modal-content">

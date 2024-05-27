@@ -290,7 +290,7 @@
         </div>
     </div>
 
-    <!-- Subscrition Plan Modal 2 -->
+    <!-- subscription Plan Modal 2 -->
     <div class="modal fade __modal" id="subscription-renew-modal">
         <div class="modal-dialog modal-xl modal-dialog-centered">
             <div class="modal-content">

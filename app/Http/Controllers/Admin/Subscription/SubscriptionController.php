@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin\Subscription;
 
+use App\Models\Zone;
 use App\Models\Store;
 use App\Models\StoreWallet;
 use Illuminate\Http\Request;
@@ -12,13 +13,18 @@ use App\Mail\SubscriptionCancel;
 use App\Models\StoreSubscription;
 use Illuminate\Support\Facades\DB;
 use App\Models\SubscriptionPackage;
+use App\Exports\CustomerOrderExport;
 use App\Http\Controllers\Controller;
 use App\Mail\SubscriptionPlanUpdate;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\Mail;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Schema;
 use App\Models\SubscriptionTransaction;
 use Illuminate\Support\Facades\Validator;
+use App\Exports\SubscritionPackageListExport;
+use App\Exports\SubscriptionTransactionsExport;
+use App\Exports\SubscriptionSubscriberListExport;
 use App\Models\SubscriptionBillingAndRefundHistory;
 use App\Contracts\Repositories\TranslationRepositoryInterface;
 
@@ -255,7 +261,7 @@ class SubscriptionController extends Controller
         $filter= $request['filter'];
         $plan_type= $request['plan_type'];
         $from =$request['start_date'] ?? Carbon::now()->format('Y-m-d');
-        $to =$request['expire_date'] ?? Carbon::now()->format('Y-m-d');
+        $to =$request['end_date'] ?? Carbon::now()->format('Y-m-d');
 
         $key = explode(' ', $request['search']);
         $transactions= SubscriptionTransaction::where('package_id',$id)
@@ -544,7 +550,7 @@ class SubscriptionController extends Controller
         $filter= $request['filter'];
         $plan_type= $request['plan_type'];
         $from =$request['start_date'] ?? Carbon::now()->format('Y-m-d');
-        $to =$request['expire_date'] ?? Carbon::now()->format('Y-m-d');
+        $to =$request['end_date'] ?? Carbon::now()->format('Y-m-d');
         $store= Store::where('id',$id)->with([
             'store_sub_update_application.package'
         ])
@@ -628,4 +634,201 @@ class SubscriptionController extends Controller
         return $data;
     }
 
+    public function packageExport(Request $request){
+
+        $key = explode(' ', $request['search']);
+
+        $packages=  SubscriptionPackage::withcount('currentSubscribers')
+        ->when(isset($key), function($q) use($key){
+            $q->where(function ($q) use ($key) {
+                foreach ($key as $value) {
+                    $q->orWhere('package_name', 'like', "%{$value}%")
+                        ->orWhere('price', 'like', "%{$value}%")
+                        ->orWhere('validity', 'like', "%{$value}%");
+                }
+            });
+        })
+        ->latest()->get();
+
+        $data = [
+            'data'=>$packages,
+            'search'=>$request['search'],
+        ];
+        if ($request->export_type == 'excel') {
+            return Excel::download(new SubscritionPackageListExport($data), 'SubscritionPackageListExport.xlsx');
+        }
+        return Excel::download(new SubscritionPackageListExport($data), 'SubscritionPackageListExport.csv');
+    }
+    public function TransactionExport(Request $request){
+        $request->validate([
+            'id' => 'required',
+        ]);
+
+
+        $filter= $request['filter'];
+        $id= $request['id'];
+        $plan_type= $request['plan_type'];
+        $from =$request['start_date'] ?? Carbon::now()->format('Y-m-d');
+        $to =$request['end_date'] ?? Carbon::now()->format('Y-m-d');
+
+        $key = explode(' ', $request['search']);
+        $transactions= SubscriptionTransaction::where('package_id',$id)
+        ->when(isset($key), function($query) use($key){
+            $query->where(function ($q) use ($key) {
+                foreach ($key as $value) {
+                    $q->Where('id', 'like', "%{$value}%");
+                }
+                $q->orWhereHas('store' , function ($q) use ($key) {
+                    foreach ($key as $value) {
+                    $q->where('name', 'like', "%{$value}%");
+                }
+                });
+            });
+        })
+        ->when($filter == 'this_year' , function($query){
+            $query->whereYear('created_at', Carbon::now()->year );
+        })
+        ->when($filter == 'this_month' , function($query){
+            $query->whereMonth('created_at', Carbon::now()->month );
+        })
+        ->when($filter == 'this_week' , function($query){
+            $query->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()] );
+        })
+        ->when($filter == 'custom' , function($query) use($from,$to) {
+            $query->whereBetween('created_at', [$from . " 00:00:00", $to . " 23:59:59"]);
+        })
+
+        ->when( in_array( $plan_type,['renew','new_plan','first_purchased','free_trial'])  , function($query) use($plan_type){
+            $query->where('plan_type', $plan_type );
+        })
+
+        ->latest()->get();
+
+        $data = [
+            'data'=>$transactions,
+            'plan_type'=>$request['plan_type'] ?? 'all',
+            'filter'=>$request['filter'] ?? 'all',
+            'search'=>$request['search'],
+            'start_date'=>$request['start_date'],
+            'end_date'=>$request['end_date'],
+            'package_name'=>SubscriptionPackage::where('id',$id)->first()?->package_name,
+        ];
+        if ($request->export_type == 'excel') {
+            return Excel::download(new SubscriptionTransactionsExport($data), 'SubscriptionTransactionsExport.xlsx');
+        }
+        return Excel::download(new SubscriptionTransactionsExport($data), 'SubscriptionTransactionsExport.csv');
+    }
+    public function subscriberListExport(Request $request){
+        $key = explode(' ', $request['search']);
+
+        $subscribers= Store::whereIn('store_business_model' ,['subscription','unsubscribed'])->with([
+            'store_sub_update_application.package'
+        ])
+
+        ->when(isset($key), function($query) use($key){
+            $query->where(function ($q) use ($key) {
+                foreach ($key as $value) {
+                    $q->Where('name', 'like', "%{$value}%");
+                }
+                $q->orWhereHas('store_sub_update_application.package' , function ($q) use ($key) {
+                    foreach ($key as $value) {
+                    $q->where('package_name', 'like', "%{$value}%");
+                }
+                });
+            });
+        })
+        ->when(isset($request->zone_id) && is_numeric($request->zone_id), function ($query) use ($request) {
+            return $query->where('zone_id', $request->zone_id);
+        })
+
+
+        ->when(isset($request->subscription_type) && $request->subscription_type == 'active', function ($query) use ($request) {
+            return $query->whereHas('store_sub_update_application', function ($q) use ($request) {
+                return $q->where('status',1);
+            });
+        })
+        ->when(isset($request->subscription_type) && $request->subscription_type == 'expired', function ($query) use ($request) {
+            return $query->whereHas('store_sub_update_application', function ($q) use ($request) {
+                return $q->where('status',0);
+            });
+        })
+        ->when(isset($request->subscription_type) && $request->subscription_type == 'cancaled', function ($query) use ($request) {
+            return $query->whereHas('store_sub_update_application', function ($q) use ($request) {
+                return $q->where('is_canceled',1);
+            });
+        })
+        ->when(isset($request->subscription_type) && $request->subscription_type == 'free_trial', function ($query) use ($request) {
+            return $query->whereHas('store_sub_update_application', function ($q) use ($request) {
+                return $q->where('is_trial',1);
+            });
+        })
+        ->latest()->get();
+
+        $data = [
+            'data'=>$subscribers,
+            'zone'=>Zone::where('id' ,$request->zone_id)->first()?->name ?? 'all',
+            'filter'=>$request->subscription_type ?? 'all',
+            'search'=>$request['search'],
+
+        ];
+        if ($request->export_type == 'excel') {
+            return Excel::download(new SubscriptionSubscriberListExport($data), 'SubscriptionSubscriberListExport.xlsx');
+        }
+        return Excel::download(new SubscriptionSubscriberListExport($data), 'SubscriptionSubscriberListExport.csv');
+    }
+
+    public function subscriberTransactionExport(Request $request){
+        $request->validate([
+            'id' => 'required',
+        ]);
+        $id= $request['id'];
+
+        $filter= $request['filter'];
+        $plan_type= $request['plan_type'];
+        $from =$request['start_date'] ?? Carbon::now()->format('Y-m-d');
+        $to =$request['end_date'] ?? Carbon::now()->format('Y-m-d');
+        $store= Store::where('id',$id)->first();
+
+        $key = explode(' ', $request['search']);
+        $transactions= SubscriptionTransaction::where('store_id',$store->id)
+        ->when(isset($key), function($query) use($key){
+            $query->where(function ($q) use ($key) {
+                foreach ($key as $value) {
+                    $q->Where('id', 'like', "%{$value}%");
+                }
+            });
+        })
+        ->when($filter == 'this_year' , function($query){
+            $query->whereYear('created_at', Carbon::now()->year );
+        })
+        ->when($filter == 'this_month' , function($query){
+            $query->whereMonth('created_at', Carbon::now()->month );
+        })
+        ->when($filter == 'this_week' , function($query){
+            $query->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()] );
+        })
+        ->when($filter == 'custom' , function($query) use($from,$to) {
+            $query->whereBetween('created_at', [$from . " 00:00:00", $to . " 23:59:59"]);
+        })
+
+        ->when( in_array( $plan_type,['renew','new_plan','first_purchased','free_trial'])  , function($query) use($plan_type){
+            $query->where('plan_type', $plan_type );
+        })
+
+        ->latest()->get();
+
+        $data = [
+            'data'=>$transactions,
+            'plan_type'=>$request['plan_type'] ?? 'all',
+            'filter'=>$request['filter'] ?? 'all',
+            'search'=>$request['search'],
+            'start_date'=>$request['start_date'],
+            'end_date'=>$request['end_date'],
+            'store'=>$store->name,
+        ];
+        if ($request->export_type == 'excel') {
+            return Excel::download(new SubscriptionTransactionsExport($data), 'SubscriptionTransactionsExport.xlsx');
+        }
+        return Excel::download(new SubscriptionTransactionsExport($data), 'SubscriptionTransactionsExport.csv');
+    }
 }

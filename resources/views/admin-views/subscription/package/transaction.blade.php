@@ -129,14 +129,14 @@ active
 
                             <span class="dropdown-header">{{ translate('download_options') }}</span>
                             <a id="export-excel" class="dropdown-item"
-                                href="{{ route('admin.transactions.report.day-wise-report-export', ['type' => 'excel', request()->getQueryString()]) }}">
+                                href="{{ route('admin.business-settings.subscriptionackage.TransactionExport', ['id'=> $id , 'export_type' => 'excel', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{ asset('public/assets/admin/svg/components/excel.svg') }}"
                                     alt="Image Description">
                                 {{ translate('messages.excel') }}
                             </a>
                             <a id="export-csv" class="dropdown-item"
-                                href="{{ route('admin.transactions.report.day-wise-report-export', ['type' => 'csv', request()->getQueryString()]) }}">
+                                href="{{  route('admin.business-settings.subscriptionackage.TransactionExport', ['id' => $id, 'export_type' => 'csv', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{ asset('public/assets/admin/svg/components/placeholder-csv-format.svg') }}"
                                     alt="Image Description">

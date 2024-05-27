@@ -31,7 +31,7 @@ active
             </div>
 
 
-                @if ($packages->total() > 0)
+                @if ($packages->total() > 0 || request()->has('search'))
 
                 <div class="card mb-20">
                     <div class="card-header border-0">
@@ -95,7 +95,6 @@ active
                                 @endforeach
 
 
-
                             </div>
                         </div>
                     </div>
@@ -106,7 +105,7 @@ active
                             <form class="search-form">
                                 <!-- Search -->
                                 <div class="input--group input-group input-group-merge input-group-flush">
-                                    <input class="form-control" placeholder="{{ translate('Search by name') }}" name="search">
+                                    <input class="form-control" value="{{ request()?->search }}" type="search" placeholder="{{ translate('Search by name') }}" name="search">
                                     <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
                                 </div>
                                 <!-- End Search -->
@@ -128,14 +127,14 @@ active
 
                                     <span class="dropdown-header">{{ translate('download_options') }}</span>
                                     <a id="export-excel" class="dropdown-item"
-                                        href="{{ route('admin.transactions.report.day-wise-report-export', ['type' => 'excel', request()->getQueryString()]) }}">
+                                        href="{{ route('admin.business-settings.subscriptionackage.packageExport', ['export_type' => 'excel', request()->getQueryString()]) }}">
                                         <img class="avatar avatar-xss avatar-4by3 mr-2"
                                             src="{{ asset('public/assets/admin/svg/components/excel.svg') }}"
                                             alt="Image Description">
                                         {{ translate('messages.excel') }}
                                     </a>
                                     <a id="export-csv" class="dropdown-item"
-                                        href="{{ route('admin.transactions.report.day-wise-report-export', ['type' => 'csv', request()->getQueryString()]) }}">
+                                        href="{{ route('admin.business-settings.subscriptionackage.packageExport', ['export_type' => 'csv', request()->getQueryString()]) }}">
                                         <img class="avatar avatar-xss avatar-4by3 mr-2"
                                             src="{{ asset('public/assets/admin/svg/components/placeholder-csv-format.svg') }}"
                                             alt="Image Description">
@@ -201,6 +200,20 @@ active
                                 </tbody>
                             </table>
                         </div>
+                        @if(count($packages) !== 0)
+                        <hr>
+                        @endif
+                        <div class="page-area">
+                            {!! $packages->withQueryString()->links() !!}
+                        </div>
+                        @if(count($packages) === 0)
+                        <div class="empty--data">
+                            <img src="{{asset('/public/assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
+                            <h5>
+                                {{translate('no_data_found')}}
+                            </h5>
+                        </div>
+                        @endif
                     </div>
                 </div>
 

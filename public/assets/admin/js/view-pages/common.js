@@ -415,3 +415,11 @@ $(document).on("click", ".location-reload-to-base", function () {
     nurl.searchParams.delete("search");
     location.href = nurl;
 });
+document.querySelectorAll('[name="search"]').forEach(function(element) {
+    element.addEventListener('input', function(event) {
+        if (this.value === "" && window.location.search !== "") {
+            let baseUrl = window.location.origin + window.location.pathname;
+            window.location.href = baseUrl;
+        }
+    });
+});
