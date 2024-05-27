@@ -52,7 +52,7 @@ class Order extends Model
 
     public function getOrderAttachmentFullUrlAttribute(){
         $images = [];
-        $value = $this->order_attachment;
+        $value = json_decode($this->order_attachment, true);
         if ($value){
             foreach ($value as $item){
                 $item = is_array($item)?$item:['img' => $item, 'storage' => 'public'];
@@ -68,7 +68,7 @@ class Order extends Model
     }
     public function getOrderProofFullUrlAttribute(){
         $images = [];
-        $value = $this->order_proof;
+        $value = json_decode($this->order_proof, true);
         if ($value){
             foreach ($value as $item){
                 $item = is_array($item)?$item:['img' => $item, 'storage' => 'public'];
