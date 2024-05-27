@@ -653,7 +653,7 @@ class ConfigController extends Controller
                     'gateway' => $method->key_name,
                     'gateway_title' => $additional_data?->gateway_title,
                     'gateway_image' => $additional_data?->gateway_image,
-                    'storage' => Helpers::get_full_url('payment_modules/gateway_image',$additional_data?->gateway_image,$additional_data?->storage ?? 'public')
+                    'gateway_image_full_url' => Helpers::get_full_url('payment_modules/gateway_image',$additional_data?->gateway_image,$additional_data?->storage ?? 'public')
                 ];
             }
         }
@@ -681,7 +681,7 @@ class ConfigController extends Controller
                     'gateway' => $method->key_name,
                     'gateway_title' => $additional_data?->gateway_title,
                     'gateway_image' => $additional_data?->gateway_image,
-                    'storage' => Helpers::get_full_url('payment_modules/gateway_image',$additional_data?->gateway_image,$additional_data?->storage ?? 'public')
+                    'gateway_image_full_url' => Helpers::get_full_url('payment_modules/gateway_image',$additional_data?->gateway_image,$additional_data?->storage ?? 'public')
                 ];
             }
         }

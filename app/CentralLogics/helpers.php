@@ -737,7 +737,6 @@ class Helpers
         if ($multi_data == true) {
             foreach ($data as $item) {
 
-                dd($item);
                 $item->load('storeConfig');
                 $ratings = StoreLogic::calculate_store_rating($item['rating']);
                 $item['ratings'] = $item?->rating ?? [];
