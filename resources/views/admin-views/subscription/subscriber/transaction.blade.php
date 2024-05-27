@@ -84,7 +84,7 @@ active
                     </div>
                 </div>
                 <div class="btn--container justify-content-end">
-                    <button type="reset" class="btn btn--reset">{{ translate('Reset') }}</button>
+                    <button type="reset" id="reset_btn" class="btn btn--reset">{{ translate('Reset') }}</button>
                     <button type="submit" class="btn btn--primary">{{ translate('Submit') }}</button>
                 </div>
             </form>
@@ -284,7 +284,13 @@ active
                 window.open($(this).data('url'), '_blank');
             });
         });
+    $(document).on("click", "#reset_btn", function () {
+        setTimeout(reset, 10);
+    });
 
+    function reset(){
+        $('.filter').trigger('change');
+    }
 </script>
 @endpush
 

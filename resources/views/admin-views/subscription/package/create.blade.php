@@ -30,6 +30,12 @@ active
                         <h5 class="text--title card-title">{{ translate('Package_Information') }}</h5>
                         <div class="fz-12px">{{ translate('Give_Subscriptions_Package_Information') }}</div>
                     </div>
+                    <div class="text--primary-2 d-flex flex-wrap align-items-end" type="button" data-toggle="modal" data-target="#initial-modal">
+                        <strong class="mr-2">{{ translate('How it Works') }}</strong>
+                        <div class="blinkings">
+                            <i class="tio-info-outined"></i>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -329,9 +335,14 @@ active
             }
         }
     })
-    $(window).on('load', function(){
-        $('#initial-modal').modal('show');
-    })
+
+
+
+
+    $(document).on("click", ".btn--reset", function () {
+        $('.custom-limit-box').hide();
+        $('.max_required').removeAttr('required');
+    });
 
 </script>
 

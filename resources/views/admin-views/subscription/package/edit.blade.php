@@ -315,18 +315,29 @@ active
 
     $('.limit-input').on('change', function() {
 
-    var closestLimitItemCard = $(this).closest('.limit-item-card');
-    var isChecked = $(this).is(':checked');
-    if (isChecked) {
-        if ($(this).val() == 'Use_Limit') {
-            closestLimitItemCard.find('.custom-limit-box').show();
-            closestLimitItemCard.find('.max_required').prop('required', true);
-        } else {
-            closestLimitItemCard.find('.custom-limit-box').hide();
-            closestLimitItemCard.find('.max_required').removeAttr('required');
+        var closestLimitItemCard = $(this).closest('.limit-item-card');
+        var isChecked = $(this).is(':checked');
+        if (isChecked) {
+            if ($(this).val() == 'Use_Limit') {
+                closestLimitItemCard.find('.custom-limit-box').show();
+                closestLimitItemCard.find('.max_required').prop('required', true);
+            } else {
+                closestLimitItemCard.find('.custom-limit-box').hide();
+                closestLimitItemCard.find('.max_required').removeAttr('required');
+            }
         }
+    }).trigger('change');
+
+
+
+    $(document).on("click", "#reset_btn", function () {
+    setTimeout(reset, 10);
+    });
+
+    function reset(){
+    $('.limit-input').trigger('change');
     }
-}).trigger('change');
+
 </script>
 
 @endpush
