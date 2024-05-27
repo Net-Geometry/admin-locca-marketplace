@@ -2,38 +2,41 @@
 
 namespace App\Http\Controllers\Api\V1\Vendor;
 
-use App\Models\AccountTransaction;
-use App\Models\Admin;
 use App\Models\Item;
+use App\Models\Admin;
 use App\Models\Order;
 use App\Models\Store;
+use App\Library\Payer;
 use App\Models\Coupon;
-use App\Models\StoreWallet;
 use App\Models\Vendor;
+use App\Traits\Payment;
 use App\Models\Campaign;
+use App\Library\Receiver;
+use App\Models\StoreWallet;
 use App\Models\Notification;
-use App\Models\WithdrawalMethod;
+use App\Models\OrderPayment;
 use Illuminate\Http\Request;
 use App\CentralLogics\Helpers;
 use App\Models\VendorEmployee;
 use App\Models\BusinessSetting;
 use App\Models\WithdrawRequest;
 use App\Models\UserNotification;
+use App\Models\WithdrawalMethod;
 use App\CentralLogics\OrderLogic;
 use App\CentralLogics\StoreLogic;
+use App\Models\StoreSubscription;
 use App\CentralLogics\CouponLogic;
+use App\Models\AccountTransaction;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Models\OrderPayment;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Config;
+use App\Library\Payment as PaymentInfo;
+use App\Models\SubscriptionTransaction;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
-use App\Library\Payment as PaymentInfo;
-use App\Library\Receiver;
-use App\Traits\Payment;
-use App\Library\Payer;
+use App\Models\SubscriptionBillingAndRefundHistory;
 
 class VendorController extends Controller
 {
@@ -138,6 +141,29 @@ class VendorController extends Controller
         unset($vendor['todaysorders']);
         unset($vendor['this_week_orders']);
         unset($vendor['this_month_orders']);
+            if(isset($st?->store_sub_update_application)){
+                    $vendor['subscription'] =$st?->store_sub_update_application;
+
+                    if($vendor['subscription']->max_product== 'unlimited' ){
+                        $max_product_uploads= -1;
+                    }
+                    else{
+                        $max_product_uploads= $vendor['subscription']->max_product - $st?->item?->count();
+                        if($max_product_uploads > 0){
+                            $max_product_uploads ?? 0;
+                        }elseif($max_product_uploads < 0) {
+                            $max_product_uploads = 0;
+                        }
+                    }
+
+                    $pending_bill= SubscriptionBillingAndRefundHistory::where(['store_id'=>$store->id,
+                                        'transaction_type'=>'pending_bill', 'is_success' =>0])?->sum('amount') ?? 0;
+                    $vendor['subscription_other_data'] =  [
+                        'total_bill'=>  (float) $vendor['subscription']->package?->price * ($vendor['subscription']->total_package_renewed + 1),
+                        'max_product_uploads' => (int) $max_product_uploads,
+                        'pending_bill' => (float) $pending_bill,
+                    ];
+                }
 
         return response()->json($vendor, 200);
     }
@@ -208,7 +234,7 @@ class VendorController extends Controller
         ->with('customer')
 
         ->where(function($query)use($vendor){
-            if(config('order_confirmation_model') == 'store' || $vendor->stores[0]->self_delivery_system)
+            if(config('order_confirmation_model') == 'store' || $vendor->stores[0]->sub_self_delivery)
             {
                 $query->whereIn('order_status', ['accepted','pending','confirmed', 'processing', 'handover','picked_up']);
             }
@@ -349,7 +375,7 @@ class VendorController extends Controller
             }
         }
 
-        if($request['status'] =="confirmed" && !$vendor->stores[0]->self_delivery_system && config('order_confirmation_model') == 'deliveryman' && $order->order_type != 'take_away')
+        if($request['status'] =="confirmed" && !$vendor->stores[0]->sub_self_delivery && config('order_confirmation_model') == 'deliveryman' && $order->order_type != 'take_away')
         {
             return response()->json([
                 'errors' => [
@@ -367,7 +393,7 @@ class VendorController extends Controller
             ], 403);
         }
 
-        if($request['status']=='delivered' && $order->order_type != 'take_away' && !$vendor->stores[0]->self_delivery_system)
+        if($request['status']=='delivered' && $order->order_type != 'take_away' && !$vendor->stores[0]->sub_self_delivery)
         {
             return response()->json([
                 'errors' => [
@@ -423,7 +449,7 @@ class VendorController extends Controller
             if (!empty($request->file('order_proof'))) {
                 foreach ($request->order_proof as $img) {
                     $image_name = Helpers::upload('order/', 'png', $img);
-                    array_push($img_names, $image_name);
+                    array_push($img_names, ['img'=>$image_name, 'storage'=> Helpers::getDisk()]);
                 }
                 $images = $img_names;
             } else {
@@ -833,25 +859,23 @@ class VendorController extends Controller
             return response()->json(['errors'=>[['code'=>'hand_in_cash', 'message'=>translate('messages.You_have_cash_in_hand,_you_have_to_pay_the_due_to_delete_your_account')]]],203);
         }
 
-        if (Storage::disk('public')->exists('vendor/' . $vendor['image'])) {
-            Storage::disk('public')->delete('vendor/' . $vendor['image']);
-        }
-        if (Storage::disk('public')->exists('store/' . $vendor->stores[0]->logo)) {
-            Storage::disk('public')->delete('store/' . $vendor->stores[0]->logo);
-        }
+        Helpers::check_and_delete('vendor/' , $vendor['image']);
+    
 
-        if (Storage::disk('public')->exists('store/cover/' . $vendor->stores[0]->cover_photo)) {
-            Storage::disk('public')->delete('store/cover/' . $vendor->stores[0]->cover_photo);
-        }
+        Helpers::check_and_delete('store/' , $vendor->stores[0]->logo);
+    
+
+
+        Helpers::check_and_delete('store/cover/' , $vendor->stores[0]->cover_photo);
+        
         foreach($vendor->stores[0]->deliverymen as $dm) {
-            if (Storage::disk('public')->exists('delivery-man/' . $dm['image'])) {
-                Storage::disk('public')->delete('delivery-man/' . $dm['image']);
-            }
+      
+            Helpers::check_and_delete('delivery-man/' , $dm['image']);
+            
 
             foreach (json_decode($dm['identity_image'], true) as $img) {
-                if (Storage::disk('public')->exists('delivery-man/' . $img)) {
-                    Storage::disk('public')->delete('delivery-man/' . $img);
-                }
+                Helpers::check_and_delete('delivery-man/' , $img);
+                
             }
         }
         $vendor->stores[0]->deliverymen()->delete();
@@ -1022,7 +1046,7 @@ class VendorController extends Controller
         ->with('customer')
 
         ->where(function($query)use($vendor){
-            if(config('order_confirmation_model') == 'store' || $vendor->stores[0]->self_delivery_system)
+            if(config('order_confirmation_model') == 'store' || $vendor->stores[0]->sub_self_delivery)
             {
                 $query->whereIn('order_status', ['accepted','pending','confirmed', 'processing', 'handover','picked_up']);
             }

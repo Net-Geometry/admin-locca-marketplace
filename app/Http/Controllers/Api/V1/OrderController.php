@@ -52,7 +52,7 @@ class OrderController extends Controller
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
         $user_id = $request?->user?->id ;
-        $order = Order::with(['store', 'delivery_man.rating', 'parcel_category', 'refund','payments'])->withCount('details')->where('id', $request['order_id'])
+        $order = Order::with(['store','store.store_sub' ,'delivery_man.rating', 'parcel_category', 'refund','payments'])->withCount('details')->where('id', $request['order_id'])
         ->when($request->user, function ($query) use ($user_id) {
             return $query->where('user_id', $user_id);
         })
@@ -196,7 +196,7 @@ class OrderController extends Controller
                     $q->where('module_type','parcel');
                 })->first();
             } else{
-                $store = Store::with('discount')->selectRaw('*, IF(((select count(*) from `store_schedule` where `stores`.`id` = `store_schedule`.`store_id` and `store_schedule`.`day` = ' . $schedule_at->format('w') . ' and `store_schedule`.`opening_time` < "' . $schedule_at->format('H:i:s') . '" and `store_schedule`.`closing_time` >"' . $schedule_at->format('H:i:s') . '") > 0), true, false) as open')->where('id', $request->store_id)->first();
+                $store = Store::with(['discount', 'store_sub'])->selectRaw('*, IF(((select count(*) from `store_schedule` where `stores`.`id` = `store_schedule`.`store_id` and `store_schedule`.`day` = ' . $schedule_at->format('w') . ' and `store_schedule`.`opening_time` < "' . $schedule_at->format('H:i:s') . '" and `store_schedule`.`closing_time` >"' . $schedule_at->format('H:i:s') . '") > 0), true, false) as open')->where('id', $request->store_id)->first();
 
                 if (!$store) {
                     return response()->json([
@@ -247,6 +247,28 @@ class OrderController extends Controller
                     ]
                 ], 406);
             }
+
+
+            $store_sub=$store?->store_sub;
+            if ($store->is_valid_subscription) {
+                if($store_sub->max_order != "unlimited" && $store_sub->max_order <= 0){
+                    return response()->json([
+                        'errors' => [
+                            ['code' => 'order-confirmation-error', 'message' => translate('messages.Sorry_the_store_is_unable_to_take_any_order_!')]
+                        ]
+                    ], 403);
+                }
+            }
+            elseif( $store->store_business_model == 'unsubscribed'){
+                return response()->json([
+                    'errors' => [
+                        ['code' => 'order-confirmation-model', 'message' => translate('messages.Sorry_the_store_is_unable_to_take_any_order_!')]
+                    ]
+                ], 403);
+            }
+
+
+
 
             if ($request['coupon_code']) {
                 $coupon = Coupon::active()->where(['code' => $request['coupon_code']])->first();
@@ -310,7 +332,7 @@ class OrderController extends Controller
             }
 
 
-            if ($request['order_type'] != 'take_away' && !$store->free_delivery &&  !isset($delivery_charge) &&  $store->self_delivery_system == 1) {
+            if ($request['order_type'] != 'take_away' && !$store->free_delivery &&  !isset($delivery_charge) &&  $store->sub_self_delivery == 1) {
                 $per_km_shipping_charge = $store->per_km_shipping_charge;
                 $minimum_shipping_charge = $store->minimum_shipping_charge;
                 $maximum_shipping_charge = $store->maximum_shipping_charge;
@@ -455,7 +477,7 @@ class OrderController extends Controller
             if (!empty($request->file('order_attachment'))) {
                 foreach ($request->order_attachment as $img) {
                     $image_name = Helpers::upload('order/', 'png', $img);
-                    array_push($img_names, $image_name);
+                    array_push($img_names, ['img'=>$image_name, 'storage'=> Helpers::getDisk()]);
                 }
                 $images = $img_names;
             } else {
@@ -463,7 +485,18 @@ class OrderController extends Controller
             }
             $order->order_attachment = json_encode($images);
         }else{
-            $order->order_attachment = $request->has('order_attachment') ? Helpers::upload('order/', 'png', $request->file('order_attachment')) : null;
+            $img_names = [];
+            $images = [];
+            if (!empty($request->file('order_attachment'))) {
+                $image_name = Helpers::upload('order/', 'png', $request->file('order_attachment'));
+                array_push($img_names, ['img'=>$image_name, 'storage'=> Helpers::getDisk()]);
+                
+                $images = $img_names;
+            } else {
+                $images = null;
+            }
+            $order->order_attachment = json_encode($images);
+            $order->order_attachment = $img_names;
         }
         $order->distance = $request->distance;
         $order->created_at = now();
@@ -936,6 +969,11 @@ class OrderController extends Controller
                 if(!in_array($order->payment_method, ['digital_payment', 'partial_payment', 'offline_payment'])  || $payments){
                         Helpers::send_order_notification($order);
 
+                        if( $store?->is_valid_subscription == 1 && $store?->store_sub?->max_order != "unlimited" && $store?->store_sub?->max_order > 0){
+                            $store?->store_sub?->decrement('max_order' , 1);
+                        }
+
+
                     if ($order->order_status == 'pending' && config('mail.status') && $order_mail_status == '1' && $request->user) {
                         Mail::to($request->user->email)->send(new PlaceOrder($order->id));
                     }
@@ -1006,7 +1044,7 @@ class OrderController extends Controller
             ], 403);
         }
 
-        $store = Store::with('discount')->selectRaw('*, IF(((select count(*) from `store_schedule` where `stores`.`id` = `store_schedule`.`store_id` and `store_schedule`.`day` = ' . $schedule_at->format('w') . ' and `store_schedule`.`opening_time` < "' . $schedule_at->format('H:i:s') . '" and `store_schedule`.`closing_time` >"' . $schedule_at->format('H:i:s') . '") > 0), true, false) as open')->where('id', $request->store_id)->first();
+        $store = Store::with(['discount', 'store_sub'])->selectRaw('*, IF(((select count(*) from `store_schedule` where `stores`.`id` = `store_schedule`.`store_id` and `store_schedule`.`day` = ' . $schedule_at->format('w') . ' and `store_schedule`.`opening_time` < "' . $schedule_at->format('H:i:s') . '" and `store_schedule`.`closing_time` >"' . $schedule_at->format('H:i:s') . '") > 0), true, false) as open')->where('id', $request->store_id)->first();
 
         if (!$store) {
             return response()->json([
@@ -1015,6 +1053,25 @@ class OrderController extends Controller
                 ]
             ], 404);
         }
+
+        $store_sub=$store?->store_sub;
+        if ($store->is_valid_subscription) {
+            if($store_sub->max_order != "unlimited" && $store_sub->max_order <= 0){
+                return response()->json([
+                    'errors' => [
+                        ['code' => 'order-confirmation-error', 'message' => translate('messages.Sorry_the_store_is_unable_to_take_any_order_!')]
+                    ]
+                ], 403);
+            }
+        }
+        elseif( $store->store_business_model == 'unsubscribed'){
+            return response()->json([
+                'errors' => [
+                    ['code' => 'order-confirmation-model', 'message' => translate('messages.Sorry_the_store_is_unable_to_take_any_order_!')]
+                ]
+            ], 403);
+        }
+
 
         $zone = null;
         if ($request->latitude && $request->longitude) {
@@ -1134,7 +1191,7 @@ class OrderController extends Controller
             $minimum_shipping_charge = (float)BusinessSetting::where(['key' => 'minimum_shipping_charge'])->first()->value;
         }
 
-        if ($request['order_type'] != 'take_away' && !$store->free_delivery &&  !isset($delivery_charge) &&  $store->self_delivery_system == 1) {
+        if ($request['order_type'] != 'take_away' && !$store->free_delivery &&  !isset($delivery_charge) &&  $store->sub_self_delivery == 1) {
             $per_km_shipping_charge = $store->per_km_shipping_charge;
             $minimum_shipping_charge = $store->minimum_shipping_charge;
             $maximum_shipping_charge = $store->maximum_shipping_charge;
@@ -1211,7 +1268,7 @@ class OrderController extends Controller
         if (!empty($request->file('order_attachment'))) {
             foreach ($request->order_attachment as $img) {
                 $image_name = Helpers::upload('order/', 'png', $img);
-                array_push($img_names, $image_name);
+                array_push($img_names, ['img'=>$image_name, 'storage'=> Helpers::getDisk()]);
             }
             $images = $img_names;
         } else {
@@ -1364,6 +1421,10 @@ class OrderController extends Controller
             DB::commit();
             if($order->payment_method != 'digital_payment'){
                 Helpers::send_order_notification($order);
+                if( $store?->is_valid_subscription == 1 && $store?->store_sub?->max_order != "unlimited" && $store?->store_sub?->max_order > 0){
+                    $store?->store_sub?->decrement('max_order' , 1);
+                }
+
             }
             $mail_status = Helpers::get_mail_status('place_order_mail_status_user');
             //PlaceOrderMail
@@ -1568,6 +1629,8 @@ class OrderController extends Controller
             $order->cancellation_reason = $request->reason;
             $order->canceled_by = 'customer';
             $order->save();
+            $order?->store ?   Helpers::increment_order_count($order?->store) : '';
+
             Helpers::send_order_notification($order);
             return response()->json(['message' => translate('messages.order_canceled_successfully')], 200);
         }
@@ -1620,7 +1683,7 @@ class OrderController extends Controller
             if (!empty($request->file('image'))) {
                 foreach ($request->image as $img) {
                     $image = Helpers::upload('refund/', 'png', $img);
-                    array_push($id_img_names, $image);
+                    array_push($id_img_names, ['img'=>$image, 'storage'=> Helpers::getDisk()]);
                 }
                 $image = json_encode($id_img_names);
             } else {

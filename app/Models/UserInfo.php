@@ -2,8 +2,12 @@
 
 namespace App\Models;
 
+use App\CentralLogics\Helpers;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Illuminate\Support\Facades\DB;
 
 class UserInfo extends Model
 {
@@ -15,7 +19,25 @@ class UserInfo extends Model
         'deliveryman_id' => 'integer',
         'admin_id' => 'integer'
     ];
+    protected $appends = ['image_full_url'];
+    public function getImageFullUrlAttribute(){
+        $value = $this->image;
+        if (count($this->storage) > 0) {
+            foreach ($this->storage as $storage) {
+                if ($storage['key'] == 'image') {
 
+                    if($storage['value'] == 's3'){
+
+                        return Helpers::s3_storage_link('profile',$value);
+                    }else{
+                        return Helpers::local_storage_link('profile',$value);
+                    }
+                }
+            }
+        }
+
+        return Helpers::local_storage_link('profile',$value);
+    }
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
@@ -34,5 +56,36 @@ class UserInfo extends Model
     public function admin()
     {
         return $this->belongsTo(Admin::class, 'admin_id');
+    }
+
+    public function storage()
+    {
+        return $this->morphMany(Storage::class, 'data');
+    }
+    protected static function booted()
+    {
+        static::addGlobalScope('storage', function ($builder) {
+            $builder->with('storage');
+        });
+    }
+    protected static function boot()
+    {
+        parent::boot();
+        static::saved(function ($model) {
+            if($model->isDirty('image')){
+                $value = Helpers::getDisk();
+
+                DB::table('storages')->updateOrInsert([
+                    'data_type' => get_class($model),
+                    'data_id' => $model->id,
+                    'key' => 'image',
+                ], [
+                    'value' => $value,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+        });
+
     }
 }

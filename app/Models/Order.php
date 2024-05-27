@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use App\CentralLogics\Helpers;
 use Carbon\Carbon;
 use App\Scopes\ZoneScope;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Illuminate\Support\Facades\DB;
 
 class Order extends Model
 {
@@ -45,7 +48,40 @@ class Order extends Model
         'ref_bonus_amount' => 'float',
     ];
 
-    protected $appends = ['module_type'];
+    protected $appends = ['module_type','order_attachment_full_url','order_proof_full_url'];
+
+    public function getOrderAttachmentFullUrlAttribute(){
+        $images = [];
+        $value = $this->order_attachment;
+        if ($value){
+            foreach ($value as $item){
+                $item = is_array($item)?$item:['img' => $item, 'storage' => 'public'];
+                if($item['storage']=='s3'){
+                    $images[] = Helpers::s3_storage_link('order',$item['img']);
+                }else{
+                    $images[] = Helpers::local_storage_link('order',$item['img']);
+                }
+            }
+        }
+
+        return $images;
+    }
+    public function getOrderProofFullUrlAttribute(){
+        $images = [];
+        $value = $this->order_proof;
+        if ($value){
+            foreach ($value as $item){
+                $item = is_array($item)?$item:['img' => $item, 'storage' => 'public'];
+                if($item['storage']=='s3'){
+                    $images[] = Helpers::s3_storage_link('order',$item['img']);
+                }else{
+                    $images[] = Helpers::local_storage_link('order',$item['img']);
+                }
+            }
+        }
+
+        return $images;
+    }
 
     public function setDeliveryChargeAttribute($value)
     {
@@ -278,8 +314,14 @@ class Order extends Model
     protected static function booted()
     {
         static::addGlobalScope(new ZoneScope);
+        static::addGlobalScope('storage', function ($builder) {
+            $builder->with('storage');
+        });
     }
-
+    public function storage()
+    {
+        return $this->morphMany(Storage::class, 'data');
+    }
     protected static function boot()
     {
         parent::boot();

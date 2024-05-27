@@ -132,6 +132,11 @@ class InstallController extends Controller
         Helpers::insert_data_settings_key('store_login_url', 'login_store' ,'store');
         Helpers::insert_data_settings_key('store_employee_login_url', 'login_store_employee' ,'store-employee');
 
+        Helpers::insert_business_settings_key('subscription_business_model', '1');
+        Helpers::insert_business_settings_key('commission_business_model', '1');
+        Helpers::insert_business_settings_key('check_daily_subscription_validity_check', date('Y-m-d'));
+
+
         $previousRouteServiceProvier = base_path('app/Providers/RouteServiceProvider.php');
         $newRouteServiceProvier = base_path('app/Providers/RouteServiceProvider.txt');
         copy($newRouteServiceProvier, $previousRouteServiceProvier);

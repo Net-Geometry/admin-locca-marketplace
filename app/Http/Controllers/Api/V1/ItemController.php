@@ -483,6 +483,7 @@ class ItemController extends Controller
             $item['store_details'] = $store;
             return response()->json($item, 200);
         } catch (\Exception $e) {
+            dd($e->getLine());
             return response()->json([
                 'errors' => ['code' => 'product-001', 'message' => translate('messages.not_found')]
             ], 404);

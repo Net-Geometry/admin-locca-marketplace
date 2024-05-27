@@ -36,6 +36,7 @@
                                 </label>
                             </div>
                         </div>
+                        @if ($store->store_business_model == 'commission')
 
                         <div class="col-sm-6 col-lg-4">
                             <div class="form-group mb-0">
@@ -59,6 +60,7 @@
                                 </label>
                             </div>
                         </div>
+                        @endif
 
                         <div class="col-sm-6 col-lg-4">
                             <div class="form-group mb-0">
@@ -71,6 +73,8 @@
                                 </label>
                             </div>
                         </div>
+                        @if ($store->store_business_model == 'commission')
+
                         <div class="col-sm-6 col-lg-4">
                             <div class="form-group mb-0">
                                 <label class="toggle-switch toggle-switch-sm d-flex justify-content-between border border-secondary rounded px-4 form-control" for="self_delivery_system">
@@ -82,6 +86,7 @@
                                 </label>
                             </div>
                         </div>
+                        @endif
                         <div class="col-sm-6 col-lg-4">
                             <div class="form-group mb-0">
                                 <label class="toggle-switch toggle-switch-sm d-flex justify-content-between border border-secondary rounded px-4 form-control" for="delivery">
@@ -223,6 +228,9 @@
                                         <input type="number" id="tax" min="0" max="100" step="0.01" name="tax" class="form-control" required value="{{$store->tax??'0'}}" {{isset($store->tax)?'':'readonly'}}>
                                     </div>
                                 </div>
+
+                                @if ($store->store_business_model == 'commission')
+
                                 <div class="form-group col-sm-6 col-lg-4">
                                     <div class="form-group">
                                         <label class="d-flex mb-1 justify-content-between switch toggle-switch-sm text-dark text-capitalize" for="comission_status">
@@ -235,6 +243,7 @@
                                         <input type="number" id="comission" min="0" max="10000" step="0.01" name="comission" class="form-control" required value="{{$store->comission??'0'}}" {{isset($store->comission)?'':'readonly'}}>
                                     </div>
                                 </div>
+                                @endif
                                 <div class="col-12">
                                     <div class="justify-content-end btn--container">
                                         <button type="reset" class="btn btn--reset">{{translate('messages.reset')}}</button>

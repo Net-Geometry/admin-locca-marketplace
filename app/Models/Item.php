@@ -2,8 +2,11 @@
 
 namespace App\Models;
 
+use App\CentralLogics\Helpers;
 use App\Scopes\ZoneScope;
 use App\Scopes\StoreScope;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
@@ -41,7 +44,7 @@ class Item extends Model
         'is_halal'=>'integer',
     ];
 
-    protected $appends = ['unit_type'];
+    protected $appends = ['unit_type','image_full_url','images_full_url'];
 
     public function scopeRecommended($query)
     {
@@ -151,6 +154,40 @@ class Item extends Model
 
         return $value;
     }
+    public function getImageFullUrlAttribute(){
+        $value = $this->image;
+        if (count($this->storage) > 0) {
+            foreach ($this->storage as $storage) {
+                if ($storage['key'] == 'image') {
+
+                    if($storage['value'] == 's3'){
+
+                        return Helpers::s3_storage_link('product',$value);
+                    }else{
+                        return Helpers::local_storage_link('product',$value);
+                    }
+                }
+            }
+        }
+
+        return Helpers::local_storage_link('product',$value);
+    }
+    public function getImagesFullUrlAttribute(){
+        $images = [];
+        $value = $this->images;
+        if ($value){
+            foreach ($value as $item){
+                $item = is_array($item)?$item:['img' => $item, 'storage' => 'public'];
+                if($item['storage']=='s3'){
+                    $images[] = Helpers::s3_storage_link('product',$item['img']);
+                }else{
+                    $images[] = Helpers::local_storage_link('product',$item['img']);
+                }
+            }
+        }
+
+        return $images;
+    }
 
     public function store()
     {
@@ -184,6 +221,9 @@ class Item extends Model
         }
 
         static::addGlobalScope(new ZoneScope);
+        static::addGlobalScope('storage', function ($builder) {
+            $builder->with('storage');
+        });
 
         static::addGlobalScope('translate', function (Builder $builder) {
             $builder->with(['translations' => function($query){
@@ -210,13 +250,44 @@ class Item extends Model
     {
         return $this->belongsToMany(Tag::class);
     }
-
+    public function storage()
+    {
+        return $this->morphMany(Storage::class, 'data');
+    }
     protected static function boot()
     {
         parent::boot();
         static::created(function ($item) {
             $item->slug = $item->generateSlug($item->name);
             $item->save();
+        });
+        static::saved(function ($model) {
+            if($model->isDirty('image')){
+                $value = Helpers::getDisk();
+
+                DB::table('storages')->updateOrInsert([
+                    'data_type' => get_class($model),
+                    'data_id' => $model->id,
+                    'key' => 'image',
+                ], [
+                    'value' => $value,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+            if($model->isDirty('images')){
+                $value = Helpers::getDisk();
+
+                DB::table('storages')->updateOrInsert([
+                    'data_type' => get_class($model),
+                    'data_id' => $model->id,
+                    'key' => 'images',
+                ], [
+                    'value' => $value,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
         });
     }
     private function generateSlug($name)

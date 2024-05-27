@@ -68,6 +68,37 @@ class ItemController extends Controller
             return response()->json(['errors' => Helpers::error_processor($validator)], 402);
         }
 
+
+
+        $store=$request['vendor']->stores[0];
+        if (  $store->store_business_model == 'subscription' ) {
+
+            $store_sub = $store?->store_sub;
+            if (isset($store_sub)) {
+                if ($store_sub?->max_product != "unlimited" && $store_sub?->max_product > 0 ) {
+                    $total_item= Item::where('store_id', $store->id)->count()+1;
+                    if ( $total_item >= $store_sub->max_product  ){
+                        $store->update(['item_section' => 0]);
+                    }
+                }
+            } else{
+                return response()->json([
+                    'unsubscribed'=>[
+                        ['code'=>'unsubscribed', 'message'=>translate('messages.you_are_not_subscribed_to_any_package')]
+                    ]
+                ]);
+            }
+        } elseif($store->store_business_model == 'unsubscribed'){
+            return response()->json([
+                'unsubscribed'=>[
+                    ['code'=>'unsubscribed', 'message'=>translate('messages.you_are_not_subscribed_to_any_package')]
+                ]
+            ]);
+        }
+
+
+
+
         $tag_ids = [];
         if ($request->tags != null) {
             $tags = explode(",", $request->tags);
@@ -185,7 +216,7 @@ class ItemController extends Controller
         if (!empty($request->file('item_images'))) {
             foreach ($request->item_images as $img) {
                 $image_name = Helpers::upload('product/', 'png', $img);
-                $images[]=$image_name;
+                $images[]=['img'=>$image_name, 'storage'=> Helpers::getDisk()];
             }
         }
 
@@ -445,10 +476,9 @@ class ItemController extends Controller
 
         foreach ($p['images'] as $img) {
             if (!in_array($img, json_decode($request->images, true))) {
-                if(Storage::disk('public')->exists('product/' . $img))
-                {
-                    Storage::disk('public')->delete('product/' . $img);
-                }
+      
+                Helpers::check_and_delete('product/' , $img);
+                
                 $key = array_search($img, $images);
                 unset($images[$key]);
             }
@@ -456,7 +486,7 @@ class ItemController extends Controller
         if ($request->has('item_images')){
             foreach ($request->item_images as $img) {
                 $image = Helpers::upload('product/', 'png', $img);
-                array_push($images, $image);
+                array_push($images, ['img'=>$image, 'storage'=> Helpers::getDisk()]);
             }
         }
 
@@ -598,9 +628,9 @@ class ItemController extends Controller
 
         if($product->image)
         {
-            if (Storage::disk('public')->exists('product/' . $product['image'])) {
-                Storage::disk('public')->delete('product/' . $product['image']);
-            }
+    
+                Helpers::check_and_delete('product/' , $product['image']);
+            
         }
         $product->translations()->delete();
         $product->delete();
@@ -900,6 +930,25 @@ class ItemController extends Controller
         $product=  Helpers::product_data_formatting($product, false, false, app()->getLocale() , true);
         return response()->json($product,200);
 
+    }
+
+    public function update_reply(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'id' => 'required',
+            'reply' => 'required|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        }
+
+        $review = Review::findOrFail($request->id);
+        $review->reply = $request->reply;
+        $review->store_id = $request['vendor']?->stores[0]?->id;
+        $review->save();
+
+        return response()->json(['message'=>translate('messages.review_reply_updated_successfully')], 200);
     }
 
 }

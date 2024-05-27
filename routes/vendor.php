@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Vendor\SubscriptionController;
 
 
 Route::group(['namespace' => 'Vendor', 'as' => 'vendor.'], function () {
@@ -10,13 +11,14 @@ Route::group(['namespace' => 'Vendor', 'as' => 'vendor.'], function () {
         Route::get('/', 'DashboardController@dashboard')->name('dashboard');
         Route::get('/get-store-data', 'DashboardController@store_data')->name('get-store-data');
         Route::post('/store-token', 'DashboardController@updateDeviceToken')->name('store.token');
-        Route::get('/reviews', 'ReviewController@index')->name('reviews')->middleware('module:reviews');
+        Route::get('/reviews', 'ReviewController@index')->name('reviews')->middleware(['module:reviews' ,'subscription:reviews']);
+        Route::post('/store-reply/{id}', 'ReviewController@update_reply')->name('review-reply')->middleware(['module:reviews' ,'subscription:reviews']);
         Route::get('site_direction', 'BusinessSettingsController@site_direction_vendor')->name('site_direction');
 
 
         Route::group(['prefix' => 'pos', 'as' => 'pos.'], function () {
             Route::post('variant_price', 'POSController@variant_price')->name('variant_price');
-            Route::group(['middleware' => ['module:pos']], function () {
+            Route::group(['middleware' => ['module:pos','subscription:pos' ]], function () {
                 Route::get('/', 'POSController@index')->name('index');
                 Route::get('quick-view', 'POSController@quick_view')->name('quick-view');
                 Route::get('quick-view-cart-item', 'POSController@quick_view_card_item')->name('quick-view-cart-item');
@@ -39,6 +41,21 @@ Route::group(['namespace' => 'Vendor', 'as' => 'vendor.'], function () {
                 Route::get('data', 'POSController@extra_charge')->name('extra_charge');
             });
         });
+
+
+        Route::group(['prefix' => 'subscription' , 'as' => 'subscriptionackage.'], function () {
+            Route::get('/subscriber-detail',  [SubscriptionController::class, 'subscriberDetail'])->name('subscriberDetail');
+
+            Route::get('/invoice/{id}',  [SubscriptionController::class, 'invoice'])->name('invoice');
+            Route::get('/subscriber-list',  [SubscriptionController::class, 'subscriberList'])->name('subscriberList');
+            Route::post('/cancel-subscription/{id}',  [SubscriptionController::class, 'cancelSubscription'])->name('cancelSubscription');
+            Route::post('/switch-to-commission/{id}',  [SubscriptionController::class, 'switchToCommission'])->name('switchToCommission');
+            Route::get('/package-view/{id}/{store_id}',  [SubscriptionController::class, 'packageView'])->name('packageView');
+            Route::get('/subscriber-transactions/{id}',  [SubscriptionController::class, 'subscriberTransactions'])->name('subscriberTransactions');
+
+            Route::post('/package-buy',  [SubscriptionController::class, 'packageBuy'])->name('packageBuy');
+        });
+
 
         Route::group(['prefix' => 'dashboard', 'as' => 'dashboard.'], function () {
             Route::post('order-stats', 'DashboardController@order_stats')->name('order-stats');
@@ -63,7 +80,7 @@ Route::group(['namespace' => 'Vendor', 'as' => 'vendor.'], function () {
 //            Route::post('search', 'CustomRoleController@search')->name('search');
         });
 
-        Route::group(['prefix' => 'delivery-man', 'as' => 'delivery-man.', 'middleware' => ['module:deliveryman']], function () {
+        Route::group(['prefix' => 'delivery-man', 'as' => 'delivery-man.', 'middleware' => ['module:deliveryman','subscription:deliveryman']], function () {
             Route::get('add', 'DeliveryManController@index')->name('add');
             Route::post('store', 'DeliveryManController@store')->name('store');
             Route::get('list', 'DeliveryManController@list')->name('list');
@@ -241,7 +258,7 @@ Route::group(['namespace' => 'Vendor', 'as' => 'vendor.'], function () {
             Route::post('update-message', 'RestaurantController@update_message')->name('update-message');
         });
 
-        Route::group(['prefix' => 'message', 'as' => 'message.'], function () {
+        Route::group(['prefix' => 'message', 'as' => 'message.', 'middleware' => ['subscription:chat']], function () {
             Route::get('list', 'ConversationController@list')->name('list');
             Route::post('store/{user_id}/{user_type}', 'ConversationController@store')->name('store');
             Route::get('view/{conversation_id}/{user_id}', 'ConversationController@view')->name('view');

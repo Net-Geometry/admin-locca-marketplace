@@ -44,7 +44,7 @@ class FileManagerController extends Controller
 
             foreach($images as $image) {
                 $name = $image->getClientOriginalName();
-                Storage::disk('local')->put($request->path.'/'. $name, file_get_contents($image));  
+                Storage::disk('local')->put($request->path.'/'. $name, file_get_contents($image));
             }
         }
         if ($request->hasfile('file')) {
@@ -52,7 +52,7 @@ class FileManagerController extends Controller
             $name = $file->getClientOriginalName();
 
             Madzipper::make($file)->extractTo('storage/app/'.$request->path);
-            // Storage::disk('local')->put($request->path.'/'. $name, file_get_contents($file));  
+            // Storage::disk('local')->put($request->path.'/'. $name, file_get_contents($file));
 
         }
         Toastr::success(translate('messages.image_uploaded_successfully'));
@@ -62,9 +62,9 @@ class FileManagerController extends Controller
 
 
 
-    public function download($file_name)
+    public function download($file_name,$storage='public')
     {
-        return Storage::download(base64_decode($file_name));
+        return Storage::disk($storage)->download(base64_decode($file_name));
     }
 
     /**

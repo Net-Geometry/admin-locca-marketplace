@@ -91,6 +91,36 @@ class ItemController extends Controller
             return response()->json(['errors' => Helpers::error_processor($validator)]);
         }
 
+
+
+
+        $store= Helpers::get_store_data();
+        if ( $store->store_business_model == 'subscription' ) {
+            $store_sub = $store?->store_sub;
+            if (isset($store_sub)) {
+                if ($store_sub->max_product != "unlimited" && $store_sub->max_product > 0 ) {
+                    $total_item= Item::where('store_id', $store->id)->count()+1;
+                    if ( $total_item >= $store_sub->max_product){
+                        $store->item_section = 0;
+                        $store->save();
+                    }
+                }
+            } else{
+                return response()->json([
+                    'errors'=>[
+                        ['code'=>'unauthorized', 'message'=>translate('messages.you_are_not_subscribed_to_any_package')]
+                    ]
+                ]);
+            }
+        }elseif( $store->store_business_model == 'unsubscribed'){
+            return response()->json([
+                'errors'=>[
+                    ['code'=>'unauthorized', 'message'=>translate('messages.you_are_not_subscribed_to_any_package')]
+                ]
+            ]);
+        }
+
+
         $tag_ids = [];
         if ($request->tags != null) {
             $tags = explode(",", $request->tags);
@@ -219,7 +249,7 @@ class ItemController extends Controller
         if (!empty($request->file('item_images'))) {
             foreach ($request->item_images as $img) {
                 $image_name = Helpers::upload('product/', 'png', $img);
-                $images[]=$image_name;
+                $images[]=['img'=>$image_name, 'storage'=> Helpers::getDisk()];
             }
         }
 
@@ -583,7 +613,7 @@ class ItemController extends Controller
             if ($request->has('item_images')){
                 foreach ($request->item_images as $img) {
                     $image = Helpers::upload('product/', 'png', $img);
-                    array_push($images, $image);
+                    array_push($images, ['img'=>$image, 'storage'=> Helpers::getDisk()]);
                 }
             }
             $p->images = $images;
@@ -640,9 +670,9 @@ class ItemController extends Controller
 
         if($product->image)
         {
-            if (Storage::disk('public')->exists('product/' . $product['image'])) {
-                Storage::disk('public')->delete('product/' . $product['image']);
-            }
+ 
+            Helpers::check_and_delete('product/' , $product['image']);
+            
         }
         $product->translations()->delete();
         $product->delete();
@@ -755,9 +785,9 @@ class ItemController extends Controller
 
     public function remove_image(Request $request)
     {
-        if (Storage::disk('public')->exists('product/' . $request['name'])) {
-            Storage::disk('public')->delete('product/' . $request['name']);
-        }
+    
+        Helpers::check_and_delete('product/' , $request['name']);
+        
         if($request?->temp_product){
             $item = TempProduct::find($request['id']);
         }
@@ -931,6 +961,44 @@ class ItemController extends Controller
             }
             try{
                 DB::beginTransaction();
+
+
+                $total_item= count($data);
+
+                $store= Helpers::get_store_data();
+                if ( $store->store_business_model == 'subscription' ) {
+                    $store_sub=$store?->store_sub;
+                    if (isset($store_sub)) {
+                        if ($store_sub->max_product != "unlimited" && $store_sub->max_product > 0  &&  $store_sub->max_product >= $total_item ) {
+                            $store_sub->decrement('max_product' , $total_item);
+                            if (  $store_sub->max_product <= 0 ){
+                                $store->update(['item_section' => 0]);
+                            }
+                        } else{
+                            Toastr::error(translate('messages.you_have_reached_the_maximum_limit_of_item'));
+                            return back();
+                        }
+
+
+                        if ($store_sub->max_product != "unlimited" && $store_sub->max_product > 0 ) {
+                            $total_all_items= Item::where('store_id', $store->id)->count();
+
+                            $available_item_uploads= $total_all_items + $total_item;
+                            if ($available_item_uploads > $store_sub->max_product){
+                                Toastr::error(translate('messages.you_have_reached_the_maximum_limit_of_item'));
+                                return back();
+                            }
+                        }
+
+                    } else{
+                        return response()->json([
+                            'errors'=>[
+                                ['code'=>'unauthorized', 'message'=>translate('messages.you_are_not_subscribed_to_any_package')]
+                            ]
+                        ]);
+                    }
+                }
+
 
                 $chunkSize = 100;
                 $chunk_items= array_chunk($data,$chunkSize);
