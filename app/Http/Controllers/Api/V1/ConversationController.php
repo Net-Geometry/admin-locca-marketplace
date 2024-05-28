@@ -24,9 +24,8 @@ class ConversationController extends Controller
             $image_name=[];
             foreach($request->file('image') as $key=>$img)
             {
-
                 $name = Helpers::upload('conversation/', 'png', $img);
-                array_push($image_name,['img'=>$name, 'storage'=> Helpers::getDisk()]);
+                $image_name[] = ['img'=>$name, 'storage'=> Helpers::getDisk()];
             }
         } else {
             $image_name = null;
@@ -139,7 +138,7 @@ class ConversationController extends Controller
         $message->message = $request->message;
         $message->file = $image_name?json_encode($image_name, JSON_UNESCAPED_SLASHES):null;
         try {
-            if($message->save())
+            $message->save();
             $conversation->unread_message_count = $conversation->unread_message_count? $conversation->unread_message_count+1:1;
             $conversation->last_message_id=$message->id;
             $conversation->last_message_time = Carbon::now()->toDateTimeString();

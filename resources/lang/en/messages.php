@@ -4735,4 +4735,8 @@
   'If_itâs_enabled _Customers_will_automatically_receive_the_refunded_amount_in_their_wallets._But_if_itâs_disabled _the_Admin_will_handle_the_Refund_Request_in_his_convenient_transaction_channel.' => 'If itâs enabled  Customers will automatically receive the refunded amount in their wallets. But if itâs disabled  the Admin will handle the Refund Request in his convenient transaction channel.',
   'If_it’s_enabled _Customers_will_automatically_receive_the_refunded_amount_in_their_wallets._But_if_it’s_disabled _the_Admin_will_handle_the_Refund_Request_in_his_convenient_transaction_channel.' => 'If it’s enabled  Customers will automatically receive the refunded amount in their wallets. But if it’s disabled  the Admin will handle the Refund Request in his convenient transaction channel.',
   'If_yes _all_its_modules _stores _and_products_will_be_DELETED_FOREVER.' => 'If yes  all its modules  stores  and products will be DELETED FOREVER.',
+  'order_already_assign_to_this_deliveryman' => 'Order already assign to this deliveryman',
+  'Incorrect_credential,_please_try_again' => 'Incorrect credential  please try again',
+  'Congratulation_you_have_received' => 'Congratulation you have received',
+  'The_cashback_amount_successfully_added_to_your_wallet' => 'The cashback amount successfully added to your wallet',
 );

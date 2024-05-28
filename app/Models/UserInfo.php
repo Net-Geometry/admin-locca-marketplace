@@ -22,21 +22,28 @@ class UserInfo extends Model
     protected $appends = ['image_full_url'];
     public function getImageFullUrlAttribute(){
         $value = $this->image;
+        $path = 'profile';
+        if ($this->user_id){
+            $path = 'profile';
+        }elseif ($this->vendor_id){
+            $path = 'store';
+        }elseif ($this->deliveryman_id){
+            $path = 'delivery-man';
+        }
         if (count($this->storage) > 0) {
             foreach ($this->storage as $storage) {
                 if ($storage['key'] == 'image') {
-
                     if($storage['value'] == 's3'){
 
-                        return Helpers::s3_storage_link('profile',$value);
+                        return Helpers::s3_storage_link($path,$value);
                     }else{
-                        return Helpers::local_storage_link('profile',$value);
+                        return Helpers::local_storage_link($path,$value);
                     }
                 }
             }
         }
 
-        return Helpers::local_storage_link('profile',$value);
+        return Helpers::local_storage_link($path,$value);
     }
     public function user()
     {
