@@ -480,10 +480,7 @@ class OrderController extends Controller
                     array_push($img_names, ['img'=>$image_name, 'storage'=> Helpers::getDisk()]);
                 }
                 $images = $img_names;
-            } else {
-                $images = null;
             }
-            $order->order_attachment = json_encode($images);
         }else{
             $img_names = [];
             if (!empty($request->file('order_attachment'))) {
@@ -492,9 +489,9 @@ class OrderController extends Controller
                 array_push($img_names, ['img'=>$image_name, 'storage'=> Helpers::getDisk()]);
 
                 $images = $img_names;
-            } else {
-                $images = null;
             }
+        }
+        if(isset($images)){
             $order->order_attachment = json_encode($images);
         }
         $order->distance = $request->distance;
@@ -1270,8 +1267,6 @@ class OrderController extends Controller
                 array_push($img_names, ['img'=>$image_name, 'storage'=> Helpers::getDisk()]);
             }
             $images = $img_names;
-        } else {
-            $images = null;
         }
 
         $total_addon_price = 0;
@@ -1300,7 +1295,9 @@ class OrderController extends Controller
         $order->zone_id = isset($zone) ? $zone->id : end(json_decode($request->header('zoneId'), true));
         $order->module_id = $request->header('moduleId');
         $order->pending = now();
-        $order->order_attachment = json_encode($images);
+        if(isset($images)){
+            $order->order_attachment = json_encode($images);
+        }
         $order->distance = $request->distance;
         $order->delivery_instruction = $request['delivery_instruction'];
         $order->dm_vehicle_id = $vehicle_id;
