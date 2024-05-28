@@ -473,8 +473,8 @@ class OrderController extends Controller
         $order->pending = now();
         if (!empty($request->file('order_attachment')) && is_array($request->file('order_attachment'))) {
             $img_names = [];
-            $images = [];
             if (!empty($request->file('order_attachment'))) {
+                $images = [];
                 foreach ($request->order_attachment as $img) {
                     $image_name = Helpers::upload('order/', 'png', $img);
                     array_push($img_names, ['img'=>$image_name, 'storage'=> Helpers::getDisk()]);
@@ -486,17 +486,16 @@ class OrderController extends Controller
             $order->order_attachment = json_encode($images);
         }else{
             $img_names = [];
-            $images = [];
             if (!empty($request->file('order_attachment'))) {
+                $images = [];
                 $image_name = Helpers::upload('order/', 'png', $request->file('order_attachment'));
                 array_push($img_names, ['img'=>$image_name, 'storage'=> Helpers::getDisk()]);
-                
+
                 $images = $img_names;
             } else {
                 $images = null;
             }
             $order->order_attachment = json_encode($images);
-            $order->order_attachment = $img_names;
         }
         $order->distance = $request->distance;
         $order->created_at = now();
@@ -1263,9 +1262,9 @@ class OrderController extends Controller
             'latitude' => (string)$request->latitude,
         ];
 
-        $img_names = [];
-        $images = [];
         if (!empty($request->file('order_attachment'))) {
+            $img_names = [];
+            $images = [];
             foreach ($request->order_attachment as $img) {
                 $image_name = Helpers::upload('order/', 'png', $img);
                 array_push($img_names, ['img'=>$image_name, 'storage'=> Helpers::getDisk()]);
