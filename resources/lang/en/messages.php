@@ -4739,4 +4739,5 @@
   'Incorrect_credential,_please_try_again' => 'Incorrect credential  please try again',
   'Congratulation_you_have_received' => 'Congratulation you have received',
   'The_cashback_amount_successfully_added_to_your_wallet' => 'The cashback amount successfully added to your wallet',
+  'point_to_wallet_transfer_successfully' => 'Point to wallet transfer successfully',
 );
