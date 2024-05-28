@@ -1137,6 +1137,7 @@ class Helpers
                     "sender_type" => (string)$sender_type,
                     "order_type" => (string)$order_type,
                     "click_action" => $web_push_link?(string)$web_push_link:'',
+                    "sound" => "notification.wav",
                 ],
                 "notification" => [
                     'title' => (string)$data['title'],
@@ -1166,11 +1167,11 @@ class Helpers
             $zone_id = '';
         }
 
-        $click_action = "";
-        if($web_push_link){
-            $click_action = ',
-            "click_action": "'.$web_push_link.'"';
-        }
+//        $click_action = "";
+//        if($web_push_link){
+//            $click_action = ',
+//            "click_action": "'.$web_push_link.'"';
+//        }
 
         if (isset($data['order_id'])) {
             $postData = [
@@ -1188,6 +1189,7 @@ class Helpers
                         "title_loc_key" => (string)$data['order_id'],
                         "body_loc_key" => (string)$type,
                         "click_action" => $web_push_link?(string)$web_push_link:'',
+                        "sound" => "notification.wav",
                     ],
                     "notification" => [
                         "title" => (string)$data['title'],
@@ -1206,6 +1208,7 @@ class Helpers
                         "image" => (string)$data['image'],
                         "body_loc_key" => (string)$type,
                         "click_action" => $web_push_link?(string)$web_push_link:'',
+                        "sound" => "notification.wav",
                     ],
                     "notification" => [
                         "title" => (string)$data['title'],
