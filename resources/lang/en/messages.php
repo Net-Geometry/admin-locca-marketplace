@@ -4740,4 +4740,6 @@
   'Congratulation_you_have_received' => 'Congratulation you have received',
   'The_cashback_amount_successfully_added_to_your_wallet' => 'The cashback amount successfully added to your wallet',
   'point_to_wallet_transfer_successfully' => 'Point to wallet transfer successfully',
+  'Order_Refund_Request' => 'Order Refund Request',
+  'refund_request_placed_successfully' => 'Refund request placed successfully',
 );
