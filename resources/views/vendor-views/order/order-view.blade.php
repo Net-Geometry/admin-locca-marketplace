@@ -336,6 +336,7 @@
                                     @foreach ($order->details as $key => $detail)
                                         @if (isset($detail->item_id))
                                             @php($detail->item = json_decode($detail->item_details, true))
+                                            @php($product = \App\Models\Item::where(['id' => $detail->item['id']])->first())
                                             <!-- Media -->
                                             <tr>
                                                 <td>
@@ -348,7 +349,7 @@
                                                         <a class="avatar avatar-xl mr-3"
                                                             href="{{ route('vendor.item.view', $detail->item['id']) }}">
                                                             <img class="img-fluid rounded onerror-image"
-                                                            src="{{\App\CentralLogics\Helpers::onerror_image_helper(data_get($detail?->item,'image'), asset('storage/app/public/product/').'/'. data_get($detail?->item,'image'), asset('public/assets/admin/img/100x100/2.png') , 'product/',isset($detail?->item['storage'])?$detail?->item['storage']['value']:'public') }}"
+                                                            src="{{\App\CentralLogics\Helpers::get_image_helper($product ,'image', asset('storage/app/public/product/').'/'. $product->image, asset('public/assets/admin/img/100x100/2.png') , 'product/') }}"
                                                                  data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
                                                                 alt="Image Description">
                                                         </a>
