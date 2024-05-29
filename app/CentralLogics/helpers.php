@@ -3,6 +3,7 @@
 namespace App\CentralLogics;
 
 use DateTime;
+use App\Models\Item;
 use App\Models\User;
 use App\Models\Zone;
 use App\Models\AddOn;
@@ -37,8 +38,8 @@ use Illuminate\Support\Facades\App;
 use App\Mail\SubscriptionSuccessful;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\SubscriptionRenewOrShift;
 
+use App\Mail\SubscriptionRenewOrShift;
 use Illuminate\Support\Facades\Config;
 use App\Library\Payment as PaymentInfo;
 use App\Models\SubscriptionTransaction;
@@ -3693,7 +3694,8 @@ class Helpers
 
         $total_food= $store->items()->withoutGlobalScope(\App\Scopes\StoreScope::class)->count();
         if ($package->max_product != 'unlimited' &&  $total_food >= $package->max_product  ){
-            return 'downgrade_error';
+            return ['disable_item_count' => $total_food - $package->max_product];
+            // return 'downgrade_error';
         }
         return null;
     }
@@ -3861,6 +3863,19 @@ class Helpers
             DB::rollBack();
             info(["line___{$e->getLine()}",$e->getMessage()]);
             return false;
+        }
+
+
+
+
+        if(data_get(self::subscriptionConditionsCheck(store_id:$store->id,package_id:$package->id) , 'disable_item_count') > 0){
+            $disable_item_count=data_get(Helpers::subscriptionConditionsCheck(store_id:$store->id,package_id:$package->id) , 'disable_item_count');
+            $store->item_section= 0;
+            $store->save();
+
+            Item::where('store_id',$store->id)->oldest()->take($disable_item_count)->update([
+                'status' => 0
+            ]);
         }
 
 

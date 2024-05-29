@@ -1,4 +1,4 @@
-<div class="modal-body px-4 pt-0">
+<div class="">
     <div>
         <div class="text-center mb-4 pb-2">
 

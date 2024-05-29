@@ -415,11 +415,17 @@ class ItemController extends Controller
 
     public function status(Request $request)
     {
-        if(!Helpers::get_store_data()->item_section)
+        if(!Helpers::get_store_data()->item_section && Helpers::get_store_data()->product_uploaad_check == 'commission')
         {
             Toastr::warning(translate('messages.permission_denied'));
             return back();
         }
+
+        if(Helpers::get_store_data()->product_uploaad_check !== null && Helpers::get_store_data()->product_uploaad_check >= 0 && $request->status == 1 ){
+            Toastr::warning(translate('Your_current_package_doesnot_allow_to_activate_more_then_allocated_items_in_your_package') );
+            return back();
+        }
+
         $product = Item::find($request->id);
         $product->status = $request->status;
         $product->save();

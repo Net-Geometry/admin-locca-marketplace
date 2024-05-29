@@ -199,7 +199,8 @@ $val= (string) ($cash_in_hand_overflow_store_amount - (($cash_in_hand_overflow_s
                         </div>
                     </div>
                     <div>
-                        <a href="{{route('vendor.subscriptionackage.subscriberDetail')}}" class="btn btn--danger">{{ translate('Renew') }}</a>
+                        <a href="{{route('vendor.subscriptionackage.subscriberDetail',['renew_now' => true])}}" class="btn btn--danger">{{ translate('Renew') }}</a>
+
                     </div>
                 </div>
                 <!-- Renew -->
@@ -341,24 +342,24 @@ $val= (string) ($cash_in_hand_overflow_store_amount - (($cash_in_hand_overflow_s
 @endif
 
 <script>
-   document.addEventListener('DOMContentLoaded', function () {
-            $(document).on('click', '.log-out', function () {
-            Swal.fire({
-            title: '{{ translate('Do you want to logout?') }}',
-            showDenyButton: true,
-            showCancelButton: true,
-            confirmButtonColor: '#FC6A57',
-            cancelButtonColor: '#363636',
-            confirmButtonText: `{{ translate('yes')}}`,
-            cancelButtonText: `{{ translate('Do_not_Logout')}}`,
-            }).then((result) => {
-            if (result.value) {
-            location.href='{{route('logout')}}';
-            } else{
-            Swal.fire('{{ translate('messages.canceled') }}', '', 'info')
-            }
-        })
-});
-});
+    document.addEventListener('DOMContentLoaded', function () {
+                $(document).on('click', '.log-out', function () {
+                Swal.fire({
+                title: '{{ translate('Do you want to logout?') }}',
+                showDenyButton: true,
+                showCancelButton: true,
+                confirmButtonColor: '#FC6A57',
+                cancelButtonColor: '#363636',
+                confirmButtonText: `{{ translate('yes')}}`,
+                cancelButtonText: `{{ translate('Do_not_Logout')}}`,
+                }).then((result) => {
+                if (result.value) {
+                location.href='{{route('logout')}}';
+                } else{
+                Swal.fire('{{ translate('messages.canceled') }}', '', 'info')
+                }
+            })
+        });
+    });
 
 </script>

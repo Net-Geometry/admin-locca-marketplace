@@ -487,17 +487,19 @@ class SubscriptionController extends Controller
 
         $balance = BusinessSetting::where('key', 'wallet_status')->first()?->value == 1 ? StoreWallet::where('vendor_id',$store->vendor_id)->first()?->balance ?? 0 : 0;
         $payment_methods = $this->getDefaultPaymentMethods();
+        $disable_item_count=null;
+        if(data_get(Helpers::subscriptionConditionsCheck(store_id:$store->id,package_id:$package->id) , 'disable_item_count') > 0 && $package->id != $store_subscription->package_id){
+            $disable_item_count=data_get(Helpers::subscriptionConditionsCheck(store_id:$store->id,package_id:$package->id) , 'disable_item_count');
+        }
+
         return response()->json([
+            'disable_item_count'=> $disable_item_count,
             'view' => view('admin-views.subscription.subscriber.partials._package_selected', compact('store_subscription','package','store_id','balance','payment_methods','pending_bill'))->render()
         ]);
 
     }
     public function packageBuy(Request $request){
 
-        if( Helpers::subscriptionConditionsCheck(store_id:$request->store_id,package_id:$request->package_id) == 'downgrade_error'){
-            Toastr::error( translate('messages.You_can_not_downgraded_to_this_package_please_choose_a_package_with_higher_upload_limits'));
-            return back();
-        }
 
         $request->validate([
             'package_id' => 'required',

@@ -339,11 +339,20 @@ class ItemController extends Controller
 
     public function status(Request $request)
     {
-        if(!$request->vendor->stores[0]->item_section)
+
+        if(!$request->vendor->stores[0]->item_section && $request->vendor->stores[0]->product_uploaad_check == 'commission' )
         {
             return response()->json([
                 'errors'=>[
                     ['code'=>'unauthorized', 'message'=>translate('messages.permission_denied')]
+                ]
+            ],403);
+        }
+        if(!$request->vendor->stores[0]->product_uploaad_check !== null && $request->vendor->stores[0]->product_uploaad_check >= 0 && $request->status == 1 )
+        {
+            return response()->json([
+                'errors'=>[
+                    ['code'=>'unauthorized', 'message'=>translate('messages.Your_current_package_doesnot_allow_to_activate_more_then_allocated_items_in_your_package')]
                 ]
             ],403);
         }

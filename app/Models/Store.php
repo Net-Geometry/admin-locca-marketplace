@@ -255,6 +255,19 @@ class Store extends Model
         }
         return 0;
     }
+    public function getProductUploaadCheckAttribute(): mixed
+    {
+        if( $this->store_business_model == 'subscription' && isset($this->store_sub) ){
+
+            if($this->store_sub->max_product == 'unlimited' ){
+                return 'unlimited';
+            } else{
+                return  $this->items()->where('status' , 1)->withoutGlobalScope(\App\Scopes\StoreScope::class)->count() - $this->store_sub->max_product;
+            }
+            unset($this->store_sub);
+        }
+        return 'commission';
+    }
 
 
     public function getLogoFullUrlAttribute(){
