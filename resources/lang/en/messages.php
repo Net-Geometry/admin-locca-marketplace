@@ -4760,4 +4760,9 @@
   'your_subscription_is_expired' => 'Your subscription is expired',
   'push_notification_faild' => 'Push notification faild',
   'your_subscription_is_expired.You_can_only_process_your_on_going_orders.' => 'Your subscription is expired.You can only process your on going orders.',
+  'The disk field is required.' => 'The disk field is required.',
+  'local' => 'Local',
+  'S3' => 'S3',
+  'local_storage' => 'Local storage',
+  'S3_bucket' => 'S3 bucket',
 );

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1\Vendor;
 
+use Carbon\Carbon;
 use App\Models\Tag;
 use App\Models\Item;
 use App\Models\Review;
@@ -190,24 +191,55 @@ class ItemController extends Controller
             $item_data= Item::withoutGlobalScope(StoreScope::class)->select(['image','images'])->findOrfail($request->item_id);
 
             if(!$request->has('image')){
-                $oldPath = storage_path("app/public/product/{$item_data->image}");
-                $newFileName =\Carbon\Carbon::now()->toDateString() . "-" . uniqid() . ".png" ;
-                $newPath = storage_path("app/public/product/{$newFileName}");
-                if (File::exists($oldPath)) {
-                    File::copy($oldPath, $newPath);
+
+                $oldDisk = 'public';
+                if ($item_data->storage && count($item_data->storage) > 0) {
+                    foreach ($item_data->storage as $value) {
+                        if ($value['key'] == 'image') {
+                            $oldDisk = $value['value'];
+                        }
+                    }
+                }
+                $oldPath = "product/{$item_data->image}";
+                $newFileName = Carbon::now()->toDateString() . "-" . uniqid() . ".png";
+                $newPath = "product/{$newFileName}";
+                $dir = 'product/';
+                $newDisk = Helpers::getDisk();
+
+                try{
+                    if (Storage::disk($oldDisk)->exists($oldPath)) {
+                        if (!Storage::disk($newDisk)->exists($dir)) {
+                            Storage::disk($newDisk)->makeDirectory($dir);
+                        }
+                        $fileContents = Storage::disk($oldDisk)->get($oldPath);
+                        Storage::disk($newDisk)->put($newPath, $fileContents);
+                    }
+                } catch (\Exception $e) {
                 }
             }
 
             $uniqueValues = array_diff($item_data->images, explode(",", $request->removedImageKeys));
 
             foreach($uniqueValues as$key=> $value){
-                $oldPath = storage_path("app/public/product/{$value}");
-                $newFileName =\Carbon\Carbon::now()->toDateString() . "-" . uniqid() . ".png" ;
-                $newPath = storage_path("app/public/product/{$newFileName}");
-                if (File::exists($oldPath)) {
-                    File::copy($oldPath, $newPath);
+                $value = is_array($value)?$value:['img' => $value, 'storage' => 'public'];
+                $oldDisk = $value['storage'];
+                $oldPath = "product/{$value['img']}";
+                $newFileName = Carbon::now()->toDateString() . "-" . uniqid() . ".png";
+                $newPath = "product/{$newFileName}";
+                $dir = 'product/';
+                $newDisk = Helpers::getDisk();
+
+                try{
+                    if (Storage::disk($oldDisk)->exists($oldPath)) {
+                        if (!Storage::disk($newDisk)->exists($dir)) {
+                            Storage::disk($newDisk)->makeDirectory($dir);
+                        }
+                        $fileContents = Storage::disk($oldDisk)->get($oldPath);
+                        Storage::disk($newDisk)->put($newPath, $fileContents);
+                    }
+                } catch (\Exception $e) {
                 }
-                $images[]=$newFileName;
+                $images[]=['img'=>$newFileName, 'storage'=> Helpers::getDisk()];
             }
         }
 
@@ -692,11 +724,27 @@ class ItemController extends Controller
 
     public function reviews(Request $request)
     {
-        $id = $request['vendor']->stores[0]->id;;
+        $id = $request['vendor']->stores[0]->id;
+        $key = explode(' ', $request['search']);
 
         $reviews = Review::with(['customer', 'item'])
         ->whereHas('item', function($query)use($id){
             return $query->where('store_id', $id);
+        })
+        ->when(isset($key), function ($query) use ($key,$request) {
+            $query->where(function($query) use($key,$request) {
+
+                $query->whereHas('item', function ($query) use ($key) {
+                    foreach ($key as $value) {
+                        $query->where('name', 'like', "%{$value}%");
+                    }
+                })->orWhereHas('customer', function ($query) use ($key){
+                    foreach ($key as $value) {
+                        $query->where('f_name', 'like', "%{$value}%")->orwhere('l_name', 'like', "%{$value}%");
+                    }
+                })->orwhere('rating', $request['search'])->orwhere('review_id', $request['search']);
+            });
+
         })
         ->latest()->get();
 
@@ -710,6 +758,7 @@ class ItemController extends Controller
             {
                 $item['item_name'] = $item->item->name;
                 $item['item_image'] = $item->item->image;
+                $item['item_image_full_url'] = $item->item->image_full_url;
                 if(count($item->item->translations)>0)
                 {
                     $translate = array_column($item->item->translations->toArray(), 'value', 'key');

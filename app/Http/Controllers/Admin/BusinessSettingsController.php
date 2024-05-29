@@ -6475,16 +6475,16 @@ class BusinessSettingsController extends Controller
 
                     if($request?->json == 1){
                         $data_value = json_decode($data?->value ,true);
-                        
+
                             Helpers::check_and_delete($request->image_path.'/',$data_value[$request->field_name]);
-                        
+
                         $data_value[$request->field_name] = null;
                         $data->value = json_encode($data_value);
                     }
                     else{
-                     
+
                             Helpers::check_and_delete($request->image_path.'/',$data_value);
-                        
+
                         $data->{$request->field_name} = null;
                     }
 
