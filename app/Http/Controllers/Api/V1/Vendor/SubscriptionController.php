@@ -46,12 +46,12 @@ class SubscriptionController extends Controller
         if($request->business_plan == 'subscription' && $request->package_id != null ) {
 
             // $type=$request->type ?? 'new_join';
-            if( Helpers::subscriptionConditionsCheck(store_id:$request->store_id,package_id:$request->package_id) == 'downgrade_error'){
+            // if( Helpers::subscriptionConditionsCheck(store_id:$request->store_id,package_id:$request->package_id) == 'downgrade_error'){
 
-                return response()->json([
-                    'errors' => ['message' => translate('messages.You_can_not_downgraded_to_this_package_please_choose_a_package_with_higher_upload_limits')]
-                ], 403);
-            }
+            //     return response()->json([
+            //         'errors' => ['message' => translate('messages.You_can_not_downgraded_to_this_package_please_choose_a_package_with_higher_upload_limits')]
+            //     ], 403);
+            // }
 
             $package = SubscriptionPackage::withoutGlobalScope('translate')->find($request->package_id);
             $pending_bill= SubscriptionBillingAndRefundHistory::where(['store_id'=>$store->id,
@@ -189,5 +189,24 @@ class SubscriptionController extends Controller
 
         return response()->json(['success'],200);
 
+    }
+
+    public function checkProductLimits(Request $request){
+
+        $validator = Validator::make($request->all(), [
+            'store_id' => 'required',
+            'package_id' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        }
+
+        $disable_item_count=0;
+        if(data_get(Helpers::subscriptionConditionsCheck(store_id:$request->store_id,package_id:$request->package_id) , 'disable_item_count') > 0){
+            $disable_item_count = (int) (data_get(Helpers::subscriptionConditionsCheck(store_id:$request->store_id,package_id:$request->package_id) , 'disable_item_count',0));
+        }
+        // dd($request->store_id);
+
+        return  response()->json(['disable_item_count'=> $disable_item_count],200);
     }
 }

@@ -199,7 +199,8 @@ $val= (string) ($cash_in_hand_overflow_store_amount - (($cash_in_hand_overflow_s
                         </div>
                     </div>
                     <div>
-                        <a href="{{route('vendor.subscriptionackage.subscriberDetail')}}" class="btn btn--danger">{{ translate('Renew') }}</a>
+                        <a href="{{route('vendor.subscriptionackage.subscriberDetail',['renew_now' => true])}}" class="btn btn--danger">{{ translate('Renew') }}</a>
+
                     </div>
                 </div>
                 <!-- Renew -->

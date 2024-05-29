@@ -384,11 +384,17 @@ class ItemController extends Controller
 
     public function status(Request $request)
     {
-        if(!Helpers::get_store_data()->item_section)
+        if(!Helpers::get_store_data()->item_section && Helpers::get_store_data()->product_uploaad_check == 'commission')
         {
             Toastr::warning(translate('messages.permission_denied'));
             return back();
         }
+
+        if(Helpers::get_store_data()->product_uploaad_check !== null && Helpers::get_store_data()->product_uploaad_check >= 0 && $request->status == 1 ){
+            Toastr::warning(translate('Your_current_package_doesnot_allow_to_activate_more_then_allocated_items_in_your_package') );
+            return back();
+        }
+
         $product = Item::find($request->id);
         $product->status = $request->status;
         $product->save();
@@ -670,9 +676,9 @@ class ItemController extends Controller
 
         if($product->image)
         {
- 
+
             Helpers::check_and_delete('product/' , $product['image']);
-            
+
         }
         $product->translations()->delete();
         $product->delete();
@@ -785,9 +791,9 @@ class ItemController extends Controller
 
     public function remove_image(Request $request)
     {
-    
+
         Helpers::check_and_delete('product/' , $request['name']);
-        
+
         if($request?->temp_product){
             $item = TempProduct::find($request['id']);
         }

@@ -60,6 +60,7 @@ Route::group(['namespace' => 'Api\V1', 'middleware'=>'localization'], function (
         Route::post('subscription/payment/api', 'SubscriptionController@subscription_payment_api')->name('subscription_payment_api');
         Route::post('package-renew', 'SubscriptionController@package_renew_change_update_api');
         Route::post('cancel-subscription', 'SubscriptionController@cancelSubscription');
+        Route::get('check-product-limits', 'SubscriptionController@checkProductLimits');
     });
 
     // Module

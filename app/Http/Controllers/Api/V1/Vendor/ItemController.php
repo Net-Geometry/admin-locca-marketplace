@@ -307,11 +307,20 @@ class ItemController extends Controller
 
     public function status(Request $request)
     {
-        if(!$request->vendor->stores[0]->item_section)
+
+        if(!$request->vendor->stores[0]->item_section && $request->vendor->stores[0]->product_uploaad_check == 'commission' )
         {
             return response()->json([
                 'errors'=>[
                     ['code'=>'unauthorized', 'message'=>translate('messages.permission_denied')]
+                ]
+            ],403);
+        }
+        if(!$request->vendor->stores[0]->product_uploaad_check !== null && $request->vendor->stores[0]->product_uploaad_check >= 0 && $request->status == 1 )
+        {
+            return response()->json([
+                'errors'=>[
+                    ['code'=>'unauthorized', 'message'=>translate('messages.Your_current_package_doesnot_allow_to_activate_more_then_allocated_items_in_your_package')]
                 ]
             ],403);
         }
@@ -476,9 +485,9 @@ class ItemController extends Controller
 
         foreach ($p['images'] as $img) {
             if (!in_array($img, json_decode($request->images, true))) {
-      
+
                 Helpers::check_and_delete('product/' , $img);
-                
+
                 $key = array_search($img, $images);
                 unset($images[$key]);
             }
@@ -628,9 +637,9 @@ class ItemController extends Controller
 
         if($product->image)
         {
-    
+
                 Helpers::check_and_delete('product/' , $product['image']);
-            
+
         }
         $product->translations()->delete();
         $product->delete();
