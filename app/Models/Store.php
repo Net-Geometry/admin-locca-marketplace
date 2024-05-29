@@ -164,7 +164,9 @@ class Store extends Model
         'featured'=>'integer',
         'items_count'=>'integer',
         'prescription_order'=>'boolean',
-        'announcement'=>'integer'
+        'announcement'=>'integer',
+        'rating_count'=>'integer',
+        'reviews_comments_count'=>'integer',
     ];
 
     /**
