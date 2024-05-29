@@ -4742,4 +4742,9 @@
   'point_to_wallet_transfer_successfully' => 'Point to wallet transfer successfully',
   'Order_Refund_Request' => 'Order Refund Request',
   'refund_request_placed_successfully' => 'Refund request placed successfully',
+  'The disk field is required.' => 'The disk field is required.',
+  'local' => 'Local',
+  'S3' => 'S3',
+  'local_storage' => 'Local storage',
+  'S3_bucket' => 'S3 bucket',
 );

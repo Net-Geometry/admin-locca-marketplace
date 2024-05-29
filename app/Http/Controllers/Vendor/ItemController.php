@@ -142,24 +142,55 @@ class ItemController extends Controller
             $item_data= Item::withoutGlobalScope(StoreScope::class)->select(['image','images'])->findOrfail($request->item_id);
 
             if(!$request->has('image')){
-                $oldPath = storage_path("app/public/product/{$item_data->image}");
-                $newFileName =\Carbon\Carbon::now()->toDateString() . "-" . uniqid() . ".png" ;
-                $newPath = storage_path("app/public/product/{$newFileName}");
-                if (File::exists($oldPath)) {
-                    File::copy($oldPath, $newPath);
+
+                $oldDisk = 'public';
+                if ($item_data->storage && count($item_data->storage) > 0) {
+                    foreach ($item_data->storage as $value) {
+                        if ($value['key'] == 'image') {
+                            $oldDisk = $value['value'];
+                        }
+                    }
+                }
+                $oldPath = "product/{$item_data->image}";
+                $newFileName = Carbon::now()->toDateString() . "-" . uniqid() . ".png";
+                $newPath = "product/{$newFileName}";
+                $dir = 'product/';
+                $newDisk = Helpers::getDisk();
+
+                try{
+                    if (Storage::disk($oldDisk)->exists($oldPath)) {
+                        if (!Storage::disk($newDisk)->exists($dir)) {
+                            Storage::disk($newDisk)->makeDirectory($dir);
+                        }
+                        $fileContents = Storage::disk($oldDisk)->get($oldPath);
+                        Storage::disk($newDisk)->put($newPath, $fileContents);
+                    }
+                } catch (\Exception $e) {
                 }
             }
 
             $uniqueValues = array_diff($item_data->images, explode(",", $request->removedImageKeys));
 
             foreach($uniqueValues as$key=> $value){
-                $oldPath = storage_path("app/public/product/{$value}");
-                $newFileName =\Carbon\Carbon::now()->toDateString() . "-" . uniqid() . ".png" ;
-                $newPath = storage_path("app/public/product/{$newFileName}");
-                if (File::exists($oldPath)) {
-                    File::copy($oldPath, $newPath);
+                $value = is_array($value)?$value:['img' => $value, 'storage' => 'public'];
+                $oldDisk = $value['storage'];
+                $oldPath = "product/{$value['img']}";
+                $newFileName = Carbon::now()->toDateString() . "-" . uniqid() . ".png";
+                $newPath = "product/{$newFileName}";
+                $dir = 'product/';
+                $newDisk = Helpers::getDisk();
+
+                try{
+                    if (Storage::disk($oldDisk)->exists($oldPath)) {
+                        if (!Storage::disk($newDisk)->exists($dir)) {
+                            Storage::disk($newDisk)->makeDirectory($dir);
+                        }
+                        $fileContents = Storage::disk($oldDisk)->get($oldPath);
+                        Storage::disk($newDisk)->put($newPath, $fileContents);
+                    }
+                } catch (\Exception $e) {
                 }
-                $images[]=$newFileName;
+                $images[]=['img'=>$newFileName, 'storage'=> Helpers::getDisk()];
             }
         }
 
@@ -670,9 +701,9 @@ class ItemController extends Controller
 
         if($product->image)
         {
- 
+
             Helpers::check_and_delete('product/' , $product['image']);
-            
+
         }
         $product->translations()->delete();
         $product->delete();
@@ -785,9 +816,9 @@ class ItemController extends Controller
 
     public function remove_image(Request $request)
     {
-    
+
         Helpers::check_and_delete('product/' , $request['name']);
-        
+
         if($request?->temp_product){
             $item = TempProduct::find($request['id']);
         }
@@ -1462,13 +1493,34 @@ class ItemController extends Controller
             $temp_item->image = $temp_image_name;
         }
         else{
-            $oldPath = storage_path("app/public/product/{$data->image}");
-            $temp_image_name =\Carbon\Carbon::now()->toDateString() . "-" . uniqid() . ".png" ;
-            $newPath = storage_path("app/public/product/{$temp_image_name}");
-            if (File::exists($oldPath)) {
-                File::copy($oldPath, $newPath);
+            $oldDisk = 'public';
+            if ($data->storage && count($data->storage) > 0) {
+                foreach ($data->storage as $value) {
+                    if ($value['key'] == 'image') {
+                        $oldDisk = $value['value'];
+                    }
+                }
             }
-            $temp_item->image = $temp_image_name;
+            $oldPath = "product/{$data->image}";
+            $newFileName = Carbon::now()->toDateString() . "-" . uniqid() . ".png";
+            $newPath = "product/{$newFileName}";
+            $dir = 'product/';
+            $newDisk = Helpers::getDisk();
+
+            if (Storage::disk($oldDisk)->exists($oldPath)) {
+                if (!Storage::disk($newDisk)->exists($dir)) {
+                    Storage::disk($newDisk)->makeDirectory($dir);
+                }
+                $fileContents = Storage::disk($oldDisk)->get($oldPath);
+                Storage::disk($newDisk)->put($newPath, $fileContents);
+            }
+//            $oldPath = storage_path("app/public/product/{$data->image}");
+//            $temp_image_name =\Carbon\Carbon::now()->toDateString() . "-" . uniqid() . ".png" ;
+//            $newPath = storage_path("app/public/product/{$temp_image_name}");
+//            if (File::exists($oldPath)) {
+//                File::copy($oldPath, $newPath);
+//            }
+            $temp_item->image = $newFileName;
         }
 
 
