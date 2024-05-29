@@ -4756,4 +4756,8 @@
   'Your_current_package_doesnot_allow_to_activate_more_then_allocated_items' => 'Your current package doesnot allow to activate more then allocated items',
   'product_status_updated' => 'Product status updated',
   'Your_current_package_doesnot_allow_to_activate_more_then_allocated_items_in_your_package' => 'Your current package doesnot allow to activate more then allocated items in your package',
+  'you_are_not_subscribed_to_any_package' => 'You are not subscribed to any package',
+  'your_subscription_is_expired' => 'Your subscription is expired',
+  'push_notification_faild' => 'Push notification faild',
+  'your_subscription_is_expired.You_can_only_process_your_on_going_orders.' => 'Your subscription is expired.You can only process your on going orders.',
 );
