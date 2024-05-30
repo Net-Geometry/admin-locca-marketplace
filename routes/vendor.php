@@ -51,6 +51,7 @@ Route::group(['namespace' => 'Vendor', 'as' => 'vendor.'], function () {
             Route::get('/subscriber-transaction-export',  [SubscriptionController::class, 'subscriberTransactionExport'])->name('subscriberTransactionExport');
 
             Route::post('/package-buy',  [SubscriptionController::class, 'packageBuy'])->name('packageBuy');
+            Route::post('/add-to-session',  [SubscriptionController::class, 'addToSession'])->name('addToSession');
         });
 
 

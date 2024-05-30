@@ -188,11 +188,12 @@ $val= (string) ($cash_in_hand_overflow_store_amount - (($cash_in_hand_overflow_s
                     $pers=  439.6 * $pers / 100;
             }
         ?>
-        @if ($store_data?->store_sub?->expiry_date_parsed && $store_data?->store_sub->expiry_date_parsed->subDays($subscription_deadline_warning_days)->isBefore(now()))
+        @if ($store_data?->store_sub?->is_trial == 0 && $store_data?->store_sub?->expiry_date_parsed && $store_data?->store_sub->expiry_date_parsed->subDays($subscription_deadline_warning_days)->isBefore(now()) && Request::is('store-panel'))
 
-                <!-- Renew -->
+                <!--Always in header Renew -->
                 <div class="renew-badge mb-20" id="renew-badge">
                     <div class="renew-content d-flex align-items-center">
+
                         <img src="{{asset('/public/assets/admin/img/timer.svg')}}" alt="">
                         <div class="txt">
                             {{ $subscription_deadline_warning_message != null ?  $subscription_deadline_warning_message : translate('Your subscription ending soon. Please renew to continue access') }}
@@ -200,14 +201,39 @@ $val= (string) ($cash_in_hand_overflow_store_amount - (($cash_in_hand_overflow_s
                     </div>
                     <div>
                         <a href="{{route('vendor.subscriptionackage.subscriberDetail',['renew_now' => true])}}" class="btn btn--danger">{{ translate('Renew') }}</a>
+                    </div>
+                </div>
 
+
+
+        @elseif ( Session::get('subscription_renew_close_btn') !== true && $store_data?->store_sub?->is_trial == 0  && $store_data?->store_sub?->expiry_date_parsed && $store_data?->store_sub->expiry_date_parsed->subDays($subscription_deadline_warning_days)->isBefore(now()) && !Request::is('store-panel'))
+
+
+                <div class="renew-badge mb-20 hide-warning" id="renew-badge">
+                    <div class="renew-content d-flex align-items-center">
+
+                        <img src="{{asset('/public/assets/admin/img/timer.svg')}}" alt="">
+                        <div class="txt">
+                            {{ $subscription_deadline_warning_message != null ?  $subscription_deadline_warning_message : translate('Your subscription ending soon. Please renew to continue access') }}
+                        </div>
+                    </div>
+                    <div>
+                        @if ($store_data?->store_sub?->is_canceled == 1)
+                        <a href="{{route('vendor.subscriptionackage.subscriberDetail',['open_plans' => true])}}" class="btn btn--danger">{{ translate('Change_Subscription') }}</a>
+                        @else
+
+                        <a href="{{route('vendor.subscriptionackage.subscriberDetail',['renew_now' => true])}}" class="btn btn--danger">{{ translate('Renew') }}</a>
+
+                        @endif
+                        <button  data-id="subscription_renew_close_btn" id="hide-warning"  class="btn btn-sm btn-primary add-to-session" >{{ translate('remind_me_later') }}</button>
                     </div>
                 </div>
                 <!-- Renew -->
 
 
         @endif
-        @if ($store_data?->store_sub?->status == 1 && $store_data?->store_sub?->is_trial == 1 && $store_data?->store_sub?->is_canceled == 0)
+        @if ( Session::get('subscription_free_trial_close_btn') !== true && $store_data?->store_sub?->status == 1 && $store_data?->store_sub?->is_trial == 1 && $store_data?->store_sub?->is_canceled == 0)
+
         <div class="free-trial trial success-bg">
             <div class="inner-div">
                 <div class="left">
@@ -228,9 +254,10 @@ $val= (string) ($cash_in_hand_overflow_store_amount - (($cash_in_hand_overflow_s
                         </span>
                         {{translate('Days_left_in_free_trial')}}
                     </a>
-                    <a href="{{route('vendor.subscriptionackage.subscriberDetail')}}" class="btn btn-light">{{ translate('Choose_Subscription_Plan') }} <i class="tio-arrow-forward"></i></a>
+                    <a href="{{route('vendor.subscriptionackage.subscriberDetail' ,['open_plans' => true])}}" class="btn btn-light">{{ translate('Choose_Subscription_Plan') }} <i class="tio-arrow-forward"></i></a>
                 </div>
-                <button type="button" class="trial-close">
+
+                <button type="button" data-id="subscription_free_trial_close_btn" class="trial-close add-to-session ">
                     <i class="tio-clear-circle"></i>
                 </button>
             </div>
@@ -252,7 +279,7 @@ $val= (string) ($cash_in_hand_overflow_store_amount - (($cash_in_hand_overflow_s
                                 <p class="mb-4">
                                     {{ translate('Purchase a subscription plan or contact with the admin to settle the payment and unblock the access to service.') }}
                                 </p>
-                                <a href="{{route('vendor.subscriptionackage.subscriberDetail')}}" class="btn btn--primary">{{ translate('Choose Subscription Plan') }} <i class="tio-arrow-forward"></i></a>
+                                <a href="{{route('vendor.subscriptionackage.subscriberDetail' ,['open_plans' => true])}}" class="btn btn--primary">{{ translate('Choose Subscription Plan') }} <i class="tio-arrow-forward"></i></a>
                                 <div class="blocked-subscription mt-5">
                                     <img src="{{asset('/public/assets/admin/img/WarningOctagon.svg')}}" alt="">
                                     <span>{{ translate('All Access to service has been blocked due to no active subscription') }}</span>
@@ -279,7 +306,7 @@ $val= (string) ($cash_in_hand_overflow_store_amount - (($cash_in_hand_overflow_s
                     </div>
                 </div>
                 <div class="right">
-                    <a href="{{route('vendor.subscriptionackage.subscriberDetail')}}" class="btn btn-light">{{ translate('Choose_Subscription_Plan') }} <i class="tio-arrow-forward"></i></a>
+                    <a href="{{route('vendor.subscriptionackage.subscriberDetail' ,['open_plans' => true])}}" class="btn btn-light">{{ translate('Choose_Subscription_Plan') }} <i class="tio-arrow-forward"></i></a>
                 </div>
                 {{-- <button type="button" class="trial-close">
                     <i class="tio-clear-circle"></i>
@@ -307,7 +334,7 @@ $val= (string) ($cash_in_hand_overflow_store_amount - (($cash_in_hand_overflow_s
                         </span>
                         {{translate('Days_left_in_this_subscription')}}
                     </a>
-                    <a href="{{route('vendor.subscriptionackage.subscriberDetail')}}" class="btn btn-light">{{ translate('Choose_Subscription_Plan') }} <i class="tio-arrow-forward"></i></a>
+                    <a href="{{route('vendor.subscriptionackage.subscriberDetail' ,['open_plans' => true])}}" class="btn btn-light">{{ translate('Choose_Subscription_Plan') }} <i class="tio-arrow-forward"></i></a>
                 </div>
 
                 <button type="button" class="trial-close">
@@ -328,7 +355,7 @@ $val= (string) ($cash_in_hand_overflow_store_amount - (($cash_in_hand_overflow_s
                 </div>
                 <div class="right">
 
-                    <a href="{{route('vendor.subscriptionackage.subscriberDetail')}}" class="btn btn-light">{{ translate('Choose_Subscription_Plan') }} <i class="tio-arrow-forward"></i></a>
+                    <a href="{{route('vendor.subscriptionackage.subscriberDetail' ,['open_plans' => true])}}" class="btn btn-light">{{ translate('Change/Renew Subscription_Plan') }} <i class="tio-arrow-forward"></i></a>
                 </div>
 {{--
                 <button type="button" class="trial-close">
@@ -360,6 +387,26 @@ $val= (string) ($cash_in_hand_overflow_store_amount - (($cash_in_hand_overflow_s
                 }
             })
         });
+                $(document).on('click', '.add-to-session', function () {
+                    var session_data = $(this).data("id");
+                    $.ajax({
+                        url: '{{ route('vendor.subscriptionackage.addToSession') }}',
+                        method: 'POST',
+                        data: {
+                            value: session_data,
+                            _token: '{{ csrf_token() }}'
+                            },
+                            success: function(response) {
+
+                            }
+                        });
+                });
+                $(document).on('click', '#hide-warning', function () {
+                $('.hide-warning').hide();
+                });
+
+
     });
+
 
 </script>

@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Schema;
 use App\Models\SubscriptionTransaction;
+use Illuminate\Support\Facades\Session;
 use App\Exports\SubscriptionTransactionsExport;
 use App\Models\SubscriptionBillingAndRefundHistory;
 
@@ -69,20 +70,21 @@ class SubscriptionController extends Controller
         $store_subscription= StoreSubscription::where('store_id', $store_id)->with(['package'])->latest()->first();
         $package = SubscriptionPackage::where('status',1)->where('id',$id)->first();
 
-        $store= Store::Where('id',$store_id)->first(['id','vendor_id']);
+        $store= Store::Where('id',$store_id)->first(['id','vendor_id','store_business_model']);
         $pending_bill= SubscriptionBillingAndRefundHistory::where(['store_id'=>$store->id,
         'transaction_type'=>'pending_bill', 'is_success' =>0])?->sum('amount') ?? 0;
 
         $balance = BusinessSetting::where('key', 'wallet_status')->first()?->value == 1 ? StoreWallet::where('vendor_id',$store->vendor_id)->first()?->balance ?? 0 : 0;
         $payment_methods = $this->getDefaultPaymentMethods();
         $disable_item_count=null;
-        if(data_get(Helpers::subscriptionConditionsCheck(store_id:$store->id,package_id:$package->id) , 'disable_item_count') > 0 && $package->id != $store_subscription->package_id){
+        if(data_get(Helpers::subscriptionConditionsCheck(store_id:$store->id,package_id:$package->id) , 'disable_item_count') > 0 && ( !$store_subscription || $package->id != $store_subscription->package_id)){
             $disable_item_count=data_get(Helpers::subscriptionConditionsCheck(store_id:$store->id,package_id:$package->id) , 'disable_item_count');
         }
-
+        $store_business_model=$store->store_business_model;
+        $admin_commission=BusinessSetting::where('key', "admin_commission")->first()?->value ?? 0 ;
         return response()->json([
             'disable_item_count'=> $disable_item_count,
-            'view' => view('vendor-views.subscription.subscriber.partials._package_selected', compact('store_subscription','package','store_id','balance','payment_methods','pending_bill'))->render()
+            'view' => view('vendor-views.subscription.subscriber.partials._package_selected', compact('store_subscription','package','store_id','balance','payment_methods','pending_bill','store_business_model','admin_commission'))->render()
         ]);
 
     }
@@ -253,4 +255,12 @@ class SubscriptionController extends Controller
         }
         return Excel::download(new SubscriptionTransactionsExport($data), 'SubscriptionTransactionsExport.csv');
     }
+
+    public function addToSession(Request $request)
+    {
+        Session::put($request->value, true);
+        return response()->json(['success' => true]);
+    }
+
+
 }

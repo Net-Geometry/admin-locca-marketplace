@@ -558,6 +558,26 @@ active
         @if (request()?->renew_now == true)
         var url = '{{ route('vendor.subscriptionackage.packageView',[$store?->store_sub?->package_id,$store->id ]) }}';
         package_pay(url);
+            var url = new URL(window.location.href);
+            var searchParams = new URLSearchParams(url.search);
+            searchParams.delete('renew_now');
+            var newUrl = url.origin + url.pathname + '?' + searchParams.toString();
+            if (!searchParams.toString()) {
+                newUrl = url.origin + url.pathname;
+            }
+            window.history.replaceState(null, '', newUrl);
+        @endif
+
+        @if (request()?->open_plans == true)
+        $('#plan-modal').modal('show');
+            var url = new URL(window.location.href);
+            var searchParams = new URLSearchParams(url.search);
+            searchParams.delete('open_plans');
+            var newUrl = url.origin + url.pathname + '?' + searchParams.toString();
+            if (!searchParams.toString()) {
+                newUrl = url.origin + url.pathname;
+            }
+            window.history.replaceState(null, '', newUrl);
         @endif
 
     </script>

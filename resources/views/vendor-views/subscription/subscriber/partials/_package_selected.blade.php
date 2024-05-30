@@ -10,6 +10,19 @@
 
         </div>
         <div class="change-plan-wrapper align-items-center">
+            @if ($store_business_model == 'commission' && !$store_subscription )
+            <div class="__plan-item">
+                <div class="inner-div">
+                    <div class="text-center">
+                        <h3 class="title">{{ translate('commission')  }}</h3>
+                        <h2 class="price">{{  $admin_commission }} %</h2>
+                        {{-- <div class="day-count">{{ $store_subscription?->package?->validity }} {{ translate('days') }}</div> --}}
+                    </div>
+                </div>
+            </div>
+
+            @else
+
             <div class="__plan-item {{ !$store_subscription  || $store_subscription?->package_id ==  $package->id ?  'active' : '' }}">
                 <div class="inner-div">
                     <div class="text-center">
@@ -19,7 +32,7 @@
                     </div>
                 </div>
             </div>
-
+            @endif
 
 
             @if ($store_subscription?->package_id !==  $package->id)

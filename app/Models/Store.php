@@ -463,6 +463,11 @@ class Store extends Model
         return $this->hasManyThrough(Review::class, Item::class);
     }
 
+    public function reviews_comments()
+    {
+        return $this->reviews()->whereNotNull('comment');
+    }
+
     /**
      * @return HasOne
      */

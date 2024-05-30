@@ -93,13 +93,13 @@ active
                         <div class="col-lg-4 col-sm-6">
                             <div class="form-group">
                                 <label class="input-label">{{ translate('Package_Price') }} ({{ \App\CentralLogics\Helpers::currency_symbol() }})</label>
-                                <input type="number" name="package_price" value="{{ old('package_price') }}" required  min="0" step="0.01" max="999999999" class="form-control" placeholder="{{ translate('Ex: 300') }}">
+                                <input type="number" name="package_price" value="{{ old('package_price') }}" required  min="0.01" step="0.01" max="999999999" class="form-control" placeholder="{{ translate('Ex: 300') }}">
                             </div>
                         </div>
                         <div class="col-lg-4 col-sm-6">
                             <div class="form-group">
                                 <label class="input-label">{{ translate('Package_Validity') }} {{ translate('Days') }}</label>
-                                <input type="number"   min="0" max="999999999"  value="{{ old('package_validity') }}"  required name="package_validity"  class="form-control" placeholder="{{ translate('Ex: 365') }}">
+                                <input type="number"   min="1" max="999999999"  value="{{ old('package_validity') }}"  required name="package_validity"  class="form-control" placeholder="{{ translate('Ex: 365') }}">
                             </div>
                         </div>
 

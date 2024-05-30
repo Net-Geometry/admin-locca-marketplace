@@ -616,7 +616,6 @@ class ItemController extends Controller
         $validator = Validator::make($request->all(), [
             'item_id' => 'required',
             'order_id' => 'required',
-            'comment' => 'required',
             'rating' => 'required|numeric|max:5',
         ]);
 
@@ -665,7 +664,7 @@ class ItemController extends Controller
         $review->item_id = $request->item_id;
         $review->order_id = $request->order_id;
         $review->module_id = $order->module_id;
-        $review->comment = $request->comment;
+        $review->comment = $request?->comment;
         $review->rating = $request->rating;
         $review->attachment = json_encode($image_array);
         $review->save();

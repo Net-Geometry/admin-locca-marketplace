@@ -480,21 +480,21 @@ class SubscriptionController extends Controller
     public function packageView($id,$store_id){
         $store_subscription= StoreSubscription::where('store_id', $store_id)->with(['package'])->latest()->first();
         $package = SubscriptionPackage::where('status',1)->where('id',$id)->first();
-
-        $store= Store::Where('id',$store_id)->first(['id','vendor_id']);
+        $store= Store::Where('id',$store_id)->first(['id','vendor_id','store_business_model']);
         $pending_bill= SubscriptionBillingAndRefundHistory::where(['store_id'=>$store->id,
                             'transaction_type'=>'pending_bill', 'is_success' =>0])->sum('amount') ;
 
         $balance = BusinessSetting::where('key', 'wallet_status')->first()?->value == 1 ? StoreWallet::where('vendor_id',$store->vendor_id)->first()?->balance ?? 0 : 0;
         $payment_methods = $this->getDefaultPaymentMethods();
         $disable_item_count=null;
-        if(data_get(Helpers::subscriptionConditionsCheck(store_id:$store->id,package_id:$package->id) , 'disable_item_count') > 0 && $package->id != $store_subscription->package_id){
+        if(data_get(Helpers::subscriptionConditionsCheck(store_id:$store->id,package_id:$package->id) , 'disable_item_count') > 0 && ( !$store_subscription || $package->id != $store_subscription->package_id)){
             $disable_item_count=data_get(Helpers::subscriptionConditionsCheck(store_id:$store->id,package_id:$package->id) , 'disable_item_count');
         }
-
+        $store_business_model=$store->store_business_model;
+        $admin_commission=BusinessSetting::where('key', "admin_commission")->first()?->value ?? 0 ;
         return response()->json([
             'disable_item_count'=> $disable_item_count,
-            'view' => view('admin-views.subscription.subscriber.partials._package_selected', compact('store_subscription','package','store_id','balance','payment_methods','pending_bill'))->render()
+            'view' => view('admin-views.subscription.subscriber.partials._package_selected', compact('store_subscription','package','store_id','balance','payment_methods','pending_bill','store_business_model','admin_commission'))->render()
         ]);
 
     }
