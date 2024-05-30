@@ -4582,7 +4582,7 @@
   'All Access to service has been blocked due to no active subscription' => 'All Access to service has been blocked due to no active subscription',
   'Free_Trial_Has_Been_Ended' => 'Free Trial Has Been Ended',
   'Get_a_subscription_plan_to_continue_with_your_business' => 'Get a subscription plan to continue with your business',
-  'your_registration_info_is_saved_successfully_now_please_choose_your_business_model' => 'Your registration info is saved successfully now please choose your business model',
+  'your_registration_info_is_saved_successfully_now_please_choose_your_business_model' => 'Your registration info is saved successfully.Now please choose your business model.',
   'Commision_Base' => 'Commision Base',
   'Subscription Base' => 'Subscription Base',
   'Run store by puchasing subsciption packages. You will have access the features of in store panel , app and interaction with user according to the subscription packages.' => 'Run store by puchasing subsciption packages. You will have access the features of in store panel   app and interaction with user according to the subscription packages.',
@@ -4776,4 +4776,6 @@
   'File size too big' => 'File size too big',
   'Current Package Name' => 'Current Package Name',
   'Total Subscription Used' => 'Total Subscription Used',
+  'See overview of all the packages earnings' => 'See overview of all the packages earnings',
+  'Insufficient_balance_in_wallet' => 'Insufficient balance in wallet',
 );

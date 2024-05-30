@@ -3718,7 +3718,8 @@ class Helpers
                     $add_orders=$store_subscription->max_order;
                 }
 
-            } elseif($store->store_sub_update_application && $store->store_sub_update_application->package_id == $package->id && $type == 'renew' ){
+            }
+            elseif($store->store_sub_update_application && $store->store_sub_update_application->package_id == $package->id && $type == 'renew' ){
                 $store_subscription=$store->store_sub_update_application;
                 $store_subscription->total_package_renewed= $store_subscription->total_package_renewed + 1;
             }

@@ -500,7 +500,6 @@ class SubscriptionController extends Controller
     }
     public function packageBuy(Request $request){
 
-
         $request->validate([
             'package_id' => 'required',
             'store_id' => 'required',
@@ -533,7 +532,8 @@ class SubscriptionController extends Controller
             }
             else{
                 Toastr::error( translate('messages.Insufficient_balance_in_wallet'));
-                return to_route('admin.business-settings.subscriptionackage.subscriberDetail',$store->id);
+                return back();
+                // return to_route('admin.business-settings.subscriptionackage.subscriberDetail',$store->id);
 
             }
         } elseif($request->payment_gateway == 'manual_payment_by_admin'){
@@ -542,7 +542,8 @@ class SubscriptionController extends Controller
         }
 
         $plan_data != false ?  Toastr::success( translate('Successfully_Subscribed.')) : Toastr::error( translate('Something_went_wrong!.'));
-        return to_route('admin.business-settings.subscriptionackage.subscriberDetail',$store->id);
+        // return to_route('admin.business-settings.subscriptionackage.subscriberDetail',$store->id);
+        return back();
 
     }
 
@@ -599,13 +600,14 @@ class SubscriptionController extends Controller
             'status' => 0
         ]);
 
-        $stores=  StoreSubscription::where('package_id',$request->turn_off_package_id)->where('status',1)->where('is_canceled',0)->where('is_trial',0)->get(['id']);
+        $stores=  StoreSubscription::where('package_id',$request->turn_off_package_id)->where('status',1)->where('is_canceled',0)->where('is_trial',0)->get(['store_id']);
+
         foreach($stores as $store){
         $pending_bill=0;
-        $pending_bill= SubscriptionBillingAndRefundHistory::where(['store_id'=>$store->id,
+        $pending_bill= SubscriptionBillingAndRefundHistory::where(['store_id'=>$store->store_id,
         'transaction_type'=>'pending_bill', 'is_success' =>0])?->sum('amount')?? 0;
             $reference= 'plan_shift_by_admin';
-            Helpers::subscription_plan_chosen(store_id:$store->id,package_id:$request->package_id,payment_method:$reference,discount:0,pending_bill:$pending_bill,reference:$reference);
+            Helpers::subscription_plan_chosen(store_id:$store->store_id,package_id:$request->package_id,payment_method:$reference,discount:0,pending_bill:$pending_bill,reference:$reference);
         }
         Toastr::success( translate('messages.Plan_Switch_Successful'));
         return back();
