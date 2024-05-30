@@ -448,6 +448,7 @@
                                             <!-- End Media -->
                                         @elseif(isset($detail->item_campaign_id))
                                             @php($detail->campaign = json_decode($detail->item_details, true))
+                                            @php($campaign = \App\Models\ItemCampaign::where(['id' => $detail->campaign['id']])->first())
                                             <!-- Media -->
                                             <tr>
                                                 <td>
@@ -459,7 +460,7 @@
                                                     <div class="media media--sm">
                                                         <div class="avatar avatar-xl mr-3">
                                                             <img class="img-fluid onerror-image"
-                                                            src="{{\App\CentralLogics\Helpers::get_image_helper($detail->campaign,'image', asset('storage/app/public/campaign/').'/'.$detail->campaign['image'], asset('public/assets/admin/img/160x160/img2.jpg'), 'campaign/') }}"
+                                                            src="{{\App\CentralLogics\Helpers::get_image_helper($campaign,'image', asset('storage/app/public/campaign/').'/'.$campaign['image'], asset('public/assets/admin/img/160x160/img2.jpg'), 'campaign/') }}"
 
                                                                  data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
                                                                 alt="Image Description">

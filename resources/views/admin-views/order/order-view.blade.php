@@ -682,6 +682,7 @@
                                                 <?php
                                                 if (!$editing) {
                                                     $detail->campaign = json_decode($detail->item_details, true);
+                                                    $campaign = \App\Models\ItemCampaign::where(['id' => $detail->campaign['id']])->first();
                                                 }
                                                 ?>
                                                 <tr>
@@ -701,7 +702,7 @@
                                                                         class="avatar-status avatar-lg-status avatar-status-dark"><i
                                                                             class="tio-edit"></i></span>
                                                                     <img class="img-fluid rounded onerror-image"
-                                                                        src="{{\App\CentralLogics\Helpers::get_image_helper($detail->campaign,'image', asset('storage/app/public/campaign/').'/'. $detail->campaign['image'], asset('public/assets/admin/img/160x160/img2.jpg') , 'campaign/') }}"
+                                                                        src="{{\App\CentralLogics\Helpers::get_image_helper($campaign,'image', asset('storage/app/public/campaign/').'/'. $campaign['image'], asset('public/assets/admin/img/160x160/img2.jpg') , 'campaign/') }}"
                                                                         data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
                                                                         alt="Image Description">
                                                                 </div>
@@ -709,7 +710,7 @@
                                                                 <a class="avatar avatar-xl mr-3"
                                                                     href="{{ route('admin.campaign.view', ['item', $detail->campaign['id']]) }}">
                                                                     <img class="img-fluid rounded onerror-image"
-                                                                        src="{{\App\CentralLogics\Helpers::get_image_helper($detail->campaign,'image', asset('storage/app/public/campaign/').'/'. $detail->campaign['image'], asset('public/assets/admin/img/160x160/img2.jpg') , 'campaign/') }}"
+                                                                        src="{{\App\CentralLogics\Helpers::get_image_helper($campaign,'image', asset('storage/app/public/campaign/').'/'. $campaign['image'], asset('public/assets/admin/img/160x160/img2.jpg') , 'campaign/') }}"
                                                                         data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
                                                                         alt="Image Description">
                                                                 </a>

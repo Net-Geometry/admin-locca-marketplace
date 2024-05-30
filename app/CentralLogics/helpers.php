@@ -925,6 +925,15 @@ class Helpers
             $item['add_ons'] = json_decode($item['add_ons']);
             $item['variation'] = json_decode($item['variation'], true);
             $item['item_details'] = json_decode($item['item_details'], true);
+            if ($item['item_id']){
+                $product = \App\Models\Item::where(['id' => $item['item_details']['id']])->first();
+                $item['image_full_url'] = $product->image_full_url;
+                $item['images_full_url'] = $product->images_full_url;
+            }else{
+               $product = \App\Models\ItemCampaign::where(['id' => $item['item_details']['id']])->first();
+                $item['image_full_url'] = $product->image_full_url;
+                $item['images_full_url'] = [];
+            }
             array_push($storage, $item);
         }
         $data = $storage;

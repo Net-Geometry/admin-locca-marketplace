@@ -4631,13 +4631,19 @@ class BusinessSettingsController extends Controller
         } elseif ($tab == 'header-section') {
             $request->validate([
                 'header_title.0' => 'required',
-                'header_sub_title.0' => 'required',
-                'banner_image' => 'required',
+                'header_sub_title.0' => 'required'
             ],[
                 'header_title.0.required' => translate('messages.Default_title_is_required'),
-                'header_sub_title.0.required' => translate('messages.Default_subtitle_is_required'),
-                'banner_image.required' => translate('messages.Banner_image_is_required'),
+                'header_sub_title.0.required' => translate('messages.Default_subtitle_is_required')
             ]);
+                $header_banner = DataSetting::where('type', 'react_landing_page')->where('key', 'header_banner')->first();
+                if ($header_banner == null) {
+                    $header_banner = new DataSetting();
+                }
+                if (!$header_banner->value && !$request->has('banner_image')) {
+                    Toastr::error(translate('messages.Banner_image_is_required'));
+                    return back();
+                }
                 $header_title = DataSetting::where('type', 'react_landing_page')->where('key', 'header_title')->first();
                 if ($header_title == null) {
                     $header_title = new DataSetting();
@@ -4677,10 +4683,7 @@ class BusinessSettingsController extends Controller
                 $header_icon->value = $request->has('image') ? Helpers::update('header_icon/', $header_icon->value, 'png', $request->file('image')) : $header_icon->value;
                 $header_icon->save();
 
-                $header_banner = DataSetting::where('type', 'react_landing_page')->where('key', 'header_banner')->first();
-                if ($header_banner == null) {
-                    $header_banner = new DataSetting();
-                }
+
                 $header_banner->key = 'header_banner';
                 $header_banner->type = 'react_landing_page';
                 $header_banner->value = $request->has('banner_image') ? Helpers::update('header_banner/', $header_banner->value, 'png', $request->file('banner_image')) : $header_banner->value;
@@ -4938,13 +4941,17 @@ class BusinessSettingsController extends Controller
                 Toastr::success(translate('messages.company_section_updated'));
 
         } else if ($tab == 'promotion-banner') {
+                if (!$request->has('image')) {
+                    Toastr::error(translate('messages.Banner_image_is_required'));
+                    return back();
+                }
                 $data = [];
                 $imageName = null;
                 $promotion_banner = DataSetting::firstOrNew(['key' => 'promotion_banner','type' => 'react_landing_page']);
                 if ($promotion_banner) {
                     $data = json_decode($promotion_banner->value, true);
                 }
-                if (count($data) >= 6) {
+                if (count($data) >= 5) {
                     Toastr::error(translate('messages.you_have_already_added_maximum_banner_image'));
                     return back();
                 }
