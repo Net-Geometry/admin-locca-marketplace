@@ -4303,7 +4303,7 @@
   'welcome_message' => 'Welcome message',
   'Subscription Package List' => 'Subscription Package List',
   'Create Subscription Plan' => 'Create Subscription Plan',
-  'Add new subscription packages to the list. So that Providers get more options to join the business for the growth and success.' => 'Add new subscription packages to the list. So that Providers get more options to join the business for the growth and success.',
+  'Add new subscription packages to the list. So that Stores get more options to join the business for the growth and success.' => 'Add new subscription packages to the list. So that Stores get more options to join the business for the growth and success.',
   'Add Subcription Package' => 'Add Subcription Package',
   'uyiyu' => 'Uyiyu',
   'dcvdc dscds dcdc' => 'Dcvdc dscds dcdc',

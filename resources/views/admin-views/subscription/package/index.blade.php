@@ -38,7 +38,7 @@ active
                         <div class="w-100 d-flex flex-wrap align-items-center justify-content-between gap-2">
                             <div>
                                 <h3 class="text--title card-title">{{ translate('Overview') }}</h3>
-                                <div>{{ translate('See overview of all the packages') }}</div>
+                                <div>{{ translate('See overview of all the packages earnings') }}</div>
                             </div>
                             <div class="status-filter-wrap m-0">
                                 <div class="statistics-btn-grp">
@@ -225,7 +225,7 @@ active
                             <img class="mb-4" src="{{asset('/public/assets/admin/img/empty-subscription.svg')}}" alt="img">
                             <h4 class="mb-3">{{translate('Create Subscription Plan')}}</h4>
                             <p class="mb-4">
-                                {{translate('Add new subscription packages to the list. So that Providers get more options to join the business for the growth and success.')}}<br>
+                                {{translate('Add new subscription packages to the list. So that Stores get more options to join the business for the growth and success.')}}<br>
                             </p>
                             <a href="{{ route('admin.business-settings.subscriptionackage.create') }}" class="btn btn--primary border-0"><i class="tio-add"></i> {{translate('Add Subcription Package')}}</a>
                         </div>
