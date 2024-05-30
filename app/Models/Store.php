@@ -347,6 +347,10 @@ class Store extends Model
     {
         return $this->hasOne(SubscriptionTransaction::class)->latest();
     }
+    public function store_all_sub_trans(): HasMany
+    {
+        return $this->hasMany(SubscriptionTransaction::class);
+    }
     /**
      * @return HasOne
      */

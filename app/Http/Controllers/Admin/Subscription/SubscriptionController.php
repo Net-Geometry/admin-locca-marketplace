@@ -356,7 +356,7 @@ class SubscriptionController extends Controller
 
         $subscribers= Store::whereIn('store_business_model' ,['subscription','unsubscribed'])->with([
             'store_sub_update_application.package'
-        ])
+        ])->withCount('store_all_sub_trans')
 
         ->when(isset($key), function($query) use($key){
             $query->where(function ($q) use ($key) {

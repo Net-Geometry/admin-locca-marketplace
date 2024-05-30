@@ -4483,7 +4483,7 @@
   'Commission Base' => 'Commission Base',
   'Store will pay' => 'Store will pay',
   'commission to' => 'Commission to',
-  'from each order. You will get access of all the features and options  in store panel , app and interaction with user.' => 'From each order. You will get access of all the features and options  in store panel   app and interaction with user.',
+  'from each order. You will get access of all the features and options  in store panel , app and interaction with user.' => 'From each order. You will get access of all the features and options in store panel , app and interaction with user.',
   'Current_Plan' => 'Current Plan',
   'mobile_app' => 'Mobile app',
   'chatting_options' => 'Chatting options',
@@ -4774,4 +4774,6 @@
   'Drop Here' => 'Drop Here',
   'Please only input png or jpg type file' => 'Please only input png or jpg type file',
   'File size too big' => 'File size too big',
+  'Current Package Name' => 'Current Package Name',
+  'Total Subscription Used' => 'Total Subscription Used',
 );

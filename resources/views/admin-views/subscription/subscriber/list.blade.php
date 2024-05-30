@@ -165,10 +165,10 @@ active
                         <thead class="thead-light white--space-false">
                             <th class="border-top px-4 border-bottom text-center">{{ translate('sl') }}</th>
                             <th class="border-top px-4 border-bottom"> {{ translate('Store Info') }}  </th>
-                            <th class="border-top px-4 border-bottom"> {{ translate('Package Name') }} </th>
+                            <th class="border-top px-4 border-bottom"> {{ translate('Current Package Name') }} </th>
                             <th class="border-top px-4 border-bottom"> {{ translate('Package Price') }}  </th>
                             <th class="border-top px-4 border-bottom"> {{ translate('Exp Date') }}  </th>
-                            <th class="border-top px-4 border-bottom"> {{ translate('Used') }}  </th>
+                            <th class="border-top px-4 border-bottom"> {{ translate('Total Subscription Used') }}  </th>
                             <th class="border-top px-4 border-bottom text-center">{{ translate('Status') }} </th>
                             <th class="border-top px-4 border-bottom text-center">{{ translate('Action') }} </th>
                         </thead>
@@ -206,7 +206,7 @@ active
                                     <div class="text-title">{{  \App\CentralLogics\Helpers::date_format($subscriber?->store_sub_update_application?->expiry_date_parsed) }}</div>
                                 </td>
                                 <td class="px-4">
-                                    <div class="text-title pl-3">{{ $subscriber?->store_sub_update_application?->total_package_renewed + 1 }}</div>
+                                    <div class="text-title pl-3">{{ $subscriber?->store_all_sub_trans_count }}</div>
                                 </td>
                                 <td class="px-4 text-center">
                                     <div>
