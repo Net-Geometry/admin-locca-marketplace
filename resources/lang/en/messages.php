@@ -4767,4 +4767,5 @@
   'S3_bucket' => 'S3 bucket',
   'upload_image' => 'Upload image',
   'you_have_already_added_maximum_banner_image' => 'You have already added maximum banner image',
+  'something_went_wrong' => 'Something went wrong',
 );

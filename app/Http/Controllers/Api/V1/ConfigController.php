@@ -585,7 +585,7 @@ class ConfigController extends Controller
                     }
                 }
 
-        $criterias = FlutterSpecialCriteria::get();
+        $criterias = FlutterSpecialCriteria::where('status',1)->get();
 
         $awsUrl = config('filesystems.disks.s3.url');
         $awsBucket = config('filesystems.disks.s3.bucket');
