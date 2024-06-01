@@ -60,12 +60,13 @@ active
                                     <div class="logo">
                                         <a href="{{route('admin.store.view', $store->id)}}">
 
-                                            <img class="onerror-image" src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
-                                            $store['logo'] ?? '',
-                                            asset('storage/app/public/store').'/'.$store['logo'] ?? '',
-                                            asset('public/assets/admin/img/160x160/img1.jpg'),
-                                            'store/'
-                                        ) }}">
+                                            <img class="onerror-image"
+                                            src="{{ \App\CentralLogics\Helpers::get_image_helper(
+                                                $store,'logo',
+                                                asset('storage/app/public/store').'/'.$store->logo ?? '',
+                                                asset('public/assets/admin/img/100x100/1.png'),
+                                                'store/'
+                                            ) }}">
                                     </div>
                                         </a>
                                     <ul class="address-info list-unstyled list-unstyled-py-3 text-dark">

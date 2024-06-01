@@ -232,7 +232,12 @@ class VendorController extends Controller
             $query->where('zone_id', $request->zone_id);
         })->notParcel()
         ->where('modules.module_name', 'like', '%'.$request->q.'%')
-        ->limit(8)->get([DB::raw('modules.id as id, modules.module_name as text')]);
+        ->limit(8)->get()->map(function($module) {
+            return [
+                'id' => $module->id,
+                'text' => $module->module_name
+            ];
+        });
         return response()->json($module_data);
     }
 

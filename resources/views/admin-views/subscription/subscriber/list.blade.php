@@ -179,12 +179,12 @@ active
                                 <td class="px-4 text-center">{{ $k + $subscribers->firstItem() }}</td>
                                 <td class="px-4">
                                     <a href="{{route('admin.store.view', $subscriber->id)}}" alt="view restaurant" class="table-rest-info">
-                                        <img src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
-                                            $subscriber['logo'] ?? '',
-                                            asset('storage/app/public/store').'/'.$subscriber['logo'] ?? '',
-                                            asset('public/assets/admin/img/160x160/img1.jpg'),
+                                        <img src="{{ \App\CentralLogics\Helpers::get_image_helper(
+                                            $subscriber,'logo',
+                                            asset('storage/app/public/store').'/'.$subscriber->logo ?? '',
+                                            asset('public/assets/admin/img/100x100/1.png'),
                                             'store/'
-                                        ) }}">
+                                        ) }}" >
                                         <div class="info">
                                             <span class="d-block text-title">
                                                 {{ $subscriber->name }}<br>
