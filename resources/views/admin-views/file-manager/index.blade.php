@@ -139,12 +139,16 @@
                     <input type="text" name="path" value = "{{base64_decode($folder_path)}}" hidden>
                     <input type="text" name="disk" value = "{{$storage}}" hidden>
                     <div class="form-group">
+                        <label class="input-label"
+                               for="exampleFormControlInput1">{{ translate('messages.upload_image') }}</label>
                         <div class="custom-file">
                             <input type="file" name="images[]" id="customFileUpload" class="custom-file-input" accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*" multiple>
                             <label class="custom-file-label" for="customFileUpload"></label>
                         </div>
                     </div>
                     <div class="form-group">
+                        <label class="input-label"
+                               for="exampleFormControlInput1">{{ translate('messages.upload_zip_file') }}</label>
                         <div class="custom-file">
                             <input type="file" name="file" id="customZipFileUpload" class="custom-file-input" accept=".zip">
                             <label class="custom-file-label" id="zipFileLabel" for="customZipFileUpload">{{translate('messages.upload_zip_file')}}</label>

@@ -86,15 +86,15 @@ class ItemCampaign extends Model
 
                     if($storage['value'] == 's3'){
 
-                        return Helpers::s3_storage_link('product',$value);
+                        return Helpers::s3_storage_link('campaign',$value);
                     }else{
-                        return Helpers::local_storage_link('product',$value);
+                        return Helpers::local_storage_link('campaign',$value);
                     }
                 }
             }
         }
 
-        return Helpers::local_storage_link('product',$value);
+        return Helpers::local_storage_link('campaign',$value);
     }
 
     public function store()

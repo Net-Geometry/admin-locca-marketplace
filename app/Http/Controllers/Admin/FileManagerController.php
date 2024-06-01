@@ -28,6 +28,13 @@ class FileManagerController extends Controller
     {
 
         if ($storage == 's3' && Helpers::getDisk()=='s3'){
+            try {
+                Storage::disk('s3')->exists($folder_path);
+            } catch (\Exception $e){
+                Toastr::error(translate('messages.something_went_wrong'));
+                return back();
+            }
+
             $folder_path = $folder_path == "cHVibGlj"? "":$folder_path;
             $directory = base64_decode($folder_path).'/';
             $s3 = Storage::disk('s3');

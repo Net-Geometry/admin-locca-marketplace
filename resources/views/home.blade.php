@@ -2645,7 +2645,7 @@
             @php($join_as_dm = $landing_data['dm_app_earning_links'])
             <div class="earn-item wow fadeInUp">
                 <div class="earn-item-img"
-                    style="background: url({{ asset('storage/app/public/earning') }}/{{ isset($landing_data['earning_delivery_image']) ? $landing_data['earning_delivery_image'] : null }}) no-repeat center center / cover;">
+                    style="background: url({{\App\CentralLogics\Helpers::onerror_image_helper(isset($landing_data['earning_delivery_image']) ? $landing_data['earning_delivery_image'] : null, asset('storage/app/public/earning').'/'. isset($landing_data['earning_delivery_image']) ? $landing_data['earning_delivery_image'] : null, asset('public/assets/admin/img/100x100/2.jpg'),'earning/',isset($landing_data['earning_delivery_image_storage']) ? $landing_data['earning_delivery_image_storage'] : 'public')}}) no-repeat center center / cover;">
                     <div class="position-relative">
                         <div class="d-flex flex-column flex-wrap gap-3">
                             @if (isset($join_as_dm['playstore_url_status']) && $join_as_dm['playstore_url_status'] == '1')

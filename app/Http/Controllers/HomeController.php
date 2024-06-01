@@ -72,10 +72,10 @@ class HomeController extends Controller
         $closing_time = BusinessSetting::where('key', 'closing_time')->first();
         $opening_day = BusinessSetting::where('key', 'opening_day')->first();
         $closing_day = BusinessSetting::where('key', 'closing_day')->first();
-        $promotional_banners = AdminPromotionalBanner::get()->toArray();
-        $features = AdminFeature::get()->toArray();
-        $criterias = AdminSpecialCriteria::get();
-        $testimonials = AdminTestimonial::get();
+        $promotional_banners = AdminPromotionalBanner::where('status',1)->get()->toArray();
+        $features = AdminFeature::where('status',1)->get()->toArray();
+        $criterias = AdminSpecialCriteria::where('status',1)->get();
+        $testimonials = AdminTestimonial::where('status',1)->get();
 
         $landing_data = [
             'fixed_header_title'=>(isset($settings['fixed_header_title']) )  ? $settings['fixed_header_title'] : null ,

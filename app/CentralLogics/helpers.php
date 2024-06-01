@@ -925,6 +925,15 @@ class Helpers
             $item['add_ons'] = json_decode($item['add_ons']);
             $item['variation'] = json_decode($item['variation'], true);
             $item['item_details'] = json_decode($item['item_details'], true);
+            if ($item['item_id']){
+                $product = \App\Models\Item::where(['id' => $item['item_details']['id']])->first();
+                $item['image_full_url'] = $product->image_full_url;
+                $item['images_full_url'] = $product->images_full_url;
+            }else{
+               $product = \App\Models\ItemCampaign::where(['id' => $item['item_details']['id']])->first();
+                $item['image_full_url'] = $product->image_full_url;
+                $item['images_full_url'] = [];
+            }
             array_push($storage, $item);
         }
         $data = $storage;
@@ -3486,21 +3495,39 @@ class Helpers
     }
 
     public static function local_storage_link($path,$data){
-        return asset('storage/app/public').'/'.$path.'/'.$data;
+        if (Storage::disk('public')->exists($path .'/'. $data)) {
+            return asset('storage/app/public') . '/' . $path . '/' . $data;
+        }
+        return 'def.png';
     }
     public static function s3_storage_link($path,$data){
-        $awsUrl = config('filesystems.disks.s3.url');
-        $awsBucket = config('filesystems.disks.s3.bucket');
-        return rtrim($awsUrl, '/').'/'.ltrim($awsBucket.'/'.$path.'/'.$data, '/');
+        try {
+
+            if (Storage::disk('s3')->exists($path .'/'. $data)) {
+                $awsUrl = config('filesystems.disks.s3.url');
+                $awsBucket = config('filesystems.disks.s3.bucket');
+                return rtrim($awsUrl, '/') . '/' . ltrim($awsBucket . '/' . $path . '/' . $data, '/');
+            }
+        } catch (\Exception $e){
+
+        }
+        return 'def.png';
     }
 
     public static function get_full_url($path,$data,$type){
-        if($type == 's3'){
-            $awsUrl = config('filesystems.disks.s3.url');
-            $awsBucket = config('filesystems.disks.s3.bucket');
-            return rtrim($awsUrl, '/').'/'.ltrim($awsBucket.'/'.$path.'/'.$data, '/');
+        try {
+
+            if ($type == 's3' && Storage::disk('s3')->exists($path .'/'. $data)) {
+                $awsUrl = config('filesystems.disks.s3.url');
+                $awsBucket = config('filesystems.disks.s3.bucket');
+                return rtrim($awsUrl, '/') . '/' . ltrim($awsBucket . '/' . $path . '/' . $data, '/');
+            }
+        } catch (\Exception $e){
         }
-        return asset('storage/app/public').'/'.$path.'/'.$data;
+        if (Storage::disk('public')->exists($path .'/'. $data)) {
+            return asset('storage/app/public') . '/' . $path . '/' . $data;
+        }
+        return 'def.png';
     }
 
 
