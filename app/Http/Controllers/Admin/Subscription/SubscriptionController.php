@@ -602,12 +602,27 @@ class SubscriptionController extends Controller
 
         $stores=  StoreSubscription::where('package_id',$request->turn_off_package_id)->where('status',1)->where('is_canceled',0)->where('is_trial',0)->get(['store_id']);
 
+        if($request->package_id == 'commission'){
+            StoreSubscription::where('package_id',$request->turn_off_package_id)->update([
+                'status' => 0
+            ]);
+        }
+
         foreach($stores as $store){
-        $pending_bill=0;
-        $pending_bill= SubscriptionBillingAndRefundHistory::where(['store_id'=>$store->store_id,
-        'transaction_type'=>'pending_bill', 'is_success' =>0])?->sum('amount')?? 0;
-            $reference= 'plan_shift_by_admin';
-            Helpers::subscription_plan_chosen(store_id:$store->store_id,package_id:$request->package_id,payment_method:$reference,discount:0,pending_bill:$pending_bill,reference:$reference);
+
+            if($request->package_id == 'commission'){
+                Store::where('id', $store->store_id)->update([
+                    'store_business_model'=>'commission',
+                    'item_section'=> 1
+                ]);
+            } else{
+                $pending_bill=0;
+                $pending_bill= SubscriptionBillingAndRefundHistory::where(['store_id'=>$store->store_id,
+                'transaction_type'=>'pending_bill', 'is_success' =>0])?->sum('amount')?? 0;
+                    $reference= 'plan_shift_by_admin';
+                    Helpers::subscription_plan_chosen(store_id:$store->store_id,package_id:$request->package_id,payment_method:$reference,discount:0,pending_bill:$pending_bill,reference:$reference);
+            }
+
         }
         Toastr::success( translate('messages.Plan_Switch_Successful'));
         return back();

@@ -289,6 +289,7 @@ active
                                 <label class="input-label text-capitalize mt-2 mb-2">{{ translate('Select_Business_Plan') }} </label>
                                     <select class="form-control js-select2-custom  " name="package_id">
                                         <option value="" selected > {{translate('select_a_package') }}</option>
+                                        <option value="commission"  > {{translate('Commission_base') }}</option>
                                         @foreach ($packages as $key => $package)
                                         @if ($package->status == 1 && $subscriptionackage->id != $package->id)
                                             <option class="show_all" id="package_{{ $package->id }}" value="{{ $package->id }}"> {{$package->package_name }}</option>

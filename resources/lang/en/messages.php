@@ -4795,4 +4795,5 @@
   'The tax field is required.' => 'The tax field is required.',
   'The minimum delivery time field is required.' => 'The minimum delivery time field is required.',
   'The maximum delivery time field is required.' => 'The maximum delivery time field is required.',
+  'Commission_base' => 'Commission base',
 );
