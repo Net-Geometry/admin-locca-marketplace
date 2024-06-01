@@ -230,9 +230,9 @@ class DeliveryManController extends Controller
 
         if ($request->has('identity_image')){
             foreach (json_decode($delivery_man['identity_image'], true) as $img) {
-              
+
                 Helpers::check_and_delete('delivery-man/' , $img);
-                
+
             }
             $img_keeper = [];
             foreach ($request->identity_image as $img) {
@@ -281,14 +281,14 @@ class DeliveryManController extends Controller
                 ]
             ],404);
         }
-      
+
         Helpers::check_and_delete('delivery-man/' , $delivery_man['image']);
-        
+
 
         foreach (json_decode($delivery_man['identity_image'], true) as $img) {
-     
+
             Helpers::check_and_delete('delivery-man/' , $img);
-            
+
         }
 
         $delivery_man->delete();

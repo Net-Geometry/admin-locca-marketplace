@@ -4781,4 +4781,6 @@
   'upload_image' => 'Upload image',
   'you_have_already_added_maximum_banner_image' => 'You have already added maximum banner image',
   'something_went_wrong' => 'Something went wrong',
+  'Deliveryman_Registration' => 'Deliveryman Registration',
+  'Want_to_remove_this_deliveryman_?' => 'Want to remove this deliveryman  ',
 );

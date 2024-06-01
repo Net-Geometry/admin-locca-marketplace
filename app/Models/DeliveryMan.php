@@ -176,7 +176,7 @@ class DeliveryMan extends Authenticatable
     }
     public function getIdentityImageFullUrlAttribute(){
         $images = [];
-        $value = is_array($this->identity_image)?$this->identity_image:json_decode($this->identity_image,true);
+        $value = json_decode(json_encode($this->identity_image),true);
         if ($value){
             foreach ($value as $item){
                 $item = is_array($item)?$item:['img' => $item, 'storage' => 'public'];
