@@ -638,7 +638,7 @@ class Store extends Model
                 // if (config('mail.status') && Helpers::get_mail_status('subscription_deadline_mail_status_store') == '1') {
                 //     $subscription_deadline_warning_days = BusinessSetting::where('key','subscription_deadline_warning_days')->first()?->value ?? 7;
 
-                //     $expire_soon= StoreSubscription::with('store:id,name,email')->where('status',1)->whereDate('expiry_date', '<=', Carbon::today()->addDays($subscription_deadline_warning_days))->get();
+                //     $expire_soon= StoreSubscription::with('store:id,name,email')->where('status',1)->whereDate('expiry_date', '==', Carbon::today()->addDays($subscription_deadline_warning_days))->get();
 
                 //     try {
                 //         foreach($expire_soon as $store){

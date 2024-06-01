@@ -177,7 +177,7 @@
                                                 ) }}"
                                                     data-onerror-image="{{ asset('public/assets/admin/img/upload-img.png') }}"
                                                     alt="Product image">
-                                                    <div class="pen spartan_remove_row"><i class="tio-edit"></i></div>
+                                                    {{-- <div class="pen spartan_remove_row"><i class="tio-edit"></i></div> --}}
                                                     @if (request()->product_gellary  == 1)
                                                         <a href="#" data-key={{ $key }} data-photo="{{ $photo['img'] }}"
                                                         class="spartan_remove_row function_remove_img"><i class="tio-add-to-trash"></i></a>

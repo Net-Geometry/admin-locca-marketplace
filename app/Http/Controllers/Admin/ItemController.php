@@ -858,8 +858,6 @@ class ItemController extends Controller
     public function remove_image(Request $request)
     {
 
-        Helpers::check_and_delete('product/' , $request['name']);
-
         if($request?->temp_product){
             $item = TempProduct::withoutGlobalScope(StoreScope::class)->find($request['id']);
         }
@@ -872,9 +870,19 @@ class ItemController extends Controller
             Toastr::warning(translate('all_image_delete_warning'));
             return back();
         }
+
+
+        Helpers::check_and_delete('product/' , $request['name']);
+
         foreach ($item['images'] as $image) {
-            if ($image != $request['name']) {
-                array_push($array, $image);
+            if(is_array($image)) {
+                if ($image['img'] != $request['name']) {
+                    array_push($array, $image);
+                }
+            } else{
+                if ($image != $request['name']) {
+                    array_push($array, $image);
+                }
             }
         }
 

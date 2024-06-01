@@ -3834,6 +3834,7 @@ class Helpers
                 $subscription_transaction->validity= $free_trial_period;
                 $subscription_transaction->paid_amount= 0;
                 $subscription_transaction->is_trial= 1;
+                $store_subscription->is_trial= 1;
             }
             elseif($payment_method  == 'pay_now'){
                 $subscription_transaction->payment_status ='on_hold';
