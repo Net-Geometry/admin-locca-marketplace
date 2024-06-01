@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use Carbon\Carbon;
 use App\Models\Item;
+use App\Models\Store;
 use App\Models\Setting;
 use App\Models\Currency;
 use App\Traits\Processor;
@@ -28,6 +29,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Mail;
 use App\Models\AdminPromotionalBanner;
 use App\Models\FlutterSpecialCriteria;
+use App\Models\StoreSubscription;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
@@ -594,6 +596,64 @@ class BusinessSettingsController extends Controller
         DB::table('business_settings')->updateOrInsert(['key' => 'delivery_charge_comission'], [
             'value' => $request['admin_comission_in_delivery_charge']
         ]);
+// dd( $request['commission_business_model']);
+
+        if(!isset($request->subscription_business_model) && !isset($request->commission_business_model)){
+            Toastr::error( translate('You_must_select_at_least_one_business_model_between_commission_and_subscription'));
+            return back();
+        }
+
+        // For subscription Model
+        if (isset($request->subscription_business_model) && !isset($request->commission_business_model)) {
+                DB::table('business_settings')->updateOrInsert(['key' => 'subscription_business_model'], [
+                    'value' => $request['subscription_business_model'] ?? 1
+                ]);
+
+                DB::table('business_settings')->updateOrInsert(['key' => 'commission_business_model'], [
+                    'value' => $request['commission_business_model'] ?? 0
+                ]);
+
+                if ( Helpers::commission_check() == 0 ){
+                    Store::where('store_business_model','commission')
+                    ->update(['store_business_model' => 'none',
+                    'status' => 0,]);
+                }
+
+
+        }
+        // For commission model
+            elseif(isset($request->commission_business_model) && !isset($request->subscription_business_model)) {
+
+
+
+                if(StoreSubscription::where('status',1)->count() > 0 ){
+                    Toastr::warning(translate('You_need_to_switch_your_subscribers_to_commission_first'));
+                    return back();
+                }
+                DB::table('business_settings')->updateOrInsert(['key' => 'commission_business_model'], [
+                    'value' => $request['commission_business_model'] ?? 1
+                ]);
+                DB::table('business_settings')->updateOrInsert(['key' => 'subscription_business_model'], [
+                    'value' => $request['subscription_business_model'] ?? 0
+                ]);
+
+                if (Helpers::subscription_check() == 0){
+                        Store::query()->update(['store_business_model' => 'commission']);
+                }
+
+
+        } else {
+            DB::table('business_settings')->updateOrInsert(['key' => 'commission_business_model'], [
+                'value' => $request['commission_business_model'] ?? 1
+            ]);
+            if(!isset($request->subscription_business_model) && StoreSubscription::where('status',1)->count() > 0){
+                Toastr::warning(translate('You_need_to_switch_your_subscribers_to_commission_first'));
+                return back();
+            }
+            DB::table('business_settings')->updateOrInsert(['key' => 'subscription_business_model'], [
+                'value' => $request['subscription_business_model'] ?? 1
+            ]);
+        }
 
 
         Toastr::success(translate('messages.successfully_updated_to_changes_restart_app'));
