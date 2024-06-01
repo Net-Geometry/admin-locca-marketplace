@@ -360,22 +360,22 @@ class VendorController extends Controller
 
 
         Helpers::check_and_delete('vendor/' , $store->vendor['image']);
-        
+
 
         Helpers::check_and_delete('store/' , $store->logo);
-        
+
 
         Helpers::check_and_delete('store/cover/' , $store->cover_photo);
-        
+
         foreach($store->deliverymen as $dm) {
- 
+
             Helpers::check_and_delete('delivery-man/' , $dm['image']);
-            
+
 
             foreach (json_decode($dm['identity_image'], true) as $img) {
-   
+
                 Helpers::check_and_delete('delivery-man/' , $img);
-                
+
             }
         }
 
@@ -520,7 +520,7 @@ class VendorController extends Controller
                 })
                 ->latest()->paginate(config('default_pagination'));
             return view('admin-views.vendor.view.disbursement', compact('store','disbursements'));
-        } else if ($tab == 'subscription') {
+        } else if ($tab == 'business_plan') {
 
 
             $store= Store::where('id',$store->id)->with([
@@ -899,21 +899,24 @@ class VendorController extends Controller
 
     public function updateStoreSettings(Store $store, Request $request)
     {
+        if($request->comission_status)
+        {
+            $store->comission = $request->comission;
+            $store->save();
+            Toastr::success(translate('messages.Commission_updated'));
+            return back();
+        }
+        else{
+            $store->comission = null;
+        }
         $request->validate([
             'minimum_order'=>'required',
-            'comission'=>'required',
+            // 'comission'=>'required',
             'tax'=>'required',
             'minimum_delivery_time' => 'required|min:1|max:2',
             'maximum_delivery_time' => 'required|min:1|max:2|gt:minimum_delivery_time',
         ]);
 
-        if($request->comission_status)
-        {
-            $store->comission = $request->comission;
-        }
-        else{
-            $store->comission = null;
-        }
 
         $store->minimum_order = $request->minimum_order;
         $store->tax = $request->tax;

@@ -229,21 +229,7 @@
                                     </div>
                                 </div>
 
-                                @if ($store->store_business_model == 'commission')
 
-                                <div class="form-group col-sm-6 col-lg-4">
-                                    <div class="form-group">
-                                        <label class="d-flex mb-1 justify-content-between switch toggle-switch-sm text-dark text-capitalize" for="comission_status">
-                                            <span>{{translate('messages.admin_commission')}}(%) <span class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('When_enabled,_admin_will_only_receive_the_certain_commission_percentage_he_set_for_this_store._Otherwise,_the_system_default_commission_will_be_applied.')}}"><img src="{{asset('/public/assets/admin/img/info-circle.svg')}}" alt="{{translate('When_enabled,_admin_will_only_receive_the_certain_commission_percentage_he_set_for_this_store._Otherwise,_the_system_default_commission_will_be_applied.')}}"></span></span>
-                                            <input type="checkbox" class="toggle-switch-input" name="comission_status" id="comission_status" value="1" {{isset($store->comission)?'checked':''}}>
-                                            <span class="toggle-switch-label">
-                                                <span class="toggle-switch-indicator"></span>
-                                            </span>
-                                        </label>
-                                        <input type="number" id="comission" min="0" max="10000" step="0.01" name="comission" class="form-control" required value="{{$store->comission??'0'}}" {{isset($store->comission)?'':'readonly'}}>
-                                    </div>
-                                </div>
-                                @endif
                                 <div class="col-12">
                                     <div class="justify-content-end btn--container">
                                         <button type="reset" class="btn btn--reset">{{translate('messages.reset')}}</button>
@@ -360,14 +346,7 @@
             $('.js-select2-custom').each(function () {
                 let select2 = $.HSCore.components.HSSelect2.init($(this));
             });
-            $("#comission_status").on('change', function(){
-                if($("#comission_status").is(':checked')){
-                    $('#comission').removeAttr('readonly');
-                } else {
-                    $('#comission').attr('readonly', true);
-                    $('#comission').val('0');
-                }
-            });
+         
 
         });
 

@@ -232,6 +232,7 @@ active
                            {{ translate('Renew or shift your plan to get better experience!') }}
                         </div>
                         <div class="plan-slider owl-theme owl-carousel">
+                            @if (\App\CentralLogics\Helpers::commission_check())
                             <div class="__plan-item hover {{ $store->store_business_model == 'commission'  ? 'active' : ''}} ">
                                 <div class="inner-div">
                                     <div class="text-center">
@@ -251,6 +252,8 @@ active
                                     </div>
                                 </div>
                             </div>
+                            @endif
+
 
                             @forelse ($packages as $package)
 

@@ -313,7 +313,7 @@ $val= (string) ($cash_in_hand_overflow_store_amount - (($cash_in_hand_overflow_s
                 </button> --}}
             </div>
         </div>
-        @elseif ($store_data?->store_sub  && $store_data?->store_sub?->is_canceled == 1)
+        @elseif ( Session::get('subscription_cancel_close_btn') !== true &&  $store_data?->store_sub  && $store_data?->store_sub?->is_canceled == 1)
         <div class="free-trial trial danger-bg">
             <div class="inner-div">
                 <div class="left">
@@ -334,10 +334,10 @@ $val= (string) ($cash_in_hand_overflow_store_amount - (($cash_in_hand_overflow_s
                         </span>
                         {{translate('Days_left_in_this_subscription')}}
                     </a>
-                    <a href="{{route('vendor.subscriptionackage.subscriberDetail' ,['open_plans' => true])}}" class="btn btn-light">{{ translate('Choose_Subscription_Plan') }} <i class="tio-arrow-forward"></i></a>
+                    <a href="{{route('vendor.subscriptionackage.subscriberDetail' ,['open_plans' => true])}}" class="btn btn-light">{{ translate('Change_Subscription_Plan') }} <i class="tio-arrow-forward"></i></a>
                 </div>
 
-                <button type="button" class="trial-close">
+                <button type="button" data-id="subscription_cancel_close_btn" class="trial-close add-to-session ">
                     <i class="tio-clear-circle"></i>
                 </button>
             </div>

@@ -78,7 +78,7 @@
                     <a class="nav-link  {{request('tab')=='disbursements' ?'active':''}}" href="{{route('admin.store.view', ['store'=>$store->id, 'tab'=> 'disbursements'])}}"  aria-disabled="true">{{translate('messages.disbursements')}}</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link  {{request('tab')=='subscription' ?'active':''}}" href="{{route('admin.store.view', ['store'=>$store->id, 'tab'=> 'subscription'])}}"  aria-disabled="true">{{translate('messages.subscription')}}</a>
+                    <a class="nav-link  {{request('tab')=='subscription' ?'active':''}}" href="{{route('admin.store.view', ['store'=>$store->id, 'tab'=> 'business_plan'])}}"  aria-disabled="true">{{translate('messages.business_plan')}}</a>
                 </li>
             </ul>
             <!-- End Nav -->

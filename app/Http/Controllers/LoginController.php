@@ -426,6 +426,7 @@ class LoginController extends Controller
             auth()->guard('vendor')->logout();
             session()->forget('subscription_free_trial_close_btn');
             session()->forget('subscription_renew_close_btn');
+            session()->forget('subscription_cancel_close_btn');
 
         }
         elseif(auth('vendor_employee')?->check()){
@@ -433,6 +434,7 @@ class LoginController extends Controller
             auth()->guard('vendor_employee')->logout();
             session()->forget('subscription_free_trial_close_btn');
             session()->forget('subscription_renew_close_btn');
+            session()->forget('subscription_cancel_close_btn');
         }
         else{
             if(!auth()?->guard('admin')?->user()?->role_id == 1){
