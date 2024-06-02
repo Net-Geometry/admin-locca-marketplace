@@ -9,4 +9,9 @@ class SubscriptionBillingAndRefundHistory extends Model
 {
     use HasFactory;
     protected $guarded = ['id'];
+
+    public function package()
+    {
+        return $this->belongsTo(SubscriptionPackage::class);
+    }
 }

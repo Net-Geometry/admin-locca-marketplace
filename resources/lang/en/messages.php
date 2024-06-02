@@ -4815,4 +4815,12 @@
   'If_enabled,_the_commission_based_business_model_option_will_be_available_for_stores.' => 'If enabled  the commission based business model option will be available for stores.',
   'Deliveryman_Registration' => 'Deliveryman Registration',
   'Want_to_remove_this_deliveryman_?' => 'Want to remove this deliveryman  ',
+  'Subscription_Refunds' => 'Subscription Refunds',
+  'Refund_History' => 'Refund History',
+  'Refund_Amount' => 'Refund Amount',
+  'Refunded_for' => 'Refunded for',
+  'Yourself' => 'Yourself',
+  'Change_Subscription_Plan' => 'Change Subscription Plan',
+  'My_Business_Plan' => 'My Business Plan',
+  'Ex : Search by Transaction ID ' => 'Ex : Search by Transaction ID ',
 );

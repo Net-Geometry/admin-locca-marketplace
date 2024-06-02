@@ -37,13 +37,13 @@ class SubscriptionController extends Controller
     }
 
     public function cancelSubscription(Request $request, $id){
-    StoreSubscription::where(['store_id' => $id, 'id'=>$request->subscription_id])->update([
+    StoreSubscription::where(['store_id' => Helpers::get_store_id(), 'id'=>$request->subscription_id])->update([
             'is_canceled' => 1,
             'canceled_by' => 'store',
         ]);
 
         try {
-            $store=Store::where('id',$id)->select(['id','name'])->first();
+            $store=Store::where('id',Helpers::get_store_id())->select(['id','name'])->first();
             if (config('mail.status') && Helpers::get_mail_status('subscription_cancel_mail_status_store') == '1') {
                 Mail::to($store->email)->send(new SubscriptionCancel($store->name));
             }
@@ -56,10 +56,10 @@ class SubscriptionController extends Controller
     }
     public function switchToCommission($id){
 
-        StoreSubscription::where(['store_id' => $id])->update([
+        StoreSubscription::where(['store_id' => Helpers::get_store_id()])->update([
             'status' => 0,
         ]);
-        Store::where('id',$id)->update([
+        Store::where('id',Helpers::get_store_id())->update([
             'store_business_model' => 'commission',
         ]);
         return response()->json(200);
@@ -136,13 +136,13 @@ class SubscriptionController extends Controller
         $plan_type= $request['plan_type'];
         $from =$request['start_date'] ?? Carbon::now()->format('Y-m-d');
         $to =$request['end_date'] ?? Carbon::now()->format('Y-m-d');
-        $store= Store::where('id',$id)->with([
+        $store= Store::where('id',Helpers::get_store_id())->with([
             'store_sub_update_application.package'
         ])
         ->first();
 
         $key = explode(' ', $request['search']);
-        $transactions= SubscriptionTransaction::where('store_id',$id)
+        $transactions= SubscriptionTransaction::where('store_id',Helpers::get_store_id())
         ->when(isset($key), function($query) use($key){
             $query->where(function ($q) use ($key) {
                 foreach ($key as $value) {
@@ -261,5 +261,13 @@ class SubscriptionController extends Controller
         return response()->json(['success' => true]);
     }
 
+    public function subscriberWalletTransactions(Request $request){
+        $store= Store::where('id',Helpers::get_store_id())->first();
+        $transactions= SubscriptionBillingAndRefundHistory::where('store_id', $store->id)->with('package')
+        ->where('transaction_type','refund')
+        ->latest()->paginate(config('default_pagination'));
 
+        return view('vendor-views.subscription.subscriber.wallet-transaction',compact('transactions','store'));
+
+    }
 }

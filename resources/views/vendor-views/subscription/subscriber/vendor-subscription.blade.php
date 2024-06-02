@@ -73,6 +73,9 @@ active
                 <li class="nav-item">
                     <a href="{{ route('vendor.subscriptionackage.subscriberTransactions',$store->id) }}" class="nav-link">{{ translate('Transactions') }}</a>
                 </li>
+                <li class="nav-item">
+                    <a href="{{ route('vendor.subscriptionackage.subscriberWalletTransactions') }}" class="nav-link">{{ translate('Subscription_Refunds') }}</a>
+                </li>
             </ul>
         </div>
 

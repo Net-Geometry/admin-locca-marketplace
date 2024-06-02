@@ -1,5 +1,5 @@
 
-@extends('layouts.admin.app')
+@extends('layouts.vendor.app')
 
 @section('title',translate('messages.Store_Transactions'))
 
@@ -21,9 +21,7 @@ active
                         <img src="{{asset('/public/assets/admin/img/store.png')}}" width="24" alt="img">
                         <div class="w-0 flex-grow pl-2">
                             <h1 class="page-header-title">{{ $store->name }} {{translate('Subscription')}} &nbsp; &nbsp;
-                                @if($store?->status == 0 &&  $store?->vendor?->status == 0)
-                                <span class=" badge badge-pill badge-info">  &nbsp; {{ translate('Approval_Pending') }}  &nbsp; </span>
-                                @elseif ($store?->store_sub_update_application?->is_canceled == 1)
+                                @if ($store?->store_sub_update_application?->is_canceled == 1)
                                 <span class=" badge badge-pill badge-warning">  &nbsp; {{ translate('canceled') }}  &nbsp; </span>
                                 @elseif($store?->store_sub_update_application?->status == 0)
                                 <span class=" badge badge-pill badge-danger">  &nbsp; {{ translate('Expired') }}  &nbsp; </span>
@@ -39,69 +37,24 @@ active
         <div class="js-nav-scroller hs-nav-scroller-horizontal mb-4">
             <ul class="nav nav-tabs border-0 nav--tabs nav--pills">
                 <li class="nav-item">
-                    <a href="{{ route('admin.business-settings.subscriptionackage.subscriberDetail',$id) }}" class="nav-link ">{{ translate('Subscription_Details') }} </a>
+                    <a href="{{ route('vendor.subscriptionackage.subscriberDetail',$store->id) }}" class="nav-link ">{{ translate('Subscription_Details') }} </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link active">{{ translate('Transactions') }}</a>
+                    <a href="{{ route('vendor.subscriptionackage.subscriberTransactions',$store->id) }}" class="nav-link">{{ translate('Transactions') }}</a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('admin.business-settings.subscriptionackage.subscriberWalletTransactions',$store->id) }}" class="nav-link">{{ translate('Subscription_Refunds') }}</a>
+                    <a href="#" class="nav-link active">{{ translate('Subscription_Refunds') }}</a>
                 </li>
             </ul>
         </div>
-        <div class="card mb-20">
-            <div class="card-header border-0">
-                <h3 class="text--title card-title">{{ translate('Filter_Option') }}</h3>
-            </div>
-            <form action="{{ route('admin.business-settings.subscriptionackage.subscriberTransactions',$id) }}" method="get">
-                <div class="card-body">
-                    <div class="row">
-                    <div class="col-lg-4 col-sm-4">
-                        <div class="form-group">
-                            <label class="input-label text-capitalize">{{translate('Duration')}}</label>
-                                <select class="form-control js-select2-custom filter" id="filter" name="filter" >
-                                    <option value="all_time" {{ isset($filter) && $filter == 'all_time' ? 'selected' : '' }}>
-                                        {{ translate('messages.All Time') }}</option>
-                                    <option value="this_year" {{ isset($filter) && $filter == 'this_year' ? 'selected' : '' }}>
-                                        {{ translate('messages.This Year') }}</option>
 
-                                    <option value="this_month"
-                                        {{ isset($filter) && $filter == 'this_month' ? 'selected' : '' }}>
-                                        {{ translate('messages.This Month') }}</option>
-                                    <option value="this_week" {{ isset($filter) && $filter == 'this_week' ? 'selected' : '' }}>
-                                        {{ translate('messages.This Week') }}</option>
-                                    <option value="custom" {{ isset($filter) && $filter == 'custom' ? 'selected' : '' }}>
-                                        {{ translate('messages.Custom') }}</option>
-                                </select>
-                            </div>
-                    </div>
-                    <div class="col-lg-4 col-sm-4">
-                        <div class="form-group">
-                            <label class="input-label text-capitalize" for="date_from">{{translate('start_date')}}</label>
-                            <input type="date"  value="{{ request()?->start_date }}" {{ isset($filter) && $filter == 'custom' ? " required  name='start_date' " : 'readonly' }}   class="form-control" id="date_from" >
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-sm-4">
-                        <div class="form-group">
-                            <label class="input-label text-capitalize" for="date_to">{{translate('end_date')}}</label>
-                            <input type="date" value="{{ request()?->end_date }}" {{ isset($filter) && $filter == 'custom' ? " required  name='end_date' " : 'readonly' }}  class="form-control" id="date_to" >
-                        </div>
-                    </div>
-                </div>
-                <div class="btn--container justify-content-end">
-                    <button type="reset" id="reset_btn" class="btn btn--reset">{{ translate('Reset') }}</button>
-                    <button type="submit" class="btn btn--primary">{{ translate('Submit') }}</button>
-                </div>
-            </form>
-            </div>
-        </div>
         <div class="card">
             <div class="card-header flex-wrap py-2 border-0">
                 <div class="d-flex align-items-center gap-2 mb-2">
                     <h4 class="mb-0">{{ translate('Transaction_History') }}</h4>
                     <span class="badge badge-soft-dark rounded-circle">{{ $transactions->total() }}</span>
                 </div>
-                <div class="search--button-wrapper justify-content-end">
+                {{-- <div class="search--button-wrapper justify-content-end">
                     <div class="max-sm-flex-1">
                         <select name="plan_type"  data-url="{{ url()->full() }}" data-filter="plan_type" class="custom-select h--40px py-0 status-filter set-filter">
                             <option {{ request()?->plan_type == 'all' ? 'selected' : '' }}  value="all">
@@ -121,7 +74,7 @@ active
                     </div>
                     <form class="search-form">
                         <div class="input-group input--group">
-                            <input name="search" type="search" value="{{ request()?->search }}" class="form-control h--40px" placeholder="{{ translate('Ex : Search by Transaction ID ') }}" aria-label="Search here">
+                            <input name="search" type="search" value="{{ request()?->search }}" class="form-control h--40px" placeholder="{{ translate('Ex : Search by Transaction ID or store name') }}" aria-label="Search here">
                             <button type="submit" class="btn btn--secondary h--40px"><i class="tio-search"></i></button>
                         </div>
                     </form>
@@ -142,14 +95,14 @@ active
 
                             <span class="dropdown-header">{{ translate('download_options') }}</span>
                             <a id="export-excel" class="dropdown-item"
-                                href="{{ route('admin.business-settings.subscriptionackage.subscriberTransactionExport', [ 'id' =>$store->id, 'export_type' => 'excel', request()->getQueryString()]) }}">
+                                href="{{ route('vendor.subscriptionackage.subscriberTransactionExport', ['export_type' => 'excel', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{ asset('public/assets/admin/svg/components/excel.svg') }}"
                                     alt="Image Description">
                                 {{ translate('messages.excel') }}
                             </a>
                             <a id="export-csv" class="dropdown-item"
-                                href="{{ route('admin.business-settings.subscriptionackage.subscriberTransactionExport', [ 'id' =>$store->id, 'export_type' => 'csv', request()->getQueryString()]) }}">
+                                href="{{ route('vendor.subscriptionackage.subscriberTransactionExport', ['export_type' => 'excel', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{ asset('public/assets/admin/svg/components/placeholder-csv-format.svg') }}"
                                     alt="Image Description">
@@ -159,7 +112,7 @@ active
                         </div>
                     </div>
                     <!-- End Unfold -->
-                </div>
+                </div> --}}
                 <!-- End Row -->
             </div>
             <div class="card-body p-0">
@@ -167,73 +120,40 @@ active
                     <table class="table table-borderless middle-align __txt-14px">
                         <thead class="thead-light white--space-false">
                             <th class="border-top px-4 border-bottom text-center">{{ translate('sl') }}</th>
-                            <th class="border-top px-4 border-bottom">{{ translate('Transaction_ID') }}</th>
                             <th class="border-top px-4 border-bottom"><div class="text-title">{{ translate('Transaction_Date') }}</div></th>
-                            <th class="border-top px-4 border-bottom">{{ translate('Store') }}</th>
-                            <th class="border-top px-4 border-bottom">{{ translate('Pricing') }}</th>
-                            <th class="border-top px-4 border-bottom">{{ translate('Payment_Type') }}</th>
+                            <th class="border-top px-4 border-bottom">{{ translate('Package_Name') }}</th>
+                            <th class="border-top px-4 border-bottom">{{ translate('Refund_Amount') }}</th>
+                            <th class="border-top px-4 border-bottom">{{ translate('Refunded_for') }}</th>
                             <th class="border-top px-4 border-bottom">{{ translate('Status') }}</th>
-                            <th class="border-top px-4 border-bottom text-center">{{ translate('Action') }}</th>
                         </thead>
                         <tbody>
                             @foreach ($transactions as $k=> $transaction)
 
                             <tr>
                                 <td class="px-4 text-center">{{ $k + $transactions->firstItem() }}</td>
-
-                                <td class="px-4">
-                                    <div class="text-title">{{ $transaction->id }}</div>
-                                </td>
                                 <td class="px-4">
                                     <div class="pl-4">{{ \App\CentralLogics\Helpers::date_format($transaction->created_at) }}</div>
                                 </td>
+
                                 <td class="px-4">
-                                    <div class="text-title">{{ $transaction?->store?->name ?? translate('messages.store deleted!') }}
-                                        @if ($transaction?->subscription?->expiry_date_parsed && $transaction->subscription->expiry_date_parsed->subDays($subscription_deadline_warning_days)->isBefore(now()))
-                                        <span title="<div class='text-left'>Expiring Soon <br /> Expiration Date: {{ \App\CentralLogics\Helpers::date_format($transaction->subscription->expiry_date_parsed)  }}</div>" data-toggle="tooltip" data-html="true">
-                                            <img src="{{asset('/public/assets/admin/img/invalid.svg')}}" alt="">
-                                        </span>
-                                        @endif
+                                    <div class="text-title">{{ $transaction?->package?->package_name }}</div>
+                                </td>
 
-
-                                    </div>
+                                <td class="px-4">
+                                    <div class="w--120px text-title text-right pr-5">{{ \App\CentralLogics\Helpers::format_currency($transaction->amount) }}</div>
                                 </td>
                                 <td class="px-4">
-                                    <div class="w--120px text-title text-right pr-5">{{ \App\CentralLogics\Helpers::format_currency($transaction->paid_amount) }}</div>
+                                    <div class="w--120px text-title text-right pr-5">{{ str_replace(['validity_left_'], '', $transaction->reference)  }} {{ translate('messages.Days') }}</div>
                                 </td>
-                                <td class="px-4">
-                                    <div>
-                                        @if ( $transaction->plan_type == 'renew'  )
-                                        <div class="text-title">{{ translate('Renewal') }}</div>
-                                        @elseif ($transaction->plan_type == 'new_plan'  )
-                                        <div class="text-title">{{ translate('Migrate_to_New_Plan') }}</div>
-                                        @elseif ($transaction->plan_type == 'first_purchased'  )
-                                        <div class="text-title">{{ translate('Purchased') }}</div>
-                                        @else
-                                        <div class="text-title">{{ translate($transaction->plan_type) }}</div>
-                                        @endif
 
-                                        <div class="text-success font-medium">{{ translate('Paid_by') }}  {{ translate($transaction->payment_method) }}</div>
-                                    </div>
-                                </td>
+
                                 <td class="px-4">
-                                    @if ( $transaction->payment_status == 'success')
                                     <span class="text-success">
-                                    @elseif($transaction->payment_status ==  'on_hold')
-                                    <span class="text--info">
-                                    @else
-                                        <span class="text--danger">
-                                    @endif
-                                        {{ translate($transaction->payment_status)  }}
+                                        {{ translate('success')  }}
                                     </span>
 
                                 </td>
-                                <td class="px-4">
-                                    <div class="btn--container justify-content-center">
-                                        <button class="btn action-btn btn--warning btn-outline-warning printButton" data-url={{ route('admin.business-settings.subscriptionackage.invoice',$transaction->id) }} >
-                                            <i class="tio-print"></i>
-                                    </div>
-                                </td>
+
                             </tr>
                             @endforeach
 
@@ -289,13 +209,7 @@ active
                 window.open($(this).data('url'), '_blank');
             });
         });
-    $(document).on("click", "#reset_btn", function () {
-        setTimeout(reset, 10);
-    });
 
-    function reset(){
-        $('.filter').trigger('change');
-    }
 </script>
 @endpush
 

@@ -852,4 +852,15 @@ class SubscriptionController extends Controller
         }
         return Excel::download(new SubscriptionTransactionsExport($data), 'SubscriptionTransactionsExport.csv');
     }
+
+    public function subscriberWalletTransactions($id,Request $request){
+        $store= Store::where('id',$id)->first();
+        $transactions= SubscriptionBillingAndRefundHistory::where('store_id', $id)->with('package')
+        ->where('transaction_type','refund')
+        ->latest()->paginate(config('default_pagination'));
+
+        return view('admin-views.subscription.subscriber.wallet-transaction',compact('transactions','store'));
+
+    }
+
 }

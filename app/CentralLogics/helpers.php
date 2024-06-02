@@ -3814,6 +3814,7 @@ class Helpers
                 $billing= new SubscriptionBillingAndRefundHistory();
                 $billing->store_id= $store->id;
                 $billing->subscription_id= $store_subscription->id;
+                $billing->package_id= $store_subscription->package_id;
                 $billing->transaction_type= 'pending_bill';
                 $billing->is_success= 0;
                 $billing->amount= $package->price;
@@ -3938,6 +3939,7 @@ class Helpers
                         $refund=new SubscriptionBillingAndRefundHistory();
                         $refund->store_id= $store->id;
                         $refund->subscription_id= $store_subscription->id;
+                        $refund->package_id= $store_subscription->package_id;
                         $refund->transaction_type= 'refund';
                         $refund->is_success= 1;
                         $refund->amount= $back_amount;

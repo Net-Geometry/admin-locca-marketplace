@@ -42,6 +42,9 @@ active
                 <li class="nav-item">
                     <a href="#" class="nav-link active">{{ translate('Transactions') }}</a>
                 </li>
+                <li class="nav-item">
+                    <a href="{{ route('vendor.subscriptionackage.subscriberWalletTransactions') }}" class="nav-link">{{ translate('Subscription_Refunds') }}</a>
+                </li>
             </ul>
         </div>
         <div class="card mb-20">

@@ -40,6 +40,9 @@ active
                 <li class="nav-item">
                     <a href="{{ route('admin.business-settings.subscriptionackage.subscriberTransactions',$store->id) }}" class="nav-link">{{ translate('Transactions') }}</a>
                 </li>
+                <li class="nav-item">
+                    <a href="{{ route('admin.business-settings.subscriptionackage.subscriberWalletTransactions',$store->id) }}" class="nav-link">{{ translate('Subscription_Refunds') }}</a>
+                </li>
             </ul>
         </div>
         <div class="card mb-20">
