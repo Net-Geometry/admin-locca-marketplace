@@ -910,7 +910,8 @@
                                                     <img src="{{\App\CentralLogics\Helpers::onerror_image_helper($img['img'], asset('storage/app/public/order').'/'.$img['img'], asset('public/assets/admin/img/160x160/img2.jpg'), 'order/',$img['storage'] ?? 'public') }}"
                                                         class="initial--22 w-100" alt="img">
                                                 </div>
-                                                @php($file = $storage == 's3'?base64_encode('order/' . $img):base64_encode('public/order/' . $img))
+                                                @php($storage = $img['storage']??'public')
+                                                @php($file = $storage == 's3'?base64_encode('order/' . $img['img']):base64_encode('public/order/' . $img['img']))
                                                 <div class="modal-footer">
                                                     <a class="btn btn-primary"
                                                         href="{{ route('admin.file-manager.download', [$file,$storage]) }}"><i
