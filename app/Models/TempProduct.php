@@ -61,7 +61,7 @@ class TempProduct extends Model
         $value = is_array($this->images)?$this->images:json_decode($this->images,true);
         if ($value){
             foreach ($value as $item){
-                $item = is_array($item)?$item:(get_class($item) == 'stdClass' ? json_decode(json_encode($item), true):['img' => $item, 'storage' => 'public']);
+                $item = is_array($item)?$item:(is_object($item) && get_class($item) == 'stdClass' ? json_decode(json_encode($item), true):['img' => $item, 'storage' => 'public']);
                 if($item['storage']=='s3'){
                     $images[] = Helpers::s3_storage_link('product',$item['img']);
                 }else{
