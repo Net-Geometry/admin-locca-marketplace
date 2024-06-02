@@ -174,7 +174,7 @@ class Item extends Model
     }
     public function getImagesFullUrlAttribute(){
         $images = [];
-        $value = $this->images;
+        $value = json_decode(json_encode($this->images),true);
         if ($value){
             foreach ($value as $item){
                 $item = is_array($item)?$item:['img' => $item, 'storage' => 'public'];

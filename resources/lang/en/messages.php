@@ -4813,4 +4813,6 @@
   'You_must_select_at_least_one_business_model_between_commission_and_subscription' => 'You must select at least one business model between commission and subscription',
   'If_enabled,_the_package_based_subscription_business_model_option_will_be_available_for_stores' => 'If enabled  the package based subscription business model option will be available for stores',
   'If_enabled,_the_commission_based_business_model_option_will_be_available_for_stores.' => 'If enabled  the commission based business model option will be available for stores.',
+  'Deliveryman_Registration' => 'Deliveryman Registration',
+  'Want_to_remove_this_deliveryman_?' => 'Want to remove this deliveryman  ',
 );
