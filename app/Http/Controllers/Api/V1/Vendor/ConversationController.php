@@ -128,7 +128,9 @@ class ConversationController extends Controller
         $message->conversation_id = $conversation->id;
         $message->sender_id = $sender->id;
         $message->message = $request->message;
-        $message->file = $image_name?json_encode($image_name, JSON_UNESCAPED_SLASHES):null;
+        if($image_name && count($image_name)>0){
+            $message->file = json_encode($image_name, JSON_UNESCAPED_SLASHES);
+        }
         try {
             if($message->save())
             {
