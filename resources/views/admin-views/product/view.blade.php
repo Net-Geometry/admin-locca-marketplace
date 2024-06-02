@@ -612,6 +612,7 @@
                             @else
                                 {{translate('messages.customer_not_found')}}
                             @endif
+                                <a class="ml-8 text-body" href="{{route('admin.order.details',['id'=>$review->order_id])}}"> {{ translate('Order_ID') }}: {{$review->order_id}}</a>
                         </td>
                         <td>
                             <div class="text-wrap mw-400">
