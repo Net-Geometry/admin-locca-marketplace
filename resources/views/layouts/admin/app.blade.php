@@ -12,9 +12,9 @@ $countryCode= strtolower($country?$country->value:'auto');
     <!-- Title -->
     <title>@yield('title')</title>
     <!-- Favicon -->
-    @php($logo=\App\Models\BusinessSetting::where(['key'=>'icon'])->first()->value)
+    @php($logo=\App\Models\BusinessSetting::where(['key'=>'icon'])->first())
     <link rel="shortcut icon" href="">
-    <link rel="icon" type="image/x-icon" href="{{asset('storage/app/public/business/'.$logo??'')}}">
+    <link rel="icon" type="image/x-icon" href="{{\App\CentralLogics\Helpers::get_image_helper($logo,'value', asset('storage/app/public/business/').'/' . $logo?->value, asset('public/assets/admin/img/160x160/img1.jpg') ,'business/' )}}">
     <!-- Font -->
     <link href="{{asset('public/assets/admin/css/fonts.css')}}" rel="stylesheet">
     <!-- CSS Implementing Plugins -->

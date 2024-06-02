@@ -455,7 +455,9 @@ class VendorController extends Controller
             } else {
                 $images = null;
             }
-            $order->order_proof = json_encode($images);
+            if(count($images)>0){
+                $order->order_proof = json_encode($images);
+            }
         }
         if($request->status == 'canceled' || $request->status == 'delivered')
         {

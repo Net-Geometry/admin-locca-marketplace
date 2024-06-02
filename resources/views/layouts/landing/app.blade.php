@@ -23,8 +23,8 @@ $countryCode= strtolower($country?$country->value:'auto');
 
     <link rel="stylesheet" href="{{asset('public/assets/admin/intltelinput/css/intlTelInput.css')}}">
 
-    @php($icon = \App\Models\BusinessSetting::where(['key' => 'icon'])->first()->value ?? '')
-    <link rel="icon" type="image/x-icon" href="{{ asset('storage/app/public/business/' . $icon ?? asset('public/assets/landing/img/favicon.svg')) }}">
+    @php($icon = \App\Models\BusinessSetting::where(['key' => 'icon'])->first())
+    <link rel="icon" type="image/x-icon" href="{{\App\CentralLogics\Helpers::get_image_helper($icon,'value', asset('storage/app/public/business/').'/' . $icon?->value, asset('public/assets/landing/img/favicon.svg') ,'business/' )}}">
     @stack('css_or_js')
     @php($backgroundChange = \App\Models\BusinessSetting::where(['key' => 'backgroundChange'])->first())
     @php($backgroundChange = isset($backgroundChange) && $backgroundChange->value ? json_decode($backgroundChange->value,true):'')

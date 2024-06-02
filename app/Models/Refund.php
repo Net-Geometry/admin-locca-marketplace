@@ -32,10 +32,10 @@ class Refund extends Model
 
     public function getImageFullUrlAttribute(){
         $images = [];
-        $value = json_decode(json_encode($this->image),true);
+        $value = is_array($this->image)?$this->image:json_decode($this->image,true);
         if ($value){
             foreach ($value as $item){
-                $item = is_array($item)?$item:['img' => $item, 'storage' => 'public'];
+                $item = is_array($item)?$item:(is_object($item) && get_class($item) == 'stdClass' ? json_decode(json_encode($item), true):['img' => $item, 'storage' => 'public']);
                 if($item['storage']=='s3'){
                     $images[] = Helpers::s3_storage_link('refund',$item['img']);
                 }else{
