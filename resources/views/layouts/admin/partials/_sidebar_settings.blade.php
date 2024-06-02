@@ -50,7 +50,7 @@
                     <small class="tio-more-horizontal nav-subtitle-replacer"></small>
                 </li>
 
-
+                @if (\App\CentralLogics\Helpers::module_permission_check('subscription'))
                 <li class="navbar-vertical-aside-has-menu @yield('subscription')">
                     <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" id="tourb-3" href="javascript:" title="{{ translate('messages.subscription_management') }}">
                         <i class="tio-crown nav-icon"></i>
@@ -83,6 +83,8 @@
                         </li>
                     </ul>
                 </li>
+                @endif
+
 
 
 

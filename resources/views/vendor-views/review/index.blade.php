@@ -23,6 +23,56 @@
         <!-- Card -->
         <div class="card">
             @php($store_review_reply = App\Models\BusinessSetting::where('key' , 'store_review_reply')->first()->value ?? 0)
+            <div class="card-header flex-wrap py-2 border-0">
+                <div class="d-flex align-items-center gap-2 mb-2">
+                    <h4 class="mb-0">{{ translate('reviews') }}</h4>
+                    <span class="badge badge-soft-dark rounded-circle">{{ $reviews->total() }}</span>
+                </div>
+                <div class="search--button-wrapper justify-content-end">
+
+                    <form class="search-form">
+                        <div class="input-group input--group">
+                            <input name="search" type="search" value="{{ request()?->search }}" class="form-control h--40px" placeholder="{{ translate('Ex : Search by item name') }}" aria-label="Search here">
+                            <button type="submit" class="btn btn--secondary h--40px"><i class="tio-search"></i></button>
+                        </div>
+                    </form>
+                    <!-- Unfold -->
+                    <div class="hs-unfold">
+                        <a class="js-hs-unfold-invoker btn btn-sm btn-white dropdown-toggle btn export-btn font--sm"
+                            href="javascript:;"
+                            data-hs-unfold-options="{
+                                &quot;target&quot;: &quot;#usersExportDropdown&quot;,
+                                &quot;type&quot;: &quot;css-animation&quot;
+                            }"
+                            data-hs-unfold-target="#usersExportDropdown" data-hs-unfold-invoker="">
+                            <i class="tio-download-to mr-1"></i> {{ translate('export') }}
+                        </a>
+
+                        <div id="usersExportDropdown"
+                            class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right hs-unfold-content-initialized hs-unfold-css-animation animated hs-unfold-reverse-y hs-unfold-hidden">
+
+                            <span class="dropdown-header">{{ translate('download_options') }}</span>
+                            <a id="export-excel" class="dropdown-item"
+                                href="{{ route('vendor.reviewsExport', ['export_type' => 'excel', request()->getQueryString()]) }}">
+                                <img class="avatar avatar-xss avatar-4by3 mr-2"
+                                    src="{{ asset('public/assets/admin/svg/components/excel.svg') }}"
+                                    alt="Image Description">
+                                {{ translate('messages.excel') }}
+                            </a>
+                            <a id="export-csv" class="dropdown-item"
+                                href="{{ route('vendor.reviewsExport', ['export_type' => 'excel', request()->getQueryString()]) }}">
+                                <img class="avatar avatar-xss avatar-4by3 mr-2"
+                                    src="{{ asset('public/assets/admin/svg/components/placeholder-csv-format.svg') }}"
+                                    alt="Image Description">
+                                .{{ translate('messages.csv') }}
+                            </a>
+
+                        </div>
+                    </div>
+                    <!-- End Unfold -->
+                </div>
+                <!-- End Row -->
+            </div>
             <!-- Table -->
             <div class="table-responsive datatable-custom">
                 <table id="columnSearchDatatable"
@@ -230,13 +280,13 @@
                                                         <h5 class="d-block text-hover-primary mb-1">{{Str::limit($review->customer['f_name']." ".$review->customer['l_name'])}} <i
                                                                 class="tio-verified text-primary" data-toggle="tooltip" data-placement="top"
                                                                 title="Verified Customer"></i></h5>
-                                                        <span class="d-block font-size-sm text-body">{{Str::limit($review->comment)}}</span>
+                                                        <span class="d-block font-size-sm text-body">{{$review->comment}}</span>
                                                     </div>
                                                 @else
                                                     {{translate('messages.customer_not_found')}}
                                                 @endif
                                             </div>
-                                            <div class="mt-2">
+                                            <div class="mt-3">
                                                 <form action="{{route('vendor.review-reply',[$review['id']])}}" method="POST">
                                                     @csrf
                                                     <textarea id="reply" name="reply" required class="form-control" cols="30" rows="3" placeholder="{{ translate('Write_your_reply_here') }}">{{ $review->reply ?? '' }}</textarea>

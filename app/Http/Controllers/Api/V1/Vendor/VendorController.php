@@ -452,9 +452,8 @@ class VendorController extends Controller
                     array_push($img_names, ['img'=>$image_name, 'storage'=> Helpers::getDisk()]);
                 }
                 $images = $img_names;
-            } else {
-                $images = null;
             }
+            
             if(count($images)>0){
                 $order->order_proof = json_encode($images);
             }
@@ -862,22 +861,22 @@ class VendorController extends Controller
         }
 
         Helpers::check_and_delete('vendor/' , $vendor['image']);
-    
+
 
         Helpers::check_and_delete('store/' , $vendor->stores[0]->logo);
-    
+
 
 
         Helpers::check_and_delete('store/cover/' , $vendor->stores[0]->cover_photo);
-        
+
         foreach($vendor->stores[0]->deliverymen as $dm) {
-      
+
             Helpers::check_and_delete('delivery-man/' , $dm['image']);
-            
+
 
             foreach (json_decode($dm['identity_image'], true) as $img) {
                 Helpers::check_and_delete('delivery-man/' , $img);
-                
+
             }
         }
         $vendor->stores[0]->deliverymen()->delete();

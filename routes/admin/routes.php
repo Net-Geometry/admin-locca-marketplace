@@ -123,7 +123,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::get(Coupon::EXPORT[URI], [CouponController::class, 'exportList'])->name('coupon_export');
         });
 
-        Route::group(['prefix' => 'cashback', 'as' => 'cashback.'], function () {
+        Route::group(['prefix' => 'cashback', 'as' => 'cashback.' , 'middleware' => ['module:cashback']], function () {
             Route::get(CashBack::INDEX[URI], [CashBackController::class,'index'])->name('add-new');
             Route::post(CashBack::ADD[URI], [CashBackController::class,'add'])->name('store');
             Route::get(CashBack::UPDATE[URI].'/{id}', [CashBackController::class,'getUpdateView'])->name('edit');
@@ -165,7 +165,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
 
         Route::group(['prefix' => 'business-settings', 'as' => 'business-settings.'], function () {
 
-            Route::group(['prefix' => 'subscription'], function () {
+            Route::group(['prefix' => 'subscription' ,'middleware' => ['module:subscription']], function () {
 
                 Route::resource('subscriptionackage', SubscriptionController::class);
                 Route::get('/status/{subscriptionackage}',  [SubscriptionController::class, 'statusChange'])->name('subscriptionackage.status');

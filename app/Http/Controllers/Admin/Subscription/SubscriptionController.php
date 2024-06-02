@@ -44,9 +44,9 @@ class SubscriptionController extends Controller
         ->when(isset($key), function($q) use($key){
             $q->where(function ($q) use ($key) {
                 foreach ($key as $value) {
-                    $q->orWhere('package_name', 'like', "%{$value}%")
-                        ->orWhere('price', 'like', "%{$value}%")
-                        ->orWhere('validity', 'like', "%{$value}%");
+                    $q->orWhere('package_name', 'like', "%{$value}%");
+                        // ->orWhere('price', 'like', "%{$value}%")
+                        // ->orWhere('validity', 'like', "%{$value}%");
                 }
             });
         })
@@ -663,9 +663,9 @@ class SubscriptionController extends Controller
         ->when(isset($key), function($q) use($key){
             $q->where(function ($q) use ($key) {
                 foreach ($key as $value) {
-                    $q->orWhere('package_name', 'like', "%{$value}%")
-                        ->orWhere('price', 'like', "%{$value}%")
-                        ->orWhere('validity', 'like', "%{$value}%");
+                    $q->orWhere('package_name', 'like', "%{$value}%");
+                        // ->orWhere('price', 'like', "%{$value}%")
+                        // ->orWhere('validity', 'like', "%{$value}%");
                 }
             });
         })
