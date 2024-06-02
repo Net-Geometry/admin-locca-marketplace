@@ -546,7 +546,10 @@ class DeliverymanController extends Controller
                 }
                 $images = $img_names;
             }
-            $order->order_proof = count($images)>0?json_encode($images):'';
+            if(count($images)>0){
+                $order->order_proof = json_encode($images);
+            }
+         
             OrderLogic::update_unpaid_order_payment(order_id:$order->id, payment_method:$order->payment_method);
 
         }

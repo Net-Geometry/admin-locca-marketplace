@@ -624,7 +624,9 @@ class OrderController extends Controller
             $images = $img_names;
         }
 
-        $order->order_proof = json_encode($images);
+        if(count($images)>0){
+            $order->order_proof = json_encode($images);
+        }
         $order->save();
 
         Toastr::success(translate('messages.order_proof_added'));

@@ -33,7 +33,7 @@ class Message extends Model
 
     public function getFileFullUrlAttribute(){
         $images = [];
-        $value = json_decode(json_encode($this->file),true);
+        $value = is_array($this->file)?$this->file:json_decode($this->file,true);
         if ($value){
             foreach ($value as $item){
                 $item = is_array($item)?$item:['img' => $item, 'storage' => 'public'];

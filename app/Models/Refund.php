@@ -32,7 +32,7 @@ class Refund extends Model
 
     public function getImageFullUrlAttribute(){
         $images = [];
-        $value = json_decode(json_encode($this->image),true);
+        $value = is_array($this->image)?$this->image:json_decode($this->image,true);
         if ($value){
             foreach ($value as $item){
                 $item = is_array($item)?$item:['img' => $item, 'storage' => 'public'];
