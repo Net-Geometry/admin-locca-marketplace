@@ -86,7 +86,7 @@ class SubscriptionController extends Controller
             'package_name.0' => 'required',
 
             'package_price' => 'required|numeric|between:0,999999999999.999',
-            'package_validity' => 'required|integer|between:0,999999999',
+            'package_validity' => 'required|integer|between:0,36160',
             'max_order' => 'nullable|integer|between:0,999999999',
             'max_product' => 'nullable|integer|between:0,999999999',
             'pos_system' => 'nullable|boolean',
@@ -97,7 +97,8 @@ class SubscriptionController extends Controller
             'text' => 'nullable|max:1000',
         ], [
             'price.required' => translate('Must enter Price for the Package'),
-            'validity.required' => translate('Must enter a validity period for the Package in days'),
+            'package_validity.required' => translate('Must enter a validity period for the Package in days'),
+            'package_validity.between' => translate('validity must be in 99 years'),
             'package_name.0.required'=>translate('default_package_name_is_required'),
         ]);
 
@@ -151,7 +152,7 @@ class SubscriptionController extends Controller
             'package_name.0' => 'required',
 
             'package_price' => 'required|numeric|between:0,999999999999.999',
-            'package_validity' => 'required|integer|between:0,999999999',
+            'package_validity' => 'required|integer|between:0,36160',
             'max_order' => 'nullable|integer|between:0,999999999',
             'max_product' => 'nullable|integer|between:0,999999999',
             'pos_system' => 'nullable|boolean',
@@ -162,7 +163,8 @@ class SubscriptionController extends Controller
             'text' => 'nullable|max:1000',
         ], [
             'price.required' => translate('Must enter Price for the Package'),
-            'validity.required' => translate('Must enter a validity period for the Package in days'),
+            'package_validity.required' => translate('Must enter a validity period for the Package in days'),
+            'package_validity.between' => translate('validity must be in 99 years'),
             'package_name.0.required'=>translate('default_package_name_is_required'),
         ]);
         $subscriptionackage->package_name = $request->package_name[array_search('default', $request->lang)];

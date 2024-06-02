@@ -40,7 +40,7 @@
         <tbody>
         @foreach($data['data'] as $k=> $subscriber)
             <tr>
-                
+
                     <td class=" text-center">{{ $k + 1 }}</td>
                     <td >
                         {{ $subscriber->name }}
@@ -60,7 +60,7 @@
                     <td class=" text-center">
                         <div>
                             @if($subscriber?->status == 0 &&  $subscriber?->vendor?->status == 0)
-                            <span class="badge badge-soft-info">{{ translate('On_hold') }}</span>
+                            <span class="badge badge-soft-info">{{ translate('Approval_Pending') }}</span>
                             @elseif ($subscriber?->store_sub_update_application?->is_canceled == 1)
                             <span class="badge badge-soft-warning">{{ translate('canceled') }}</span>
                             @elseif($subscriber?->store_sub_update_application?->status == 0)

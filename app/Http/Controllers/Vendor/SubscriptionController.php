@@ -37,10 +37,9 @@ class SubscriptionController extends Controller
     }
 
     public function cancelSubscription(Request $request, $id){
-
-        StoreSubscription::where(['store_id' => $id, 'id'=>$request->subscription_id])->update([
+    StoreSubscription::where(['store_id' => $id, 'id'=>$request->subscription_id])->update([
             'is_canceled' => 1,
-            'canceled_by' => 'vendor',
+            'canceled_by' => 'store',
         ]);
 
         try {

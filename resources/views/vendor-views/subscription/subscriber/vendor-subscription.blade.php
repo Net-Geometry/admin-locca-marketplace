@@ -9,7 +9,42 @@ active
 
 @section('content')
 <div class="content container-fluid">
-        @if ( $store?->store_sub_update_application)
+
+
+
+    @if ($store->store_business_model == 'commission' &&  \App\CentralLogics\Helpers::commission_check())
+
+    <div class="card mb-3">
+        <div class="card-header border-0 align-items-center">
+            <h4 class="card-title align-items-center gap-2">
+                <span class="card-header-icon">
+                    <img width="25" src="{{asset('public/assets/admin/img/subscription-plan/subscribed-user.png')}}" alt="">
+                </span>
+                <span>{{ translate('Business_plan') }}</span>
+            </h4>
+        </div>
+        <div class="card-body pt-0">
+            <div class="__bg-F8F9FC-card __plan-details">
+                <div class="d-flex flex-wrap flex-md-nowrap justify-content-between __plan-details-top">
+                    <div class="left w-100">
+                        <h3 class="name">{{ translate('Commission Base') }}</h3>
+                        <h4 class="title mt-2">{{ translate('messages.Commission_percentage') }}: {{ $admin_commission }} %</h4>
+                        <div class="info-text ">
+                            {{ translate('Store will pay') }} {{ $store->comission > 0 ?  $store->comission :  $admin_commission }}% {{ translate('commission to') }} {{ $business_name }} {{ translate('from each order. You will get access of all the features and options  in store panel , app and interaction with user.') }}
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+            @if (\App\CentralLogics\Helpers::subscription_check() )
+                <div class="btn--container justify-content-end mt-3">
+                    <button type="button" data-toggle="modal" data-target="#plan-modal" class="btn btn--primary">{{ translate('Change Plan') }}</button>
+                </div>
+            @endif
+        </div>
+    </div>
+    @elseif (in_array($store->store_business_model,[ 'subscription' ,'unsubscribed']) && $store?->store_sub_update_application)
         <div class="page-header">
             <div class="d-flex flex-wrap justify-content-between align-items-center py-2">
                 <div class="flex-grow-1">
@@ -187,6 +222,7 @@ active
 
                     </div>
                 </div>
+                {{-- {{ dd($store?->store_sub_update_application) }} --}}
                 <div class="btn--container justify-content-end mt-3">
                     @if ( $store?->store_sub_update_application?->is_canceled == 0 && $store?->store_sub_update_application?->status == 1  )
                         <button type="button"  data-url="{{route('vendor.subscriptionackage.cancelSubscription',$store?->id)}}" data-message="{{translate('If_you_cancel_the_subscription,_after_')}} {{  Carbon\Carbon::now()->subDays(1)->diffInDays($store?->store_sub_update_application?->expiry_date_parsed->format('Y-m-d'), false); }} {{ translate('days_the_you_will_no_longer_be_able_to_run_the_business_before_subscribe_a_new_plan.') }} "
@@ -431,6 +467,7 @@ active
 
         "use strict";
             $('.status_change_alert').on('click', function (event) {
+
             let url = $(this).data('url');
             let message = $(this).data('message');
             status_change_alert(url, message, event)

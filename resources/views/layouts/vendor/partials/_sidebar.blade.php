@@ -479,7 +479,7 @@
                             title="{{translate('messages.My_Subscription')}}">
                             <i class="tio-crown nav-icon"></i>
                             <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                {{translate('messages.My_Subscription')}}
+                                {{translate('messages.My_Business_Plan')}}
                             </span>
                         </a>
                     </li>

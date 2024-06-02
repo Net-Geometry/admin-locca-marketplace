@@ -175,7 +175,7 @@ class SubscriptionController extends Controller
 
         StoreSubscription::where(['store_id' => $request->id, 'id'=>$request->subscription_id])->update([
             'is_canceled' => 1,
-            'canceled_by' => 'vendor',
+            'canceled_by' => 'store',
         ]);
 
         try {
