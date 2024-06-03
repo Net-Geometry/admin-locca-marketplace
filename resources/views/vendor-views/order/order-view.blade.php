@@ -204,7 +204,7 @@
                                 </h6>
                                 @if ($order->order_attachment)
                                         @php
-                                            $order_images = json_decode($order->order_attachment);
+                                            $order_images = json_decode($order->order_attachment,true);
                                         @endphp
                                     {{-- @if (is_array($order_images)) --}}
                                         <h5 class="text-dark">
@@ -218,7 +218,7 @@
                                                         data-target="#imagemodal{{ $key }}"
                                                         title="{{ translate('messages.order_attachment') }}">
                                                         <div class="gallary-card ml-auto">
-                                                            <img src="{{\App\CentralLogics\Helpers::onerror_image_helper($item['img'], asset('storage/app/public/order').'/'.$item['img'], asset('public/assets/admin/img/160x160/img2.jpg'), 'order/', $item['storage']??'public') }}"
+                                                            <img  src="{{\App\CentralLogics\Helpers::onerror_image_helper($item['img'], asset('storage/app/public/order').'/'.$item['img'], asset('public/assets/admin/img/160x160/img2.jpg'), 'order/', $item['storage']??'public') }}"
                                                                 alt="{{ translate('messages.prescription') }}"
                                                                 class="initial--22 object-cover">
                                                         </div>
