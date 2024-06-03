@@ -369,12 +369,13 @@ class CustomerController extends Controller
         if($order?->details){
             $images = collect($order->details)->pluck('item_details')->map(function ($itemDetail) {
                 $decodeditemDetail = json_decode($itemDetail, true);
-                return $decodeditemDetail['image'] ?? null;
+                $product = Item::where(['id' => $decodeditemDetail['id']])->first();
+                return $product->image_full_url ?? null;
             })->filter();
         }
 
         return response()->json(['order_id' =>$order?->id ?? null,
-        'images'=> $images ?? [],'images_full_url'=> $images_full_url ?? []],200);
+        'images'=> $images ?? []],200);
 
     }
 
