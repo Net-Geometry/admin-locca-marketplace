@@ -4840,4 +4840,7 @@
   'unseen' => 'Unseen',
   'Approval_Pending' => 'Approval Pending',
   'Change/Renew Subscription_Plan' => 'Change/Renew Subscription Plan',
+  'is_trial' => 'Is trial',
+  'is_cancel' => 'Is cancel',
+  'Subscriber_list' => 'Subscriber list',
 );

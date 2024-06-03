@@ -41,8 +41,8 @@ class SubscriptionSubscriberListExport implements FromView, ShouldAutoSize, With
     }
 
     public function styles(Worksheet $sheet) {
-        $sheet->getStyle('A2:G3')->getFont()->setBold(true);
-        $sheet->getStyle('A3:G3')->getFill()->applyFromArray([
+        $sheet->getStyle('A2:I3')->getFont()->setBold(true);
+        $sheet->getStyle('A3:I3')->getFill()->applyFromArray([
             'fillType' => 'solid',
             'rotation' => 0,
             'color' => ['rgb' => '9F9F9F'],
@@ -64,7 +64,7 @@ class SubscriptionSubscriberListExport implements FromView, ShouldAutoSize, With
         $sheet->getStyle('A1:C1')->applyFromArray($styleArray);
         return [
             // Define the style for cells with data
-            'A1:G'.$this->data['data']->count() + 3 => [
+            'A1:I'.$this->data['data']->count() + 3 => [
                 'borders' => [
                     'allBorders' => [
                         'borderStyle' => Border::BORDER_THIN,
@@ -79,7 +79,7 @@ class SubscriptionSubscriberListExport implements FromView, ShouldAutoSize, With
     {
         return [
             AfterSheet::class => function(AfterSheet $event) {
-                $event->sheet->getStyle('A1:G1') // Adjust the range as per your needs
+                $event->sheet->getStyle('A1:I1') // Adjust the range as per your needs
                     ->getAlignment()
                     ->setHorizontal(Alignment::HORIZONTAL_CENTER)
                     ->setVertical(Alignment::VERTICAL_CENTER);
@@ -88,18 +88,18 @@ class SubscriptionSubscriberListExport implements FromView, ShouldAutoSize, With
                     ->setHorizontal(Alignment::HORIZONTAL_CENTER)
                     ->setVertical(Alignment::VERTICAL_CENTER);
 
-                $event->sheet->getStyle('A3:G'.$this->data['data']->count() + 3) // Adjust the range as per your needs
+                $event->sheet->getStyle('A3:I'.$this->data['data']->count() + 3) // Adjust the range as per your needs
                     ->getAlignment()
                     ->setHorizontal(Alignment::HORIZONTAL_CENTER)
                     ->setVertical(Alignment::VERTICAL_CENTER);
-                $event->sheet->getStyle('D2:G2') // Adjust the range as per your needs
+                $event->sheet->getStyle('D2:I2') // Adjust the range as per your needs
                     ->getAlignment()
                     ->setHorizontal(Alignment::HORIZONTAL_LEFT)
                     ->setVertical(Alignment::VERTICAL_CENTER);
 
-                    $event->sheet->mergeCells('A1:G1');
+                    $event->sheet->mergeCells('A1:I1');
                     $event->sheet->mergeCells('A2:C2');
-                    $event->sheet->mergeCells('D2:G2');
+                    $event->sheet->mergeCells('D2:I2');
                     $event->sheet->getRowDimension(2)->setRowHeight(100);
                     $event->sheet->getDefaultRowDimension()->setRowHeight(30);
                     $workSheet = $event->sheet->getDelegate();

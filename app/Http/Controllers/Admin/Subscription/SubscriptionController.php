@@ -356,7 +356,10 @@ class SubscriptionController extends Controller
     public function subscriberList(Request $request){
         $key = explode(' ', $request['search']);
 
-        $subscribers= Store::whereIn('store_business_model' ,['subscription','unsubscribed'])->with([
+        $subscribers= Store::whereHas('vendor',function($query){
+            $query->where('status', 1);
+        })
+        ->whereIn('store_business_model' ,['subscription','unsubscribed'])->with([
             'store_sub_update_application.package'
         ])->withCount('store_all_sub_trans')
 
@@ -402,7 +405,9 @@ class SubscriptionController extends Controller
         $data=[];
         $subscription_deadline_warning_days = BusinessSetting::where('key','subscription_deadline_warning_days')->first()?->value ?? 7;
 
-        $totalSubscribersData= StoreSubscription::when(isset($request->zone_id) && is_numeric($request->zone_id), function ($query) use ($request) {
+        $totalSubscribersData= StoreSubscription::whereHas('store.vendor',function($query){
+            $query->where('status', 1);
+        })->when(isset($request->zone_id) && is_numeric($request->zone_id), function ($query) use ($request) {
             return $query->whereHas('store', function ($q) use ($request) {
                 return $q->where('zone_id', $request->zone_id);
             });
@@ -421,7 +426,9 @@ class SubscriptionController extends Controller
 
 
 
-            $totals= SubscriptionTransaction::where('is_trial',0)
+            $totals= SubscriptionTransaction::whereHas('store.vendor',function($query){
+                $query->where('status', 1);
+            })->where('is_trial',0)
             ->when(isset($request->zone_id) && is_numeric($request->zone_id), function ($query) use ($request) {
                 return $query->whereHas('store', function ($q) use ($request) {
                     return $q->where('zone_id', $request->zone_id);
@@ -742,9 +749,12 @@ class SubscriptionController extends Controller
     public function subscriberListExport(Request $request){
         $key = explode(' ', $request['search']);
 
-        $subscribers= Store::whereIn('store_business_model' ,['subscription','unsubscribed'])->with([
+        $subscribers= Store::whereHas('vendor',function($query){
+            $query->where('status', 1);
+        })
+        ->whereIn('store_business_model' ,['subscription','unsubscribed'])->with([
             'store_sub_update_application.package'
-        ])
+        ])->withCount('store_all_sub_trans')
 
         ->when(isset($key), function($query) use($key){
             $query->where(function ($q) use ($key) {
