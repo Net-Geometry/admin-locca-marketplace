@@ -208,8 +208,10 @@
                                             <h3 class="title">Commission Base</h3>
                                             <h2 class="price">15%</h2>
                                         </div>
-                                        <div class="info-text text-center py-5 mt-4">
-                                            Store will pay 15% commission to 6amMart from each order. You will get access of all the features and options  in store panel , app and interaction with user.
+                                        <div class="py-5 mt-4">
+                                            <div class="info-text text-center">
+                                                Store will pay 15% commission to 6amMart from each order. You will get access of all the features and options  in store panel , app and interaction with user.
+                                            </div>
                                         </div>
                                         <div class="text-center">
                                             <button type="button" class="btn btn--primary" data-dismiss="modal" data-toggle="modal" data-target="#shift-modal">Shift in this plan</button>

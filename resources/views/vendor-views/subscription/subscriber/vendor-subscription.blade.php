@@ -278,8 +278,10 @@ active
                                         <h3 class="title">{{ translate('Commission Base') }}</h3>
                                         <h2 class="price">{{ $admin_commission }}%</h2>
                                     </div>
-                                    <div class="info-text text-center py-5 mt-4">
-                                       {{ translate('Store will pay') }} {{ $admin_commission }}% {{ translate('commission to') }} {{ $business_name }} {{ translate('from each order. You will get access of all the features and options  in store panel , app and interaction with user.') }}
+                                    <div class="py-5 mt-4">
+                                        <div class="info-text text-center">
+                                            {{ translate('Store will pay') }} {{ $admin_commission }}% {{ translate('commission to') }} {{ $business_name }} {{ translate('from each order. You will get access of all the features and options  in store panel , app and interaction with user.') }}
+                                        </div>
                                     </div>
                                     <div class="text-center">
                                         @if ($store->store_business_model == 'commission')

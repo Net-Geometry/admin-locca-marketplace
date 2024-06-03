@@ -194,7 +194,7 @@ active
                     <span>{{ translate('Package Overview') }}</span>
                 </h4>
             </div>
-            <div class="card-body pt-0">
+            <div class="card-body pt-0 px-0">
                 <div class="__bg-F8F9FC-card __plan-details">
                     <div class="d-flex flex-wrap flex-md-nowrap justify-content-between __plan-details-top">
                         <div class="left">
@@ -319,7 +319,7 @@ active
                             <div class="text-center text-14 mb-4 pb-3">
                                {{ translate('Renew or shift your plan to get better experience!') }}
                             </div>
-                            <div class="plan-slider owl-theme owl-carousel">
+                            <div class="plan-slider owl-theme owl-carousel owl-refresh">
                                 @if (\App\CentralLogics\Helpers::commission_check())
 
                                 <div class="__plan-item hover {{ $store->store_business_model == 'commission'  ? 'active' : ''}} ">
@@ -328,8 +328,10 @@ active
                                             <h3 class="title">{{ translate('Commission Base') }}</h3>
                                             <h2 class="price">{{ $admin_commission }}%</h2>
                                         </div>
-                                        <div class="info-text text-center py-5 mt-4">
-                                           {{ translate('Store will pay') }} {{ $admin_commission }}% {{ translate('commission to') }} {{ $business_name }} {{ translate('from each order. You will get access of all the features and options  in store panel , app and interaction with user.') }}
+                                        <div class="py-5 mt-4">
+                                            <div class="info-text text-center">
+                                            {{ translate('Store will pay') }} {{ $admin_commission }}% {{ translate('commission to') }} {{ $business_name }} {{ translate('from each order. You will get access of all the features and options  in store panel , app and interaction with user.') }}
+                                            </div>
                                         </div>
                                         <div class="text-center">
                                             @if ($store->store_business_model == 'commission')
@@ -491,10 +493,11 @@ active
             dots:false,
             items: 3,
             center: true,
-            autoplay:true,
-            autoplayTimeout:2500,
-            autoplayHoverPause:true,
-
+            // autoplay:true,
+            // autoplayTimeout:2500,
+            // autoplayHoverPause:true,
+            startPosition: 0,
+            
             responsive:{
                 0: {
                     items:1.1,
