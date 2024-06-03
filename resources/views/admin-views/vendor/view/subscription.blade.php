@@ -291,7 +291,7 @@
 
                             @forelse ($packages as $package)
 
-                            <div class="__plan-item hover">
+                            <div class="__plan-item hover {{ $store?->store_sub_update_application?->package_id == $package->id  && $store->store_business_model != 'commission'  ? 'active' : ''}}">
                                 <div class="inner-div">
                                     <div class="text-center">
                                         <h3 class="title">{{ $package->package_name }}</h3>
@@ -348,7 +348,7 @@
                                     <div class="text-center">
                                         {{-- <button type="button" class="btn btn--primary" data-dismiss="modal" data-toggle="modal" data-target="#shift-modal">Shift in this plan</button> --}}
 
-                                        @if ($store?->store_sub_update_application?->package_id == $package->id)
+                                        @if ( $store?->store_business_model != 'commission'  && $store?->store_sub_update_application?->package_id == $package->id)
                                         <button data-id="{{ $package->id }}"  data-url="{{route('admin.business-settings.subscriptionackage.packageView',[$package->id,$store->id ])}}"
                                             data-target="#package_detail" id="package_detail" type="button" class="btn btn--warning text-white renew-btn package_detail">{{ translate('messages.Renew') }}</button>
                                         @else

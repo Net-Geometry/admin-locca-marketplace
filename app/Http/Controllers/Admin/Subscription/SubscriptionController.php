@@ -355,7 +355,6 @@ class SubscriptionController extends Controller
 
     public function subscriberList(Request $request){
         $key = explode(' ', $request['search']);
-
         $subscribers= Store::whereHas('vendor',function($query){
             $query->where('status', 1);
         })
@@ -380,23 +379,23 @@ class SubscriptionController extends Controller
         })
 
 
-        ->when(isset($request->subscription_type) && $request->subscription_type == 'active', function ($query) use ($request) {
-            return $query->whereHas('store_sub_update_application', function ($q) use ($request) {
+        ->when(isset($request->subscription_type) && $request->subscription_type == 'active', function ($query)  {
+            return $query->whereHas('store_sub_update_application', function ($q)  {
                 return $q->where('status',1);
             });
         })
-        ->when(isset($request->subscription_type) && $request->subscription_type == 'expired', function ($query) use ($request) {
-            return $query->whereHas('store_sub_update_application', function ($q) use ($request) {
+        ->when(isset($request->subscription_type) && $request->subscription_type == 'expired', function ($query)  {
+            return $query->whereHas('store_sub_update_application', function ($q)  {
                 return $q->where('status',0);
             });
         })
-        ->when(isset($request->subscription_type) && $request->subscription_type == 'cancaled', function ($query) use ($request) {
-            return $query->whereHas('store_sub_update_application', function ($q) use ($request) {
+        ->when(isset($request->subscription_type) && $request->subscription_type == 'cancaled', function ($query)  {
+            return $query->whereHas('store_sub_update_application', function ($q)  {
                 return $q->where('is_canceled',1);
             });
         })
-        ->when(isset($request->subscription_type) && $request->subscription_type == 'free_trial', function ($query) use ($request) {
-            return $query->whereHas('store_sub_update_application', function ($q) use ($request) {
+        ->when(isset($request->subscription_type) && $request->subscription_type == 'free_trial', function ($query)  {
+            return $query->whereHas('store_sub_update_application', function ($q)  {
                 return $q->where('is_trial',1);
             });
         })

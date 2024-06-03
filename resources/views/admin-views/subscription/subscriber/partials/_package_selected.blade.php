@@ -10,7 +10,7 @@
 
         </div>
         <div class="change-plan-wrapper align-items-center">
-            @if ($store_business_model == 'commission' && !$store_subscription )
+            @if ($store_business_model == 'commission'  )
             <div class="__plan-item">
                 <div class="inner-div">
                     <div class="text-center">
@@ -37,7 +37,7 @@
 
 
 
-            @if ($store_subscription?->package_id !==  $package->id)
+            @if ($store_subscription?->package_id !==  $package->id || $store_business_model == 'commission' )
             <!-- Plan Seperator Arrow -->
             <div class="plan-seperator-arrow mx-auto">
                 <img src="{{asset('public/assets/admin/img/exchange.svg')}}" alt="" class="w-100">
@@ -90,7 +90,7 @@
                     <div class="subscription__plan-info">
                         <div class="info">
                             {{ translate('Bill_status') }}
-                        </div> <h4 class="subtitle">  {{ $store_subscription?->package_id ==  $package->id ? translate('Renew') :  translate('Migrate_to_new_plan') }}  </h4> </div>
+                        </div> <h4 class="subtitle">  {{  $store_business_model != 'commission' && $store_subscription?->package_id ==  $package->id ? translate('Renew') :  translate('Migrate_to_new_plan') }}  </h4> </div>
                 </div>
             </div>
         </div>
@@ -164,7 +164,7 @@
         </div>
         <div class="btn--container justify-content-end mt-3">
             <button type="reset" data-dismiss="modal" class="btn btn--reset">{{ translate('Cancel') }}</button>
-            @if ($store_subscription?->package_id ==  $package->id)
+            @if ( $store_business_model != 'commission' && $store_subscription?->package_id ==  $package->id)
             <button type="submit" class="btn btn--primary">{{ translate('Renew Subscription Plan') }}</button>
             @else
             <button type="submit" class="btn btn--primary">{{ translate('Change_Plan') }}</button>

@@ -110,7 +110,7 @@ active
                             <option {{ request()?->subscription_type == 'cancaled' ? 'selected' : '' }}  value="cancaled">
                                 {{ translate('cancaled') }}
                             </option>
-                            <option {{ request()?->subscription_type == 'is_trial' ? 'selected' : '' }}  value="is_trial">
+                            <option {{ request()?->subscription_type == 'free_trial' ? 'selected' : '' }}  value="free_trial">
                                 {{ translate('Free_trial') }}
                             </option>
 
@@ -176,7 +176,6 @@ active
                         </thead>
                         <tbody>
                             @foreach ($subscribers as $k=> $subscriber)
-
                             <tr>
                                 <td class="px-4 text-center">{{ $k + $subscribers->firstItem() }}</td>
                                 <td class="px-4">

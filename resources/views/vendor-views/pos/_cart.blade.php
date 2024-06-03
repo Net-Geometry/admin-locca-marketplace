@@ -219,7 +219,7 @@ if (isset($cart['paid'])) {
                         <div class="form-group col-12">
                             <label class="input-label"
                                 for="paid">{{ translate('messages.amount') }}({{ \App\CentralLogics\Helpers::currency_symbol() }})</label>
-                            <input type="number" class="form-control" id="paid" name="paid" min="0" step="0.01"
+                            <input type="number" class="form-control"  id="paid" name="paid" min="0" step="0.01"
                                 value="{{ $paid }}">
                         </div>
                     </div>
