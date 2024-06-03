@@ -37,7 +37,7 @@
     </div>
     <div class="row g-2">
         <div class="col-sm-6 col-lg-4">
-            <a class="order--card h-100" href="">
+            <a class="order--card h-100" href="#">
                 <div class="d-flex justify-content-between align-items-center">
                     <h6 class="card-subtitle d-flex justify-content-between m-0 align-items-center">
                         <img src="{{asset('public/assets/admin/img/plan/free.png')}}" alt="dashboard"
@@ -51,7 +51,7 @@
             </a>
         </div>
         <div class="col-sm-6 col-lg-4">
-            <a class="order--card h-100" href="">
+            <a class="order--card h-100" href="#">
                 <div class="d-flex justify-content-between align-items-center">
                     <h6 class="card-subtitle d-flex justify-content-between m-0 align-items-center">
                         <img src="{{asset('public/assets/admin/img/plan/renewed.png')}}" alt="dashboard"
@@ -65,7 +65,7 @@
             </a>
         </div>
         <div class="col-sm-6 col-lg-4">
-            <a class="order--card h-100" href="">
+            <a class="order--card h-100" href="#">
                 <div class="d-flex justify-content-between align-items-center">
                     <h6 class="card-subtitle d-flex justify-content-between m-0 align-items-center">
                         <img src="{{asset('public/assets/admin/img/plan/total.png')}}" alt="dashboard"

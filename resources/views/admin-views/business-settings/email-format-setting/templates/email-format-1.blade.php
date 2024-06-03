@@ -24,7 +24,7 @@ $company_name = App\Models\BusinessSetting::where('key', 'business_name')->first
                     $data, 'image',
                     asset('storage/app/public/email_template').'/'.data_get($data, 'image' , null),
                     asset('/public/assets/admin/img/blank2.png'),
-                    'email_template'
+                    'email_template/'
                 ) }}"
 
                 alt="iamge">

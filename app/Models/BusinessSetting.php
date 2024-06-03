@@ -10,9 +10,9 @@ use Illuminate\Support\Facades\DB;
 class BusinessSetting extends Model
 {
     protected $guarded = ['id'];
-    public function storage(): MorphOne
+    public function storage()
     {
-        return $this->morphOne(Storage::class, 'data');
+        return $this->morphMany(Storage::class, 'data');
     }
     public function translations()
     {
@@ -24,7 +24,7 @@ class BusinessSetting extends Model
         static::addGlobalScope('storage', function ($builder) {
             $builder->with('storage');
         });
-        
+
     }
 
     protected static function boot()

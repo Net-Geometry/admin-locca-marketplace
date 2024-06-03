@@ -101,13 +101,13 @@ active
                         <div class="col-lg-4 col-sm-6">
                             <div class="form-group">
                                 <label class="input-label">{{ translate('Package_Price') }} ({{ \App\CentralLogics\Helpers::currency_symbol() }})</label>
-                                <input type="number" value="{{ $subscriptionackage->price }}" name="package_price" required  min="0" step="0.01" max="999999999" class="form-control" placeholder="{{ translate('Ex: 300') }}">
+                                <input type="number" value="{{ $subscriptionackage->price }}" name="package_price" required  min="0.01" step="0.01" max="999999999" class="form-control" placeholder="{{ translate('Ex: 300') }}">
                             </div>
                         </div>
                         <div class="col-lg-4 col-sm-6">
                             <div class="form-group">
                                 <label class="input-label">{{ translate('Package_Validity') }} {{ translate('Days') }}</label>
-                                <input type="number"   min="0" max="999999999"  value="{{ $subscriptionackage->validity }}"  required name="package_validity"  class="form-control" placeholder="{{ translate('Ex: 365') }}">
+                                <input type="number"   min="1" max="999999999"  value="{{ $subscriptionackage->validity }}"  required name="package_validity"  class="form-control" placeholder="{{ translate('Ex: 365') }}">
                             </div>
                         </div>
 
@@ -168,7 +168,7 @@ active
                     <div class="check--item-wrapper check--item-wrapper-2 mt-0">
                         <div class="check-item">
                             <label class="form-group form-check form--check">
-                                <input type="checkbox" class="form-check-input package-available-feature"  {{ $subscriptionackage->pos_system == 1 ? 'checked' : '' }} name="pos_system" value="1">
+                                <input type="checkbox" class="form-check-input package-available-feature"  {{ $subscriptionackage->pos == 1 ? 'checked' : '' }} name="pos_system" value="1">
                                 <span class="form-check-label text-dark">{{ translate('messages.pos_system') }}</span>
                             </label>
                         </div>
@@ -311,22 +311,33 @@ active
         }else{
             $('#select-all').prop('checked', false);
         }
-    })
+    }).trigger('change');
 
     $('.limit-input').on('change', function() {
 
-    var closestLimitItemCard = $(this).closest('.limit-item-card');
-    var isChecked = $(this).is(':checked');
-    if (isChecked) {
-        if ($(this).val() == 'Use_Limit') {
-            closestLimitItemCard.find('.custom-limit-box').show();
-            closestLimitItemCard.find('.max_required').prop('required', true);
-        } else {
-            closestLimitItemCard.find('.custom-limit-box').hide();
-            closestLimitItemCard.find('.max_required').removeAttr('required');
+        var closestLimitItemCard = $(this).closest('.limit-item-card');
+        var isChecked = $(this).is(':checked');
+        if (isChecked) {
+            if ($(this).val() == 'Use_Limit') {
+                closestLimitItemCard.find('.custom-limit-box').show();
+                closestLimitItemCard.find('.max_required').prop('required', true);
+            } else {
+                closestLimitItemCard.find('.custom-limit-box').hide();
+                closestLimitItemCard.find('.max_required').removeAttr('required');
+            }
         }
+    }).trigger('change');
+
+
+
+    $(document).on("click", "#reset_btn", function () {
+    setTimeout(reset, 10);
+    });
+
+    function reset(){
+    $('.limit-input').trigger('change');
     }
-}).trigger('change');
+
 </script>
 
 @endpush

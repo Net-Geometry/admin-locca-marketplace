@@ -101,7 +101,7 @@
                             </div>
                         @endif
                     @endif
-                    @if ($store->self_delivery_system == 1)
+                    @if ($store->sub_self_delivery == 1)
                     <div class="col-lg-4 col-sm-6">
                         <div class="form-group m-0">
                             <label class="toggle-switch toggle-switch-sm d-flex justify-content-between border rounded px-3 form-control" for="free_delivery">
@@ -239,7 +239,7 @@
                             </div>
                         </div>
 
-                        @if($store->self_delivery_system)
+                        @if($store->sub_self_delivery)
                         <div class="col-sm-4 col-12">
                             <div class="form-group">
                                 <label class="input-label text-capitalize" for="minimum_shipping_charge">{{translate('messages.minimum_shipping_charge')}} ({{\App\CentralLogics\Helpers::currency_symbol()}})

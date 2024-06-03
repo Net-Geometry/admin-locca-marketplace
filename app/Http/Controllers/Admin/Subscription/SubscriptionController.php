@@ -2,18 +2,30 @@
 
 namespace App\Http\Controllers\Admin\Subscription;
 
+use App\Models\Zone;
 use App\Models\Store;
 use App\Models\StoreWallet;
 use Illuminate\Http\Request;
+use App\CentralLogics\Helpers;
 use Illuminate\Support\Carbon;
 use App\Models\BusinessSetting;
+use App\Mail\SubscriptionCancel;
 use App\Models\StoreSubscription;
 use Illuminate\Support\Facades\DB;
 use App\Models\SubscriptionPackage;
+use App\Exports\CustomerOrderExport;
 use App\Http\Controllers\Controller;
+use App\Mail\SubscriptionPlanUpdate;
 use Brian2694\Toastr\Facades\Toastr;
+use Illuminate\Support\Facades\Mail;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Schema;
 use App\Models\SubscriptionTransaction;
+use Illuminate\Support\Facades\Validator;
+use App\Exports\SubscritionPackageListExport;
+use App\Exports\SubscriptionTransactionsExport;
+use App\Exports\SubscriptionSubscriberListExport;
+use App\Models\SubscriptionBillingAndRefundHistory;
 use App\Contracts\Repositories\TranslationRepositoryInterface;
 
 class SubscriptionController extends Controller
@@ -27,18 +39,39 @@ class SubscriptionController extends Controller
     public function index(Request $request)
     {
         $key = explode(' ', $request['search']);
+        $filter = $request['statistics'];
         $packages=  SubscriptionPackage::withcount('currentSubscribers')
         ->when(isset($key), function($q) use($key){
             $q->where(function ($q) use ($key) {
                 foreach ($key as $value) {
-                    $q->orWhere('package_name', 'like', "%{$value}%")
-                        ->orWhere('price', 'like', "%{$value}%")
-                        ->orWhere('validity', 'like', "%{$value}%");
+                    $q->orWhere('package_name', 'like', "%{$value}%");
+                        // ->orWhere('price', 'like', "%{$value}%")
+                        // ->orWhere('validity', 'like', "%{$value}%");
                 }
             });
         })
         ->latest()->paginate(config('default_pagination'));
-        return view('admin-views.subscription.package.index',compact('packages'));
+
+
+     $package_sell_count= SubscriptionPackage::
+        withSum([
+            'transactions' => function ($query) use ($filter) {
+                $query->where('is_trial',0)
+                    ->when(isset($filter) && $filter == 'this_year', function ($query) {
+                        return $query->whereYear('created_at', now()->format('Y'));
+                    })
+
+                    ->when(isset($filter) && $filter == 'this_month', function ($query) {
+                        return $query->whereMonth('created_at', now()->format('m'))->whereYear('created_at', now()->format('Y'));
+                    })
+
+                    ->when(isset($filter) && $filter == 'this_week', function ($query) {
+                        return $query->whereBetween('created_at', [now()->startOfWeek()->format('Y-m-d H:i:s'), now()->endOfWeek()->format('Y-m-d H:i:s')]);
+                    });
+            },
+        ], 'paid_amount')->get();
+
+        return view('admin-views.subscription.package.index',compact('packages','package_sell_count'));
     }
     public function create()
     {
@@ -53,7 +86,7 @@ class SubscriptionController extends Controller
             'package_name.0' => 'required',
 
             'package_price' => 'required|numeric|between:0,999999999999.999',
-            'package_validity' => 'required|integer|between:0,999999999',
+            'package_validity' => 'required|integer|between:0,36160',
             'max_order' => 'nullable|integer|between:0,999999999',
             'max_product' => 'nullable|integer|between:0,999999999',
             'pos_system' => 'nullable|boolean',
@@ -64,7 +97,8 @@ class SubscriptionController extends Controller
             'text' => 'nullable|max:1000',
         ], [
             'price.required' => translate('Must enter Price for the Package'),
-            'validity.required' => translate('Must enter a validity period for the Package in days'),
+            'package_validity.required' => translate('Must enter a validity period for the Package in days'),
+            'package_validity.between' => translate('validity must be in 99 years'),
             'package_name.0.required'=>translate('default_package_name_is_required'),
         ]);
 
@@ -99,8 +133,9 @@ class SubscriptionController extends Controller
 
     public function show(SubscriptionPackage $subscriptionackage)
     {
+        $packages= SubscriptionPackage::where('status',1)->get();
         $over_view_data= $this->packageOverview($subscriptionackage);
-        return view('admin-views.subscription.package.package-details', compact('subscriptionackage','over_view_data'));
+        return view('admin-views.subscription.package.package-details', compact('subscriptionackage','over_view_data','packages'));
     }
     public function edit(SubscriptionPackage $subscriptionackage)
     {
@@ -117,7 +152,7 @@ class SubscriptionController extends Controller
             'package_name.0' => 'required',
 
             'package_price' => 'required|numeric|between:0,999999999999.999',
-            'package_validity' => 'required|integer|between:0,999999999',
+            'package_validity' => 'required|integer|between:0,36160',
             'max_order' => 'nullable|integer|between:0,999999999',
             'max_product' => 'nullable|integer|between:0,999999999',
             'pos_system' => 'nullable|boolean',
@@ -128,7 +163,8 @@ class SubscriptionController extends Controller
             'text' => 'nullable|max:1000',
         ], [
             'price.required' => translate('Must enter Price for the Package'),
-            'validity.required' => translate('Must enter a validity period for the Package in days'),
+            'package_validity.required' => translate('Must enter a validity period for the Package in days'),
+            'package_validity.between' => translate('validity must be in 99 years'),
             'package_name.0.required'=>translate('default_package_name_is_required'),
         ]);
         $subscriptionackage->package_name = $request->package_name[array_search('default', $request->lang)];
@@ -147,6 +183,20 @@ class SubscriptionController extends Controller
         $this->translationRepo->updateByModel(request: $request, model: $subscriptionackage, modelPath: 'App\Models\SubscriptionPackage', attribute: 'package_name');
         $this->translationRepo->updateByModel(request: $request, model: $subscriptionackage, modelPath: 'App\Models\SubscriptionPackage', attribute: 'text');
         Toastr::success(translate('messages.Package_Updated_successfully'));
+
+
+        try {
+            if (config('mail.status') && Helpers::get_mail_status('subscription_plan_upadte_mail_status_store') == '1') {
+            $subscribers= StoreSubscription::with('store:id,name,email')->select(['store_id'])->where(['package_id' =>  $subscriptionackage->id,'status'=> 1])->get();
+                foreach ($subscribers as $subscriber){
+                    Mail::to($subscriber->email)->send(new SubscriptionPlanUpdate($subscriber->name));
+                }
+            }
+        } catch (\Exception $ex) {
+            info($ex->getMessage());
+        }
+
+
         return redirect()->route('admin.business-settings.subscriptionackage.show',$subscriptionackage->id);
     }
     public function overView(SubscriptionPackage $subscriptionackage, Request $request)
@@ -213,7 +263,7 @@ class SubscriptionController extends Controller
         $filter= $request['filter'];
         $plan_type= $request['plan_type'];
         $from =$request['start_date'] ?? Carbon::now()->format('Y-m-d');
-        $to =$request['expire_date'] ?? Carbon::now()->format('Y-m-d');
+        $to =$request['end_date'] ?? Carbon::now()->format('Y-m-d');
 
         $key = explode(' ', $request['search']);
         $transactions= SubscriptionTransaction::where('package_id',$id)
@@ -253,7 +303,7 @@ class SubscriptionController extends Controller
     }
     public function settings(){
 
-        $key=['subscription_deadline_warning_days','subscription_deadline_warning_message','subscription_free_trial_days','subscription_free_trial_type','subscription_free_trial_status'];
+        $key=['subscription_deadline_warning_days','subscription_deadline_warning_message','subscription_free_trial_days','subscription_free_trial_type','subscription_free_trial_status','subscription_usage_max_time'];
         $settings=BusinessSetting::whereIn('key', $key)->pluck('value','key');
         return view('admin-views.subscription.settings.setting', compact('settings'));
 
@@ -269,7 +319,7 @@ class SubscriptionController extends Controller
     }
     public function settingUpdate(Request $request){
 
-        $key=['subscription_deadline_warning_days','subscription_deadline_warning_message','subscription_free_trial_days','subscription_free_trial_type','subscription_free_trial_status'];
+        $key=['subscription_deadline_warning_days','subscription_deadline_warning_message','subscription_free_trial_days','subscription_free_trial_type','subscription_free_trial_status','subscription_usage_max_time'];
             foreach ($request->all() as $k => $value) {
 
                 if(in_array($k, $key) ){
@@ -295,16 +345,23 @@ class SubscriptionController extends Controller
         return back();
     }
     public function invoice($id){
-        return view('admin-views.subscription.subscription-invoice');
+        $BusinessData= ['admin_commission' ,'business_name','address','phone','logo','email_address'];
+        $transaction= SubscriptionTransaction::with(['store.vendor','package:id,package_name,price'])->find($id);
+        $BusinessData=BusinessSetting::whereIn('key', $BusinessData)->pluck('value' ,'key') ;
+        $logo=BusinessSetting::where('key', "logo")->first() ;
+        return view('admin-views.subscription.subscription-invoice',compact('transaction','BusinessData','logo'))->render();
     }
 
 
     public function subscriberList(Request $request){
         $key = explode(' ', $request['search']);
 
-        $subscribers= Store::whereIn('store_business_model' ,['subscription','unsubscribed'])->with([
+        $subscribers= Store::whereHas('vendor',function($query){
+            $query->where('status', 1);
+        })
+        ->whereIn('store_business_model' ,['subscription','unsubscribed'])->with([
             'store_sub_update_application.package'
-        ])
+        ])->withCount('store_all_sub_trans')
 
         ->when(isset($key), function($query) use($key){
             $query->where(function ($q) use ($key) {
@@ -335,7 +392,7 @@ class SubscriptionController extends Controller
         })
         ->when(isset($request->subscription_type) && $request->subscription_type == 'cancaled', function ($query) use ($request) {
             return $query->whereHas('store_sub_update_application', function ($q) use ($request) {
-                return $q->where('is_cancaled',1);
+                return $q->where('is_canceled',1);
             });
         })
         ->when(isset($request->subscription_type) && $request->subscription_type == 'free_trial', function ($query) use ($request) {
@@ -348,7 +405,9 @@ class SubscriptionController extends Controller
         $data=[];
         $subscription_deadline_warning_days = BusinessSetting::where('key','subscription_deadline_warning_days')->first()?->value ?? 7;
 
-        $totalSubscribersData= StoreSubscription::when(isset($request->zone_id) && is_numeric($request->zone_id), function ($query) use ($request) {
+        $totalSubscribersData= StoreSubscription::whereHas('store.vendor',function($query){
+            $query->where('status', 1);
+        })->when(isset($request->zone_id) && is_numeric($request->zone_id), function ($query) use ($request) {
             return $query->whereHas('store', function ($q) use ($request) {
                 return $q->where('zone_id', $request->zone_id);
             });
@@ -367,7 +426,9 @@ class SubscriptionController extends Controller
 
 
 
-            $totals= SubscriptionTransaction::where('is_trial',0)
+            $totals= SubscriptionTransaction::whereHas('store.vendor',function($query){
+                $query->where('status', 1);
+            })->where('is_trial',0)
             ->when(isset($request->zone_id) && is_numeric($request->zone_id), function ($query) use ($request) {
                 return $query->whereHas('store', function ($q) use ($request) {
                     return $q->where('zone_id', $request->zone_id);
@@ -399,9 +460,18 @@ class SubscriptionController extends Controller
     public function cancelSubscription(Request $request, $id){
 
         StoreSubscription::where(['store_id' => $id, 'id'=>$request->subscription_id])->update([
-            'is_cancaled' => 1,
+            'is_canceled' => 1,
             'canceled_by' => 'admin',
         ]);
+
+        try {
+            $store=Store::where('id',$id)->select(['id','name'])->first();
+            if (config('mail.status') && Helpers::get_mail_status('subscription_cancel_mail_status_store') == '1') {
+                Mail::to($store->email)->send(new SubscriptionCancel($store->name));
+            }
+        } catch (\Exception $ex) {
+            info($ex->getMessage());
+        }
         return response()->json(200);
 
     }
@@ -419,50 +489,365 @@ class SubscriptionController extends Controller
     public function packageView($id,$store_id){
         $store_subscription= StoreSubscription::where('store_id', $store_id)->with(['package'])->latest()->first();
         $package = SubscriptionPackage::where('status',1)->where('id',$id)->first();
-
-        $store= Store::Where('id',$store_id)->first(['id','vendor_id']);
+        $store= Store::Where('id',$store_id)->first(['id','vendor_id','store_business_model']);
+        $pending_bill= SubscriptionBillingAndRefundHistory::where(['store_id'=>$store->id,
+                            'transaction_type'=>'pending_bill', 'is_success' =>0])->sum('amount') ;
 
         $balance = BusinessSetting::where('key', 'wallet_status')->first()?->value == 1 ? StoreWallet::where('vendor_id',$store->vendor_id)->first()?->balance ?? 0 : 0;
-        $payment_methods = $this->getDefaultPaymentMethods();
+        $payment_methods = Helpers::getDefaultPaymentMethods();
+        $disable_item_count=null;
+        if(data_get(Helpers::subscriptionConditionsCheck(store_id:$store->id,package_id:$package->id) , 'disable_item_count') > 0 && ( !$store_subscription || $package->id != $store_subscription->package_id)){
+            $disable_item_count=data_get(Helpers::subscriptionConditionsCheck(store_id:$store->id,package_id:$package->id) , 'disable_item_count');
+        }
+        $store_business_model=$store->store_business_model;
+        $admin_commission=BusinessSetting::where('key', "admin_commission")->first()?->value ?? 0 ;
         return response()->json([
-            'view' => view('admin-views.subscription.subscriber.partials._package_selected', compact('store_subscription','package','store_id','balance','payment_methods'))->render()
+            'disable_item_count'=> $disable_item_count,
+            'view' => view('admin-views.subscription.subscriber.partials._package_selected', compact('store_subscription','package','store_id','balance','payment_methods','pending_bill','store_business_model','admin_commission'))->render()
         ]);
 
     }
     public function packageBuy(Request $request){
-        dd($request->all());
+
+        $request->validate([
+            'package_id' => 'required',
+            'store_id' => 'required',
+            'payment_gateway' => 'required'
+        ]);
+        $store= Store::Where('id',$request->store_id)->first(['id','vendor_id']);
+        $package = SubscriptionPackage::withoutGlobalScope('translate')->find($request->package_id);
+
+
+        $pending_bill= SubscriptionBillingAndRefundHistory::where(['store_id'=>$store->id,
+                            'transaction_type'=>'pending_bill', 'is_success' =>0])?->sum('amount')?? 0;
+
+        if(!in_array($request->payment_gateway,['wallet','manual_payment_by_admin'])){
+            $url= route('admin.business-settings.subscriptionackage.subscriberDetail',$store->id);
+            return redirect()->away(Helpers::subscriptionPayment(store_id:$store->id,package_id:$package->id,payment_gateway:$request->payment_gateway,payment_platform:'web',url:$url,pending_bill:$pending_bill,type: $request?->type));
+        }
+
+        if($request->payment_gateway == 'wallet'){
+        $wallet= StoreWallet::firstOrNew(['vendor_id'=> $store->vendor_id]);
+        $balance = BusinessSetting::where('key', 'wallet_status')->first()?->value == 1 ? $wallet?->balance ?? 0 : 0;
+
+            if($balance > ($package?->price + $pending_bill)){
+                $reference= 'wallet_payment_by_admin';
+                $plan_data=   Helpers::subscription_plan_chosen(store_id:$store->id,package_id:$package->id,payment_method:$reference,discount:0,pending_bill:$pending_bill,reference:$reference,type: $request?->type);
+                if($plan_data != false){
+                    $wallet->total_withdrawn= $wallet?->total_withdrawn + $package->price + $pending_bill;
+                    $wallet?->save();
+                }
+
+            }
+            else{
+                Toastr::error( translate('messages.Insufficient_balance_in_wallet'));
+                return back();
+                // return to_route('admin.business-settings.subscriptionackage.subscriberDetail',$store->id);
+
+            }
+        } elseif($request->payment_gateway == 'manual_payment_by_admin'){
+            $reference= 'manual_payment_by_admin';
+            $plan_data=   Helpers::subscription_plan_chosen(store_id:$store->id,package_id:$package->id,payment_method:$reference,discount:0,pending_bill:$pending_bill,reference:$reference,type: $request?->type);
+        }
+
+        $plan_data != false ?  Toastr::success( translate('Successfully_Subscribed.')) : Toastr::error( translate('Something_went_wrong!.'));
+        // return to_route('admin.business-settings.subscriptionackage.subscriberDetail',$store->id);
+        return back();
+
     }
 
 
 
+    public function subscriberTransactions($id,Request $request){
+        $filter= $request['filter'];
+        $plan_type= $request['plan_type'];
+        $from =$request['start_date'] ?? Carbon::now()->format('Y-m-d');
+        $to =$request['end_date'] ?? Carbon::now()->format('Y-m-d');
+        $store= Store::where('id',$id)->with([
+            'store_sub_update_application.package'
+        ])
+        ->first();
 
+        $key = explode(' ', $request['search']);
+        $transactions= SubscriptionTransaction::where('store_id',$id)
+        ->when(isset($key), function($query) use($key){
+            $query->where(function ($q) use ($key) {
+                foreach ($key as $value) {
+                    $q->Where('id', 'like', "%{$value}%");
+                }
+            });
+        })
+        ->when($filter == 'this_year' , function($query){
+            $query->whereYear('created_at', Carbon::now()->year );
+        })
+        ->when($filter == 'this_month' , function($query){
+            $query->whereMonth('created_at', Carbon::now()->month );
+        })
+        ->when($filter == 'this_week' , function($query){
+            $query->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()] );
+        })
+        ->when($filter == 'custom' , function($query) use($from,$to) {
+            $query->whereBetween('created_at', [$from . " 00:00:00", $to . " 23:59:59"]);
+        })
 
+        ->when( in_array( $plan_type,['renew','new_plan','first_purchased','free_trial'])  , function($query) use($plan_type){
+            $query->where('plan_type', $plan_type );
+        })
 
+        ->latest()->paginate(config('default_pagination'));
+            $subscription_deadline_warning_days = BusinessSetting::where('key','subscription_deadline_warning_days')->first()?->value ?? 7;
+        return view('admin-views.subscription.subscriber.transaction',compact('store','transactions','id','filter','subscription_deadline_warning_days'));
 
+    }
 
-    private function getDefaultPaymentMethods()
-    {
-        if (!Schema::hasTable('addon_settings')) {
-            return [];
+    public function switchPlan(Request $request){
+        $request->validate([
+            'package_id' => 'required',
+        ]);
+
+        SubscriptionPackage::where('id',$request->turn_off_package_id)->update([
+            'status' => 0
+        ]);
+
+        $stores=  StoreSubscription::where('package_id',$request->turn_off_package_id)->where('status',1)->where('is_canceled',0)->where('is_trial',0)->get(['store_id']);
+
+        if($request->package_id == 'commission'){
+            StoreSubscription::where('package_id',$request->turn_off_package_id)->update([
+                'status' => 0
+            ]);
         }
 
-        $methods = DB::table('addon_settings')->where('is_active',1)->whereIn('settings_type', ['payment_config'])->whereIn('key_name', ['ssl_commerz','paypal','stripe','razor_pay','senang_pay','paytabs','paystack','paymob_accept','paytm','flutterwave','liqpay','bkash','mercadopago'])->get();
-        $env = env('APP_ENV') == 'live' ? 'live' : 'test';
-        $credentials = $env . '_values';
+        foreach($stores as $store){
 
-        $data = [];
-        foreach ($methods as $method) {
-            $credentialsData = json_decode($method->$credentials);
-            $additional_data = json_decode($method->additional_data);
-            if ($credentialsData->status == 1) {
-                $data[] = [
-                    'gateway' => $method->key_name,
-                    'gateway_title' => $additional_data?->gateway_title,
-                    'gateway_image' => $additional_data?->gateway_image
-                ];
+            if($request->package_id == 'commission'){
+                Store::where('id', $store->store_id)->update([
+                    'store_business_model'=>'commission',
+                    'item_section'=> 1
+                ]);
+            } else{
+                $pending_bill=0;
+                $pending_bill= SubscriptionBillingAndRefundHistory::where(['store_id'=>$store->store_id,
+                'transaction_type'=>'pending_bill', 'is_success' =>0])?->sum('amount')?? 0;
+                    $reference= 'plan_shift_by_admin';
+                    Helpers::subscription_plan_chosen(store_id:$store->store_id,package_id:$request->package_id,payment_method:$reference,discount:0,pending_bill:$pending_bill,reference:$reference);
             }
+
         }
-        return $data;
+        Toastr::success( translate('messages.Plan_Switch_Successful'));
+        return back();
+    }
+
+
+
+    public function packageExport(Request $request){
+
+        $key = explode(' ', $request['search']);
+
+        $packages=  SubscriptionPackage::withcount('currentSubscribers')
+        ->when(isset($key), function($q) use($key){
+            $q->where(function ($q) use ($key) {
+                foreach ($key as $value) {
+                    $q->orWhere('package_name', 'like', "%{$value}%");
+                        // ->orWhere('price', 'like', "%{$value}%")
+                        // ->orWhere('validity', 'like', "%{$value}%");
+                }
+            });
+        })
+        ->latest()->get();
+
+        $data = [
+            'data'=>$packages,
+            'search'=>$request['search'],
+        ];
+        if ($request->export_type == 'excel') {
+            return Excel::download(new SubscritionPackageListExport($data), 'SubscritionPackageListExport.xlsx');
+        }
+        return Excel::download(new SubscritionPackageListExport($data), 'SubscritionPackageListExport.csv');
+    }
+    public function TransactionExport(Request $request){
+        $request->validate([
+            'id' => 'required',
+        ]);
+
+
+        $filter= $request['filter'];
+        $id= $request['id'];
+        $plan_type= $request['plan_type'];
+        $from =$request['start_date'] ?? Carbon::now()->format('Y-m-d');
+        $to =$request['end_date'] ?? Carbon::now()->format('Y-m-d');
+
+        $key = explode(' ', $request['search']);
+        $transactions= SubscriptionTransaction::where('package_id',$id)
+        ->when(isset($key), function($query) use($key){
+            $query->where(function ($q) use ($key) {
+                foreach ($key as $value) {
+                    $q->Where('id', 'like', "%{$value}%");
+                }
+                $q->orWhereHas('store' , function ($q) use ($key) {
+                    foreach ($key as $value) {
+                    $q->where('name', 'like', "%{$value}%");
+                }
+                });
+            });
+        })
+        ->when($filter == 'this_year' , function($query){
+            $query->whereYear('created_at', Carbon::now()->year );
+        })
+        ->when($filter == 'this_month' , function($query){
+            $query->whereMonth('created_at', Carbon::now()->month );
+        })
+        ->when($filter == 'this_week' , function($query){
+            $query->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()] );
+        })
+        ->when($filter == 'custom' , function($query) use($from,$to) {
+            $query->whereBetween('created_at', [$from . " 00:00:00", $to . " 23:59:59"]);
+        })
+
+        ->when( in_array( $plan_type,['renew','new_plan','first_purchased','free_trial'])  , function($query) use($plan_type){
+            $query->where('plan_type', $plan_type );
+        })
+
+        ->latest()->get();
+
+        $data = [
+            'data'=>$transactions,
+            'plan_type'=>$request['plan_type'] ?? 'all',
+            'filter'=>$request['filter'] ?? 'all',
+            'search'=>$request['search'],
+            'start_date'=>$request['start_date'],
+            'end_date'=>$request['end_date'],
+            'package_name'=>SubscriptionPackage::where('id',$id)->first()?->package_name,
+        ];
+        if ($request->export_type == 'excel') {
+            return Excel::download(new SubscriptionTransactionsExport($data), 'SubscriptionTransactionsExport.xlsx');
+        }
+        return Excel::download(new SubscriptionTransactionsExport($data), 'SubscriptionTransactionsExport.csv');
+    }
+    public function subscriberListExport(Request $request){
+        $key = explode(' ', $request['search']);
+
+        $subscribers= Store::whereHas('vendor',function($query){
+            $query->where('status', 1);
+        })
+        ->whereIn('store_business_model' ,['subscription','unsubscribed'])->with([
+            'store_sub_update_application.package'
+        ])->withCount('store_all_sub_trans')
+
+        ->when(isset($key), function($query) use($key){
+            $query->where(function ($q) use ($key) {
+                foreach ($key as $value) {
+                    $q->Where('name', 'like', "%{$value}%");
+                }
+                $q->orWhereHas('store_sub_update_application.package' , function ($q) use ($key) {
+                    foreach ($key as $value) {
+                    $q->where('package_name', 'like', "%{$value}%");
+                }
+                });
+            });
+        })
+        ->when(isset($request->zone_id) && is_numeric($request->zone_id), function ($query) use ($request) {
+            return $query->where('zone_id', $request->zone_id);
+        })
+
+
+        ->when(isset($request->subscription_type) && $request->subscription_type == 'active', function ($query) use ($request) {
+            return $query->whereHas('store_sub_update_application', function ($q) use ($request) {
+                return $q->where('status',1);
+            });
+        })
+        ->when(isset($request->subscription_type) && $request->subscription_type == 'expired', function ($query) use ($request) {
+            return $query->whereHas('store_sub_update_application', function ($q) use ($request) {
+                return $q->where('status',0);
+            });
+        })
+        ->when(isset($request->subscription_type) && $request->subscription_type == 'cancaled', function ($query) use ($request) {
+            return $query->whereHas('store_sub_update_application', function ($q) use ($request) {
+                return $q->where('is_canceled',1);
+            });
+        })
+        ->when(isset($request->subscription_type) && $request->subscription_type == 'free_trial', function ($query) use ($request) {
+            return $query->whereHas('store_sub_update_application', function ($q) use ($request) {
+                return $q->where('is_trial',1);
+            });
+        })
+        ->latest()->get();
+
+        $data = [
+            'data'=>$subscribers,
+            'zone'=>Zone::where('id' ,$request->zone_id)->first()?->name ?? 'all',
+            'filter'=>$request->subscription_type ?? 'all',
+            'search'=>$request['search'],
+
+        ];
+        if ($request->export_type == 'excel') {
+            return Excel::download(new SubscriptionSubscriberListExport($data), 'SubscriptionSubscriberListExport.xlsx');
+        }
+        return Excel::download(new SubscriptionSubscriberListExport($data), 'SubscriptionSubscriberListExport.csv');
+    }
+
+    public function subscriberTransactionExport(Request $request){
+        $request->validate([
+            'id' => 'required',
+        ]);
+        $id= $request['id'];
+
+        $filter= $request['filter'];
+        $plan_type= $request['plan_type'];
+        $from =$request['start_date'] ?? Carbon::now()->format('Y-m-d');
+        $to =$request['end_date'] ?? Carbon::now()->format('Y-m-d');
+        $store= Store::where('id',$id)->first();
+
+        $key = explode(' ', $request['search']);
+        $transactions= SubscriptionTransaction::where('store_id',$store->id)
+        ->when(isset($key), function($query) use($key){
+            $query->where(function ($q) use ($key) {
+                foreach ($key as $value) {
+                    $q->Where('id', 'like', "%{$value}%");
+                }
+            });
+        })
+        ->when($filter == 'this_year' , function($query){
+            $query->whereYear('created_at', Carbon::now()->year );
+        })
+        ->when($filter == 'this_month' , function($query){
+            $query->whereMonth('created_at', Carbon::now()->month );
+        })
+        ->when($filter == 'this_week' , function($query){
+            $query->whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()] );
+        })
+        ->when($filter == 'custom' , function($query) use($from,$to) {
+            $query->whereBetween('created_at', [$from . " 00:00:00", $to . " 23:59:59"]);
+        })
+
+        ->when( in_array( $plan_type,['renew','new_plan','first_purchased','free_trial'])  , function($query) use($plan_type){
+            $query->where('plan_type', $plan_type );
+        })
+
+        ->latest()->get();
+
+        $data = [
+            'data'=>$transactions,
+            'plan_type'=>$request['plan_type'] ?? 'all',
+            'filter'=>$request['filter'] ?? 'all',
+            'search'=>$request['search'],
+            'start_date'=>$request['start_date'],
+            'end_date'=>$request['end_date'],
+            'store'=>$store->name,
+        ];
+        if ($request->export_type == 'excel') {
+            return Excel::download(new SubscriptionTransactionsExport($data), 'SubscriptionTransactionsExport.xlsx');
+        }
+        return Excel::download(new SubscriptionTransactionsExport($data), 'SubscriptionTransactionsExport.csv');
+    }
+
+    public function subscriberWalletTransactions($id,Request $request){
+        $store= Store::where('id',$id)->first();
+        $transactions= SubscriptionBillingAndRefundHistory::where('store_id', $id)->with('package')
+        ->where('transaction_type','refund')
+        ->latest()->paginate(config('default_pagination'));
+
+        return view('admin-views.subscription.subscriber.wallet-transaction',compact('transactions','store'));
+
     }
 
 }

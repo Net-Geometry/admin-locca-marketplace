@@ -32,6 +32,7 @@
                     }
                 ?>
                 @foreach(session()->get('cart') as $key => $cartItem)
+{{--                    {{dd($cartItem)}}--}}
 
                 @if(is_array($cartItem))
                     <?php

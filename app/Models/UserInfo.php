@@ -19,7 +19,32 @@ class UserInfo extends Model
         'deliveryman_id' => 'integer',
         'admin_id' => 'integer'
     ];
+    protected $appends = ['image_full_url'];
+    public function getImageFullUrlAttribute(){
+        $value = $this->image;
+        $path = 'profile';
+        if ($this->user_id){
+            $path = 'profile';
+        }elseif ($this->vendor_id){
+            $path = 'store';
+        }elseif ($this->deliveryman_id){
+            $path = 'delivery-man';
+        }
+        if (count($this->storage) > 0) {
+            foreach ($this->storage as $storage) {
+                if ($storage['key'] == 'image') {
+                    if($storage['value'] == 's3'){
 
+                        return Helpers::s3_storage_link($path,$value);
+                    }else{
+                        return Helpers::local_storage_link($path,$value);
+                    }
+                }
+            }
+        }
+
+        return Helpers::local_storage_link($path,$value);
+    }
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
@@ -40,9 +65,9 @@ class UserInfo extends Model
         return $this->belongsTo(Admin::class, 'admin_id');
     }
 
-    public function storage(): MorphOne
+    public function storage()
     {
-        return $this->morphOne(Storage::class, 'data');
+        return $this->morphMany(Storage::class, 'data');
     }
     protected static function booted()
     {
@@ -54,16 +79,19 @@ class UserInfo extends Model
     {
         parent::boot();
         static::saved(function ($model) {
-            $value = Helpers::getDisk();
+            if($model->isDirty('image')){
+                $value = Helpers::getDisk();
 
-            DB::table('storages')->updateOrInsert([
-                'data_type' => get_class($model),
-                'data_id' => $model->id,
-            ], [
-                'value' => $value,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
+                DB::table('storages')->updateOrInsert([
+                    'data_type' => get_class($model),
+                    'data_id' => $model->id,
+                    'key' => 'image',
+                ], [
+                    'value' => $value,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
         });
 
     }

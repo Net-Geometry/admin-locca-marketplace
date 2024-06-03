@@ -1,4 +1,4 @@
-<div class="modal-body px-4 pt-0">
+<div class="">
     <div>
         <div class="text-center mb-4 pb-2">
 
@@ -10,15 +10,30 @@
 
         </div>
         <div class="change-plan-wrapper align-items-center">
-            <div class="__plan-item {{ !$store_subscription  || $store_subscription?->package_id ==  $package->id ?  'active' : '' }}">
+            @if ($store_business_model == 'commission' && !$store_subscription )
+            <div class="__plan-item">
                 <div class="inner-div">
                     <div class="text-center">
-                        <h3 class="title">{{ $package->package_name }}</h3>
-                        <h2 class="price">{{ \App\CentralLogics\Helpers::format_currency($package?->price) }}</h2>
-                        <div class="day-count">{{ $package?->validity }} {{ translate('days') }}</div>
+                        <h3 class="title">{{ translate('commission')  }}</h3>
+                        <h2 class="price">{{  $admin_commission }} %</h2>
+                        {{-- <div class="day-count">{{ $store_subscription?->package?->validity }} {{ translate('days') }}</div> --}}
                     </div>
                 </div>
             </div>
+
+            @else
+
+            <div class="__plan-item {{ !$store_subscription  || $store_subscription?->package_id ==  $package->id ?  'active' : '' }}">
+                <div class="inner-div">
+                    <div class="text-center">
+                        <h3 class="title">{{ $store_subscription?->package?->package_name  }}</h3>
+                        <h2 class="price">{{  \App\CentralLogics\Helpers::format_currency($store_subscription?->package?->price) }}</h2>
+                        <div class="day-count">{{ $store_subscription?->package?->validity }} {{ translate('days') }}</div>
+                    </div>
+                </div>
+            </div>
+            @endif
+
 
 
 
@@ -31,9 +46,9 @@
             <div class="__plan-item active">
                 <div class="inner-div">
                     <div class="text-center">
-                        <h3 class="title">{{ $store_subscription?->package?->package_name }}</h3>
-                        <h2 class="price">{{ \App\CentralLogics\Helpers::format_currency($store_subscription?->package?->price) }}</h2>
-                        <div class="day-count">{{ $store_subscription?->package?->validity }} {{ translate('days') }}</div>
+                        <h3 class="title">{{$package->package_name }}</h3>
+                        <h2 class="price">{{ \App\CentralLogics\Helpers::format_currency($package?->price) }}</h2>
+                        <div class="day-count">{{ $package?->validity }} {{ translate('days') }}</div>
                     </div>
                 </div>
             </div>
@@ -44,7 +59,7 @@
 
         <div class="mb-4 mb-lg-5 subscription__plan-info-wrapper bg-ECEEF1 rounded-20">
             <div class="row g-3">
-                <div class="col-md-4">
+                <div class="col-md-{{ $pending_bill > 0 ? '3' :'4' }}">
                     <div class="subscription__plan-info">
                         <div class="info">
                             {{ translate('Validity') }}
@@ -52,7 +67,7 @@
                         <h4 class="subtitle">{{ $package?->validity }} {{ translate('days') }}</h4>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-{{ $pending_bill > 0 ? '3' :'4' }}">
                     <div class="subscription__plan-info">
                         <div class="info">
                             {{ translate('Price') }}
@@ -60,7 +75,18 @@
                         <h4 class="subtitle">{{ \App\CentralLogics\Helpers::format_currency($package?->price) }}</h4>
                     </div>
                 </div>
-                <div class="col-md-4">
+                @if ($pending_bill)
+                <div class="col-md-3">
+                    <div class="subscription__plan-info">
+                        <div class="info">
+                            {{ translate('pending_bill') }}
+                        </div>
+                        <h4 class="subtitle">{{ \App\CentralLogics\Helpers::format_currency($pending_bill) }}</h4>
+                    </div>
+                </div>
+
+                @endif
+                <div class="col-md-{{ $pending_bill > 0 ? '3' :'4' }}">
                     <div class="subscription__plan-info">
                         <div class="info">
                             {{ translate('Bill_status') }}
@@ -74,6 +100,7 @@
             @method('POST')
                 <input type="hidden" value="{{ $package->id }}" name="package_id">
                 <input type="hidden" value="{{ $store_id }}" name="store_id">
+                <input type="hidden" value="{{ $store_subscription?->package_id ==  $package->id ? 'renew' : 'payment' }}" name="type">
 
 
 
@@ -84,8 +111,8 @@
 
             <div class="col-md-6">
                 <label class="payment-item">
-                    <input type="radio" {{ $balance >= $package?->price ? '' :'disabled'  }} value="wallet"  class="d-none" name="payment">
-                    <div class="payment-item-inner">
+                    <input type="radio" {{ $balance > $package?->price ? '' :'disabled'  }} value="wallet"  class="d-none" name="payment_gateway">
+                    <div  data-toggle="tooltip" data-placement="bottom" title="{{$balance > $package?->price ? translate('pay_the_amount_via_wallet') : translate('You have not sufficient balance on you wallet! please add money to your wallet to purchase the packages') }}"  class="payment-item-inner">
                         <div class="check">
                             <img src="{{asset('/public/assets/admin/img/check-1.png')}}" class="uncheck" alt="">
                             <img src="{{asset('/public/assets/admin/img/check-2.png')}}" class="check" alt="">
@@ -97,12 +124,25 @@
             </div>
             @endif
 
+            <div class="col-md-6">
+                <label class="payment-item">
+                    <input type="radio" value="manual_payment_by_admin"  class="d-none" name="payment_gateway">
+                    <div class="payment-item-inner">
+                        <div class="check">
+                            <img src="{{asset('/public/assets/admin/img/check-1.png')}}" class="uncheck" alt="">
+                            <img src="{{asset('/public/assets/admin/img/check-2.png')}}" class="check" alt="">
+                        </div>
+                        <span>{{ translate('manually_pay') }}</span>
+                        {{-- <span class="ml-auto" >{{ \App\CentralLogics\Helpers::format_currency($balance) }} </span> --}}
+                    </div>
+                </label>
+            </div>
 
-            @foreach ($payment_methods as $item)
+            {{-- @foreach ($payment_methods as $item)
 
             <div class="col-md-6">
                 <label class="payment-item">
-                    <input type="radio" class="d-none" value="{{ $item['gateway'] }}" name="payment">
+                    <input type="radio" class="d-none" value="{{ $item['gateway'] }}" name="payment_gateway">
                     <div class="payment-item-inner">
                         <div class="check">
                             <img src="{{asset('/public/assets/admin/img/check-1.png')}}" class="uncheck" alt="">
@@ -119,13 +159,16 @@
                 </label>
             </div>
 
-            @endforeach
+            @endforeach --}}
 
         </div>
         <div class="btn--container justify-content-end mt-3">
             <button type="reset" data-dismiss="modal" class="btn btn--reset">{{ translate('Cancel') }}</button>
+            @if ($store_subscription?->package_id ==  $package->id)
             <button type="submit" class="btn btn--primary">{{ translate('Renew Subscription Plan') }}</button>
+            @else
+            <button type="submit" class="btn btn--primary">{{ translate('Change_Plan') }}</button>
+            @endif
         </div>
     </div>
-</form>
 </div>

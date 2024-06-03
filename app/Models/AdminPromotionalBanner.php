@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 class AdminPromotionalBanner extends Model
 {
     use HasFactory;
+    protected $appends = ['image_full_url'];
 
     public function translations()
     {
@@ -41,9 +42,27 @@ class AdminPromotionalBanner extends Model
 
         return $value;
     }
-    public function storage(): MorphOne
+    public function getImageFullUrlAttribute(){
+        $value = $this->image;
+        if (count($this->storage) > 0) {
+            foreach ($this->storage as $storage) {
+                if ($storage['key'] == 'image') {
+                 
+                    if($storage['value'] == 's3'){
+
+                        return Helpers::s3_storage_link('promotional_banner',$value);
+                    }else{
+                        return Helpers::local_storage_link('promotional_banner',$value);
+                    }
+                }
+            }
+        }
+
+        return Helpers::local_storage_link('promotional_banner',$value);
+    }
+    public function storage()
     {
-        return $this->morphOne(Storage::class, 'data');
+        return $this->morphMany(Storage::class, 'data');
     }
     protected static function booted()
     {
@@ -60,16 +79,19 @@ class AdminPromotionalBanner extends Model
     {
         parent::boot();
         static::saved(function ($model) {
-            $value = Helpers::getDisk();
+            if($model->isDirty('image')){
+                $value = Helpers::getDisk();
 
-            DB::table('storages')->updateOrInsert([
-                'data_type' => get_class($model),
-                'data_id' => $model->id,
-            ], [
-                'value' => $value,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
+                DB::table('storages')->updateOrInsert([
+                    'data_type' => get_class($model),
+                    'data_id' => $model->id,
+                    'key' => 'image',
+                ], [
+                    'value' => $value,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
         });
     }
 }

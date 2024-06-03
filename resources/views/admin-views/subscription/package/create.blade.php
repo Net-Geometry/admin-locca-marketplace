@@ -30,6 +30,12 @@ active
                         <h5 class="text--title card-title">{{ translate('Package_Information') }}</h5>
                         <div class="fz-12px">{{ translate('Give_Subscriptions_Package_Information') }}</div>
                     </div>
+                    <div class="text--primary-2 d-flex flex-wrap align-items-end" type="button" data-toggle="modal" data-target="#initial-modal">
+                        <strong class="mr-2">{{ translate('How it Works') }}</strong>
+                        <div class="blinkings">
+                            <i class="tio-info-outined"></i>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -87,13 +93,13 @@ active
                         <div class="col-lg-4 col-sm-6">
                             <div class="form-group">
                                 <label class="input-label">{{ translate('Package_Price') }} ({{ \App\CentralLogics\Helpers::currency_symbol() }})</label>
-                                <input type="number" name="package_price" value="{{ old('package_price') }}" required  min="0" step="0.01" max="999999999" class="form-control" placeholder="{{ translate('Ex: 300') }}">
+                                <input type="number" name="package_price" value="{{ old('package_price') }}" required  min="0.01" step="0.01" max="999999999" class="form-control" placeholder="{{ translate('Ex: 300') }}">
                             </div>
                         </div>
                         <div class="col-lg-4 col-sm-6">
                             <div class="form-group">
                                 <label class="input-label">{{ translate('Package_Validity') }} {{ translate('Days') }}</label>
-                                <input type="number"   min="0" max="999999999"  value="{{ old('package_validity') }}"  required name="package_validity"  class="form-control" placeholder="{{ translate('Ex: 365') }}">
+                                <input type="number"   min="1" max="999999999"  value="{{ old('package_validity') }}"  required name="package_validity"  class="form-control" placeholder="{{ translate('Ex: 365') }}">
                             </div>
                         </div>
 
@@ -329,9 +335,14 @@ active
             }
         }
     })
-    $(window).on('load', function(){
-        $('#initial-modal').modal('show');
-    })
+
+
+
+
+    $(document).on("click", ".btn--reset", function () {
+        $('.custom-limit-box').hide();
+        $('.max_required').removeAttr('required');
+    });
 
 </script>
 

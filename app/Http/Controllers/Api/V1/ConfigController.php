@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Models\Setting;
 use App\Models\Zone;
 use App\Models\Order;
 use App\Models\Module;
@@ -39,11 +40,21 @@ class ConfigController extends Controller
 
     public function configuration()
     {
-        $key = ['currency_code','cash_on_delivery','digital_payment','default_location','free_delivery_over','business_name','logo','address','phone','email_address','country','currency_symbol_position','app_minimum_version_android','app_url_android','app_minimum_version_ios','app_url_ios','app_url_android_store','app_minimum_version_ios_store','app_url_ios_store','app_minimum_version_ios_deliveryman','app_url_ios_deliveryman','app_minimum_version_android_deliveryman','app_minimum_version_android_store', 'app_url_android_deliveryman', 'customer_verification','schedule_order','order_delivery_verification','per_km_shipping_charge','minimum_shipping_charge','show_dm_earning','canceled_by_deliveryman','canceled_by_store','timeformat','toggle_veg_non_veg','toggle_dm_registration','toggle_store_registration','schedule_order_slot_duration','parcel_per_km_shipping_charge','parcel_minimum_shipping_charge','web_app_landing_page_settings','footer_text','landing_page_links','loyalty_point_exchange_rate', 'loyalty_point_item_purchase_point', 'loyalty_point_status', 'loyalty_point_minimum_point', 'wallet_status', 'dm_tips_status', 'ref_earning_status','ref_earning_exchange_rate','refund_active_status','refund','cancelation','shipping_policy','prescription_order_status','tax_included','icon','cookies_text','home_delivery_status','takeaway_status','additional_charge','additional_charge_status','additional_charge_name','dm_picture_upload_status','partial_payment_status','partial_payment_method','add_fund_status','offline_payment_status','websocket_url','websocket_port','websocket_status','guest_checkout_status','disbursement_type','restaurant_disbursement_waiting_time','dm_disbursement_waiting_time' , 'min_amount_to_pay_store' ,'min_amount_to_pay_dm' ,
-        'new_customer_discount_status','new_customer_discount_amount','new_customer_discount_amount_type','new_customer_discount_amount_validity','new_customer_discount_validity_type','store_review_reply',
+        $key = ['currency_code','cash_on_delivery','digital_payment','default_location','free_delivery_over','business_name','logo','address','phone','email_address','country','currency_symbol_position','app_minimum_version_android','app_url_android','app_minimum_version_ios','app_url_ios','app_url_android_store','app_minimum_version_ios_store','app_url_ios_store','app_minimum_version_ios_deliveryman','app_url_ios_deliveryman','app_minimum_version_android_deliveryman','app_minimum_version_android_store', 'app_url_android_deliveryman', 'customer_verification','schedule_order','order_delivery_verification','per_km_shipping_charge','minimum_shipping_charge','show_dm_earning','canceled_by_deliveryman','canceled_by_store','timeformat','toggle_veg_non_veg','toggle_dm_registration','toggle_store_registration','schedule_order_slot_duration','parcel_per_km_shipping_charge','parcel_minimum_shipping_charge','web_app_landing_page_settings','footer_text','landing_page_links','loyalty_point_exchange_rate', 'loyalty_point_item_purchase_point', 'loyalty_point_status', 'loyalty_point_minimum_point', 'wallet_status', 'dm_tips_status', 'ref_earning_status','ref_earning_exchange_rate','refund_active_status','refund','cancelation','shipping_policy','prescription_order_status','tax_included','icon','cookies_text','home_delivery_status','takeaway_status','additional_charge','additional_charge_status','additional_charge_name','dm_picture_upload_status','partial_payment_status','partial_payment_method','add_fund_status','offline_payment_status','websocket_url','websocket_port','websocket_status','guest_checkout_status','disbursement_type','restaurant_disbursement_waiting_time','dm_disbursement_waiting_time' , 'min_amount_to_pay_store' ,'min_amount_to_pay_dm' ,'admin_commission',
+        'new_customer_discount_status','new_customer_discount_amount','new_customer_discount_amount_type','new_customer_discount_amount_validity','new_customer_discount_validity_type','store_review_reply','subscription_business_model','commission_business_model','subscription_deadline_warning_days','subscription_deadline_warning_message','subscription_free_trial_days','subscription_free_trial_type','subscription_free_trial_status'
+
+
+
     ];
 
         $settings =  array_column(BusinessSetting::whereIn('key',$key)->get()->toArray(), 'value', 'key');
+        $image_key = ['logo','icon','web_app_landing_page_settings'];
+        $data = [];
+
+        foreach ($image_key as $value){
+            $data[$value.'_storage'] = BusinessSetting::where('key',$value)->first()?->storage[0]?->value ??'public';
+        }
+
 
         $DataSetting =  DataSetting::where('type','flutter_landing_page')->where('key','download_user_app_links')->pluck('value', 'key')->toArray();
         $DataSetting =  isset($DataSetting['download_user_app_links'])? json_decode($DataSetting['download_user_app_links'],true):[];
@@ -128,6 +139,7 @@ class ConfigController extends Controller
             // 'business_open_time' => $settings['business_open_time'],
             // 'business_close_time' => $settings['business_close_time'],
             'logo' => $settings['logo'],
+            'logo_full_url' => Helpers::get_full_url('business',$settings['logo'],$data['logo_storage']??'public'),
             'address' => $settings['address'],
             'phone' => $settings['phone'],
             'email' => $settings['email_address'],
@@ -229,11 +241,13 @@ class ConfigController extends Controller
             'module'=>$module,
             'parcel_per_km_shipping_charge' => (float)$settings['parcel_per_km_shipping_charge'],
             'parcel_minimum_shipping_charge' => (float)$settings['parcel_minimum_shipping_charge'],
-            'landing_page_settings'=> isset($settings['web_app_landing_page_settings'])?json_decode($settings['web_app_landing_page_settings'], true):null,
+//            'landing_page_settings'=> isset($settings['web_app_landing_page_settings'])?json_decode($settings['web_app_landing_page_settings'], true):null,
+//            'landing_page_settings_full_url'=> $data['web_app_landing_page_settings_storage']??'public',
             'social_media'=>SocialMedia::active()->get()->toArray(),
             'footer_text'=>isset($settings['footer_text'])?$settings['footer_text']:'',
             'cookies_text'=>isset($settings['cookies_text'])?$settings['cookies_text']:'',
             'fav_icon' => $settings['icon'],
+            'fav_icon_full_url' => Helpers::get_full_url('business',$settings['icon'],$data['icon_storage']??'public'),
             'landing_page_links'=>$landing_page_links,
             //Added Business Setting
             'dm_tips_status' => (int)(isset($settings['dm_tips_status']) ? $settings['dm_tips_status'] : 0),
@@ -275,6 +289,14 @@ class ConfigController extends Controller
             'new_customer_discount_amount_validity' => (int)(isset($settings['new_customer_discount_amount_validity']) ? $settings['new_customer_discount_amount_validity'] : 0),
             'new_customer_discount_validity_type' => (isset($settings['new_customer_discount_validity_type']) ? $settings['new_customer_discount_validity_type'] : 'day'),
             'store_review_reply' => (int)(isset($settings['store_review_reply']) ? $settings['store_review_reply'] : 0),
+            'admin_commission' => (float)(isset($settings['admin_commission']) ? $settings['admin_commission'] : 0),
+            'subscription_business_model' => (int)(isset($settings['subscription_business_model']) ? $settings['subscription_business_model'] : 1),
+            'commission_business_model' => (int)(isset($settings['commission_business_model']) ? $settings['commission_business_model'] : 1),
+            'subscription_deadline_warning_days' => (int)(isset($settings['subscription_deadline_warning_days']) ? $settings['subscription_deadline_warning_days'] : 1),
+            'subscription_deadline_warning_message' => isset($settings['subscription_deadline_warning_message']) ? $settings['subscription_deadline_warning_message'] : null,
+            'subscription_free_trial_days' => (int)(isset($settings['subscription_free_trial_days']) ? $settings['subscription_free_trial_days'] : 1),
+            'subscription_free_trial_type' => (int)(isset($settings['subscription_free_trial_type']) ? $settings['subscription_free_trial_type'] : 1),
+            'subscription_free_trial_status' => (int)(isset($settings['subscription_free_trial_status']) ? $settings['subscription_free_trial_status'] : 1),
         ]);
     }
 
@@ -442,6 +464,13 @@ class ConfigController extends Controller
                 ];
                 array_push($data,$cred);
             }
+            if (isset($value->storage)) {
+
+                $cred = [
+                    $value->key.'_storage' => $value?->storage[0]?->value ?? 'public',
+                ];
+                array_push($data, $cred);
+            }
         }
         $settings = [];
         foreach($data as $single_data){
@@ -455,6 +484,11 @@ class ConfigController extends Controller
         $awsUrl = config('filesystems.disks.s3.url');
         $awsBucket = config('filesystems.disks.s3.bucket');
         $awsBaseURL = rtrim($awsUrl, '/').'/'.ltrim($awsBucket.'/');
+
+        $promotional_banners = [];
+        foreach (json_decode($settings['promotion_banner'], true) as $value){
+            $promotional_banners[] = Helpers::get_full_url('promotional_banner',$value['img'],$value['storage']??'public');
+        }
 
         return  response()->json(
             [
@@ -477,7 +511,9 @@ class ConfigController extends Controller
                 'header_sub_title'=>(isset($settings['header_sub_title']) )  ? $settings['header_sub_title'] : null ,
                 'header_tag_line'=>(isset($settings['header_tag_line']) )  ? $settings['header_tag_line'] : null ,
                 'header_icon'=>(isset($settings['header_icon']) )  ? $settings['header_icon'] : null ,
+                'header_icon_full_url'=>Helpers::get_full_url('header_icon',(isset($settings['header_icon']) )  ? $settings['header_icon'] : null,isset($settings['header_icon_storage'])   ? $settings['header_icon_storage'] : 'public') ,
                 'header_banner'=>(isset($settings['header_banner']) )  ? $settings['header_banner'] : null ,
+                'header_banner_full_url'=>Helpers::get_full_url('header_banner',(isset($settings['header_banner']) )  ? $settings['header_banner'] : null,isset($settings['header_banner_storage'])   ? $settings['header_banner_storage'] : 'public') ,
                 'company_title'=>(isset($settings['company_title']) )  ? $settings['company_title'] : null ,
                 'company_sub_title'=>(isset($settings['company_sub_title']) )  ? $settings['company_sub_title'] : null ,
                 'company_description'=>(isset($settings['company_description']) )  ? $settings['company_description'] : null ,
@@ -498,16 +534,19 @@ class ConfigController extends Controller
                 'business_title'=>(isset($settings['business_title']) )  ? $settings['business_title'] : null ,
                 'business_sub_title'=>(isset($settings['business_sub_title']) )  ? $settings['business_sub_title'] : null ,
                 'business_image'=>(isset($settings['business_image']) )  ? $settings['business_image'] : null ,
+                'business_image_full_url'=>Helpers::get_full_url('business_image',isset($settings['business_image'])   ? $settings['business_image'] : null,isset($settings['business_image_storage'])  ? $settings['business_image_storage'] : 'public') ,
                 'testimonial_title'=>(isset($settings['testimonial_title']) )  ? $settings['testimonial_title'] : null ,
                 'testimonial_list'=>(isset($reviews) )  ? $reviews : null ,
                 'fixed_newsletter_title'=>(isset($settings['fixed_newsletter_title']) )  ? $settings['fixed_newsletter_title'] : null ,
                 'fixed_newsletter_sub_title'=>(isset($settings['fixed_newsletter_sub_title']) )  ? $settings['fixed_newsletter_sub_title'] : null ,
                 'fixed_footer_description'=>(isset($settings['fixed_footer_description']) )  ? $settings['fixed_footer_description'] : null ,
                 'fixed_promotional_banner'=>(isset($settings['fixed_promotional_banner']) )  ? $settings['fixed_promotional_banner'] : null ,
+                'fixed_promotional_banner_storage'=>Helpers::get_full_url('promotional_banner',(isset($settings['fixed_promotional_banner']) )  ? $settings['fixed_promotional_banner'] : null,(isset($settings['fixed_promotional_banner_storage']) )  ? $settings['fixed_promotional_banner_storage'] : 'public') ,
 
 
 
                 'promotion_banners'=> (isset($settings['promotion_banner']) )  ? json_decode($settings['promotion_banner'], true) : null ,
+                'promotion_banners_full_url'=> $promotional_banners ,
                 'download_user_app_links'=> (isset($settings['download_user_app_links']) )  ? json_decode($settings['download_user_app_links'], true) : null ,
                 'download_business_app_links'=> (isset($settings['download_business_app_links']) )  ? json_decode($settings['download_business_app_links'], true) : null ,
                 // 'dm_app_earning_links'=> (isset($settings['dm_app_earning_links']) )  ? json_decode($settings['dm_app_earning_links'], true) : null ,
@@ -531,6 +570,13 @@ class ConfigController extends Controller
                     ];
                 array_push($data,$cred);
             }
+            if (isset($value->storage)) {
+
+                $cred = [
+                    $value->key.'_storage' => $value?->storage[0]?->value ?? 'public',
+                ];
+                array_push($data, $cred);
+            }
         }
         $settings = [];
         foreach($data as $single_data){
@@ -539,7 +585,7 @@ class ConfigController extends Controller
                     }
                 }
 
-        $criterias = FlutterSpecialCriteria::get();
+        $criterias = FlutterSpecialCriteria::where('status',1)->get();
 
         $awsUrl = config('filesystems.disks.s3.url');
         $awsBucket = config('filesystems.disks.s3.bucket');
@@ -562,6 +608,7 @@ class ConfigController extends Controller
                 'fixed_header_title'=>(isset($settings['fixed_header_title']) )  ? $settings['fixed_header_title'] : null ,
                 'fixed_header_sub_title'=>(isset($settings['fixed_header_sub_title']) )  ? $settings['fixed_header_sub_title'] : null ,
                 'fixed_header_image'=>(isset($settings['fixed_header_image']) )  ? $settings['fixed_header_image'] : null ,
+                'fixed_header_image_full_url'=>Helpers::s3_storage_link('fixed_header_image',(isset($settings['fixed_header_image']) )  ? $settings['fixed_header_image'] : null,(isset($settings['fixed_header_image_storage']) )  ? $settings['fixed_header_image_storage'] : 'public') ,
                 'fixed_module_title'=>(isset($settings['fixed_module_title']) )  ? $settings['fixed_module_title'] : null ,
                 'fixed_module_sub_title'=>(isset($settings['fixed_module_sub_title']) )  ? $settings['fixed_module_sub_title'] : null ,
                 'fixed_location_title'=>(isset($settings['fixed_location_title']) )  ? $settings['fixed_location_title'] : null ,
@@ -576,6 +623,7 @@ class ConfigController extends Controller
                 'download_user_app_title'=>(isset($settings['download_user_app_title']) )  ? $settings['download_user_app_title'] : null ,
                 'download_user_app_sub_title'=>(isset($settings['download_user_app_sub_title']) )  ? $settings['download_user_app_sub_title'] : null ,
                 'download_user_app_image'=>(isset($settings['download_user_app_image']) )  ? $settings['download_user_app_image'] : null ,
+                'download_user_app_image_full_url'=>Helpers::s3_storage_link('download_user_app_image',(isset($settings['download_user_app_image']) )  ? $settings['download_user_app_image'] : null,(isset($settings['download_user_app_image_storage']) )  ? $settings['download_user_app_image_storage'] : 'public') ,
 
                 'special_criterias'=>(isset($criterias) )  ? $criterias : null ,
 
@@ -592,19 +640,20 @@ class ConfigController extends Controller
             return [];
         }
 
-        $methods = DB::table('addon_settings')->where('is_active',1)->where('settings_type', 'payment_config')->get();
+        $methods = Setting::where('is_active',1)->where('settings_type', 'payment_config')->get();
         $env = env('APP_ENV') == 'live' ? 'live' : 'test';
         $credentials = $env . '_values';
 
         $data = [];
         foreach ($methods as $method) {
-            $credentialsData = json_decode($method->$credentials);
+            $credentialsData = $method->$credentials;
             $additional_data = json_decode($method->additional_data);
-            if ($credentialsData->status == 1) {
+            if ($credentialsData['status'] == 1) {
                 $data[] = [
                     'gateway' => $method->key_name,
                     'gateway_title' => $additional_data?->gateway_title,
-                    'gateway_image' => $additional_data?->gateway_image
+                    'gateway_image' => $additional_data?->gateway_image,
+                    'gateway_image_full_url' => Helpers::get_full_url('payment_modules/gateway_image',$additional_data?->gateway_image,$additional_data?->storage ?? 'public')
                 ];
             }
         }
@@ -618,19 +667,21 @@ class ConfigController extends Controller
             return [];
         }
 
-        $methods = DB::table('addon_settings')->where('is_active',1)->whereIn('settings_type', ['payment_config'])->whereIn('key_name', ['ssl_commerz','paypal','stripe','razor_pay','senang_pay','paytabs','paystack','paymob_accept','paytm','flutterwave','liqpay','bkash','mercadopago'])->get();
+        $methods = Setting::where('is_active',1)->whereIn('settings_type', ['payment_config'])->whereIn('key_name', ['ssl_commerz','paypal','stripe','razor_pay','senang_pay','paytabs','paystack','paymob_accept','paytm','flutterwave','liqpay','bkash','mercadopago'])->get();
+
         $env = env('APP_ENV') == 'live' ? 'live' : 'test';
         $credentials = $env . '_values';
 
         $data = [];
         foreach ($methods as $method) {
-            $credentialsData = json_decode($method->$credentials);
+            $credentialsData = $method->$credentials;
             $additional_data = json_decode($method->additional_data);
-            if ($credentialsData->status == 1) {
+            if ($credentialsData['status'] == 1) {
                 $data[] = [
                     'gateway' => $method->key_name,
                     'gateway_title' => $additional_data?->gateway_title,
-                    'gateway_image' => $additional_data?->gateway_image
+                    'gateway_image' => $additional_data?->gateway_image,
+                    'gateway_image_full_url' => Helpers::get_full_url('payment_modules/gateway_image',$additional_data?->gateway_image,$additional_data?->storage ?? 'public')
                 ];
             }
         }

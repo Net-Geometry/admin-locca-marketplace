@@ -1,5 +1,5 @@
 @extends('layouts.admin.app')
-@section('title',translate('messages.store_Details'))
+@section('title',translate('messages.Store_Subscription'))
 @section('subscriberList')
 active
 @endsection
@@ -17,7 +17,9 @@ active
                         <img src="{{asset('/public/assets/admin/img/store.png')}}" width="24" alt="img">
                         <div class="w-0 flex-grow pl-2">
                             <h1 class="page-header-title">{{ $store->name }} {{translate('Subscription')}} &nbsp; &nbsp;
-                                @if ($store?->store_sub_update_application?->is_cancaled == 1)
+                                @if($store?->status == 0 &&  $store?->vendor?->status == 0)
+                                <span class=" badge badge-pill badge-info">  &nbsp; {{ translate('Approval_Pending') }}  &nbsp; </span>
+                                @elseif ($store?->store_sub_update_application?->is_canceled == 1)
                                 <span class=" badge badge-pill badge-warning">  &nbsp; {{ translate('canceled') }}  &nbsp; </span>
                                 @elseif($store?->store_sub_update_application?->status == 0)
                                 <span class=" badge badge-pill badge-danger">  &nbsp; {{ translate('Expired') }}  &nbsp; </span>
@@ -36,7 +38,10 @@ active
                     <a href="" class="nav-link active">{{ translate('Subscription_Details') }} </a>
                 </li>
                 <li class="nav-item">
-                    <a href="" class="nav-link">{{ translate('Transactions') }}</a>
+                    <a href="{{ route('admin.business-settings.subscriptionackage.subscriberTransactions',$store->id) }}" class="nav-link">{{ translate('Transactions') }}</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('admin.business-settings.subscriptionackage.subscriberWalletTransactions',$store->id) }}" class="nav-link">{{ translate('Subscription_Refunds') }}</a>
                 </li>
             </ul>
         </div>
@@ -58,12 +63,13 @@ active
                                     <div class="logo">
                                         <a href="{{route('admin.store.view', $store->id)}}">
 
-                                            <img class="onerror-image" src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
-                                            $store['logo'] ?? '',
-                                            asset('storage/app/public/store').'/'.$store['logo'] ?? '',
-                                            asset('public/assets/admin/img/160x160/img1.jpg'),
-                                            'store/'
-                                        ) }}">
+                                            <img class="onerror-image"
+                                            src="{{ \App\CentralLogics\Helpers::get_image_helper(
+                                                $store,'logo',
+                                                asset('storage/app/public/store').'/'.$store->logo ?? '',
+                                                asset('public/assets/admin/img/100x100/1.png'),
+                                                'store/'
+                                            ) }}">
                                     </div>
                                         </a>
                                     <ul class="address-info list-unstyled list-unstyled-py-3 text-dark">
@@ -154,7 +160,7 @@ active
                             <img src="{{asset('public/assets/admin/img/expiring.png')}}" alt="report/new" class="w-60px">
                             <div class="w-0 flex-grow-1 py-md-3">
                                 <span class="text-body">{{ translate('Expire Date') }}</span>
-                                <h4 class="title m-0">{{  \App\CentralLogics\Helpers::date_format($store?->store_sub_update_application?->expiry_date) }}</h4>
+                                <h4 class="title m-0">{{  \App\CentralLogics\Helpers::date_format($store?->store_sub_update_application?->expiry_date_parsed) }}</h4>
                             </div>
                         </a>
                     </div>
@@ -195,7 +201,7 @@ active
                             <h3 class="name">{{ $store?->store_sub_update_application?->package?->package_name }}</h3>
                             <div class="font-medium text--title">{{ $store?->store_sub_update_application?->package?->text }}</div>
                         </div>
-                        <h3 class="right">{{ \App\CentralLogics\Helpers::format_currency($store?->store_sub_update_application?->last_transcations?->peice) }} /<small class="font-medium text--title">{{ $store?->store_sub_update_application?->last_transcations?->validity }} {{ translate('messages.Days') }}</small></h3>
+                        <h3 class="right">{{ \App\CentralLogics\Helpers::format_currency($store?->store_sub_update_application?->last_transcations?->price) }} /<small class="font-medium text--title">{{ $store?->store_sub_update_application?->last_transcations?->validity }} {{ translate('messages.Days') }}</small></h3>
                     </div>
 
 
@@ -285,8 +291,8 @@ active
                     </div>
                 </div>
                 <div class="btn--container justify-content-end mt-3">
-                    @if ( $store?->store_sub_update_application?->is_cancaled == 0 )
-                        <button type="button"  data-url="{{route('admin.business-settings.subscriptionackage.cancelSubscription',$store?->id)}}" data-message="{{translate('Do_You_Want_To_This_subscription_?')}}"
+                    @if ( $store?->store_sub_update_application?->is_canceled == 0 && $store?->store_sub_update_application?->status == 1  )
+                        <button type="button"  data-url="{{route('admin.business-settings.subscriptionackage.cancelSubscription',$store?->id)}}" data-message="{{translate('If_you_cancel_the_subscription,_after_')}} {{  Carbon\Carbon::now()->subDays(1)->diffInDays($store?->store_sub_update_application?->expiry_date_parsed->format('Y-m-d'), false); }} {{ translate('days_the_vendor_will_no_longer_be_able_to_run_the_business_before_subscribe_a_new_plan.') }}"
                         class="btn btn--danger text-white status_change_alert">{{ translate('Cancel Subscription') }}</button>
                     @endif
 
@@ -314,6 +320,8 @@ active
                                {{ translate('Renew or shift your plan to get better experience!') }}
                             </div>
                             <div class="plan-slider owl-theme owl-carousel">
+                                @if (\App\CentralLogics\Helpers::commission_check())
+
                                 <div class="__plan-item hover {{ $store->store_business_model == 'commission'  ? 'active' : ''}} ">
                                     <div class="inner-div">
                                         <div class="text-center">
@@ -325,18 +333,19 @@ active
                                         </div>
                                         <div class="text-center">
                                             @if ($store->store_business_model == 'commission')
-                                            <button type="button" data-url="{{route('admin.business-settings.subscriptionackage.switchToCommission',$store->id)}}" data-message="{{translate('You_Want_To_Migrate_To_Commission')}}" class="btn btn--primary shift_to_commission">{{ translate('Shift in this plan') }}</button>
-                                            @else
                                             <button type="button" class="btn btn--secondary">{{ translate('Current_Plan') }}</button>
+                                            @else
+                                            <button type="button" data-url="{{route('admin.business-settings.subscriptionackage.switchToCommission',$store->id)}}" data-message="{{translate('You_Want_To_Migrate_To_Commission')}}" class="btn btn--primary shift_to_commission">{{ translate('Shift in this plan') }}</button>
                                             @endif
 
                                         </div>
                                     </div>
                                 </div>
+                                @endif
 
                                 @forelse ($packages as $package)
 
-                                <div class="__plan-item hover">
+                                <div class="__plan-item hover {{ $store?->store_sub_update_application?->package_id == $package->id  ? 'active' : ''}}">
                                     <div class="inner-div">
                                         <div class="text-center">
                                             <h3 class="title">{{ $package->package_name }}</h3>
@@ -416,154 +425,59 @@ active
             </div>
         </div>
 
-        <div class="modal fade show" id="shift-modal">
-            <div class="modal-dialog modal-lg modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header px-3 pt-3">
-                        <button type="button" class="close" data-dismiss="modal">
-                            <span aria-hidden="true" class="tio-clear"></span>
-                        </button>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-
-        <div class="modal fade show" id="renew-modal">
-            <div class="modal-dialog modal-lg modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header px-3 pt-3">
-                        <button type="button" class="close" data-dismiss="modal">
-                            <span aria-hidden="true" class="tio-clear"></span>
-                        </button>
-                    </div>
-                    <div class="modal-body px-4 pt-0">
-                        <div>
-                            <div class="text-center mb-4 pb-2">
-                                <h2 class="modal-title">Renew Subscription Plan</h2>
-                            </div>
-                            <div class="change-plan-wrapper align-items-center">
-                                <div class="__plan-item active">
-                                    <div class="inner-div">
-                                        <div class="text-center">
-                                            <h3 class="title">STANDARD</h3>
-                                            <h2 class="price">15%</h2>
-                                            <div class="day-count">60 days</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="mb-4 mb-lg-5 subscription__plan-info-wrapper bg-ECEEF1 rounded-20">
-                                <div class="row g-3">
-                                    <div class="col-md-4">
-                                        <div class="subscription__plan-info">
-                                            <div class="info">
-                                                Validity
-                                            </div>
-                                            <h4 class="subtitle">365 Days</h4>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="subscription__plan-info">
-                                            <div class="info">
-                                                Price
-                                            </div>
-                                            <h4 class="subtitle">$1,199.00</h4>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="subscription__plan-info">
-                                            <div class="info">
-                                                Bill status
-                                            </div>
-                                            <h4 class="subtitle">Renew</h4>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <h4 class="mb-4">Pay Via Online <span class="font-regular text-body">(Faster & secure way to pay bill)</span></h4>
-                            <div class="row g-3">
-                                <div class="col-md-6">
-                                    <label class="payment-item">
-                                        <input type="radio" class="d-none" name="payment">
-                                        <div class="payment-item-inner">
-                                            <div class="check">
-                                                <img src="{{asset('/public/assets/admin/img/check-1.png')}}" class="uncheck" alt="">
-                                                <img src="{{asset('/public/assets/admin/img/check-2.png')}}" class="check" alt="">
-                                            </div>
-                                            <span>Bkash</span>
-                                            <img class="ml-auto" src="{{asset('/public/assets/admin/img/bkash1.png')}}" width="30" alt="">
-                                        </div>
-                                    </label>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="payment-item">
-                                        <input type="radio" class="d-none" name="payment">
-                                        <div class="payment-item-inner">
-                                            <div class="check">
-                                                <img src="{{asset('/public/assets/admin/img/check-1.png')}}" class="uncheck" alt="">
-                                                <img src="{{asset('/public/assets/admin/img/check-2.png')}}" class="check" alt="">
-                                            </div>
-                                            <span>Marcado pago</span>
-                                            <img class="ml-auto" src="{{asset('/public/assets/admin/img/marcado1.png')}}" width="30" alt="">
-                                        </div>
-                                    </label>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="payment-item">
-                                        <input type="radio" class="d-none" name="payment">
-                                        <div class="payment-item-inner">
-                                            <div class="check">
-                                                <img src="{{asset('/public/assets/admin/img/check-1.png')}}" class="uncheck" alt="">
-                                                <img src="{{asset('/public/assets/admin/img/check-2.png')}}" class="check" alt="">
-                                            </div>
-                                            <span>SSL COMMERZ</span>
-                                            <img class="ml-auto" src="{{asset('/public/assets/admin/img/sslcomz1.png')}}" width="60" alt="">
-                                        </div>
-                                    </label>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="payment-item">
-                                        <input type="radio" class="d-none" name="payment">
-                                        <div class="payment-item-inner">
-                                            <div class="check">
-                                                <img src="{{asset('/public/assets/admin/img/check-1.png')}}" class="uncheck" alt="">
-                                                <img src="{{asset('/public/assets/admin/img/check-2.png')}}" class="check" alt="">
-                                            </div>
-                                            <span>PayStack</span>
-                                            <img class="ml-auto" src="{{asset('/public/assets/admin/img/paystack1.png')}}" width="30" alt="">
-                                        </div>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="btn--container justify-content-end mt-3">
-                                <button type="reset" data-dismiss="modal" class="btn btn--reset">Cancel</button>
-                                <button type="submit" class="btn btn--primary">Renew Subscription Plan</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
     </div>
 
 
-    <!-- Subscrition Plan Modal 2 -->
+    <!-- subscription Plan Modal 2 -->
     <div class="modal fade __modal" id="subscription-renew-modal">
-        <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
 
                 <!-- Modal Header -->
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
+                <div class="modal-body px-4 pt-0">
                     <div class="data_package" id="data_package">
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
+
+    <div class="modal fade" id="product_warning">
+        <div class="modal-dialog modal-dialog-centered status-warning-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true" class="tio-clear"></span>
+                    </button>
+                </div>
+                <div class="modal-body pb-5 pt-0">
+                    <div class="max-349 mx-auto mb-20">
+                        <div>
+                            <div class="text-center">
+                                <img src="{{asset('/public/assets/admin/img/subscription-plan/package-status-disable.png')}}" class="mb-20">
+                                <h5 class="modal-title" ></h5>
+                            </div>
+                            <div class="text-center">
+                                <h3>{{ translate('Are_You_Sure_You_want_To_switch_to_this_plan?') }}</h3>
+                                <p>{{ translate('You_are_about_to_downgrade_your_plan.After_subscribing_to_this_plan_your_oldest_') }} <span id="disable_item_count"></span> {{ translate('Items_will_be_inactivated.') }} </p>
+                            </div>
+                        </div>
+                        <div class="btn--container justify-content-center">
+                            <button  id="continue_btn" class="btn btn-outline-primary min-w-120" data-dismiss="modal" >
+                                {{translate("Continue")}}
+                            </button>
+                            <button  class="btn btn--primary min-w-120  shift_package"  id="back_to_planes" data-dismiss="modal" >{{translate('Go_Back')}}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 @endsection
 
@@ -711,14 +625,27 @@ active
                             },
                 success: function(data){
                     $('#data_package').html(data.view);
-                    $('#subscription-renew-modal').modal('show')
+                    if(data.disable_item_count !== null && data.disable_item_count > 0){
+                        $('#product_warning').modal('show')
+                        $('#disable_item_count').text(data.disable_item_count)
+                    } else{
+                        $('#subscription-renew-modal').modal('show')
+                    }
                 },
                 complete: function() {
                         $('#loading').hide();
                     },
-
             });
         });
+
+        $(document).on('click', '#continue_btn', function () {
+            $('#subscription-renew-modal').modal('show')
+        });
+
+        $(document).on('click', '#back_to_planes', function () {
+            $('#plan-modal').modal('show')
+        });
+
 
     </script>
 @endpush

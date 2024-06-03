@@ -23,8 +23,8 @@ $countryCode= strtolower($country?$country->value:'auto');
 
     <link rel="stylesheet" href="{{asset('public/assets/admin/intltelinput/css/intlTelInput.css')}}">
 
-    @php($icon = \App\Models\BusinessSetting::where(['key' => 'icon'])->first()->value ?? '')
-    <link rel="icon" type="image/x-icon" href="{{ asset('storage/app/public/business/' . $icon ?? asset('public/assets/landing/img/favicon.svg')) }}">
+    @php($icon = \App\Models\BusinessSetting::where(['key' => 'icon'])->first())
+    <link rel="icon" type="image/x-icon" href="{{\App\CentralLogics\Helpers::get_image_helper($icon,'value', asset('storage/app/public/business/').'/' . $icon?->value, asset('public/assets/landing/img/favicon.svg') ,'business/' )}}">
     @stack('css_or_js')
     @php($backgroundChange = \App\Models\BusinessSetting::where(['key' => 'backgroundChange'])->first())
     @php($backgroundChange = isset($backgroundChange) && $backgroundChange->value ? json_decode($backgroundChange->value,true):'')
@@ -69,7 +69,7 @@ $countryCode= strtolower($country?$country->value:'auto');
                     </a>
                     <ul class="menu">
                         <li>
-                            <a href="{{route('home')}}" class="{{ Request::is('/') ? 'active' : '' }}"><span>{{ translate('messages.home') }}</span></a>
+                            <a id="home-link" href="{{route('home')}}" class="{{ Request::is('/') ? 'active' : '' }}"><span>{{ translate('messages.home') }}</span></a>
                         </li>
                         <li>
                             <a href="{{route('about-us')}}" class="{{ Request::is('about-us') ? 'active' : '' }}"><span>{{ translate('messages.about_us') }}</span></a>
@@ -491,27 +491,28 @@ $countryCode= strtolower($country?$country->value:'auto');
 
 <script>
             "use strict";
-            const input = document.querySelector('input[type="tel"]');
-        window.intlTelInput(input, {
-        initialCountry: "{{$countryCode}}",
-        utilsScript: "{{ asset('public/assets/admin/intltelinput/js/utils.js') }}",
-        autoInsertDialCode: true,
-        nationalMode: false,
-        formatOnDisplay: false,
-        });
-
-        function keepNumbersAndPlus(inputString) {
-        let regex = /[0-9+]/g;
-        let filteredString = inputString.match(regex);
-        let result = filteredString ? filteredString.join('') : '';
-        return result;
-        }
+            const inputs = document.querySelectorAll('input[type="tel"]');
+            inputs.forEach(input => {
+                window.intlTelInput(input, {
+                    initialCountry: "{{$countryCode}}",
+                    utilsScript: "{{ asset('public/assets/admin/intltelinput/js/utils.js') }}",
+                    autoInsertDialCode: true,
+                    nationalMode: false,
+                    formatOnDisplay: false,
+                });
+            });
 
 
-        $(document).on('keyup', 'input[type="tel"]', function () {
-        let input = $(this).val();
-        $(this).val(keepNumbersAndPlus(input));
-        });
+            function keepNumbersAndPlus(inputString) {
+                let regex = /[0-9+]/g;
+                let filteredString = inputString.match(regex);
+            return filteredString ? filteredString.join('') : '';
+            }
+
+            $(document).on('keyup', 'input[type="tel"]', function () {
+                $(this).val(keepNumbersAndPlus($(this).val()));
+                });
+
 
 </script>
 

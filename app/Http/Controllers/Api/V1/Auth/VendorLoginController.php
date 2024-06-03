@@ -296,7 +296,7 @@ class VendorLoginController extends Controller
         }
 
 
-        if( $store?->store_model == 'unsubscribed' && isset($store?->store_sub_update_application)){
+        if( $store?->store_business_model == 'unsubscribed' && isset($store?->store_sub_update_application)){
             $vendor->auth_token = $token;
             $vendor?->save();
                     if($store?->store_sub_update_application?->max_product== 'unlimited' ){
@@ -325,7 +325,7 @@ class VendorLoginController extends Controller
             ], 205);
         }
 
-        if($store?->store_model == 'unsubscribed' && !isset($store?->store_sub_update_application)){
+        if($store?->store_business_model == 'unsubscribed' && !isset($store?->store_sub_update_application)){
 
             return [ 'type' => 'subscribed',
             'code' => 200,

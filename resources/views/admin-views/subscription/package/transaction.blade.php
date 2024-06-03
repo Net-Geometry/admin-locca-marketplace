@@ -32,7 +32,7 @@ active
                     <a href="{{ route('admin.business-settings.subscriptionackage.show',$id) }}" class="nav-link">{{ translate('Package_Details') }}</a>
                 </li>
                 <li class="nav-item">
-                    <a href="" class="nav-link active">{{ translate('Transactions') }}</a>
+                    <a href="#" class="nav-link active">{{ translate('Transactions') }}</a>
                 </li>
             </ul>
         </div>
@@ -76,7 +76,7 @@ active
                     </div>
                 </div>
                 <div class="btn--container justify-content-end">
-                    <button type="reset" class="btn btn--reset">{{ translate('Reset') }}</button>
+                    <button type="reset" id="reset_btn" class="btn btn--reset">{{ translate('Reset') }}</button>
                     <button type="submit" class="btn btn--primary">{{ translate('Submit') }}</button>
                 </div>
             </form>
@@ -129,14 +129,14 @@ active
 
                             <span class="dropdown-header">{{ translate('download_options') }}</span>
                             <a id="export-excel" class="dropdown-item"
-                                href="{{ route('admin.transactions.report.day-wise-report-export', ['type' => 'excel', request()->getQueryString()]) }}">
+                                href="{{ route('admin.business-settings.subscriptionackage.TransactionExport', ['id'=> $id , 'export_type' => 'excel', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{ asset('public/assets/admin/svg/components/excel.svg') }}"
                                     alt="Image Description">
                                 {{ translate('messages.excel') }}
                             </a>
                             <a id="export-csv" class="dropdown-item"
-                                href="{{ route('admin.transactions.report.day-wise-report-export', ['type' => 'csv', request()->getQueryString()]) }}">
+                                href="{{  route('admin.business-settings.subscriptionackage.TransactionExport', ['id' => $id, 'export_type' => 'csv', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{ asset('public/assets/admin/svg/components/placeholder-csv-format.svg') }}"
                                     alt="Image Description">
@@ -176,8 +176,8 @@ active
                                 </td>
                                 <td class="px-4">
                                     <div class="text-title">{{ $transaction?->store?->name ?? translate('messages.store deleted!') }}
-                                        @if ($transaction?->subscription?->expiry_date && $transaction->subscription->expiry_date->subDays($subscription_deadline_warning_days)->isBefore(now()))
-                                        <span title="<div class='text-left'>Expiring Soon <br /> Expiration Date: {{ \App\CentralLogics\Helpers::date_format($transaction->subscription->expiry_date)  }}</div>" data-toggle="tooltip" data-html="true">
+                                        @if ($transaction?->subscription?->expiry_date_parsed && $transaction->subscription->expiry_date_parsed->subDays($subscription_deadline_warning_days)->isBefore(now()))
+                                        <span title="<div class='text-left'>Expiring Soon <br /> Expiration Date: {{ \App\CentralLogics\Helpers::date_format($transaction->subscription->expiry_date_parsed)  }}</div>" data-toggle="tooltip" data-html="true">
                                             <img src="{{asset('/public/assets/admin/img/invalid.svg')}}" alt="">
                                         </span>
                                         @endif
@@ -200,7 +200,7 @@ active
                                         <div class="text-title">{{ translate($transaction->plan_type) }}</div>
                                         @endif
 
-                                        <div class="text-success font-medium">{{ translate('Paid_by') }}  {{ $transaction->payment_method  }}</div>
+                                        <div class="text-success font-medium">{{ translate('Paid_by') }}  {{ translate($transaction->payment_method) }}</div>
                                     </div>
                                 </td>
                                 <td class="px-4">
@@ -217,9 +217,8 @@ active
                                 </td>
                                 <td class="px-4">
                                     <div class="btn--container justify-content-center">
-                                        <a class="btn action-btn btn--warning btn-outline-warning" href="{{ route('admin.business-settings.subscriptionackage.invoice',$transaction->id) }}">
+                                        <button class="btn action-btn btn--warning btn-outline-warning printButton" data-url={{ route('admin.business-settings.subscriptionackage.invoice',$transaction->id) }} >
                                             <i class="tio-print"></i>
-                                        </a>
                                     </div>
                                 </td>
                             </tr>
@@ -228,13 +227,13 @@ active
                         </tbody>
                     </table>
                 </div>
-                @if(count($transaction) !== 0)
+                @if(count($transactions) !== 0)
                 <hr>
                 @endif
                 <div class="page-area">
-                    {!! $transaction->withQueryString()->links() !!}
+                    {!! $transactions->withQueryString()->links() !!}
                 </div>
-                @if(count($transaction) === 0)
+                @if(count($transactions) === 0)
                 <div class="empty--data">
                     <img src="{{asset('/public/assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                     <h5>
@@ -273,6 +272,19 @@ active
             }
         });
 
+        $(document).ready(function() {
+            $('.printButton').click(function() {
+                window.open($(this).data('url'), '_blank');
+            });
+        });
+
+    $(document).on("click", "#reset_btn", function () {
+        setTimeout(reset, 10);
+    });
+
+    function reset(){
+        $('.filter').trigger('change');
+    }
 </script>
 @endpush
 

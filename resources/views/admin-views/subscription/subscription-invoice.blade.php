@@ -1,10 +1,13 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.disbursement'))
+@section('title',translate('messages.Subscription_Invoice'))
 
 @push('css_or_js')
 
     <style>
+        .trx-invoice table {
+            width: 100%
+        }
         .trx-invoice {
             font-size: 0.75rem;
             font-family: "Inter", sans-serif;
@@ -99,218 +102,25 @@
         .trx-invoice table th.text-right {
             text-align: right !important;
         }
-        @media print {
-            .trx-invoice table th.text-right {
-                text-align: right !important;
-            }
-        }
-        .trx-invoice .content-position {
-            padding: 30px 20px 10px;
-        }
-        .trx-invoice .content-position-y {
-            padding: 0 40px;
-        }
-        .trx-invoice .text-white {
-            color: white !important;
-        }
-        .trx-invoice .bs-0 {
-            border-spacing: 0;
-        }
-        .trx-invoice .mb-1 {
-            margin-bottom: 4px !important;
-        }
-        .trx-invoice .mb-2 {
-            margin-bottom: 8px !important;
-        }
-        .trx-invoice .mb-4 {
-            margin-bottom: 24px !important;
-        }
-        .trx-invoice .mb-30 {
-            margin-bottom: 30px !important;
-        }
-        .trx-invoice .px-10 {
-            padding-inline-start: 10px;
-            padding-inline-end: 10px;
-        }
-        .trx-invoice .fz-14 {
-            font-size: 14px;
-        }
-        .trx-invoice .fz-12 {
-            font-size: 12px;
-        }
-        .trx-invoice .fz-10 {
+        .fz-10 {
             font-size: 10px;
         }
-        .trx-invoice .font-normal {
-            font-weight: 400;
-        }
-        .trx-invoice .font-weight-normal {
-            font-weight: normal;
-        }
-        .trx-invoice .border-dashed-top {
-            border-top: 1px dashed #ddd;
-        }
-        .trx-invoice .font-weight-bold {
-            font-weight: 700;
-        }
-        .trx-invoice .bg-light {
-            background-color: #f7f7f7;
-        }
-        .trx-invoice .py-30 {
-            padding-top: 30px;
-            padding-bottom: 30px;
-        }
-        .trx-invoice .py-4 {
-            padding-top: 24px;
-            padding-bottom: 24px;
-        }
-        .trx-invoice .d-flex {
-            display: flex;
-            gap: 3px;
-        }
-        .trx-invoice .align-items-center {
-            align-items: center;
-        }
-        .trx-invoice .gap-2 {
-            gap: 8px;
-        }
-        .trx-invoice .flex-wrap {
-            flex-wrap: wrap;
-        }
-        .trx-invoice .align-items-center {
-            align-items: center;
-        }
-        .trx-invoice .justify-content-center {
-            justify-content: center;
-        }
-        .trx-invoice a {
-            color: rgba(0, 128, 245, 1);
-        }
-        .trx-invoice .p-1 {
-            padding: 4px !important;
-        }
-        .trx-invoice .h2 {
-            font-size: 1.5em;
-            margin-block-start: 0.83em;
-            margin-block-end: 0.83em;
-            margin-inline-start: 0;
-            margin-inline-end: 0;
-            font-weight: bold;
-            color: #222;
-        }
-        .trx-invoice .h4 {
-            margin-block-start: 1.33em;
-            margin-block-end: 1.33em;
-            margin-inline-start: 0;
-            margin-inline-end: 0;
-            font-weight: bold;
-            color: #222;
-        }
-        .trx-invoice .m-0 {
-            margin: 0;
-        }
-        .trx-invoice .my-0 {
-            margin-top: 0;
-            margin-bottom: 0;
-        }
-        .trx-invoice .mb-0 {
-            margin-bottom: 0;
-        }
-        .trx-invoice .mt-6px {
-            margin-top: 6px;
-        }
-        .trx-invoice .font-size-26px {
-            font-size: 26px;
-        }
-        .trx-invoice .w-100 {
-            width: 100%;
-        }
-        .trx-invoice .width-60 {
-            width: 60%;
-        }
-        .trx-invoice .fz-17 {
+        .fz-17 {
             font-size: 17px;
-            font-weight: 700;
+            font-weight: 700
         }
-        .trx-invoice .text-primary {
-            color: #0177cd;
-        }
-        .trx-invoice .border {
-            border: 1px solid #d7dae0;
-        }
-        .trx-invoice .border-bottom {
-            border-bottom: 1px solid #d7dae0;
-        }
-        .trx-invoice .border-left {
-            border-left: 1px solid #d7dae0;
-        }
-        .trx-invoice .font-bold {
-            font-weight: bold;
-            color: #222;
-        }
-        .trx-invoice .vertical-align-top {
-            vertical-align: top;
-        }
-        .trx-invoice .font-semibold {
-            font-weight: 600;
-            color: #222;
-        }
-        .trx-invoice .fz-11 {
-            font-size: 11px;
-        }
-        .trx-invoice .fz-14 {
-            font-size: 14px !important;
-        }
-        .trx-invoice .h-100 {
-            height: 100%;
-        }
-        .trx-invoice .font-medium {
-            font-weight: 600;
-            color: #222;
-        }
-        .trx-invoice .text-capitalize {
-            text-transform: capitalize;
-        }
-        .trx-invoice .text-dark, .trx-invoice strong {
-            color: #222;
-        }
-        .trx-invoice .text-uppercase {
-            text-transform: uppercase;
-        }
-        .trx-invoice .pt-0 {
-            padding-top: 0 !important;
-        }
-        .trx-invoice .pb-0 {
-            padding-bottom: 0 !important;
-        }
-        .__subscribe-table tr th {
-            background: #00555512;
-            color: #000000
-        }
-        .trx-invoice .text-dark,
-        .__subscribe-table tr th span {
-            color: #000000
-        }
-        .trx-invoice .bg-white {
-            background: #ffffff
-        }
-        .trx-invoice .p-3 {
-            padding: 16px;
-        }
-        .trx-invoice .rounded-md {
-            border-radius: 0.375rem
-        }
-        body {
-            background: #f9f9f9;
+        .fz-12 {
+            font-size: 12px;
         }
     </style>
 @endpush
 
 @section('content')
-<div class="content container-fluid">
-    <div class="trx-invoice">
 
-        <div class="first content-position" style="width:732px;margin: 0 auto;">
+
+<div class="content container-fluid">
+    <div id="printableArea2">
+        <div class="first content-position trx-invoice" style="width:732px;margin: 0 auto;">
             <div class="bg-white p-3 rounded-md">
                 <table class="fz-10">
                     <tr>
@@ -319,20 +129,22 @@
                                 {{ translate('Invoice')}}
                             </div>
                             <div class="font-normal">
-                                <span class="text-dark">{{ translate('Transaction ID')}}</span> : #0100082
+                                <span class="text-dark">{{ translate('Transaction ID')}}</span> : #{{ $transaction->id }}
                             </div>
                             <div class="font-normal">
-                                <span class="text-dark">{{ translate('invoice_Date')}}</span> : June 3, 2020
+                                <span class="text-dark">{{ translate('invoice_Date')}}</span> : {{ App\CentralLogics\Helpers::date_format($transaction->created_at) }}
                             </div>
                         </td>
                         <td style="padding:0;text-align:right">
-                            <img width="60" height="40" src="" alt="6amMart" style="margin-bottom:5px">
+                            <img width="60" height="40"  alt="6amMart"
+                            src="{{ \App\CentralLogics\Helpers::get_image_helper($logo,'value', asset('storage/app/public/business/').'/'.$logo->value??'', asset('public/assets/admin/img/upload-img.png'),'business/') }}"
+                            style="margin-bottom:5px">
                             <div class="font-normal">
-                                Business address City, State, IN - 000 000
+                                {{ $BusinessData['address'] }}
                             </div>
-                            <div>
+                            {{-- <div>
                                 TAX ID 00XXXXX1234X0XX
-                            </div>
+                            </div> --}}
                         </td>
                     </tr>
                 </table>
@@ -342,23 +154,23 @@
                         <td class="text-left" style="padding:21px 16px">
                             <div class="fz-11">{{ translate('Store Owner')}}</div>
                             <div class="font-medium fz-10 mb-2 text-capitalize">
-                            <span class="text-dark">Jhone Doe</span></div>
+                            <span class="text-dark">{{ $transaction?->store?->vendor?->f_name. ' '.$transaction?->store?->vendor?->l_name }}</span></div>
                         </td>
                         <td class="text-left" style="padding:21px 8px">
                             <div class="fz-11">{{ translate('Phone')}}</div>
                             <div class="font-medium fz-10 mb-2 text-capitalize">
-                            <span class="text-dark">+9154983134435</span></div>
+                            <span class="text-dark">{{ $transaction?->store?->vendor?->phone }}</span></div>
                         </td>
                         <td class="text-left" style="padding:21px 8px">
                             <div class="fz-11">{{ translate('Email')}}</div>
                             <div class="font-medium fz-10 mb-2 text-capitalize">
-                            <span class="text-dark">jhone@example.com</span></div>
+                            <span class="text-dark">{{ $transaction?->store?->vendor?->email }}</span></div>
                         </td>
                         <td colspan="3" class="text-right" style="padding:21px 16px">
                             <div class="mb-1 fz-10">
-                                <span class="text-dark">{{translate('invoice_of')}}</span> <span class="font-normal">$</span>
+                                <span class="text-dark">{{translate('invoice_of')}}</span> <span class="font-normal">({{  App\CentralLogics\Helpers::currency_symbol() }})</span>
                             </div>
-                            <div class="fz-17 text-primary text-right">$1000.00</div>
+                            <div class="fz-17 text-primary text-right">{{  App\CentralLogics\Helpers::format_currency($transaction->paid_amount)  }}</div>
                         </td>
                     </tr>
                     <tr>
@@ -374,15 +186,15 @@
                                     <td class="vertical-align-top" style="padding:8px 16px; width:25%">
                                         <div class="fz-11">{{ translate('payment')}}</div>
                                         <div class="font-medium fz-10 mb-2 text-capitalize">
-                                        <span class="text-dark">Stripe</span></div>
+                                        <span class="text-dark">{{ translate($transaction->payment_method) }}</span></div>
                                     </td>
                                     <td class="fz-10 border-left vertical-align-top" style="padding:8px 16px; width:34%">
-                                        <div>Purchased</div>
-                                        <div class="font-bold fz-11">{{ translate('Standard Package')}}</div>
+                                        <div>{{ translate('Purchased') }}</div>
+                                        <div class="font-bold fz-11">{{ $transaction->package->package_name}}</div>
                                     </td>
                                     <td class="fz-10 border-left vertical-align-top" style="padding:8px 16px; width:34%">
-                                        <div>365 Days</div>
-                                        <div class="font-bold fz-11">{{translate('365 Days')}} </div>
+                                        <div>{{translate('Duration')}}</div>
+                                        <div class="font-bold fz-11"> {{ $transaction->validity }} {{translate('Days')}} </div>
                                     </td>
                                 </tr>
                             </table>
@@ -403,39 +215,39 @@
                                 <thead>
                                     <tr>
                                         <th>
-                                            <span>Transaction ID</span>
+                                            <span>{{ translate('Transaction ID') }}</span>
                                         </th>
                                         <th>
-                                            <span>Package Name</span>
+                                            <span>{{ translate('Package Name') }}</span>
                                         </th>
                                         <th>
-                                            <span>Transaction Time</span>
+                                            <span>{{ translate('Transaction Time') }}</span>
                                         </th>
                                         <th>
-                                            <span>Validity Time</span>
+                                            <span>{{ translate('Validity Time') }}</span>
                                         </th>
                                         <th>
-                                            <span>Amount</span>
+                                            <span>{{ translate('Amount') }}</span>
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
                                         <td>
-                                            <span>2398435734</span>
+                                            <span>{{ $transaction->id}}</span>
                                         </td>
                                         <td>
-                                            <span>Pro</span>
+                                            <span>{{ $transaction->package->package_name}}</span>
                                         </td>
                                         <td>
-                                            <span>24 Nov 2022</span>
+                                            <span>{{ App\CentralLogics\Helpers::date_format($transaction->created_at) }}</span>
                                         </td>
                                         <td>
-                                            <span>365 Days</span>
+                                            <span>{{ $transaction->validity }} {{translate('Days')}}</span>
                                         </td>
                                         <td>
                                             <span class="__txt-nowrap">
-                                                $ 1,199.00
+                                                {{  App\CentralLogics\Helpers::format_currency($transaction->paid_amount) }}
                                             </span>
                                         </td>
                                     </tr>
@@ -465,16 +277,16 @@
                     </tr>
                 </table>
             </div>
-            <table class="border-0" style="text-align:center; background: #f1f1f1">
+            <table class="border-0" style="text-align:center; background-color: #f1f1f1">
                 <tr>
                     <td>
-                        www.6ammart.inc
+                        {{url('/') }}
                     </td>
                     <td>
-                        +91 00000 00000
+                        {{ $BusinessData['phone'] }}
                     </td>
                     <td>
-                        6ammart@email.com
+                        {{ $BusinessData['email_address'] }}
                     </td>
                 </tr>
             </table>
@@ -485,6 +297,11 @@
 @endsection
 
 @push('script_2')
-
+<script>
+      let printContents = document.getElementById("printableArea2").innerHTML;
+    let originalContents = document.body.innerHTML;
+    document.body.innerHTML = printContents;
+    window.print();
+    document.body.innerHTML = printContents;
+</script>
 @endpush
-

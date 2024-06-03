@@ -85,7 +85,7 @@ active
             </h4>
             <div class="d-flex gap-2 align-items-center justify-content-center">
                 <label class="toggle-switch toggle-switch-sm"> {{ translate('Status') }}:&nbsp;
-                    <input type="checkbox" data-url="{{route('admin.business-settings.subscriptionackage.status',[$subscriptionackage->id,$subscriptionackage->status?0:1])}}" class="toggle-switch-input status_change_alert" {{$subscriptionackage->status?'checked':''}}>
+                    <input type="checkbox"  data-package_id="{{$subscriptionackage->id}}" data-package_name="{{$subscriptionackage->package_name}}" data-url="{{route('admin.business-settings.subscriptionackage.status',[$subscriptionackage->id,$subscriptionackage->status?0:1])}}" class="toggle-switch-input {{$subscriptionackage->status?'status_change_alert':'status_change_alert_reenable'}}" {{$subscriptionackage->status?'checked':''}}>
                     <span class="toggle-switch-label">
                         <span class="toggle-switch-indicator"></span>
                     </span>
@@ -199,6 +199,119 @@ active
 
 
 
+<!-- Button trigger modal -->
+<div class="modal fade" id="status-chage-deactive">
+    <div class="modal-dialog modal-dialog-centered status-warning-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true" class="tio-clear"></span>
+                </button>
+            </div>
+            <div class="modal-body pb-5 pt-0">
+                <div class="max-349 mx-auto mb-20">
+                    <div>
+                        <div class="text-center">
+                            <img src="{{asset('/public/assets/admin/img/subscription-plan/package-status-disable.png')}}" class="mb-20">
+                            <h5 class="modal-title" id="toggle-title"></h5>
+                        </div>
+                        <div class="text-center" id="toggle-message">
+                            <h3>{{ translate('Are_You_Sure_You_want_To_Off_The_Status?') }}</h3>
+                            <p>{{ translate('You_are_about_to_deactivate_a_subscription_package._You_have_the_option_to_either_switch_all_stores_plans_or_allow_stores_to_make_changes._Please_choose_an_option_below_to_proceed.') }}</p>
+                        </div>
+                    </div>
+                    <div class="btn--container justify-content-center">
+                        <a href="#" data-toggle="tooltip" data-placement="bottom" title="{{ translate('Stores_will_be_subscribed_untill_their_package_expires') }}"  id="status_change_now" class="btn btn-outline-primary min-w-120" >
+                            {{translate("Allow Store to Change")}}
+                        </a>
+                        <button type="button"  class="btn btn--primary min-w-120  shift_package"  data-dismiss="modal" >{{translate('Switch_Plan')}}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Button trigger modal -->
+<div class="modal fade" id="status-chage-active">
+    <div class="modal-dialog modal-dialog-centered status-warning-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true" class="tio-clear"></span>
+                </button>
+            </div>
+            <div class="modal-body pb-5 pt-0">
+                <div class="max-349 mx-auto mb-20">
+                    <div>
+                        <div class="text-center">
+                            <img src="{{asset('/public/assets/admin/img/subscription-plan/tick.png')}}" class="mb-20">
+                            <h5 class="modal-title" id="toggle-title"></h5>
+                        </div>
+                        <div class="text-center" id="toggle-message">
+                            <h3>{{ translate('Are_You_Sure_You_want_To_ON_The_Status?') }}</h3>
+                            <p>{{ translate('This_package_will_be_available_for_the_stores.') }}</p>
+                        </div>
+                    </div>
+                    <div class="btn--container justify-content-center">
+                        <button type="button"  class="btn btn--cancel min-w-120 "  data-dismiss="modal" >{{translate('Close')}}</button>
+                        <a href="#"  id="status_change_now2" class="btn btn--primary  min-w-120" >
+                            {{translate("Active_now")}}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="shift_package">
+    <div class="modal-dialog modal-dialog-centered status-warning-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true" class="tio-clear"></span>
+                </button>
+            </div>
+            <form action="{{ route('admin.business-settings.subscriptionackage.switchPlan') }}" method="post">
+                @csrf
+                <input type="hidden" name="turn_off_package_id" id="turn_off_package_id">
+            <div class="modal-body pb-5 pt-0">
+                <div class="max-349 mx-auto mb-20">
+                    <div>
+                        <div class="text-center">
+                            <img src="{{asset('/public/assets/admin/img/subscription-plan/package-status-disable.png')}}" class="mb-20">
+                            <h5 class="modal-title" id="toggle-title"></h5>
+                        </div>
+                        <div class="text-center" id="toggle-message">
+                            <h3>{{ translate('Switch_existing_business_plan.') }}</h3>
+                            <div class="form-group">
+                                <label class="input-label text-capitalize"> <span  id="package_name"  class="badge badge-secondary"></span> </label>
+                                <label class="input-label text-capitalize mt-2 mb-2">{{ translate('Select_Business_Plan') }} </label>
+                                    <select class="form-control js-select2-custom  " name="package_id">
+                                        <option value="" selected > {{translate('select_a_package') }}</option>
+                                        <option value="commission"  > {{translate('Commission_base') }}</option>
+                                        @foreach ($packages as $key => $package)
+                                        @if ($package->status == 1 && $subscriptionackage->id != $package->id)
+                                            <option class="show_all" id="package_{{ $package->id }}" value="{{ $package->id }}"> {{$package->package_name }}</option>
+                                        @endif
+                                        @endforeach
+                                    </select>
+                                </div>
+                        </div>
+                    </div>
+                    <div class="btn--container justify-content-center">
+
+                        <button type="submit"  class="btn btn--primary min-w-120 ">{{translate('Switch & Turn Of The Status')}}</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+        </div>
+    </div>
+</div>
+
+
+
 
 @endsection
 
@@ -249,6 +362,50 @@ active
             },
         });
     });
+
+
+        $(document).on("click", ".status_change_alert", function () {
+            let url = $(this).data('url');
+            let package_name = $(this).data('package_name');
+            $('.show_all').removeAttr("hidden");
+            $('#package_'+$(this).data('package_id')).attr("hidden","true");
+            $('#status_change_now').attr("href",url);
+            $('#turn_off_package_id').val($(this).data('package_id')) ;
+            $('#package_name').text(package_name);
+
+            status_change_alert(url,event)
+        });
+        $(document).on("click", ".status_change_alert_reenable", function (e) {
+            e.preventDefault();
+            let url = $(this).data('url');
+            $('#status_change_now2').attr("href",url);
+            // $('#status-chage-deactive').modal('hide');
+            $('#status-chage-active').modal('show');
+        });
+
+
+
+        $(document).on("click", ".shift_package", function () {
+            $('#status-chage-deactive').modal('hide');
+            $('#shift_package').modal('show');
+        });
+
+        function status_change_alert(url, e) {
+            e.preventDefault();
+            $('#status-chage-deactive').modal('show');
+        }
+        $(document).on("ready",  function () {
+            $('.js-select2-custom').select2({
+                templateResult: function(option) {
+                    if(option.element && (option.element).hasAttribute('hidden')){
+                        return null;
+                    }
+                        return option.text;
+                    }
+            });
+        });
+
+
 
 
 </script>

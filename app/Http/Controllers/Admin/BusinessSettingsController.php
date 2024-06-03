@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use Carbon\Carbon;
 use App\Models\Item;
+use App\Models\Store;
 use App\Models\Setting;
 use App\Models\Currency;
 use App\Traits\Processor;
@@ -28,6 +29,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Mail;
 use App\Models\AdminPromotionalBanner;
 use App\Models\FlutterSpecialCriteria;
+use App\Models\StoreSubscription;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
@@ -594,6 +596,64 @@ class BusinessSettingsController extends Controller
         DB::table('business_settings')->updateOrInsert(['key' => 'delivery_charge_comission'], [
             'value' => $request['admin_comission_in_delivery_charge']
         ]);
+// dd( $request['commission_business_model']);
+
+        if(!isset($request->subscription_business_model) && !isset($request->commission_business_model)){
+            Toastr::error( translate('You_must_select_at_least_one_business_model_between_commission_and_subscription'));
+            return back();
+        }
+
+        // For subscription Model
+        if (isset($request->subscription_business_model) && !isset($request->commission_business_model)) {
+                DB::table('business_settings')->updateOrInsert(['key' => 'subscription_business_model'], [
+                    'value' => $request['subscription_business_model'] ?? 1
+                ]);
+
+                DB::table('business_settings')->updateOrInsert(['key' => 'commission_business_model'], [
+                    'value' => $request['commission_business_model'] ?? 0
+                ]);
+
+                if ( Helpers::commission_check() == 0 ){
+                    Store::where('store_business_model','commission')
+                    ->update(['store_business_model' => 'none',
+                    'status' => 0,]);
+                }
+
+
+        }
+        // For commission model
+            elseif(isset($request->commission_business_model) && !isset($request->subscription_business_model)) {
+
+
+
+                if(StoreSubscription::where('status',1)->count() > 0 ){
+                    Toastr::warning(translate('You_need_to_switch_your_subscribers_to_commission_first'));
+                    return back();
+                }
+                DB::table('business_settings')->updateOrInsert(['key' => 'commission_business_model'], [
+                    'value' => $request['commission_business_model'] ?? 1
+                ]);
+                DB::table('business_settings')->updateOrInsert(['key' => 'subscription_business_model'], [
+                    'value' => $request['subscription_business_model'] ?? 0
+                ]);
+
+                if (Helpers::subscription_check() == 0){
+                        Store::query()->update(['store_business_model' => 'commission']);
+                }
+
+
+        } else {
+            DB::table('business_settings')->updateOrInsert(['key' => 'commission_business_model'], [
+                'value' => $request['commission_business_model'] ?? 1
+            ]);
+            if(!isset($request->subscription_business_model) && StoreSubscription::where('status',1)->count() > 0){
+                Toastr::warning(translate('You_need_to_switch_your_subscribers_to_commission_first'));
+                return back();
+            }
+            DB::table('business_settings')->updateOrInsert(['key' => 'subscription_business_model'], [
+                'value' => $request['subscription_business_model'] ?? 1
+            ]);
+        }
 
 
         Toastr::success(translate('messages.successfully_updated_to_changes_restart_app'));
@@ -1113,20 +1173,19 @@ class BusinessSettingsController extends Controller
         $payment_additional_data = [
             'gateway_title' => $request['gateway_title'],
             'gateway_image' => $gateway_image,
+            'storage' => self::getDisk(),
         ];
 
         $validator = Validator::make($request->all(), array_merge($validation, $additional_data));
 
 
-        Setting::updateOrCreate(['key_name' => $request['gateway'], 'settings_type' => 'payment_config'], [
-            'key_name' => $request['gateway'],
-            'live_values' => $validator->validate(),
-            'test_values' => $validator->validate(),
-            'settings_type' => 'payment_config',
-            'mode' => $request['mode'],
-            'is_active' => $request['status'],
-            'additional_data' => json_encode($payment_additional_data),
-        ]);
+        $settings = Setting::firstOrNew(['key_name' => $request['gateway'], 'settings_type' => 'payment_config']);
+        $settings->live_values  = $validator->validate();
+        $settings->test_values  = $validator->validate();
+        $settings->mode  = $request['mode'];
+        $settings->is_active  = $request['status'];
+        $settings->additional_data  = json_encode($payment_additional_data);
+        $settings->save();
 
         Toastr::success(GATEWAYS_DEFAULT_UPDATE_200['message']);
         return back();
@@ -1526,7 +1585,7 @@ class BusinessSettingsController extends Controller
                 }
                 $imageName = \Carbon\Carbon::now()->toDateString() . "-" . uniqid() . ".png";
                 $request->top_content_image->move(public_path('assets/landing/image'), $imageName);
-                $data['top_content_image'] = $imageName;
+                $data['top_content_image'] = ['img' => $imageName, 'storage'=> Helpers::getDisk()];
             }
 
             if ($request->has('mobile_app_section_image')) {
@@ -1535,7 +1594,7 @@ class BusinessSettingsController extends Controller
                 }
                 $imageName = \Carbon\Carbon::now()->toDateString() . "-" . uniqid() . ".png";
                 $request->mobile_app_section_image->move(public_path('assets/landing/image'), $imageName);
-                $data['mobile_app_section_image'] = $imageName;
+                $data['mobile_app_section_image'] = ['img' => $imageName, 'storage'=> Helpers::getDisk()];
             }
             DB::table('business_settings')->updateOrInsert(['key' => 'web_app_landing_page_settings'], [
                 'value' => json_encode($data)
@@ -1653,8 +1712,8 @@ class BusinessSettingsController extends Controller
             foreach ($request->banner_section_half  as $key => $value) {
 
                 if ($request->hasfile("banner_section_half.{$key}.img")) {
-                    if (isset($data[$key]['img']) && Storage::disk('public')->exists('react_landing/' . $data[$key]['img'])) {
-                        Storage::disk('public')->delete('react_landing/' . $data[$key]['img']);
+                    if (isset($data[$key]['img'])) {
+                        Helpers::check_and_delete('react_landing/' , $data[$key]['img']);
                     }
 
                     $value['img'] = Helpers::upload('react_landing/', 'png', $request->file("banner_section_half.{$key}.img"));
@@ -1973,13 +2032,17 @@ class BusinessSettingsController extends Controller
 
     public function update_fcm(Request $request)
     {
+        DB::table('business_settings')->updateOrInsert(['key' => 'push_notification_service_file_content'], [
+            'value' => $request['push_notification_service_file_content'],
+        ]);
+
         DB::table('business_settings')->updateOrInsert(['key' => 'fcm_project_id'], [
             'value' => $request['projectId']
         ]);
 
-        DB::table('business_settings')->updateOrInsert(['key' => 'push_notification_key'], [
-            'value' => $request['push_notification_key']
-        ]);
+//        DB::table('business_settings')->updateOrInsert(['key' => 'push_notification_key'], [
+//            'value' => $request['push_notification_key']
+//        ]);
 
         DB::table('business_settings')->updateOrInsert(['key' => 'fcm_credentials'], [
             'value' => json_encode([
@@ -2466,11 +2529,34 @@ class BusinessSettingsController extends Controller
     public function storage_connection_update(Request $request, $name)
     {
         if($name == 'local_storage'){
-            BusinessSetting::where('key', 'local_storage')->update([
-                'value' => $request->status??0
+            DB::table('business_settings')->updateOrInsert(['key' => 'local_storage'], [
+                'key' => 'local_storage',
+                'value' => $request->status??0,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+            DB::table('business_settings')->updateOrInsert(['key' => '3rd_party_storage'], [
+                'key' => '3rd_party_storage',
+                'value' => $request->status=='1'?0:1,
+                'created_at' => now(),
+                'updated_at' => now(),
             ]);
         }
-        if($name == 'storage_connection'){
+        if($name == '3rd_party_storage'){
+            DB::table('business_settings')->updateOrInsert(['key' => '3rd_party_storage'], [
+                'key' => '3rd_party_storage',
+                'value' => $request->status??0,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+            DB::table('business_settings')->updateOrInsert(['key' => 'local_storage'], [
+                'key' => 'local_storage',
+                'value' => $request->status=='1'?0:1,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
+        if($name == 'storage_connection') {
             DB::table('business_settings')->updateOrInsert(['key' => 's3_credential'], [
                 'key' => 's3_credential',
                 'value' => json_encode([
@@ -2484,60 +2570,62 @@ class BusinessSettingsController extends Controller
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
-
-            $credentials=\App\CentralLogics\Helpers::get_business_settings('s3_credential');
-
-            $s3Credentials = [
-                'FILESYSTEM_DRIVER' => 's3',
-                'AWS_ACCESS_KEY_ID' => $credentials['key'],
-                'AWS_SECRET_ACCESS_KEY' => $credentials['secret'],
-                'AWS_DEFAULT_REGION' => $credentials['region'],
-                'AWS_BUCKET' => $credentials['bucket'],
-                'AWS_URL' => $credentials['url'],
-                'AWS_ENDPOINT' => $credentials['end_point']
-            ];
-
-            // Load existing environment file into an array
-            $envFile = file(base_path('.env'), FILE_IGNORE_NEW_LINES);
-            $data = [];
-            foreach ($envFile as $line) {
-                if (!empty(trim($line))) {
-                    list($key, $value) = explode('=', $line, 2);
-                    $data[$key] = $value;
-                } else {
-                    // Preserve empty lines
-                    $data[] = '';
-                }
-            }
-
-            // Update existing keys
-            foreach ($s3Credentials as $key => $value) {
-                if (isset($data[$key])) {
-                    // Update the value
-                    $data[$key] = $value;
-                }
-            }
-
-            // Append any new keys that were not present in the original file
-            foreach ($s3Credentials as $key => $value) {
-                if (!isset($data[$key])) {
-                    $data[$key] = $value;
-                }
-            }
-
-            // Write the updated environment file
-            $lines = [];
-            foreach ($data as $key => $value) {
-                if (is_numeric($key)) {
-                    // Preserve empty lines
-                    $lines[] = '';
-                } else {
-                    $lines[] = $key . '=' . $value;
-                }
-            }
-
-            file_put_contents(base_path('.env'), implode(PHP_EOL, $lines) . PHP_EOL);
         }
+
+//        $credentials=\App\CentralLogics\Helpers::get_business_settings('s3_credential');
+//        $config=\App\CentralLogics\Helpers::get_business_data('local_storage');
+//
+//        $s3Credentials = [
+//            'FILESYSTEM_DRIVER' => isset($config)?($config==0?'s3':'local'):'local',
+//            'AWS_ACCESS_KEY_ID' => $credentials['key'],
+//            'AWS_SECRET_ACCESS_KEY' => $credentials['secret'],
+//            'AWS_DEFAULT_REGION' => $credentials['region'],
+//            'AWS_BUCKET' => $credentials['bucket'],
+//            'AWS_URL' => $credentials['url'],
+//            'AWS_ENDPOINT' => $credentials['end_point']
+//        ];
+
+//        // Load existing environment file into an array
+//        $envFile = file(base_path('.env'), FILE_IGNORE_NEW_LINES);
+//        $data = [];
+//        foreach ($envFile as $line) {
+//            if (!empty(trim($line))) {
+//                list($key, $value) = explode('=', $line, 2);
+//                $data[$key] = $value;
+//            } else {
+//                // Preserve empty lines
+//                $data[] = '';
+//            }
+//        }
+//
+//        // Update existing keys
+//        foreach ($s3Credentials as $key => $value) {
+//            if (isset($data[$key])) {
+//                // Update the value
+//                $data[$key] = $value;
+//            }
+//        }
+//
+//        // Append any new keys that were not present in the original file
+//        foreach ($s3Credentials as $key => $value) {
+//            if (!isset($data[$key])) {
+//                $data[$key] = $value;
+//            }
+//        }
+//
+//        // Write the updated environment file
+//        $lines = [];
+//        foreach ($data as $key => $value) {
+//            if (is_numeric($key)) {
+//                // Preserve empty lines
+//                $lines[] = '';
+//            } else {
+//                $lines[] = $key . '=' . $value;
+//            }
+//        }
+//
+//        file_put_contents(base_path('.env'), implode(PHP_EOL, $lines) . PHP_EOL);
+
 
         Toastr::success(translate('messages.updated_successfully'));
         return back();
@@ -4603,13 +4691,19 @@ class BusinessSettingsController extends Controller
         } elseif ($tab == 'header-section') {
             $request->validate([
                 'header_title.0' => 'required',
-                'header_sub_title.0' => 'required',
-                'banner_image' => 'required',
+                'header_sub_title.0' => 'required'
             ],[
                 'header_title.0.required' => translate('messages.Default_title_is_required'),
-                'header_sub_title.0.required' => translate('messages.Default_subtitle_is_required'),
-                'banner_image.required' => translate('messages.Banner_image_is_required'),
+                'header_sub_title.0.required' => translate('messages.Default_subtitle_is_required')
             ]);
+                $header_banner = DataSetting::where('type', 'react_landing_page')->where('key', 'header_banner')->first();
+                if ($header_banner == null) {
+                    $header_banner = new DataSetting();
+                }
+                if (!$header_banner->value && !$request->has('banner_image')) {
+                    Toastr::error(translate('messages.Banner_image_is_required'));
+                    return back();
+                }
                 $header_title = DataSetting::where('type', 'react_landing_page')->where('key', 'header_title')->first();
                 if ($header_title == null) {
                     $header_title = new DataSetting();
@@ -4649,10 +4743,7 @@ class BusinessSettingsController extends Controller
                 $header_icon->value = $request->has('image') ? Helpers::update('header_icon/', $header_icon->value, 'png', $request->file('image')) : $header_icon->value;
                 $header_icon->save();
 
-                $header_banner = DataSetting::where('type', 'react_landing_page')->where('key', 'header_banner')->first();
-                if ($header_banner == null) {
-                    $header_banner = new DataSetting();
-                }
+
                 $header_banner->key = 'header_banner';
                 $header_banner->type = 'react_landing_page';
                 $header_banner->value = $request->has('banner_image') ? Helpers::update('header_banner/', $header_banner->value, 'png', $request->file('banner_image')) : $header_banner->value;
@@ -4910,13 +5001,17 @@ class BusinessSettingsController extends Controller
                 Toastr::success(translate('messages.company_section_updated'));
 
         } else if ($tab == 'promotion-banner') {
+                if (!$request->has('image')) {
+                    Toastr::error(translate('messages.Banner_image_is_required'));
+                    return back();
+                }
                 $data = [];
                 $imageName = null;
                 $promotion_banner = DataSetting::firstOrNew(['key' => 'promotion_banner','type' => 'react_landing_page']);
                 if ($promotion_banner) {
                     $data = json_decode($promotion_banner->value, true);
                 }
-                if (count($data) >= 6) {
+                if (count($data) >= 5) {
                     Toastr::error(translate('messages.you_have_already_added_maximum_banner_image'));
                     return back();
                 }
@@ -4925,7 +5020,7 @@ class BusinessSettingsController extends Controller
                 }
                 array_push($data, [
                     'img' => $imageName,
-                    // 'title' => $request->title,
+                     'storage' => Helpers::getDisk(),
                     // 'sub_title' => $request->sub_title,
                 ]);
                 $promotion_banner->value = json_encode($data);
@@ -5085,8 +5180,8 @@ class BusinessSettingsController extends Controller
         $item = DataSetting::where('type','react_landing_page')->where('key', $tab)->first();
         $data = $item ? json_decode($item->value, true) : null;
         if ($data && array_key_exists($key, $data)) {
-            if (isset($data[$key]['img']) && Storage::disk('public')->exists('promotion_banner/' . $data[$key]['img'])) {
-                Storage::disk('public')->delete('promotion_banner/' . $data[$key]['img']);
+            if (isset($data[$key]['img'])) {
+                Helpers::check_and_delete('promotion_banner/' , $data[$key]['img']);
             }
             array_splice($data, $key, 1);
 
@@ -5902,6 +5997,24 @@ class BusinessSettingsController extends Controller
             return view('admin-views.business-settings.email-format-setting.'.$type.'-email-formats.pos-registration-format',compact('template'));
         } else if ($tab == 'unsuspend') {
             return view('admin-views.business-settings.email-format-setting.'.$type.'-email-formats.unsuspend-format',compact('template'));
+
+        } else if ($tab == 'subscription-successful') {
+            return view('admin-views.business-settings.email-format-setting.'.$type.'-email-formats.subscription-successful-format',compact('template'));
+        }
+        else if ($tab == 'subscription-renew') {
+            return view('admin-views.business-settings.email-format-setting.'.$type.'-email-formats.subscription-renew-format',compact('template'));
+        }
+        else if ($tab == 'subscription-shift') {
+            return view('admin-views.business-settings.email-format-setting.'.$type.'-email-formats.subscription-shift-format',compact('template'));
+        }
+        else if ($tab == 'subscription-cancel') {
+            return view('admin-views.business-settings.email-format-setting.'.$type.'-email-formats.subscription-cancel-format',compact('template'));
+        }
+        else if ($tab == 'subscription-deadline') {
+            return view('admin-views.business-settings.email-format-setting.'.$type.'-email-formats.subscription-deadline-format',compact('template'));
+        }
+        else if ($tab == 'subscription-plan_upadte') {
+            return view('admin-views.business-settings.email-format-setting.'.$type.'-email-formats.subscription-plan_upadte-format',compact('template'));
         }
 
     }
@@ -6001,6 +6114,24 @@ class BusinessSettingsController extends Controller
         }elseif($tab == 'unsuspend'){
             $email_type = 'unsuspend';
             $template = EmailTemplate::where('type',$type)->where('email_type', 'unsuspend')->first();
+        }elseif($tab == 'subscription-successful'){
+            $email_type = 'subscription-successful';
+            $template = EmailTemplate::where('type',$type)->where('email_type', 'subscription-successful')->first();
+        }elseif($tab == 'subscription-renew'){
+            $email_type = 'subscription-renew';
+            $template = EmailTemplate::where('type',$type)->where('email_type', 'subscription-renew')->first();
+        }elseif($tab == 'subscription-shift'){
+            $email_type = 'subscription-shift';
+            $template = EmailTemplate::where('type',$type)->where('email_type', 'subscription-shift')->first();
+        }elseif($tab == 'subscription-cancel'){
+            $email_type = 'subscription-cancel';
+            $template = EmailTemplate::where('type',$type)->where('email_type', 'subscription-cancel')->first();
+        }elseif($tab == 'subscription-deadline'){
+            $email_type = 'subscription-deadline';
+            $template = EmailTemplate::where('type',$type)->where('email_type', 'subscription-deadline')->first();
+        }elseif($tab == 'subscription-plan_upadte'){
+            $email_type = 'subscription-plan_upadte';
+            $template = EmailTemplate::where('type',$type)->where('email_type', 'subscription-plan_upadte')->first();
         }
 
         if ($template == null) {
@@ -6322,6 +6453,30 @@ class BusinessSettingsController extends Controller
             BusinessSetting::query()->updateOrInsert(['key' => 'unsuspend_mail_status_'.$type], [
                 'value' => $status
             ]);
+        } else if ($tab == 'subscription-successful') {
+            BusinessSetting::query()->updateOrInsert(['key' => 'subscription_successful_mail_status_'.$type], [
+                'value' => $status
+            ]);
+        } else if ($tab == 'subscription-renew') {
+            BusinessSetting::query()->updateOrInsert(['key' => 'subscription_renew_mail_status_'.$type], [
+                'value' => $status
+            ]);
+        } else if ($tab == 'subscription-shift') {
+            BusinessSetting::query()->updateOrInsert(['key' => 'subscription_shift_mail_status_'.$type], [
+                'value' => $status
+            ]);
+        } else if ($tab == 'subscription-cancel') {
+            BusinessSetting::query()->updateOrInsert(['key' => 'subscription_cancel_mail_status_'.$type], [
+                'value' => $status
+            ]);
+        } else if ($tab == 'subscription-deadline') {
+            BusinessSetting::query()->updateOrInsert(['key' => 'subscription_deadline_mail_status_'.$type], [
+                'value' => $status
+            ]);
+        } else if ($tab == 'subscription-plan_upadte') {
+            BusinessSetting::query()->updateOrInsert(['key' => 'subscription_plan_upadte_mail_status_'.$type], [
+                'value' => $status
+            ]);
         }
 
         Toastr::success(translate('messages.email_status_updated'));
@@ -6387,16 +6542,16 @@ class BusinessSettingsController extends Controller
 
                     if($request?->json == 1){
                         $data_value = json_decode($data?->value ,true);
-                        if (Storage::disk('public')->exists($request->image_path.'/'.$data_value[$request->field_name])) {
-                            Storage::disk('public')->delete($request->image_path.'/'.$data_value[$request->field_name]);
-                        }
+
+                            Helpers::check_and_delete($request->image_path.'/',$data_value[$request->field_name]);
+
                         $data_value[$request->field_name] = null;
                         $data->value = json_encode($data_value);
                     }
                     else{
-                        if (Storage::disk('public')->exists($request->image_path.'/'.$data_value)) {
-                            Storage::disk('public')->delete($request->image_path.'/'.$data_value);
-                        }
+
+                            Helpers::check_and_delete($request->image_path.'/',$data_value);
+
                         $data->{$request->field_name} = null;
                     }
 

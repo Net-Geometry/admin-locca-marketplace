@@ -1,5 +1,6 @@
 @extends('layouts.landing.app')
-@section('title', translate("messages.landing_page") . ' | ' . \App\CentralLogics\Helpers::get_settings('business_name') != 'null' ? \App\CentralLogics\Helpers::get_settings('business_name') :'Sixam Mart')
+@php( $business_name= \App\CentralLogics\Helpers::get_settings('business_name'))
+@section('title', translate("messages.landing_page") . ' | ' . $business_name != 'null' ? $business_name :'Sixam Mart')
 @section('content')
 
         <!-- Basic Settings -->
@@ -2644,7 +2645,7 @@
             @php($join_as_dm = $landing_data['dm_app_earning_links'])
             <div class="earn-item wow fadeInUp">
                 <div class="earn-item-img"
-                    style="background: url({{ asset('storage/app/public/earning') }}/{{ isset($landing_data['earning_delivery_image']) ? $landing_data['earning_delivery_image'] : null }}) no-repeat center center / cover;">
+                    style="background: url({{\App\CentralLogics\Helpers::onerror_image_helper(isset($landing_data['earning_delivery_image']) ? $landing_data['earning_delivery_image'] : null, asset('storage/app/public/earning').'/'. isset($landing_data['earning_delivery_image']) ? $landing_data['earning_delivery_image'] : null, asset('public/assets/admin/img/100x100/2.jpg'),'earning/',isset($landing_data['earning_delivery_image_storage']) ? $landing_data['earning_delivery_image_storage'] : 'public')}}) no-repeat center center / cover;">
                     <div class="position-relative">
                         <div class="d-flex flex-column flex-wrap gap-3">
                             @if (isset($join_as_dm['playstore_url_status']) && $join_as_dm['playstore_url_status'] == '1')
@@ -3737,28 +3738,30 @@
     @endif
     <!-- ==== Testimonial Ends Here ==== -->
 
+        @if (isset($new_user) && $new_user ==  true)
 
-    <!-- Modal -->
-    <div class="modal fade show" id="welcome-modal">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0">
-                <div class="modal-header border-0 pt-4 px-4">
-                    <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body px-sm-5 pb-5">
-                    <div class="text-center">
-                        <img src="{{asset('/public/assets/landing/img/welcome.svg')}}" class="mw-100 mb-3" alt="">
-                        <h5 class="mb-3">Welcome to 6amMart!</h5>
-                        <p class="m-0 mb-4">Thanks for joining us! Your registration is under review. Hang tight, we'll notify you once approved!</p>
-                        <button type="button" class="border-0 outline-0 shadow-none cmn--btn" data-bs-dismiss="modal">
-                            okay
-                        </button>
+        <!-- Modal -->
+        <div class="modal fade show" id="welcome-modal">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-0">
+                    <div class="modal-header border-0 pt-4 px-4">
+                        <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body px-sm-5 pb-5">
+                        <div class="text-center">
+                            <img src="{{asset('/public/assets/landing/img/welcome.svg')}}" class="mw-100 mb-3" alt="">
+                            <h5 class="mb-3">{{ translate('Welcome_to') }} {{ $business_name }}!</h5>
+                            <p class="m-0 mb-4">{{ translate('Thanks for joining us! Your registration is under review. Hang tight, we’ll notify you once approved!') }}</p>
+                            <button type="button" class="border-0 outline-0 shadow-none cmn--btn" data-bs-dismiss="modal">
+                                {{ translate('okay') }}
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <!-- Modal -->
+        <!-- Modal -->
+        @endif
 
 @endsection
 @push('script_2')

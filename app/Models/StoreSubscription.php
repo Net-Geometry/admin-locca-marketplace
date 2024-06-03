@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use App\Scopes\ZoneScope;
+use Illuminate\Support\Carbon;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class StoreSubscription extends Model
 {
@@ -13,7 +14,7 @@ class StoreSubscription extends Model
 
 
     protected $casts = [
-        'expiry_date'=> 'datetime',
+        // 'expiry_date'=> 'datetime',
         'price'=>'float',
         'validity'=>'integer',
         'chat'=>'integer',
@@ -49,5 +50,8 @@ class StoreSubscription extends Model
     protected static function booted()
     {
         static::addGlobalScope(new ZoneScope);
+    }
+    public function getExpiryDateParsedAttribute($value){
+        return Carbon::parse($this->expiry_date) ;
     }
 }

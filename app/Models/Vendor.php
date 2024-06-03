@@ -26,7 +26,25 @@ class Vendor extends Authenticatable
         'auth_token',
         'remember_token',
     ];
+    protected $appends = ['image_full_url'];
+    public function getImageFullUrlAttribute(){
+        $value = $this->image;
+        if (count($this->storage) > 0) {
+            foreach ($this->storage as $storage) {
+                if ($storage['key'] == 'image') {
 
+                    if($storage['value'] == 's3'){
+
+                        return Helpers::s3_storage_link('profile',$value);
+                    }else{
+                        return Helpers::local_storage_link('profile',$value);
+                    }
+                }
+            }
+        }
+
+        return Helpers::local_storage_link('profile',$value);
+    }
     public function order_transaction()
     {
         return $this->hasMany(OrderTransaction::class);
@@ -85,9 +103,9 @@ class Vendor extends Authenticatable
         return $this->hasOne(UserInfo::class,'vendor_id', 'id');
     }
 
-    public function storage(): MorphOne
+    public function storage()
     {
-        return $this->morphOne(Storage::class, 'data');
+        return $this->morphMany(Storage::class, 'data');
     }
 
     protected static function booted()
@@ -101,16 +119,19 @@ class Vendor extends Authenticatable
     {
         parent::boot();
         static::saved(function ($model) {
-            $value = Helpers::getDisk();
+            if($model->isDirty('image')){
+                $value = Helpers::getDisk();
 
-            DB::table('storages')->updateOrInsert([
-                'data_type' => get_class($model),
-                'data_id' => $model->id,
-            ], [
-                'value' => $value,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
+                DB::table('storages')->updateOrInsert([
+                    'data_type' => get_class($model),
+                    'data_id' => $model->id,
+                    'key' => 'image',
+                ], [
+                    'value' => $value,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
         });
 
     }

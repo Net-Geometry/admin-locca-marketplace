@@ -98,7 +98,7 @@
                                                 <img
 
                                                 src="{{ \App\CentralLogics\Helpers::get_image_helper(
-                                                    $review,'company_iamge',
+                                                    $review,'company_image',
                                                     asset('storage/app/public/reviewer_company_image').'/'.$review->company_image ?? '',
                                                     asset('/public/assets/admin/img/aspect-3-1.png'),
                                                     'reviewer_company_image/'

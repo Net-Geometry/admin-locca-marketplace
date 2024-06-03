@@ -34,6 +34,8 @@ class ItemCampaign extends Model
         'end_time'=>'datetime',
     ];
 
+    protected $appends = ['image_full_url'];
+
     public function carts()
     {
     return $this->morphMany(Cart::class, 'item');
@@ -74,6 +76,25 @@ class ItemCampaign extends Model
         }
 
         return $value;
+    }
+
+    public function getImageFullUrlAttribute(){
+        $value = $this->image;
+        if (count($this->storage) > 0) {
+            foreach ($this->storage as $storage) {
+                if ($storage['key'] == 'image') {
+
+                    if($storage['value'] == 's3'){
+
+                        return Helpers::s3_storage_link('campaign',$value);
+                    }else{
+                        return Helpers::local_storage_link('campaign',$value);
+                    }
+                }
+            }
+        }
+
+        return Helpers::local_storage_link('campaign',$value);
     }
 
     public function store()
@@ -118,9 +139,9 @@ class ItemCampaign extends Model
             $builder->with('storage');
         });
     }
-    public function storage(): MorphOne
+    public function storage()
     {
-        return $this->morphOne(Storage::class, 'data');
+        return $this->morphMany(Storage::class, 'data');
     }
     protected static function boot()
     {
@@ -130,16 +151,19 @@ class ItemCampaign extends Model
             $itemcampaign->save();
         });
         static::saved(function ($model) {
-            $value = Helpers::getDisk();
+            if($model->isDirty('image')){
+                $value = Helpers::getDisk();
 
-            DB::table('storages')->updateOrInsert([
-                'data_type' => get_class($model),
-                'data_id' => $model->id,
-            ], [
-                'value' => $value,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
+                DB::table('storages')->updateOrInsert([
+                    'data_type' => get_class($model),
+                    'data_id' => $model->id,
+                    'key' => 'image',
+                ], [
+                    'value' => $value,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
         });
     }
     private function generateSlug($name)

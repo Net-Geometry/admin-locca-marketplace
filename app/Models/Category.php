@@ -58,6 +58,7 @@ class Category extends Model
         'products_count' => 'integer',
         'childes_count' => 'integer',
     ];
+    protected $appends = ['image_full_url'];
 
     public function translations(): MorphMany
     {
@@ -98,9 +99,27 @@ class Category extends Model
     {
         return $this->belongsTo(Category::class, 'parent_id');
     }
-    public function storage(): MorphOne
+    public function storage()
     {
-        return $this->morphOne(Storage::class, 'data');
+        return $this->morphMany(Storage::class, 'data');
+    }
+    public function getImageFullUrlAttribute(){
+        $value = $this->image;
+        if (count($this->storage) > 0) {
+            foreach ($this->storage as $storage) {
+                if ($storage['key'] == 'image') {
+
+                    if($storage['value'] == 's3'){
+
+                        return Helpers::s3_storage_link('category',$value);
+                    }else{
+                        return Helpers::local_storage_link('category',$value);
+                    }
+                }
+            }
+        }
+
+        return Helpers::local_storage_link('category',$value);
     }
 
     protected static function boot()
@@ -111,16 +130,19 @@ class Category extends Model
             $category->save();
         });
         static::saved(function ($model) {
-            $value = Helpers::getDisk();
+            if($model->isDirty('image')){
+                $value = Helpers::getDisk();
 
-            DB::table('storages')->updateOrInsert([
-                'data_type' => get_class($model),
-                'data_id' => $model->id,
-            ], [
-                'value' => $value,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
+                DB::table('storages')->updateOrInsert([
+                    'data_type' => get_class($model),
+                    'data_id' => $model->id,
+                    'key' => 'image',
+                ], [
+                    'value' => $value,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
         });
     }
 

@@ -44,7 +44,7 @@ class Item extends Model
         'is_halal'=>'integer',
     ];
 
-    protected $appends = ['unit_type'];
+    protected $appends = ['unit_type','image_full_url','images_full_url'];
 
     public function scopeRecommended($query)
     {
@@ -154,6 +154,40 @@ class Item extends Model
 
         return $value;
     }
+    public function getImageFullUrlAttribute(){
+        $value = $this->image;
+        if (count($this->storage) > 0) {
+            foreach ($this->storage as $storage) {
+                if ($storage['key'] == 'image') {
+
+                    if($storage['value'] == 's3'){
+
+                        return Helpers::s3_storage_link('product',$value);
+                    }else{
+                        return Helpers::local_storage_link('product',$value);
+                    }
+                }
+            }
+        }
+
+        return Helpers::local_storage_link('product',$value);
+    }
+    public function getImagesFullUrlAttribute(){
+        $images = [];
+        $value = is_array($this->images)?$this->images:json_decode($this->images,true);
+        if ($value){
+            foreach ($value as $item){
+                $item = is_array($item)?$item:(is_object($item) && get_class($item) == 'stdClass' ? json_decode(json_encode($item), true):['img' => $item, 'storage' => 'public']);
+                if($item['storage']=='s3'){
+                    $images[] = Helpers::s3_storage_link('product',$item['img']);
+                }else{
+                    $images[] = Helpers::local_storage_link('product',$item['img']);
+                }
+            }
+        }
+
+        return $images;
+    }
 
     public function store()
     {
@@ -216,9 +250,9 @@ class Item extends Model
     {
         return $this->belongsToMany(Tag::class);
     }
-    public function storage(): MorphOne
+    public function storage()
     {
-        return $this->morphOne(Storage::class, 'data');
+        return $this->morphMany(Storage::class, 'data');
     }
     protected static function boot()
     {
@@ -228,16 +262,32 @@ class Item extends Model
             $item->save();
         });
         static::saved(function ($model) {
-            $value = Helpers::getDisk();
+            if($model->isDirty('image')){
+                $value = Helpers::getDisk();
 
-            DB::table('storages')->updateOrInsert([
-                'data_type' => get_class($model),
-                'data_id' => $model->id,
-            ], [
-                'value' => $value,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
+                DB::table('storages')->updateOrInsert([
+                    'data_type' => get_class($model),
+                    'data_id' => $model->id,
+                    'key' => 'image',
+                ], [
+                    'value' => $value,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+            if($model->isDirty('images')){
+                $value = Helpers::getDisk();
+
+                DB::table('storages')->updateOrInsert([
+                    'data_type' => get_class($model),
+                    'data_id' => $model->id,
+                    'key' => 'images',
+                ], [
+                    'value' => $value,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
         });
     }
     private function generateSlug($name)

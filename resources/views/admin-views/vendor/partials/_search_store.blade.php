@@ -6,7 +6,7 @@
             $store,'logo',
             asset('storage/app/public/store').'/'.$store['logo'] ?? '',
             asset('public/assets/admin/img/160x160/img1.jpg'),
-            'store'
+            'store/'
         ) }}"
 
             alt="">

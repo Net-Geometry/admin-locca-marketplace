@@ -3,20 +3,25 @@
 namespace App\CentralLogics;
 
 use DateTime;
+use App\Models\Item;
 use App\Models\User;
 use App\Models\Zone;
 use App\Models\AddOn;
 use App\Models\Order;
 use App\Models\Store;
+use App\Library\Payer;
 use App\Models\Module;
 use App\Models\Review;
 use App\Models\Expense;
+use App\Traits\Payment;
 use App\Mail\PlaceOrder;
 use App\Models\CashBack;
 use App\Models\Category;
 use App\Models\Currency;
 use App\Models\DMReview;
+use App\Library\Receiver;
 use App\Models\DataSetting;
+use App\Models\StoreWallet;
 use App\Models\Translation;
 use Illuminate\Support\Str;
 use PayPal\Api\Transaction;
@@ -30,14 +35,20 @@ use App\Mail\OrderVerificationMail;
 use App\Models\NotificationMessage;
 use App\Models\SubscriptionPackage;
 use Illuminate\Support\Facades\App;
+use App\Mail\SubscriptionSuccessful;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
+
+use App\Mail\SubscriptionRenewOrShift;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Schema;
+use App\Library\Payment as PaymentInfo;
 use App\Models\SubscriptionTransaction;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Collection;
 use MatanYadaev\EloquentSpatial\Objects\Point;
+use App\Models\SubscriptionBillingAndRefundHistory;
 use Laravelpkg\Laravelchk\Http\Controllers\LaravelchkController;
-
 
 class Helpers
 {
@@ -273,6 +284,8 @@ class Helpers
                 $item['is_prescription_required'] =  (int) $item->pharmacy_item_details?->is_prescription_required ?? 0;
                 $item['halal_tag_status'] =  (int) $item->store->storeConfig?->halal_tag_status??0;
 
+                $item->store['self_delivery_system'] = (int) $item->store->sub_self_delivery;
+
                 unset($item['pharmacy_item_details']);
                 unset($item['store']);
                 unset($item['rating']);
@@ -346,6 +359,8 @@ class Helpers
             if($temp_product == true){
                 $data['tags']=\App\Models\Tag::whereIn('id',json_decode($data?->tag_ids) )->get(['tag','id']);
             }
+            $data->store['self_delivery_system'] = (int) $data->store->sub_self_delivery;
+
             unset($data['pharmacy_item_details']);
             unset($data['store']);
             unset($data['rating']);
@@ -723,6 +738,7 @@ class Helpers
         $storage = [];
         if ($multi_data == true) {
             foreach ($data as $item) {
+
                 $item->load('storeConfig');
                 $ratings = StoreLogic::calculate_store_rating($item['rating']);
                 $item['ratings'] = $item?->rating ?? [];
@@ -741,6 +757,8 @@ class Helpers
                 if($item->storeConfig && $item->storeConfig->is_recommended_deleted == 0 ){
                     $item['is_recommended'] = $item->storeConfig->is_recommended;
                 }
+                $item0['self_delivery_system'] = (int) $item->sub_self_delivery;
+
                 unset($item['items_count']);
                 unset($item['campaigns_count']);
                 unset($item['storeConfig']);
@@ -760,6 +778,7 @@ class Helpers
             if($data->storeConfig && $data->storeConfig->is_recommended_deleted == 0 ){
                 $data['is_recommended'] = $data->storeConfig->is_recommended;
             }
+            $data['self_delivery_system'] = (int) $data->sub_self_delivery;
             $ratings = StoreLogic::calculate_store_rating($data['rating']);
             $data['ratings'] = $data?->rating ?? [];
             unset($data['rating']);
@@ -818,6 +837,12 @@ class Helpers
                     $item['store_logo'] = $item['store']['logo'];
                     $item['min_delivery_time'] =  (int) explode('-',$item['store']['delivery_time'])[0] ?? 0;
                     $item['max_delivery_time'] =  (int) explode('-',$item['store']['delivery_time'])[1] ?? 0;
+
+                    $item['vendor_id'] = $item['store']['vendor_id'];
+                    $item['chat_permission'] = $item['store']['chat_permission']?? 0;
+                    $item['review_permission'] = $item['store']['review_permission'] ?? 0;
+                    $item['store_business_model'] = $item['store']['store_business_model'];
+
                     unset($item['store']);
                 } else {
                     $item['store_name'] = null;
@@ -828,6 +853,10 @@ class Helpers
                     $item['store_logo'] = null;
                     $item['min_delivery_time'] = null;
                     $item['max_delivery_time'] = null;
+                    $item['vendor_id'] = null;
+                    $item['chat_permission'] = null;
+                    $item['review_permission'] = null;
+                    $item['store_business_model'] = null;
                 }
                 $item['item_campaign'] = 0;
                 foreach ($item->details as $d) {
@@ -855,6 +884,11 @@ class Helpers
                 $data['store_logo'] = $data['store']['logo'];
                 $data['min_delivery_time'] =  $data['store']?(int) explode('-',$data['store']['delivery_time'])[0] ?? 0:0;
                 $data['max_delivery_time'] =  $data['store']?(int) explode('-',$data['store']['delivery_time'])[1] ?? 0:0;
+                $data['vendor_id'] = $data['store']['vendor_id'];
+                $data['chat_permission'] = $data['store']['chat_permission']?? 0;
+                $data['review_permission'] = $data['store']['review_permission'] ?? 0;
+                $data['store_business_model'] = $data['store']['store_business_model'];
+
                 unset($data['store']);
             } else {
                 $data['store_name'] = null;
@@ -865,6 +899,10 @@ class Helpers
                 $data['store_logo'] = null;
                 $data['min_delivery_time'] = null;
                 $data['max_delivery_time'] = null;
+                $item['vendor_id'] = null;
+                $item['chat_permission'] = null;
+                $item['review_permission'] = null;
+                $item['store_business_model'] = null;
             }
 
             $data['item_campaign'] = 0;
@@ -888,6 +926,15 @@ class Helpers
             $item['add_ons'] = json_decode($item['add_ons']);
             $item['variation'] = json_decode($item['variation'], true);
             $item['item_details'] = json_decode($item['item_details'], true);
+            if ($item['item_id']){
+                $product = \App\Models\Item::where(['id' => $item['item_details']['id']])->first();
+                $item['image_full_url'] = $product->image_full_url;
+                $item['images_full_url'] = $product->images_full_url;
+            }else{
+               $product = \App\Models\ItemCampaign::where(['id' => $item['item_details']['id']])->first();
+                $item['image_full_url'] = $product->image_full_url;
+                $item['images_full_url'] = [];
+            }
             array_push($storage, $item);
         }
         $data = $storage;
@@ -899,6 +946,14 @@ class Helpers
     {
         $storage = [];
         foreach ($data as $item) {
+            $storage_type = 'public';
+            if ($item->storage && count($item->storage) > 0) {
+                foreach ($item->storage as $value) {
+                    if ($value['key'] == 'image') {
+                        $storage_type = $value['value'];
+                    }
+                }
+            }
             $storage[] = [
                 'id' => $item['id'],
                 'name' => $item['f_name'] . ' ' . $item['l_name'],
@@ -907,6 +962,8 @@ class Helpers
                 'lat' => $item->last_location ? $item->last_location->latitude : false,
                 'lng' => $item->last_location ? $item->last_location->longitude : false,
                 'location' => $item->last_location ? $item->last_location->location : '',
+                'storage' => $storage_type,
+                'image_link' => self::onerror_image_helper($item['image'], asset('storage/app/public/delivery-man/').'/'. $item['image'], asset('public/assets/admin/img/160x160/img1.jpg') , 'delivery-man/', $storage_type)
             ];
         }
         $data = $storage;
@@ -1003,20 +1060,54 @@ class Helpers
         return $currency_symbol_position == 'right' ? number_format($value, config('round_up_to_digit')) . ' ' . self::currency_symbol() : self::currency_symbol() . ' ' . number_format($value, config('round_up_to_digit'));
     }
 
+    public static function sendNotificationToHttp(array|null $data)
+    {
+        $config = self::get_business_settings('push_notification_service_file_content');
+        $key = (array)$config;
+        if($key['project_id']){
+            $url = 'https://fcm.googleapis.com/v1/projects/'.$key['project_id'].'/messages:send';
+            $headers = [
+                'Authorization' => 'Bearer ' . self::getAccessToken($key),
+                'Content-Type' => 'application/json',
+            ];
+            try {
+                Http::withHeaders($headers)->post($url, $data);
+            }catch (\Exception $exception){
+                return false;
+            }
+        }
+        return false;
+    }
+
+    public static function getAccessToken($key)
+    {
+        $jwtToken = [
+            'iss' => $key['client_email'],
+            'scope' => 'https://www.googleapis.com/auth/firebase.messaging',
+            'aud' => 'https://oauth2.googleapis.com/token',
+            'exp' => time() + 3600,
+            'iat' => time(),
+        ];
+        $jwtHeader = base64_encode(json_encode(['alg' => 'RS256', 'typ' => 'JWT']));
+        $jwtPayload = base64_encode(json_encode($jwtToken));
+        $unsignedJwt = $jwtHeader . '.' . $jwtPayload;
+        openssl_sign($unsignedJwt, $signature, $key['private_key'], OPENSSL_ALGO_SHA256);
+        $jwt = $unsignedJwt . '.' . base64_encode($signature);
+
+        $response = Http::asForm()->post('https://oauth2.googleapis.com/token', [
+            'grant_type' => 'urn:ietf:params:oauth:grant-type:jwt-bearer',
+            'assertion' => $jwt,
+        ]);
+        return $response->json('access_token');
+    }
+
     public static function send_push_notif_to_device($fcm_token, $data, $web_push_link = null)
     {
-        $key = BusinessSetting::where(['key' => 'push_notification_key'])->first()->value;
-        $url = "https://fcm.googleapis.com/fcm/send";
-        $header = array(
-            "authorization: key=" . $key . "",
-            "content-type: application/json"
-        );
-
-        if(isset($data['message'])){
-            $message = $data['message'];
-        }else{
-            $message = '';
-        }
+//        if(isset($data['message'])){
+//            $message = $data['message'];
+//        }else{
+//            $message = '';
+//        }
         if(isset($data['conversation_id'])){
             $conversation_id = $data['conversation_id'];
         }else{
@@ -1038,69 +1129,39 @@ class Helpers
             $order_type = '';
         }
 
-        $click_action = "";
-        if($web_push_link){
-            $click_action = ',
-            "click_action": "'.$web_push_link.'"';
-        }
+//        $click_action = "";
+//        if($web_push_link){
+//            $click_action = ',
+//            "click_action": "'.$web_push_link.'"';
+//        }
+        $postData = [
+            'message' => [
+                "token" => $fcm_token,
+                "data" => [
+                    "title" => (string)$data['title'],
+                    "body" => (string)$data['description'],
+                    "image" => (string)$data['image'],
+                    "order_id" => (string)$data['order_id'],
+                    "type" => (string)$data['type'],
+                    "conversation_id" => (string)$conversation_id,
+                    "module_id" => (string)$module_id,
+                    "sender_type" => (string)$sender_type,
+                    "order_type" => (string)$order_type,
+                    "click_action" => $web_push_link?(string)$web_push_link:'',
+                    "sound" => "notification.wav",
+                ],
+                "notification" => [
+                    'title' => (string)$data['title'],
+                    'body' => (string)$data['description'],
+                ],
+            ]
+        ];
 
-        $postdata = '{
-            "to" : "' . $fcm_token . '",
-            "mutable_content": true,
-            "data" : {
-                "title":"' . $data['title'] . '",
-                "body" : "' . $data['description'] . '",
-                "image" : "' . $data['image'] . '",
-                "order_id":"' . $data['order_id'] . '",
-                "type":"' . $data['type'] . '",
-                "conversation_id":"' . $conversation_id . '",
-                "sender_type":"' . $sender_type . '",
-                "module_id":"' . $module_id . '",
-                "order_type":"' . $order_type . '",
-                "is_read": 0
-            },
-            "notification" : {
-                "title" :"' . $data['title'] . '",
-                "body" : "' . $data['description'] . '",
-                "image" : "' . $data['image'] . '",
-                "order_id":"' . $data['order_id'] . '",
-                "title_loc_key":"' . $data['order_id'] . '",
-                "body_loc_key":"' . $data['type'] . '",
-                "type":"' . $data['type'] . '",
-                "is_read": 0,
-                "icon" : "new",
-                "sound": "notification.wav",
-                "android_channel_id": "6ammart"
-                '.$click_action.'
-            }
-        }';
-        $ch = curl_init();
-        $timeout = 120;
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
-
-        // Get URL content
-        $result = curl_exec($ch);
-        // close handle to release resources
-        curl_close($ch);
-
-        return $result;
+        return self::sendNotificationToHttp($postData);
     }
 
     public static function send_push_notif_to_topic($data, $topic, $type,$web_push_link = null)
     {
-        // info([$data, $topic, $type, $web_push_link]);
-        $key = BusinessSetting::where(['key' => 'push_notification_key'])->first()->value;
-
-        $url = "https://fcm.googleapis.com/fcm/send";
-        $header = array(
-            "authorization: key=" . $key . "",
-            "content-type: application/json"
-        );
         if(isset($data['module_id'])){
             $module_id = $data['module_id'];
         }else{
@@ -1117,84 +1178,58 @@ class Helpers
             $zone_id = '';
         }
 
-        $click_action = "";
-        if($web_push_link){
-            $click_action = ',
-            "click_action": "'.$web_push_link.'"';
-        }
+//        $click_action = "";
+//        if($web_push_link){
+//            $click_action = ',
+//            "click_action": "'.$web_push_link.'"';
+//        }
 
         if (isset($data['order_id'])) {
-            $postdata = '{
-                "to" : "/topics/' . $topic . '",
-                "mutable_content": true,
-                "data" : {
-                    "title":"' . $data['title'] . '",
-                    "body" : "' . $data['description'] . '",
-                    "image" : "' . $data['image'] . '",
-                    "order_id":"' . $data['order_id'] . '",
-                    "module_id":"' . $module_id . '",
-                    "order_type":"' . $order_type . '",
-                    "zone_id":"' . $zone_id . '",
-                    "is_read": 0,
-                    "type":"' . $type . '"
-                },
-                "notification" : {
-                    "title":"' . $data['title'] . '",
-                    "body" : "' . $data['description'] . '",
-                    "image" : "' . $data['image'] . '",
-                    "order_id":"' . $data['order_id'] . '",
-                    "title_loc_key":"' . $data['order_id'] . '",
-                    "body_loc_key":"' . $type . '",
-                    "type":"' . $type . '",
-                    "is_read": 0,
-                    "icon" : "new",
-                    "sound": "notification.wav",
-                    "android_channel_id": "6ammart"
-                    '.$click_action.'
-                  }
-            }';
+            $postData = [
+                'message' => [
+                    "topic" => $topic,
+                    "data" => [
+                        "title" => (string)$data['title'],
+                        "body" => (string)$data['description'],
+                        "order_id" => (string)$data['order_id'],
+                        "order_type" => (string)$order_type,
+                        "type" => (string)$type,
+                        "image" => (string)$data['image'],
+                        "module_id" => (string)$module_id,
+                        "zone_id" => (string)$zone_id,
+                        "title_loc_key" => (string)$data['order_id'],
+                        "body_loc_key" => (string)$type,
+                        "click_action" => $web_push_link?(string)$web_push_link:'',
+                        "sound" => "notification.wav",
+                    ],
+                    "notification" => [
+                        "title" => (string)$data['title'],
+                        "body" => (string)$data['description'],
+                    ],
+                ]
+            ];
         } else {
-            $postdata = '{
-                "to" : "/topics/' . $topic . '",
-                "mutable_content": true,
-                "data" : {
-                    "title":"' . $data['title'] . '",
-                    "body" : "' . $data['description'] . '",
-                    "image" : "' . $data['image'] . '",
-                    "is_read": 0,
-                    "type":"' . $type . '"
-                },
-                "notification" : {
-                    "title":"' . $data['title'] . '",
-                    "body" : "' . $data['description'] . '",
-                    "image" : "' . $data['image'] . '",
-                    "body_loc_key":"' . $type . '",
-                    "type":"' . $type . '",
-                    "is_read": 0,
-                    "icon" : "new",
-                    "sound": "notification.wav",
-                    "android_channel_id": "6ammart"
-                    '.$click_action.'
-                  }
-            }';
+            $postData = [
+                'message' => [
+                    "topic" => $topic,
+                    "data" => [
+                        "title" => (string)$data['title'],
+                        "body" => (string)$data['description'],
+                        "type" => (string)$type,
+                        "image" => (string)$data['image'],
+                        "body_loc_key" => (string)$type,
+                        "click_action" => $web_push_link?(string)$web_push_link:'',
+                        "sound" => "notification.wav",
+                    ],
+                    "notification" => [
+                        "title" => (string)$data['title'],
+                        "body" => (string)$data['description'],
+                    ],
+                ]
+            ];
         }
 
-
-        $ch = curl_init();
-        $timeout = 120;
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
-
-        // Get URL content
-        $result = curl_exec($ch);
-        // close handle to release resources
-        curl_close($ch);
-
-        return $result;
+        return self::sendNotificationToHttp($postData);
     }
 
 
@@ -1517,7 +1552,7 @@ class Helpers
             }
 
             if ($order->order_type == 'delivery' && !$order->scheduled && $status == 'pending' && $order->payment_method == 'cash_on_delivery' && config('order_confirmation_model') == 'deliveryman') {
-                if ($order->store->self_delivery_system) {
+                if ($order->store->sub_self_delivery) {
                     $data = [
                         'title' => translate('messages.order_push_title'),
                         'description' => translate('messages.new_order_push_description'),
@@ -1630,7 +1665,7 @@ class Helpers
             }
 
             if ($order->order_status == 'confirmed' && $order->order_type != 'take_away' && config('order_confirmation_model') == 'deliveryman' && $order->payment_method == 'cash_on_delivery') {
-                if ($order->store->self_delivery_system) {
+                if ($order->store->sub_self_delivery) {
                     $data = [
                         'title' => translate('messages.order_push_title'),
                         'description' => translate('messages.new_order_push_description'),
@@ -1674,7 +1709,7 @@ class Helpers
                     'order_type' => $order->order_type,
                     'image' => '',
                 ];
-                if ($order->store->self_delivery_system) {
+                if ($order->store->sub_self_delivery) {
                     self::send_push_notif_to_topic($data, "restaurant_dm_" . $order->store_id, 'order_request');
                 } else
                 {if($order->zone){
@@ -1838,16 +1873,18 @@ class Helpers
 
     public static function upload(string $dir, string $format, $image = null)
     {
-        if ($image != null) {
-            $imageName = \Carbon\Carbon::now()->toDateString() . "-" . uniqid() . "." . $format;
-            if (!Storage::disk(self::getDisk())->exists($dir)) {
-                Storage::disk(self::getDisk())->makeDirectory($dir);
+        try {
+            if ($image != null) {
+                $imageName = \Carbon\Carbon::now()->toDateString() . "-" . uniqid() . "." . $format;
+                if (!Storage::disk(self::getDisk())->exists($dir)) {
+                    Storage::disk(self::getDisk())->makeDirectory($dir);
+                }
+                Storage::disk(self::getDisk())->putFileAs($dir, $image, $imageName);
+            } else {
+                $imageName = 'def.png';
             }
-            Storage::disk(self::getDisk())->putFileAs($dir, $image, $imageName);
-        } else {
-            $imageName = 'def.png';
+        } catch (\Exception $e) {
         }
-
         return $imageName;
     }
 
@@ -1856,11 +1893,30 @@ class Helpers
         if ($image == null) {
             return $old_image;
         }
-        if (Storage::disk(self::getDisk())->exists($dir . $old_image)) {
-            Storage::disk(self::getDisk())->delete($dir . $old_image);
+        try {
+            if (Storage::disk(self::getDisk())->exists($dir . $old_image)) {
+                Storage::disk(self::getDisk())->delete($dir . $old_image);
+            }
+        } catch (\Exception $e) {
         }
         $imageName = Helpers::upload($dir, $format, $image);
         return $imageName;
+    }
+
+    public static function check_and_delete(string $dir, $old_image)
+    {
+
+        try {
+            if (Storage::disk('public')->exists($dir . $old_image)) {
+                Storage::disk('public')->delete($dir . $old_image);
+            }
+            if (Storage::disk('s3')->exists($dir . $old_image)) {
+                Storage::disk('s3')->delete($dir . $old_image);
+            }
+        } catch (\Exception $e) {
+        }
+
+        return true;
     }
 
     public static function format_coordiantes($coordinates)
@@ -3285,6 +3341,10 @@ class Helpers
     }
 
     public static function get_image_helper($data, $key, $src, $error_src ,$path){
+
+        if(!$data){
+            return $error_src;
+        }
         $image = '';
         $storage = 'public';
 
@@ -3294,44 +3354,117 @@ class Helpers
         }elseif ((is_array($data) && array_key_exists($key, $data))) {
             $image = $data[$key] ?? '';
         }elseif(!(is_array($data)) && (get_class($data) != 'stdClass')) {
-            $image = is_object($data) ? $data->$key : ($data[$key] ?? '');
+            $image = (is_object($data) && ($data instanceof Collection)) ? $data->$key : ($data[$key] ?? '');
         }
 
-        if (is_object($data) && property_exists($data, 'storage') && is_object($data->storage) && property_exists($data->storage, 'value')) {
-            $storage = $data->storage->value;
-        } elseif (is_array($data) && array_key_exists('storage', $data) && is_array($data['storage']) && array_key_exists('value', $data['storage'])) {
-            $storage = $data['storage']['value'];
-        }elseif(!(is_array($data)) && (get_class($data) != 'stdClass')) {
-            $storage = is_object($data)?$data?->storage?->value:($data['storage']?$data['storage']['value']:'public');
+        if (is_object($data) && property_exists($data, 'storage') && is_object($data->storage)) {
+            if ($data->storage && count($data->storage) > 0) {
+                foreach ($data->storage as $value) {
+                    if ($value['key'] == $key || $value['data_type'] == 'App\Models\BusinessSetting' || $value['data_type'] == 'App\Models\DataSetting') {
+                        $storage = $value['value'];
+                    }
+                }
+            }
+        } elseif (is_array($data) && array_key_exists('storage', $data) && is_array($data['storage'])) {
+            if ($data['storage'] && count($data['storage']) > 0) {
+                foreach ($data['storage'] as $value) {
+                    if ($value['key'] == $key || $value['data_type'] == 'App\Models\BusinessSetting' || $value['data_type'] == 'App\Models\DataSetting') {
+                        $storage = $value['value'];
+                    }
+                }
+            }
+        }
+        elseif(!(is_array($data)) && (get_class($data) != 'stdClass')) {
+
+            if(is_object($data) && ($data instanceof Collection)){
+                if ($data->storage && count($data->storage) > 0) {
+                    foreach ($data->storage as $value) {
+                        if ($value['key'] == $key || $value['data_type'] == 'App\Models\BusinessSetting' || $value['data_type'] == 'App\Models\DataSetting') {
+                            $storage = $value['value'];
+                        }
+                    }
+                }
+            }else{
+                if ($data['storage'] && count($data['storage']) > 0) {
+                    foreach ($data['storage'] as $value) {
+                        if ($value['key'] == $key || $value['data_type'] == 'App\Models\BusinessSetting' || $value['data_type'] == 'App\Models\DataSetting') {
+                            $storage = $value['value'];
+                        }
+                    }
+                }
+            }
         }
 
-
-//        $image = (get_class($data) === 'stdClass' && property_exists($data, $key)) ? $data?->$key : ($data?->$key ?? '');
-//        $storage = $data?->storage?->value ?? 'public';
-
-        if(($storage  == 'public') && isset($image) && strlen($image) >1 && Storage::disk($storage)->exists($path.$image)){
-            return $src;
-        }
-        if(($storage  == 's3') && isset($image) && strlen($image) >1 && Storage::disk($storage)->exists($path.$image)){
-            $awsUrl = config('filesystems.disks.s3.url');
-            $awsBucket = config('filesystems.disks.s3.bucket');
-            return rtrim($awsUrl, '/').'/'.ltrim($awsBucket.'/'.$path.$image, '/');
+        try {
+            if(($storage  == 'public') && isset($image) && strlen($image) >1 && Storage::disk($storage)->exists($path.$image)){
+                return $src;
+            }
+            if(($storage  == 's3') && isset($image) && strlen($image) >1 && Storage::disk($storage)->exists($path.$image)){
+                $awsUrl = config('filesystems.disks.s3.url');
+                $awsBucket = config('filesystems.disks.s3.bucket');
+                return rtrim($awsUrl, '/').'/'.ltrim($awsBucket.'/'.$path.$image, '/');
+            }
+        } catch (\Exception $e) {
+            return $error_src;
         }
         return $error_src;
     }
 
-    public static function onerror_image_helper($data, $src, $error_src ,$path, $storag = null){
 
-        if(($storag  == 'public') && isset($data) && strlen($data) >1 && Storage::disk($storag)->exists($path.$data)){
-            return $src;
-        }
-        if(($storag  == 's3') && isset($data) && strlen($data) >1 && Storage::disk($storag)->exists($path.$data)){
-            $awsUrl = config('filesystems.disks.s3.url'); // Get the AWS URL from filesystem configuration
-            $awsBucket = config('filesystems.disks.s3.bucket'); // Get the AWS bucket name from filesystem configuration
-            return rtrim($awsUrl, '/').'/'.ltrim($awsBucket.'/'.$path.$data, '/'); // Concatenate URL parts
+    public static function onerror_image_helper($image, $src, $error_src ,$path, $storage = null){
+
+        try {
+            if(($storage  == 'public') && isset($image) && strlen($image) >1 && Storage::disk($storage)->exists($path.$image)){
+                return $src;
+            }
+            if(($storage  == 's3') && isset($image) && strlen($image) >1 && Storage::disk($storage)->exists($path.$image)){
+                $awsUrl = config('filesystems.disks.s3.url');
+                $awsBucket = config('filesystems.disks.s3.bucket');
+                return rtrim($awsUrl, '/').'/'.ltrim($awsBucket.'/'.$path.$image, '/');
+            }
+        } catch (\Exception $e) {
+            return $error_src;
         }
         return $error_src;
     }
+
+    public static function local_storage_link($path,$data){
+        if (Storage::disk('public')->exists($path .'/'. $data)) {
+            return asset('storage/app/public') . '/' . $path . '/' . $data;
+        }
+        return 'def.png';
+    }
+    public static function s3_storage_link($path,$data){
+        try {
+
+            if (Storage::disk('s3')->exists($path .'/'. $data)) {
+                $awsUrl = config('filesystems.disks.s3.url');
+                $awsBucket = config('filesystems.disks.s3.bucket');
+                return rtrim($awsUrl, '/') . '/' . ltrim($awsBucket . '/' . $path . '/' . $data, '/');
+            }
+        } catch (\Exception $e){
+
+        }
+        return 'def.png';
+    }
+
+    public static function get_full_url($path,$data,$type){
+        try {
+
+            if ($type == 's3' && Storage::disk('s3')->exists($path .'/'. $data)) {
+                $awsUrl = config('filesystems.disks.s3.url');
+                $awsBucket = config('filesystems.disks.s3.bucket');
+                return rtrim($awsUrl, '/') . '/' . ltrim($awsBucket . '/' . $path . '/' . $data, '/');
+            }
+        } catch (\Exception $e){
+        }
+        if (Storage::disk('public')->exists($path .'/'. $data)) {
+            return asset('storage/app/public') . '/' . $path . '/' . $data;
+        }
+        return 'def.png';
+    }
+
+
 
     public static function create_storage($model,$data_id){
         $config=self::get_business_settings('local_storage');
@@ -3499,89 +3632,84 @@ class Helpers
 
     public static function send_push_notif_for_demo_reset($data, $topic, $type,)
     {
-        $key = BusinessSetting::where(['key' => 'push_notification_key'])->first()->value;
+        $postData = [
+            'message' => [
+                "topic" => $topic,
+                "data" => [
+                    "title" => (string)$data['title'],
+                    "body" => (string)$data['description'],
+                    "type" => (string)$type,
+                    "image" => (string)$data['image'],
+                    "body_loc_key" => (string)$type,
+                ]
+            ]
+        ];
 
-        $url = "https://fcm.googleapis.com/fcm/send";
-        $header = array(
-            "authorization: key=" . $key . "",
-            "content-type: application/json"
-        );
-        $postdata = '{
-            "to" : "/topics/' . $topic . '",
-            "mutable_content": true,
-               "data" : {
-                    "title":"' . $data['title'] . '",
-                    "body" : "' . $data['description'] . '",
-                    "image" : "' . $data['image'] . '",
-                    "is_read": 0,
-                    "type":"' . $type . '",
-                }
-
-        }';
-
-        $ch = curl_init();
-        $timeout = 120;
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
-
-        $result = curl_exec($ch);
-        curl_close($ch);
-
-        return $result;
+        return self::sendNotificationToHttp($postData);
     }
 
-    public static function subscription_plan_chosen($store_id ,$package_id, $payment_method  ,$discount,$reference=null ,$type=null){
+
+    public static function subscriptionConditionsCheck($store_id ,$package_id,){
         $store=Store::findOrFail($store_id);
-        $package = SubscriptionPackage::withoutGlobalScope('translate')->findOrFail($package_id);
-        $add_days=0;
-        $add_orders=0;
+        $package = SubscriptionPackage::withoutGlobalScope('translate')->find($package_id);
+
         $total_food= $store->items()->withoutGlobalScope(\App\Scopes\StoreScope::class)->count();
         if ($package->max_product != 'unlimited' &&  $total_food >= $package->max_product  ){
-            return 'downgrade_error';
+            return ['disable_item_count' => $total_food - $package->max_product];
+            // return 'downgrade_error';
         }
+        return null;
+    }
+    public static function subscription_plan_chosen($store_id ,$package_id, $payment_method  ,$discount = 0,$pending_bill =0,$reference=null ,$type=null){
+        $store=Store::find($store_id);
+        $package = SubscriptionPackage::withoutGlobalScope('translate')->find($package_id);
+        $add_days=0;
+        $add_orders=0;
+
         try {
             $store_subscription=$store->store_sub;
             if (isset($store_subscription) && $type == 'renew') {
                 $store_subscription->total_package_renewed= $store_subscription->total_package_renewed + 1;
 
-                $day_left=$store_subscription->expiry_date->format('Y-m-d');
+                $day_left=$store_subscription->expiry_date_parsed->format('Y-m-d');
                 if (Carbon::now()->subDays(1)->diffInDays($day_left, false) > 0) {
                     $add_days= Carbon::now()->subDays(1)->diffInDays($day_left, false);
                 }
                 if ($store_subscription->max_order != 'unlimited' && $store_subscription->max_order > 0) {
                     $add_orders=$store_subscription->max_order;
                 }
-            } else{
+
+            }
+            elseif($store->store_sub_update_application && $store->store_sub_update_application->package_id == $package->id && $type == 'renew' ){
+                $store_subscription=$store->store_sub_update_application;
+                $store_subscription->total_package_renewed= $store_subscription->total_package_renewed + 1;
+            }
+
+            else{
+                self::calculateSubscriptionRefundAmount($store);
                 StoreSubscription::where('store_id',$store->id)->update([
                     'status' => 0,
                 ]);
                 $store_subscription =new StoreSubscription();
                 $store_subscription->total_package_renewed= 0;
+                $store_subscription->is_trial= 0;
 
             }
+
 
             $store_subscription->renewed_at=now();
             $store_subscription->package_id=$package->id;
             $store_subscription->store_id=$store->id;
             if ($payment_method  == 'free_trial' ) {
-                $free_trial_period_data = BusinessSetting::where(['key' => 'free_trial_period'])->first();
-                if ($free_trial_period_data == false) {
-                    $values= [
-                        'data' => 7,
-                        'status' => 1,
-                    ];
-                    Helpers::insert_business_settings_key('free_trial_period',  json_encode($values) );
-                }
-                $free_trial_period_data = json_decode(BusinessSetting::where(['key' => 'free_trial_period'])->first()->value,true);
-                $free_trial_period= $free_trial_period_data['data'];
+
+                $free_trial_period= BusinessSetting::where(['key' => 'subscription_free_trial_days'])->first()?->value ?? 1;
+
                 $store_subscription->expiry_date= Carbon::now()->addDays($free_trial_period)->format('Y-m-d');
+                $store_subscription->validity= $free_trial_period;
             }
             else{
                 $store_subscription->expiry_date= Carbon::now()->addDays($package->validity+$add_days)->format('Y-m-d');
+                $store_subscription->validity=$package->validity+$add_days;
             }
             if($package->max_order != 'unlimited'){
                 $store_subscription->max_order=$package->max_order + $add_orders;
@@ -3596,6 +3724,8 @@ class Helpers
             $store_subscription->chat=$package->chat;
             $store_subscription->review=$package->review;
             $store_subscription->self_delivery=$package->self_delivery;
+            $store_subscription->is_canceled=0;
+            $store_subscription->canceled_by='none';
 
             $store->item_section= 1;
             $store->pos_system= 1;
@@ -3623,19 +3753,22 @@ class Helpers
             $store->store_business_model= 'subscription';
 
             $subscription_transaction= new SubscriptionTransaction();
-            // $subscription_transaction_ID= Str::uuid();
-            // $subscription_transaction->id=  $subscription_transaction_ID;
-            $subscription_transaction->store_subscription_id= $store_subscription->id;
+
             $subscription_transaction->package_id=$package->id;
             $subscription_transaction->store_id=$store->id;
             $subscription_transaction->price=$package->price;
 
             $subscription_transaction->validity=$package->validity;
-            $subscription_transaction->paid_amount= $package->price - (($package->price*$discount)/100);
+            $subscription_transaction->paid_amount= $package->price - (($package->price*$discount)/100) + $pending_bill;
+
+            $subscription_transaction->payment_status = 'success';
+            $subscription_transaction->created_by=  in_array($payment_method,['wallet_payment_by_admin','manual_payment_by_admin' ,'plan_shift_by_admin'] )?'Admin': 'Store';
 
             if ($payment_method  == 'free_trial') {
                 $subscription_transaction->validity= $free_trial_period;
                 $subscription_transaction->paid_amount= 0;
+                $subscription_transaction->is_trial= 1;
+                $store_subscription->is_trial= 1;
             }
             elseif($payment_method  == 'pay_now'){
                 $subscription_transaction->payment_status ='on_hold';
@@ -3643,14 +3776,17 @@ class Helpers
                 $store_subscription->status= 0;
             }
 
+
+
             $subscription_transaction->payment_method=$payment_method;
             $subscription_transaction->reference=$reference ?? null;
             $subscription_transaction->discount=$discount ?? 0;
-            if( $payment_method == 'manual_payment_admin'){
-                $subscription_transaction->created_by= 'Admin';
-            } else{
-                $subscription_transaction->created_by= 'Store';
+            if(in_array($type ,['renew','free_trial'])){
+                $subscription_transaction->plan_type=$type;
+            } elseif(StoreSubscription::where('store_id',$store->id)->where('is_trial',0)->count() > 0 || $reference == 'plan_shift_by_admin'){
+                $subscription_transaction->plan_type='new_plan';
             }
+
 
             $subscription_transaction->package_details=[
                 'pos'=>$package->pos,
@@ -3661,20 +3797,195 @@ class Helpers
                 'max_order'=>$package->max_order,
                 'max_product'=>$package->max_product,
             ];
-
             DB::beginTransaction();
             $store->save();
             $subscription_transaction->save();
             $store_subscription->save();
             DB::commit();
+            $subscription_transaction->store_subscription_id= $store_subscription->id;
+            $subscription_transaction->save();
+
+            SubscriptionBillingAndRefundHistory::where(['store_id'=>$store->id,
+            'transaction_type'=>'pending_bill', 'is_success' =>0])->update([
+                'is_success'=> 1,
+                'reference'=> 'payment_via_'.$payment_method.' _transaction_id_'.$subscription_transaction->id
+            ]);
+
+            if($reference == 'plan_shift_by_admin'){
+                $billing= new SubscriptionBillingAndRefundHistory();
+                $billing->store_id= $store->id;
+                $billing->subscription_id= $store_subscription->id;
+                $billing->package_id= $store_subscription->package_id;
+                $billing->transaction_type= 'pending_bill';
+                $billing->is_success= 0;
+                $billing->amount= $package->price;
+                $billing->save();
+            }
+
+
         } catch(\Exception $e){
             DB::rollBack();
             info(["line___{$e->getLine()}",$e->getMessage()]);
             return false;
         }
+
+
+
+
+        if(data_get(self::subscriptionConditionsCheck(store_id:$store->id,package_id:$package->id) , 'disable_item_count') > 0){
+            $disable_item_count=data_get(Helpers::subscriptionConditionsCheck(store_id:$store->id,package_id:$package->id) , 'disable_item_count');
+            $store->item_section= 0;
+            $store->save();
+
+            Item::where('store_id',$store->id)->oldest()->take($disable_item_count)->update([
+                'status' => 0
+            ]);
+        }
+
+
+        try {
+
+            if (config('mail.status') && Helpers::get_mail_status('subscription_renew_mail_status_store') == '1' && $type == 'renew' ) {
+                Mail::to($store->email)->send(new SubscriptionRenewOrShift($type,$store->name));
+            }
+            if (config('mail.status') && Helpers::get_mail_status('subscription_shift_mail_status_store') == '1' && $type != 'renew' ) {
+                Mail::to($store->email)->send(new SubscriptionRenewOrShift($type,$store->name));
+            }
+            if (config('mail.status') && Helpers::get_mail_status('subscription_successful_mail_status_store') == '1' ) {
+                $url=route('subscription_invoice',['id' => base64_encode($subscription_transaction->id)]);
+                Mail::to($store->email)->send(new SubscriptionSuccessful($store->name,$url));
+            }
+
+        } catch (\Exception $ex) {
+            info($ex->getMessage());
+        }
+
         return  $subscription_transaction->id;
     }
+    public static function subscriptionPayment($store_id,$package_id,$payment_gateway,$url,$pending_bill=0,$type='payment',$payment_platform='web'){
+        $store = Store::where('id',$store_id)->first();
+        $package = SubscriptionPackage::where('id',$package_id)->first();
+        $type == null ? 'payment' :$type ;
 
+        $payer = new Payer(
+            $store->name ,
+            $store->email,
+            $store->phone,
+            ''
+        );
+        $additional_data = [
+            'business_name' => BusinessSetting::where(['key'=>'business_name'])->first()?->value,
+            'business_logo' => asset('storage/app/public/business') . '/' .BusinessSetting::where(['key' => 'logo'])->first()?->value
+        ];
+        $payment_info = new PaymentInfo(
+            success_hook: 'sub_success',
+            failure_hook: 'sub_fail',
+            currency_code: Helpers::currency_code(),
+            payment_method: $payment_gateway,
+            payment_platform: $payment_platform,
+            payer_id: $store->id,
+            receiver_id:  $package->id,
+            additional_data: $additional_data,
+            payment_amount: $package->price + $pending_bill,
+            external_redirect_link: $url,
+            attribute: 'store_subscription_'.$type,
+            attribute_id: $package->id,
+        );
+        $receiver_info = new Receiver('Admin','example.png');
+        $redirect_link = Payment::generate_link($payer, $payment_info, $receiver_info);
+
+        return $redirect_link;
+    }
+
+    public Static function subscription_check()
+    {
+        $subscription_business_model=  BusinessSetting::where(['key'=>'subscription_business_model'])->first()?->value ?? null;
+        if($subscription_business_model == null ){
+            Helpers::insert_business_settings_key('subscription_business_model', '1');
+            $subscription_business_model=  BusinessSetting::where(['key'=>'subscription_business_model'])->first()?->value ?? null;
+        }
+        return $subscription_business_model ?? 1;
+
+    }
+    public Static function commission_check()
+    {
+        $commission_business_model=  BusinessSetting::where(['key'=>'commission_business_model'])->first()?->value ?? null;
+        if($commission_business_model == null ){
+            Helpers::insert_business_settings_key('commission_business_model', '1');
+            $commission_business_model=  BusinessSetting::where(['key'=>'commission_business_model'])->first()?->value ?? null;
+        }
+        return $commission_business_model ?? 1;
+    }
+
+    public static function calculateSubscriptionRefundAmount($store){
+
+        $store_subscription=$store->store_sub;
+        if($store_subscription){
+            $day_left=$store_subscription->expiry_date_parsed->format('Y-m-d');
+            if (Carbon::now()->subDays(1)->diffInDays($day_left, false) > 0) {
+                $add_days= Carbon::now()->subDays(1)->diffInDays($day_left, false);
+                $validity=$store_subscription?->validity;
+                $subscription_usage_max_time=BusinessSetting::where('key', 'subscription_usage_max_time')->first()?->value ?? 50 ;
+                $subscription_usage_max_time=  ($validity * $subscription_usage_max_time) /100 ;
+
+                if(($validity - $add_days) < $subscription_usage_max_time ){
+                        $per_day= $store->store_sub_trans->price / $store->store_sub_trans->validity;
+                        $back_amount= $per_day *  $add_days;
+                        $vendorWallet = StoreWallet::firstOrNew(
+                            ['vendor_id' => $store->vendor_id]
+                        );
+                        $vendorWallet->total_earning = $vendorWallet->total_earning+$back_amount;
+                        $vendorWallet->save();
+
+                        $refund=new SubscriptionBillingAndRefundHistory();
+                        $refund->store_id= $store->id;
+                        $refund->subscription_id= $store_subscription->id;
+                        $refund->package_id= $store_subscription->package_id;
+                        $refund->transaction_type= 'refund';
+                        $refund->is_success= 1;
+                        $refund->amount= $back_amount;
+                        $refund->reference= 'validity_left_'.$add_days ;
+                        $refund->save();
+                    }
+            }
+
+        }
+
+        return true;
+    }
+    public static function increment_order_count($store){
+        $store_sub=$store->store_sub;
+        if ( $store->store_business_model == 'subscription' && isset($store_sub) && $store_sub->max_order != "unlimited") {
+            $store_sub->increment('max_order', 1);
+        }
+        return true;
+    }
+
+    public static function getDefaultPaymentMethods()
+    {
+        if (!Schema::hasTable('addon_settings')) {
+            return [];
+        }
+
+        $methods = DB::table('addon_settings')->where('is_active',1)->whereIn('settings_type', ['payment_config'])->whereIn('key_name', ['ssl_commerz','paypal','stripe','razor_pay','senang_pay','paytabs','paystack','paymob_accept','paytm','flutterwave','liqpay','bkash','mercadopago'])->get();
+        $env = env('APP_ENV') == 'live' ? 'live' : 'test';
+        $credentials = $env . '_values';
+
+        $data = [];
+        foreach ($methods as $method) {
+            $credentialsData = json_decode($method->$credentials);
+            $additional_data = json_decode($method->additional_data);
+            if ($credentialsData->status == 1) {
+                $data[] = [
+                    'gateway' => $method->key_name,
+                    'gateway_title' => $additional_data?->gateway_title,
+                    'gateway_image' => $additional_data?->gateway_image,
+                    'storage' => $additional_data?->storage ?? 'public'
+                ];
+            }
+        }
+        return $data;
+    }
 }
 
 

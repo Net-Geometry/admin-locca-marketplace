@@ -216,13 +216,12 @@ $(".route-alert").on("click", function () {
 });
 $(".set-filter").on("change", function () {
     const id = $(this).val();
-    const url = $(this).data("url");
-    const filter_by = $(this).data("filter");
+    const url = $(this).data('url');
+    const filter_by = $(this).data('filter');
     let nurl = new URL(url);
-    nurl.searchParams.delete("page");
+    nurl.searchParams.delete('page');
     nurl.searchParams.set(filter_by, id);
     location.href = nurl;
-    tour.next();
 });
 $(document).ready(function () {
     $(".onerror-image").on("error", function () {
@@ -414,4 +413,12 @@ $(document).on("click", ".location-reload-to-base", function () {
     let nurl = new URL(url);
     nurl.searchParams.delete("search");
     location.href = nurl;
+});
+document.querySelectorAll('[name="search"]').forEach(function(element) {
+    element.addEventListener('input', function(event) {
+        if (this.value === "" && window.location.search !== "") {
+            let baseUrl = window.location.origin + window.location.pathname;
+            window.location.href = baseUrl;
+        }
+    });
 });

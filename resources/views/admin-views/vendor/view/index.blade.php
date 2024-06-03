@@ -160,10 +160,6 @@
                                 asset('public/assets/admin/img/160x160/img1.jpg'),
                                 'vendor/'
                             ) }}"
-
-
-
-
                             alt="Image Description">
                         </div>
                         <ul class="address-info address-info-2 list-unstyled list-unstyled-py-3 text-dark">
@@ -183,7 +179,67 @@
                 </div>
             </div>
         </div>
+
+        <div class="col-lg-6">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="card-title m-0 d-flex align-items-center">
+                        <span class="card-header-icon mr-2">
+                            <i class="tio-crown"></i>
+                        </span>
+                        <span class="ml-1">{{translate('messages.Business_Plan')}}</span>
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="resturant--info-address">
+                        <ul class="address-info address-info-2 list-unstyled list-unstyled-py-3 text-dark">
+
+                        @if ($store->store_business_model == 'commission')
+                        <li>
+                            <span>{{translate('messages.Business_Plan')}}</span> <span>:</span> &nbsp; {{ translate($store->store_business_model) }}
+                        </li>
+                        @php($admin_commission = \App\Models\BusinessSetting::where(['key' => 'admin_commission'])->first()?->value)
+                        <li>
+                            <span>{{translate('messages.Commission_percentage')}}</span> <span>:</span> &nbsp; {{ $store->comission > 0 ?  $store->comission : $admin_commission }} %
+                        </li>
+                        @elseif ($store->store_business_model == 'subscription')
+                            <li>
+                                <span>{{translate('messages.Business_Plan')}}</span> <span>:</span> &nbsp; {{ translate($store->store_business_model) }} &nbsp;
+                                @if ($store?->store_sub_update_application->is_trial == '1')
+                                <small> <span class="badge badge-info" >{{ translate('messages.Free_trial')}}</span> </small>
+                                @endif
+                            </li>
+                            <li>
+                                <span>{{translate('messages.Package_name')}}</span> <span>:</span> &nbsp; {{ $store?->store_sub_update_application?->package?->package_name  ?? translate('Pacakge_not_found!!!')}}
+                            </li>
+                        @elseif ($store->store_business_model == 'unsubscribed')
+                            <li>
+                                <span>{{translate('messages.Business_Plan')}}</span> <span>:</span> &nbsp; {{ translate($store->store_business_model) }} &nbsp;
+
+                                <small> <span class="badge badge-danger" >{{ translate('messages.Expired')}}</span> </small>
+
+                            </li>
+                            <li>
+                                <span>{{translate('messages.Package_name')}}</span> <span>:</span> &nbsp; {{ $store?->store_sub_update_application?->package?->package_name  ?? translate('Pacakge_not_found!!!')}}
+                            </li>
+                            @else
+                                <li>
+                                <span>{{translate('messages.Business_Plan')}}</span> <span>:</span> &nbsp; {{ translate('Have_n’t_Selected_Yet.') }}
+                            </li>
+                        @endif
+
+
+
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
     </div>
+
 </div>
 
 <div class="modal fade" id="collect-cash" tabindex="-1">

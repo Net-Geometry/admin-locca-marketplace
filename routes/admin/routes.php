@@ -123,7 +123,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::get(Coupon::EXPORT[URI], [CouponController::class, 'exportList'])->name('coupon_export');
         });
 
-        Route::group(['prefix' => 'cashback', 'as' => 'cashback.'], function () {
+        Route::group(['prefix' => 'cashback', 'as' => 'cashback.' , 'middleware' => ['module:cashback']], function () {
             Route::get(CashBack::INDEX[URI], [CashBackController::class,'index'])->name('add-new');
             Route::post(CashBack::ADD[URI], [CashBackController::class,'add'])->name('store');
             Route::get(CashBack::UPDATE[URI].'/{id}', [CashBackController::class,'getUpdateView'])->name('edit');
@@ -165,7 +165,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
 
         Route::group(['prefix' => 'business-settings', 'as' => 'business-settings.'], function () {
 
-            Route::group(['prefix' => 'subscription'], function () {
+            Route::group(['prefix' => 'subscription' ,'middleware' => ['module:subscription']], function () {
 
                 Route::resource('subscriptionackage', SubscriptionController::class);
                 Route::get('/status/{subscriptionackage}',  [SubscriptionController::class, 'statusChange'])->name('subscriptionackage.status');
@@ -175,12 +175,19 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                 Route::get('/trial-status',  [SubscriptionController::class, 'trialStatus'])->name('subscriptionackage.trialStatus');
                 Route::post('/setting-update',  [SubscriptionController::class, 'settingUpdate'])->name('subscriptionackage.settingUpdate');
                 Route::get('/invoice/{id}',  [SubscriptionController::class, 'invoice'])->name('subscriptionackage.invoice');
+                Route::post('/switch-plan',  [SubscriptionController::class, 'switchPlan'])->name('subscriptionackage.switchPlan');
+                Route::get('/package-export',  [SubscriptionController::class, 'packageExport'])->name('subscriptionackage.packageExport');
+                Route::get('/transaction-export',  [SubscriptionController::class, 'TransactionExport'])->name('subscriptionackage.TransactionExport');
 
                 Route::get('/subscriber-list',  [SubscriptionController::class, 'subscriberList'])->name('subscriptionackage.subscriberList');
+                Route::get('/subscriber-list-export',  [SubscriptionController::class, 'subscriberListExport'])->name('subscriptionackage.subscriberListExport');
+                Route::get('/subscriber-transaction-export',  [SubscriptionController::class, 'subscriberTransactionExport'])->name('subscriptionackage.subscriberTransactionExport');
                 Route::post('/cancel-subscription/{id}',  [SubscriptionController::class, 'cancelSubscription'])->name('subscriptionackage.cancelSubscription');
                 Route::post('/switch-to-commission/{id}',  [SubscriptionController::class, 'switchToCommission'])->name('subscriptionackage.switchToCommission');
                 Route::get('/subscriber-detail/{id}',  [SubscriptionController::class, 'subscriberDetail'])->name('subscriptionackage.subscriberDetail');
                 Route::get('/package-view/{id}/{store_id}',  [SubscriptionController::class, 'packageView'])->name('subscriptionackage.packageView');
+                Route::get('/subscriber-transactions/{id}',  [SubscriptionController::class, 'subscriberTransactions'])->name('subscriptionackage.subscriberTransactions');
+                Route::get('/subscriber-wallet-transactions/{id}',  [SubscriptionController::class, 'subscriberWalletTransactions'])->name('subscriptionackage.subscriberWalletTransactions');
 
                 Route::post('/package-buy',  [SubscriptionController::class, 'packageBuy'])->name('subscriptionackage.packageBuy');
             });

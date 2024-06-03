@@ -139,14 +139,14 @@ active
 
                             <span class="dropdown-header">{{ translate('download_options') }}</span>
                             <a id="export-excel" class="dropdown-item"
-                                href="{{ route('admin.transactions.report.day-wise-report-export', ['type' => 'excel', request()->getQueryString()]) }}">
+                                href="{{ route('admin.business-settings.subscriptionackage.subscriberListExport', ['export_type' => 'excel', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{ asset('public/assets/admin/svg/components/excel.svg') }}"
                                     alt="Image Description">
                                 {{ translate('messages.excel') }}
                             </a>
                             <a id="export-csv" class="dropdown-item"
-                                href="{{ route('admin.transactions.report.day-wise-report-export', ['type' => 'csv', request()->getQueryString()]) }}">
+                                href="{{ route('admin.business-settings.subscriptionackage.subscriberListExport', ['export_type' => 'csv', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{ asset('public/assets/admin/svg/components/placeholder-csv-format.svg') }}"
                                     alt="Image Description">
@@ -165,10 +165,12 @@ active
                         <thead class="thead-light white--space-false">
                             <th class="border-top px-4 border-bottom text-center">{{ translate('sl') }}</th>
                             <th class="border-top px-4 border-bottom"> {{ translate('Store Info') }}  </th>
-                            <th class="border-top px-4 border-bottom"> {{ translate('Package Name') }} </th>
+                            <th class="border-top px-4 border-bottom"> {{ translate('Current Package Name') }} </th>
                             <th class="border-top px-4 border-bottom"> {{ translate('Package Price') }}  </th>
                             <th class="border-top px-4 border-bottom"> {{ translate('Exp Date') }}  </th>
-                            <th class="border-top px-4 border-bottom"> {{ translate('Used') }}  </th>
+                            <th class="border-top px-4 border-bottom text-center"> {{ translate('Total Subscription Used') }}  </th>
+                            <th class="border-top px-4 border-bottom text-center"> {{ translate('is_trial') }}  </th>
+                            <th class="border-top px-4 border-bottom text-center"> {{ translate('is_cancel') }}  </th>
                             <th class="border-top px-4 border-bottom text-center">{{ translate('Status') }} </th>
                             <th class="border-top px-4 border-bottom text-center">{{ translate('Action') }} </th>
                         </thead>
@@ -179,16 +181,19 @@ active
                                 <td class="px-4 text-center">{{ $k + $subscribers->firstItem() }}</td>
                                 <td class="px-4">
                                     <a href="{{route('admin.store.view', $subscriber->id)}}" alt="view restaurant" class="table-rest-info">
-                                        <img src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
-                                            $subscriber['logo'] ?? '',
-                                            asset('storage/app/public/store').'/'.$subscriber['logo'] ?? '',
-                                            asset('public/assets/admin/img/160x160/img1.jpg'),
+                                        <img src="{{ \App\CentralLogics\Helpers::get_image_helper(
+                                            $subscriber,'logo',
+                                            asset('storage/app/public/store').'/'.$subscriber->logo ?? '',
+                                            asset('public/assets/admin/img/100x100/1.png'),
                                             'store/'
-                                        ) }}">
+                                        ) }}" >
                                         <div class="info">
                                             <span class="d-block text-title">
                                                 {{ $subscriber->name }}<br>
-                                                <span class="rating text-star"><i class="tio-star"></i> 0</span>
+                                                @php($user_rating = null)
+                                                @php($store_reviews = \App\CentralLogics\StoreLogic::calculate_store_rating($subscriber['rating']))
+                                                @php($user_rating = $store_reviews['rating'])
+                                                <span class="rating text-star"><i class="tio-star"></i> {{ number_format($user_rating, 1) }}</span>
                                             </span>
                                         </div>
                                     </a>
@@ -200,15 +205,39 @@ active
                                     <div class="text-title">{{  \App\CentralLogics\Helpers::format_currency($subscriber?->store_sub_update_application?->package?->price) }}</div>
                                 </td>
                                 <td class="px-4">
-                                    <div class="text-title">{{  \App\CentralLogics\Helpers::date_format($subscriber?->store_sub_update_application?->expiry_date) }}</div>
+                                    <div class="text-title">{{  \App\CentralLogics\Helpers::date_format($subscriber?->store_sub_update_application?->expiry_date_parsed) }}</div>
                                 </td>
                                 <td class="px-4">
-                                    <div class="text-title pl-3">{{ $subscriber?->store_sub_update_application?->total_package_renewed + 1 }}</div>
+                                    <div class="text-title pl-3">{{ $subscriber?->store_all_sub_trans_count }}</div>
+                                </td>
+
+                                <td class="px-4">
+                                    <div class="text-title pl-3">
+                                        @if ($subscriber?->store_sub_update_application?->is_trial)
+                                        <span class="badge badge-pill badge-info">{{  translate('Yes') }}</span>
+
+                                        @else
+                                        <span class="badge badge-pill badge-success">{{  translate('No') }}</span>
+                                        @endif
+
+                                </div>
+                                <td class="px-4">
+                                    <div class="text-title pl-3">
+                                        @if ($subscriber?->store_sub_update_application?->is_canceled)
+                                        <span class="badge badge-pill badge-warning">{{  translate('Yes') }}</span>
+
+                                        @else
+                                        <span class="badge badge-pill badge-success">{{  translate('No') }}</span>
+                                        @endif
+
+                                </div>
                                 </td>
                                 <td class="px-4 text-center">
                                     <div>
-                                        @if ($subscriber?->store_sub_update_application?->is_cancaled == 1)
-                                        <span class="badge badge-soft-warning">{{ translate('canceled') }}</span>
+                                        @if($subscriber?->status == 0 &&  $subscriber?->vendor?->status == 0)
+                                        <span class="badge badge-soft-info">{{ translate('Approval_Pending') }}</span>
+                                        {{-- @elseif ($subscriber?->store_sub_update_application?->is_canceled == 1)
+                                        <span class="badge badge-soft-warning">{{ translate('canceled') }}</span> --}}
                                         @elseif($subscriber?->store_sub_update_application?->status == 0)
                                         <span class="badge badge-soft-danger">{{ translate('Expired') }}</span>
                                         @elseif($subscriber?->store_sub_update_application?->status == 1)
