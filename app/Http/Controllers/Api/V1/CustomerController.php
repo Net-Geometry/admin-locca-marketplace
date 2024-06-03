@@ -374,7 +374,7 @@ class CustomerController extends Controller
         }
 
         return response()->json(['order_id' =>$order?->id ?? null,
-        'images'=> $images ?? []],200);
+        'images'=> $images ?? [],'images_full_url'=> $images_full_url ?? []],200);
 
     }
 
