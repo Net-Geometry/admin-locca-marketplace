@@ -420,9 +420,9 @@
                                                             accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
                                                             <i class="tio-edit"></i>
                                                     </div>
-                                                    <button class="btn action-btn btn-outline-danger">
+                                                    {{-- <button class="btn action-btn btn-outline-danger">
                                                         <i class="tio-delete-outlined"></i>
-                                                    </button>
+                                                    </button> --}}
                                                 </div>
                                             </label>
                                         </div>

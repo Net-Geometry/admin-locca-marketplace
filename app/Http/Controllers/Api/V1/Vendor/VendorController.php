@@ -141,6 +141,8 @@ class VendorController extends Controller
         unset($vendor['todaysorders']);
         unset($vendor['this_week_orders']);
         unset($vendor['this_month_orders']);
+
+        $vendor['subscription_transactions']= (boolean) SubscriptionTransaction::where('store_id',$store->id)->count() > 0? true : false;
             if(isset($st?->store_sub_update_application)){
                     $vendor['subscription'] =$st?->store_sub_update_application;
 
@@ -453,7 +455,7 @@ class VendorController extends Controller
                 }
                 $images = $img_names;
             }
-            
+
             if(count($images)>0){
                 $order->order_proof = json_encode($images);
             }

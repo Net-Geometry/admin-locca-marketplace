@@ -37,7 +37,7 @@ $company_name = App\Models\BusinessSetting::where('key', 'business_name')->first
             @php($store_logo = \App\Models\BusinessSetting::where(['key' => 'logo'])->first())
             <img class="email-template-img onerror-image"
 
-            @if ($data->logo)
+            @if ($data?->logo)
             src="{{ \App\CentralLogics\Helpers::get_image_helper(
                 $data, 'logo',
                 asset('storage/app/public/email_template').'/'.data_get($data, 'logo' , null),
