@@ -494,7 +494,7 @@ class SubscriptionController extends Controller
                             'transaction_type'=>'pending_bill', 'is_success' =>0])->sum('amount') ;
 
         $balance = BusinessSetting::where('key', 'wallet_status')->first()?->value == 1 ? StoreWallet::where('vendor_id',$store->vendor_id)->first()?->balance ?? 0 : 0;
-        $payment_methods = $this->getDefaultPaymentMethods();
+        $payment_methods = Helpers::getDefaultPaymentMethods();
         $disable_item_count=null;
         if(data_get(Helpers::subscriptionConditionsCheck(store_id:$store->id,package_id:$package->id) , 'disable_item_count') > 0 && ( !$store_subscription || $package->id != $store_subscription->package_id)){
             $disable_item_count=data_get(Helpers::subscriptionConditionsCheck(store_id:$store->id,package_id:$package->id) , 'disable_item_count');
@@ -637,30 +637,7 @@ class SubscriptionController extends Controller
         return back();
     }
 
-    private function getDefaultPaymentMethods()
-    {
-        if (!Schema::hasTable('addon_settings')) {
-            return [];
-        }
 
-        $methods = DB::table('addon_settings')->where('is_active',1)->whereIn('settings_type', ['payment_config'])->whereIn('key_name', ['ssl_commerz','paypal','stripe','razor_pay','senang_pay','paytabs','paystack','paymob_accept','paytm','flutterwave','liqpay','bkash','mercadopago'])->get();
-        $env = env('APP_ENV') == 'live' ? 'live' : 'test';
-        $credentials = $env . '_values';
-
-        $data = [];
-        foreach ($methods as $method) {
-            $credentialsData = json_decode($method->$credentials);
-            $additional_data = json_decode($method->additional_data);
-            if ($credentialsData->status == 1) {
-                $data[] = [
-                    'gateway' => $method->key_name,
-                    'gateway_title' => $additional_data?->gateway_title,
-                    'gateway_image' => $additional_data?->gateway_image
-                ];
-            }
-        }
-        return $data;
-    }
 
     public function packageExport(Request $request){
 

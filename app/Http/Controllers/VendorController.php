@@ -252,7 +252,7 @@ class VendorController extends Controller
             'package_id'=> $request->package_id,
             'store_id' => $request->store_id,
             'free_trial_settings'=>$free_trial_settings,
-            'payment_methods' => $this->getDefaultPaymentMethods(),
+            'payment_methods' => Helpers::getDefaultPaymentMethods(),
 
             ]);
         }
@@ -326,28 +326,4 @@ public function final_step(Request $request){
     return view('vendor-views.auth.register-complete',['store_id' =>$store_id,'payment_status'=> $payment_status]);
 }
 
-   private function getDefaultPaymentMethods()
-    {
-        if (!Schema::hasTable('addon_settings')) {
-            return [];
-        }
-
-        $methods = DB::table('addon_settings')->where('is_active',1)->whereIn('settings_type', ['payment_config'])->whereIn('key_name', ['ssl_commerz','paypal','stripe','razor_pay','senang_pay','paytabs','paystack','paymob_accept','paytm','flutterwave','liqpay','bkash','mercadopago'])->get();
-        $env = env('APP_ENV') == 'live' ? 'live' : 'test';
-        $credentials = $env . '_values';
-
-        $data = [];
-        foreach ($methods as $method) {
-            $credentialsData = json_decode($method->$credentials);
-            $additional_data = json_decode($method->additional_data);
-            if ($credentialsData->status == 1) {
-                $data[] = [
-                    'gateway' => $method->key_name,
-                    'gateway_title' => $additional_data?->gateway_title,
-                    'gateway_image' => $additional_data?->gateway_image
-                ];
-            }
-        }
-        return $data;
-    }
 }

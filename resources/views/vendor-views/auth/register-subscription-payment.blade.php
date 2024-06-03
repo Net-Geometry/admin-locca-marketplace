@@ -78,12 +78,18 @@
                                             <img src="{{asset('public/assets/admin/img/check-2.png')}}" class="check" alt="">
                                         </div>
                                         <span>{{ $item['gateway_title'] }}</span>
-                                        <img class="ms-auto" src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
-                                            $item['gateway_image'],
-                                            asset('storage/app/public/payment_modules/gateway_image').'/'. $item['gateway_image'],
-                                            asset('/public/assets/admin/img/payment/placeholder.png'),
-                                            'payment_modules/gateway_image/',$item['storage']??'public'
-                                        ) }}" width="30" alt="">
+                                        <img class="ms-auto"
+                                  
+
+                                            src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
+                                                $item['gateway_image'],
+                                                asset('storage/app/public/payment_modules/gateway_image').'/'.$item['gateway_image'],
+                                                asset('/public/assets/admin/img/payment/placeholder.png'),
+                                                'payment_modules/gateway_image/',$item['storage']??'public'
+                                            ) }}"
+
+
+                                        width="30" alt="">
                                     </div>
                                 </label>
                             </div>

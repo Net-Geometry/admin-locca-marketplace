@@ -41,6 +41,7 @@ use Illuminate\Support\Facades\Mail;
 
 use App\Mail\SubscriptionRenewOrShift;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Schema;
 use App\Library\Payment as PaymentInfo;
 use App\Models\SubscriptionTransaction;
 use Illuminate\Support\Facades\Storage;
@@ -3958,6 +3959,32 @@ class Helpers
             $store_sub->increment('max_order', 1);
         }
         return true;
+    }
+
+    public static function getDefaultPaymentMethods()
+    {
+        if (!Schema::hasTable('addon_settings')) {
+            return [];
+        }
+
+        $methods = DB::table('addon_settings')->where('is_active',1)->whereIn('settings_type', ['payment_config'])->whereIn('key_name', ['ssl_commerz','paypal','stripe','razor_pay','senang_pay','paytabs','paystack','paymob_accept','paytm','flutterwave','liqpay','bkash','mercadopago'])->get();
+        $env = env('APP_ENV') == 'live' ? 'live' : 'test';
+        $credentials = $env . '_values';
+
+        $data = [];
+        foreach ($methods as $method) {
+            $credentialsData = json_decode($method->$credentials);
+            $additional_data = json_decode($method->additional_data);
+            if ($credentialsData->status == 1) {
+                $data[] = [
+                    'gateway' => $method->key_name,
+                    'gateway_title' => $additional_data?->gateway_title,
+                    'gateway_image' => $additional_data?->gateway_image,
+                    'storage' => $additional_data?->storage ?? 'public'
+                ];
+            }
+        }
+        return $data;
     }
 }
 
