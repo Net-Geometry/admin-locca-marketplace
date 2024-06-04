@@ -835,6 +835,7 @@ class Helpers
                     $item['store_lat'] = $item['store']['latitude'];
                     $item['store_lng'] = $item['store']['longitude'];
                     $item['store_logo'] = $item['store']['logo'];
+                    $item['store_logo_full_url'] = $item['store']['logo_full_url'];
                     $item['min_delivery_time'] =  (int) explode('-',$item['store']['delivery_time'])[0] ?? 0;
                     $item['max_delivery_time'] =  (int) explode('-',$item['store']['delivery_time'])[1] ?? 0;
 
@@ -851,6 +852,7 @@ class Helpers
                     $item['store_lat'] = null;
                     $item['store_lng'] = null;
                     $item['store_logo'] = null;
+                    $item['store_logo_full_url'] = null;
                     $item['min_delivery_time'] = null;
                     $item['max_delivery_time'] = null;
                     $item['vendor_id'] = null;
@@ -882,6 +884,7 @@ class Helpers
                 $data['store_lat'] = $data['store']['latitude'];
                 $data['store_lng'] = $data['store']['longitude'];
                 $data['store_logo'] = $data['store']['logo'];
+                $data['store_logo_full_url'] = $data['store']['logo_full_url'];
                 $data['min_delivery_time'] =  $data['store']?(int) explode('-',$data['store']['delivery_time'])[0] ?? 0:0;
                 $data['max_delivery_time'] =  $data['store']?(int) explode('-',$data['store']['delivery_time'])[1] ?? 0:0;
                 $data['vendor_id'] = $data['store']['vendor_id'];
@@ -897,6 +900,7 @@ class Helpers
                 $data['store_lat'] = null;
                 $data['store_lng'] = null;
                 $data['store_logo'] = null;
+                $data['store_logo_full_url'] = null;
                 $data['min_delivery_time'] = null;
                 $data['max_delivery_time'] = null;
                 $item['vendor_id'] = null;
@@ -2280,7 +2284,7 @@ class Helpers
     //Mail Config Check
     public static function remove_invalid_charcaters($str)
     {
-        return str_ireplace(['\'', '"', ',', ';', '<', '>', '?'], ' ', $str);
+        return str_ireplace(['\'', '"', ';', '<', '>'], ' ', $str);
     }
 
     //Generate referer code

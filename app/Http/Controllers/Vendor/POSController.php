@@ -663,7 +663,7 @@ class POSController extends Controller
 
                 $order->adjusment = 0;
             }else{
-                $order->adjusment = $request->amount - ($total_price + $total_tax_amount + $order->delivery_charge);
+                $order->adjusment = $request->amount - ($total_price + $tax_a + $order->delivery_charge);
 
             }
             $order->payment_method = $request->type;

@@ -19,10 +19,10 @@ active
                             <h1 class="page-header-title">{{ $store->name }} {{translate('Subscription')}} &nbsp; &nbsp;
                                 @if($store?->status == 0 &&  $store?->vendor?->status == 0)
                                 <span class=" badge badge-pill badge-info">  &nbsp; {{ translate('Approval_Pending') }}  &nbsp; </span>
-                                @elseif ($store?->store_sub_update_application?->is_canceled == 1)
-                                <span class=" badge badge-pill badge-warning">  &nbsp; {{ translate('canceled') }}  &nbsp; </span>
                                 @elseif($store?->store_sub_update_application?->status == 0)
                                 <span class=" badge badge-pill badge-danger">  &nbsp; {{ translate('Expired') }}  &nbsp; </span>
+                                @elseif ($store?->store_sub_update_application?->is_canceled == 1)
+                                <span class=" badge badge-pill badge-warning">  &nbsp; {{ translate('canceled') }}  &nbsp; </span>
                                 @elseif($store?->store_sub_update_application?->status == 1)
                                 <span class=" badge badge-pill badge-success">  &nbsp; {{ translate('Active') }}  &nbsp; </span>
                                 @endif
@@ -214,8 +214,8 @@ active
                                 @if ( $store?->store_sub_update_application?->max_order == 'unlimited' )
                                 <span class="form-check-label text-dark">{{ translate('messages.unlimited_orders') }}</span>
                                 @else
-                                <span class="form-check-label text-dark"> {{ $store?->store_sub_update_application?->max_order }} {{
-                                    translate('messages.Orders') }}</span>
+                                <span class="form-check-label text-dark"> {{ $store?->store_sub_update_application?->package?->max_order }} {{
+                                    translate('messages.Orders') }} <small>({{ $store?->store_sub_update_application?->max_order }} {{ translate('left') }}) </small> </span>
                                 @endif
                             </div>
                         </div>
@@ -261,7 +261,7 @@ active
                                     }}</span>
                                 @else
                                 <span class="form-check-label text-dark"> {{ $store?->store_sub_update_application?->max_product }} {{
-                                    translate('messages.product_Upload') }}</span>
+                                    translate('messages.product_Upload') }} <small>({{ $store?->store_sub_update_application?->max_product  - $store->items_count > 0 ? $store?->store_sub_update_application?->max_product  - $store->items_count : 0 }} {{ translate('left') }}) </small></span>
                                 @endif
                             </div>
                         </div>
@@ -347,7 +347,7 @@ active
 
                                 @forelse ($packages as $package)
 
-                                <div class="__plan-item hover {{ $store?->store_sub_update_application?->package_id == $package->id  ? 'active' : ''}}">
+                                <div class="__plan-item hover {{ $store?->store_sub_update_application?->package_id == $package->id  && $store->store_business_model != 'commission'  ? 'active' : ''}}">
                                     <div class="inner-div">
                                         <div class="text-center">
                                             <h3 class="title">{{ $package->package_name }}</h3>
@@ -403,8 +403,7 @@ active
                                         </ul>
                                         <div class="text-center">
                                             {{-- <button type="button" class="btn btn--primary" data-dismiss="modal" data-toggle="modal" data-target="#shift-modal">Shift in this plan</button> --}}
-
-                                            @if ($store?->store_sub_update_application?->package_id == $package->id)
+                                            @if ( $store?->store_business_model != 'commission'  && $store?->store_sub_update_application?->package_id == $package->id)
                                             <button data-id="{{ $package->id }}"  data-url="{{route('admin.business-settings.subscriptionackage.packageView',[$package->id,$store->id ])}}"
                                                 data-target="#package_detail" id="package_detail" type="button" class="btn btn--warning text-white renew-btn package_detail">{{ translate('messages.Renew') }}</button>
                                             @else

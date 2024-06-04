@@ -21,10 +21,10 @@ active
                         <img src="{{asset('/public/assets/admin/img/store.png')}}" width="24" alt="img">
                         <div class="w-0 flex-grow pl-2">
                             <h1 class="page-header-title">{{ $store->name }} {{translate('Subscription')}} &nbsp; &nbsp;
-                                @if ($store?->store_sub_update_application?->is_canceled == 1)
-                                <span class=" badge badge-pill badge-warning">  &nbsp; {{ translate('canceled') }}  &nbsp; </span>
-                                @elseif($store?->store_sub_update_application?->status == 0)
+                                @if($store?->store_sub_update_application?->status == 0)
                                 <span class=" badge badge-pill badge-danger">  &nbsp; {{ translate('Expired') }}  &nbsp; </span>
+                                @elseif ($store?->store_sub_update_application?->is_canceled == 1)
+                                <span class=" badge badge-pill badge-warning">  &nbsp; {{ translate('canceled') }}  &nbsp; </span>
                                 @elseif($store?->store_sub_update_application?->status == 1)
                                 <span class=" badge badge-pill badge-success">  &nbsp; {{ translate('Active') }}  &nbsp; </span>
                                 @endif

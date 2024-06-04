@@ -787,7 +787,7 @@ class POSController extends Controller
             $order->tax_percentage = $tax;
             $order->total_tax_amount= $total_tax_amount;
             $order->order_amount = $total_price + $tax_a + $order->delivery_charge;
-            $order->adjusment = $request->amount - ($total_price + $total_tax_amount + $order->delivery_charge);
+            $order->adjusment = $request->amount - ($total_price + $tax_a + $order->delivery_charge);
             $order->payment_method = $request->type == 'wallet'?'wallet':'cash_on_delivery';
 
             $max_cod_order_amount = BusinessSetting::where('key', 'max_cod_order_amount')->first();

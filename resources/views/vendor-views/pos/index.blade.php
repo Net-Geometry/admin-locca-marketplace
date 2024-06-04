@@ -742,8 +742,18 @@
             });
         });
 
-        $(document).on('click', '.payable-amount', function () {
+        $(document).on('click', '.payable-amount', function (event) {
            let form_id = 'payable_store_amount';
+
+                if($('#paid').val() < 0){
+                    toastr.error('{{ translate('Amount_must_be_grater_then_0') }}', {
+                            CloseButton: true,
+                            ProgressBar: true
+                        });
+                        event.preventDefault();
+                        return;
+                }
+
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')

@@ -6026,6 +6026,18 @@ class BusinessSettingsController extends Controller
             return back();
         }
 
+        $request->validate([
+            'title.*' => 'nullable|max:255',
+            'button_name.*' => 'nullable|max:255',
+            'footer_text.*' => 'nullable|max:255',
+            'copyright_text.*' => 'nullable|max:255',
+        ],[
+            'title.*.max' => 'The title may not be greater than 255 characters.',
+            'button_name.*.max' => 'The button_name may not be greater than 255 characters.',
+            'footer_text.*.max' => 'The footer_text may not be greater than 255 characters.',
+            'copyright_text.*.max' => 'The copyright_text may not be greater than 255 characters.',
+        ]);
+
         if ($tab == 'new-order') {
             $email_type = 'new_order';
             $template = EmailTemplate::where('type',$type)->where('email_type', 'new_order')->first();

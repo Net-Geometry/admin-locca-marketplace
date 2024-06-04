@@ -525,7 +525,7 @@ class VendorController extends Controller
 
             $store= Store::where('id',$store->id)->with([
                 'store_sub_update_application.package','vendor','store_sub_update_application.last_transcations'
-            ])
+            ])->withcount('items')
             ->first();
             $packages = SubscriptionPackage::where('status',1)->latest()->get();
             $admin_commission=BusinessSetting::where('key', 'admin_commission')->first()?->value ;
@@ -899,15 +899,11 @@ class VendorController extends Controller
 
     public function updateStoreSettings(Store $store, Request $request)
     {
-        if($request->comission_status)
-        {
-            $store->comission = $request->comission;
+        if($request?->tab == 'business_plan'){
+            $store->comission = $request->comission_status ?  $request->comission : null;
             $store->save();
             Toastr::success(translate('messages.Commission_updated'));
             return back();
-        }
-        else{
-            $store->comission = null;
         }
         $request->validate([
             'minimum_order'=>'required',
