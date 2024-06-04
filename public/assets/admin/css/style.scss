@@ -12163,7 +12163,7 @@ label.position-relative {
         padding-bottom: 6px;
     }
     .info-text {
-        max-height: 152px;
+        height: 152px;
         overflow-y: auto;
     }
     .info {
@@ -12553,4 +12553,13 @@ label.position-relative {
     .text-md-white {
         color: #ffffff50;
     }
+}
+.w-200px {
+    width: 200px;
+}
+.form-control[readonly].bg-white {
+    background-color: #fff !important;
+}
+.text-180 {
+    font-size: 180%;
 }

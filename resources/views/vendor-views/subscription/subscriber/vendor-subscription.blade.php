@@ -270,7 +270,7 @@ active
                         <div class="text-center text-14 mb-4 pb-3">
                            {{ translate('Renew or shift your plan to get better experience!') }}
                         </div>
-                        <div class="plan-slider owl-theme owl-carousel">
+                        <div class="plan-slider owl-theme owl-carousel owl-refresh">
                             @if (\App\CentralLogics\Helpers::commission_check())
                             <div class="__plan-item hover {{ $store->store_business_model == 'commission'  ? 'active' : ''}} ">
                                 <div class="inner-div">

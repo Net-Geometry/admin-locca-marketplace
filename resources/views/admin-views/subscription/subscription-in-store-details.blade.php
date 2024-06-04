@@ -201,7 +201,7 @@
                             <div class="text-center text-14 mb-4 pb-3">
                                 Renew or shift your plan to get better experience!
                             </div>
-                            <div class="plan-slider owl-theme owl-carousel">
+                            <div class="plan-slider owl-theme owl-carousel owl-refresh">
                                 <div class="__plan-item hover">
                                     <div class="inner-div">
                                         <div class="text-center">

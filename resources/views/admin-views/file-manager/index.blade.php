@@ -151,7 +151,7 @@
                                for="exampleFormControlInput1">{{ translate('messages.upload_zip_file') }}</label>
                         <div class="custom-file">
                             <input type="file" name="file" id="customZipFileUpload" class="custom-file-input" accept=".zip">
-                            <label class="custom-file-label" id="zipFileLabel" for="customZipFileUpload">{{translate('messages.upload_zip_file')}}</label>
+                            <label class="custom-file-label" id="zipFileLabel" for="customZipFileUpload"></label>
                         </div>
                     </div>
 
