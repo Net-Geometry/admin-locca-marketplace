@@ -2280,7 +2280,7 @@ class Helpers
     //Mail Config Check
     public static function remove_invalid_charcaters($str)
     {
-        return str_ireplace(['\'', '"', ',', ';', '<', '>', '?'], ' ', $str);
+        return str_ireplace(['\'', '"', ';', '<', '>'], ' ', $str);
     }
 
     //Generate referer code

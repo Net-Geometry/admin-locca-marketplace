@@ -119,7 +119,19 @@
                             <span class="card-header-icon">
                                 <img width="25" src="{{asset('public/assets/admin/img/subscription-plan/subscribed-user.png')}}" alt="">
                             </span>
-                            <span>{{ translate('Package Overview') }}</span>
+                            <span>{{ translate('Package Overview') }}
+
+                                @if($store?->status == 0 &&  $store?->vendor?->status == 0)
+                                <span class=" badge badge-pill badge-info">  &nbsp; {{ translate('Approval_Pending') }}  &nbsp; </span>
+                                @elseif($store?->store_sub_update_application?->status == 0)
+                                <span class=" badge badge-pill badge-danger">  &nbsp; {{ translate('Expired') }}  &nbsp; </span>
+                                @elseif ($store?->store_sub_update_application?->is_canceled == 1)
+                                <span class=" badge badge-pill badge-warning">  &nbsp; {{ translate('canceled') }}  &nbsp; </span>
+                                @elseif($store?->store_sub_update_application?->status == 1)
+                                <span class=" badge badge-pill badge-success">  &nbsp; {{ translate('Active') }}  &nbsp; </span>
+                                @endif
+
+                            </span>
                         </h4>
                     </div>
                     <div class="card-body pt-0">

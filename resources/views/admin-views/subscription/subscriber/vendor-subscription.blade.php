@@ -19,10 +19,10 @@ active
                             <h1 class="page-header-title">{{ $store->name }} {{translate('Subscription')}} &nbsp; &nbsp;
                                 @if($store?->status == 0 &&  $store?->vendor?->status == 0)
                                 <span class=" badge badge-pill badge-info">  &nbsp; {{ translate('Approval_Pending') }}  &nbsp; </span>
-                                @elseif ($store?->store_sub_update_application?->is_canceled == 1)
-                                <span class=" badge badge-pill badge-warning">  &nbsp; {{ translate('canceled') }}  &nbsp; </span>
                                 @elseif($store?->store_sub_update_application?->status == 0)
                                 <span class=" badge badge-pill badge-danger">  &nbsp; {{ translate('Expired') }}  &nbsp; </span>
+                                @elseif ($store?->store_sub_update_application?->is_canceled == 1)
+                                <span class=" badge badge-pill badge-warning">  &nbsp; {{ translate('canceled') }}  &nbsp; </span>
                                 @elseif($store?->store_sub_update_application?->status == 1)
                                 <span class=" badge badge-pill badge-success">  &nbsp; {{ translate('Active') }}  &nbsp; </span>
                                 @endif
