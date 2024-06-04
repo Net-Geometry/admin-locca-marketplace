@@ -39,7 +39,7 @@ class StoreWiseItemReviewExport implements  FromView, ShouldAutoSize, WithStyles
     }
 
     public function styles(Worksheet $sheet) {
-        $sheet->getStyle('A2:G2')->getFont()->setBold(true);
+        $sheet->getStyle('A2:H2')->getFont()->setBold(true);
 
         $sheet->getStyle('A3:G3')->getFont()->setBold(true)->getColor()
         ->setARGB('FFFFFF');
@@ -65,7 +65,7 @@ class StoreWiseItemReviewExport implements  FromView, ShouldAutoSize, WithStyles
         $sheet->getStyle('A1:G1')->applyFromArray($styleArray);
         return [
             // Define the style for cells with data
-            'A1:G'.$this->data['data']->count() +3 => [
+            'A1:H'.$this->data['data']->count() +3 => [
                 'borders' => [
                     'allBorders' => [
                         'borderStyle' => Border::BORDER_THIN,
@@ -94,7 +94,7 @@ class StoreWiseItemReviewExport implements  FromView, ShouldAutoSize, WithStyles
                     ->setHorizontal(Alignment::HORIZONTAL_CENTER)
                     ->setVertical(Alignment::VERTICAL_CENTER);
 
-                $event->sheet->getStyle('A3:G'.$this->data['data']->count() +3)
+                $event->sheet->getStyle('A3:H'.$this->data['data']->count() +3)
                     ->getAlignment()
                     ->setHorizontal(Alignment::HORIZONTAL_CENTER)
                     ->setVertical(Alignment::VERTICAL_CENTER);
