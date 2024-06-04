@@ -76,13 +76,29 @@ class Item extends Model
         return $query->where('module_id', $module_id);
     }
 
+    // public function scopeActive($query)
+    // {
+    //     return $query->where('status', 1)->where('is_approved',1)->whereHas('store', function($query){
+    //         return $query->where('status', 1);
+    //     });
+    // }
+
+
     public function scopeActive($query)
     {
-        return $query->where('status', 1)->where('is_approved',1)->whereHas('store', function($query){
-            return $query->where('status', 1);
-        });
+        return $query->where('status', 1)->where('is_approved',1)
+        ->whereHas('store', function($query) {
+            $query->where('status', 1)
+                    ->where(function($query) {
+                        $query->where('store_business_model', 'commission')
+                                ->orWhereHas('store_sub', function($query) {
+                                    $query->where(function($query) {
+                                        $query->where('max_order', 'unlimited')->orWhere('max_order', '>', 0);
+                                    });
+                                });
+                    });
+            });
     }
-
     public function scopePopular($query)
     {
         return $query->orderBy('order_count', 'desc');
