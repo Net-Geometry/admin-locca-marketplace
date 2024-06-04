@@ -453,7 +453,6 @@ class SubscriptionController extends Controller
         $packages = SubscriptionPackage::where('status',1)->latest()->get();
         $admin_commission=BusinessSetting::where('key', 'admin_commission')->first()?->value ;
         $business_name=BusinessSetting::where('key', 'business_name')->first()?->value ;
-
         try {
             $index=  $store->store_business_model == 'commission' ? 0 : 1+ array_search($store?->store_sub_update_application?->package_id??1 ,array_column($packages->toArray() ,'id') );
         } catch (\Throwable $th) {
@@ -494,7 +493,7 @@ class SubscriptionController extends Controller
     public function packageView($id,$store_id){
         $store_subscription= StoreSubscription::where('store_id', $store_id)->with(['package'])->latest()->first();
         $package = SubscriptionPackage::where('status',1)->where('id',$id)->first();
-        $store= Store::Where('id',$store_id)->first(['id','vendor_id','store_business_model']);
+        $store= Store::Where('id',$store_id)->first();
         $pending_bill= SubscriptionBillingAndRefundHistory::where(['store_id'=>$store->id,
                             'transaction_type'=>'pending_bill', 'is_success' =>0])->sum('amount') ;
 
@@ -506,9 +505,14 @@ class SubscriptionController extends Controller
         }
         $store_business_model=$store->store_business_model;
         $admin_commission=BusinessSetting::where('key', "admin_commission")->first()?->value ?? 0 ;
+        $cash_backs=[];
+        if($store->store_business_model == 'subscription' &&  $store_subscription->status == 1 && $store_subscription->is_canceled == 0 && $store_subscription->is_trial == 0  && $store_subscription->package_id !=  $package->id){
+            $cash_backs= Helpers::calculateSubscriptionRefundAmount(store:$store, return_data:true);
+        }
+
         return response()->json([
             'disable_item_count'=> $disable_item_count,
-            'view' => view('admin-views.subscription.subscriber.partials._package_selected', compact('store_subscription','package','store_id','balance','payment_methods','pending_bill','store_business_model','admin_commission'))->render()
+            'view' => view('admin-views.subscription.subscriber.partials._package_selected', compact('store_subscription','package','store_id','balance','payment_methods','pending_bill','store_business_model','admin_commission','cash_backs'))->render()
         ]);
 
     }

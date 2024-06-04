@@ -53,7 +53,17 @@
                         <strong>{{translate('messages.address')}} : </strong> {{$shop->address}}
                     </span>
                     <span class="d-block mb-1 pb-1">
+                        <strong>{{translate('messages.Business_Plan')}} : </strong> {{translate($shop->store_business_model)}}
+                    </span>
+                    <span class="d-block mb-1 pb-1">
+                        @if ($shop->store_business_model == 'commission')
+
                         <strong>{{translate('messages.admin_commission')}} : </strong> {{(isset($shop->comission)? $shop->comission:\App\Models\BusinessSetting::where('key','admin_commission')->first()->value)}}%
+                        @elseif(in_array($shop->store_business_model ,['subscription','unsubscribed']))
+
+                        <strong>{{translate('Subscription_plan')}} : </strong> {{ $shop?->store_sub_update_application?->package?->package_name}}
+                        @endif
+
                     </span>
                     <span class="d-block mb-1 pb-1">
                         <strong>{{translate('messages.vat/tax')}} : </strong> {{$shop->tax}}%</span>

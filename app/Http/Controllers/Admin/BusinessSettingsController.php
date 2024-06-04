@@ -615,7 +615,7 @@ class BusinessSettingsController extends Controller
 
                 if ( Helpers::commission_check() == 0 ){
                     Store::where('store_business_model','commission')
-                    ->update(['store_business_model' => 'none',
+                    ->update(['store_business_model' => 'unsubscribed',
                     'status' => 0,]);
                 }
 

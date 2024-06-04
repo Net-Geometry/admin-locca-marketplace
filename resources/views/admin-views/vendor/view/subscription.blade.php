@@ -20,15 +20,15 @@
                 <span class="card-header-icon">
                     <img width="25" src="{{asset('public/assets/admin/img/subscription-plan/subscribed-user.png')}}" alt="">
                 </span>
-                <span>{{ translate('Business_plan') }}</span>
+                <span>{{ translate('Overview') }}</span>
             </h4>
         </div>
         <div class="card-body pt-0">
             <div class="__bg-F8F9FC-card __plan-details">
                 <div class="d-flex flex-wrap flex-md-nowrap justify-content-between __plan-details-top">
                     <div class="w-100">
-                        <h2 class="name text--primary">{{ translate('Commission Base') }}</h2>
-                        <h4 class="title mt-2"><span class="text-180">{{ $admin_commission }} %</span> {{ translate('messages.Commission_percentage') }}</h4>
+                        <h2 class="name text--primary">{{ translate('Commission Base Plan') }}</h2>
+                        <h4 class="title mt-2"><span class="text-180">{{ $admin_commission }} %</span> {{ translate('messages.Commission_per_order') }}</h4>
                         <div class="info-text ">
                             {{ translate('Store will pay') }} {{ $store->comission > 0 ?  $store->comission :  $admin_commission }}% {{ translate('commission to') }} <strong>{{ $business_name }}</strong> {{ translate('from each order. You will get access of all the features and options  in store panel , app and interaction with user.') }}
                         </div>
@@ -40,7 +40,7 @@
                                             <div class="col-xl-6 col-xxl-5">
                                                 <div>
                                                     <label class="d-flex mb-1 justify-content-between switch toggle-switch-sm text-dark text-capitalize" for="comission_status">
-                                                        <span>{{translate('messages.admin_commission')}}(%) <span class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('When_enabled,_admin_will_only_receive_the_certain_commission_percentage_he_set_for_this_store._Otherwise,_the_system_default_commission_will_be_applied.')}}"><img src="{{asset('/public/assets/admin/img/info-circle.svg')}}" alt="{{translate('When_enabled,_admin_will_only_receive_the_certain_commission_percentage_he_set_for_this_store._Otherwise,_the_system_default_commission_will_be_applied.')}}"></span></span>
+                                                        <span>{{translate('messages.Change_Commission_Rate')}}(%) <span class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('When_enabled,_admin_will_only_receive_the_certain_commission_percentage_he_set_for_this_store._Otherwise,_the_system_default_commission_will_be_applied.')}}"><img src="{{asset('/public/assets/admin/img/info-circle.svg')}}" alt="{{translate('When_enabled,_admin_will_only_receive_the_certain_commission_percentage_he_set_for_this_store._Otherwise,_the_system_default_commission_will_be_applied.')}}"></span></span>
                                                         <input type="checkbox" class="toggle-switch-input" name="comission_status" id="comission_status" value="1" {{isset($store->comission)?'checked':''}}>
                                                         <span class="toggle-switch-label">
                                                             <span class="toggle-switch-indicator"></span>
@@ -48,7 +48,7 @@
                                                     </label>
                                                     <div class="d-flex flex-wrap gap-3">
                                                         <input type="number" id="comission" min="0" max="10000" step="0.01" name="comission" class="form-control w-200px flex-grow-1 bg-white" required value="{{$store->comission??'0'}}" {{isset($store->comission)?'':'readonly'}}>
-                                                        <button type="submit" class="btn btn--primary h--45px">{{ translate('Submit') }}</button>
+                                                        <button type="submit" class="btn btn--primary h--45px">{{ translate('Change') }}</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -61,7 +61,7 @@
             </div>
             @if (\App\CentralLogics\Helpers::subscription_check() )
                 <div class="btn--container justify-content-end mt-3">
-                    <button type="button" data-toggle="modal" data-target="#plan-modal" class="btn btn--primary">{{ translate('Change Plan') }}</button>
+                    <button type="button" data-toggle="modal" data-target="#plan-modal" class="btn btn--primary">{{ translate('Change Business Plan') }}</button>
                 </div>
             @endif
         </div>

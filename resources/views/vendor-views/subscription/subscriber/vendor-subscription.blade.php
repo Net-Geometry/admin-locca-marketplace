@@ -14,23 +14,57 @@ active
 
     @if ($store->store_business_model == 'commission' &&  \App\CentralLogics\Helpers::commission_check())
 
+    <div class="page-header">
+        <div class="d-flex flex-wrap justify-content-between align-items-center py-2">
+            <div class="flex-grow-1">
+                <div class="d-flex align-items-start">
+                    <img src="{{asset('/public/assets/admin/img/store.png')}}" width="24" alt="img">
+                    <div class="w-0 flex-grow pl-2">
+                        <h1 class="page-header-title">{{ $store->name }} {{translate('Business_Plan')}} &nbsp; &nbsp;
+
+                        </h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if ($store->store_all_sub_trans_count > 0)
+
+
+    <div class="js-nav-scroller hs-nav-scroller-horizontal mb-4">
+        <ul class="nav nav-tabs border-0 nav--tabs nav--pills">
+            <li class="nav-item">
+                <a href="#" class="nav-link active">{{ translate('Business_Details') }} </a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ route('vendor.subscriptionackage.subscriberTransactions',$store->id) }}" class="nav-link">{{ translate('Transactions') }}</a>
+            </li>
+            <li class="nav-item">
+                <a href="{{ route('vendor.subscriptionackage.subscriberWalletTransactions') }}" class="nav-link">{{ translate('Subscription_Refunds') }}</a>
+            </li>
+        </ul>
+    </div>
+
+    @endif
+
     <div class="card mb-3">
         <div class="card-header border-0 align-items-center">
             <h4 class="card-title align-items-center gap-2">
                 <span class="card-header-icon">
                     <img width="25" src="{{asset('public/assets/admin/img/subscription-plan/subscribed-user.png')}}" alt="">
                 </span>
-                <span>{{ translate('Business_plan') }}</span>
+                <span>{{ translate('Overview') }}</span>
             </h4>
         </div>
         <div class="card-body pt-0">
             <div class="__bg-F8F9FC-card __plan-details">
                 <div class="d-flex flex-wrap flex-md-nowrap justify-content-between __plan-details-top">
-                    <div class="left w-100">
-                        <h3 class="name">{{ translate('Commission Base') }}</h3>
-                        <h4 class="title mt-2">{{ translate('messages.Commission_percentage') }}: {{ $admin_commission }} %</h4>
+                    <div class="w-100">
+                        <h2 class="name text--primary">{{ translate('Commission Base Plan') }}</h2>
+                        <h4 class="title mt-2"><span class="text-180">{{ $admin_commission }} %</span> {{ translate('messages.Commission_per_order') }}</h4>
                         <div class="info-text ">
-                            {{ translate('Store will pay') }} {{ $store->comission > 0 ?  $store->comission :  $admin_commission }}% {{ translate('commission to') }} {{ $business_name }} {{ translate('from each order. You will get access of all the features and options  in store panel , app and interaction with user.') }}
+                            {{ translate('Store will pay') }} {{ $store->comission > 0 ?  $store->comission :  $admin_commission }}% {{ translate('commission to') }} <strong>{{ $business_name }}</strong> {{ translate('from each order. You will get access of all the features and options  in store panel , app and interaction with user.') }}
                         </div>
 
                     </div>
@@ -39,7 +73,7 @@ active
             </div>
             @if (\App\CentralLogics\Helpers::subscription_check() )
                 <div class="btn--container justify-content-end mt-3">
-                    <button type="button" data-toggle="modal" data-target="#plan-modal" class="btn btn--primary">{{ translate('Change Plan') }}</button>
+                    <button type="button" data-toggle="modal" data-target="#plan-modal" class="btn btn--primary">{{ translate('Change Business Plan') }}</button>
                 </div>
             @endif
         </div>

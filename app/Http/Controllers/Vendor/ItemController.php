@@ -34,9 +34,13 @@ class ItemController extends Controller
 {
     public function index()
     {
-        if(!Helpers::get_store_data()->item_section)
+        if(!Helpers::get_store_data()->item_section && Helpers::get_store_data()->store_business_model == 'commission')
         {
             Toastr::warning(translate('messages.permission_denied'));
+            return back();
+        }
+        elseif (!Helpers::get_store_data()->item_section &&  in_array(Helpers::get_store_data()->store_business_model ,['subscription','unsubscribed'])) {
+            Toastr::warning(translate('You_have_reached_the_maximum_limit_of_item_uploads_allowed_in_your_subscription_package'));
             return back();
         }
         $categories = Category::where(['position' => 0])->module(Helpers::get_store_data()->module_id)->get();

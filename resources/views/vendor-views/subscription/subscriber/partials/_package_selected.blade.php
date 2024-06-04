@@ -20,8 +20,13 @@
                     </div>
                 </div>
             </div>
+            <!-- Plan Seperator Arrow -->
+            <div class="plan-seperator-arrow mx-auto">
+                <img src="{{asset('public/assets/admin/img/exchange.svg')}}" alt="" class="w-100">
+            </div>
+            <!-- Plan Seperator Arrow -->
 
-            @else
+            @elseif(!in_array($store_business_model,['commission','none']))
 
             <div class="__plan-item {{ !$store_subscription  || $store_subscription?->package_id ==  $package->id ?  'active' : '' }}">
                 <div class="inner-div">
@@ -32,15 +37,16 @@
                     </div>
                 </div>
             </div>
-            @endif
-
-
-            @if ($store_subscription?->package_id !==  $package->id || $store_business_model == 'commission' )
             <!-- Plan Seperator Arrow -->
             <div class="plan-seperator-arrow mx-auto">
                 <img src="{{asset('public/assets/admin/img/exchange.svg')}}" alt="" class="w-100">
             </div>
             <!-- Plan Seperator Arrow -->
+            @endif
+
+
+            @if ($store_subscription?->package_id !==  $package->id || $store_business_model == 'commission' )
+
             <div class="__plan-item active">
                 <div class="inner-div">
                     <div class="text-center">
@@ -55,7 +61,7 @@
         </div>
 
 
-        <div class="mb-4 mb-lg-5 subscription__plan-info-wrapper bg-ECEEF1 rounded-20">
+        <div class="mb-2 mb-lg-3 subscription__plan-info-wrapper bg-ECEEF1 rounded-20">
             <div class="row g-3">
                 <div class="col-md-{{ $pending_bill > 0 ? '3' :'4' }}">
                     <div class="subscription__plan-info">
@@ -92,7 +98,16 @@
                 </div>
             </div>
         </div>
-
+        @if (data_get($cash_backs,'back_amount') > 0 )
+        <div class="mb-2 mb-lg-3 subscription__plan-info-wrapper bg--10 rounded-20 py-2">
+            <div class="row g-3">
+            <div class="col-auto">
+                <i class="tio-notice"></i>
+                    {{ translate('You will get') }}  {{ \App\CentralLogics\Helpers::format_currency(data_get($cash_backs,'back_amount')) }} {{ translate('to_your_wallet_for_remaining') }}  {{ data_get($cash_backs,'days') }} {{ translate('messages.days_subscription_plan') }}
+                </div>
+            </div>
+        </div>
+        @endif
         <form action="{{ route('vendor.subscriptionackage.packageBuy') }}" method="post">
             @csrf
             @method('POST')

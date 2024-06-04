@@ -173,13 +173,13 @@ class SubscriptionController extends Controller
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
 
-        StoreSubscription::where(['store_id' => $request->id, 'id'=>$request->subscription_id])->update([
+        StoreSubscription::where([ 'id'=>$request->subscription_id , 'store_id' => $request->store_id])->update([
             'is_canceled' => 1,
             'canceled_by' => 'store',
         ]);
 
         try {
-            $store=Store::where('id',$request->id)->select(['id','name'])->first();
+            $store=Store::where('id',$request->store_id)->select(['id','name'])->first();
             if (config('mail.status') && Helpers::get_mail_status('subscription_cancel_mail_status_store') == '1') {
                 Mail::to($store->email)->send(new SubscriptionCancel($store->name));
             }

@@ -196,35 +196,35 @@
 
                         @if ($store->store_business_model == 'commission')
                         <li>
-                            <span>{{translate('messages.Business_Plan')}}</span> <span>:</span> &nbsp; {{ translate($store->store_business_model) }}
+                            <span>  <strong>{{translate('messages.Business_Plan')}}</span></strong>  <span>:</span> &nbsp; {{ translate($store->store_business_model) }}
                         </li>
                         @php($admin_commission = \App\Models\BusinessSetting::where(['key' => 'admin_commission'])->first()?->value)
                         <li>
-                            <span>{{translate('messages.Commission_percentage')}}</span> <span>:</span> &nbsp; {{ $store->comission > 0 ?  $store->comission : $admin_commission }} %
+                            <span><strong>{{translate('messages.Commission_percentage')}}</strong></span> <span>:</span> &nbsp; {{ $store->comission > 0 ?  $store->comission : $admin_commission }} %
                         </li>
                         @elseif ($store->store_business_model == 'subscription')
                             <li>
-                                <span>{{translate('messages.Business_Plan')}}</span> <span>:</span> &nbsp; {{ translate($store->store_business_model) }} &nbsp;
+                                <span>  <strong>{{translate('messages.Business_Plan')}}</span></strong>  <span>:</span> &nbsp; {{ translate($store->store_business_model) }} &nbsp;
                                 @if ($store?->store_sub_update_application->is_trial == '1')
                                 <small> <span class="badge badge-info" >{{ translate('messages.Free_trial')}}</span> </small>
                                 @endif
                             </li>
                             <li>
-                                <span>{{translate('messages.Package_name')}}</span> <span>:</span> &nbsp; {{ $store?->store_sub_update_application?->package?->package_name  ?? translate('Pacakge_not_found!!!')}}
+                                <span> <strong>{{translate('messages.Package_name')}}</strong></span> <span>:</span> &nbsp; {{ $store?->store_sub_update_application?->package?->package_name  ?? translate('Pacakge_not_found!!!')}}
                             </li>
                         @elseif ($store->store_business_model == 'unsubscribed')
                             <li>
-                                <span>{{translate('messages.Business_Plan')}}</span> <span>:</span> &nbsp; {{ translate($store->store_business_model) }} &nbsp;
+                                <span>  <strong>{{translate('messages.Business_Plan')}}</span></strong>  <span>:</span> &nbsp; {{ translate($store->store_business_model) }} &nbsp;
 
                                 <small> <span class="badge badge-danger" >{{ translate('messages.Expired')}}</span> </small>
 
                             </li>
                             <li>
-                                <span>{{translate('messages.Package_name')}}</span> <span>:</span> &nbsp; {{ $store?->store_sub_update_application?->package?->package_name  ?? translate('Pacakge_not_found!!!')}}
+                                <span> <strong>{{translate('messages.Package_name')}}</strong></span> <span>:</span> &nbsp; {{ $store?->store_sub_update_application?->package?->package_name  ?? translate('Pacakge_not_found!!!')}}
                             </li>
                             @else
                                 <li>
-                                <span>{{translate('messages.Business_Plan')}}</span> <span>:</span> &nbsp; {{ translate('Have_n’t_Selected_Yet.') }}
+                                <span>  <strong>{{translate('messages.Business_Plan')}}</span></strong>  <span>:</span> &nbsp; {{ translate('Have_n’t_Selected_Yet.') }}
                             </li>
                         @endif
 

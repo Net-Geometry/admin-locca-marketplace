@@ -3921,7 +3921,7 @@ class Helpers
         return $commission_business_model ?? 1;
     }
 
-    public static function calculateSubscriptionRefundAmount($store){
+    public static function calculateSubscriptionRefundAmount($store,$return_data=null){
 
         $store_subscription=$store->store_sub;
         if($store_subscription){
@@ -3935,6 +3935,11 @@ class Helpers
                 if(($validity - $add_days) < $subscription_usage_max_time ){
                         $per_day= $store->store_sub_trans->price / $store->store_sub_trans->validity;
                         $back_amount= $per_day *  $add_days;
+
+                        if($return_data == true){
+                            return ['back_amount' => $back_amount, 'days'=> $add_days];
+                        }
+
                         $vendorWallet = StoreWallet::firstOrNew(
                             ['vendor_id' => $store->vendor_id]
                         );
@@ -3950,6 +3955,7 @@ class Helpers
                         $refund->amount= $back_amount;
                         $refund->reference= 'validity_left_'.$add_days ;
                         $refund->save();
+
                     }
             }
 

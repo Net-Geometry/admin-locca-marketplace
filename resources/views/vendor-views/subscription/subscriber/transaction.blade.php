@@ -167,7 +167,6 @@ active
                             <th class="border-top px-4 border-bottom text-center">{{ translate('sl') }}</th>
                             <th class="border-top px-4 border-bottom">{{ translate('Transaction_ID') }}</th>
                             <th class="border-top px-4 border-bottom"><div class="text-title">{{ translate('Transaction_Date') }}</div></th>
-                            <th class="border-top px-4 border-bottom">{{ translate('Store') }}</th>
                             <th class="border-top px-4 border-bottom">{{ translate('Pricing') }}</th>
                             <th class="border-top px-4 border-bottom">{{ translate('Payment_Type') }}</th>
                             <th class="border-top px-4 border-bottom">{{ translate('Status') }}</th>
@@ -185,19 +184,9 @@ active
                                 <td class="px-4">
                                     <div class="pl-4">{{ \App\CentralLogics\Helpers::date_format($transaction->created_at) }}</div>
                                 </td>
-                                <td class="px-4">
-                                    <div class="text-title">{{ $transaction?->store?->name ?? translate('messages.store deleted!') }}
-                                        @if ($transaction?->subscription?->expiry_date_parsed && $transaction->subscription->expiry_date_parsed->subDays($subscription_deadline_warning_days)->isBefore(now()))
-                                        <span title="<div class='text-left'>Expiring Soon <br /> Expiration Date: {{ \App\CentralLogics\Helpers::date_format($transaction->subscription->expiry_date_parsed)  }}</div>" data-toggle="tooltip" data-html="true">
-                                            <img src="{{asset('/public/assets/admin/img/invalid.svg')}}" alt="">
-                                        </span>
-                                        @endif
 
-
-                                    </div>
-                                </td>
                                 <td class="px-4">
-                                    <div class="w--120px text-title text-right pr-5">{{ \App\CentralLogics\Helpers::format_currency($transaction->paid_amount) }}</div>
+                                    <div class="w--120px text-title  ">{{ \App\CentralLogics\Helpers::format_currency($transaction->paid_amount) }}</div>
                                 </td>
                                 <td class="px-4">
                                     <div>

@@ -27,7 +27,7 @@ class SubscriptionController extends Controller
     public function subscriberDetail(){
         $store= Store::where('id',Helpers::get_store_id())->with([
             'store_sub_update_application.package','vendor','store_sub_update_application.last_transcations'
-        ])->withcount('items')
+        ])->withcount(['items','store_all_sub_trans'])
         ->first();
         $packages = SubscriptionPackage::where('status',1)->latest()->get();
         $admin_commission=BusinessSetting::where('key', 'admin_commission')->first()?->value ;
@@ -37,7 +37,6 @@ class SubscriptionController extends Controller
         } catch (\Throwable $th) {
             $index= 2;
         }
-
         return view('vendor-views.subscription.subscriber.vendor-subscription',compact('store','packages','business_name','admin_commission','index'));
     }
 
@@ -74,7 +73,7 @@ class SubscriptionController extends Controller
         $store_subscription= StoreSubscription::where('store_id', $store_id)->with(['package'])->latest()->first();
         $package = SubscriptionPackage::where('status',1)->where('id',$id)->first();
 
-        $store= Store::Where('id',$store_id)->first(['id','vendor_id','store_business_model']);
+        $store= Store::Where('id',$store_id)->first();
         $pending_bill= SubscriptionBillingAndRefundHistory::where(['store_id'=>$store->id,
         'transaction_type'=>'pending_bill', 'is_success' =>0])?->sum('amount') ?? 0;
 
@@ -86,9 +85,15 @@ class SubscriptionController extends Controller
         }
         $store_business_model=$store->store_business_model;
         $admin_commission=BusinessSetting::where('key', "admin_commission")->first()?->value ?? 0 ;
+
+        $cash_backs=[];
+        if($store->store_business_model == 'subscription' &&  $store_subscription->status == 1 && $store_subscription->is_canceled == 0 && $store_subscription->is_trial == 0  && $store_subscription->package_id !=  $package->id){
+            $cash_backs= Helpers::calculateSubscriptionRefundAmount(store:$store, return_data:true);
+        }
+
         return response()->json([
             'disable_item_count'=> $disable_item_count,
-            'view' => view('vendor-views.subscription.subscriber.partials._package_selected', compact('store_subscription','package','store_id','balance','payment_methods','pending_bill','store_business_model','admin_commission'))->render()
+            'view' => view('vendor-views.subscription.subscriber.partials._package_selected', compact('store_subscription','package','store_id','balance','payment_methods','pending_bill','store_business_model','admin_commission','cash_backs'))->render()
         ]);
 
     }

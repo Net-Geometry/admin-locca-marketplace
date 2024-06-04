@@ -25,9 +25,11 @@ class Subscription
 
 
             elseif($store->store_business_model == 'unsubscribed') {
-                // if (in_array($module,['reviews','pos','deliveryman','chat']) ) {
-                // }
                 Toastr::error(translate('messages.your_subscription_is_expired.You_can_only_process_your_on_going_orders.'));
+                return back();
+            }
+            elseif($store->store_business_model == 'none') {
+                Toastr::error(translate('Please_chose_a_business_plan_to_continue_your_services'));
                 return back();
             }
 
