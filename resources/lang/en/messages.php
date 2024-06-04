@@ -4585,7 +4585,7 @@
   'your_registration_info_is_saved_successfully_now_please_choose_your_business_model' => 'Your registration info is saved successfully.Now please choose your business model.',
   'Commision_Base' => 'Commision Base',
   'Subscription Base' => 'Subscription Base',
-  'Run store by puchasing subsciption packages. You will have access the features of in store panel , app and interaction with user according to the subscription packages.' => 'Run store by puchasing subsciption packages. You will have access the features of in store panel   app and interaction with user according to the subscription packages.',
+  'Run store by puchasing subsciption packages. You will have access the features of in store panel , app and interaction with user according to the subscription packages.' => 'Run store by puchasing subsciption packages. You will have access the features of in store panel ,app and interaction with user according to the subscription packages.',
   'Account' => 'Account',
   'You’ve opted for our commission-based plan. Admin will review the details and activate your account shortly. To explore the site.' => 'You’ve opted for our commission-based plan. Admin will review the details and activate your account shortly. To explore the site.',
   'visit_here' => 'Visit here',
