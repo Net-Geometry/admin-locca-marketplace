@@ -11207,7 +11207,7 @@ body > .initial-38-1 {
 }
 .btn.text-title {
   color: var(--title-clr) !important;
-} 
+}
 .__alert-2 {
   border-radius: 4px;
   background: #fff1f1 !important;
@@ -12180,7 +12180,7 @@ label.position-relative {
   margin: 0;
   list-style: none;
   margin-top: 16px;
-  max-height: 160px;
+  height: 160px;
   overflow-y: auto;
   margin-bottom: 30px;
 }
@@ -12220,7 +12220,6 @@ label.position-relative {
 .__plan-item.active .btn--primary, .__plan-item.hover:hover .btn--primary {
   --primary-clr: #f99c4d;
 }
-
 .subscription__plan-info {
   font-size: 14px;
   font-weight: 500;

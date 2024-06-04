@@ -3072,7 +3072,7 @@ textarea.__form-control {
   inset-inline-start: 0;
   inset-inline-end: unset !important;
 } */
-/* 
+/*
 .iti--allow-dropdown input,
 .iti--allow-dropdown input[type=text],
 .iti--allow-dropdown input[type=tel],
@@ -3290,6 +3290,10 @@ input::-webkit-inner-spin-button {
   color: var(--base-1);
 }
 
+
+.__plan-item .info li img {
+    width: 20px !important;
+}
 .__plan-item {
   --border-clr: #f2f5f9;
   --success: #039d55;
@@ -3355,6 +3359,8 @@ input::-webkit-inner-spin-button {
   list-style: none;
   margin-top: 16px;
   margin-bottom: 30px;
+  height: 160px;
+  overflow-y: auto;
 }
 
 .__plan-item .info li {
@@ -3534,3 +3540,27 @@ input[type=password] ~ .show-password .icon-2 {
 input[type=text] ~ .show-password .icon-1 {
   display: none;
 }/*# sourceMappingURL=main.css.map */
+
+.__plan-item .info li img {
+    width: 20px !important;
+}
+
+
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 1px #cfcfcf;
+    /*border-radius: 5px;*/
+  }
+
+  ::-webkit-scrollbar {
+    width: 3px !important;
+    height: 3px !important;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    /*border-radius: 5px;*/
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #003638;
+  }

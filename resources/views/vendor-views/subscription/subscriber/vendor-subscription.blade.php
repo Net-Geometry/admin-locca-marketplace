@@ -438,9 +438,7 @@ active
             dots:false,
             items: 3,
             center: true,
-            autoplay:true,
-            autoplayTimeout:2500,
-            autoplayHoverPause:true,
+            startPosition: '{{ $index }}',
 
             responsive:{
                 0: {

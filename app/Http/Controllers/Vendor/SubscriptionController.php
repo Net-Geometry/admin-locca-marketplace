@@ -32,8 +32,13 @@ class SubscriptionController extends Controller
         $packages = SubscriptionPackage::where('status',1)->latest()->get();
         $admin_commission=BusinessSetting::where('key', 'admin_commission')->first()?->value ;
         $business_name=BusinessSetting::where('key', 'business_name')->first()?->value ;
+        try {
+            $index=  $store->store_business_model == 'commission' ? 0 : 1+ array_search($store?->store_sub_update_application?->package_id??1 ,array_column($packages->toArray() ,'id') );
+        } catch (\Throwable $th) {
+            $index= 2;
+        }
 
-        return view('vendor-views.subscription.subscriber.vendor-subscription',compact('store','packages','business_name','admin_commission'));
+        return view('vendor-views.subscription.subscriber.vendor-subscription',compact('store','packages','business_name','admin_commission','index'));
     }
 
     public function cancelSubscription(Request $request, $id){

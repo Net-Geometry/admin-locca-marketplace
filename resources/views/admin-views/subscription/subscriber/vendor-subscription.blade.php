@@ -345,8 +345,7 @@ active
                                 </div>
                                 @endif
 
-                                @forelse ($packages as $package)
-
+                                @forelse ($packages as $key => $package)
                                 <div class="__plan-item hover {{ $store?->store_sub_update_application?->package_id == $package->id  && $store->store_business_model != 'commission'  ? 'active' : ''}}">
                                     <div class="inner-div">
                                         <div class="text-center">
@@ -485,6 +484,7 @@ active
 @push('script_2')
     <script>
         $('.plan-slider').owlCarousel({
+
             loop: false,
             margin: 30,
             responsiveClass:true,
@@ -495,8 +495,8 @@ active
             // autoplay:true,
             // autoplayTimeout:2500,
             // autoplayHoverPause:true,
-            startPosition: 0,
-            
+            startPosition: '{{ $index }}',
+
             responsive:{
                 0: {
                     items:1.1,
