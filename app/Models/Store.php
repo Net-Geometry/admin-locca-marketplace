@@ -554,6 +554,15 @@ class Store extends Model
      */
     public function scopeActive($query): mixed
     {
+
+        if($this->store_business_model != 'commission'){
+            $query = $query->whereHas('store_sub', function ($query) {
+                $query->where(function ($query) {
+                    $query->where('max_order','unlimited')->orWhere('max_order','>',0);
+                });
+            });
+        }
+
         return $query->where('status', 1);
     }
 

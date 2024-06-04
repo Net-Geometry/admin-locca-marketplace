@@ -131,8 +131,8 @@ width: 24px;
                  src="{{\App\CentralLogics\Helpers::get_image_helper( $data, 'logo', asset('storage/app/public/email_template/').'/'.data_get($data, 'logo'), asset('public/assets/admin/img/emai_demo_template_2.png'), 'email_template/') }}"
                  alt="public/img">
                 @else
-                @php($store_logo = \App\Models\BusinessSetting::where(['key' => 'logo'])->first()->value)
-                <img style="width:100px;display:block;margin:10px auto" src='{{ asset('storage/app/public/business/' . $store_logo) }}'alt="public/img">
+                @php($store_logo = \App\Models\BusinessSetting::where(['key' => 'logo'])->first())
+                <img style="width:100px;display:block;margin:10px auto" src="{{\App\CentralLogics\Helpers::get_image_helper($store_logo,'value', asset('storage/app/public/business/').'/' . $store_logo?->value, asset('public/assets/admin/img/160x160/img2.jpg') ,'business/')}}" alt="public/img">
                 @endif
                 <span class="privacy">
                     @php($landing_data =\App\Models\DataSetting::where('type', 'admin_landing_page')->whereIn('key', ['shipping_policy_status','refund_policy_status','cancellation_policy_status'])->pluck('value','key')->toArray())

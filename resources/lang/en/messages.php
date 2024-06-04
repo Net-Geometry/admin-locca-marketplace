@@ -4843,4 +4843,6 @@
   'is_trial' => 'Is trial',
   'is_cancel' => 'Is cancel',
   'Subscriber_list' => 'Subscriber list',
+  'left' => 'Left',
+  'validity must be in 99 years' => 'Validity must be in 99 years',
 );

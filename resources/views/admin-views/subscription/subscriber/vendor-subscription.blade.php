@@ -214,8 +214,8 @@ active
                                 @if ( $store?->store_sub_update_application?->max_order == 'unlimited' )
                                 <span class="form-check-label text-dark">{{ translate('messages.unlimited_orders') }}</span>
                                 @else
-                                <span class="form-check-label text-dark"> {{ $store?->store_sub_update_application?->max_order }} {{
-                                    translate('messages.Orders') }}</span>
+                                <span class="form-check-label text-dark"> {{ $store?->store_sub_update_application?->package?->max_order }} {{
+                                    translate('messages.Orders') }} <small>({{ $store?->store_sub_update_application?->max_order }} {{ translate('left') }}) </small> </span>
                                 @endif
                             </div>
                         </div>
@@ -261,7 +261,7 @@ active
                                     }}</span>
                                 @else
                                 <span class="form-check-label text-dark"> {{ $store?->store_sub_update_application?->max_product }} {{
-                                    translate('messages.product_Upload') }}</span>
+                                    translate('messages.product_Upload') }} <small>({{ $store?->store_sub_update_application?->max_product  - $store->items_count > 0 ? $store?->store_sub_update_application?->max_product  - $store->items_count : 0 }} {{ translate('left') }}) </small></span>
                                 @endif
                             </div>
                         </div>
