@@ -43,22 +43,26 @@
                     </div>
                     <div class="card-body p-4 pt-0">
 
+                        <?php
+                        if( data_get($free_trial_settings, 'subscription_free_trial_type') == 'year'){
+                                $trial_period =data_get($free_trial_settings, 'subscription_free_trial_days') > 0 ? data_get($free_trial_settings, 'subscription_free_trial_days')  / 365 : 0;
+                            } else if( data_get($free_trial_settings, 'subscription_free_trial_type') == 'month'){
+                                $trial_period =data_get($free_trial_settings, 'subscription_free_trial_days') > 0 ? data_get($free_trial_settings, 'subscription_free_trial_days')  / 30 : 0;
+                            } else{
+                                $trial_period =data_get($free_trial_settings, 'subscription_free_trial_days') > 0 ? data_get($free_trial_settings, 'subscription_free_trial_days') : 0 ;
+                            }
+                        ?>
                         @if (data_get($free_trial_settings,'subscription_free_trial_status') == 1 && data_get($free_trial_settings,'subscription_free_trial_days') > 0 )
-                        <div class="card-header card-header-active">
-                            <h5 class="card-title text-center font-semibold">
-
-                                <label class="payment-item">
-                                    <input type="radio" class="d-none"  checked value="free_trial" name="payment">
-                                    <div class="payment-item-inner ">
-                                        <div class="check">
-                                            {{-- <img src="{{asset('public/assets/admin/img/check-1.png')}}" class="uncheck" alt=""> --}}
-                                            <img src="{{asset('public/assets/admin/img/check-2.png')}}" class="check" alt="">
-                                        </div>
-                                        <span>{{ translate('Continue with') }} {{ data_get($free_trial_settings,'subscription_free_trial_days') }} {{ translate('Days Free Trial') }}</span>
+                            <label class="payment-item">
+                                <input type="radio" class="d-none" checked value="free_trial" name="payment">
+                                <div class="payment-item-inner justify-content-center">
+                                    <div class="check">
+                                        {{-- <img src="{{asset('public/assets/admin/img/check-1.png')}}" class="uncheck" alt=""> --}}
+                                        <img src="{{asset('public/assets/admin/img/check-2.png')}}" class="check" alt="">
                                     </div>
-                                </label>
-                            </h5>
-                        </div>
+                                    <span>{{ translate('Continue with') }} {{ $trial_period }}  {{ data_get($free_trial_settings, 'subscription_free_trial_type') }} {{ translate('Free_Trial') }}</span>
+                                </div>
+                            </label>
                         @endif
 
 
@@ -79,7 +83,7 @@
                                         </div>
                                         <span>{{ $item['gateway_title'] }}</span>
                                         <img class="ms-auto"
-                                  
+
 
                                             src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
                                                 $item['gateway_image'],

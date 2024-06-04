@@ -134,6 +134,14 @@ class ConfigController extends Controller
         $awsBucket = config('filesystems.disks.s3.bucket');
         $awsBaseURL = rtrim($awsUrl, '/').'/'.ltrim($awsBucket.'/');
 
+        if( data_get($settings, 'subscription_free_trial_type') == 'year'){
+            $trial_period =data_get($settings, 'subscription_free_trial_days') > 0 ? data_get($settings, 'subscription_free_trial_days')  / 365 : 0;
+        } else if( data_get($settings, 'subscription_free_trial_type') == 'month'){
+            $trial_period =data_get($settings, 'subscription_free_trial_days') > 0 ? data_get($settings, 'subscription_free_trial_days')  / 30 : 0;
+        } else{
+            $trial_period =data_get($settings, 'subscription_free_trial_days') > 0 ? data_get($settings, 'subscription_free_trial_days') : 0 ;
+        }
+
         return response()->json([
             'business_name' => $settings['business_name'],
             // 'business_open_time' => $settings['business_open_time'],
@@ -294,8 +302,8 @@ class ConfigController extends Controller
             'commission_business_model' => (int)(isset($settings['commission_business_model']) ? $settings['commission_business_model'] : 1),
             'subscription_deadline_warning_days' => (int)(isset($settings['subscription_deadline_warning_days']) ? $settings['subscription_deadline_warning_days'] : 1),
             'subscription_deadline_warning_message' => isset($settings['subscription_deadline_warning_message']) ? $settings['subscription_deadline_warning_message'] : null,
-            'subscription_free_trial_days' => (int)(isset($settings['subscription_free_trial_days']) ? $settings['subscription_free_trial_days'] : 1),
-            'subscription_free_trial_type' => (int)(isset($settings['subscription_free_trial_type']) ? $settings['subscription_free_trial_type'] : 1),
+            'subscription_free_trial_days' => (int)$trial_period,
+            'subscription_free_trial_type' => (isset($settings['subscription_free_trial_type']) ? $settings['subscription_free_trial_type'] : 'day'),
             'subscription_free_trial_status' => (int)(isset($settings['subscription_free_trial_status']) ? $settings['subscription_free_trial_status'] : 1),
         ]);
     }

@@ -549,7 +549,7 @@ class DeliverymanController extends Controller
             if(count($images)>0){
                 $order->order_proof = json_encode($images);
             }
-         
+
             OrderLogic::update_unpaid_order_payment(order_id:$order->id, payment_method:$order->payment_method);
 
         }
@@ -765,13 +765,13 @@ class DeliverymanController extends Controller
             return response()->json(['errors'=>[['code'=>'on-going', 'message'=>translate('messages.You_have_cash_in_hand,_you_have_to_pay_the_due_to_delete_your_account.')]]],203);
         }
 
-  
+
         Helpers::check_and_delete('delivery-man/' , $dm['image']);
-        
+
 
         foreach (json_decode($dm['identity_image'], true) as $img) {
             Helpers::check_and_delete('delivery-man/' , $img);
-            
+
         }
         if($dm->userinfo){
 
@@ -800,9 +800,11 @@ class DeliverymanController extends Controller
             $dm->phone,
             ''
         );
+
+        $store_logo= BusinessSetting::where(['key' => 'logo'])->first();
         $additional_data = [
             'business_name' => BusinessSetting::where(['key'=>'business_name'])->first()?->value,
-            'business_logo' => asset('storage/app/public/business') . '/' .BusinessSetting::where(['key' => 'logo'])->first()?->value
+            'business_logo' => \App\CentralLogics\Helpers::get_image_helper($store_logo,'value', asset('storage/app/public/business/').'/' . $store_logo->value, asset('public/assets/admin/img/160x160/img2.jpg') ,'business/' )
         ];
         $payment_info = new PaymentInfo(
             success_hook: 'collect_cash_success',
