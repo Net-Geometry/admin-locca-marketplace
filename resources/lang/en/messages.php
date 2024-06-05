@@ -4863,4 +4863,9 @@
   'order_transaction_statement' => 'Order transaction statement',
   'TNX ID' => 'TNX ID',
   'Select_the_number_of_days_before_the_warning_will_be_shown_with_a_countdown_to_the_end_of_all_packages' => 'Select the number of days before the warning will be shown with a countdown to the end of all packages',
+  'Store_Wise_Review_List' => 'Store Wise Review List',
+  'Store_details' => 'Store details',
+  'Store_ID' => 'Store ID',
+  'Customer_Name' => 'Customer Name',
+  'not_given' => 'Not given',
 );

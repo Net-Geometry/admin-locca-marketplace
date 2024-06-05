@@ -30,7 +30,7 @@
                     </div>
                 </div>
             <!-- Stepper -->
-        
+
 
             <form class="reg-form js-validate" action="{{ route('restaurant.store') }}" method="post" enctype="multipart/form-data"
                 id="form-id">
@@ -106,7 +106,7 @@
                                 @endforeach
                                 @endif
                                 <div class="form-group mb-4">
-                                    <label class="input-label" for="choice_zones">{{ translate('messages.zone') }} <span
+                                    <label class="input-label" title="{{ translate('messages.select_zone_for_map') }}" for="choice_zones">{{ translate('messages.zone') }} <span
                                             class="form-label-secondary" data-toggle="tooltip" data-placement="right"
                                             data-original-title="{{ translate('messages.select_zone_for_map') }}"><img
                                                 src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
@@ -261,8 +261,8 @@
                                                 placeholder="{{ translate('messages.Ex:') }} 017********" value="{{ old('phone') }}"
                                                 required>
                                         </div>
-        
-        
+
+
                                     </div>
                                 </div>
                             </div>
@@ -280,27 +280,33 @@
                                             <label class="input-label" for="email">{{ translate('messages.email') }}</label>
                                             <input type="email" id="email" name="email" class="form-control __form-control"
                                                 placeholder="{{ translate('messages.Ex:') }} ex@example.com" value="{{ old('email') }}"
+
                                                 required>
                                         </div>
                                     </div>
                                     <div class="col-md-4 col-sm-12 col-lg-4">
                                         <div class="form-group">
-                                            <label class="input-label" for="exampleInputPassword">{{ translate('messages.password') }}
-        
+                                            <label class="input-label" title="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}" for="exampleInputPassword">{{ translate('messages.password') }} &nbsp;
+                                                <span
+                                        class="form-label-secondary" data-toggle="tooltip" data-placement="right"
+                                        data-original-title="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"><img
+                                            src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
+                                            alt="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"></span>
+
                                             </label>
                                             <label class="position-relative m-0 d-block">
                                                 <input type="password" name="password"
-                                                    placeholder="{{ translate('messages.password_length_placeholder', ['length' => '6+']) }}"
+                                                    placeholder="{{ translate('messages.password_length_placeholder', ['length' => '8+']) }}"
                                                     class="form-control __form-control form-control __form-control-user" minlength="6"
-                                                    id="exampleInputPassword" required value="{{ old('password') }}">
+                                                    id="exampleInputPassword" required value="{{ old('password') }}" >
                                                     <span class="show-password">
-                                                        <span class="icon-1">
+                                                        <span class="icon-2">
                                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
                                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                                                             </svg>
                                                         </span>
-                                                        <span class="icon-2">
+                                                        <span class="icon-1">
                                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.894 7.894L21 21m-3.228-3.228-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243m4.242 4.242L9.88 9.88" />
                                                             </svg>
@@ -318,16 +324,16 @@
                                                 <input type="password" name="confirm-password"
                                                     class="form-control __form-control form-control __form-control-user" minlength="6"
                                                     id="exampleRepeatPassword"
-                                                    placeholder="{{ translate('messages.password_length_placeholder', ['length' => '6+']) }}"
+                                                    placeholder="{{ translate('messages.password_length_placeholder', ['length' => '8+']) }}"
                                                     required value="{{ old('confirm-password') }}">
                                                     <span class="show-password">
-                                                        <span class="icon-1">
+                                                        <span class="icon-2">
                                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
                                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                                                             </svg>
                                                         </span>
-                                                        <span class="icon-2">
+                                                        <span class="icon-1">
                                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.894 7.894L21 21m-3.228-3.228-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243m4.242 4.242L9.88 9.88" />
                                                             </svg>

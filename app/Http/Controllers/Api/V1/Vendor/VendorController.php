@@ -150,12 +150,7 @@ class VendorController extends Controller
                         $max_product_uploads= -1;
                     }
                     else{
-                        $max_product_uploads= $vendor['subscription']->max_product - $st?->item?->count();
-                        if($max_product_uploads > 0){
-                            $max_product_uploads ?? 0;
-                        }elseif($max_product_uploads < 0) {
-                            $max_product_uploads = 0;
-                        }
+                        $max_product_uploads= $vendor['subscription']->max_product - $st?->items?->count() > 0?  $vendor['subscription']->max_product - $st?->items?->count() : 0 ;
                     }
 
                     $pending_bill= SubscriptionBillingAndRefundHistory::where(['store_id'=>$store->id,

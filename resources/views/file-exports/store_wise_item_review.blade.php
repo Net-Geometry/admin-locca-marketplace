@@ -31,6 +31,7 @@
             <th>{{ translate('Customer_Name') }}</th>
             <th>{{ translate('Rating') }}</th>
             <th>{{ translate('Review') }}</th>
+            <th >{{translate('messages.store_reply')}}</th>
             <th>{{ translate('Status') }}</th>
 
         </thead>
@@ -47,6 +48,7 @@
         </td>
         <td> {{$review->rating}}</td>
         <td>{{$review->comment}}</td>
+        <td>{{ $review?->reply ?? translate('not_given') }}</td>
         <td>{{ $review->status == 1 ? translate('messages.active') : translate('messages.inactive') }}</td>
 
             </tr>
