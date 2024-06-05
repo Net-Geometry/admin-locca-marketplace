@@ -4863,4 +4863,7 @@
   'order_transaction_statement' => 'Order transaction statement',
   'TNX ID' => 'TNX ID',
   'Select_the_number_of_days_before_the_warning_will_be_shown_with_a_countdown_to_the_end_of_all_packages' => 'Select the number of days before the warning will be shown with a countdown to the end of all packages',
+  'test frewthrejktgr' => 'Test frewthrejktgr',
+  'The path field is required.' => 'The path field is required.',
+  'To_upload_file_on_s3_bucket_go_to_a_specific_folder' => 'To upload file on s3 bucket go to a specific folder',
 );
