@@ -27,7 +27,7 @@ use App\Exports\SubscriptionTransactionsExport;
 use App\Exports\SubscriptionSubscriberListExport;
 use App\Models\SubscriptionBillingAndRefundHistory;
 use App\Contracts\Repositories\TranslationRepositoryInterface;
-
+use Illuminate\Support\Facades\View;
 class SubscriptionController extends Controller
 {
 
@@ -349,7 +349,10 @@ class SubscriptionController extends Controller
         $transaction= SubscriptionTransaction::with(['store.vendor','package:id,package_name,price'])->find($id);
         $BusinessData=BusinessSetting::whereIn('key', $BusinessData)->pluck('value' ,'key') ;
         $logo=BusinessSetting::where('key', "logo")->first() ;
-        return view('admin-views.subscription.subscription-invoice',compact('transaction','BusinessData','logo'))->render();
+
+        $mpdf_view = View::make('subscription-invoice', compact('transaction','BusinessData','logo'));
+        Helpers::gen_mpdf(view: $mpdf_view,file_prefix: 'Subscription',file_postfix: $id);
+        return back();
     }
 
 

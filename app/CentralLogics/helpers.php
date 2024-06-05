@@ -2709,7 +2709,7 @@ class Helpers
 
     public static function gen_mpdf($view, $file_prefix, $file_postfix)
     {
-        $mpdf = new \Mpdf\Mpdf(['tempDir' => __DIR__ . '/../../storage/tmp','default_font' => 'FreeSerif', 'mode' => 'utf-8', 'format' => [190, 250]]);
+        $mpdf = new \Mpdf\Mpdf(['tempDir' => __DIR__ . '/../../storage/tmp','default_font' => 'Inter', 'mode' => 'utf-8', 'format' => [190, 250]]);
         /* $mpdf->AddPage('XL', '', '', '', '', 10, 10, 10, '10', '270', '');*/
         $mpdf->autoScriptToLang = true;
         $mpdf->autoLangToFont = true;

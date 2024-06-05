@@ -4860,4 +4860,6 @@
   'Business_Details' => 'Business Details',
   'Change Business Plan' => 'Change Business Plan',
   '\\s_Free_Trial' => '\\s Free Trial',
+  'order_transaction_statement' => 'Order transaction statement',
+  'TNX ID' => 'TNX ID',
 );

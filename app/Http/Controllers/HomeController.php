@@ -14,6 +14,7 @@ use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\File;
 use App\Models\AdminPromotionalBanner;
 use App\Models\SubscriptionTransaction;
+use Illuminate\Support\Facades\View;
 
 class HomeController extends Controller
 {
@@ -395,6 +396,8 @@ class HomeController extends Controller
         $transaction= SubscriptionTransaction::with(['store.vendor','package:id,package_name,price'])->findOrFail($id);
         $BusinessData=BusinessSetting::whereIn('key', $BusinessData)->pluck('value' ,'key') ;
         $logo=BusinessSetting::where('key', "logo")->first() ;
-        return view('subscription-invoice',compact('transaction','BusinessData','logo'))->render();
+        $mpdf_view = View::make('subscription-invoice', compact('transaction','BusinessData','logo'));
+        Helpers::gen_mpdf(view: $mpdf_view,file_prefix: 'Subscription',file_postfix: $id);
+        return back();
     }
 }
