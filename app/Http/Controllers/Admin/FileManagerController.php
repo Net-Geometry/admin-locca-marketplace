@@ -61,9 +61,13 @@ class FileManagerController extends Controller
         $request->validate([
             'images' => 'required_without:file',
             'file' => 'required_without:images',
-            'path' => 'required',
+            'path' => 'required_if:disk,local',
           ]);
         $disk = $request->disk;
+        if($disk == 's3' && !$request->path){
+            Toastr::warning(translate('messages.To_upload_file_on_s3_bucket_go_to_a_specific_folder'));
+            return back();
+        }
         if ($request->hasfile('images')) {
             $images = $request->file('images');
 

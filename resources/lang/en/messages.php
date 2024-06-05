@@ -4869,4 +4869,7 @@
   'Customer_Name' => 'Customer Name',
   'not_given' => 'Not given',
   'Subscription_Canceled' => 'Subscription Canceled',
+  'test frewthrejktgr' => 'Test frewthrejktgr',
+  'The path field is required.' => 'The path field is required.',
+  'To_upload_file_on_s3_bucket_go_to_a_specific_folder' => 'To upload file on s3 bucket go to a specific folder',
 );
