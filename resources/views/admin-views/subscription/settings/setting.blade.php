@@ -24,7 +24,7 @@ active
                 </div>
             </div>
         </div>
-        <div class="card">
+        <div class="card mb-4">
             <div class="card-header border-0 align-items-center">
                 <div class="w-100 d-flex flex-wrap align-items-center justify-content-between gap-2">
                     <div>
@@ -39,18 +39,17 @@ active
                     </label>
                 </div>
             </div>
-            <?php
-            if( data_get($settings, 'subscription_free_trial_type') == 'year'){
-                $trial_period =data_get($settings, 'subscription_free_trial_days') > 0 ? data_get($settings, 'subscription_free_trial_days')  / 365 : 0;
-            } else if( data_get($settings, 'subscription_free_trial_type') == 'month'){
-                $trial_period =data_get($settings, 'subscription_free_trial_days') > 0 ? data_get($settings, 'subscription_free_trial_days')  / 30 : 0;
-            } else{
-                $trial_period =data_get($settings, 'subscription_free_trial_days') > 0 ? data_get($settings, 'subscription_free_trial_days') : null ;
-            }
-
-        ?>
+                <?php
+                    if( data_get($settings, 'subscription_free_trial_type') == 'year'){
+                        $trial_period =data_get($settings, 'subscription_free_trial_days') > 0 ? data_get($settings, 'subscription_free_trial_days')  / 365 : 0;
+                    } else if( data_get($settings, 'subscription_free_trial_type') == 'month'){
+                        $trial_period =data_get($settings, 'subscription_free_trial_days') > 0 ? data_get($settings, 'subscription_free_trial_days')  / 30 : 0;
+                    } else{
+                        $trial_period =data_get($settings, 'subscription_free_trial_days') > 0 ? data_get($settings, 'subscription_free_trial_days') : null ;
+                    }
+                ?>
             <div class="card-body py-2">
-                <div class="card">
+                <div class="card mb-2">
                     <div class="card-body">
                         <form action="{{ route('admin.business-settings.subscriptionackage.settingUpdate') }}" method="post">
                             @csrf
@@ -79,11 +78,15 @@ active
                     </div>
                 </div>
             </div>
+
+        </div>
+
+        <div class="card ">
             <div class="card-header border-0 align-items-center">
                 <div class="w-100 d-flex flex-wrap align-items-center justify-content-between gap-2">
                     <div>
                         <h3 class="text--title card-title">{{ translate('Show_Deadline_Warning') }}</h3>
-                        <div>{{ translate('Select_the_number_of_days_before_the_warning_will_be_shown_with_a_countdown_to_the_end_of_the_free_trial') }}</div>
+                        <div>{{ translate('Select_the_number_of_days_before_the_warning_will_be_shown_with_a_countdown_to_the_end_of_all_packages') }}</div>
                     </div>
                 </div>
             </div>
