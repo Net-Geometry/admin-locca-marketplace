@@ -25,13 +25,17 @@ class UserInfo extends Model
         $path = 'profile';
         if ($this->user_id){
             $path = 'profile';
+            $storages = $this->user?->storage;
         }elseif ($this->vendor_id){
             $path = 'store';
+            $storages = $this->vendor?->storage;
         }elseif ($this->deliveryman_id){
             $path = 'delivery-man';
+            $storages = $this->delivery_man?->storage;
         }
-        if (count($this->storage) > 0) {
-            foreach ($this->storage as $storage) {
+
+        if (count($storages) > 0) {
+            foreach ($storages as $storage) {
                 if ($storage['key'] == 'image') {
                     if($storage['value'] == 's3'){
 

@@ -42,16 +42,18 @@ class BannerLogic
                     });
                 })
                 ->find($banner->data);
-                $data[]=[
-                    'id'=>$banner->id,
-                    'title'=>$banner->title,
-                    'type'=>$banner->type,
-                    'image'=>$banner->image,
-                    'link'=> null,
-                    'store'=> $store?Helpers::store_data_formatting($store, false):null,
-                    'item'=>null,
-                    'image_full_url' => $banner->image_full_url
-                ];
+                if($store){
+                    $data[]=[
+                        'id'=>$banner->id,
+                        'title'=>$banner->title,
+                        'type'=>$banner->type,
+                        'image'=>$banner->image,
+                        'link'=> null,
+                        'store'=> $store?Helpers::store_data_formatting($store, false):null,
+                        'item'=>null,
+                        'image_full_url' => $banner->image_full_url
+                    ];
+                }
             }
             if($banner->type=='item_wise')
             {

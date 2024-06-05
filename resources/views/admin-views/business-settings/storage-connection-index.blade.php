@@ -106,7 +106,7 @@
                         method="post">
                         @csrf
                                 <div class="border pt-5 radius-10 row mb-3">
-                                    <div class="col-lg-4 col-sm-6 p-20">
+                                    <div class="col-lg-4 col-sm-6 p-10px">
                                         <label for="key" class="form-label">{{translate('messages.key')}}</label>
                                     </div>
                                     <div class="col-lg-8 col-sm-6">
@@ -118,7 +118,7 @@
                                     </div>
                                 </div>
                                 <div class="border pt-5 radius-10 row mb-3">
-                                    <div class="col-lg-4 col-sm-6 p-20">
+                                    <div class="col-lg-4 col-sm-6 p-10px">
                                         <label for="secret" class="form-label">{{translate('messages.secret')}}</label>
                                     </div>
                                     <div class="col-lg-8 col-sm-6">
@@ -130,7 +130,7 @@
                                     </div>
                                 </div>
                                 <div class="border pt-5 radius-10 row mb-3">
-                                    <div class="col-lg-4 col-sm-6 p-20">
+                                    <div class="col-lg-4 col-sm-6 p-10px">
                                         <label for="region" class="form-label">{{translate('messages.region')}}</label>
                                     </div>
                                     <div class="col-lg-8 col-sm-6">
@@ -142,7 +142,7 @@
                                     </div>
                                 </div>
                                 <div class="border pt-5 radius-10 row mb-3">
-                                    <div class="col-lg-4 col-sm-6 p-20">
+                                    <div class="col-lg-4 col-sm-6 p-10px">
                                         <label for="bucket" class="form-label">{{translate('messages.bucket')}}</label>
                                     </div>
                                     <div class="col-lg-8 col-sm-6">
@@ -154,7 +154,7 @@
                                     </div>
                                 </div>
                                 <div class="border pt-5 radius-10 row mb-3">
-                                    <div class="col-lg-4 col-sm-6 p-20">
+                                    <div class="col-lg-4 col-sm-6 p-10px">
                                         <label for="url" class="form-label">{{translate('messages.url')}}</label>
                                     </div>
                                     <div class="col-lg-8 col-sm-6">
@@ -166,7 +166,7 @@
                                     </div>
                                 </div>
                                 <div class="border pt-5 radius-10 row mb-3">
-                                    <div class="col-lg-4 col-sm-6 p-20">
+                                    <div class="col-lg-4 col-sm-6 p-10px">
                                         <label for="end_point" class="form-label">{{translate('messages.end_point')}}</label>
                                     </div>
                                     <div class="col-lg-8 col-sm-6">
