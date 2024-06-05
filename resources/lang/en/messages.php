@@ -4868,4 +4868,5 @@
   'Store_ID' => 'Store ID',
   'Customer_Name' => 'Customer Name',
   'not_given' => 'Not given',
+  'Subscription_Canceled' => 'Subscription Canceled',
 );
