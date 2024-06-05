@@ -205,8 +205,17 @@ class SubscriptionController extends Controller
         if(data_get(Helpers::subscriptionConditionsCheck(store_id:$request->store_id,package_id:$request->package_id) , 'disable_item_count') > 0){
             $disable_item_count = (int) (data_get(Helpers::subscriptionConditionsCheck(store_id:$request->store_id,package_id:$request->package_id) , 'disable_item_count',0));
         }
-        // dd($request->store_id);
 
-        return  response()->json(['disable_item_count'=> $disable_item_count],200);
+        $store = Store::where('id',$request->store_id)->with('store_sub_update_application')->first();
+        $store_subscription= $store->store_sub_update_application;
+        $cash_backs=[];
+
+        if($store->store_business_model == 'subscription' &&  $store_subscription->status == 1 && $store_subscription->is_canceled == 0 && $store_subscription->is_trial == 0  && $store_subscription->package_id !=  $request->package_id){
+            $cash_backs= Helpers::calculateSubscriptionRefundAmount(store:$store, return_data:true);
+        }
+
+        return  response()->json(['disable_item_count'=> $disable_item_count,
+                                    'back_amount'=> (float)data_get($cash_backs,'back_amount',0),
+                                    'days'=> (int) data_get($cash_backs,'days',0) ],200);
     }
 }
