@@ -120,7 +120,7 @@ class SubscriptionController extends Controller
         $wallet= StoreWallet::firstOrNew(['vendor_id'=> $store->vendor_id]);
         $balance = BusinessSetting::where('key', 'wallet_status')->first()?->value == 1 ? $wallet?->balance ?? 0 : 0;
 
-            if($balance > ($package?->price + $pending_bill)){
+            if($balance >= ($package?->price + $pending_bill)){
                 $reference= 'wallet_payment_by_vendor';
                 $plan_data=   Helpers::subscription_plan_chosen(store_id:$store->id,package_id:$package->id,payment_method:$reference,discount:0,pending_bill:$pending_bill,reference:$reference,type: $request?->type);
                 if($plan_data != false){

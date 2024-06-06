@@ -4872,4 +4872,6 @@
   'test frewthrejktgr' => 'Test frewthrejktgr',
   'The path field is required.' => 'The path field is required.',
   'To_upload_file_on_s3_bucket_go_to_a_specific_folder' => 'To upload file on s3 bucket go to a specific folder',
+  'Extra_Packaging_Amount' => 'Extra Packaging Amount',
+  'active_status_updated' => 'Active status updated',
 );

@@ -127,8 +127,8 @@
 
             <div class="col-md-6">
                 <label class="payment-item">
-                    <input type="radio" {{ $balance > $package?->price ? '' :'disabled'  }} value="wallet"  class="d-none" name="payment_gateway">
-                    <div  data-toggle="tooltip" data-placement="bottom" title="{{$balance > $package?->price ? translate('pay_the_amount_via_wallet') : translate('You have not sufficient balance on you wallet! please add money to your wallet to purchase the packages') }}"  class="payment-item-inner">
+                    <input type="radio" {{ $balance >= $package?->price ? '' :'disabled'  }} value="wallet"  class="d-none" name="payment_gateway">
+                    <div  data-toggle="tooltip" data-placement="bottom" title="{{$balance >= $package?->price ? translate('pay_the_amount_via_wallet') : translate('You have not sufficient balance on you wallet! please add money to your wallet to purchase the packages') }}"  class="payment-item-inner">
                         <div class="check">
                             <img src="{{asset('/public/assets/admin/img/check-1.png')}}" class="uncheck" alt="">
                             <img src="{{asset('/public/assets/admin/img/check-2.png')}}" class="check" alt="">

@@ -54,6 +54,7 @@ class DeliveryManLoginController extends Controller
             $delivery_man->auth_token = $token;
             $delivery_man->save();
 
+            $topic = 'restaurant_dm_'.$delivery_man?->store_id;
             if(isset($delivery_man->zone)){
                 if($delivery_man->vehicle_id){
 
