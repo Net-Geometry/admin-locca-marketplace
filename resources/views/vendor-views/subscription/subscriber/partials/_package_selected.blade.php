@@ -37,11 +37,13 @@
                     </div>
                 </div>
             </div>
-            <!-- Plan Seperator Arrow -->
-            <div class="plan-seperator-arrow mx-auto">
+                @if ( $store_subscription?->package_id !=  $package->id )
+                <!-- Plan Seperator Arrow -->
+                <div class="plan-seperator-arrow mx-auto">
                 <img src="{{asset('public/assets/admin/img/exchange.svg')}}" alt="" class="w-100">
-            </div>
-            <!-- Plan Seperator Arrow -->
+                </div>
+                <!-- Plan Seperator Arrow -->
+                @endif
             @endif
 
 

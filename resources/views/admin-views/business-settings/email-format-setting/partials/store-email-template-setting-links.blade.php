@@ -103,12 +103,12 @@
                     {{translate('Subscription_Cancel')}}
                 </a>
             </li>
-            <li class="nav-item">
+            {{-- <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/email-setup/store/subscription-deadline') ? 'active' : '' }}"
                 href="{{ route('admin.business-settings.email-setup', ['store','subscription-deadline']) }}">
                     {{translate('Subscription_Deadline_Warning')}}
                 </a>
-            </li>
+            </li> --}}
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/email-setup/store/subscription-plan_upadte') ? 'active' : '' }}"
                 href="{{ route('admin.business-settings.email-setup', ['store','subscription-plan_upadte']) }}">

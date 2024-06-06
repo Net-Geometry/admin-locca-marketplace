@@ -22,8 +22,8 @@
             </div>
                 <!-- Plan Seperator Arrow -->
                 <div class="plan-seperator-arrow mx-auto">
-                <img src="{{asset('public/assets/admin/img/exchange.svg')}}" alt="" class="w-100">
-            </div>
+                    <img src="{{asset('public/assets/admin/img/exchange.svg')}}" alt="" class="w-100">
+                </div>
             <!-- Plan Seperator Arrow -->
 
             @elseif(!in_array($store_business_model,['commission','none']))
@@ -37,11 +37,15 @@
                     </div>
                 </div>
             </div>
-                <!-- Plan Seperator Arrow -->
-                <div class="plan-seperator-arrow mx-auto">
-                <img src="{{asset('public/assets/admin/img/exchange.svg')}}" alt="" class="w-100">
-            </div>
-            <!-- Plan Seperator Arrow -->
+                    @if ( $store_subscription?->package_id !=  $package->id )
+                    <!-- Plan Seperator Arrow -->
+                    <div class="plan-seperator-arrow mx-auto">
+                    <img src="{{asset('public/assets/admin/img/exchange.svg')}}" alt="" class="w-100">
+                    </div>
+
+                    <!-- Plan Seperator Arrow -->
+
+                    @endif
             @endif
 
 
