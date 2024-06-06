@@ -189,7 +189,7 @@ class SubscriptionController extends Controller
             if (config('mail.status') && Helpers::get_mail_status('subscription_plan_upadte_mail_status_store') == '1') {
             $subscribers= StoreSubscription::with('store:id,name,email')->select(['store_id'])->where(['package_id' =>  $subscriptionackage->id,'status'=> 1])->get();
                 foreach ($subscribers as $subscriber){
-                    Mail::to($subscriber->email)->send(new SubscriptionPlanUpdate($subscriber->name));
+                    Mail::to($subscriber?->store?->email)->send(new SubscriptionPlanUpdate($subscriber?->store?->name));
                 }
             }
         } catch (\Exception $ex) {
@@ -423,7 +423,7 @@ class SubscriptionController extends Controller
         [Carbon::today()->addDays($subscription_deadline_warning_days)])
         ->first();
         // COUNT(DISTINCT CASE WHEN status != 0 THEN store_id END) AS expired_subscriptions,
-        
+
         $data['total_subscribed_user']= $totalSubscribersData['total_subscribers'];
             $data['active_subscription']= $totalSubscribersData['active_subscriptions'];
             $data['expired_soon']= $totalSubscribersData['expired_soon'];
