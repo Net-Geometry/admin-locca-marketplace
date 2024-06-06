@@ -358,7 +358,7 @@ class SubscriptionController extends Controller
 
     public function subscriberList(Request $request){
         $key = explode(' ', $request['search']);
-        $subscribers= Store::whereHas('vendor',function($query){
+        $subscribers= Store::has('store_sub_update_application')->whereHas('vendor',function($query){
             $query->where('status', 1);
         })
         ->whereIn('store_business_model' ,['subscription','unsubscribed'])->with([
@@ -407,24 +407,38 @@ class SubscriptionController extends Controller
         $data=[];
         $subscription_deadline_warning_days = BusinessSetting::where('key','subscription_deadline_warning_days')->first()?->value ?? 7;
 
-        $totalSubscribersData= StoreSubscription::whereHas('store.vendor',function($query){
-            $query->where('status', 1);
-        })->when(isset($request->zone_id) && is_numeric($request->zone_id), function ($query) use ($request) {
-            return $query->whereHas('store', function ($q) use ($request) {
-                return $q->where('zone_id', $request->zone_id);
+        $totalSubscribersData= StoreSubscription::whereHas('store',function ($query)use($request){
+            $query->whereIn('store_business_model' ,['subscription','unsubscribed'])
+            ->when(isset($request->zone_id) && is_numeric($request->zone_id), function ($query) use ($request) {
+                return $query->where('zone_id', $request->zone_id);
+
             });
+        })
+        ->whereHas('store.vendor',function($query){
+            $query->where('status', 1);
         })
         ->selectRaw('COUNT(DISTINCT store_id) AS total_subscribers,
         COUNT(DISTINCT CASE WHEN status = 1 THEN store_id END) AS active_subscriptions,
-        COUNT(DISTINCT CASE WHEN status = 0 THEN store_id END) AS expired_subscriptions,
         COUNT(DISTINCT CASE WHEN status = 1 AND expiry_date <= ? THEN store_id END) AS expired_soon',
         [Carbon::today()->addDays($subscription_deadline_warning_days)])
         ->first();
-
-            $data['total_subscribed_user']= $totalSubscribersData['total_subscribers'];
+        // COUNT(DISTINCT CASE WHEN status != 0 THEN store_id END) AS expired_subscriptions,
+        
+        $data['total_subscribed_user']= $totalSubscribersData['total_subscribers'];
             $data['active_subscription']= $totalSubscribersData['active_subscriptions'];
-            $data['expired_subscription']= $totalSubscribersData['expired_subscriptions'];
             $data['expired_soon']= $totalSubscribersData['expired_soon'];
+
+
+            $total_inactive_subscription = Store::has('store_sub_update_application')
+            ->whereIn('store_business_model' ,['unsubscribed'])
+            ->when(is_numeric($request->zone_id), function ($query) use ($request) {
+                return $query->where('zone_id', $request->zone_id);
+                })
+                ->whereDoesntHave('store_sub_update_application',function($query){
+                    return $query->where('status', '1');
+                    })->count();
+
+        $data['expired_subscription']= $total_inactive_subscription;
 
 
 
