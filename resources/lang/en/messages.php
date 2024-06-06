@@ -4874,4 +4874,12 @@
   'To_upload_file_on_s3_bucket_go_to_a_specific_folder' => 'To upload file on s3 bucket go to a specific folder',
   'Extra_Packaging_Amount' => 'Extra Packaging Amount',
   'active_status_updated' => 'Active status updated',
+  'Want to enable the option store to reply?' => 'Want to enable the option store to reply?',
+  'If enabled, stores can actively engage with the customers by responding to the reviews left for their orders' => 'If enabled, stores can actively engage with the customers by responding to the reviews left for their orders',
+  'Want_to_disable_the_option_store_to_reply?' => 'Want to disable the option store to reply?',
+  'Are you sure to enable the free trial option?' => 'Are you sure to enable the free trial option?',
+  'If enabled, the store can experience the services at no cost for a limited time.' => 'If enabled, the store can experience the services at no cost for a limited time.',
+  'Free_Trial_Disabled_Successfully' => 'Free Trial Disabled Successfully',
+  'Are you sure to disable the free trial option?' => 'Are you sure to disable the free trial option?',
+  'If disabled, the store can’t get the experience without any business plan.' => 'If disabled, the store can’t get the experience without any business plan.',
 );

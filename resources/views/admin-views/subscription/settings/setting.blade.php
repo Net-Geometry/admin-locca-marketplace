@@ -32,7 +32,9 @@ active
                         <div>{{ translate('You_can_offer_vendors_a_free_trial_to_experience_the_system_overall') }}</div>
                     </div>
                     <label class="toggle-switch toggle-switch-sm"> {{ translate('Status') }}:&nbsp;
-                        <input type="checkbox" data-url="{{route('admin.business-settings.subscriptionackage.trialStatus')}}"  class="toggle-switch-input status_change_alert" {{ data_get($settings, 'subscription_free_trial_status') == 1?'checked':''}} >
+                        <input type="checkbox" data-url="{{route('admin.business-settings.subscriptionackage.trialStatus')}}" data-title="{{ data_get($settings, 'subscription_free_trial_status') != 1 ? translate('Are you sure to enable the free trial option?') : translate('Are you sure to disable the free trial option?') }}"
+                        data-message="{{ data_get($settings, 'subscription_free_trial_status') != 1 ? translate('If enabled, the store can experience the services at no cost for a limited time.') : translate('If disabled, the store can’t get the experience without any business plan.') }}"
+                        class="toggle-switch-input status_change_alert" {{ data_get($settings, 'subscription_free_trial_status') == 1?'checked':''}} >
                         <span class="toggle-switch-label">
                             <span class="toggle-switch-indicator"></span>
                         </span>
@@ -161,15 +163,16 @@ active
 <script>
     "use strict";
         $('.status_change_alert').on('click', function (event) {
+        let title = $(this).data('title');
         let url = $(this).data('url');
         let message = $(this).data('message');
-        status_change_alert(url, message, event)
+        status_change_alert(title,url, message, event)
     })
 
-    function status_change_alert(url, message, e) {
+    function status_change_alert(title,url, message, e) {
         e.preventDefault();
         Swal.fire({
-            title: '{{ translate('Are_you_sure?') }}',
+            title: title,
             text: message,
             type: 'warning',
             showCancelButton: true,

@@ -217,7 +217,7 @@
                                                 </span>
                                                 <span class="form-label-secondary text-danger d-flex"
                                                       data-toggle="tooltip" data-placement="right"
-                                                      data-original-title="{{ translate('If_enabled,_a_store_can_reply_to_a_review') }}"><img
+                                                      data-original-title="{{ translate('If enabled, stores can actively engage with the customers by responding to the reviews left for their orders') }}"><img
                                                         src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
                                                         alt="{{ translate('messages.store_review_reply') }}">
                                                 </span>
@@ -228,9 +228,9 @@
                                                    data-type="toggle"
                                                    data-image-on="{{ asset('/public/assets/admin/img/modal/store-self-reg-on.png') }}"
                                                    data-image-off="{{ asset('/public/assets/admin/img/modal/store-self-reg-off.png') }}"
-                                                   data-title-on="{{ translate('Want_to_enable') }} <strong>{{ translate('store Reply Review') }}</strong> ?"
-                                                   data-title-off="{{ translate('Want_to_disable') }} <strong>{{ translate('store Reply Review') }}</strong> ?"
-                                                   data-text-on="<p>{{ translate('If_enabled,_a_store_can_reply_to_a_review') }}</p>"
+                                                   data-title-on="{{ translate('Want to enable the option store to reply?') }}"
+                                                   data-title-off="{{ translate('Want_to_disable_the_option_store_to_reply?') }}"
+                                                   data-text-on="<p>{{ translate('If enabled, stores can actively engage with the customers by responding to the reviews left for their orders.') }}</p>"
                                                    data-text-off="<p>{{ translate('If_disabled,_a_store_can_not_reply_to_a_review') }}</p>"
                                                    class="toggle-switch-input dynamic-checkbox-toggle"
 
