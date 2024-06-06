@@ -1075,7 +1075,7 @@ class Helpers
                 'Content-Type' => 'application/json',
             ];
             try {
-               return Http::withHeaders($headers)->post($url, $data);
+                Http::withHeaders($headers)->post($url, $data);
             }catch (\Exception $exception){
                 return false;
             }
@@ -1164,7 +1164,7 @@ class Helpers
         return self::sendNotificationToHttp($postData);
     }
 
-    public static function send_push_notif_to_topic($data, $topic, $type,$web_push_link = null ,$w=null)
+    public static function send_push_notif_to_topic($data, $topic, $type,$web_push_link = null)
     {
         if(isset($data['module_id'])){
             $module_id = $data['module_id'];
@@ -1182,7 +1182,6 @@ class Helpers
             $zone_id = '';
         }
 
-        info($w);
 //        $click_action = "";
 //        if($web_push_link){
 //            $click_action = ',
@@ -1233,7 +1232,6 @@ class Helpers
                 ]
             ];
         }
-info(self::sendNotificationToHttp($postData));
         return self::sendNotificationToHttp($postData);
     }
 
@@ -1680,7 +1678,7 @@ info(self::sendNotificationToHttp($postData));
                         'image' => '',
                     ];
 
-                    self::send_push_notif_to_topic($data, "restaurant_dm_" . $order->store_id, 'new_order',null, 'from_1');
+                    self::send_push_notif_to_topic($data, "restaurant_dm_" . $order->store_id, 'new_order',null);
                 } else {
                     $data = [
                         'title' => translate('messages.order_push_title'),
@@ -1715,7 +1713,7 @@ info(self::sendNotificationToHttp($postData));
                     'image' => '',
                 ];
                 if ($order->store->sub_self_delivery) {
-                    self::send_push_notif_to_topic($data, "restaurant_dm_" . $order->store_id, 'order_request',null, 'from_2');
+                    self::send_push_notif_to_topic($data, "restaurant_dm_" . $order->store_id, 'order_request',null);
                 } else
                 {if($order->zone){
                     if($order->dm_vehicle_id){
