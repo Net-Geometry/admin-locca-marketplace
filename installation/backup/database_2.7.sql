@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jun 06, 2024 at 09:21 AM
--- Server version: 10.4.27-MariaDB
--- PHP Version: 8.2.0
+-- Generation Time: Apr 20, 2024 at 10:47 AM
+-- Server version: 10.6.15-MariaDB
+-- PHP Version: 8.1.24
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `mart_install`
+-- Database: `admin_6ammart_install`
 --
 
 -- --------------------------------------------------------
@@ -501,10 +501,7 @@ INSERT INTO `business_settings` (`id`, `key`, `value`, `created_at`, `updated_at
 (135, 'takeaway_status', '1', '2023-08-17 00:26:56', '2023-08-17 00:26:56'),
 (136, 'dm_picture_upload_status', '1', NULL, NULL),
 (137, 'offline_payment_status', NULL, NULL, '2023-10-16 20:16:58'),
-(138, 'guest_checkout_status', '0', NULL, NULL),
-(139, 'check_daily_subscription_validity_check', '2024-06-06', '2024-06-05 20:15:07', '2024-06-05 20:15:07'),
-(140, 'commission_business_model', '1', '2024-06-05 20:16:14', '2024-06-05 20:16:14'),
-(141, 'subscription_business_model', '0', '2024-06-05 20:16:14', '2024-06-05 20:16:14');
+(138, 'guest_checkout_status', '0', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -738,125 +735,125 @@ CREATE TABLE `currencies` (
 --
 
 INSERT INTO `currencies` (`id`, `country`, `currency_code`, `currency_symbol`, `exchange_rate`, `created_at`, `updated_at`) VALUES
-(1, 'US Dollar', 'USD', '$', '1.00', NULL, NULL),
-(2, 'Canadian Dollar', 'CAD', 'CA$', '1.00', NULL, NULL),
-(3, 'Euro', 'EUR', '€', '1.00', NULL, NULL),
-(4, 'United Arab Emirates Dirham', 'AED', 'د.إ.‏', '1.00', NULL, NULL),
-(5, 'Afghan Afghani', 'AFN', '؋', '1.00', NULL, NULL),
-(6, 'Albanian Lek', 'ALL', 'L', '1.00', NULL, NULL),
-(7, 'Armenian Dram', 'AMD', '֏', '1.00', NULL, NULL),
-(8, 'Argentine Peso', 'ARS', '$', '1.00', NULL, NULL),
-(9, 'Australian Dollar', 'AUD', '$', '1.00', NULL, NULL),
-(10, 'Azerbaijani Manat', 'AZN', '₼', '1.00', NULL, NULL),
-(11, 'Bosnia-Herzegovina Convertible Mark', 'BAM', 'KM', '1.00', NULL, NULL),
-(12, 'Bangladeshi Taka', 'BDT', '৳', '1.00', NULL, NULL),
-(13, 'Bulgarian Lev', 'BGN', 'лв.', '1.00', NULL, NULL),
-(14, 'Bahraini Dinar', 'BHD', 'د.ب.‏', '1.00', NULL, NULL),
-(15, 'Burundian Franc', 'BIF', 'FBu', '1.00', NULL, NULL),
-(16, 'Brunei Dollar', 'BND', 'B$', '1.00', NULL, NULL),
-(17, 'Bolivian Boliviano', 'BOB', 'Bs', '1.00', NULL, NULL),
-(18, 'Brazilian Real', 'BRL', 'R$', '1.00', NULL, NULL),
-(19, 'Botswanan Pula', 'BWP', 'P', '1.00', NULL, NULL),
-(20, 'Belarusian Ruble', 'BYN', 'Br', '1.00', NULL, NULL),
-(21, 'Belize Dollar', 'BZD', '$', '1.00', NULL, NULL),
-(22, 'Congolese Franc', 'CDF', 'FC', '1.00', NULL, NULL),
-(23, 'Swiss Franc', 'CHF', 'CHf', '1.00', NULL, NULL),
-(24, 'Chilean Peso', 'CLP', '$', '1.00', NULL, NULL),
-(25, 'Chinese Yuan', 'CNY', '¥', '1.00', NULL, NULL),
-(26, 'Colombian Peso', 'COP', '$', '1.00', NULL, NULL),
-(27, 'Costa Rican Colón', 'CRC', '₡', '1.00', NULL, NULL),
-(28, 'Cape Verdean Escudo', 'CVE', '$', '1.00', NULL, NULL),
-(29, 'Czech Republic Koruna', 'CZK', 'Kč', '1.00', NULL, NULL),
-(30, 'Djiboutian Franc', 'DJF', 'Fdj', '1.00', NULL, NULL),
-(31, 'Danish Krone', 'DKK', 'Kr.', '1.00', NULL, NULL),
-(32, 'Dominican Peso', 'DOP', 'RD$', '1.00', NULL, NULL),
-(33, 'Algerian Dinar', 'DZD', 'د.ج.‏', '1.00', NULL, NULL),
-(34, 'Estonian Kroon', 'EEK', 'kr', '1.00', NULL, NULL),
-(35, 'Egyptian Pound', 'EGP', 'E£‏', '1.00', NULL, NULL),
-(36, 'Eritrean Nakfa', 'ERN', 'Nfk', '1.00', NULL, NULL),
-(37, 'Ethiopian Birr', 'ETB', 'Br', '1.00', NULL, NULL),
-(38, 'British Pound Sterling', 'GBP', '£', '1.00', NULL, NULL),
-(39, 'Georgian Lari', 'GEL', 'GEL', '1.00', NULL, NULL),
-(40, 'Ghanaian Cedi', 'GHS', 'GH¢', '1.00', NULL, NULL),
-(41, 'Guinean Franc', 'GNF', 'FG', '1.00', NULL, NULL),
-(42, 'Guatemalan Quetzal', 'GTQ', 'Q', '1.00', NULL, NULL),
-(43, 'Hong Kong Dollar', 'HKD', 'HK$', '1.00', NULL, NULL),
-(44, 'Honduran Lempira', 'HNL', 'L', '1.00', NULL, NULL),
-(45, 'Croatian Kuna', 'HRK', 'kn', '1.00', NULL, NULL),
-(46, 'Hungarian Forint', 'HUF', 'Ft', '1.00', NULL, NULL),
-(47, 'Indonesian Rupiah', 'IDR', 'Rp', '1.00', NULL, NULL),
-(48, 'Israeli New Sheqel', 'ILS', '₪', '1.00', NULL, NULL),
-(49, 'Indian Rupee', 'INR', '₹', '1.00', NULL, NULL),
-(50, 'Iraqi Dinar', 'IQD', 'ع.د', '1.00', NULL, NULL),
-(51, 'Iranian Rial', 'IRR', '﷼', '1.00', NULL, NULL),
-(52, 'Icelandic Króna', 'ISK', 'kr', '1.00', NULL, NULL),
-(53, 'Jamaican Dollar', 'JMD', '$', '1.00', NULL, NULL),
-(54, 'Jordanian Dinar', 'JOD', 'د.ا‏', '1.00', NULL, NULL),
-(55, 'Japanese Yen', 'JPY', '¥', '1.00', NULL, NULL),
-(56, 'Kenyan Shilling', 'KES', 'Ksh', '1.00', NULL, NULL),
-(57, 'Cambodian Riel', 'KHR', '៛', '1.00', NULL, NULL),
-(58, 'Comorian Franc', 'KMF', 'FC', '1.00', NULL, NULL),
-(59, 'South Korean Won', 'KRW', 'CF', '1.00', NULL, NULL),
-(60, 'Kuwaiti Dinar', 'KWD', 'د.ك.‏', '1.00', NULL, NULL),
-(61, 'Kazakhstani Tenge', 'KZT', '₸.', '1.00', NULL, NULL),
-(62, 'Lebanese Pound', 'LBP', 'ل.ل.‏', '1.00', NULL, NULL),
-(63, 'Sri Lankan Rupee', 'LKR', 'Rs', '1.00', NULL, NULL),
-(64, 'Lithuanian Litas', 'LTL', 'Lt', '1.00', NULL, NULL),
-(65, 'Latvian Lats', 'LVL', 'Ls', '1.00', NULL, NULL),
-(66, 'Libyan Dinar', 'LYD', 'د.ل.‏', '1.00', NULL, NULL),
-(67, 'Moroccan Dirham', 'MAD', 'د.م.‏', '1.00', NULL, NULL),
-(68, 'Moldovan Leu', 'MDL', 'L', '1.00', NULL, NULL),
-(69, 'Malagasy Ariary', 'MGA', 'Ar', '1.00', NULL, NULL),
-(70, 'Macedonian Denar', 'MKD', 'Ден', '1.00', NULL, NULL),
-(71, 'Myanma Kyat', 'MMK', 'K', '1.00', NULL, NULL),
-(72, 'Macanese Pataca', 'MOP', 'MOP$', '1.00', NULL, NULL),
-(73, 'Mauritian Rupee', 'MUR', 'Rs', '1.00', NULL, NULL),
-(74, 'Mexican Peso', 'MXN', '$', '1.00', NULL, NULL),
-(75, 'Malaysian Ringgit', 'MYR', 'RM', '1.00', NULL, NULL),
-(76, 'Mozambican Metical', 'MZN', 'MT', '1.00', NULL, NULL),
-(77, 'Namibian Dollar', 'NAD', 'N$', '1.00', NULL, NULL),
-(78, 'Nigerian Naira', 'NGN', '₦', '1.00', NULL, NULL),
-(79, 'Nicaraguan Córdoba', 'NIO', 'C$', '1.00', NULL, NULL),
-(80, 'Norwegian Krone', 'NOK', 'kr', '1.00', NULL, NULL),
-(81, 'Nepalese Rupee', 'NPR', 'Re.', '1.00', NULL, NULL),
-(82, 'New Zealand Dollar', 'NZD', '$', '1.00', NULL, NULL),
-(83, 'Omani Rial', 'OMR', 'ر.ع.‏', '1.00', NULL, NULL),
-(84, 'Panamanian Balboa', 'PAB', 'B/.', '1.00', NULL, NULL),
-(85, 'Peruvian Nuevo Sol', 'PEN', 'S/', '1.00', NULL, NULL),
-(86, 'Philippine Peso', 'PHP', '₱', '1.00', NULL, NULL),
-(87, 'Pakistani Rupee', 'PKR', 'Rs', '1.00', NULL, NULL),
-(88, 'Polish Zloty', 'PLN', 'zł', '1.00', NULL, NULL),
-(89, 'Paraguayan Guarani', 'PYG', '₲', '1.00', NULL, NULL),
-(90, 'Qatari Rial', 'QAR', 'ر.ق.‏', '1.00', NULL, NULL),
-(91, 'Romanian Leu', 'RON', 'lei', '1.00', NULL, NULL),
-(92, 'Serbian Dinar', 'RSD', 'din.', '1.00', NULL, NULL),
-(93, 'Russian Ruble', 'RUB', '₽.', '1.00', NULL, NULL),
-(94, 'Rwandan Franc', 'RWF', 'FRw', '1.00', NULL, NULL),
-(95, 'Saudi Riyal', 'SAR', 'ر.س.‏', '1.00', NULL, NULL),
-(96, 'Sudanese Pound', 'SDG', 'ج.س.', '1.00', NULL, NULL),
-(97, 'Swedish Krona', 'SEK', 'kr', '1.00', NULL, NULL),
-(98, 'Singapore Dollar', 'SGD', '$', '1.00', NULL, NULL),
-(99, 'Somali Shilling', 'SOS', 'Sh.so.', '1.00', NULL, NULL),
-(100, 'Syrian Pound', 'SYP', 'LS‏', '1.00', NULL, NULL),
-(101, 'Thai Baht', 'THB', '฿', '1.00', NULL, NULL),
-(102, 'Tunisian Dinar', 'TND', 'د.ت‏', '1.00', NULL, NULL),
-(103, 'Tongan Paʻanga', 'TOP', 'T$', '1.00', NULL, NULL),
-(104, 'Turkish Lira', 'TRY', '₺', '1.00', NULL, NULL),
-(105, 'Trinidad and Tobago Dollar', 'TTD', '$', '1.00', NULL, NULL),
-(106, 'New Taiwan Dollar', 'TWD', 'NT$', '1.00', NULL, NULL),
-(107, 'Tanzanian Shilling', 'TZS', 'TSh', '1.00', NULL, NULL),
-(108, 'Ukrainian Hryvnia', 'UAH', '₴', '1.00', NULL, NULL),
-(109, 'Ugandan Shilling', 'UGX', 'USh', '1.00', NULL, NULL),
-(110, 'Uruguayan Peso', 'UYU', '$', '1.00', NULL, NULL),
-(111, 'Uzbekistan Som', 'UZS', 'so\'m', '1.00', NULL, NULL),
-(112, 'Venezuelan Bolívar', 'VEF', 'Bs.F.', '1.00', NULL, NULL),
-(113, 'Vietnamese Dong', 'VND', '₫', '1.00', NULL, NULL),
-(114, 'CFA Franc BEAC', 'XAF', 'FCFA', '1.00', NULL, NULL),
-(115, 'CFA Franc BCEAO', 'XOF', 'CFA', '1.00', NULL, NULL),
-(116, 'Yemeni Rial', 'YER', '﷼‏', '1.00', NULL, NULL),
-(117, 'South African Rand', 'ZAR', 'R', '1.00', NULL, NULL),
-(118, 'Zambian Kwacha', 'ZMK', 'ZK', '1.00', NULL, NULL),
-(119, 'Zimbabwean Dollar', 'ZWL', 'Z$', '1.00', NULL, NULL);
+(1, 'US Dollar', 'USD', '$', 1.00, NULL, NULL),
+(2, 'Canadian Dollar', 'CAD', 'CA$', 1.00, NULL, NULL),
+(3, 'Euro', 'EUR', '€', 1.00, NULL, NULL),
+(4, 'United Arab Emirates Dirham', 'AED', 'د.إ.‏', 1.00, NULL, NULL),
+(5, 'Afghan Afghani', 'AFN', '؋', 1.00, NULL, NULL),
+(6, 'Albanian Lek', 'ALL', 'L', 1.00, NULL, NULL),
+(7, 'Armenian Dram', 'AMD', '֏', 1.00, NULL, NULL),
+(8, 'Argentine Peso', 'ARS', '$', 1.00, NULL, NULL),
+(9, 'Australian Dollar', 'AUD', '$', 1.00, NULL, NULL),
+(10, 'Azerbaijani Manat', 'AZN', '₼', 1.00, NULL, NULL),
+(11, 'Bosnia-Herzegovina Convertible Mark', 'BAM', 'KM', 1.00, NULL, NULL),
+(12, 'Bangladeshi Taka', 'BDT', '৳', 1.00, NULL, NULL),
+(13, 'Bulgarian Lev', 'BGN', 'лв.', 1.00, NULL, NULL),
+(14, 'Bahraini Dinar', 'BHD', 'د.ب.‏', 1.00, NULL, NULL),
+(15, 'Burundian Franc', 'BIF', 'FBu', 1.00, NULL, NULL),
+(16, 'Brunei Dollar', 'BND', 'B$', 1.00, NULL, NULL),
+(17, 'Bolivian Boliviano', 'BOB', 'Bs', 1.00, NULL, NULL),
+(18, 'Brazilian Real', 'BRL', 'R$', 1.00, NULL, NULL),
+(19, 'Botswanan Pula', 'BWP', 'P', 1.00, NULL, NULL),
+(20, 'Belarusian Ruble', 'BYN', 'Br', 1.00, NULL, NULL),
+(21, 'Belize Dollar', 'BZD', '$', 1.00, NULL, NULL),
+(22, 'Congolese Franc', 'CDF', 'FC', 1.00, NULL, NULL),
+(23, 'Swiss Franc', 'CHF', 'CHf', 1.00, NULL, NULL),
+(24, 'Chilean Peso', 'CLP', '$', 1.00, NULL, NULL),
+(25, 'Chinese Yuan', 'CNY', '¥', 1.00, NULL, NULL),
+(26, 'Colombian Peso', 'COP', '$', 1.00, NULL, NULL),
+(27, 'Costa Rican Colón', 'CRC', '₡', 1.00, NULL, NULL),
+(28, 'Cape Verdean Escudo', 'CVE', '$', 1.00, NULL, NULL),
+(29, 'Czech Republic Koruna', 'CZK', 'Kč', 1.00, NULL, NULL),
+(30, 'Djiboutian Franc', 'DJF', 'Fdj', 1.00, NULL, NULL),
+(31, 'Danish Krone', 'DKK', 'Kr.', 1.00, NULL, NULL),
+(32, 'Dominican Peso', 'DOP', 'RD$', 1.00, NULL, NULL),
+(33, 'Algerian Dinar', 'DZD', 'د.ج.‏', 1.00, NULL, NULL),
+(34, 'Estonian Kroon', 'EEK', 'kr', 1.00, NULL, NULL),
+(35, 'Egyptian Pound', 'EGP', 'E£‏', 1.00, NULL, NULL),
+(36, 'Eritrean Nakfa', 'ERN', 'Nfk', 1.00, NULL, NULL),
+(37, 'Ethiopian Birr', 'ETB', 'Br', 1.00, NULL, NULL),
+(38, 'British Pound Sterling', 'GBP', '£', 1.00, NULL, NULL),
+(39, 'Georgian Lari', 'GEL', 'GEL', 1.00, NULL, NULL),
+(40, 'Ghanaian Cedi', 'GHS', 'GH¢', 1.00, NULL, NULL),
+(41, 'Guinean Franc', 'GNF', 'FG', 1.00, NULL, NULL),
+(42, 'Guatemalan Quetzal', 'GTQ', 'Q', 1.00, NULL, NULL),
+(43, 'Hong Kong Dollar', 'HKD', 'HK$', 1.00, NULL, NULL),
+(44, 'Honduran Lempira', 'HNL', 'L', 1.00, NULL, NULL),
+(45, 'Croatian Kuna', 'HRK', 'kn', 1.00, NULL, NULL),
+(46, 'Hungarian Forint', 'HUF', 'Ft', 1.00, NULL, NULL),
+(47, 'Indonesian Rupiah', 'IDR', 'Rp', 1.00, NULL, NULL),
+(48, 'Israeli New Sheqel', 'ILS', '₪', 1.00, NULL, NULL),
+(49, 'Indian Rupee', 'INR', '₹', 1.00, NULL, NULL),
+(50, 'Iraqi Dinar', 'IQD', 'ع.د', 1.00, NULL, NULL),
+(51, 'Iranian Rial', 'IRR', '﷼', 1.00, NULL, NULL),
+(52, 'Icelandic Króna', 'ISK', 'kr', 1.00, NULL, NULL),
+(53, 'Jamaican Dollar', 'JMD', '$', 1.00, NULL, NULL),
+(54, 'Jordanian Dinar', 'JOD', 'د.ا‏', 1.00, NULL, NULL),
+(55, 'Japanese Yen', 'JPY', '¥', 1.00, NULL, NULL),
+(56, 'Kenyan Shilling', 'KES', 'Ksh', 1.00, NULL, NULL),
+(57, 'Cambodian Riel', 'KHR', '៛', 1.00, NULL, NULL),
+(58, 'Comorian Franc', 'KMF', 'FC', 1.00, NULL, NULL),
+(59, 'South Korean Won', 'KRW', 'CF', 1.00, NULL, NULL),
+(60, 'Kuwaiti Dinar', 'KWD', 'د.ك.‏', 1.00, NULL, NULL),
+(61, 'Kazakhstani Tenge', 'KZT', '₸.', 1.00, NULL, NULL),
+(62, 'Lebanese Pound', 'LBP', 'ل.ل.‏', 1.00, NULL, NULL),
+(63, 'Sri Lankan Rupee', 'LKR', 'Rs', 1.00, NULL, NULL),
+(64, 'Lithuanian Litas', 'LTL', 'Lt', 1.00, NULL, NULL),
+(65, 'Latvian Lats', 'LVL', 'Ls', 1.00, NULL, NULL),
+(66, 'Libyan Dinar', 'LYD', 'د.ل.‏', 1.00, NULL, NULL),
+(67, 'Moroccan Dirham', 'MAD', 'د.م.‏', 1.00, NULL, NULL),
+(68, 'Moldovan Leu', 'MDL', 'L', 1.00, NULL, NULL),
+(69, 'Malagasy Ariary', 'MGA', 'Ar', 1.00, NULL, NULL),
+(70, 'Macedonian Denar', 'MKD', 'Ден', 1.00, NULL, NULL),
+(71, 'Myanma Kyat', 'MMK', 'K', 1.00, NULL, NULL),
+(72, 'Macanese Pataca', 'MOP', 'MOP$', 1.00, NULL, NULL),
+(73, 'Mauritian Rupee', 'MUR', 'Rs', 1.00, NULL, NULL),
+(74, 'Mexican Peso', 'MXN', '$', 1.00, NULL, NULL),
+(75, 'Malaysian Ringgit', 'MYR', 'RM', 1.00, NULL, NULL),
+(76, 'Mozambican Metical', 'MZN', 'MT', 1.00, NULL, NULL),
+(77, 'Namibian Dollar', 'NAD', 'N$', 1.00, NULL, NULL),
+(78, 'Nigerian Naira', 'NGN', '₦', 1.00, NULL, NULL),
+(79, 'Nicaraguan Córdoba', 'NIO', 'C$', 1.00, NULL, NULL),
+(80, 'Norwegian Krone', 'NOK', 'kr', 1.00, NULL, NULL),
+(81, 'Nepalese Rupee', 'NPR', 'Re.', 1.00, NULL, NULL),
+(82, 'New Zealand Dollar', 'NZD', '$', 1.00, NULL, NULL),
+(83, 'Omani Rial', 'OMR', 'ر.ع.‏', 1.00, NULL, NULL),
+(84, 'Panamanian Balboa', 'PAB', 'B/.', 1.00, NULL, NULL),
+(85, 'Peruvian Nuevo Sol', 'PEN', 'S/', 1.00, NULL, NULL),
+(86, 'Philippine Peso', 'PHP', '₱', 1.00, NULL, NULL),
+(87, 'Pakistani Rupee', 'PKR', 'Rs', 1.00, NULL, NULL),
+(88, 'Polish Zloty', 'PLN', 'zł', 1.00, NULL, NULL),
+(89, 'Paraguayan Guarani', 'PYG', '₲', 1.00, NULL, NULL),
+(90, 'Qatari Rial', 'QAR', 'ر.ق.‏', 1.00, NULL, NULL),
+(91, 'Romanian Leu', 'RON', 'lei', 1.00, NULL, NULL),
+(92, 'Serbian Dinar', 'RSD', 'din.', 1.00, NULL, NULL),
+(93, 'Russian Ruble', 'RUB', '₽.', 1.00, NULL, NULL),
+(94, 'Rwandan Franc', 'RWF', 'FRw', 1.00, NULL, NULL),
+(95, 'Saudi Riyal', 'SAR', 'ر.س.‏', 1.00, NULL, NULL),
+(96, 'Sudanese Pound', 'SDG', 'ج.س.', 1.00, NULL, NULL),
+(97, 'Swedish Krona', 'SEK', 'kr', 1.00, NULL, NULL),
+(98, 'Singapore Dollar', 'SGD', '$', 1.00, NULL, NULL),
+(99, 'Somali Shilling', 'SOS', 'Sh.so.', 1.00, NULL, NULL),
+(100, 'Syrian Pound', 'SYP', 'LS‏', 1.00, NULL, NULL),
+(101, 'Thai Baht', 'THB', '฿', 1.00, NULL, NULL),
+(102, 'Tunisian Dinar', 'TND', 'د.ت‏', 1.00, NULL, NULL),
+(103, 'Tongan Paʻanga', 'TOP', 'T$', 1.00, NULL, NULL),
+(104, 'Turkish Lira', 'TRY', '₺', 1.00, NULL, NULL),
+(105, 'Trinidad and Tobago Dollar', 'TTD', '$', 1.00, NULL, NULL),
+(106, 'New Taiwan Dollar', 'TWD', 'NT$', 1.00, NULL, NULL),
+(107, 'Tanzanian Shilling', 'TZS', 'TSh', 1.00, NULL, NULL),
+(108, 'Ukrainian Hryvnia', 'UAH', '₴', 1.00, NULL, NULL),
+(109, 'Ugandan Shilling', 'UGX', 'USh', 1.00, NULL, NULL),
+(110, 'Uruguayan Peso', 'UYU', '$', 1.00, NULL, NULL),
+(111, 'Uzbekistan Som', 'UZS', 'so\'m', 1.00, NULL, NULL),
+(112, 'Venezuelan Bolívar', 'VEF', 'Bs.F.', 1.00, NULL, NULL),
+(113, 'Vietnamese Dong', 'VND', '₫', 1.00, NULL, NULL),
+(114, 'CFA Franc BEAC', 'XAF', 'FCFA', 1.00, NULL, NULL),
+(115, 'CFA Franc BCEAO', 'XOF', 'CFA', 1.00, NULL, NULL),
+(116, 'Yemeni Rial', 'YER', '﷼‏', 1.00, NULL, NULL),
+(117, 'South African Rand', 'ZAR', 'R', 1.00, NULL, NULL),
+(118, 'Zambian Kwacha', 'ZMK', 'ZK', 1.00, NULL, NULL),
+(119, 'Zimbabwean Dollar', 'ZWL', 'Z$', 1.00, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1463,7 +1460,7 @@ CREATE TABLE `items` (
 --
 
 INSERT INTO `items` (`id`, `name`, `description`, `image`, `category_id`, `category_ids`, `variations`, `add_ons`, `attributes`, `choice_options`, `price`, `tax`, `tax_type`, `discount`, `discount_type`, `available_time_starts`, `available_time_ends`, `veg`, `status`, `store_id`, `created_at`, `updated_at`, `order_count`, `avg_rating`, `rating_count`, `rating`, `module_id`, `stock`, `unit_id`, `images`, `food_variations`, `slug`, `recommended`, `organic`, `maximum_cart_quantity`, `is_approved`, `is_halal`) VALUES
-(1, 'Demo Product', 'Demo Product Description', '2023-08-16-64dca91404b64.png', 2, '[{\"id\":\"1\",\"position\":1},{\"id\":\"2\",\"position\":2}]', '[]', '[]', '[]', '[]', '10.00', '0.00', 'percent', '0.00', 'percent', '00:00:00', '23:59:59', 0, 1, 1, '2023-08-15 23:46:44', '2023-08-16 00:00:05', 0, 0.00000000000000, 0, NULL, 1, 10, NULL, '[\"2023-08-16-64dca9140233e.png\",\"2023-08-16-64dcac358a7ea.png\"]', '[]', 'demo-product', 0, 1, 2, 1, 0);
+(1, 'Demo Product', 'Demo Product Description', '2023-08-16-64dca91404b64.png', 2, '[{\"id\":\"1\",\"position\":1},{\"id\":\"2\",\"position\":2}]', '[]', '[]', '[]', '[]', 10.00, 0.00, 'percent', 0.00, 'percent', '00:00:00', '23:59:59', 0, 1, 1, '2023-08-15 23:46:44', '2023-08-16 00:00:05', 0, 0.00000000000000, 0, NULL, 1, 10, NULL, '[\"2023-08-16-64dca9140233e.png\",\"2023-08-16-64dcac358a7ea.png\"]', '[]', 'demo-product', 0, 1, 2, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -1563,7 +1560,7 @@ CREATE TABLE `messages` (
   `conversation_id` bigint(20) UNSIGNED DEFAULT NULL,
   `sender_id` bigint(20) UNSIGNED DEFAULT NULL,
   `message` text DEFAULT NULL,
-  `file` text DEFAULT NULL,
+  `file` varchar(100) DEFAULT NULL,
   `is_seen` tinyint(1) NOT NULL DEFAULT 0,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -1729,17 +1726,7 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (143, '2024_04_18_171021_add_halal_extra_packaging_cols_to_store_configs_table', 47),
 (144, '2024_04_18_171206_add_halal_brand_cols_to_temp_products_table', 47),
 (145, '2024_04_18_171851_add_cashback_ref_amount_cols_to_temp_orders_table', 47),
-(146, '2024_04_18_172145_add_extrapackaging_ref_amount_cols_to_temp_order_transactions_table', 47),
-(147, '2024_05_13_102547_create_subscription_packages_table', 48),
-(148, '2024_05_13_102612_create_store_subscriptions_table', 48),
-(149, '2024_05_13_104250_create_subscription_transactions_table', 48),
-(150, '2024_05_13_170120_add_store_business_model_col_to_stores_table', 48),
-(151, '2024_05_14_175408_add_reply_col_to_reviews_table', 48),
-(152, '2024_05_16_113516_create_storages_table', 48),
-(153, '2024_05_22_115717_create_subscription_billing_and_refund_histories_table', 48),
-(154, '2024_05_26_120621_add_subscription_model_to_order_transaction_table', 48),
-(155, '2024_05_28_110550_add_change_file_column_to_messages_table', 48),
-(156, '2024_05_28_112559_add_change_order_attachment_column_to_orders_table', 48);
+(146, '2024_04_18_172145_add_extrapackaging_ref_amount_cols_to_temp_order_transactions_table', 47);
 
 -- --------------------------------------------------------
 
@@ -2125,7 +2112,7 @@ CREATE TABLE `orders` (
   `delivery_time` varchar(255) DEFAULT NULL,
   `zone_id` bigint(20) UNSIGNED DEFAULT NULL,
   `module_id` bigint(20) UNSIGNED NOT NULL,
-  `order_attachment` text DEFAULT NULL,
+  `order_attachment` varchar(191) DEFAULT NULL,
   `parcel_category_id` bigint(20) UNSIGNED DEFAULT NULL,
   `receiver_details` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
   `charge_payer` enum('sender','receiver') DEFAULT NULL,
@@ -2146,7 +2133,7 @@ CREATE TABLE `orders` (
   `delivery_instruction` text DEFAULT NULL,
   `tax_percentage` double(24,3) DEFAULT NULL,
   `additional_charge` double(23,3) NOT NULL DEFAULT 0.000,
-  `order_proof` text DEFAULT NULL,
+  `order_proof` varchar(255) DEFAULT NULL,
   `partially_paid_amount` double(23,3) NOT NULL DEFAULT 0.000,
   `is_guest` tinyint(1) NOT NULL DEFAULT 0,
   `flash_admin_discount_amount` double(24,3) NOT NULL DEFAULT 0.000,
@@ -2277,9 +2264,7 @@ CREATE TABLE `order_transactions` (
   `discount_amount_by_store` double(23,3) DEFAULT 0.000,
   `additional_charge` double(23,3) NOT NULL DEFAULT 0.000,
   `extra_packaging_amount` double(23,3) NOT NULL DEFAULT 0.000,
-  `ref_bonus_amount` double(23,3) NOT NULL DEFAULT 0.000,
-  `commission_percentage` double(16,3) DEFAULT 0.000,
-  `is_subscribed` tinyint(1) NOT NULL DEFAULT 0
+  `ref_bonus_amount` double(23,3) NOT NULL DEFAULT 0.000
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -2499,10 +2484,7 @@ CREATE TABLE `reviews` (
   `updated_at` timestamp NULL DEFAULT NULL,
   `item_campaign_id` bigint(20) UNSIGNED DEFAULT NULL,
   `status` tinyint(1) DEFAULT 1,
-  `module_id` bigint(20) UNSIGNED NOT NULL,
-  `store_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `reply` text DEFAULT NULL,
-  `review_id` varchar(100) DEFAULT NULL
+  `module_id` bigint(20) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -2533,30 +2515,6 @@ CREATE TABLE `soft_credentials` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `storages`
---
-
-CREATE TABLE `storages` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `data_type` varchar(255) NOT NULL,
-  `data_id` varchar(100) NOT NULL,
-  `key` varchar(255) DEFAULT NULL,
-  `value` varchar(255) NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `storages`
---
-
-INSERT INTO `storages` (`id`, `data_type`, `data_id`, `key`, `value`, `created_at`, `updated_at`) VALUES
-(1, 'App\\Models\\BusinessSetting', '18', NULL, 'public', '2024-06-05 20:19:10', '2024-06-05 20:19:10'),
-(2, 'App\\Models\\BusinessSetting', '96', NULL, 'public', '2024-06-05 20:19:10', '2024-06-05 20:19:10');
 
 -- --------------------------------------------------------
 
@@ -2613,16 +2571,15 @@ CREATE TABLE `stores` (
   `meta_description` text DEFAULT NULL,
   `meta_image` varchar(100) DEFAULT NULL,
   `announcement` tinyint(1) NOT NULL DEFAULT 0,
-  `announcement_message` varchar(255) DEFAULT NULL,
-  `store_business_model` enum('none','commission','subscription','unsubscribed') NOT NULL DEFAULT 'commission'
+  `announcement_message` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `stores`
 --
 
-INSERT INTO `stores` (`id`, `name`, `phone`, `email`, `logo`, `latitude`, `longitude`, `address`, `footer_text`, `minimum_order`, `comission`, `schedule_order`, `status`, `vendor_id`, `created_at`, `updated_at`, `free_delivery`, `rating`, `cover_photo`, `delivery`, `take_away`, `item_section`, `tax`, `zone_id`, `reviews_section`, `active`, `off_day`, `gst`, `self_delivery_system`, `pos_system`, `minimum_shipping_charge`, `delivery_time`, `veg`, `non_veg`, `order_count`, `total_order`, `module_id`, `order_place_to_schedule_interval`, `featured`, `per_km_shipping_charge`, `prescription_order`, `slug`, `maximum_shipping_charge`, `cutlery`, `meta_title`, `meta_description`, `meta_image`, `announcement`, `announcement_message`, `store_business_model`) VALUES
-(1, 'Demo Store', '+101511111111', 'demo.store@gmail.com', '2023-08-16-64dca8ad238c4.png', '23.81695886557418', '90.36934144046135', 'House, road', NULL, '0.00', NULL, 0, 1, 1, '2023-08-15 23:45:01', '2024-06-05 20:19:10', 0, NULL, '2023-08-16-64dca8ad263f6.png', 1, 1, 1, '5.00', 1, 1, 1, ' ', NULL, 0, 0, '0.00', '30-40 min', 1, 1, 0, 0, 1, 0, 1, 0.000, 0, 'demo-store', NULL, 0, NULL, NULL, NULL, 0, NULL, 'commission');
+INSERT INTO `stores` (`id`, `name`, `phone`, `email`, `logo`, `latitude`, `longitude`, `address`, `footer_text`, `minimum_order`, `comission`, `schedule_order`, `status`, `vendor_id`, `created_at`, `updated_at`, `free_delivery`, `rating`, `cover_photo`, `delivery`, `take_away`, `item_section`, `tax`, `zone_id`, `reviews_section`, `active`, `off_day`, `gst`, `self_delivery_system`, `pos_system`, `minimum_shipping_charge`, `delivery_time`, `veg`, `non_veg`, `order_count`, `total_order`, `module_id`, `order_place_to_schedule_interval`, `featured`, `per_km_shipping_charge`, `prescription_order`, `slug`, `maximum_shipping_charge`, `cutlery`, `meta_title`, `meta_description`, `meta_image`, `announcement`, `announcement_message`) VALUES
+(1, 'Demo Store', '+101511111111', 'demo.store@gmail.com', '2023-08-16-64dca8ad238c4.png', '23.81695886557418', '90.36934144046135', 'House, road', NULL, 0.00, NULL, 0, 1, 1, '2023-08-15 23:45:01', '2023-08-15 23:45:19', 0, NULL, '2023-08-16-64dca8ad263f6.png', 1, 1, 1, 5.00, 1, 1, 1, ' ', NULL, 0, 0, 0.00, '30-40 min', 1, 1, 0, 0, 1, 0, 1, 0.000, 0, 'demo-store', NULL, 0, NULL, NULL, NULL, 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -2661,35 +2618,6 @@ CREATE TABLE `store_schedule` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `store_subscriptions`
---
-
-CREATE TABLE `store_subscriptions` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `package_id` bigint(20) UNSIGNED NOT NULL,
-  `store_id` bigint(20) UNSIGNED NOT NULL,
-  `expiry_date` date NOT NULL,
-  `validity` int(11) NOT NULL DEFAULT 0,
-  `max_order` varchar(255) NOT NULL,
-  `max_product` varchar(255) NOT NULL,
-  `pos` tinyint(1) NOT NULL DEFAULT 0,
-  `mobile_app` tinyint(1) NOT NULL DEFAULT 0,
-  `chat` tinyint(1) NOT NULL DEFAULT 0,
-  `review` tinyint(1) NOT NULL DEFAULT 0,
-  `self_delivery` tinyint(1) NOT NULL DEFAULT 0,
-  `status` tinyint(1) NOT NULL DEFAULT 1,
-  `is_trial` tinyint(1) NOT NULL DEFAULT 0,
-  `total_package_renewed` tinyint(4) NOT NULL DEFAULT 0,
-  `renewed_at` datetime DEFAULT NULL,
-  `is_canceled` tinyint(1) NOT NULL DEFAULT 0,
-  `canceled_by` enum('none','admin','store') NOT NULL DEFAULT 'none',
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `store_wallets`
 --
 
@@ -2700,86 +2628,6 @@ CREATE TABLE `store_wallets` (
   `total_withdrawn` decimal(24,2) NOT NULL DEFAULT 0.00,
   `pending_withdraw` decimal(24,2) NOT NULL DEFAULT 0.00,
   `collected_cash` decimal(24,2) NOT NULL DEFAULT 0.00,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `store_wallets`
---
-
-INSERT INTO `store_wallets` (`id`, `vendor_id`, `total_earning`, `total_withdrawn`, `pending_withdraw`, `collected_cash`, `created_at`, `updated_at`) VALUES
-(1, 1, '0.00', '0.00', '0.00', '0.00', '2024-06-05 20:16:11', '2024-06-05 20:16:11');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `subscription_billing_and_refund_histories`
---
-
-CREATE TABLE `subscription_billing_and_refund_histories` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `store_id` bigint(20) UNSIGNED NOT NULL,
-  `subscription_id` bigint(20) UNSIGNED NOT NULL,
-  `package_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `transaction_type` enum('pending_bill','refund') NOT NULL DEFAULT 'pending_bill',
-  `amount` double(24,3) NOT NULL,
-  `is_success` tinyint(1) NOT NULL DEFAULT 0,
-  `reference` varchar(191) DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `subscription_packages`
---
-
-CREATE TABLE `subscription_packages` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `package_name` varchar(191) NOT NULL,
-  `price` double(24,3) NOT NULL,
-  `validity` int(11) NOT NULL,
-  `max_order` varchar(255) NOT NULL DEFAULT 'unlimited',
-  `max_product` varchar(255) NOT NULL DEFAULT 'unlimited',
-  `pos` tinyint(1) NOT NULL DEFAULT 0,
-  `mobile_app` tinyint(1) NOT NULL DEFAULT 0,
-  `chat` tinyint(1) NOT NULL DEFAULT 0,
-  `review` tinyint(1) NOT NULL DEFAULT 0,
-  `self_delivery` tinyint(1) NOT NULL DEFAULT 0,
-  `status` tinyint(1) NOT NULL DEFAULT 1,
-  `default` tinyint(1) NOT NULL DEFAULT 0,
-  `colour` varchar(50) DEFAULT NULL,
-  `text` text DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `subscription_transactions`
---
-
-CREATE TABLE `subscription_transactions` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `package_id` bigint(20) UNSIGNED NOT NULL,
-  `store_id` bigint(20) UNSIGNED NOT NULL,
-  `store_subscription_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `price` double(24,3) NOT NULL DEFAULT 0.000,
-  `previous_due` double(24,3) NOT NULL DEFAULT 0.000,
-  `validity` int(11) NOT NULL DEFAULT 0,
-  `payment_method` varchar(191) NOT NULL,
-  `payment_status` varchar(191) NOT NULL,
-  `reference` varchar(191) DEFAULT NULL,
-  `paid_amount` double(24,2) NOT NULL,
-  `discount` int(11) NOT NULL DEFAULT 0,
-  `package_details` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`package_details`)),
-  `created_by` varchar(50) NOT NULL,
-  `is_trial` tinyint(1) NOT NULL DEFAULT 0,
-  `transaction_status` tinyint(1) NOT NULL DEFAULT 1,
-  `plan_type` enum('renew','new_plan','first_purchased','free_trial') NOT NULL DEFAULT 'first_purchased',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -3776,14 +3624,6 @@ ALTER TABLE `soft_credentials`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `storages`
---
-ALTER TABLE `storages`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `storages_data_id_index` (`data_id`),
-  ADD KEY `storages_value_index` (`value`);
-
---
 -- Indexes for table `stores`
 --
 ALTER TABLE `stores`
@@ -3804,33 +3644,9 @@ ALTER TABLE `store_schedule`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `store_subscriptions`
---
-ALTER TABLE `store_subscriptions`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indexes for table `store_wallets`
 --
 ALTER TABLE `store_wallets`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `subscription_billing_and_refund_histories`
---
-ALTER TABLE `subscription_billing_and_refund_histories`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `subscription_packages`
---
-ALTER TABLE `subscription_packages`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `subscription_transactions`
---
-ALTER TABLE `subscription_transactions`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -4030,7 +3846,7 @@ ALTER TABLE `brands`
 -- AUTO_INCREMENT for table `business_settings`
 --
 ALTER TABLE `business_settings`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=142;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=139;
 
 --
 -- AUTO_INCREMENT for table `campaigns`
@@ -4258,7 +4074,7 @@ ALTER TABLE `messages`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=157;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=147;
 
 --
 -- AUTO_INCREMENT for table `modules`
@@ -4441,12 +4257,6 @@ ALTER TABLE `soft_credentials`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `storages`
---
-ALTER TABLE `storages`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
---
 -- AUTO_INCREMENT for table `stores`
 --
 ALTER TABLE `stores`
@@ -4465,34 +4275,10 @@ ALTER TABLE `store_schedule`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `store_subscriptions`
---
-ALTER TABLE `store_subscriptions`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `store_wallets`
 --
 ALTER TABLE `store_wallets`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
--- AUTO_INCREMENT for table `subscription_billing_and_refund_histories`
---
-ALTER TABLE `subscription_billing_and_refund_histories`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `subscription_packages`
---
-ALTER TABLE `subscription_packages`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `subscription_transactions`
---
-ALTER TABLE `subscription_transactions`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1000000;
 
 --
 -- AUTO_INCREMENT for table `tags`
