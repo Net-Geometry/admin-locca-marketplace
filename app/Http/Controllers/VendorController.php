@@ -208,7 +208,7 @@ class VendorController extends Controller
         if (Helpers::subscription_check()) {
             Toastr::success(translate('messages.your_registration_info_is_saved_successfully_now_please_choose_your_business_model'));
             return view('vendor-views.auth.register-step-2',[
-                'store_id' => 46 ?? $store->id,
+                'store_id' =>$store->id,
                 'packages' =>$packages,
                 'business_name' =>$business_name?->value,
                 'admin_commission' =>$admin_commission?->value,
