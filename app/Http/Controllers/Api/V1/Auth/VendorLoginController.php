@@ -75,7 +75,7 @@ class VendorLoginController extends Controller
                 //     ], 403);
                 // }
 
-                $storeSubscriptionCheck=  $this->storeSubscriptionCheck($vendor?->stores,$vendor,$token);
+                $storeSubscriptionCheck=  $this->storeSubscriptionCheck($vendor?->store,$vendor,$token);
                 if(data_get($storeSubscriptionCheck,'type') != null){
                     return response()->json(data_get($storeSubscriptionCheck,'data'), data_get($storeSubscriptionCheck,'code'));
                 }
