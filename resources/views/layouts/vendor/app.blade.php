@@ -435,15 +435,15 @@ $countryCode= strtolower($country?$country->value:'auto');
                             $('#view-conversation').html(data.view);
                         }
                     })
-                    if($('#conversation-list').scrollTop() === 0){
-                        conversationList();
-                    }
                 }
                 toastr.success('{{ translate('messages.New message arrived') }}', {
                     CloseButton: true,
                     ProgressBar: true
                 });
-        }
+                if($('#conversation-list').scrollTop() === 0){
+                    conversationList();
+                }
+            }
         });
 
         @if(\App\CentralLogics\Helpers::employee_module_permission_check('order') && $order_notification_type == 'manual')

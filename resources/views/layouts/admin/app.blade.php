@@ -591,14 +591,14 @@ $countryCode= strtolower($country?$country->value:'auto');
                         $('#view-conversation').html(data.view);
                     }
                 })
-                if($('#conversation-list').scrollTop() === 0){
-                    conversationList();
-                }
             }
             toastr.success('New message arrived', {
                 CloseButton: true,
                 ProgressBar: true
             });
+            if($('#conversation-list').scrollTop() === 0){
+                conversationList();
+            }
         }
     });
 
