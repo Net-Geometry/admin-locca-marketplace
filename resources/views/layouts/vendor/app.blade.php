@@ -313,37 +313,72 @@ $countryCode= strtolower($country?$country->value:'auto');
     };
     firebase.initializeApp(firebaseConfig);
     const messaging = firebase.messaging();
+{{--    function startFCM() {--}}
+
+{{--messaging--}}
+{{--    .requestPermission()--}}
+{{--    .then(function () {--}}
+{{--        return messaging.getToken()--}}
+
+{{--    }).then(function (response) {--}}
+{{--        @php($store_id=\App\CentralLogics\Helpers::get_store_id())--}}
+{{--        subscribeTokenToTopic(response, "store_panel_{{$store_id}}_message");--}}
+{{--    }).catch(function (error) {--}}
+{{--        console.log(error);--}}
+{{--    });--}}
+{{--}--}}
+
+{{--@php($key = \App\Models\BusinessSetting::where('key', 'push_notification_key')->first())--}}
+{{--function subscribeTokenToTopic(token, topic) {--}}
+{{--fetch('https://iid.googleapis.com/iid/v1/' + token + '/rel/topics/' + topic, {--}}
+{{--    method: 'POST',--}}
+{{--    headers: new Headers({--}}
+{{--        'Authorization': 'key={{ $key ? $key->value : '' }}'--}}
+{{--    })--}}
+{{--}).then(response => {--}}
+{{--    if (response.status < 200 || response.status >= 400) {--}}
+{{--        throw 'Error subscribing to topic: ' + response.status + ' - ' + response.text();--}}
+{{--    }--}}
+{{--    console.log('Subscribed to "' + topic + '"');--}}
+{{--}).catch(error => {--}}
+{{--    console.error(error);--}}
+{{--})--}}
+{{--}--}}
+
     function startFCM() {
-
-messaging
-    .requestPermission()
-    .then(function () {
-        return messaging.getToken()
-
-    }).then(function (response) {
-        @php($store_id=\App\CentralLogics\Helpers::get_store_id())
-        subscribeTokenToTopic(response, "store_panel_{{$store_id}}_message");
-    }).catch(function (error) {
-        console.log(error);
-    });
-}
-
-@php($key = \App\Models\BusinessSetting::where('key', 'push_notification_key')->first())
-function subscribeTokenToTopic(token, topic) {
-fetch('https://iid.googleapis.com/iid/v1/' + token + '/rel/topics/' + topic, {
-    method: 'POST',
-    headers: new Headers({
-        'Authorization': 'key={{ $key ? $key->value : '' }}'
-    })
-}).then(response => {
-    if (response.status < 200 || response.status >= 400) {
-        throw 'Error subscribing to topic: ' + response.status + ' - ' + response.text();
+        messaging
+            .requestPermission()
+            .then(function() {
+                return messaging.getToken();
+            })
+            .then(function(token) {
+                @php($store_id=\App\CentralLogics\Helpers::get_store_id())
+                // Send the token to your backend to subscribe to topic
+                subscribeTokenToBackend(token, 'store_panel_{{$store_id}}_message');
+            }).catch(function(error) {
+            console.error('Error getting permission or token:', error);
+        });
     }
-    console.log('Subscribed to "' + topic + '"');
-}).catch(error => {
-    console.error(error);
-})
-}
+
+    function subscribeTokenToBackend(token, topic) {
+        fetch('{{url('/')}}/subscribeToTopic', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({ token: token, topic: topic })
+        }).then(response => {
+            if (response.status < 200 || response.status >= 400) {
+                return response.text().then(text => {
+                    throw new Error(`Error subscribing to topic: ${response.status} - ${text}`);
+                });
+            }
+            console.log(`Subscribed to "${topic}"`);
+        }).catch(error => {
+            console.error('Subscription error:', error);
+        });
+    }
     function getUrlParameter(sParam) {
             let sPageURL = window.location.search.substring(1);
             let sURLletiables = sPageURL.split('&');
@@ -390,23 +425,24 @@ fetch('https://iid.googleapis.com/iid/v1/' + token + '/rel/topics/' + topic, {
                     $('#popup-modal').appendTo("body").modal('show');
                 @endif
             }else if(payload.data.type === 'message'){
-            let conversation_id = getUrlParameter('conversation');
-            let user_id = getUrlParameter('user');
-            let url= '{{url('/')}}/store-panel/message/view/'+conversation_id+'/' + user_id;
-            $.ajax({
-                url: url,
-                success: function(data) {
-                    $('#view-conversation').html(data.view);
+                if (window.location.href.includes('message/list?conversation')) {
+                    let conversation_id = getUrlParameter('conversation');
+                    let user_id = getUrlParameter('user');
+                    let url = '{{url('/')}}/store-panel/message/view/' + conversation_id + '/' + user_id;
+                    $.ajax({
+                        url: url,
+                        success: function (data) {
+                            $('#view-conversation').html(data.view);
+                        }
+                    })
+                    if($('#conversation-list').scrollTop() === 0){
+                        conversationList();
+                    }
                 }
-            })
-            toastr.success('{{ translate('messages.New message arrived') }}', {
-                        CloseButton: true,
-                        ProgressBar: true
-                    });
-
-            if($('#conversation-list').scrollTop() === 0){
-                conversationList();
-            }
+                toastr.success('{{ translate('messages.New message arrived') }}', {
+                    CloseButton: true,
+                    ProgressBar: true
+                });
         }
         });
 

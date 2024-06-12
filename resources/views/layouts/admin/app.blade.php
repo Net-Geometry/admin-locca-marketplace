@@ -435,36 +435,71 @@ $countryCode= strtolower($country?$country->value:'auto');
     const messaging = firebase.messaging();
 
     function startFCM() {
-
         messaging
             .requestPermission()
             .then(function() {
-                return messaging.getToken()
+                return messaging.getToken();
             })
-            .then(function(response) {
-                subscribeTokenToTopic(response, 'admin_message');
-                console.log('subscribed');
+            .then(function(token) {
+                // console.log('FCM Token:', token);
+                // Send the token to your backend to subscribe to topic
+                subscribeTokenToBackend(token, 'admin_message');
             }).catch(function(error) {
-                console.log(error);
-            });
+            console.error('Error getting permission or token:', error);
+        });
     }
-    @php($key = \App\Models\BusinessSetting::where('key', 'push_notification_key')->first())
 
-    function subscribeTokenToTopic(token, topic) {
-        fetch('https://iid.googleapis.com/iid/v1/' + token + '/rel/topics/' + topic, {
+    function subscribeTokenToBackend(token, topic) {
+        fetch('{{url('/')}}/subscribeToTopic', {
             method: 'POST',
-            headers: new Headers({
-                'Authorization': 'key={{ $key ? $key->value : '' }}'
-            })
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({ token: token, topic: topic })
         }).then(response => {
             if (response.status < 200 || response.status >= 400) {
-                throw 'Error subscribing to topic: ' + response.status + ' - ' + response.text();
+                return response.text().then(text => {
+                    throw new Error(`Error subscribing to topic: ${response.status} - ${text}`);
+                });
             }
-            console.log('Subscribed to "' + topic + '"');
+            console.log(`Subscribed to "${topic}"`);
         }).catch(error => {
-            console.error(error);
-        })
+            console.error('Subscription error:', error);
+        });
     }
+
+    {{--function startFCM() {--}}
+
+    {{--    messaging--}}
+    {{--        .requestPermission()--}}
+    {{--        .then(function() {--}}
+    {{--            return messaging.getToken()--}}
+    {{--        })--}}
+    {{--        .then(function(response) {--}}
+    {{--            subscribeTokenToTopic(response, 'admin_message');--}}
+    {{--            console.log('subscribed');--}}
+    {{--        }).catch(function(error) {--}}
+    {{--            console.log(error);--}}
+    {{--        });--}}
+    {{--}--}}
+    {{--@php($key = \App\Models\BusinessSetting::where('key', 'push_notification_key')->first())--}}
+
+    {{--function subscribeTokenToTopic(token, topic) {--}}
+    {{--    fetch('https://iid.googleapis.com/iid/v1/' + token + '/rel/topics/' + topic, {--}}
+    {{--        method: 'POST',--}}
+    {{--        headers: new Headers({--}}
+    {{--            'Authorization': 'key={{ $key ? $key->value : '' }}'--}}
+    {{--        })--}}
+    {{--    }).then(response => {--}}
+    {{--        if (response.status < 200 || response.status >= 400) {--}}
+    {{--            throw 'Error subscribing to topic: ' + response.status + ' - ' + response.text();--}}
+    {{--        }--}}
+    {{--        console.log('Subscribed to "' + topic + '"');--}}
+    {{--    }).catch(error => {--}}
+    {{--        console.error(error);--}}
+    {{--    })--}}
+    {{--}--}}
 
     function conversationList() {
         $.ajax({
@@ -525,6 +560,7 @@ $countryCode= strtolower($country?$country->value:'auto');
     @php($order_notification_type = \App\Models\BusinessSetting::where('key', 'order_notification_type')->first())
     @php($order_notification_type = $order_notification_type ? $order_notification_type->value : 'firebase')
     messaging.onMessage(function(payload) {
+        console.log(payload.data)
         if(payload.data.order_id && payload.data.type == "order_request"){
                 @php($admin_order_notification = \App\Models\BusinessSetting::where('key', 'admin_order_notification')->first())
                 @php($admin_order_notification = $admin_order_notification ? $admin_order_notification->value : 0)
@@ -544,23 +580,25 @@ $countryCode= strtolower($country?$country->value:'auto');
                 @endif
 
         }else{
-            let conversation_id = getUrlParameter('conversation');
-            let user_id = getUrlParameter('user');
-            let url= '{{url('/')}}/admin/message/view/'+conversation_id+'/' + user_id;
-            console.log(url);
-            $.ajax({
-                url: url,
-                success: function(data) {
-                    $('#view-conversation').html(data.view);
+            if (window.location.href.includes('message/list?conversation')) {
+                let conversation_id = getUrlParameter('conversation');
+                let user_id = getUrlParameter('user');
+                let url = '{{url('/')}}/admin/message/view/' + conversation_id + '/' + user_id;
+                console.log(url);
+                $.ajax({
+                    url: url,
+                    success: function (data) {
+                        $('#view-conversation').html(data.view);
+                    }
+                })
+                if($('#conversation-list').scrollTop() === 0){
+                    conversationList();
                 }
-            })
+            }
             toastr.success('New message arrived', {
                 CloseButton: true,
                 ProgressBar: true
             });
-            if($('#conversation-list').scrollTop() === 0){
-                conversationList();
-            }
         }
     });
 
