@@ -616,7 +616,7 @@ class ConfigController extends Controller
                 'fixed_header_title'=>(isset($settings['fixed_header_title']) )  ? $settings['fixed_header_title'] : null ,
                 'fixed_header_sub_title'=>(isset($settings['fixed_header_sub_title']) )  ? $settings['fixed_header_sub_title'] : null ,
                 'fixed_header_image'=>(isset($settings['fixed_header_image']) )  ? $settings['fixed_header_image'] : null ,
-                'fixed_header_image_full_url'=>Helpers::s3_storage_link('fixed_header_image',(isset($settings['fixed_header_image']) )  ? $settings['fixed_header_image'] : null,(isset($settings['fixed_header_image_storage']) )  ? $settings['fixed_header_image_storage'] : 'public') ,
+                'fixed_header_image_full_url'=>Helpers::get_full_url('fixed_header_image',(isset($settings['fixed_header_image']) )  ? $settings['fixed_header_image'] : null,(isset($settings['fixed_header_image_storage']) )  ? $settings['fixed_header_image_storage'] : 'public') ,
                 'fixed_module_title'=>(isset($settings['fixed_module_title']) )  ? $settings['fixed_module_title'] : null ,
                 'fixed_module_sub_title'=>(isset($settings['fixed_module_sub_title']) )  ? $settings['fixed_module_sub_title'] : null ,
                 'fixed_location_title'=>(isset($settings['fixed_location_title']) )  ? $settings['fixed_location_title'] : null ,
@@ -631,7 +631,7 @@ class ConfigController extends Controller
                 'download_user_app_title'=>(isset($settings['download_user_app_title']) )  ? $settings['download_user_app_title'] : null ,
                 'download_user_app_sub_title'=>(isset($settings['download_user_app_sub_title']) )  ? $settings['download_user_app_sub_title'] : null ,
                 'download_user_app_image'=>(isset($settings['download_user_app_image']) )  ? $settings['download_user_app_image'] : null ,
-                'download_user_app_image_full_url'=>Helpers::s3_storage_link('download_user_app_image',(isset($settings['download_user_app_image']) )  ? $settings['download_user_app_image'] : null,(isset($settings['download_user_app_image_storage']) )  ? $settings['download_user_app_image_storage'] : 'public') ,
+                'download_user_app_image_full_url'=>Helpers::get_full_url('download_user_app_image',(isset($settings['download_user_app_image']) )  ? $settings['download_user_app_image'] : null,(isset($settings['download_user_app_image_storage']) )  ? $settings['download_user_app_image_storage'] : 'public') ,
 
                 'special_criterias'=>(isset($criterias) )  ? $criterias : null ,
 
