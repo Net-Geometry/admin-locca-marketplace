@@ -408,7 +408,7 @@ class SocialAuthController extends Controller
                 $awsUrl = config('filesystems.disks.s3.url');
                 $awsBucket = config('filesystems.disks.s3.bucket');
                 $awsBaseURL = rtrim($awsUrl, '/').'/'.ltrim($awsBucket.'/');
-                $service_file = ($apple_login_data?->storage && $apple_login_data?->storage?->value == 's3') ? $awsBaseURL.'apple-login/'.$apple_login->service_file : 'storage/app/public/apple-login/'.$apple_login->service_file;
+                $service_file = (count($apple_login_data?->storage)>0 && $apple_login_data?->storage[0]?->value == 's3') ? $awsBaseURL.'apple-login/'.$apple_login->service_file : 'storage/app/public/apple-login/'.$apple_login->service_file;
                 $keyContent = file_get_contents($service_file);
 
                 $token = JWT::encode([
@@ -426,7 +426,6 @@ class SocialAuthController extends Controller
                     'client_id' => $sub,
                     'client_secret' => $token,
                 ]);
-
 
                 $claims = explode('.', $res['id_token'])[1];
                 $data = json_decode(base64_decode($claims),true);
