@@ -3400,7 +3400,7 @@ class Helpers
 
         try {
             if(($storage  == 'public') && isset($image) && strlen($image) >1 && Storage::disk($storage)->exists($path.$image)){
-                return $src;
+                return asset('storage/app/public') . '/' . $path . '/' . $image;
             }
             if(($storage  == 's3') && isset($image) && strlen($image) >1 && Storage::disk($storage)->exists($path.$image)){
                 $awsUrl = config('filesystems.disks.s3.url');
