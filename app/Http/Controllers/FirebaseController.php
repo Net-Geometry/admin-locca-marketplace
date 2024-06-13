@@ -24,8 +24,11 @@ class FirebaseController extends Controller
         $topic = $request->input('topic');
 
         try {
-            $this->messaging->subscribeToTopic($topic, $token);
-            return response()->json(['message' => 'Successfully subscribed to topic'], 200);
+            if($this->messaging){
+                $this->messaging->subscribeToTopic($topic, $token);
+                return response()->json(['message' => 'Successfully subscribed to topic'], 200);
+            }
+            return response()->json(['message' => 'Unauthorized'], 401);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
