@@ -3403,9 +3403,10 @@ class Helpers
                 return asset('storage/app/public') . '/' . $path . '/' . $image;
             }
             if(($storage  == 's3') && isset($image) && strlen($image) >1 && Storage::disk($storage)->exists($path.$image)){
-                $awsUrl = config('filesystems.disks.s3.url');
-                $awsBucket = config('filesystems.disks.s3.bucket');
-                return rtrim($awsUrl, '/').'/'.ltrim($awsBucket.'/'.$path.$image, '/');
+                return Storage::disk($storage)->url($path . $image);
+//                $awsUrl = config('filesystems.disks.s3.url');
+//                $awsBucket = config('filesystems.disks.s3.bucket');
+//                return rtrim($awsUrl, '/').'/'.ltrim($awsBucket.'/'.$path.$image, '/');
             }
         } catch (\Exception $e) {
             return $error_src;
@@ -3421,9 +3422,10 @@ class Helpers
                 return $src;
             }
             if(($storage  == 's3') && isset($image) && strlen($image) >1 && Storage::disk($storage)->exists($path.$image)){
-                $awsUrl = config('filesystems.disks.s3.url');
-                $awsBucket = config('filesystems.disks.s3.bucket');
-                return rtrim($awsUrl, '/').'/'.ltrim($awsBucket.'/'.$path.$image, '/');
+                return Storage::disk($storage)->url($path . $image);
+//                $awsUrl = config('filesystems.disks.s3.url');
+//                $awsBucket = config('filesystems.disks.s3.bucket');
+//                return rtrim($awsUrl, '/').'/'.ltrim($awsBucket.'/'.$path.$image, '/');
             }
         } catch (\Exception $e) {
             return $error_src;
