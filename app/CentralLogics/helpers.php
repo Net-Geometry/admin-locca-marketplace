@@ -3443,9 +3443,10 @@ class Helpers
         try {
 
             if (Storage::disk('s3')->exists($path .'/'. $data)) {
-                $awsUrl = config('filesystems.disks.s3.url');
-                $awsBucket = config('filesystems.disks.s3.bucket');
-                return rtrim($awsUrl, '/') . '/' . ltrim($awsBucket . '/' . $path . '/' . $data, '/');
+                return Storage::disk('s3')->url($path .'/'. $data);
+//                $awsUrl = config('filesystems.disks.s3.url');
+//                $awsBucket = config('filesystems.disks.s3.bucket');
+//                return rtrim($awsUrl, '/') . '/' . ltrim($awsBucket . '/' . $path . '/' . $data, '/');
             }
         } catch (\Exception $e){
 
@@ -3457,9 +3458,10 @@ class Helpers
         try {
 
             if ($type == 's3' && Storage::disk('s3')->exists($path .'/'. $data)) {
-                $awsUrl = config('filesystems.disks.s3.url');
-                $awsBucket = config('filesystems.disks.s3.bucket');
-                return rtrim($awsUrl, '/') . '/' . ltrim($awsBucket . '/' . $path . '/' . $data, '/');
+                return Storage::disk('s3')->url($path .'/'. $data);
+//                $awsUrl = config('filesystems.disks.s3.url');
+//                $awsBucket = config('filesystems.disks.s3.bucket');
+//                return rtrim($awsUrl, '/') . '/' . ltrim($awsBucket . '/' . $path . '/' . $data, '/');
             }
         } catch (\Exception $e){
         }
