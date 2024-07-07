@@ -516,7 +516,7 @@ document.addEventListener('DOMContentLoaded', function () {
             $('#modal-text').empty().append(text);
             $('#image-src').attr('src',image);
             $('#new-dynamic-submit-model').modal('show');
-            $('#new-dynamic-ok-button').addClass('btn-outline-danger');
+            $('#new-dynamic-ok-button').addClass('btn-primary');
             $('#new-dynamic-ok-button-show').addClass('d-none');
             $('#hide-buttons').addClass('d-none');
 
@@ -537,7 +537,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 $('#hide-buttons').removeClass('d-none');
                 $('#note-data').removeClass('d-none');
                 $('#get-text-note').attr('get-text-note-id', dataId);
-                $('#new-dynamic-ok-button').removeClass('btn-outline-danger').addClass(btn_class);
+                $('#new-dynamic-ok-button').removeClass('btn-primary').addClass(btn_class);
                 $('#cancel_btn_text').text(cancel_btn_text);
 
                 }
@@ -545,7 +545,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 $('#new-dynamic-ok-button').attr('toggle-ok-button', dataId);
                 $('#hide-buttons').removeClass('d-none');
                 $('#note-data').addClass('d-none');
-                $('#new-dynamic-ok-button').removeClass('btn-outline-danger').addClass(btn_class);
+                $('#new-dynamic-ok-button').removeClass('btn-primary').addClass(btn_class);
                 }
             else{
                 $('#note-data').addClass('d-none');

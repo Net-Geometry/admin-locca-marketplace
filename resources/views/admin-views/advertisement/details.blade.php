@@ -543,7 +543,7 @@ active
 
                     <div class="btn--container justify-content-center">
                         <button data-dismiss="modal" class="btn btn--secondary min-w-120" >{{translate("Not_Now")}}</button>
-                        <a href="{{ route('admin.advertisement.status',['status' => 'approved' ,'id' => $advertisement->id ,'approved' => 1]) }}" type="button"  class="btn btn-outline-success min-w-120">{{translate('Approve')}}</a>
+                        <a href="{{ route('admin.advertisement.status',['status' => 'approved' ,'id' => $advertisement->id ,'approved' => 1]) }}" type="button"  class="btn btn-primary min-w-120">{{translate('Approve')}}</a>
 
                     </div>
                 </div>

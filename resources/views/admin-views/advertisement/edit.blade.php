@@ -142,7 +142,7 @@ active
 
 
 
-                        <label class="form-label" for="exampleFormControlSelect1">{{ translate('messages.Select_Restautant') }} </label>
+                        <label class="form-label" for="exampleFormControlSelect1">{{ translate('messages.Select_Store') }} </label>
                         <div class="mb-20">
                             <select name="store_id" id="store_id"  data-placeholder="{{ translate('messages.select_store') }}"
                             class="js-data-example-ajax form-control">
@@ -606,7 +606,8 @@ active
                             data: function(params) {
                                 return {
                                     q: params.term, // search term
-                                    page: params.page
+                                    page: params.page,
+                                    module_id:{{ config('module')['current_module_id'] }}
                                 };
                             },
                             processResults: function(data) {

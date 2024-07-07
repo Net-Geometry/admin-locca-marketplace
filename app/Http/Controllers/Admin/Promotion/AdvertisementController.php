@@ -22,9 +22,17 @@ class AdvertisementController extends Controller
      */
     public function index(Request $request)
     {
+
+        // dd(is_numeric(config('module')['current_module_id']));
+
+
         $key = explode(' ', $request['search']);
 
         $adds=Advertisement::where('is_updated',0)
+        ->when(is_numeric(config('module')['current_module_id']), function($query){
+            $query->where('module_id', config('module')['current_module_id']);
+        })
+
         ->whereNotIn('status' ,['pending','denied' ])
 
         ->when($request?->ads_type === 'running',function($query){
@@ -49,8 +57,16 @@ class AdvertisementController extends Controller
         ->paginate(config('default_pagination'));
 
 
-        $total_adds=Advertisement::whereNotNull('priority')->count() + 1;
-        $ads_count= Advertisement::count();
+        $total_adds=Advertisement::whereNotNull('priority')
+        ->when(is_numeric(config('module')['current_module_id']), function($query){
+            $query->where('module_id', config('module')['current_module_id']);
+        })
+        ->count() + 1;
+        $ads_count= Advertisement::when(is_numeric(config('module')['current_module_id']), function($query){
+            $query->where('module_id', config('module')['current_module_id']);
+        })
+
+        ->count();
 
 
         return view("admin-views.advertisement.list",compact('adds','total_adds','ads_count'));
@@ -61,7 +77,11 @@ class AdvertisementController extends Controller
         $key = explode(' ', $request['search']);
 
         $adds=Advertisement::
-        when(!$request?->type ,function($query)use($request,$key){
+        when(is_numeric(config('module')['current_module_id']), function($query){
+            $query->where('module_id', config('module')['current_module_id']);
+        })
+
+        ->when(!$request?->type ,function($query)use($request,$key){
             $query->where('is_updated' ,0)->whereIn('status' ,['pending'])->when($request?->search ,function($query)use($key) {
                 foreach ($key as $value) {
                 $query->where(function($query) use ($value){
@@ -99,12 +119,13 @@ class AdvertisementController extends Controller
         })
 
 
-
-
-
         ->paginate(config('default_pagination'));
         $type= $request?->type;
-        $count=Advertisement::whereIn('status' ,['pending','denied' ])->count();
+        $count=Advertisement::whereIn('status' ,['pending','denied' ])
+        ->when(is_numeric(config('module')['current_module_id']), function($query){
+            $query->where('module_id', config('module')['current_module_id']);
+        })
+        ->count();
         return view("admin-views.advertisement.request-list",compact('adds','count','type'));
     }
 
@@ -115,7 +136,11 @@ class AdvertisementController extends Controller
     {
         $language = getWebConfig('language');
         $defaultLang = str_replace('_', '-', app()->getLocale());
-        $total_adds=Advertisement::whereNotNull('priority')->count()+1;
+        $total_adds=Advertisement::whereNotNull('priority')
+        ->when(is_numeric(config('module')['current_module_id']), function($query){
+            $query->where('module_id', config('module')['current_module_id']);
+        })
+        ->count()+1;
         return view("admin-views.advertisement.create",compact('total_adds','defaultLang','language'));
     }
 
@@ -134,7 +159,11 @@ class AdvertisementController extends Controller
 
 
         $newPriority = $request['priority'];
-        $request['priority'] > 0 ? Advertisement::where('priority', '>=', $newPriority)->increment('priority') : null;
+        $request['priority'] > 0 ? Advertisement::
+        when(is_numeric(config('module')['current_module_id']), function($query){
+            $query->where('module_id', config('module')['current_module_id']);
+        })
+        ->where('priority', '>=', $newPriority)->increment('priority') : null;
 
         $advertisement = New Advertisement();
         $advertisement->store_id = $request->store_id;
@@ -156,7 +185,12 @@ class AdvertisementController extends Controller
         $advertisement->video_attachment = $request->has('video_attachment') &&  $request->advertisement_type == 'video_promotion' ?  Helpers::upload(dir: 'advertisement/', format:$request->file('video_attachment')->getClientOriginalExtension(), image:$request->file('video_attachment')) : null;
         $advertisement->save();
 
-        
+
+        $advertisement->module_id= $advertisement->store?->module?->id;
+        $advertisement->module_type= $advertisement->store?->module?->module_type;
+        $advertisement->save();
+
+
         Helpers::add_or_update_translations(request: $request, key_data:'title' , name_field:'title' , model_name: 'Advertisement' ,data_id: $advertisement->id,data_value: $advertisement->title);
 
         Helpers::add_or_update_translations(request: $request, key_data:'description' , name_field:'description' , model_name: 'Advertisement' ,data_id: $advertisement->id,data_value: $advertisement->description);
@@ -206,6 +240,10 @@ class AdvertisementController extends Controller
     {
         $request_page_type=$request?->request_page_type ?? null;
         $nextId = Advertisement::where('id', '>', $advertisement)
+        ->when(is_numeric(config('module')['current_module_id']), function($query){
+            $query->where('module_id', config('module')['current_module_id']);
+        })
+
         ->when($request_page_type == 'update-requests' , function($query){
             $query->where('is_updated',1)->whereNotIn('status' ,['pending']);
         })
@@ -217,6 +255,10 @@ class AdvertisementController extends Controller
         })
         ->min('id');
         $previousId = Advertisement::where('id', '<', $advertisement)
+        ->when(is_numeric(config('module')['current_module_id']), function($query){
+            $query->where('module_id', config('module')['current_module_id']);
+        })
+
         ->when($request_page_type == 'update-requests' , function($query){
             $query->where('is_updated',1)->whereNotIn('status' ,['pending']);
         })
@@ -244,7 +286,11 @@ class AdvertisementController extends Controller
         $request_page_type=$request?->request_page_type ;
         $advertisement->withoutGlobalScope('translate');
         $advertisement->load('translations');
-        $total_adds=Advertisement::whereNotNull('priority')->count()+1;
+        $total_adds=Advertisement::whereNotNull('priority')
+        ->when(is_numeric(config('module')['current_module_id']), function($query){
+            $query->where('module_id', config('module')['current_module_id']);
+        })
+        ->count()+1;
         return view("admin-views.advertisement.edit",compact('advertisement','total_adds','request_page_type','language','defaultLang'));
     }
 
@@ -377,17 +423,26 @@ class AdvertisementController extends Controller
 
             if ($oldPriority === null) {
                 Advertisement::where('priority', '>=', $newPriority)
+                ->when(is_numeric(config('module')['current_module_id']), function($query){
+                    $query->where('module_id', config('module')['current_module_id']);
+                })
                     ->lockForUpdate() // Lock rows for update
                     ->increment('priority');
 
             } else if ($newPriority !== null) {
                 if ($newPriority < $oldPriority) {
                     Advertisement::whereBetween('priority', [$newPriority, $oldPriority - 1])
+                    ->when(is_numeric(config('module')['current_module_id']), function($query){
+                        $query->where('module_id', config('module')['current_module_id']);
+                    })
                         ->lockForUpdate()
                         ->increment('priority');
 
                 } else if ($newPriority > $oldPriority) {
                     Advertisement::whereBetween('priority', [$oldPriority + 1, $newPriority])
+                    ->when(is_numeric(config('module')['current_module_id']), function($query){
+                        $query->where('module_id', config('module')['current_module_id']);
+                    })
                         ->lockForUpdate()
                         ->decrement('priority');
 
@@ -398,7 +453,12 @@ class AdvertisementController extends Controller
         $advertisement->priority = $newPriority;
         $advertisement?->save();
 
-        $adds=Advertisement::whereNotNull('priority')->orderByRaw('ISNULL(priority), priority ASC')->get();
+        $adds=Advertisement::whereNotNull('priority')
+        ->when(is_numeric(config('module')['current_module_id']), function($query){
+            $query->where('module_id', config('module')['current_module_id']);
+        })
+
+        ->orderByRaw('ISNULL(priority), priority ASC')->get();
 
         $newPriority = 1;
         foreach ($adds as $advertisement) {
@@ -458,20 +518,28 @@ class AdvertisementController extends Controller
 
             if ($oldPriority === null) {
                 Advertisement::where('priority', '>=', $newPriority)
+                ->when(is_numeric(config('module')['current_module_id']), function($query){
+                    $query->where('module_id', config('module')['current_module_id']);
+                })
                     ->lockForUpdate() // Lock rows for update
                     ->increment('priority');
 
             } else if ($newPriority !== null) {
                 if ($newPriority < $oldPriority) {
                     Advertisement::whereBetween('priority', [$newPriority, $oldPriority - 1])
+                    ->when(is_numeric(config('module')['current_module_id']), function($query){
+                        $query->where('module_id', config('module')['current_module_id']);
+                    })
                         ->lockForUpdate()
                         ->increment('priority');
 
                 } else if ($newPriority > $oldPriority) {
                     Advertisement::whereBetween('priority', [$oldPriority + 1, $newPriority])
+                    ->when(is_numeric(config('module')['current_module_id']), function($query){
+                        $query->where('module_id', config('module')['current_module_id']);
+                    })
                         ->lockForUpdate()
                         ->decrement('priority');
-
                 }
             }
         }
@@ -538,7 +606,11 @@ class AdvertisementController extends Controller
     {
         $language = getWebConfig('language');
         $defaultLang = str_replace('_', '-', app()->getLocale());
-        $total_adds=Advertisement::whereNotNull('priority')->count()+1;
+        $total_adds=Advertisement::whereNotNull('priority')
+        ->when(is_numeric(config('module')['current_module_id']), function($query){
+            $query->where('module_id', config('module')['current_module_id']);
+        })
+        ->count()+1;
         return view("admin-views.advertisement.edit",compact('advertisement','total_adds','language','defaultLang'));
     }
     public function updateDate(Advertisement $advertisement,Request $request)
@@ -574,7 +646,13 @@ class AdvertisementController extends Controller
 
 
             $newPriority = $request['priority'];
-            $request['priority'] > 0 ? Advertisement::where('priority', '>=', $newPriority)->increment('priority') : null;
+            $request['priority'] > 0 ? Advertisement::where('priority', '>=', $newPriority)
+
+            ->when(is_numeric(config('module')['current_module_id']), function($query){
+                $query->where('module_id', config('module')['current_module_id']);
+            })
+
+            ->increment('priority') : null;
 
             $newAdvertisement = New Advertisement();
             $newAdvertisement->store_id = $request->store_id;
@@ -615,7 +693,11 @@ class AdvertisementController extends Controller
             }
         }
 
-            $newAdvertisement->save();
+        $newAdvertisement->save();
+
+        $newAdvertisement->module_id= $newAdvertisement->store?->module?->id;
+        $newAdvertisement->module_type= $newAdvertisement->store?->module?->module_type;
+        $newAdvertisement->save();
 
             Helpers::add_or_update_translations(request: $request, key_data:'title' , name_field:'title' , model_name: 'Advertisement' ,data_id: $newAdvertisement->id,data_value: $newAdvertisement->title);
             Helpers::add_or_update_translations(request: $request, key_data:'description' , name_field:'description' , model_name: 'Advertisement' ,data_id: $newAdvertisement->id,data_value: $newAdvertisement->description);
@@ -676,9 +758,11 @@ class AdvertisementController extends Controller
             Helpers::check_and_delete('advertisement/' , $advertisement->video_attachment);
         }
         $advertisement?->translations()?->delete();
+        $module_id =$advertisement?->module_id;
         $advertisement?->delete();
 
-        $adds=Advertisement::whereNotNull('priority')->orderByRaw('ISNULL(priority), priority ASC')->get();
+        $adds=Advertisement::whereNotNull('priority')->where('module_id',$module_id)
+        ->orderByRaw('ISNULL(priority), priority ASC')->get();
 
         $newPriority = 1;
         foreach ($adds as $advertisement) {

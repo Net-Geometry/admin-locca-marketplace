@@ -18,7 +18,6 @@ use BeyondCode\LaravelWebSockets\Facades\WebSocketsRouter;
 Route::group(['namespace' => 'Api\V1', 'middleware'=>'localization'], function () {
     Route::get('zone/list', 'ZoneController@get_zones');
     Route::get('zone/check', 'ZoneController@zonesCheck');
-    Route::get('advertisement/list', 'AdvertisementController@get_adds');
 
     Route::get('offline_payment_method_list', 'ConfigController@offline_payment_method_list');
     Route::group(['prefix' => 'auth', 'namespace' => 'Auth'], function () {
@@ -466,6 +465,8 @@ Route::group(['namespace' => 'Api\V1', 'middleware'=>'localization'], function (
         });
 
         Route::get('parcel-category','ParcelCategoryController@index');
+        Route::get('advertisement/list', 'AdvertisementController@get_adds');
+
     });
     Route::get('vehicle/extra_charge', 'ConfigController@extra_charge');
     Route::get('get-vehicles', 'ConfigController@get_vehicles');

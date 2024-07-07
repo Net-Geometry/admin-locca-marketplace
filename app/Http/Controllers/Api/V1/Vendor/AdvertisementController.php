@@ -155,6 +155,13 @@ class AdvertisementController extends Controller
         $advertisement->profile_image = $request->has('profile_image') &&  $request->advertisement_type == 'store_promotion' ?  Helpers::upload(dir: 'advertisement/', format:$request->file('profile_image')->getClientOriginalExtension(), image:$request->file('profile_image')) : null;
         $advertisement->video_attachment = $request->has('video_attachment') &&  $request->advertisement_type == 'video_promotion' ?  Helpers::upload(dir: 'advertisement/', format:$request->file('video_attachment')->getClientOriginalExtension(), image:$request->file('video_attachment')) : null;
         $advertisement->save();
+
+
+
+        $advertisement->module_id= $advertisement->store?->module?->id;
+        $advertisement->module_type= $advertisement->store?->module?->module_type;
+        $advertisement->save();
+
         foreach ($data as $key=>$item) {
             $data[$key]['translationable_type'] = 'App\Models\Advertisement';
             $data[$key]['translationable_id'] = $advertisement->id;
@@ -313,9 +320,12 @@ class AdvertisementController extends Controller
             Helpers::check_and_delete('advertisement/' , $advertisement->video_attachment);
         }
         $advertisement?->translations()?->delete();
+        $module_id =$advertisement?->module_id;
+
         $advertisement?->delete();
 
-        $adds=Advertisement::whereNotNull('priority')->orderByRaw('ISNULL(priority), priority ASC')->get();
+        $adds=Advertisement::whereNotNull('priority')->where('module_id',$module_id)
+        ->orderByRaw('ISNULL(priority), priority ASC')->get();
 
         $newPriority = 1;
         foreach ($adds as $advertisement) {
@@ -441,6 +451,9 @@ class AdvertisementController extends Controller
         }
     }
 
+        $newAdvertisement->save();
+        $newAdvertisement->module_id= $newAdvertisement->store?->module?->id;
+        $newAdvertisement->module_type= $newAdvertisement->store?->module?->module_type;
         $newAdvertisement->save();
 
         foreach ($data as $key=>$item) {
