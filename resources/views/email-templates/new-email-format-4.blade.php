@@ -168,7 +168,8 @@ width: 24px;
                     </div>
                     @if ($data?->button_url)
                     <span class="d-block text-center" style="margin-top: 16px">
-                    <a href="{{ $data['button_url']??'#' }}" class="cmn-btn" id="mail-button">{{ $data['button_name']??'Submit' }}</a>
+                                        <a type="button" href="{{ $data['button_url']??'#' }}" class="cmn-btn" id="mail-button">{{ $data['button_name']??'Submit' }}</a>
+
                     </span>
                     @endif
                     <hr>

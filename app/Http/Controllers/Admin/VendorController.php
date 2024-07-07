@@ -1912,5 +1912,30 @@ class VendorController extends Controller
 
 
 
+    public function get_store_ratings(Request $request)
+    {
 
+        $data=['review' => 4.7, 'rating' => 2];
+
+        if(!$request->store_id){
+            return response()->json($data);
+        }
+
+
+        $store =  Store::where('id',$request->store_id)->first();
+        if(!$store){
+            return response()->json($data);
+        }
+        $review = (int) $store->reviews_comments()->count();
+        $reviewsInfo = $store->reviews()
+        ->selectRaw('avg(reviews.rating) as average_rating, count(reviews.id) as total_reviews, items.store_id')
+        ->groupBy('items.store_id')
+        ->first();
+
+        $rating = (float)  $reviewsInfo?->average_rating ?? 0;
+
+        $data=['review' => round($review,1), 'rating' => round($rating,1)];
+
+        return response()->json($data);
+    }
 }

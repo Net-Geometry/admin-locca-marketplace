@@ -213,7 +213,8 @@ width: 24px;
                     <div class="mb-1" id="mail-body">{!! $body?? translate('Hi_Sabrina,') !!}</div>
                     <span class="d-block text-center mb-3">
                         @if ($data?->button_url)
-                        <a href="{{ $data['button_url']??'#' }}" class="cmn-btn" id="mail-button">{{ $data['button_name']??'Submit' }}</a>
+                                            <a type="button" href="{{ $data['button_url']??'#' }}" class="cmn-btn" id="mail-button">{{ $data['button_name']??'Submit' }}</a>
+
                         @endif                    </span>
                     <table class="bg-section p-10 w-100">
                         <tbody>

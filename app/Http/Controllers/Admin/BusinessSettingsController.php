@@ -6015,6 +6015,20 @@ class BusinessSettingsController extends Controller
         }
         else if ($tab == 'subscription-plan_upadte') {
             return view('admin-views.business-settings.email-format-setting.'.$type.'-email-formats.subscription-plan_upadte-format',compact('template'));
+        } else if ($tab == 'new-advertisement') {
+            return view('admin-views.business-settings.email-format-setting.'.$type.'-email-formats.new-advertisement-format',compact('template'));
+        } else if ($tab == 'update-advertisement') {
+            return view('admin-views.business-settings.email-format-setting.'.$type.'-email-formats.update-advertisement-format',compact('template'));
+        } else if ($tab == 'advertisement-create') {
+            return view('admin-views.business-settings.email-format-setting.'.$type.'-email-formats.advertisement-create-format',compact('template'));
+        } else if ($tab == 'advertisement-approved') {
+            return view('admin-views.business-settings.email-format-setting.'.$type.'-email-formats.advertisement-approved-format',compact('template'));
+        } else if ($tab == 'advertisement-deny') {
+            return view('admin-views.business-settings.email-format-setting.'.$type.'-email-formats.advertisement-deny-format',compact('template'));
+        } else if ($tab == 'advertisement-resume') {
+            return view('admin-views.business-settings.email-format-setting.'.$type.'-email-formats.advertisement-resume-format',compact('template'));
+        } else if ($tab == 'advertisement-pause') {
+            return view('admin-views.business-settings.email-format-setting.'.$type.'-email-formats.advertisement-pause-format',compact('template'));
         }
 
     }
@@ -6144,6 +6158,27 @@ class BusinessSettingsController extends Controller
         }elseif($tab == 'subscription-plan_upadte'){
             $email_type = 'subscription-plan_upadte';
             $template = EmailTemplate::where('type',$type)->where('email_type', 'subscription-plan_upadte')->first();
+        }elseif($tab == 'new-advertisement'){
+            $email_type = 'new_advertisement';
+            $template = EmailTemplate::where('type',$type)->where('email_type', 'new_advertisement')->first();
+        }elseif($tab == 'update-advertisement'){
+            $email_type = 'update_advertisement';
+            $template = EmailTemplate::where('type',$type)->where('email_type', 'update_advertisement')->first();
+        }elseif($tab == 'advertisement-pause'){
+            $email_type = 'advertisement_pause';
+            $template = EmailTemplate::where('type',$type)->where('email_type', 'advertisement_pause')->first();
+        }elseif($tab == 'advertisement-approved'){
+            $email_type = 'advertisement_approved';
+            $template = EmailTemplate::where('type',$type)->where('email_type', 'advertisement_approved')->first();
+        }elseif($tab == 'advertisement-create'){
+            $email_type = 'advertisement_create';
+            $template = EmailTemplate::where('type',$type)->where('email_type', 'advertisement_create')->first();
+        }elseif($tab == 'advertisement-deny'){
+            $email_type = 'advertisement_deny';
+            $template = EmailTemplate::where('type',$type)->where('email_type', 'advertisement_deny')->first();
+        }elseif($tab == 'advertisement-resume'){
+            $email_type = 'advertisement_resume';
+            $template = EmailTemplate::where('type',$type)->where('email_type', 'advertisement_resume')->first();
         }
 
         if ($template == null) {
@@ -6487,6 +6522,34 @@ class BusinessSettingsController extends Controller
             ]);
         } else if ($tab == 'subscription-plan_upadte') {
             BusinessSetting::query()->updateOrInsert(['key' => 'subscription_plan_upadte_mail_status_'.$type], [
+                'value' => $status
+            ]);
+        } else if ($tab == 'new-advertisement') {
+            DB::table('business_settings')->updateOrInsert(['key' => 'new_advertisement_mail_status_'.$type], [
+                'value' => $status
+            ]);
+        } else if ($tab == 'update-advertisement') {
+            DB::table('business_settings')->updateOrInsert(['key' => 'update_advertisement_mail_status_'.$type], [
+                'value' => $status
+            ]);
+        } else if ($tab == 'advertisement-resume') {
+            DB::table('business_settings')->updateOrInsert(['key' => 'advertisement_resume_mail_status_'.$type], [
+                'value' => $status
+            ]);
+        } else if ($tab == 'advertisement-approved') {
+            DB::table('business_settings')->updateOrInsert(['key' => 'advertisement_approved_mail_status_'.$type], [
+                'value' => $status
+            ]);
+        } else if ($tab == 'advertisement-create') {
+            DB::table('business_settings')->updateOrInsert(['key' => 'advertisement_create_mail_status_'.$type], [
+                'value' => $status
+            ]);
+        } else if ($tab == 'advertisement-pause') {
+            DB::table('business_settings')->updateOrInsert(['key' => 'advertisement_pause_mail_status_'.$type], [
+                'value' => $status
+            ]);
+        } else if ($tab == 'advertisement-deny') {
+            DB::table('business_settings')->updateOrInsert(['key' => 'advertisement_deny_mail_status_'.$type], [
                 'value' => $status
             ]);
         }

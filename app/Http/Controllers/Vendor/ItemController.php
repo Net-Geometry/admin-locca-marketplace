@@ -399,11 +399,6 @@ class ItemController extends Controller
             return back();
         }
 
-        if(Helpers::get_store_data()->product_uploaad_check !== null && Helpers::get_store_data()->product_uploaad_check >= 0 && $request->status == 1 ){
-            Toastr::warning(translate('Your_current_package_doesnot_allow_to_activate_more_then_allocated_items_in_your_package') );
-            return back();
-        }
-
 
         $temp_product= false;
         if($request->temp_product){
@@ -433,7 +428,7 @@ class ItemController extends Controller
             return back();
         }
 
-        if(Helpers::get_store_data()->product_uploaad_check !== null && Helpers::get_store_data()->product_uploaad_check >= 0 && $request->status == 1 ){
+        if(Helpers::get_store_data()->product_uploaad_check !== null && Helpers::get_store_data()->product_uploaad_check != 'commission' && Helpers::get_store_data()->product_uploaad_check >= 0 && $request->status == 1 ){
             Toastr::warning(translate('Your_current_package_doesnot_allow_to_activate_more_then_allocated_items_in_your_package') );
             return back();
         }
@@ -469,15 +464,6 @@ class ItemController extends Controller
                 ]
             ]);
         }
-
-        if(Helpers::get_store_data()->product_uploaad_check !== null && Helpers::get_store_data()->product_uploaad_check >= 0 && $request->status == 1 ){
-            return response()->json([
-                'errors'=>[
-                    ['code'=>'unauthorized', 'message'=>translate('messages.Your_current_package_doesnot_allow_to_activate_more_then_allocated_items_in_your_package')]
-                ]
-            ]);
-        }
-
 
 
         $validator = Validator::make($request->all(), [

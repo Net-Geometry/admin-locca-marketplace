@@ -18,6 +18,8 @@ use BeyondCode\LaravelWebSockets\Facades\WebSocketsRouter;
 Route::group(['namespace' => 'Api\V1', 'middleware'=>'localization'], function () {
     Route::get('zone/list', 'ZoneController@get_zones');
     Route::get('zone/check', 'ZoneController@zonesCheck');
+    Route::get('advertisement/list', 'AdvertisementController@get_adds');
+
     Route::get('offline_payment_method_list', 'ConfigController@offline_payment_method_list');
     Route::group(['prefix' => 'auth', 'namespace' => 'Auth'], function () {
         Route::post('sign-up', 'CustomerAuthController@register');
@@ -200,6 +202,18 @@ Route::group(['namespace' => 'Api\V1', 'middleware'=>'localization'], function (
             Route::post('delete', 'CouponController@delete')->name('delete');
             Route::post('search', 'CouponController@search')->name('search');
         });
+       // advertisement
+        Route::group([ 'prefix' => 'advertisement', 'as' => 'advertisement.'], function () {
+            Route::get('/', 'AdvertisementController@index');
+            Route::get('details/{id}', 'AdvertisementController@show');
+            Route::delete('delete/{id}', 'AdvertisementController@destroy');
+            Route::post('store', 'AdvertisementController@store');
+            Route::post('update/{id}', 'AdvertisementController@update');
+            Route::put('/status', 'AdvertisementController@status')->name('status');
+            Route::post('copy-add-post', 'AdvertisementController@copyAddPost');
+
+        });
+
         // Addon
         Route::group(['prefix'=>'addon'], function(){
             Route::get('/', 'AddOnController@list');
