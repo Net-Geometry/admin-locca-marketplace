@@ -89,7 +89,7 @@
                                     </div>
                                     <div class="avatar avatar-sm avatar-circle">
                                         <img class="avatar-img  onerror-image"  data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
-                                        src="{{\App\CentralLogics\Helpers::get_image_helper(\App\CentralLogics\Helpers::get_loggedin_user(),'image', asset('storage/app/public/vendor/').'/'.\App\CentralLogics\Helpers::get_loggedin_user()->image, asset('public/assets/admin/img/160x160/img1.jpg'), 'vendor/') }}"
+                                        src="{{ \App\CentralLogics\Helpers::get_loggedin_user()->toArray()['image_full_url'] }}"
                                             alt="Image Description">
                                         <span class="avatar-status avatar-sm-status avatar-status-success"></span>
                                     </div>
@@ -102,7 +102,7 @@
                                     <div class="media align-items-center">
                                         <div class="avatar avatar-sm avatar-circle mr-2">
                                             <img class="avatar-img  onerror-image"  data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
-                                            src="{{\App\CentralLogics\Helpers::get_image_helper(\App\CentralLogics\Helpers::get_loggedin_user(),'image', asset('storage/app/public/vendor/').'/'.\App\CentralLogics\Helpers::get_loggedin_user()->image, asset('public/assets/admin/img/160x160/img1.jpg'), 'vendor/') }}"
+                                            src="{{ \App\CentralLogics\Helpers::get_loggedin_user()->toArray()['image_full_url'] }}"
                                                  alt="Owner image">
                                         </div>
                                         <div class="media-body">

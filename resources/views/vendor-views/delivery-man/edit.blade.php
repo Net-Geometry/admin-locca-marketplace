@@ -113,12 +113,7 @@
                                 <div class="text-center pt-3">
                                     <img class="img--120" id="viewer"
 
-                                    src="{{ \App\CentralLogics\Helpers::get_image_helper(
-                                        $delivery_man,'image',
-                                        asset('storage/app/public/delivery-man') . '/' .$delivery_man['image'],
-                                        asset('/public/assets/admin/img/160x160/img1.jpg'),
-                                        'delivery-man/'
-                                    ) }}" alt="delivery-man image"/>
+                                    src="{{ $delivery_man['image_full_url'] }}" alt="delivery-man image"/>
                                 </div>
                             </div>
                             <div class="custom-file mt-3">

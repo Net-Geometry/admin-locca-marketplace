@@ -5,7 +5,7 @@
             <div class="chat-user-info-img">
                 <img class="avatar-img onerror-image"
                      data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
-                     src="{{\App\CentralLogics\Helpers::get_image_helper($user,'image', asset('storage/app/public/profile/').'/'.$user['image'], asset('public/assets/admin/img/160x160/img1.jpg'), 'profile/')}}"
+                     src="{{ $user['image_full_url'] }}"
                      alt="Image Description">
             </div>
             <div class="chat-user-info-content">

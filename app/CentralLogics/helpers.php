@@ -969,7 +969,7 @@ class Helpers
                 'lng' => $item->last_location ? $item->last_location->longitude : false,
                 'location' => $item->last_location ? $item->last_location->location : '',
                 'storage' => $storage_type,
-                'image_link' => self::onerror_image_helper($item['image'], asset('storage/app/public/delivery-man/').'/'. $item['image'], asset('public/assets/admin/img/160x160/img1.jpg') , 'delivery-man/', $storage_type)
+                'image_link' => $item['image_full_url']
             ];
         }
         $data = $storage;
@@ -3438,41 +3438,69 @@ class Helpers
         return $error_src;
     }
 
-    public static function local_storage_link($path,$data){
-        if (Storage::disk('public')->exists($path .'/'. $data)) {
-            return asset('storage/app/public') . '/' . $path . '/' . $data;
-        }
-        return 'def.png';
-    }
-    public static function s3_storage_link($path,$data){
-        try {
+    public static function get_full_url($path,$data,$type,$placeholder = null){
+        $place_holders = [
+            'default' => asset('public/assets/admin/img/100x100/no-image-found.png'),
+            'business' => asset('public/assets/admin/img/160x160/img2.jpg'),
+            'contact_us_image' => asset('public/assets/admin/img/160x160/img2.jpg'),
+            'profile' => asset('public/assets/admin/img/160x160/img2.jpg'),
+            'product' => asset('public/assets/admin/img/160x160/img2.jpg'),
+            'delivery-man' => asset('public/assets/admin/img/160x160/img2.jpg'),
+            'admin' => asset('public/assets/admin/img/160x160/img1.jpg'),
+            'banner' => asset('public/assets/admin/img/900x400/img1.jpg'),
+            'campaign' => asset('public/assets/admin/img/900x400/img1.jpg'),
+            'notification' => asset('public/assets/admin/img/900x400/img1.jpg'),
+            'category' => asset('public/assets/admin/img/upload-img.png'),
+            'store' => asset('public/assets/admin/img/160x160/img1.jpg'),
+            'vendor' => asset('public/assets/admin/img/160x160/img1.jpg'),
+            'brand' => asset('public/assets/admin/img/upload-img.png'),
+            'upload_image' => asset('public/assets/admin/img/upload-img.png'),
+            'store/cover' => asset('public/assets/admin/img/upload-img.png'),
+            'upload_image_4' => asset('/public/assets/admin/img/upload-4.png'),
+            'promotional_banner' => asset('/public/assets/admin/img/upload-4.png'),
+            'admin_feature' => asset('/public/assets/admin/img/upload-3.png'),
+            'aspect_1' => asset('/public/assets/admin/img/aspect-1.png'),
+            'special_criteria' => asset('/public/assets/admin/img/aspect-1.png'),
+            'download_user_app_image' => asset('/public/assets/admin/img/aspect-1.png'),
+            'reviewer_image' => asset('/public/assets/admin/img/aspect-1.png'),
+            'fixed_header_image' => asset('/public/assets/admin/img/aspect-1.png'),
+            'header_icon' => asset('/public/assets/admin/img/aspect-1.png'),
+            'why_choose' => asset('/public/assets/admin/img/aspect-1.png'),
+            'header_banner' => asset('/public/assets/admin/img/aspect-1.png'),
+            'reviewer_company_image' => asset('/public/assets/admin/img/aspect-3-1.png'),
+            'module' => asset('/public/assets/admin/img/new-img/module-icon.svg'),
+            'parcel_category' => asset('/public/assets/admin/img/400x400/img2.jpg'),
+            'favicon' => asset('/public/assets/admin/img/favicon.png'),
+            'seller' => asset('public/assets/back-end/img/160x160/img1.jpg'),
+            'upload_placeholder' => asset('/public/assets/admin/img/upload-placeholder.png'),
+        ];
 
-            if (Storage::disk('s3')->exists($path .'/'. $data)) {
+        try {
+            if ($data && $type == 's3' && Storage::disk('s3')->exists($path .'/'. $data)) {
                 return Storage::disk('s3')->url($path .'/'. $data);
 //                $awsUrl = config('filesystems.disks.s3.url');
 //                $awsBucket = config('filesystems.disks.s3.bucket');
 //                return rtrim($awsUrl, '/') . '/' . ltrim($awsBucket . '/' . $path . '/' . $data, '/');
             }
         } catch (\Exception $e){
-
         }
-        return 'def.png';
-    }
 
-    public static function get_full_url($path,$data,$type){
-        try {
-
-            if ($type == 's3' && Storage::disk('s3')->exists($path .'/'. $data)) {
-                return Storage::disk('s3')->url($path .'/'. $data);
-//                $awsUrl = config('filesystems.disks.s3.url');
-//                $awsBucket = config('filesystems.disks.s3.bucket');
-//                return rtrim($awsUrl, '/') . '/' . ltrim($awsBucket . '/' . $path . '/' . $data, '/');
-            }
-        } catch (\Exception $e){
-        }
-        if (Storage::disk('public')->exists($path .'/'. $data)) {
+        if ($data && Storage::disk('public')->exists($path .'/'. $data)) {
             return asset('storage/app/public') . '/' . $path . '/' . $data;
         }
+
+        if (request()->is('api/*')) {
+            return null;
+        }
+
+        if(isset($placeholder) && array_key_exists($placeholder, $place_holders)){
+            return $place_holders[$placeholder];
+        }elseif(array_key_exists($path, $place_holders)){
+            return $place_holders[$path];
+        }else{
+            return $place_holders['default'];
+        }
+
         return 'def.png';
     }
 
@@ -3888,7 +3916,7 @@ class Helpers
         $store_logo= BusinessSetting::where(['key' => 'logo'])->first();
         $additional_data = [
             'business_name' => BusinessSetting::where(['key'=>'business_name'])->first()?->value,
-            'business_logo' => \App\CentralLogics\Helpers::get_image_helper($store_logo,'value', asset('storage/app/public/business/').'/' . $store_logo->value, asset('public/assets/admin/img/160x160/img2.jpg') ,'business/' )
+            'business_logo' => \App\CentralLogics\Helpers::get_full_url('business',$store_logo?->value,$store_logo?->storage[0]?->value ?? 'public')
         ];
         $payment_info = new PaymentInfo(
             success_hook: 'sub_success',

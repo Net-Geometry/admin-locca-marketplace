@@ -292,7 +292,7 @@
                 <div class="d-flex flex-column flex-md-row align-items-center gap-3 border rounded p-3">
                     <div class="d-flex gap-3">
                         <img class="rounded" data-onerror-image="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}"
-                            src="{{ \App\CentralLogics\Helpers::get_image_helper($deliveryMan,'image', asset('storage/app/public/delivery-man/') . '/' . $deliveryMan['image'], asset('public/assets/admin/img/160x160/img1.jpg'), 'delivery-man/') }}"
+                            src="{{ $deliveryMan['image_full_url']}}"
                             width="115" height="115" alt="Delivery man image">
                     </div>
 

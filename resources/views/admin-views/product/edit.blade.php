@@ -196,12 +196,7 @@
                                     </label>
                                     <label class="d-inline-block m-0 position-relative">
                                         <img class="img--176 border onerror-image" id="viewer"
-                                        src="{{ \App\CentralLogics\Helpers::get_image_helper(
-                                            $product,'image',
-                                            asset('storage/app/public/product').'/'.$product['image'] ?? '',
-                                            asset('public/assets/admin/img/upload-img.png'),
-                                            'product/'
-                                        ) }}"
+                                        src="{{ $product['image_full_url'] ?? asset('public/assets/admin/img/upload-img.png') }}"
                                             data-onerror-image="{{ asset('public/assets/admin/img/upload-img.png') }}"
                                             alt="thumbnail" />
                                         <div class="icon-file-group">

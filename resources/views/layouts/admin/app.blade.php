@@ -14,7 +14,7 @@ $countryCode= strtolower($country?$country->value:'auto');
     <!-- Favicon -->
     @php($logo=\App\Models\BusinessSetting::where(['key'=>'icon'])->first())
     <link rel="shortcut icon" href="">
-    <link rel="icon" type="image/x-icon" href="{{\App\CentralLogics\Helpers::get_image_helper($logo,'value', asset('storage/app/public/business/').'/' . $logo?->value, asset('public/assets/admin/img/160x160/img1.jpg') ,'business/' )}}">
+    <link rel="icon" type="image/x-icon" href="{{\App\CentralLogics\Helpers::get_full_url('business', $logo?->value?? '', $logo?->storage[0]?->value ?? 'public','favicon')}}">
     <!-- Font -->
     <link href="{{asset('public/assets/admin/css/fonts.css')}}" rel="stylesheet">
     <!-- CSS Implementing Plugins -->

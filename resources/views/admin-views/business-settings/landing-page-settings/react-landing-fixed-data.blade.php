@@ -69,12 +69,7 @@
                                     <div class="position-relative">
                                     <div class="img">
                                         <img
-                                        src="{{ \App\CentralLogics\Helpers::get_image_helper(
-                                            $fixed_promotional_banner,'value',
-                                            asset('storage/app/public/promotional_banner').'/'.$fixed_promotional_banner['value'] ?? '',
-                                            asset('/public/assets/admin/img/upload-4.png'),
-                                            'promotional_banner/'
-                                        ) }}"
+                                        src="{{\App\CentralLogics\Helpers::get_full_url('promotional_banner', $fixed_promotional_banner?->value?? '', $fixed_promotional_banner?->storage[0]?->value ?? 'public','upload_image_4')}}"
 
                                         data-onerror-image="{{asset('/public/assets/admin/img/upload-4.png')}}" class="vertical-img mw-100 vertical onerror-image" alt="">
                                     </div>

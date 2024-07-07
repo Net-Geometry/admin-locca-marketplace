@@ -330,12 +330,7 @@
 
                                             </td>
                         <td>
-                            <img  src="{{ \App\CentralLogics\Helpers::get_image_helper(
-                                $feature,'image',
-                                asset('storage/app/public/admin_feature').'/'.$feature->image ?? '',
-                                asset('/public/assets/admin/img/upload-3.png'),
-                                'admin_feature/'
-                            ) }}"
+                            <img  src="{{ $feature?->image_full_url ?? asset('/public/assets/admin/img/upload-3.png') }}"
 
                                 class="__size-105 onerror-image"  data-onerror-image="{{ asset('/public/assets/admin/img/upload-3.png') }}" alt="image">
                         </td>

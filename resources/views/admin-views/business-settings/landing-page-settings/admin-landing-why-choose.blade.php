@@ -216,11 +216,7 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <img  src="{{ \App\CentralLogics\Helpers::get_image_helper(
-                                                $criteria,'image',
-                                                asset('storage/app/public/special_criteria').'/'.$criteria->image ?? '',
-                                                asset('/public/assets/admin/img/upload-3.png'),
-                                                'special_criteria/'  ) }}"
+                                            <img  src="{{ $criteria->image_full_url ?? asset('/public/assets/admin/img/upload-3.png') }}"
                                             data-onerror-image="{{asset('/public/assets/admin/img/upload-3.png')}}" class="__size-105 onerror-image" alt="">
                                         </td>
                                         <td>
