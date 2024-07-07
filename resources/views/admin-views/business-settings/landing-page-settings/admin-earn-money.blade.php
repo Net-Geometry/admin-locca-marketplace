@@ -180,12 +180,7 @@
                                 <label class="upload-img-3 m-0 d-block">
                                     <div class="position-relative">
                                     <div class="img">
-                                        <img  src="{{ \App\CentralLogics\Helpers::get_image_helper(
-                                            $earning_seller_image,'value',
-                                            asset('storage/app/public/earning').'/'.$earning_seller_image['value'] ?? '',
-                                            asset('/public/assets/admin/img/upload-4.png'),
-                                            'earning/'
-                                        ) }}"
+                                        <img  src="{{\App\CentralLogics\Helpers::get_full_url('earning', $earning_seller_image?->value?? '', $earning_seller_image?->storage[0]?->value ?? 'public','upload_image_4')}}"
 
 
                                         data-onerror-image="{{asset('/public/assets/admin/img/upload-4.png')}}"
@@ -310,12 +305,7 @@
                                     <div class="position-relative">
                                     <div class="img">
 
-                                        <img src="{{ \App\CentralLogics\Helpers::get_image_helper(
-                                            $earning_delivery_image,'value',
-                                            asset('storage/app/public/earning/').'/'.$earning_delivery_image['value'],
-                                            asset('/public/assets/admin/img/upload-4.png'),
-                                            'earning/'
-                                        ) }}"
+                                        <img src="{{\App\CentralLogics\Helpers::get_full_url('earning', $earning_delivery_image?->value?? '', $earning_delivery_image?->storage[0]?->value ?? 'public','upload_image_4')}}"
 
                                         data-onerror-image="{{asset('/public/assets/admin/img/upload-4.png')}}" class="vertical-img mw-100 vertical onerror-image" alt="">
                                     </div>

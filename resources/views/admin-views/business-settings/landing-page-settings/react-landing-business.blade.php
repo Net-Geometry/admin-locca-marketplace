@@ -147,12 +147,7 @@
                                     <div class="position-relative">
                                     <div class="img">
                                         <img
-                                        src="{{ \App\CentralLogics\Helpers::get_image_helper(
-                                            $business_image,'value',
-                                            asset('storage/app/public/business_image').'/'.$business_image['value'] ?? '',
-                                            asset('/public/assets/admin/img/aspect-1.png'),
-                                            'business_image/'
-                                        ) }}" data-onerror-image="{{asset('/public/assets/admin/img/aspect-1.png')}}" alt="" class="img__aspect-1 min-w-187px max-w-187px onerror-image">
+                                        src="{{\App\CentralLogics\Helpers::get_full_url('business_image', $business_image?->value?? '', $business_image?->storage[0]?->value ?? 'public','aspect_1')}}" data-onerror-image="{{asset('/public/assets/admin/img/aspect-1.png')}}" alt="" class="img__aspect-1 min-w-187px max-w-187px onerror-image">
                                     </div>
                                       <input type="file"  name="image" hidden>
                                          @if (isset($business_image['value']))

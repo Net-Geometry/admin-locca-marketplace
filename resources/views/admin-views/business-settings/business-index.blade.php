@@ -390,7 +390,7 @@
                                             <label class="text-center position-relative">
                                                 <img class="img--vertical onerror-image image--border" id="viewer"
                                                     data-onerror-image="{{ asset('public/assets/admin/img/upload-img.png') }}"
-                                                    src="{{ \App\CentralLogics\Helpers::get_image_helper($logo,'value', asset('storage/app/public/business/').'/'.$logo->value??'', asset('public/assets/admin/img/upload-img.png'),'business/') }}"
+                                                    src="{{\App\CentralLogics\Helpers::get_full_url('business', $logo?->value?? '', $logo?->storage[0]?->value ?? 'public','upload_image')}}"
                                                     alt="logo image" />
                                                 <div class="icon-file-group">
                                                     <div class="icon-file">
@@ -411,7 +411,7 @@
                                             <label class="text-center position-relative">
                                                 <img class="img--133 onerror-image image--border" id="iconViewer"
                                                     data-onerror-image="{{ asset('public/assets/admin/img/upload-img.png') }}"
-                                                    src="{{ \App\CentralLogics\Helpers::get_image_helper($icon,'value', asset('storage/app/public/business/').'/'.$icon->value??'', asset('public/assets/admin/img/upload-img.png') , 'business/')}}"
+                                                    src="{{\App\CentralLogics\Helpers::get_full_url('business', $icon?->value?? '', $icon?->storage[0]?->value ?? 'public','upload_image')}}"
                                                     alt="Fav icon" />
                                                 <div class="icon-file-group">
                                                     <div class="icon-file">

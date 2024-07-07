@@ -161,18 +161,12 @@ class DeliveryMan extends Authenticatable
         if (count($this->storage) > 0) {
             foreach ($this->storage as $storage) {
                 if ($storage['key'] == 'image') {
-
-                    if($storage['value'] == 's3'){
-
-                        return Helpers::s3_storage_link('delivery-man',$value);
-                    }else{
-                        return Helpers::local_storage_link('delivery-man',$value);
-                    }
+                    return Helpers::get_full_url('delivery-man',$value,$storage['value']);
                 }
             }
         }
 
-        return Helpers::local_storage_link('delivery-man',$value);
+        return Helpers::get_full_url('delivery-man',$value,'public');
     }
     public function getIdentityImageFullUrlAttribute(){
         $images = [];
@@ -180,11 +174,7 @@ class DeliveryMan extends Authenticatable
         if ($value){
             foreach ($value as $item){
                 $item = is_array($item)?$item:(is_object($item) && get_class($item) == 'stdClass' ? json_decode(json_encode($item), true):['img' => $item, 'storage' => 'public']);
-                if($item['storage']=='s3'){
-                    $images[] = Helpers::s3_storage_link('delivery-man',$item['img']);
-                }else{
-                    $images[] = Helpers::local_storage_link('delivery-man',$item['img']);
-                }
+                $images[] = Helpers::get_full_url('delivery-man',$item['img'],$item['storage']);
             }
         }
 

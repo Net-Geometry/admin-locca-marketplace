@@ -180,7 +180,7 @@
                                 <label class="text-dark">{{translate('messages.item_thumbnail')}} <small class="text-danger">* ( {{translate('messages.ratio')}} 1:1 )</small></label>
                                 <div class="text-center d-block" id="image-viewer-section" class="pt-2">
                                     <img class="img--100 onerror-image" id="viewer"
-                                    src="{{\App\CentralLogics\Helpers::get_image_helper($product,'image', asset('storage/app/public/product/').'/'.$product['image'], asset('public/assets/admin/img/400x400/img2.jpg'), 'product/') }}"
+                                    src="{{ $product['image_full_url'] }}"
                                             data-onerror-image ="{{asset('/public/assets/admin/img/400x400/img2.jpg')}}"
                                             alt="product image"/>
                                 </div>

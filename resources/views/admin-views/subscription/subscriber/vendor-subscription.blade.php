@@ -64,12 +64,7 @@ active
                                         <a href="{{route('admin.store.view', $store->id)}}">
 
                                             <img class="onerror-image"
-                                            src="{{ \App\CentralLogics\Helpers::get_image_helper(
-                                                $store,'logo',
-                                                asset('storage/app/public/store').'/'.$store->logo ?? '',
-                                                asset('public/assets/admin/img/100x100/1.png'),
-                                                'store/'
-                                            ) }}">
+                                            src="{{ $store->logo_full_url ?? asset('public/assets/admin/img/100x100/1.png') }}">
                                     </div>
                                         </a>
                                     <ul class="address-info list-unstyled list-unstyled-py-3 text-dark">

@@ -24,7 +24,7 @@ $countryCode= strtolower($country?$country->value:'auto');
     <link rel="stylesheet" href="{{asset('public/assets/admin/intltelinput/css/intlTelInput.css')}}">
 
     @php($icon = \App\Models\BusinessSetting::where(['key' => 'icon'])->first())
-    <link rel="icon" type="image/x-icon" href="{{\App\CentralLogics\Helpers::get_image_helper($icon,'value', asset('storage/app/public/business/').'/' . $icon?->value, asset('public/assets/landing/img/favicon.svg') ,'business/' )}}">
+    <link rel="icon" type="image/x-icon" href="{{\App\CentralLogics\Helpers::get_full_url('business', $icon?->value?? '', $icon?->storage[0]?->value ?? 'public','favicon')}}">
     @stack('css_or_js')
     @php($backgroundChange = \App\Models\BusinessSetting::where(['key' => 'backgroundChange'])->first())
     @php($backgroundChange = isset($backgroundChange) && $backgroundChange->value ? json_decode($backgroundChange->value,true):'')
@@ -58,12 +58,7 @@ $countryCode= strtolower($country?$country->value:'auto');
                     <a href="{{route('home')}}" class="logo">
                         <img class="onerror-image"  data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
 
-                    src="{{ \App\CentralLogics\Helpers::get_image_helper(
-                        $fav,'value',
-                        asset('storage/app/public/business/').'/'. $fav->value??'',
-                        asset('public/assets/admin/img/160x160/img2.jpg'),
-                        'business/'
-                    ) }}"
+                    src="{{\App\CentralLogics\Helpers::get_full_url('business', $fav?->value?? '', $fav?->storage[0]?->value ?? 'public','favicon')}}"
 
                     alt="image">
                     </a>
@@ -214,7 +209,7 @@ $countryCode= strtolower($country?$country->value:'auto');
                     <div class="footer-widget">
                         <div class="footer-logo">
                             <a class="logo">
-                                <img  class="onerror-image"  data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}" src="{{ \App\CentralLogics\Helpers::get_image_helper($logo,'value', asset('storage/app/public/business/') .'/'. $logo->value??'', asset('public/assets/admin/img/upload-img.png') , 'business/') }}" alt="image">
+                                <img  class="onerror-image"  data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}" src="{{\App\CentralLogics\Helpers::get_full_url('business', $logo?->value?? '', $logo?->storage[0]?->value ?? 'public','favicon')}}" alt="image">
                             </a>
                         </div>
                         <div class="txt">

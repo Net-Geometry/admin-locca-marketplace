@@ -275,54 +275,36 @@ class Store extends Model
         if (count($this->storage) > 0) {
             foreach ($this->storage as $storage) {
                 if ($storage['key'] == 'logo') {
-
-                    if($storage['value'] == 's3'){
-
-                        return Helpers::s3_storage_link('store',$value);
-                    }else{
-                        return Helpers::local_storage_link('store',$value);
-                    }
+                    return Helpers::get_full_url('store',$value,$storage['value']);
                 }
             }
         }
 
-        return Helpers::local_storage_link('store',$value);
+        return Helpers::get_full_url('store',$value,'public');
     }
     public function getCoverPhotoFullUrlAttribute(){
         $value = $this->cover_photo;
         if (count($this->storage) > 0) {
             foreach ($this->storage as $storage) {
                 if ($storage['key'] == 'cover_photo') {
-
-                    if($storage['value'] == 's3'){
-
-                        return Helpers::s3_storage_link('store/cover',$value);
-                    }else{
-                        return Helpers::local_storage_link('store/cover',$value);
-                    }
+                    return Helpers::get_full_url('store/cover',$value,$storage['value']);
                 }
             }
         }
 
-        return Helpers::local_storage_link('store/cover',$value);
+        return Helpers::get_full_url('store/cover',$value,'public');
     }
     public function getMetaImageFullUrlAttribute(){
         $value = $this->meta_image;
         if (count($this->storage) > 0) {
             foreach ($this->storage as $storage) {
                 if ($storage['key'] == 'meta_image') {
-
-                    if($storage['value'] == 's3'){
-
-                        return Helpers::s3_storage_link('store',$value);
-                    }else{
-                        return Helpers::local_storage_link('store',$value);
-                    }
+                    return Helpers::get_full_url('store',$value,$storage['value']);
                 }
             }
         }
 
-        return Helpers::local_storage_link('store',$value);
+        return Helpers::get_full_url('store',$value,'public');
     }
 
     /**

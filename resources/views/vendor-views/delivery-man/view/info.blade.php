@@ -94,7 +94,7 @@
                         <div class="d-flex align-items-center justify-content-center">
                             <img class="avatar avatar-xxl avatar-4by3 mr-4 img--120 onerror-image"
                                  data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
-                                 src="{{\App\CentralLogics\Helpers::get_image_helper($dm,'image', asset('storage/app/public/delivery-man').'/'.$dm['image'], asset('public/assets/admin/img/160x160/img1.jpg'), 'delivery-man/') }}"
+                                 src="{{ $dm['image_full_url'] }}"
                                  alt="Image Description">
                                  <div class="d-block">
                                     <div class="rating--review">
@@ -333,7 +333,7 @@
                                         <div class="avatar avatar-circle">
                                             <img class="avatar-img onerror-image" width="75" height="75"
                                                  data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
-                                                 src="{{\App\CentralLogics\Helpers::get_image_helper($review->customer,'image', asset('storage/app/public/profile/').'/'.$review->customer->image, asset('public/assets/admin/img/160x160/img1.jpg'), 'profile/') }}"
+                                                 src="{{ $review->customer->image_full_url }}"
                                                 alt="Image Description">
                                         </div>
                                         <div class="ml-3">

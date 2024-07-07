@@ -28,12 +28,7 @@
                     <div>
                         <div class="d-flex flex-wrap align-items-center food--media position-relative mr-4 mt-4">
                             <img class="avatar avatar-xxl avatar-4by3 onerror-image aspect-ratio-1 h-unset"
-                            src="{{ \App\CentralLogics\Helpers::get_image_helper(
-                                $product,'image',
-                                asset('storage/app/public/product').'/'.$product['image'] ?? '',
-                                asset('public/assets/admin/img/160x160/img2.jpg'),
-                                'product/'
-                            ) }}"
+                            src="{{ $product['image_full_url'] ?? asset('public/assets/admin/img/160x160/img2.jpg') }}"
                                 data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
                                 alt="Image Description">
                                 @if ($product['is_rejected'] == 1 )

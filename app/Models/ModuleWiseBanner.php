@@ -58,18 +58,12 @@ class ModuleWiseBanner extends Model
         if (count($this->storage) > 0) {
             foreach ($this->storage as $storage) {
                 if ($storage['key'] == 'value') {
-
-                    if($storage['value'] == 's3'){
-
-                        return Helpers::s3_storage_link('promotional_banner',$value);
-                    }else{
-                        return Helpers::local_storage_link('promotional_banner',$value);
-                    }
+                    return Helpers::get_full_url('promotional_banner',$value,$storage['value']);
                 }
             }
         }
 
-        return Helpers::local_storage_link('promotional_banner',$value);
+        return Helpers::get_full_url('promotional_banner',$value,'public');
     }
 
     public function storage()

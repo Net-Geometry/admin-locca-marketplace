@@ -95,12 +95,7 @@
                     <div class="resturant--info-address">
                         <div class="logo">
                             <img class="onerror-image" data-onerror-image="{{asset('public/assets/admin/img/100x100/1.png')}}"
-                            src="{{ \App\CentralLogics\Helpers::get_image_helper(
-                                $store,'logo',
-                                asset('storage/app/public/store').'/'.$store->logo ?? '',
-                                asset('public/assets/admin/img/100x100/1.png'),
-                                'store/'
-                            ) }}"
+                            src="{{ $store->logo_full_url ?? asset('public/assets/admin/img/100x100/1.png') }}"
 
                             alt="{{$store->name}} Logo">
                         </div>
@@ -154,12 +149,7 @@
                         <div class="avatar avatar-xxl avatar-circle avatar-border-lg">
                             <img class="avatar-img onerror-image" data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
 
-                            src="{{ \App\CentralLogics\Helpers::get_image_helper(
-                                $store->vendor,'image',
-                                asset('storage/app/public/vendor').'/'.$store->vendor->image ?? '',
-                                asset('public/assets/admin/img/160x160/img1.jpg'),
-                                'vendor/'
-                            ) }}"
+                            src="{{ $store->vendor->image ?? asset('public/assets/admin/img/160x160/img1.jpg') }}"
                             alt="Image Description">
                         </div>
                         <ul class="address-info address-info-2 list-unstyled list-unstyled-py-3 text-dark">

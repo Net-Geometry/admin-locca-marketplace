@@ -37,11 +37,7 @@ class Message extends Model
         if ($value){
             foreach ($value as $item){
                 $item = is_array($item)?$item:(is_object($item) && get_class($item) == 'stdClass' ? json_decode(json_encode($item), true):['img' => $item, 'storage' => 'public']);
-                if($item['storage']=='s3'){
-                    $images[] = Helpers::s3_storage_link('conversation',$item['img']);
-                }else{
-                    $images[] = Helpers::local_storage_link('conversation',$item['img']);
-                }
+                $images[] = Helpers::get_full_url('conversation',$item['img'],$item['storage']);
             }
         }
 
