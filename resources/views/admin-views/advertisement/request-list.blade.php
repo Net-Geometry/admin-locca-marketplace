@@ -123,6 +123,17 @@ active
                                         @if ($add->status == 'pending')
 
 
+                                        <a class="dropdown-item d-flex gap-2 align-items-center approve_add"
+
+                                        data-is_expired="{{ $add->active }}"
+                                        data-approve_url={{   route('admin.advertisement.status',['status' => 'approved' ,'id' => $add->id ,'approved' => 1]) }}
+                                        data-edit_url={{  route('admin.advertisement.edit',[$add->id ,'request_page_type'=> isset($request_page_type) ]) }}
+
+                                        href="#">
+                                            <i class="tio-done"></i>
+                                            {{ translate('Approve') }}
+                                        </a>
+
                                         <a class="dropdown-item d-flex gap-2 align-items-center new-dynamic-submit-model" id="data-add-{{ $add->id }}" data-id="data-add-{{ $add->id }}" data-title="{{translate('Are you sure you want to deny the request?')}}" data-text="<p>{{translate('You will lost the Store ads request.')}}</p>" data-image="{{asset('public/assets/admin/img/modal/deny.png')}}" data-type="deny" data-btn_class="btn-primary" data-2nd_btn_text="{{ translate('messages.Cancel') }}" href="#">
                                             <i class="tio-pause-circle"></i>
                                             {{ translate('Cancel_Ads') }}
@@ -176,8 +187,108 @@ active
         </div>
     </div>
 </div>
+
+
+
+<div class="modal fade" id="approve-model1">
+    <div class="modal-dialog modal-dialog-centered status-warning-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true" class="tio-clear"></span>
+                </button>
+            </div>
+            <div class="modal-body pb-5 pt-0">
+                <div class="max-349 mx-auto mb-20">
+                    <div>
+                        <div class="text-center">
+                            <img src="{{  asset('public/assets/admin/img/modal/timeout.png') }}" class="mb-20">
+                            <h5 class="modal-title"></h5>
+                        </div>
+                        <div class="text-center" >
+                            <h3 > {{ translate('This advertisement is already expired.') }}</h3>
+                            <div > <p>{{ translate('After approval this Advertisement will automatically show in the expired list as the duration is already over.') }}</h3></p></div>
+                        </div>
+
+                        </div>
+
+                    <div class="btn--container justify-content-center">
+                            <a href="#" id="edit_url1"  class="btn btn-success min-w-120" >{{translate("Edit & Approve")}}</a>
+                            <a href="#" id="approve_url1"  type="button"  class="btn btn--secondary  min-w-120">{{translate('Only Approve')}}</a>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<div class="modal fade" id="confirm-approve-model">
+    <div class="modal-dialog modal-dialog-centered status-warning-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true" class="tio-clear"></span>
+                </button>
+            </div>
+            <div class="modal-body pb-5 pt-0">
+                <div class="max-349 mx-auto mb-20">
+                    <div>
+                        <div class="text-center">
+                            <img width="80" src="{{  asset('public/assets/admin/img/modal/tick.png') }}" class="mb-20">
+                            <h5 class="modal-title"></h5>
+                        </div>
+                        <div class="text-center" >
+                            <h3 > {{ translate('Are_you_sure_?') }}</h3>
+                            <div > <p>{{ translate('After approval this Advertisement will show in The User App & Websites.') }}</h3></p></div>
+                        </div>
+
+                        </div>
+
+                    <div class="btn--container justify-content-center">
+                        <button data-dismiss="modal" class="btn btn--secondary min-w-120" >{{translate("Not_Now")}}</button>
+                        <a href="#" id="approve_url" type="button"  class="btn btn-primary min-w-120">{{translate('Approve')}}</a>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 @endsection
 
 @push('script_2')
+
+
+<script>
+    $(document).on("click", ".approve_add", function () {
+    const edit_url = $(this).data("edit_url");
+    const approve_url = $(this).data("approve_url");
+    const is_expired = $(this).data("is_expired");
+
+
+    if(is_expired !== 0){
+        $("#approve_url").attr("href", approve_url);
+        $("#confirm-approve-model").modal('show');
+    }
+    else{
+        $("#approve_url1").attr("href", approve_url);
+        $("#edit_url1").attr("href", edit_url);
+        $("#approve-model1").modal('show');
+
+    }
+
+
+
+
+});
+</script>
+
 
 @endpush

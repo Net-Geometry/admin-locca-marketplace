@@ -510,6 +510,9 @@ document.addEventListener('DOMContentLoaded', function () {
             const type = data.getAttribute('data-type');
             const btn_class = data.getAttribute('data-btn_class');
             const cancel_btn_text = data.getAttribute('data-2nd_btn_text');
+            const success_btn_text = data.getAttribute('data-success_btn_text');
+
+
 
             $('#get-text-note').val('');
             $('#modal-title').empty().append(title);
@@ -546,6 +549,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 $('#hide-buttons').removeClass('d-none');
                 $('#note-data').addClass('d-none');
                 $('#new-dynamic-ok-button').removeClass('btn-primary').addClass(btn_class);
+                    if(success_btn_text){
+                        $('#new-dynamic-ok-button').text(success_btn_text);
+                    }
                 }
             else{
                 $('#note-data').addClass('d-none');

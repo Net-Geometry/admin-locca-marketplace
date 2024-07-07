@@ -162,10 +162,25 @@ active
                                             </a>
 
                                             @else
-                                            <a class="dropdown-item d-flex gap-2 align-items-center" href="{{ route('vendor.advertisement.edit',$add->id) }}">
+                                            <a class="dropdown-item d-flex gap-2 align-items-center new-dynamic-submit-model" href="#"
+
+                                                id="data-edit-{{ $add->id }}"
+                                                data-id="data-edit-{{ $add->id }}"
+
+                                                data-title="{{translate('Do You Want to Edit?')}}"
+                                                data-text="<p>{{translate('Your ad is running. If you edit this ad, it will be listed for pending and needs to be approved by the Admin. After the approval, it will be running again.')}}</p>"
+                                                data-image="{{asset('public/assets/admin/img/modal/package-status-disable.png')}}"
+                                                data-type="resume"
+                                                data-btn_class = "btn-primary"
+                                                data-success_btn_text = "{{ translate('Yes, Edit') }}"
+
+
+                                                >
                                                 <i class="tio-edit"></i>
                                                 {{ translate('Edit Ads') }}
                                             </a>
+                                            <form  id="data-edit-{{ $add->id }}_form" action="{{ route('vendor.advertisement.edit',$add->id) }}" method="get">
+                                            </form>
                                         @endif
 
 
