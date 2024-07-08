@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Models\OrderPayment;
 use App\Models\ParcelDeliveryInstruction;
+use Illuminate\Validation\Rules\Password;
 use Stripe\Product;
 use App\Models\Cart;
 use App\Models\Item;
@@ -100,10 +101,52 @@ class OrderController extends Controller
             'guest_id' => $request->user ? 'nullable' : 'required',
             'contact_person_name' => $request->user ? 'nullable' : 'required',
             'contact_person_number' => $request->user ? 'nullable' : 'required',
+            'contact_person_email' => $request->user ? 'nullable' : 'required',
+            'password' => $request->create_new_user ? 'nullable' : ['required', Password::min(8)],
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        }
+
+        if($request->create_new_user){
+            $user = new User();
+            $user->f_name = $request->contact_person_name;
+            $user->email = $request->contact_person_email;
+            $user->phone = $request->contact_person_number;
+            $user->password = bcrypt($request->password);
+            $user->ref_code = Helpers::generate_referer_code($user);
+            $user->save();
+
+            try
+            {
+                $mail_status = Helpers::get_mail_status('registration_mail_status_user');
+                if (config('mail.status') && $request->email && $mail_status == '1') {
+                    Mail::to($request->email)->send(new \App\Mail\CustomerRegistration($request->contact_person_name));
+                }
+            }
+            catch(\Exception $ex)
+            {
+                info($ex->getMessage());
+            }
+            if($request->guest_id  && isset($user->id)){
+
+                $userStoreIds = Cart::where('user_id', $request->guest_id)
+                    ->join('items', 'carts.item_id', '=', 'items.id')
+                    ->pluck('items.store_id')
+                    ->toArray();
+
+                Cart::where('user_id', $user->id)
+                    ->whereHas('item', function ($query) use ($userStoreIds) {
+                        $query->whereNotIn('store_id', $userStoreIds);
+                    })
+                    ->delete();
+
+                Cart::where('user_id',  )->update(['user_id' => $user->id,'is_guest' => 0]);
+            }
+
+            $request->is_guest = false;
+            $request->user = $user;
         }
 
 
