@@ -15,12 +15,7 @@ $company_name = App\Models\BusinessSetting::where('key', 'business_name')->first
                                     @php($restaurant_logo = \App\Models\BusinessSetting::where(['key' => 'logo'])->first()->value)
                                     <img class="mb-2 mail-img-2 onerror-image" data-onerror-image="{{ asset('storage/app/public/business/' . $restaurant_logo) }}"
 
-                                    src="{{ \App\CentralLogics\Helpers::get_image_helper(
-                                        $data, 'logo',
-                                        asset('storage/app/public/email_template').'/'.data_get($data, 'logo' , null),
-                                        asset('storage/app/public/business/' . $restaurant_logo),
-                                        'email_template/'
-                                    ) }}"
+                                    src="{{ $data?->logo ? $data->logo_full_url : \App\CentralLogics\Helpers::get_full_url('business',$restaurant_logo?->value,$restaurant_logo?->storage[0]?->value ?? 'public', 'favicon') }}"
 
                                     id="logoViewer" alt="">
                                     <h3 class="mb-3 mt-0">{{ translate('Order_Info') }}</h3>

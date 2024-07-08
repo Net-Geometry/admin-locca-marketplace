@@ -160,7 +160,7 @@
                                     @foreach ($product->images as $key => $photo)
                                     @php($photo = is_array($photo)?$photo:['img'=>$photo,'storage'=>'public'])
                                         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-4 col-6 spartan_item_wrapper" id="product_images_{{ $key }}">
-                                            <img class="img--square onerror-image" src="{{\App\CentralLogics\Helpers::onerror_image_helper($photo['img'], asset('storage/app/public/product/').'/'.$photo['img'], asset('public/assets/admin/img/400x400/img2.jpg'), 'product/',$photo['storage'] ?? 'public') }}"
+                                            <img class="img--square onerror-image" src="{{\App\CentralLogics\Helpers::get_full_url('product',$photo['img'],$photo['storage'] ?? 'public') }}"
                                             data-onerror-image ="{{asset('/public/assets/admin/img/400x400/img2.jpg')}}" alt="Product image">
 
 

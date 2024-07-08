@@ -24,16 +24,12 @@
                         <div class="conv-reply-1">
                             <h6>{{$con->message}}</h6>
                             @if($con->file!=null)
-                            @foreach (json_decode($con->file,true) as $img)
-                            @php($img = is_array($img)?$img:['img'=>$img,'storage'=>'public'])
-                                    <br>
-                                    <img class="w-100"
-                                    src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
-                                        $img['img'],
-                                        asset('storage/app/public/conversation').'/'.$img['img'],
-                                        asset('public/assets/admin/img/160x160/img1.jpg'),
-                                        'conversation/',$img['storage']
-                                    ) }}">
+                            @foreach ($con->file_full_url as $img)
+                            <br>
+                                <img class="w-100 mb-3"
+
+                                src="{{$img }}"
+                                >
                                 @endforeach
                             @endif
                         </div>
@@ -46,16 +42,12 @@
                         <div class="conv-reply-2">
                             <h6>{{$con->message}}</h6>
                             @if($con->file!=null)
-                            @foreach (json_decode($con->file,true) as $img)
-                            @php($img = is_array($img)?$img:['img'=>$img,'storage'=>'public'])
-                                    <br>
-                                    <img class="w-100"
-                                    src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
-                                        $img['img'],
-                                        asset('storage/app/public/conversation').'/'.$img['img'],
-                                        asset('public/assets/admin/img/160x160/img1.jpg'),
-                                        'conversation/',$img['storage']
-                                    ) }}">
+                            @foreach ($con->file_full_url as $img)
+                            <br>
+                                <img class="w-100 mb-3"
+
+                                src="{{$img }}"
+                                >
                                 @endforeach
                             @endif
                         </div>

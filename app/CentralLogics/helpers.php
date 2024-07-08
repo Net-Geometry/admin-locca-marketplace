@@ -3348,131 +3348,46 @@ class Helpers
         return  Carbon::parse($data)->locale(app()->getLocale())->translatedFormat($time);
     }
 
-    public static function get_image_helper($data, $key, $src, $error_src ,$path){
-
-        if(!$data){
-            return $error_src;
-        }
-        $image = '';
-        $storage = 'public';
-
-
-        if (!(is_array($data)) && (get_class($data) == 'stdClass' && property_exists($data, $key))) {
-            $image = $data->$key;
-        }elseif ((is_array($data) && array_key_exists($key, $data))) {
-            $image = $data[$key] ?? '';
-        }elseif(!(is_array($data)) && (get_class($data) != 'stdClass')) {
-            $image = (is_object($data) && ($data instanceof Collection)) ? $data->$key : ($data[$key] ?? '');
-        }
-
-        if (is_object($data) && property_exists($data, 'storage') && is_object($data->storage)) {
-            if ($data->storage && count($data->storage) > 0) {
-                foreach ($data->storage as $value) {
-                    if ($value['key'] == $key || $value['data_type'] == 'App\Models\BusinessSetting' || $value['data_type'] == 'App\Models\DataSetting') {
-                        $storage = $value['value'];
-                    }
-                }
-            }
-        } elseif (is_array($data) && array_key_exists('storage', $data) && is_array($data['storage'])) {
-            if ($data['storage'] && count($data['storage']) > 0) {
-                foreach ($data['storage'] as $value) {
-                    if ($value['key'] == $key || $value['data_type'] == 'App\Models\BusinessSetting' || $value['data_type'] == 'App\Models\DataSetting') {
-                        $storage = $value['value'];
-                    }
-                }
-            }
-        }
-        elseif(!(is_array($data)) && (get_class($data) != 'stdClass')) {
-
-            if(is_object($data) && ($data instanceof Collection)){
-                if ($data->storage && count($data->storage) > 0) {
-                    foreach ($data->storage as $value) {
-                        if ($value['key'] == $key || $value['data_type'] == 'App\Models\BusinessSetting' || $value['data_type'] == 'App\Models\DataSetting') {
-                            $storage = $value['value'];
-                        }
-                    }
-                }
-            }else{
-                if ($data['storage'] && count($data['storage']) > 0) {
-                    foreach ($data['storage'] as $value) {
-                        if ($value['key'] == $key || $value['data_type'] == 'App\Models\BusinessSetting' || $value['data_type'] == 'App\Models\DataSetting') {
-                            $storage = $value['value'];
-                        }
-                    }
-                }
-            }
-        }
-
-        try {
-            if(($storage  == 'public') && isset($image) && strlen($image) >1 && Storage::disk($storage)->exists($path.$image)){
-                return asset('storage/app/public') . '/' . $path . '/' . $image;
-            }
-            if(($storage  == 's3') && isset($image) && strlen($image) >1 && Storage::disk($storage)->exists($path.$image)){
-                return Storage::disk($storage)->url($path . $image);
-//                $awsUrl = config('filesystems.disks.s3.url');
-//                $awsBucket = config('filesystems.disks.s3.bucket');
-//                return rtrim($awsUrl, '/').'/'.ltrim($awsBucket.'/'.$path.$image, '/');
-            }
-        } catch (\Exception $e) {
-            return $error_src;
-        }
-        return $error_src;
-    }
-
-
-    public static function onerror_image_helper($image, $src, $error_src ,$path, $storage = null){
-
-        try {
-            if(($storage  == 'public') && isset($image) && strlen($image) >1 && Storage::disk($storage)->exists($path.$image)){
-                return asset('storage/app/public') . '/' . $path . '/' . $image;
-            }
-            if(($storage  == 's3') && isset($image) && strlen($image) >1 && Storage::disk($storage)->exists($path.$image)){
-                return Storage::disk($storage)->url($path . $image);
-//                $awsUrl = config('filesystems.disks.s3.url');
-//                $awsBucket = config('filesystems.disks.s3.bucket');
-//                return rtrim($awsUrl, '/').'/'.ltrim($awsBucket.'/'.$path.$image, '/');
-            }
-        } catch (\Exception $e) {
-            return $error_src;
-        }
-        return $error_src;
-    }
-
     public static function get_full_url($path,$data,$type,$placeholder = null){
         $place_holders = [
-            'default' => asset('public/assets/admin/img/100x100/no-image-found.png'),
+            'default' => asset('public/assets/admin/img/100x100/2.jpg'),
             'business' => asset('public/assets/admin/img/160x160/img2.jpg'),
             'contact_us_image' => asset('public/assets/admin/img/160x160/img2.jpg'),
             'profile' => asset('public/assets/admin/img/160x160/img2.jpg'),
             'product' => asset('public/assets/admin/img/160x160/img2.jpg'),
+            'order' => asset('public/assets/admin/img/160x160/img2.jpg'),
+            'refund' => asset('public/assets/admin/img/160x160/img2.jpg'),
             'delivery-man' => asset('public/assets/admin/img/160x160/img2.jpg'),
             'admin' => asset('public/assets/admin/img/160x160/img1.jpg'),
+            'conversation' => asset('public/assets/admin/img/160x160/img1.jpg'),
             'banner' => asset('public/assets/admin/img/900x400/img1.jpg'),
             'campaign' => asset('public/assets/admin/img/900x400/img1.jpg'),
             'notification' => asset('public/assets/admin/img/900x400/img1.jpg'),
-            'category' => asset('public/assets/admin/img/upload-img.png'),
+            'category' => asset('public/assets/admin/img/100x100/2.jpg'),
             'store' => asset('public/assets/admin/img/160x160/img1.jpg'),
             'vendor' => asset('public/assets/admin/img/160x160/img1.jpg'),
-            'brand' => asset('public/assets/admin/img/upload-img.png'),
+            'brand' => asset('public/assets/admin/img/100x100/2.jpg'),
             'upload_image' => asset('public/assets/admin/img/upload-img.png'),
-            'store/cover' => asset('public/assets/admin/img/upload-img.png'),
+            'store/cover' => asset('public/assets/admin/img/100x100/2.jpg'),
             'upload_image_4' => asset('/public/assets/admin/img/upload-4.png'),
-            'promotional_banner' => asset('/public/assets/admin/img/upload-4.png'),
-            'admin_feature' => asset('/public/assets/admin/img/upload-3.png'),
+            'promotional_banner' => asset('public/assets/admin/img/100x100/2.jpg'),
+            'admin_feature' => asset('public/assets/admin/img/100x100/2.jpg'),
             'aspect_1' => asset('/public/assets/admin/img/aspect-1.png'),
-            'special_criteria' => asset('/public/assets/admin/img/aspect-1.png'),
-            'download_user_app_image' => asset('/public/assets/admin/img/aspect-1.png'),
-            'reviewer_image' => asset('/public/assets/admin/img/aspect-1.png'),
+            'special_criteria' => asset('public/assets/admin/img/100x100/2.jpg'),
+            'download_user_app_image' => asset('public/assets/admin/img/100x100/2.jpg'),
+            'reviewer_image' => asset('public/assets/admin/img/100x100/2.jpg'),
             'fixed_header_image' => asset('/public/assets/admin/img/aspect-1.png'),
             'header_icon' => asset('/public/assets/admin/img/aspect-1.png'),
             'why_choose' => asset('/public/assets/admin/img/aspect-1.png'),
             'header_banner' => asset('/public/assets/admin/img/aspect-1.png'),
-            'reviewer_company_image' => asset('/public/assets/admin/img/aspect-3-1.png'),
-            'module' => asset('/public/assets/admin/img/new-img/module-icon.svg'),
+            'reviewer_company_image' => asset('public/assets/admin/img/100x100/2.jpg'),
+            'module' => asset('public/assets/admin/img/100x100/2.jpg'),
             'parcel_category' => asset('/public/assets/admin/img/400x400/img2.jpg'),
             'favicon' => asset('/public/assets/admin/img/favicon.png'),
             'seller' => asset('public/assets/back-end/img/160x160/img1.jpg'),
             'upload_placeholder' => asset('/public/assets/admin/img/upload-placeholder.png'),
+            'payment_modules/gateway_image' => asset('/public/assets/admin/img/payment/placeholder.png'),
+            'email_template' => asset('/public/assets/admin/img/blank1.png'),
         ];
 
         try {

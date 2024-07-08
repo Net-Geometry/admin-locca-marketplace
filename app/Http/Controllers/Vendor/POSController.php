@@ -218,6 +218,7 @@ class POSController extends Controller
         $data['name'] = $product->name;
         $data['discount'] = Helpers::product_discount_calculate($product, $price,Helpers::get_store_data())['discount_amount'];
         $data['image'] = $product->image;
+        $data['image_full_url'] = $product->image_full_url;
         $data['storage'] = $product->storage?->toArray();
         $data['add_ons'] = [];
         $data['add_on_qtys'] = [];
@@ -302,6 +303,7 @@ class POSController extends Controller
         $data['name'] = $product->name;
         $data['discount'] = Helpers::product_discount_calculate($product, $price,Helpers::get_store_data())['discount_amount'];
         $data['image'] = $product->image;
+        $data['image_full_url'] = $product->image_full_url;
         $data['storage'] = $product->storage?->toArray();
         $data['add_ons'] = [];
         $data['add_on_qtys'] = [];

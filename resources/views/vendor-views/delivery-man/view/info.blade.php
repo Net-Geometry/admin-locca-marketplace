@@ -362,7 +362,7 @@
                             <td>
                                 @foreach(json_decode($review['attachment'],true) as $attachment)
                                 @php($attachment = is_array($attachment)?$attachment:['img'=>$attachment,'storage'=>'public'])
-                                    <img width="100" class="onerror-image" data-onerror-image="{{asset('public/assets/admin/img/160x160/img2.jpg')}}"  src="{{\App\CentralLogics\Helpers::onerror_image_helper($attachment['img'], asset('storage/app/public').'/'.$attachment['img'], asset('public/assets/admin/img/160x160/img2.jpg'), $attachment['img'].'/',$attachment['storage'] ?? 'public') }}"
+                                    <img width="100" class="onerror-image" data-onerror-image="{{asset('public/assets/admin/img/160x160/img2.jpg')}}"  src="{{\App\CentralLogics\Helpers::get_full_url($attachment['img'],$attachment['img'],$attachment['storage'] ?? 'public') }}"
                                     alt="image">
                                 @endforeach
                             </td>

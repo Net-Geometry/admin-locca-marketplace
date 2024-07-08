@@ -19,7 +19,7 @@
             <div class="banner-content wow fadeInUp">
                 <h1 class="title">{{ $landing_data['fixed_header_title'] }}</h1>
                 <img class="w-100 onerror-image"  data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
-                src="{{\App\CentralLogics\Helpers::get_image_helper($logo,'value', asset('storage/app/public/business/').'/' . $logo?->value, asset('public/assets/admin/img/160x160/img2.jpg') ,'business/')}}"
+                src="{{\App\CentralLogics\Helpers::get_full_url('business', $logo?->value?? '', $logo?->storage[0]?->value ?? 'public','favicon')}}"
 
                 alt="">
                 <div class="text">
@@ -1900,7 +1900,7 @@
                         @foreach ($modules as $key => $item)
                         <div class="item">
                             <img class="__img-50 onerror-image"  data-onerror-image="{{asset('public/assets/admin/img/100x100/2.png')}}"
-                            src="{{\App\CentralLogics\Helpers::get_image_helper($item,'icon', asset('storage/app/public/module/').'/' . $item['icon']??'', asset('public/assets/admin/img/100x100/2.png') ,'module/')}}"
+                            src="{{$item['icon_full_url']??asset('public/assets/admin/img/100x100/2.png')}}"
 
                             alt="image">
                             <div class="txt d-block">{{translate("messages.{$item->module_name}")}}</div>
@@ -1921,7 +1921,7 @@
                         </div>
                         <div class="col-lg-6 col-md-8">
                             <div class="venture-img mx-1">
-                                <img  src="{{\App\CentralLogics\Helpers::get_image_helper($item, 'thumbnail', asset('storage/app/public/module/').'/' . $item['thumbnail']?? '', asset('public/assets/admin/img/100x100/2.png') ,'module/')}}"
+                                <img  src="{{$item['thumbnail_full_url']?? asset('public/assets/admin/img/100x100/2.png')}}"
 
                                 class="onerror-image"  data-onerror-image="{{asset('public/assets/admin/img/100x100/2.png')}}"
                                 alt="image">
@@ -1942,7 +1942,7 @@
             <div class="main-category-slider owl-theme owl-carousel">
                 @foreach ($promotion_banner as $item)
                 <div class="category-slide-item"
-                    style="background: url({{\App\CentralLogics\Helpers::get_image_helper($item,'image', asset('storage/app/public/promotional_banner').'/'. isset($item['image']) ? $item['image'] : null, asset('public/assets/admin/img/100x100/2.jpg'),'promotional_banner/')}}) no-repeat center center / cover">
+                    style="background: url({{$item['image_full_url']}}) no-repeat center center / cover">
                     <div>
                         <h2 class="title">{{$item['title'] ?? ''}}</h2>
                         <div class="text">{{$item['sub_title'] ?? ''}}</div>
@@ -1988,7 +1988,7 @@
                                         <div class="learn-feature-item">
                                             <div class="learn-feature-icon">
                                                 <img
-                                                src="{{\App\CentralLogics\Helpers::get_image_helper($item,'image', asset('storage/app/public/admin_feature/').'/' .data_get($item,'image'), asset('public/assets/admin/img/100x100/2.jpg'),'admin_feature/')}}"
+                                                src="{{$item['image_full_url']}}"
                                                 alt="{{$item['title'] ?? ''}}">
                                             </div>
                                             <div class="learn-feature-item-content">
@@ -2011,7 +2011,7 @@
                                         <div class="learn-feature-item">
                                             <div class="learn-feature-icon">
                                                 <img
-                                                src="{{\App\CentralLogics\Helpers::get_image_helper($item,'image', asset('storage/app/public/admin_feature/').'/' .data_get($item,'image'), asset('public/assets/admin/img/100x100/2.jpg'),'admin_feature/')}}"
+                                                src="{{$item['image_full_url']}}"
                                                 alt="{{$item['title'] ?? ''}}">
                                             </div>
                                             <div class="learn-feature-item-content">
@@ -2622,7 +2622,7 @@
             @php($join_as_seller = $landing_data['seller_app_earning_links'])
             <div class="earn-item wow fadeInUp">
                 <div class="earn-item-img"
-                    style="background: url({{\App\CentralLogics\Helpers::onerror_image_helper(isset($landing_data['earning_seller_image']) ? $landing_data['earning_seller_image'] : null, asset('storage/app/public/earning').'/'. isset($landing_data['earning_seller_image']) ? $landing_data['earning_seller_image'] : null, asset('public/assets/admin/img/100x100/2.jpg'),'earning/',isset($landing_data['earning_seller_image_storage']) ? $landing_data['earning_seller_image_storage'] : 'public')}}) no-repeat center center / cover;">
+                    style="background: url({{\App\CentralLogics\Helpers::get_full_url('earning',isset($landing_data['earning_seller_image']) ? $landing_data['earning_seller_image'] : null,isset($landing_data['earning_seller_image_storage']) ? $landing_data['earning_seller_image_storage'] : 'public')}}) no-repeat center center / cover;">
                     <div class="position-relative">
                         <div class="d-flex flex-column flex-wrap gap-3">
                             @if (isset($join_as_seller['playstore_url_status']) && $join_as_seller['playstore_url_status'] == '1')
@@ -2645,7 +2645,7 @@
             @php($join_as_dm = $landing_data['dm_app_earning_links'])
             <div class="earn-item wow fadeInUp">
                 <div class="earn-item-img"
-                    style="background: url({{\App\CentralLogics\Helpers::onerror_image_helper(isset($landing_data['earning_delivery_image']) ? $landing_data['earning_delivery_image'] : null, asset('storage/app/public/earning').'/'. isset($landing_data['earning_delivery_image']) ? $landing_data['earning_delivery_image'] : null, asset('public/assets/admin/img/100x100/2.jpg'),'earning/',isset($landing_data['earning_delivery_image_storage']) ? $landing_data['earning_delivery_image_storage'] : 'public')}}) no-repeat center center / cover;">
+                    style="background: url({{\App\CentralLogics\Helpers::get_full_url('earning',isset($landing_data['earning_delivery_image']) ? $landing_data['earning_delivery_image'] : null,isset($landing_data['earning_delivery_image_storage']) ? $landing_data['earning_delivery_image_storage'] : 'public')}}) no-repeat center center / cover;">
                     <div class="position-relative">
                         <div class="d-flex flex-column flex-wrap gap-3">
                             @if (isset($join_as_dm['playstore_url_status']) && $join_as_dm['playstore_url_status'] == '1')
@@ -3368,7 +3368,7 @@
 
                 <div class="feature-card">
                     <div class="feature-card-icon">
-                        <img  src="{{\App\CentralLogics\Helpers::get_image_helper($item,'image', asset('storage/app/public/special_criteria/').'/' .$item['image']?? '', asset('public/assets/admin/img/160x160/img2.jpg'),'special_criteria/')}}"
+                        <img  src="{{$item['image_full_url']}}"
                         alt="{{$item['title']}}"
                         class="onerror-image"  data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}">
                     </div>
@@ -3573,7 +3573,7 @@
                     <div class="right-side d-flex word-nowrap align-items-center">
                         <img class="onerror-image"  data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
 {{--                        src="{{ asset('storage/app/public/business/' . $fav) }}"--}}
-                        src="{{\App\CentralLogics\Helpers::get_image_helper($fav,'value', asset('storage/app/public/business/').'/' . $fav?->value, asset('public/assets/admin/img/160x160/img2.jpg'),'business/')}}"
+                        src="{{\App\CentralLogics\Helpers::get_full_url('business', $fav?->value?? '', $fav?->storage[0]?->value ?? 'public','favicon')}}"
 
 
                         alt="image">
@@ -3608,7 +3608,7 @@
                     </div>
                 </div>
                 <div class="col-lg-6 col-md-9">
-                    <img class="mw-100" src="{{\App\CentralLogics\Helpers::onerror_image_helper(isset($landing_data['download_user_app_image']) ? $landing_data['download_user_app_image'] : null, asset('storage/app/public/download_user_app_image').'/'. isset($landing_data['download_user_app_image']) ? $landing_data['download_user_app_image'] : null, asset('public/assets/admin/img/100x100/2.jpg'),'download_user_app_image/',isset($landing_data['download_user_app_image_storage']) ? $landing_data['download_user_app_image_storage'] : 'public')}}" alt="">
+                    <img class="mw-100" src="{{\App\CentralLogics\Helpers::get_full_url('download_user_app_image',isset($landing_data['download_user_app_image']) ? $landing_data['download_user_app_image'] : null, isset($landing_data['download_user_app_image_storage']) ? $landing_data['download_user_app_image_storage'] : 'public')}}" alt="">
                 </div>
             </div>
         </div>
@@ -3640,7 +3640,7 @@
                                 <img
 
 
-                                src="{{\App\CentralLogics\Helpers::get_image_helper($data,'reviewer_image' , asset('storage/app/public/reviewer_image/').'/'.$data['reviewer_image'], asset('public/assets/admin/img/160x160/img2.jpg'),'reviewer_image/')}}"
+                                src="{{$data['reviewer_image_full_url']}}"
 
                                 alt="image">
                                 <div>
@@ -3650,7 +3650,7 @@
                             </div>
                             @if (isset($data['company_image']))
                             <img style="max-height: 35px; max-width:75px"
-                            src="{{\App\CentralLogics\Helpers::get_image_helper($data, 'company_image' , asset('storage/app/public/reviewer_company_image/').'/'.$data['company_image'], asset('public/assets/admin/img/160x160/img2.jpg'),'reviewer_company_image/')}}"
+                            src="{{$data['company_image_full_url']}}"
                             alt="image">
                             @endif
                         </div>

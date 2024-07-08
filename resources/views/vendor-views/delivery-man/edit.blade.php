@@ -85,16 +85,10 @@
                         <div class="card-body d-flex flex-column">
                             <div class="form-group">
                                 <div class="btn--container" id="coba">
-                                    @foreach(json_decode($delivery_man['identity_image'],true) as $img)
-                                    @php($img = is_array($img)?$img:['img'=>$img,'storage'=>'public'])
+                                    @foreach($delivery_man['identity_image_full_url'] as $img)
                                         <div>
                                             <img class="img--120"
-                                            src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
-                                                $img['img'],
-                                                asset('storage/app/public/delivery-man') . '/' .$img['img'],
-                                                asset('/public/assets/admin/img/160x160/img1.jpg'),
-                                                'delivery-man/',$img['storage'] ?? 'public'
-                                            ) }}"  alt="image">
+                                            src="{{ $img }}"  alt="image">
                                         </div>
                                     @endforeach
                                 </div>

@@ -169,12 +169,7 @@
                                             @php($photo = is_array($photo)?$photo:['img'=>$photo,'storage'=>'public'])
                                             <div id="product_images_{{ $key }}" class="spartan_item_wrapper min-w-176px max-w-176px">
                                                 <img class="img--square onerror-image"
-                                                src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
-                                                    $photo['img'] ?? '',
-                                                    asset('storage/app/public/product').'/'.$photo['img'] ?? '',
-                                                    asset('public/assets/admin/img/upload-img.png'),
-                                                    'product/',$photo['storage']
-                                                ) }}"
+                                                src="{{ \App\CentralLogics\Helpers::get_full_url('product',$photo['img'] ?? '',$photo['storage']) }}"
                                                     data-onerror-image="{{ asset('public/assets/admin/img/upload-img.png') }}"
                                                     alt="Product image">
                                                     {{-- <div class="pen spartan_remove_row"><i class="tio-edit"></i></div> --}}

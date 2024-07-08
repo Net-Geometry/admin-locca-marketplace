@@ -85,12 +85,7 @@
                                         <img class="ms-auto"
 
 
-                                            src="{{ \App\CentralLogics\Helpers::onerror_image_helper(
-                                                $item['gateway_image'],
-                                                asset('storage/app/public/payment_modules/gateway_image').'/'.$item['gateway_image'],
-                                                asset('/public/assets/admin/img/payment/placeholder.png'),
-                                                'payment_modules/gateway_image/',$item['storage']??'public'
-                                            ) }}"
+                                            src="{{ \App\CentralLogics\Helpers::get_full_url('payment_modules/gateway_image',$item['gateway_image'],$item['storage'] ?? 'public') }}"
 
 
                                         width="30" alt="">
