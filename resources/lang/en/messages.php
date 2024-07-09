@@ -5029,4 +5029,7 @@
   'If_disabled,_deliverymen_will_not_receive_an_email_for_account_unsuspension.' => 'If disabled, deliverymen will not receive an email for account unsuspension.',
   'Logo_must_be_1:1.' => 'Logo must be 1:1.',
   'phone_already_taken' => 'Phone already taken',
+  'Email_Verification' => 'Email Verification',
+  'verification_otp' => 'Verification otp',
+  'your_verification_otp_is' => 'Your verification otp is',
 );
