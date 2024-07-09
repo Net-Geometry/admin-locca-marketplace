@@ -53,6 +53,13 @@ trait NotificationTrait
                         "title" => (string)$data['title'],
                         "body" => (string)$data['description'],
                     ],
+                    "apns" => [
+                        "payload" => [
+                            "aps" => [
+                                "sound" => "notification.wav"
+                            ]
+                        ]
+                    ],
                 ]
             ];
         } else {
@@ -71,6 +78,13 @@ trait NotificationTrait
                     "notification" => [
                         "title" => (string)$data['title'],
                         "body" => (string)$data['description'],
+                    ],
+                    "apns" => [
+                        "payload" => [
+                            "aps" => [
+                                "sound" => "notification.wav"
+                            ]
+                        ]
                     ],
                 ]
             ];
@@ -131,6 +145,13 @@ trait NotificationTrait
                     'title' => (string)$data['title'],
                     'body' => (string)$data['description'],
                 ],
+                "apns" => [
+                    "payload" => [
+                        "aps" => [
+                            "sound" => "notification.wav"
+                        ]
+                    ]
+                ]
             ]
         ];
 
