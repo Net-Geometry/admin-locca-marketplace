@@ -377,6 +377,12 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::get('social-media/status-update', 'SocialMediaController@social_media_status_update')->name('social-media.status-update');
             Route::resource('pages/social-media', 'SocialMediaController');
 
+
+            Route::get('notification-setup', 'BusinessSettingsController@notification_setup')->name('notification_setup');
+            Route::get('notification-status-change/{key}/{user_type}/{type}', 'BusinessSettingsController@notification_status_change')->name('notification_status_change');
+
+
+
             Route::group(['prefix' => 'file-manager', 'as' => 'file-manager.'], function () {
                 Route::get('/download/{file_name}/{storage?}', 'FileManagerController@download')->name('download');
                 Route::get('/index/{folder_path?}/{storage?}', 'FileManagerController@index')->name('index');

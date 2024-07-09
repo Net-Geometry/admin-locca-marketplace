@@ -20,8 +20,10 @@ use App\Models\BusinessSetting;
 use App\Models\AdminTestimonial;
 use App\Models\ReactTestimonial;
 use App\Models\OrderCancelReason;
+use App\Models\StoreSubscription;
 use Illuminate\Support\Facades\DB;
 use App\Models\NotificationMessage;
+use App\Models\NotificationSetting;
 use App\Http\Controllers\Controller;
 use App\Models\AdminSpecialCriteria;
 use Brian2694\Toastr\Facades\Toastr;
@@ -29,7 +31,6 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Mail;
 use App\Models\AdminPromotionalBanner;
 use App\Models\FlutterSpecialCriteria;
-use App\Models\StoreSubscription;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
@@ -6844,5 +6845,51 @@ class BusinessSettingsController extends Controller
         return true;
     }
 
+
+    public function notification_setup(Request $request){
+
+
+        if(NotificationSetting::count() == 0 ){
+            Helpers::notificationDataSetup();
+        }
+        $data= NotificationSetting::
+            when( $request?->type == null ||  $request?->type == 'admin'  , function($query){
+            $query->where('type','admin');
+        })
+        ->when($request?->type == 'store'  , function($query){
+            $query->where('type','store');
+        })
+        ->when($request?->type == 'customers'  , function($query){
+            $query->where('type','customer');
+        })
+        ->when($request?->type == 'deliveryman'  , function($query){
+            $query->where('type','deliveryman');
+        })->get();
+
+
+        $business_name= BusinessSetting::where('key','business_name')->first()?->value;
+        return view('admin-views.business-settings.notification_setup',compact('business_name' ,'data'));
+
+    }
+    public function notification_status_change($key,$user_type, $type){
+        $data= NotificationSetting::where('type',$user_type)->where('key',$key)->first();
+        if(!$data){
+            Toastr::error(translate('messages.Notification_settings_not_found'));
+            return back();
+        }
+        if($type == 'Mail' ) {
+            $data->mail_status =  $data->mail_status == 'active' ? 'inactive' : 'active';
+        }
+        elseif($type == 'push_notification' ) {
+            $data->push_notification_status =  $data->push_notification_status == 'active' ? 'inactive' : 'active';
+        }
+        elseif($type == 'SMS' ) {
+            $data->sms_status =  $data->sms_status == 'active' ? 'inactive' : 'active';
+        }
+        $data?->save();
+
+        Toastr::success(translate('messages.Notification_settings_updated'));
+        return back();
+    }
 
 }

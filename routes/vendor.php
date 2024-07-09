@@ -243,6 +243,8 @@ Route::group(['namespace' => 'Vendor', 'as' => 'vendor.'], function () {
             Route::post('update-setup/{store}', 'BusinessSettingsController@store_setup')->name('update-setup');
             Route::post('update-meta-data/{store}', 'BusinessSettingsController@updateStoreMetaData')->name('update-meta-data');
             Route::get('toggle-settings-status/{store}/{status}/{menu}', 'BusinessSettingsController@store_status')->name('toggle-settings');
+            Route::get('notification-setup', 'BusinessSettingsController@notification_index')->name('notification-setup');
+            Route::get('notification-status-change/{key}/{type}', 'BusinessSettingsController@notification_status_change')->name('notification_status_change');
         });
 
         Route::group(['prefix' => 'profile', 'as' => 'profile.', 'middleware' => ['module:bank_info' ,'subscription:bank_info']], function () {

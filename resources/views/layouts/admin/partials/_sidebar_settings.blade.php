@@ -285,6 +285,15 @@
                     </a>
                 </li>
 
+                <li class="navbar-vertical-aside-has-menu  @yield('notification_setup')">
+                    <a class="nav-link " href="{{ route('admin.business-settings.notification_setup') }}"
+                        title="{{ translate('messages.Notification_Channels') }} ">
+                        <span class="tio-snooze-notification  nav-icon"></span>
+                        <span class="text-truncate">{{ translate('messages.Notification_Channels') }}
+                        </span>
+                    </a>
+                </li>
+
                 <li class="navbar-vertical-aside-has-menu {{Request::is('admin/business-settings/db-index')?'active':''}}">
                     <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{route('admin.business-settings.db-index')}}" title="{{translate('messages.clean_database')}}">
                         <i class="tio-cloud nav-icon"></i>

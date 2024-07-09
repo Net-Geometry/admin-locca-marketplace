@@ -511,6 +511,15 @@
                     </li>
                     @endif
 
+                    <li class="navbar-vertical-aside-has-menu {{Request::is('store-panel/business-settings/notification-setup')?'active':''}}">
+                        <a class="nav-link " href="{{route('vendor.business-settings.notification-setup')}}" title="{{translate('messages.notification_setup')}}"
+                        >
+                            <span class="tio-notifications nav-icon"></span>
+                            <span
+                                class="text-truncate">{{translate('messages.notification_setup')}}</span>
+                        </a>
+                    </li>
+
                     @if(\App\CentralLogics\Helpers::employee_module_permission_check('my_shop'))
                     <li class="navbar-vertical-aside-has-menu {{Request::is('store-panel/store/*')?'active':''}}">
                         <a class="js-navbar-vertical-aside-menu-link nav-link"

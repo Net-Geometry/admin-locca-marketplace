@@ -4226,6 +4226,71 @@ class Helpers
         ];
 
         $data []=[
+            'title' => 'store_product_approve',
+            'key' => 'store_product_approve',
+            'type' => 'store',
+            'mail_status' => 'active',
+            'sms_status' => 'disable',
+            'push_notification_status' => 'active',
+            'sub_title' => 'Sent_notification_on_store_product_approve',
+        ];
+        $data []=[
+            'title' => 'store_product_reject',
+            'key' => 'store_product_reject',
+            'type' => 'store',
+            'mail_status' => 'active',
+            'sms_status' => 'disable',
+            'push_notification_status' => 'active',
+            'sub_title' => 'Sent_notification_on_store_product_reject',
+        ];
+        $data []=[
+            'title' => 'store_subscription_success',
+            'key' => 'store_subscription_success',
+            'type' => 'store',
+            'mail_status' => 'active',
+            'sms_status' => 'disable',
+            'push_notification_status' => 'active',
+            'sub_title' => 'Sent_notification_on_store_subscription_success',
+        ];
+        $data []=[
+            'title' => 'store_subscription_renew',
+            'key' => 'store_subscription_renew',
+            'type' => 'store',
+            'mail_status' => 'active',
+            'sms_status' => 'disable',
+            'push_notification_status' => 'active',
+            'sub_title' => 'Sent_notification_on_store_subscription_renew',
+        ];
+        $data []=[
+            'title' => 'store_subscription_shift',
+            'key' => 'store_subscription_shift',
+            'type' => 'store',
+            'mail_status' => 'active',
+            'sms_status' => 'disable',
+            'push_notification_status' => 'active',
+            'sub_title' => 'Sent_notification_on_store_subscription_shift',
+        ];
+        $data []=[
+            'title' => 'store_subscription_cancel',
+            'key' => 'store_subscription_cancel',
+            'type' => 'store',
+            'mail_status' => 'active',
+            'sms_status' => 'disable',
+            'push_notification_status' => 'active',
+            'sub_title' => 'Sent_notification_on_store_subscription_cancel',
+        ];
+        $data []=[
+            'title' => 'store_subscription_plan_update',
+            'key' => 'store_subscription_plan_update',
+            'type' => 'store',
+            'mail_status' => 'active',
+            'sms_status' => 'disable',
+            'push_notification_status' => 'active',
+            'sub_title' => 'Sent_notification_on_store_subscription_plan_update',
+        ];
+
+
+        $data []=[
             'title' => 'store_advertisement_create_by_admin',
             'key' => 'store_advertisement_create_by_admin',
             'type' => 'store',
@@ -4434,122 +4499,186 @@ class Helpers
     }
     public static function storeNotificationDataSetup($id){
         $data []=[
-            'title' => 'store_account_block',
+            'title' => 'account_block',
             'key' => 'store_account_block',
             'store_id' => $id,
             'mail_status' => 'active',
             'sms_status' => 'disable',
             'push_notification_status' => 'active',
-            'sub_title' => 'Get_notification_on_store_account_block',
+            'sub_title' => 'Get_notification_on_account_block',
         ];
         $data []=[
-            'title' => 'store_account_unblock',
+            'title' => 'account_unblock',
             'key' => 'store_account_unblock',
             'store_id' => $id,
             'mail_status' => 'active',
             'sms_status' => 'disable',
             'push_notification_status' => 'active',
-            'sub_title' => 'Get_notification_on_store_account_unblock',
+            'sub_title' => 'Get_notification_on_account_unblock',
         ];
         $data []=[
-            'title' => 'store_withdraw_approve',
+            'title' => 'withdraw_approve',
             'key' => 'store_withdraw_approve',
             'store_id' => $id,
             'mail_status' => 'active',
             'sms_status' => 'disable',
             'push_notification_status' => 'active',
-            'sub_title' => 'Get_notification_on_store_withdraw_approve',
+            'sub_title' => 'Get_notification_on_withdraw_approve',
         ];
         $data []=[
-            'title' => 'store_withdraw_rejaction',
+            'title' => 'withdraw_rejaction',
             'key' => 'store_withdraw_rejaction',
             'store_id' => $id,
             'mail_status' => 'active',
             'sms_status' => 'disable',
             'push_notification_status' => 'active',
-            'sub_title' => 'Get_notification_on_store_withdraw_rejaction',
+            'sub_title' => 'Get_notification_on_withdraw_rejaction',
         ];
         $data []=[
-            'title' => 'store_campaign_join_request',
+            'title' => 'campaign_join_request',
             'key' => 'store_campaign_join_request',
             'store_id' => $id,
             'mail_status' => 'active',
             'sms_status' => 'disable',
             'push_notification_status' => 'disable',
-            'sub_title' => 'Get_notification_on_store_campaign_join_request',
+            'sub_title' => 'Get_notification_on_campaign_join_request',
         ];
         $data []=[
-            'title' => 'store_campaign_join_rejaction',
+            'title' => 'campaign_join_rejaction',
             'key' => 'store_campaign_join_rejaction',
             'store_id' => $id,
             'mail_status' => 'active',
             'sms_status' => 'disable',
             'push_notification_status' => 'active',
-            'sub_title' => 'Get_notification_on_store_campaign_join_rejaction',
+            'sub_title' => 'Get_notification_on_campaign_join_rejaction',
         ];
         $data []=[
-            'title' => 'store_campaign_join_approval',
+            'title' => 'campaign_join_approval',
             'key' => 'store_campaign_join_approval',
             'store_id' => $id,
             'mail_status' => 'active',
             'sms_status' => 'disable',
             'push_notification_status' => 'active',
-            'sub_title' => 'Get_notification_on_store_campaign_join_approval',
+            'sub_title' => 'Get_notification_on_campaign_join_approval',
         ];
         $data []=[
-            'title' => 'store_order_notification',
+            'title' => 'order_notification',
             'key' => 'store_order_notification',
             'store_id' => $id,
             'mail_status' => 'disable',
             'sms_status' => 'disable',
             'push_notification_status' => 'active',
-            'sub_title' => 'Get_notification_on_store_order_notification',
+            'sub_title' => 'Get_notification_on_order_notification',
         ];
 
         $data []=[
-            'title' => 'store_advertisement_create_by_admin',
+            'title' => 'advertisement_create_by_admin',
             'key' => 'store_advertisement_create_by_admin',
             'store_id' => $id,
             'mail_status' => 'active',
             'sms_status' => 'disable',
             'push_notification_status' => 'active',
-            'sub_title' => 'Get_notification_on_store_advertisement_create_by_admin',
+            'sub_title' => 'Get_notification_on_advertisement_create_by_admin',
         ];
         $data []=[
-            'title' => 'store_advertisement_approval',
+            'title' => 'advertisement_approval',
             'key' => 'store_advertisement_approval',
             'store_id' => $id,
             'mail_status' => 'active',
             'sms_status' => 'disable',
             'push_notification_status' => 'active',
-            'sub_title' => 'Get_notification_on_store_advertisement_approval',
+            'sub_title' => 'Get_notification_on_advertisement_approval',
         ];
         $data []=[
-            'title' => 'store_advertisement_deny',
+            'title' => 'advertisement_deny',
             'key' => 'store_advertisement_deny',
             'store_id' => $id,
             'mail_status' => 'active',
             'sms_status' => 'disable',
             'push_notification_status' => 'active',
-            'sub_title' => 'Get_notification_on_store_advertisement_deny',
+            'sub_title' => 'Get_notification_on_advertisement_deny',
         ];
         $data []=[
-            'title' => 'store_advertisement_resume',
+            'title' => 'advertisement_resume',
             'key' => 'store_advertisement_resume',
             'store_id' => $id,
             'mail_status' => 'active',
             'sms_status' => 'disable',
             'push_notification_status' => 'active',
-            'sub_title' => 'Get_notification_on_store_advertisement_resume',
+            'sub_title' => 'Get_notification_on_advertisement_resume',
         ];
         $data []=[
-            'title' => 'store_advertisement_pause',
+            'title' => 'advertisement_pause',
             'key' => 'store_advertisement_pause',
             'store_id' => $id,
             'mail_status' => 'active',
             'sms_status' => 'disable',
             'push_notification_status' => 'active',
-            'sub_title' => 'Get_notification_on_store_advertisement_pause',
+            'sub_title' => 'Get_notification_on_advertisement_pause',
+        ];
+
+        $data []=[
+            'title' => 'product_approve',
+            'key' => 'store_product_approve',
+            'store_id' => $id,
+            'mail_status' => 'active',
+            'sms_status' => 'disable',
+            'push_notification_status' => 'active',
+            'sub_title' => 'Get_notification_on_product_approve',
+        ];
+        $data []=[
+            'title' => 'product_reject',
+            'key' => 'store_product_reject',
+            'store_id' => $id,
+            'mail_status' => 'active',
+            'sms_status' => 'disable',
+            'push_notification_status' => 'active',
+            'sub_title' => 'Get_notification_on_product_reject',
+        ];
+        $data []=[
+            'title' => 'subscription_success',
+            'key' => 'store_subscription_success',
+            'store_id' => $id,
+            'mail_status' => 'active',
+            'sms_status' => 'disable',
+            'push_notification_status' => 'active',
+            'sub_title' => 'Get_notification_on_subscription_success',
+        ];
+        $data []=[
+            'title' => 'subscription_renew',
+            'key' => 'store_subscription_renew',
+            'store_id' => $id,
+            'mail_status' => 'active',
+            'sms_status' => 'disable',
+            'push_notification_status' => 'active',
+            'sub_title' => 'Get_notification_on_subscription_renew',
+        ];
+        $data []=[
+            'title' => 'subscription_shift',
+            'key' => 'store_subscription_shift',
+            'store_id' => $id,
+            'mail_status' => 'active',
+            'sms_status' => 'disable',
+            'push_notification_status' => 'active',
+            'sub_title' => 'Get_notification_on_subscription_shift',
+        ];
+        $data []=[
+            'title' => 'subscription_cancel',
+            'key' => 'store_subscription_cancel',
+            'store_id' => $id,
+            'mail_status' => 'active',
+            'sms_status' => 'disable',
+            'push_notification_status' => 'active',
+            'sub_title' => 'Get_notification_on_subscription_cancel',
+        ];
+        $data []=[
+            'title' => 'subscription_plan_update',
+            'key' => 'store_subscription_plan_update',
+            'store_id' => $id,
+            'mail_status' => 'active',
+            'sms_status' => 'disable',
+            'push_notification_status' => 'active',
+            'sub_title' => 'Get_notification_on_subscription_plan_update',
         ];
 
 
