@@ -102,7 +102,7 @@ class OrderController extends Controller
             'contact_person_name' => $request->user ? 'nullable' : 'required',
             'contact_person_number' => $request->user ? 'nullable' : 'required',
             'contact_person_email' => $request->user ? 'nullable' : 'required',
-            'password' => $request->create_new_user ? 'nullable' : ['required', Password::min(8)],
+            'password' => $request->create_new_user ? ['required', Password::min(8)] : 'nullable',
         ]);
 
         if ($validator->fails()) {
@@ -110,6 +110,20 @@ class OrderController extends Controller
         }
 
         if($request->create_new_user){
+            if(User::where('phone',$request->contact_person_number)->first()){
+                return response()->json([
+                    'errors' => [
+                        ['code' => 'phone_person_email', 'message' => translate('messages.phone_already_taken')]
+                    ]
+                ], 403);
+            }
+            if(User::where('email',$request->contact_person_email)->first()){
+                return response()->json([
+                    'errors' => [
+                        ['code' => 'contact_person_email', 'message' => translate('messages.email_already_taken')]
+                    ]
+                ], 403);
+            }
             $user = new User();
             $user->f_name = $request->contact_person_name;
             $user->email = $request->contact_person_email;
@@ -142,10 +156,10 @@ class OrderController extends Controller
                     })
                     ->delete();
 
-                Cart::where('user_id',  )->update(['user_id' => $user->id,'is_guest' => 0]);
+                Cart::where('user_id', $request->guest_id)->update(['user_id' => $user->id,'is_guest' => 0]);
             }
 
-            $request->is_guest = false;
+            $request->is_guest = 0;
             $request->user = $user;
         }
 

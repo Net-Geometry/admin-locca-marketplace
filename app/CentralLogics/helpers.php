@@ -969,7 +969,8 @@ class Helpers
                 'lng' => $item->last_location ? $item->last_location->longitude : false,
                 'location' => $item->last_location ? $item->last_location->location : '',
                 'storage' => $storage_type,
-                'image_link' => $item['image_full_url']
+                'image_link' => $item['image_full_url'],
+                'image_full_url' => $item['image_full_url'],
             ];
         }
         $data = $storage;

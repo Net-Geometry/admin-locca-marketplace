@@ -5028,4 +5028,5 @@
   'If_enabled,_deliverymen_will_receive_an_email_for_account_unsuspension' => 'If enabled, deliverymen will receive an email for account unsuspension',
   'If_disabled,_deliverymen_will_not_receive_an_email_for_account_unsuspension.' => 'If disabled, deliverymen will not receive an email for account unsuspension.',
   'Logo_must_be_1:1.' => 'Logo must be 1:1.',
+  'phone_already_taken' => 'Phone already taken',
 );
