@@ -5219,4 +5219,7 @@
   'Email_Verification' => 'Email Verification',
   'verification_otp' => 'Verification otp',
   'your_verification_otp_is' => 'Your verification otp is',
+  'Login_Verification' => 'Login Verification',
+  'phone_number_varified_successfully' => 'Phone number varified successfully',
+  'password_is_required' => 'Password is required',
 );
