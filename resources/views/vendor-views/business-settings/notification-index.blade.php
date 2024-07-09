@@ -52,7 +52,11 @@
                                         </label>
                                     @else
 
-                                        <label class="toggle-switch toggle-switch-sm" data-toggle="tooltip" title="{{ translate('toggle_push_notification_for') .' '.translate($item->title)  }}">
+                                        <label class="toggle-switch toggle-switch-sm" data-toggle="tooltip"  @if ($item->push_notification_status  == 'active')
+                                            title="{{ translate('Turn_Off_push_notification_for') .' '.translate($item->title)  }}"
+                                        @else
+                                            title="{{ translate('Turn_On_push_notification_for') .' '.translate($item->title)  }}"
+                                        @endif >
                                             <input type="checkbox"
                                                    id="push_notification_{{$item->key}}"
                                                    data-id="push_notification_{{$item->key}}"
@@ -79,7 +83,12 @@
                                         </label>
                                     @else
 
-                                        <label class="toggle-switch toggle-switch-sm" data-toggle="tooltip" title="{{ translate('toggle_Mail_for') .' '.translate($item->title)  }}">
+                                        <label class="toggle-switch toggle-switch-sm" data-toggle="tooltip"
+                                        @if ($item->mail_status  == 'active')
+                                            data-toggle="tooltip" title="{{ translate('Turn_Off_Mail_for') .' '.translate($item->title)  }}"
+                                            @else
+                                            data-toggle="tooltip" title="{{ translate('Turn_On_Mail_for') .' '.translate($item->title)  }}"
+                                            @endif>
 
                                             <input type="checkbox" data-type="toggle"
                                                    id="mail_{{ $item->key }}"
@@ -107,7 +116,11 @@
                                         </label>
                                     @else
 
-                                        <label class="toggle-switch toggle-switch-sm" data-toggle="tooltip" title="{{ translate('toggle_SMS_for') .' '.translate($item->title)  }}">
+                                        <label class="toggle-switch toggle-switch-sm" data-toggle="tooltip"    @if ($item->mail_status  == 'active')
+                                            data-toggle="tooltip" title="{{ translate('Turn_Off_Mail_for') .' '.translate($item->title)  }}"
+                                            @else
+                                            data-toggle="tooltip" title="{{ translate('Turn_On_Mail_for') .' '.translate($item->title)  }}"
+                                            @endif>
                                             <input type="checkbox"
                                                    id="SMS_{{ $item->key }}"
                                                    data-id="SMS_{{ $item->key }}"
