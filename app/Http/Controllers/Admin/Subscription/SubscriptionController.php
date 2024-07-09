@@ -188,8 +188,11 @@ class SubscriptionController extends Controller
         try {
             if (config('mail.status') && Helpers::get_mail_status('subscription_plan_upadte_mail_status_store') == '1') {
             $subscribers= StoreSubscription::with('store:id,name,email')->select(['store_id'])->where(['package_id' =>  $subscriptionackage->id,'status'=> 1])->get();
-                foreach ($subscribers as $subscriber){
-                    Mail::to($subscriber?->store?->email)->send(new SubscriptionPlanUpdate($subscriber?->store?->name));
+
+            foreach ($subscribers as $subscriber){
+                    if(Helpers::getNotificationStatusData('store','store_subscription_plan_update','mail_status' ,$subscriber?->store?->id)){
+                        Mail::to($subscriber?->store?->email)->send(new SubscriptionPlanUpdate($subscriber?->store?->name));
+                    }
                 }
             }
         } catch (\Exception $ex) {
@@ -487,7 +490,7 @@ class SubscriptionController extends Controller
 
         try {
             $store=Store::where('id',$id)->select(['id','name','email'])->first();
-            if (config('mail.status') && Helpers::get_mail_status('subscription_cancel_mail_status_store') == '1') {
+            if (config('mail.status') && Helpers::get_mail_status('subscription_cancel_mail_status_store') == '1' &&  Helpers::getNotificationStatusData('store','store_subscription_cancel','mail_status' ,$store?->id)) {
                 Mail::to($store->email)->send(new SubscriptionCancel($store->name));
             }
         } catch (\Exception $ex) {

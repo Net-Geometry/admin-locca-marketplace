@@ -49,7 +49,7 @@ class SubscriptionController extends Controller
 
         try {
             $store=Store::where('id',Helpers::get_store_id())->select(['id','name','email'])->first();
-            if (config('mail.status') && Helpers::get_mail_status('subscription_cancel_mail_status_store') == '1') {
+            if (config('mail.status') && Helpers::get_mail_status('subscription_cancel_mail_status_store') == '1' &&  Helpers::getNotificationStatusData('store','store_subscription_cancel','mail_status' ,$store?->id)) {
                 Mail::to($store->email)->send(new SubscriptionCancel($store->name));
             }
         } catch (\Exception $ex) {

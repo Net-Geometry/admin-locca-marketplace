@@ -40,6 +40,7 @@ use App\Contracts\Repositories\ConversationRepositoryInterface;
 use App\Enums\ViewPaths\Admin\DeliveryMan as DeliveryManViewPath;
 use App\Contracts\Repositories\OrderTransactionRepositoryInterface;
 use App\Contracts\Repositories\UserNotificationRepositoryInterface;
+use App\CentralLogics\Helpers;
 
 class DeliveryManController extends BaseController
 {
@@ -207,10 +208,10 @@ class DeliveryManController extends BaseController
                 }
             }
             try {
-                if (config('mail.status') && getWebConfigStatus('suspend_mail_status_dm') == '1' &&  $request['status'] == 0) {
+                if (config('mail.status') && getWebConfigStatus('suspend_mail_status_dm') == '1' &&  $request['status'] == 0 && Helpers::getNotificationStatusData('deliveryman','deliveryman_account_block','mail_status') ) {
                     Mail::to($deliveryMan['email'])->send(new DmSuspendMail('suspend',$deliveryMan['f_name']));
                 }
-                elseif(config('mail.status') && getWebConfigStatus('unsuspend_mail_status_dm') == '1' &&  $request['status'] != 0){
+                elseif(config('mail.status') && getWebConfigStatus('unsuspend_mail_status_dm') == '1' &&  $request['status'] != 0 && Helpers::getNotificationStatusData('deliveryman','deliveryman_account_unblock','mail_status')){
                     Mail::to($deliveryMan['email'])->send(new DmSuspendMail('unsuspend',$deliveryMan['f_name']));
                 }
             }  catch (Exception) {
@@ -429,13 +430,13 @@ class DeliveryManController extends BaseController
             if($request['status']=='approved'){
 
                 $mail_status = getWebConfigStatus('approve_mail_status_dm');
-                if(config('mail.status') && $mail_status == '1'){
+                if(config('mail.status') && $mail_status == '1'  && Helpers::getNotificationStatusData('deliveryman','deliveryman_registration_approval','mail_status')){
                     Mail::to($deliveryMan->email)->send(new DmSelfRegistration('approved',$deliveryMan->f_name.' '.$deliveryMan->l_name));
                 }
             }else{
 
                 $mail_status = getWebConfigStatus('deny_mail_status_dm');
-                if(config('mail.status') && $mail_status == '1'){
+                if(config('mail.status') && $mail_status == '1' && Helpers::getNotificationStatusData('deliveryman','deliveryman_registration_deny','mail_status')){
                     Mail::to($deliveryMan->email)->send(new DmSelfRegistration('denied', $deliveryMan->f_name.' '.$deliveryMan->l_name));
                 }
             }

@@ -99,13 +99,13 @@ class CustomerController extends Controller
                     ]);
                 }
 
-                if ( config('mail.status') && Helpers::get_mail_status('suspend_mail_status_user') == '1') {
-                    Mail::to( $customer->email)->send(new \App\Mail\UserStatus('suspended', $customer->f_name.' '.$customer->l_name));
+                if ( config('mail.status') && Helpers::get_mail_status('suspend_mail_status_user') == '1' &&  Helpers::getNotificationStatusData('customer','customer_account_block','mail_status') )  {
+                    Mail::to($customer->email)->send(new \App\Mail\UserStatus('suspended', $customer->f_name.' '.$customer->l_name));
                 }
 
             } else{
-                if ( config('mail.status') && Helpers::get_mail_status('unsuspend_mail_status_user')== '1') {
-                    Mail::to( $customer->email)->send(new \App\Mail\UserStatus('unsuspended', $customer->f_name.' '.$customer->l_name));
+                if ( config('mail.status') && Helpers::get_mail_status('unsuspend_mail_status_user')== '1' &&  Helpers::getNotificationStatusData('customer','customer_account_unblock','mail_status') ) {
+                    Mail::to($customer->email)->send(new \App\Mail\UserStatus('unsuspended', $customer->f_name.' '.$customer->l_name));
                 }
             }
 

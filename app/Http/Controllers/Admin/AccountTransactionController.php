@@ -118,14 +118,11 @@ class AccountTransactionController extends Controller
         }
 
         try {
-            if($request['type']=='deliveryman' && $request['deliveryman_id'] && config('mail.status')){
-                $mail_status = Helpers::get_mail_status('cash_collect_mail_status_dm');
-                if (config('mail.status') && $mail_status == '1') {
-                    Mail::to($data['email'])->send(new \App\Mail\CollectCashMail($account_transaction,$data['f_name']));
-                }
+            if($request['type']=='deliveryman' && $request['deliveryman_id'] && config('mail.status') &&  Helpers::get_mail_status('cash_collect_mail_status_dm') == '1'  &&  Helpers::getNotificationStatusData('deliveryman','deliveryman_collect_cash','mail_status')){
+                Mail::to($data['email'])->send(new \App\Mail\CollectCashMail($account_transaction,$data['f_name']));
             }
         } catch (\Throwable $th) {
-            
+
         }
         return response()->json(200);
     }

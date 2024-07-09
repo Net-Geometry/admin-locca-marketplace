@@ -297,8 +297,7 @@ class OrderLogic
                         $ref_code_exchange_amt = BusinessSetting::where('key','ref_earning_exchange_rate')->first()->value;
                         $referar_user=User::where('id',$order->customer->ref_by)->first();
                         $refer_wallet_transaction = CustomerLogic::create_wallet_transaction($referar_user->id, $ref_code_exchange_amt, 'referrer',$order->customer->phone);
-                        $mail_status = Helpers::get_mail_status('add_fund_mail_status_user');
-
+                        
                         $notification_data = [
                             'title' => translate('messages.Congratulation'),
                             'description' => translate('You have received').' '.Helpers::format_currency($ref_code_exchange_amt).' '.translate('in your wallet as').' '.$order?->customer?->f_name.' '.$order?->customer?->l_name.' '.translate('you referred completed thier first order') ,
@@ -319,7 +318,7 @@ class OrderLogic
 
 
                         try{
-                            if(config('mail.status') && $mail_status == '1') {
+                            if(config('mail.status') && Helpers::get_mail_status('add_fund_mail_status_user') == '1' && Helpers::getNotificationStatusData('customer','customer_add_fund_to_wallet','mail_status') ) {
                                 Mail::to($referar_user->email)->send(new \App\Mail\AddFundToWallet($refer_wallet_transaction));
                             }
                         } catch(\Exception $ex){

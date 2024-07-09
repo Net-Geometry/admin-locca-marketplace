@@ -170,9 +170,8 @@ class AdvertisementController extends Controller
 
 
         try {
-            $notification_status= Helpers::getNotificationStatusData('admin','advertisement_add');
 
-            if($notification_status?->mail_status == 'active' && config('mail.status') && Helpers::get_mail_status('new_advertisement_mail_status_admin') == '1'){
+            if( Helpers::getNotificationStatusData('admin','advertisement_add','mail_status' ) && config('mail.status') && Helpers::get_mail_status('new_advertisement_mail_status_admin') == '1'){
                 Mail::to(Admin::where('role_id', 1)->first()?->email)->send(new \App\Mail\AdminAdversitementMail($advertisement?->store?->name,'new_advertisement' ,$advertisement->id));
         }
         } catch (\Throwable $th) {
@@ -283,9 +282,8 @@ class AdvertisementController extends Controller
         }
 
         try {
-            $notification_status= Helpers::getNotificationStatusData('admin','advertisement_update');
 
-            if($notification_status?->mail_status == 'active' && config('mail.status') && Helpers::get_mail_status('update_advertisement_mail_status_admin') == '1'){
+            if(Helpers::getNotificationStatusData('admin','advertisement_update','mail_status' ) && config('mail.status') && Helpers::get_mail_status('update_advertisement_mail_status_admin') == '1'){
                     Mail::to(Admin::where('role_id', 1)->first()?->email)->send(new \App\Mail\AdminAdversitementMail($advertisement?->store?->name,'update_advertisement' ,$advertisement->id));
             }
         } catch (\Throwable $th) {
@@ -463,9 +461,7 @@ class AdvertisementController extends Controller
         Translation::insert($data);
 
             try {
-            $notification_status= Helpers::getNotificationStatusData('admin','advertisement_add');
-
-            if($notification_status?->mail_status == 'active' && config('mail.status') && Helpers::get_mail_status('new_advertisement_mail_status_admin') == '1'){
+            if( Helpers::getNotificationStatusData('admin','advertisement_add','mail_status' ) && config('mail.status') && Helpers::get_mail_status('new_advertisement_mail_status_admin') == '1'){
                 Mail::to(Admin::where('role_id', 1)->first()?->email)->send(new \App\Mail\AdminAdversitementMail($advertisement?->store?->name,'new_advertisement' ,$advertisement->id));
         }
         } catch (\Throwable $th) {

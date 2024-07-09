@@ -176,9 +176,8 @@ if (! function_exists('wallet_success')) {
         $wallet_transaction = CustomerLogic::create_wallet_transaction($data->payer_id, $data->payment_amount, 'add_fund',$data->payment_method);
         if($wallet_transaction)
         {
-            $mail_status = Helpers::get_mail_status('add_fund_mail_status_user');
             try{
-                if(config('mail.status') && $mail_status == '1') {
+                if(config('mail.status') && Helpers::get_mail_status('add_fund_mail_status_user') == '1' &&  Helpers::getNotificationStatusData('customer','customer_add_fund_to_wallet','mail_status')) {
                     Mail::to($wallet_transaction->user->email)->send(new \App\Mail\AddFundToWallet($wallet_transaction));
                 }
             }catch(\Exception $ex)

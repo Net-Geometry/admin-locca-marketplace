@@ -553,8 +553,7 @@ class ItemController extends Controller
             $item->is_approved = 1;
             try
             {
-                $mail_status = Helpers::get_mail_status('product_approve_mail_status_store');
-                if(config('mail.status') && $mail_status == '1') {
+                if(config('mail.status') && Helpers::get_mail_status('product_approve_mail_status_store') == '1' &&  Helpers::getNotificationStatusData('store','store_product_approve','mail_status',$item?->store?->id) ) {
                     Mail::to($item?->store?->vendor?->email)->send(new \App\Mail\VendorProductMail($item?->store?->name,'approved'));
                 }
             }
@@ -1649,8 +1648,8 @@ class ItemController extends Controller
 
         try
         {
-            $mail_status = Helpers::get_mail_status('product_deny_mail_status_store');
-            if(config('mail.status') && $mail_status == '1') {
+
+            if(config('mail.status') && Helpers::get_mail_status('product_deny_mail_status_store')  == '1' &&  Helpers::getNotificationStatusData('store','store_product_reject','mail_status',$data?->store?->id) ) {
                 Mail::to($data?->store?->vendor?->email)->send(new \App\Mail\VendorProductMail($data?->store?->name,'denied'));
             }
         }
@@ -1719,16 +1718,14 @@ class ItemController extends Controller
 
         try
         {
-            $mail_status = Helpers::get_mail_status('product_approve_mail_status_store');
-            if(config('mail.status') && $mail_status == '1') {
-                Mail::to($data?->store?->vendor?->email)->send(new \App\Mail\VendorProductMail($data?->store?->name,'approved'));
+            if(config('mail.status') && Helpers::get_mail_status('product_approve_mail_status_store') == '1' &&  Helpers::getNotificationStatusData('store','store_product_approve','mail_status',$item?->store?->id)) {
+                Mail::to($item?->store?->vendor?->email)->send(new \App\Mail\VendorProductMail($item?->store?->name,'approved'));
             }
         }
         catch(\Exception $e)
         {
             info($e->getMessage());
         }
-
         Toastr::success(translate('messages.Product_approved'));
         return to_route('admin.item.approval_list');
     }

@@ -698,11 +698,11 @@ class VendorController extends Controller
         {
             $admin= Admin::where('role_id', 1)->first();
             $mail_status = Helpers::get_mail_status('campaign_request_mail_status_admin');
-            if(config('mail.status') && $mail_status == '1') {
+            if(config('mail.status') && $mail_status == '1' && Helpers::getNotificationStatusData('admin','campaign_join_request','mail_status' )) {
                 Mail::to($admin->email)->send(new \App\Mail\CampaignRequestMail($store->name));
             }
             $mail_status = Helpers::get_mail_status('campaign_request_mail_status_store');
-            if(config('mail.status') && $mail_status == '1') {
+            if(config('mail.status') && $mail_status == '1' &&  Helpers::getNotificationStatusData('store','store_campaign_join_request','mail_status',$store->id )) {
                 Mail::to($store->vendor->email)->send(new \App\Mail\VendorCampaignRequestMail($store->name,'pending'));
             }
         }
@@ -823,7 +823,7 @@ class VendorController extends Controller
                 DB::table('withdraw_requests')->insert($data);
                 $w?->increment('pending_withdraw', $request['amount']);
                 $mail_status = Helpers::get_mail_status('withdraw_request_mail_status_admin');
-                if(config('mail.status') && $mail_status == '1') {
+                if(config('mail.status') && $mail_status == '1'  &&  Helpers::getNotificationStatusData('admin','withdraw_request','mail_status' )) {
                     $wallet_transaction = WithdrawRequest::where('vendor_id',$w->vendor_id)->latest()->first();
                     $admin= \App\Models\Admin::where('role_id', 1)->first();
                     Mail::to($admin->email)->send(new \App\Mail\WithdrawRequestMail('admin_mail',$wallet_transaction));

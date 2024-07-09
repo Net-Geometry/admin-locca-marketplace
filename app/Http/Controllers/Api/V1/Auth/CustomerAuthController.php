@@ -164,7 +164,7 @@ class CustomerAuthController extends Controller
                 'updated_at' => now(),
             ]);
             $mail_status = Helpers::get_mail_status('registration_otp_mail_status_user');
-            if (config('mail.status') && $mail_status == '1') {
+            if (config('mail.status') && $mail_status == '1'  && Helpers::getNotificationStatusData('customer','customer_registration_otp','mail_status')) {
                 $user = User::where('email', $request['email'])->first();
                 Mail::to($request['email'])->send(new EmailVerification($token,$user->f_name));
             }
@@ -302,7 +302,7 @@ class CustomerAuthController extends Controller
                 'updated_at' => now(),
                 ]);
                 $mail_status = Helpers::get_mail_status('registration_otp_mail_status_user');
-                if (config('mail.status') && $mail_status == '1') {
+                if (config('mail.status') && $mail_status == '1' && Helpers::getNotificationStatusData('customer','customer_registration_otp','mail_status')) {
                     Mail::to($request['email'])->send(new EmailVerification($otp,$request->f_name));
                 }
             //for payment and sms gateway addon
@@ -353,7 +353,7 @@ class CustomerAuthController extends Controller
         try
         {
             $mail_status = Helpers::get_mail_status('registration_mail_status_user');
-            if (config('mail.status') && $request->email && $mail_status == '1') {
+            if (config('mail.status') && $request->email && $mail_status == '1' && Helpers::getNotificationStatusData('customer','customer_registration','mail_status')) {
                 Mail::to($request->email)->send(new \App\Mail\CustomerRegistration($request->f_name . ' ' . $request->l_name));
             }
         }
@@ -430,7 +430,7 @@ class CustomerAuthController extends Controller
                     'updated_at' => now(),
                     ]);
                 $mail_status = Helpers::get_mail_status('login_otp_mail_status_user');
-                if (config('mail.status') && $mail_status == '1') {
+                if (config('mail.status') && $mail_status == '1' && Helpers::getNotificationStatusData('customer','customer_login_otp','mail_status')) {
                     Mail::to($user['email'])->send(new LoginVerification($otp,$user->f_name));
                 }
                 //for payment and sms gateway addon
@@ -469,7 +469,7 @@ class CustomerAuthController extends Controller
                         'type' => 'otp'
                     ];
                     Helpers::send_push_notif_to_device($user->cm_firebase_token, $data);
-    
+
                     DB::table('user_notifications')->insert([
                         'data' => json_encode($data),
                         'user_id' => $user->id,

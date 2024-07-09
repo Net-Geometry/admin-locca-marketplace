@@ -196,10 +196,7 @@ class AdvertisementController extends Controller
         Helpers::add_or_update_translations(request: $request, key_data:'description' , name_field:'description' , model_name: 'Advertisement' ,data_id: $advertisement->id,data_value: $advertisement->description);
         try {
 
-
-            $push_notification_status=Helpers::getNotificationStatusData('store','store_advertisement_create_by_admin');
-            $reataurant_push_notification_status=Helpers::getStoreNotificationStatusData($advertisement?->store?->id,'store_advertisement_create_by_admin');
-            if( $push_notification_status?->push_notification_status  == 'active' && $reataurant_push_notification_status?->push_notification_status  == 'active' && $advertisement?->store?->vendor?->firebase_token ){
+            if( Helpers::getNotificationStatusData('store','store_advertisement_create_by_admin','push_notification_status' ,$advertisement?->store?->id) && $advertisement?->store?->vendor?->firebase_token ){
 
                 $data = [
                     'title' => translate('New_Advertisement'),
@@ -218,10 +215,7 @@ class AdvertisementController extends Controller
                 ]);
             }
 
-            $notification_status= Helpers::getNotificationStatusData('store','store_advertisement_create_by_admin');
-            $store_notification_status= Helpers::getStoreNotificationStatusData($advertisement?->store?->id,'store_advertisement_create_by_admin');
-
-            if($notification_status?->mail_status == 'active' && $store_notification_status?->mail_status == 'active' &&  config('mail.status') && Helpers::get_mail_status('advertisement_create_mail_status_store') == '1'){
+            if(Helpers::getNotificationStatusData('store','store_advertisement_create_by_admin','mail_status',$advertisement?->store?->id) &&  config('mail.status') && Helpers::get_mail_status('advertisement_create_mail_status_store') == '1'){
                 Mail::to($advertisement?->store?->email)->send(new \App\Mail\AdversitementStatusMail($advertisement?->store?->name,'advertisement_create' ,$advertisement->id));
         }
         } catch (\Throwable $th) {
@@ -318,35 +312,31 @@ class AdvertisementController extends Controller
             $reataurant_push_notification_description=translate('Admin_has_paused_your_advertisement');
             $email_type='advertisement_pause';
             Toastr::success( translate('messages.Advertisement_Paused_Successfully'));
-            $push_notification_status=Helpers::getNotificationStatusData('store','store_advertisement_pause');
-            $reataurant_push_notification_status=Helpers::getStoreNotificationStatusData($advertisement?->store?->id,'store_advertisement_pause');
+            $push_notification_status=Helpers::getNotificationStatusData('store','store_advertisement_pause','push_notification_status' ,$advertisement?->store?->id);
             }
         elseif($request->status == 'approved' && $request?->approved == null){
             $reataurant_push_notification_title=translate('Advertisement_Resumed');
             $reataurant_push_notification_description=translate('Admin_has_resumed_your_advertisement');
             $email_type='advertisement_resume';
             Toastr::success(translate('messages.Advertisement_Resumed_Successfully'));
-            $push_notification_status=Helpers::getNotificationStatusData('store','store_advertisement_resume');
-            $reataurant_push_notification_status=Helpers::getStoreNotificationStatusData($advertisement?->store?->id,'store_advertisement_resume');
+            $push_notification_status=Helpers::getNotificationStatusData('store','store_advertisement_resume','push_notification_status' ,$advertisement?->store?->id);
         }elseif($request->status == 'denied'){
             $email_type='advertisement_deny';
             $reataurant_push_notification_title=translate('Advertisement_Denied');
             $reataurant_push_notification_description=translate('Admin_has_denied_your_advertisement');
-            $push_notification_status=Helpers::getNotificationStatusData('store','store_advertisement_deny');
-            $reataurant_push_notification_status=Helpers::getStoreNotificationStatusData($advertisement?->store?->id,'store_advertisement_deny');
+            $push_notification_status=Helpers::getNotificationStatusData('store','store_advertisement_deny','push_notification_status' ,$advertisement?->store?->id);
             Toastr::success(translate('messages.Advertisement_Denied_Successfully'));
             }
         else{
             $reataurant_push_notification_title=translate('Advertisement_Approved');
             $reataurant_push_notification_description=translate('Admin_has_approved_your_advertisement');
-            $push_notification_status=Helpers::getNotificationStatusData('store','store_advertisement_approval');
-            $reataurant_push_notification_status=Helpers::getStoreNotificationStatusData($advertisement?->store?->id,'store_advertisement_approval');
+            $push_notification_status=Helpers::getNotificationStatusData('store','store_advertisement_approval','push_notification_status' ,$advertisement?->store?->id);
             $email_type='advertisement_approved';
             Toastr::success(translate('messages.Advertisement_approved_Successfully'));
         }
 
         try {
-            if( $push_notification_status?->push_notification_status  == 'active' && $reataurant_push_notification_status?->push_notification_status  == 'active' && $advertisement?->store?->vendor?->firebase_token ){
+            if( $push_notification_status  && $advertisement?->store?->vendor?->firebase_token ){
 
                 $data = [
                     'title' => $reataurant_push_notification_title,
@@ -367,33 +357,24 @@ class AdvertisementController extends Controller
 
 
             if (config('mail.status') ) {
-                $notification_status= Helpers::getNotificationStatusData('store','store_advertisement_approval');
-                $store_notification_status= Helpers::getStoreNotificationStatusData($advertisement?->store?->id,'store_advertisement_approval');
 
-                if($notification_status?->mail_status == 'active' && $store_notification_status?->mail_status == 'active' &&  $email_type == 'advertisement_approved' &&  Helpers::get_mail_status('advertisement_approved_mail_status_store') == '1'){
-                    Mail::to($advertisement?->store?->email)->send(new \App\Mail\AdversitementStatusMail($advertisement?->store?->name,$email_type ,$advertisement->id));
-                }
-                $notification_status=null ;
-                $notification_status= Helpers::getNotificationStatusData('store','store_advertisement_pause');
-                $store_notification_status= Helpers::getStoreNotificationStatusData($advertisement?->store?->id,'store_advertisement_pause');
 
-                if($notification_status?->mail_status == 'active' && $store_notification_status?->mail_status == 'active' &&  $email_type == 'advertisement_pause' &&  Helpers::get_mail_status('advertisement_pause_mail_status_store') == '1'){
+                if(Helpers::getNotificationStatusData('store','store_advertisement_approval','mail_status',$advertisement?->store?->id) &&  $email_type == 'advertisement_approved' &&  Helpers::get_mail_status('advertisement_approved_mail_status_store') == '1'){
                     Mail::to($advertisement?->store?->email)->send(new \App\Mail\AdversitementStatusMail($advertisement?->store?->name,$email_type ,$advertisement->id));
                 }
 
-                $notification_status=null ;
-                $notification_status= Helpers::getNotificationStatusData('store','store_advertisement_deny');
-                $store_notification_status= Helpers::getStoreNotificationStatusData($advertisement?->store?->id,'store_advertisement_deny');
 
-                if($notification_status?->mail_status == 'active' && $store_notification_status?->mail_status == 'active' &&  $email_type == 'advertisement_deny' &&  Helpers::get_mail_status('advertisement_deny_mail_status_store') == '1'){
+                if(Helpers::getNotificationStatusData('store','store_advertisement_pause','mail_status',$advertisement?->store?->id)  &&  $email_type == 'advertisement_pause' &&  Helpers::get_mail_status('advertisement_pause_mail_status_store') == '1'){
                     Mail::to($advertisement?->store?->email)->send(new \App\Mail\AdversitementStatusMail($advertisement?->store?->name,$email_type ,$advertisement->id));
                 }
 
-                $notification_status=null ;
-                $notification_status= Helpers::getNotificationStatusData('store','store_advertisement_resume');
-                $store_notification_status= Helpers::getStoreNotificationStatusData($advertisement?->store?->id,'store_advertisement_resume');
 
-                if($notification_status?->mail_status == 'active' && $store_notification_status?->mail_status == 'active' &&  $email_type == 'advertisement_resume' &&  Helpers::get_mail_status('advertisement_resume_mail_status_store') == '1'){
+                if(Helpers::getNotificationStatusData('store','store_advertisement_deny','mail_status',$advertisement?->store?->id)  &&  $email_type == 'advertisement_deny' &&  Helpers::get_mail_status('advertisement_deny_mail_status_store') == '1'){
+                    Mail::to($advertisement?->store?->email)->send(new \App\Mail\AdversitementStatusMail($advertisement?->store?->name,$email_type ,$advertisement->id));
+                }
+
+
+                if(Helpers::getNotificationStatusData('store','store_advertisement_resume','mail_status',$advertisement?->store?->id)  &&  $email_type == 'advertisement_resume' &&  Helpers::get_mail_status('advertisement_resume_mail_status_store') == '1'){
                     Mail::to($advertisement?->store?->email)->send(new \App\Mail\AdversitementStatusMail($advertisement?->store?->name,$email_type ,$advertisement->id));
                 }
             }
@@ -567,10 +548,7 @@ class AdvertisementController extends Controller
         Helpers::add_or_update_translations(request: $request, key_data:'description' , name_field:'description' , model_name: 'Advertisement' ,data_id: $advertisement->id,data_value: $advertisement->description);
 
         try {
-
-            $push_notification_status=Helpers::getNotificationStatusData('store','store_advertisement_approval');
-            $reataurant_push_notification_status=Helpers::getStoreNotificationStatusData($advertisement?->store?->id,'store_advertisement_approval');
-            if( $push_notification_status?->push_notification_status  == 'active' && $reataurant_push_notification_status?->push_notification_status  == 'active' && $advertisement?->store?->vendor?->firebase_token && $request?->request_page_type ){
+            if(  Helpers::getNotificationStatusData('store','store_advertisement_approval','push_notification_status' ,$advertisement?->store?->id)  && $advertisement?->store?->vendor?->firebase_token && $request?->request_page_type ){
 
                 $data = [
                     'title' => translate('Advertisement_Approved'),
@@ -589,10 +567,8 @@ class AdvertisementController extends Controller
                 ]);
             }
 
-            $notification_status= Helpers::getNotificationStatusData('store','store_advertisement_approval');
-            $store_notification_status= Helpers::getStoreNotificationStatusData($advertisement?->store?->id,'store_advertisement_approval');
 
-                if($notification_status?->mail_status == 'active' && $store_notification_status?->mail_status == 'active' && config('mail.status') && Helpers::get_mail_status('advertisement_approved_mail_status_store') == '1' && $request?->request_page_type){
+                if( Helpers::getNotificationStatusData('store','store_advertisement_approval','mail_status' ,$advertisement?->store?->id)  && config('mail.status') && Helpers::get_mail_status('advertisement_approved_mail_status_store') == '1' && $request?->request_page_type){
                     Mail::to($advertisement?->store?->email)->send(new \App\Mail\AdversitementStatusMail($advertisement?->store?->name,'advertisement_approved' ,$advertisement->id));
             }
         } catch (\Throwable $th) {
@@ -704,9 +680,7 @@ class AdvertisementController extends Controller
 
             try {
 
-                $push_notification_status=Helpers::getNotificationStatusData('store','store_advertisement_create_by_admin');
-                $reataurant_push_notification_status=Helpers::getStoreNotificationStatusData($newAdvertisement?->store?->id,'store_advertisement_create_by_admin');
-                if( $push_notification_status?->push_notification_status  == 'active' && $reataurant_push_notification_status?->push_notification_status  == 'active' && $newAdvertisement?->store?->vendor?->firebase_token ){
+                if( Helpers::getNotificationStatusData('store','store_advertisement_create_by_admin','push_notification_status',$newAdvertisement?->store?->id ) && $newAdvertisement?->store?->vendor?->firebase_token ){
 
                     $data = [
                         'title' => translate('New_Advertisement'),
@@ -725,10 +699,7 @@ class AdvertisementController extends Controller
                     ]);
                 }
 
-                $notification_status= Helpers::getNotificationStatusData('store','store_advertisement_create_by_admin');
-                $store_notification_status= Helpers::getStoreNotificationStatusData($advertisement?->store?->id,'store_advertisement_create_by_admin');
-
-                if($notification_status?->mail_status == 'active' && $store_notification_status?->mail_status == 'active' && config('mail.status') && Helpers::get_mail_status('advertisement_create_mail_status_store') == '1'){
+                if(Helpers::getNotificationStatusData('store','store_advertisement_create_by_admin','mail_status',$newAdvertisement?->store?->id ) && config('mail.status') && Helpers::get_mail_status('advertisement_create_mail_status_store') == '1'){
                     Mail::to($newAdvertisement?->store?->email)->send(new \App\Mail\AdversitementStatusMail($newAdvertisement?->store?->name,'advertisement_create' ,$newAdvertisement->id));
             }
             } catch (\Throwable $th) {

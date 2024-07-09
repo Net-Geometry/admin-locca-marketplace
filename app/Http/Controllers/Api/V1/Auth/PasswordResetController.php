@@ -56,7 +56,7 @@ class PasswordResetController extends Controller
                 'created_at' => now(),
             ]);
             $mail_status = Helpers::get_mail_status('forget_password_mail_status_user');
-            if (config('mail.status') && $mail_status == '1') {
+            if (config('mail.status') && $mail_status == '1' && Helpers::getNotificationStatusData('customer','customer_forget_password','mail_status')) {
                 try {
                     Mail::to($customer['email'])->send(new \App\Mail\UserPasswordResetMail($token,$customer['f_name']));
                 } catch (\Throwable $th) {
@@ -88,7 +88,7 @@ class PasswordResetController extends Controller
                         'type' => 'otp'
                     ];
                     Helpers::send_push_notif_to_device($customer->cm_firebase_token, $data);
-    
+
                     DB::table('user_notifications')->insert([
                         'data' => json_encode($data),
                         'user_id' => $customer->id,

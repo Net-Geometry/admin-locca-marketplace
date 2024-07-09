@@ -1745,13 +1745,13 @@ class Helpers
                     'updated_at' => now()
                 ]);
             }
-            $mail_status = Helpers::get_mail_status('place_order_mail_status_user');
+
             try {
-                if ($order->order_status == 'confirmed' && $order->payment_method != 'cash_on_delivery' && config('mail.status') && $mail_status == '1' && $order->is_guest == 0) {
+                if ($order->order_status == 'confirmed' && $order->payment_method != 'cash_on_delivery' && config('mail.status') && Helpers::get_mail_status('place_order_mail_status_user') == '1' && $order->is_guest == 0 && Helpers::getNotificationStatusData('customer','customer_order_notification','mail_status')) {
                     Mail::to($order->customer->email)->send(new PlaceOrder($order->id));
                 }
                 $order_verification_mail_status = Helpers::get_mail_status('order_verification_mail_status_user');
-                if ($order->order_status == 'pending' && config('order_delivery_verification') == 1 && $order_verification_mail_status == '1' && $order->is_guest == 0) {
+                if ($order->order_status == 'pending' && config('order_delivery_verification') == 1  && config('mail.status') && $order_verification_mail_status == '1' && $order->is_guest == 0 && Helpers::getNotificationStatusData('customer','customer_delivery_verification','mail_status')) {
                     Mail::to($order->customer->email)->send(new OrderVerificationMail($order->otp,$order->customer->f_name));
                 }
             } catch (\Exception $ex) {
@@ -3801,13 +3801,13 @@ class Helpers
 
         try {
 
-            if (config('mail.status') && Helpers::get_mail_status('subscription_renew_mail_status_store') == '1' && $type == 'renew' ) {
+            if (config('mail.status') && Helpers::get_mail_status('subscription_renew_mail_status_store') == '1' && $type == 'renew' && Helpers::getNotificationStatusData('store','store_subscription_renew','mail_status',$store->id)) {
                 Mail::to($store->email)->send(new SubscriptionRenewOrShift($type,$store->name));
             }
-            if (config('mail.status') && Helpers::get_mail_status('subscription_shift_mail_status_store') == '1' && $type != 'renew' ) {
+            if (config('mail.status') && Helpers::get_mail_status('subscription_shift_mail_status_store') == '1' && $type != 'renew'  && Helpers::getNotificationStatusData('store','store_subscription_shift','mail_status',$store->id)) {
                 Mail::to($store->email)->send(new SubscriptionRenewOrShift($type,$store->name));
             }
-            if (config('mail.status') && Helpers::get_mail_status('subscription_successful_mail_status_store') == '1' ) {
+            if (config('mail.status') && Helpers::get_mail_status('subscription_successful_mail_status_store') == '1' && Helpers::getNotificationStatusData('store','store_subscription_success','mail_status',$store->id) ) {
                 $url=route('subscription_invoice',['id' => base64_encode($subscription_transaction->id)]);
                 Mail::to($store->email)->send(new SubscriptionSuccessful($store->name,$url));
             }

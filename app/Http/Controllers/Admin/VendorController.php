@@ -822,11 +822,11 @@ class VendorController extends Controller
                     ]);
                 }
 
-                if ( config('mail.status') && Helpers::get_mail_status('suspend_mail_status_store') == '1') {
+                if ( config('mail.status') && Helpers::get_mail_status('suspend_mail_status_store') == '1' &&  Helpers::getNotificationStatusData('store','store_account_block','mail_status',$store?->id)) {
                     Mail::to( $vendor?->email)->send(new \App\Mail\VendorStatus('suspended', $vendor?->f_name.' '.$vendor?->l_name));
                 }
             } else{
-                if ( config('mail.status') && Helpers::get_mail_status('unsuspend_mail_status_store') == '1') {
+                if ( config('mail.status') && Helpers::get_mail_status('unsuspend_mail_status_store') == '1' &&  Helpers::getNotificationStatusData('store','store_account_unblock','mail_status',$store?->id)) {
                     Mail::to( $vendor?->email)->send(new \App\Mail\VendorStatus('unsuspended', $vendor?->f_name.' '.$vendor?->l_name));
                 }
             }
@@ -1025,13 +1025,11 @@ class VendorController extends Controller
         $store->save();
         try{
             if($request->status==1){
-                $mail_status = Helpers::get_mail_status('approve_mail_status_store');
-                if ( config('mail.status') && $mail_status == '1') {
+                if ( config('mail.status') && Helpers::get_mail_status('approve_mail_status_store') == '1' &&  Helpers::getNotificationStatusData('store','store_registration_approval','mail_status',$store?->id)) {
                     Mail::to($store?->vendor?->email)->send(new \App\Mail\VendorSelfRegistration('approved', $store->vendor->f_name.' '.$store->vendor->l_name));
                 }
             }else{
-                $mail_status = Helpers::get_mail_status('deny_mail_status_store');
-                if ( config('mail.status') && $mail_status == '1') {
+                if ( config('mail.status') &&  Helpers::get_mail_status('deny_mail_status_store') == '1' &&  Helpers::getNotificationStatusData('store','store_registration_deny','mail_status',$store?->id)) {
                     Mail::to($store?->vendor?->email)->send(new \App\Mail\VendorSelfRegistration('denied', $store->vendor->f_name.' '.$store->vendor->l_name));
                 }
             }
@@ -1190,8 +1188,7 @@ class VendorController extends Controller
             $withdraw->save();
             try
             {
-                $mail_status = Helpers::get_mail_status('withdraw_approve_mail_status_store');
-                if(config('mail.status') && $mail_status == '1') {
+                if(config('mail.status') &&  Helpers::get_mail_status('withdraw_approve_mail_status_store') == '1' &&  Helpers::getNotificationStatusData('store','store_withdraw_approve','mail_status',$withdraw->vendor?->stores[0]?->id)) {
                     Mail::to($withdraw->vendor->email)->send(new \App\Mail\WithdrawRequestMail('approved',$withdraw));
                 }
             }
@@ -1206,8 +1203,8 @@ class VendorController extends Controller
             $withdraw->save();
             try
             {
-                $mail_status = Helpers::get_mail_status('withdraw_deny_mail_status_store');
-                if(config('mail.status') && $mail_status == '1') {
+
+                if(config('mail.status') &&  Helpers::get_mail_status('withdraw_deny_mail_status_store') == '1'  &&  Helpers::getNotificationStatusData('store','store_withdraw_rejaction','mail_status',$withdraw->vendor?->stores[0]?->id)) {
                     Mail::to($withdraw->vendor->email)->send(new \App\Mail\WithdrawRequestMail('denied',$withdraw));
                 }
             }

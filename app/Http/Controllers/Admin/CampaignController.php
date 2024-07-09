@@ -722,9 +722,9 @@ class CampaignController extends Controller
 
     public function delete(Campaign $campaign)
     {
-     
+
         Helpers::check_and_delete('campaign/' , $campaign->image);
-        
+
         $campaign->translations()->delete();
         $campaign->delete();
         Toastr::success(translate('messages.campaign_deleted_successfully'));
@@ -732,9 +732,9 @@ class CampaignController extends Controller
     }
     public function delete_item(ItemCampaign $campaign)
     {
-      
+
         Helpers::check_and_delete('campaign/' , $campaign->image);
-        
+
         $campaign->translations()->delete();
         $campaign?->carts()?->delete();
         $campaign->delete();
@@ -748,8 +748,7 @@ class CampaignController extends Controller
         $campaign->save();
         try
         {
-            $mail_status = Helpers::get_mail_status('campaign_deny_mail_status_store');
-            if(config('mail.status') && $mail_status == '1') {
+            if(config('mail.status') && Helpers::get_mail_status('campaign_deny_mail_status_store') == '1' &&  Helpers::getNotificationStatusData('store','store_campaign_join_rejaction','mail_status',$store->id )) {
                 Mail::to($store->vendor->email)->send(new \App\Mail\VendorCampaignRequestMail($store->name,'denied'));
             }
         }
@@ -776,13 +775,12 @@ class CampaignController extends Controller
         try
         {
             $store=Store::find($store_id);
-            $mail_status = Helpers::get_mail_status('campaign_deny_mail_status_store');
-            if(config('mail.status') && $mail_status == '1' && $status == 'rejected') {
+
+            if(config('mail.status') && Helpers::get_mail_status('campaign_deny_mail_status_store') == '1' && $status == 'rejected' &&  Helpers::getNotificationStatusData('store','store_campaign_join_rejaction','mail_status',$store->id )) {
                 Mail::to($store->vendor->email)->send(new \App\Mail\VendorCampaignRequestMail($store->name,'denied'));
             }
 
-            $mail_status = Helpers::get_mail_status('campaign_approve_mail_status_store');
-            if(config('mail.status') && $mail_status == '1' && $status == 'confirmed') {
+            if(config('mail.status') && Helpers::get_mail_status('campaign_approve_mail_status_store') == '1' && $status == 'confirmed' &&  Helpers::getNotificationStatusData('store','store_campaign_join_approval','mail_status',$store->id )) {
                 Mail::to($store->vendor->email)->send(new \App\Mail\VendorCampaignRequestMail($store->name,'approved'));
             }
         }

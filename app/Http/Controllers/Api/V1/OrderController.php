@@ -135,7 +135,7 @@ class OrderController extends Controller
             try
             {
                 $mail_status = Helpers::get_mail_status('registration_mail_status_user');
-                if (config('mail.status') && $request->email && $mail_status == '1') {
+                if (config('mail.status') && $request->email && $mail_status == '1' && Helpers::getNotificationStatusData('customer','customer_registration','mail_status')) {
                     Mail::to($request->email)->send(new \App\Mail\CustomerRegistration($request->contact_person_name));
                 }
             }
@@ -1027,16 +1027,16 @@ class OrderController extends Controller
                         }
 
 
-                    if ($order->order_status == 'pending' && config('mail.status') && $order_mail_status == '1' && $request->user) {
+                    if ($order->order_status == 'pending' && config('mail.status') && $order_mail_status == '1' && $request->user && Helpers::getNotificationStatusData('customer','customer_order_notification','mail_status')) {
                         Mail::to($request->user->email)->send(new PlaceOrder($order->id));
                     }
-                    if ($order->order_status == 'pending' && config('order_delivery_verification') == 1 && $order_verification_mail_status == '1' && $request->user) {
+                    if ($order->order_status == 'pending' && config('order_delivery_verification') == 1 && $order_verification_mail_status == '1' && $request->user && Helpers::getNotificationStatusData('customer','customer_delivery_verification','mail_status')) {
                         Mail::to($request->user->email)->send(new OrderVerificationMail($order->otp,$request->user->f_name));
                     }
-                    if ($order->is_guest == 1 && $order->order_status == 'pending' && config('mail.status') && $order_mail_status == '1' && isset($request->contact_person_email)) {
+                    if ($order->is_guest == 1 && $order->order_status == 'pending' && config('mail.status') && $order_mail_status == '1' && isset($request->contact_person_email) && Helpers::getNotificationStatusData('customer','customer_order_notification','mail_status')) {
                         Mail::to($request->contact_person_email)->send(new PlaceOrder($order->id));
                     }
-                    if ($order->is_guest == 1 && $order->order_status == 'pending' && config('order_delivery_verification') == 1 && $order_verification_mail_status == '1' && isset($request->contact_person_email)) {
+                    if ($order->is_guest == 1 && $order->order_status == 'pending' && config('order_delivery_verification') == 1 && $order_verification_mail_status == '1' && isset($request->contact_person_email) && Helpers::getNotificationStatusData('customer','customer_delivery_verification','mail_status') ) {
                         Mail::to($request->contact_person_email)->send(new OrderVerificationMail($order->otp,$request->contact_person_name));
                     }
                 }
@@ -1482,7 +1482,7 @@ class OrderController extends Controller
             $mail_status = Helpers::get_mail_status('place_order_mail_status_user');
             //PlaceOrderMail
             try {
-                if ($order->order_status == 'pending' && config('mail.status') && $mail_status == '1' && $request->user) {
+                if ($order->order_status == 'pending' && config('mail.status') && $mail_status == '1' && $request->user && Helpers::getNotificationStatusData('customer','customer_order_notification','mail_status')) {
                     Mail::to($request->user->email)->send(new PlaceOrder($order->id));
                 }
             } catch (\Exception $ex) {
@@ -1763,7 +1763,7 @@ class OrderController extends Controller
             $admin = Admin::where('role_id',1)->first();
             $mail_status = Helpers::get_mail_status('refund_request_mail_status_admin');
             try {
-                if (config('mail.status') && $admin['email'] && $mail_status == '1') {
+                if (config('mail.status') && $admin['email'] && $mail_status == '1' && Helpers::getNotificationStatusData('admin','order_refund_request','mail_status')) {
                     Mail::to($admin['email'])->send(new RefundRequest($order->id));
                 }
             } catch (\Exception $ex) {
@@ -1824,10 +1824,10 @@ class OrderController extends Controller
             try {
                 Helpers::send_order_notification($order);
 
-                if ($order->is_guest == 0 && config('mail.status') && $order_mail_status == '1'&& $order->customer) {
+                if ($order->is_guest == 0 && config('mail.status') && $order_mail_status == '1'&& $order->customer && Helpers::getNotificationStatusData('customer','customer_order_notification','mail_status')) {
                     Mail::to($order->customer->email)->send(new PlaceOrder($order->id));
                 }
-                if ($order->is_guest == 1 && config('mail.status') && $order_mail_status == '1' && isset($address['contact_person_email'])) {
+                if ($order->is_guest == 1 && config('mail.status') && $order_mail_status == '1' && isset($address['contact_person_email']) && Helpers::getNotificationStatusData('customer','customer_order_notification','mail_status')) {
                     Mail::to($address['contact_person_email'])->send(new PlaceOrder($order->id));
                 }
 

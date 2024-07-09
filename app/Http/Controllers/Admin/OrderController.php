@@ -487,8 +487,7 @@ class OrderController extends Controller
             }
 
             try {
-                $mail_status = Helpers::get_mail_status('refund_order_mail_status_user');
-                if(config('mail.status') && $order?->customer?->email && $mail_status == '1'){
+                if(config('mail.status') && $order?->customer?->email && Helpers::get_mail_status('refund_order_mail_status_user') == '1'  &&  Helpers::getNotificationStatusData('customer','customer_refund_request_approval','mail_status') ){
                     Mail::to($order->customer->email)->send(new \App\Mail\RefundedOrderMail($order->id));
                 }
             } catch (\Throwable $th) {
@@ -758,9 +757,9 @@ class OrderController extends Controller
             Toastr::warning(translate('all_image_delete_warning'));
             return back();
         }
-     
+
         Helpers::check_and_delete('order/' , $request['name']);
-        
+
         foreach ($proof as $image) {
             if ($image != $request['name']) {
                 array_push($array, $image);
@@ -1547,8 +1546,7 @@ class OrderController extends Controller
         $order->refund_request_canceled = now();
         $order->save();
         try {
-            $mail_status = Helpers::get_mail_status('refund_request_deny_mail_status_user');
-            if(config('mail.status') && $order?->customer?->email && $mail_status == '1'){
+            if(config('mail.status') && $order?->customer?->email && Helpers::get_mail_status('refund_request_deny_mail_status_user') == '1' &&  Helpers::getNotificationStatusData('customer','customer_refund_request_rejaction','mail_status')){
                 Mail::to($order->customer->email)->send(new RefundRejected($order->id));
             }
         } catch (\Throwable $th) {
@@ -1701,20 +1699,20 @@ class OrderController extends Controller
         {
             if($status == 'approved' && config('mail.status') ){
 
-                if(Helpers::get_mail_status('offline_payment_approve_mail_status_user') == '1'){
+                if(Helpers::get_mail_status('offline_payment_approve_mail_status_user') == '1' &&  Helpers::getNotificationStatusData('customer','customer_offline_payment_approve','mail_status')){
                     Mail::to($email)->send(new UserOfflinePaymentMail($name, 'approved'));
                 }
-                $order_verification_mail_status = Helpers::get_mail_status('order_verification_mail_status_user');
-                if ( $order_verification_mail_status == '1'  && $otp) {
+
+                if ( Helpers::get_mail_status('order_verification_mail_status_user') == '1'  && $otp  && Helpers::getNotificationStatusData('customer','customer_delivery_verification','mail_status') ) {
                     Mail::to($email)->send(new OrderVerificationMail($otp, $name));
                 }
             }
 
-            if($status == 'COD' && $order_id  && config('mail.status'))
+            if($status == 'COD' && $order_id  && config('mail.status')  && Helpers::getNotificationStatusData('customer','customer_order_notification','mail_status'))
             {
                 Mail::to($email)->send(new PlaceOrder($order_id));
             }
-            if($status == 'denied' && config('mail.status') && Helpers::get_mail_status('offline_payment_deny_mail_status_user') == '1'){
+            if($status == 'denied' && config('mail.status') && Helpers::get_mail_status('offline_payment_deny_mail_status_user') == '1' &&  Helpers::getNotificationStatusData('customer','customer_offline_payment_deny','mail_status')){
                 Mail::to($email)->send(new UserOfflinePaymentMail($name, 'denied'));
             }
         }
