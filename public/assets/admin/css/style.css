@@ -13313,3 +13313,45 @@ video#VisaChipCardVideo {
 .__alert-4 .right-0 {
     right: 10px !important;
 }
+.promo-card-2 {
+    background: #0055A3;
+    border-radius: 5px;
+    padding: 11px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    text-align: left;
+    gap: 12px;
+    position: relative;
+    overflow: hidden;
+}
+.promo-card-2 .shapes {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+}
+.promo-card-2 a {
+    position: relative;
+}
+.promo-card-2 .left {
+    width: 0;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+}
+.promo-card-2 .left .inner {
+    width: 0;
+    flex-grow: 1;
+}
+@media screen and (max-width:500px) {
+    .promo-card-2 .left {
+        width: 100%;
+    }
+}
+.profile-preview-box,
+.video-preview-box {
+    display: none;
+}

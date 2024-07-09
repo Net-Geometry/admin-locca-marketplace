@@ -300,13 +300,13 @@ active
                             </div>
                             <br>
                             <br>
-                            </div>
-                            </div>
-                            </div>
-                                <div class="btn--container justify-content-end">
-                                    <button type="reset" id="reset_btn" class="btn btn--reset">{{ translate('Reset') }}</button>
-                                    <button type="submit" class="btn btn--primary">{{ translate('Submit') }}</button>
-                                </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="btn--container justify-content-end">
+                    <button type="reset" id="reset_btn" class="btn btn--reset">{{ translate('Reset') }}</button>
+                    <button type="submit" class="btn btn--primary">{{ translate('Submit') }}</button>
+                </div>
             </form>
         </div>
     </div>

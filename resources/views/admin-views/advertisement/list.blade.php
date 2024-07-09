@@ -335,11 +335,9 @@ active
                         <input id="update_priority_old_value"  type="hidden">
                         </div>
 
-                    <div class="btn--container justify-content-center">
-                        <div id="">
-                            <button data-dismiss="modal" type="reset" id="reset_btn" class="btn btn--cancel" >{{translate("Not_Now")}}</button> &nbsp;
-                            <button type="sbmit" class="btn btn-primary min-w-120">{{translate('Yes')}}</button>
-                        </div>
+                    <div class="btn--container justify-content-center mt-3">
+                        <button data-dismiss="modal" type="reset" id="reset_btn" class="btn btn--cancel" >{{translate("Not_Now")}}</button>
+                        <button type="sbmit" class="btn btn-primary min-w-120">{{translate('Yes')}}</button>
                     </div>
                 </div>
             </form>
