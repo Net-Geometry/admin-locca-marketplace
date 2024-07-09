@@ -100,7 +100,7 @@ if (! function_exists('collect_cash_success')) {
 
 
         try {
-            if($data->attribute == 'deliveryman_collect_cash_payments' && config('mail.status') && Helpers::get_mail_status('cash_collect_mail_status_dm') == 1 ){
+            if($data->attribute == 'deliveryman_collect_cash_payments' && config('mail.status') &&  Helpers::getNotificationStatusData('deliveryman','deliveryman_collect_cash','mail_status') && Helpers::get_mail_status('cash_collect_mail_status_dm') == 1 ){
                 Mail::to($user_data['email'])->send(new \App\Mail\CollectCashMail($account_transaction,$user_data['f_name']));
             }
         } catch (\Exception $exception) {
@@ -136,13 +136,16 @@ if (! function_exists('order_place')) {
             Helpers::send_order_notification($order);
             $address = json_decode($order->delivery_address, true);
 
-            $order_verification_mail_status = Helpers::get_mail_status('order_verification_mail_status_user');
-            if ( config('order_delivery_verification') == 1 && $order_verification_mail_status == '1' && $order->is_guest == 0) {
-                Mail::to($order->customer->email)->send(new OrderVerificationMail($order->otp,$order->customer->f_name));
-            }
 
-            if ($order->is_guest == 1 && config('mail.status') && $order_verification_mail_status == '1' && isset($address['contact_person_email'])) {
-                Mail::to($address['contact_person_email'])->send(new OrderVerificationMail($order->otp,$order->customer->f_name));
+            if(Helpers::getNotificationStatusData('customer','customer_delivery_verification','mail_status')  && Helpers::get_mail_status('order_verification_mail_status_user') == 1 && config('mail.status')){
+
+                if ( config('order_delivery_verification') == 1  && $order->is_guest == 0) {
+                    Mail::to($order->customer->email)->send(new OrderVerificationMail($order->otp,$order->customer->f_name));
+                }
+
+                if ($order->is_guest == 1   && isset($address['contact_person_email'])) {
+                    Mail::to($address['contact_person_email'])->send(new OrderVerificationMail($order->otp,$order?->customer?->f_name));
+                }
             }
         } catch (\Exception $e) {
             info($e);

@@ -5214,4 +5214,6 @@
   'Sent_notification_order_notification_to_deliveryman' => 'Sent notification order notification to deliveryman',
   'deliveryman_order_assign_or_unassign' => 'Deliveryman order assign or unassign',
   'Sent_notification_on_deliveryman_order_assign_or_unassign' => 'Sent notification on deliveryman order assign or unassign',
+  'Notification_settings_updated' => 'Notification settings updated',
+  'Turn_On_Mail_for' => 'Turn On Mail for',
 );
