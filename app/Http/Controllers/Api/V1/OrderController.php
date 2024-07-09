@@ -53,7 +53,9 @@ class OrderController extends Controller
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
         $user_id = $request?->user?->id ;
-        $order = Order::with(['store','store.store_sub' ,'delivery_man.rating', 'parcel_category', 'refund','payments'])->withCount('details')->where('id', $request['order_id'])
+
+        $order = Order::with(['store','store.store_sub' ,'delivery_man.rating', 'parcel_category', 'refund','payments'])->withCount('details')
+        ->where('id', $request['order_id'])
         ->when($request->user, function ($query) use ($user_id) {
             return $query->where('user_id', $user_id);
         })
@@ -110,6 +112,13 @@ class OrderController extends Controller
         }
 
         if($request->create_new_user){
+            if(!$request->password){
+                return response()->json([
+                    'errors' => [
+                        ['code' => 'password', 'message' => translate('messages.password_is_required')]
+                    ]
+                ], 403);
+            }
             if(User::where('phone',$request->contact_person_number)->first()){
                 return response()->json([
                     'errors' => [
@@ -466,7 +475,8 @@ class OrderController extends Controller
 
         $address = [
             'contact_person_name' => $request->contact_person_name ? $request->contact_person_name : ($request->user?$request->user->f_name . ' ' . $request->user->f_name:''),
-            'contact_person_number' => $request->contact_person_number ? ($request->user ? $request->contact_person_number :str_replace('+', '', $request->contact_person_number)) : ($request->user?$request->user->phone:''),
+            'contact_person_number' => $request->contact_person_number ? str_replace('+', '', $request->contact_person_number) : ($request->user?$request->user->phone:''),
+//            'contact_person_number' => $request->contact_person_number ? ($request->user ? $request->contact_person_number :str_replace('+', '', $request->contact_person_number)) : ($request->user?$request->user->phone:''),
             'contact_person_email' => $request->contact_person_email ? $request->contact_person_email : ($request->user?$request->user->email:''),
             'address_type' => $request->address_type ? $request->address_type : 'Delivery',
             'address' => $request?->address??'',

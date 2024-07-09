@@ -1161,6 +1161,13 @@ class Helpers
                     'title' => (string)$data['title'],
                     'body' => (string)$data['description'],
                 ],
+                "apns" => [
+                    "payload" => [
+                        "aps" => [
+                            "sound" => "notification.wav"
+                        ]
+                    ]
+                ]
             ]
         ];
 
@@ -1213,6 +1220,13 @@ class Helpers
                         "title" => (string)$data['title'],
                         "body" => (string)$data['description'],
                     ],
+                    "apns" => [
+                        "payload" => [
+                            "aps" => [
+                                "sound" => "notification.wav"
+                            ]
+                        ]
+                    ]
                 ]
             ];
         } else {
@@ -1232,6 +1246,13 @@ class Helpers
                         "title" => (string)$data['title'],
                         "body" => (string)$data['description'],
                     ],
+                    "apns" => [
+                        "payload" => [
+                            "aps" => [
+                                "sound" => "notification.wav"
+                            ]
+                        ]
+                    ]
                 ]
             ];
         }
