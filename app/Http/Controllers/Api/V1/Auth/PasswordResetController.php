@@ -76,20 +76,39 @@ class PasswordResetController extends Controller
             }else{
                 $response = SMS_module::send($request['phone'],$token);
             }
-            if($response == 'success')
-            {
+
+            // if($response == 'success')
+            // {
+                if (isset($customer->cm_firebase_token)) {
+                    $data = [
+                        'title' => translate('messages.password_reset'),
+                        'description' => translate('messages.your_reset_password_otp_is').' '.$token,
+                        'order_id' => '',
+                        'image' => '',
+                        'type' => 'otp'
+                    ];
+                    Helpers::send_push_notif_to_device($customer->cm_firebase_token, $data);
+    
+                    DB::table('user_notifications')->insert([
+                        'data' => json_encode($data),
+                        'user_id' => $customer->id,
+                        'created_at' => now(),
+                        'updated_at' => now()
+                    ]);
+                }
+
                 return response()->json(['message' => translate('messages.otp_sent_successfull')], 200);
-            }
-            else
-            {
-                return response()->json([
-                    'errors' => [
-                        ['code' => 'otp', 'message' => translate('messages.failed_to_send_sms')]
-                ]], 200);
+            // }
+            // else
+            // {
+            //     return response()->json([
+            //         'errors' => [
+            //             ['code' => 'otp', 'message' => translate('messages.failed_to_send_sms')]
+            //     ]], 200);
 
-                // Need To Update the logic for Sms and Email
+            //     // Need To Update the logic for Sms and Email
 
-            }
+            // }
         }
         return response()->json(['errors' => [
             ['code' => 'not-found', 'message' => 'Phone number not found!']

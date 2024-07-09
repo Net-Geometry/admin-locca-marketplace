@@ -71,18 +71,37 @@ class DMPasswordResetController extends Controller
             }else{
                 $response = SMS_module::send($request['phone'],$token);
             }
-            if($response == 'success')
-            {
+
+            if (isset($deliveryman->fcm_token)) {
+                $data = [
+                    'title' => translate('messages.password_reset'),
+                    'description' => translate('messages.your_reset_password_otp_is').' '.$token,
+                    'order_id' => '',
+                    'image' => '',
+                    'type' => 'otp'
+                ];
+                Helpers::send_push_notif_to_device($deliveryman->fcm_token, $data);
+
+                DB::table('user_notifications')->insert([
+                    'data' => json_encode($data),
+                    'delivery_man_id' => $deliveryman->id,
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ]);
+            }
+
+            // if($response == 'success')
+            // {
                 return response()->json(['message' => translate('messages.otp_sent_successfull')], 200);
-            }
-            else
-            {
-                $errors = [];
-                array_push($errors, ['code' => 'otp', 'message' => translate('messages.failed_to_send_sms')]);
-                return response()->json([
-                    'errors' => $errors
-                ], 405);
-            }
+            // }
+            // else
+            // {
+            //     $errors = [];
+            //     array_push($errors, ['code' => 'otp', 'message' => translate('messages.failed_to_send_sms')]);
+            //     return response()->json([
+            //         'errors' => $errors
+            //     ], 405);
+            // }
         }
         $errors = [];
         array_push($errors, ['code' => 'not-found', 'message' => 'Phone number not found!']);

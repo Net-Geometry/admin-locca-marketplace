@@ -5216,4 +5216,7 @@
   'Sent_notification_on_deliveryman_order_assign_or_unassign' => 'Sent notification on deliveryman order assign or unassign',
   'Notification_settings_updated' => 'Notification settings updated',
   'Turn_On_Mail_for' => 'Turn On Mail for',
+  'Email_Verification' => 'Email Verification',
+  'verification_otp' => 'Verification otp',
+  'your_verification_otp_is' => 'Your verification otp is',
 );
