@@ -81,7 +81,7 @@ class CustomerController extends Controller
                 $customer->tokens->each(function ($token, $key) {
                     $token->delete();
                 });
-                if (isset($customer->cm_firebase_token)) {
+                if (isset($customer->cm_firebase_token) && Helpers::getNotificationStatusData('customer','customer_account_block','push_notification_status') ) {
                     $data = [
                         'title' => translate('messages.suspended'),
                         'description' => translate('messages.your_account_has_been_blocked'),
@@ -104,6 +104,26 @@ class CustomerController extends Controller
                 }
 
             } else{
+
+                if(Helpers::getNotificationStatusData('customer','customer_account_unblock','push_notification_status')  && isset($customer->cm_firebase_token))
+                {
+                    $data = [
+                        'title' => translate('messages.account_activation'),
+                        'description' => translate('messages.your_account_has_been_activated'),
+                        'order_id' => '',
+                        'image' => '',
+                        'type'=> 'unblock'
+                    ];
+                    Helpers::send_push_notif_to_device($customer->cm_firebase_token, $data);
+
+                    DB::table('user_notifications')->insert([
+                        'data'=> json_encode($data),
+                        'user_id'=>$customer->id,
+                        'created_at'=>now(),
+                        'updated_at'=>now()
+                    ]);
+                }
+
                 if ( config('mail.status') && Helpers::get_mail_status('unsuspend_mail_status_user')== '1' &&  Helpers::getNotificationStatusData('customer','customer_account_unblock','mail_status') ) {
                     Mail::to($customer->email)->send(new \App\Mail\UserStatus('unsuspended', $customer->f_name.' '.$customer->l_name));
                 }

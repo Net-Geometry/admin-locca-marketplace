@@ -487,6 +487,28 @@ class OrderController extends Controller
             }
 
             try {
+
+
+                if(Helpers::getNotificationStatusData('customer','customer_refund_request_approval','push_notification_status') && $order?->customer?->cm_firebase_token){
+                    $data = [
+                        'title' => translate('messages.order_refunded'),
+                        'description' => translate('messages.Your_refund_request_has_been_approved'),
+                        'order_id' => $order->id,
+                        'image' => '',
+                        'type' => 'order_status',
+                        'order_status' => $order->order_status,
+                    ];
+                    Helpers::send_push_notif_to_device($order?->customer?->cm_firebase_token, $data);
+                    DB::table('user_notifications')->insert([
+                        'data' => json_encode($data),
+                        'user_id' => $order->user_id,
+                        'created_at' => now(),
+                        'updated_at' => now()
+                    ]);
+                }
+
+
+
                 if(config('mail.status') && $order?->customer?->email && Helpers::get_mail_status('refund_order_mail_status_user') == '1'  &&  Helpers::getNotificationStatusData('customer','customer_refund_request_approval','mail_status') ){
                     Mail::to($order->customer->email)->send(new \App\Mail\RefundedOrderMail($order->id));
                 }
@@ -1549,6 +1571,27 @@ class OrderController extends Controller
         $order->refund_request_canceled = now();
         $order->save();
         try {
+
+
+            if(Helpers::getNotificationStatusData('customer','customer_refund_request_rejaction','push_notification_status')  && isset($order?->customer?->cm_firebase_token))
+            {
+                $data = [
+                    'title' => translate('messages.account_activation'),
+                    'description' => translate('messages.your_account_has_been_activated'),
+                    'order_id' => '',
+                    'image' => '',
+                    'type'=> 'unblock'
+                ];
+                Helpers::send_push_notif_to_device($order?->customer?->cm_firebase_token, $data);
+
+                DB::table('user_notifications')->insert([
+                    'data'=> json_encode($data),
+                    'user_id'=>$order?->customer?->id,
+                    'created_at'=>now(),
+                    'updated_at'=>now()
+                ]);
+            }
+
             if(config('mail.status') && $order?->customer?->email && Helpers::get_mail_status('refund_request_deny_mail_status_user') == '1' &&  Helpers::getNotificationStatusData('customer','customer_refund_request_rejaction','mail_status')){
                 Mail::to($order->customer->email)->send(new RefundRejected($order->id));
             }

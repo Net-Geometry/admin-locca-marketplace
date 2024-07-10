@@ -177,6 +177,7 @@ if (! function_exists('wallet_success')) {
         if($wallet_transaction)
         {
             try{
+                Helpers::add_fund_push_notification($data->payer_id);
                 if(config('mail.status') && Helpers::get_mail_status('add_fund_mail_status_user') == '1' &&  Helpers::getNotificationStatusData('customer','customer_add_fund_to_wallet','mail_status')) {
                     Mail::to($wallet_transaction->user->email)->send(new \App\Mail\AddFundToWallet($wallet_transaction));
                 }

@@ -4771,6 +4771,29 @@ class Helpers
         }
         return $data ?? null ;
     }
+    public static function add_fund_push_notification($user_id){
+        $customer_push_notification_status=self::getNotificationStatusData('customer','customer_add_fund_to_wallet','push_notification_status' );
+
+        $user= User::where('id',$user_id)->first();
+        if ($customer_push_notification_status && $user?->cm_firebase_token) {
+            $data = [
+                'title' => translate('messages.Fund_added'),
+                'description' => translate('messages.Fund_added_to_your_wallet'),
+                'order_id' => '',
+                'image' => '',
+                'type' => 'add_fund',
+                'order_status' =>'',
+            ];
+            self::send_push_notif_to_device($user?->cm_firebase_token, $data);
+
+            DB::table('user_notifications')->insert([
+                'data' => json_encode($data),
+                'user_id' => $user_id,
+                'created_at' => now(),
+                'updated_at' => now()
+            ]);
+        }
+        return true;
+    }
 }
 
-// ['mail_status','push_notification_status','sms_status']

@@ -250,7 +250,7 @@ class CustomerAuthController extends Controller
                 'type' => 'referral_code',
             ];
 
-            if($referar_user?->cm_firebase_token){
+            if(Helpers::getNotificationStatusData('customer','customer_new_referral_join','push_notification_status')&&  $referar_user?->cm_firebase_token){
                 Helpers::send_push_notif_to_device($referar_user?->cm_firebase_token, $notification_data);
                 DB::table('user_notifications')->insert([
                     'data' => json_encode($notification_data),
@@ -325,11 +325,11 @@ class CustomerAuthController extends Controller
                     $response = SMS_module::send($request['phone'],$otp);
                 }
             }
-            if(Helpers::getNotificationStatusData('customer','customer_registration_otp','push_notification_status')){
-                if(!$user->cm_firebase_token){
-                    $user->cm_firebase_token = $request->cm_firebase_token;
-                    $user->save();
+            if(!$user->cm_firebase_token){
+                $user->cm_firebase_token = $request->cm_firebase_token;
+                $user->save();
                 }
+            if(Helpers::getNotificationStatusData('customer','customer_registration_otp','push_notification_status')){
 
                 if (isset($user->cm_firebase_token)) {
                     $data = [
@@ -462,11 +462,11 @@ class CustomerAuthController extends Controller
                         }
                     }
 
-                        if(Helpers::getNotificationStatusData('customer','customer_login_otp','push_notification_status')){
-                            if(!$user->cm_firebase_token){
-                                $user->cm_firebase_token = $request->cm_firebase_token;
-                                DB::table('users')->where('id', $user->id)->update(['cm_firebase_token' => $request->cm_firebase_token]);
-                            }
+                        if(!$user->cm_firebase_token){
+                            $user->cm_firebase_token = $request->cm_firebase_token;
+                        DB::table('users')->where('id', $user->id)->update(['cm_firebase_token' => $request->cm_firebase_token]);
+                        }
+                    if(Helpers::getNotificationStatusData('customer','customer_login_otp','push_notification_status')){
 
                             if (isset($user->cm_firebase_token)) {
                                 $data = [
