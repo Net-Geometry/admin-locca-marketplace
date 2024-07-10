@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\PriorityList;
 use Carbon\Carbon;
 use App\Models\Item;
 use App\Models\Store;
@@ -84,7 +85,53 @@ class BusinessSettingsController extends Controller
             return view('admin-views.business-settings.websocket-index');
         } else if ($tab == 'disbursement') {
             return view('admin-views.business-settings.disbursement-index');
+        } else if ($tab == 'priority') {
+            return view('admin-views.business-settings.priority-index');
         }
+    }
+
+    public function update_priority(Request $request)
+    {
+        $list = ['popular_item','popular_store','new_store','all_store','campaign_item','best_reviewed_item' ,'category_list','cuisine_list','category_item','search_bar'];
+        foreach ($list as $item){
+            BusinessSetting::updateOrInsert(['key' => $item.'_default_status'], [
+                'value' => $request[$item.'_default_status'] ?? 0
+            ]);
+
+            if($request[$item.'_default_status'] == '0'){
+
+
+                if (! $request[$item.'_sort_by_general']    &&  $item != 'search_bar'){
+                    Toastr::error(translate('you_must_selcet_an_option_for').' '.translate($item) );
+                    return back();
+                }
+
+
+                if($request[$item.'_sort_by_general']){
+                    PriorityList::query()->updateOrInsert(['name' => $item.'_sort_by_general','type' => 'general'], [
+                        'value' => $request[$item.'_sort_by_general']
+                    ]);
+                }
+                if($request[$item.'_sort_by_unavailable']){
+                    PriorityList::query()->updateOrInsert(['name' => $item.'_sort_by_unavailable','type' => 'unavailable'], [
+                        'value' => $request[$item.'_sort_by_unavailable']
+                    ]);
+                }
+                if($request[$item.'_sort_by_temp_closed']){
+                    PriorityList::query()->updateOrInsert(['name' => $item.'_sort_by_temp_closed','type' => 'temp_closed'], [
+                        'value' => $request[$item.'_sort_by_temp_closed']
+                    ]);
+                }
+                if($request[$item.'_sort_by_rating']){
+                    PriorityList::query()->updateOrInsert(['name' => $item.'_sort_by_rating','type' => 'rating'], [
+                        'value' => $request[$item.'_sort_by_rating']
+                    ]);
+                }
+            }
+        }
+
+        Toastr::success(translate('messages.successfully_updated_to_changes_restart_app'));
+        return back();
     }
 
     public function update_dm(Request $request)
