@@ -301,53 +301,63 @@ class CustomerAuthController extends Controller
                 'created_at' => now(),
                 'updated_at' => now(),
                 ]);
-                $mail_status = Helpers::get_mail_status('registration_otp_mail_status_user');
-                if (config('mail.status') && $mail_status == '1' && Helpers::getNotificationStatusData('customer','customer_registration_otp','mail_status')) {
-                    Mail::to($request['email'])->send(new EmailVerification($otp,$request->f_name));
+
+
+                try {
+                    $mailResponse= null;
+                    if (config('mail.status') && Helpers::get_mail_status('registration_otp_mail_status_user') == '1' && Helpers::getNotificationStatusData('customer','customer_registration_otp','mail_status')) {
+                        Mail::to($request['email'])->send(new EmailVerification($otp,$request->f_name));
+                        $mailResponse='success';
+                    }
+
+                }catch(\Exception $ex){
+                    info($ex->getMessage());
+                    $mailResponse=null;
                 }
+
             //for payment and sms gateway addon
-            $published_status = 0;
-            $payment_published_status = config('get_payment_publish_status');
-            if (isset($payment_published_status[0]['is_published'])) {
-                $published_status = $payment_published_status[0]['is_published'];
+            $response =null;
+            if(Helpers::getNotificationStatusData('customer','customer_registration_otp','sms_status')){
+                $published_status = addon_published_status('Gateways');
+                if($published_status == 1){
+                    $response = SmsGateway::send($request['phone'],$otp);
+                }else{
+                    $response = SMS_module::send($request['phone'],$otp);
+                }
+            }
+            if(Helpers::getNotificationStatusData('customer','customer_registration_otp','push_notification_status')){
+                if(!$user->cm_firebase_token){
+                    $user->cm_firebase_token = $request->cm_firebase_token;
+                    $user->save();
+                }
+
+                if (isset($user->cm_firebase_token)) {
+                    $data = [
+                        'title' => translate('messages.verification_otp'),
+                        'description' => translate('messages.your_verification_otp_is').' '.$otp,
+                        'order_id' => '',
+                        'image' => '',
+                        'type' => 'otp'
+                    ];
+                    Helpers::send_push_notif_to_device($user->cm_firebase_token, $data);
+
+                    DB::table('user_notifications')->insert([
+                        'data' => json_encode($data),
+                        'user_id' => $user->id,
+                        'created_at' => now(),
+                        'updated_at' => now()
+                    ]);
+                    $response = 'success';
+                }
             }
 
-            if($published_status == 1){
-                $response = SmsGateway::send($request['phone'],$otp);
-            }else{
-                $response = SMS_module::send($request['phone'],$otp);
-            }
-
-            // if($response != 'success')
-            // {
-            //     $errors = [];
-            //     array_push($errors, ['code' => 'otp', 'message' => translate('messages.faield_to_send_sms')]);
-            //     return response()->json([
-            //         'errors' => $errors
-            //     ], 405);
-            // }
-
-            if(!$user->cm_firebase_token){
-                $user->cm_firebase_token = $request->cm_firebase_token;
-                DB::table('users')->where('id', $user->id)->update(['cm_firebase_token' => $request->cm_firebase_token]);
-            }
-
-            if (isset($user->cm_firebase_token)) {
-                $data = [
-                    'title' => translate('messages.verification_otp'),
-                    'description' => translate('messages.your_verification_otp_is').' '.$otp,
-                    'order_id' => '',
-                    'image' => '',
-                    'type' => 'otp'
-                ];
-                Helpers::send_push_notif_to_device($user->cm_firebase_token, $data);
-
-                DB::table('user_notifications')->insert([
-                    'data' => json_encode($data),
-                    'user_id' => $user->id,
-                    'created_at' => now(),
-                    'updated_at' => now()
-                ]);
+            if($response !== 'success' && $mailResponse !== 'success')
+            {
+                $errors = [];
+                array_push($errors, ['code' => 'otp', 'message' => translate('messages.failed_to_send_sms_&_mail')]);
+                return response()->json([
+                    'errors' => $errors
+                ], 405);
             }
         }
         try
@@ -429,54 +439,66 @@ class CustomerAuthController extends Controller
                     'created_at' => now(),
                     'updated_at' => now(),
                     ]);
-                $mail_status = Helpers::get_mail_status('login_otp_mail_status_user');
-                if (config('mail.status') && $mail_status == '1' && Helpers::getNotificationStatusData('customer','customer_login_otp','mail_status')) {
-                    Mail::to($user['email'])->send(new LoginVerification($otp,$user->f_name));
-                }
-                //for payment and sms gateway addon
-                $published_status = 0;
-                $payment_published_status = config('get_payment_publish_status');
-                if (isset($payment_published_status[0]['is_published'])) {
-                    $published_status = $payment_published_status[0]['is_published'];
+
+                    try {
+                        $mailResponse=null;
+                        if (config('mail.status') && Helpers::get_mail_status('login_otp_mail_status_user') == '1' && Helpers::getNotificationStatusData('customer','customer_login_otp','mail_status')) {
+                            Mail::to($user['email'])->send(new LoginVerification($otp,$user->f_name));
+                            $mailResponse='success';
+                        }
+                    }catch(\Exception $ex){
+                        $mailResponse=null;
+                        info($ex->getMessage());
+                    }
+
+                    $response= null;
+                    if(Helpers::getNotificationStatusData('customer','customer_login_otp','sms_status')){
+                        $published_status = addon_published_status('Gateways');
+                        if($published_status == 1){
+                        //for payment and sms gateway addon
+                        $response = SmsGateway::send($request['phone'],$otp);
+                        }else{
+                            $response = SMS_module::send($request['phone'],$otp);
+                        }
+                    }
+
+                        if(Helpers::getNotificationStatusData('customer','customer_login_otp','push_notification_status')){
+                            if(!$user->cm_firebase_token){
+                                $user->cm_firebase_token = $request->cm_firebase_token;
+                                DB::table('users')->where('id', $user->id)->update(['cm_firebase_token' => $request->cm_firebase_token]);
+                            }
+
+                            if (isset($user->cm_firebase_token)) {
+                                $data = [
+                                    'title' => translate('messages.verification_otp'),
+                                    'description' => translate('messages.your_verification_otp_is').' '.$otp,
+                                    'order_id' => '',
+                                    'image' => '',
+                                    'type' => 'otp'
+                                ];
+                                Helpers::send_push_notif_to_device($user->cm_firebase_token, $data);
+
+                                DB::table('user_notifications')->insert([
+                                    'data' => json_encode($data),
+                                    'user_id' => $user->id,
+                                    'created_at' => now(),
+                                    'updated_at' => now()
+                                ]);
+                                $response = 'success';
+                            }
+
+                        }
+
+
+                if($response !== 'success' && $mailResponse !== 'success')
+                {
+                    $errors = [];
+                    array_push($errors, ['code' => 'otp', 'message' => translate('messages.failed_to_send_sms_&_mail')]);
+                    return response()->json([
+                        'errors' => $errors
+                    ], 405);
                 }
 
-                if($published_status == 1){
-                    $response = SmsGateway::send($request['phone'],$otp);
-                }else{
-                    $response = SMS_module::send($request['phone'],$otp);
-                }
-
-                // if($response != 'success')
-                // {
-                //     $errors = [];
-                //     array_push($errors, ['code' => 'otp', 'message' => translate('messages.faield_to_send_sms')]);
-                //     return response()->json([
-                //         'errors' => $errors
-                //     ], 405);
-                // }
-
-                if(!$user->cm_firebase_token){
-                    $user->cm_firebase_token = $request->cm_firebase_token;
-                    DB::table('users')->where('id', $user->id)->update(['cm_firebase_token' => $request->cm_firebase_token]);
-                }
-
-                if (isset($user->cm_firebase_token)) {
-                    $data = [
-                        'title' => translate('messages.verification_otp'),
-                        'description' => translate('messages.your_verification_otp_is').' '.$otp,
-                        'order_id' => '',
-                        'image' => '',
-                        'type' => 'otp'
-                    ];
-                    Helpers::send_push_notif_to_device($user->cm_firebase_token, $data);
-
-                    DB::table('user_notifications')->insert([
-                        'data' => json_encode($data),
-                        'user_id' => $user->id,
-                        'created_at' => now(),
-                        'updated_at' => now()
-                    ]);
-                }
 
             }
             if($user->ref_code == null && isset($user->id)){

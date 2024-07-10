@@ -4117,7 +4117,7 @@ class Helpers
             'type' => 'deliveryman',
             'mail_status' => 'active',
             'sms_status' => 'active',
-            'push_notification_status' => 'disable',
+            'push_notification_status' => 'active',
             'sub_title' => 'Sent_notification_on_deliveryman_forget_password',
         ];
         $data []=[
@@ -4389,7 +4389,7 @@ class Helpers
             'type' => 'customer',
             'mail_status' => 'active',
             'sms_status' => 'active',
-            'push_notification_status' => 'disable',
+            'push_notification_status' => 'active',
             'sub_title' => 'Sent_notification_on_customer_registration_otp',
         ];
         $data []=[
@@ -4398,7 +4398,7 @@ class Helpers
             'type' => 'customer',
             'mail_status' => 'active',
             'sms_status' => 'active',
-            'push_notification_status' => 'disable',
+            'push_notification_status' => 'active',
             'sub_title' => 'Sent_notification_on_customer_login_otp',
         ];
         $data []=[
@@ -4407,7 +4407,7 @@ class Helpers
             'type' => 'customer',
             'mail_status' => 'active',
             'sms_status' => 'active',
-            'push_notification_status' => 'disable',
+            'push_notification_status' => 'active',
             'sub_title' => 'Sent_notification_on_customer_forget_password',
         ];
 

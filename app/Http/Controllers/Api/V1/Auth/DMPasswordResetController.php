@@ -7,7 +7,6 @@ use App\Models\DeliveryMan;
 use Illuminate\Http\Request;
 use App\CentralLogics\Helpers;
 use Illuminate\Support\Carbon;
-use App\Models\BusinessSetting;
 use App\CentralLogics\SMS_module;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -55,53 +54,72 @@ class DMPasswordResetController extends Controller
                 'token' => $token,
                 'created_at' => now(),
             ]);
-            $mail_status = Helpers::get_mail_status('forget_password_mail_status_dm');
-            if (config('mail.status') && $mail_status == '1' && Helpers::getNotificationStatusData('deliveryman','deliveryman_forget_password','mail_status')) {
-                Mail::to($deliveryman['email'])->send(new \App\Mail\DmPasswordResetMail($token,$deliveryman['f_name']));
-            }
-            //for payment and sms gateway addon
-            $published_status = 0;
-            $payment_published_status = config('get_payment_publish_status');
-            if (isset($payment_published_status[0]['is_published'])) {
-                $published_status = $payment_published_status[0]['is_published'];
-            }
 
-            if($published_status == 1){
-                $response = SmsGateway::send($request['phone'],$token);
-            }else{
-                $response = SMS_module::send($request['phone'],$token);
+
+            try {
+                $mailResponse=null;
+                if (config('mail.status') && Helpers::get_mail_status('forget_password_mail_status_dm') == '1' && Helpers::getNotificationStatusData('deliveryman','deliveryman_forget_password','mail_status')) {
+                    Mail::to($deliveryman['email'])->send(new \App\Mail\DmPasswordResetMail($token,$deliveryman['f_name']));
+                $mailResponse='success';
+                }
+            }catch(\Exception $ex){
+                $mailResponse=null;
+                info($ex->getMessage());
             }
 
-            if (isset($deliveryman->fcm_token)) {
-                $data = [
-                    'title' => translate('messages.password_reset'),
-                    'description' => translate('messages.your_reset_password_otp_is').' '.$token,
-                    'order_id' => '',
-                    'image' => '',
-                    'type' => 'otp'
-                ];
-                Helpers::send_push_notif_to_device($deliveryman->fcm_token, $data);
+                $response= null;
 
-                DB::table('user_notifications')->insert([
-                    'data' => json_encode($data),
-                    'delivery_man_id' => $deliveryman->id,
-                    'created_at' => now(),
-                    'updated_at' => now()
-                ]);
+                if (Helpers::getNotificationStatusData('deliveryman','deliveryman_forget_password','sms_status')) {
+                    $published_status = addon_published_status('Gateways');
+                    if($published_status == 1){
+                        $response = SmsGateway::send($request['phone'],$token);
+                    }else{
+                        $response = SMS_module::send($request['phone'],$token);
+                    }
+                }
+
+
+                if (Helpers::getNotificationStatusData('deliveryman','deliveryman_forget_password','push_notification_status')) {
+                    if (isset($deliveryman->fcm_token)) {
+                        $data = [
+                            'title' => translate('messages.password_reset'),
+                            'description' => translate('messages.your_reset_password_otp_is').' '.$token,
+                            'order_id' => '',
+                            'image' => '',
+                            'type' => 'otp'
+                        ];
+                        Helpers::send_push_notif_to_device($deliveryman->fcm_token, $data);
+
+                        DB::table('user_notifications')->insert([
+                            'data' => json_encode($data),
+                            'delivery_man_id' => $deliveryman->id,
+                            'created_at' => now(),
+                            'updated_at' => now()
+                        ]);
+                        $response = 'success';
+                    }
+                }
+
+
+            if($response == 'success' && $mailResponse == 'success')
+            {
+                return response()->json(['message' => translate('messages.Otp_Successfully_Sent_To_Your_Phone_and_Mail')], 200);
             }
-
-            // if($response == 'success')
-            // {
-                return response()->json(['message' => translate('messages.otp_sent_successfull')], 200);
-            // }
-            // else
-            // {
-            //     $errors = [];
-            //     array_push($errors, ['code' => 'otp', 'message' => translate('messages.failed_to_send_sms')]);
-            //     return response()->json([
-            //         'errors' => $errors
-            //     ], 405);
-            // }
+            elseif($response == 'success')
+            {
+                return response()->json(['message' => translate('messages.Otp_Successfully_Sent_To_Your_Phone')], 200);
+            }
+            elseif($mailResponse == 'success')
+            {
+                return response()->json(['message' => translate('messages.Otp_Successfully_Sent_To_Your_Mail')], 200);
+            }
+            else
+            {
+                return response()->json([
+                    'errors' => [
+                        ['code' => 'otp', 'message' => translate('messages.failed_to_send_sms')]
+                ]], 405);
+            }
         }
         $errors = [];
         array_push($errors, ['code' => 'not-found', 'message' => 'Phone number not found!']);

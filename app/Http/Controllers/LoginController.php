@@ -322,26 +322,25 @@ class LoginController extends Controller
                     'updated_at' => now(),
                 ]);
             //for payment and sms gateway addon
-            $published_status = 0;
-            $payment_published_status = config('get_payment_publish_status');
-            if (isset($payment_published_status[0]['is_published'])) {
-                $published_status = $payment_published_status[0]['is_published'];
+
+            $response= null;
+            if(  Helpers::getNotificationStatusData('admin','forget_password','sms_status') ){
+                $published_status = addon_published_status('Gateways');
+                if($published_status == 1){
+                    $response = SmsGateway::send($admin['phone'],$otp);
+                }else{
+                    $response = SMS_module::send($admin['phone'],$otp);
+                }
             }
 
-            if($published_status == 1){
-                $response = SmsGateway::send($admin['phone'],$otp);
-            }else{
-                $response = SMS_module::send($admin['phone'],$otp);
-            }
             $site_direction = session()?->get('site_direction') ?? $direction ??  'ltr';
             $locale = session()?->get('local') ??  $lang ?? 'en';
-
             App::setLocale($locale);
-            if($response != 'success')
+            if($response == 'success')
             {
-                return view('auth.reset-password', compact('token','admin','site_direction','locale'));
+                return view('auth.verify-otp', compact('token','admin','site_direction','locale'));
             }
-            return view('auth.verify-otp', compact('token','admin','site_direction','locale'));
+            return view('auth.reset-password', compact('token','admin','site_direction','locale'));
         }else{
             $site_direction = session()?->get('vendor_site_direction') ?? $direction ?? 'ltr';
             $locale = session()?->get('vendor_local') ??  $lang ?? 'en';
@@ -451,6 +450,11 @@ class LoginController extends Controller
         if(!$data || Carbon::parse($data->created_at)->diffInMinutes(Carbon::now()) >= 60){
             return response()->json(['errors' => 'link_expired']);
         }
+
+        if( Helpers::getNotificationStatusData('admin','forget_password' ,'sms_status') != 1){
+            return response()->json(['otp_fail' => 'otp_fail' ]);
+        }
+
         if($data->created_by == 'admin'){
             $admin = Admin::where('email',$data->email)->where('role_id',1)->first();
             $otp = rand(10000, 99999);
@@ -462,17 +466,18 @@ class LoginController extends Controller
                     'updated_at' => now(),
                 ]);
             //for payment and sms gateway addon
-            $published_status = 0;
-            $payment_published_status = config('get_payment_publish_status');
-            if (isset($payment_published_status[0]['is_published'])) {
-                $published_status = $payment_published_status[0]['is_published'];
-            }
+
+
+
+        $published_status = addon_published_status('Gateways');
 
             if($published_status == 1){
                 $response = SmsGateway::send($admin['phone'],$otp);
             }else{
                 $response = SMS_module::send($admin['phone'],$otp);
             }
+
+
             if($response != 'success')
             {
                 return response()->json(['otp_fail' => 'otp_fail' ]);

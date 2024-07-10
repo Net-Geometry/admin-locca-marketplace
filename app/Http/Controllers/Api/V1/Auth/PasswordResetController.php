@@ -55,60 +55,77 @@ class PasswordResetController extends Controller
                 'token' => $token,
                 'created_at' => now(),
             ]);
-            $mail_status = Helpers::get_mail_status('forget_password_mail_status_user');
-            if (config('mail.status') && $mail_status == '1' && Helpers::getNotificationStatusData('customer','customer_forget_password','mail_status')) {
-                try {
-                    Mail::to($customer['email'])->send(new \App\Mail\UserPasswordResetMail($token,$customer['f_name']));
-                } catch (\Throwable $th) {
 
+
+
+
+            try {
+                $mailResponse=null;
+                    if ( Helpers::getNotificationStatusData('customer','customer_forget_password','mail_status') && config('mail.status') && Helpers::get_mail_status('forget_password_mail_status_user') == '1') {
+                        Mail::to($customer['email'])->send(new \App\Mail\UserPasswordResetMail($token,$customer['f_name']));
+                    $mailResponse='success';
+                        }
+                } catch (\Throwable $th) {
+                    $mailResponse=null;
+                    info($th->getMessage());
                 }
-            }
+
 
             //for payment and sms gateway addon
-            $published_status = 0;
-            $payment_published_status = config('get_payment_publish_status');
-            if (isset($payment_published_status[0]['is_published'])) {
-                $published_status = $payment_published_status[0]['is_published'];
-            }
-
-            if($published_status == 1){
+            $response =null;
+            if(Helpers::getNotificationStatusData('customer','customer_forget_password','sms_status')){
+                $published_status = addon_published_status('Gateways');
+                if($published_status == 1){
                 $response = SmsGateway::send($request['phone'],$token);
-            }else{
-                $response = SMS_module::send($request['phone'],$token);
+                }else{
+                    $response = SMS_module::send($request['phone'],$token);
+                }
             }
 
-            // if($response == 'success')
-            // {
-                if (isset($customer->cm_firebase_token)) {
-                    $data = [
-                        'title' => translate('messages.password_reset'),
-                        'description' => translate('messages.your_reset_password_otp_is').' '.$token,
-                        'order_id' => '',
-                        'image' => '',
-                        'type' => 'otp'
-                    ];
-                    Helpers::send_push_notif_to_device($customer->cm_firebase_token, $data);
+                if(Helpers::getNotificationStatusData('customer','customer_forget_password','push_notification_status')){
+                    if (isset($customer->cm_firebase_token)) {
+                        $data = [
+                            'title' => translate('messages.password_reset'),
+                            'description' => translate('messages.your_reset_password_otp_is').' '.$token,
+                            'order_id' => '',
+                            'image' => '',
+                            'type' => 'otp'
+                        ];
+                        Helpers::send_push_notif_to_device($customer->cm_firebase_token, $data);
 
-                    DB::table('user_notifications')->insert([
-                        'data' => json_encode($data),
-                        'user_id' => $customer->id,
-                        'created_at' => now(),
-                        'updated_at' => now()
-                    ]);
+                        DB::table('user_notifications')->insert([
+                            'data' => json_encode($data),
+                            'user_id' => $customer->id,
+                            'created_at' => now(),
+                            'updated_at' => now()
+                        ]);
+                        $response = 'success';
+                    }
                 }
 
-                return response()->json(['message' => translate('messages.otp_sent_successfull')], 200);
-            // }
-            // else
-            // {
-            //     return response()->json([
-            //         'errors' => [
-            //             ['code' => 'otp', 'message' => translate('messages.failed_to_send_sms')]
-            //     ]], 200);
 
-            //     // Need To Update the logic for Sms and Email
 
-            // }
+                if($response == 'success' && $mailResponse == 'success')
+                {
+                    return response()->json(['message' => translate('messages.Otp_Successfully_Sent_To_Your_Phone_and_Mail')], 200);
+                }
+                elseif($response == 'success')
+                {
+                    return response()->json(['message' => translate('messages.Otp_Successfully_Sent_To_Your_Phone')], 200);
+                }
+                elseif($mailResponse == 'success')
+                {
+                    return response()->json(['message' => translate('messages.Otp_Successfully_Sent_To_Your_Mail')], 200);
+                }
+                else
+                {
+                    return response()->json([
+                        'errors' => [
+                            ['code' => 'otp', 'message' => translate('messages.failed_to_send_sms')]
+                    ]], 405);
+                }
+
+
         }
         return response()->json(['errors' => [
             ['code' => 'not-found', 'message' => 'Phone number not found!']
