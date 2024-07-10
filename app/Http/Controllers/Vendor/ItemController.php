@@ -1056,7 +1056,11 @@ class ItemController extends Controller
                 $chunkSize = 100;
                 $chunk_items= array_chunk($data,$chunkSize);
                 foreach($chunk_items as $key=> $chunk_item){
-                    DB::table('items')->insert($chunk_item);
+//                    DB::table('items')->insert($chunk_item);
+                    foreach ($chunk_item as $item) {
+                        $insertedId = DB::table('items')->insertGetId($item);
+                        Helpers::updateStorageTable(get_class(new Item), $insertedId, $item['image']);
+                    }
 
                 }
                 if(count($temp_data) > 0 ){
@@ -1064,7 +1068,11 @@ class ItemController extends Controller
 
                     $chunk_temp_items= array_chunk($temp_data,$chunkSize);
                     foreach($chunk_temp_items as $key=> $chunk_item){
-                        DB::table('temp_products')->insert($chunk_item);
+//                        DB::table('temp_products')->insert($chunk_item);
+                        foreach ($chunk_item as $item) {
+                            $insertedId = DB::table('temp_products')->insertGetId($item);
+                            Helpers::updateStorageTable(get_class(new TempProduct), $insertedId, $item['image']);
+                        }
                     }
                 }
 
@@ -1202,13 +1210,31 @@ class ItemController extends Controller
                 $chunk_items= array_chunk($temp_data,$chunkSize);
 
                 foreach($chunk_items as $key=> $chunk_item){
-                    DB::table('temp_products')->upsert($chunk_item,['item_id','module_id'],['name','description','image','images','category_id','category_ids','unit_id','stock','price','discount','discount_type','available_time_starts','available_time_ends','variations','food_variations','add_ons','attributes','store_id','status','veg','recommended' ,'tag_ids','choice_options']);
+//                    DB::table('temp_products')->upsert($chunk_item,['item_id','module_id'],['name','description','image','images','category_id','category_ids','unit_id','stock','price','discount','discount_type','available_time_starts','available_time_ends','variations','food_variations','add_ons','attributes','store_id','status','veg','recommended' ,'tag_ids','choice_options']);
+                    foreach ($chunk_item as $item) {
+                        if (isset($item['id']) && DB::table('temp_products')->where('id', $item['id'])->exists()) {
+                            DB::table('temp_products')->where('id', $item['id'])->update($item);
+                            Helpers::updateStorageTable(get_class(new TempProduct), $item['id'], $item['image']);
+                        } else {
+                            $insertedId = DB::table('temp_products')->insertGetId($item);
+                            Helpers::updateStorageTable(get_class(new TempProduct), $insertedId, $item['image']);
+                        }
+                    }
                 }
 
             } else {
                 $chunk_items= array_chunk($data,$chunkSize);
                 foreach($chunk_items as $key=> $chunk_item){
-                    DB::table('items')->upsert($chunk_item,['id','module_id'],['name','description','image','images','category_id','category_ids','unit_id','stock','price','discount','discount_type','available_time_starts','available_time_ends','variations','food_variations','add_ons','attributes','store_id','status','veg','recommended', 'updated_at','choice_options']);
+//                    DB::table('items')->upsert($chunk_item,['id','module_id'],['name','description','image','images','category_id','category_ids','unit_id','stock','price','discount','discount_type','available_time_starts','available_time_ends','variations','food_variations','add_ons','attributes','store_id','status','veg','recommended', 'updated_at','choice_options']);
+                    foreach ($chunk_item as $item) {
+                        if (isset($item['id']) && DB::table('items')->where('id', $item['id'])->exists()) {
+                            DB::table('items')->where('id', $item['id'])->update($item);
+                            Helpers::updateStorageTable(get_class(new Item), $item['id'], $item['image']);
+                        } else {
+                            $insertedId = DB::table('items')->insertGetId($item);
+                            Helpers::updateStorageTable(get_class(new Item), $insertedId, $item['image']);
+                        }
+                    }
                 }
             }
 

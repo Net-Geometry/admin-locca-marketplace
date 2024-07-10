@@ -4720,6 +4720,20 @@ class Helpers
         }
         return $data ?? null ;
     }
+
+    public static function updateStorageTable($dataType, $dataId, $image)
+    {
+        $value = Helpers::getDisk();
+        DB::table('storages')->updateOrInsert([
+            'data_type' => $dataType,
+            'data_id' => $dataId,
+            'key' => 'image',
+        ], [
+            'value' => $value,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+    }
 }
 
 // ['mail_status','push_notification_status','sms_status']

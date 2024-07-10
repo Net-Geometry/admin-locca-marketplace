@@ -1438,7 +1438,12 @@ class VendorController extends Controller
 
                 foreach($chunk_stores as $key=> $chunk_store){
                     DB::table('vendors')->insert($chunk_vendors[$key]);
-                    DB::table('stores')->insert($chunk_store);
+//                    DB::table('stores')->insert($chunk_store);
+                    foreach ($chunk_store as $store) {
+                        $insertedId = DB::table('stores')->insertGetId($store);
+                        Helpers::updateStorageTable(get_class(new Store), $insertedId, $store['logo']);
+                        Helpers::updateStorageTable(get_class(new Store), $insertedId, $store['cover_photo']);
+                    }
                 }
                 DB::table('store_schedule')->insert(array_merge(...$data));
                 DB::commit();
@@ -1570,8 +1575,19 @@ class VendorController extends Controller
                 DB::beginTransaction();
 
                 foreach($chunk_stores as $key=> $chunk_store){
-                DB::table('vendors')->upsert($chunk_vendors[$key],['id','email','phone'],['f_name','l_name','password']);
-                DB::table('stores')->upsert($chunk_store,['id','email','phone','vendor_id'],['name','logo','cover_photo','latitude','longitude','address','zone_id','module_id','minimum_order','comission','tax','delivery_time','minimum_shipping_charge','per_km_shipping_charge','maximum_shipping_charge','schedule_order','status','self_delivery_system','veg','non_veg','free_delivery','take_away','delivery','reviews_section','pos_system','active','featured']);
+                    DB::table('vendors')->upsert($chunk_vendors[$key],['id','email','phone'],['f_name','l_name','password']);
+//                    DB::table('stores')->upsert($chunk_store,['id','email','phone','vendor_id'],['name','logo','cover_photo','latitude','longitude','address','zone_id','module_id','minimum_order','comission','tax','delivery_time','minimum_shipping_charge','per_km_shipping_charge','maximum_shipping_charge','schedule_order','status','self_delivery_system','veg','non_veg','free_delivery','take_away','delivery','reviews_section','pos_system','active','featured']);
+                    foreach ($chunk_store as $store) {
+                        if (isset($store['id']) && DB::table('food')->where('id', $store['id'])->exists()) {
+                            DB::table('stores')->where('id', $store['id'])->update($store);
+                            Helpers::updateStorageTable(get_class(new Store), $store['id'], $store['logo']);
+                            Helpers::updateStorageTable(get_class(new Store), $store['id'], $store['cover_photo']);
+                        } else {
+                            $insertedId = DB::table('stores')->insertGetId($store);
+                            Helpers::updateStorageTable(get_class(new Store), $insertedId, $store['logo']);
+                            Helpers::updateStorageTable(get_class(new Store), $insertedId, $store['cover_photo']);
+                        }
+                    }
                 }
                 DB::commit();
             }catch(\Exception $e)
