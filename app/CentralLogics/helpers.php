@@ -247,7 +247,7 @@ class Helpers
                 $item['category_ids'] = $categories;
                 $item['attributes'] = json_decode($item['attributes']);
                 $item['choice_options'] = json_decode($item['choice_options']);
-                $item['add_ons'] = self::addon_data_formatting(AddOn::withoutGlobalScope('translate')->whereIn('id', json_decode($item['add_ons'], true))->active()->get(), true, $trans, $local);
+                $item['add_ons'] = self::addon_data_formatting(AddOn::whereIn('id', json_decode($item['add_ons'], true))->active()->get(), true, $trans, $local);
                 foreach (json_decode($item['variations'], true) as $var) {
                     array_push($variations, [
                         'type' => $var['type'],
@@ -1507,6 +1507,7 @@ class Helpers
 
     public static function send_order_notification($order)
     {
+        $push_notification_status=self::getNotificationStatusData('store','store_order_notification','push_notification_status', $order?->store?->id);
 
         try {
 
@@ -1567,7 +1568,7 @@ class Helpers
                     'image' => '',
                     'type' => 'order_status',
                 ];
-                if($order->store && $order->store->vendor){
+                if($order->store && $order->store->vendor && $push_notification_status){
                     self::send_push_notif_to_device($order->store->vendor->firebase_token, $data);
                     DB::table('user_notifications')->insert([
                         'data' => json_encode($data),
@@ -1579,7 +1580,7 @@ class Helpers
             }
 
             if ($order->order_type == 'delivery' && !$order->scheduled && $status == 'pending' && $order->payment_method == 'cash_on_delivery' && config('order_confirmation_model') == 'deliveryman') {
-                if ($order->store->sub_self_delivery) {
+                if ($order->store->sub_self_delivery && $push_notification_status) {
                     $data = [
                         'title' => translate('messages.order_push_title'),
                         'description' => translate('messages.new_order_push_description'),
@@ -1589,7 +1590,7 @@ class Helpers
                         'image' => '',
                         'type' => 'new_order',
                     ];
-                    if($order->store && $order->store->vendor){
+                    if($order->store && $order->store->vendor && $push_notification_status){
                         self::send_push_notif_to_device($order->store->vendor->firebase_token, $data);
                         $web_push_link = url('/').'/store-panel/order/list/all';
                         self::send_push_notif_to_topic($data, "store_panel_{$order->store_id}_message", 'new_order', $web_push_link);
@@ -1656,7 +1657,7 @@ class Helpers
                     'image' => '',
                     'type' => 'new_order',
                 ];
-                if($order->store && $order->store->vendor){
+                if($order->store && $order->store->vendor && $push_notification_status){
                     self::send_push_notif_to_device($order->store->vendor->firebase_token, $data);
                     $web_push_link = url('/').'/store-panel/order/list/all';
                     self::send_push_notif_to_topic($data, "store_panel_{$order->store_id}_message", 'new_order', $web_push_link);
@@ -1678,7 +1679,7 @@ class Helpers
                     'image' => '',
                     'type' => 'new_order',
                 ];
-                if($order->store && $order->store->vendor){
+                if($order->store && $order->store->vendor && $push_notification_status){
                     self::send_push_notif_to_device($order->store->vendor->firebase_token, $data);
                     $web_push_link = url('/').'/store-panel/order/list/all';
                     self::send_push_notif_to_topic($data, "store_panel_{$order->store_id}_message", 'new_order', $web_push_link);
@@ -1713,7 +1714,7 @@ class Helpers
                         'image' => '',
                         'type' => 'new_order',
                     ];
-                    if($order->store && $order->store->vendor){
+                    if($order->store && $order->store->vendor && $push_notification_status){
                         self::send_push_notif_to_device($order->store->vendor->firebase_token, $data);
                         $web_push_link = url('/').'/store-panel/order/list/all';
                         self::send_push_notif_to_topic($data, "store_panel_{$order->store_id}_message", 'new_order', $web_push_link);
@@ -3822,6 +3823,36 @@ class Helpers
 
         try {
 
+            if($type == 'renew'){
+                $push_notification_status=Helpers::getNotificationStatusData('store','store_subscription_renew','push_notification_status',$store->id);
+                $title=translate('subscription_renewed');
+                $des=translate('Your_subscription_successfully_renewed');
+                } elseif($type != 'renew'){
+                    $des=translate('Your_subscription_successfully_shifted');
+                    $title=translate('subscription_shifted');
+                    $push_notification_status=Helpers::getNotificationStatusData('store','store_subscription_shift','push_notification_status',$store->id);
+
+
+            }
+            if($push_notification_status  &&  $store?->vendor?->firebase_token){
+                $data = [
+                    'title' => $title ?? '',
+                    'description' => $des ?? '',
+                    'order_id' => '',
+                    'image' => '',
+                    'type' => 'subscription',
+                    'order_status' => '',
+                ];
+                Helpers::send_push_notif_to_device($store?->vendor?->firebase_token, $data);
+                DB::table('user_notifications')->insert([
+                    'data' => json_encode($data),
+                    'vendor_id' => $store?->vendor_id,
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ]);
+            }
+
+
             if (config('mail.status') && Helpers::get_mail_status('subscription_renew_mail_status_store') == '1' && $type == 'renew' && Helpers::getNotificationStatusData('store','store_subscription_renew','mail_status',$store->id)) {
                 Mail::to($store->email)->send(new SubscriptionRenewOrShift($type,$store->name));
             }
@@ -3832,6 +3863,26 @@ class Helpers
                 $url=route('subscription_invoice',['id' => base64_encode($subscription_transaction->id)]);
                 Mail::to($store->email)->send(new SubscriptionSuccessful($store->name,$url));
             }
+
+
+            if( Helpers::getNotificationStatusData('store','store_subscription_success','push_notification_status',$store->id)  &&  $store?->vendor?->firebase_token){
+                $data = [
+                    'title' => translate('subscription_successful'),
+                    'description' => translate('You_are_successfully_subscribed'),
+                    'order_id' => '',
+                    'image' => '',
+                    'type' => 'subscription',
+                    'order_status' => '',
+                ];
+                Helpers::send_push_notif_to_device($store?->vendor?->firebase_token, $data);
+                DB::table('user_notifications')->insert([
+                    'data' => json_encode($data),
+                    'vendor_id' => $store?->vendor_id,
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ]);
+            }
+
 
         } catch (\Exception $ex) {
             info($ex->getMessage());
@@ -4313,7 +4364,7 @@ class Helpers
             'type' => 'store',
             'mail_status' => 'active',
             'sms_status' => 'disable',
-            'push_notification_status' => 'active',
+            'push_notification_status' => 'inactive',
             'sub_title' => 'Sent_notification_on_store_subscription_plan_update',
         ];
 

@@ -804,7 +804,7 @@ class VendorController extends Controller
         {
             if($request->status == 0)
             {   $vendor->auth_token = null;
-                if(isset($vendor->firebase_token))
+                if(isset($vendor->firebase_token) && Helpers::getNotificationStatusData('store','store_account_block','push_notification_status',$store?->id))
                 {
                     $data = [
                         'title' => translate('messages.suspended'),
@@ -826,6 +826,25 @@ class VendorController extends Controller
                     Mail::to( $vendor?->email)->send(new \App\Mail\VendorStatus('suspended', $vendor?->f_name.' '.$vendor?->l_name));
                 }
             } else{
+
+                if ( Helpers::getNotificationStatusData('store','store_account_unblock','push_notification_status',$store?->id) &&  isset($vendor->firebase_token)) {
+                    $data = [
+                        'title' => translate('Account_Activation'),
+                        'description' => translate('messages.your_account_has_been_activated'),
+                        'order_id' => '',
+                        'image' => '',
+                        'type' => 'unblock'
+                    ];
+                    Helpers::send_push_notif_to_device($vendor->firebase_token, $data);
+                    DB::table('user_notifications')->insert([
+                        'data' => json_encode($data),
+                        'vendor_id' => $vendor->id,
+                        'created_at' => now(),
+                        'updated_at' => now()
+                    ]);
+                }
+
+
                 if ( config('mail.status') && Helpers::get_mail_status('unsuspend_mail_status_store') == '1' &&  Helpers::getNotificationStatusData('store','store_account_unblock','mail_status',$store?->id)) {
                     Mail::to( $vendor?->email)->send(new \App\Mail\VendorStatus('unsuspended', $vendor?->f_name.' '.$vendor?->l_name));
                 }
@@ -1188,6 +1207,26 @@ class VendorController extends Controller
             $withdraw->save();
             try
             {
+                if( Helpers::getNotificationStatusData('store','store_withdraw_approve','push_notification_status',$withdraw->vendor?->stores[0]?->id) && $withdraw->vendor?->firebase_token ){
+
+                    $data = [
+                        'title' => translate('Withdraw_approved'),
+                        'description' => translate('Withdraw_request_approved_by_admin'),
+                        'order_id' => '',
+                        'image' => '',
+                        'type' => 'withdraw',
+                        'order_status' => '',
+                    ];
+                    Helpers::send_push_notif_to_device($withdraw->vendor->firebase_token, $data);
+                    DB::table('user_notifications')->insert([
+                        'data' => json_encode($data),
+                        'vendor_id' => $withdraw->vendor_id,
+                        'created_at' => now(),
+                        'updated_at' => now()
+                    ]);
+                }
+
+
                 if(config('mail.status') &&  Helpers::get_mail_status('withdraw_approve_mail_status_store') == '1' &&  Helpers::getNotificationStatusData('store','store_withdraw_approve','mail_status',$withdraw->vendor?->stores[0]?->id)) {
                     Mail::to($withdraw->vendor->email)->send(new \App\Mail\WithdrawRequestMail('approved',$withdraw));
                 }
@@ -1203,6 +1242,24 @@ class VendorController extends Controller
             $withdraw->save();
             try
             {
+                if(  Helpers::getNotificationStatusData('store','store_withdraw_rejaction','push_notification_status',$withdraw->vendor?->stores[0]?->id) && $withdraw->vendor?->firebase_token ){
+
+                    $data = [
+                        'title' => translate('Withdraw_rejected'),
+                        'description' => translate('Withdraw_request_rejected_by_admin'),
+                        'order_id' => '',
+                        'image' => '',
+                        'type' => 'withdraw',
+                        'order_status' => '',
+                    ];
+                    Helpers::send_push_notif_to_device($withdraw->vendor->firebase_token, $data);
+                    DB::table('user_notifications')->insert([
+                        'data' => json_encode($data),
+                        'vendor_id' => $withdraw->vendor_id,
+                        'created_at' => now(),
+                        'updated_at' => now()
+                    ]);
+                }
 
                 if(config('mail.status') &&  Helpers::get_mail_status('withdraw_deny_mail_status_store') == '1'  &&  Helpers::getNotificationStatusData('store','store_withdraw_rejaction','mail_status',$withdraw->vendor?->stores[0]?->id)) {
                     Mail::to($withdraw->vendor->email)->send(new \App\Mail\WithdrawRequestMail('denied',$withdraw));

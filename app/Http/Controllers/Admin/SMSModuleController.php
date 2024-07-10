@@ -66,6 +66,7 @@ class SMSModuleController extends Controller
             $additional_data = [
                 'status' => $request['status'],
                 'api_key' =>$request['api_key'],
+                'sender_id' =>$request['sender_id'] ?? null,
                 'otp_template' =>$request['otp_template'],
             ];
         }

@@ -553,6 +553,25 @@ class ItemController extends Controller
             $item->is_approved = 1;
             try
             {
+
+                if(Helpers::getNotificationStatusData('store','store_product_approve','push_notification_status',$item?->store->id)  &&  $item?->store?->vendor?->firebase_token){
+                    $data = [
+                        'title' => translate('product_approved'),
+                        'description' => translate('Product_Request_Has_Been_Approved_By_Admin'),
+                        'order_id' => '',
+                        'image' => '',
+                        'type' => 'product',
+                        'order_status' => '',
+                    ];
+                    Helpers::send_push_notif_to_device($item?->store?->vendor?->firebase_token, $data);
+                    DB::table('user_notifications')->insert([
+                        'data' => json_encode($data),
+                        'vendor_id' => $item?->store?->vendor_id,
+                        'created_at' => now(),
+                        'updated_at' => now()
+                    ]);
+                }
+
                 if(config('mail.status') && Helpers::get_mail_status('product_approve_mail_status_store') == '1' &&  Helpers::getNotificationStatusData('store','store_product_approve','mail_status',$item?->store?->id) ) {
                     Mail::to($item?->store?->vendor?->email)->send(new \App\Mail\VendorProductMail($item?->store?->name,'approved'));
                 }
@@ -1649,6 +1668,25 @@ class ItemController extends Controller
         try
         {
 
+            if(Helpers::getNotificationStatusData('store','store_product_reject','push_notification_status',$data?->store->id)  &&  $data?->store?->vendor?->firebase_token){
+                $ndata = [
+                    'title' => translate('product_rejected'),
+                    'description' => translate('Product_Request_Has_Been_Rejected_By_Admin'),
+                    'order_id' => '',
+                    'image' => '',
+                    'type' => 'product',
+                    'order_status' => '',
+                ];
+                Helpers::send_push_notif_to_device($data?->store?->vendor?->firebase_token, $ndata);
+                DB::table('user_notifications')->insert([
+                    'data' => json_encode($ndata),
+                    'vendor_id' => $data?->store?->vendor_id,
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ]);
+            }
+
+
             if(config('mail.status') && Helpers::get_mail_status('product_deny_mail_status_store')  == '1' &&  Helpers::getNotificationStatusData('store','store_product_reject','mail_status',$data?->store?->id) ) {
                 Mail::to($data?->store?->vendor?->email)->send(new \App\Mail\VendorProductMail($data?->store?->name,'denied'));
             }
@@ -1718,6 +1756,26 @@ class ItemController extends Controller
 
         try
         {
+
+            if(Helpers::getNotificationStatusData('store','store_product_approve','push_notification_status',$item?->store->id)  &&  $item?->store?->vendor?->firebase_token){
+                $data = [
+                    'title' => translate('product_approved'),
+                    'description' => translate('Product_Request_Has_Been_Approved_By_Admin'),
+                    'order_id' => '',
+                    'image' => '',
+                    'type' => 'product',
+                    'order_status' => '',
+                ];
+                Helpers::send_push_notif_to_device($item?->store?->vendor?->firebase_token, $data);
+                DB::table('user_notifications')->insert([
+                    'data' => json_encode($data),
+                    'vendor_id' => $item?->store?->vendor_id,
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ]);
+            }
+
+
             if(config('mail.status') && Helpers::get_mail_status('product_approve_mail_status_store') == '1' &&  Helpers::getNotificationStatusData('store','store_product_approve','mail_status',$item?->store?->id)) {
                 Mail::to($item?->store?->vendor?->email)->send(new \App\Mail\VendorProductMail($item?->store?->name,'approved'));
             }
