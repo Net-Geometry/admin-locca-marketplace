@@ -309,7 +309,7 @@ class DeliverymanController extends Controller
         $value = Helpers::order_status_update_message('accepted',$order->module->module_type);
         $value = Helpers::text_variable_data_format(value:$value,store_name:$order->store?->name,order_id:$order->id,user_name:"{$order?->customer?->f_name} {$order?->customer?->l_name}",delivery_man_name:"{$order->delivery_man?->f_name} {$order->delivery_man?->l_name}");
         try {
-            if($value && $fcm_token)
+            if($value && $fcm_token && Helpers::getNotificationStatusData('customer','customer_order_notification','push_notification_status'))
             {
                 $data = [
                     'title' =>translate('messages.order_push_title'),
@@ -391,7 +391,7 @@ class DeliverymanController extends Controller
         try {
 
             $fcm_token= $order->is_guest == 0 ? $order?->customer?->cm_firebase_token : $order?->guest?->fcm_token;
-            if ($value && $fcm_token) {
+            if ($value && $fcm_token && Helpers::getNotificationStatusData('customer','customer_delivery_verification' ,'push_notification_status')) {
                 $data = [
                     'title' => translate('messages.order_ready_to_be_delivered'),
                     'description' => $value,

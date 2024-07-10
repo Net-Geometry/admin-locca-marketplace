@@ -1542,7 +1542,7 @@ class Helpers
                 $user_fcm = $order?->customer?->cm_firebase_token;
             }
 
-            if ($value) {
+            if (self::getNotificationStatusData('customer','customer_order_notification','push_notification_status') &&  $value && $user_fcm) {
                 $data = [
                     'title' => translate('messages.order_push_title'),
                     'description' => $value,
@@ -1750,7 +1750,7 @@ class Helpers
                 }
             }
 
-            if (in_array($order->order_status, ['processing', 'handover']) && $order->delivery_man) {
+            if (in_array($order->order_status, ['processing', 'handover']) && $order->delivery_man && self::getNotificationStatusData('deliveryman','deliveryman_order_notification','push_notification_status')) {
                 $data = [
                     'title' => translate('messages.order_push_title'),
                     'description' => $order->order_status == 'processing' ? translate('messages.Proceed_for_cooking') : translate('messages.ready_for_delivery'),

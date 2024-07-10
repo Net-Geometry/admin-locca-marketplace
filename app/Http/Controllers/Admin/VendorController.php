@@ -804,7 +804,7 @@ class VendorController extends Controller
         {
             if($request->status == 0)
             {   $vendor->auth_token = null;
-                if(isset($vendor->fcm_token))
+                if(isset($vendor->firebase_token))
                 {
                     $data = [
                         'title' => translate('messages.suspended'),
@@ -813,7 +813,7 @@ class VendorController extends Controller
                         'image' => '',
                         'type'=> 'block'
                     ];
-                    Helpers::send_push_notif_to_device($vendor->fcm_token, $data);
+                    Helpers::send_push_notif_to_device($vendor->firebase_token, $data);
                     DB::table('user_notifications')->insert([
                         'data'=> json_encode($data),
                         'vendor_id'=>$vendor->id,

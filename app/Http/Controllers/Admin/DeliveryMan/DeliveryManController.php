@@ -7,10 +7,12 @@ use App\Models\Order;
 use Illuminate\View\View;
 use App\Mail\DmSuspendMail;
 use Illuminate\Http\Request;
+use App\CentralLogics\Helpers;
 use App\Mail\DmSelfRegistration;
 use App\Traits\NotificationTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Redirector;
+use Illuminate\Support\Facades\DB;
 use App\Models\DisbursementDetails;
 use App\Services\DeliveryManService;
 use Brian2694\Toastr\Facades\Toastr;
@@ -40,7 +42,6 @@ use App\Contracts\Repositories\ConversationRepositoryInterface;
 use App\Enums\ViewPaths\Admin\DeliveryMan as DeliveryManViewPath;
 use App\Contracts\Repositories\OrderTransactionRepositoryInterface;
 use App\Contracts\Repositories\UserNotificationRepositoryInterface;
-use App\CentralLogics\Helpers;
 
 class DeliveryManController extends BaseController
 {
@@ -185,7 +186,8 @@ class DeliveryManController extends BaseController
 
             if($request['status'] == 0)
             {   $deliveryMan->auth_token = null;
-                if(isset($deliveryMan->fcm_token))
+
+                if(isset($deliveryMan->fcm_token) &&  Helpers::getNotificationStatusData('deliveryman','deliveryman_account_block','push_notification_status'))
                 {
                     $data = [
                         'title' => translate('messages.suspended'),
@@ -205,6 +207,25 @@ class DeliveryManController extends BaseController
                 }
                 else{
                     Toastr::warning(translate('messages.push_notification_failed'));
+                }
+            } else{
+                if( Helpers::getNotificationStatusData('deliveryman','deliveryman_account_unblock','push_notification_status') && isset($deliveryMan->fcm_token))
+                {
+                    $data = [
+                        'title' => translate('messages.Account_activation'),
+                        'description' => translate('messages.your_account_has_been_activated'),
+                        'order_id' => '',
+                        'image' => '',
+                        'type'=> 'unblock'
+                    ];
+                    Helpers::send_push_notif_to_device($deliveryMan->fcm_token, $data);
+
+                    DB::table('user_notifications')->insert([
+                        'data'=> json_encode($data),
+                        'delivery_man_id'=>$deliveryMan->id,
+                        'created_at'=>now(),
+                        'updated_at'=>now()
+                    ]);
                 }
             }
             try {

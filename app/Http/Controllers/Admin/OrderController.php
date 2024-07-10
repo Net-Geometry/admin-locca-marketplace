@@ -568,22 +568,24 @@ class OrderController extends Controller
                 $dm = $order->delivery_man;
                 $dm->current_orders = $dm->current_orders > 1 ? $dm->current_orders - 1 : 0;
                 $dm->save();
+                if (Helpers::getNotificationStatusData('deliveryman','deliveryman_order_assign_unassign','push_notification_status')) {
+                    $data = [
+                        'title' => translate('messages.order_push_title'),
+                        'description' => translate('messages.you_are_unassigned_from_a_order'),
+                        'order_id' => '',
+                        'image' => '',
+                        'type' => 'assign'
+                    ];
+                    Helpers::send_push_notif_to_device($dm->fcm_token, $data);
 
-                $data = [
-                    'title' => translate('messages.order_push_title'),
-                    'description' => translate('messages.you_are_unassigned_from_a_order'),
-                    'order_id' => '',
-                    'image' => '',
-                    'type' => 'assign'
-                ];
-                Helpers::send_push_notif_to_device($dm->fcm_token, $data);
+                    DB::table('user_notifications')->insert([
+                        'data' => json_encode($data),
+                        'delivery_man_id' => $dm->id,
+                        'created_at' => now(),
+                        'updated_at' => now()
+                    ]);
+                }
 
-                DB::table('user_notifications')->insert([
-                    'data' => json_encode($data),
-                    'delivery_man_id' => $dm->id,
-                    'created_at' => now(),
-                    'updated_at' => now()
-                ]);
             }
             $order->delivery_man_id = $delivery_man_id;
             $order->order_status = in_array($order->order_status, ['pending', 'confirmed']) ? 'accepted' : $order->order_status;
@@ -599,7 +601,7 @@ class OrderController extends Controller
             $order?->customer?->current_language_key:'en');
             $value = Helpers::text_variable_data_format(value:$value,store_name:$order->store?->name,order_id:$order->id,user_name:"{$order?->customer?->f_name} {$order?->customer?->l_name}",delivery_man_name:"{$order->delivery_man?->f_name} {$order->delivery_man?->l_name}");
             try {
-                if ($value) {
+                if ($value  && Helpers::getNotificationStatusData('customer','customer_order_notification','push_notification_status') && $fcm_token ) {
                     $data = [
                         'title' => translate('messages.order_push_title'),
                         'description' => $value,
@@ -607,8 +609,6 @@ class OrderController extends Controller
                         'image' => '',
                         'type' => 'order_status'
                     ];
-
-                    if($fcm_token){
                         Helpers::send_push_notif_to_device($fcm_token, $data);
                         DB::table('user_notifications')->insert([
                             'data' => json_encode($data),
@@ -616,22 +616,25 @@ class OrderController extends Controller
                             'created_at' => now(),
                             'updated_at' => now()
                         ]);
-                    }
                 }
-                $data = [
-                    'title' => translate('messages.order_push_title'),
-                    'description' => translate('messages.you_are_assigned_to_a_order'),
-                    'order_id' => $order['id'],
-                    'image' => '',
-                    'type' => 'assign'
-                ];
-                Helpers::send_push_notif_to_device($deliveryman->fcm_token, $data);
-                DB::table('user_notifications')->insert([
-                    'data' => json_encode($data),
-                    'delivery_man_id' => $deliveryman->id,
-                    'created_at' => now(),
-                    'updated_at' => now()
-                ]);
+
+                if(Helpers::getNotificationStatusData('deliveryman','deliveryman_order_assign_unassign','push_notification_status')){
+                    $data = [
+                        'title' => translate('messages.order_push_title'),
+                        'description' => translate('messages.you_are_assigned_to_a_order'),
+                        'order_id' => $order['id'],
+                        'image' => '',
+                        'type' => 'assign'
+                    ];
+                    Helpers::send_push_notif_to_device($deliveryman->fcm_token, $data);
+                    DB::table('user_notifications')->insert([
+                        'data' => json_encode($data),
+                        'delivery_man_id' => $deliveryman->id,
+                        'created_at' => now(),
+                        'updated_at' => now()
+                    ]);
+                }
+
             } catch (\Exception $e) {
                 info($e->getMessage());
                 Toastr::warning(translate('messages.push_notification_faild'));
@@ -1617,7 +1620,7 @@ class OrderController extends Controller
                 ];
 
                 $fcm= $order->is_guest == 0 ? $order?->customer?->cm_firebase_token : $order?->guest?->fcm_token;
-                if($fcm && ( $value || $request->note)){
+                if($fcm && ( $value || $request->note) && Helpers::getNotificationStatusData('customer','customer_offline_payment_approve','push_notification_status') ){
                     Helpers::send_push_notif_to_device($fcm, $data);
                     DB::table('user_notifications')->insert([
                         'data' => json_encode($data),
@@ -1675,7 +1678,7 @@ class OrderController extends Controller
                     ];
 
                     $fcm= $order->is_guest == 0 ? $order?->customer?->cm_firebase_token : $order?->guest?->fcm_token ;
-                    if($fcm && ( $value || $request->note)){
+                    if($fcm && ( $value || $request->note) &&  Helpers::getNotificationStatusData('customer','customer_offline_payment_deny','push_notification_status')){
                         Helpers::send_push_notif_to_device($fcm, $data);
                         DB::table('user_notifications')->insert([
                             'data' => json_encode($data),

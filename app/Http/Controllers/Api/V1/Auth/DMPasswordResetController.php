@@ -79,8 +79,7 @@ class DMPasswordResetController extends Controller
                 }
 
 
-                if (Helpers::getNotificationStatusData('deliveryman','deliveryman_forget_password','push_notification_status')) {
-                    if (isset($deliveryman->fcm_token)) {
+                    if (isset($deliveryman->fcm_token) && Helpers::getNotificationStatusData('deliveryman','deliveryman_forget_password','push_notification_status')) {
                         $data = [
                             'title' => translate('messages.password_reset'),
                             'description' => translate('messages.your_reset_password_otp_is').' '.$token,
@@ -98,7 +97,7 @@ class DMPasswordResetController extends Controller
                         ]);
                         $response = 'success';
                     }
-                }
+
 
 
             if($response == 'success' && $mailResponse == 'success')
