@@ -441,6 +441,8 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                 Route::post('remove-key/{lang}', 'LanguageController@translate_key_remove')->name('remove-key');
                 Route::get('delete/{lang}', 'LanguageController@delete')->name('delete');
                 Route::any('auto-translate/{lang}', 'LanguageController@auto_translate')->name('auto-translate');
+                Route::get('auto-translate-all/{lang}', 'LanguageController@auto_translate_all')->name('auto_translate_all');
+
             });
 
             Route::get('order-cancel-reasons/status/{id}/{status}', 'OrderCancelReasonController@status')->name('order-cancel-reasons.status');
