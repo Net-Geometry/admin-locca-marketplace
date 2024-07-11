@@ -13355,3 +13355,10 @@ video#VisaChipCardVideo {
 .video-preview-box {
     display: none;
 }
+.p-20px {
+    padding: 20px;
+}
+
+.sorting-card .form--check .form-check-input[type="radio"]:checked, .sorting-card .toggle-switch-input:checked + .toggle-switch-label {
+    background-color: var(--primary-clr) !important;
+}

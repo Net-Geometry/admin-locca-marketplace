@@ -4869,5 +4869,19 @@ class Helpers
         return true;
         }
 
+
+    public static function updateStorageTable($dataType, $dataId, $image)
+    {
+        $value = Helpers::getDisk();
+        DB::table('storages')->updateOrInsert([
+            'data_type' => $dataType,
+            'data_id' => $dataId,
+            'key' => 'image',
+        ], [
+            'value' => $value,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+    }
 }
 
