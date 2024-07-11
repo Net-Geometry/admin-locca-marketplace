@@ -13,6 +13,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
         Route::post('settings-password', 'SystemController@settings_password_update')->name('settings-password');
         Route::get('/get-store-data', 'SystemController@store_data')->name('get-store-data');
         Route::post('remove_image', 'BusinessSettingsController@remove_image')->name('remove_image');
+        Route::get('system-currency', 'SystemController@system_currency')->name('system_currency');
         //dashboard
         Route::get('/', 'DashboardController@dashboard')->name('dashboard');
 

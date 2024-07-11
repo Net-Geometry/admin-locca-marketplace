@@ -51,9 +51,11 @@ use Illuminate\Database\Eloquent\Collection;
 use MatanYadaev\EloquentSpatial\Objects\Point;
 use App\Models\SubscriptionBillingAndRefundHistory;
 use Laravelpkg\Laravelchk\Http\Controllers\LaravelchkController;
+use App\Traits\PaymentGatewayTrait;
 
 class Helpers
 {
+    use PaymentGatewayTrait;
     public static function error_processor($validator)
     {
         $err_keeper = [];
@@ -4795,5 +4797,77 @@ class Helpers
         }
         return true;
     }
+
+
+    public static function getActivePaymentGateways(){
+
+        if (!Schema::hasTable('addon_settings')) {
+            return [];
+        }
+
+        $published_status = 0;
+        $payment_published_status = config('get_payment_publish_status');
+        if (isset($payment_published_status[0]['is_published'])) {
+            $published_status = $payment_published_status[0]['is_published'];
+        }
+
+
+        if($published_status == 1){
+            $methods = DB::table('addon_settings')->where('is_active',1)->where('settings_type', 'payment_config')->get();
+            $env = env('APP_ENV') == 'live' ? 'live' : 'test';
+            $credentials = $env . '_values';
+
+        } else{
+            $methods = DB::table('addon_settings')->where('is_active',1)->whereIn('settings_type', ['payment_config'])->whereIn('key_name', ['ssl_commerz','paypal','stripe','razor_pay','senang_pay','paytabs','paystack','paymob_accept','paytm','flutterwave','liqpay','bkash','mercadopago'])->get();
+            $env = env('APP_ENV') == 'live' ? 'live' : 'test';
+            $credentials = $env . '_values';
+
+        }
+
+            $data = [];
+            foreach ($methods as $method) {
+                $credentialsData = json_decode($method->$credentials);
+                $additional_data = json_decode($method->additional_data);
+                if ($credentialsData->status == 1) {
+                    $data[] = [
+                        'gateway' => $method->key_name,
+                        'gateway_title' => $additional_data?->gateway_title,
+                        'gateway_image' => $additional_data?->gateway_image,
+                        'gateway_image_full_url' => Helpers::get_full_url('payment_modules/gateway_image',$additional_data?->gateway_image,$additional_data?->storage ?? 'public')
+                    ];
+                }
+            }
+            return $data;
+
+    }
+
+
+
+    public static function checkCurrency($data , $type= null){
+
+        $digital_payment=self::get_business_settings('digital_payment');
+
+        if($digital_payment && $digital_payment['status']==1){
+            if($type === null){
+                if(is_array(self::getActivePaymentGateways())){
+                    foreach(self::getActivePaymentGateways() as $payment_gateway){
+
+                        if(!empty(self::getPaymentGatewaySupportedCurrencies($payment_gateway['gateway'])) && !array_key_exists($data,self::getPaymentGatewaySupportedCurrencies($payment_gateway['gateway']))    ){
+                            return  $payment_gateway['gateway'];
+                        }
+                    }
+                }
+            }
+            elseif($type == 'payment_gateway'){
+                $currency=  BusinessSetting::where('key','currency')->first()?->value;
+                    if(!empty(self::getPaymentGatewaySupportedCurrencies($data)) && !array_key_exists($currency,self::getPaymentGatewaySupportedCurrencies($data))    ){
+                        return  $data;
+                    }
+            }
+        }
+
+        return true;
+        }
+
 }
 

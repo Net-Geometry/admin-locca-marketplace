@@ -717,7 +717,7 @@
                                     <div class="form-group mb-0">
                                         <label class="form-label"
                                             for="currency">{{ translate('Currency Symbol') }}</label>
-                                        <select name="currency" class="form-control js-select2-custom">
+                                        <select id="change_currency" name="currency" class="form-control js-select2-custom">
                                             @foreach (\App\Models\Currency::orderBy('currency_code')->get() as $currency)<option value="{{ $currency['currency_code'] }}"
                                                     {{ $currency_code ? ($currency_code->value == $currency['currency_code'] ? 'selected' : '') : '' }}>
                                                     {{ $currency['currency_code'] }} ({{ $currency['currency_symbol'] }})
@@ -1359,9 +1359,92 @@
         </form>
     </div>
 
+
+
+    <div class="modal fade" id="currency-warning-modal">
+        <div class="modal-dialog modal-dialog-centered status-warning-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true" class="tio-clear"></span>
+                    </button>
+                </div>
+                <div class="modal-body pb-5 pt-0">
+                    <div class="max-349 mx-auto mb-20">
+                        <div>
+                            <div class="text-center">
+                                <img width="80" src="{{  asset('public/assets/admin/img/modal/currency.png') }}" class="mb-20">
+                                <h5 class="modal-title"></h5>
+                            </div>
+                            <div class="text-center" >
+                                <h3 > {{ translate('Are_you_sure_to_change_the_currency_?') }}</h3>
+                                <div > <p>{{ translate('If_you_enable_this_currency,_you_must_active_at_least_one_digital_payment_method_that_supports_this_currency._Otherwise_customers_cannot_pay_via_digital_payments_from_the_app_and_websites._And_Also_restaurants_cannot_pay_you_digitally') }}</h3></p></div>
+                            </div>
+
+                            <div class="text-center mb-4" >
+                                <a class="text--underline" href="{{ route('admin.business-settings.third-party.payment-method') }}"> {{ translate('Go_to_payment_method_settings.') }}</a>
+                            </div>
+                            </div>
+
+                        <div class="btn--container justify-content-center">
+                            <button data-dismiss="modal" id="confirm-currency-change" class="btn btn--cancel min-w-120" >{{translate("Cancel")}}</button>
+                            <button data-dismiss="modal"   type="button"  class="btn btn--primary min-w-120">{{translate('OK')}}</button>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 @endsection
 
 @push('script_2')
+
+<script>
+      "use strict";
+      $(document).ready(function() {
+    let selectedCurrency = "{{ $currency_code ? $currency_code->value : 'USD' }}";
+    let currencyConfirmed = false;
+    let updatingCurrency = false;
+
+    $("#change_currency").change(function() {
+        if (!updatingCurrency) check_currency($(this).val());
+    });
+
+    $("#confirm-currency-change").click(function() {
+        currencyConfirmed = true;
+        update_currency(selectedCurrency);
+        $('#currency-warning-modal').modal('hide');
+    });
+
+    function check_currency(currency) {
+        $.ajax({
+            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+            url: "{{route('admin.system_currency')}}",
+            method: 'GET',
+            data: { currency: currency },
+            success: function(response) {
+                if (response.data) {
+                    $('#currency-warning-modal').modal('show');
+                } else {
+                    update_currency(currency);
+                }
+            }
+        });
+    }
+
+    function update_currency(currency) {
+        if (currencyConfirmed) {
+            updatingCurrency = true;
+            $("#change_currency").val(currency).trigger('change');
+            updatingCurrency = false;
+            currencyConfirmed = false;
+        }
+    }
+});
+</script>
+
     <script
         src="https://maps.googleapis.com/maps/api/js?key={{ \App\Models\BusinessSetting::where('key', 'map_api_key')->first()->value }}&libraries=places&v=3.45.8">
     </script>
