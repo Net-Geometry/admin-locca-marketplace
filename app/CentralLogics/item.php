@@ -5,10 +5,10 @@ namespace App\CentralLogics;
 use App\Models\Item;
 use App\Models\Review;
 use App\Models\Category;
+use App\Models\PriorityList;
 use App\Models\FlashSaleItem;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
-use Twig\Node\Expression\Test\NullTest;
+use App\Models\BusinessSetting;
+
 
 class ProductLogic
 {
@@ -29,11 +29,18 @@ class ProductLogic
 
     public static function get_latest_products($zone_id, $limit, $offset, $store_id, $category_id, $type, $min=false, $max=false, $product_id=null)
     {
+
+        $latest_items_default_status =BusinessSetting::where('key', 'latest_items_default_status')->first()?->value ?? 1;
+        $latest_items_sort_by_general =PriorityList::where('name', 'latest_items_sort_by_general')->where('type','general')->first()?->value ?? '';
+        $latest_items_sort_by_unavailable =PriorityList::where('name', 'latest_items_sort_by_unavailable')->where('type','unavailable')->first()?->value ?? '';
+        $latest_items_sort_by_temp_closed =PriorityList::where('name', 'latest_items_sort_by_temp_closed')->where('type','temp_closed')->first()?->value ?? '';
+
+
         if($category_id != 0){
             $category_id = explode(',', $category_id);
         }
-        $paginator = Item::active()->type($type)
-        ->when($category_id != 0, function($q)use($category_id){
+        $query = Item::
+        when($category_id != 0, function($q)use($category_id){
             $q->whereHas('category',function($q)use($category_id){
                 return $q->whereIn('id',$category_id)->orWhereIn('parent_id', $category_id);
             });
@@ -62,11 +69,50 @@ class ProductLogic
                 $q->where('slug', $store_id);
             });
         })
-        ->latest()->paginate($limit, ['*'], 'page', $offset);
+
+        ->select(['items.*'])
+        ->selectSub(function ($subQuery) {
+            $subQuery->selectRaw('active as temp_available')
+                ->from('stores')
+                ->whereColumn('stores.id', 'items.store_id');
+        }, 'temp_available')
+        ->active()->type($type);
+
+        if ($latest_items_default_status == '1'){
+            $query = $query->latest();
+        } else {
+
+            if($latest_items_sort_by_unavailable == 'remove'){
+                $query = $query->having('stock', '>', 0);
+            }elseif($latest_items_sort_by_unavailable == 'last'){
+                $query = $query->orderBy('stock', 'desc');
+            }
+
+            if($latest_items_sort_by_temp_closed == 'remove'){
+                $query = $query->having('temp_available', '>', 0);
+            }elseif($latest_items_sort_by_temp_closed == 'last'){
+                $query = $query->orderByDesc('temp_available');
+            }
+
+            if ($latest_items_sort_by_general == 'rating') {
+                $query = $query->orderByDesc('avg_rating');
+            } elseif ($latest_items_sort_by_general == 'review_count') {
+                $query = $query->withCount('reviews')->orderByDesc('reviews_count');
+
+            } elseif ($latest_items_sort_by_general == 'a_to_z') {
+                $query = $query->orderBy('name');
+            } elseif ($latest_items_sort_by_general == 'z_to_a') {
+                $query = $query->orderByDesc('name');
+            } elseif ($latest_items_sort_by_general == 'latest_created') {
+                $query = $query->latest();
+            }
+        }
+
+        $paginator = $query->paginate($limit, ['*'], 'page', $offset);
 
 
-        $item_categories = Item::active()->type($type)
-        ->when($category_id != 0, function($q)use($category_id){
+        $query = Item::
+        when($category_id != 0, function($q)use($category_id){
             $q->whereHas('category',function($q)use($category_id){
                 return $q->whereId($category_id)->orWhere('parent_id', $category_id);
             });
@@ -95,8 +141,48 @@ class ProductLogic
                 return $q->where('slug', $store_id);
             });
         })
-        ->latest()
-        ->pluck('category_id')->toArray();
+
+        ->select(['items.*'])
+        ->selectSub(function ($subQuery) {
+            $subQuery->selectRaw('active as temp_available')
+                ->from('stores')
+                ->whereColumn('stores.id', 'items.store_id');
+        }, 'temp_available')
+        ->active()->type($type);
+
+        if ($latest_items_default_status == '1'){
+            $query = $query->latest();
+        } else {
+
+            if($latest_items_sort_by_unavailable == 'remove'){
+                $query = $query->having('stock', '>', 0);
+            }elseif($latest_items_sort_by_unavailable == 'last'){
+                $query = $query->orderBy('stock', 'desc');
+            }
+
+            if($latest_items_sort_by_temp_closed == 'remove'){
+                $query = $query->having('temp_available', '>', 0);
+            }elseif($latest_items_sort_by_temp_closed == 'last'){
+                $query = $query->orderByDesc('temp_available');
+            }
+
+            if ($latest_items_sort_by_general == 'rating') {
+                $query = $query->orderByDesc('avg_rating');
+            } elseif ($latest_items_sort_by_general == 'review_count') {
+                $query = $query->withCount('reviews')->orderByDesc('reviews_count');
+
+            } elseif ($latest_items_sort_by_general == 'a_to_z') {
+                $query = $query->orderBy('name');
+            } elseif ($latest_items_sort_by_general == 'z_to_a') {
+                $query = $query->orderByDesc('name');
+            } elseif ($latest_items_sort_by_general == 'latest_created') {
+                $query = $query->latest();
+            }
+        }
+
+
+
+        $item_categories = $query->pluck('category_id')->toArray();
 
         $item_categories = array_unique($item_categories);
 
@@ -121,11 +207,17 @@ class ProductLogic
 
     public static function get_new_products($zone_id, $type, $min=false, $max=false,$product_id=null,$limit = null, $offset = null, $filter = null, $rating_count = null, $category_ids = null, $brand_ids = null)
     {
+
+        $latest_items_default_status =BusinessSetting::where('key', 'latest_items_default_status')->first()?->value ?? 1;
+        $latest_items_sort_by_general =PriorityList::where('name', 'latest_items_sort_by_general')->where('type','general')->first()?->value ?? '';
+        $latest_items_sort_by_unavailable =PriorityList::where('name', 'latest_items_sort_by_unavailable')->where('type','unavailable')->first()?->value ?? '';
+        $latest_items_sort_by_temp_closed =PriorityList::where('name', 'latest_items_sort_by_temp_closed')->where('type','temp_closed')->first()?->value ?? '';
+
         $category_ids = isset($category_ids)?(is_array($category_ids)?$category_ids:json_decode($category_ids)):[];
         $brand_ids = isset($brand_ids)?(is_array($brand_ids)?$brand_ids:json_decode($brand_ids)):[];
         $filter = $filter?(is_array($filter)?$filter:str_getcsv(trim($filter, "[]"), ',')):'';
-        $paginator = Item::active()->type($type)
-        ->when(isset($product_id), function($q)use($product_id){
+        $query = Item::
+        when(isset($product_id), function($q)use($product_id){
             $q->where('id', '!=', $product_id);
         })
         ->when(isset($category_ids) && (count($category_ids)>0), function($query)use($category_ids){
@@ -171,10 +263,50 @@ class ProductLogic
         ->when($filter && in_array('discounted',$filter),function ($qurey){
             $qurey->Discounted()->orderBy('discount','desc');
         })
-        ->latest()->paginate($limit, ['*'], 'page', $offset);
 
-        $item_categories = Item::active()->type($type)
-        ->when(isset($product_id), function($q)use($product_id){
+        ->select(['items.*'])
+        ->selectSub(function ($subQuery) {
+            $subQuery->selectRaw('active as temp_available')
+                ->from('stores')
+                ->whereColumn('stores.id', 'items.store_id');
+        }, 'temp_available')
+        ->active()->type($type);
+
+        if ($latest_items_default_status == '1'){
+            $query = $query->latest();
+        } else {
+
+            if($latest_items_sort_by_unavailable == 'remove'){
+                $query = $query->having('stock', '>', 0);
+            }elseif($latest_items_sort_by_unavailable == 'last'){
+                $query = $query->orderBy('stock', 'desc');
+            }
+
+            if($latest_items_sort_by_temp_closed == 'remove'){
+                $query = $query->having('temp_available', '>', 0);
+            }elseif($latest_items_sort_by_temp_closed == 'last'){
+                $query = $query->orderByDesc('temp_available');
+            }
+
+            if ($latest_items_sort_by_general == 'rating') {
+                $query = $query->orderByDesc('avg_rating');
+            } elseif ($latest_items_sort_by_general == 'review_count') {
+                $query = $query->withCount('reviews')->orderByDesc('reviews_count');
+
+            } elseif ($latest_items_sort_by_general == 'a_to_z') {
+                $query = $query->orderBy('name');
+            } elseif ($latest_items_sort_by_general == 'z_to_a') {
+                $query = $query->orderByDesc('name');
+            } elseif ($latest_items_sort_by_general == 'latest_created') {
+                $query = $query->latest();
+            }
+        }
+
+        $paginator = $query->paginate($limit, ['*'], 'page', $offset);
+
+
+        $query = Item::
+        when(isset($product_id), function($q)use($product_id){
             $q->where('id', '!=', $product_id);
         })
         ->when(isset($category_ids) && (count($category_ids)>0), function($query)use($category_ids){
@@ -220,9 +352,46 @@ class ProductLogic
         ->when($filter && in_array('low',$filter),function ($qurey){
             $qurey->orderBy('price', 'asc');
         })
-        ->latest()
-        ->pluck('category_id')->toArray();
 
+        ->select(['items.*'])
+        ->selectSub(function ($subQuery) {
+            $subQuery->selectRaw('active as temp_available')
+                ->from('stores')
+                ->whereColumn('stores.id', 'items.store_id');
+        }, 'temp_available')
+        ->active()->type($type);
+
+        if ($latest_items_default_status == '1'){
+            $query = $query->latest();
+        } else {
+
+            if($latest_items_sort_by_unavailable == 'remove'){
+                $query = $query->having('stock', '>', 0);
+            }elseif($latest_items_sort_by_unavailable == 'last'){
+                $query = $query->orderBy('stock', 'desc');
+            }
+
+            if($latest_items_sort_by_temp_closed == 'remove'){
+                $query = $query->having('temp_available', '>', 0);
+            }elseif($latest_items_sort_by_temp_closed == 'last'){
+                $query = $query->orderByDesc('temp_available');
+            }
+
+            if ($latest_items_sort_by_general == 'rating') {
+                $query = $query->orderByDesc('avg_rating');
+            } elseif ($latest_items_sort_by_general == 'review_count') {
+                $query = $query->withCount('reviews')->orderByDesc('reviews_count');
+
+            } elseif ($latest_items_sort_by_general == 'a_to_z') {
+                $query = $query->orderBy('name');
+            } elseif ($latest_items_sort_by_general == 'z_to_a') {
+                $query = $query->orderByDesc('name');
+            } elseif ($latest_items_sort_by_general == 'latest_created') {
+                $query = $query->latest();
+            }
+        }
+
+        $item_categories = $query->pluck('category_id')->toArray();
         $item_categories = array_unique($item_categories);
 
         $categories = Category::withCount(['products','childes'])->with(['childes' => function($query)  {
