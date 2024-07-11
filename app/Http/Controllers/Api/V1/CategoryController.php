@@ -5,7 +5,10 @@ namespace App\Http\Controllers\Api\V1;
 use App\CentralLogics\CategoryLogic;
 use App\CentralLogics\Helpers;
 use App\Http\Controllers\Controller;
+use App\Models\BusinessSetting;
 use App\Models\Category;
+use App\Models\Item;
+use App\Models\PriorityList;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -14,6 +17,9 @@ class CategoryController extends Controller
     public function get_categories(Request $request,$search=null)
     {
         try {
+            $category_list_default_status = BusinessSetting::where('key', 'category_list_default_status')->first()?->value ?? 1;
+            $category_list_sort_by_general = PriorityList::where('name', 'category_list_sort_by_general')->where('type','general')->first()?->value ?? '';
+            $zone_id=  $request->header('zoneId') ? json_decode($request->header('zoneId'), true) : [];
             $key = explode(' ', $search);
             $featured = $request->query('featured');
             $categories = Category::withCount(['products','childes'=> function($query){
@@ -37,7 +43,48 @@ class CategoryController extends Controller
                     }
                 });
             })
-            ->orderBy('priority','desc')->get();
+            ->when($category_list_default_status  == 1 , function ($query) {
+                $query->orderBy('priority','desc');
+            })
+
+
+            ->when($category_list_default_status  != 1 &&  $category_list_sort_by_general == 'latest', function ($query) {
+                $query->latest();
+            })
+            ->when($category_list_default_status  != 1 &&  $category_list_sort_by_general == 'oldest', function ($query) {
+                $query->oldest();
+            })
+            ->when($category_list_default_status  != 1 &&  $category_list_sort_by_general == 'a_to_z', function ($query) {
+                $query->orderby('name');
+            })
+            ->when($category_list_default_status  != 1 &&  $category_list_sort_by_general == 'z_to_a', function ($query) {
+                $query->orderby('name','desc');
+            })
+            ->get();
+
+            if(count($zone_id) > 0){
+                foreach ($categories as $category) {
+                    $productCountQuery = Item::active()
+                        ->whereHas('store', function ($query) use ($zone_id) {
+                            $query->whereIn('zone_id', $zone_id);
+                        })
+                        ->whereHas('category',function($q)use($category){
+                            return $q->whereId($category->id)->orWhere('parent_id', $category->id);
+                        })
+                        ->withCount('orders');
+
+                    $productCount = $productCountQuery->count();
+                    $orderCount = $productCountQuery->sum('order_count');
+
+                    $category['products_count'] = $productCount;
+                    $category['order_count'] = $orderCount;
+                    // unset($category['childes']);
+                }
+                if($category_list_default_status  != 1 &&  $category_list_sort_by_general == 'order_count'){
+
+                    $categories = $categories->sortByDesc('order_count')->values()->all();
+                }
+            }
             return response()->json($categories, 200);
         } catch (\Exception $e) {
             return response()->json([], 200);

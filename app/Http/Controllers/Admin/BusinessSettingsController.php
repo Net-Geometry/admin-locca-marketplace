@@ -92,7 +92,7 @@ class BusinessSettingsController extends Controller
 
     public function update_priority(Request $request)
     {
-        $list = ['popular_item','popular_store','new_store','all_store','campaign_item','best_reviewed_item' ,'category_list','cuisine_list','category_item','search_bar'];
+        $list = ['category_list','popular_store','recommended_store','special_offer','popular_item','best_reviewed_item'];
         foreach ($list as $item){
             BusinessSetting::updateOrInsert(['key' => $item.'_default_status'], [
                 'value' => $request[$item.'_default_status'] ?? 0
@@ -100,12 +100,10 @@ class BusinessSettingsController extends Controller
 
             if($request[$item.'_default_status'] == '0'){
 
-
                 if (! $request[$item.'_sort_by_general']    &&  $item != 'search_bar'){
                     Toastr::error(translate('you_must_selcet_an_option_for').' '.translate($item) );
                     return back();
                 }
-
 
                 if($request[$item.'_sort_by_general']){
                     PriorityList::query()->updateOrInsert(['name' => $item.'_sort_by_general','type' => 'general'], [
