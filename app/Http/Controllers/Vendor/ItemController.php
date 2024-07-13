@@ -156,8 +156,8 @@ class ItemController extends Controller
                     }
                 }
                 $oldPath = "product/{$item_data->image}";
-                $newFileName = Carbon::now()->toDateString() . "-" . uniqid() . ".png";
-                $newPath = "product/{$newFileName}";
+                $newFileNamethumb = Carbon::now()->toDateString() . "-" . uniqid() . ".png";
+                $newPath = "product/{$newFileNamethumb}";
                 $dir = 'product/';
                 $newDisk = Helpers::getDisk();
 
@@ -173,28 +173,27 @@ class ItemController extends Controller
                 }
             }
 
-            $uniqueValues = array_diff($item_data->images, explode(",", $request->removedImageKeys));
-
-            foreach($uniqueValues as$key=> $value){
-                $value = is_array($value)?$value:['img' => $value, 'storage' => 'public'];
-                $oldDisk = $value['storage'];
-                $oldPath = "product/{$value['img']}";
-                $newFileName = Carbon::now()->toDateString() . "-" . uniqid() . ".png";
-                $newPath = "product/{$newFileName}";
-                $dir = 'product/';
-                $newDisk = Helpers::getDisk();
-
-                try{
-                    if (Storage::disk($oldDisk)->exists($oldPath)) {
-                        if (!Storage::disk($newDisk)->exists($dir)) {
-                            Storage::disk($newDisk)->makeDirectory($dir);
+            foreach($item_data->images as$key=> $value){
+                if( !in_array( is_array($value) ?   $value['img'] : $value ,explode(",", $request->removedImageKeys))) {
+                    $value = is_array($value)?$value:['img' => $value, 'storage' => 'public'];
+                    $oldDisk = $value['storage'];
+                    $oldPath = "product/{$value['img']}";
+                    $newFileName = Carbon::now()->toDateString() . "-" . uniqid() . ".png";
+                    $newPath = "product/{$newFileName}";
+                    $dir = 'product/';
+                    $newDisk = Helpers::getDisk();
+                    try{
+                        if (Storage::disk($oldDisk)->exists($oldPath)) {
+                            if (!Storage::disk($newDisk)->exists($dir)) {
+                                Storage::disk($newDisk)->makeDirectory($dir);
+                            }
+                            $fileContents = Storage::disk($oldDisk)->get($oldPath);
+                            Storage::disk($newDisk)->put($newPath, $fileContents);
                         }
-                        $fileContents = Storage::disk($oldDisk)->get($oldPath);
-                        Storage::disk($newDisk)->put($newPath, $fileContents);
+                    } catch (\Exception $e) {
                     }
-                } catch (\Exception $e) {
+                    $images[]=['img'=>$newFileName, 'storage'=> Helpers::getDisk()];
                 }
-                $images[]=['img'=>$newFileName, 'storage'=> Helpers::getDisk()];
             }
         }
 
@@ -267,19 +266,6 @@ class ItemController extends Controller
                 array_push($variations, $item);
             }
         }
-        //combinations end
-
-        // $img_names = [];
-        // $images = [];
-        // if (!empty($request->file('item_images'))) {
-        //     foreach ($request->item_images as $img) {
-        //         $image_name = Helpers::upload('product/', 'png', $img);
-        //         array_push($img_names, $image_name);
-        //     }
-        //     $images = $img_names;
-        // }
-
-
 
         if (!empty($request->file('item_images'))) {
             foreach ($request->item_images as $img) {
@@ -330,7 +316,7 @@ class ItemController extends Controller
         $food->variations = json_encode($variations);
         $food->price = $request->price;
         $food->veg = $request->veg??0;
-        $food->image =  $request->has('image') ? Helpers::upload('product/', 'png', $request->file('image')) : $newFileName ?? null;
+        $food->image =  $request->has('image') ? Helpers::upload('product/', 'png', $request->file('image')) : $newFileNamethumb ?? null;
         $food->available_time_starts = $request->available_time_starts??'00:00:00';
         $food->available_time_ends = $request->available_time_ends??'23:59:59';
         $food->discount = $request->discount_type == 'amount' ? $request->discount : $request->discount;
@@ -1562,50 +1548,10 @@ class ItemController extends Controller
                 $fileContents = Storage::disk($oldDisk)->get($oldPath);
                 Storage::disk($newDisk)->put($newPath, $fileContents);
             }
-//            $oldPath = storage_path("app/public/product/{$data->image}");
-//            $temp_image_name =\Carbon\Carbon::now()->toDateString() . "-" . uniqid() . ".png" ;
-//            $newPath = storage_path("app/public/product/{$temp_image_name}");
-//            if (File::exists($oldPath)) {
-//                File::copy($oldPath, $newPath);
-//            }
             $temp_item->image = $newFileName;
         }
 
 
-        // $old_images =  count($old_images) > 0  ? json_decode($old_images , true) : [];
-        // $old_images =  count($data->images) > 0  ? json_decode($$data->images , true) : [];
-
-
-        // $uniqueValues = array_diff($data->images, $old_images);
-
-
-        // $images = $data->images;
-        // if ($request->has('item_images')){
-        //     foreach ($request->item_images as $img) {
-        //         $image = Helpers::upload('product/', 'png', $img);
-        //         array_push($images, $image);
-        //     }
-        // }
-
-
-
-
-
-
-
-
-        // foreach($images as $key=> $value){
-        //     $oldPath = storage_path("app/public/product/{$value}");
-        //     $newFileName =\Carbon\Carbon::now()->toDateString() . "-" . uniqid() . ".png" ;
-        //     $newPath = storage_path("app/public/product/{$newFileName}");
-        //     if (File::exists($oldPath)) {
-        //         File::copy($oldPath, $newPath);
-        //     }
-        //     $images[]=$newFileName;
-        // }
-
-
-        // $p->images = $images;
 
 
         $temp_item->images = $data->images;
