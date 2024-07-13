@@ -1435,10 +1435,15 @@ class ProductLogic
 
     public static function get_popular_basic_products($zone_id, $limit, $offset, $type, $store_id =null, $category_id=null, $min=false, $max=false,$product_id=null)
     {
+        $basic_medicine_default_status = BusinessSetting::where('key', 'basic_medicine_default_status')->first()?->value ?? 1;
+        $basic_medicine_sort_by_general = PriorityList::where('name', 'basic_medicine_sort_by_general')->where('type','general')->first()?->value ?? '';
+        $basic_medicine_sort_by_unavailable = PriorityList::where('name', 'basic_medicine_sort_by_unavailable')->where('type','unavailable')->first()?->value ?? '';
+        $basic_medicine_sort_by_temp_closed = PriorityList::where('name', 'basic_medicine_sort_by_temp_closed')->where('type','temp_closed')->first()?->value ?? '';
+
         if(isset($category_id)&&($category_id != 0)){
             $category_id = explode(',', $category_id);
         }
-        $paginator = Item::active()->type($type)
+        $query = Item::active()->type($type)
         ->whereHas('pharmacy_item_details', function($query){
             $query->where('is_basic', 1);
         })
@@ -1471,44 +1476,49 @@ class ProductLogic
                 return $q->where('slug', $store_id);
             });
         })
-        ->popular()->paginate($limit, ['*'], 'page', $offset);
+        ->select(['items.*'])
+        ->selectSub(function ($subQuery) {
+            $subQuery->selectRaw('active as temp_available')
+                ->from('stores')
+                ->whereColumn('stores.id', 'items.store_id');
+        }, 'temp_available')
+        ->active()->type($type);
+
+        if ($basic_medicine_default_status == '1'){
+            $query = $query->popular();
+        } else {
+            if(config('module.current_module_data')['module_type']  !== 'food'){
+                if($basic_medicine_sort_by_unavailable == 'remove'){
+                    $query = $query->where('stock', '>', 0);
+                }elseif($basic_medicine_sort_by_unavailable == 'last'){
+                    $query = $query->orderBy('stock', 'desc');
+                }
+            }
+
+            if($basic_medicine_sort_by_temp_closed == 'remove'){
+                $query = $query->having('temp_available', '>', 0);
+            }elseif($basic_medicine_sort_by_temp_closed == 'last'){
+                $query = $query->orderByDesc('temp_available');
+            }
+
+            if ($basic_medicine_sort_by_general == 'rating') {
+                $query = $query->orderByDesc('avg_rating');
+            } elseif ($basic_medicine_sort_by_general == 'review_count') {
+                $query = $query->withCount('reviews')->orderByDesc('reviews_count');
+
+            } elseif ($basic_medicine_sort_by_general == 'a_to_z') {
+                $query = $query->orderBy('name');
+            } elseif ($basic_medicine_sort_by_general == 'z_to_a') {
+                $query = $query->orderByDesc('name');
+            } elseif ($basic_medicine_sort_by_general == 'order_count') {
+                $query = $query->orderByDesc('order_count');
+            }
+
+        }
+        $paginator = $query->paginate($limit, ['*'], 'page', $offset);
 
 
-        $item_categories = Item::active()->type($type)
-        ->whereHas('pharmacy_item_details', function($query){
-            $query->where('is_basic', 1);
-        })
-        ->when($category_id != 0, function($q)use($category_id){
-            $q->whereHas('category',function($q)use($category_id){
-                return $q->whereId($category_id)->orWhere('parent_id', $category_id);
-            });
-        })
-        ->when(isset($product_id), function($q)use($product_id){
-            $q->where('id', '!=', $product_id);
-        })
-        ->whereHas('module.zones', function($query)use($zone_id){
-            $query->whereIn('zones.id', json_decode($zone_id, true));
-        })
-        ->whereHas('store', function($query)use($zone_id){
-            $query->when(config('module.current_module_data'), function($query){
-                $query->where('module_id', config('module.current_module_data')['id'])->whereHas('zone.modules',function($query){
-                    $query->where('modules.id', config('module.current_module_data')['id']);
-                });
-            })->whereIn('zone_id', json_decode($zone_id, true));
-        })
-        ->when($min && $max, function($query)use($min,$max){
-            $query->whereBetween('price',[$min,$max]);
-        })
-        ->when(isset($store_id)&&is_numeric($store_id),function ($qurey) use($store_id){
-            $qurey->where('store_id', $store_id);
-        })
-        ->when(isset($store_id)&&(!is_numeric($store_id)), function ($query) use ($store_id) {
-            $query->whereHas('store', function ($q) use ($store_id) {
-                return $q->where('slug', $store_id);
-            });
-        })
-        ->popular()
-        ->pluck('category_id')->toArray();
+        $item_categories = $query->pluck('category_id')->toArray();
 
         $item_categories = array_unique($item_categories);
 

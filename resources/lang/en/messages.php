@@ -5393,4 +5393,5 @@
   'Want_to_disable_advertisement_create_mail?' => 'Want to disable advertisement create mail?',
   'If_enabled,_stores_will_receive_an_create_mail_for_advertisement.' => 'If enabled, stores will receive an create mail for advertisement.',
   'If_disabled,stores_won\'t_receive_an_create_mail_for_advertisement.' => 'If disabled,stores won t receive an create mail for advertisement.',
+  'Basic Medicine Nearby' => 'Basic Medicine Nearby',
 );
