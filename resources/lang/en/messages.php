@@ -5356,4 +5356,5 @@
   'special_offer' => 'Special offer',
   'product search list' => 'Product search list',
   'product search list is the list of customer choices in which customer ordered items most and also highly rated with good reviews' => 'Product search list is the list of customer choices in which customer ordered items most and also highly rated with good reviews',
+  'Basic Medicine Nearby' => 'Basic Medicine Nearby',
 );

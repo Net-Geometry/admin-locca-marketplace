@@ -640,7 +640,10 @@ class DashboardController extends Controller
                     return $query->where('zone_id', $params['zone_id']);
                 });
             })
-            ->select('store_id', DB::raw('COUNT(store_id) as count'))->groupBy('store_id')->orderBy('count', 'DESC')->limit(6)->get();
+            ->select('store_id', DB::raw('COUNT(store_id) as count'))->groupBy('store_id')
+            ->having("count" , '>', 0)
+            ->orderBy('count', 'DESC')
+            ->limit(6)->get();
         $top_sell = Item::withoutGlobalScope(ZoneScope::class)
             ->when(is_numeric($params['module_id']), function ($q) use ($params) {
                 return $q->whereHas('store', function ($query) use ($params) {
@@ -652,6 +655,7 @@ class DashboardController extends Controller
                     return $query->where('module_id', $params['module_id'])->where('zone_id', $params['zone_id']);
                 });
             })
+            ->having("order_count" , '>', 0)
             ->orderBy("order_count", 'desc')
             ->take(6)
             ->get();
@@ -666,6 +670,7 @@ class DashboardController extends Controller
                     return $query->where('zone_id', $params['zone_id']);
                 });
             })
+            ->having("rating_count" , '>', 0)
             ->orderBy('rating_count', 'desc')
             ->take(6)
             ->get();
@@ -674,6 +679,7 @@ class DashboardController extends Controller
                 return $q->where('zone_id', $params['zone_id']);
             })
             ->Zonewise()
+            ->having("orders_count" , '>', 0)
             ->orderBy("orders_count", 'desc')
             ->take(6)
             ->get();
@@ -681,6 +687,7 @@ class DashboardController extends Controller
         $top_customers = User::when(is_numeric($params['zone_id']), function ($q) use ($params) {
                 return $q->where('zone_id', $params['zone_id']);
             })
+            ->having("order_count" , '>', 0)
             ->orderBy("order_count", 'desc')
             ->take(6)
             ->get();
@@ -691,6 +698,7 @@ class DashboardController extends Controller
             ->when(is_numeric($params['zone_id']), function ($q) use ($params) {
                 return $q->where('zone_id', $params['zone_id']);
             })
+            ->having("order_count" , '>', 0)
             ->orderBy("order_count", 'desc')
             ->take(6)
             ->get();
