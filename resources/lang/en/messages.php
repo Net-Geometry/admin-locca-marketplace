@@ -5394,4 +5394,7 @@
   'If_enabled,_stores_will_receive_an_create_mail_for_advertisement.' => 'If enabled, stores will receive an create mail for advertisement.',
   'If_disabled,stores_won\'t_receive_an_create_mail_for_advertisement.' => 'If disabled,stores won t receive an create mail for advertisement.',
   'Basic Medicine Nearby' => 'Basic Medicine Nearby',
+  'Common Condition' => 'Common Condition',
+  'Brand wise product list' => 'Brand wise product list',
+  'Brand is the list of customer choices in which customer ordered items most and also highly rated with good reviews' => 'Brand is the list of customer choices in which customer ordered items most and also highly rated with good reviews',
 );
