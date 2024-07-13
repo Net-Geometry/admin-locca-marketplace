@@ -92,7 +92,7 @@ class BusinessSettingsController extends Controller
 
     public function update_priority(Request $request)
     {
-        $list = ['category_list','popular_store','recommended_store','special_offer','popular_item','best_reviewed_item','item_campaign','latest_items' ];
+        $list = ['category_list','popular_store','recommended_store','special_offer','popular_item','best_reviewed_item','item_campaign','latest_items' ,'all_stores','category_sub_category_item','product_search' ];
         foreach ($list as $item){
             BusinessSetting::updateOrInsert(['key' => $item.'_default_status'], [
                 'value' => $request[$item.'_default_status'] ?? 0

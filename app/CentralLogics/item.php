@@ -81,11 +81,13 @@ class ProductLogic
         if ($latest_items_default_status == '1'){
             $query = $query->latest();
         } else {
+            if(config('module.current_module_data')['module_type']  !== 'food'){
+                if($latest_items_sort_by_unavailable == 'remove'){
+                    $query = $query->where('stock', '>', 0);
+                }elseif($latest_items_sort_by_unavailable == 'last'){
+                    $query = $query->orderBy('stock', 'desc');
+                }
 
-            if($latest_items_sort_by_unavailable == 'remove'){
-                $query = $query->having('stock', '>', 0);
-            }elseif($latest_items_sort_by_unavailable == 'last'){
-                $query = $query->orderBy('stock', 'desc');
             }
 
             if($latest_items_sort_by_temp_closed == 'remove'){
@@ -153,11 +155,12 @@ class ProductLogic
         if ($latest_items_default_status == '1'){
             $query = $query->latest();
         } else {
-
-            if($latest_items_sort_by_unavailable == 'remove'){
-                $query = $query->having('stock', '>', 0);
-            }elseif($latest_items_sort_by_unavailable == 'last'){
-                $query = $query->orderBy('stock', 'desc');
+            if(config('module.current_module_data')['module_type']  !== 'food'){
+                if($latest_items_sort_by_unavailable == 'remove'){
+                    $query = $query->where('stock', '>', 0);
+                }elseif($latest_items_sort_by_unavailable == 'last'){
+                    $query = $query->orderBy('stock', 'desc');
+                }
             }
 
             if($latest_items_sort_by_temp_closed == 'remove'){
@@ -275,11 +278,12 @@ class ProductLogic
         if ($latest_items_default_status == '1'){
             $query = $query->latest();
         } else {
-
-            if($latest_items_sort_by_unavailable == 'remove'){
-                $query = $query->having('stock', '>', 0);
-            }elseif($latest_items_sort_by_unavailable == 'last'){
-                $query = $query->orderBy('stock', 'desc');
+            if(config('module.current_module_data')['module_type']  !== 'food'){
+                if($latest_items_sort_by_unavailable == 'remove'){
+                    $query = $query->where('stock', '>', 0);
+                }elseif($latest_items_sort_by_unavailable == 'last'){
+                    $query = $query->orderBy('stock', 'desc');
+                }
             }
 
             if($latest_items_sort_by_temp_closed == 'remove'){
@@ -364,11 +368,12 @@ class ProductLogic
         if ($latest_items_default_status == '1'){
             $query = $query->latest();
         } else {
-
-            if($latest_items_sort_by_unavailable == 'remove'){
-                $query = $query->having('stock', '>', 0);
-            }elseif($latest_items_sort_by_unavailable == 'last'){
-                $query = $query->orderBy('stock', 'desc');
+            if(config('module.current_module_data')['module_type']  !== 'food'){
+                if($latest_items_sort_by_unavailable == 'remove'){
+                    $query = $query->where('stock', '>', 0);
+                }elseif($latest_items_sort_by_unavailable == 'last'){
+                    $query = $query->orderBy('stock', 'desc');
+                }
             }
 
             if($latest_items_sort_by_temp_closed == 'remove'){
@@ -548,10 +553,12 @@ class ProductLogic
                 $query = $query->popular();
             } else {
 
-                if($popular_item_sort_by_unavailable == 'remove'){
-                    $query = $query->having('stock', '>', 0);
-                }elseif($popular_item_sort_by_unavailable == 'last'){
-                    $query = $query->orderBy('stock', 'desc');
+                if(config('module.current_module_data')['module_type']  !== 'food'){
+                    if($popular_item_sort_by_unavailable == 'remove'){
+                        $query = $query->where('stock', '>', 0);
+                    }elseif($popular_item_sort_by_unavailable == 'last'){
+                        $query = $query->orderBy('stock', 'desc');
+                    }
                 }
 
                 if($popular_item_sort_by_temp_closed == 'remove'){
@@ -608,11 +615,12 @@ class ProductLogic
         if ($popular_item_default_status == '1'){
             $query = $query->popular();
         } else {
-
-            if($popular_item_sort_by_unavailable == 'remove'){
-                $query = $query->having('stock', '>', 0);
-            }elseif($popular_item_sort_by_unavailable == 'last'){
-                $query = $query->orderBy('stock', 'desc');
+            if(config('module.current_module_data')['module_type']  !== 'food'){
+                if($popular_item_sort_by_unavailable == 'remove'){
+                    $query = $query->where('stock', '>', 0);
+                }elseif($popular_item_sort_by_unavailable == 'last'){
+                    $query = $query->orderBy('stock', 'desc');
+                }
             }
 
             if($popular_item_sort_by_temp_closed == 'remove'){
@@ -681,30 +689,31 @@ class ProductLogic
             }, 'temp_available')
             ->withCount('reviews')->active()->type($type);
 
-           if ($best_reviewed_item_default_status == '1'){
-               $query = $query->orderBy('reviews_count','desc');
-           } else {
+            if ($best_reviewed_item_default_status == '1'){
+                $query = $query->orderBy('reviews_count','desc');
+            } else {
+            if(config('module.current_module_data')['module_type']  !== 'food'){
+                if($best_reviewed_item_sort_by_unavailable == 'remove'){
+                    $query = $query->where('stock', '>', 0);
+                }elseif($best_reviewed_item_sort_by_unavailable == 'last'){
+                    $query = $query->orderBy('stock', 'desc');
+                }
+            }
 
-               if($best_reviewed_item_sort_by_unavailable == 'remove'){
-                   $query = $query->having('stock', '>', 0);
-               }elseif($best_reviewed_item_sort_by_unavailable == 'last'){
-                   $query = $query->orderBy('stock', 'desc');
-               }
+                if($best_reviewed_item_sort_by_temp_closed == 'remove'){
+                    $query = $query->having('temp_available', '>', 0);
+                }elseif($best_reviewed_item_sort_by_temp_closed == 'last'){
+                    $query = $query->orderByDesc('temp_available');
+                }
 
-               if($best_reviewed_item_sort_by_temp_closed == 'remove'){
-                   $query = $query->having('temp_available', '>', 0);
-               }elseif($best_reviewed_item_sort_by_temp_closed == 'last'){
-                   $query = $query->orderByDesc('temp_available');
-               }
-
-               if ($best_reviewed_item_sort_by_general == 'rating') {
-                   $query = $query->orderByDesc('avg_rating');
-               } elseif ($best_reviewed_item_sort_by_general == 'review_count') {
-                   $query = $query->orderByDesc('reviews_count');
-               } elseif ($best_reviewed_item_sort_by_general == 'order_count') {
-                   $query = $query->orderByDesc('order_count');
-               }
-           }
+                if ($best_reviewed_item_sort_by_general == 'rating') {
+                    $query = $query->orderByDesc('avg_rating');
+                } elseif ($best_reviewed_item_sort_by_general == 'review_count') {
+                    $query = $query->orderByDesc('reviews_count');
+                } elseif ($best_reviewed_item_sort_by_general == 'order_count') {
+                    $query = $query->orderByDesc('order_count');
+                }
+            }
             $paginator = $query->paginate($limit, ['*'], 'page', $offset);
 
             return [
@@ -736,11 +745,12 @@ class ProductLogic
         if ($best_reviewed_item_default_status == '1'){
             $query = $query->orderBy('reviews_count','desc');
         } else {
-
-            if($best_reviewed_item_sort_by_unavailable == 'remove'){
-                $query = $query->having('stock', '>', 0);
-            }elseif($best_reviewed_item_sort_by_unavailable == 'last'){
-                $query = $query->orderBy('stock', 'desc');
+            if(config('module.current_module_data')['module_type']  !== 'food'){
+                if($best_reviewed_item_sort_by_unavailable == 'remove'){
+                    $query = $query->where('stock', '>', 0);
+                }elseif($best_reviewed_item_sort_by_unavailable == 'last'){
+                    $query = $query->orderBy('stock', 'desc');
+                }
             }
 
             if($best_reviewed_item_sort_by_temp_closed == 'remove'){
@@ -855,11 +865,12 @@ class ProductLogic
             if($special_offer_default_status == '1') {
                 $query = $query->orderBy('discount','desc');
             }else{
-
-                if($special_offer_sort_by_unavailable == 'remove'){
-                    $query = $query->having('stock', '>', 0);
-                }elseif($special_offer_sort_by_unavailable == 'last'){
-                    $query = $query->orderBy('stock', 'desc');
+                if(config('module.current_module_data')['module_type']  !== 'food'){
+                    if($special_offer_sort_by_unavailable == 'remove'){
+                        $query = $query->where('stock', '>', 0);
+                    }elseif($special_offer_sort_by_unavailable == 'last'){
+                        $query = $query->orderBy('stock', 'desc');
+                    }
                 }
 
                 if ($special_offer_sort_by_general == 'rating') {
@@ -941,11 +952,12 @@ class ProductLogic
         if($special_offer_default_status == '1') {
             $query = $query->orderBy('discount','desc');
         }else{
-
-            if($special_offer_sort_by_unavailable == 'remove'){
-                $query = $query->having('stock', '>', 0);
-            }elseif($special_offer_sort_by_unavailable == 'last'){
-                $query = $query->orderBy('stock', 'desc');
+            if(config('module.current_module_data')['module_type']  !== 'food'){
+                if($special_offer_sort_by_unavailable == 'remove'){
+                    $query = $query->where('stock', '>', 0);
+                }elseif($special_offer_sort_by_unavailable == 'last'){
+                    $query = $query->orderBy('stock', 'desc');
+                }
             }
 
             if ($special_offer_sort_by_general == 'rating') {

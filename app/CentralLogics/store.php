@@ -15,9 +15,15 @@ class StoreLogic
 {
     public static function get_stores( $zone_id, $filter_data, $type, $store_type, $limit = 10, $offset = 1, $featured=false,$longitude=0,$latitude=0,$filter=null,$rating_count=null)
     {
-        $paginator = Store::
+
+        $all_stores_default_status = \App\Models\BusinessSetting::where('key', 'all_stores_default_status')->first()?->value ?? 1;
+        $all_stores_sort_by_general = \App\Models\PriorityList::where('name', 'all_stores_sort_by_general')->where('type','general')->first()?->value ?? '';
+        $all_stores_sort_by_unavailable = \App\Models\PriorityList::where('name', 'all_stores_sort_by_unavailable')->where('type','unavailable')->first()?->value ?? '';
+        $all_stores_sort_by_temp_closed = \App\Models\PriorityList::where('name', 'all_stores_sort_by_temp_closed')->where('type','temp_closed')->first()?->value ?? '';
+
+        $query = Store::type($type)->
         withOpen($longitude??0,$latitude??0)
-            ->withCount(['items','campaigns'])
+            ->withCount(['items','campaigns','reviews','orders'])
             ->with(['discount'=>function($q){
                 return $q->validate();
             }])
@@ -34,18 +40,55 @@ class StoreLogic
                 $query->featured();
             });
         if(config('module.current_module_data')) {
-            $paginator = $paginator->whereHas('zone.modules', function($query){
+            $query = $query->whereHas('zone.modules', function($query){
                 $query->where('modules.id', config('module.current_module_data')['id']);
             })->module(config('module.current_module_data')['id'])
                 ->when(!config('module.current_module_data')['all_zone_service'], function($query)use($zone_id){
                     $query->whereIn('zone_id', json_decode($zone_id,true));
                 });
         } else {
-            $paginator = $paginator->whereIn('zone_id', json_decode($zone_id,true));
+            $query = $query->whereIn('zone_id', json_decode($zone_id,true));
         }
-        $paginator = $paginator->Active()
-            ->type($type)
-            ->when($store_type == 'all', function($q){
+
+            if($all_stores_default_status != '1') {
+                if($all_stores_sort_by_unavailable == 'remove'){
+                    $query = $query->Active();
+                }elseif($all_stores_sort_by_unavailable == 'last'){
+                    $query = $query->orderByDesc('active');
+                }
+
+                if($all_stores_sort_by_temp_closed == 'remove'){
+                    $query = $query->having('open', '>', 0);
+                }elseif($all_stores_sort_by_temp_closed == 'last'){
+                    $query = $query->orderBy('open', 'desc');
+                }
+
+                if($all_stores_sort_by_general == 'rating') {
+                    $query = $query->selectSub(function ($query) {
+                        $query->selectRaw('AVG(reviews.rating)')
+                            ->from('reviews')
+                            ->join('items', 'items.id', '=', 'reviews.item_id')
+                            ->whereColumn('items.store_id', 'stores.id')
+                            ->groupBy('items.store_id');
+                    }, 'avg_r')->orderBy('avg_r', 'desc');
+                }elseif($all_stores_sort_by_general == 'review_count') {
+                    $query = $query->orderByDesc('reviews_count');
+                }elseif($all_stores_sort_by_general == 'order_count') {
+                    $query = $query->orderBy('orders_count', 'desc');
+                }elseif($all_stores_sort_by_general == 'latest_created') {
+                    $query = $query->latest();
+                }elseif($all_stores_sort_by_general == 'first_created') {
+                    $query = $query->oldest();
+                }elseif($all_stores_sort_by_general == 'a_to_z') {
+                    $query = $query->orderBy('name');
+                }elseif($all_stores_sort_by_general == 'z_to_a') {
+                    $query = $query->orderByDesc('name');
+                }
+            }else{
+                $query = $query->Active();
+            }
+
+            $query = $query->when($store_type == 'all', function($q){
                 return $q->orderBy('open', 'desc')
                     ->orderBy('distance');
             })
@@ -84,10 +127,17 @@ class StoreLogic
             })
             ->when($filter && in_array('nearby',$filter),function ($qurey){
                 $qurey->orderBy('distance');
-            })
-            ->orderBy('open', 'desc')
+            });
 
-            ->paginate($limit, ['*'], 'page', $offset);
+
+            if($all_stores_default_status == '1') {
+                $query = $query->orderBy('open', 'desc');
+            }
+
+
+        $paginator = $query->paginate($limit??50, ['*'], 'page', $offset??1);
+
+
 
         $paginator->each(function ($store) {
             $category_ids = DB::table('items')
@@ -121,8 +171,6 @@ class StoreLogic
             $store->discount_status = !empty($store->items->where('discount', '>', 0));
             unset($store['items']);
         });
-
-        /*$paginator->total();*/
         return [
             'total_size' => $paginator->total(),
             'limit' => $limit,
