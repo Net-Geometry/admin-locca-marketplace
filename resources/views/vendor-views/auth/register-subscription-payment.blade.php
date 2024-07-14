@@ -82,7 +82,7 @@
                                             <img src="{{asset('public/assets/admin/img/check-2.png')}}" class="check" alt="">
                                         </div>
                                         <span>{{ $item['gateway_title'] }}</span>
-                                        <img class="ms-auto"
+                                        <img class="ms-auto" height="30"
 
 
                                             src="{{ \App\CentralLogics\Helpers::get_full_url('payment_modules/gateway_image',$item['gateway_image'],$item['storage'] ?? 'public') }}"

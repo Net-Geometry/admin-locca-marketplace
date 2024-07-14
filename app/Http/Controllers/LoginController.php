@@ -160,15 +160,30 @@ class LoginController extends Controller
             if($vendor)
             {
                 if($vendor?->stores[0]?->store_business_model == 'none'){
-                    $admin_commission= BusinessSetting::where('key','admin_commission')->first();
-                    $business_name= BusinessSetting::where('key','business_name')->first();
-                    $packages= SubscriptionPackage::where('status',1)->get();
-                    return view('vendor-views.auth.register-step-2',[
-                        'store_id' => $vendor?->stores[0]?->id,
-                        'packages' =>$packages,
-                        'business_name' =>$business_name?->value,
-                        'admin_commission' =>$admin_commission?->value,
+                    // $admin_commission= BusinessSetting::where('key','admin_commission')->first();
+                    // $business_name= BusinessSetting::where('key','business_name')->first();
+                    // $packages= SubscriptionPackage::where('status',1)->get();
+
+
+                    // return view('vendor-views.auth.register-step-2',[
+                    //     'store_id' => $vendor?->stores[0]?->id,
+                    //     'packages' =>$packages,
+                    //     'business_name' =>$business_name?->value,
+                    //     'admin_commission' =>$admin_commission?->value,
+                    // ]);
+
+                    $key=['subscription_free_trial_days','subscription_free_trial_type','subscription_free_trial_status'];
+                    $free_trial_settings=BusinessSetting::whereIn('key', $key)->pluck('value','key');
+
+                    return view('vendor-views.auth.register-subscription-payment',[
+                    'package_id'=> $vendor?->stores[0]?->package_id,
+                    'store_id' => $vendor?->stores[0]?->id,
+                    'free_trial_settings'=>$free_trial_settings,
+                    'payment_methods' => Helpers::getDefaultPaymentMethods(),
                     ]);
+
+
+
                 }
 
                 if($vendor?->stores[0]?->status == 0 &&  $vendor?->status == 0)
