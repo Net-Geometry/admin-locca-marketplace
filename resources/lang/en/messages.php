@@ -5426,4 +5426,7 @@
   'subscription_renewed' => 'Subscription renewed',
   'Your_subscription_successfully_renewed' => 'Your subscription successfully renewed',
   'Subscription_Package_Renewed_Successfully.' => 'Subscription Package Renewed Successfully.',
+  'Common Condition' => 'Common Condition',
+  'Brand wise product list' => 'Brand wise product list',
+  'Brand is the list of customer choices in which customer ordered items most and also highly rated with good reviews' => 'Brand is the list of customer choices in which customer ordered items most and also highly rated with good reviews',
 );
