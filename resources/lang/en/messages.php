@@ -5418,4 +5418,12 @@
   'Start date must be greater than or equal to today' => 'Start date must be greater than or equal to today',
   'New Advertisement Request' => 'New Advertisement Request',
   'Advertisement Update Request' => 'Advertisement Update Request',
+  'Your_subscription_successfully_shifted' => 'Your subscription successfully shifted',
+  'subscription_shifted' => 'Subscription shifted',
+  'subscription_successful' => 'Subscription successful',
+  'You_are_successfully_subscribed' => 'You are successfully subscribed',
+  'Subscription_Package_Shifted_Successfully.' => 'Subscription Package Shifted Successfully.',
+  'subscription_renewed' => 'Subscription renewed',
+  'Your_subscription_successfully_renewed' => 'Your subscription successfully renewed',
+  'Subscription_Package_Renewed_Successfully.' => 'Subscription Package Renewed Successfully.',
 );

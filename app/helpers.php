@@ -16,6 +16,7 @@ use App\CentralLogics\CustomerLogic;
 use Illuminate\Support\Facades\Mail;
 use App\Models\SubscriptionTransaction;
 use App\Models\SubscriptionBillingAndRefundHistory;
+use Brian2694\Toastr\Facades\Toastr;
 
 if (! function_exists('translate')) {
     function translate($key, $replace = [])
@@ -238,7 +239,9 @@ if (!function_exists('config_settings')) {
                 $pending_bill= SubscriptionBillingAndRefundHistory::where(['store_id'=>$data->payer_id,
                 'transaction_type'=>'pending_bill', 'is_success' =>0])?->sum('amount')?? 0;
                 Helpers::subscription_plan_chosen(store_id:$data->payer_id,package_id:$data->attribute_id,payment_method:$data->payment_method,discount:0,pending_bill:$pending_bill,reference:$data->attribute,type: $type);
-
+                if($type !== 'new_join'){
+                    Toastr::success(  $type == 'renew' ?  translate('Subscription_Package_Renewed_Successfully.'): translate('Subscription_Package_Shifted_Successfully.')  );
+                }
 
             return true;
         }

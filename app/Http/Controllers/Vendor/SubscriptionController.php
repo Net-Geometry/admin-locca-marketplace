@@ -152,7 +152,7 @@ class SubscriptionController extends Controller
             }
         }
 
-        $plan_data != false ?  Toastr::success( translate('Successfully_Subscribed.')) : Toastr::error( translate('Something_went_wrong!.'));
+        $plan_data != false ?  Toastr::success(  $request?->type == 'renew' ?  translate('Subscription_Package_Renewed_Successfully.'): translate('Subscription_Package_Shifted_Successfully.')  ) : Toastr::error( translate('Something_went_wrong!.'));
         return to_route('vendor.subscriptionackage.subscriberDetail',$store->id);
 
     }

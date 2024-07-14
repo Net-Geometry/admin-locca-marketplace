@@ -612,16 +612,13 @@ class SubscriptionController extends Controller
             else{
                 Toastr::error( translate('messages.Insufficient_balance_in_wallet'));
                 return back();
-                // return to_route('admin.business-settings.subscriptionackage.subscriberDetail',$store->id);
-
             }
         } elseif($request->payment_gateway == 'manual_payment_by_admin'){
             $reference= 'manual_payment_by_admin';
             $plan_data=   Helpers::subscription_plan_chosen(store_id:$store->id,package_id:$package->id,payment_method:$reference,discount:0,pending_bill:$pending_bill,reference:$reference,type: $request?->type);
         }
 
-        $plan_data != false ?  Toastr::success( translate('Successfully_Subscribed.')) : Toastr::error( translate('Something_went_wrong!.'));
-        // return to_route('admin.business-settings.subscriptionackage.subscriberDetail',$store->id);
+        $plan_data != false ?  Toastr::success(  $request?->type == 'renew' ?  translate('Subscription_Package_Renewed_Successfully.'): translate('Subscription_Package_Shifted_Successfully.') ) : Toastr::error( translate('Something_went_wrong!.'));
         return back();
 
     }

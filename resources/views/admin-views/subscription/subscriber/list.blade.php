@@ -193,7 +193,7 @@ active
                                     </a>
                                 </td>
                                 <td class="px-4">
-                                    <div>{{ $subscriber?->store_sub_update_application?->package?->package_name }}</div>
+                                    <div>{{ $subscriber?->store_sub_update_application?->package?->package_name  ?? translate('Package_Not_Found!')}}</div>
                                 </td>
                                 <td class="px-4">
                                     <div class="text-title">{{  \App\CentralLogics\Helpers::format_currency($subscriber?->store_sub_update_application?->package?->price) }}</div>
