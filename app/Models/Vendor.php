@@ -32,12 +32,12 @@ class Vendor extends Authenticatable
         if (count($this->storage) > 0) {
             foreach ($this->storage as $storage) {
                 if ($storage['key'] == 'image') {
-                    return Helpers::get_full_url('profile',$value,$storage['value']);
+                    return Helpers::get_full_url('vendor',$value,$storage['value']);
                 }
             }
         }
 
-        return Helpers::get_full_url('profile',$value,'public');
+        return Helpers::get_full_url('vendor',$value,'public');
     }
     public function order_transaction()
     {

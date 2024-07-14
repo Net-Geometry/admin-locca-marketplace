@@ -33,7 +33,8 @@
         }
 
         :root {
-           --base: #ffa726
+           --base: #006161
+
         }
 
         .main-table {
@@ -198,10 +199,10 @@
                         @php($landing_data =\App\Models\DataSetting::where('type', 'admin_landing_page')->whereIn('key', ['shipping_policy_status','refund_policy_status','cancellation_policy_status'])->pluck('value','key')->toArray())
                         <a href="{{ route('privacy-policy') }}" id="privacy-check" style="{{ (isset($data['privacy']) && $data['privacy'] == 1)?'':'display:none;' }}">{{ translate('Privacy_Policy')}}</a>
                         @if (isset($landing_data['refund_policy_status']) && $landing_data['refund_policy_status']  == 1)
-                        <a href="{{ route('refund-policy') }}" id="refund-check" style="{{ (isset($data['refund']) && $data['refund'] == 1)?'':'display:none;' }}"><span class="dot"></span>{{ translate('Refund_Policy') }}</a>
+                            <a href="{{ route('refund') }}" id="refund-check" style="{{ (isset($data['refund']) && $data['refund'] == 1)?'':'display:none;' }}"><span class="dot"></span>{{ translate('Refund_Policy') }}</a>
                         @endif
                         @if (isset($landing_data['cancellation_policy_status']) && $landing_data['cancellation_policy_status']  == 1)
-                        <a href="{{ route('cancellation-policy') }}" id="cancelation-check" style="{{ (isset($data['cancelation']) && $data['cancelation'] == 1)?'':'display:none;' }}"><span class="dot"></span>{{ translate('Cancelation_Policy') }}</a>
+                            <a href="{{ route('cancelation') }}" id="cancelation-check" style="{{ (isset($data['cancelation']) && $data['cancelation'] == 1)?'':'display:none;' }}"><span class="dot"></span>{{ translate('Cancelation_Policy') }}</a>
                         @endif
                         <a href="{{ route('contact-us') }}" id="contact-check" style="{{ (isset($data['contact']) && $data['contact'] == 1)?'':'display:none;' }}"><span class="dot"></span>{{ translate('Contact_us') }}</a>
                     </span>
@@ -216,7 +217,7 @@
                         @endif
                     </span>
                     <span class="copyright" id="mail-copyright">
-                        {{ $copyright_text?? translate('Copyright_2023_Stackfood._All_right_reserved') }}
+                        {{ $copyright_text ?? translate('Copyright 2023 6ammart. All right reserved') }}
                     </span>
                 </td>
             </tr>

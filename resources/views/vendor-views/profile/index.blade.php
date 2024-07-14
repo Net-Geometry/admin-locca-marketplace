@@ -87,7 +87,7 @@
                             <img id="viewer"
                                  data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
                                  class="avatar-img onerror-image"
-                                 src="{{ auth('vendor_employee')->user()->toArray()->image }}"
+                                 src="{{ \App\CentralLogics\Helpers::get_loggedin_user()?->image_full_url ?? asset('public/assets/admin/img/160x160/img1.jpg') }}"
                                  alt="Image">
 
                             <input type="file" name="image" class="js-file-attach avatar-uploader-input"

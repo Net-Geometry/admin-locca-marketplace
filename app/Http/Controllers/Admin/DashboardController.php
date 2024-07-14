@@ -23,6 +23,11 @@ use Illuminate\Support\Facades\Config;
 
 class DashboardController extends Controller
 {
+
+    public function __construct()
+    {
+        DB::statement("SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));");
+    }
     public function user_dashboard(Request $request)
     {
         $params = [

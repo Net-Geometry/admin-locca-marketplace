@@ -40,7 +40,7 @@ class AdversitementStatusMail extends Mailable
 
 
 
-        $data=EmailTemplate::where('type','restaurant')->where('email_type', $this->email_type)->first();
+        $data=EmailTemplate::where('type','store')->where('email_type', $this->email_type)->first();
         $template=$data?$data->email_template:11;
         $store_name = $this->store_name;
         $add_id = $this->add_id;

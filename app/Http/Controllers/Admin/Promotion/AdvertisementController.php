@@ -217,9 +217,8 @@ class AdvertisementController extends Controller
 
             if(Helpers::getNotificationStatusData('store','store_advertisement_create_by_admin','mail_status',$advertisement?->store?->id) &&  config('mail.status') && Helpers::get_mail_status('advertisement_create_mail_status_store') == '1'){
                 Mail::to($advertisement?->store?->email)->send(new \App\Mail\AdversitementStatusMail($advertisement?->store?->name,'advertisement_create' ,$advertisement->id));
-        }
+            }
         } catch (\Throwable $th) {
-            //throw $th;
         }
 
         return response()->json(['type'=> 'admin' ,'message'=>translate('messages.Advertisement_Added_Successfully') ], 200);
