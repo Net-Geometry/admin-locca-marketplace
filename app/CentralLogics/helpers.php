@@ -3652,7 +3652,7 @@ class Helpers
                 $store_subscription->total_package_renewed= $store_subscription->total_package_renewed + 1;
 
                 $day_left=$store_subscription->expiry_date_parsed->format('Y-m-d');
-                if (Carbon::now()->subDays(1)->diffInDays($day_left, false) > 0) {
+                if (Carbon::now()->diffInDays($day_left, false) > 0 && $store_subscription->is_canceled != 1) {
                     $add_days= Carbon::now()->subDays(1)->diffInDays($day_left, false);
                 }
                 if ($store_subscription->max_order != 'unlimited' && $store_subscription->max_order > 0) {
@@ -3953,8 +3953,8 @@ class Helpers
         $store_subscription=$store->store_sub;
         if($store_subscription){
             $day_left=$store_subscription->expiry_date_parsed->format('Y-m-d');
-            if (Carbon::now()->subDays(1)->diffInDays($day_left, false) > 0) {
-                $add_days= Carbon::now()->subDays(1)->diffInDays($day_left, false);
+            if (Carbon::now()->diffInDays($day_left, false) > 0) {
+                $add_days= Carbon::now()->diffInDays($day_left, false);
                 $validity=$store_subscription?->validity;
                 $subscription_usage_max_time=BusinessSetting::where('key', 'subscription_usage_max_time')->first()?->value ?? 50 ;
                 $subscription_usage_max_time=  ($validity * $subscription_usage_max_time) /100 ;

@@ -5447,4 +5447,7 @@
   'confirm_password_does_not_match' => 'Confirm password does not match',
   'You_must_select_a_package' => 'You must select a package',
   'The package id field is required.' => 'The package id field is required.',
+  'free_trial' => 'Free trial',
+  'Amount_must_be_grater_then_0' => 'Amount must be grater then 0',
+  'Subscription_plan' => 'Subscription plan',
 );

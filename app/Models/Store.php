@@ -614,7 +614,7 @@ class Store extends Model
 
             if($check_daily_subscription_validity_check && $check_daily_subscription_validity_check?->value != $current_date){
                 Store::whereHas('store_subs',function ($query)use($current_date){
-                    $query->where('status',1)->whereDate('expiry_date', '<', $current_date);
+                    $query->where('status',1)->whereDate('expiry_date', '<=', $current_date);
                 })->update(['status' => 0,
                             'pos_system'=>1,
                             'self_delivery_system'=>1,
@@ -622,7 +622,7 @@ class Store extends Model
                             'free_delivery'=>0,
                             'store_business_model'=>'unsubscribed',
                             ]);
-                StoreSubscription::where('status',1)->whereDate('expiry_date', '<', $current_date)->update([
+                StoreSubscription::where('status',1)->whereDate('expiry_date', '<=', $current_date)->update([
                     'status' => 0
                 ]);
 
