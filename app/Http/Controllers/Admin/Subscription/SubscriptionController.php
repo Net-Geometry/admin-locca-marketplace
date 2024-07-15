@@ -542,11 +542,18 @@ class SubscriptionController extends Controller
     }
     public function switchToCommission($id){
 
+        $store=  Store::where('id',$id)->with('store_sub')->first();
+
+        $store_subscription=  $store->store_sub;
+        if($store->store_business_model == 'subscription'  && $store_subscription?->is_canceled === 0 && $store_subscription?->is_trial === 0){
+            Helpers::calculateSubscriptionRefundAmount(store:$store);
+        }
+
+        $store->store_business_model = 'commission';
+        $store->save();
+
         StoreSubscription::where(['store_id' => $id])->update([
             'status' => 0,
-        ]);
-        Store::where('id',$id)->update([
-            'store_business_model' => 'commission',
         ]);
         return response()->json(200);
 

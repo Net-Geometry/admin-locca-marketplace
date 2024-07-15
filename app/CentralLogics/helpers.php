@@ -3672,11 +3672,10 @@ class Helpers
                 ]);
                 $store_subscription =new StoreSubscription();
                 $store_subscription->total_package_renewed= 0;
-                $store_subscription->is_trial= 0;
 
-            }
+                }
 
-
+            $store_subscription->is_trial= 0;
             $store_subscription->renewed_at=now();
             $store_subscription->package_id=$package->id;
             $store_subscription->store_id=$store->id;
@@ -3951,7 +3950,7 @@ class Helpers
     public static function calculateSubscriptionRefundAmount($store,$return_data=null){
 
         $store_subscription=$store->store_sub;
-        if($store_subscription){
+        if($store_subscription && $store_subscription?->is_canceled === 0 && $store_subscription?->is_trial === 0 ){
             $day_left=$store_subscription->expiry_date_parsed->format('Y-m-d');
             if (Carbon::now()->diffInDays($day_left, false) > 0) {
                 $add_days= Carbon::now()->diffInDays($day_left, false);

@@ -5450,4 +5450,7 @@
   'free_trial' => 'Free trial',
   'Amount_must_be_grater_then_0' => 'Amount must be grater then 0',
   'Subscription_plan' => 'Subscription plan',
+  'advertisement_deleted' => 'Advertisement deleted',
+  'advertisement_added_successfully_&_submited_for_admin\'s_approval' => 'Advertisement added successfully & submited for admin s approval',
+  'You_Want_To_Migrate_To_Commission.' => 'You Want To Migrate To Commission.',
 );
