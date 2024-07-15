@@ -238,7 +238,7 @@ class StoreLogic
             ->withCount('orders');
 
         if($popular_store_default_status == '1') {
-            $query = $query->orderBy('open', 'desc')
+            $query = $query->Active()->orderBy('open', 'desc')
                     ->orderBy('distance')
                     ->orderBy('orders_count', 'desc');
         }else{

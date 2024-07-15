@@ -60,7 +60,7 @@ class CampaignController extends Controller
         }
         try {
             $campaign = Campaign::with(['stores'=>function($q)use($zone_id,$longitude,$latitude){
-                $q->withOpen($longitude??0,$latitude??0)->where('campaign_status','confirmed')->when(config('module.current_module_data'), function($query){
+                $q->withOpen($longitude??0,$latitude??0)->Active()->where('campaign_status','confirmed')->when(config('module.current_module_data'), function($query){
                     $query->where('module_id', config('module.current_module_data')['id'])->whereHas('zone.modules',function($query){
                         $query->where('modules.id', config('module.current_module_data')['id']);
                     });

@@ -112,15 +112,15 @@ class CategoryLogic
         $brand_ids = isset($brand_ids)?(is_array($brand_ids)?$brand_ids:json_decode($brand_ids)):[];
         $filter = $filter?(is_array($filter)?$filter:str_getcsv(trim($filter, "[]"), ',')):'';
         $query = Item::
-        whereHas('module.zones', function($query)use($zone_id){
-            $query->whereIn('zones.id', json_decode($zone_id, true));
-        })
+            whereHas('module.zones', function($query)use($zone_id){
+                $query->whereIn('zones.id', json_decode($zone_id, true));
+            })
             ->whereHas('store', function($query)use($zone_id){
-                $query->whereIn('zone_id', json_decode($zone_id, true))->whereHas('zone.modules',function($query){
-                    $query->when(config('module.current_module_data'), function($query){
+                $query->when(config('module.current_module_data'), function($query){
+                    $query->where('module_id', config('module.current_module_data')['id'])->whereHas('zone.modules',function($query){
                         $query->where('modules.id', config('module.current_module_data')['id']);
                     });
-                });
+                })->whereIn('zone_id', json_decode($zone_id, true));
             })
             ->when(isset($category_ids) && (count($category_ids)>0), function($query)use($category_ids){
                 $query->whereHas('category',function($q)use($category_ids){
@@ -201,15 +201,15 @@ class CategoryLogic
 
 
             $query = Item::
-            whereHas('module.zones', function($query)use($zone_id){
-                $query->whereIn('zones.id', json_decode($zone_id, true));
-            })
+                whereHas('module.zones', function($query)use($zone_id){
+                    $query->whereIn('zones.id', json_decode($zone_id, true));
+                })
                 ->whereHas('store', function($query)use($zone_id){
-                    $query->whereIn('zone_id', json_decode($zone_id, true))->whereHas('zone.modules',function($query){
-                        $query->when(config('module.current_module_data'), function($query){
+                    $query->when(config('module.current_module_data'), function($query){
+                        $query->where('module_id', config('module.current_module_data')['id'])->whereHas('zone.modules',function($query){
                             $query->where('modules.id', config('module.current_module_data')['id']);
                         });
-                    });
+                    })->whereIn('zone_id', json_decode($zone_id, true));
                 })
                 ->when(isset($category_ids) && (count($category_ids)>0), function($query)use($category_ids){
                     $query->whereHas('category',function($q)use($category_ids){
