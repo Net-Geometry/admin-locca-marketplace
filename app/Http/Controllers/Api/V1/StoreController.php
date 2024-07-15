@@ -223,13 +223,14 @@ class StoreController extends Controller
                     $translate = array_column($temp->item->translations->toArray(), 'value', 'key');
                     $temp['item_name'] = $translate['name'];
                 }
+                $temp['item'] = Helpers::product_data_formatting($temp->item, false, false, app()->getLocale());
             }
             if($temp->customer)
             {
                 $temp['customer_name'] = $temp->customer->f_name.' '.$temp->customer->l_name;
             }
 
-            unset($temp['item']);
+//            unset($temp['item']);
             unset($temp['customer']);
             array_push($storage, $temp);
         }
