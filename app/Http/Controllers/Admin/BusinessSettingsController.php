@@ -4146,7 +4146,6 @@ class BusinessSettingsController extends Controller
             Toastr::info(translate('messages.update_option_is_disable_for_demo'));
             return back();
         }
-
         if ($tab == 'download-app-section') {
 
             $request->validate([
@@ -5057,7 +5056,7 @@ class BusinessSettingsController extends Controller
                 if ($promotion_banner) {
                     $data = json_decode($promotion_banner->value, true);
                 }
-                if (count($data) >= 5) {
+                if (count($data) >= 3) {
                     Toastr::error(translate('messages.you_have_already_added_maximum_banner_image'));
                     return back();
                 }

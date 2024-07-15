@@ -30,7 +30,7 @@
 
                         <tbody>
                         @foreach ($data as  $key => $item)
-                            @php($item_admin_data = \App\CentralLogics\Helpers::getNotificationStatusData('store',$item->key))
+                            @php($item_admin_data = \App\CentralLogics\Helpers::getNotificationStatusDataAdmin('store',$item->key))
                             <tr>
                                 <td>{{ $key +1 }}</td>
                                 <td>

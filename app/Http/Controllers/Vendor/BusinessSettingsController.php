@@ -252,7 +252,7 @@ class BusinessSettingsController extends Controller
 
     public function notification_index()
     {
-        if(StoreNotificationSetting::count() == 0 ){
+        if(StoreNotificationSetting::where('store_id',Helpers::get_store_id())->count() == 0 ){
             Helpers::storeNotificationDataSetup(Helpers::get_store_id());
         }
         $data= StoreNotificationSetting::where('store_id',Helpers::get_store_id())->get();

@@ -4040,6 +4040,10 @@ class Helpers
 
         return $data;
     }
+        public static function getNotificationStatusDataAdmin($user_type,$key){
+            $data= NotificationSetting::where('type',$user_type)->where('key',$key)->select(['mail_status','push_notification_status','sms_status'])->first();
+            return $data ?? null ;
+        }
 
     public static function notificationDataSetup(){
         $data []=[
