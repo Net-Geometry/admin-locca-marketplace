@@ -296,7 +296,7 @@ class AdvertisementController extends Controller
     public function show(Request $request,$id)
     {
         $store_id = $request?->vendor?->stores[0]?->id;
-        $advertisement =Advertisement::where('id',$id)->where('store_id', $store_id)->first();
+        $advertisement =Advertisement::withoutGlobalScope('translate')->with('translations')->where('id',$id)->where('store_id', $store_id)->first();
         return response()->json($advertisement,200);
     }
 

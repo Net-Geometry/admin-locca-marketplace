@@ -5454,4 +5454,9 @@
   'advertisement_added_successfully_&_submited_for_admin\'s_approval' => 'Advertisement added successfully & submited for admin s approval',
   'You_Want_To_Migrate_To_Commission.' => 'You Want To Migrate To Commission.',
   'advertisement_updated_successfully_&_submited_for_admin\'s_approval' => 'Advertisement updated successfully & submited for admin s approval',
+  'Your_Current_Subscription_Package_has_been_Disable_By_Admin._You_can\'t_renwe_this_package' => 'Your Current Subscription Package has been Disable By Admin. You can t renwe this package',
+  'Your_Current_Subscription_Package_has_been_Disable_By_Admin._You_can_not_renew_this_package' => 'Your Current Subscription Package has been Disable By Admin. You can not renew this package',
+  'Your_Current_Subscription_Package_has_been_Disable_By_Admin.' => 'Your Current Subscription Package has been Disable By Admin.',
+  'You_can_not_renew_this_Package_after' => 'You can not renew this Package after',
+  'to_continue_your_subscription_please_chose_another_package.' => 'To continue your subscription please chose another package.',
 );

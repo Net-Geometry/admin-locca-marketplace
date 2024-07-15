@@ -342,6 +342,35 @@ $val= (string) ($cash_in_hand_overflow_store_amount - (($cash_in_hand_overflow_s
                 </button>
             </div>
         </div>
+        @elseif ( Session::get('subscription_plan_update_close_btn') !== true &&  $store_data?->store_sub  && $store_data?->store_sub?->package?->status != 1)
+        <div class="free-trial trial danger-bg">
+            <div class="inner-div">
+                <div class="left">
+                    <img src="{{asset('/public/assets/admin/img/timer-2.svg')}}" alt="">
+                    <div class="left-content">
+                        <h6>{{ translate('Your_Current_Subscription_Package_has_been_Disable_By_Admin.') }} </h6>
+                        <div>{{ translate('You_can_not_renew_this_Package_after') }} {{ \App\CentralLogics\Helpers::date_format($store_data?->store_sub?->expiry_date_parsed) }}. {{ translate('to_continue_your_subscription_please_chose_another_package.')  }}</div>
+                    </div>
+                </div>
+                <div class="right">
+                    <a href="" class="btn btn-2">
+                        <span class="circle-progress-container">
+                            <svg width="40" viewBox="0 0 160 160">
+                                <circle r="70" cx="80" cy="80" fill="transparent" stroke="#ffffff20" stroke-width="12px"></circle>
+                                <circle r="70" cx="80" cy="80" fill="transparent" stroke="#ffffff" stroke-width="12px" stroke-dasharray="439.6px" stroke-dashoffset="{{ $pers }}px"></circle>
+                            </svg>
+                            {{ Carbon\Carbon::now()->diffInDays($store_data?->store_sub?->expiry_date_parsed->format('Y-m-d'), false) }}
+                        </span>
+                        {{translate('Days_left_in_this_subscription')}}
+                    </a>
+                    <a href="{{route('vendor.subscriptionackage.subscriberDetail' ,['open_plans' => true])}}" class="btn btn-light">{{ translate('Change_Subscription_Plan') }} <i class="tio-arrow-forward"></i></a>
+                </div>
+
+                <button type="button" data-id="subscription_plan_update_close_btn" class="trial-close add-to-session ">
+                    <i class="tio-clear-circle"></i>
+                </button>
+            </div>
+        </div>
 
         @elseif ($store_data?->store_sub == null)
         <div class="free-trial trial danger-bg">
