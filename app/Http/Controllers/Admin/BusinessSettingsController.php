@@ -494,6 +494,9 @@ class BusinessSettingsController extends Controller
             return back();
         }
 
+        BusinessSetting::query()->updateOrInsert(['key' => 'country_picker_status'], [
+            'value' => $request['country_picker_status'] ? $request['country_picker_status'] : 0
+        ]);
 
         DB::table('business_settings')->updateOrInsert(['key' => 'business_name'], [
             'value' => $request['store_name']

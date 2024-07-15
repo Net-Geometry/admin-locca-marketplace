@@ -1067,6 +1067,51 @@
                                     </div>
                                 </div>
 
+
+
+
+
+
+                                <div class="col-sm-6 col-lg-4">
+                                    @php($country_picker_status = \App\Models\BusinessSetting::where('key', 'country_picker_status')->first())
+                                    @php($country_picker_status = $country_picker_status ? $country_picker_status->value : 0)
+                                    <div class="form-group mb-0">
+                                        <label
+                                            class="toggle-switch h--45px toggle-switch-sm d-flex justify-content-between border rounded px-3 py-0 form-control">
+                                            <span class="pr-1 d-flex align-items-center switch--label">
+                                                <span class="line--limit-1">
+                                                    {{translate('messages.country_picker') }}
+                                                </span>
+                                                <span class="form-label-secondary text-danger d-flex"
+                                                    data-toggle="tooltip" data-placement="right"
+                                                    data-original-title="{{ translate('messages.If_you_enable_this_option,_in_all_phone_no_field_will_show_a_country_picker_list.')}}"><img
+                                                        src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
+                                                        alt="{{ translate('messages.customer_varification_toggle') }}">
+                                                </span>
+                                            </span>
+                                            <input type="checkbox"
+                                            data-id="country_picker_status"
+                                            data-type="toggle"
+                                            data-image-on="{{ asset('/public/assets/admin/img/modal/mail-success.png') }}"
+                                            data-image-off="{{ asset('/public/assets/admin/img/modal/mail-warning.png') }}"
+                                            data-title-on="<strong>{{ translate('messages.Want_to_enable_country_picker?') }}</strong>"
+                                            data-title-off="<strong>{{ translate('messages.Want_to_disable_country_picker?') }}</strong>"
+                                            data-text-on="<p>{{ translate('messages.If_you_enable_this,_user_can_select_country_from_country_picker') }}</p>"
+                                            data-text-off="<p>{{ translate('messages.If_you_disable_this,_user_can_not_select_country_from_country_picker,_default_country_will_be_selected') }}</p>"
+                                            class="status toggle-switch-input dynamic-checkbox-toggle"
+                                            value="1"
+                                                name="country_picker_status" id="country_picker_status"
+                                                {{ $country_picker_status == 1 ? 'checked' : '' }}>
+                                            <span class="toggle-switch-label text">
+                                                <span class="toggle-switch-indicator"></span>
+                                            </span>
+                                        </label>
+                                    </div>
+                                </div>
+
+
+
+
                             </div>
                             <div class="__bg-F8F9FC-card p-0 mt-4">
                                 <div class="border-bottom p-3">

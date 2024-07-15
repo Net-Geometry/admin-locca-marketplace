@@ -134,6 +134,8 @@ class InstallController extends Controller
 
         Helpers::insert_business_settings_key('check_daily_subscription_validity_check', date('Y-m-d'));
 
+        Helpers::insert_business_settings_key('country_picker_status', '1');
+    
 
         $previousRouteServiceProvier = base_path('app/Providers/RouteServiceProvider.php');
         $newRouteServiceProvier = base_path('app/Providers/RouteServiceProvider.txt');

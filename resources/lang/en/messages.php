@@ -5459,4 +5459,10 @@
   'Your_Current_Subscription_Package_has_been_Disable_By_Admin.' => 'Your Current Subscription Package has been Disable By Admin.',
   'You_can_not_renew_this_Package_after' => 'You can not renew this Package after',
   'to_continue_your_subscription_please_chose_another_package.' => 'To continue your subscription please chose another package.',
+  'country_picker' => 'Country picker',
+  'If_you_enable_this_option,_in_all_phone_no_field_will_show_a_country_picker_list.' => 'If you enable this option, in all phone no field will show a country picker list.',
+  'Want_to_enable_country_picker?' => 'Want to enable country picker?',
+  'Want_to_disable_country_picker?' => 'Want to disable country picker?',
+  'If_you_enable_this,_user_can_select_country_from_country_picker' => 'If you enable this, user can select country from country picker',
+  'If_you_disable_this,_user_can_not_select_country_from_country_picker,_default_country_will_be_selected' => 'If you disable this, user can not select country from country picker, default country will be selected',
 );

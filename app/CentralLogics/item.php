@@ -687,8 +687,8 @@ class ProductLogic
                     ->from('stores')
                     ->whereColumn('stores.id', 'items.store_id');
             }, 'temp_available')
-            ->withCount('reviews')->active()->type($type);
-
+            ->withCount('reviews')->active()->type($type)
+            ->having('reviews_count' ,'>',0);
             if ($best_reviewed_item_default_status == '1'){
                 $query = $query->orderBy('reviews_count','desc');
             } else {
@@ -740,8 +740,8 @@ class ProductLogic
                     ->from('stores')
                     ->whereColumn('stores.id', 'items.store_id');
             }, 'temp_available')
-            ->withCount('reviews')->active()->type($type);
-
+            ->withCount('reviews')->active()->type($type)
+            ->having('reviews_count' ,'>',0);
         if ($best_reviewed_item_default_status == '1'){
             $query = $query->orderBy('reviews_count','desc');
         } else {

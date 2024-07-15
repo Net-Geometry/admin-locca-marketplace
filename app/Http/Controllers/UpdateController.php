@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Setting;
 use App\Models\Store;
+use App\Models\Setting;
 use App\Models\DataSetting;
 
 ini_set('max_execution_time', 180);
@@ -15,6 +15,7 @@ use App\CentralLogics\Helpers;
 use App\Models\BusinessSetting;
 use App\Traits\ActivationClass;
 use Illuminate\Support\Facades\DB;
+use App\Models\NotificationSetting;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Schema;
@@ -173,6 +174,12 @@ class UpdateController extends Controller
             Helpers::insert_business_settings_key('landing_integration_type','none');
         }
         Helpers::insert_business_settings_key("dm_max_cash_in_hand" , "5000");
+
+        if(NotificationSetting::count() == 0 ){
+            Helpers::notificationDataSetup();
+        }
+        Helpers::insert_business_settings_key('country_picker_status', '1');
+
 
         $data = DataSetting::where('type', 'login_admin')->pluck('value')->first();
         return redirect('/login/'.$data);
