@@ -77,6 +77,7 @@ active
                 data-url="{{url()->full()}}" data-filter="ads_type">
                     <option  value="all">{{translate('messages.All Ads')}}</option>
                     <option {{ request()?->ads_type =='running'?'selected':''}} value="running">{{translate('running')}} </option>
+                    <option {{request()?->ads_type =='paused'?'selected':''}} value="paused">{{translate('paused')}} </option>
                     <option {{request()?->ads_type =='approved'?'selected':''}} value="approved">{{translate('approved')}} </option>
                     <option {{request()?->ads_type =='expired'?'selected':''}} value="expired">{{translate('expired')}} </option>
                 </select>

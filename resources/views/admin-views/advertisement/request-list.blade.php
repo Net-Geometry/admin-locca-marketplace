@@ -135,7 +135,7 @@ active
                                         </a>
 
                                         <a class="dropdown-item d-flex gap-2 align-items-center new-dynamic-submit-model" id="data-add-{{ $add->id }}" data-id="data-add-{{ $add->id }}" data-title="{{translate('Are you sure you want to deny the request?')}}" data-text="<p>{{translate('You will lost the Store ads request.')}}</p>" data-image="{{asset('public/assets/admin/img/modal/deny.png')}}" data-type="deny" data-btn_class="btn-primary" data-2nd_btn_text="{{ translate('messages.Cancel') }}" href="#">
-                                            <i class="tio-pause-circle"></i>
+                                            <i class="tio-clear-circle-outlined"></i>
                                             {{ translate('Cancel_Ads') }}
                                         </a>
 

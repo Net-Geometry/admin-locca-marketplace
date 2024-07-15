@@ -238,12 +238,10 @@ active
                                             </form>
                                             @endif
 
-                                        @if (request()?->type !== 'pending')
                                         <a class="dropdown-item d-flex gap-2 align-items-center" href="{{ route('vendor.advertisement.copyAdd', $add->id) }}" >
                                             <i class="tio-copy"></i>
                                             {{ translate('Copy_Ads') }}
                                             </a>
-                                        @endif
 
                                         <a class="dropdown-item d-flex gap-2 align-items-center new-dynamic-submit-model"
                                         id="delete-add-{{ $add->id }}"

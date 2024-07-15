@@ -44,6 +44,9 @@ class AdvertisementController extends Controller
         ->when($request?->ads_type === 'expired',function($query){
             $query->expired();
         })
+        ->when($request?->ads_type === 'paused',function($query){
+            $query->where('status','paused');
+        })
         ->when($request?->search ,function($query)use($key) {
             foreach ($key as $value) {
             $query->where(function($query) use ($value){
