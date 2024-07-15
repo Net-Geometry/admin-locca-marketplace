@@ -90,6 +90,7 @@
                         <th class="border-0">{{translate('messages.reviewer')}}</th>
                         <th class="border-0">{{translate('messages.review')}}</th>
                         <th class="border-0">{{translate('messages.date')}}</th>
+                        <th class="border-0">{{translate('messages.Reply_date')}}</th>
                         @if($store_review_reply == '1')
                             <th class="text-center">{{translate('messages.action')}}</th>
                         @endif
@@ -148,6 +149,17 @@
                                     {{ \App\CentralLogics\Helpers::date_format($review->created_at)  }}
                                 </span>
                                 <span class="d-block"> {{ \App\CentralLogics\Helpers::time_format($review->created_at)  }}</span>
+                            </td>
+                            <td>
+                                @if ($review->replied_at)
+                                    <span class="d-block">
+                                        {{ \App\CentralLogics\Helpers::date_format($review->replied_at)  }}
+                                    </span>
+                                    <span class="d-block"> {{ \App\CentralLogics\Helpers::time_format($review->replied_at)  }}</span>
+
+                                @else
+                                    -------
+                                @endif
                             </td>
                             @if($store_review_reply == '1')
                                 <td>

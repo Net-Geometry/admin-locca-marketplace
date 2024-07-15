@@ -1002,6 +1002,7 @@ class ItemController extends Controller
 
         $review = Review::findOrFail($request->id);
         $review->reply = $request->reply;
+        $review->replied_at = now();
         $review->store_id = $request['vendor']?->stores[0]?->id;
         $review->save();
 

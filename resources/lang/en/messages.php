@@ -5453,4 +5453,5 @@
   'advertisement_deleted' => 'Advertisement deleted',
   'advertisement_added_successfully_&_submited_for_admin\'s_approval' => 'Advertisement added successfully & submited for admin s approval',
   'You_Want_To_Migrate_To_Commission.' => 'You Want To Migrate To Commission.',
+  'advertisement_updated_successfully_&_submited_for_admin\'s_approval' => 'Advertisement updated successfully & submited for admin s approval',
 );

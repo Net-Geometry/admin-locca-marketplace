@@ -167,6 +167,7 @@ class Store extends Model
         'announcement'=>'integer',
         'rating_count'=>'integer',
         'reviews_comments_count'=>'integer',
+        'package_id'=>'integer',
     ];
 
     /**
