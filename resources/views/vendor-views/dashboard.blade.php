@@ -29,13 +29,17 @@
                         <div class="left">
                             <img src="{{asset('public/assets/admin/img/promo.png')}}" width="40" class="mw-100" alt="">
                             <div class="inner">
-                                <h4 class="m-0 text-white">{{ translate('Want_to_get_highlighted?') }}</h4>
-                                <p class="m-0 text-white">
-                                    {{ translate('Create_ads_to_get_highlighted_on_the_app_and_web_browser') }}
-                                </p>
+                                <div class="d-flex flex-wrap flex-md-nowrap align-items-center justify-content-between gap-2">
+                                    <div>
+                                        <h4 class="m-0 text-white">{{ translate('Want_to_get_highlighted?') }}</h4>
+                                        <p class="m-0 text-white">
+                                            {{ translate('Create_ads_to_get_highlighted_on_the_app_and_web_browser') }}
+                                        </p>
+                                    </div>
+                                    <a href="{{ route('vendor.advertisement.create') }}" class="btn btn-white text-nowrap font-semibold text-dark">{{ translate('Create_Ads') }}</a>
+                                </div>
                             </div>
                         </div>
-                        <a href="{{ route('vendor.advertisement.create') }}" class="btn btn-white font-semibold text-dark">{{ translate('Create_Ads') }}</a>
                     </div>
                 </div>
             </div>

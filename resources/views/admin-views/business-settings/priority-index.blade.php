@@ -2532,7 +2532,7 @@
                     </div>
                     <br>
 
-                    <div class="btn--container justify-content-end position-sticky bottom-0 p-3 bg-white">
+                    <div class="btn--container justify-content-end position-sticky bottom-0 p-3 bg-white border-top">
                         <button id="reset_btn" type="reset"
                             class="btn btn--reset">{{ translate('Reset') }}</button>
                         <button type="submit"

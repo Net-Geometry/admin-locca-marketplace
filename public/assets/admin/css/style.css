@@ -1658,7 +1658,7 @@ select.form-control {
 
 .table .thead-light th {
     color: var(--title-clr);
-    border-top: none !important
+    border-top: none !important;
 }
 
 .w--26 {
@@ -12543,6 +12543,7 @@ label.position-relative {
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: 9px;
 }
 .circle-progress-container svg {
     position: absolute;
@@ -13017,7 +13018,8 @@ video#VisaChipCardVideo {
 }
 
 .upload-file__img_banner {
-    max-inline-size: 20.9375rem;
+    max-inline-size: 100%;
+    max-block-size: 180px;
 }
 
 @media only screen and (max-width: 1399px) {
@@ -13027,7 +13029,7 @@ video#VisaChipCardVideo {
 }
 @media only screen and (min-width: 576px) {
     .upload-file__img_banner img {
-        aspect-ratio: 3/1;
+        aspect-ratio: 2/1;
     }
 }
 
@@ -13240,7 +13242,7 @@ video#VisaChipCardVideo {
     position: absolute;
     width: 126px;
     height: 115px;
-    background: #ff79181a;
+    background: #039D551A;
     border-radius: 50%;
 }
 
@@ -13401,4 +13403,13 @@ video#VisaChipCardVideo {
 }
 .navbar-fixed {
     z-index: 100000;
+}
+@media screen and (max-width: 1600px) {
+    .promotion-typewise-upload-box .upload-file__img img {
+        max-height: 110px !important;
+        aspect-ratio: unset !important;
+    }
+}
+.navbar-vertical-content .navbar-nav {
+  padding-bottom: 80px;
 }

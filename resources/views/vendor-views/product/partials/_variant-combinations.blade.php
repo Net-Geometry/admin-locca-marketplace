@@ -1,6 +1,6 @@
 @if(count($combinations[0]) > 0)
     <table class="table table-bordered">
-        <thead class="thead-light">
+        <thead class="thead-light table-nowrap">
             <tr>
                 <th class="text-center border-0">
                     <span class="control-label">{{translate('messages.Variant')}}</span>

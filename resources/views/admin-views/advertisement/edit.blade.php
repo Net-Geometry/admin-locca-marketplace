@@ -40,7 +40,7 @@ active
 
                 @method("PUT")
                 @endif
-                <div class="row">
+                <div class="row g-4">
                     <div class="col-lg-6">
                         @isset($request_page_type)
                         <input type="hidden" name="request_page_type" value="true"  >
@@ -227,7 +227,7 @@ active
                             </div>
                             <br>
                             <label class="form-label">{{ translate('Upload Related Files') }}</label>
-                            <div class="d-flex flex-wrap justify-content-center gap-3 border rounded p-3">
+                            <div class="d-flex flex-wrap flex-sm-nowrap justify-content-center gap-3 border rounded p-3">
                                 <div class="d-flex flex-column align-items-center gap-3">
                                     <p class="title-color mb-0">{{ translate('Profile Image') }} <span class="text-danger">({{ translate('Ratio - 1:1') }})</span></p>
 

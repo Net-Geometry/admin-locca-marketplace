@@ -32,7 +32,7 @@
                     <div class="card-body">
                         <div class="table-responsive">
                             <table class="table table-bordered" id="dataTable" >
-                                <thead>
+                                <thead class="thead-light table-nowrap">
                                 <tr>
                                     <th>{{translate('SL#')}}</th>
                                     <th class="__width-400">{{translate('Current_value')}}</th>
