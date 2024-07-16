@@ -173,7 +173,7 @@
                                                     <i class="tio-info-outined"></i>
                                                 </span>
                                                 <div class="fs-13">
-                                                    {{ translate('This_section_is_currently_sorted_by_total_orders.') }}
+                                                    {{ translate('This_section_is_currently_sorted_by_distance_which_is_the_most_nearby_user_and_total_orders.') }}
                                                 </div>
                                             </label>
                                         </div>
@@ -1248,7 +1248,7 @@
                                                         <i class="tio-info-outined"></i>
                                                     </span>
                                                 <div class="fs-13">
-                                                    {{ translate('Currently sorting this section by top ratings') }}
+                                                    {{ translate('Currently sorting this section by latest') }}
                                                 </div>
                                             </label>
                                         </div>
@@ -1431,7 +1431,7 @@
                                                     <i class="tio-info-outined"></i>
                                                 </span>
                                                 <div class="fs-13">
-                                                    {{ translate('This_section_is_currently_sorted_by_total_orders.') }}
+                                                    {{ translate('This_section_is_currently_sorted_by_active_stores.') }}
                                                 </div>
                                             </label>
                                         </div>
@@ -1629,7 +1629,7 @@
                                                     <i class="tio-info-outined"></i>
                                                 </span>
                                                 <div class="fs-13">
-                                                    {{ translate('This_section_is_currently_sorted_by_total_orders.') }}
+                                                    {{ translate('This_section_is_currently_sorted_by_latest_created_items.') }}
                                                 </div>
                                             </label>
                                         </div>
@@ -1812,7 +1812,7 @@
                                                     <i class="tio-info-outined"></i>
                                                 </span>
                                                 <div class="fs-13">
-                                                    {{ translate('This_section_is_currently_sorted_by_total_orders.') }}
+                                                    {{ translate('This_section_is_currently_sorted_by_active_items.') }}
                                                 </div>
                                             </label>
                                         </div>
@@ -2135,7 +2135,7 @@
                                                     <i class="tio-info-outined"></i>
                                                 </span>
                                                 <div class="fs-13">
-                                                    {{ translate('Currently sorting this section by priority') }}</div>
+                                                    {{ translate('Currently sorting this section by active conditions') }}</div>
                                             </label>
                                         </div>
                                         <div>
@@ -2254,7 +2254,7 @@
                                                     <i class="tio-info-outined"></i>
                                                 </span>
                                                 <div class="fs-13">
-                                                    {{ translate('Currently sorting this section by priority') }}</div>
+                                                    {{ translate('Currently sorting this section by active brands') }}</div>
                                             </label>
                                         </div>
                                         <div>
