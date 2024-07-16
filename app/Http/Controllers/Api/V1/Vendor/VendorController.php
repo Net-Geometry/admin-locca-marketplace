@@ -52,9 +52,10 @@ class VendorController extends Controller
         $store['module']=$store->module;
 
         $vendor['order_count'] =$vendor->orders->where('order_type','!=','pos')->whereNotIn('order_status',['canceled','failed'])->count();
-        $vendor['todays_order_count'] =$vendor->todaysorders->where('order_type','!=','pos')->whereNotIn('order_status',['canceled','failed'])->count();
-        $vendor['this_week_order_count'] =$vendor->this_week_orders->where('order_type','!=','pos')->whereNotIn('order_status',['canceled','failed'])->count();
-        $vendor['this_month_order_count'] =$vendor->this_month_orders->where('order_type','!=','pos')->whereNotIn('order_status',['canceled','failed'])->count();
+        $vendor['order_count'] =$vendor->orders->where('order_type','!=','pos')->whereNotIn('order_status',['canceled','failed'])->count();
+        $vendor['todays_order_count'] =$vendor->todaysorders->where('order_type','!=','pos')->whereIn('order_status', ['refunded', 'delivered'])->count();
+        $vendor['this_week_order_count'] =$vendor->this_week_orders->where('order_type','!=','pos')->whereIn('order_status', ['refunded', 'delivered'])->count();
+        $vendor['this_month_order_count'] =$vendor->this_month_orders->where('order_type','!=','pos')->whereIn('order_status', ['refunded', 'delivered'])->count();
         $vendor['member_since_days'] =$vendor->created_at->diffInDays();
         $vendor['cash_in_hands'] =$vendor->wallet?(float)$vendor->wallet->collected_cash:0;
         $vendor['balance'] =$vendor->wallet?(float)$vendor->wallet->balance:0;

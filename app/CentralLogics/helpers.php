@@ -761,8 +761,8 @@ class Helpers
                 if($item->storeConfig && $item->storeConfig->is_recommended_deleted == 0 ){
                     $item['is_recommended'] = $item->storeConfig->is_recommended;
                 }
-                $item0['self_delivery_system'] = (int) $item->sub_self_delivery;
-
+                $item['self_delivery_system'] = (int) $item->sub_self_delivery;
+                $item['current_opening_time'] = self::getNextOpeningTime($item['schedules']) ?? 'closed';
                 unset($item['items_count']);
                 unset($item['campaigns_count']);
                 unset($item['storeConfig']);
@@ -791,6 +791,7 @@ class Helpers
             $data['positive_rating'] = $ratings['positive_rating'];
             $data['total_items'] = $data['items_count'];
             $data['total_campaigns'] = $data['campaigns_count'];
+            $data['current_opening_time'] = self::getNextOpeningTime($data['schedules']) ?? 'closed';
             unset($data['items_count']);
             unset($data['campaigns_count']);
             unset($data['campaigns']);
@@ -4886,5 +4887,20 @@ class Helpers
             'updated_at' => now(),
         ]);
     }
+    public static function getNextOpeningTime($schedule) {
+        $currentTime =now()->format('H:i');
+        if ($schedule) {
+            foreach($schedule as $entry) {
+                if ($entry['day'] == now()->format('w')) {
+                        if ($currentTime >= $entry['opening_time'] && $currentTime <= $entry['closing_time']) {
+                            return $entry['opening_time'];
+                        } elseif($currentTime < $entry['opening_time']){
+                            return $entry['opening_time'];
+                        }
+                }
+            }
+        }
+            return 'closed';
+        }
 }
 

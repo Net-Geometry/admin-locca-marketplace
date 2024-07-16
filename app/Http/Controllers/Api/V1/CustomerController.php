@@ -303,13 +303,16 @@ class CustomerController extends Controller
 
         $interest = $request->user()->interest;
         $interest = isset($interest) ? json_decode($interest):null;
-        // return response()->json($interest, 200);
 
         $products =  Item::active()->whereHas('store', function($q)use($zone_id){
             $q->whereIn('zone_id', json_decode($zone_id, true));
         })
         ->when(isset($interest), function($q)use($interest){
-            return $q->whereIn('category_id',$interest);
+            $q->where(function($query) use ($interest) {
+                foreach ($interest as $id) {
+                    $query->orWhereJsonContains('category_ids', ['id' =>  (string)$id]);
+                }
+            });
         })
         ->whereHas('module.zones', function($query)use($zone_id){
             $query->whereIn('zones.id', json_decode($zone_id, true));
@@ -323,7 +326,8 @@ class CustomerController extends Controller
         })
         ->when($interest == null, function($q){
             return $q->popular();
-        })->limit(5)->get();
+        })
+        ->limit(5)->get();
         $products = Helpers::product_data_formatting($products, true, false, app()->getLocale());
         return response()->json($products, 200);
     }

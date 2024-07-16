@@ -262,4 +262,20 @@ class CategoryController extends Controller
         $data['products'] = Helpers::product_data_formatting($data['products'] , true, false, app()->getLocale());
         return response()->json($data, 200);
     }
+
+    public function get_popular_category_list(){
+
+        $avg_items=Item::where('order_count','>=', 1 )->avg('order_count') ?? 0;
+
+        $items= Item::where('order_count','>', $avg_items )->pluck('category_ids');
+        $get_popular_category_ids = $items->flatMap(function($categoryIds) {
+            $categories = json_decode($categoryIds, true);
+                return collect($categories)->pluck('id');
+            })->unique();
+        $categories= Category::when(config('module.current_module_data'), function($query){
+            $query->module(config('module.current_module_data')['id']);
+        })
+        ->whereIn('id',$get_popular_category_ids->toArray())->where(['position'=>0,'status'=>1])->take(20)->get();
+        return response()->json($categories, 200);
+    }
 }
