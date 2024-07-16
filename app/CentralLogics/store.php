@@ -54,7 +54,21 @@ class StoreLogic
                 if($all_stores_sort_by_unavailable == 'remove'){
                     $query = $query->Active();
                 }elseif($all_stores_sort_by_unavailable == 'last'){
-                    $query = $query->orderByDesc('active');
+                    // $query = $query->orderByDesc('active');
+                    $query = $query->orderByRaw('
+                        CASE 
+                            WHEN status = 1 
+                                AND (store_business_model = "commission" 
+                                OR EXISTS (
+                                    SELECT 1 
+                                    FROM store_subscriptions 
+                                    WHERE store_subscriptions.store_id = stores.id 
+                                        AND (max_order = "unlimited" OR max_order > 0)
+                                ))
+                            THEN 0
+                            ELSE 1
+                        END
+                    ');
                 }
 
                 if($all_stores_sort_by_temp_closed == 'remove'){
@@ -246,7 +260,21 @@ class StoreLogic
             if($popular_store_sort_by_temp_closed == 'remove'){
                 $query = $query->Active();
             }elseif($popular_store_sort_by_temp_closed == 'last'){
-                $query = $query->orderByDesc('active');
+                // $query = $query->orderByDesc('active');
+                $query = $query->orderByRaw('
+                    CASE 
+                        WHEN status = 1 
+                            AND (store_business_model = "commission" 
+                            OR EXISTS (
+                                SELECT 1 
+                                FROM store_subscriptions 
+                                WHERE store_subscriptions.store_id = stores.id 
+                                    AND (max_order = "unlimited" OR max_order > 0)
+                            ))
+                        THEN 0
+                        ELSE 1
+                    END
+                ');
             }
 
             if($popular_store_sort_by_unavailable == 'remove'){
@@ -746,7 +774,21 @@ class StoreLogic
             if($recommended_store_sort_by_temp_closed == 'remove'){
                 $query = $query->Active();
             }elseif($recommended_store_sort_by_temp_closed == 'last'){
-                $query = $query->orderByDesc('active');
+                // $query = $query->orderByDesc('active');
+                $query = $query->orderByRaw('
+                    CASE 
+                        WHEN status = 1 
+                            AND (store_business_model = "commission" 
+                            OR EXISTS (
+                                SELECT 1 
+                                FROM store_subscriptions 
+                                WHERE store_subscriptions.store_id = stores.id 
+                                    AND (max_order = "unlimited" OR max_order > 0)
+                            ))
+                        THEN 0
+                        ELSE 1
+                    END
+                '); 
             }
 
             if($recommended_store_sort_by_unavailable == 'remove'){

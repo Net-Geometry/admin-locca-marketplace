@@ -128,7 +128,7 @@ class ItemController extends Controller
                 if($product_search_sort_by_unavailable == 'remove'){
                     $query = $query->where('stock', '>', 0);
                 }elseif($product_search_sort_by_unavailable == 'last'){
-                    $query = $query->orderBy('stock', 'desc');
+                    $query = $query->orderByRaw('CASE WHEN stock = 0 THEN 1 ELSE 0 END');
                 }
 
             }
@@ -245,7 +245,7 @@ class ItemController extends Controller
                 if($product_search_sort_by_unavailable == 'remove'){
                     $query = $query->where('stock', '>', 0);
                 }elseif($product_search_sort_by_unavailable == 'last'){
-                    $query = $query->orderBy('stock', 'desc');
+                    $query = $query->orderByRaw('CASE WHEN stock = 0 THEN 1 ELSE 0 END');
                 }
 
             }

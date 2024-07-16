@@ -390,7 +390,7 @@
                                                     <i class="tio-info-outined"></i>
                                                 </span>
                                                 <div class="fs-13">
-                                                    {{ translate('This_section_is_currently_sorted_by_total_orders.') }}
+                                                    {{ translate('This_section_is_currently_sorted_by_recommended_active_stores.') }}
                                                 </div>
                                             </label>
                                         </div>
@@ -436,6 +436,34 @@
                                     </div>
                                     <div class="inner-collapse-div">
                                         <div class="pt-4">
+                                            @php($recommended_store_sort_by_general = \App\Models\PriorityList::where('name', 'recommended_store_sort_by_general')->where('type', 'general')->first())
+                                            @php($recommended_store_sort_by_general = $recommended_store_sort_by_general ? $recommended_store_sort_by_general->value : '')
+                                            <div class="border rounded p-3 d-flex flex-column gap-2 fs-14 mb-10px">
+                                                <label class="form-check form--check">
+                                                    <input class="form-check-input" type="radio"
+                                                           name="recommended_store_sort_by_general" value="order_count"
+                                                        {{ $recommended_store_sort_by_general == 'order_count' ? 'checked' : '' }}>
+                                                    <span class="form-check-label">
+                                                        {{ translate('Sort by orders') }}
+                                                    </span>
+                                                </label>
+                                                <label class="form-check form--check">
+                                                    <input class="form-check-input" type="radio"
+                                                           name="recommended_store_sort_by_general" value="review_count"
+                                                        {{ $recommended_store_sort_by_general == 'review_count' ? 'checked' : '' }}>
+                                                    <span class="form-check-label">
+                                                        {{ translate('Sort by reviews count') }}
+                                                    </span>
+                                                </label>
+                                                <label class="form-check form--check">
+                                                    <input class="form-check-input" type="radio"
+                                                           name="recommended_store_sort_by_general" value="rating"
+                                                        {{ $recommended_store_sort_by_general == 'rating' ? 'checked' : '' }}>
+                                                    <span class="form-check-label">
+                                                        {{ translate('Sort by ratings') }}
+                                                    </span>
+                                                </label>
+                                            </div>
                                             @php($recommended_store_sort_by_rating = \App\Models\PriorityList::where('name', 'recommended_store_sort_by_rating')->where('type', 'rating')->first())
                                             @php($recommended_store_sort_by_rating = $recommended_store_sort_by_rating ? $recommended_store_sort_by_rating->value : '')
                                             <div class="border rounded p-3 d-flex flex-column gap-2 fs-14 mb-10px">
@@ -477,34 +505,6 @@
                                                         {{ $recommended_store_sort_by_rating == 'none' ? 'checked' : '' }}>
                                                     <span class="form-check-label">
                                                         {{ translate('None') }}
-                                                    </span>
-                                                </label>
-                                            </div>
-                                            @php($recommended_store_sort_by_general = \App\Models\PriorityList::where('name', 'recommended_store_sort_by_general')->where('type', 'general')->first())
-                                            @php($recommended_store_sort_by_general = $recommended_store_sort_by_general ? $recommended_store_sort_by_general->value : '')
-                                            <div class="border rounded p-3 d-flex flex-column gap-2 fs-14 mb-10px">
-                                                <label class="form-check form--check">
-                                                    <input class="form-check-input" type="radio"
-                                                        name="recommended_store_sort_by_general" value="order_count"
-                                                        {{ $recommended_store_sort_by_general == 'order_count' ? 'checked' : '' }}>
-                                                    <span class="form-check-label">
-                                                        {{ translate('Sort by orders') }}
-                                                    </span>
-                                                </label>
-                                                <label class="form-check form--check">
-                                                    <input class="form-check-input" type="radio"
-                                                        name="recommended_store_sort_by_general" value="review_count"
-                                                        {{ $recommended_store_sort_by_general == 'review_count' ? 'checked' : '' }}>
-                                                    <span class="form-check-label">
-                                                        {{ translate('Sort by reviews count') }}
-                                                    </span>
-                                                </label>
-                                                <label class="form-check form--check">
-                                                    <input class="form-check-input" type="radio"
-                                                        name="recommended_store_sort_by_general" value="rating"
-                                                        {{ $recommended_store_sort_by_general == 'rating' ? 'checked' : '' }}>
-                                                    <span class="form-check-label">
-                                                        {{ translate('Sort by ratings') }}
                                                     </span>
                                                 </label>
                                             </div>
@@ -599,7 +599,7 @@
                                                     <i class="tio-info-outined"></i>
                                                 </span>
                                                 <div class="fs-13">
-                                                    {{ translate('Currently sorting this section by latest items.') }}
+                                                    {{ translate('Currently sorting this section by highest discount amount.') }}
                                                 </div>
                                             </label>
                                         </div>
@@ -753,7 +753,7 @@
                                                     <i class="tio-info-outined"></i>
                                                 </span>
                                                 <div class="fs-13">
-                                                    {{ translate('This_section_is_currently_sorted_by_higher_ratings,_reviews,_and_total_orders.') }}
+                                                    {{ translate('This_section_is_currently_sorted_by_higher_ordered_items.') }}
                                                 </div>
                                             </label>
                                         </div>
@@ -2376,7 +2376,7 @@
                                                     <i class="tio-info-outined"></i>
                                                 </span>
                                                 <div class="fs-13">
-                                                    {{ translate('This_section_is_currently_sorted_by_total_orders.') }}
+                                                    {{ translate('This_section_is_currently_sorted_by_latest_created_items.') }}
                                                 </div>
                                             </label>
                                         </div>
