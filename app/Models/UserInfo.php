@@ -24,7 +24,7 @@ class UserInfo extends Model
         if ($this->user_id){
             return $this->user?->image_full_url;
         }elseif ($this->vendor_id){
-            return $this->vendor?->stores[0]->image_full_url;
+            return $this->vendor?->stores[0]->logo_full_url;
         }elseif ($this->deliveryman_id){
             return $this->delivery_man?->image_full_url;
         }
