@@ -57,17 +57,16 @@ active
 
 
             <div class="card">
-
                 <div class="card-body p-0">
                     <div class="table-responsive datatable-custom">
-                        <table class="font-size-sm table table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
-                            <thead class="thead-light">
+                        <table class="font-size-sm table table-borderless table-thead-bordered table-align-middle card-table">
+                            <thead class="thead-light table-nowrap">
                                 <tr>
                                     <th>{{ translate('sl') }}</th>
                                     <th >{{translate('Topics')}}</th>
-                                    <th >{{translate('Push Notification')}}</th>
-                                    <th >{{translate('Mail')}}</th>
-                                    <th >{{translate('SMS')}}</th>
+                                    <th class="text-center">{{translate('Push Notification')}}</th>
+                                    <th class="text-center">{{translate('Mail')}}</th>
+                                    <th class="text-center">{{translate('SMS')}}</th>
                                 </tr>
                             </thead>
 
@@ -82,56 +81,62 @@ active
                                         </div>
                                     </td>
                                     <td>
-                                        @if ($item->push_notification_status == 'disable')
-                                        <span class="badge badge-pill badge--info">  {{ translate('messages.N/A') }}</span>
-                                        @else
+                                        <div class="d-flex justify-content-center">
+                                            <div>
+                                                @if ($item->push_notification_status == 'disable')
+                                                <span class="badge badge-pill badge--info">  {{ translate('messages.N/A') }}</span>
+                                                @else
 
-                                        <label class="toggle-switch toggle-switch-sm" data-toggle="tooltip"
-                                            @if ($item->push_notification_status  == 'active')
-                                                title="{{ translate('Turn_Off_push_notification_for') .' '.translate($item->title)  }}"
-                                            @else
-                                                title="{{ translate('Turn_On_push_notification_for') .' '.translate($item->title)  }}"
-                                            @endif >
-                                            <input type="checkbox"
-                                            id="push_notification_{{$item->key}}"
-                                            data-id="push_notification_{{$item->key}}"
-                                            data-type="toggle" data-image-on="{{asset('public/assets/admin/img/modal/mail-success.png')}}" data-image-off="{{asset('public/assets/admin/img/modal/mail-warning.png')}}" data-title-on="{{ translate('Want to enable the Push Notification For') .' '.  translate($item->title) }} ?" data-title-off="{{ translate('Want to disable the Push Notification For') .' '.  translate($item->title) }} ?" data-text-on="<p>{{ translate('Push Notification Will Be Enabled For')  .' '.  translate($item->title) }}</p>" data-text-off="<p>{{ translate('Push Notification Will Be disabled For')  .' '.  translate($item->title) }}</p>" class="status toggle-switch-input dynamic-checkbox"  {{ $item->push_notification_status  == 'active' ? 'checked' : '' }}>
-                                            <span class="toggle-switch-label text">
-                                                <span class="toggle-switch-indicator"></span>
-                                            </span>
-                                        </label>
-                                        <form action="{{route('admin.business-settings.notification_status_change',['key'=> $item->key ,'user_type' => $item->type ,'type' => 'push_notification'])}}" method="get" id="push_notification_{{$item->key}}_form">
-                                        </form>
-                                        @endif
+                                                <label class="toggle-switch toggle-switch-sm" data-toggle="tooltip"
+                                                    @if ($item->push_notification_status  == 'active')
+                                                        title="{{ translate('Turn_Off_push_notification_for') .' '.translate($item->title)  }}"
+                                                    @else
+                                                        title="{{ translate('Turn_On_push_notification_for') .' '.translate($item->title)  }}"
+                                                    @endif >
+                                                    <input type="checkbox"
+                                                    id="push_notification_{{$item->key}}"
+                                                    data-id="push_notification_{{$item->key}}"
+                                                    data-type="toggle" data-image-on="{{asset('public/assets/admin/img/modal/mail-success.png')}}" data-image-off="{{asset('public/assets/admin/img/modal/mail-warning.png')}}" data-title-on="{{ translate('Want to enable the Push Notification For') .' '.  translate($item->title) }} ?" data-title-off="{{ translate('Want to disable the Push Notification For') .' '.  translate($item->title) }} ?" data-text-on="<p>{{ translate('Push Notification Will Be Enabled For')  .' '.  translate($item->title) }}</p>" data-text-off="<p>{{ translate('Push Notification Will Be disabled For')  .' '.  translate($item->title) }}</p>" class="status toggle-switch-input dynamic-checkbox"  {{ $item->push_notification_status  == 'active' ? 'checked' : '' }}>
+                                                    <span class="toggle-switch-label text">
+                                                        <span class="toggle-switch-indicator"></span>
+                                                    </span>
+                                                </label>
+                                                <form action="{{route('admin.business-settings.notification_status_change',['key'=> $item->key ,'user_type' => $item->type ,'type' => 'push_notification'])}}" method="get" id="push_notification_{{$item->key}}_form">
+                                                </form>
+                                                @endif
+                                            </div>
+                                        </div>
                                     </td>
 
                                     <td>
-                                        @if ($item->mail_status == 'disable')
-                                       <span class="badge badge-pill badge--info">  {{ translate('messages.N/A') }}</span>
-                                       @else
-
-                                       <label class="toggle-switch toggle-switch-sm"
-                                            @if ($item->mail_status  == 'active')
-                                            data-toggle="tooltip" title="{{ translate('Turn_Off_Mail_for') .' '.translate($item->title)  }}"
+                                        <div class="d-flex justify-content-center">
+                                            <div>
+                                            @if ($item->mail_status == 'disable')
+                                                <span class="badge badge-pill badge--info">  {{ translate('messages.N/A') }}</span>
                                             @else
-                                            data-toggle="tooltip" title="{{ translate('Turn_On_Mail_for') .' '.translate($item->title)  }}"
+                                            <label class="toggle-switch toggle-switch-sm"
+                                                    @if ($item->mail_status  == 'active')
+                                                    data-toggle="tooltip" title="{{ translate('Turn_Off_Mail_for') .' '.translate($item->title)  }}"
+                                                    @else
+                                                    data-toggle="tooltip" title="{{ translate('Turn_On_Mail_for') .' '.translate($item->title)  }}"
+                                                    @endif
+                                                >
+                                                <input type="checkbox" data-type="toggle"
+                                                id="mail_{{ $item->key }}"
+                                                data-id="mail_{{ $item->key }}"
+                                                data-image-on="{{asset('public/assets/admin/img/modal/mail-success.png')}}" data-image-off="{{asset('public/assets/admin/img/modal/mail-warning.png')}}" data-title-on="{{ translate('Want to enable the Mail For') .' '.  translate($item->title) }} ?" data-title-off="{{ translate('Want to disable the Mail For') .' '.  translate($item->title) }} ?" data-text-on="<p>{{ translate('Mail Will Be Enabled For')  .' '.  translate($item->title) }}</p>" data-text-off="<p>{{ translate('Mail Will Be disabled For')  .' '.  translate($item->title) }}</p>" class="status toggle-switch-input dynamic-checkbox" {{ $item->mail_status  == 'active' ? 'checked' : '' }}>
+                                                <span class="toggle-switch-label text">
+                                                    <span class="toggle-switch-indicator"></span>
+                                                </span>
+                                            </label>
+                                            <form action="{{route('admin.business-settings.notification_status_change',['key'=> $item->key ,'user_type' => $item->type ,'type' => 'Mail'])}}" method="get" id="mail_{{$item->key}}_form">
+                                            </form>
                                             @endif
-                                        >
-
-                                           <input type="checkbox" data-type="toggle"
-                                           id="mail_{{ $item->key }}"
-                                           data-id="mail_{{ $item->key }}"
-                                           data-image-on="{{asset('public/assets/admin/img/modal/mail-success.png')}}" data-image-off="{{asset('public/assets/admin/img/modal/mail-warning.png')}}" data-title-on="{{ translate('Want to enable the Mail For') .' '.  translate($item->title) }} ?" data-title-off="{{ translate('Want to disable the Mail For') .' '.  translate($item->title) }} ?" data-text-on="<p>{{ translate('Mail Will Be Enabled For')  .' '.  translate($item->title) }}</p>" data-text-off="<p>{{ translate('Mail Will Be disabled For')  .' '.  translate($item->title) }}</p>" class="status toggle-switch-input dynamic-checkbox" {{ $item->mail_status  == 'active' ? 'checked' : '' }}>
-                                           <span class="toggle-switch-label text">
-                                               <span class="toggle-switch-indicator"></span>
-                                           </span>
-                                       </label>
-                                       <form action="{{route('admin.business-settings.notification_status_change',['key'=> $item->key ,'user_type' => $item->type ,'type' => 'Mail'])}}" method="get" id="mail_{{$item->key}}_form">
-                                       </form>
-                                        @endif
+                                            </div>
+                                        </div>
                                     </td>
 
-                                    <td>
+                                    <td class="text-center">
                                         @if ($item->sms_status == 'disable')
                                        <span class="badge badge-pill badge--info">  {{ translate('messages.N/A') }}</span>
                                        @else

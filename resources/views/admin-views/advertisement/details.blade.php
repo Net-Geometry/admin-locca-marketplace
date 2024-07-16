@@ -311,7 +311,7 @@ active
 
 
                                 @if($advertisement->status == 'paused')
-                                <a class="dropdown-item d-flex gap-2 align-items-center new-dynamic-submit-model"
+                                <a class="btn btn-soft-primary justify-content-center d-flex gap-2 align-items-center new-dynamic-submit-model"
 
 
                                 id="data-add-{{ $advertisement->id }}"
@@ -337,7 +337,7 @@ active
                                 </form>
 
                             @elseif($advertisement->status == 'approved' && ($advertisement->active == 1 || $advertisement->active == 2 ))
-                            <a class="dropdown-item d-flex gap-2 align-items-center new-dynamic-submit-model"
+                            <a class="btn btn-soft-danger justify-content-center d-flex gap-2 align-items-center new-dynamic-submit-model"
                             id="data-add-{{ $advertisement->id }}"
                             data-id="data-add-{{ $advertisement->id }}"
                             data-title="{{translate('Are you sure you want to Pause the request?')}}"

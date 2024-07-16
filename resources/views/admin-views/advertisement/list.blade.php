@@ -13,7 +13,7 @@ active
 @endpush
 
 @section('content')
-<div class="content container-fluid">
+<div class="content container-fluid overflow-hidden">
 
 
 
@@ -72,7 +72,7 @@ active
                 </div>
                 <!-- End Search -->
             </form>
-            <div class="select-item min-250">
+            <div class="select-item min-w-135px">
                 <select name="subscription_list" class="form-control js-select2-custom set-filter"
                 data-url="{{url()->full()}}" data-filter="ads_type">
                     <option  value="all">{{translate('messages.All Ads')}}</option>
