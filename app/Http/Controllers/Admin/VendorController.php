@@ -194,7 +194,7 @@ class VendorController extends Controller
         } catch (\Exception $ex) {
             info($ex->getMessage());
         }
-        Toastr::success(translate('messages.store').translate('messages.added_successfully'));
+        Toastr::success(translate('messages.store_added_successfully'));
         return redirect('admin/store/list');
     }
 
@@ -341,7 +341,7 @@ class VendorController extends Controller
             $userinfo->image = $store->logo;
             $userinfo->save();
         }
-        Toastr::success(translate('messages.store').translate('messages.updated_successfully'));
+        Toastr::success(translate('messages.store_updated_successfully'));
         return redirect('admin/store/list');
     }
 
@@ -855,7 +855,7 @@ class VendorController extends Controller
             Toastr::warning(translate('messages.push_notification_faild'));
         }
 
-        Toastr::success(translate('messages.store').translate('messages.status_updated'));
+        Toastr::success(translate('messages.store_status_updated'));
         return back();
     }
 
@@ -894,7 +894,7 @@ class VendorController extends Controller
 
         $store[$request->menu] = $request->status;
         $store->save();
-        Toastr::success(translate('messages.store').translate('messages.settings_updated'));
+        Toastr::success(translate('messages.store_settings_updated'));
         return back();
     }
 
@@ -945,7 +945,7 @@ class VendorController extends Controller
         $store->non_veg = (bool)($request->veg_non_veg == 'non_veg' || $request->veg_non_veg == 'both');
 
         $store->save();
-        Toastr::success(translate('messages.store').translate('messages.settings_updated'));
+        Toastr::success(translate('messages.store_settings_updated'));
         return back();
     }
 
@@ -1017,7 +1017,7 @@ class VendorController extends Controller
                 }
             }
         }
-        Toastr::success(translate('messages.store').translate('messages.meta_data_updated'));
+        Toastr::success(translate('messages.store_meta_data_updated'));
         return back();
     }
 
@@ -1062,7 +1062,7 @@ class VendorController extends Controller
     public function cleardiscount(Store $store)
     {
         $store->discount->delete();
-        Toastr::success(translate('messages.store').translate('messages.discount_cleared'));
+        Toastr::success(translate('messages.store_discount_cleared'));
         return back();
     }
 
