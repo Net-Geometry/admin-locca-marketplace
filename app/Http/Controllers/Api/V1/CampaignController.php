@@ -95,7 +95,7 @@ class CampaignController extends Controller
         $item_campaign_default_status = \App\Models\BusinessSetting::where('key', 'item_campaign_default_status')->first()?->value ??  1;
         $item_campaign_sort_by_general = \App\Models\PriorityList::where('name', 'item_campaign_sort_by_general')->where('type','general')->first()?->value ?? '';
         try {
-            $query =  $campaigns = ItemCampaign::active()
+            $query = ItemCampaign::active()
             ->whereHas('module.zones', function($query)use($zone_id){
                 $query->whereIn('zones.id', json_decode($zone_id, true));
             })
@@ -113,7 +113,13 @@ class CampaignController extends Controller
 
             } else{
                 if ($item_campaign_sort_by_general == 'order_count') {
-                    $query = $query->withCount('orderdetails')->orderByDesc('orderdetails_count');
+                    $query = $query->withCount([
+                        'orderdetails' => function ($query) {
+                                $query->whereHas('order', function ($query) {
+                                    return $query->whereIn('order_status', ['delivered', 'refund_requested', 'refund_request_canceled']);
+                                });
+                        },
+                    ])->orderByDesc('orderdetails_count');
                 } elseif ($item_campaign_sort_by_general == 'a_to_z') {
                     $query = $query->orderBy('title');
                 } elseif ($item_campaign_sort_by_general == 'z_to_a') {

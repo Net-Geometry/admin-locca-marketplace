@@ -1243,7 +1243,7 @@
                                     <div class="w-100 text-center mt-3">
                                         <button type="button" class="btn btn--primary w-100" data-toggle="modal"
                                             data-target="#myModal" data-lat='21.03' data-lng='105.85'>
-                                            {{ translate('messages.assign_delivery_mam_manually') }}
+                                            {{ translate('messages.assign_delivery_man_manually') }}
                                         </button>
                                     </div>
                                 @endif
