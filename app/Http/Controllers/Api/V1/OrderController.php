@@ -143,9 +143,8 @@ class OrderController extends Controller
 
             try
             {
-                $mail_status = Helpers::get_mail_status('registration_mail_status_user');
-                if (config('mail.status') && $request->email && $mail_status == '1' && Helpers::getNotificationStatusData('customer','customer_registration','mail_status')) {
-                    Mail::to($request->email)->send(new \App\Mail\CustomerRegistration($request->contact_person_name));
+                if (config('mail.status') && $request->contact_person_email && Helpers::get_mail_status('registration_mail_status_user') == '1' && Helpers::getNotificationStatusData('customer','customer_registration','mail_status')) {
+                    Mail::to($request->contact_person_email)->send(new \App\Mail\CustomerRegistration($request->contact_person_name));
                 }
             }
             catch(\Exception $ex)

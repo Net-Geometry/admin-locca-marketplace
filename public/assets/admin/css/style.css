@@ -11292,10 +11292,6 @@ body > .initial-38-1 {
     color: rgba(113, 120, 133, 0.62);
 }
 
-.select2-container--open {
-    z-index: 99999;
-}
-
 .tab-button-group button {
     border: none;
     background-color: transparent;
@@ -13400,9 +13396,6 @@ video#VisaChipCardVideo {
 .sorting-card .form--check .form-check-input[type="radio"]:checked,
 .sorting-card .toggle-switch-input:checked + .toggle-switch-label {
     background-color: var(--primary-clr) !important;
-}
-.navbar-fixed {
-    z-index: 100000;
 }
 @media screen and (max-width: 1600px) {
     .promotion-typewise-upload-box .upload-file__img img {
