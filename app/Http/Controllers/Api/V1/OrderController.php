@@ -1610,9 +1610,9 @@ class OrderController extends Controller
         $user_id = $request?->user?->id ;
 
         $order = Order::with('details', 'offline_payments','parcel_category')
-        ->when(!isset($request->user) , function($query){
-            $query->where('is_guest' , 1);
-        })
+//        ->when(!isset($request->user) , function($query){
+//            $query->where('is_guest' , 1);
+//        })
 
         ->when(isset($request->user)  , function($query){
             $query->where('is_guest' , 0);
