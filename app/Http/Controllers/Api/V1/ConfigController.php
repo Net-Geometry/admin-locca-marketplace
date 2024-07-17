@@ -658,7 +658,7 @@ class ConfigController extends Controller
         foreach ($methods as $method) {
             $credentialsData = $method->$credentials;
             $additional_data = json_decode($method->additional_data);
-            if ($credentialsData['status'] == 1) {
+            if ($credentialsData && $credentialsData['status'] == 1) {
                 $data[] = [
                     'gateway' => $method->key_name,
                     'gateway_title' => $additional_data?->gateway_title,
@@ -686,7 +686,7 @@ class ConfigController extends Controller
         foreach ($methods as $method) {
             $credentialsData = $method->$credentials;
             $additional_data = json_decode($method->additional_data);
-            if ($credentialsData['status'] == 1) {
+            if ($credentialsData && $credentialsData['status'] == 1) {
                 $data[] = [
                     'gateway' => $method->key_name,
                     'gateway_title' => $additional_data?->gateway_title,
