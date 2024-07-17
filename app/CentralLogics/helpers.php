@@ -933,7 +933,6 @@ class Helpers
         $storage = [];
         foreach ($data as $item) {
             $item['add_ons'] = json_decode($item['add_ons']);
-            $item['is_guest'] = $item['is_guest']??0;
             $item['variation'] = json_decode($item['variation'], true);
             $item['item_details'] = json_decode($item['item_details'], true);
             if ($item['item_id']){

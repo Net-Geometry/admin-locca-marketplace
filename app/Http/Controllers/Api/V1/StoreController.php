@@ -212,7 +212,7 @@ class StoreController extends Controller
             $temp['attachment'] = json_decode($temp['attachment']);
             $temp['item_name'] = null;
             $temp['item_image'] = null;
-            $temp['item'] = null;
+            $temp['product'] = null;
             $temp['customer_name'] = null;
             if($temp->item)
             {
@@ -224,7 +224,7 @@ class StoreController extends Controller
                     $translate = array_column($temp->item->translations->toArray(), 'value', 'key');
                     $temp['item_name'] = $translate['name'];
                 }
-                $temp['item'] = Helpers::product_data_formatting($temp->item, false, false, app()->getLocale());
+                $temp['product'] = Helpers::product_data_formatting($temp->item, false, false, app()->getLocale());
             }
             if($temp->customer)
             {
