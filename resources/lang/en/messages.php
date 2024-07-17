@@ -5476,4 +5476,5 @@
   'Currently sorting this section by active brands' => 'Currently sorting this section by active brands',
   'razor_pay' => 'Razor pay',
   'Your_Security_Pin_is' => 'Your Security Pin is',
+  'order_canceled_successfully' => 'Order canceled successfully',
 );

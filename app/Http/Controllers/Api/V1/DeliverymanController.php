@@ -606,6 +606,7 @@ class DeliverymanController extends Controller
         if ($details != null && $details->count() > 0) {
             $details[0]['vendor_id'] = $order?->store?->vendor_id;
             $details = $details = Helpers::order_details_data_formatting($details);
+            $details[0]['is_guest'] = (int)$order->is_guest;
             return response()->json($details, 200);
         }
         else if ($order->order_type == 'parcel' ) {

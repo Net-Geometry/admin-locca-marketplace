@@ -502,6 +502,7 @@ class VendorController extends Controller
         $details = isset($order->details)?$order->details:null;
         if ($details != null && $details->count() > 0) {
             $details = $details = Helpers::order_details_data_formatting($details);
+            $details[0]['is_guest'] = (int)$order->is_guest;
             return response()->json($details, 200);
         } else if ($order->order_type == 'parcel' || $order->prescription_order == 1) {
             $order->delivery_address = json_decode($order->delivery_address, true);
