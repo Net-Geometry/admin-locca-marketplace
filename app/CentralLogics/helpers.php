@@ -4832,7 +4832,7 @@ class Helpers
             foreach ($methods as $method) {
                 $credentialsData = json_decode($method->$credentials);
                 $additional_data = json_decode($method->additional_data);
-                if ($credentialsData->status == 1) {
+                if ($credentialsData?->status == 1) {
                     $data[] = [
                         'gateway' => $method->key_name,
                         'gateway_title' => $additional_data?->gateway_title,

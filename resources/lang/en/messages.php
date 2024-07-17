@@ -5474,4 +5474,6 @@
   'This_section_is_currently_sorted_by_active_items.' => 'This section is currently sorted by active items.',
   'Currently sorting this section by active conditions' => 'Currently sorting this section by active conditions',
   'Currently sorting this section by active brands' => 'Currently sorting this section by active brands',
+  'razor_pay' => 'Razor pay',
+  'Your_Security_Pin_is' => 'Your Security Pin is',
 );
