@@ -5465,4 +5465,13 @@
   'Want_to_disable_country_picker?' => 'Want to disable country picker?',
   'If_you_enable_this,_user_can_select_country_from_country_picker' => 'If you enable this, user can select country from country picker',
   'If_you_disable_this,_user_can_not_select_country_from_country_picker,_default_country_will_be_selected' => 'If you disable this, user can not select country from country picker, default country will be selected',
+  'This_section_is_currently_sorted_by_recommended_active_stores.' => 'This section is currently sorted by recommended active stores.',
+  'This_section_is_currently_sorted_by_latest_created_items.' => 'This section is currently sorted by latest created items.',
+  'Currently sorting this section by highest discount amount.' => 'Currently sorting this section by highest discount amount.',
+  'This_section_is_currently_sorted_by_higher_ordered_items.' => 'This section is currently sorted by higher ordered items.',
+  'This_section_is_currently_sorted_by_distance_which_is_the_most_nearby_user_and_total_orders.' => 'This section is currently sorted by distance which is the most nearby user and total orders.',
+  'This_section_is_currently_sorted_by_active_stores.' => 'This section is currently sorted by active stores.',
+  'This_section_is_currently_sorted_by_active_items.' => 'This section is currently sorted by active items.',
+  'Currently sorting this section by active conditions' => 'Currently sorting this section by active conditions',
+  'Currently sorting this section by active brands' => 'Currently sorting this section by active brands',
 );

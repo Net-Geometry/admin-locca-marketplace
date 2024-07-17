@@ -38,7 +38,7 @@ class StoreLogic
             })
             ->when($featured, function($query){
                 $query->featured();
-            });
+            })->Active();
         if(config('module.current_module_data')) {
             $query = $query->whereHas('zone.modules', function($query){
                 $query->where('modules.id', config('module.current_module_data')['id']);
@@ -52,7 +52,7 @@ class StoreLogic
 
             if($all_stores_default_status != '1') {
                 if($all_stores_sort_by_unavailable == 'remove'){
-                    $query = $query->Active();
+                    $query = $query->where('active', '>', 0);
                 }elseif($all_stores_sort_by_unavailable == 'last'){
                     $query = $query->orderByDesc('active');
                 }
@@ -84,8 +84,6 @@ class StoreLogic
                 }elseif($all_stores_sort_by_general == 'z_to_a') {
                     $query = $query->orderByDesc('name');
                 }
-            }else{
-                $query = $query->Active();
             }
 
             $query = $query->when($store_type == 'all', function($q){
@@ -235,16 +233,16 @@ class StoreLogic
             })
             ->type($type)
             ->withCount('reviews')
-            ->withCount('orders');
+            ->withCount('orders')->Active();
 
         if($popular_store_default_status == '1') {
-            $query = $query->Active()->orderBy('open', 'desc')
+            $query = $query->orderBy('open', 'desc')
                     ->orderBy('distance')
                     ->orderBy('orders_count', 'desc');
         }else{
 
             if($popular_store_sort_by_temp_closed == 'remove'){
-                $query = $query->Active();
+                $query = $query->where('active', '>', 0);
             }elseif($popular_store_sort_by_temp_closed == 'last'){
                 $query = $query->orderByDesc('active');
             }
@@ -737,14 +735,14 @@ class StoreLogic
                 $q->inRandomOrder();
             })
             ->withCount('reviews')
-            ->withCount('orders');
+            ->withCount('orders')->Active();
 
         if($recommended_store_default_status == '1') {
-            $query = $query->Active();
+            
         }else{
 
             if($recommended_store_sort_by_temp_closed == 'remove'){
-                $query = $query->Active();
+                $query = $query->where('active', '>', 0);
             }elseif($recommended_store_sort_by_temp_closed == 'last'){
                 $query = $query->orderByDesc('active');
             }

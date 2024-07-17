@@ -85,7 +85,7 @@ class ProductLogic
                 if($latest_items_sort_by_unavailable == 'remove'){
                     $query = $query->where('stock', '>', 0);
                 }elseif($latest_items_sort_by_unavailable == 'last'){
-                    $query = $query->orderBy('stock', 'desc');
+                    $query = $query->orderByRaw('CASE WHEN stock = 0 THEN 1 ELSE 0 END');
                 }
 
             }
@@ -159,7 +159,7 @@ class ProductLogic
                 if($latest_items_sort_by_unavailable == 'remove'){
                     $query = $query->where('stock', '>', 0);
                 }elseif($latest_items_sort_by_unavailable == 'last'){
-                    $query = $query->orderBy('stock', 'desc');
+                    $query = $query->orderByRaw('CASE WHEN stock = 0 THEN 1 ELSE 0 END');
                 }
             }
 
@@ -282,7 +282,7 @@ class ProductLogic
                 if($latest_items_sort_by_unavailable == 'remove'){
                     $query = $query->where('stock', '>', 0);
                 }elseif($latest_items_sort_by_unavailable == 'last'){
-                    $query = $query->orderBy('stock', 'desc');
+                    $query = $query->orderByRaw('CASE WHEN stock = 0 THEN 1 ELSE 0 END');
                 }
             }
 
@@ -372,7 +372,7 @@ class ProductLogic
                 if($latest_items_sort_by_unavailable == 'remove'){
                     $query = $query->where('stock', '>', 0);
                 }elseif($latest_items_sort_by_unavailable == 'last'){
-                    $query = $query->orderBy('stock', 'desc');
+                    $query = $query->orderByRaw('CASE WHEN stock = 0 THEN 1 ELSE 0 END');
                 }
             }
 
@@ -557,7 +557,7 @@ class ProductLogic
                     if($popular_item_sort_by_unavailable == 'remove'){
                         $query = $query->where('stock', '>', 0);
                     }elseif($popular_item_sort_by_unavailable == 'last'){
-                        $query = $query->orderBy('stock', 'desc');
+                        $query = $query->orderByRaw('CASE WHEN stock = 0 THEN 1 ELSE 0 END');
                     }
                 }
 
@@ -619,7 +619,7 @@ class ProductLogic
                 if($popular_item_sort_by_unavailable == 'remove'){
                     $query = $query->where('stock', '>', 0);
                 }elseif($popular_item_sort_by_unavailable == 'last'){
-                    $query = $query->orderBy('stock', 'desc');
+                    $query = $query->orderByRaw('CASE WHEN stock = 0 THEN 1 ELSE 0 END');
                 }
             }
 
@@ -696,7 +696,7 @@ class ProductLogic
                 if($best_reviewed_item_sort_by_unavailable == 'remove'){
                     $query = $query->where('stock', '>', 0);
                 }elseif($best_reviewed_item_sort_by_unavailable == 'last'){
-                    $query = $query->orderBy('stock', 'desc');
+                    $query = $query->orderByRaw('CASE WHEN stock = 0 THEN 1 ELSE 0 END');
                 }
             }
 
@@ -749,7 +749,7 @@ class ProductLogic
                 if($best_reviewed_item_sort_by_unavailable == 'remove'){
                     $query = $query->where('stock', '>', 0);
                 }elseif($best_reviewed_item_sort_by_unavailable == 'last'){
-                    $query = $query->orderBy('stock', 'desc');
+                    $query = $query->orderByRaw('CASE WHEN stock = 0 THEN 1 ELSE 0 END');
                 }
             }
 
@@ -869,7 +869,7 @@ class ProductLogic
                     if($special_offer_sort_by_unavailable == 'remove'){
                         $query = $query->where('stock', '>', 0);
                     }elseif($special_offer_sort_by_unavailable == 'last'){
-                        $query = $query->orderBy('stock', 'desc');
+                        $query = $query->orderByRaw('CASE WHEN stock = 0 THEN 1 ELSE 0 END');
                     }
                 }
 
@@ -956,7 +956,7 @@ class ProductLogic
                 if($special_offer_sort_by_unavailable == 'remove'){
                     $query = $query->where('stock', '>', 0);
                 }elseif($special_offer_sort_by_unavailable == 'last'){
-                    $query = $query->orderBy('stock', 'desc');
+                    $query = $query->orderByRaw('CASE WHEN stock = 0 THEN 1 ELSE 0 END');
                 }
             }
 
@@ -1491,7 +1491,7 @@ class ProductLogic
                 if($basic_medicine_sort_by_unavailable == 'remove'){
                     $query = $query->where('stock', '>', 0);
                 }elseif($basic_medicine_sort_by_unavailable == 'last'){
-                    $query = $query->orderBy('stock', 'desc');
+                    $query = $query->orderByRaw('CASE WHEN stock = 0 THEN 1 ELSE 0 END');
                 }
             }
 
