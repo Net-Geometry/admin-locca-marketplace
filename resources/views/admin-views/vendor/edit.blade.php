@@ -399,6 +399,11 @@
     <script src="https://maps.googleapis.com/maps/api/js?key={{\App\Models\BusinessSetting::where('key', 'map_api_key')->first()->value}}&libraries=places&callback=initMap&v=3.45.8"></script>
     <script>
         "use strict";
+        $("#vendor_form").on('keydown', function(e){
+            if (e.keyCode === 13) {
+                e.preventDefault();
+            }
+        })
       $(document).on('ready', function () {
             $('.offcanvas').on('click', function(){
                 $('.offcanvas, .floating--date').removeClass('active')

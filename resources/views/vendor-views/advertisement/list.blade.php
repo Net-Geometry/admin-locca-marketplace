@@ -75,7 +75,11 @@ active
             <h5 class="card-title"></h5>
             <form >
                 <!-- Search -->
+                @if (request()?->type == 'pending')
+                <input type="hidden" name="type" value="pending">
+                @endif
                 <div class="input--group input-group input-group-merge input-group-flush">
+
                     <input id="datatableSearch" type="search" name="search"  value="{{ request()?->search ?? null }}"  class="form-control" placeholder="{{ translate('Search by ads ID or store name') }}" aria-label="{{translate('messages.search_here')}}">
                     <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
                 </div>

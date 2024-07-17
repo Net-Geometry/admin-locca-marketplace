@@ -212,6 +212,7 @@ class StoreController extends Controller
             $temp['attachment'] = json_decode($temp['attachment']);
             $temp['item_name'] = null;
             $temp['item_image'] = null;
+            $temp['item'] = null;
             $temp['customer_name'] = null;
             if($temp->item)
             {
@@ -230,7 +231,6 @@ class StoreController extends Controller
                 $temp['customer_name'] = $temp->customer->f_name.' '.$temp->customer->l_name;
             }
 
-//            unset($temp['item']);
             unset($temp['customer']);
             array_push($storage, $temp);
         }

@@ -399,7 +399,7 @@ class VendorController extends Controller
 
         $key = explode(' ', request()->search);
 
-        $store = Store::find($store_id);
+        $store = Store::findOrFail($store_id);
         $wallet = $store->vendor->wallet;
         if(!$wallet)
         {
