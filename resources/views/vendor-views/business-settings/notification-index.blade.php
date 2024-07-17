@@ -23,8 +23,8 @@
                             <th>{{ translate('sl') }}</th>
                             <th >{{translate('Topics')}}</th>
                             <th >{{translate('Push Notification')}}</th>
-                            <th >{{translate('Mail')}}</th>
-                            <th >{{translate('SMS')}}</th>
+                            <th  >{{translate('Mail')}}</th>
+                            <th class="text-center">{{translate('SMS')}}</th>
                         </tr>
                         </thead>
 
@@ -41,7 +41,7 @@
                                 </td>
                                 <td>
                                     @if ($item_admin_data->push_notification_status == 'disable')
-                                        <span class="badge badge-pill badge--info">  {{ translate('messages.N/A') }}</span>
+                                        <span class="badge badge-pill badge--info pr-6">  {{ translate('messages.N/A') }}</span>
                                     @elseif($item_admin_data->push_notification_status == 'inactive')
                                         <label class="toggle-switch toggle-switch-sm" data-toggle="tooltip" title="{{ translate('This_notification_turned_off_by_admin.')  }}">
                                             <input type="checkbox"
@@ -72,7 +72,7 @@
 
                                 <td>
                                     @if ($item_admin_data->mail_status == 'disable')
-                                        <span class="badge badge-pill badge--info">  {{ translate('messages.N/A') }}</span>
+                                        <span class="badge badge-pill badge--info pr-6">  {{ translate('messages.N/A') }}</span>
                                     @elseif($item_admin_data->mail_status == 'inactive')
                                         <label class="toggle-switch toggle-switch-sm" data-toggle="tooltip" title="{{ translate('This_mail_turned_off_by_admin') }}">
                                             <input type="checkbox"
@@ -103,7 +103,7 @@
                                     @endif
                                 </td>
 
-                                <td>
+                                <td class="text-center">
                                     @if ($item_admin_data->sms_status == 'disable')
                                         <span class="badge badge-pill badge--info">  {{ translate('messages.N/A') }}</span>
                                     @elseif($item_admin_data->sms_status == 'inactive')
