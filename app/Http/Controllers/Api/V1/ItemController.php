@@ -513,6 +513,7 @@ class ItemController extends Controller
     public function get_product($id)
     {
         try {
+
             $item = Item::withCount('whislists')->with(['tags','reviews','reviews.customer'])->active()
             ->when(config('module.current_module_data'), function($query){
                 $query->module(config('module.current_module_data')['id']);
@@ -546,7 +547,6 @@ class ItemController extends Controller
             $item['store_details'] = $store;
             return response()->json($item, 200);
         } catch (\Exception $e) {
-            dd($e->getLine());
             return response()->json([
                 'errors' => ['code' => 'product-001', 'message' => translate('messages.not_found')]
             ], 404);

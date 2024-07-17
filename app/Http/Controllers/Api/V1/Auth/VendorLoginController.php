@@ -206,6 +206,42 @@ class VendorLoginController extends Controller
         }
         Translation::insert($data);
 
+
+        if (Helpers::subscription_check()) {
+                if ($request->business_plan == 'subscription' && $request->package_id != null ) {
+                    $store->package_id = $request->package_id;
+                    $store->save();
+
+                    return response()->json([
+                        'store_id'=> $store->id,
+                        'package_id'=> $store->package_id,
+                        'type'=> 'subscription',
+                        'message'=>translate('messages.application_placed_successfully')],200);
+
+                }
+                elseif($request->business_plan == 'commission' ){
+                    $store->store_business_model = 'commission';
+                    $store->save();
+                    return response()->json([
+                        'store_id'=> $store->id,
+                        'type'=> 'commission',
+                        'message'=>translate('messages.application_placed_successfully')],200);
+                }
+                else{
+                    return response()->json([
+                        'store_id'=> $store->id,
+                        'type'=> 'business_model_fail',
+                        'message'=>translate('messages.application_placed_successfully')],200);
+                }
+            } else{
+                $store->store_business_model = 'commission';
+                $store->save();
+                return response()->json([
+                    'store_id'=> $store->id,
+                    'type'=> 'commission',
+                    'message'=>translate('messages.application_placed_successfully')],200);
+            }
+
         try{
             $admin= Admin::where('role_id', 1)->first();
             $mail_status = Helpers::get_mail_status('registration_mail_status_store');
@@ -245,7 +281,7 @@ class VendorLoginController extends Controller
             return [ 'type' => 'subscribed',
             'code' => 200,
             'data'=> [
-                'subscribed' => ['store_id' => $store?->id, 'type' => 'new_join']
+                'subscribed' => ['store_id' => $store?->id, 'package_id' => $store?->package_id  , 'type' => 'new_join']
                 ]
             ];
         }

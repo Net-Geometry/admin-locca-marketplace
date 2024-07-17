@@ -22,12 +22,7 @@ class AdvertisementController extends Controller
      */
     public function index(Request $request)
     {
-
-        // dd(is_numeric(config('module')['current_module_id']));
-
-
         $key = explode(' ', $request['search']);
-
         $adds=Advertisement::where('is_updated',0)
         ->when(is_numeric(config('module')['current_module_id']), function($query){
             $query->where('module_id', config('module')['current_module_id']);

@@ -237,7 +237,7 @@ active
                                     <h4 class="mb-2">{{ translate('Title') }}:</h4>
                                     <p class="">{{$translate[$lang]['title']??'------------'}}</p>
                                     <h4 class="mb-2">{{ translate('Description') }}:</h4>
-                                    <p class="m-0">{{$advertisement?->getRawOriginal('description') }}</p>
+                                    <p class="m-0">{{$translate[$lang]['description']??'------------' }}</p>
 
                                 </div>
 
@@ -299,7 +299,7 @@ active
                         <form action="{{route('admin.advertisement.paidStatus')}}" id="is_paid_form" method="get">
                             <input type="hidden" name="add_id" value="{{  $advertisement?->id }}">
                         </form>
-                            @if (!in_array($advertisement->status ,['denied','pending']))
+                            @if (!in_array($advertisement->status ,['denied','pending']) && $advertisement->active == 1  )
 
                             <div class="mb-20">
                                 <label class="form-label">{{ translate('Ads Status') }}</label>

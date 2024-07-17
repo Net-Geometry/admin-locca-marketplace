@@ -136,7 +136,10 @@ active
                                         </div>
                                     </td>
 
-                                    <td class="text-center">
+                                    <td>
+                                        <div class="d-flex justify-content-center">
+                                            <div>
+
                                         @if ($item->sms_status == 'disable')
                                        <span class="badge badge-pill badge--info">  {{ translate('messages.N/A') }}</span>
                                        @else
@@ -164,6 +167,11 @@ active
                                        <form action="{{route('admin.business-settings.notification_status_change',['key'=> $item->key,'user_type' => $item->type ,'type' => 'SMS'])}}" method="get" id="SMS_{{$item->key}}_form">
                                        </form>
                                         @endif
+
+  </div>
+                                        </div>
+
+
                                     </td>
                                 </tr>
 

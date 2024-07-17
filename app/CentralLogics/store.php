@@ -30,15 +30,7 @@ class StoreLogic
             ->whereHas('module',function($query){
                 $query->active();
             })
-            ->when($filter_data=='delivery', function($q){
-                return $q->delivery();
-            })
-            ->when($filter_data=='take_away', function($q){
-                return $q->takeaway();
-            })
-            ->when($featured, function($query){
-                $query->featured();
-            })->Active();
+            ->Active();
         if(config('module.current_module_data')) {
             $query = $query->whereHas('zone.modules', function($query){
                 $query->where('modules.id', config('module.current_module_data')['id']);
@@ -93,10 +85,6 @@ class StoreLogic
             ->when($store_type == 'newly_joined', function($q){
                 return $q->latest();
             })
-            ->when($store_type == 'popular', function($q){
-                return $q->withCount('orders')
-                    ->orderBy('orders_count', 'desc');
-            })
             ->when($rating_count, function($query) use ($rating_count){
                 $query->selectSub(function ($query) use ($rating_count){
                     $query->selectRaw('AVG(reviews.rating)')
@@ -107,10 +95,10 @@ class StoreLogic
                         ->havingRaw('AVG(reviews.rating) >= ?', [$rating_count]);
                 }, 'avg_r')->having('avg_r', '>=', $rating_count);
             })
-            ->when($filter && in_array('top_rated',$filter),function ($qurey){
+            ->when(($filter && in_array('top_rated',$filter) ) || $store_type == 'top_rated' ,function ($qurey){
                 $qurey->whereNotNull('rating')->whereRaw("LENGTH(rating) > 0");
             })
-            ->when($filter && in_array('popular',$filter),function ($qurey){
+            ->when(($filter && in_array('popular',$filter)) || $store_type == 'popular'  ,function ($qurey){
                 $qurey->withCount('orders')->orderBy('orders_count', 'desc');
             })
             ->when($filter && in_array('discounted',$filter),function ($qurey){
@@ -125,8 +113,16 @@ class StoreLogic
             })
             ->when($filter && in_array('nearby',$filter),function ($qurey){
                 $qurey->orderBy('distance');
+            })
+            ->when($filter_data=='delivery', function($q){
+                return $q->delivery();
+            })
+            ->when($filter_data=='take_away', function($q){
+                return $q->takeaway();
+            })
+            ->when($featured, function($query){
+                $query->featured();
             });
-
 
             if($all_stores_default_status == '1') {
                 $query = $query->orderBy('open', 'desc');
@@ -738,7 +734,7 @@ class StoreLogic
             ->withCount('orders')->Active();
 
         if($recommended_store_default_status == '1') {
-            
+
         }else{
 
             if($recommended_store_sort_by_temp_closed == 'remove'){
