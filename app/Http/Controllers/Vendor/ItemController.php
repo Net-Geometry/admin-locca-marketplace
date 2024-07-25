@@ -414,7 +414,7 @@ class ItemController extends Controller
             return back();
         }
 
-        if(Helpers::get_store_data()->product_uploaad_check !== null && Helpers::get_store_data()->product_uploaad_check != 'commission' && Helpers::get_store_data()->product_uploaad_check >= 0 && $request->status == 1 ){
+        if(Helpers::get_store_data()->product_uploaad_check !== null && !in_array(Helpers::get_store_data()->product_uploaad_check,['unlimited' ,'commission']) && Helpers::get_store_data()->product_uploaad_check >= 0 && $request->status == 1 ){
             Toastr::warning(translate('Your_current_package_doesnot_allow_to_activate_more_then_allocated_items_in_your_package') );
             return back();
         }

@@ -347,7 +347,7 @@ class ItemController extends Controller
                 ]
             ],403);
         }
-        if($request->vendor->stores[0]->product_uploaad_check !== null && $request->vendor->stores[0]->product_uploaad_check != 'commission' && $request->vendor->stores[0]->product_uploaad_check >= 0 && $request->status == 1 )
+        if($request->vendor->stores[0]->product_uploaad_check !== null &&  !in_array($request->vendor->stores[0]->product_uploaad_check,['unlimited' ,'commission'])  && $request->vendor->stores[0]->product_uploaad_check >= 0 && $request->status == 1 )
         {
             return response()->json([
                 'errors'=>[
