@@ -13,8 +13,9 @@ class ModuleWiseWhyChoose extends Model
 {
     use HasFactory;
 
-        protected $casts = [
+    protected $casts = [
         'status' => 'integer',
+        'module_id' => 'integer',
     ];
 
     protected $appends = ['image_full_url'];
