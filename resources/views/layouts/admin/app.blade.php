@@ -766,6 +766,36 @@ $(document).on('keyup', 'input[type="tel"]', function () {
         });
 
 
+  //external configuration
+    $("#generateSystemSelfToken").on("click", function () {
+        generateRandomToken(64);
+    });
+
+    document.getElementById('copyButton').addEventListener('click', function() {
+        const input = document.getElementById('systemSelfToken');
+
+        // Select the input field text
+        input.select();
+        input.setSelectionRange(0, 99999); // For mobile devices
+
+        // Copy the text inside the input field to the clipboard
+        navigator.clipboard.writeText(input.value).then(function() {
+            toastr.success('Text copied to clipboard: ' + input.value);
+        }).catch(function(error) {
+            toastr.error('Failed to copy text: ', error);
+        });
+    });
+
+    function generateRandomToken(length) {
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let token = '';
+        for (let i = 0; i < length; i++) {
+            const randomIndex = Math.floor(Math.random() * characters.length);
+            token += characters.charAt(randomIndex);
+        }
+        $('#systemSelfToken').val(token)
+    }
+
 </script>
 
 <script>

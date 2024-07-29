@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
 
     Route::group(['middleware' => ['admin', 'current-module']], function () {
+        Route::get('drivemond-panel', 'DriveMondController@drivemondExternalLogin')->name('drivemond-panel');
         Route::get('get-all-stores', 'VendorController@get_all_stores')->name('get_all_stores');
         Route::get('lang/{locale}', 'LanguageController@lang')->name('lang');
         Route::get('settings', 'SystemController@settings')->name('settings');
@@ -290,6 +291,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::post('update-dm', 'BusinessSettingsController@update_dm')->name('update-dm');
             Route::post('update-disbursement', 'BusinessSettingsController@update_disbursement')->name('update-disbursement');
             Route::post('update-websocket', 'BusinessSettingsController@update_websocket')->name('update-websocket');
+            Route::post('update-external-configuration', 'BusinessSettingsController@update_external_configuration')->name('update-external-configuration');
             Route::post('update-store', 'BusinessSettingsController@update_store')->name('update-store');
             Route::post('update-order', 'BusinessSettingsController@update_order')->name('update-order');
             Route::post('update-priority', 'BusinessSettingsController@update_priority')->name('update-priority');

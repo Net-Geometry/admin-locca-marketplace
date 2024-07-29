@@ -106,6 +106,20 @@
                         </a>
                     </li>
                     @endif
+                    @if(\App\Models\ExternalConfiguration::where('key','activation_mode')->first()?->value ?? 0)
+                        @php($drivemondBaseUrl = \App\Models\ExternalConfiguration::where('key', 'drivemond_base_url')->first()->value ?? null)
+                        <li class="nav-item __nav-item">
+                            <form method="POST" action="{{url($drivemondBaseUrl."/admin/auth/external-login-from-mart")}}">
+                                <input type="hidden" name="mart_token" value="{{\App\Models\ExternalConfiguration::where('key','system_self_token')->first()->value ?? null}}">
+                                <input type="hidden" name="mart_base_url" value="{{url('/')}}">
+                                <input type="hidden" name="drivemond_token" value="{{\App\Models\ExternalConfiguration::where('key','drivemond_token')->first()->value ?? null}}">
+                                <button type="submit" id="tourb-8" class="__nav-link">
+                                    <img src="{{asset('/public/assets/admin/img/new-img/dispatch.svg')}}" alt="public/img">
+                                    <span>{{ translate('Switch DriveMond Panel')}}</span>
+                                </button>
+                            </form>
+                        </li>
+                    @endif
 
                     <li class="nav-item max-sm-m-0 ml-auto mr-lg-3">
                         <a class="btn btn-icon rounded-circle nav-msg-icon"

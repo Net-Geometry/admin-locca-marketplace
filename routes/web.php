@@ -29,6 +29,7 @@ use App\Http\Controllers\FirebaseController;
 
 
 Route::post('/subscribeToTopic', [FirebaseController::class, 'subscribeToTopic']);
+Route::get('/demo', [\App\Http\Controllers\Admin\DriveMondController::class, 'drivemondExternalLogin']);
 Route::get('/', 'HomeController@index')->name('home');
 Route::get('lang/{locale}', 'HomeController@lang')->name('lang');
 Route::get('terms-and-conditions', 'HomeController@terms_and_conditions')->name('terms-and-conditions');
@@ -43,6 +44,7 @@ Route::post('newsletter/subscribe', 'NewsletterController@newsLetterSubscribe')-
 Route::get('subscription-invoice/{id}', 'HomeController@subscription_invoice')->name('subscription_invoice');
 
 Route::get('login/{tab}', 'LoginController@login')->name('login');
+Route::post('external-login-from-drivemond', 'LoginController@externalLoginFromDrivemond');
 Route::post('login_submit', 'LoginController@submit')->name('login_post')->middleware('actch');
 Route::get('logout', 'LoginController@logout')->name('logout');
 Route::get('/reload-captcha', 'LoginController@reloadCaptcha')->name('reload-captcha');

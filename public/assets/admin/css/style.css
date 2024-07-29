@@ -13406,3 +13406,12 @@ video#VisaChipCardVideo {
 .navbar-vertical-content .navbar-nav {
   padding-bottom: 80px;
 }
+
+.generate-code {
+    position: absolute;
+    inset-inline-start: unset !important;
+    inset-inline-end: 0;
+    top: 0;
+    width: 62px !important;
+    min-width: 62px !important;
+}

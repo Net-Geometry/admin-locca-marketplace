@@ -87,6 +87,8 @@ class BusinessSettingsController extends Controller
             return view('admin-views.business-settings.disbursement-index');
         } else if ($tab == 'priority') {
             return view('admin-views.business-settings.priority-index');
+        } else if ($tab == 'external-configuration') {
+            return view('admin-views.business-settings.external-index');
         }
     }
 
@@ -192,6 +194,36 @@ class BusinessSettingsController extends Controller
 
         DB::table('business_settings')->updateOrInsert(['key' => 'websocket_port'], [
             'value' => $request['websocket_port']
+        ]);
+
+        Toastr::success(translate('messages.successfully_updated_to_changes_restart_app'));
+        return back();
+    }
+    public function update_external_configuration(Request $request)
+    {
+        if (env('APP_MODE') == 'demo') {
+            Toastr::info(translate('messages.update_option_is_disable_for_demo'));
+            return back();
+        }
+        if (array_key_exists('activation_mode',$request->all())){
+            DB::table('external_configurations')->updateOrInsert(['key' => 'activation_mode'], [
+                'value' => 1
+            ]);
+        }else{
+            DB::table('external_configurations')->updateOrInsert(['key' => 'activation_mode'], [
+                'value' => 0
+            ]);
+        }
+
+        DB::table('external_configurations')->updateOrInsert(['key' => 'drivemond_base_url'], [
+            'value' => $request['drivemond_base_url']
+        ]);
+
+        DB::table('external_configurations')->updateOrInsert(['key' => 'drivemond_token'], [
+            'value' => $request['drivemond_token']
+        ]);
+        DB::table('external_configurations')->updateOrInsert(['key' => 'system_self_token'], [
+            'value' => $request['system_self_token']
         ]);
 
         Toastr::success(translate('messages.successfully_updated_to_changes_restart_app'));
