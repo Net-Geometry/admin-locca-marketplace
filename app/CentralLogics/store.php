@@ -441,7 +441,7 @@ class StoreLogic
         $positive_submit = $ratings[0]+$ratings[1]+$ratings[2];
         $rating = ($ratings[0]*5+$ratings[1]*4+$ratings[2]*3+$ratings[3]*2+$ratings[4])/($total_submit?$total_submit:1);
         $positive_rating = $total_submit>0?(($positive_submit*100)/$total_submit):0;
-        return ['rating'=>$rating, 'total'=>$total_submit, 'positive_rating'=>$positive_rating];
+        return ['rating'=>round($rating,2), 'total'=>$total_submit, 'positive_rating'=>$positive_rating];
     }
 
     public static function update_store_rating($ratings, $product_rating)
