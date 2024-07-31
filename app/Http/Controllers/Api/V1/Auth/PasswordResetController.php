@@ -36,8 +36,6 @@ class PasswordResetController extends Controller
                 return response()->json(['message' => translate('messages.otp_sent_successfull')], 200);
             }
 
-            // $interval_time = BusinessSetting::where('key', 'otp_interval_time')->first();
-            // $otp_interval_time= isset($interval_time) ? $interval_time->value : 20;
             $otp_interval_time= 60; //seconds
             $password_verification_data= DB::table('password_resets')->where('email', $customer['email'])->first();
             if(isset($password_verification_data) &&  Carbon::parse($password_verification_data->created_at)->DiffInSeconds() < $otp_interval_time){
@@ -83,7 +81,7 @@ class PasswordResetController extends Controller
             }
 
                 if(Helpers::getNotificationStatusData('customer','customer_forget_password','push_notification_status')){
-                    if (isset($customer->cm_firebase_token)) {
+                    if (isset($request->cm_firebase_token)) {
                         $data = [
                             'title' => translate('messages.password_reset'),
                             'description' => translate('messages.your_reset_password_otp_is').' '.$token,
@@ -91,7 +89,7 @@ class PasswordResetController extends Controller
                             'image' => '',
                             'type' => 'otp'
                         ];
-                        Helpers::send_push_notif_to_device($customer->cm_firebase_token, $data);
+                        Helpers::send_push_notif_to_device($request->cm_firebase_token, $data);
 
                         DB::table('user_notifications')->insert([
                             'data' => json_encode($data),

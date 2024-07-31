@@ -20,8 +20,8 @@ class AdvertisementController extends Controller
 
         try {
             $Advertisement->each(function ($advertisement) {
-                $advertisement->reviews_comments_count = (int) $advertisement->store->reviews_comments()->count();
-                $reviewsInfo = $advertisement->store->reviews()
+                $advertisement->reviews_comments_count = (int) $advertisement?->store?->reviews_comments()->count();
+                $reviewsInfo = $advertisement?->store?->reviews()
                 ->selectRaw('avg(reviews.rating) as average_rating, count(reviews.id) as total_reviews, items.store_id')
                 ->groupBy('items.store_id')
                 ->first();

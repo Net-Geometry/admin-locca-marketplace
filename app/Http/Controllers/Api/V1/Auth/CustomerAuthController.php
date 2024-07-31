@@ -325,7 +325,7 @@ class CustomerAuthController extends Controller
                     $response = SMS_module::send($request['phone'],$otp);
                 }
             }
-            if(!$user->cm_firebase_token){
+            if(!$user->cm_firebase_token || $user->cm_firebase_token == '@'  ){
                 $user->cm_firebase_token = $request->cm_firebase_token;
                 $user->save();
                 }
@@ -462,19 +462,18 @@ class CustomerAuthController extends Controller
                         }
                     }
 
-                        if(!$user->cm_firebase_token){
+                        if(!$user->cm_firebase_token || $user->cm_firebase_token == '@' ){
                             $user->cm_firebase_token = $request->cm_firebase_token;
                         DB::table('users')->where('id', $user->id)->update(['cm_firebase_token' => $request->cm_firebase_token]);
                         }
                     if(Helpers::getNotificationStatusData('customer','customer_login_otp','push_notification_status')){
-
-                            if (isset($user->cm_firebase_token)) {
-                                $data = [
-                                    'title' => translate('messages.verification_otp'),
-                                    'description' => translate('messages.your_verification_otp_is').' '.$otp,
-                                    'order_id' => '',
-                                    'image' => '',
-                                    'type' => 'otp'
+                        if (isset($user->cm_firebase_token)) {
+                            $data = [
+                                'title' => translate('messages.verification_otp'),
+                                'description' => translate('messages.your_verification_otp_is').' '.$otp,
+                                'order_id' => '',
+                                'image' => '',
+                                'type' => 'otp'
                                 ];
                                 Helpers::send_push_notif_to_device($user->cm_firebase_token, $data);
 

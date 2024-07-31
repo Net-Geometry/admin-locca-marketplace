@@ -5477,4 +5477,9 @@
   'razor_pay' => 'Razor pay',
   'Your_Security_Pin_is' => 'Your Security Pin is',
   'order_canceled_successfully' => 'Order canceled successfully',
+  'Order_Verification' => 'Order Verification',
+  'your_order_is_ready_to_be_delivered,_plesae_share_your_otp_with_delivery_man.' => 'Your order is ready to be delivered, plesae share your otp with delivery man.',
+  'otp:' => 'Otp:',
+  'order_id:' => 'Order id:',
+  'order_ready_to_be_delivered' => 'Order ready to be delivered',
 );

@@ -397,7 +397,7 @@ class DeliverymanController extends Controller
                     'description' => $value,
                     'order_id' => $order->id,
                     'image' => '',
-                    'type' => 'order_status',
+                    'type' => 'otp',
                 ];
 
                 Helpers::send_push_notif_to_device($fcm_token , $data);
