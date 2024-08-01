@@ -5506,4 +5506,10 @@
   'Campaign_Request_Has_Been_Approved_By_Admin' => 'Campaign Request Has Been Approved By Admin',
   'Campaign_Request_Approved' => 'Campaign Request Approved',
   'store_remove_from_campaign' => 'Store remove from campaign',
+  'Withdraw_approved' => 'Withdraw approved',
+  'Withdraw_request_approved_by_admin' => 'Withdraw request approved by admin',
+  'insufficient_balance' => 'Insufficient balance',
+  'withdraw_request_placed_successfully' => 'Withdraw request placed successfully',
+  'Withdraw_rejected' => 'Withdraw rejected',
+  'Withdraw_request_rejected_by_admin' => 'Withdraw request rejected by admin',
 );
