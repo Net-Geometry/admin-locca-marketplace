@@ -594,9 +594,9 @@ class OrderController extends Controller
                     $data = [
                         'title' => translate('messages.order_push_title'),
                         'description' => translate('messages.you_are_unassigned_from_a_order'),
-                        'order_id' => $order->id,
+                        'order_id' => '',
                         'image' => '',
-                        'type' => 'order_status'
+                        'type' => 'unassign'
                     ];
                     Helpers::send_push_notif_to_device($dm->fcm_token, $data);
 

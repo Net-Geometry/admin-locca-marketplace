@@ -508,7 +508,7 @@ class SubscriptionController extends Controller
         ]);
 
         try {
-            $store=Store::where('id',$id)->select(['id','name','email'])->first();
+            $store=Store::where('id',$id)->first();
 
 
 
