@@ -52,6 +52,12 @@ trait NotificationTrait
                     "notification" => [
                         "title" => (string)$data['title'],
                         "body" => (string)$data['description'],
+                        "image" => (string)$data['image'],
+                    ],
+                    "android" => [
+                        "notification" => [
+                            "channelId" => '6ammart',
+                        ]
                     ],
                     "apns" => [
                         "payload" => [
@@ -78,6 +84,12 @@ trait NotificationTrait
                     "notification" => [
                         "title" => (string)$data['title'],
                         "body" => (string)$data['description'],
+                        "image" => (string)$data['image'],
+                    ],
+                    "android" => [
+                        "notification" => [
+                            "channelId" => '6ammart',
+                        ]
                     ],
                     "apns" => [
                         "payload" => [
@@ -144,6 +156,12 @@ trait NotificationTrait
                 "notification" => [
                     'title' => (string)$data['title'],
                     'body' => (string)$data['description'],
+                    "image" => (string)$data['image'],
+                ],
+                "android" => [
+                    "notification" => [
+                        "channelId" => '6ammart',
+                    ]
                 ],
                 "apns" => [
                     "payload" => [

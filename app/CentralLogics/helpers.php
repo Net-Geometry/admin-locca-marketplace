@@ -1163,6 +1163,12 @@ class Helpers
                 "notification" => [
                     'title' => (string)$data['title'],
                     'body' => (string)$data['description'],
+                    "image" => (string)$data['image'],
+                ],
+                "android" => [
+                    "notification" => [
+                        "channelId" => '6ammart',
+                    ]
                 ],
                 "apns" => [
                     "payload" => [
@@ -1222,6 +1228,12 @@ class Helpers
                     "notification" => [
                         "title" => (string)$data['title'],
                         "body" => (string)$data['description'],
+                        "image" => (string)$data['image'],
+                    ],
+                    "android" => [
+                        "notification" => [
+                            "channelId" => '6ammart',
+                        ]
                     ],
                     "apns" => [
                         "payload" => [
@@ -1248,6 +1260,12 @@ class Helpers
                     "notification" => [
                         "title" => (string)$data['title'],
                         "body" => (string)$data['description'],
+                        "image" => (string)$data['image'],
+                    ],
+                    "android" => [
+                        "notification" => [
+                            "channelId" => '6ammart',
+                        ]
                     ],
                     "apns" => [
                         "payload" => [
