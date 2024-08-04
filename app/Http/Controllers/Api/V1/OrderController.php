@@ -1960,7 +1960,7 @@ class OrderController extends Controller
 
 
                 $data = [
-                    'title' => translate('messages.order_push_title'),
+                    'title' => translate('Order_Notification'),
                     'description' => translate('messages.new_order_push_description'),
                     'order_id' => $order->id,
                     'image' => '',

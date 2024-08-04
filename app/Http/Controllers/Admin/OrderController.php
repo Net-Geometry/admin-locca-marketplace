@@ -592,7 +592,7 @@ class OrderController extends Controller
                 $dm->save();
                 if (Helpers::getNotificationStatusData('deliveryman','deliveryman_order_assign_unassign','push_notification_status')) {
                     $data = [
-                        'title' => translate('messages.order_push_title'),
+                        'title' => translate('Order_Notification'),
                         'description' => translate('messages.you_are_unassigned_from_a_order'),
                         'order_id' => '',
                         'image' => '',
@@ -625,7 +625,7 @@ class OrderController extends Controller
             try {
                 if ($value  && Helpers::getNotificationStatusData('customer','customer_order_notification','push_notification_status') && $fcm_token ) {
                     $data = [
-                        'title' => translate('messages.order_push_title'),
+                        'title' => translate('Order_Notification'),
                         'description' => $value,
                         'order_id' => $order['id'],
                         'image' => '',
@@ -642,7 +642,7 @@ class OrderController extends Controller
 
                 if(Helpers::getNotificationStatusData('deliveryman','deliveryman_order_assign_unassign','push_notification_status')){
                     $data = [
-                        'title' => translate('messages.order_push_title'),
+                        'title' => translate('Order_Notification'),
                         'description' => translate('messages.you_are_assigned_to_a_order'),
                         'order_id' => $order['id'],
                         'image' => '',

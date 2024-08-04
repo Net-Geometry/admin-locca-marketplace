@@ -1535,7 +1535,7 @@ class Helpers
 
             if((in_array($order->payment_method, ['cash_on_delivery', 'offline_payment'])  && $order->order_status == 'pending' )||(!in_array($order->payment_method, ['cash_on_delivery', 'offline_payment']) && $order->order_status == 'confirmed' )){
                 $data = [
-                    'title' => translate('messages.order_push_title'),
+                    'title' => translate('Order_Notification'),
                     'description' => translate('messages.new_order_push_description'),
                     'order_id' => $order->id,
                     'image' => '',
@@ -1566,7 +1566,7 @@ class Helpers
 
             if (self::getNotificationStatusData('customer','customer_order_notification','push_notification_status') &&  $value && $user_fcm) {
                 $data = [
-                    'title' => translate('messages.order_push_title'),
+                    'title' => translate('Order_Notification'),
                     'description' => $value,
                     'order_id' => $order->id,
                     'image' => '',
@@ -1583,7 +1583,7 @@ class Helpers
 
             if ($status == 'picked_up') {
                 $data = [
-                    'title' => translate('messages.order_push_title'),
+                    'title' => translate('Order_Notification'),
                     'description' => $value,
                     'order_id' => $order->id,
                     'image' => '',
@@ -1603,7 +1603,7 @@ class Helpers
             if ($order->order_type == 'delivery' && !$order->scheduled && $status == 'pending' && $order->payment_method == 'cash_on_delivery' && config('order_confirmation_model') == 'deliveryman') {
                 if ($order->store->sub_self_delivery && $push_notification_status) {
                     $data = [
-                        'title' => translate('messages.order_push_title'),
+                        'title' => translate('Order_Notification'),
                         'description' => translate('messages.new_order_push_description'),
                         'order_id' => $order->id,
                         'module_id' => $order->module_id,
@@ -1626,7 +1626,7 @@ class Helpers
                     }
                 } else {
                     $data = [
-                        'title' => translate('messages.order_push_title'),
+                        'title' => translate('Order_Notification'),
                         'description' => translate('messages.new_order_push_description'),
                         'order_id' => $order->id,
                         'module_id' => $order->module_id,
@@ -1649,7 +1649,7 @@ class Helpers
 
             if ($order->order_type == 'parcel' && in_array($order->order_status, ['pending', 'confirmed'])) {
                 $data = [
-                    'title' => translate('messages.order_push_title'),
+                    'title' => translate('Order_Notification'),
                     'description' => translate('messages.new_order_push_description'),
                     'order_id' => $order->id,
                     'module_id' => $order->module_id,
@@ -1670,7 +1670,7 @@ class Helpers
 
             if ($order->order_type == 'delivery' && !$order->scheduled && $order->order_status == 'pending' && $order->payment_method == 'cash_on_delivery' && config('order_confirmation_model') == 'store') {
                 $data = [
-                    'title' => translate('messages.order_push_title'),
+                    'title' => translate('Order_Notification'),
                     'description' => translate('messages.new_order_push_description'),
                     'order_id' => $order->id,
                     'module_id' => $order->module_id,
@@ -1694,7 +1694,7 @@ class Helpers
 
             if (!$order->scheduled && (($order->order_type == 'take_away' && $order->order_status == 'pending') || ($order->payment_method != 'cash_on_delivery' && $order->order_status == 'confirmed'))) {
                 $data = [
-                    'title' => translate('messages.order_push_title'),
+                    'title' => translate('Order_Notification'),
                     'description' => translate('messages.new_order_push_description'),
                     'order_id' => $order->id,
                     'image' => '',
@@ -1716,7 +1716,7 @@ class Helpers
             if ($order->order_status == 'confirmed' && $order->order_type != 'take_away' && config('order_confirmation_model') == 'deliveryman' && $order->payment_method == 'cash_on_delivery') {
                 if ($order->store->sub_self_delivery) {
                     $data = [
-                        'title' => translate('messages.order_push_title'),
+                        'title' => translate('Order_Notification'),
                         'description' => translate('messages.new_order_push_description'),
                         'order_id' => $order->id,
                         'module_id' => $order->module_id,
@@ -1727,7 +1727,7 @@ class Helpers
                     self::send_push_notif_to_topic($data, "restaurant_dm_" . $order->store_id, 'new_order',null);
                 } else {
                     $data = [
-                        'title' => translate('messages.order_push_title'),
+                        'title' => translate('Order_Notification'),
                         'description' => translate('messages.new_order_push_description'),
                         'order_id' => $order->id,
                         'module_id' => $order->module_id,
@@ -1751,7 +1751,7 @@ class Helpers
 
             if ($order->order_type == 'delivery' && !$order->scheduled && $order->order_status == 'confirmed'  && ($order->payment_method != 'cash_on_delivery' || config('order_confirmation_model') == 'store')) {
                 $data = [
-                    'title' => translate('messages.order_push_title'),
+                    'title' => translate('Order_Notification'),
                     'description' => translate('messages.new_order_push_description'),
                     'order_id' => $order->id,
                     'module_id' => $order->module_id,
@@ -1774,7 +1774,7 @@ class Helpers
 
             if (in_array($order->order_status, ['processing', 'handover']) && $order->delivery_man && self::getNotificationStatusData('deliveryman','deliveryman_order_notification','push_notification_status')) {
                 $data = [
-                    'title' => translate('messages.order_push_title'),
+                    'title' => translate('Order_Notification'),
                     'description' => $order->order_status == 'processing' ? translate('messages.Proceed_for_cooking') : translate('messages.ready_for_delivery'),
                     'order_id' => $order->id,
                     'image' => '',

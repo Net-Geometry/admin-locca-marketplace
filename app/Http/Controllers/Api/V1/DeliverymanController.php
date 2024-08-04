@@ -312,7 +312,7 @@ class DeliverymanController extends Controller
             if($value && $fcm_token && Helpers::getNotificationStatusData('customer','customer_order_notification','push_notification_status'))
             {
                 $data = [
-                    'title' =>translate('messages.order_push_title'),
+                    'title' =>translate('Order_Notification'),
                     'description' => $value,
                     'order_id' => $order['id'],
                     'image' => '',

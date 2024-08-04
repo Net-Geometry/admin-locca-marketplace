@@ -2614,7 +2614,7 @@
   'Order_Notification_Type' => 'Order Notification Type',
   'successfully_updated_to_changes_restart_app' => 'Successfully updated to changes restart app',
   'updated_successfully' => 'Updated successfully',
-  'order_push_title' => 'Order push title',
+  'Order_Notification' => 'Order Notification',
   'new_order_push_description' => 'New order push description',
   'order_placed_successfully' => 'Order placed successfully',
   'Cancelled_By' => 'Cancelled By',
