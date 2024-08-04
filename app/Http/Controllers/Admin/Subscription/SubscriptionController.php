@@ -147,6 +147,7 @@ class SubscriptionController extends Controller
 
     public function update(SubscriptionPackage $subscriptionackage, Request $request)
     {
+
         $request->validate([
             'package_name' => 'max:191|unique:subscription_packages,package_name,'.$subscriptionackage->id,
             'package_name.0' => 'required',
@@ -186,11 +187,9 @@ class SubscriptionController extends Controller
 
 
         try {
-            if (config('mail.status') && Helpers::get_mail_status('subscription_plan_upadte_mail_status_store') == '1') {
-            $subscribers= StoreSubscription::with('store')->select(['store_id'])->where(['package_id' =>  $subscriptionackage->id,'status'=> 1])->get();
 
+            $subscribers= StoreSubscription::with('store.vendor')->select(['store_id'])->where(['package_id' =>  $subscriptionackage->id,'status'=> 1])->get();
             foreach ($subscribers as $subscriber){
-
                 if( Helpers::getNotificationStatusData('store','store_subscription_plan_update','push_notification_status',$subscriber?->store->id)  &&  $subscriber?->store?->vendor?->firebase_token){
                     $data = [
                         'title' => translate('subscription_canceled'),
@@ -209,11 +208,11 @@ class SubscriptionController extends Controller
                     ]);
                 }
 
-                    if(Helpers::getNotificationStatusData('store','store_subscription_plan_update','mail_status' ,$subscriber?->store?->id)){
+                    if(config('mail.status') && Helpers::get_mail_status('subscription_plan_upadte_mail_status_store') == '1' &&  Helpers::getNotificationStatusData('store','store_subscription_plan_update','mail_status' ,$subscriber?->store?->id)){
                         Mail::to($subscriber?->store?->email)->send(new SubscriptionPlanUpdate($subscriber?->store?->name));
                     }
                 }
-            }
+
         } catch (\Exception $ex) {
             info($ex->getMessage());
         }
