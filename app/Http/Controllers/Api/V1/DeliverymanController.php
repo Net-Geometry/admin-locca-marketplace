@@ -159,7 +159,7 @@ class DeliverymanController extends Controller
             $userinfo->save();
         }
 
-        return response()->json(['message' => 'successfully updated!'], 200);
+        return response()->json(['message' => translate('successfully updated!')], 200);
     }
 
     public function activeStatus(Request $request)
@@ -341,7 +341,7 @@ class DeliverymanController extends Controller
             'updated_at' => now()
             ]);
 
-        return response()->json(['message' => 'location recorded'], 200);
+        return response()->json(['message' => translate('location recorded')], 200);
     }
 
     public function get_order_history(Request $request)
@@ -474,7 +474,7 @@ class DeliverymanController extends Controller
         {
             return response()->json([
                 'errors' => [
-                    ['code' => 'otp', 'message' => 'Not matched']
+                    ['code' => 'otp', 'message' => translate('Not matched')]
                 ]
             ], 406);
         }
@@ -483,7 +483,7 @@ class DeliverymanController extends Controller
         {
             return response()->json([
                 'errors' => [
-                    ['code' => 'otp', 'message' => 'Not matched']
+                    ['code' => 'otp', 'message' => translate('Not matched')]
                 ]
             ], 406);
         }
@@ -576,7 +576,7 @@ class DeliverymanController extends Controller
 
         Helpers::send_order_notification($order);
 
-        return response()->json(['message' => 'Status updated'], 200);
+        return response()->json(['message' =>  translate('Status updated')], 200);
     }
 
     public function get_order_details(Request $request)
@@ -706,11 +706,11 @@ class DeliverymanController extends Controller
             Order::where(['delivery_man_id' => $dm['id'], 'id' => $request['order_id']])->update([
                 'payment_status' => $request['status']
             ]);
-            return response()->json(['message' => 'Payment status updated'], 200);
+            return response()->json(['message' => translate('Payment status updated') ], 200);
         }
         return response()->json([
             'errors' => [
-                ['code' => 'order', 'message' => 'not found!']
+                ['code' => 'order', 'message' => translate('not found!')]
             ]
         ], 404);
     }
@@ -729,7 +729,7 @@ class DeliverymanController extends Controller
             'fcm_token' => $request['fcm_token']
         ]);
 
-        return response()->json(['message'=>'successfully updated!'], 200);
+        return response()->json(['message'=> translate('successfully updated!')], 200);
     }
 
     public function get_notifications(Request $request){
@@ -1053,7 +1053,7 @@ class DeliverymanController extends Controller
 
         DB::table('disbursement_withdrawal_methods')->insert($data);
 
-        return response()->json(['message'=>'successfully added!'], 200);
+        return response()->json(['message'=>translate('successfully added!')], 200);
     }
 
     public function disbursement_withdrawal_method_default(Request $request)
