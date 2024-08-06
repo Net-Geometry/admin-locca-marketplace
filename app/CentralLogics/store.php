@@ -6,8 +6,10 @@ use Exception;
 use App\Models\Store;
 use App\Models\Review;
 use App\Models\DataSetting;
-use App\Models\StoreSchedule;
+use App\Models\PriorityList;
 
+use App\Models\StoreSchedule;
+use App\Models\BusinessSetting;
 use App\Models\OrderTransaction;
 use Illuminate\Support\Facades\DB;
 
@@ -43,15 +45,15 @@ class StoreLogic
         }
 
             if($all_stores_default_status != '1') {
-                if($all_stores_sort_by_unavailable == 'remove'){
+                if($all_stores_sort_by_temp_closed == 'remove'){
                     $query = $query->where('active', '>', 0);
-                }elseif($all_stores_sort_by_unavailable == 'last'){
+                }elseif($all_stores_sort_by_temp_closed == 'last'){
                     $query = $query->orderByDesc('active');
                 }
 
-                if($all_stores_sort_by_temp_closed == 'remove'){
+                if($all_stores_sort_by_unavailable == 'remove'){
                     $query = $query->having('open', '>', 0);
-                }elseif($all_stores_sort_by_temp_closed == 'last'){
+                }elseif($all_stores_sort_by_unavailable == 'last'){
                     $query = $query->orderBy('open', 'desc');
                 }
 
@@ -175,7 +177,15 @@ class StoreLogic
 
     public static function get_latest_stores($zone_id, $limit = 50, $offset = 1, $type='all',$longitude=0,$latitude=0)
     {
-        $paginator = Store::withOpen($longitude??0,$latitude??0)
+    $latest_stores_default_status =BusinessSetting::where('key', 'latest_stores_default_status')->first()?->value ?? 1;
+    $latest_stores_sort_by_general =PriorityList::where('name', 'latest_stores_sort_by_general')->where('type','general')->first()?->value ?? '';
+    $latest_stores_sort_by_unavailable =PriorityList::where('name', 'latest_stores_sort_by_unavailable')->where('type','unavailable')->first()?->value ?? '';
+    $latest_stores_sort_by_temp_closed =PriorityList::where('name', 'latest_stores_sort_by_temp_closed')->where('type','temp_closed')->first()?->value ?? '';
+
+
+
+
+    $query = Store::withOpen($longitude??0,$latitude??0)
             ->withCount(['items','campaigns'])
             ->with(['discount'=>function($q){
                 return $q->validate();
@@ -189,9 +199,53 @@ class StoreLogic
                 }
             })
             ->Active()
-            ->type($type)
-            ->latest()
-            ->paginate($limit??50, ['*'], 'page', $offset??1);
+            ->type($type);
+
+
+
+            if($latest_stores_default_status == '1'){
+                $query = $query->latest();
+            } else{
+
+                if($latest_stores_default_status != '1') {
+                    if($latest_stores_sort_by_unavailable == 'remove'){
+                        $query = $query->where('active', '>', 0);
+                    }elseif($latest_stores_sort_by_unavailable == 'last'){
+                        $query = $query->orderByDesc('active');
+                    }
+
+                    if($latest_stores_sort_by_temp_closed == 'remove'){
+                        $query = $query->having('open', '>', 0);
+                    }elseif($latest_stores_sort_by_temp_closed == 'last'){
+                        $query = $query->orderBy('open', 'desc');
+                    }
+
+                    if($latest_stores_sort_by_general == 'rating') {
+                        $query = $query->selectSub(function ($query) {
+                            $query->selectRaw('AVG(reviews.rating)')
+                                ->from('reviews')
+                                ->join('items', 'items.id', '=', 'reviews.item_id')
+                                ->whereColumn('items.store_id', 'stores.id')
+                                ->groupBy('items.store_id');
+                        }, 'avg_r')->orderBy('avg_r', 'desc');
+                    }elseif($latest_stores_sort_by_general == 'review_count') {
+                        $query = $query->orderByDesc('reviews_count');
+                    }elseif($latest_stores_sort_by_general == 'order_count') {
+                        $query = $query->orderBy('orders_count', 'desc');
+                    }elseif($latest_stores_sort_by_general == 'latest_created') {
+                        $query = $query->latest();
+                    }elseif($latest_stores_sort_by_general == 'first_created') {
+                        $query = $query->oldest();
+                    }elseif($latest_stores_sort_by_general == 'a_to_z') {
+                        $query = $query->orderBy('name');
+                    }elseif($latest_stores_sort_by_general == 'z_to_a') {
+                        $query = $query->orderByDesc('name');
+                    }
+                }
+            }
+
+
+            $paginator = $query->paginate($limit??50, ['*'], 'page', $offset??1);
 
         return [
             'total_size' => $paginator->total(),
