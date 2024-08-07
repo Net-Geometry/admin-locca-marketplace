@@ -159,7 +159,7 @@ active
                                             {{ translate('View Ads') }}
                                         </a>
 
-                                        @if ($add->active == 0)
+                                        @if ($add->active == 0 || in_array($add->status ,['pending']))
                                         <a class="dropdown-item d-flex gap-2 align-items-center" href="{{ route('vendor.advertisement.edit',$add->id) }}">
                                             <i class="tio-edit"></i>
                                             {{ translate('Edit & Resubmit Ads') }}

@@ -1040,7 +1040,8 @@ class VendorController extends Controller
         }
         $vendor = $request['vendor'];
 
-        $order = Order::whereHas('store.vendor', function($query) use($vendor){
+        $order = Order::where('id' ,$request->order_id)
+        ->whereHas('store.vendor', function($query) use($vendor){
             $query->where('id', $vendor->id);
         })
         ->with('customer')
@@ -1084,7 +1085,7 @@ class VendorController extends Controller
                     'description' => $value,
                     'order_id' => $order->id,
                     'image' => '',
-                    'type' => 'order_status',
+                    'type' => 'otp',
                 ];
                 Helpers::send_push_notif_to_device($fcm_token , $data);
                 DB::table('user_notifications')->insert([

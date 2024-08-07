@@ -616,7 +616,7 @@ class OrderLogic
                 'description' => translate('The_cashback_amount_successfully_added_to_your_wallet') ,
                 'order_id' => $order->id,
                 'image' => '',
-                'type' => 'csahback',
+                'type' => 'cashback',
             ];
 
             if($order->customer?->cm_firebase_token && Helpers::getNotificationStatusData('customer','customer_cashback','push_notification_status')){

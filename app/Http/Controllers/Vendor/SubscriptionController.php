@@ -48,7 +48,8 @@ class SubscriptionController extends Controller
         ]);
 
         try {
-            $store=Store::where('id',Helpers::get_store_id())->select(['id','name','email'])->first();
+            $store=Store::where('id',Helpers::get_store_id())->first();
+
             if( Helpers::getNotificationStatusData('store','store_subscription_cancel','push_notification_status',$store->id)  &&  $store?->vendor?->firebase_token){
                 $data = [
                     'title' => translate('subscription_canceled'),

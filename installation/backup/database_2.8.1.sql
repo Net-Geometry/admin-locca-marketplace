@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Aug 07, 2024 at 11:41 AM
+-- Generation Time: Jun 06, 2024 at 12:42 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -300,39 +300,6 @@ CREATE TABLE `admin_wallets` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `advertisements`
---
-
-CREATE TABLE `advertisements` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `store_id` bigint(20) UNSIGNED NOT NULL,
-  `module_id` bigint(20) UNSIGNED DEFAULT NULL,
-  `module_type` varchar(255) DEFAULT NULL,
-  `add_type` enum('video_promotion','store_promotion') NOT NULL DEFAULT 'store_promotion',
-  `title` varchar(255) DEFAULT NULL,
-  `description` text DEFAULT NULL,
-  `start_date` date NOT NULL,
-  `end_date` date NOT NULL,
-  `pause_note` text DEFAULT NULL,
-  `cancellation_note` text DEFAULT NULL,
-  `cover_image` varchar(255) DEFAULT NULL,
-  `profile_image` varchar(255) DEFAULT NULL,
-  `video_attachment` varchar(255) DEFAULT NULL,
-  `priority` int(11) DEFAULT NULL,
-  `is_rating_active` tinyint(1) NOT NULL DEFAULT 0,
-  `is_review_active` tinyint(1) NOT NULL DEFAULT 0,
-  `is_paid` tinyint(1) NOT NULL DEFAULT 0,
-  `is_updated` tinyint(1) NOT NULL DEFAULT 0,
-  `created_by_id` bigint(20) UNSIGNED NOT NULL,
-  `created_by_type` varchar(255) NOT NULL,
-  `status` enum('pending','running','approved','expired','denied','paused') NOT NULL DEFAULT 'pending',
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `attributes`
 --
 
@@ -515,7 +482,7 @@ INSERT INTO `business_settings` (`id`, `key`, `value`, `created_at`, `updated_at
 (116, 'tax_included', NULL, NULL, NULL),
 (117, 'partial_payment_status', NULL, NULL, NULL),
 (118, 'partial_payment_method', 'both', NULL, NULL),
-(119, 'order_notification_type', 'manual', NULL, NULL),
+(119, 'order_notification_type', 'firebase', NULL, NULL),
 (120, 'free_delivery_over_status', NULL, NULL, NULL),
 (121, 'additional_charge_status', NULL, NULL, NULL),
 (122, 'additional_charge_name', 'Additional Charge', NULL, NULL),
@@ -544,8 +511,7 @@ INSERT INTO `business_settings` (`id`, `key`, `value`, `created_at`, `updated_at
 (145, 'subscription_deadline_warning_days', '7', '2024-06-05 23:24:02', '2024-06-05 23:24:02'),
 (146, 'subscription_deadline_warning_message', 'Your subscription ending soon. Please renew to continue access.', '2024-06-05 23:24:02', '2024-06-05 23:27:22'),
 (147, 'subscription_usage_max_time', '80', '2024-06-05 23:24:14', '2024-06-05 23:24:14'),
-(148, 'apple_login', '[{\"login_medium\":\"apple\",\"client_id\":\"\",\"client_secret\":\"\",\"team_id\":\"\",\"key_id\":\"\",\"service_file\":\"\",\"redirect_url\":\"\",\"status\":\"\"}]', '2024-06-05 23:39:00', '2024-06-05 23:39:00'),
-(149, 'country_picker_status', '1', NULL, NULL);
+(148, 'apple_login', '[{\"login_medium\":\"apple\",\"client_id\":\"\",\"client_secret\":\"\",\"team_id\":\"\",\"key_id\":\"\",\"service_file\":\"\",\"redirect_url\":\"\",\"status\":\"\"}]', '2024-06-05 23:39:00', '2024-06-05 23:39:00');
 
 -- --------------------------------------------------------
 
@@ -1780,13 +1746,7 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (153, '2024_05_22_115717_create_subscription_billing_and_refund_histories_table', 48),
 (154, '2024_05_26_120621_add_subscription_model_to_order_transaction_table', 48),
 (155, '2024_05_28_110550_add_change_file_column_to_messages_table', 48),
-(156, '2024_05_28_112559_add_change_order_attachment_column_to_orders_table', 48),
-(157, '2024_07_07_111841_create_advertisements_table', 49),
-(158, '2024_07_07_112117_create_notification_settings_table', 49),
-(159, '2024_07_07_112203_create_store_notification_settings_table', 49),
-(160, '2024_07_10_165721_create_priority_lists_table', 49),
-(161, '2024_07_14_182931_add_package_id_col_stores_table', 49),
-(162, '2024_07_15_131402_add_replied_at_col_to_reviews_table', 49);
+(156, '2024_05_28_112559_add_change_order_attachment_column_to_orders_table', 48);
 
 -- --------------------------------------------------------
 
@@ -1990,88 +1950,6 @@ INSERT INTO `notification_messages` (`id`, `module_type`, `key`, `message`, `sta
 (49, 'parcel', 'delivery_boy_assign_message', 'Your order {orderId}  has been assigned to a delivery man', 1, '2023-01-17 17:01:02', '2023-06-12 19:29:42'),
 (50, 'parcel', 'delivery_boy_delivered_message', 'parcel id  {orderId}  delivered successfully', 1, '2023-01-17 17:01:02', '2023-06-12 19:29:42'),
 (51, 'parcel', 'order_cancled_message', 'Order is canceled by your request', 1, '2023-01-17 17:01:02', '2023-01-17 17:01:02');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `notification_settings`
---
-
-CREATE TABLE `notification_settings` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `title` varchar(255) DEFAULT NULL,
-  `sub_title` text DEFAULT NULL,
-  `key` varchar(255) DEFAULT NULL,
-  `type` enum('admin','customer','store','deliveryman') NOT NULL DEFAULT 'admin',
-  `mail_status` enum('active','inactive','disable') NOT NULL DEFAULT 'disable',
-  `sms_status` enum('active','inactive','disable') NOT NULL DEFAULT 'disable',
-  `push_notification_status` enum('active','inactive','disable') NOT NULL DEFAULT 'disable',
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `notification_settings`
---
-
-INSERT INTO `notification_settings` (`id`, `title`, `sub_title`, `key`, `type`, `mail_status`, `sms_status`, `push_notification_status`, `created_at`, `updated_at`) VALUES
-(1, 'forget_password', 'Sent_notification_on_forget_password', 'forget_password', 'admin', 'active', 'active', 'disable', '2024-08-06 22:40:34', '2024-08-06 22:40:34'),
-(2, 'deliveryman_self_registration', 'Sent_notification_on_deliveryman_self_registration', 'deliveryman_self_registration', 'admin', 'active', 'disable', 'disable', '2024-08-06 22:40:34', '2024-08-06 22:40:34'),
-(3, 'store_self_registration', 'Sent_notification_on_store_self_registration', 'store_self_registration', 'admin', 'active', 'disable', 'disable', '2024-08-06 22:40:34', '2024-08-06 22:40:34'),
-(4, 'campaign_join_request', 'Sent_notification_on_campaign_join_request', 'campaign_join_request', 'admin', 'active', 'disable', 'disable', '2024-08-06 22:40:34', '2024-08-06 22:40:34'),
-(5, 'withdraw_request', 'Sent_notification_on_withdraw_request', 'withdraw_request', 'admin', 'active', 'disable', 'disable', '2024-08-06 22:40:34', '2024-08-06 22:40:34'),
-(6, 'order_refund_request', 'Sent_notification_on_order_refund_request', 'order_refund_request', 'admin', 'active', 'disable', 'disable', '2024-08-06 22:40:34', '2024-08-06 22:40:34'),
-(7, 'advertisement_add', 'Sent_notification_on_advertisement_add', 'advertisement_add', 'admin', 'active', 'disable', 'disable', '2024-08-06 22:40:34', '2024-08-06 22:40:34'),
-(8, 'advertisement_update', 'Sent_notification_on_advertisement_update', 'advertisement_update', 'admin', 'active', 'disable', 'disable', '2024-08-06 22:40:34', '2024-08-06 22:40:34'),
-(9, 'deliveryman_registration', 'Sent_notification_on_deliveryman_registration', 'deliveryman_registration', 'deliveryman', 'active', 'disable', 'disable', '2024-08-06 22:40:34', '2024-08-06 22:40:34'),
-(10, 'deliveryman_registration_approval', 'Sent_notification_on_deliveryman_registration_approval', 'deliveryman_registration_approval', 'deliveryman', 'active', 'disable', 'disable', '2024-08-06 22:40:34', '2024-08-06 22:40:34'),
-(11, 'deliveryman_registration_deny', 'Sent_notification_on_deliveryman_registration_deny', 'deliveryman_registration_deny', 'deliveryman', 'active', 'disable', 'disable', '2024-08-06 22:40:34', '2024-08-06 22:40:34'),
-(12, 'deliveryman_account_block', 'Sent_notification_on_deliveryman_account_block', 'deliveryman_account_block', 'deliveryman', 'active', 'disable', 'active', '2024-08-06 22:40:34', '2024-08-06 22:40:34'),
-(13, 'deliveryman_account_unblock', 'Sent_notification_on_deliveryman_account_unblock', 'deliveryman_account_unblock', 'deliveryman', 'active', 'disable', 'active', '2024-08-06 22:40:34', '2024-08-06 22:40:34'),
-(14, 'deliveryman_forget_password', 'Sent_notification_on_deliveryman_forget_password', 'deliveryman_forget_password', 'deliveryman', 'active', 'active', 'active', '2024-08-06 22:40:34', '2024-08-06 22:40:34'),
-(15, 'deliveryman_collect_cash', 'Sent_notification_on_deliveryman_collect_cash', 'deliveryman_collect_cash', 'deliveryman', 'active', 'disable', 'active', '2024-08-06 22:40:34', '2024-08-06 22:40:34'),
-(16, 'deliveryman_order_notification', 'Sent_notification_order_notification_to_deliveryman', 'deliveryman_order_notification', 'deliveryman', 'disable', 'disable', 'active', '2024-08-06 22:40:34', '2024-08-06 22:40:34'),
-(17, 'deliveryman_order_assign_or_unassign', 'Sent_notification_on_deliveryman_order_assign_or_unassign', 'deliveryman_order_assign_unassign', 'deliveryman', 'disable', 'disable', 'active', '2024-08-06 22:40:34', '2024-08-06 22:40:34'),
-(18, 'store_registration', 'Sent_notification_on_store_registration', 'store_registration', 'store', 'active', 'disable', 'disable', '2024-08-06 22:40:34', '2024-08-06 22:40:34'),
-(19, 'store_registration_approval', 'Sent_notification_on_store_registration_approval', 'store_registration_approval', 'store', 'active', 'disable', 'disable', '2024-08-06 22:40:34', '2024-08-06 22:40:34'),
-(20, 'store_registration_deny', 'Sent_notification_on_store_registration_deny', 'store_registration_deny', 'store', 'active', 'disable', 'disable', '2024-08-06 22:40:34', '2024-08-06 22:40:34'),
-(21, 'store_account_block', 'Sent_notification_on_store_account_block', 'store_account_block', 'store', 'active', 'disable', 'active', '2024-08-06 22:40:34', '2024-08-06 22:40:34'),
-(22, 'store_account_unblock', 'Sent_notification_on_store_account_unblock', 'store_account_unblock', 'store', 'active', 'disable', 'active', '2024-08-06 22:40:34', '2024-08-06 22:40:34'),
-(23, 'store_withdraw_approve', 'Sent_notification_on_store_withdraw_approve', 'store_withdraw_approve', 'store', 'active', 'disable', 'active', '2024-08-06 22:40:34', '2024-08-06 22:40:34'),
-(24, 'store_withdraw_rejaction', 'Sent_notification_on_store_withdraw_rejaction', 'store_withdraw_rejaction', 'store', 'active', 'disable', 'active', '2024-08-06 22:40:34', '2024-08-06 22:40:34'),
-(25, 'store_campaign_join_request', 'Sent_notification_on_store_campaign_join_request', 'store_campaign_join_request', 'store', 'active', 'disable', 'disable', '2024-08-06 22:40:34', '2024-08-06 22:40:34'),
-(26, 'store_campaign_join_rejaction', 'Sent_notification_on_store_campaign_join_rejaction', 'store_campaign_join_rejaction', 'store', 'active', 'disable', 'active', '2024-08-06 22:40:34', '2024-08-06 22:40:34'),
-(27, 'store_campaign_join_approval', 'Sent_notification_on_store_campaign_join_approval', 'store_campaign_join_approval', 'store', 'active', 'disable', 'active', '2024-08-06 22:40:34', '2024-08-06 22:40:34'),
-(28, 'store_order_notification', 'Sent_notification_on_store_order_notification', 'store_order_notification', 'store', 'disable', 'disable', 'active', '2024-08-06 22:40:34', '2024-08-06 22:40:34'),
-(29, 'store_product_approve', 'Sent_notification_on_store_product_approve', 'store_product_approve', 'store', 'active', 'disable', 'active', '2024-08-06 22:40:34', '2024-08-06 22:40:34'),
-(30, 'store_product_reject', 'Sent_notification_on_store_product_reject', 'store_product_reject', 'store', 'active', 'disable', 'active', '2024-08-06 22:40:34', '2024-08-06 22:40:34'),
-(31, 'store_subscription_success', 'Sent_notification_on_store_subscription_success', 'store_subscription_success', 'store', 'active', 'disable', 'active', '2024-08-06 22:40:34', '2024-08-06 22:40:34'),
-(32, 'store_subscription_renew', 'Sent_notification_on_store_subscription_renew', 'store_subscription_renew', 'store', 'active', 'disable', 'active', '2024-08-06 22:40:34', '2024-08-06 22:40:34'),
-(33, 'store_subscription_shift', 'Sent_notification_on_store_subscription_shift', 'store_subscription_shift', 'store', 'active', 'disable', 'active', '2024-08-06 22:40:34', '2024-08-06 22:40:34'),
-(34, 'store_subscription_cancel', 'Sent_notification_on_store_subscription_cancel', 'store_subscription_cancel', 'store', 'active', 'disable', 'active', '2024-08-06 22:40:34', '2024-08-06 22:40:34'),
-(35, 'store_subscription_plan_update', 'Sent_notification_on_store_subscription_plan_update', 'store_subscription_plan_update', 'store', 'active', 'disable', 'inactive', '2024-08-06 22:40:34', '2024-08-06 22:40:34'),
-(36, 'store_advertisement_create_by_admin', 'Sent_notification_on_store_advertisement_create_by_admin', 'store_advertisement_create_by_admin', 'store', 'active', 'disable', 'active', '2024-08-06 22:40:34', '2024-08-06 22:40:34'),
-(37, 'store_advertisement_approval', 'Sent_notification_on_store_advertisement_approval', 'store_advertisement_approval', 'store', 'active', 'disable', 'active', '2024-08-06 22:40:34', '2024-08-06 22:40:34'),
-(38, 'store_advertisement_deny', 'Sent_notification_on_store_advertisement_deny', 'store_advertisement_deny', 'store', 'active', 'disable', 'active', '2024-08-06 22:40:34', '2024-08-06 22:40:34'),
-(39, 'store_advertisement_resume', 'Sent_notification_on_store_advertisement_resume', 'store_advertisement_resume', 'store', 'active', 'disable', 'active', '2024-08-06 22:40:34', '2024-08-06 22:40:34'),
-(40, 'store_advertisement_pause', 'Sent_notification_on_store_advertisement_pause', 'store_advertisement_pause', 'store', 'active', 'disable', 'active', '2024-08-06 22:40:34', '2024-08-06 22:40:34'),
-(41, 'customer_registration', 'Sent_notification_on_customer_registration', 'customer_registration', 'customer', 'active', 'disable', 'disable', '2024-08-06 22:40:34', '2024-08-06 22:40:34'),
-(42, 'customer_pos_registration', 'Sent_notification_on_customer_pos_registration', 'customer_pos_registration', 'customer', 'active', 'disable', 'disable', '2024-08-06 22:40:34', '2024-08-06 22:40:34'),
-(43, 'customer_registration_otp', 'Sent_notification_on_customer_registration_otp', 'customer_registration_otp', 'customer', 'active', 'active', 'active', '2024-08-06 22:40:34', '2024-08-06 22:40:34'),
-(44, 'customer_login_otp', 'Sent_notification_on_customer_login_otp', 'customer_login_otp', 'customer', 'active', 'active', 'active', '2024-08-06 22:40:34', '2024-08-06 22:40:34'),
-(45, 'customer_forget_password', 'Sent_notification_on_customer_forget_password', 'customer_forget_password', 'customer', 'active', 'active', 'active', '2024-08-06 22:40:34', '2024-08-06 22:40:34'),
-(46, 'customer_order_notification', 'Sent_notification_on_customer_order_notification', 'customer_order_notification', 'customer', 'active', 'disable', 'active', '2024-08-06 22:40:34', '2024-08-06 22:40:34'),
-(47, 'customer_delivery_verification', 'Sent_notification_on_customer_delivery_verification', 'customer_delivery_verification', 'customer', 'active', 'disable', 'active', '2024-08-06 22:40:34', '2024-08-06 22:40:34'),
-(48, 'customer_refund_request_approval', 'Sent_notification_on_customer_refund_request_approval', 'customer_refund_request_approval', 'customer', 'active', 'disable', 'active', '2024-08-06 22:40:34', '2024-08-06 22:40:34'),
-(49, 'customer_refund_request_rejaction', 'Sent_notification_on_customer_refund_request_rejaction', 'customer_refund_request_rejaction', 'customer', 'active', 'disable', 'active', '2024-08-06 22:40:34', '2024-08-06 22:40:34'),
-(50, 'customer_add_fund_to_wallet', 'Sent_notification_on_customer_add_fund_to_wallet', 'customer_add_fund_to_wallet', 'customer', 'active', 'disable', 'active', '2024-08-06 22:40:34', '2024-08-06 22:40:34'),
-(51, 'customer_offline_payment_approve', 'Sent_notification_on_customer_offline_payment_approve', 'customer_offline_payment_approve', 'customer', 'active', 'disable', 'active', '2024-08-06 22:40:34', '2024-08-06 22:40:34'),
-(52, 'customer_offline_payment_deny', 'Sent_notification_on_customer_offline_payment_deny', 'customer_offline_payment_deny', 'customer', 'active', 'disable', 'active', '2024-08-06 22:40:34', '2024-08-06 22:40:34'),
-(53, 'customer_account_block', 'Sent_notification_on_customer_account_block', 'customer_account_block', 'customer', 'active', 'disable', 'active', '2024-08-06 22:40:34', '2024-08-06 22:40:34'),
-(54, 'customer_account_unblock', 'Sent_notification_on_customer_account_unblock', 'customer_account_unblock', 'customer', 'active', 'disable', 'active', '2024-08-06 22:40:34', '2024-08-06 22:40:34'),
-(55, 'customer_cashback', 'Sent_notification_on_customer_cashback', 'customer_cashback', 'customer', 'disable', 'disable', 'active', '2024-08-06 22:40:34', '2024-08-06 22:40:34'),
-(56, 'customer_referral_bonus_earning', 'Sent_notification_on_customer_referral_bonus_earning', 'customer_referral_bonus_earning', 'customer', 'disable', 'disable', 'active', '2024-08-06 22:40:34', '2024-08-06 22:40:34'),
-(57, 'customer_new_referral_join', 'Sent_notification_on_customer_new_referral_join', 'customer_new_referral_join', 'customer', 'disable', 'disable', 'active', '2024-08-06 22:40:34', '2024-08-06 22:40:34');
 
 -- --------------------------------------------------------
 
@@ -2529,21 +2407,6 @@ CREATE TABLE `phone_verifications` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `priority_lists`
---
-
-CREATE TABLE `priority_lists` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `value` varchar(255) NOT NULL,
-  `type` varchar(255) NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `provide_d_m_earnings`
 --
 
@@ -2646,8 +2509,7 @@ CREATE TABLE `reviews` (
   `module_id` bigint(20) UNSIGNED NOT NULL,
   `store_id` bigint(20) UNSIGNED DEFAULT NULL,
   `reply` text DEFAULT NULL,
-  `review_id` varchar(100) DEFAULT NULL,
-  `replied_at` datetime DEFAULT NULL
+  `review_id` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -2700,8 +2562,8 @@ CREATE TABLE `storages` (
 --
 
 INSERT INTO `storages` (`id`, `data_type`, `data_id`, `key`, `value`, `created_at`, `updated_at`) VALUES
-(1, 'App\\Models\\BusinessSetting', '18', NULL, 'public', '2024-08-06 22:40:05', '2024-08-06 22:40:05'),
-(2, 'App\\Models\\BusinessSetting', '96', NULL, 'public', '2024-08-06 22:40:05', '2024-08-06 22:40:05'),
+(1, 'App\\Models\\BusinessSetting', '18', NULL, 'public', '2024-06-05 23:30:13', '2024-06-05 23:30:13'),
+(2, 'App\\Models\\BusinessSetting', '96', NULL, 'public', '2024-06-05 23:30:13', '2024-06-05 23:30:13'),
 (3, 'App\\Models\\BusinessSetting', '142', NULL, 'public', '2024-06-05 23:23:50', '2024-06-05 23:23:50'),
 (4, 'App\\Models\\BusinessSetting', '143', NULL, 'public', '2024-06-05 23:23:50', '2024-06-05 23:23:50'),
 (5, 'App\\Models\\BusinessSetting', '144', NULL, 'public', '2024-06-05 23:23:55', '2024-06-05 23:23:55'),
@@ -2765,16 +2627,15 @@ CREATE TABLE `stores` (
   `meta_image` varchar(100) DEFAULT NULL,
   `announcement` tinyint(1) NOT NULL DEFAULT 0,
   `announcement_message` varchar(255) DEFAULT NULL,
-  `store_business_model` enum('none','commission','subscription','unsubscribed') NOT NULL DEFAULT 'commission',
-  `package_id` bigint(20) UNSIGNED DEFAULT NULL
+  `store_business_model` enum('none','commission','subscription','unsubscribed') NOT NULL DEFAULT 'commission'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `stores`
 --
 
-INSERT INTO `stores` (`id`, `name`, `phone`, `email`, `logo`, `latitude`, `longitude`, `address`, `footer_text`, `minimum_order`, `comission`, `schedule_order`, `status`, `vendor_id`, `created_at`, `updated_at`, `free_delivery`, `rating`, `cover_photo`, `delivery`, `take_away`, `item_section`, `tax`, `zone_id`, `reviews_section`, `active`, `off_day`, `gst`, `self_delivery_system`, `pos_system`, `minimum_shipping_charge`, `delivery_time`, `veg`, `non_veg`, `order_count`, `total_order`, `module_id`, `order_place_to_schedule_interval`, `featured`, `per_km_shipping_charge`, `prescription_order`, `slug`, `maximum_shipping_charge`, `cutlery`, `meta_title`, `meta_description`, `meta_image`, `announcement`, `announcement_message`, `store_business_model`, `package_id`) VALUES
-(1, 'Demo Store', '+101511111111', 'demo.store@gmail.com', '2023-08-16-64dca8ad238c4.png', '23.81695886557418', '90.36934144046135', 'House, road', NULL, '0.00', NULL, 0, 1, 1, '2023-08-15 23:45:01', '2024-08-06 22:40:05', 0, NULL, '2023-08-16-64dca8ad263f6.png', 1, 1, 1, '5.00', 1, 1, 1, ' ', NULL, 0, 0, '0.00', '30-40 min', 1, 1, 0, 0, 1, 0, 1, 0.000, 0, 'demo-store', NULL, 0, NULL, NULL, NULL, 0, NULL, 'commission', NULL);
+INSERT INTO `stores` (`id`, `name`, `phone`, `email`, `logo`, `latitude`, `longitude`, `address`, `footer_text`, `minimum_order`, `comission`, `schedule_order`, `status`, `vendor_id`, `created_at`, `updated_at`, `free_delivery`, `rating`, `cover_photo`, `delivery`, `take_away`, `item_section`, `tax`, `zone_id`, `reviews_section`, `active`, `off_day`, `gst`, `self_delivery_system`, `pos_system`, `minimum_shipping_charge`, `delivery_time`, `veg`, `non_veg`, `order_count`, `total_order`, `module_id`, `order_place_to_schedule_interval`, `featured`, `per_km_shipping_charge`, `prescription_order`, `slug`, `maximum_shipping_charge`, `cutlery`, `meta_title`, `meta_description`, `meta_image`, `announcement`, `announcement_message`, `store_business_model`) VALUES
+(1, 'Demo Store', '+101511111111', 'demo.store@gmail.com', '2023-08-16-64dca8ad238c4.png', '23.81695886557418', '90.36934144046135', 'House, road', NULL, '0.00', NULL, 0, 1, 1, '2023-08-15 23:45:01', '2024-06-05 23:30:13', 0, NULL, '2023-08-16-64dca8ad263f6.png', 1, 1, 1, '5.00', 1, 1, 1, ' ', NULL, 0, 0, '0.00', '30-40 min', 1, 1, 0, 0, 1, 0, 1, 0.000, 0, 'demo-store', NULL, 0, NULL, NULL, NULL, 0, NULL, 'commission');
 
 -- --------------------------------------------------------
 
@@ -2792,25 +2653,6 @@ CREATE TABLE `store_configs` (
   `halal_tag_status` tinyint(1) NOT NULL DEFAULT 0,
   `extra_packaging_status` tinyint(1) NOT NULL DEFAULT 0,
   `extra_packaging_amount` double(23,3) NOT NULL DEFAULT 0.000
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `store_notification_settings`
---
-
-CREATE TABLE `store_notification_settings` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `title` varchar(255) DEFAULT NULL,
-  `sub_title` text DEFAULT NULL,
-  `key` varchar(255) DEFAULT NULL,
-  `store_id` bigint(20) UNSIGNED NOT NULL,
-  `mail_status` enum('active','inactive','disable') NOT NULL DEFAULT 'disable',
-  `sms_status` enum('active','inactive','disable') NOT NULL DEFAULT 'disable',
-  `push_notification_status` enum('active','inactive','disable') NOT NULL DEFAULT 'disable',
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -3468,12 +3310,6 @@ ALTER TABLE `admin_wallets`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `advertisements`
---
-ALTER TABLE `advertisements`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indexes for table `attributes`
 --
 ALTER TABLE `attributes`
@@ -3785,12 +3621,6 @@ ALTER TABLE `notification_messages`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `notification_settings`
---
-ALTER TABLE `notification_settings`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indexes for table `oauth_access_tokens`
 --
 ALTER TABLE `oauth_access_tokens`
@@ -3916,12 +3746,6 @@ ALTER TABLE `phone_verifications`
   ADD UNIQUE KEY `phone_verifications_phone_unique` (`phone`);
 
 --
--- Indexes for table `priority_lists`
---
-ALTER TABLE `priority_lists`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indexes for table `provide_d_m_earnings`
 --
 ALTER TABLE `provide_d_m_earnings`
@@ -3984,12 +3808,6 @@ ALTER TABLE `stores`
 -- Indexes for table `store_configs`
 --
 ALTER TABLE `store_configs`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `store_notification_settings`
---
-ALTER TABLE `store_notification_settings`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -4204,12 +4022,6 @@ ALTER TABLE `admin_wallets`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `advertisements`
---
-ALTER TABLE `advertisements`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1000000;
-
---
 -- AUTO_INCREMENT for table `attributes`
 --
 ALTER TABLE `attributes`
@@ -4231,7 +4043,7 @@ ALTER TABLE `brands`
 -- AUTO_INCREMENT for table `business_settings`
 --
 ALTER TABLE `business_settings`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=150;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=149;
 
 --
 -- AUTO_INCREMENT for table `campaigns`
@@ -4459,7 +4271,7 @@ ALTER TABLE `messages`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=163;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=157;
 
 --
 -- AUTO_INCREMENT for table `modules`
@@ -4508,12 +4320,6 @@ ALTER TABLE `notifications`
 --
 ALTER TABLE `notification_messages`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
-
---
--- AUTO_INCREMENT for table `notification_settings`
---
-ALTER TABLE `notification_settings`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
 
 --
 -- AUTO_INCREMENT for table `oauth_clients`
@@ -4606,12 +4412,6 @@ ALTER TABLE `phone_verifications`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `priority_lists`
---
-ALTER TABLE `priority_lists`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `provide_d_m_earnings`
 --
 ALTER TABLE `provide_d_m_earnings`
@@ -4669,12 +4469,6 @@ ALTER TABLE `stores`
 -- AUTO_INCREMENT for table `store_configs`
 --
 ALTER TABLE `store_configs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `store_notification_settings`
---
-ALTER TABLE `store_notification_settings`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --

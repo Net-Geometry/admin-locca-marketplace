@@ -127,7 +127,7 @@ class AccountTransactionController extends Controller
                     'image' => '',
                     'type' => 'cash_collect'
                 ];
-                Helpers::send_push_notif_to_device($data->fcm_token, $data);
+                Helpers::send_push_notif_to_device($data->fcm_token, $notification_data);
                 DB::table('user_notifications')->insert([
                     'data' => json_encode($notification_data),
                     'delivery_man_id' => $data->id,

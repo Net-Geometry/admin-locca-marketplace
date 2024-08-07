@@ -370,7 +370,7 @@
                             <div class="max-w-353px">
                                 <h4 class="mb-2 mt-4">{{ translate('Recommended Store') }}</h4>
                                 <p class="m-0 fs-12">
-                                    {{ translate('Recommended Stores is the list of customer choices in which customer ordered items most and also highly rated with good reviews') }}
+                                    {{ translate('Recommended Stores is the list of Admin choices which is highly recommended by admin') }}
                                 </p>
                             </div>
                         </div>
@@ -390,7 +390,7 @@
                                                     <i class="tio-info-outined"></i>
                                                 </span>
                                                 <div class="fs-13">
-                                                    {{ translate('This_section_is_currently_sorted_by_recommended_active_stores.') }}
+                                                    {{ translate('This_section_is_currently_sorted_by_oldest_recommended_stores.') }}
                                                 </div>
                                             </label>
                                         </div>
@@ -579,7 +579,7 @@
                             <div class="max-w-353px">
                                 <h4 class="mb-2 mt-4">{{ translate('Special Offers') }}</h4>
                                 <p class="m-0 fs-12">
-                                    {{ translate('Category Wise Items means the latest item items list under a specific category') }}
+                                    {{ translate('The special offers includes the list of discounted items offered for the customers') }}
                                 </p>
                             </div>
                         </div>
@@ -1100,7 +1100,7 @@
                             <div class="max-w-353px">
                                 <h4 class="mb-2 mt-4">{{ translate('Just for You') }}</h4>
                                 <p class="m-0 fs-12">
-                                    {{ translate('The_Item_Category_list_groups_similar_items_together_arranged_with_the_latest_category_first_and_in_alphabetical_order.') }}
+                                    {{ translate('Just for You is the Item campaign includes the list of discounted items offered for the customers.') }}
                                 </p>
                             </div>
                         </div>
@@ -1220,7 +1220,8 @@
                     </div>
                     <br>
 
-                    {{-- New on (latest) --}}
+
+                {{-- New on (products latest)
 
                     <div class="row g-3">
                         <div class="col-lg-6">
@@ -1402,6 +1403,192 @@
                             </div>
                         </div>
                     </div>
+                    <br> --}}
+
+
+                    {{-- New on (stores latest) --}}
+
+
+                    <div class="row g-3">
+                        <div class="col-lg-6">
+                            <div class="max-w-353px">
+                                <h4 class="mb-2 mt-4">{{ translate('New_0n') }} {{\App\Models\BusinessSetting::where(['key'=>'business_name'])->first()?->value}}</h4>
+                                <p class="m-0 fs-12">
+                                    {{ translate('The New store list arranges stores based on the latest join that are closest to the customers location.') }}
+                                </p>
+                            </div>
+                        </div>
+                        @php($latest_stores_default_status = \App\Models\BusinessSetting::where('key', 'latest_stores_default_status')->first())
+                        @php($latest_stores_default_status = $latest_stores_default_status ? $latest_stores_default_status->value : 1)
+                        <div class="col-lg-6">
+                            <div class="__bg-FAFAFA rounded">
+                                <!-- Default Collapsible Card -->
+                                <div class="sorting-card p-20px">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="w-0 flex-grow">
+                                            <h5 class="fs-14 font-semibold">
+                                                {{ translate('Use default sorting list') }}</h5>
+                                            <label class="form-label d-flex align-items-center m-0">
+                                                    <span class="input-label-secondary text--title ml-0 mr-1"
+                                                            data-toggle="tooltip" data-placement="top"
+                                                            data-original-title="">
+                                                        <i class="tio-info-outined"></i>
+                                                    </span>
+                                                <div class="fs-13">
+                                                    {{ translate('Currently sorting this section by latest') }}
+                                                </div>
+                                            </label>
+                                        </div>
+                                        <div>
+                                            <label
+                                                class="switch--custom-label toggle-switch toggle-switch-sm d-inline-flex">
+                                                <input type="radio" name="latest_stores_default_status"
+                                                        value="1" class="toggle-switch-input collapse-div-toggler"
+                                                    {{ $latest_stores_default_status == '1' ? 'checked' : '' }}>
+                                                <span class="toggle-switch-label text">
+                                                        <span class="toggle-switch-indicator"></span>
+                                                    </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Custom Collapsible Card -->
+                                <div class="sorting-card p-20px">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="w-0 flex-grow">
+                                            <h5 class="fs-14 font-semibold">
+                                                {{ translate('Use custom sorting list') }}</h5>
+                                            <label class="form-label d-flex align-items-center m-0">
+                                                    <span class="input-label-secondary text--title ml-0 mr-1"
+                                                            data-toggle="tooltip" data-placement="top"
+                                                            data-original-title="">
+                                                        <i class="tio-info-outined"></i>
+                                                    </span>
+                                                <div class="fs-13">
+                                                    {{ translate('Set customized condition to show this list') }}
+                                                </div>
+                                            </label>
+                                        </div>
+                                        <div>
+                                            <label
+                                                class="switch--custom-label toggle-switch toggle-switch-sm d-inline-flex">
+                                                <input type="radio" name="latest_stores_default_status"
+                                                        value="0" class="toggle-switch-input collapse-div-toggler"
+                                                    {{ $latest_stores_default_status == '0' ? 'checked' : '' }}>
+                                                <span class="toggle-switch-label text">
+                                                        <span class="toggle-switch-indicator"></span>
+                                                    </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="inner-collapse-div">
+                                        <div class="pt-4">
+                                            @php($latest_stores_sort_by_general = \App\Models\PriorityList::where('name', 'latest_stores_sort_by_general')->where('type', 'general')->first())
+                                            @php($latest_stores_sort_by_general = $latest_stores_sort_by_general ? $latest_stores_sort_by_general->value : '')
+                                            <div class="border rounded p-3 d-flex flex-column gap-2 fs-14 mb-10px">
+                                                <label class="form-check form--check">
+                                                    <input class="form-check-input" type="radio"
+                                                            name="latest_stores_sort_by_general" value="latest_created"
+                                                        {{ $latest_stores_sort_by_general == 'latest_created' ? 'checked' : '' }}>
+                                                    <span class="form-check-label">
+                                                            {{ translate('Sort by latest created') }}
+                                                        </span>
+                                                </label>
+                                                <label class="form-check form--check">
+                                                    <input class="form-check-input" type="radio"
+                                                            name="latest_stores_sort_by_general" value="review_count"
+                                                        {{ $latest_stores_sort_by_general == 'review_count' ? 'checked' : '' }}>
+                                                    <span class="form-check-label">
+                                                            {{ translate('Sort by reviews count') }}
+                                                        </span>
+                                                </label>
+                                                <label class="form-check form--check">
+                                                    <input class="form-check-input" type="radio"
+                                                            name="latest_stores_sort_by_general" value="rating"
+                                                        {{ $latest_stores_sort_by_general == 'rating' ? 'checked' : '' }}>
+                                                    <span class="form-check-label">
+                                                            {{ translate('Sort by ratings') }}
+                                                        </span>
+                                                </label>
+                                                <label class="form-check form--check">
+                                                    <input class="form-check-input" type="radio"
+                                                        name="latest_stores_sort_by_general" value="a_to_z"
+                                                        {{ $latest_stores_sort_by_general == 'a_to_z' ? 'checked' : '' }}>
+                                                    <span class="form-check-label">
+                                                        {{ translate('Sort by Alphabetical (A to Z)') }}
+                                                    </span>
+                                                </label>
+                                                <label class="form-check form--check">
+                                                    <input class="form-check-input" type="radio"
+                                                        name="latest_stores_sort_by_general" value="z_to_a"
+                                                        {{ $latest_stores_sort_by_general == 'z_to_a' ? 'checked' : '' }}>
+                                                    <span class="form-check-label">
+                                                        {{ translate('Sort by Alphabetical (Z to A)') }}
+                                                    </span>
+                                                </label>
+                                            </div>
+                                            @php($latest_stores_sort_by_unavailable = \App\Models\PriorityList::where('name', 'latest_stores_sort_by_unavailable')->where('type', 'unavailable')->first())
+                                            @php($latest_stores_sort_by_unavailable = $latest_stores_sort_by_unavailable ? $latest_stores_sort_by_unavailable->value : '')
+                                            <div class="border rounded p-3 d-flex flex-column gap-2 fs-14 mb-10px">
+                                                <label class="form-check form--check">
+                                                    <input class="form-check-input" type="radio"
+                                                            name="latest_stores_sort_by_unavailable" value="last"
+                                                        {{ $latest_stores_sort_by_unavailable == 'last' ? 'checked' : '' }}>
+                                                    <span class="form-check-label">
+                                                            {{ translate('Show currently closed stores in the last') }}
+                                                        </span>
+                                                </label>
+                                                <label class="form-check form--check">
+                                                    <input class="form-check-input" type="radio"
+                                                            name="latest_stores_sort_by_unavailable" value="remove"
+                                                        {{ $latest_stores_sort_by_unavailable == 'remove' ? 'checked' : '' }}>
+                                                    <span class="form-check-label">
+                                                            {{ translate('Remove currently closed stores from the list') }}
+                                                        </span>
+                                                </label>
+                                                <label class="form-check form--check">
+                                                    <input class="form-check-input" type="radio"
+                                                            name="latest_stores_sort_by_unavailable" value="none"
+                                                        {{ $latest_stores_sort_by_unavailable == 'none' ? 'checked' : '' }}>
+                                                    <span class="form-check-label">
+                                                            {{ translate('None') }}
+                                                        </span>
+                                                </label>
+                                            </div>
+                                            @php($latest_stores_sort_by_temp_closed = \App\Models\PriorityList::where('name', 'latest_stores_sort_by_temp_closed')->where('type', 'temp_closed')->first())
+                                            @php($latest_stores_sort_by_temp_closed = $latest_stores_sort_by_temp_closed ? $latest_stores_sort_by_temp_closed->value : '')
+                                            <div class="border rounded p-3 d-flex flex-column gap-2 fs-14 mb-10px">
+                                                <label class="form-check form--check">
+                                                    <input class="form-check-input" type="radio"
+                                                            name="latest_stores_sort_by_temp_closed" value="last"
+                                                        {{ $latest_stores_sort_by_temp_closed == 'last' ? 'checked' : '' }}>
+                                                    <span class="form-check-label">
+                                                            {{ translate('Show temporarily off stores in the last') }}
+                                                        </span>
+                                                </label>
+                                                <label class="form-check form--check">
+                                                    <input class="form-check-input" type="radio"
+                                                            name="latest_stores_sort_by_temp_closed" value="remove"
+                                                        {{ $latest_stores_sort_by_temp_closed == 'remove' ? 'checked' : '' }}>
+                                                    <span class="form-check-label">
+                                                            {{ translate('Remove temporarily off stores from the list') }}
+                                                        </span>
+                                                </label>
+                                                <label class="form-check form--check">
+                                                    <input class="form-check-input" type="radio"
+                                                            name="latest_stores_sort_by_temp_closed" value="none"
+                                                        {{ $latest_stores_sort_by_temp_closed == 'none' ? 'checked' : '' }}>
+                                                    <span class="form-check-label">
+                                                            {{ translate('None') }}
+                                                        </span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <br>
 
                     {{-- All Stores List --}}
@@ -1411,7 +1598,7 @@
                             <div class="max-w-353px">
                                 <h4 class="mb-2 mt-4">{{ translate('All Stores') }}</h4>
                                 <p class="m-0 fs-12">
-                                    {{ translate('all Stores is the list of customer choices in which customer ordered items most and also highly rated with good reviews') }}
+                                    {{ translate('The all store list arranges all stores based on the latest join that are closest to the customers location.') }}
                                 </p>
                             </div>
                         </div>
@@ -1609,7 +1796,7 @@
                             <div class="max-w-353px">
                                 <h4 class="mb-2 mt-4">{{ translate('Category / Subcategory wise product list') }}</h4>
                                 <p class="m-0 fs-12">
-                                    {{ translate('Category / Subcategory is the list of customer choices in which customer ordered items most and also highly rated with good reviews') }}
+                                    {{ translate('Category / Subcategory Wise Items means the latest items list under a specific category') }}
                                 </p>
                             </div>
                         </div>
@@ -1792,7 +1979,7 @@
                             <div class="max-w-353px">
                                 <h4 class="mb-2 mt-4">{{ translate('product search list') }}</h4>
                                 <p class="m-0 fs-12">
-                                    {{ translate('product search list is the list of customer choices in which customer ordered items most and also highly rated with good reviews') }}
+                                    {{ translate('product search list (Search Bar) means the item list from top search bar') }}
                                 </p>
                             </div>
                         </div>
@@ -1935,7 +2122,7 @@
                             <div class="max-w-353px">
                                 <h4 class="mb-2 mt-4">{{ translate('Basic Medicine Nearby') }}</h4>
                                 <p class="m-0 fs-12">
-                                    {{ translate('Category / Subcategory is the list of customer choices in which customer ordered items most and also highly rated with good reviews') }}
+                                    {{ translate('Basic Medicine Nearby is item list of the stores based on the latest join that are closest to the customers location.') }}
                                 </p>
                             </div>
                         </div>
@@ -2118,7 +2305,7 @@
                             <div class="max-w-353px">
                                 <h4 class="mb-2 mt-4">{{ translate('Common Condition') }}</h4>
                                 <p class="m-0 fs-12">
-                                    {{ translate('The_Item_Category_list_groups_similar_items_together_arranged_with_the_latest_category_first_and_in_alphabetical_order.') }}
+                                    {{ translate('Common Condition is the list of items which are mostly commonly used by the users.') }}
                                 </p>
                             </div>
                         </div>
@@ -2237,7 +2424,7 @@
                             <div class="max-w-353px">
                                 <h4 class="mb-2 mt-4">{{ translate('Brand') }}</h4>
                                 <p class="m-0 fs-12">
-                                    {{ translate('The_Item_Category_list_groups_similar_items_together_arranged_with_the_latest_category_first_and_in_alphabetical_order.') }}
+                                    {{ translate('The list of well known brands.') }}
                                 </p>
                             </div>
                         </div>
@@ -2356,7 +2543,7 @@
                             <div class="max-w-353px">
                                 <h4 class="mb-2 mt-4">{{ translate('Brand wise product list') }}</h4>
                                 <p class="m-0 fs-12">
-                                    {{ translate('Brand is the list of customer choices in which customer ordered items most and also highly rated with good reviews') }}
+                                    {{ translate('The Brand wise product list groups similar items together arranged with the latest brand first.') }}
                                 </p>
                             </div>
                         </div>

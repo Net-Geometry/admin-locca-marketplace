@@ -15,10 +15,15 @@ class WordValidation implements ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         // Example: Reject words longer than 30 characters
-        if (strlen($value) > 30) {
-            $fail('The :attribute must be a valid word.');
-            return;
+        $key=explode(' ', $value);
+
+        foreach ($key as $value) {
+            if (strlen($value) > 30) {
+                $fail('The :attribute must be a valid word.');
+                return;
+            }
         }
+
 
         // Example: Reject words with repeated characters more than twice
         if (preg_match('/(.)\1{5,}/', $value)) {

@@ -118,6 +118,7 @@ class SocialAuthController extends Controller
                                 'created_at' => now(),
                                 'updated_at' => now()
                             ]);
+                            
                         }
 
                         $user->ref_by =$referar_user->id;
@@ -184,7 +185,7 @@ class SocialAuthController extends Controller
                         }
                     }
 
-                        if(!$user->cm_firebase_token){
+                        if(!$user->cm_firebase_token || $user->cm_firebase_token == '@' ){
                             $user->cm_firebase_token = $request->cm_firebase_token;
                             $user->save();
                         }
@@ -366,7 +367,7 @@ class SocialAuthController extends Controller
                             }
                         }
 
-                            if(!$user->cm_firebase_token){
+                            if(!$user->cm_firebase_token || $user->cm_firebase_token == '@' ){
                                 $user->cm_firebase_token = $request->cm_firebase_token;
                                 $user->save();
                             }
@@ -565,7 +566,7 @@ class SocialAuthController extends Controller
                     }
                 }
 
-                    if(!isset($user->cm_firebase_token)){
+                    if(!isset($user->cm_firebase_token) || $user->cm_firebase_token == '@' ){
                         $user->cm_firebase_token = $request->cm_firebase_token;
                         $user->save();
                     }

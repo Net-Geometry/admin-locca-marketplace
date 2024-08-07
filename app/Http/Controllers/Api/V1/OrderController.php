@@ -1052,13 +1052,13 @@ class OrderController extends Controller
             } catch (\Exception $ex) {
                 info($ex->getMessage());
             }
-            //PlaceOrderMail end
             return response()->json([
                 'message' => translate('messages.order_placed_successfully'),
                 'order_id' => $order->id,
                 'total_ammount' => $order->order_amount,
                 'status' => $order->order_status,
-                'created_at' => $order->created_at
+                'created_at' => $order->created_at,
+                'user_id' => (int) $order->user_id,
             ], 200);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -1504,7 +1504,8 @@ class OrderController extends Controller
                 'total_ammount' => $order->order_amount,
                 'offline_payments' => isset($order->offline_payments) ? Helpers::offline_payment_formater($order->offline_payments) : null,
                 'status' => $order->order_status,
-                'created_at' => $order->created_at
+                'created_at' => $order->created_at,
+                'user_id' => (int) $order->user_id,
             ], 200);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -1533,9 +1534,9 @@ class OrderController extends Controller
 
         $paginator = Order::with(['store', 'delivery_man.rating', 'parcel_category', 'refund:order_id,admin_note,customer_note'])->withCount('details')->where(['user_id' => $user_id])->whereIn('order_status', ['delivered', 'canceled', 'refund_requested', 'refund_request_canceled', 'refunded', 'failed'])
 
-        ->when(!isset($request->user) , function($query){
-            $query->where('is_guest' , 1);
-        })
+        // ->when(!isset($request->user) , function($query){
+        //     $query->where('is_guest' , 1);
+        // })
 
         ->when(isset($request->user)  , function($query){
             $query->where('is_guest' , 0);
@@ -1573,9 +1574,9 @@ class OrderController extends Controller
         $user_id = $request->user ? $request->user->id : $request['guest_id'];
 
         $paginator = Order::with(['store', 'delivery_man.rating', 'parcel_category'])
-        ->when(!isset($request->user) , function($query){
-            $query->where('is_guest' , 1);
-        })
+        // ->when(!isset($request->user) , function($query){
+        //     $query->where('is_guest' , 1);
+        // })
 
         ->when(isset($request->user)  , function($query){
             $query->where('is_guest' , 0);
@@ -1659,9 +1660,9 @@ class OrderController extends Controller
 
         $order = Order::where(['user_id' => $user_id, 'id' => $request['order_id']])
 
-        ->when(!isset($request->user) , function($query){
-            $query->where('is_guest' , 1);
-        })
+        // ->when(!isset($request->user) , function($query){
+        //     $query->where('is_guest' , 1);
+        // })
 
         ->when(isset($request->user)  , function($query){
             $query->where('is_guest' , 0);
@@ -1724,9 +1725,9 @@ class OrderController extends Controller
 
         $order = Order::where(['user_id' => $request->user->id, 'id' => $request['order_id']])
 
-        ->when(!isset($request->user) , function($query){
-            $query->where('is_guest' , 1);
-        })
+        // ->when(!isset($request->user) , function($query){
+        //     $query->where('is_guest' , 1);
+        // })
 
         ->when(isset($request->user)  , function($query){
             $query->where('is_guest' , 0);
@@ -1960,7 +1961,7 @@ class OrderController extends Controller
 
 
                 $data = [
-                    'title' => translate('messages.order_push_title'),
+                    'title' => translate('Order_Notification'),
                     'description' => translate('messages.new_order_push_description'),
                     'order_id' => $order->id,
                     'image' => '',

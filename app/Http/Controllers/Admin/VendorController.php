@@ -595,7 +595,7 @@ class VendorController extends Controller
         ->when(is_numeric($module_id), function($query)use($request){
             return $query->module($request->query('module_id'));
         })
-                ->when(isset($key), function($query)use($key){
+                ->when(isset($key), function($query)use($key,$request){
             return $query->where(function($query)use($key){
                 $query->orWhereHas('vendor',function ($q) use ($key) {
                     $q->where(function($q)use($key){
@@ -613,7 +613,7 @@ class VendorController extends Controller
                             ->orWhere('phone', 'like', "%{$value}%");
                     }
                 });
-            });
+            })->orderByRaw("FIELD(name, ?) DESC", [$request->search]);
         })
         ->module(Config::get('module.current_module_id'))
         ->with('vendor','module')->type($type)->latest()->paginate(config('default_pagination'));

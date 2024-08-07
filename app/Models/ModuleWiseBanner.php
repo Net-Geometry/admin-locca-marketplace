@@ -15,6 +15,7 @@ class ModuleWiseBanner extends Model
 
     protected $casts = [
         'status' => 'integer',
+        'module_id' => 'integer',
     ];
 
     protected $fillable = ['module_id', 'key', 'type', 'value'];

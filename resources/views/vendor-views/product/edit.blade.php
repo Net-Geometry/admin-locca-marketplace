@@ -165,10 +165,10 @@
 
 
                                         @if (request()->product_gellary  == 1)
-                                            <a href="#"  data-key={{ $key }} data-photo="{{ $photo }}"
+                                            <a href="#"  data-key={{ $key }} data-photo="{{ $photo['img'] }}"
                                             class="spartan_remove_row"><i class="tio-add-to-trash"></i></a>
                                         @else
-                                            <a href="{{ route('vendor.item.remove-image', ['id' => $product['id'], 'name' => $photo ,'temp_product' => $temp_product]) }}"
+                                            <a href="{{ route('vendor.item.remove-image', ['id' => $product['id'], 'name' => $photo['img'] ,'temp_product' => $temp_product]) }}"
                                                 class="spartan_remove_row"><i class="tio-add-to-trash"></i></a>
                                         @endif
                                         </div>
