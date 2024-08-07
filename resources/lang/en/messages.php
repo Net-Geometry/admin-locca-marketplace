@@ -5525,4 +5525,6 @@
   'The list of well known brands.' => 'The list of well known brands.',
   'The Brand wise product list groups similar items together arranged with the latest brand first.' => 'The Brand wise product list groups similar items together arranged with the latest brand first.',
   'email_already_taken' => 'Email already taken',
+  'subscription_plan_updated' => 'Subscription plan updated',
+  'Your_subscription_has_been_updated' => 'Your subscription has been updated',
 );

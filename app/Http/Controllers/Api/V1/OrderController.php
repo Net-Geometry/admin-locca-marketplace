@@ -1533,9 +1533,9 @@ class OrderController extends Controller
 
         $paginator = Order::with(['store', 'delivery_man.rating', 'parcel_category', 'refund:order_id,admin_note,customer_note'])->withCount('details')->where(['user_id' => $user_id])->whereIn('order_status', ['delivered', 'canceled', 'refund_requested', 'refund_request_canceled', 'refunded', 'failed'])
 
-        ->when(!isset($request->user) , function($query){
-            $query->where('is_guest' , 1);
-        })
+        // ->when(!isset($request->user) , function($query){
+        //     $query->where('is_guest' , 1);
+        // })
 
         ->when(isset($request->user)  , function($query){
             $query->where('is_guest' , 0);
@@ -1573,9 +1573,9 @@ class OrderController extends Controller
         $user_id = $request->user ? $request->user->id : $request['guest_id'];
 
         $paginator = Order::with(['store', 'delivery_man.rating', 'parcel_category'])
-        ->when(!isset($request->user) , function($query){
-            $query->where('is_guest' , 1);
-        })
+        // ->when(!isset($request->user) , function($query){
+        //     $query->where('is_guest' , 1);
+        // })
 
         ->when(isset($request->user)  , function($query){
             $query->where('is_guest' , 0);
@@ -1659,9 +1659,9 @@ class OrderController extends Controller
 
         $order = Order::where(['user_id' => $user_id, 'id' => $request['order_id']])
 
-        ->when(!isset($request->user) , function($query){
-            $query->where('is_guest' , 1);
-        })
+        // ->when(!isset($request->user) , function($query){
+        //     $query->where('is_guest' , 1);
+        // })
 
         ->when(isset($request->user)  , function($query){
             $query->where('is_guest' , 0);
@@ -1724,9 +1724,9 @@ class OrderController extends Controller
 
         $order = Order::where(['user_id' => $request->user->id, 'id' => $request['order_id']])
 
-        ->when(!isset($request->user) , function($query){
-            $query->where('is_guest' , 1);
-        })
+        // ->when(!isset($request->user) , function($query){
+        //     $query->where('is_guest' , 1);
+        // })
 
         ->when(isset($request->user)  , function($query){
             $query->where('is_guest' , 0);

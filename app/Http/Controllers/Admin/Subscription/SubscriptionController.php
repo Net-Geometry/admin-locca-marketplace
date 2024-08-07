@@ -188,12 +188,12 @@ class SubscriptionController extends Controller
 
         try {
 
-            $subscribers= StoreSubscription::with('store.vendor')->select(['store_id'])->where(['package_id' =>  $subscriptionackage->id,'status'=> 1])->get();
+            $subscribers= StoreSubscription::with('store.vendor')->has('store')->where(['package_id' =>  $subscriptionackage->id,'status'=> 1])->get();
             foreach ($subscribers as $subscriber){
-                if( Helpers::getNotificationStatusData('store','store_subscription_plan_update','push_notification_status',$subscriber?->store->id)  &&  $subscriber?->store?->vendor?->firebase_token){
+                if( Helpers::getNotificationStatusData('store','store_subscription_plan_update','push_notification_status',$subscriber?->store?->id)  &&  $subscriber?->store?->vendor?->firebase_token){
                     $data = [
-                        'title' => translate('subscription_canceled'),
-                        'description' => translate('Your_subscription_has_been_canceled'),
+                        'title' => translate('subscription_plan_updated'),
+                        'description' => translate('Your_subscription_plan_has_been_updated'),
                         'order_id' => '',
                         'image' => '',
                         'type' => 'subscription',
