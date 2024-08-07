@@ -370,7 +370,7 @@
                             <div class="max-w-353px">
                                 <h4 class="mb-2 mt-4">{{ translate('Recommended Store') }}</h4>
                                 <p class="m-0 fs-12">
-                                    {{ translate('Recommended Stores is the list of customer choices in which customer ordered items most and also highly rated with good reviews') }}
+                                    {{ translate('Recommended Stores is the list of Admin choices which is highly recommended by admin') }}
                                 </p>
                             </div>
                         </div>
@@ -390,7 +390,7 @@
                                                     <i class="tio-info-outined"></i>
                                                 </span>
                                                 <div class="fs-13">
-                                                    {{ translate('This_section_is_currently_sorted_by_recommended_active_stores.') }}
+                                                    {{ translate('This_section_is_currently_sorted_by_oldest_recommended_stores.') }}
                                                 </div>
                                             </label>
                                         </div>
@@ -579,7 +579,7 @@
                             <div class="max-w-353px">
                                 <h4 class="mb-2 mt-4">{{ translate('Special Offers') }}</h4>
                                 <p class="m-0 fs-12">
-                                    {{ translate('Category Wise Items means the latest item items list under a specific category') }}
+                                    {{ translate('The special offers includes the list of discounted items offered for the customers') }}
                                 </p>
                             </div>
                         </div>
@@ -1100,7 +1100,7 @@
                             <div class="max-w-353px">
                                 <h4 class="mb-2 mt-4">{{ translate('Just for You') }}</h4>
                                 <p class="m-0 fs-12">
-                                    {{ translate('The_Item_Category_list_groups_similar_items_together_arranged_with_the_latest_category_first_and_in_alphabetical_order.') }}
+                                    {{ translate('Just for You is the Item campaign includes the list of discounted items offered for the customers.') }}
                                 </p>
                             </div>
                         </div>
@@ -1414,7 +1414,7 @@
                             <div class="max-w-353px">
                                 <h4 class="mb-2 mt-4">{{ translate('New_0n') }} {{\App\Models\BusinessSetting::where(['key'=>'business_name'])->first()?->value}}</h4>
                                 <p class="m-0 fs-12">
-                                    {{ translate('Best New items are the top most ordered item list of customer choice which are highly rated & reviewed ') }}
+                                    {{ translate('The New store list arranges stores based on the latest join that are closest to the customers location.') }}
                                 </p>
                             </div>
                         </div>
@@ -1598,7 +1598,7 @@
                             <div class="max-w-353px">
                                 <h4 class="mb-2 mt-4">{{ translate('All Stores') }}</h4>
                                 <p class="m-0 fs-12">
-                                    {{ translate('all Stores is the list of customer choices in which customer ordered items most and also highly rated with good reviews') }}
+                                    {{ translate('The all store list arranges all stores based on the latest join that are closest to the customers location.') }}
                                 </p>
                             </div>
                         </div>
@@ -1796,7 +1796,7 @@
                             <div class="max-w-353px">
                                 <h4 class="mb-2 mt-4">{{ translate('Category / Subcategory wise product list') }}</h4>
                                 <p class="m-0 fs-12">
-                                    {{ translate('Category / Subcategory is the list of customer choices in which customer ordered items most and also highly rated with good reviews') }}
+                                    {{ translate('Category / Subcategory Wise Items means the latest items list under a specific category') }}
                                 </p>
                             </div>
                         </div>
@@ -1979,7 +1979,7 @@
                             <div class="max-w-353px">
                                 <h4 class="mb-2 mt-4">{{ translate('product search list') }}</h4>
                                 <p class="m-0 fs-12">
-                                    {{ translate('product search list is the list of customer choices in which customer ordered items most and also highly rated with good reviews') }}
+                                    {{ translate('product search list (Search Bar) means the item list from top search bar') }}
                                 </p>
                             </div>
                         </div>
@@ -2122,7 +2122,7 @@
                             <div class="max-w-353px">
                                 <h4 class="mb-2 mt-4">{{ translate('Basic Medicine Nearby') }}</h4>
                                 <p class="m-0 fs-12">
-                                    {{ translate('Category / Subcategory is the list of customer choices in which customer ordered items most and also highly rated with good reviews') }}
+                                    {{ translate('Basic Medicine Nearby is item list of the stores based on the latest join that are closest to the customers location.') }}
                                 </p>
                             </div>
                         </div>
@@ -2305,7 +2305,7 @@
                             <div class="max-w-353px">
                                 <h4 class="mb-2 mt-4">{{ translate('Common Condition') }}</h4>
                                 <p class="m-0 fs-12">
-                                    {{ translate('The_Item_Category_list_groups_similar_items_together_arranged_with_the_latest_category_first_and_in_alphabetical_order.') }}
+                                    {{ translate('Common Condition is the list of items which are mostly commonly used by the users.') }}
                                 </p>
                             </div>
                         </div>
@@ -2424,7 +2424,7 @@
                             <div class="max-w-353px">
                                 <h4 class="mb-2 mt-4">{{ translate('Brand') }}</h4>
                                 <p class="m-0 fs-12">
-                                    {{ translate('The_Item_Category_list_groups_similar_items_together_arranged_with_the_latest_category_first_and_in_alphabetical_order.') }}
+                                    {{ translate('The list of well known brands.') }}
                                 </p>
                             </div>
                         </div>
@@ -2543,7 +2543,7 @@
                             <div class="max-w-353px">
                                 <h4 class="mb-2 mt-4">{{ translate('Brand wise product list') }}</h4>
                                 <p class="m-0 fs-12">
-                                    {{ translate('Brand is the list of customer choices in which customer ordered items most and also highly rated with good reviews') }}
+                                    {{ translate('The Brand wise product list groups similar items together arranged with the latest brand first.') }}
                                 </p>
                             </div>
                         </div>
