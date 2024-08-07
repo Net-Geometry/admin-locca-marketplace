@@ -1058,7 +1058,7 @@ class OrderController extends Controller
                 'total_ammount' => $order->order_amount,
                 'status' => $order->order_status,
                 'created_at' => $order->created_at,
-                'user_id' => $request->user?->id,
+                'user_id' => (int) $order->user_id,
             ], 200);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -1504,7 +1504,8 @@ class OrderController extends Controller
                 'total_ammount' => $order->order_amount,
                 'offline_payments' => isset($order->offline_payments) ? Helpers::offline_payment_formater($order->offline_payments) : null,
                 'status' => $order->order_status,
-                'created_at' => $order->created_at
+                'created_at' => $order->created_at,
+                'user_id' => (int) $order->user_id,
             ], 200);
         } catch (\Exception $e) {
             DB::rollBack();
