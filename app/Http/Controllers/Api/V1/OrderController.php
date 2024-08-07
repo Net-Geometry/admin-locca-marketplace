@@ -1052,13 +1052,13 @@ class OrderController extends Controller
             } catch (\Exception $ex) {
                 info($ex->getMessage());
             }
-            //PlaceOrderMail end
             return response()->json([
                 'message' => translate('messages.order_placed_successfully'),
                 'order_id' => $order->id,
                 'total_ammount' => $order->order_amount,
                 'status' => $order->order_status,
-                'created_at' => $order->created_at
+                'created_at' => $order->created_at,
+                'user_id' => $request->user?->id,
             ], 200);
         } catch (\Exception $e) {
             DB::rollBack();

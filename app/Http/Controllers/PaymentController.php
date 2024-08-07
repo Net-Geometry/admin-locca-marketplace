@@ -49,6 +49,9 @@ class PaymentController extends Controller
         session()->put('order_id', $request->order_id);
 
         $order = Order::where(['id' => $request->order_id, 'user_id' => $request['customer_id']])->first();
+        if(!$order){
+            return response()->json(['errors' => ['code' => 'order-payment', 'message' => 'Data not found']], 403);
+        }
         if($order->is_guest){
             $customer_details = json_decode($order['delivery_address'],true);
         }else{
@@ -75,9 +78,6 @@ class PaymentController extends Controller
             ]);
         }
 
-        if(!$order){
-            return response()->json(['errors' => ['code' => 'order-payment', 'message' => 'Data not found']], 403);
-        }
 
         if (session()->has('payment_method') == false) {
             session()->put('payment_method', 'ssl_commerz_payment');

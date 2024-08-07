@@ -5524,4 +5524,5 @@
   'Common Condition is the list of items which are mostly commonly used by the users.' => 'Common Condition is the list of items which are mostly commonly used by the users.',
   'The list of well known brands.' => 'The list of well known brands.',
   'The Brand wise product list groups similar items together arranged with the latest brand first.' => 'The Brand wise product list groups similar items together arranged with the latest brand first.',
+  'email_already_taken' => 'Email already taken',
 );
