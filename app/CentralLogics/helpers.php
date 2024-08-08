@@ -4928,10 +4928,7 @@ class Helpers
         $driveMondBaseUrl = ExternalConfiguration::where('key', 'drivemond_base_url')->first()->value;
         $driveMondToken = ExternalConfiguration::where('key', 'drivemond_token')->first()->value;
         $systemSelfToken = ExternalConfiguration::where('key', 'system_self_token')->first()->value;
-        if ($activationMode == 1 && $driveMondBaseUrl == $externalBaseUrl && $driveMondToken == $externalTokem && $systemSelfToken == $martToken) {
-            return true;
-        }
-        return false;
+        return $activationMode == 1 && $driveMondBaseUrl == $externalBaseUrl && $driveMondToken == $externalTokem && $systemSelfToken == $martToken;
     }
 }
 
