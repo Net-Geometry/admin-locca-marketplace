@@ -4922,16 +4922,16 @@ class Helpers
             return 'closed';
         }
 
-        public static function checkExternalConfiguration($externalBaseUrl,$externalTokem,$martToken)
-        {
-            $activationMode = ExternalConfiguration::where('key','activation_mode')->first()->value;
-            $driveMondBaseUrl = ExternalConfiguration::where('key','drivemond_base_url')->first()->value;
-            $driveMondToken = ExternalConfiguration::where('key','drivemond_token')->first()->value;
-            $systemSelfToken = ExternalConfiguration::where('key','system_self_token')->first()->value;
-            if ($activationMode == 1 && $driveMondBaseUrl == $externalBaseUrl && $driveMondToken ==$externalTokem && $systemSelfToken == $martToken){
-                return true;
-            }
-            return false;
+    public static function checkExternalConfiguration($externalBaseUrl, $externalTokem, $martToken)
+    {
+        $activationMode = ExternalConfiguration::where('key', 'activation_mode')->first()->value;
+        $driveMondBaseUrl = ExternalConfiguration::where('key', 'drivemond_base_url')->first()->value;
+        $driveMondToken = ExternalConfiguration::where('key', 'drivemond_token')->first()->value;
+        $systemSelfToken = ExternalConfiguration::where('key', 'system_self_token')->first()->value;
+        if ($activationMode == 1 && $driveMondBaseUrl == $externalBaseUrl && $driveMondToken == $externalTokem && $systemSelfToken == $martToken) {
+            return true;
         }
+        return false;
+    }
 }
 
