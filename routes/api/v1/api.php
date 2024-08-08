@@ -16,6 +16,7 @@ use BeyondCode\LaravelWebSockets\Facades\WebSocketsRouter;
 */
 
 Route::group(['namespace' => 'Api\V1', 'middleware'=>'localization'], function () {
+    Route::post('get-customer', 'CustomerController@getCustomer');
     Route::get('zone/list', 'ZoneController@get_zones');
     Route::get('zone/check', 'ZoneController@zonesCheck');
 
