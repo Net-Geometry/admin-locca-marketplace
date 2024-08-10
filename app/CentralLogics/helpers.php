@@ -4930,5 +4930,14 @@ class Helpers
         $systemSelfToken = ExternalConfiguration::where('key', 'system_self_token')->first()->value;
         return $activationMode == 1 && $driveMondBaseUrl == $externalBaseUrl && $driveMondToken == $externalTokem && $systemSelfToken == $martToken;
     }
+
+    public static function checkSelfExternalConfiguration()
+    {
+        $activationMode = ExternalConfiguration::where('key', 'activation_mode')->first()->value;
+        $driveMondBaseUrl = ExternalConfiguration::where('key', 'drivemond_base_url')->first()->value;
+        $driveMondToken = ExternalConfiguration::where('key', 'drivemond_token')->first()->value;
+        $systemSelfToken = ExternalConfiguration::where('key', 'system_self_token')->first()->value;
+        return $activationMode == 1 && $driveMondBaseUrl != null && $driveMondToken != null && $systemSelfToken != null;
+    }
 }
 
