@@ -306,6 +306,7 @@ class ConfigController extends Controller
             'subscription_free_trial_type' => (isset($settings['subscription_free_trial_type']) ? $settings['subscription_free_trial_type'] : 'day'),
             'subscription_free_trial_status' => (int)(isset($settings['subscription_free_trial_status']) ? $settings['subscription_free_trial_status'] : 0),
             'country_picker_status' => (int)(isset($settings['country_picker_status']) ? $settings['country_picker_status'] : 1),
+            'external_system' => Helpers::checkSelfExternalConfiguration(),
 
         ]);
     }
