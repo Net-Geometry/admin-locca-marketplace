@@ -139,8 +139,8 @@ class LoginController extends Controller
                 }
             }
         }
-        Toastr::error(AUTH_LOGIN_401['message']);
-        return back();
+        return redirect()->back()->withInput($request->only('email', 'remember'))
+            ->withErrors(['Credentials does not match.']);
     }
 
 
