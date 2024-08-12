@@ -13,6 +13,7 @@ use App\CentralLogics\Helpers;
 use App\Models\OrderReference;
 use Illuminate\Support\Carbon;
 use App\Models\CustomerAddress;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\BusinessSetting;
@@ -415,16 +416,8 @@ class CustomerController extends Controller
             ];
             return response()->json($data);
         }
-        if (Helpers::checkExternalConfiguration($request->external_base_url, json_decode($request->external_token), json_decode($request->token))) {
-            $user = User::where('phone', $request->phone)->first();
-            if ($user && Hash::check($request->password, $user->password)) {
-                $data = [
-                    'status' => true,
-                    'data' => $user
-                ];
-                return response()->json($data);
-            }
-
+        if (Helpers::checkExternalConfiguration($request->external_base_url, $request->external_token, $request->token)) {
+            $user = DB::table('users')->where('id',Auth::id())->first();
             if (!$user){
                 $data = [
                     'status' => false,
@@ -432,6 +425,11 @@ class CustomerController extends Controller
                 ];
                 return response()->json($data);
             }
+            $data = [
+                'status' => true,
+                'data' => $user
+            ];
+            return response()->json($data);
         }
         $data = [
             'status' => false,

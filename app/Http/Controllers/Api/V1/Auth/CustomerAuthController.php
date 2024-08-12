@@ -523,7 +523,28 @@ class CustomerAuthController extends Controller
             ], 401);
         }
     }
+    public function guest_request(Request $request)
+    {
+        $guest = new Guest();
+        $guest->ip_address = $request->ip();
+        $guest->fcm_token = $request->fcm_token;
 
+        if ($guest->save()) {
+            return response()->json([
+                'message' => translate('messages.guest_varified'),
+                'guest_id' => $guest->id,
+            ], 200);
+        }
+
+        return response()->json([
+            'message' => translate('messages.failed')
+        ], 404);
+    }
+
+
+
+
+    #handshake
     public function customerLoginFromDrivemond(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -614,21 +635,4 @@ class CustomerAuthController extends Controller
         ], 403);
     }
 
-    public function guest_request(Request $request)
-    {
-        $guest = new Guest();
-        $guest->ip_address = $request->ip();
-        $guest->fcm_token = $request->fcm_token;
-
-        if ($guest->save()) {
-            return response()->json([
-                'message' => translate('messages.guest_varified'),
-                'guest_id' => $guest->id,
-            ], 200);
-        }
-
-        return response()->json([
-            'message' => translate('messages.failed')
-        ], 404);
-    }
 }
