@@ -404,7 +404,6 @@ class CustomerController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'phone' => 'required',
-            'password' => 'required',
             'token' => 'required',
             'external_base_url' => 'required',
             'external_token' => 'required',
