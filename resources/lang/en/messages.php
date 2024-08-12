@@ -5527,4 +5527,5 @@
   'email_already_taken' => 'Email already taken',
   'subscription_plan_updated' => 'Subscription plan updated',
   'Your_subscription_has_been_updated' => 'Your subscription has been updated',
+  'failed_to_send_sms_&_mail' => 'Failed to send sms & mail',
 );
