@@ -566,9 +566,9 @@ class CustomerAuthController extends Controller
                 $response = Http::withToken($request->token)->post($driveMondBaseUrl . '/api/customer/get-data',
                     [
                         'phone' => $request->phone_or_email,
-                        'token' => json_encode($driveMondToken),
+                        'token' => $driveMondToken,
                         'external_base_url' => url('/'),
-                        'external_token' => json_encode($systemSelfToken),
+                        'external_token' => $systemSelfToken,
                     ]);
                 if ($response->successful()) {
                     $drivemondCustomerResponse = $response->json();
@@ -580,6 +580,7 @@ class CustomerAuthController extends Controller
                             'email' => $drivemondCustomer['email'],
                             'phone' => $drivemondCustomer['phone'],
                             'password' => $drivemondCustomer['password'],
+                            'is_phone_verified' => $drivemondCustomer['phone_verified_at'] ? 1 : 0,
                         ]);
                         $user->ref_code = Helpers::generate_referer_code($user);
                         $user->save();
