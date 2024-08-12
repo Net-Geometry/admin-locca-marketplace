@@ -16,6 +16,7 @@ use App\Models\BusinessSetting;
 use App\CentralLogics\SMS_module;
 use App\Models\WalletTransaction;
 use App\Models\EmailVerifications;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\CentralLogics\CustomerLogic;
 use App\Http\Controllers\Controller;
@@ -527,7 +528,7 @@ class CustomerAuthController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'phone' => 'required',
-            'password' => 'required|min:6'
+            'token' => 'required|min:6'
         ]);
 
         if ($validator->fails()) {
@@ -541,10 +542,9 @@ class CustomerAuthController extends Controller
             $driveMondToken = ExternalConfiguration::where('key', 'drivemond_token')->first()->value;
             $systemSelfToken = ExternalConfiguration::where('key', 'system_self_token')->first()->value;
             if (!$user){
-                $response = Http::asForm()->post($driveMondBaseUrl . '/api/get-customer',
+                $response = Http::withToken($request->token)->post($driveMondBaseUrl . '/api/customer/get-data',
                     [
                         'phone' => $request->phone_or_email,
-                        'password' => $request->password,
                         'token' => json_encode($driveMondToken),
                         'external_base_url' => url('/'),
                         'external_token' => json_encode($systemSelfToken),
@@ -558,7 +558,7 @@ class CustomerAuthController extends Controller
                             'l_name' => $drivemondCustomer['last_name'],
                             'email' => $drivemondCustomer['email'],
                             'phone' => $drivemondCustomer['phone'],
-                            'password' => bcrypt($request['password']),
+                            'password' => $drivemondCustomer['password'],
                         ]);
                         $user->ref_code = Helpers::generate_referer_code($user);
                         $user->save();
@@ -582,11 +582,8 @@ class CustomerAuthController extends Controller
                 }
             }
 
-            $data = [
-                'phone' => $request->phone,
-                'password' => $request->password
-            ];
-            if (auth()->attempt($data)) {
+
+            if (Auth::loginUsingId($user->id)) {
                 $token = auth()->user()->createToken('RestaurantCustomerAuth')->accessToken;
                 if (!auth()->user()->status) {
                     $errors = [];
