@@ -510,13 +510,13 @@ class CustomerController extends Controller
                 return response()->json($data);
             }
 
-        } else {
-            $data = [
-                'status' => false,
-                'data' => ['error_code' => 402, 'message' => "Invalid token"]
-            ];
-            return response()->json($data);
         }
+        $data = [
+            'status' => false,
+            'data' => ['error_code' => 402, 'message' => "Invalid token"]
+        ];
+        return response()->json($data);
+
 
     }
 }

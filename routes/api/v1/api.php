@@ -343,6 +343,9 @@ Route::group(['namespace' => 'Api\V1', 'middleware'=>'localization'], function (
                 Route::get('transactions', 'WalletController@transactions');
                 Route::get('bonuses', 'WalletController@get_bonus');
                 Route::post('add-fund', 'WalletController@add_fund');
+                #handshake
+                Route::post('transfer-mart-to-drivemond', 'WalletController@transferMartToDrivemondWallet');
+                Route::post('transfer-mart-from-drivemond', 'WalletController@transferMartFromDrivemondWallet')->withoutMiddleware('auth:api');
             });
 
             Route::get('visit-again', 'OrderController@order_again');
