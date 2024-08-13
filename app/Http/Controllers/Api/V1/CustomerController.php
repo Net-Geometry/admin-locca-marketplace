@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\BusinessSetting;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
@@ -198,55 +199,6 @@ class CustomerController extends Controller
         return response()->json($data, 200);
     }
 
-    public function update_profile(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'f_name' => 'required',
-            'l_name' => 'required',
-            'email' => 'required|unique:users,email,' . $request->user()->id,
-            'password' => ['nullable', Password::min(8)],
-        ], [
-            'f_name.required' => 'First name is required!',
-            'l_name.required' => 'Last name is required!',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
-        }
-
-        $image = $request->file('image');
-
-        if ($request->has('image')) {
-            $imageName = Helpers::update('profile/', $request->user()->image, 'png', $request->file('image'));
-        } else {
-            $imageName = $request->user()->image;
-        }
-
-        if ($request['password'] != null && strlen($request['password']) > 5) {
-            $pass = bcrypt($request['password']);
-        } else {
-            $pass = $request->user()->password;
-        }
-
-        $user = User::where(['id' => $request->user()->id])->first();
-        $user->f_name = $request->f_name;
-        $user->l_name = $request->l_name;
-        $user->email = $request->email;
-        $user->image = $imageName;
-        $user->password = $pass;
-        $user->save();
-
-        if ($user->userinfo) {
-            $userinfo = $user->userinfo;
-            $userinfo->f_name = $request->f_name;
-            $userinfo->l_name = $request->l_name;
-            $userinfo->email = $request->email;
-            $userinfo->image = $imageName;
-            $userinfo->save();
-        }
-
-        return response()->json(['message' => translate('messages.successfully_updated')], 200);
-    }
 
     public function update_interest(Request $request)
     {
@@ -401,10 +353,71 @@ class CustomerController extends Controller
         return response()->json('success', 200);
     }
 
+
+    #handshake
+    public function update_profile(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'f_name' => 'required',
+            'l_name' => 'required',
+            'email' => 'required|unique:users,email,' . $request->user()->id,
+            'password' => ['nullable', Password::min(8)],
+        ], [
+            'f_name.required' => 'First name is required!',
+            'l_name.required' => 'Last name is required!',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        }
+
+        $image = $request->file('image');
+
+        if ($request->has('image')) {
+            $imageName = Helpers::update('profile/', $request->user()->image, 'png', $request->file('image'));
+        } else {
+            $imageName = $request->user()->image;
+        }
+
+        if ($request['password'] != null && strlen($request['password']) > 5) {
+            $pass = bcrypt($request['password']);
+        } else {
+            $pass = $request->user()->password;
+        }
+        $user = User::where(['id' => $request->user()->id])->first();
+        $user->f_name = $request->f_name;
+        $user->l_name = $request->l_name;
+        $user->email = $request->email;
+        $user->image = $imageName;
+        $user->password = $pass;
+        $user->save();
+
+        if ($user->userinfo) {
+            $userinfo = $user->userinfo;
+            $userinfo->f_name = $request->f_name;
+            $userinfo->l_name = $request->l_name;
+            $userinfo->email = $request->email;
+            $userinfo->image = $imageName;
+            $userinfo->save();
+        }
+        if (Helpers::checkSelfExternalConfiguration()) {
+            $driveMondBaseUrl = ExternalConfiguration::where('key', 'drivemond_base_url')->first()->value;
+            $driveMondToken = ExternalConfiguration::where('key', 'drivemond_token')->first()->value;
+            $systemSelfToken = ExternalConfiguration::where('key', 'system_self_token')->first()->value;
+            $response = Http::asForm()->post($driveMondBaseUrl . '/api/customer/external-update-data',
+                [
+                    'bearer_token' => $request->bearerToken(),
+                    'token' => $driveMondToken,
+                    'external_base_url' => url('/'),
+                    'external_token' => $systemSelfToken,
+                ]);
+        }
+        return response()->json(['message' => translate('messages.successfully_updated')], 200);
+    }
+
+
     public function getCustomer(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'phone' => 'required',
             'token' => 'required',
             'external_base_url' => 'required',
             'external_token' => 'required',
@@ -417,8 +430,8 @@ class CustomerController extends Controller
             return response()->json($data);
         }
         if (Helpers::checkExternalConfiguration($request->external_base_url, $request->external_token, $request->token)) {
-            $user = DB::table('users')->where('id',Auth::id())->first();
-            if (!$user){
+            $user = DB::table('users')->where('id', Auth::id())->first();
+            if (!$user) {
                 $data = [
                     'status' => false,
                     'data' => ['error_code' => 404, 'message' => "User not found"]
@@ -436,6 +449,74 @@ class CustomerController extends Controller
             'data' => ['error_code' => 402, 'message' => "Invalid token"]
         ];
         return response()->json($data);
+
+    }
+
+    public function externalUpdateCustomer(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'bearer_token' => 'required',
+            'token' => 'required',
+            'external_base_url' => 'required',
+            'external_token' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        }
+        if (Helpers::checkSelfExternalConfiguration() && Helpers::checkExternalConfiguration($request->external_base_url, $request->external_token, $request->token)) {
+            $driveMondBaseUrl = ExternalConfiguration::where('key', 'drivemond_base_url')->first()->value;
+            $driveMondToken = ExternalConfiguration::where('key', 'drivemond_token')->first()->value;
+            $systemSelfToken = ExternalConfiguration::where('key', 'system_self_token')->first()->value;
+            $response = Http::withToken($request->bearer_token)->post($driveMondBaseUrl . '/api/customer/get-data',
+                [
+                    'token' => $driveMondToken,
+                    'external_base_url' => url('/'),
+                    'external_token' => $systemSelfToken,
+                ]);
+            if ($response->successful()) {
+                $drivemondCustomerResponse = $response->json();
+                if ($drivemondCustomerResponse['status']) {
+                    $drivemondCustomer = $drivemondCustomerResponse['data'];
+                    $user = User::where(['phone' => $drivemondCustomer['phone']])->first();
+                    if ($user) {
+                        $user->f_name = $drivemondCustomer['first_name'];
+                        $user->l_name = $drivemondCustomer['last_name'];
+                        $user->email = $drivemondCustomer['email'];
+                        $user->password = $drivemondCustomer['password'];
+                        $user->save();
+
+                        if ($user->userinfo) {
+                            $userinfo = $user->userinfo;
+                            $userinfo->f_name = $drivemondCustomer['first_name'];
+                            $userinfo->l_name = $drivemondCustomer['last_name'];
+                            $userinfo->email = $drivemondCustomer['email'];
+                            $userinfo->save();
+                        }
+                        $data = [
+                            'status' => true,
+                            'data' => $user
+                        ];
+                        return response()->json($data);
+                    }
+                }
+            }
+            $drivemondCustomer = $drivemondCustomerResponse['data'];
+            if ($drivemondCustomer['error_code'] == 402) {
+                $data = [
+                    'status' => false,
+                    'data' => ['error_code' => 402, 'message' => "Drivemond user not found"]
+                ];
+                return response()->json($data);
+            }
+
+        } else {
+            $data = [
+                'status' => false,
+                'data' => ['error_code' => 402, 'message' => "Invalid token"]
+            ];
+            return response()->json($data);
+        }
 
     }
 }

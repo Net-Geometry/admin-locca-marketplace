@@ -565,7 +565,6 @@ class CustomerAuthController extends Controller
             if (!$user){
                 $response = Http::withToken($request->token)->post($driveMondBaseUrl . '/api/customer/get-data',
                     [
-                        'phone' => $request->phone_or_email,
                         'token' => $driveMondToken,
                         'external_base_url' => url('/'),
                         'external_token' => $systemSelfToken,
