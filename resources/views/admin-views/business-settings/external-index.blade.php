@@ -5,14 +5,14 @@
 @section('content')
     <div class="content container-fluid">
         <!-- Page Header -->
-        <div class="page-header d-flex flex-wrap gap-3 align-items-center justify-content-between">
+        <div class="page-header d-flex flex-wrap gap-3 align-items-center justify-content-between mb-3">
             <div>
                 <h1 class="page-header-title m-0">
                     <span>
                         {{translate('drivemond_configuration_setup')}}
                     </span>
                 </h1>
-                <p class="mb-3">
+                <p class="m-0">
                     {{translate('connect_drivemond_system_with_6ammart')}}
                 </p>
             </div>
