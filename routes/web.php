@@ -15,6 +15,7 @@ use App\Http\Controllers\PaypalPaymentController;
 use App\Http\Controllers\StripePaymentController;
 use App\Http\Controllers\SslCommerzPaymentController;
 use App\Http\Controllers\FirebaseController;
+use App\CentralLogics\Helpers;
 
 /*
 |--------------------------------------------------------------------------
@@ -183,6 +184,7 @@ if (!$is_published) {
 
 
 Route::get('/test', function () {
+    Helpers::updateAdminNotificationSetupDataSetup();
     dd('Hello tester');
 });
 
