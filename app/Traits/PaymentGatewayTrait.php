@@ -126,7 +126,8 @@ trait PaymentGatewayTrait
                 "USD" => "United States Dollar"
             ],
             "paystack" => [
-                "NGN" => "Nigerian Naira"
+                "NGN" => "Nigerian Naira",
+                "KES" => "Kenyan Shilling"
             ],
             "paytabs" => [
                 "AED" => "United Arab Emirates Dirham",
