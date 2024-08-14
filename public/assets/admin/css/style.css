@@ -13479,11 +13479,11 @@ video#VisaChipCardVideo {
     box-shadow: 0 0 5px rgba(0, 159, 170, 0.2);
 }
 
-.__nav-module-item-drivemond.active {
+.__nav-module-item-drivemond:hover {
     background: #009faa;
     color: #ffffff;
     border: 1px solid #009faa;
 }
-.__nav-module-item-drivemond.active * {
+.__nav-module-item-drivemond:hover * {
     color: #ffffff;
 }

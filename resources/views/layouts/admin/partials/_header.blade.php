@@ -198,7 +198,7 @@
                                             </p>
                                         </div>
                                         <div class="col-6">
-                                            <a href="javascript:" class="__nav-module-item set-module __nav-module-item-drivemond {{Config::get('module.current_module_id') == 'drivemond_id' ? 'active':''}}">
+                                            <a href="javascript:" class="__nav-module-item set-module __nav-module-item-drivemond">
                                                 <div class="img w--70px ">
                                                     <img src="{{asset('/public/assets/admin/img/how-it-works/ride-sharing.svg')}}" alt="">
                                                 </div>
