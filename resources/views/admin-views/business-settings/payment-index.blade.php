@@ -158,7 +158,8 @@
                 </div>
             </div>
         @endif
-        @if($checkCurrency !== true )
+
+        @if($digital_payment && $digital_payment['status'] ==1 && $checkCurrency !== true )
         <br>
         <div>
             <div class="card">
@@ -170,7 +171,7 @@
                 </div>
             </div>
         </div>
-        @elseif ($data_values->where('is_active',1  )->count()  == 0)
+        @elseif ($digital_payment && $digital_payment['status'] ==1 && $data_values->where('is_active',1  )->count()  == 0)
         <br>
         <div>
             <div class="card">
@@ -187,7 +188,7 @@
         @php($is_published = $published_status == 1 ? 'inactive' : '')
         <!-- Tab Content -->
         <div class="row digital_payment_methods  {{ $is_published }} mt-3 g-3">
-            @foreach($data_values as $payment_key => $payment)
+            @foreach($data_values->sortByDesc('is_active') as $payment_key => $payment)
                 <div class="col-md-6 mb-4">
                     <div class="card">
                         <form action="{{env('APP_MODE')!='demo'?route('admin.business-settings.third-party.payment-method-update'):'javascript:'}}" method="POST"
