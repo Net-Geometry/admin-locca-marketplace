@@ -190,10 +190,24 @@
                             @if(isset($modules) && ($modules->count()>0))
                             <div class="__nav-module-header">
                                 <div class="inner">
-                                    <h4>{{translate('Modules Section')}}</h4>
-                                    <p>
-                                        {{translate('Select Module & Monitor your business module wise')}}
-                                    </p>
+                                    <div class="row g-3 align-items-center">
+                                        <div class="col-6">
+                                            <h5>{{translate('Modules Section')}}</h5>
+                                            <p class="m-0">
+                                                {{translate('Select Module & Monitor your business module wise')}}
+                                            </p>
+                                        </div>
+                                        <div class="col-6">
+                                            <a href="javascript:" class="__nav-module-item set-module __nav-module-item-drivemond {{Config::get('module.current_module_id') == 'drivemond_id' ? 'active':''}}">
+                                                <div class="img w--70px ">
+                                                    <img src="{{asset('/public/assets/admin/img/how-it-works/ride-sharing.svg')}}" alt="">
+                                                </div>
+                                                <div>
+                                                    Drivemond Admin Panel
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="__nav-module-body">

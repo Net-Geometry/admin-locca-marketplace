@@ -13238,7 +13238,7 @@ video#VisaChipCardVideo {
     position: absolute;
     width: 126px;
     height: 115px;
-    background: #039D551A;
+    background: #039d551a;
     border-radius: 50%;
 }
 
@@ -13404,14 +13404,86 @@ video#VisaChipCardVideo {
     }
 }
 .navbar-vertical-content .navbar-nav {
-  padding-bottom: 80px;
+    padding-bottom: 80px;
+}
+.input-group .btn--primary {
+    border-radius: 0 5px 5px 0 !important;
+}
+.input-token-group .form-control {
+    padding-right: 40px;
+    border-radius: 5px 0 0 5px !important;
+}
+.input-token-group .position-relative {
+    flex-grow: 1;
+    width: 0;
+}
+.input-token-group .generate-code {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    right: 0;
+    width: 40px;
+}
+.how-it-works-modal .modal-dialog {
+    max-width: 1007px;
+}
+.how-it-count {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+    font-weight: 600;
+}
+.how-it-count::after {
+    width: 0;
+    flex-grow: 1;
+    height: 1px;
+    display: block;
+    background: #9eadc14d;
+    content: "";
+}
+@media screen and (max-width: 767px) {
+    .how-it-count::after {
+        display: none;
+    }
+}
+.how-it-count span {
+    width: 35px;
+    height: 35px;
+    border-radius: 6px;
+    color: #107980;
+    background: #009faa0d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.__nav-module-item-drivemond * {
+    color: #2b4d66;
+}
+.__nav-module-item-drivemond {
+    color: #2b4d66;
+    text-align: center;
+    padding: 10px;
+    background: #ffffff;
+    border: 1px solid rgba(0, 159, 170, 0.2);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+    gap: 8px;
+    border-radius: 4px;
+    box-shadow: 0 0 5px rgba(0, 159, 170, 0.2);
 }
 
-.generate-code {
-    position: absolute;
-    inset-inline-start: unset !important;
-    inset-inline-end: 0;
-    top: 0;
-    width: 62px !important;
-    min-width: 62px !important;
+.__nav-module-item-drivemond.active {
+    background: #009faa;
+    color: #ffffff;
+    border: 1px solid #009faa;
+}
+.__nav-module-item-drivemond.active * {
+    color: #ffffff;
 }
