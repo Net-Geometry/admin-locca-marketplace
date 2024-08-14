@@ -186,30 +186,30 @@ class SocialAuthController extends Controller
                         }
                     }
 
-                        if(!$user->cm_firebase_token || $user->cm_firebase_token == '@' ){
-                            $user->cm_firebase_token = $request->cm_firebase_token;
-                            $user->save();
-                        }
-                        if(Helpers::getNotificationStatusData('customer','customer_registration_otp','push_notification_status')){
-                            if (isset($user->cm_firebase_token)) {
-                                $data = [
-                                    'title' => translate('messages.verification_otp'),
-                                    'description' => translate('messages.your_verification_otp_is').' '.$otp,
-                                    'order_id' => '',
-                                    'image' => '',
-                                    'type' => 'otp'
-                                ];
-                                Helpers::send_push_notif_to_device($user->cm_firebase_token, $data);
-
-                                DB::table('user_notifications')->insert([
-                                    'data' => json_encode($data),
-                                    'user_id' => $user->id,
-                                    'created_at' => now(),
-                                    'updated_at' => now()
-                                ]);
-                                $response = 'success';
-                            }
-                        }
+//                        if(!$user->cm_firebase_token || $user->cm_firebase_token == '@' ){
+//                            $user->cm_firebase_token = $request->cm_firebase_token;
+//                            $user->save();
+//                        }
+//                        if(Helpers::getNotificationStatusData('customer','customer_registration_otp','push_notification_status')){
+//                            if (isset($user->cm_firebase_token)) {
+//                                $data = [
+//                                    'title' => translate('messages.verification_otp'),
+//                                    'description' => translate('messages.your_verification_otp_is').' '.$otp,
+//                                    'order_id' => '',
+//                                    'image' => '',
+//                                    'type' => 'otp'
+//                                ];
+//                                Helpers::send_push_notif_to_device($user->cm_firebase_token, $data);
+//
+//                                DB::table('user_notifications')->insert([
+//                                    'data' => json_encode($data),
+//                                    'user_id' => $user->id,
+//                                    'created_at' => now(),
+//                                    'updated_at' => now()
+//                                ]);
+//                                $response = 'success';
+//                            }
+//                        }
 
                     if($response != 'success')
                     {
@@ -369,31 +369,31 @@ class SocialAuthController extends Controller
                             }
                         }
 
-                            if(!$user->cm_firebase_token || $user->cm_firebase_token == '@' ){
-                                $user->cm_firebase_token = $request->cm_firebase_token;
-                                $user->save();
-                            }
-                            if(Helpers::getNotificationStatusData('customer','customer_registration_otp','push_notification_status')){
-
-                                if (isset($user->cm_firebase_token)) {
-                                    $data = [
-                                        'title' => translate('messages.verification_otp'),
-                                        'description' => translate('messages.your_verification_otp_is').' '.$otp,
-                                        'order_id' => '',
-                                        'image' => '',
-                                        'type' => 'otp'
-                                    ];
-                                    Helpers::send_push_notif_to_device($user->cm_firebase_token, $data);
-
-                                    DB::table('user_notifications')->insert([
-                                        'data' => json_encode($data),
-                                        'user_id' => $user->id,
-                                        'created_at' => now(),
-                                        'updated_at' => now()
-                                    ]);
-                                    $response = 'success';
-                                }
-                            }
+//                            if(!$user->cm_firebase_token || $user->cm_firebase_token == '@' ){
+//                                $user->cm_firebase_token = $request->cm_firebase_token;
+//                                $user->save();
+//                            }
+//                            if(Helpers::getNotificationStatusData('customer','customer_registration_otp','push_notification_status')){
+//
+//                                if (isset($user->cm_firebase_token)) {
+//                                    $data = [
+//                                        'title' => translate('messages.verification_otp'),
+//                                        'description' => translate('messages.your_verification_otp_is').' '.$otp,
+//                                        'order_id' => '',
+//                                        'image' => '',
+//                                        'type' => 'otp'
+//                                    ];
+//                                    Helpers::send_push_notif_to_device($user->cm_firebase_token, $data);
+//
+//                                    DB::table('user_notifications')->insert([
+//                                        'data' => json_encode($data),
+//                                        'user_id' => $user->id,
+//                                        'created_at' => now(),
+//                                        'updated_at' => now()
+//                                    ]);
+//                                    $response = 'success';
+//                                }
+//                            }
 
                         if($response != 'success')
                         {
@@ -569,31 +569,31 @@ class SocialAuthController extends Controller
                     }
                 }
 
-                    if(!isset($user->cm_firebase_token) || $user->cm_firebase_token == '@' ){
-                        $user->cm_firebase_token = $request->cm_firebase_token;
-                        $user->save();
-                    }
-
-                    if(Helpers::getNotificationStatusData('customer','customer_login_otp','push_notification_status')){
-                        if (isset($user->cm_firebase_token)) {
-                            $data = [
-                                'title' => translate('messages.login_otp'),
-                                'description' => translate('messages.your_login_otp_is').' '.$otp,
-                                'order_id' => '',
-                                'image' => '',
-                                'type' => 'otp'
-                            ];
-                            Helpers::send_push_notif_to_device($user->cm_firebase_token, $data);
-
-                            DB::table('user_notifications')->insert([
-                                'data' => json_encode($data),
-                                'user_id' => $user->id,
-                                'created_at' => now(),
-                                'updated_at' => now()
-                            ]);
-                            $response = 'success';
-                    }
-                }
+//                    if(!isset($user->cm_firebase_token) || $user->cm_firebase_token == '@' ){
+//                        $user->cm_firebase_token = $request->cm_firebase_token;
+//                        $user->save();
+//                    }
+//
+//                    if(Helpers::getNotificationStatusData('customer','customer_login_otp','push_notification_status')){
+//                        if (isset($user->cm_firebase_token)) {
+//                            $data = [
+//                                'title' => translate('messages.login_otp'),
+//                                'description' => translate('messages.your_login_otp_is').' '.$otp,
+//                                'order_id' => '',
+//                                'image' => '',
+//                                'type' => 'otp'
+//                            ];
+//                            Helpers::send_push_notif_to_device($user->cm_firebase_token, $data);
+//
+//                            DB::table('user_notifications')->insert([
+//                                'data' => json_encode($data),
+//                                'user_id' => $user->id,
+//                                'created_at' => now(),
+//                                'updated_at' => now()
+//                            ]);
+//                            $response = 'success';
+//                    }
+//                }
                 if($response != 'success')
                 {
 

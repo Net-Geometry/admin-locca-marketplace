@@ -82,26 +82,26 @@ class PasswordResetController extends Controller
                 }
             }
 
-                if(Helpers::getNotificationStatusData('customer','customer_forget_password','push_notification_status')){
-                    if (isset($request->cm_firebase_token)) {
-                        $data = [
-                            'title' => translate('messages.password_reset'),
-                            'description' => translate('messages.your_reset_password_otp_is').' '.$token,
-                            'order_id' => '',
-                            'image' => '',
-                            'type' => 'otp'
-                        ];
-                        Helpers::send_push_notif_to_device($request->cm_firebase_token, $data);
-
-                        DB::table('user_notifications')->insert([
-                            'data' => json_encode($data),
-                            'user_id' => $customer->id,
-                            'created_at' => now(),
-                            'updated_at' => now()
-                        ]);
-                        $response = 'success';
-                    }
-                }
+//                if(Helpers::getNotificationStatusData('customer','customer_forget_password','push_notification_status')){
+//                    if (isset($request->cm_firebase_token)) {
+//                        $data = [
+//                            'title' => translate('messages.password_reset'),
+//                            'description' => translate('messages.your_reset_password_otp_is').' '.$token,
+//                            'order_id' => '',
+//                            'image' => '',
+//                            'type' => 'otp'
+//                        ];
+//                        Helpers::send_push_notif_to_device($request->cm_firebase_token, $data);
+//
+//                        DB::table('user_notifications')->insert([
+//                            'data' => json_encode($data),
+//                            'user_id' => $customer->id,
+//                            'created_at' => now(),
+//                            'updated_at' => now()
+//                        ]);
+//                        $response = 'success';
+//                    }
+//                }
 
 
 
