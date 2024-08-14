@@ -118,7 +118,7 @@ class SocialAuthController extends Controller
                                 'created_at' => now(),
                                 'updated_at' => now()
                             ]);
-                            
+
                         }
 
                         $user->ref_by =$referar_user->id;
@@ -140,6 +140,7 @@ class SocialAuthController extends Controller
                 'password' => $user->phone
             ];
             $customer_verification = BusinessSetting::where('key','customer_verification')->first()->value;
+            $firebase_otp_verification = BusinessSetting::where('key', 'firebase_otp_verification')->first()->value??0;
             if (auth()->attempt($data)) {
                 $token = auth()->user()->createToken('RestaurantCustomerAuth')->accessToken;
                 if(!auth()->user()->status)
@@ -150,7 +151,7 @@ class SocialAuthController extends Controller
                         'errors' => $errors
                     ], 403);
                 }
-                if($customer_verification && !auth()->user()->is_phone_verified && env('APP_MODE') != 'demo')
+                if($customer_verification && !$firebase_otp_verification && !auth()->user()->is_phone_verified && env('APP_MODE') != 'demo')
                 {
                     // $interval_time = BusinessSetting::where('key', 'otp_interval_time')->first();
                     // $otp_interval_time= isset($interval_time) ? $interval_time->value : 20;
@@ -324,6 +325,7 @@ class SocialAuthController extends Controller
                 'password' => $user->social_id
             ];
             $customer_verification = BusinessSetting::where('key','customer_verification')->first()->value;
+            $firebase_otp_verification = BusinessSetting::where('key', 'firebase_otp_verification')->first()->value??0;
             if (auth()->loginUsingId($user->id)) {
                 $token = auth()->user()->createToken('RestaurantCustomerAuth')->accessToken;
                 if(!auth()->user()->status)
@@ -334,7 +336,7 @@ class SocialAuthController extends Controller
                         'errors' => $errors
                     ], 403);
                 }
-                if($customer_verification && !auth()->user()->is_phone_verified && env('APP_MODE') != 'demo')
+                if($customer_verification && !$firebase_otp_verification && !auth()->user()->is_phone_verified && env('APP_MODE') != 'demo')
                 {
                     // $interval_time = BusinessSetting::where('key', 'otp_interval_time')->first();
                     // $otp_interval_time= isset($interval_time) ? $interval_time->value : 20;
@@ -522,6 +524,7 @@ class SocialAuthController extends Controller
         }
 
         $customer_verification = BusinessSetting::where('key','customer_verification')->first()->value;
+        $firebase_otp_verification = BusinessSetting::where('key', 'firebase_otp_verification')->first()->value??0;
         if (auth()->loginUsingId($user->id)) {
             $token = auth()->user()->createToken('RestaurantCustomerAuth')->accessToken;
             if(!auth()->user()->status)
@@ -532,7 +535,7 @@ class SocialAuthController extends Controller
                     'errors' => $errors
                 ], 403);
             }
-            if($customer_verification && !auth()->user()->is_phone_verified && env('APP_MODE') != 'demo')
+            if($customer_verification && !$firebase_otp_verification && !auth()->user()->is_phone_verified && env('APP_MODE') != 'demo')
             {
                 // $interval_time = BusinessSetting::where('key', 'otp_interval_time')->first();
                 // $otp_interval_time= isset($interval_time) ? $interval_time->value : 20;

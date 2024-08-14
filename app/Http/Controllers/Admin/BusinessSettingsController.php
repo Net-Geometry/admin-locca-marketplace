@@ -2570,6 +2570,24 @@ class BusinessSettingsController extends Controller
         return back();
     }
     //recaptcha
+
+    public function firebase_otp_index(Request $request)
+    {
+        return view('admin-views.business-settings.firebase-otp-index');
+    }
+
+    public function firebase_otp_update(Request $request)
+    {
+        BusinessSetting::updateOrInsert(['key' => 'firebase_otp_verification'], [
+            'value' => $request['firebase_otp_verification'] ?? 0
+        ]);
+        BusinessSetting::updateOrInsert(['key' => 'firebase_web_api_key'], [
+            'value' => $request['firebase_web_api_key']
+        ]);
+
+        Toastr::success(translate('messages.updated_successfully'));
+        return back();
+    }
     public function storage_connection_index(Request $request)
     {
         return view('admin-views.business-settings.storage-connection-index');

@@ -5528,4 +5528,10 @@
   'subscription_plan_updated' => 'Subscription plan updated',
   'Your_subscription_has_been_updated' => 'Your subscription has been updated',
   'failed_to_send_sms_&_mail' => 'Failed to send sms & mail',
+  'Firebase OTP' => 'Firebase OTP',
+  'Firebase OTP Verification' => 'Firebase OTP Verification',
+  'Firebase_OTP_Verification_Status' => 'Firebase OTP Verification Status',
+  'If_this_field_is_active_customers_get_the_OTP_through_Firebase.' => 'If this field is active customers get the OTP through Firebase.',
+  'firebase_otp_verification' => 'Firebase otp verification',
+  'Web_API_key' => 'Web API key',
 );

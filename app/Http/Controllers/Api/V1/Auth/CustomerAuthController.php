@@ -16,12 +16,12 @@ use App\CentralLogics\SMS_module;
 use App\Models\WalletTransaction;
 use App\Models\EmailVerifications;
 use Illuminate\Support\Facades\DB;
-use App\CentralLogics\CustomerLogic;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
 use Modules\Gateways\Traits\SmsGateway;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Support\Facades\Http;
 
 class CustomerAuthController extends Controller
 {
@@ -156,7 +156,7 @@ class CustomerAuthController extends Controller
 
 
         if (BusinessSetting::where(['key' => 'email_verification'])->first()->value) {
-            $token = rand(1000, 9999);
+            $token = rand(100000, 999999);
             DB::table('email_verifications')->insert([
                 'email' => $request['email'],
                 'token' => $token,
@@ -225,6 +225,7 @@ class CustomerAuthController extends Controller
         }
         $ref_by= null ;
         $customer_verification = BusinessSetting::where('key', 'customer_verification')->first()->value;
+        $firebase_otp_verification = BusinessSetting::where('key', 'firebase_otp_verification')->first()->value??0;
 
         if($request->ref_code) {
             $ref_status = BusinessSetting::where('key','ref_earning_status')->first()->value;
@@ -279,7 +280,7 @@ class CustomerAuthController extends Controller
 
         $token = $user->createToken('RestaurantCustomerAuth')->accessToken;
 
-        if($customer_verification && env('APP_MODE') !='demo')
+        if($customer_verification && !$firebase_otp_verification && env('APP_MODE') !='demo')
         {
             $otp_interval_time= 60; //seconds
             $verification_data= DB::table('phone_verifications')->where('phone', $request['phone'])->first();
@@ -293,7 +294,7 @@ class CustomerAuthController extends Controller
                 ], 405);
             }
 
-            $otp = rand(1000, 9999);
+            $otp = rand(100000, 999999);
             DB::table('phone_verifications')->updateOrInsert(['phone' => $request['phone']],
                 [
                 'token' => $otp,
@@ -405,6 +406,7 @@ class CustomerAuthController extends Controller
             'password' => $request->password
         ];
         $customer_verification = BusinessSetting::where('key', 'customer_verification')->first()->value;
+        $firebase_otp_verification = BusinessSetting::where('key', 'firebase_otp_verification')->first()->value??0;
         if (auth()->attempt($data)) {
             $token = auth()->user()->createToken('RestaurantCustomerAuth')->accessToken;
             if (!auth()->user()->status) {
@@ -415,7 +417,7 @@ class CustomerAuthController extends Controller
                 ], 403);
             }
             $user = auth()->user();
-            if($customer_verification && !auth()->user()->is_phone_verified && env('APP_MODE') != 'demo')
+            if($customer_verification && !$firebase_otp_verification && !auth()->user()->is_phone_verified && env('APP_MODE') != 'demo')
             {
                 $otp_interval_time= 60; //seconds
 
@@ -431,7 +433,7 @@ class CustomerAuthController extends Controller
                     ], 405);
                 }
 
-                $otp = rand(1000, 9999);
+                $otp = rand(100000, 999999);
                 DB::table('phone_verifications')->updateOrInsert(['phone' => $request['phone']],
                     [
                     'token' => $otp,
@@ -544,6 +546,69 @@ class CustomerAuthController extends Controller
 
         return response()->json([
             'message' => translate('messages.failed')
+        ], 404);
+    }
+
+    public function firebase_auth_verify(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'sessionInfo' => 'required',
+            'phoneNumber' => 'required',
+            'code' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        }
+
+
+        $webApiKey = BusinessSetting::where('key', 'firebase_web_api_key')->first()->value??'';
+
+//        $firebaseOTPVerification = Helpers::get_business_settings('firebase_otp_verification');
+//        $webApiKey = $firebaseOTPVerification ? $firebaseOTPVerification['web_api_key'] : '';
+
+        $response = Http::post('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPhoneNumber?key='. $webApiKey, [
+            'sessionInfo' => $request->sessionInfo,
+            'phoneNumber' => $request->phoneNumber,
+            'code' => $request->code,
+        ]);
+
+        $responseData = $response->json();
+
+        if (isset($responseData['error'])) {
+            $errors = [];
+            $errors[] = ['code' => "403", 'message' => $responseData['error']['message']];
+            return response()->json(['errors' => $errors], 403);
+        }
+
+        $user = User::Where(['phone' => $request->phoneNumber])->first();
+
+        if (isset($user)){
+            if ($request['is_reset_token'] == 1){
+                DB::table('password_resets')->updateOrInsert(['email' => $user->email],
+                    [
+                        'token' => $request->code,
+                        'created_at' => now(),
+                    ]);
+                return response()->json(['message'=>"OTP found, you can proceed"], 200);
+            }else{
+                if ($user->is_phone_verified) {
+                    return response()->json([
+                        'message' => translate('messages.phone_number_is_already_varified')
+                    ], 200);
+                }
+                $user->is_phone_verified = 1;
+                $user->save();
+
+                return response()->json([
+                    'message' => translate('messages.phone_number_varified_successfully'),
+                    'otp' => 'inactive'
+                ], 200);
+            }
+        }
+
+        return response()->json([
+            'message' => translate('messages.not_found')
         ], 404);
     }
 }

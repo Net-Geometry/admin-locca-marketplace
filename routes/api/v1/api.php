@@ -30,6 +30,7 @@ Route::group(['namespace' => 'Api\V1', 'middleware'=>'localization'], function (
 
         Route::post('forgot-password', 'PasswordResetController@reset_password_request');
         Route::post('verify-token', 'PasswordResetController@verify_token');
+        Route::post('firebase-verify-token', 'PasswordResetController@firebase_auth_verify');
         Route::put('reset-password', 'PasswordResetController@reset_password_submit');
 
         Route::post('guest/request','CustomerAuthController@guest_request');

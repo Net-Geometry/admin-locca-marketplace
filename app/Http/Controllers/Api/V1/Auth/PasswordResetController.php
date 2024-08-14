@@ -28,10 +28,12 @@ class PasswordResetController extends Controller
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
 
+        $firebase_otp_verification = BusinessSetting::where('key', 'firebase_otp_verification')->first()->value??0;
+
         $customer = User::Where(['phone' => $request['phone']])->first();
 
         if (isset($customer)) {
-            if(env('APP_MODE')=='demo')
+            if($firebase_otp_verification || env('APP_MODE')=='demo')
             {
                 return response()->json(['message' => translate('messages.otp_sent_successfull')], 200);
             }
@@ -47,7 +49,7 @@ class PasswordResetController extends Controller
                 ], 405);
             }
 
-            $token = rand(1000,9999);
+            $token = rand(100000, 999999);
             DB::table('password_resets')->updateOrInsert(['email' => $customer->email],
             [
                 'token' => $token,
