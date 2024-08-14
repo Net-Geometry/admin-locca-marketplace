@@ -120,7 +120,13 @@ class ItemController extends Controller
             $query->withCount(['campaigns'=> function($query){
                 $query->Running();
             }]);
-        });
+        })
+        ->select(['items.*'])
+        ->selectSub(function ($subQuery) {
+            $subQuery->selectRaw('active as temp_available')
+                ->from('stores')
+                ->whereColumn('stores.id', 'items.store_id');
+        }, 'temp_available');
 
 
         if ($product_search_default_status != '1'){
@@ -237,7 +243,13 @@ class ItemController extends Controller
             $query->withCount(['campaigns'=> function($query){
                 $query->Running();
             }]);
-        });
+        })  
+        ->select(['items.*'])
+        ->selectSub(function ($subQuery) {
+            $subQuery->selectRaw('active as temp_available')
+                ->from('stores')
+                ->whereColumn('stores.id', 'items.store_id');
+        }, 'temp_available');
 
 
         if ($product_search_default_status != '1'){
