@@ -218,11 +218,11 @@
                                                     {{translate('Select Module & Monitor your business module wise')}}
                                                 </p>
                                             </div>
-                                            @if(\App\Models\ExternalConfiguration::where('key','activation_mode')->first()?->value ?? 0)
+                                            @if(\App\Models\ExternalConfiguration::where('key','activation_mode')->first()->value ?? 0)
                                                 @php($drivemondBaseUrl = \App\Models\ExternalConfiguration::where('key', 'drivemond_base_url')->first()->value ?? null)
                                                 <div class="col-6">
                                                     <form method="POST"
-                                                          action="{{url($drivemondBaseUrl."/admin/auth/external-login-from-mart")}}">
+                                                          action="{{url($drivemondBaseUrl."/admin/auth/external-login-from-mart")}}" target="_blank">
                                                         <input type="hidden" name="mart_token"
                                                                value="{{\App\Models\ExternalConfiguration::where('key','system_self_token')->first()->value ?? null}}">
                                                         <input type="hidden" name="mart_base_url" value="{{url('/')}}">
@@ -238,19 +238,6 @@
                                                     </form>
                                                 </div>
                                             @endif
-                                            <div class="col-6">
-                                                <a href="javascript:"
-                                                   class="__nav-module-item set-module __nav-module-item-drivemond">
-                                                    <div class="img w--70px ">
-                                                        <img
-                                                            src="{{asset('/public/assets/admin/img/how-it-works/ride-sharing.svg')}}"
-                                                            alt="">
-                                                    </div>
-                                                    <div>
-                                                        Drivemond Admin Panel
-                                                    </div>
-                                                </a>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
