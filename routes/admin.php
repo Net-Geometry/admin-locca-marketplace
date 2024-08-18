@@ -418,6 +418,9 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                 //recaptcha
                 Route::get('recaptcha', 'BusinessSettingsController@recaptcha_index')->name('recaptcha_index');
                 Route::post('recaptcha-update', 'BusinessSettingsController@recaptcha_update')->name('recaptcha_update');
+                //firebase-otp
+                Route::get('firebase-otp', 'BusinessSettingsController@firebase_otp_index')->name('firebase_otp_index');
+                Route::post('firebase-otp-update', 'BusinessSettingsController@firebase_otp_update')->name('firebase_otp_update');
                 //file_system
                 Route::get('storage-connection', 'BusinessSettingsController@storage_connection_index')->name('storage_connection_index');
                 Route::post('storage-connection-update/{name}', 'BusinessSettingsController@storage_connection_update')->name('storage_connection_update');

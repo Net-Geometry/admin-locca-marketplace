@@ -72,17 +72,19 @@ class SMSModuleController extends Controller
         }
 
         $data= ['gateway' => $module ,
-        'mode' =>  isset($request['status']) == 1  ?  'live': 'test'
+        'mode' =>  isset($request['status']) === 1  ?  'live': 'test'
         ];
 
-    $credentials= json_encode(array_merge($data, $additional_data));
+
+        $credentials= json_encode(array_merge($data, $additional_data));
+
     DB::table('addon_settings')->updateOrInsert(['key_name' => $module, 'settings_type' => 'sms_config'], [
         'key_name' => $module,
         'live_values' => $credentials,
         'test_values' => $credentials,
         'settings_type' => 'sms_config',
-        'mode' => isset($request['status']) == 1  ?  'live': 'test',
-        'is_active' => isset($request['status']) == 1  ?  1: 0 ,
+        'mode' => isset($request['status']) === 1  ?  'live': 'test',
+        'is_active' => isset($request['status']) === 1  ?  1: 0 ,
     ]);
 
     if ($request['status'] == 1) {

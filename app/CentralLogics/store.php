@@ -835,7 +835,7 @@ class StoreLogic
                         ->join('items', 'items.id', '=', 'reviews.item_id')
                         ->whereColumn('items.store_id', 'stores.id')
                         ->groupBy('items.store_id');
-                }, 'avg_r')->orderBy('avg_r', 'desc');
+                }, 'avg_rat')->orderBy('avg_rat', 'desc');
             }elseif($recommended_store_sort_by_general == 'review_count') {
                 $query = $query->orderByDesc('reviews_count');
             }elseif($recommended_store_sort_by_general == 'order_count') {

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api\V1\Auth;
 
+use App\Models\BusinessSetting;
+use App\Models\User;
 use Carbon\CarbonInterval;
 use App\Models\DeliveryMan;
 use Illuminate\Http\Request;
@@ -10,6 +12,7 @@ use Illuminate\Support\Carbon;
 use App\CentralLogics\SMS_module;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Modules\Gateways\Traits\SmsGateway;
 use Illuminate\Support\Facades\Validator;
@@ -26,11 +29,11 @@ class DMPasswordResetController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
-
+        $firebase_otp_verification = BusinessSetting::where('key', 'firebase_otp_verification')->first()->value??0;
         $deliveryman = DeliveryMan::Where(['phone' => $request['phone']])->first();
 
         if (isset($deliveryman)) {
-            if(env('APP_MODE') =='demo')
+            if($firebase_otp_verification || env('APP_MODE') =='demo')
             {
                 return response()->json(['message' => translate('messages.otp_sent_successfull')], 200);
             }
@@ -48,7 +51,7 @@ class DMPasswordResetController extends Controller
                 ], 405);
             }
 
-            $token = rand(1000,9999);
+            $token = rand(100000, 999999);
             DB::table('password_resets')->updateOrInsert(['email' => $deliveryman['email']],
             [
                 'token' => $token,
@@ -79,24 +82,24 @@ class DMPasswordResetController extends Controller
                 }
 
 
-                    if (isset($request->fcm_token) && Helpers::getNotificationStatusData('deliveryman','deliveryman_forget_password','push_notification_status')) {
-                        $data = [
-                            'title' => translate('messages.password_reset'),
-                            'description' => translate('messages.your_reset_password_otp_is').' '.$token,
-                            'order_id' => '',
-                            'image' => '',
-                            'type' => 'otp'
-                        ];
-                        Helpers::send_push_notif_to_device($request->fcm_token, $data);
-
-                        DB::table('user_notifications')->insert([
-                            'data' => json_encode($data),
-                            'delivery_man_id' => $deliveryman->id,
-                            'created_at' => now(),
-                            'updated_at' => now()
-                        ]);
-                        $response = 'success';
-                    }
+//                    if (isset($request->fcm_token) && Helpers::getNotificationStatusData('deliveryman','deliveryman_forget_password','push_notification_status')) {
+//                        $data = [
+//                            'title' => translate('messages.password_reset'),
+//                            'description' => translate('messages.your_reset_password_otp_is').' '.$token,
+//                            'order_id' => '',
+//                            'image' => '',
+//                            'type' => 'otp'
+//                        ];
+//                        Helpers::send_push_notif_to_device($request->fcm_token, $data);
+//
+//                        DB::table('user_notifications')->insert([
+//                            'data' => json_encode($data),
+//                            'delivery_man_id' => $deliveryman->id,
+//                            'created_at' => now(),
+//                            'updated_at' => now()
+//                        ]);
+//                        $response = 'success';
+//                    }
 
 
 
@@ -269,5 +272,53 @@ class DMPasswordResetController extends Controller
         $errors = [];
         array_push($errors, ['code' => 'invalid', 'message' => 'Invalid token.']);
         return response()->json(['errors' => $errors], 400);
+    }
+
+    public function firebase_auth_verify(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'sessionInfo' => 'required',
+            'phoneNumber' => 'required',
+            'code' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        }
+
+
+        $webApiKey = BusinessSetting::where('key', 'firebase_web_api_key')->first()->value??'';
+
+//        $firebaseOTPVerification = Helpers::get_business_settings('firebase_otp_verification');
+//        $webApiKey = $firebaseOTPVerification ? $firebaseOTPVerification['web_api_key'] : '';
+
+        $response = Http::post('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPhoneNumber?key='. $webApiKey, [
+            'sessionInfo' => $request->sessionInfo,
+            'phoneNumber' => $request->phoneNumber,
+            'code' => $request->code,
+        ]);
+
+        $responseData = $response->json();
+
+        if (isset($responseData['error'])) {
+            $errors = [];
+            $errors[] = ['code' => "403", 'message' => $responseData['error']['message']];
+            return response()->json(['errors' => $errors], 403);
+        }
+
+        $user = DeliveryMan::Where(['phone' => $request->phoneNumber])->first();
+
+        if (isset($user)){
+            DB::table('password_resets')->updateOrInsert(['email' => $user->email],
+                [
+                    'token' => $request->code,
+                    'created_at' => now(),
+                ]);
+            return response()->json(['message'=>"Token found, you can proceed"], 200);
+        }
+
+        return response()->json([
+            'message' => translate('messages.not_found')
+        ], 404);
     }
 }

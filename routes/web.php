@@ -15,6 +15,7 @@ use App\Http\Controllers\PaypalPaymentController;
 use App\Http\Controllers\StripePaymentController;
 use App\Http\Controllers\SslCommerzPaymentController;
 use App\Http\Controllers\FirebaseController;
+use App\CentralLogics\Helpers;
 
 /*
 |--------------------------------------------------------------------------
@@ -160,9 +161,10 @@ if (!$is_published) {
         });
 
         //MERCADOPAGO
+
         Route::group(['prefix' => 'mercadopago', 'as' => 'mercadopago.'], function () {
             Route::get('pay', [MercadoPagoController::class, 'index'])->name('index');
-            Route::post('make-payment', [MercadoPagoController::class, 'make_payment'])->name('make_payment');
+            Route::any('make-payment', [MercadoPagoController::class, 'make_payment'])->name('make_payment')->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
             Route::get('success', [MercadoPagoController::class, 'success'])->name('success');
             Route::get('failed', [MercadoPagoController::class, 'failed'])->name('failed');
         });
@@ -184,6 +186,7 @@ if (!$is_published) {
 
 
 Route::get('/test', function () {
+    Helpers::updateAdminNotificationSetupDataSetup();
     dd('Hello tester');
 });
 

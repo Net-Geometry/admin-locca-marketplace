@@ -1012,10 +1012,10 @@ class ItemController extends Controller
                             $store_sub->decrement('max_product' , $total_item);
                             if (  $store_sub->max_product <= 0 ){
                                 $store->update(['item_section' => 0]);
+                            } else{
+                                Toastr::error(translate('messages.you_have_reached_the_maximum_limit_of_item'));
+                                return back();
                             }
-                        } else{
-                            Toastr::error(translate('messages.you_have_reached_the_maximum_limit_of_item'));
-                            return back();
                         }
 
 
