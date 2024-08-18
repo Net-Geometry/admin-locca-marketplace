@@ -5527,4 +5527,5 @@
   'email_already_taken' => 'Email already taken',
   'subscription_plan_updated' => 'Subscription plan updated',
   'Your_subscription_has_been_updated' => 'Your subscription has been updated',
+  'drivemond_configuration_setup' => 'Drivemond configuration setup',
 );
