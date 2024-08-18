@@ -5543,4 +5543,5 @@
   'drivemond_token' => 'Drivemond token',
   'Ex: https://drivemond.com' => 'Ex: https://drivemond.com',
   'drivemond_base_url' => 'Drivemond base url',
+  'failed_to_send_sms_&_mail' => 'Failed to send sms & mail',
 );
