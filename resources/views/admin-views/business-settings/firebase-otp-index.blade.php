@@ -16,8 +16,8 @@
                 </span>
             </h1>
             @include('admin-views.business-settings.partials.third-party-links')
-                <div class="py-1">
-                    <div class="text--primary-2 my-lg-n8 my-md-n8 mx-4 d-flex flex-wrap justify-content-end align-items-center" type="button" data-toggle="modal" data-target="#instructionsModal">
+                <div class="">
+                    <div class="text--primary-2  mx-4 d-flex flex-wrap justify-content-end align-items-center" type="button" data-toggle="modal" data-target="#instructionsModal">
                         <strong class="mr-2">{{translate('How it Works')}}</strong>
                         <div class="blinkings">
                             <i class="tio-info-outined"></i>
@@ -27,6 +27,20 @@
             </div>
         <!-- End Page Header -->
 
+
+        @php
+        $text= null;
+            if ($is_sms_active) {
+                $text= translate('Your_SMS_gateway_is_Active');
+                }
+            if($is_mail_active){
+                $text= translate('Your_Mail_is_Active');
+                }
+            if($is_mail_active && $is_sms_active){
+                $text= translate('Your_SMS_gateway_&_Mail_is_Active');
+                }
+
+        @endphp
         <form
             action="{{env('APP_MODE')!='demo'?route('admin.business-settings.third-party.firebase_otp_update',['recaptcha']):'javascript:'}}"
             method="post">
@@ -61,7 +75,8 @@
                                                    data-image-off="{{ asset('/public/assets/admin/img/modal/order-delivery-verification-off.png') }}"
                                                    data-title-on="{{translate('Want_to_enable')}} <strong>{{translate('Firebase_OTP_Verification')}}</strong>"
                                                    data-title-off="{{translate('Want_to_disable')}} <strong>{{translate('Firebase_OTP_Verification')}}</strong> "
-                                                   data-text-on="<p>{{ translate('If_enabled,Otp_will_sent_by_the_Firebase') }}</p>"
+                                                   data-text-on="<p>{{ translate('If_enabled,Otp_will_sent_by_the_Firebase') .' </p>' .'  <p class=text--danger>   <strong>
+                                            Note: ' .$text .'. '. translate('Users_won’t_get_the_OTP_from_these_methods.') .'</strong>'}}</p>"
                                                    data-text-off="<p>{{ translate('If_disabled,Otp_won’t_be_sent_by_the_Firebase') }}</p>"
                                                    class="status toggle-switch-input dynamic-checkbox-toggle"
                                                    value="1"

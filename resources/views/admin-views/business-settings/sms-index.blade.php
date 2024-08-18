@@ -54,7 +54,7 @@
                         <div class="discount-type">
                                 <div class="d-flex align-items-center gap-4 gap-xl-5 mb-30">
                                     <div class="custom-radio">
-                                        <input type="radio" id="{{$gateway->key_name}}-active"
+                                        <input class="{{ \App\Models\BusinessSetting::where('key', 'firebase_otp_verification')->first()?->value == 1 ? 'firebase-check' : '' }} "  type="radio" id="{{$gateway->key_name}}-active"
                                                 name="status"
                                                 value="1" {{$data_values->where('key_name',$gateway->key_name)->first()->live_values['status']?'checked':''}}>
                                         <label
@@ -98,6 +98,63 @@
 
             </div>
         </div>
-    @endsection
+
+
+        <div class="modal fade" id="firebase-modal">
+            <div class="modal-dialog status-warning-modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span aria-hidden="true" class="tio-clear"></span>
+                        </button>
+                    </div>
+                    <div class="modal-body pb-5 pt-0">
+                        <div class="max-349 mx-auto mb-20">
+                            <div>
+                                <div class="text-center">
+                                    <img src="{{ asset('/public/assets/admin/img/modal/order-delivery-verification-on.png') }}" class="mb-20">
+                                    <h5 class="modal-title" >{{ translate('messages.Note') }} </h5>
+                                </div>
+                                <div class="text-center">
+                                    <p class="text--danger" >
+                                        {{ translate('Currently_Your_FireBase_OTP_System_is_Active.Users_won’t_get_any_OTP_from_this_SMS_Gateway' ) }}
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="btn--container justify-content-center">
+                                <button type="button"  data-dismiss="modal" class="btn btn--primary min-w-120 confirm-Status-Toggle" data-dismiss="modal" >{{translate('OK')}}</button>
+                                {{-- <button type="button" class="btn btn--cancel min-w-120" data-dismiss="modal">
+                                    {{translate("Cancel")}}
+                                </button> --}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+@endsection
+@push('script_2')
+
+    <script>
+
+    $(document).on('click', '.firebase-check', function(event) {
+        // event.preventDefault();
+        $('#firebase-modal').modal('show');
+    });
+
+    </script>
+@endpush
+
 
 

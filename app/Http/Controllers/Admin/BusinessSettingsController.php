@@ -2573,7 +2573,10 @@ class BusinessSettingsController extends Controller
 
     public function firebase_otp_index(Request $request)
     {
-        return view('admin-views.business-settings.firebase-otp-index');
+        $is_sms_active= Setting::where('is_active',1)->where('settings_type', 'sms_config')
+        ->exists();
+        $is_mail_active= config('mail.status');
+        return view('admin-views.business-settings.firebase-otp-index',compact('is_sms_active','is_mail_active'));
     }
 
     public function firebase_otp_update(Request $request)
