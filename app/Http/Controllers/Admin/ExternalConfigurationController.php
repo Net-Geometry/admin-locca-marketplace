@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 
 class ExternalConfigurationController extends Controller
 {
@@ -28,7 +29,6 @@ class ExternalConfigurationController extends Controller
                 'value' => 0
             ]);
         }
-
         DB::table('external_configurations')->updateOrInsert(['key' => 'drivemond_base_url'], [
             'value' => $request['drivemond_base_url']
         ]);
@@ -39,7 +39,26 @@ class ExternalConfigurationController extends Controller
         DB::table('external_configurations')->updateOrInsert(['key' => 'system_self_token'], [
             'value' => $request['system_self_token']
         ]);
-
+        $activationMode = DB::table('external_configurations')->where('key', 'activation_mode')->first();
+        if ($activationMode && $activationMode->value==1) {
+            $response = Http::get($request['drivemond_base_url'].'/api/configurations');
+            if ($response->status()==200){
+                $driveMondConfig = $response->json();
+                DB::table('external_configurations')->updateOrInsert(['key' => 'drivemond_business_name'], [
+                    'value' => $driveMondConfig['business_name']
+                ]);
+                DB::table('external_configurations')->updateOrInsert(['key' => 'drivemond_business_logo'], [
+                    'value' => $driveMondConfig['logo']
+                ]);
+                Toastr::success(translate('messages.successfully_updated_to_changes_restart_app'));
+                return back();
+            }
+            DB::table('external_configurations')->updateOrInsert(['key' => 'activation_mode'], [
+                'value' => 0
+            ]);
+            Toastr::warning(translate('messages.something_went_wrong,please_check_drivemond_base_url'));
+            return back();
+        }
         Toastr::success(translate('messages.successfully_updated_to_changes_restart_app'));
         return back();
     }

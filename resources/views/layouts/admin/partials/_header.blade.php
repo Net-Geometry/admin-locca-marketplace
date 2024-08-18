@@ -220,9 +220,12 @@
                                             </div>
                                             @if(\App\Models\ExternalConfiguration::where('key','activation_mode')->first()->value ?? 0)
                                                 @php($drivemondBaseUrl = \App\Models\ExternalConfiguration::where('key', 'drivemond_base_url')->first()->value ?? null)
+                                                @php($drivemondBusinessName = \App\Models\ExternalConfiguration::where('key', 'drivemond_business_name')->first()->value ?? "DriveMond")
+                                                @php($drivemondBusinessLogo = \App\Models\ExternalConfiguration::where('key', 'drivemond_business_logo')->first()->value ?? null)
                                                 <div class="col-6">
                                                     <form method="POST"
-                                                          action="{{url($drivemondBaseUrl."/admin/auth/external-login-from-mart")}}" target="_blank">
+                                                          action="{{url($drivemondBaseUrl."/admin/auth/external-login-from-mart")}}"
+                                                          target="_blank">
                                                         <input type="hidden" name="mart_token"
                                                                value="{{\App\Models\ExternalConfiguration::where('key','system_self_token')->first()->value ?? null}}">
                                                         <input type="hidden" name="mart_base_url" value="{{url('/')}}">
@@ -233,7 +236,7 @@
                                                             <img
                                                                 src="{{asset('/public/assets/admin/img/how-it-works/ride-sharing.svg')}}"
                                                                 alt="public/img">
-                                                            <span>{{ translate('DriveMond Admin Panel')}}</span>
+                                                            <span>{{ $drivemondBusinessName. ' '. translate('Admin Panel')}}</span>
                                                         </button>
                                                     </form>
                                                 </div>
