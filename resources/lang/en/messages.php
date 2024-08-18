@@ -5539,4 +5539,8 @@
   'external_configuration' => 'External configuration',
   'generate_system_self_token' => 'Generate system self token',
   'system_self_token' => 'System self token',
+  'enter_drivemond_token' => 'Enter drivemond token',
+  'drivemond_token' => 'Drivemond token',
+  'Ex: https://drivemond.com' => 'Ex: https://drivemond.com',
+  'drivemond_base_url' => 'Drivemond base url',
 );
