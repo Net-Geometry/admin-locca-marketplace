@@ -86,7 +86,7 @@
                                     @php($systemSelfToken = \App\Models\ExternalConfiguration::where('key', 'system_self_token')->first())
                                     <div class="p-3 p-sm-4 bg-soft-secondary rounded">
                                         <label
-                                            class="form-label">{{ (\App\CentralLogics\Helpers::get_business_data('business_name') ?? "6amMart" ) . ' ' .translate('messages.System Token') }}
+                                            class="form-label">{{ (\App\CentralLogics\Helpers::get_business_data('business_name') ?? "6amMart" ) . ' ' .translate('messages.System Self Token') }}
                                             <i class="tio-info-outined text-primary"
                                                title="{{ translate("Click on the Generate Token button, It will automatically generate the token and paste it into the input field.") }}"
                                                data-toggle="tooltip"></i>
