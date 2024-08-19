@@ -98,7 +98,7 @@
                                                 <img
                                                     src="{{asset('/public/assets/admin/img/navbar-setting-icon/external-configuration.svg')}}"
                                                     alt="">
-                                                <span>{{translate('messages.drivemond_configuration_setup')}}</span>
+                                                <span>{{translate('messages.software_setup_and_integration')}}</span>
                                             </a>
                                         </li>
                                     @endif
