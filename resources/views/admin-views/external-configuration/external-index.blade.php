@@ -130,7 +130,7 @@
                         </button>
                     </div>
                     <div class="modal-body pb-5 pt-0 px-lg-5">
-                        <h4 class="mb-3">{{translate('How does it works')}}</h4>
+                        <h4 class="mb-3">{{translate('How does it works')}} ?</h4>
                         <div class="row g-3">
                             <div class="col-md-4">
                                 <div class="">
