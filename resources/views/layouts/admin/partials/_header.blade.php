@@ -236,7 +236,7 @@
                                                             <img
                                                                 src="{{asset('/public/assets/admin/img/how-it-works/ride-sharing.svg')}}"
                                                                 alt="public/img">
-                                                            <span>{{ $drivemondBusinessName. ' '. translate('Admin Panel')}}</span>
+                                                            <span>{{ $drivemondBusinessName?? "DriveMond". ' '. translate('Admin Panel')}}</span>
                                                         </button>
                                                     </form>
                                                 </div>

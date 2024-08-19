@@ -400,9 +400,9 @@ class CustomerController extends Controller
             $userinfo->save();
         }
         if (Helpers::checkSelfExternalConfiguration()) {
-            $driveMondBaseUrl = ExternalConfiguration::where('key', 'drivemond_base_url')->first()->value;
-            $driveMondToken = ExternalConfiguration::where('key', 'drivemond_token')->first()->value;
-            $systemSelfToken = ExternalConfiguration::where('key', 'system_self_token')->first()->value;
+            $driveMondBaseUrl = ExternalConfiguration::where('key', 'drivemond_base_url')->first()?->value;
+            $driveMondToken = ExternalConfiguration::where('key', 'drivemond_token')->first()?->value;
+            $systemSelfToken = ExternalConfiguration::where('key', 'system_self_token')->first()?->value;
             $response = Http::asForm()->post($driveMondBaseUrl . '/api/customer/external-update-data',
                 [
                     'bearer_token' => $request->bearerToken(),
@@ -465,9 +465,9 @@ class CustomerController extends Controller
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
         if (Helpers::checkSelfExternalConfiguration() && Helpers::checkExternalConfiguration($request->external_base_url, $request->external_token, $request->token)) {
-            $driveMondBaseUrl = ExternalConfiguration::where('key', 'drivemond_base_url')->first()->value;
-            $driveMondToken = ExternalConfiguration::where('key', 'drivemond_token')->first()->value;
-            $systemSelfToken = ExternalConfiguration::where('key', 'system_self_token')->first()->value;
+            $driveMondBaseUrl = ExternalConfiguration::where('key', 'drivemond_base_url')->first()?->value;
+            $driveMondToken = ExternalConfiguration::where('key', 'drivemond_token')->first()?->value;
+            $systemSelfToken = ExternalConfiguration::where('key', 'system_self_token')->first()?->value;
             $response = Http::withToken($request->bearer_token)->post($driveMondBaseUrl . '/api/customer/get-data',
                 [
                     'token' => $driveMondToken,

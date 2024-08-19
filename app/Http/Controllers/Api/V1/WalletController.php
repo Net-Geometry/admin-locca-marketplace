@@ -165,9 +165,9 @@ class WalletController extends Controller
         }
         if (Helpers::checkSelfExternalConfiguration()) {
             $currencyCode = Helpers::currency_code();
-            $driveMondBaseUrl = ExternalConfiguration::where('key', 'drivemond_base_url')->first()->value;
-            $driveMondToken = ExternalConfiguration::where('key', 'drivemond_token')->first()->value;
-            $systemSelfToken = ExternalConfiguration::where('key', 'system_self_token')->first()->value;
+            $driveMondBaseUrl = ExternalConfiguration::where('key', 'drivemond_base_url')->first()?->value;
+            $driveMondToken = ExternalConfiguration::where('key', 'drivemond_token')->first()?->value;
+            $systemSelfToken = ExternalConfiguration::where('key', 'system_self_token')->first()?->value;
             $response = Http::post($driveMondBaseUrl . '/api/customer/wallet/transfer-drivemond-from-mart',
                 [
                     'bearer_token' => $request->bearerToken(),
@@ -249,9 +249,9 @@ class WalletController extends Controller
             return response()->json($data);
         }
         if (Helpers::checkSelfExternalConfiguration() && Helpers::checkExternalConfiguration($request->external_base_url, $request->external_token, $request->token)) {
-            $driveMondBaseUrl = ExternalConfiguration::where('key', 'drivemond_base_url')->first()->value;
-            $driveMondToken = ExternalConfiguration::where('key', 'drivemond_token')->first()->value;
-            $systemSelfToken = ExternalConfiguration::where('key', 'system_self_token')->first()->value;
+            $driveMondBaseUrl = ExternalConfiguration::where('key', 'drivemond_base_url')->first()?->value;
+            $driveMondToken = ExternalConfiguration::where('key', 'drivemond_token')->first()?->value;
+            $systemSelfToken = ExternalConfiguration::where('key', 'system_self_token')->first()?->value;
             $response = Http::withToken($request->bearer_token)->post($driveMondBaseUrl . '/api/customer/get-data',
                 [
                     'token' => $driveMondToken,
