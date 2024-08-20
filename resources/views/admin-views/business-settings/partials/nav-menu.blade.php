@@ -35,9 +35,6 @@
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/business-setup/disbursement') ?'active':'' }}" href="{{ route('admin.business-settings.business-setup',  ['tab' => 'disbursement']) }}"  aria-disabled="true">{{translate('messages.disbursement')}}</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link {{ Request::is('admin/business-settings/business-setup/external-configuration') ?'active':'' }}" href="{{ route('admin.business-settings.business-setup',  ['tab' => 'external-configuration']) }}"  aria-disabled="true">{{translate('messages.external_configuration')}}</a>
-            </li>
         </ul>
         <!-- End Nav -->
     </div>

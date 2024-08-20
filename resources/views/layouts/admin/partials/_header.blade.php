@@ -98,7 +98,7 @@
                                                 <img
                                                     src="{{asset('/public/assets/admin/img/navbar-setting-icon/external-configuration.svg')}}"
                                                     alt="">
-                                                <span>{{translate('messages.software_setup_and_integration')}}</span>
+                                                <span>{{translate('messages.Ride_Share_Setup_&_Integration')}}</span>
                                             </a>
                                         </li>
                                     @endif

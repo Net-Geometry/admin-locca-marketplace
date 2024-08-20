@@ -5595,4 +5595,5 @@
   'and paste it here to the Software System Token input field.' => 'And paste it here to the Software System Token input field.',
   'At last,  Click on the  ' => 'At last,  Click on the  ',
   'Generate Token ' => 'Generate Token ',
+  'Ride_Share_Setup_&_Integration' => 'Ride Share Setup & Integration',
 );
