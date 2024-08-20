@@ -5569,4 +5569,8 @@
   'Enable the switch to activate drivemond in 6amMart system. Setup the configurations with accurate data in order to work the functionality properly' => 'Enable the switch to activate drivemond in 6amMart system. Setup the configurations with accurate data in order to work the functionality properly',
   'Your_Mail_is_Active' => 'Your Mail is Active',
   'Users_won’t_get_the_OTP_from_these_methods.' => 'Users won’t get the OTP from these methods.',
+  'Currently_Your_FireBase_OTP_System_is_Active.Users_won’t_get_any_OTP_from_this_SMS_Gateway' => 'Currently Your FireBase OTP System is Active.Users won’t get any OTP from this SMS Gateway',
+  'NOTE: Currently_Your_FireBase_OTP_System_is_Active.Users_won’t_get_any_OTP_related_mails.' => 'NOTE: Currently Your FireBase OTP System is Active.Users won’t get any OTP related mails.',
+  'Image is required!' => 'Image is required!',
+  'Sub_category_added_successfully' => 'Sub category added successfully',
 );

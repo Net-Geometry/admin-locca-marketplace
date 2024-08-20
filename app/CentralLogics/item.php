@@ -1519,8 +1519,15 @@ class ProductLogic
         }
         $paginator = $query->paginate($limit, ['*'], 'page', $offset);
 
+        $item_categories = $query->pluck('category_ids')->toArray();
 
-        $item_categories = $query->pluck('category_id')->toArray();
+        $item_categories = array_reduce($item_categories, function($carry, $jsonString) {
+            $items = json_decode($jsonString, true);
+            $filtered = array_filter($items, fn($item) => $item['position'] == 1);
+            $carry = array_merge($carry, array_column($filtered, 'id'));
+            return $carry;
+        }, []);
+
 
         $item_categories = array_unique($item_categories);
 
