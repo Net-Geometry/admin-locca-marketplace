@@ -50,6 +50,15 @@ class ExternalConfigurationController extends Controller
                 DB::table('external_configurations')->updateOrInsert(['key' => 'drivemond_business_logo'], [
                     'value' => $driveMondConfig['logo']
                 ]);
+                DB::table('external_configurations')->updateOrInsert(['key' => 'drivemond_app_url_ios'], [
+                    'value' => $driveMondConfig['app_url_ios']
+                ]);
+
+                DB::table('external_configurations')->updateOrInsert(['key' => 'drivemond_app_url_android'], [
+                    'value' => $driveMondConfig['app_url_android']
+                ]);
+
+
                 Toastr::success(translate('messages.successfully_updated_to_changes_restart_app'));
                 return back();
             }
