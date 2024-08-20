@@ -54,6 +54,10 @@ class OrderController extends Controller
         }
         $user_id = $request?->user?->id ;
 
+        if ($request['contact_number'] && (substr($request['contact_number'], 0, 1) !== '+')) {
+            $request['contact_number'] = '+' . $request['contact_number'];
+        }
+
         $order = Order::with(['store','store.store_sub' ,'delivery_man.rating', 'parcel_category', 'refund','payments'])->withCount('details')
         ->where('id', $request['order_id'])
         ->when($request->user, function ($query) use ($user_id) {

@@ -1357,6 +1357,18 @@
                                     </span>
                                 </div>
                             </a>
+
+
+                        @elseif($order->is_guest)
+                            <span class="badge badge-soft-success py-2 d-block qcont">
+                                {{ translate('Guest_user') }}
+                            </span>
+
+                        @else
+                            <span class="badge badge-soft-danger py-2 d-block qcont">
+                                {{ translate('Customer Not found!') }}
+                            </span>
+                        @endif
                             @if ($order->receiver_details)
                                 @php($receiver_details = $order->receiver_details)
                                 <h5 class="card-title mt-3">
@@ -1371,28 +1383,28 @@
                                         <span class="info">{{ $receiver_details['contact_person_name'] }}</span>
                                         <span class="name">{{ translate('messages.contact') }}</span>
                                         <a class="deco-none info d-flex"
-                                            href="tel:{{ $receiver_details['contact_person_number'] }}">
+                                           href="tel:{{ $receiver_details['contact_person_number'] }}">
                                             {{ $receiver_details['contact_person_number'] }}</a>
 
                                                 @if (data_get($receiver_details,'floor') != '')
-                                                <span class="name">{{ translate('Floor') }}</span> <span
+                                            <span class="name">{{ translate('Floor') }}</span> <span
                                                 class="info">{{ data_get($receiver_details,'floor', translate('messages.N/A'))  }}</span>
-                                                @endif
-                                                @if ( data_get($receiver_details,'house') != '')
-                                                <span class="name">{{ translate('House') }}</span> <span
+                                        @endif
+                                        @if ( data_get($receiver_details,'house') != '')
+                                            <span class="name">{{ translate('House') }}</span> <span
                                                 class="info">{{data_get($receiver_details,'house', translate('messages.N/A')) }}</span>
-                                                @endif
-                                                @if ( data_get($receiver_details,'road') != '')
-                                                <span class="name">{{ translate('Road') }}</span> <span
+                                        @endif
+                                        @if ( data_get($receiver_details,'road') != '')
+                                            <span class="name">{{ translate('Road') }}</span> <span
                                                 class="info">{{ data_get($receiver_details,'road', translate('messages.N/A')) }}</span>
-                                                @endif
+                                        @endif
 
                                         <hr class="w-100">
 
                                         @if (isset($receiver_details['address']))
                                             @if (isset($receiver_details['latitude']) && isset($receiver_details['longitude']))
                                                 <a class="mt-2 d-flex" target="_blank"
-                                                    href="http://maps.google.com/maps?z=12&t=m&q=loc:{{ $receiver_details['latitude'] }}+{{ $receiver_details['longitude'] }}">
+                                                   href="http://maps.google.com/maps?z=12&t=m&q=loc:{{ $receiver_details['latitude'] }}+{{ $receiver_details['longitude'] }}">
                                                     <i class="tio-poi"></i>{{ $receiver_details['address'] }}
                                                 </a>
                                             @else
@@ -1402,17 +1414,6 @@
                                     </span>
                                 @endif
                             @endif
-
-                        @elseif($order->is_guest)
-                            <span class="badge badge-soft-success py-2 d-block qcont">
-                                {{ translate('Guest_user') }}
-                            </span>
-
-                        @else
-                            <span class="badge badge-soft-danger py-2 d-block qcont">
-                                {{ translate('Customer Not found!') }}
-                            </span>
-                        @endif
 
                         @if ($order->delivery_address)
                             @php($address = json_decode($order->delivery_address, true))
