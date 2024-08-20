@@ -98,7 +98,7 @@
                                                 <img
                                                     src="{{asset('/public/assets/admin/img/navbar-setting-icon/external-configuration.svg')}}"
                                                     alt="">
-                                                <span>{{translate('messages.drivemond_configuration_setup')}}</span>
+                                                <span>{{translate('messages.software_setup_and_integration')}}</span>
                                             </a>
                                         </li>
                                     @endif
@@ -236,7 +236,7 @@
                                                             <img
                                                                 src="{{asset('/public/assets/admin/img/how-it-works/ride-sharing.svg')}}"
                                                                 alt="public/img">
-                                                            <span>{{ $drivemondBusinessName. ' '. translate('Admin Panel')}}</span>
+                                                            <span>{{ ($drivemondBusinessName?? "DriveMond"). ' '. translate('Admin Panel')}}</span>
                                                         </button>
                                                     </form>
                                                 </div>

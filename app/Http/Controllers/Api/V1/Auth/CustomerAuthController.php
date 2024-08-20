@@ -639,6 +639,13 @@ class CustomerAuthController extends Controller
                     $drivemondCustomerResponse = $response->json();
                     if ($drivemondCustomerResponse['status']) {
                         $drivemondCustomer = $drivemondCustomerResponse['data'];
+                        if (User::where('email', $drivemondCustomer['email'])->first()) {
+                            $errors = [];
+                            array_push($errors, ['code' => 'email_unique_402', 'message' => translate('messages.Email already exists, Please update mart email and switch 6ammart')]);
+                            return response()->json([
+                                'errors' => $errors
+                            ], 403);
+                        }
                         $user = User::create([
                             'f_name' => $drivemondCustomer['first_name'],
                             'l_name' => $drivemondCustomer['last_name'],

@@ -113,9 +113,9 @@
                     @if (\App\CentralLogics\Helpers::module_permission_check('settings'))
                         <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/external-system*') ? 'active' : '' }}">
                             <a class="nav-link " href="{{ route('admin.business-settings.external-system.drivemond-configuration') }}"
-                               title="{{ translate('messages.drivemond_configuration_setup') }}">
+                               title="{{ translate('messages.software_setup_and_integration') }}">
                                 <span class="tio-settings nav-icon"></span>
-                                <span class="text-truncate">{{ translate('messages.drivemond_configuration_setup') }}</span>
+                                <span class="text-truncate">{{ translate('messages.software_setup_and_integration') }}</span>
                             </a>
                         </li>
                     @endif

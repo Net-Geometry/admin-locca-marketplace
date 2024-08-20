@@ -14,7 +14,7 @@ class ExternalConfigurationController extends Controller
         $name = \App\Models\BusinessSetting::where('key', 'business_name')->first();
         $logo = \App\Models\BusinessSetting::where('key', 'logo')->first();
         $configs = [
-            'business_name' => $name->value ?? "6amMart",
+            'business_name' => $name?->value ?? "6amMart",
             'logo' => \App\CentralLogics\Helpers::get_full_url('business', $logo?->value ?? '', $logo?->storage[0]?->value ?? 'public', 'favicon') ?? asset('public/assets/admin/img/160x160/img2.jpg'),
         ];
         return response()->json($configs);

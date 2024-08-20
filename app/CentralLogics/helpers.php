@@ -1030,6 +1030,18 @@ class Helpers
 
         return $config;
     }
+    public static function get_external_data($name)
+    {
+        $config = null;
+
+        $paymentmethod = ExternalConfiguration::where('key', $name)->first();
+
+        if ($paymentmethod) {
+            $config = $paymentmethod->value;
+        }
+
+        return $config;
+    }
 
     public static function currency_code()
     {
