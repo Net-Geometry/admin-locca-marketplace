@@ -18,6 +18,7 @@ use App\Models\OfflinePayments;
 use App\Models\ReactTestimonial;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\ExternalConfiguration;
 use App\Models\OfflinePaymentMethod;
 use Illuminate\Support\Facades\Http;
 use App\Models\FlutterSpecialCriteria;
@@ -54,7 +55,6 @@ class ConfigController extends Controller
         foreach ($image_key as $value){
             $data[$value.'_storage'] = BusinessSetting::where('key',$value)->first()?->storage[0]?->value ??'public';
         }
-
 
         $DataSetting =  DataSetting::where('type','flutter_landing_page')->where('key','download_user_app_links')->pluck('value', 'key')->toArray();
         $DataSetting =  isset($DataSetting['download_user_app_links'])? json_decode($DataSetting['download_user_app_links'],true):[];
@@ -307,6 +307,9 @@ class ConfigController extends Controller
             'subscription_free_trial_status' => (int)(isset($settings['subscription_free_trial_status']) ? $settings['subscription_free_trial_status'] : 0),
             'country_picker_status' => (int)(isset($settings['country_picker_status']) ? $settings['country_picker_status'] : 1),
             'external_system' => Helpers::checkSelfExternalConfiguration(),
+
+            'drivemond_app_url_android'=>Helpers::checkSelfExternalConfiguration() ? Helpers::get_external_data('drivemond_app_url_android') : '' ,
+            'drivemond_app_url_ios'=>Helpers::checkSelfExternalConfiguration()? Helpers::get_external_data('drivemond_app_url_ios') : '' ,
             'firebase_otp_verification' => (int)(isset($settings['firebase_otp_verification']) ? $settings['firebase_otp_verification'] : 0)
 
         ]);

@@ -1037,7 +1037,7 @@ class Helpers
         $paymentmethod = ExternalConfiguration::where('key', $name)->first();
 
         if ($paymentmethod) {
-            $config = $paymentmethod->value;
+            $config = $paymentmethod?->value;
         }
 
         return $config;
