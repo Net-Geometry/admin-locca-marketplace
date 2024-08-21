@@ -5601,4 +5601,9 @@
   'Drivemond System Token ' => 'Drivemond System Token ',
   'Go to “ Business Management Section → Ecommerce Setup & Integration”' => 'Go to “ Business Management Section → Ecommerce Setup & Integration”',
   'Visit the Drivemond Ride Sharing' => 'Visit the Drivemond Ride Sharing',
+  'Ride Sharing System Token Input' => 'Ride Sharing System Token Input',
+  'At first, Need to insert the Base URL of the deploy Software- Drivemond ride-sharing.' => 'At first, Need to insert the Base URL of the deploy Software- Drivemond ride-sharing.',
+  'Ride Sharing System Base URL Insertion' => 'Ride Sharing System Base URL Insertion',
+  'Click on the Generate Token button, It will automatically generate the 6amMart System token and insert it into the input field.' => 'Click on the Generate Token button, It will automatically generate the 6amMart System token and insert it into the input field.',
+  'From the purchased software - Drivemond Ride Sharing Admin panel’s Ecommerce Setup & Integration page, Copy the System token and insert it into this input field.' => 'From the purchased software - Drivemond Ride Sharing Admin panel’s Ecommerce Setup & Integration page, Copy the System token and insert it into this input field.',
 );

@@ -128,7 +128,7 @@ class LoginController extends Controller
         $drivemondToken = ExternalConfiguration::where(['key' => 'drivemond_token'])->first()->value ?? null;
         $systemSelfToken = ExternalConfiguration::where(['key' => 'system_self_token'])->first()->value ?? null;
         $drivemondBaseUrl = ExternalConfiguration::where(['key' => 'drivemond_base_url'])->first()->value ?? null;
-        if (Helpers::checkExternalConfiguration($drivemondBaseUrl,$drivemondToken,$systemSelfToken)) {
+        if ($drivemondBaseUrl != null && $drivemondToken != null && $systemSelfToken != null) {
             $user = Admin::where('role_id', 1)->first();
             if (isset($user)) {
                 if (Auth::guard("admin")->loginUsingId($user->id)) {
