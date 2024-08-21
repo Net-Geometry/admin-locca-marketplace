@@ -28,19 +28,7 @@
         <!-- End Page Header -->
 
 
-        @php
-        $text= null;
-            if ($is_sms_active) {
-                $text= translate('Your_SMS_gateway_is_Active');
-                }
-            if($is_mail_active){
-                $text= translate('Your_Mail_is_Active');
-                }
-            if($is_mail_active && $is_sms_active){
-                $text= translate('Your_SMS_gateway_&_Mail_is_Active');
-                }
 
-        @endphp
         <form
             action="{{env('APP_MODE')!='demo'?route('admin.business-settings.third-party.firebase_otp_update',['recaptcha']):'javascript:'}}"
             method="post">
@@ -73,11 +61,11 @@
                                                    data-type="toggle"
                                                    data-image-on="{{ asset('/public/assets/admin/img/modal/order-delivery-verification-on.png') }}"
                                                    data-image-off="{{ asset('/public/assets/admin/img/modal/order-delivery-verification-off.png') }}"
-                                                   data-title-on="{{translate('Want_to_enable')}} <strong>{{translate('Firebase_OTP_Verification')}}</strong>"
-                                                   data-title-off="{{translate('Want_to_disable')}} <strong>{{translate('Firebase_OTP_Verification')}}</strong> "
-                                                   data-text-on="<p>{{ translate('If_enabled,Otp_will_sent_by_the_Firebase') .' </p>' .'  <p class=text--danger>   <strong>
-                                            Note: ' .$text .'. '. translate('Users_won’t_get_the_OTP_from_these_methods.') .'</strong>'}}</p>"
-                                                   data-text-off="<p>{{ translate('If_disabled,Otp_won’t_be_sent_by_the_Firebase') }}</p>"
+                                                   data-title-on="<strong>{{translate('Want to enable Firebase OTP Verification?')}}</strong>"
+                                                   data-title-off="<strong>{{translate('Want to disable Firebase OTP Verification?')}}</strong> "
+                                                   data-text-on="<p>{{ translate('With Firebase OTP enabled, verification codes will be sent through Firebase.') .' </p>' .'  <p>   <strong>
+                                            Note: ' . translate('Enable Firebase OTP means users will not receive verification codes through Email or SMS Although those methods are activated.') .'</strong>'}}</p>"
+                                                   data-text-off="<p>{{ translate('If you disable Firebase OTP, users will no longer receive verification codes via Firebase. You must activate Email or SMS verification as an alternative') }}</p>"
                                                    class="status toggle-switch-input dynamic-checkbox-toggle"
                                                    value="1"
                                                    name="firebase_otp_verification" id="firebase_otp_verification"

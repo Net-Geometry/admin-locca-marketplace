@@ -252,6 +252,13 @@ class Item extends Model
         return $query;
     }
 
+    public function scopeAvailable($query,$time)
+    {
+        $query->where(function($q)use($time){
+            $q->where('available_time_starts','<=',$time)->where('available_time_ends','>=',$time);
+        });
+    }
+
     public function tags()
     {
         return $this->belongsToMany(Tag::class);
