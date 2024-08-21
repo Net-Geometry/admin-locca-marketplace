@@ -18,6 +18,7 @@ use BeyondCode\LaravelWebSockets\Facades\WebSocketsRouter;
 Route::group(['namespace' => 'Api\V1', 'middleware'=>'localization'], function () {
     Route::group(['prefix' => 'configurations'], function () {
         Route::get('/', 'ExternalConfigurationController@getConfiguration');
+        Route::get('/get-external', 'ExternalConfigurationController@getExternalConfiguration');
         Route::post('/store', 'ExternalConfigurationController@updateConfiguration');
     });
 

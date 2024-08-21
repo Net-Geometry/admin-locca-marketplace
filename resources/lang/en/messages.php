@@ -5598,4 +5598,7 @@
   'Ride_Share_Setup_&_Integration' => 'Ride Share Setup & Integration',
   'assign_delivery_man_manually' => 'Assign delivery man manually',
   'and paste it here to the Ride Sharing System Token input field.' => 'And paste it here to the Ride Sharing System Token input field.',
+  'Drivemond System Token ' => 'Drivemond System Token ',
+  'Go to “ Business Management Section → Ecommerce Setup & Integration”' => 'Go to “ Business Management Section → Ecommerce Setup & Integration”',
+  'Visit the Drivemond Ride Sharing' => 'Visit the Drivemond Ride Sharing',
 );

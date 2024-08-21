@@ -125,20 +125,21 @@ class LoginController extends Controller
 
     public function externalLoginFromDrivemond(Request $request)
     {
-        $drivemondToken = ExternalConfiguration::where(['key' => 'mart_token'])->first()->value ?? null;
+        $drivemondToken = ExternalConfiguration::where(['key' => 'drivemond_token'])->first()->value ?? null;
         $systemSelfToken = ExternalConfiguration::where(['key' => 'system_self_token'])->first()->value ?? null;
         $drivemondBaseUrl = ExternalConfiguration::where(['key' => 'drivemond_base_url'])->first()->value ?? null;
-        if ($drivemondToken == $request->drivemond_token && $drivemondBaseUrl == $request->drivemond_base_url && $systemSelfToken == $request->mart_token) {
+        if (Helpers::checkExternalConfiguration($drivemondBaseUrl,$drivemondToken,$systemSelfToken)) {
             $user = Admin::where('role_id', 1)->first();
             if (isset($user)) {
-                if (Auth::loginUsingId($user->id)) {
-                    $admin = Admin::find(auth('admin')->id());
+                if (Auth::guard("admin")->loginUsingId($user->id)) {
+                    $admin = Auth::guard("admin")->user();
                     $admin->is_logged_in = 1;
                     $admin->save();
                     return redirect()->route('admin.dashboard');
                 }
             }
         }
+        dd("h");
         return redirect()->back()->withInput($request->only('email', 'remember'))
             ->withErrors(['Credentials does not match.']);
     }
