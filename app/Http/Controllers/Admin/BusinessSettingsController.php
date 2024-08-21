@@ -2147,8 +2147,63 @@ class BusinessSettingsController extends Controller
                 'measurementId' => $request->measurementId
             ])
         ]);
+        self::firebase_message_config_file_gen();
         Toastr::success(translate('messages.settings_updated'));
         return back();
+    }
+
+    function firebase_message_config_file_gen()
+    {
+        $config = Helpers::get_business_settings('fcm_credentials');
+
+        $apiKey = $config['apiKey'] ?? '';
+        $authDomain = $config['authDomain'] ?? '';
+        $projectId = $config['projectId'] ?? '';
+        $storageBucket = $config['storageBucket'] ?? '';
+        $messagingSenderId = $config['messagingSenderId'] ?? '';
+        $appId = $config['appId'] ?? '';
+        $measurementId = $config['measurementId'] ?? '';
+
+        $filePath = base_path('firebase-messaging-sw.js');
+
+        try {
+            if (file_exists($filePath) && !is_writable($filePath)) {
+                if (!chmod($filePath, 0644)) {
+                    throw new \Exception('File is not writable and permission change failed: ' . $filePath);
+                }
+            }
+
+            $fileContent = <<<JS
+                importScripts('https://www.gstatic.com/firebasejs/8.3.2/firebase-app.js');
+                importScripts('https://www.gstatic.com/firebasejs/8.3.2/firebase-messaging.js');
+
+                firebase.initializeApp({
+                    apiKey: "$apiKey",
+                    authDomain: "$authDomain",
+                    projectId: "$projectId",
+                    storageBucket: "$storageBucket",
+                    messagingSenderId: "$messagingSenderId",
+                    appId: "$appId",
+                    measurementId: "$measurementId"
+                });
+
+                const messaging = firebase.messaging();
+                messaging.setBackgroundMessageHandler(function (payload) {
+                    return self.registration.showNotification(payload.data.title, {
+                        body: payload.data.body ? payload.data.body : '',
+                        icon: payload.data.icon ? payload.data.icon : ''
+                    });
+                });
+                JS;
+
+
+            if (file_put_contents($filePath, $fileContent) === false) {
+                throw new \Exception('Failed to write to file: ' . $filePath);
+            }
+
+        } catch (\Exception $e) {
+            //
+        }
     }
 
     public function update_fcm_messages(Request $request)

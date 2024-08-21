@@ -63,7 +63,7 @@ class POSController extends Controller
         ->whereHas('store', function($query)use($store_id, $module_id){
             return $query->where(['id'=>$store_id, 'module_id'=>$module_id]);
         })
-        // ->available($time)
+         ->available($time)
         ->latest()->paginate(10);
         return view('admin-views.pos.index', compact('categories', 'products','category', 'keyword', 'store', 'module_id'));
     }
