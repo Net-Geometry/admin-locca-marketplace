@@ -275,6 +275,14 @@ class WalletController extends Controller
                         $wallet_transaction->created_at = now();
                         $wallet_transaction->updated_at = now();
                         $wallet_transaction->save();
+                        $notification_data = [
+                            'title' => translate('wallet_transfer_mart_from_drivemond'),
+                            'description' => translate('you_transfer_your_wallet_balance_mart_from_drivemond') ,
+                            'image' => '',
+                            'type' => 'wallet_transfer',
+                        ];
+                        Helpers::send_push_notif_to_device($user?->cm_firebase_token, $notification_data);
+
                         $data = [
                             'status' => true,
                             'data' => $user
