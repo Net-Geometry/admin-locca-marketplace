@@ -5606,4 +5606,5 @@
   'Ride Sharing System Base URL Insertion' => 'Ride Sharing System Base URL Insertion',
   'Click on the Generate Token button, It will automatically generate the 6amMart System token and insert it into the input field.' => 'Click on the Generate Token button, It will automatically generate the 6amMart System token and insert it into the input field.',
   'From the purchased software - Drivemond Ride Sharing Admin panel’s Ecommerce Setup & Integration page, Copy the System token and insert it into this input field.' => 'From the purchased software - Drivemond Ride Sharing Admin panel’s Ecommerce Setup & Integration page, Copy the System token and insert it into this input field.',
+  'Ride Sharing System Token' => 'Ride Sharing System Token',
 );
