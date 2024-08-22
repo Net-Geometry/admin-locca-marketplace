@@ -5612,4 +5612,7 @@
   'Currency not matched, Please contact support' => 'Currency not matched, Please contact support',
   'you_transfer_your_wallet_balance_mart_from_drivemond' => 'You transfer your wallet balance mart from drivemond',
   'wallet_transfer_mart_from_drivemond' => 'Wallet transfer mart from drivemond',
+  'ride_sharing_setup_and_integration' => 'Ride sharing setup and integration',
+  'Enable the switch to activate the purchased Software- Drivemond ride-sharing in the 6amMart system. You must input the correct information to make sure the functionality works properly.' => 'Enable the switch to activate the purchased Software- Drivemond ride-sharing in the 6amMart system. You must input the correct information to make sure the functionality works properly.',
+  'Ride Sharing System Base URL' => 'Ride Sharing System Base URL',
 );

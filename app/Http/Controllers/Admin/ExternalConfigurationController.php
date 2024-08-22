@@ -12,6 +12,10 @@ class ExternalConfigurationController extends Controller
 {
     public function index()
     {
+        if(auth('admin')->user()->role_id != 1){
+            Toastr::warning(translate('messages.access_denied'));
+            return back();
+        }
         return view('admin-views.external-configuration.external-index');
     }
     public function updateDrivemondConfiguration(Request $request)
