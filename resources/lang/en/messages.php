@@ -5607,4 +5607,12 @@
   'Click on the Generate Token button, It will automatically generate the 6amMart System token and insert it into the input field.' => 'Click on the Generate Token button, It will automatically generate the 6amMart System token and insert it into the input field.',
   'From the purchased software - Drivemond Ride Sharing Admin panel’s Ecommerce Setup & Integration page, Copy the System token and insert it into this input field.' => 'From the purchased software - Drivemond Ride Sharing Admin panel’s Ecommerce Setup & Integration page, Copy the System token and insert it into this input field.',
   'Ride Sharing System Token' => 'Ride Sharing System Token',
+  'drivemond account not found' => 'Drivemond account not found',
+  'Need to get the purchased software - Drivemond Ride Sharing‘s Base URL to insert it into this input field.' => 'Need to get the purchased software - Drivemond Ride Sharing‘s Base URL to insert it into this input field.',
+  'Currency not matched, Please contact support' => 'Currency not matched, Please contact support',
+  'you_transfer_your_wallet_balance_mart_from_drivemond' => 'You transfer your wallet balance mart from drivemond',
+  'wallet_transfer_mart_from_drivemond' => 'Wallet transfer mart from drivemond',
+  'ride_sharing_setup_and_integration' => 'Ride sharing setup and integration',
+  'Enable the switch to activate the purchased Software- Drivemond ride-sharing in the 6amMart system. You must input the correct information to make sure the functionality works properly.' => 'Enable the switch to activate the purchased Software- Drivemond ride-sharing in the 6amMart system. You must input the correct information to make sure the functionality works properly.',
+  'Ride Sharing System Base URL' => 'Ride Sharing System Base URL',
 );

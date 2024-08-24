@@ -91,7 +91,7 @@
                                             </a>
                                         </li>
                                     @endif
-                                    @if (\App\CentralLogics\Helpers::module_permission_check('settings'))
+                                    @if (\App\CentralLogics\Helpers::module_permission_check('settings') && (auth('admin')->user()->role_id == 1))
                                         <li>
                                             <a href="{{ route('admin.business-settings.external-system.drivemond-configuration') }}"
                                                class="next-tour">
@@ -218,7 +218,7 @@
                                                     {{translate('Select Module & Monitor your business module wise')}}
                                                 </p>
                                             </div>
-                                            @if(\App\Models\ExternalConfiguration::where('key','activation_mode')->first()->value ?? 0)
+                                            @if((\App\Models\ExternalConfiguration::where('key','activation_mode')->first()->value ?? 0) && (auth('admin')->user()->role_id == 1))
                                                 @php($drivemondBaseUrl = \App\Models\ExternalConfiguration::where('key', 'drivemond_base_url')->first()->value ?? null)
                                                 @php($drivemondBusinessName = \App\Models\ExternalConfiguration::where('key', 'drivemond_business_name')->first()->value ?? "DriveMond")
                                                 @php($drivemondBusinessLogo = \App\Models\ExternalConfiguration::where('key', 'drivemond_business_logo')->first()->value ?? null)

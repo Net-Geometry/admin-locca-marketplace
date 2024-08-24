@@ -179,7 +179,7 @@ class WalletController extends Controller
                 ]);
             if ($response->successful()) {
                 $drivemondCustomerResponse = $response->json();
-                if ($drivemondCustomerResponse['status']) {
+                if (array_key_exists('status',$drivemondCustomerResponse) && $drivemondCustomerResponse['status']) {
                     $drivemondCustomer = $drivemondCustomerResponse['data'];
                     $user = User::where(['phone' => $drivemondCustomer['phone']])->first();
                     if ($user) {
@@ -202,8 +202,8 @@ class WalletController extends Controller
                         return response()->json($data);
                     }
                 }
-                $drivemondCustomer = $drivemondCustomerResponse['errors'];
-                if ($drivemondCustomer['error_code'] == 405) {
+                $drivemondCustomer = $drivemondCustomerResponse['data'];
+                if (array_key_exists('error_code',$drivemondCustomer) && $drivemondCustomer['error_code'] == 405) {
                     $errors = [];
                     array_push($errors, ['code' => 'currency_not_match_403', 'message' => translate('messages.Currency not matched, Please contact support')]);
                     return response()->json([
@@ -239,12 +239,16 @@ class WalletController extends Controller
             'external_token' => 'required',
         ]);
         if ($validator->fails()) {
-            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+            $data = [
+                'status' => false,
+                'data' =>Helpers::error_processor($validator),
+            ];
+            return response()->json($data);
         }
         if (strcasecmp(str_replace('"', '', $request->currency), str_replace('"', '', Helpers::currency_code())) !== 0) {
             $data = [
                 'status' => false,
-                'errors' => ['error_code' => 405, 'message' => "Currency not matched, Please contact support"],
+                'data' => ['error_code' => 405, 'message' => "Currency not matched, Please contact support"],
             ];
             return response()->json($data);
         }
@@ -275,6 +279,16 @@ class WalletController extends Controller
                         $wallet_transaction->created_at = now();
                         $wallet_transaction->updated_at = now();
                         $wallet_transaction->save();
+
+                        $notificationData = [
+                            'title' => translate('wallet_transfer_mart_from_drivemond'),
+                            'description' => translate('you_transfer_your_wallet_balance_mart_from_drivemond'),
+                            'order_id' => '',
+                            'image' => '',
+                            'type'=> 'wallet_transfer'
+                        ];
+                        Helpers::send_push_notif_to_device($user->cm_firebase_token, $notificationData);
+
                         $data = [
                             'status' => true,
                             'data' => $user
