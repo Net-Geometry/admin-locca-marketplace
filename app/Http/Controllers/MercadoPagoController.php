@@ -84,6 +84,12 @@ class MercadoPagoController extends Controller
         }
 
 
+        if(data_get($response,'error.message',null)){
+
+            $response['error'] =  data_get($response,'error.message',null);
+            return response()->json($response);
+        }
+
 
         if ($payment->status == 'approved') {
             $paymentInfo = $this->paymentRequest::where(['id' => $request['payment_id']])->first();
