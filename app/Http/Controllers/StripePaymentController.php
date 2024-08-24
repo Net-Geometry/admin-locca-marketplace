@@ -91,7 +91,7 @@ class StripePaymentController extends Controller
             ]],
             'mode' => 'payment',
             'success_url' => url('/') . '/payment/stripe/success?session_id={CHECKOUT_SESSION_ID}&payment_id=' . $data->id,
-            'cancel_url' => url()->previous(),
+            'cancel_url' => url('/').'/payment-cancel',
         ]);
 
         return response()->json(['id' => $checkout_session->id]);
