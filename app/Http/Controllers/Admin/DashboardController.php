@@ -725,13 +725,13 @@ class DashboardController extends Controller
             '"'.translate('Dec').'"'
         );
         $days = array(
-            '"'.translate('Sun').'"',
             '"'.translate('Mon').'"',
             '"'.translate('Tue').'"',
             '"'.translate('Wed').'"',
             '"'.translate('Thu').'"',
             '"'.translate('Fri').'"',
-            '"'.translate('Sat').'"'
+            '"'.translate('Sat').'"',
+            '"'.translate('Sun').'"',
         );
         $total_sell = [];
         $commission = [];
