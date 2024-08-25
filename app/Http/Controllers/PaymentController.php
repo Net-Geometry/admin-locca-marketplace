@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PaymentRequest;
 use App\Models\User;
 use App\Models\Order;
 use Illuminate\Http\Request;
@@ -13,6 +14,7 @@ use App\Library\Payment as PaymentInfo;
 
 class PaymentController extends Controller
 {
+    private PaymentRequest $payment;
     public function __construct(){
         if (is_dir('App\Traits') && trait_exists('App\Traits\Payment')) {
             $this->extendWithPaymentGatewayTrait();
@@ -149,11 +151,16 @@ class PaymentController extends Controller
     }
     public function cancel(Request $request)
     {
-        $order = Order::where(['id' => session('order_id'), 'user_id'=>session('customer_id')])->first();
-        if (isset($order) && $order->callback != null) {
-            return redirect($order->callback . '&status=fail');
+//        $order = Order::where(['id' => session('order_id'), 'user_id'=>session('customer_id')])->first();
+//        if (isset($order) && $order->callback != null) {
+//            return redirect($order->callback . '&status=fail');
+//        }
+        $payment_data = $this->payment::where(['id' => $request['payment_id']])->first();
+        if (isset($payment_data) && function_exists($payment_data->failure_hook)) {
+            call_user_func($payment_data->failure_hook, $payment_data);
         }
-        return response()->json(['message' => 'Payment failed'], 403);
+        return $this->payment_response($payment_data, 'cancel');
+//        return response()->json(['message' => 'Payment failed'], 403);
     }
 
 }
