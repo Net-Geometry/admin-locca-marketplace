@@ -97,7 +97,7 @@ if (!$is_published) {
             Route::get('pay', [StripePaymentController::class, 'index'])->name('pay');
             Route::get('token', [StripePaymentController::class, 'payment_process_3d'])->name('token');
             Route::get('success', [StripePaymentController::class, 'success'])->name('success');
-            Route::post('canceled', [StripePaymentController::class, 'canceled'])
+            Route::get('canceled', [StripePaymentController::class, 'canceled'])
                 ->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
         });
 
