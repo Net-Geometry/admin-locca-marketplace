@@ -107,8 +107,8 @@ class SubscriptionController extends Controller
         $package->text = $request->text[array_search('default', $request->lang)];
         $package->price = $request->package_price;
         $package->validity = $request->package_validity;
-        $package->max_order = $request->max_order  ?? 'unlimited';
-        $package->max_product = $request->max_product ?? 'unlimited';
+        $package->max_order = $request?->minimum_order_limit == 'on' ?   'unlimited' : $request->max_order;
+        $package->max_product =   $request?->maximum_item_limit == 'on' ?   'unlimited' : $request->max_product;
         $package->pos = $request->pos_system ?? 0;
         $package->mobile_app = $request->mobile_app ?? 0;
         $package->self_delivery = $request->self_delivery ?? 0;
@@ -172,8 +172,8 @@ class SubscriptionController extends Controller
         $subscriptionackage->text = $request->text[array_search('default', $request->lang)];
         $subscriptionackage->price = $request->package_price;
         $subscriptionackage->validity = $request->package_validity;
-        $subscriptionackage->max_order = $request->max_order  ?? 'unlimited';
-        $subscriptionackage->max_product = $request->max_product ?? 'unlimited';
+        $subscriptionackage->max_order = $request?->minimum_order_limit == 'on' ?   'unlimited' : $request->max_order;
+        $subscriptionackage->max_product =   $request?->maximum_item_limit == 'on' ?   'unlimited' : $request->max_product;
         $subscriptionackage->pos = $request->pos_system ?? 0;
         $subscriptionackage->mobile_app = $request->mobile_app ?? 0;
         $subscriptionackage->self_delivery = $request->self_delivery ?? 0;
