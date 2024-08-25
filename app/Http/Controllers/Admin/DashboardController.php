@@ -743,115 +743,8 @@ class DashboardController extends Controller
         ->when(is_numeric($params['zone_id']), function ($q) use ($params) {
             return $q->where('zone_id', $params['zone_id']);
         });
-            switch ($params['commission_overview']) {
-                case "this_year":
-                    for ($i = 1; $i <= 12; $i++) {
-                        $total_sell[$i] = OrderTransaction::NotRefunded()
-                            ->when(is_numeric($params['module_id']), function ($q) use ($params) {
-                                return $q->where('module_id', $params['module_id']);
-                            })
-                            ->when(is_numeric($params['zone_id']), function ($q) use ($params) {
-                                return $q->where('zone_id', $params['zone_id']);
-                            })
-                            ->whereMonth('created_at', $i)->whereYear('created_at', now()->format('Y'))
-                            ->sum('order_amount');
-                        $commission[$i] = OrderTransaction::NotRefunded()
-                            ->when(is_numeric($params['module_id']), function ($q) use ($params) {
-                                return $q->where('module_id', $params['module_id']);
-                            })
-                            ->when(is_numeric($params['zone_id']), function ($q) use ($params) {
-                                return $q->where('zone_id', $params['zone_id']);
-                            })
-                            ->whereMonth('created_at', $i)->whereYear('created_at', now()->format('Y'))
-                            ->sum(DB::raw('admin_commission + admin_expense - delivery_fee_comission'));
-                        $delivery_commission[$i] = OrderTransaction::when(is_numeric($params['module_id']), function ($q) use ($params) {
-                                return $q->where('module_id', $params['module_id']);
-                            })
-                            ->when(is_numeric($params['zone_id']), function ($q) use ($params) {
-                                return $q->where('zone_id', $params['zone_id']);
-                            })
-                            ->whereMonth('created_at', $i)->whereYear('created_at', now()->format('Y'))
-                            ->sum('delivery_fee_comission');
-                    }
-                        $label = $months;
-                    break;
-                case "this_week":
-                    $weekStartDate = now()->startOfWeek();
-                    for ($i = 1; $i <= 7; $i++) {
-                        $total_sell[$i] = OrderTransaction::NotRefunded()
-                            ->when(is_numeric($params['module_id']), function ($q) use ($params) {
-                                return $q->where('module_id', $params['module_id']);
-                            })
-                            ->when(is_numeric($params['zone_id']), function ($q) use ($params) {
-                                return $q->where('zone_id', $params['zone_id']);
-                            })
-                            ->whereDay('created_at', $weekStartDate->format('d'))->whereMonth('created_at', now()->format('m'))
-                            ->sum('order_amount');
-                        $commission[$i] = OrderTransaction::NotRefunded()
-                            ->when(is_numeric($params['module_id']), function ($q) use ($params) {
-                                return $q->where('module_id', $params['module_id']);
-                            })
-                            ->when(is_numeric($params['zone_id']), function ($q) use ($params) {
-                                return $q->where('zone_id', $params['zone_id']);
-                            })
-                            ->whereDay('created_at', $weekStartDate->format('d'))->whereMonth('created_at', now()->format('m'))
-                            ->sum(DB::raw('admin_commission + admin_expense - delivery_fee_comission'));
-                        $delivery_commission[$i] = OrderTransaction::when(is_numeric($params['module_id']), function ($q) use ($params) {
-                                return $q->where('module_id', $params['module_id']);
-                            })
-                            ->when(is_numeric($params['zone_id']), function ($q) use ($params) {
-                                return $q->where('zone_id', $params['zone_id']);
-                            })
-                            ->whereDay('created_at', $weekStartDate->format('d'))->whereMonth('created_at', now()->format('m'))
-                            ->sum('delivery_fee_comission');
-                    }
-                    $label = $days;
-                    break;
-                case "this_month":
-                    $start = now()->startOfMonth();
-                    $end = now()->startOfMonth()->addDays(7);
-                    $total_day = now()->daysInMonth;
-                    $remaining_days = now()->daysInMonth - 28;
-                    $weeks = array(
-                        '"Day 1-7"',
-                        '"Day 8-14"',
-                        '"Day 15-21"',
-                        '"Day 22-' . $total_day . '"',
-                    );
-                    for ($i = 1; $i <= 4; $i++) {
-                        $total_sell[$i] = OrderTransaction::NotRefunded()
-                            ->when(is_numeric($params['module_id']), function ($q) use ($params) {
-                                return $q->where('module_id', $params['module_id']);
-                            })
-                            ->when(is_numeric($params['zone_id']), function ($q) use ($params) {
-                                return $q->where('zone_id', $params['zone_id']);
-                            })
-                            ->whereBetween('created_at', ["{$start->format('Y-m-d')} 00:00:00", "{$end->format('Y-m-d')} 23:59:59"])
-                            ->sum('order_amount');
-                        $commission[$i] = OrderTransaction::NotRefunded()
-                            ->when(is_numeric($params['module_id']), function ($q) use ($params) {
-                                return $q->where('module_id', $params['module_id']);
-                            })
-                            ->when(is_numeric($params['zone_id']), function ($q) use ($params) {
-                                return $q->where('zone_id', $params['zone_id']);
-                            })
-                            ->whereBetween('created_at', ["{$start->format('Y-m-d')} 00:00:00", "{$end->format('Y-m-d')} 23:59:59"])
-                            ->sum(DB::raw('admin_commission + admin_expense - delivery_fee_comission'));
-                        $delivery_commission[$i] = OrderTransaction::when(is_numeric($params['module_id']), function ($q) use ($params) {
-                                return $q->where('module_id', $params['module_id']);
-                            })
-                            ->when(is_numeric($params['zone_id']), function ($q) use ($params) {
-                                return $q->where('zone_id', $params['zone_id']);
-                            })
-                            ->whereBetween('created_at', ["{$start->format('Y-m-d')} 00:00:00", "{$end->format('Y-m-d')} 23:59:59"])
-                            ->sum('delivery_fee_comission');
-
-                            $start = $start->addDays(7);
-                            $end = $i == 3 ? $end->addDays(7 + $remaining_days) : $end->addDays(7);
-                    }
-                    $label = $weeks;
-                    break;
-                default:
+        switch ($params['commission_overview']) {
+            case "this_year":
                 for ($i = 1; $i <= 12; $i++) {
                     $total_sell[$i] = OrderTransaction::NotRefunded()
                         ->when(is_numeric($params['module_id']), function ($q) use ($params) {
@@ -872,16 +765,138 @@ class DashboardController extends Controller
                         ->whereMonth('created_at', $i)->whereYear('created_at', now()->format('Y'))
                         ->sum(DB::raw('admin_commission + admin_expense - delivery_fee_comission'));
                     $delivery_commission[$i] = OrderTransaction::when(is_numeric($params['module_id']), function ($q) use ($params) {
-                            return $q->where('module_id', $params['module_id']);
-                        })
+                        return $q->where('module_id', $params['module_id']);
+                    })
                         ->when(is_numeric($params['zone_id']), function ($q) use ($params) {
                             return $q->where('zone_id', $params['zone_id']);
                         })
                         ->whereMonth('created_at', $i)->whereYear('created_at', now()->format('Y'))
                         ->sum('delivery_fee_comission');
                 }
-                    $label = $months;
-            }
+                $label = $months;
+                break;
+            case "this_week":
+                $weekStartDate = now()->startOfWeek(); // Start from Monday
+
+
+                for ($i = 0; $i < 7; $i++) { // Loop through each day of the week
+                    $currentDate = $weekStartDate->copy()->addDays($i); // Get the date for the current day in the loop
+
+                    $total_sell[$i] = OrderTransaction::NotRefunded()
+                        ->when(is_numeric($params['module_id']), function ($q) use ($params) {
+                            return $q->where('module_id', $params['module_id']);
+                        })
+                        ->when(is_numeric($params['zone_id']), function ($q) use ($params) {
+                            return $q->where('zone_id', $params['zone_id']);
+                        })
+                        ->whereDate('created_at', $currentDate->format('Y-m-d'))
+                        ->sum('order_amount');
+
+                    $commission[$i] = OrderTransaction::NotRefunded()
+                        ->when(is_numeric($params['module_id']), function ($q) use ($params) {
+                            return $q->where('module_id', $params['module_id']);
+                        })
+                        ->when(is_numeric($params['zone_id']), function ($q) use ($params) {
+                            return $q->where('zone_id', $params['zone_id']);
+                        })
+                        ->whereDate('created_at', $currentDate->format('Y-m-d'))
+                        ->sum(DB::raw('admin_commission + admin_expense - delivery_fee_comission'));
+
+                    $delivery_commission[$i] = OrderTransaction::when(is_numeric($params['module_id']), function ($q) use ($params) {
+                        return $q->where('module_id', $params['module_id']);
+                    })
+                        ->when(is_numeric($params['zone_id']), function ($q) use ($params) {
+                            return $q->where('zone_id', $params['zone_id']);
+                        })
+                        ->whereDate('created_at', $currentDate->format('Y-m-d'))
+                        ->sum('delivery_fee_comission');
+                }
+
+                $label = $days;
+                break;
+            case "this_month":
+                $start = now()->startOfMonth();
+                $total_day = now()->daysInMonth;
+                $remaining_days = $total_day - 28;
+                $weeks = array(
+                    '"Day 1-7"',
+                    '"Day 8-14"',
+                    '"Day 15-21"',
+                    '"Day 22-' . $total_day . '"',
+                );
+
+                for ($i = 1; $i <= 4; $i++) {
+                    $end = $start->copy()->addDays(6); // Set the end date for each week
+
+                    $total_sell[$i] = OrderTransaction::NotRefunded()
+                        ->when(is_numeric($params['module_id']), function ($q) use ($params) {
+                            return $q->where('module_id', $params['module_id']);
+                        })
+                        ->when(is_numeric($params['zone_id']), function ($q) use ($params) {
+                            return $q->where('zone_id', $params['zone_id']);
+                        })
+                        ->whereBetween('created_at', ["{$start->format('Y-m-d')} 00:00:00", "{$end->format('Y-m-d')} 23:59:59"])
+                        ->sum('order_amount');
+
+                    $commission[$i] = OrderTransaction::NotRefunded()
+                        ->when(is_numeric($params['module_id']), function ($q) use ($params) {
+                            return $q->where('module_id', $params['module_id']);
+                        })
+                        ->when(is_numeric($params['zone_id']), function ($q) use ($params) {
+                            return $q->where('zone_id', $params['zone_id']);
+                        })
+                        ->whereBetween('created_at', ["{$start->format('Y-m-d')} 00:00:00", "{$end->format('Y-m-d')} 23:59:59"])
+                        ->sum(DB::raw('admin_commission + admin_expense - delivery_fee_comission'));
+
+                    $delivery_commission[$i] = OrderTransaction::when(is_numeric($params['module_id']), function ($q) use ($params) {
+                        return $q->where('module_id', $params['module_id']);
+                    })
+                        ->when(is_numeric($params['zone_id']), function ($q) use ($params) {
+                            return $q->where('zone_id', $params['zone_id']);
+                        })
+                        ->whereBetween('created_at', ["{$start->format('Y-m-d')} 00:00:00", "{$end->format('Y-m-d')} 23:59:59"])
+                        ->sum('delivery_fee_comission');
+
+                    // Move to the next week
+                    $start = $end->copy()->addDay();
+                    if ($i == 3) {
+                        $end = $end->addDays(7 + $remaining_days);
+                    }
+                }
+
+                $label = $weeks;
+                break;
+            default:
+                for ($i = 1; $i <= 12; $i++) {
+                    $total_sell[$i] = OrderTransaction::NotRefunded()
+                        ->when(is_numeric($params['module_id']), function ($q) use ($params) {
+                            return $q->where('module_id', $params['module_id']);
+                        })
+                        ->when(is_numeric($params['zone_id']), function ($q) use ($params) {
+                            return $q->where('zone_id', $params['zone_id']);
+                        })
+                        ->whereMonth('created_at', $i)->whereYear('created_at', now()->format('Y'))
+                        ->sum('order_amount');
+                    $commission[$i] = OrderTransaction::NotRefunded()
+                        ->when(is_numeric($params['module_id']), function ($q) use ($params) {
+                            return $q->where('module_id', $params['module_id']);
+                        })
+                        ->when(is_numeric($params['zone_id']), function ($q) use ($params) {
+                            return $q->where('zone_id', $params['zone_id']);
+                        })
+                        ->whereMonth('created_at', $i)->whereYear('created_at', now()->format('Y'))
+                        ->sum(DB::raw('admin_commission + admin_expense - delivery_fee_comission'));
+                    $delivery_commission[$i] = OrderTransaction::when(is_numeric($params['module_id']), function ($q) use ($params) {
+                        return $q->where('module_id', $params['module_id']);
+                    })
+                        ->when(is_numeric($params['zone_id']), function ($q) use ($params) {
+                            return $q->where('zone_id', $params['zone_id']);
+                        })
+                        ->whereMonth('created_at', $i)->whereYear('created_at', now()->format('Y'))
+                        ->sum('delivery_fee_comission');
+                }
+                $label = $months;
+        }
 
         if (!url()->current() == $request->is('admin/users')) {
             $dash_data = array_merge($data_os, $data_uo);
