@@ -187,7 +187,6 @@ if (!$is_published) {
 
 
 Route::get('/test', function () {
-    Helpers::updateAdminNotificationSetupDataSetup();
     dd('Hello tester');
 });
 
