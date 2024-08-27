@@ -151,7 +151,7 @@ class PasswordResetController extends Controller
 
         if(env('APP_MODE')=='demo')
         {
-            if($request['reset_token']=="1234")
+            if($request['reset_token']=="123456")
             {
                 return response()->json(['message'=>"OTP found, you can proceed"], 200);
             }
@@ -242,7 +242,7 @@ class PasswordResetController extends Controller
 
         if(env('APP_MODE')=='demo')
         {
-            if($request['reset_token']=="1234")
+            if($request['reset_token']=="123456")
             {
                 DB::table('users')->where(['phone' => $request['phone']])->update([
                     'password' => bcrypt($request['confirm_password'])

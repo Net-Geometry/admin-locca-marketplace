@@ -46,7 +46,7 @@ class CustomerAuthController extends Controller
             }
 
             if (env('APP_MODE') == 'demo') {
-                if ($request['otp'] == "1234") {
+                if ($request['otp'] == "123456") {
                     $user->is_phone_verified = 1;
                     $user->save();
 

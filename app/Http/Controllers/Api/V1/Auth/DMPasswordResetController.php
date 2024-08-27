@@ -147,7 +147,7 @@ class DMPasswordResetController extends Controller
         }
         if(env('APP_MODE')=='demo')
         {
-            if($request['reset_token'] == '1234')
+            if($request['reset_token'] == '123456')
             {
                 return response()->json(['message'=>"Token found, you can proceed"], 200);
             }
@@ -244,7 +244,7 @@ class DMPasswordResetController extends Controller
         }
         if(env('APP_MODE')=='demo')
         {
-            if($request['reset_token']=="1234")
+            if($request['reset_token']=="123456")
             {
                 DB::table('delivery_men')->where(['phone' => $request['phone']])->update([
                     'password' => bcrypt($request['confirm_password'])
