@@ -168,7 +168,7 @@ class SocialAuthController extends Controller
                         ], 405);
                     }
 
-                    $otp = rand(1000, 9999);
+                    $otp = rand(100000, 999999);
                     DB::table('phone_verifications')->updateOrInsert(['phone' => $request['phone']],
                         [
                         'token' => $otp,
@@ -365,7 +365,7 @@ class SocialAuthController extends Controller
                         ], 405);
                     }
 
-                    $otp = rand(1000, 9999);
+                    $otp = rand(100000, 999999);
                     DB::table('phone_verifications')->updateOrInsert(['phone' => $request['phone']],
                         [
                         'token' => $otp,
@@ -575,7 +575,7 @@ class SocialAuthController extends Controller
                         'errors' => $errors
                     ], 405);
                 }
-                $otp = rand(1000, 9999);
+                $otp = rand(100000, 999999);
                 DB::table('phone_verifications')->updateOrInsert(['phone' => $user->phone],
                     [
                     'token' => $otp,
