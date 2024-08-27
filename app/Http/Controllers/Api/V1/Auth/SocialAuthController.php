@@ -180,7 +180,7 @@ class SocialAuthController extends Controller
                     try {
                         $mailResponse = null;
                         if (config('mail.status') && Helpers::get_mail_status('registration_otp_mail_status_user') == '1' && Helpers::getNotificationStatusData('customer', 'customer_registration_otp', 'mail_status')) {
-                            Mail::to($request['email'])->send(new EmailVerification($otp, $request->f_name));
+                            Mail::to($user->email)->send(new EmailVerification($otp, $user->email));
                             $mailResponse = 'success';
                         }
 
@@ -573,6 +573,19 @@ class SocialAuthController extends Controller
                     ]);
 
 
+                try {
+                    $mailResponse = null;
+                    if (config('mail.status') && Helpers::get_mail_status('registration_otp_mail_status_user') == '1' && Helpers::getNotificationStatusData('customer', 'customer_registration_otp', 'mail_status')) {
+                        Mail::to($user->email)->send(new EmailVerification($otp, $user->email));
+                        $mailResponse = 'success';
+                    }
+
+                } catch (\Exception $ex) {
+                    info($ex->getMessage());
+                    $mailResponse = null;
+                }
+
+
                 $response= null;
                 if(Helpers::getNotificationStatusData('customer','customer_login_otp','sms_status')){
                     $published_status = addon_published_status('Gateways');
@@ -608,7 +621,7 @@ class SocialAuthController extends Controller
 //                            $response = 'success';
 //                    }
 //                }
-                if($response != 'success')
+                if($response != 'success' && $mailResponse != 'success')
                 {
 
                     $errors = [];
