@@ -5,9 +5,11 @@ namespace App\Http\Controllers\api\v1\auth;
 
 use App\CentralLogics\Helpers;
 use App\Http\Controllers\Controller;
+use App\Mail\EmailVerification;
 use App\Models\User;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use App\CentralLogics\SMS_module;
 use App\Models\BusinessSetting;
@@ -175,6 +177,18 @@ class SocialAuthController extends Controller
                         ]);
                     //for payment and sms gateway addon
 
+                    try {
+                        $mailResponse = null;
+                        if (config('mail.status') && Helpers::get_mail_status('registration_otp_mail_status_user') == '1' && Helpers::getNotificationStatusData('customer', 'customer_registration_otp', 'mail_status')) {
+                            Mail::to($request['email'])->send(new EmailVerification($otp, $request->f_name));
+                            $mailResponse = 'success';
+                        }
+
+                    } catch (\Exception $ex) {
+                        info($ex->getMessage());
+                        $mailResponse = null;
+                    }
+
 
                     $response =null;
                     if(Helpers::getNotificationStatusData('customer','customer_registration_otp','sms_status')){
@@ -211,7 +225,7 @@ class SocialAuthController extends Controller
 //                            }
 //                        }
 
-                    if($response != 'success')
+                    if($response != 'success' && $mailResponse !== 'success')
                     {
 
                         $errors = [];
