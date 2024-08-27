@@ -20,6 +20,8 @@ class Advertisement extends Model
         'is_review_active' => 'integer',
         'priority' => 'integer',
         'store_id' => 'integer',
+        'created_by_id' => 'integer',
+        'is_updated' => 'integer',
     ];
     public function created_by()
     {
