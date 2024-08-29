@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:8889
--- Generation Time: Aug 25, 2024 at 12:58 PM
+-- Generation Time: Aug 29, 2024 at 05:54 AM
 -- Server version: 5.7.39
 -- PHP Version: 8.2.0
 
@@ -528,7 +528,7 @@ INSERT INTO `business_settings` (`id`, `key`, `value`, `created_at`, `updated_at
 (136, 'dm_picture_upload_status', '1', NULL, NULL),
 (137, 'offline_payment_status', NULL, NULL, '2023-10-16 20:16:58'),
 (138, 'guest_checkout_status', '0', NULL, NULL),
-(139, 'check_daily_subscription_validity_check', '2024-06-06', '2024-06-05 20:15:07', '2024-06-05 20:15:07'),
+(139, 'check_daily_subscription_validity_check', '2024-08-29', '2024-06-05 20:15:07', '2024-08-28 18:53:16'),
 (140, 'commission_business_model', '1', '2024-06-05 20:16:14', '2024-06-05 20:16:14'),
 (141, 'subscription_business_model', '0', '2024-06-05 20:16:14', '2024-06-05 20:16:14'),
 (142, 'subscription_free_trial_days', '7', '2024-06-05 23:23:50', '2024-06-05 23:23:50'),
@@ -2715,7 +2715,8 @@ INSERT INTO `storages` (`id`, `data_type`, `data_id`, `key`, `value`, `created_a
 (5, 'App\\Models\\BusinessSetting', '144', NULL, 'public', '2024-06-05 23:23:55', '2024-06-05 23:23:55'),
 (6, 'App\\Models\\BusinessSetting', '145', NULL, 'public', '2024-06-05 23:27:22', '2024-06-05 23:27:22'),
 (7, 'App\\Models\\BusinessSetting', '146', NULL, 'public', '2024-06-05 23:27:22', '2024-06-05 23:27:22'),
-(8, 'App\\Models\\BusinessSetting', '147', NULL, 'public', '2024-06-05 23:24:14', '2024-06-05 23:24:14');
+(8, 'App\\Models\\BusinessSetting', '147', NULL, 'public', '2024-06-05 23:24:14', '2024-06-05 23:24:14'),
+(9, 'App\\Models\\BusinessSetting', '139', NULL, 'public', '2024-08-28 18:53:16', '2024-08-28 18:53:16');
 
 -- --------------------------------------------------------
 
@@ -4179,7 +4180,7 @@ ALTER TABLE `add_ons`
 -- AUTO_INCREMENT for table `admins`
 --
 ALTER TABLE `admins`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `admin_features`
@@ -4677,7 +4678,7 @@ ALTER TABLE `soft_credentials`
 -- AUTO_INCREMENT for table `storages`
 --
 ALTER TABLE `storages`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `stores`
