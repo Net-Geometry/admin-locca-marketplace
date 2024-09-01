@@ -504,8 +504,8 @@
                                                 <?php
                                                 if (!$editing) {
                                                     $detail->item = json_decode($detail->item_details, true);
-                                                    $product = \App\Models\Item::where(['id' => $detail->item['id']])->first();
                                                 }
+                                                    $product = \App\Models\Item::where(['id' => $detail->item['id']])->first();
                                                 ?>
 
                                                 <tr>
@@ -641,8 +641,8 @@
                                                 <?php
                                                 if (!$editing) {
                                                     $detail->campaign = json_decode($detail->item_details, true);
-                                                    $campaign = \App\Models\ItemCampaign::where(['id' => $detail->campaign['id']])->first();
                                                 }
+                                                    $campaign = \App\Models\ItemCampaign::where(['id' => $detail->campaign['id']])->first();
                                                 ?>
                                                 <tr>
                                                     <td>
