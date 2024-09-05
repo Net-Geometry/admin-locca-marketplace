@@ -181,7 +181,7 @@
                             </h5>
                         </div>
                         <div class="card-body">
-                            <div class="row g-2">
+                            <div class="row g-2 align-items-end">
                                 <div class="col-sm-6 col-lg-3">
                                     <div class="form-group mb-0">
                                         <label class="input-label" for="store_id">{{ translate('messages.store') }} <span class="form-label-secondary text-danger"
@@ -285,7 +285,7 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-6 col-lg-3" id="organic">
-                                    <div class="form-check mb-0 p-6">
+                                    <div class="form-check mb-sm-2 pb-sm-1">
                                         <input class="form-check-input" name="organic" type="checkbox" value="1" id="flexCheckDefault" checked>
                                         <label class="form-check-label" for="flexCheckDefault">
                                           {{ translate('messages.is_organic') }}
@@ -293,7 +293,7 @@
                                       </div>
                                 </div>
                                 <div class="col-sm-6 col-lg-3" id="basic">
-                                    <div class="form-check mb-0 p-6">
+                                    <div class="form-check mb-sm-2 pb-sm-1">
                                         <input class="form-check-input" name="basic" type="checkbox" value="1" id="flexCheckDefault" checked>
                                         <label class="form-check-label" for="flexCheckDefault">
                                           {{ translate('messages.Is_Basic_Medicine') }}
@@ -302,23 +302,81 @@
                                 </div>
                                 @if(Config::get('module.current_module_type') == 'pharmacy')
                                 <div class="col-sm-6 col-lg-3" id="is_prescription_required">
-                                    <div class="form-check mb-0 p-6">
+                                    <div class="form-check mb-sm-2 pb-sm-1">
                                         <input class="form-check-input" name="is_prescription_required" type="checkbox" value="1" id="flexCheckDefaultprescription" checked>
                                         <label class="form-check-label" for="flexCheckDefaultprescription">
                                           {{ translate('messages.is_prescription_required') }}
                                         </label>
                                       </div>
                                 </div>
+                                <div class="col-sm-6 col-lg-3">
+                                    <label class="input-label" for="sub-categories">
+                                        {{translate('Generic Name')}}
+                                        <span class="input-label-secondary" title="lorem imspu" data-toggle="tooltip">
+                                            <i class="tio-info-outined"></i>
+                                        </span>
+                                    </label>
+                                    <select name="" id="" class="form-control multiple-select2" multiple>
+                                        <option disabled>{{translate('Select Generic')}}</option>
+                                        <option value="Paracetamal">{{translate('Paracetamal')}}</option>
+                                        <option value="Caffein">{{translate('Caffein')}}</option>
+                                        <option value="Maxpro">{{translate('Maxpro')}}</option>
+                                        <option value="Sedno">{{translate('Sedno')}}</option>
+                                        <option value="Omeprazol">{{translate('Omeprazol')}}</option>
+                                        <option value="Tafnil">{{translate('Tafnil')}}</option>
+                                    </select>
+                                </div>
+                                @endif
+                                @if(Config::get('module.current_module_type') == 'grocery' || Config::get('module.current_module_type') == 'food')
+
+                                    <div class="col-sm-6">
+                                        <label class="input-label" for="sub-categories">
+                                            {{translate('Nutrition')}}
+                                            <span class="input-label-secondary" title="lorem imspu" data-toggle="tooltip">
+                                                <i class="tio-info-outined"></i>
+                                            </span>
+                                        </label>
+                                        <select name="" class="form-control multiple-select2" multiple>
+                                            <option disabled>{{translate('Select Nutrition')}}</option>
+                                            <option value="Paracetamal">{{translate('Paracetamal')}}</option>
+                                            <option value="Caffein">{{translate('Caffein')}}</option>
+                                            <option value="Maxpro">{{translate('Maxpro')}}</option>
+                                            <option value="Sedno">{{translate('Sedno')}}</option>
+                                            <option value="Omeprazol">{{translate('Omeprazol')}}</option>
+                                            <option value="Tafnil">{{translate('Tafnil')}}</option>
+                                        </select>
+                                    </div>
+                                    
+
+                                    <div class="col-sm-6">
+                                        <label class="input-label" for="sub-categories">
+                                            {{translate('Allegren Ingredients')}}
+                                            <span class="input-label-secondary" title="lorem imspu" data-toggle="tooltip">
+                                                <i class="tio-info-outined"></i>
+                                            </span>
+                                        </label>
+                                        <select name="" class="form-control multiple-select2" multiple>
+                                            <option disabled>{{translate('Select Allegren Ingredients')}}</option>
+                                            <option value="Paracetamal">{{translate('Paracetamal')}}</option>
+                                            <option value="Caffein">{{translate('Caffein')}}</option>
+                                            <option value="Maxpro">{{translate('Maxpro')}}</option>
+                                            <option value="Sedno">{{translate('Sedno')}}</option>
+                                            <option value="Omeprazol">{{translate('Omeprazol')}}</option>
+                                            <option value="Tafnil">{{translate('Tafnil')}}</option>
+                                        </select>
+                                    </div>
                                 @endif
                                 @if(Config::get('module.current_module_type') == 'grocery' || Config::get('module.current_module_type') == 'food')
                                     <div class="col-sm-6 col-lg-3" id="halal">
-                                        <div class="form-check mb-0 p-6">
+                                        <div class="form-check mb-sm-2 pb-sm-1">
                                             <input class="form-check-input" name="is_halal" type="checkbox" value="1" id="flexCheckDefault1" checked>
                                             <label class="form-check-label" for="flexCheckDefault1">
                                                 {{ translate('messages.Is_It_Halal') }}
                                             </label>
                                         </div>
                                     </div>
+
+
                                 @endif
                             </div>
                         </div>

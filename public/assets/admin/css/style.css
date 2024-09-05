@@ -13487,3 +13487,117 @@ video#VisaChipCardVideo {
 .__nav-module-item-drivemond:hover * {
     color: #ffffff;
 }
+
+/* Mutiple Select2 */
+
+.multiple-select2
+    + .select2-container--default
+    .select2-selection--multiple
+    .select2-selection__choice {
+    display: inline-flex;
+    align-items: center;
+    padding: 0 5px;
+    margin: 2px;
+    background-color: #e4e4e4;
+    border-radius: 4px;
+}
+.multiple-select2
+    + .select2-container--default
+    .select2-selection--multiple
+    .select2-selection__choice__remove {
+    cursor: pointer;
+    margin-left: 5px;
+    color: #333;
+}
+.multiple-select2
+    + .select2-container--default
+    .select2-selection--multiple
+    .close-icon {
+    cursor: pointer;
+    color: #00000078;
+}
+.multiple-select2
+    + .select2-container--default
+    .select2-selection--multiple
+    .select2-selection__rendered
+    li {
+    list-style: none;
+}
+.multiple-select2
+    + .select2-container--default
+    .select2-selection--multiple
+    ul.select2-selection__rendered
+    .select2-search
+    input {
+    width: 100% !important;
+    margin: 0 !important;
+    height: 30px;
+}
+.multiple-select2
+    + .select2-container--default
+    .select2-selection--multiple
+    ul.select2-selection__rendered
+    .select2-search {
+    width: 30px;
+    flex-grow: 1;
+    margin-right: -15px;
+}
+.multiple-select2
+    + .select2-container--default
+    .select2-selection--multiple
+    ul.select2-selection__rendered {
+    display: flex;
+    height: 38px;
+    align-items: center;
+    padding: 0;
+    margin: 0;
+    gap: 5px;
+}
+.multiple-select2
+    + .select2-container--default
+    .select2-selection--multiple
+    ul.select2-selection__rendered
+    .name {
+    padding: 5px;
+    border-radius: 3px;
+    background: #009faa26;
+    color: #333;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+/* Optional: Add a plus sign for remaining items */
+.multiple-select2
+    + .select2-container--default
+    .select2-selection--multiple
+    .select2-selection__rendered::after {
+    content: attr(data-placeholder);
+    color: #334257;
+    font-weight: 600;
+    display: inline-block;
+    width: auto;
+    text-align: center;
+    background: transparent;
+    margin-left: auto;
+    display: none;
+}
+.table-responsive {
+    position: static;
+}
+.table-responsive .dropdown {
+    position: static;
+}
+.table-responsive .dropdown .dropdown-menu {
+    top: unset;
+    left: unset;
+    right: unset;
+    inset-inline-end: 0px;
+}
+
+.conversation-tooltip {
+    font-size: 10px;
+}
+.conversation-tooltip .tooltip-arrow {
+    left: -30% !important;
+}
