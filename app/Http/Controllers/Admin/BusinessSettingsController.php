@@ -6736,6 +6736,24 @@ class BusinessSettingsController extends Controller
 
         return view('admin-views.login-setup.login_setup', compact('data'));
     }
+    public function zone_setup()
+    {
+
+
+        return view('admin-views.login-setup.zone_setup');
+    }
+    public function automated_message()
+    {
+
+
+        return view('admin-views.login-setup.automated_message');
+    }
+    public function login_page()
+    {
+
+
+        return view('admin-views.login-setup.login_page');
+    }
 
     public function login_url_page_update(Request $request)
     {

@@ -321,6 +321,27 @@
                                         <span class="text-truncate">{{ translate('messages.login_url_page') }}</span>
                                     </a>
                                 </li>
+                                <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/zone_setup*') ? 'active' : '' }}">
+                                    <a class="nav-link " href="{{ route('admin.business-settings.zone_setup') }}"
+                                       title="{{ translate('messages.zone_setup') }}">
+                                        <span class="tio-circle nav-indicator-icon"></span>
+                                        <span class="text-truncate">{{ translate('messages.zone') }}</span>
+                                    </a>
+                                </li>
+                                <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/automated_message*') ? 'active' : '' }}">
+                                    <a class="nav-link " href="{{ route('admin.business-settings.automated_message') }}"
+                                       title="{{ translate('messages.automated_message') }}">
+                                        <span class="tio-circle nav-indicator-icon"></span>
+                                        <span class="text-truncate">{{ translate('messages.automated_message') }}</span>
+                                    </a>
+                                </li>
+                                <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/login_page*') ? 'active' : '' }}">
+                                    <a class="nav-link " href="{{ route('admin.business-settings.login_page') }}"
+                                       title="{{ translate('messages.login_page') }}">
+                                        <span class="tio-circle nav-indicator-icon"></span>
+                                        <span class="text-truncate">{{ translate('messages.login_page') }}</span>
+                                    </a>
+                                </li>
                                 @if (\App\CentralLogics\Helpers::get_mail_status('offline_payment_status'))
                                     <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/business-settings/offline*') ? 'active' : '' }}">
                                         <a class="nav-link " href="{{ route('admin.business-settings.offline') }}"
