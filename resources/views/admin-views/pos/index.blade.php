@@ -57,8 +57,8 @@
                                     <div class="col-sm-12 col-12">
                                         <form id="search-form" class="search-form">
                                             <!-- Search -->
-                                            <div class="input-group input--group input-group--merge">
-                                                <input id="datatableSearch" type="search" value="{{$keyword??''}}" name="search" class="form-control h--45px" placeholder="{{translate('messages.Search_by_product_name')}}" aria-label="{{translate('messages.search_here')}}" disabled>
+                                            <div class="position-relative">
+                                                <input id="datatableSearch" type="search" value="{{$keyword??''}}" name="search" class="form-control h--45px pl-5" placeholder="{{translate('messages.Search_by_product_name')}}" aria-label="{{translate('messages.search_here')}}" disabled>
                                                 <img width="16" height="16" src="{{asset('public/assets/admin/img/icons/search-icon.png')}}" alt="" class="search-icon">
 
                                                 @if($keyword)

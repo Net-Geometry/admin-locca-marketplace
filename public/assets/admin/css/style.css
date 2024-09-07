@@ -11484,7 +11484,7 @@ body > .initial-38-1 {
     height: 70px;
 }
 
-.input-group--merge > .search-icon {
+.search-icon {
     position: absolute;
     left: 10px;
     top: 50%;
@@ -13593,4 +13593,96 @@ video#VisaChipCardVideo {
 }
 .conversation-tooltip .tooltip-arrow {
     left: -30% !important;
+}
+.form--check--inline {
+    padding: 16px 20px !important;
+    background: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.form--check--inline .form-check-label {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    width: 0;
+}
+.form--check--inline .form-check-input {
+    position: relative;
+    inset: unset;
+    transform: translateY(-2px);
+}
+/* .coupon-slider .owl-item {
+    width: 256px;
+} */
+.coupon-slider-button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    border-radius: 8px;
+    background: #f7f7f7;
+    border: 1px solid #f7f7f7;
+    width: 250px;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    color: rgba(51, 66, 87, 0.6);
+    position: relative;
+}
+.coupon-slider-button h6 {
+    font-size: 14px;
+    font-weight: 500;
+    color: rgba(51, 66, 87, 1);
+    margin: 0;
+}
+.coupon-slider-button small {
+    font-size: 12px;
+}
+.coupon-slider-button .right {
+    position: relative;
+    width: 80px;
+    color: var(--primary-clr);
+}
+.coupon-slider-button .left {
+    text-align: left;
+}
+.coupon-slider-button .right h6 {
+    font-weight: 900;
+    color: var(--primary-clr);
+}
+.coupon-slider-button .right::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: -4px;
+    height: calc(100% + 8px);
+    border-left: 2px dashed #fff;
+}
+.coupon-slider-button.active .right::before {
+    border-color: var(--primary-clr);
+    opacity: 0.5;
+}
+.coupon-slider-item {
+    padding-top: 6px;
+    padding-right: 6px;
+}
+
+.coupon-slider-button.active {
+    border-color: var(--primary-clr);
+    background: rgba(52, 195, 128, 0.1);
+}
+.coupon-slider-button .checkmark {
+    color: var(--primary-clr);
+    top: -5px;
+    right: -5px;
+    position: absolute;
+    z-index: 1;
+    animation: zoomIn 0.2s;
+    -webkit-animation: zoomIn 0.2s;
+    -moz-animation: zoomIn 0.2s;
+    font-size: 20px;
+}
+.coupon-slider-button:not(.active) .checkmark {
+    display: none;
 }
