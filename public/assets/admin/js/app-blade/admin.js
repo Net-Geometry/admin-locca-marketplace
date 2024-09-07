@@ -448,3 +448,11 @@ $.fn.select2DynamicDisplay = function () {
     });
 };
 $(".multiple-select2").select2DynamicDisplay();
+
+$(function () {
+    $(".date-range-picker").daterangepicker({
+        // timePicker: true,
+        startDate: moment().startOf("hour"),
+        endDate: moment().startOf("hour"),
+    });
+});

@@ -5629,4 +5629,9 @@
   'Select Nutrition' => 'Select Nutrition',
   'Allegren Ingredients' => 'Allegren Ingredients',
   'Select Allegren Ingredients' => 'Select Allegren Ingredients',
+  'Subscription Date' => 'Subscription Date',
+  'Sort By' => 'Sort By',
+  'Ex : 100' => 'Ex : 100',
+  'Customer Joining Date' => 'Customer Joining Date',
+  'Choose First' => 'Choose First',
 );

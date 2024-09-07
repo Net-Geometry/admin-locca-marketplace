@@ -20,7 +20,54 @@
             </h1>
         </div>
         <!-- End Page Header -->
-
+        <div class="card mb-3">
+            <div class="card-body">
+                <form>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label">{{translate('Order Date')}}</label>
+                            <div class="position-relative">
+                                <span class="tio-calendar icon-absolute-on-right"></span>
+                                <input type="text" class="date-range-picker form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">{{translate('Customer Joining Date')}}</label>
+                            <div class="position-relative">
+                                <span class="tio-calendar icon-absolute-on-right"></span>
+                                <input type="text" class="date-range-picker form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">{{translate('Customer Joining Date')}}</label>
+                            <select name="filter" class="form-control js-select2-custom set-filter"
+                            data-filter="filter"
+                                    data-url="{{ url()->full() }}">
+                                <option  {{ request()->get('filter')  == 'all'?'selected':''}} value="all">{{ translate('messages.All_Customers') }}</option>
+                                <option  {{ request()->get('filter')  == 'active'?'selected':''}} value="active">{{ translate('messages.Active_Customers') }}</option>
+                                <option  {{ request()->get('filter')  == 'blocked'?'selected':''}} value="blocked">{{ translate('messages.Inactive_Customers') }}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">{{translate('Sort By')}}</label>
+                            <select class="form-control js-select2-custom">
+                                <option value="">Select Customer sorting order</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">{{translate('Choose First')}}</label>
+                            <input type="number" class="form-control" placeholder="{{translate('Ex : 100')}}">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="d-md-block">&nbsp;</label>
+                            <div class="btn--container justify-content-end">
+                                <button type="submit" class="btn btn--primary">{{translate('Filter')}}</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
         <!-- Card -->
         <div class="card">
             <!-- Header -->
@@ -49,16 +96,6 @@
                             <option  {{ request()->get('order_wise')  == 'top'?'selected':''}}  value="top">{{ translate('messages.Total_orders') }} ({{ translate('messages.High_to_Low') }})</option>
                             <option {{ request()->get('order_wise')  == 'least'?'selected':''}}  value="least">{{ translate('messages.Total_orders') }} ({{ translate('messages.Low_to_High') }})</option>
                             <option {{ request()->get('order_wise')  == 'latest'?'selected':''}}  value="latest">{{ translate('messages.New_Customers') }}</option>
-                        </select>
-                    </div>
-
-                    <div class="col-sm-auto min--240">
-                        <select name="filter" class="form-control js-select2-custom set-filter"
-                        data-filter="filter"
-                                data-url="{{ url()->full() }}">
-                            <option  {{ request()->get('filter')  == 'all'?'selected':''}} value="all">{{ translate('messages.All_Customers') }}</option>
-                            <option  {{ request()->get('filter')  == 'active'?'selected':''}} value="active">{{ translate('messages.Active_Customers') }}</option>
-                            <option  {{ request()->get('filter')  == 'blocked'?'selected':''}} value="blocked">{{ translate('messages.Inactive_Customers') }}</option>
                         </select>
                     </div>
                     <form class="search-form">
@@ -257,9 +294,12 @@
                                         {{ $key + $customers->firstItem() }}
                                     </td>
                                     <td class="table-column-pl-0">
-                                        <a href="{{ route('admin.users.customer.view', [$customer['id']]) }}" class="text--hover">
-                                            {{ $customer['f_name'] . ' ' . $customer['l_name'] }}
-                                        </a>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <img class="rounded aspect-1-1 object-cover" width="40" data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}" src="{{ $customer->image_full_url }}" alt="Image Description">
+                                            <a href="{{ route('admin.users.customer.view', [$customer['id']]) }}" class="text--hover">
+                                                {{ $customer['f_name'] . ' ' . $customer['l_name'] }}
+                                            </a>
+                                        </div>
                                     </td>
                                     <td>
                                         <div>

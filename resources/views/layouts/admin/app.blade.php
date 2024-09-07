@@ -246,6 +246,7 @@ $countryCode= strtolower($country?$country->value:'auto');
 
 @stack('script')
 <!-- JS Front -->
+
 <script src="{{asset('public/assets/admin')}}/js/vendor.min.js"></script>
 <script src="{{asset('public/assets/admin')}}/js/theme.min.js"></script>
 <script src="{{asset('public/assets/admin')}}/js/sweet_alert.js"></script>

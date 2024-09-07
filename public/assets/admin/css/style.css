@@ -457,7 +457,7 @@ a[class*="btn--"]:hover {
 .btn--container {
     display: flex;
     flex-wrap: wrap;
-    margin: -8px;
+    gap: 16px;
 }
 
 .table {
@@ -468,16 +468,8 @@ a[class*="btn--"]:hover {
     flex-wrap: nowrap;
 }
 
-.btn--container > * {
-    margin: 8px;
-}
-
 .table .btn--container {
-    margin: -5px;
-}
-
-.table .btn--container > * {
-    margin: 5px;
+    gap: 10px;
 }
 
 .zone-setup-top {
@@ -12853,6 +12845,7 @@ div.dataTables_wrapper div.dataTables_length select {
     right: 15px;
     top: 50%;
     transform: translateY(-50%);
+    pointer-events: none;
 }
 
 .h-160 {

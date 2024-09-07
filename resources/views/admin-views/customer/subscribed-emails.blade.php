@@ -18,6 +18,34 @@
             </h1>
         </div>
         <!-- Page Header -->
+        <div class="card mb-3">
+            <div class="card-body">
+                <form>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label">{{translate('Subscription Date')}}</label>
+                            <div class="position-relative">
+                                <span class="tio-calendar icon-absolute-on-right"></span>
+                                <input type="text" class="date-range-picker form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">{{translate('Sort By')}}</label>
+                            <select class="form-control js-select2-custom">
+                                <option value="">Select mail sorting order</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">{{translate('Choose First')}}</label>
+                            <input type="number" class="form-control" placeholder="{{translate('Ex : 100')}}">
+                        </div>
+                    </div>
+                    <div class="btn--container justify-content-end mt-3">
+                        <button type="submit" class="btn btn--primary">{{translate('Filter')}}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
         <!-- Card -->
         <div class="card">
             <!-- Header -->
@@ -70,66 +98,67 @@
                 </div>
             </div>
             <!-- End Header -->
-            <!-- Table -->
-            <div class="table-responsive datatable-custom">
-                <table id="datatable"
-                       class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table generalData"
-                       data-hs-datatables-options='{
-                                                             "columnDefs": [{
-                                                                "targets": [0],
-                                                                "orderable": false
-                                                              }],
-                                                             "order": [],
-                                                             "info": {
-                                                               "totalQty": "#datatableWithPaginationInfoTotalQty"
-                                                             },
-                                                             "search": "#datatableSearch",
-                                                             "entries": "#datatableEntries",
-                                                             "pageLength": 25,
-                                                             "isResponsive": false,
-                                                             "isShowPaging": false,
-                                                             "paging":false
-                                                           }'>
-                    <thead class="thead-light">
-                    <tr>
-                        <th class="border-0">
-                            {{ translate('sl') }}
-                        </th>
-                        <th class="border-0">{{ translate('messages.email') }}</th>
-                        <th class="border-0">{{ translate('messages.created_at') }}</th>
-                    </tr>
-                    </thead>
-                    <tbody id="set-rows">
-                    @if (count($subscribedCustomers))
-                        @foreach ($subscribedCustomers as $key => $customer)
-                            <tr>
-                                <td>{{$key+$subscribedCustomers->firstItem()}}</td>
-                                <td>
-                                    {{ $customer->email }}
-                                </td>
-                                <td>  {{  Helpers::date_format($customer->created_at)}} </td>
-                            </tr>
-                        @endforeach
-                    @endif
-                    </tbody>
+            <div class="card-body p-0">
+                <!-- Table -->
+                <div class="table-responsive datatable-custom">
+                    <table id="datatable"
+                        class="table table-hover table-borderless table-thead-bordered table-nowrap table-align-middle card-table generalData"
+                        data-hs-datatables-options='{
+                                                                "columnDefs": [{
+                                                                    "targets": [0],
+                                                                    "orderable": false
+                                                                }],
+                                                                "order": [],
+                                                                "info": {
+                                                                "totalQty": "#datatableWithPaginationInfoTotalQty"
+                                                                },
+                                                                "search": "#datatableSearch",
+                                                                "entries": "#datatableEntries",
+                                                                "pageLength": 25,
+                                                                "isResponsive": false,
+                                                                "isShowPaging": false,
+                                                                "paging":false
+                                                            }'>
+                        <thead class="thead-light">
+                        <tr>
+                            <th class="border-0">
+                                {{ translate('sl') }}
+                            </th>
+                            <th class="border-0">{{ translate('messages.email') }}</th>
+                            <th class="border-0">{{ translate('messages.created_at') }}</th>
+                        </tr>
+                        </thead>
+                        <tbody id="set-rows">
+                        @if (count($subscribedCustomers))
+                            @foreach ($subscribedCustomers as $key => $customer)
+                                <tr>
+                                    <td>{{$key+$subscribedCustomers->firstItem()}}</td>
+                                    <td>
+                                        {{ $customer->email }}
+                                    </td>
+                                    <td>  {{  Helpers::date_format($customer->created_at)}} </td>
+                                </tr>
+                            @endforeach
+                        @endif
+                        </tbody>
 
-                </table>
-            </div>
-            @if(count($subscribedCustomers) !== 0)
-                <hr>
-            @endif
-            <div class="page-area">
-                {!! $subscribedCustomers->withQueryString()->links() !!}
-            </div>
-            @if(count($subscribedCustomers) === 0)
-                <div class="empty--data">
-                    <img src="{{asset('/public/assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
-                    <h5>
-                        {{translate('no_data_found')}}
-                    </h5>
+                    </table>
                 </div>
-            @endif
-
+                @if(count($subscribedCustomers) !== 0)
+                    <hr>
+                @endif
+                <div class="page-area">
+                    {!! $subscribedCustomers->withQueryString()->links() !!}
+                </div>
+                @if(count($subscribedCustomers) === 0)
+                    <div class="empty--data">
+                        <img src="{{asset('/public/assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
+                        <h5>
+                            {{translate('no_data_found')}}
+                        </h5>
+                    </div>
+                @endif
+            </div>
         </div>
 
     </div>
