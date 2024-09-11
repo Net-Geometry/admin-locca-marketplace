@@ -32,6 +32,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use App\Models\AdminPromotionalBanner;
+use App\Models\AutomatedMessage;
 use App\Models\FlutterSpecialCriteria;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Session;
@@ -88,6 +89,18 @@ class BusinessSettingsController extends Controller
             return view('admin-views.business-settings.disbursement-index');
         } else if ($tab == 'priority') {
             return view('admin-views.business-settings.priority-index');
+        } else if ($tab == 'automated-message') {
+            $key = explode(' ', $request['search']);
+            $messages = AutomatedMessage::orderBy('id', 'desc')
+            ->when($request?->search ,function($query)use($key) {
+                foreach ($key as $value) {
+                $query->where('message' ,'like', "%{$value}%");
+                };
+            })
+                ->paginate(config('default_pagination'));
+                $language = getWebConfig('language');
+
+            return view('admin-views.business-settings.automated_message', compact( 'messages','language'));
         }
     }
 

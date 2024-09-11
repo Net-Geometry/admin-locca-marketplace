@@ -62,8 +62,7 @@ active
                 <div class="d-flex flex-wrap flex-md-nowrap justify-content-between __plan-details-top">
                     <div class="w-100">
                         <h2 class="name text--primary">{{ translate('Commission Base Plan') }}</h2>
-                        <h4 class="title mt-2"><span class="text-180">{{ $admin_commission }} %</span> {{ translate('messages.Commission_per_order') }}</h4>
-                        <div class="info-text ">
+                        <h4 class="title mt-2"><span class="text-180">{{ $store->comission > 0 ?  $store->comission :  $admin_commission }} %</span> {{ translate('messages.Commission_per_order') }}</h4>                        <div class="info-text ">
                             {{ translate('Store will pay') }} {{ $store->comission > 0 ?  $store->comission :  $admin_commission }}% {{ translate('commission to') }} <strong>{{ $business_name }}</strong> {{ translate('from each order. You will get access of all the features and options  in store panel , app and interaction with user.') }}
                         </div>
 

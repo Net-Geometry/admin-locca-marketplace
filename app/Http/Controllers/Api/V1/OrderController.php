@@ -2,12 +2,9 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Models\OrderPayment;
-use App\Models\ParcelDeliveryInstruction;
-use Illuminate\Validation\Rules\Password;
-use Stripe\Product;
 use App\Models\Cart;
 use App\Models\Item;
+use App\Models\User;
 use App\Models\Zone;
 use App\Models\Admin;
 use App\Models\Order;
@@ -19,12 +16,15 @@ use App\Models\DMVehicle;
 use App\Mail\RefundRequest;
 use App\Models\OrderDetail;
 use App\Models\ItemCampaign;
+use App\Models\OrderPayment;
 use App\Models\RefundReason;
 use Illuminate\Http\Request;
 use App\CentralLogics\Helpers;
 use App\Models\ParcelCategory;
 use App\Models\BusinessSetting;
+use App\Models\CashBackHistory;
 use App\Models\OfflinePayments;
+use App\Models\AutomatedMessage;
 use App\CentralLogics\OrderLogic;
 use App\Models\OrderCancelReason;
 use App\CentralLogics\CouponLogic;
@@ -33,11 +33,11 @@ use App\CentralLogics\ProductLogic;
 use App\Mail\OrderVerificationMail;
 use App\CentralLogics\CustomerLogic;
 use App\Http\Controllers\Controller;
-use App\Models\CashBackHistory;
 use App\Models\OfflinePaymentMethod;
-use App\Models\User;
 use Illuminate\Support\Facades\Mail;
+use App\Models\ParcelDeliveryInstruction;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rules\Password;
 use MatanYadaev\EloquentSpatial\Objects\Point;
 
 class OrderController extends Controller
@@ -2084,5 +2084,23 @@ class OrderController extends Controller
             ]);
         }
         return true;
+    }
+
+
+    public function automatedMessage(Request $request)
+    {
+        $limit = $request->query('limit', 25);
+        $offset = $request->query('offset', 1);
+        $messages = AutomatedMessage::orderBy('id', 'desc')->where('status',1)->select(['id','message'])
+        ->paginate($limit, ['*'], 'page', $offset);
+        $messages->makeHidden(['translations']);
+        $data = [
+            'total_size' => $messages->total(),
+            'limit' => $limit,
+            'offset' => $offset,
+            'data' => $messages->items()
+        ];
+
+        return response()->json($data, 200);
     }
 }

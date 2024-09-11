@@ -5655,4 +5655,12 @@
   'available_zone_setup' => 'Available zone setup',
   'Coupon Discount' => 'Coupon Discount',
   'Update_To_Cart' => 'Update To Cart',
+  'Automated_Message' => 'Automated Message',
+  'Automated_Message/Reason' => 'Automated Message/Reason',
+  'You_must_set_predefined_reasons_for_customers_to_select_This_will_guide_them_in_choosing_a_reason_when_reporting_any_issues_with_their_order.' => 'You must set predefined reasons for customers to select This will guide them in choosing a reason when reporting any issues with their order.',
+  'Ex:Enter_the_message' => 'Ex:Enter the message',
+  'Total message' => 'Total message',
+  'ex_:Search_by_message' => 'Ex :Search by message',
+  'Want to delete this message ?' => 'Want to delete this message ?',
+  'Automated_Message/Reason_Update' => 'Automated Message/Reason Update',
 );
