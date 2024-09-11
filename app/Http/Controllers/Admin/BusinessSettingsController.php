@@ -2850,6 +2850,8 @@ class BusinessSettingsController extends Controller
             return view('admin-views.business-settings.landing-page-settings.admin-earn-money');
         } else if ($tab == 'why-choose-us') {
             return view('admin-views.business-settings.landing-page-settings.admin-landing-why-choose');
+        } else if ($tab == 'available-zone') {
+            return view('admin-views.business-settings.landing-page-settings.admin-landing-available-zone');
         } else if ($tab == 'download-apps') {
             return view('admin-views.business-settings.landing-page-settings.admin-landing-download-apps');
         } else if ($tab == 'testimonials') {
@@ -3896,6 +3898,97 @@ class BusinessSettingsController extends Controller
 
 
             Toastr::success(translate('messages.contact_section_updated'));
+        } elseif ($tab == 'available-zone-section') {
+            $available_zone_title = DataSetting::where('type', 'admin_landing_page')->where('key', 'available_zone_title')->first();
+            if ($available_zone_title == null) {
+                $available_zone_title = new DataSetting();
+            }
+
+            $available_zone_title->key = 'available_zone_title';
+            $available_zone_title->type = 'admin_landing_page';
+            $available_zone_title->value = $request->available_zone_title[array_search('default', $request->lang)];
+            $available_zone_title->save();
+
+            $available_zone_short_description = DataSetting::where('type', 'admin_landing_page')->where('key', 'available_zone_short_description')->first();
+            if ($available_zone_short_description == null) {
+                $available_zone_short_description = new DataSetting();
+            }
+
+            $available_zone_short_description->key = 'available_zone_short_description';
+            $available_zone_short_description->type = 'admin_landing_page';
+            $available_zone_short_description->value = $request->available_zone_short_description[array_search('default', $request->lang)];
+            $available_zone_short_description->save();
+
+            $available_zone_image = DataSetting::where('type', 'admin_landing_page')->where('key', 'available_zone_image')->first();
+            if ($available_zone_image == null) {
+                $available_zone_image = new DataSetting();
+            }
+            $available_zone_image->key = 'available_zone_image';
+            $available_zone_image->type = 'admin_landing_page';
+            $available_zone_image->value = $request->has('image') ? Helpers::update('available_zone_image/', $available_zone_image->value, 'png', $request->file('image')) : $available_zone_image->value;
+            $available_zone_image->save();
+
+            $data = [];
+            $default_lang = str_replace('_', '-', app()->getLocale());
+            foreach ($request->lang as $index => $key) {
+                if ($default_lang == $key && !($request->available_zone_title[$index])) {
+                    if ($key != 'default') {
+                        Translation::updateOrInsert(
+                            [
+                                'translationable_type' => 'App\Models\DataSetting',
+                                'translationable_id' => $available_zone_title->id,
+                                'locale' => $key,
+                                'key' => 'available_zone_title'
+                            ],
+                            ['value' => $available_zone_title?->getRawOriginal('value')]
+                        );
+                    }
+                } else {
+                    if ($request->available_zone_title[$index] && $key != 'default') {
+                        Translation::updateOrInsert(
+                            [
+                                'translationable_type' => 'App\Models\DataSetting',
+                                'translationable_id' => $available_zone_title->id,
+                                'locale' => $key,
+                                'key' => 'available_zone_title'
+                            ],
+                            ['value' => $request->available_zone_title[$index]]
+                        );
+                    }
+                }
+                if ($default_lang == $key && !($request->available_zone_short_description[$index])) {
+                    if ($key != 'default') {
+                        Translation::updateOrInsert(
+                            [
+                                'translationable_type' => 'App\Models\DataSetting',
+                                'translationable_id' => $available_zone_short_description->id,
+                                'locale' => $key,
+                                'key' => 'available_zone_short_description'
+                            ],
+                            ['value' => $available_zone_short_description?->getRawOriginal('value')]
+                        );
+                    }
+                } else {
+                    if ($request->available_zone_short_description[$index] && $key != 'default') {
+                        Translation::updateOrInsert(
+                            [
+                                'translationable_type' => 'App\Models\DataSetting',
+                                'translationable_id' => $available_zone_short_description->id,
+                                'locale' => $key,
+                                'key' => 'available_zone_short_description'
+                            ],
+                            ['value' => $request->available_zone_short_description[$index]]
+                        );
+                    }
+                }
+            }
+
+            DB::table('data_settings')->updateOrInsert(['type' => 'admin_landing_page','key' => 'available_zone_status'], [
+                'value' => $request['available_zone_status']
+            ]);
+
+
+            Toastr::success(translate('messages.available_zone_section_updated'));
         } elseif ($tab == 'background-color') {
             DB::table('business_settings')->updateOrInsert(['key' => 'backgroundChange'], [
                 'value' => json_encode([
