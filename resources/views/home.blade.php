@@ -2617,7 +2617,7 @@
                 <div class="text">{{ $landing_data['earning_sub_title'] }}</div>
             </div>
         </div>
-        <div class="container-fluid p-0">
+        <div class="container">
             <!-- Earn Money Item -->
             @php($join_as_seller = $landing_data['seller_app_earning_links'])
             <div class="earn-item wow fadeInUp">
