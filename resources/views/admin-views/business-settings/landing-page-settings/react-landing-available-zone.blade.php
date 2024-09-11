@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('messages.admin_landing_page'))
+@section('title',translate('messages.react_landing_page'))
 
 @section('content')
 <div class="content container-fluid">
@@ -11,7 +11,7 @@
                     <img src="{{asset('public/assets/admin/img/landing.png')}}" class="w--20" alt="">
                 </span>
                 <span>
-                    {{ translate('messages.admin_landing_pages') }}
+                    {{ translate('messages.react_landing_page') }}
                 </span>
             </h1>
             <div class="text--primary-2 py-1 d-flex flex-wrap align-items-center" type="button" data-toggle="modal" data-target="#how-it-works">
@@ -24,25 +24,25 @@
     </div>
     <div class="mb-4 mt-2">
         <div class="js-nav-scroller hs-nav-scroller-horizontal">
-            @include('admin-views.business-settings.landing-page-settings.top-menu-links.admin-landing-page-links')
+            @include('admin-views.business-settings.landing-page-settings.top-menu-links.react-landing-page-links')
         </div>
     </div>
-    @php($available_zone_title=\App\Models\DataSetting::withoutGlobalScope('translate')->where('type','admin_landing_page')->where('key','available_zone_title')->first())
-    @php($available_zone_short_description=\App\Models\DataSetting::withoutGlobalScope('translate')->where('type','admin_landing_page')->where('key','available_zone_short_description')->first())
-    @php($available_zone_image=\App\Models\DataSetting::withoutGlobalScope('translate')->where('type','admin_landing_page')->where('key','available_zone_image')->first())
-    @php($available_zone_status=\App\Models\DataSetting::withoutGlobalScope('translate')->where('type','admin_landing_page')->where('key','available_zone_status')->first())
+    @php($available_zone_title=\App\Models\DataSetting::withoutGlobalScope('translate')->where('type','react_landing_page')->where('key','available_zone_title')->first())
+    @php($available_zone_short_description=\App\Models\DataSetting::withoutGlobalScope('translate')->where('type','react_landing_page')->where('key','available_zone_short_description')->first())
+    @php($available_zone_image=\App\Models\DataSetting::withoutGlobalScope('translate')->where('type','react_landing_page')->where('key','available_zone_image')->first())
+    @php($available_zone_status=\App\Models\DataSetting::withoutGlobalScope('translate')->where('type','react_landing_page')->where('key','available_zone_status')->first())
     @php($available_zone_status = $available_zone_status ? $available_zone_status->value : 0)
     @php($language=\App\Models\BusinessSetting::where('key','language')->first())
     @php($language = $language->value ?? null)
     @php($defaultLang = str_replace('_', '-', app()->getLocale()))
 
-    <form id="zone-setup-form" action="{{ route('admin.business-settings.admin-landing-page-settings', 'available-zone-section') }}" method="POST" enctype="multipart/form-data">
+    <form id="zone-setup-form" action="{{ route('admin.business-settings.react-landing-page-settings', 'available-zone-section') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="card mb-3">
             <div class="card-body">
                 <div class="row g-3">
                     <div class="col-sm-6">
-                        {{ translate('To view a list of all active zones on your') }} <a href="{{route('home')}}" target="_blank" class="text-primary">{{ translate('Admin Landing') }}</a> {{ translate('Page,') }} <br class="d-none d-md-inline-block"> {{ translate('Enable the `Available Zones` feature') }}
+                        {{ translate('To view a list of all active zones on your React Landing Page') }} <br class="d-none d-md-inline-block"> {{ translate('Enable the `Available Zones` feature') }}
                     </div>
                     <div class="col-sm-6">
                         <label
@@ -114,26 +114,26 @@
                             </div>
                             @foreach (json_decode($language) as $lang)
                                     <?php
-                                        if(isset($available_zone_title->translations)&&count($available_zone_title->translations)){
-                                            $available_zone_title_translate = [];
-                                            foreach($available_zone_title->translations as $t)
-                                            {
-                                                if($t->locale == $lang && $t->key=='available_zone_title'){
-                                                    $available_zone_title_translate[$lang]['value'] = $t->value;
-                                                }
+                                    if(isset($available_zone_title->translations)&&count($available_zone_title->translations)){
+                                        $available_zone_title_translate = [];
+                                        foreach($available_zone_title->translations as $t)
+                                        {
+                                            if($t->locale == $lang && $t->key=='available_zone_title'){
+                                                $available_zone_title_translate[$lang]['value'] = $t->value;
                                             }
-
                                         }
-                                        if(isset($available_zone_short_description->translations)&&count($available_zone_short_description->translations)){
-                                            $available_zone_short_description_translate = [];
-                                            foreach($available_zone_short_description->translations as $t)
-                                            {
-                                                if($t->locale == $lang && $t->key=='available_zone_short_description'){
-                                                    $available_zone_short_description_translate[$lang]['value'] = $t->value;
-                                                }
+
+                                    }
+                                    if(isset($available_zone_short_description->translations)&&count($available_zone_short_description->translations)){
+                                        $available_zone_short_description_translate = [];
+                                        foreach($available_zone_short_description->translations as $t)
+                                        {
+                                            if($t->locale == $lang && $t->key=='available_zone_short_description'){
+                                                $available_zone_short_description_translate[$lang]['value'] = $t->value;
                                             }
-
                                         }
+
+                                    }
                                     ?>
                                 <div class="d-none lang_form"
                                      id="{{ $lang }}-form">
@@ -207,7 +207,7 @@
                     <div class="card-body d-flex">
                         <i class="tio-info-outined text-danger mr-1 mt-1"></i>
                         <p class="fs-15 text-dark m-0">
-                            <strong>{{ translate('Note:') }}</strong> {{ translate('Customize the section by adding a title, short description, and images in the') }} <a href="{{ route('admin.business-settings.zone.home') }}" target="_blank" class="text-primary">{{ translate('Zone Setup') }}</a> {{ translate('section. All created zones will be automatically displayed on the') }} <a href="{{route('home')}}" target="_blank" class="text-primary">{{ translate('Admin Landing') }}</a> {{ translate('Page. The zones will be based on the Zone Display Name.') }}
+                            <strong>{{ translate('Note:') }}</strong> {{ translate('Customize the section by adding a title, short description, and images in the') }} <a href="{{ route('admin.business-settings.zone.home') }}" target="_blank" class="text-primary">{{ translate('Zone Setup') }}</a> {{ translate('section. All created zones will be automatically displayed on the React Landing Page. The zones will be based on the Zone Display Name.') }}
                         </p>
                     </div>
                 </div>
@@ -222,11 +222,9 @@
     </form>
     </div>
 
-
     <!-- How it Works -->
-    @include('admin-views.business-settings.landing-page-settings.partial.how-it-work')
+    @include('admin-views.business-settings.landing-page-settings.partial.how-it-work-react')
 @endsection
-
 @push('script_2')
     <script>
         // Form on reset
@@ -253,3 +251,4 @@
         });
     </script>
 @endpush
+
