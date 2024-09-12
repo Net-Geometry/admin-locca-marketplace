@@ -30,62 +30,67 @@
         <div class="scroll-down">
             @foreach($convs as $con)
             @if($con->sender_id == $receiver->id)
-            {{-- {{ dd($con->order) }} --}}
-                    <div class="pt1 pb-1">
-                        <div class="conv-reply-1">
 
-                            @if ($con?->order)
 
-                            <div class="card shadow-sm my-3" >
-                                <div class="card-body">
-                                    <!-- Order ID and Status -->
-                                    <div class="d-flex justify-content-between">
-                                            <div class="">
-                                                <h5 class="card-title">{{ translate('Order ID') }} # {{ $con?->order?->id }}</h5>
-                                                @if (in_array($con?->order?->order_status ,['pending' ,'confirmed',
-                                                'accepted','processing','handover','picked_up']))
-                                                <span class="badge badge-soft-info">
+            @if ($con?->order)
+            <div class="conv-reply-1 p-0 m-0 bg-transparent">
 
-                                                @elseif (in_array($con?->order?->order_status ,['delivered' ]))
+                <div class="card shadow-sm my-3" >
+                    <div class="card-body">
+                        <!-- Order ID and Status -->
+                        <div class="d-flex justify-content-between gap-2">
+                            <div>
+                                <div class="d-flex align-items-center gap-2">
+                                    <h5 class="card-title">{{ translate('Order ID') }} # {{ $con?->order?->id }}</h5>
+                                    @if (in_array($con?->order?->order_status ,['pending' ,'confirmed',
+                                    'accepted','processing','handover','picked_up']))
+                                    <span class="badge badge-soft-info">
 
-                                                <span class="badge badge-soft-success">
+                                    @elseif (in_array($con?->order?->order_status ,['delivered' ]))
 
-                                                @elseif (in_array($con?->order?->order_status ,['refund_requested', 'refunded', 'refund_request_canceled','canceled','failed' ]))
+                                    <span class="badge badge-soft-success">
 
-                                                <span class="badge badge-soft-danger">
+                                    @elseif (in_array($con?->order?->order_status ,['refund_requested', 'refunded', 'refund_request_canceled','canceled','failed' ]))
 
-                                                    @endif
+                                    <span class="badge badge-soft-danger">
 
-                                                    {{ translate($con?->order?->order_status) }}
-                                                    </span>
-                                                </div>
-                                            <p class="text-muted mb-2"> {{ translate('Order Placed') }} : {{ \App\CentralLogics\Helpers::date_format($con?->order?->created_at)  }}</p>
-                                            </div>
+                                        @endif
 
-                                    <!-- Total Amount -->
-                                    <p class="text-success font-weight-bold">{{ translate('Total') }}: {{ \App\CentralLogics\Helpers::format_currency($con?->order?->order_amount)  }}</p>
-
-                                    <!-- Order Date -->
-
-                                    <!-- Delivery Address -->
-                                    <h6 class="font-weight-bold"> {{ translate('Delivery Address') }}  </h6>
-                                    @php
-                                        $delivery_address = json_decode($con?->order?->delivery_address,true);
-                                    @endphp
-                                    <p class="mb-1">{{ data_get($delivery_address ,'contact_person_number') }}</p>
-                                    <p>{{ data_get($delivery_address ,'address') }}</p>
-
-                                    <!-- Items count -->
-                                    <div class="d-flex justify-content-end">
-                                        <div class="border rounded p-2 text-center">
-                                            <p class="mb-0 font-weight-bold">{{ translate('Items') }}</p>
-                                            <h5 class="mb-0"> {{ $con?->order?->details_count }}</h5>
-                                        </div>
-                                    </div>
+                                        {{ translate($con?->order?->order_status) }}
+                                        </span>
+                                </div>
+                                <!-- Total Amount -->
+                                <p class="text-success font-weight-bold">{{ translate('Total') }}: {{ \App\CentralLogics\Helpers::format_currency($con?->order?->order_amount)  }}</p>
+                            </div>
+                            <!-- Order Date -->
+                                <p class="text-muted mb-2 text-right text-dark"> <span class="text-muted fs-12">{{ translate('Order Placed') }}</span> <br> {{ \App\CentralLogics\Helpers::date_format($con?->order?->created_at)  }}</p>
+                            </div>
+    <br />
+                    <div class="d-flex justify-content-betweeen align-items-center">
+                        <div class="w-0 flex-grow-1">
+                            <!-- Delivery Address -->
+                            <h6 class="font-weight-bold"> {{ translate('Delivery Address') }}  </h6>
+                            @php
+                                $delivery_address = json_decode($con?->order?->delivery_address,true);
+                            @endphp
+                            <p class="mb-1">{{ data_get($delivery_address ,'contact_person_number') }}</p>
+                            <p>{{ data_get($delivery_address ,'address') }}</p>
+                        </div>
+                            <!-- Items count -->
+                            <div class="d-flex justify-content-end">
+                                <div class="border rounded p-2 text-center">
+                                    <p class="mb-0 font-weight-bold">{{ translate('Items') }}</p>
+                                    <h5 class="mb-0"> {{ $con?->order?->details_count }}</h5>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                            @endif
+                @endif
+                    <div class="pt1 pb-1">
+                        <div class="conv-reply-1">
                                 <h6>{{$con->message}}</h6>
                                 @if($con->file!=null)
                                 @foreach ($con->file_full_url as $img)

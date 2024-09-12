@@ -185,12 +185,14 @@
         }
         $(document).on('ready', function () {
             banner_type_change('{{$banner->type}}');
-
+            if($('#banner_type').val() !== 'item_wise' ){
+                get_items();
+            }
             $('#zone').on('change', function(){
                 if($(this).val())
                 {
                     zone_id = $(this).val();
-                    get_items();
+                    // get_items();
                 }
                 else
                 {
