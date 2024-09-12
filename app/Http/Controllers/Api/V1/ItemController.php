@@ -191,6 +191,20 @@ class ItemController extends Controller
                     };
                 });
             });
+            $q->orWhereHas('nutritions',function($query)use($key){
+                $query->where(function($q)use($key){
+                    foreach ($key as $value) {
+                        $q->where('nutrition', 'like', "%{$value}%");
+                    };
+                });
+            });
+            $q->orWhereHas('allergies',function($query)use($key){
+                $query->where(function($q)use($key){
+                    foreach ($key as $value) {
+                        $q->where('allergy', 'like', "%{$value}%");
+                    };
+                });
+            });
             $q->orWhereHas('category.parent',function($query)use($key){
                 $query->where(function($q)use($key){
                     foreach ($key as $value) {
@@ -243,7 +257,7 @@ class ItemController extends Controller
             $query->withCount(['campaigns'=> function($query){
                 $query->Running();
             }]);
-        })  
+        })
         ->select(['items.*'])
         ->selectSub(function ($subQuery) {
             $subQuery->selectRaw('active as temp_available')
@@ -307,6 +321,20 @@ class ItemController extends Controller
                 $query->where(function($q)use($key){
                     foreach ($key as $value) {
                         $q->where('tag', 'like', "%{$value}%");
+                    };
+                });
+            });
+            $q->orWhereHas('nutritions',function($query)use($key){
+                $query->where(function($q)use($key){
+                    foreach ($key as $value) {
+                        $q->where('nutrition', 'like', "%{$value}%");
+                    };
+                });
+            });
+            $q->orWhereHas('allergies',function($query)use($key){
+                $query->where(function($q)use($key){
+                    foreach ($key as $value) {
+                        $q->where('allergy', 'like', "%{$value}%");
                     };
                 });
             });
@@ -425,6 +453,20 @@ class ItemController extends Controller
                     };
                 });
             });
+            $q->orWhereHas('nutritions',function($query)use($key){
+                $query->where(function($q)use($key){
+                    foreach ($key as $value) {
+                        $q->where('nutrition', 'like', "%{$value}%");
+                    };
+                });
+            });
+            $q->orWhereHas('allergies',function($query)use($key){
+                $query->where(function($q)use($key){
+                    foreach ($key as $value) {
+                        $q->where('allergy', 'like', "%{$value}%");
+                    };
+                });
+            });
         })->select(['name','image'])
 
         ->paginate($limit, ['*'], 'page', $offset);
@@ -526,7 +568,7 @@ class ItemController extends Controller
     {
         try {
 
-            $item = Item::withCount('whislists')->with(['tags','reviews','reviews.customer'])->active()
+            $item = Item::withCount('whislists')->with(['tags','nutritions','allergies','reviews','reviews.customer'])->active()
             ->when(config('module.current_module_data'), function($query){
                 $query->module(config('module.current_module_data')['id']);
             })
@@ -809,6 +851,20 @@ class ItemController extends Controller
                 $query->where(function($q)use($key){
                     foreach ($key as $value) {
                         $q->where('tag', 'like', "%{$value}%");
+                    };
+                });
+            });
+            $q->orWhereHas('nutritions',function($query)use($key){
+                $query->where(function($q)use($key){
+                    foreach ($key as $value) {
+                        $q->where('nutrition', 'like', "%{$value}%");
+                    };
+                });
+            });
+            $q->orWhereHas('allergies',function($query)use($key){
+                $query->where(function($q)use($key){
+                    foreach ($key as $value) {
+                        $q->where('allergy', 'like', "%{$value}%");
                     };
                 });
             });

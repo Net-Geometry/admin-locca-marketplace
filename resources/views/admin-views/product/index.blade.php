@@ -269,6 +269,39 @@
                                         </select>
                                     </div>
                                 </div>
+                                @if(Config::get('module.current_module_type') == 'grocery' || Config::get('module.current_module_type') == 'food')
+
+                                    <div class="col-sm-6" id="nutrition">
+                                        <label class="input-label" for="sub-categories">
+                                            {{translate('Nutrition')}}
+                                            <span class="input-label-secondary" title="lorem imspu" data-toggle="tooltip">
+                                                <i class="tio-info-outined"></i>
+                                            </span>
+                                        </label>
+                                        <select name="nutritions[]" class="form-control multiple-select2" multiple>
+                                            <option disabled>{{translate('Select Nutrition')}}</option>
+                                            @foreach (\App\Models\Nutrition::all() as $nutrition)
+                                                <option value="{{ $nutrition->nutrition }}">{{ $nutrition->nutrition }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
+
+                                    <div class="col-sm-6" id="allergy">
+                                        <label class="input-label" for="sub-categories">
+                                            {{translate('Allegren Ingredients')}}
+                                            <span class="input-label-secondary" title="lorem imspu" data-toggle="tooltip">
+                                                <i class="tio-info-outined"></i>
+                                            </span>
+                                        </label>
+                                        <select name="allergies[]" class="form-control multiple-select2" multiple>
+                                            <option disabled>{{translate('Select Allegren Ingredients')}}</option>
+                                            @foreach (\App\Models\Allergy::all() as $allergy)
+                                                <option value="{{ $allergy->allergy }}">{{ $allergy->allergy }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                @endif
 
                                 <div class="col-sm-6 col-lg-3" id="maximum_cart_quantity">
                                     <div class="form-group mb-0">
@@ -326,45 +359,6 @@
                                         <option value="Tafnil">{{translate('Tafnil')}}</option>
                                     </select>
                                 </div>
-                                @endif
-                                @if(Config::get('module.current_module_type') == 'grocery' || Config::get('module.current_module_type') == 'food')
-
-                                    <div class="col-sm-6">
-                                        <label class="input-label" for="sub-categories">
-                                            {{translate('Nutrition')}}
-                                            <span class="input-label-secondary" title="lorem imspu" data-toggle="tooltip">
-                                                <i class="tio-info-outined"></i>
-                                            </span>
-                                        </label>
-                                        <select name="" class="form-control multiple-select2" multiple>
-                                            <option disabled>{{translate('Select Nutrition')}}</option>
-                                            <option value="Paracetamal">{{translate('Paracetamal')}}</option>
-                                            <option value="Caffein">{{translate('Caffein')}}</option>
-                                            <option value="Maxpro">{{translate('Maxpro')}}</option>
-                                            <option value="Sedno">{{translate('Sedno')}}</option>
-                                            <option value="Omeprazol">{{translate('Omeprazol')}}</option>
-                                            <option value="Tafnil">{{translate('Tafnil')}}</option>
-                                        </select>
-                                    </div>
-                                    
-
-                                    <div class="col-sm-6">
-                                        <label class="input-label" for="sub-categories">
-                                            {{translate('Allegren Ingredients')}}
-                                            <span class="input-label-secondary" title="lorem imspu" data-toggle="tooltip">
-                                                <i class="tio-info-outined"></i>
-                                            </span>
-                                        </label>
-                                        <select name="" class="form-control multiple-select2" multiple>
-                                            <option disabled>{{translate('Select Allegren Ingredients')}}</option>
-                                            <option value="Paracetamal">{{translate('Paracetamal')}}</option>
-                                            <option value="Caffein">{{translate('Caffein')}}</option>
-                                            <option value="Maxpro">{{translate('Maxpro')}}</option>
-                                            <option value="Sedno">{{translate('Sedno')}}</option>
-                                            <option value="Omeprazol">{{translate('Omeprazol')}}</option>
-                                            <option value="Tafnil">{{translate('Tafnil')}}</option>
-                                        </select>
-                                    </div>
                                 @endif
                                 @if(Config::get('module.current_module_type') == 'grocery' || Config::get('module.current_module_type') == 'food')
                                     <div class="col-sm-6 col-lg-3" id="halal">
@@ -801,6 +795,7 @@
                 dataType: 'json',
                 success: function(data) {
                     module_data = data.data;
+                    console.log(module_data)
                     stock = module_data.stock;
                     module_type = data.type;
                     if (stock) {
@@ -857,6 +852,16 @@
                         $('#basic').show();
                     } else {
                         $('#basic').hide();
+                    }
+                    if (module_data.nutrition) {
+                        $('#nutrition').show();
+                    } else {
+                        $('#nutrition').hide();
+                    }
+                    if (module_data.allergy) {
+                        $('#allergy').show();
+                    } else {
+                        $('#allergy').hide();
                     }
                 },
             });

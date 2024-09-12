@@ -263,6 +263,14 @@ class Item extends Model
     {
         return $this->belongsToMany(Tag::class);
     }
+    public function allergies()
+    {
+        return $this->belongsToMany(Allergy::class);
+    }
+    public function nutritions()
+    {
+        return $this->belongsToMany(Nutrition::class);
+    }
     public function storage()
     {
         return $this->morphMany(Storage::class, 'data');
