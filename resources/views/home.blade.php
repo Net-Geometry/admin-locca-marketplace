@@ -1939,16 +1939,18 @@
     @if ($promotion_banner && count($promotion_banner) > 0)
     <section class="main-category overflow-hidden pt-30 pb-50">
         <div class="container">
-            <div class="main-category-slider owl-theme owl-carousel">
-                @foreach ($promotion_banner as $item)
-                <div class="category-slide-item"
-                    style="background: url({{$item['image_full_url']}}) no-repeat center center / cover">
-                    <div>
-                        <h2 class="title">{{$item['title'] ?? ''}}</h2>
-                        <div class="text">{{$item['sub_title'] ?? ''}}</div>
+            <div class="overflow-hidden">
+                <div class="main-category-slider owl-theme owl-carousel">
+                    @foreach ($promotion_banner as $item)
+                    <div class="category-slide-item"
+                        style="background: url({{$item['image_full_url']}}) no-repeat center center / cover">
+                        <div>
+                            <h2 class="title">{{$item['title'] ?? ''}}</h2>
+                            <div class="text">{{$item['sub_title'] ?? ''}}</div>
+                        </div>
                     </div>
+                    @endforeach
                 </div>
-                @endforeach
             </div>
         </div>
     </section>
@@ -2033,6 +2035,161 @@
         </div>
     </section>
     <!-- ==== Learn Feature Section Ends Here ==== -->
+
+    <!-- ==== Delivery Area Section Starts Here ==== -->
+    <section class="delivery-area-section">
+        <div class="container">
+            <div class="row align-items-center text-center gy-4 flex-wrap-reverse">
+                <div class="col-lg-5 col-xl-6 text-lg-start">
+                    <div class="section-header text-lg-start mb-3 wow fadeInUp">
+                        <h2 class="title">
+                            <span>Available delivery</span> <span class="text--base">areas / Zone</span>
+                        </h2>
+                    </div>
+                    <div class="text">
+                        We offer delivery services across a wide range of regions. To see if we deliver to your area, check our list of available delivery zones or use our delivery 
+                    </div>
+                    <div class="zone-list-container">
+                        <div class="zone-list-wrapper mt-4">
+                            <div class="zone-list">
+                                <a href="" class="item" 
+                                    data-bs-trigger="hover" 
+                                    data-bs-toggle="popover" 
+                                    data-bs-placement="top"
+                                    title="Popover title"
+                                    data-bs-content="And here's some amazing content. It's very engaging. Right?"
+                                >
+                                    Dhaka
+                                </a>
+                                <a href="" class="item" 
+                                    data-bs-trigger="hover" 
+                                    data-bs-toggle="popover" 
+                                    data-bs-placement="top"
+                                    title="Popover title"
+                                    data-bs-content="And here's some amazing content. It's very engaging. Right?"
+                                >
+                                    Khulna Divisional Zone
+                                </a>
+                                <a href="" class="item" 
+                                    data-bs-trigger="hover" 
+                                    data-bs-toggle="popover" 
+                                    data-bs-placement="top"
+                                    title="Popover title"
+                                    data-bs-content="And here's some amazing content. It's very engaging. Right?"
+                                >
+                                    Barisal
+                                </a>
+                                <a href="" class="item" 
+                                    data-bs-trigger="hover" 
+                                    data-bs-toggle="popover" 
+                                    data-bs-placement="top"
+                                    title="Popover title"
+                                    data-bs-content="And here's some amazing content. It's very engaging. Right?"
+                                >
+                                    Dinajpur
+                                </a>
+                                <a href="" class="item" 
+                                    data-bs-trigger="hover" 
+                                    data-bs-toggle="popover" 
+                                    data-bs-placement="top"
+                                    title="Popover title"
+                                    data-bs-content="And here's some amazing content. It's very engaging. Right?"
+                                >
+                                    Rangpur City
+                                </a>
+                                <a href="" class="item" 
+                                    data-bs-trigger="hover" 
+                                    data-bs-toggle="popover" 
+                                    data-bs-placement="top"
+                                    title="Popover title"
+                                    data-bs-content="And here's some amazing content. It's very engaging. Right?"
+                                >
+                                    Sylhet
+                                </a>
+                                <a href="" class="item" 
+                                    data-bs-trigger="hover" 
+                                    data-bs-toggle="popover" 
+                                    data-bs-placement="top"
+                                    title="Popover title"
+                                    data-bs-content="And here's some amazing content. It's very engaging. Right?"
+                                >
+                                    Dinajpur
+                                </a>
+                                <a href="" class="item" 
+                                    data-bs-trigger="hover" 
+                                    data-bs-toggle="popover" 
+                                    data-bs-placement="top"
+                                    title="Popover title"
+                                    data-bs-content="And here's some amazing content. It's very engaging. Right?"
+                                >
+                                    Dhaka
+                                </a>
+                                <a href="" class="item" 
+                                    data-bs-trigger="hover" 
+                                    data-bs-toggle="popover" 
+                                    data-bs-placement="top"
+                                    title="Popover title"
+                                    data-bs-content="And here's some amazing content. It's very engaging. Right?"
+                                >
+                                    Khulna Divisional Zone
+                                </a>
+                                <a href="" class="item" 
+                                    data-bs-trigger="hover" 
+                                    data-bs-toggle="popover" 
+                                    data-bs-placement="top"
+                                    title="Popover title"
+                                    data-bs-content="And here's some amazing content. It's very engaging. Right?"
+                                >
+                                    Barisal
+                                </a>
+                                <a href="" class="item" 
+                                    data-bs-trigger="hover" 
+                                    data-bs-toggle="popover" 
+                                    data-bs-placement="top"
+                                    title="Popover title"
+                                    data-bs-content="And here's some amazing content. It's very engaging. Right?"
+                                >
+                                    Dinajpur
+                                </a>
+                                <a href="" class="item" 
+                                    data-bs-trigger="hover" 
+                                    data-bs-toggle="popover" 
+                                    data-bs-placement="top"
+                                    title="Popover title"
+                                    data-bs-content="And here's some amazing content. It's very engaging. Right?"
+                                >
+                                    Rangpur City
+                                </a>
+                                <a href="" class="item" 
+                                    data-bs-trigger="hover" 
+                                    data-bs-toggle="popover" 
+                                    data-bs-placement="top"
+                                    title="Popover title"
+                                    data-bs-content="And here's some amazing content. It's very engaging. Right?"
+                                >
+                                    Sylhet
+                                </a>
+                                <a href="" class="item" 
+                                    data-bs-trigger="hover" 
+                                    data-bs-toggle="popover" 
+                                    data-bs-placement="top"
+                                    title="Popover title"
+                                    data-bs-content="And here's some amazing content. It's very engaging. Right?"
+                                >
+                                    Dinajpur
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-lg-7 col-xl-6 text-lg-end">
+                    <img src="{{asset('/public/assets/landing/image/delivery-area-zone.png')}}" alt="   " class="max-w-100">
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- ==== Delivery Area Section Ends Here ==== -->
 
     <!-- ==== Refer Section Starts Here ==== -->
     <section class="refer-section">
@@ -2609,6 +2766,8 @@
         </div>
     </section>
     <!-- ==== Refer Section Ends Here ==== -->
+
+
     <!-- ==== Earn Money Section Starts Here ==== -->
     <section class="earn-money-section">
         <div class="container">
@@ -3779,5 +3938,20 @@
             $(this).attr('src', img);
         });
     });
+</script>
+<script>
+
+    var tooltipTriggerList = [].slice.call(
+        document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    );
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+
+    var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+
+    var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+        return new bootstrap.Popover(popoverTriggerEl)
+    })
 </script>
 @endpush

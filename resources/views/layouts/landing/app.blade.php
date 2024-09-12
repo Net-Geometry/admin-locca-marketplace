@@ -388,10 +388,10 @@ $countryCode= strtolower($country?$country->value:'auto');
          let thumbnailItemClass = ".owl-item";
          let slides = sync1
             .owlCarousel({
-                startPosition: 12,
+                // startPosition: 12,
                 items: 1,
                 loop: false,
-                margin: 0,
+                margin: 30,
                 mouseDrag: true,
                 touchDrag: true,
                 pullDrag: false,
@@ -437,16 +437,17 @@ $countryCode= strtolower($country?$country->value:'auto');
                 sync2.trigger("to.owl.carousel", [current, duration, true]);
             }
         }
+        
         let thumbs = sync2
             .owlCarousel({
-                startPosition: 12,
+                // startPosition: 12,
                 items: 2,
                 loop: false,
-                margin: 10,
+                margin: 0,
                 autoplay: false,
-                nav: false,
+                nav: true,
+                navText: ["",""],
                 dots: false,
-                // center: true,
                 mouseDrag: true,
                 touchDrag: true,
                 rtl: {{ $landing_site_direction === 'rtl'?'true':'false' }},
@@ -458,7 +459,7 @@ $countryCode= strtolower($country?$country->value:'auto');
                         items: 5,
                     },
                     1200: {
-                        items: 6,
+                        items: 5,
                     },
                 },
                 onInitialized: function (e) {
