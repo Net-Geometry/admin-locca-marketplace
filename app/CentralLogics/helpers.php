@@ -364,6 +364,8 @@ class Helpers
             $data['halal_tag_status'] =  (int) $data->store->storeConfig?->halal_tag_status??0;
             if($temp_product == true){
                 $data['tags']=\App\Models\Tag::whereIn('id',json_decode($data?->tag_ids) )->get(['tag','id']);
+                $data['nutritions']=\App\Models\Nutrition::whereIn('id',json_decode($data?->nutrition_ids) )->get(['nutrition','id']);
+                $data['allergies']=\App\Models\Allergy::whereIn('id',json_decode($data?->allergy_ids) )->get(['allergy','id']);
             }
             $data->store['self_delivery_system'] = (int) $data->store->sub_self_delivery;
 

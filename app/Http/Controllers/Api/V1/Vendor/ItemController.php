@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api\V1\Vendor;
 
+use App\Models\Allergy;
+use App\Models\Nutrition;
 use Carbon\Carbon;
 use App\Models\Tag;
 use App\Models\Item;
@@ -111,6 +113,33 @@ class ItemController extends Controller
                 );
                 $tag->save();
                 array_push($tag_ids,$tag->id);
+            }
+        }
+
+        $nutrition_ids = [];
+        if ($request->nutritions != null) {
+            $nutritions = $request->nutritions;
+        }
+        if (isset($nutritions)) {
+            foreach ($nutritions as $key => $value) {
+                $nutrition = Nutrition::firstOrNew(
+                    ['nutrition' => $value]
+                );
+                $nutrition->save();
+                array_push($nutrition_ids, $nutrition->id);
+            }
+        }
+        $allergy_ids = [];
+        if ($request->allergies != null) {
+            $allergies = $request->allergies;
+        }
+        if (isset($allergies)) {
+            foreach ($allergies as $key => $value) {
+                $allergy = Allergy::firstOrNew(
+                    ['allergy' => $value]
+                );
+                $allergy->save();
+                array_push($allergy_ids, $allergy->id);
             }
         }
 
@@ -298,6 +327,8 @@ class ItemController extends Controller
         $item->is_halal =  $request->is_halal ?? 0;
         $item->save();
         $item->tags()->sync($tag_ids);
+        $item->nutritions()->sync($nutrition_ids);
+        $item->allergies()->sync($allergy_ids);
 
 
         if ($request['vendor']->stores[0]->module->module_type == 'pharmacy') {
@@ -325,7 +356,7 @@ class ItemController extends Controller
         $product_approval_datas = \App\Models\BusinessSetting::where('key', 'product_approval_datas')->first()?->value ?? '';
         $product_approval_datas =json_decode($product_approval_datas , true);
         if (Helpers::get_mail_status('product_approval') && data_get($product_approval_datas,'Add_new_product',null) == 1) {
-            $this->store_temp_data($item, $request,$tag_ids);
+            $this->store_temp_data($item, $request,$tag_ids,$nutrition_ids,$allergy_ids);
             $item->is_approved = 0;
             $item->save();
             return response()->json(['message' => translate('messages.The_product_will_be_published_once_it_receives_approval_from_the_admin.')], 200);
@@ -436,6 +467,33 @@ class ItemController extends Controller
                 );
                 $tag->save();
                 array_push($tag_ids,$tag->id);
+            }
+        }
+
+        $nutrition_ids = [];
+        if ($request->nutritions != null) {
+            $nutritions = $request->nutritions;
+        }
+        if (isset($nutritions)) {
+            foreach ($nutritions as $key => $value) {
+                $nutrition = Nutrition::firstOrNew(
+                    ['nutrition' => $value]
+                );
+                $nutrition->save();
+                array_push($nutrition_ids, $nutrition->id);
+            }
+        }
+        $allergy_ids = [];
+        if ($request->allergies != null) {
+            $allergies = $request->allergies;
+        }
+        if (isset($allergies)) {
+            foreach ($allergies as $key => $value) {
+                $allergy = Allergy::firstOrNew(
+                    ['allergy' => $value]
+                );
+                $allergy->save();
+                array_push($allergy_ids, $allergy->id);
             }
         }
 
@@ -600,7 +658,7 @@ class ItemController extends Controller
 
         if (Helpers::get_mail_status('product_approval') && ((data_get($product_approval_datas,'Update_anything_in_product_details',null) == 1) || (data_get($product_approval_datas,'Update_product_price',null) == 1 && $old_price !=  $request->price) || ( data_get($product_approval_datas,'Update_product_variation',null) == 1 &&  $variation_changed)) )  {
 
-            $this->store_temp_data($p, $request,$tag_ids, true);
+            $this->store_temp_data($p, $request,$tag_ids, $nutrition_ids, $allergy_ids,true);
             return response()->json(['message' => translate('your_product_added_for_approval')], 200);
         }
 
@@ -629,6 +687,8 @@ class ItemController extends Controller
 
         $p->save();
         $p->tags()->sync($tag_ids);
+        $p->nutritions()->sync($nutrition_ids);
+        $p->allergies()->sync($allergy_ids);
 
         foreach ($data as $key=>$item) {
             Translation::updateOrInsert(
@@ -834,7 +894,7 @@ class ItemController extends Controller
 
     }
 
-    public function store_temp_data($data, $request,$tag_ids , $update =null)
+    public function store_temp_data($data, $request,$tag_ids ,$nutrition_ids,$allergy_ids, $update =null)
     {
         $item = TempProduct::firstOrNew(
             ['item_id' => $data->id]
@@ -866,6 +926,8 @@ class ItemController extends Controller
         $item->discount = $data->discount;
         $item->discount_type = $data->discount_type;
         $item->tag_ids =json_encode($tag_ids);
+        $item->nutrition_ids =json_encode($nutrition_ids);
+        $item->allergy_ids =json_encode($allergy_ids);
 
         $item->available_time_starts = $data->available_time_starts;
         $item->available_time_ends = $data->available_time_ends;
