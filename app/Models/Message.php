@@ -16,7 +16,11 @@ class Message extends Model
     protected $casts = [
         'conversation_id' => 'integer',
         'sender_id' => 'integer',
-        'is_seen' => 'integer'
+        'is_seen' => 'integer',
+        'order_id' => 'integer',
+        'details_count' => 'integer',
+        'order_amount' => 'float',
+
     ];
 
     protected $appends = ['file_full_url'];
@@ -24,6 +28,10 @@ class Message extends Model
     public function sender()
     {
         return $this->belongsTo(UserInfo::class, 'sender_id');
+    }
+    public function order()
+    {
+        return $this->belongsTo(Order::class)->select(['id','order_amount' ,'order_status' ,'created_at','delivery_address'])->withcount('details');
     }
 
     public function conversation()

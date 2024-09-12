@@ -173,7 +173,7 @@ class InstallController extends Controller
                     DB_PORT=3306
                     DB_DATABASE=' . $request->DB_DATABASE . '
                     DB_USERNAME=' . $request->DB_USERNAME . '
-                    DB_PASSWORD=' . $request->DB_PASSWORD . '
+                    DB_PASSWORD="' . $request->DB_PASSWORD . '"
 
                     BROADCAST_DRIVER=log
                     CACHE_DRIVER=file

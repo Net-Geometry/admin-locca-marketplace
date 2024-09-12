@@ -22,9 +22,6 @@
                 <li>
                     <a href="{{ route('admin.users.customer.view', [$user->user->id]) }}">{{ translate('View_Details') }}</a>
                 </li>
-{{--                <li>--}}
-{{--                    <a href="{{ route('admin.users.customer.view', [$user->user->id]) }}">{{ translate('view_order_list') }}</a>--}}
-{{--                </li>--}}
             </ul>
         </div>
     </div>
@@ -32,19 +29,74 @@
     <div class="card-body">
         <div class="scroll-down">
             @foreach($convs as $con)
-                @if($con->sender_id == $receiver->id)
+            @if($con->sender_id == $receiver->id)
+            {{-- {{ dd($con->order) }} --}}
                     <div class="pt1 pb-1">
                         <div class="conv-reply-1">
+
+                            @if ($con?->order)
+
+                            <div class="card shadow-sm my-3" >
+                                <div class="card-body">
+                                    <!-- Order ID and Status -->
+                                    <div class="d-flex justify-content-between">
+                                            <div class="">
+                                                <h5 class="card-title">{{ translate('Order ID') }} # {{ $con?->order?->id }}</h5>
+                                                @if (in_array($con?->order?->order_status ,['pending' ,'confirmed',
+                                                'accepted','processing','handover','picked_up']))
+                                                <span class="badge badge-soft-info">
+
+                                                @elseif (in_array($con?->order?->order_status ,['delivered' ]))
+
+                                                <span class="badge badge-soft-success">
+
+                                                @elseif (in_array($con?->order?->order_status ,['refund_requested', 'refunded', 'refund_request_canceled','canceled','failed' ]))
+
+                                                <span class="badge badge-soft-danger">
+
+                                                    @endif
+
+                                                    {{ translate($con?->order?->order_status) }}
+                                                    </span>
+                                                </div>
+                                            <p class="text-muted mb-2"> {{ translate('Order Placed') }} : {{ \App\CentralLogics\Helpers::date_format($con?->order?->created_at)  }}</p>
+                                            </div>
+
+                                    <!-- Total Amount -->
+                                    <p class="text-success font-weight-bold">{{ translate('Total') }}: {{ \App\CentralLogics\Helpers::format_currency($con?->order?->order_amount)  }}</p>
+
+                                    <!-- Order Date -->
+
+                                    <!-- Delivery Address -->
+                                    <h6 class="font-weight-bold"> {{ translate('Delivery Address') }}  </h6>
+                                    @php
+                                        $delivery_address = json_decode($con?->order?->delivery_address,true);
+                                    @endphp
+                                    <p class="mb-1">{{ data_get($delivery_address ,'contact_person_number') }}</p>
+                                    <p>{{ data_get($delivery_address ,'address') }}</p>
+
+                                    <!-- Items count -->
+                                    <div class="d-flex justify-content-end">
+                                        <div class="border rounded p-2 text-center">
+                                            <p class="mb-0 font-weight-bold">{{ translate('Items') }}</p>
+                                            <h5 class="mb-0"> {{ $con?->order?->details_count }}</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @endif
                                 <h6>{{$con->message}}</h6>
                                 @if($con->file!=null)
                                 @foreach ($con->file_full_url as $img)
                                 <br>
                                     <img class="w-100 mb-3"
-    
+
                                     src="{{$img }}"
                                     >
                                     @endforeach
                                 @endif
+
                         </div>
                         <div class="pl-1">
                             <small>{{date('d M Y',strtotime($con->created_at))}} {{date(config('timeformat'),strtotime($con->created_at))}}</small>
@@ -53,7 +105,7 @@
                 @else
                     <div class="pt-1 pb-1">
                         <div class="conv-reply-2">
-                            <h6>{{$con->message}}</h6>
+                            <h6>{{$con->message}} </h6>
                             @if($con->file!=null)
                             @foreach ($con->file_full_url as $img)
                             <br>

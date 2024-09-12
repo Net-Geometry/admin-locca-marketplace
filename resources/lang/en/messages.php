@@ -5663,4 +5663,8 @@
   'ex_:Search_by_message' => 'Ex :Search by message',
   'Want to delete this message ?' => 'Want to delete this message ?',
   'Automated_Message/Reason_Update' => 'Automated Message/Reason Update',
+  'message_from_admin' => 'Message from admin',
+  'Order Placed' => 'Order Placed',
+  'Delivery Address' => 'Delivery Address',
+  'Items' => 'Items',
 );
