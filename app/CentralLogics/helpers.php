@@ -1129,11 +1129,7 @@ class Helpers
 
     public static function send_push_notif_to_device($fcm_token, $data, $web_push_link = null)
     {
-//        if(isset($data['message'])){
-//            $message = $data['message'];
-//        }else{
-//            $message = '';
-//        }
+
         if(isset($data['conversation_id'])){
             $conversation_id = $data['conversation_id'];
         }else{
@@ -1154,12 +1150,19 @@ class Helpers
         }else{
             $order_type = '';
         }
+        if(isset($data['data_id'])){
+            $data_id = $data['data_id'];
+        }else{
+            $data_id = '';
+        }
 
-//        $click_action = "";
-//        if($web_push_link){
-//            $click_action = ',
-//            "click_action": "'.$web_push_link.'"';
-//        }
+        if(isset($data['advertisement_id'])){
+            $advertisement_id = $data['advertisement_id'];
+        }else{
+            $advertisement_id = '';
+        }
+
+
         $postData = [
             'message' => [
                 "token" => $fcm_token,
@@ -1169,6 +1172,8 @@ class Helpers
                     "image" => (string)$data['image'],
                     "order_id" => (string)$data['order_id'],
                     "type" => (string)$data['type'],
+                    "data_id" => (string)$data_id,
+                    "advertisement_id" => (string)$advertisement_id,
                     "conversation_id" => (string)$conversation_id,
                     "module_id" => (string)$module_id,
                     "sender_type" => (string)$sender_type,

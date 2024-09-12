@@ -761,6 +761,7 @@ class CampaignController extends Controller
                         'description' => $store_push_notification_description,
                         'order_id' => '',
                         'image' => '',
+                        'data_id'=> $campaign->id,
                         'type' => 'campaign',
                         'order_status' => '',
                     ];
@@ -820,6 +821,7 @@ class CampaignController extends Controller
                         'order_id' => '',
                         'image' => '',
                         'type' => 'campaign',
+                        'data_id'=> $campaign->id,
                         'order_status' => '',
                     ];
                     Helpers::send_push_notif_to_device($store?->vendor?->firebase_token, $data);

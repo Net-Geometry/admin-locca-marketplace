@@ -202,6 +202,7 @@ class AdvertisementController extends Controller
                     'order_id' => '',
                     'image' => '',
                     'type' => 'advertisement',
+                    'advertisement_id' => $advertisement->id,
                     'order_status' => '',
                 ];
                 Helpers::send_push_notif_to_device($advertisement->store->vendor->firebase_token, $data);
@@ -341,6 +342,7 @@ class AdvertisementController extends Controller
                     'order_id' => '',
                     'image' => '',
                     'type' => 'advertisement',
+                    'advertisement_id' => $advertisement->id,
                     'order_status' => '',
                 ];
                 Helpers::send_push_notif_to_device($advertisement->store->vendor->firebase_token, $data);
@@ -553,6 +555,7 @@ class AdvertisementController extends Controller
                     'order_id' => '',
                     'image' => '',
                     'type' => 'advertisement',
+                    'advertisement_id' => $advertisement->id,
                     'order_status' => '',
                 ];
                 Helpers::send_push_notif_to_device($advertisement->store->vendor->firebase_token, $data);
@@ -685,6 +688,7 @@ class AdvertisementController extends Controller
                         'order_id' => '',
                         'image' => '',
                         'type' => 'advertisement',
+                        'advertisement_id' => $newAdvertisement->id,
                         'order_status' => '',
                     ];
                     Helpers::send_push_notif_to_device($newAdvertisement->store->vendor->firebase_token, $data);
