@@ -2037,158 +2037,46 @@
     <!-- ==== Learn Feature Section Ends Here ==== -->
 
     <!-- ==== Delivery Area Section Starts Here ==== -->
-    <section class="delivery-area-section">
-        <div class="container">
-            <div class="row align-items-center text-center gy-4 flex-wrap-reverse">
-                <div class="col-lg-5 col-xl-6 text-lg-start">
-                    <div class="section-header text-lg-start mb-3 wow fadeInUp">
-                        <h2 class="title">
-                            <span>Available delivery</span> <span class="text--base">areas / Zone</span>
-                        </h2>
-                    </div>
-                    <div class="text">
-                        We offer delivery services across a wide range of regions. To see if we deliver to your area, check our list of available delivery zones or use our delivery 
-                    </div>
-                    <div class="zone-list-container">
-                        <div class="zone-list-wrapper mt-4">
-                            <div class="zone-list">
-                                <a href="" class="item" 
-                                    data-bs-trigger="hover" 
-                                    data-bs-toggle="popover" 
-                                    data-bs-placement="top"
-                                    title="Popover title"
-                                    data-bs-content="And here's some amazing content. It's very engaging. Right?"
-                                >
-                                    Dhaka
-                                </a>
-                                <a href="" class="item" 
-                                    data-bs-trigger="hover" 
-                                    data-bs-toggle="popover" 
-                                    data-bs-placement="top"
-                                    title="Popover title"
-                                    data-bs-content="And here's some amazing content. It's very engaging. Right?"
-                                >
-                                    Khulna Divisional Zone
-                                </a>
-                                <a href="" class="item" 
-                                    data-bs-trigger="hover" 
-                                    data-bs-toggle="popover" 
-                                    data-bs-placement="top"
-                                    title="Popover title"
-                                    data-bs-content="And here's some amazing content. It's very engaging. Right?"
-                                >
-                                    Barisal
-                                </a>
-                                <a href="" class="item" 
-                                    data-bs-trigger="hover" 
-                                    data-bs-toggle="popover" 
-                                    data-bs-placement="top"
-                                    title="Popover title"
-                                    data-bs-content="And here's some amazing content. It's very engaging. Right?"
-                                >
-                                    Dinajpur
-                                </a>
-                                <a href="" class="item" 
-                                    data-bs-trigger="hover" 
-                                    data-bs-toggle="popover" 
-                                    data-bs-placement="top"
-                                    title="Popover title"
-                                    data-bs-content="And here's some amazing content. It's very engaging. Right?"
-                                >
-                                    Rangpur City
-                                </a>
-                                <a href="" class="item" 
-                                    data-bs-trigger="hover" 
-                                    data-bs-toggle="popover" 
-                                    data-bs-placement="top"
-                                    title="Popover title"
-                                    data-bs-content="And here's some amazing content. It's very engaging. Right?"
-                                >
-                                    Sylhet
-                                </a>
-                                <a href="" class="item" 
-                                    data-bs-trigger="hover" 
-                                    data-bs-toggle="popover" 
-                                    data-bs-placement="top"
-                                    title="Popover title"
-                                    data-bs-content="And here's some amazing content. It's very engaging. Right?"
-                                >
-                                    Dinajpur
-                                </a>
-                                <a href="" class="item" 
-                                    data-bs-trigger="hover" 
-                                    data-bs-toggle="popover" 
-                                    data-bs-placement="top"
-                                    title="Popover title"
-                                    data-bs-content="And here's some amazing content. It's very engaging. Right?"
-                                >
-                                    Dhaka
-                                </a>
-                                <a href="" class="item" 
-                                    data-bs-trigger="hover" 
-                                    data-bs-toggle="popover" 
-                                    data-bs-placement="top"
-                                    title="Popover title"
-                                    data-bs-content="And here's some amazing content. It's very engaging. Right?"
-                                >
-                                    Khulna Divisional Zone
-                                </a>
-                                <a href="" class="item" 
-                                    data-bs-trigger="hover" 
-                                    data-bs-toggle="popover" 
-                                    data-bs-placement="top"
-                                    title="Popover title"
-                                    data-bs-content="And here's some amazing content. It's very engaging. Right?"
-                                >
-                                    Barisal
-                                </a>
-                                <a href="" class="item" 
-                                    data-bs-trigger="hover" 
-                                    data-bs-toggle="popover" 
-                                    data-bs-placement="top"
-                                    title="Popover title"
-                                    data-bs-content="And here's some amazing content. It's very engaging. Right?"
-                                >
-                                    Dinajpur
-                                </a>
-                                <a href="" class="item" 
-                                    data-bs-trigger="hover" 
-                                    data-bs-toggle="popover" 
-                                    data-bs-placement="top"
-                                    title="Popover title"
-                                    data-bs-content="And here's some amazing content. It's very engaging. Right?"
-                                >
-                                    Rangpur City
-                                </a>
-                                <a href="" class="item" 
-                                    data-bs-trigger="hover" 
-                                    data-bs-toggle="popover" 
-                                    data-bs-placement="top"
-                                    title="Popover title"
-                                    data-bs-content="And here's some amazing content. It's very engaging. Right?"
-                                >
-                                    Sylhet
-                                </a>
-                                <a href="" class="item" 
-                                    data-bs-trigger="hover" 
-                                    data-bs-toggle="popover" 
-                                    data-bs-placement="top"
-                                    title="Popover title"
-                                    data-bs-content="And here's some amazing content. It's very engaging. Right?"
-                                >
-                                    Dinajpur
-                                </a>
+        @if($landing_data['available_zone_status'])
+            <section class="delivery-area-section">
+                <div class="container">
+                    <div class="row text-center gy-4 flex-wrap-reverse">
+                        <div class="col-lg-5 col-xl-6 text-lg-start">
+                            <div class="section-header text-lg-start mb-3 wow fadeInUp">
+                                <h2 class="title">
+                                    {{--<span>Available delivery</span> <span class="text--base">areas / Zone</span>--}}
+                                    <span>{{ $landing_data['available_zone_title'] }}</span>
+                                </h2>
                             </div>
+                            <div class="text">
+                                {{ $landing_data['available_zone_short_description'] }}
+                            </div>
+                            <div class="zone-list-container">
+                                <div class="zone-list-wrapper mt-4">
+                                    <div class="zone-list">
+                                        @foreach($landing_data['available_zone_list'] as $zone)
+                                            <span class="item"
+                                                  data-bs-trigger="hover"
+                                                  data-bs-toggle="popover"
+                                                  data-bs-placement="top"
+                                                  title="{{ $zone['display_name'] }}"
+                                                  data-bs-content="{{(count($zone['modules']->toArray())>0) ? (implode(', ', $zone['modules']->toArray()).' '.translate('are_available.')) : translate('right_now_no_module_available.')}}"
+                                            >
+                                       {{ $zone['display_name'] }}
+                                    </span>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-lg-7 col-xl-6 text-lg-end">
+                            <img src="{{$landing_data['available_zone_image_full_url']}}" alt="" class="mw-100">
                         </div>
                     </div>
-
                 </div>
-                <div class="col-lg-7 col-xl-6 text-lg-end">
-                    <img src="{{asset('/public/assets/landing/image/delivery-area-zone.png')}}" alt="   " class="max-w-100">
-                </div>
-            </div>
-        </div>
-    </section>
+            </section>
+        @endif
     <!-- ==== Delivery Area Section Ends Here ==== -->
 
     <!-- ==== Refer Section Starts Here ==== -->
