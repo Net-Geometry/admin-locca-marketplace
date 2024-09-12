@@ -335,6 +335,47 @@
                                         </select>
                                     </div>
                                 </div>
+                                @if(Config::get('module.current_module_type') == 'grocery' || Config::get('module.current_module_type') == 'food')
+                                    @if (isset($temp_product) && $temp_product == 1 )
+                                        @php($product_nutritions = \App\Models\Nutrition::whereIn('id', json_decode($product?->nutrition_ids))->pluck('id'))
+                                        @php($product_allergies = \App\Models\Allergy::whereIn('id', json_decode($product?->allergy_ids))->pluck('id'))
+                                    @else
+                                        @php($product_nutritions = $product->nutritions->pluck('id'))
+                                        @php($product_allergies = $product->allergies->pluck('id'))
+                                    @endif
+
+                                    <div class="col-sm-6" id="nutrition">
+                                        <label class="input-label" for="sub-categories">
+                                            {{translate('Nutrition')}}
+                                            <span class="input-label-secondary" title="lorem imspu" data-toggle="tooltip">
+                                                <i class="tio-info-outined"></i>
+                                            </span>
+                                        </label>
+                                        <select name="nutritions[]" class="form-control multiple-select2" multiple>
+                                            <option disabled>{{translate('Select Nutrition')}}</option>
+                                            @foreach (\App\Models\Nutrition::all() as $nutrition)
+                                                <option value="{{ $nutrition->nutrition }}" {{ $product_nutritions->contains($nutrition->id) ? 'selected' : '' }}>{{ $nutrition->nutrition }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
+
+                                    <div class="col-sm-6" id="allergy">
+                                        <label class="input-label" for="sub-categories">
+                                            {{translate('Allegren Ingredients')}}
+                                            <span class="input-label-secondary" title="lorem imspu" data-toggle="tooltip">
+                                                <i class="tio-info-outined"></i>
+                                            </span>
+                                        </label>
+                                        <select name="allergies[]" class="form-control multiple-select2" multiple>
+                                            <option disabled>{{translate('Select Allegren Ingredients')}}</option>
+                                            @foreach (\App\Models\Allergy::all() as $allergy)
+                                                <option value="{{ $allergy->allergy }}" {{ $product_allergies->contains($allergy->id) ? 'selected' : '' }}>{{ $allergy->allergy }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                @endif
+
                                 <div class="col-sm-6 col-lg-3" id="stock_input">
                                     <div class="form-group mb-0">
                                         <label class="input-label"
@@ -1042,6 +1083,16 @@
             $('#basic').show();
         } else {
             $('#basic').hide();
+        }
+        if (module_data.nutrition) {
+            $('#nutrition').show();
+        } else {
+            $('#nutrition').hide();
+        }
+        if (module_data.allergy) {
+            $('#allergy').show();
+        } else {
+            $('#allergy').hide();
         }
     }
 

@@ -27,7 +27,7 @@
                 <div class="card-body">
                     <div class="row g-3">
                         <div class="col-sm-6">
-                            To view a list of all active zomes on your <a href="" class="text-primary">Admin Landing</a> Page, <br class="d-none d-md-inline-block"> Enable the 'Available Zones' feature
+                            To view a list of all active zones on your <a href="" class="text-primary">Admin Landing</a> Page, <br class="d-none d-md-inline-block"> Enable the 'Available Zones' feature
                         </div>
                         <div class="col-sm-6">
                             <label class="toggle-switch h--45px toggle-switch-sm d-flex justify-content-between border rounded px-3 py-0 form-control">

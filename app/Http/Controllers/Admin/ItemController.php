@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 
+use App\Models\Allergy;
 use App\Models\Brand;
 use App\Models\EcommerceItemDetails;
+use App\Models\Nutrition;
 use Carbon\Carbon;
 use App\Models\Tag;
 use App\Models\Item;
@@ -154,6 +156,34 @@ class ItemController extends Controller
             }
         }
 
+        $nutrition_ids = [];
+        if ($request->nutritions != null) {
+            $nutritions = $request->nutritions;
+        }
+        if (isset($nutritions)) {
+            foreach ($nutritions as $key => $value) {
+                $nutrition = Nutrition::firstOrNew(
+                    ['nutrition' => $value]
+                );
+                $nutrition->save();
+                array_push($nutrition_ids, $nutrition->id);
+            }
+        }
+
+        $allergy_ids = [];
+        if ($request->allergies != null) {
+            $allergies = $request->allergies;
+        }
+        if (isset($allergies)) {
+            foreach ($allergies as $key => $value) {
+                $allergy = Allergy::firstOrNew(
+                    ['allergy' => $value]
+                );
+                $allergy->save();
+                array_push($allergy_ids, $allergy->id);
+            }
+        }
+
         $item = new Item;
         $item->name = $request->name[array_search('default', $request->lang)];
 
@@ -291,6 +321,8 @@ class ItemController extends Controller
         $item->is_halal =  $request->is_halal ?? 0;
         $item->save();
         $item->tags()->sync($tag_ids);
+        $item->nutritions()->sync($nutrition_ids);
+        $item->allergies()->sync($allergy_ids);
         if ($module_type == 'pharmacy') {
             $item_details = new PharmacyItemDetails();
             $item_details->item_id = $item->id;
@@ -340,8 +372,6 @@ class ItemController extends Controller
             $category = $temp;
             $sub_category = null;
         }
-
-
 
         return view('admin-views.product.edit', compact('product', 'sub_category', 'category','temp_product'));
     }
@@ -402,6 +432,32 @@ class ItemController extends Controller
                 );
                 $tag->save();
                 array_push($tag_ids, $tag->id);
+            }
+        }
+        $nutrition_ids = [];
+        if ($request->nutritions != null) {
+            $nutritions = $request->nutritions;
+        }
+        if (isset($nutritions)) {
+            foreach ($nutritions as $key => $value) {
+                $nutrition = Nutrition::firstOrNew(
+                    ['nutrition' => $value]
+                );
+                $nutrition->save();
+                array_push($nutrition_ids, $nutrition->id);
+            }
+        }
+        $allergy_ids = [];
+        if ($request->allergies != null) {
+            $allergies = $request->allergies;
+        }
+        if (isset($allergies)) {
+            foreach ($allergies as $key => $value) {
+                $allergy = Allergy::firstOrNew(
+                    ['allergy' => $value]
+                );
+                $allergy->save();
+                array_push($allergy_ids, $allergy->id);
             }
         }
 
@@ -581,6 +637,8 @@ class ItemController extends Controller
         }
         $item->save();
         $item->tags()->sync($tag_ids);
+        $item->nutritions()->sync($nutrition_ids);
+        $item->allergies()->sync($allergy_ids);
         if($item->module->module_type == 'pharmacy'){
             DB::table('pharmacy_item_details')
                 ->updateOrInsert(
@@ -1746,6 +1804,8 @@ class ItemController extends Controller
 
         $item->save();
         $item->tags()->sync(json_decode($data->tag_ids));
+        $item->nutritions()->sync(json_decode($data->nutrition_ids));
+        $item->allergies()->sync(json_decode($data->allergy_ids));
 
         $item?->pharmacy_item_details()?->delete();
 
