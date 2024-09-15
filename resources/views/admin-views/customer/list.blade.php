@@ -28,14 +28,14 @@
                             <label class="form-label">{{translate('Order Date')}}</label>
                             <div class="position-relative">
                                 <span class="tio-calendar icon-absolute-on-right"></span>
-                                <input type="text" class="date-range-picker form-control">
+                                <input type="text" name="order_date" class="date-range-picker form-control">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">{{translate('Customer Joining Date')}}</label>
                             <div class="position-relative">
                                 <span class="tio-calendar icon-absolute-on-right"></span>
-                                <input type="text" class="date-range-picker form-control">
+                                <input type="text" name="join_date" class="date-range-picker form-control">
                             </div>
                         </div>
                         <div class="col-md-4">

@@ -211,6 +211,14 @@ class Helpers
         $data['is_basic'] =  (int) $data->pharmacy_item_details?->is_basic ?? 0;
         $data['is_prescription_required'] =  (int) $data->pharmacy_item_details?->is_prescription_required ?? 0;
         $data['halal_tag_status'] =  (int) $data->store->storeConfig?->halal_tag_status??0;
+        $data['nutritions_name']=Nutrition::whereIn('id',$data?->nutritions->pluck('id') )->pluck('nutrition');
+        $data['allergies_name']=Allergy::whereIn('id',$data?->allergies->pluck('id') )->pluck('allergy');
+        $data['generic_name']=GenericName::whereIn('id',$data?->generic->pluck('id') )->pluck('generic_name');
+
+
+        unset($data['nutritions']);
+        unset($data['allergies']);
+        unset($data['generic']);
 
         unset($data['pharmacy_item_details']);
         unset($data['store']);
@@ -507,6 +515,14 @@ class Helpers
                 if (!$trans) {
                     unset($item['translations']);
                 }
+                $item['nutritions_name']=Nutrition::whereIn('id',$item?->nutritions->pluck('id') )->pluck('nutrition');
+                $item['allergies_name']=Allergy::whereIn('id',$item?->allergies->pluck('id') )->pluck('allergy');
+                $item['generic_name']=GenericName::whereIn('id',$item?->generic->pluck('id') )->pluck('generic_name');
+
+
+                unset($item['nutritions']);
+                unset($item['allergies']);
+                unset($item['generic']);
                 unset($item['ecommerce_item_details']);
                 unset($item['pharmacy_item_details']);
                 unset($item['store']);
@@ -611,9 +627,16 @@ class Helpers
                     }
                 }
             }
+
+            $data['nutritions_name']=Nutrition::whereIn('id',$data?->nutritions->pluck('id') )->pluck('nutrition');
+            $data['allergies_name']=Allergy::whereIn('id',$data?->allergies->pluck('id') )->pluck('allergy');
+            $data['generic_name']=GenericName::whereIn('id',$data?->generic->pluck('id') )->pluck('generic_name');
             if (!$trans) {
                 unset($data['translations']);
             }
+            unset($data['nutritions']);
+            unset($data['allergies']);
+            unset($data['generic']);
             unset($data['ecommerce_item_details']);
             unset($data['pharmacy_item_details']);
             unset($data['store']);

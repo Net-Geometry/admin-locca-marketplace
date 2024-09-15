@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Models\Newsletter;
 use Illuminate\Http\Request;
 use App\CentralLogics\Helpers;
+use Illuminate\Support\Carbon;
 use App\Models\BusinessSetting;
 use Illuminate\Support\Facades\DB;
 use App\Exports\CustomerListExport;
@@ -26,6 +27,8 @@ class CustomerController extends Controller
     }
     public function customer_list(Request $request)
     {
+
+        // dd($request->all());
         $zone_id=  $request->zone_id ?? null;
         $filter=  $request->filter ?? null;
         $order_wise=  $request->order_wise ?? null;
@@ -33,6 +36,23 @@ class CustomerController extends Controller
         if ($request->search) {
             $key = explode(' ', $request['search']);
         }
+
+
+
+
+        list($order_date_start, $order_date_end) = explode(' - ', $request->order_date);
+        list($join_date_start, $join_date_end) = explode(' - ', $request->join_date);
+
+
+
+        $order_date_start = Carbon::createFromFormat('m/d/Y', $order_date_start)->startOfDay();
+        $order_date_end = Carbon::createFromFormat('m/d/Y', $order_date_end)->endOfDay();
+
+        $join_date_start = Carbon::createFromFormat('m/d/Y', $join_date_start)->startOfDay();
+        $join_date_end = Carbon::createFromFormat('m/d/Y', $join_date_end)->endOfDay();
+
+
+
         $customers = User::when(count($key) > 0, function ($query) use ($key) {
             foreach ($key as $value) {
                 $query->orWhere('f_name', 'like', "%{$value}%")
@@ -41,6 +61,18 @@ class CustomerController extends Controller
                     ->orWhere('phone', 'like', "%{$value}%");
             };
         })->withcount('orders')
+
+
+
+        ->when(isset($request->join_date) , function ($query) use($join_date_start, $join_date_end) {
+            $query->WhereBetween('created_at', [$join_date_start, $join_date_end]);
+        })
+
+
+
+
+
+
 
         ->when(isset($zone_id) && is_numeric($zone_id) , function ($query) use($zone_id){
             $query->where('zone_id' ,$zone_id);
