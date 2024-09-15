@@ -352,12 +352,14 @@
                                             <i class="tio-info-outined"></i>
                                         </span>
                                     </label>
-                                    <select name="generic_name" class="form-control multiple-select2">
-                                        <option selected disabled>{{translate('Select generic_name')}}</option>
-                                        @foreach (\App\Models\GenericName::select(['generic_name'])->get() as $generic_name)
-                                            <option value="{{ $generic_name->generic_name }}">{{ $generic_name->generic_name }}</option>
-                                        @endforeach
-                                    </select>
+                                    <div class="dropdown suggestion_dropdown">
+                                        <input type="text" class="form-control" data-toggle="dropdown" name="generic_name">
+                                        <div class="dropdown-menu">
+                                            @foreach (\App\Models\GenericName::select(['generic_name'])->get() as $generic_name)
+                                                <div class="dropdown-item">{{ $generic_name->generic_name }}</div>
+                                            @endforeach
+                                        </div>
+                                    </div>
                                 </div>
 
 
@@ -654,6 +656,12 @@
     <script src="{{asset('public/assets/admin')}}/js/view-pages/product-index.js"></script>
     <script>
         "use strict";
+
+        $('.suggestion_dropdown .dropdown-item').on('click', function(){
+            const input =$(this).closest('.suggestion_dropdown').children('input')
+            input.val($(this).text())
+            input.focus()
+        })
 
         $(document).on('change', '#discount_type', function () {
          let data =  document.getElementById("discount_type");
