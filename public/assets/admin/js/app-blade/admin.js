@@ -409,7 +409,7 @@ $.fn.select2DynamicDisplay = function () {
 
         $this.select2({
             tags: true,
-            maximumSelectionLength: 5
+            maximumSelectionLength: 5,
         });
 
         // Bind change event to update display

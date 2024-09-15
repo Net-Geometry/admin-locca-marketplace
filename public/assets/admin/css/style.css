@@ -13686,3 +13686,6 @@ video#VisaChipCardVideo {
 .coupon-slider-button:not(.active) .checkmark {
     display: none;
 }
+.suggestion_dropdown .dropdown-menu {
+    width: 100% !important;
+}
