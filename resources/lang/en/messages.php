@@ -5691,4 +5691,8 @@
   'section. All created zones will be automatically displayed on the React Landing Page. The zones will be based on the Zone Display Name.' => 'Section. All created zones will be automatically displayed on the React Landing Page. The zones will be based on the Zone Display Name.',
   'To view a list of all active zones on your Flutter Landing Page' => 'To view a list of all active zones on your Flutter Landing Page',
   'section. All created zones will be automatically displayed on the Flutter Landing Page. The zones will be based on the Zone Display Name.' => 'Section. All created zones will be automatically displayed on the Flutter Landing Page. The zones will be based on the Zone Display Name.',
+  'are_available.' => 'are available.',
+  'default_short_description_is_required' => 'Default short description is required',
+  'Default short description is required' => 'Default short description is required',
+  'right_now_no_module_available.' => 'Right now no module available.',
 );

@@ -3443,6 +3443,7 @@ class Helpers
             'reviewer_image' => asset('public/assets/admin/img/100x100/2.jpg'),
             'fixed_header_image' => asset('/public/assets/admin/img/aspect-1.png'),
             'header_icon' => asset('/public/assets/admin/img/aspect-1.png'),
+            'available_zone_image' => asset('public/assets/admin/img/100x100/2.jpg'),
             'why_choose' => asset('/public/assets/admin/img/aspect-1.png'),
             'header_banner' => asset('/public/assets/admin/img/aspect-1.png'),
             'reviewer_company_image' => asset('public/assets/admin/img/100x100/2.jpg'),

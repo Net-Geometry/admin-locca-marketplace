@@ -3912,6 +3912,16 @@ class BusinessSettingsController extends Controller
 
             Toastr::success(translate('messages.contact_section_updated'));
         } elseif ($tab == 'available-zone-section') {
+            if($request['available_zone_status']){
+                $request->validate([
+                    'available_zone_title.0' => 'required',
+                    'available_zone_short_description.0' => 'required',
+                    'image' => 'required',
+                ], [
+                    'available_zone_title.0.required' => translate('default_title_is_required'),
+                    'available_zone_short_description.0.required' => translate('default_short_description_is_required'),
+                ]);
+            }
             $available_zone_title = DataSetting::where('type', 'admin_landing_page')->where('key', 'available_zone_title')->first();
             if ($available_zone_title == null) {
                 $available_zone_title = new DataSetting();
@@ -4488,6 +4498,16 @@ class BusinessSettingsController extends Controller
 
             Toastr::success(translate('messages.download_app_section_updated'));
         } elseif ($tab == 'available-zone-section') {
+            if($request['available_zone_status']){
+                $request->validate([
+                    'available_zone_title.0' => 'required',
+                    'available_zone_short_description.0' => 'required',
+                    'image' => 'required',
+                ], [
+                    'available_zone_title.0.required' => translate('default_title_is_required'),
+                    'available_zone_short_description.0.required' => translate('default_short_description_is_required'),
+                ]);
+            }
             $available_zone_title = DataSetting::where('type', 'react_landing_page')->where('key', 'available_zone_title')->first();
             if ($available_zone_title == null) {
                 $available_zone_title = new DataSetting();
@@ -5684,6 +5704,16 @@ class BusinessSettingsController extends Controller
 
             Toastr::success(translate('messages.criteria_added_successfully'));
         } elseif ($tab == 'available-zone-section') {
+            if($request['available_zone_status']){
+                $request->validate([
+                    'available_zone_title.0' => 'required',
+                    'available_zone_short_description.0' => 'required',
+                    'image' => 'required',
+                ], [
+                    'available_zone_title.0.required' => translate('default_title_is_required'),
+                    'available_zone_short_description.0.required' => translate('default_short_description_is_required'),
+                ]);
+            }
             $available_zone_title = DataSetting::where('type', 'flutter_landing_page')->where('key', 'available_zone_title')->first();
             if ($available_zone_title == null) {
                 $available_zone_title = new DataSetting();

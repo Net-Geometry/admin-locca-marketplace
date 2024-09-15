@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Contact;
 use App\Models\DataSetting;
 use App\Models\AdminFeature;
+use App\Models\Zone;
 use Illuminate\Http\Request;
 use App\CentralLogics\Helpers;
 use App\Models\BusinessSetting;
@@ -78,6 +79,9 @@ class HomeController extends Controller
         $criterias = AdminSpecialCriteria::where('status',1)->get();
         $testimonials = AdminTestimonial::where('status',1)->get();
 
+        $zones= Zone::where('status',1)->get();
+        $zones = self::zone_format($zones);
+
         $landing_data = [
             'fixed_header_title'=>(isset($settings['fixed_header_title']) )  ? $settings['fixed_header_title'] : null ,
             'fixed_header_sub_title'=>(isset($settings['fixed_header_sub_title']) )  ? $settings['fixed_header_sub_title'] : null ,
@@ -122,6 +126,13 @@ class HomeController extends Controller
             'dm_app_earning_links'=> (isset($settings['dm_app_earning_links']) )  ? json_decode($settings['dm_app_earning_links'], true) : null ,
             'download_user_app_links'=> (isset($settings['download_user_app_links']) )  ? json_decode($settings['download_user_app_links'], true) : null ,
             'fixed_link'=> (isset($settings['fixed_link']) )  ? json_decode($settings['fixed_link'], true) : null ,
+
+            'available_zone_status' => (int)((isset($settings['available_zone_status'])) ? $settings['available_zone_status'] : 0),
+            'available_zone_title' => (isset($settings['available_zone_title'])) ? $settings['available_zone_title'] : null,
+            'available_zone_short_description' => (isset($settings['available_zone_short_description'])) ? $settings['available_zone_short_description'] : null,
+            'available_zone_image' => (isset($settings['available_zone_image'])) ? $settings['available_zone_image'] : null,
+            'available_zone_image_full_url' => Helpers::get_full_url('available_zone_image', (isset($settings['available_zone_image'])) ? $settings['available_zone_image'] : null, (isset($settings['available_zone_image_storage'])) ? $settings['available_zone_image_storage'] : 'public'),
+            'available_zone_list' => $zones,
         ];
 
 
@@ -130,7 +141,6 @@ class HomeController extends Controller
         $redirect_url = Helpers::get_business_data('landing_page_custom_url');
 
         $new_user= request()?->new_user ?? null ;
-
 
         if(isset($config) && $config){
 
@@ -142,6 +152,22 @@ class HomeController extends Controller
         }else{
             abort(404);
         }
+    }
+
+    private function zone_format($data)
+    {
+        $storage = [];
+        foreach ($data as $item) {
+            $storage[] = [
+                'id' => $item['id'],
+                'name' => $item['name'],
+                'display_name' => $item['display_name']?$item['display_name']:$item['name'],
+                'modules' => $item->modules->pluck('module_name')
+            ];
+        }
+        $data = $storage;
+
+        return $data;
     }
 
     public function terms_and_conditions(Request $request)
