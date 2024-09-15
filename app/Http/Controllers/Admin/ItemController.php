@@ -3,17 +3,17 @@
 namespace App\Http\Controllers\Admin;
 
 
-use App\Models\Allergy;
-use App\Models\Brand;
-use App\Models\EcommerceItemDetails;
-use App\Models\Nutrition;
 use Carbon\Carbon;
 use App\Models\Tag;
 use App\Models\Item;
+use App\Models\Brand;
 use App\Models\Store;
 use App\Models\Review;
+use App\Models\Allergy;
 use App\Models\Category;
+use App\Models\Nutrition;
 use App\Scopes\StoreScope;
+use App\Models\GenericName;
 use App\Models\TempProduct;
 use App\Models\Translation;
 use Illuminate\Support\Str;
@@ -29,6 +29,7 @@ use Illuminate\Support\Facades\DB;
 use App\CentralLogics\ProductLogic;
 use App\Models\PharmacyItemDetails;
 use App\Http\Controllers\Controller;
+use App\Models\EcommerceItemDetails;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Mail;
@@ -168,6 +169,14 @@ class ItemController extends Controller
                 $nutrition->save();
                 array_push($nutrition_ids, $nutrition->id);
             }
+        }
+        $generic_ids = [];
+        if ($request->generic_name != null) {
+            $generic_name = GenericName::firstOrNew(
+                ['generic_name' => $request->generic_name]
+            );
+            $generic_name->save();
+            array_push($generic_ids, $generic_name->id);
         }
 
         $allergy_ids = [];
@@ -330,7 +339,8 @@ class ItemController extends Controller
             $item_details->is_basic = $request->basic ?? 0;
             $item_details->is_prescription_required = $request->is_prescription_required ?? 0;
             $item_details->save();
-        }
+            $item->generic()->sync($generic_ids);
+            }
         if ($module_type == 'ecommerce') {
             $item_details = new EcommerceItemDetails();
             $item_details->item_id = $item->id;
@@ -459,6 +469,15 @@ class ItemController extends Controller
                 $allergy->save();
                 array_push($allergy_ids, $allergy->id);
             }
+        }
+
+        $generic_ids = [];
+        if ($request->generic_name != null) {
+            $generic_name = GenericName::firstOrNew(
+                ['generic_name' => $request->generic_name]
+            );
+            $generic_name->save();
+            array_push($generic_ids, $generic_name->id);
         }
 
         $item->name = $request->name[array_search('default', $request->lang)];
@@ -640,6 +659,7 @@ class ItemController extends Controller
         $item->nutritions()->sync($nutrition_ids);
         $item->allergies()->sync($allergy_ids);
         if($item->module->module_type == 'pharmacy'){
+            $item->generic()->sync($generic_ids);
             DB::table('pharmacy_item_details')
                 ->updateOrInsert(
                     ['item_id' => $item->id],
@@ -1806,6 +1826,7 @@ class ItemController extends Controller
         $item->tags()->sync(json_decode($data->tag_ids));
         $item->nutritions()->sync(json_decode($data->nutrition_ids));
         $item->allergies()->sync(json_decode($data->allergy_ids));
+        $item->generic()->sync(json_decode($data->generic_ids));
 
         $item?->pharmacy_item_details()?->delete();
 

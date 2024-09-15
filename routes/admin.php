@@ -334,8 +334,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
 
             Route::get('login-url-setup', 'BusinessSettingsController@login_url_page')->name('login_url_page');
             // Centerlize login
-            Route::get('zone_setup', 'BusinessSettingsController@zone_setup')->name('zone_setup');
-            Route::get('automated_message', 'BusinessSettingsController@automated_message')->name('automated_message');
+
             Route::get('login_page', 'BusinessSettingsController@login_page')->name('login_page');
 
             Route::post('login-url-setup/update', 'BusinessSettingsController@login_url_page_update')->name('login_url_update');

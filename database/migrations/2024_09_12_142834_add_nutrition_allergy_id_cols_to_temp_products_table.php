@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::table('temp_products', function (Blueprint $table) {
             $table->string('nutrition_ids',255)->nullable();
             $table->string('allergy_ids',255)->nullable();
+            $table->string('generic_ids',255)->nullable();
         });
     }
 
@@ -25,6 +26,7 @@ return new class extends Migration
         Schema::table('temp_products', function (Blueprint $table) {
             $table->dropColumn('nutrition_ids');
             $table->dropColumn('allergy_ids');
+            $table->dropColumn('generic_ids');
         });
     }
 };

@@ -7058,22 +7058,12 @@ class BusinessSettingsController extends Controller
 
         return view('admin-views.login-setup.login_setup', compact('data'));
     }
-    public function zone_setup()
-    {
 
 
-        return view('admin-views.login-setup.zone_setup');
-    }
-    public function automated_message()
-    {
-
-
-        return view('admin-views.login-setup.automated_message');
-    }
     public function login_page()
     {
 
-
+        abort(404);
         return view('admin-views.login-setup.login_page');
     }
 

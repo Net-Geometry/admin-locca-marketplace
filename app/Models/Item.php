@@ -267,6 +267,10 @@ class Item extends Model
     {
         return $this->belongsToMany(Allergy::class);
     }
+    public function generic()
+    {
+        return $this->belongsToMany(GenericName::class,'item_generic_names');
+    }
     public function nutritions()
     {
         return $this->belongsToMany(Nutrition::class);

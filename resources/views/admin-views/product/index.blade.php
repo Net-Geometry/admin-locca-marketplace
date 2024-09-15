@@ -280,7 +280,7 @@
                                         </label>
                                         <select name="nutritions[]" class="form-control multiple-select2" multiple>
                                             <option disabled>{{translate('Select Nutrition')}}</option>
-                                            @foreach (\App\Models\Nutrition::all() as $nutrition)
+                                            @foreach (\App\Models\Nutrition::select(['nutrition'])->get() as $nutrition)
                                                 <option value="{{ $nutrition->nutrition }}">{{ $nutrition->nutrition }}</option>
                                             @endforeach
                                         </select>
@@ -296,12 +296,13 @@
                                         </label>
                                         <select name="allergies[]" class="form-control multiple-select2" multiple>
                                             <option disabled>{{translate('Select Allegren Ingredients')}}</option>
-                                            @foreach (\App\Models\Allergy::all() as $allergy)
+                                            @foreach (\App\Models\Allergy::select(['allergy'])->get() as $allergy)
                                                 <option value="{{ $allergy->allergy }}">{{ $allergy->allergy }}</option>
                                             @endforeach
                                         </select>
                                     </div>
                                 @endif
+
 
                                 <div class="col-sm-6 col-lg-3" id="maximum_cart_quantity">
                                     <div class="form-group mb-0">
@@ -342,7 +343,25 @@
                                         </label>
                                       </div>
                                 </div>
-                                <div class="col-sm-6 col-lg-3">
+
+
+                                <div class="col-sm-6" id="generic_name">
+                                    <label class="input-label" for="sub-categories">
+                                        {{translate('generic_name')}}
+                                        <span class="input-label-secondary" title="lorem imspu" data-toggle="tooltip">
+                                            <i class="tio-info-outined"></i>
+                                        </span>
+                                    </label>
+                                    <select name="generic_name" class="form-control multiple-select2">
+                                        <option selected disabled>{{translate('Select generic_name')}}</option>
+                                        @foreach (\App\Models\GenericName::select(['generic_name'])->get() as $generic_name)
+                                            <option value="{{ $generic_name->generic_name }}">{{ $generic_name->generic_name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+
+                                {{-- <div class="col-sm-6 col-lg-3">
                                     <label class="input-label" for="sub-categories">
                                         {{translate('Generic Name')}}
                                         <span class="input-label-secondary" title="lorem imspu" data-toggle="tooltip">
@@ -358,7 +377,7 @@
                                         <option value="Omeprazol">{{translate('Omeprazol')}}</option>
                                         <option value="Tafnil">{{translate('Tafnil')}}</option>
                                     </select>
-                                </div>
+                                </div> --}}
                                 @endif
                                 @if(Config::get('module.current_module_type') == 'grocery' || Config::get('module.current_module_type') == 'food')
                                     <div class="col-sm-6 col-lg-3" id="halal">

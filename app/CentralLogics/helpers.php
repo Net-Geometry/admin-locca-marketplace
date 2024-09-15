@@ -2,8 +2,8 @@
 
 namespace App\CentralLogics;
 
-use App\Models\ExternalConfiguration;
 use DateTime;
+use App\Models\Tag;
 use App\Models\Item;
 use App\Models\User;
 use App\Models\Zone;
@@ -13,6 +13,7 @@ use App\Models\Store;
 use App\Library\Payer;
 use App\Models\Module;
 use App\Models\Review;
+use App\Models\Allergy;
 use App\Models\Expense;
 use App\Traits\Payment;
 use App\Mail\PlaceOrder;
@@ -21,11 +22,14 @@ use App\Models\Category;
 use App\Models\Currency;
 use App\Models\DMReview;
 use App\Library\Receiver;
+use App\Models\Nutrition;
 use App\Models\DataSetting;
+use App\Models\GenericName;
 use App\Models\StoreWallet;
 use App\Models\Translation;
 use Illuminate\Support\Str;
 use PayPal\Api\Transaction;
+use App\Models\ItemCampaign;
 use App\Models\FlashSaleItem;
 use Illuminate\Support\Carbon;
 use App\Models\BusinessSetting;
@@ -35,12 +39,14 @@ use Illuminate\Support\Facades\DB;
 use App\Mail\OrderVerificationMail;
 use App\Models\NotificationMessage;
 use App\Models\NotificationSetting;
+
 use App\Models\SubscriptionPackage;
+use App\Traits\PaymentGatewayTrait;
 use Illuminate\Support\Facades\App;
 use App\Mail\SubscriptionSuccessful;
 use Illuminate\Support\Facades\Http;
-
 use Illuminate\Support\Facades\Mail;
+use App\Models\ExternalConfiguration;
 use App\Mail\SubscriptionRenewOrShift;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Schema;
@@ -48,12 +54,11 @@ use App\Library\Payment as PaymentInfo;
 use App\Models\SubscriptionTransaction;
 use Illuminate\Support\Facades\Storage;
 use App\Models\StoreNotificationSetting;
+use App\Traits\NotificationDataSetUpTrait;
 use Illuminate\Database\Eloquent\Collection;
 use MatanYadaev\EloquentSpatial\Objects\Point;
 use App\Models\SubscriptionBillingAndRefundHistory;
 use Laravelpkg\Laravelchk\Http\Controllers\LaravelchkController;
-use App\Traits\PaymentGatewayTrait;
-use App\Traits\NotificationDataSetUpTrait;
 
 class Helpers
 {
@@ -291,7 +296,14 @@ class Helpers
                 $item['halal_tag_status'] =  (int) $item->store->storeConfig?->halal_tag_status??0;
 
                 $item->store['self_delivery_system'] = (int) $item->store->sub_self_delivery;
+                $item['nutritions_name']=Nutrition::whereIn('id',$item?->nutritions->pluck('id') )->pluck('nutrition');
+                $item['allergies_name']=Allergy::whereIn('id',$item?->allergies->pluck('id') )->pluck('allergy');
+                $item['generic_name']=GenericName::whereIn('id',$item?->generic->pluck('id') )->pluck('generic_name');
 
+
+                unset($item['nutritions']);
+                unset($item['allergies']);
+                unset($item['generic']);
                 unset($item['pharmacy_item_details']);
                 unset($item['store']);
                 unset($item['rating']);
@@ -362,16 +374,27 @@ class Helpers
             $data['is_basic'] =  (int) $data->pharmacy_item_details?->is_basic ?? 0;
             $data['is_prescription_required'] =  (int) $data->pharmacy_item_details?->is_prescription_required ?? 0;
             $data['halal_tag_status'] =  (int) $data->store->storeConfig?->halal_tag_status??0;
+
+            $data['nutritions_name']=Nutrition::whereIn('id',$data?->nutritions->pluck('id') )->pluck('nutrition');
+            $data['allergies_name']=Allergy::whereIn('id',$data?->allergies->pluck('id') )->pluck('allergy');
+            $data['generic_name']=GenericName::whereIn('id',$data?->generic->pluck('id') )->pluck('generic_name');
+
             if($temp_product == true){
-                $data['tags']=\App\Models\Tag::whereIn('id',json_decode($data?->tag_ids) )->get(['tag','id']);
-                $data['nutritions']=\App\Models\Nutrition::whereIn('id',json_decode($data?->nutrition_ids) )->get(['nutrition','id']);
-                $data['allergies']=\App\Models\Allergy::whereIn('id',json_decode($data?->allergy_ids) )->get(['allergy','id']);
+                $data['tags']=Tag::whereIn('id',json_decode($data?->tag_ids) )->get(['tag','id']);
+                $data['nutritions_data']=Nutrition::whereIn('id',json_decode($data?->nutrition_ids) )->get(['nutrition','id']);
+                $data['allergies_data']=Allergy::whereIn('id',json_decode($data?->allergy_ids) )->get(['allergy','id']);
+                $data['generic_name_data']=GenericName::whereIn('id',json_decode($data?->generic_ids) )->get(['generic_name','id']);
             }
+
             $data->store['self_delivery_system'] = (int) $data->store->sub_self_delivery;
 
             unset($data['pharmacy_item_details']);
             unset($data['store']);
             unset($data['rating']);
+            unset($item['nutritions']);
+            unset($item['allergies']);
+            unset($item['generic']);
+
         }
 
         return $data;

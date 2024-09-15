@@ -26,6 +26,7 @@ return [
         'basic'=>false,
         'halal'=>true,
         'brand'=>false,
+        'generic_name'=>false,
         'description'=>'In this type, You can set delivery slot start after x minutes from current time, No available time for items and has stock for items.',
     ],
 
@@ -50,6 +51,7 @@ return [
         'basic'=>false,
         'halal'=>true,
         'brand'=>false,
+        'generic_name'=>false,
         'description'=>'In this type, you can set item available time, no stock management for items and has option to add add-on.',
     ],
 
@@ -74,6 +76,7 @@ return [
         'basic'=>true,
         'halal'=>false,
         'brand'=>false,
+        'generic_name'=>true,
         'description'=>'In this type, Customer can upload prescription when place order, No available time for items and has stock for items.',
     ],
 
@@ -98,6 +101,7 @@ return [
         'basic'=>false,
         'halal'=>false,
         'brand'=>true,
+        'generic_name'=>false,
         'description'=>'In this type, No opening and closing time for store, no available time for items and has stock for items.',
     ],
 
@@ -122,6 +126,7 @@ return [
         'basic'=>false,
         'halal'=>false,
         'brand'=>false,
+        'generic_name'=>false,
         'description'=>'',
     ],
 ];

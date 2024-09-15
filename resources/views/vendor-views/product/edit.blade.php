@@ -380,6 +380,35 @@
                                         <input type="number"  placeholder="{{ translate('messages.Ex:_10') }}" class="form-control" name="maximum_cart_quantity" min="0" value="{{ $product->maximum_cart_quantity }}" id="cart_quantity">
                                     </div>
                                 </div>
+
+
+
+
+
+
+                                @if (isset($temp_product) && $temp_product == 1 )
+                                @php($product_generic_name = \App\Models\GenericName::whereIn('id', json_decode($product?->generic_ids))->pluck('id'))
+                            @else
+                                @php($product_generic_name = $product->generic->pluck('id'))
+                            @endif
+
+                            <div class="col-sm-6 col-lg-6" id="generic_name">
+                                <label class="input-label" for="sub-categories">
+                                    {{translate('generic_name')}}
+                                    <span class="input-label-secondary" title="lorem imspu" data-toggle="tooltip">
+                                        <i class="tio-info-outined"></i>
+                                    </span>
+                                </label>
+                                <select name="generic_name" class="form-control multiple-select2" >
+                                    <option disabled>{{translate('Select generic_name')}}</option>
+                                    @foreach (\App\Models\GenericName::select(['id','generic_name'])->get() as $generic_name)
+                                        <option value="{{ $generic_name->generic_name }}" {{ $product_generic_name->contains($generic_name->id) ? 'selected' : '' }}>{{ $generic_name->generic_name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+
+
                                 <div class="col-sm-6 col-lg-4" id="organic">
                                     <div class="form-check mb-0 p-6">
                                         <input class="form-check-input" name="organic" type="checkbox" value="1" id="flexCheckDefault" {{ $product->organic == 1?'checked':'' }}>
@@ -389,7 +418,7 @@
                                       </div>
                                 </div>
                                 @if ($module_data['basic'])
-                                <div class="col-sm-6 col-lg-4" id="basic">
+                                <div class="col-sm-3 col-lg-3" id="basic">
                                     <div class="form-check mb-0 p-6">
                                         <input class="form-check-input" name="basic" type="checkbox" value="1" id="flexCheckDefaultbasic" {{ $product->pharmacy_item_details?->is_basic == 1?'checked':'' }}>
                                         <label class="form-check-label" for="flexCheckDefaultbasic">
@@ -399,7 +428,7 @@
                                 </div>
                                 @endif
                                 @if ($module_type == 'pharmacy')
-                                <div class="col-sm-6 col-lg-4" id="is_prescription_required">
+                                <div class="col-sm-3 col-lg-3" id="is_prescription_required">
                                     <div class="form-check mb-0 p-6">
                                         <input class="form-check-input" name="is_prescription_required" type="checkbox" value="1" id="flexCheckDefaultPrescription" {{ $product->pharmacy_item_details?->is_prescription_required == 1?'checked':'' }}>
                                         <label class="form-check-label" for="flexCheckDefaultPrescription">

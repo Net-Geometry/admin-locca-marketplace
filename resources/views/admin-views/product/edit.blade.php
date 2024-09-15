@@ -415,7 +415,6 @@
                                         </label>
                                       </div>
                                 </div>
-                                @endif
                                 <div class="col-sm-6 col-lg-3" id="basic">
                                     <div class="form-check mb-0 p-6">
                                         <input class="form-check-input" name="basic" type="checkbox" value="1" id="flexCheckDefaultbasic" {{ $product->pharmacy_item_details?->is_basic == 1?'checked':((isset($temp_product) && $temp_product == 1 && $product->basic ==1)?'checked':'') }}>
@@ -424,6 +423,27 @@
                                         </label>
                                       </div>
                                 </div>
+                                @if (isset($temp_product) && $temp_product == 1 )
+                                        @php($product_generic_name = \App\Models\GenericName::whereIn('id', json_decode($product?->generic_ids))->pluck('id'))
+                                    @else
+                                        @php($product_generic_name = $product->generic->pluck('id'))
+                                    @endif
+                                    <div class="col-sm-6" id="generic_name">
+                                        <label class="input-label" for="sub-categories">
+                                            {{translate('generic_name')}}
+                                            <span class="input-label-secondary" title="lorem imspu" data-toggle="tooltip">
+                                                <i class="tio-info-outined"></i>
+                                            </span>
+                                        </label>
+                                        <select name="generic_name" class="form-control multiple-select2" >
+                                            <option disabled>{{translate('Select generic_name')}}</option>
+                                            @foreach (\App\Models\GenericName::select(['id','generic_name'])->get() as $generic_name)
+                                                <option value="{{ $generic_name->generic_name }}" {{ $product_generic_name->contains($generic_name->id) ? 'selected' : '' }}>{{ $generic_name->generic_name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                @endif
+
                                 @if(Config::get('module.current_module_type') == 'grocery' || Config::get('module.current_module_type') == 'food')
                                     <div class="col-sm-6 col-lg-3" id="halal">
                                         <div class="form-check mb-0 p-6">

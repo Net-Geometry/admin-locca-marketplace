@@ -318,6 +318,38 @@
                                         <input type="number"  placeholder="{{ translate('messages.Ex:_10') }}"  class="form-control" name="maximum_cart_quantity" min="0" id="cart_quantity">
                                     </div>
                                 </div>
+
+
+
+
+                                @if($module_type == 'pharmacy')
+
+
+
+
+                                <div class="col-sm-6" id="generic_name">
+                                    <label class="input-label" for="sub-categories">
+                                        {{translate('generic_name')}}
+                                        <span class="input-label-secondary" title="lorem imspu" data-toggle="tooltip">
+                                            <i class="tio-info-outined"></i>
+                                        </span>
+                                    </label>
+                                    <select name="generic_name" class="form-control multiple-select2">
+                                        <option selected disabled>{{translate('Select generic_name')}}</option>
+                                        @foreach (\App\Models\GenericName::select(['generic_name'])->get() as $generic_name)
+                                            <option value="{{ $generic_name->generic_name }}">{{ $generic_name->generic_name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+
+
+                                @endif
+
+
+
+
+
                                 <div class="col-sm-6 col-lg-4" id="organic">
                                     <div class="form-check mb-0 p-6">
                                         <input class="form-check-input" name="organic" type="checkbox" value="1" id="flexCheckDefault" checked>
@@ -327,7 +359,7 @@
                                       </div>
                                 </div>
                                 @if ($module_data['basic'])
-                                <div class="col-sm-6 col-lg-4" id="basic">
+                                <div class="col-sm-3 col-lg-3" id="basic">
                                     <div class="form-check mb-0 p-6">
                                         <input class="form-check-input" name="basic" type="checkbox" value="1" id="flexCheckDefault" checked>
                                         <label class="form-check-label" for="flexCheckDefault">
@@ -337,7 +369,7 @@
                                 </div>
                                 @endif
                                 @if ($module_type == 'pharmacy')
-                                <div class="col-sm-6 col-lg-4" id="is_prescription_required">
+                                <div class="col-sm-3 col-lg-3" id="is_prescription_required">
                                     <div class="form-check mb-0 p-6">
                                         <input class="form-check-input" name="is_prescription_required" type="checkbox" value="1" id="flexCheckDefaultPrescription" checked>
                                         <label class="form-check-label" for="flexCheckDefault">

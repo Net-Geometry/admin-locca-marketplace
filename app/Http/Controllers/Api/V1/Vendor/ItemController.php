@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\Api\V1\Vendor;
 
-use App\Models\Allergy;
-use App\Models\Nutrition;
 use Carbon\Carbon;
 use App\Models\Tag;
 use App\Models\Item;
 use App\Models\Review;
+use App\Models\Allergy;
 use App\Models\Category;
+use App\Models\Nutrition;
 use App\Scopes\StoreScope;
+use App\Models\GenericName;
 use App\Models\TempProduct;
 use App\Models\Translation;
 use Illuminate\Http\Request;
@@ -118,7 +119,7 @@ class ItemController extends Controller
 
         $nutrition_ids = [];
         if ($request->nutritions != null) {
-            $nutritions = $request->nutritions;
+            $nutritions =  explode(",", $request->nutritions);
         }
         if (isset($nutritions)) {
             foreach ($nutritions as $key => $value) {
@@ -131,7 +132,8 @@ class ItemController extends Controller
         }
         $allergy_ids = [];
         if ($request->allergies != null) {
-            $allergies = $request->allergies;
+            $allergies =  explode(",", $request->allergies);
+
         }
         if (isset($allergies)) {
             foreach ($allergies as $key => $value) {
@@ -142,6 +144,15 @@ class ItemController extends Controller
                 array_push($allergy_ids, $allergy->id);
             }
         }
+        $generic_ids = [];
+        if ($request->generic_name != null) {
+            $generic_name = GenericName::firstOrNew(
+                ['generic_name' => $request->generic_name]
+            );
+            $generic_name->save();
+            array_push($generic_ids, $generic_name->id);
+        }
+
 
         $item = new Item;
         $item->name = $data[0]['value'];
@@ -332,6 +343,8 @@ class ItemController extends Controller
 
 
         if ($request['vendor']->stores[0]->module->module_type == 'pharmacy') {
+            $item->generic()->sync($generic_ids);
+
             $item_details = new PharmacyItemDetails();
             $item_details->item_id = $item->id;
             $item_details->common_condition_id = $request->condition_id;
@@ -356,7 +369,7 @@ class ItemController extends Controller
         $product_approval_datas = \App\Models\BusinessSetting::where('key', 'product_approval_datas')->first()?->value ?? '';
         $product_approval_datas =json_decode($product_approval_datas , true);
         if (Helpers::get_mail_status('product_approval') && data_get($product_approval_datas,'Add_new_product',null) == 1) {
-            $this->store_temp_data($item, $request,$tag_ids,$nutrition_ids,$allergy_ids);
+            $this->store_temp_data($item, $request,$tag_ids,$nutrition_ids,$allergy_ids,$generic_ids);
             $item->is_approved = 0;
             $item->save();
             return response()->json(['message' => translate('messages.The_product_will_be_published_once_it_receives_approval_from_the_admin.')], 200);
@@ -472,7 +485,7 @@ class ItemController extends Controller
 
         $nutrition_ids = [];
         if ($request->nutritions != null) {
-            $nutritions = $request->nutritions;
+            $nutritions =  explode(",", $request->nutritions);
         }
         if (isset($nutritions)) {
             foreach ($nutritions as $key => $value) {
@@ -485,7 +498,7 @@ class ItemController extends Controller
         }
         $allergy_ids = [];
         if ($request->allergies != null) {
-            $allergies = $request->allergies;
+            $allergies =  explode(",", $request->allergies);
         }
         if (isset($allergies)) {
             foreach ($allergies as $key => $value) {
@@ -496,6 +509,16 @@ class ItemController extends Controller
                 array_push($allergy_ids, $allergy->id);
             }
         }
+
+        $generic_ids = [];
+        if ($request->generic_name != null) {
+            $generic_name = GenericName::firstOrNew(
+                ['generic_name' => $request->generic_name]
+            );
+            $generic_name->save();
+            array_push($generic_ids, $generic_name->id);
+        }
+
 
         $p = Item::findOrFail($request->id);
 
@@ -658,7 +681,7 @@ class ItemController extends Controller
 
         if (Helpers::get_mail_status('product_approval') && ((data_get($product_approval_datas,'Update_anything_in_product_details',null) == 1) || (data_get($product_approval_datas,'Update_product_price',null) == 1 && $old_price !=  $request->price) || ( data_get($product_approval_datas,'Update_product_variation',null) == 1 &&  $variation_changed)) )  {
 
-            $this->store_temp_data($p, $request,$tag_ids, $nutrition_ids, $allergy_ids,true);
+            $this->store_temp_data($p, $request,$tag_ids, $nutrition_ids, $allergy_ids, $generic_ids , true);
             return response()->json(['message' => translate('your_product_added_for_approval')], 200);
         }
 
@@ -689,6 +712,8 @@ class ItemController extends Controller
         $p->tags()->sync($tag_ids);
         $p->nutritions()->sync($nutrition_ids);
         $p->allergies()->sync($allergy_ids);
+        $p->generic()->sync($generic_ids);
+
 
         foreach ($data as $key=>$item) {
             Translation::updateOrInsert(
@@ -894,7 +919,7 @@ class ItemController extends Controller
 
     }
 
-    public function store_temp_data($data, $request,$tag_ids ,$nutrition_ids,$allergy_ids, $update =null)
+    public function store_temp_data($data, $request,$tag_ids ,$nutrition_ids,$allergy_ids, $generic_ids, $update =null)
     {
         $item = TempProduct::firstOrNew(
             ['item_id' => $data->id]
@@ -928,6 +953,7 @@ class ItemController extends Controller
         $item->tag_ids =json_encode($tag_ids);
         $item->nutrition_ids =json_encode($nutrition_ids);
         $item->allergy_ids =json_encode($allergy_ids);
+        $item->generic_ids =json_encode($generic_ids);
 
         $item->available_time_starts = $data->available_time_starts;
         $item->available_time_ends = $data->available_time_ends;

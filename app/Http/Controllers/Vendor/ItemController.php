@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers\Vendor;
 
-use App\Models\Allergy;
-use App\Models\Brand;
-use App\Models\Nutrition;
 use DateTime;
 use Carbon\Carbon;
 use App\Models\Tag;
 use App\Models\Item;
+use App\Models\Brand;
 use App\Models\Review;
+use App\Models\Allergy;
 use App\Models\Category;
+use App\Models\Nutrition;
 use App\Scopes\StoreScope;
+use App\Models\GenericName;
 use App\Models\TempProduct;
 use App\Models\Translation;
 use Illuminate\Support\Str;
@@ -167,7 +168,14 @@ class ItemController extends Controller
                 array_push($allergy_ids, $allergy->id);
             }
         }
-
+        $generic_ids = [];
+        if ($request->generic_name != null) {
+            $generic_name = GenericName::firstOrNew(
+                ['generic_name' => $request->generic_name]
+            );
+            $generic_name->save();
+            array_push($generic_ids, $generic_name->id);
+        }
 
         $images = [];
 
@@ -368,6 +376,8 @@ class ItemController extends Controller
         $food->allergies()->sync($allergy_ids);
 
         if ($module_type == 'pharmacy') {
+
+            $food->generic()->sync($generic_ids);
             $item_details = new PharmacyItemDetails();
             $item_details->item_id = $food->id;
             $item_details->common_condition_id = $request->condition_id;
@@ -390,7 +400,7 @@ class ItemController extends Controller
         $product_approval_datas = \App\Models\BusinessSetting::where('key', 'product_approval_datas')->first()?->value ?? '';
         $product_approval_datas =json_decode($product_approval_datas , true);
         if (Helpers::get_mail_status('product_approval') && data_get($product_approval_datas,'Add_new_product',null) == 1) {
-            $this->store_temp_data($food, $request,$tag_ids, $nutrition_ids,$allergy_ids);
+            $this->store_temp_data($food, $request,$tag_ids, $nutrition_ids,$allergy_ids,$generic_ids);
             $food->is_approved = 0;
             $food->save();
             return response()->json(['product_approval' => translate('messages.The_product_will_be_published_once_it_receives_approval_from_the_admin.')], 200);
@@ -554,6 +564,15 @@ class ItemController extends Controller
             }
         }
 
+        $generic_ids = [];
+        if ($request->generic_name != null) {
+            $generic_name = GenericName::firstOrNew(
+                ['generic_name' => $request->generic_name]
+            );
+            $generic_name->save();
+            array_push($generic_ids, $generic_name->id);
+        }
+
         $p = Item::find($id);
         $p->name = $request->name[array_search('default', $request->lang)];
 
@@ -693,7 +712,7 @@ class ItemController extends Controller
 
         if (Helpers::get_mail_status('product_approval') && ((data_get($product_approval_datas,'Update_anything_in_product_details',null) == 1) || (data_get($product_approval_datas,'Update_product_price',null) == 1 && $old_price !=  $request->price) || ( data_get($product_approval_datas,'Update_product_variation',null) == 1 &&  $variation_changed)) )  {
 
-            $this->store_temp_data($p, $request,$tag_ids,$nutrition_ids,$allergy_ids,true);
+            $this->store_temp_data($p, $request,$tag_ids,$nutrition_ids,$allergy_ids,$generic_ids,true);
             return response()->json(['product_approval' => translate('your_product_added_for_approval')], 200);
         }
 
@@ -735,6 +754,7 @@ class ItemController extends Controller
         $p->tags()->sync($tag_ids);
         $p->nutritions()->sync($nutrition_ids);
         $p->allergies()->sync($allergy_ids);
+        $p->generic()->sync($generic_ids);
 
         Helpers::add_or_update_translations(request: $request, key_data: 'name', name_field: 'name', model_name: 'Item', data_id: $p->id, data_value: $p->name);
         Helpers::add_or_update_translations(request: $request, key_data: 'description', name_field: 'description', model_name: 'Item', data_id: $p->id, data_value: $p->description);
@@ -1036,6 +1056,7 @@ class ItemController extends Controller
                             'tag_ids' => json_encode([]),
                             'nutrition_ids' => json_encode([]),
                             'allergy_ids' => json_encode([]),
+                            'generic_ids' => json_encode([]),
                             'choice_options' => $data[$key]['choice_options'],
                             'food_variations' => $data[$key]['food_variations'],
                             'variations' => $data[$key]['variations'],
@@ -1232,6 +1253,7 @@ class ItemController extends Controller
                             'tag_ids' => json_encode([]),
                             'nutrition_ids' => json_encode([]),
                             'allergy_ids' => json_encode([]),
+                            'generic_ids' => json_encode([]),
                             'choice_options' => $data[$key]['choice_options'],
 
                             'updated_at' => now()
@@ -1524,7 +1546,7 @@ class ItemController extends Controller
         $product=TempProduct::withoutGlobalScope('translate')->with(['translations','store','unit'])->findOrFail($id);
         return view('vendor-views.product.requested_product_view', compact('product'));
     }
-    public function store_temp_data($data, $request,$tag_ids, $nutrition_ids, $allergy_ids , $update =null)
+    public function store_temp_data($data, $request,$tag_ids, $nutrition_ids, $allergy_ids , $generic_ids, $update =null)
     {
         $temp_item = TempProduct::firstOrNew(
             ['item_id' => $data->id]
@@ -1562,6 +1584,8 @@ class ItemController extends Controller
         $temp_item->tag_ids =json_encode($tag_ids);
         $temp_item->nutrition_ids =json_encode($nutrition_ids);
         $temp_item->allergy_ids =json_encode($allergy_ids);
+        $temp_item->generic_ids =json_encode($generic_ids);
+
 
         $temp_item->available_time_starts = $data->available_time_starts;
         $temp_item->available_time_ends = $data->available_time_ends;

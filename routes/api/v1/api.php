@@ -302,6 +302,11 @@ Route::group(['namespace' => 'Api\V1', 'middleware'=>'localization'], function (
 
     Route::get('customer/order/cancellation-reasons', 'OrderController@cancellation_reason');
     Route::get('customer/automated-message', 'OrderController@automatedMessage');
+
+    Route::get('item/get-generic-name-list', 'ItemController@getGenericNameList');
+    Route::get('item/get-allergy-name-list', 'ItemController@getAllergyNameList');
+    Route::get('item/get-nutrition-name-list', 'ItemController@getNutritionNameList');
+
     Route::get('customer/order/parcel-instructions', 'OrderController@parcel_instructions');
     Route::get('most-tips', 'OrderController@most_tips');
     Route::get('stores/details/{id}', 'StoreController@get_details');
