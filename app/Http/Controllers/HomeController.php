@@ -6,6 +6,7 @@ use App\Models\Contact;
 use App\Models\DataSetting;
 use App\Models\AdminFeature;
 use App\Models\Zone;
+use Gregwar\Captcha\CaptchaBuilder;
 use Illuminate\Http\Request;
 use App\CentralLogics\Helpers;
 use App\Models\BusinessSetting;
@@ -15,6 +16,8 @@ use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\File;
 use App\Models\AdminPromotionalBanner;
 use App\Models\SubscriptionTransaction;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 
 class HomeController extends Controller
@@ -229,8 +232,12 @@ class HomeController extends Controller
         $landing_integration_type = Helpers::get_business_data('landing_integration_type');
         $redirect_url = Helpers::get_business_data('landing_page_custom_url');
 
+        $custome_recaptcha = new CaptchaBuilder;
+        $custome_recaptcha->build();
+        Session::put('six_captcha', $custome_recaptcha->getPhrase());
+
         if(isset($config) && $config){
-            return view('contact-us');
+            return view('contact-us',compact('custome_recaptcha'));
         }elseif($landing_integration_type == 'file_upload' && File::exists('resources/views/layouts/landing/custom/index.blade.php')){
             return view('layouts.landing.custom.index');
         }elseif($landing_integration_type == 'url'){
@@ -248,6 +255,29 @@ class HomeController extends Controller
             'subject' => 'required',
             'message' => 'required',
         ]);
+
+        $recaptcha = Helpers::get_business_settings('recaptcha');
+        if (isset($recaptcha) && $recaptcha['status'] == 1) {
+            $request->validate([
+                'g-recaptcha-response' => [
+                    function ($attribute, $value, $fail) {
+                        $secret_key = Helpers::get_business_settings('recaptcha')['secret_key'];
+                        $gResponse = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+                            'secret' => $secret_key,
+                            'response' => $value,
+                            'remoteip' => \request()->ip(),
+                        ]);
+
+                        if (!$gResponse->successful()) {
+                            $fail(translate('ReCaptcha Failed'));
+                        }
+                    },
+                ],
+            ]);
+        } else if (strtolower(session('six_captcha')) != strtolower($request->custome_recaptcha)) {
+            Toastr::error(translate('messages.ReCAPTCHA Failed'));
+            return back();
+        }
 
         $contact = new Contact;
         $contact->name = $request->name;

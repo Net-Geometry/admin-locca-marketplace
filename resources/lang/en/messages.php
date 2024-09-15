@@ -5695,4 +5695,9 @@
   'default_short_description_is_required' => 'Default short description is required',
   'Default short description is required' => 'Default short description is required',
   'right_now_no_module_available.' => 'Right now no module available.',
+  'V3 Version is available now. Must setup for ReCAPTCHA V3' => 'V3 Version is available now. Must setup for ReCAPTCHA V3',
+  'You must setup for V3 version. Otherwise the default reCAPTCHA will be displayed automatically' => 'You must setup for V3 version. Otherwise the default reCAPTCHA will be displayed automatically',
+  'ReCAPTCHA Status Turn ON' => 'ReCAPTCHA Status Turn ON',
+  'Select reCAPTCHA v3 as ' => 'Select reCAPTCHA v3 as ',
+  'ReCAPTCHA Status Turn OFF' => 'ReCAPTCHA Status Turn OFF',
 );

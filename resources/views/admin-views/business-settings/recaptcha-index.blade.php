@@ -32,8 +32,8 @@
                 <div class="alert alert-soft-secondary">
                     <div class="d-flex gap-2">
                         <div class="w-0 flex-grow-1">
-                            <h4 class="m-0">V3 VErsion is available now. Must setup for ReCAPTCHA V3</h4>
-                            <div>You must setup for V3 version. Otherwise the default reCAPTCHA will be displayed automatically</div>
+                            <h4 class="m-0">{{ translate('V3 Version is available now. Must setup for ReCAPTCHA V3') }}</h4>
+                            <div>{{ translate('You must setup for V3 version. Otherwise the default reCAPTCHA will be displayed automatically') }}</div>
                         </div>
                         <div>
                             <button type="button" class="btn p-0 text-danger" data-dismiss="alert">
@@ -49,9 +49,9 @@
                         <span class="pr-1 d-flex align-items-center switch--label">
                             <span class="line--limit-1">
                                 @if (isset($config) && $config['status'] == 1)
-                                {{translate('Turn OFF')}}
+                                {{translate('ReCAPTCHA Status Turn OFF')}}
                                 @else
-                                {{translate('Turn ON')}}
+                                {{translate('ReCAPTCHA Status Turn ON')}}
                                 @endif
                             </span>
                         </span>
@@ -118,7 +118,7 @@
                             <b>{{translate('messages.label')}}</b> {{translate('messages.(Ex: Test Label)')}}
                         </li>
                         <li>
-                            {{translate('messages.Select reCAPTCHA v2 as ')}}
+                            {{translate('messages.Select reCAPTCHA v3 as ')}}
                             <b>{{translate('messages.reCAPTCHA Type')}}</b>
                             ({{translate("Sub type: I'm not a robot Checkbox")}}
                             )

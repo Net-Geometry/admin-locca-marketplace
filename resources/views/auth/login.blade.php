@@ -124,8 +124,7 @@
 
                     @php($recaptcha = \App\CentralLogics\Helpers::get_business_settings('recaptcha'))
                     @if(isset($recaptcha) && $recaptcha['status'] == 1)
-                        <div id="recaptcha_element" class="w-100" data-type="image"></div>
-                        <br/>
+                        <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
                     @else
                         <div class="row p-2" id="reload-captcha">
                             <div class="col-6 pr-0">
@@ -141,7 +140,7 @@
                         </div>
                     @endif
 
-                    <button type="submit" class="btn btn-lg btn-block btn--primary mt-xxl-3">{{translate('messages.login')}}</button>
+                    <button type="submit" class="btn btn-lg btn-block btn--primary mt-xxl-3" id="signInBtn">{{translate('messages.login')}}</button>
                 </form>
                 <!-- End Form -->
                 @if(env('APP_MODE') == 'demo')
@@ -346,24 +345,34 @@ $(document).on('click','.reloadCaptcha', function(){
     });
 </script>
 @if(isset($recaptcha) && $recaptcha['status'] == 1)
-    <script type="text/javascript">
-    "use strict";
-        var onloadCallback = function () {
-            grecaptcha.render('recaptcha_element', {
-                'sitekey': '{{ \App\CentralLogics\Helpers::get_business_settings('recaptcha')['site_key'] }}'
-            });
-        };
-    </script>
-    <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
+    <script src="https://www.google.com/recaptcha/api.js?render={{$recaptcha['site_key']}}"></script>
+@endif
+@if(isset($recaptcha) && $recaptcha['status'] == 1)
     <script>
-        "use strict";
-        $("#form-id").on('submit',function(e) {
-            var response = grecaptcha.getResponse();
-
-            if (response.length === 0) {
+        $(document).ready(function() {
+            $('#signInBtn').click(function (e) {
                 e.preventDefault();
-                toastr.error("{{translate('messages.Please check the recaptcha')}}");
-            }
+                if (typeof grecaptcha === 'undefined') {
+                    toastr.error('Invalid recaptcha key provided. Please check the recaptcha configuration.');
+                    return;
+                }
+                grecaptcha.ready(function () {
+                    grecaptcha.execute('{{$recaptcha['site_key']}}', {action: 'submit'}).then(function (token) {
+                        $('#g-recaptcha-response').value = token;
+                        $('#form-id').submit();
+                    });
+                });
+                window.onerror = function (message) {
+                    var errorMessage = 'An unexpected error occurred. Please check the recaptcha configuration';
+                    if (message.includes('Invalid site key')) {
+                        errorMessage = 'Invalid site key provided. Please check the recaptcha configuration.';
+                    } else if (message.includes('not loaded in api.js')) {
+                        errorMessage = 'reCAPTCHA API could not be loaded. Please check the recaptcha API configuration.';
+                    }
+                    toastr.error(errorMessage)
+                    return true;
+                };
+            });
         });
     </script>
 @endif

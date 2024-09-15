@@ -165,7 +165,7 @@
                     </div>
                 </div>
                 <div class="col-lg-6">
-                    <form class="contact-form-wrapper" method="post" action="{{route('send-message')}}">
+                    <form class="contact-form-wrapper" method="post" action="{{route('send-message')}}" id="form-id">
                         @csrf
                         <div class="row g-4">
                             <div class="col-sm-6">
@@ -180,8 +180,22 @@
                             <div class="col-sm-12">
                                 <textarea name="message" required class="form-control form--control" placeholder="Message"></textarea>
                             </div>
+                            @php($recaptcha = \App\CentralLogics\Helpers::get_business_settings('recaptcha'))
+                            @if(isset($recaptcha) && $recaptcha['status'] == 1)
+                                <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
+                            @else
+                                <div class="m-auto p-3 row" id="reload-captcha">
+                                    <div class="col-6 pr-0">
+                                        <input type="text" class="form-control form-control-lg" name="custome_recaptcha"
+                                               id="custome_recaptcha" required placeholder="{{translate('Enter recaptcha value')}}" autocomplete="off" value="{{env('APP_MODE')=='dev'? session('six_captcha'):''}}">
+                                    </div>
+                                    <div class="col-6 bg-white rounded d-flex w-auto">
+                                        <img src="<?php echo $custome_recaptcha->inline(); ?>" class="rounded w-100" />
+                                    </div>
+                                </div>
+                            @endif
                             <div class="col-sm-12 text-center">
-                                <button class="cmn--btn border-0" type="submit">{{translate("messages.Send_Message")}} </button>
+                                <button class="cmn--btn border-0" type="submit" id="signInBtn">{{translate("messages.Send_Message")}} </button>
                             </div>
                         </div>
                     </form>
@@ -534,3 +548,36 @@
     </section>
     <!-- ==== Contact Section ==== -->
 @endsection
+@if(isset($recaptcha) && $recaptcha['status'] == 1)
+    <script src="https://www.google.com/recaptcha/api.js?render={{$recaptcha['site_key']}}"></script>
+@endif
+@if(isset($recaptcha) && $recaptcha['status'] == 1)
+    <script>
+        $(document).ready(function() {
+            $('#signInBtn').click(function (e) {
+                e.preventDefault();
+                if (typeof grecaptcha === 'undefined') {
+                    toastr.error('Invalid recaptcha key provided. Please check the recaptcha configuration.');
+                    return;
+                }
+                grecaptcha.ready(function () {
+                    grecaptcha.execute('{{$recaptcha['site_key']}}', {action: 'submit'}).then(function (token) {
+                        $('#g-recaptcha-response').value = token;
+                        $('#form-id').submit();
+                    });
+                });
+                window.onerror = function (message) {
+                    var errorMessage = 'An unexpected error occurred. Please check the recaptcha configuration';
+                    if (message.includes('Invalid site key')) {
+                        errorMessage = 'Invalid site key provided. Please check the recaptcha configuration.';
+                    } else if (message.includes('not loaded in api.js')) {
+                        errorMessage = 'reCAPTCHA API could not be loaded. Please check the recaptcha API configuration.';
+                    }
+                    toastr.error(errorMessage)
+                    return true;
+                };
+            });
+        });
+    </script>
+@endif
+{{-- recaptcha scripts end --}}
