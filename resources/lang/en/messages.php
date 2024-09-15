@@ -5700,4 +5700,6 @@
   'ReCAPTCHA Status Turn ON' => 'ReCAPTCHA Status Turn ON',
   'Select reCAPTCHA v3 as ' => 'Select reCAPTCHA v3 as ',
   'ReCAPTCHA Status Turn OFF' => 'ReCAPTCHA Status Turn OFF',
+  'generic_name' => 'Generic name',
+  'Select generic_name' => 'Select generic name',
 );

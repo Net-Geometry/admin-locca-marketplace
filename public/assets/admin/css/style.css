@@ -13534,6 +13534,7 @@ video#VisaChipCardVideo {
     width: 30px;
     flex-grow: 1;
     margin-right: -15px;
+    height: 30px;
 }
 .multiple-select2
     + .select2-container--default
@@ -13685,4 +13686,7 @@ video#VisaChipCardVideo {
 }
 .coupon-slider-button:not(.active) .checkmark {
     display: none;
+}
+.suggestion_dropdown .dropdown-menu {
+    width: 100% !important;
 }

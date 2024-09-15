@@ -353,34 +353,22 @@
                                         </span>
                                     </label>
                                     <div class="dropdown suggestion_dropdown">
-                                        <input type="text" class="form-control" data-toggle="dropdown" name="generic_name">
+                                        <input type="text" class="form-control" data-toggle="dropdown" name="generic_name" autocomplete="off">
+                                        @if(count(\App\Models\GenericName::select(['generic_name'])->get())>0)
                                         <div class="dropdown-menu">
                                             @foreach (\App\Models\GenericName::select(['generic_name'])->get() as $generic_name)
-                                                <div class="dropdown-item">{{ $generic_name->generic_name }}</div>
+                                            <div class="dropdown-item">{{ $generic_name->generic_name }}</div>
                                             @endforeach
+                                            <div class="dropdown-item no-results collapse">
+                                                <div>No results found</div>
+                                            </div>
                                         </div>
+                                        @endif
                                     </div>
                                 </div>
-
-
-                                {{-- <div class="col-sm-6 col-lg-3">
-                                    <label class="input-label" for="sub-categories">
-                                        {{translate('Generic Name')}}
-                                        <span class="input-label-secondary" title="lorem imspu" data-toggle="tooltip">
-                                            <i class="tio-info-outined"></i>
-                                        </span>
-                                    </label>
-                                    <select name="" id="" class="form-control multiple-select2" multiple>
-                                        <option disabled>{{translate('Select Generic')}}</option>
-                                        <option value="Paracetamal">{{translate('Paracetamal')}}</option>
-                                        <option value="Caffein">{{translate('Caffein')}}</option>
-                                        <option value="Maxpro">{{translate('Maxpro')}}</option>
-                                        <option value="Sedno">{{translate('Sedno')}}</option>
-                                        <option value="Omeprazol">{{translate('Omeprazol')}}</option>
-                                        <option value="Tafnil">{{translate('Tafnil')}}</option>
-                                    </select>
-                                </div> --}}
                                 @endif
+
+                                
                                 @if(Config::get('module.current_module_type') == 'grocery' || Config::get('module.current_module_type') == 'food')
                                     <div class="col-sm-6 col-lg-3" id="halal">
                                         <div class="form-check mb-sm-2 pb-sm-1">
@@ -657,11 +645,6 @@
     <script>
         "use strict";
 
-        $('.suggestion_dropdown .dropdown-item').on('click', function(){
-            const input =$(this).closest('.suggestion_dropdown').children('input')
-            input.val($(this).text())
-            input.focus()
-        })
 
         $(document).on('change', '#discount_type', function () {
          let data =  document.getElementById("discount_type");
@@ -1213,5 +1196,33 @@
                 }
             });
         })
+
+
+
+        $(function () {
+
+            $('.suggestion_dropdown .dropdown-item:not(.no-results)').on('click', function(){
+                const input =$(this).closest('.suggestion_dropdown').children('input')
+                input.val($(this).text())
+                input.focus()
+            })
+
+            $(".suggestion_dropdown")
+                .find(".form-control")
+                .on("input", function () {
+                    var search = $(this).val().toLowerCase();
+                    var dropdown = $(this).siblings(".dropdown-menu");
+                    dropdown.find(".dropdown-item").each(function () {
+                        var text = $(this).text().toLowerCase();
+                        $(this).toggle(text.includes(search));
+                    });
+                    if(!dropdown.find(".dropdown-item:visible").length){
+                        dropdown.find(".dropdown-item.no-results").show();
+                    }else {
+                        dropdown.find(".dropdown-item.no-results").hide();
+                    }
+                });
+        });
+
     </script>
 @endpush
