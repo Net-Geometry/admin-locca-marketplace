@@ -290,6 +290,7 @@ function getUrlParameter(sParam) {
 }
 
 $.fn.select2DynamicDisplay = function () {
+    const limit = 5;
     function updateDisplay($element) {
         var $rendered = $element
             .siblings(".select2-container")
@@ -352,7 +353,10 @@ $.fn.select2DynamicDisplay = function () {
                                     <div class="more">+${remainingCount}</div>
                                     </li>`;
         }
-        html += $searchForm.prop("outerHTML");
+
+        if (selectedItems.length < limit) {
+            html += $searchForm.prop("outerHTML");
+        }
 
         $rendered.html(html);
 
@@ -409,7 +413,7 @@ $.fn.select2DynamicDisplay = function () {
 
         $this.select2({
             tags: true,
-            maximumSelectionLength: 5,
+            maximumSelectionLength: limit,
         });
 
         // Bind change event to update display
