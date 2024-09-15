@@ -40,16 +40,16 @@ class CustomerController extends Controller
 
 
 
-        list($order_date_start, $order_date_end) = explode(' - ', $request->order_date);
-        list($join_date_start, $join_date_end) = explode(' - ', $request->join_date);
+        // list($order_date_start, $order_date_end) = explode(' - ', $request->order_date);
+        // list($join_date_start, $join_date_end) = explode(' - ', $request->join_date);
 
 
 
-        $order_date_start = Carbon::createFromFormat('m/d/Y', $order_date_start)->startOfDay();
-        $order_date_end = Carbon::createFromFormat('m/d/Y', $order_date_end)->endOfDay();
+        // $order_date_start = Carbon::createFromFormat('m/d/Y', $order_date_start)->startOfDay();
+        // $order_date_end = Carbon::createFromFormat('m/d/Y', $order_date_end)->endOfDay();
 
-        $join_date_start = Carbon::createFromFormat('m/d/Y', $join_date_start)->startOfDay();
-        $join_date_end = Carbon::createFromFormat('m/d/Y', $join_date_end)->endOfDay();
+        // $join_date_start = Carbon::createFromFormat('m/d/Y', $join_date_start)->startOfDay();
+        // $join_date_end = Carbon::createFromFormat('m/d/Y', $join_date_end)->endOfDay();
 
 
 
@@ -64,9 +64,9 @@ class CustomerController extends Controller
 
 
 
-        ->when(isset($request->join_date) , function ($query) use($join_date_start, $join_date_end) {
-            $query->WhereBetween('created_at', [$join_date_start, $join_date_end]);
-        })
+        // ->when(isset($request->join_date) , function ($query) use($join_date_start, $join_date_end) {
+        //     $query->WhereBetween('created_at', [$join_date_start, $join_date_end]);
+        // })
 
 
 
