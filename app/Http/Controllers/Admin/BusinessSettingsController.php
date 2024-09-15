@@ -3916,7 +3916,7 @@ class BusinessSettingsController extends Controller
                 $request->validate([
                     'available_zone_title.0' => 'required',
                     'available_zone_short_description.0' => 'required',
-                    'image' => 'required',
+//                    'image' => 'required',
                 ], [
                     'available_zone_title.0.required' => translate('default_title_is_required'),
                     'available_zone_short_description.0.required' => translate('default_short_description_is_required'),
@@ -4502,7 +4502,7 @@ class BusinessSettingsController extends Controller
                 $request->validate([
                     'available_zone_title.0' => 'required',
                     'available_zone_short_description.0' => 'required',
-                    'image' => 'required',
+//                    'image' => 'required',
                 ], [
                     'available_zone_title.0.required' => translate('default_title_is_required'),
                     'available_zone_short_description.0.required' => translate('default_short_description_is_required'),
@@ -5708,7 +5708,7 @@ class BusinessSettingsController extends Controller
                 $request->validate([
                     'available_zone_title.0' => 'required',
                     'available_zone_short_description.0' => 'required',
-                    'image' => 'required',
+//                    'image' => 'required',
                 ], [
                     'available_zone_title.0.required' => translate('default_title_is_required'),
                     'available_zone_short_description.0.required' => translate('default_short_description_is_required'),

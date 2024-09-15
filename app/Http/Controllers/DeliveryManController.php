@@ -48,12 +48,14 @@ class DeliveryManController extends Controller
                 'g-recaptcha-response' => [
                     function ($attribute, $value, $fail) {
                         $secret_key = Helpers::get_business_settings('recaptcha')['secret_key'];
-                        $response = $value;
-                        $url = 'https://www.google.com/recaptcha/api/siteverify?secret=' . $secret_key . '&response=' . $response;
-                        $response = Http::get($url);
-                        $response = $response->json();
-                        if (!isset($response['success']) || !$response['success']) {
-                            $fail(trans('messages.ReCAPTCHA Failed'));
+                        $gResponse = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+                            'secret' => $secret_key,
+                            'response' => $value,
+                            'remoteip' => \request()->ip(),
+                        ]);
+
+                        if (!$gResponse->successful()) {
+                            $fail(translate('ReCaptcha Failed'));
                         }
                     },
                 ],
