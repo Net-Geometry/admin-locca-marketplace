@@ -191,6 +191,6 @@ div.scroll-down {
     }
 
     .daterangepicker.opensright {
-        width: 564px;
+        min-width: 564px;
     }
 }
