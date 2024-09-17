@@ -399,9 +399,9 @@ class Helpers
             unset($data['pharmacy_item_details']);
             unset($data['store']);
             unset($data['rating']);
-            unset($item['nutritions']);
-            unset($item['allergies']);
-            unset($item['generic']);
+            unset($data['nutritions']);
+            unset($data['allergies']);
+            unset($data['generic']);
 
         }
 
