@@ -455,9 +455,44 @@ $.fn.select2DynamicDisplay = function () {
 $(".multiple-select2").select2DynamicDisplay();
 
 $(function () {
-    $(".date-range-picker").daterangepicker({
-        // timePicker: true,
-        startDate: moment().startOf("hour"),
-        endDate: moment().startOf("hour"),
+
+    $('.date-range-picker').daterangepicker({
+        // "timePicker": true,
+        ranges: {
+            'Today': [moment(), moment()],
+            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+            'This Month': [moment().startOf('month'), moment().endOf('month')],
+            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+        },
+        // minDate: new Date(),
+        startDate: moment().startOf('hour'),
+        endDate: moment().startOf('hour').add(10, 'day'),
+        autoUpdateInput: false,
+        locale: {
+            cancelLabel: 'Clear'
+        },
+        "alwaysShowCalendars": true,
+        "startDate": "09/04/2024",
+        "endDate": "09/10/2024"
+    }, function(start, end, label) {
+
+
+
+
+
+
+            console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
+    });
+
+    $('.date-range-picker').attr('placeholder', "Select date");
+
+    $('.date-range-picker').on('apply.daterangepicker', function(ev, picker) {
+        $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
+    });
+
+    $('.date-range-picker').on('cancel.daterangepicker', function(ev, picker) {
+        $(this).val('');
     });
 });

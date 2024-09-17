@@ -382,31 +382,24 @@
                                 </div>
 
 
-
-
-
-
-                                @if (isset($temp_product) && $temp_product == 1 )
-                                @php($product_generic_name = \App\Models\GenericName::whereIn('id', json_decode($product?->generic_ids))->pluck('id'))
-                            @else
-                                @php($product_generic_name = $product->generic->pluck('id'))
-                            @endif
-
-                            <div class="col-sm-6 col-lg-6" id="generic_name">
-                                <label class="input-label" for="sub-categories">
-                                    {{translate('generic_name')}}
-                                    <span class="input-label-secondary" title="lorem imspu" data-toggle="tooltip">
-                                        <i class="tio-info-outined"></i>
-                                    </span>
-                                </label>
-                                <select name="generic_name" class="form-control multiple-select2" >
-                                    <option disabled>{{translate('Select generic_name')}}</option>
-                                    @foreach (\App\Models\GenericName::select(['id','generic_name'])->get() as $generic_name)
-                                        <option value="{{ $generic_name->generic_name }}" {{ $product_generic_name->contains($generic_name->id) ? 'selected' : '' }}>{{ $generic_name->generic_name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-
+                                <div class="col-sm-6" id="generic_name">
+                                    <label class="input-label" for="sub-categories">
+                                        {{translate('generic_name')}}
+                                        {{-- <span class="input-label-secondary" title="lorem imspu" data-toggle="tooltip">
+                                            <i class="tio-info-outined"></i>
+                                        </span> --}}
+                                    </label>
+                                    <div class="dropdown suggestion_dropdown">
+                                        <input type="text" class="form-control" data-toggle="dropdown" name="generic_name" value="{{ isset($temp_product) && $temp_product == 1 ?  \App\Models\GenericName::where('id', json_decode($product?->generic_ids))->first()?->generic_name : $product->generic->pluck('generic_name')->first() }}" autocomplete="off">
+                                        @if(count(\App\Models\GenericName::select(['generic_name'])->get())>0)
+                                        <div class="dropdown-menu">
+                                            @foreach (\App\Models\GenericName::select(['generic_name'])->get() as $generic_name)
+                                            <div class="dropdown-item">{{ $generic_name->generic_name }}</div>
+                                            @endforeach
+                                        </div>
+                                        @endif
+                                    </div>
+                                </div>
 
 
                                 <div class="col-sm-6 col-lg-4" id="organic">
@@ -906,6 +899,16 @@
                 }
             });
         });
+        $('#product_form').on('keydown', function(e) {
+            if (e.key === 'Enter') {
+            e.preventDefault(); // Prevent submission on Enter
+            }
+        });
+
+
+
+
+
     </script>
 @endpush
 

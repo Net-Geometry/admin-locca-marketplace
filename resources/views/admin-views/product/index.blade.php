@@ -328,8 +328,8 @@
                                 </div>
                                 <div class="col-sm-6 col-lg-3" id="basic">
                                     <div class="form-check mb-sm-2 pb-sm-1">
-                                        <input class="form-check-input" name="basic" type="checkbox" value="1" id="flexCheckDefault" checked>
-                                        <label class="form-check-label" for="flexCheckDefault">
+                                        <input class="form-check-input" name="basic" type="checkbox" value="1" id="flexCheckDefaultBasic" checked>
+                                        <label class="form-check-label" for="flexCheckDefaultBasic">
                                           {{ translate('messages.Is_Basic_Medicine') }}
                                         </label>
                                       </div>
@@ -348,9 +348,9 @@
                                 <div class="col-sm-6" id="generic_name">
                                     <label class="input-label" for="sub-categories">
                                         {{translate('generic_name')}}
-                                        <span class="input-label-secondary" title="lorem imspu" data-toggle="tooltip">
+                                        {{-- <span class="input-label-secondary" title="lorem imspu" data-toggle="tooltip">
                                             <i class="tio-info-outined"></i>
-                                        </span>
+                                        </span> --}}
                                     </label>
                                     <div class="dropdown suggestion_dropdown">
                                         <input type="text" class="form-control" data-toggle="dropdown" name="generic_name" autocomplete="off">
@@ -359,16 +359,13 @@
                                             @foreach (\App\Models\GenericName::select(['generic_name'])->get() as $generic_name)
                                             <div class="dropdown-item">{{ $generic_name->generic_name }}</div>
                                             @endforeach
-                                            <div class="dropdown-item no-results collapse">
-                                                <div>No results found</div>
-                                            </div>
                                         </div>
                                         @endif
                                     </div>
                                 </div>
                                 @endif
 
-                                
+
                                 @if(Config::get('module.current_module_type') == 'grocery' || Config::get('module.current_module_type') == 'food')
                                     <div class="col-sm-6 col-lg-3" id="halal">
                                         <div class="form-check mb-sm-2 pb-sm-1">
@@ -1067,6 +1064,12 @@
             });
         }
 
+        $('#item_form').on('keydown', function(e) {
+            if (e.key === 'Enter') {
+            e.preventDefault(); // Prevent submission on Enter
+            }
+        });
+
         $('#item_form').on('submit', function(e) {
             $('#submitButton').attr('disabled', true);
             e.preventDefault();
@@ -1199,30 +1202,7 @@
 
 
 
-        $(function () {
 
-            $('.suggestion_dropdown .dropdown-item:not(.no-results)').on('click', function(){
-                const input =$(this).closest('.suggestion_dropdown').children('input')
-                input.val($(this).text())
-                input.focus()
-            })
-
-            $(".suggestion_dropdown")
-                .find(".form-control")
-                .on("input", function () {
-                    var search = $(this).val().toLowerCase();
-                    var dropdown = $(this).siblings(".dropdown-menu");
-                    dropdown.find(".dropdown-item").each(function () {
-                        var text = $(this).text().toLowerCase();
-                        $(this).toggle(text.includes(search));
-                    });
-                    if(!dropdown.find(".dropdown-item:visible").length){
-                        dropdown.find(".dropdown-item.no-results").show();
-                    }else {
-                        dropdown.find(".dropdown-item.no-results").hide();
-                    }
-                });
-        });
 
     </script>
 @endpush

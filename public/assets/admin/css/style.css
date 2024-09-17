@@ -13689,4 +13689,6 @@ video#VisaChipCardVideo {
 }
 .suggestion_dropdown .dropdown-menu {
     width: 100% !important;
+    height: 150px;
+    overflow-y: auto
 }

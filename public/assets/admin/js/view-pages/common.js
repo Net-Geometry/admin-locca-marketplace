@@ -570,3 +570,40 @@ $(document).on('keyup', '#get-text-note', function () {
     let text_data = $('#get-text-note').attr('get-text-note-id');
     $('#'+text_data+'_note').val($(this).val());
 });
+
+
+$(function () {
+
+    $('.suggestion_dropdown .dropdown-item').on('click', function(){
+        let input =$(this).closest('.suggestion_dropdown').children('input')
+        input.val($(this).text())
+        $(this).closest('.dropdown-menu').removeClass('show')
+        input.focus()
+    })
+
+    $(".suggestion_dropdown")
+        .find(".form-control")
+        .on("input", function () {
+            let search = $(this).val().toLowerCase();
+            let dropdown = $(this).closest('.suggestion_dropdown').find(".dropdown-menu");
+            dropdown.find(".dropdown-item").each(function () {
+                var text = $(this).text().toLowerCase();
+                $(this).toggle(text.includes(search));
+            });
+            dropdown.addClass('show');
+
+            if(!dropdown.find(".dropdown-item:visible").length ){
+                dropdown.removeClass('show')
+            }
+        });
+
+    $(".suggestion_dropdown").find(".form-control").on("click", function (e) {
+        e.preventDefault()
+        let dropdown = $(this).closest('.suggestion_dropdown').find(".dropdown-menu");
+        dropdown.addClass('show');
+        if(dropdown.find(".dropdown-item:visible").length == 0){
+            dropdown.removeClass('show')
+        }
+    });
+
+});

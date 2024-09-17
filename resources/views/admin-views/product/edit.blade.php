@@ -376,14 +376,7 @@
                                     </div>
                                 @endif
 
-                                <div class="col-sm-6 col-lg-3" id="stock_input">
-                                    <div class="form-group mb-0">
-                                        <label class="input-label"
-                                            for="total_stock">{{ translate('messages.total_stock') }}</label>
-                                        <input type="number" class="form-control" name="current_stock" min="0"
-                                            value="{{ $product->stock }}" id="quantity">
-                                    </div>
-                                </div>
+
                                 <div class="col-sm-6 col-lg-3" id="maximum_cart_quantity">
                                     <div class="form-group mb-0">
                                         <label class="input-label"
@@ -423,25 +416,26 @@
                                         </label>
                                       </div>
                                 </div>
-                                @if (isset($temp_product) && $temp_product == 1 )
-                                        @php($product_generic_name = \App\Models\GenericName::whereIn('id', json_decode($product?->generic_ids))->pluck('id'))
-                                    @else
-                                        @php($product_generic_name = $product->generic->pluck('id'))
-                                    @endif
+
                                     <div class="col-sm-6" id="generic_name">
                                         <label class="input-label" for="sub-categories">
                                             {{translate('generic_name')}}
-                                            <span class="input-label-secondary" title="lorem imspu" data-toggle="tooltip">
+                                            {{-- <span class="input-label-secondary" title="lorem imspu" data-toggle="tooltip">
                                                 <i class="tio-info-outined"></i>
-                                            </span>
+                                            </span> --}}
                                         </label>
-                                        <select name="generic_name" class="form-control multiple-select2" >
-                                            <option disabled>{{translate('Select generic_name')}}</option>
-                                            @foreach (\App\Models\GenericName::select(['id','generic_name'])->get() as $generic_name)
-                                                <option value="{{ $generic_name->generic_name }}" {{ $product_generic_name->contains($generic_name->id) ? 'selected' : '' }}>{{ $generic_name->generic_name }}</option>
-                                            @endforeach
-                                        </select>
+                                        <div class="dropdown suggestion_dropdown">
+                                            <input type="text" class="form-control" data-toggle="dropdown" name="generic_name" value="{{ isset($temp_product) && $temp_product == 1 ?  \App\Models\GenericName::where('id', json_decode($product?->generic_ids))->first()?->generic_name : $product->generic->pluck('generic_name')->first() }}" autocomplete="off">
+                                            @if(count(\App\Models\GenericName::select(['generic_name'])->get())>0)
+                                            <div class="dropdown-menu">
+                                                @foreach (\App\Models\GenericName::select(['generic_name'])->get() as $generic_name)
+                                                <div class="dropdown-item">{{ $generic_name->generic_name }}</div>
+                                                @endforeach
+                                            </div>
+                                            @endif
+                                        </div>
                                     </div>
+
                                 @endif
 
                                 @if(Config::get('module.current_module_type') == 'grocery' || Config::get('module.current_module_type') == 'food')
@@ -523,7 +517,7 @@
                         </div>
                         <div class="card-body">
                             <div class="row g-2">
-                                <div class="col-sm-4 col-6">
+                                <div class="col-sm-6 col-lg-3">
                                     <div class="form-group mb-0">
                                         <label class="input-label"
                                             for="exampleFormControlInput1">{{ translate('messages.price') }}  <span class="form-label-secondary text-danger"
@@ -535,7 +529,15 @@
                                             placeholder="{{ translate('messages.Ex:') }} 100" required>
                                     </div>
                                 </div>
-                                <div class="col-sm-4 col-6">
+                                <div class="col-sm-6 col-lg-3" id="stock_input">
+                                    <div class="form-group mb-0">
+                                        <label class="input-label"
+                                            for="total_stock">{{ translate('messages.total_stock') }}</label>
+                                        <input type="number" class="form-control" name="current_stock" min="0"
+                                            value="{{ $product->stock }}" id="quantity">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-lg-3">
                                     <div class="form-group mb-0">
                                         <label class="input-label"
                                             for="exampleFormControlInput1">{{ translate('messages.discount_type') }} <span class="form-label-secondary text-danger"
@@ -559,7 +561,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-sm-4 col-6">
+                                <div class="col-sm-6 col-lg-3">
                                     <div class="form-group mb-0">
                                         <label class="input-label"
                                             for="exampleFormControlInput1">{{ translate('messages.discount') }}
@@ -1333,6 +1335,11 @@
      $(document).on('change', '.combination_update', function () {
          combination_update();
      });
+     $('#product_form').on('keydown', function(e) {
+            if (e.key === 'Enter') {
+            e.preventDefault(); // Prevent submission on Enter
+            }
+        });
 
     $('#product_form').on('submit', function() {
         console.log('working');

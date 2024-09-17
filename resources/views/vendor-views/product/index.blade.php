@@ -330,19 +330,21 @@
                                 <div class="col-sm-6" id="generic_name">
                                     <label class="input-label" for="sub-categories">
                                         {{translate('generic_name')}}
-                                        <span class="input-label-secondary" title="lorem imspu" data-toggle="tooltip">
+                                        {{-- <span class="input-label-secondary" title="lorem imspu" data-toggle="tooltip">
                                             <i class="tio-info-outined"></i>
-                                        </span>
+                                        </span> --}}
                                     </label>
-                                    <select name="generic_name" class="form-control multiple-select2">
-                                        <option selected disabled>{{translate('Select generic_name')}}</option>
-                                        @foreach (\App\Models\GenericName::select(['generic_name'])->get() as $generic_name)
-                                            <option value="{{ $generic_name->generic_name }}">{{ $generic_name->generic_name }}</option>
-                                        @endforeach
-                                    </select>
+                                    <div class="dropdown suggestion_dropdown">
+                                        <input type="text" class="form-control" data-toggle="dropdown" name="generic_name" autocomplete="off">
+                                        @if(count(\App\Models\GenericName::select(['generic_name'])->get())>0)
+                                        <div class="dropdown-menu">
+                                            @foreach (\App\Models\GenericName::select(['generic_name'])->get() as $generic_name)
+                                            <div class="dropdown-item">{{ $generic_name->generic_name }}</div>
+                                            @endforeach
+                                        </div>
+                                        @endif
+                                    </div>
                                 </div>
-
-
 
                                 @endif
 
@@ -730,6 +732,12 @@
         });
     }
 
+    $('#item_form').on('keydown', function(e) {
+            if (e.key === 'Enter') {
+            e.preventDefault(); // Prevent submission on Enter
+            }
+        });
+        
     $('#item_form').on('submit', function () {
         let formData = new FormData(this);
         $.ajaxSetup({
