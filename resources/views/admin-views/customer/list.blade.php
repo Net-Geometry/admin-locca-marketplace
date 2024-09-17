@@ -28,14 +28,14 @@
                             <label class="form-label">{{translate('Order Date')}}</label>
                             <div class="position-relative">
                                 <span class="tio-calendar icon-absolute-on-right"></span>
-                                <input type="text" name="order_date" class="date-range-picker form-control">
+                                <input type="text" name="order_date" value="{{ request()->get('order_date')  ?? null }}" class="date-range-picker form-control">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">{{translate('Customer Joining Date')}}</label>
                             <div class="position-relative">
                                 <span class="tio-calendar icon-absolute-on-right"></span>
-                                <input type="text" name="join_date" class="date-range-picker form-control">
+                                <input type="text" name="join_date" value="{{ request()->get('join_date') ?? null }}" class="date-range-picker form-control">
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -61,7 +61,7 @@
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">{{translate('Choose First')}}</label>
-                            <input type="number" name="show_limit" class="form-control" value="{{ request()->get('show_limit')}}" placeholder="{{translate('Ex : 100')}}">
+                            <input type="number" min="1" name="show_limit" class="form-control" value="{{ request()->get('show_limit')}}" placeholder="{{translate('Ex : 100')}}">
                         </div>
                         <div class="col-md-4">
                             <label class="d-md-block">&nbsp;</label>
@@ -110,7 +110,7 @@
 
                         <div id="usersExportDropdown"
                             class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
-                            <span class="dropdown-header">{{ translate('messages.options') }}</span>
+                            {{-- <span class="dropdown-header">{{ translate('messages.options') }}</span>
                             <a id="export-copy" class="dropdown-item" href="javascript:;">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{ asset('public/assets/admin') }}/svg/illustrations/copy.svg"
@@ -122,8 +122,8 @@
                                     src="{{ asset('public/assets/admin') }}/svg/illustrations/print.svg"
                                     alt="Image Description">
                                 {{ translate('messages.print') }}
-                            </a>
-                            <div class="dropdown-divider"></div>
+                            </a> --}}
+                            {{-- <div class="dropdown-divider"></div> --}}
                             <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
                             <a id="export-excel" class="dropdown-item" href="{{route('admin.customer.export', ['type'=>'excel',request()->getQueryString()])}}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"

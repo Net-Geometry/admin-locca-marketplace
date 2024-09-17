@@ -5709,4 +5709,10 @@
   'Sort by oldest' => 'Sort by oldest',
   'Sort by newest' => 'Sort by newest',
   'Select_Status' => 'Select Status',
+  'ex_: search_by_name,_email,_or_subject' => 'Ex : search by name, email, or subject',
+  'Not_Seen_Yet' => 'Not Seen Yet',
+  'Want to delete this message?' => 'Want to delete this message?',
+  'Select Mail Sorting Order' => 'Select Mail Sorting Order',
+  'subscriber_list' => 'Subscriber list',
+  'subscribed_at' => 'Subscribed at',
 );

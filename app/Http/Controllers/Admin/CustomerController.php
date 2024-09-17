@@ -17,7 +17,6 @@ use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
-use Rap2hpoutre\FastExcel\FastExcel;
 use App\Exports\SubscriberListExport;
 
 class CustomerController extends Controller
@@ -28,7 +27,6 @@ class CustomerController extends Controller
     }
     public function customer_list(Request $request)
     {
-        // dd($request->all());
         $zone_id=  $request->zone_id ?? null;
         $filter=  $request->filter ?? null;
         $order_wise=  $request->order_wise ?? null;
@@ -261,22 +259,19 @@ class CustomerController extends Controller
 
     public function subscribedCustomers(Request $request)
     {
-        $key = explode(' ', $request['search']);
-        $data['subscribedCustomers'] = Newsletter::orderBy('id', 'desc')
+        $filter=  $request->filter ?? null;
+        $show_limit=  $request->show_limit ?? null;
+        $join_date_start =null;
+        $join_date_end = null;
+        if($request?->join_date){
+            list($join_date_start, $join_date_end) = explode(' - ', $request?->join_date);
+            $join_date_start = Carbon::createFromFormat('m/d/Y', $join_date_start)->startOfDay();
+            $join_date_end = Carbon::createFromFormat('m/d/Y', $join_date_end)->endOfDay();
+        }
 
-        ->when(isset($key), function($query) use($key) {
-            $query->where(function ($q) use ($key) {
-                foreach ($key as $value) {
-                    $q->orWhere('email', 'like', "%". $value."%");
-                }
-            });
-        })
-        ->paginate(config('default_pagination'));
-        return view('admin-views.customer.subscribed-emails', $data);
-    }
-
-    public function subscribed_customer_export(Request $request){
         $key = explode(' ', $request['search']);
+
+
         $customers = Newsletter::orderBy('id', 'desc')
 
         ->when(isset($key), function($query) use($key) {
@@ -286,7 +281,85 @@ class CustomerController extends Controller
                 }
             });
         })
-        ->get();
+        ->when(isset($filter) && $filter == 'latest' , function ($query) {
+            $query->latest();
+        })
+        ->when(isset($filter) && $filter == 'oldest' , function ($query) {
+            $query->oldest();
+        })
+        ->when(isset($request->join_date) , function ($query) use($join_date_start, $join_date_end) {
+            $query->WhereBetween('created_at', [$join_date_start, $join_date_end]);
+        });
+
+
+        if(isset($show_limit) && $show_limit > 0 ){
+            $customers= $customers->take($show_limit)->get();
+            $perPage = config('default_pagination');
+            $page =  $request?->page ?? 1;
+            $offset = ($page - 1) * $perPage;
+            $itemsForCurrentPage = $customers->slice($offset, $perPage);
+            $customers = new \Illuminate\Pagination\LengthAwarePaginator(
+                $itemsForCurrentPage,
+                $customers->count(),
+                $perPage,
+                $page,
+                ['path' => Paginator::resolveCurrentPath(), 'query' => request()->query()]
+            );
+
+
+        } else{
+            $customers=$customers->paginate(config('default_pagination'));
+        }
+
+
+        $data['subscribedCustomers'] = $customers;
+
+
+        return view('admin-views.customer.subscribed-emails', $data);
+    }
+
+    public function subscribed_customer_export(Request $request){
+        $key = explode(' ', $request['search']);
+
+        $filter=  $request->filter ?? null;
+        $show_limit=  $request->show_limit ?? null;
+        $join_date_start =null;
+        $join_date_end = null;
+        if($request?->join_date){
+            list($join_date_start, $join_date_end) = explode(' - ', $request?->join_date);
+            $join_date_start = Carbon::createFromFormat('m/d/Y', $join_date_start)->startOfDay();
+            $join_date_end = Carbon::createFromFormat('m/d/Y', $join_date_end)->endOfDay();
+        }
+
+
+
+        $customers = Newsletter::orderBy('id', 'desc')
+
+        ->when(isset($key), function($query) use($key) {
+            $query->where(function ($q) use ($key) {
+                foreach ($key as $value) {
+                    $q->orWhere('email', 'like', "%". $value."%");
+                }
+            });
+        })
+        ->when(isset($filter) && $filter == 'latest' , function ($query) {
+            $query->latest();
+        })
+        ->when(isset($filter) && $filter == 'oldest' , function ($query) {
+            $query->oldest();
+        })
+        ->when(isset($request->join_date) , function ($query) use($join_date_start, $join_date_end) {
+            $query->WhereBetween('created_at', [$join_date_start, $join_date_end]);
+        });
+
+
+        if(isset($show_limit) && $show_limit > 0 ){
+            $customers= $customers->take($show_limit)->get();
+        } else{
+            $customers= $customers->get();
+        }
+
+
         $data = [
             'customers'=>$customers
         ];
@@ -408,10 +481,35 @@ class CustomerController extends Controller
     }
 
     public function export(Request $request){
+
+        $zone_id=  $request->zone_id ?? null;
+        $filter=  $request->filter ?? null;
+        $order_wise=  $request->order_wise ?? null;
+        $show_limit=  $request->show_limit ?? null;
         $key = [];
         if ($request->search) {
             $key = explode(' ', $request['search']);
         }
+
+        $order_date_start = null;
+        $order_date_end =null;
+
+        $join_date_start =null;
+        $join_date_end = null;
+
+        if($request?->order_date){
+            list($order_date_start, $order_date_end) = explode(' - ', $request?->order_date);
+            $order_date_start = Carbon::createFromFormat('m/d/Y', $order_date_start)->startOfDay();
+            $order_date_end = Carbon::createFromFormat('m/d/Y', $order_date_end)->endOfDay();
+        }
+        if($request?->join_date){
+            list($join_date_start, $join_date_end) = explode(' - ', $request?->join_date);
+            $join_date_start = Carbon::createFromFormat('m/d/Y', $join_date_start)->startOfDay();
+            $join_date_end = Carbon::createFromFormat('m/d/Y', $join_date_end)->endOfDay();
+        }
+
+
+
         $customers = User::when(count($key) > 0, function ($query) use ($key) {
             foreach ($key as $value) {
                 $query->orWhere('f_name', 'like', "%{$value}%")
@@ -419,8 +517,56 @@ class CustomerController extends Controller
                     ->orWhere('email', 'like', "%{$value}%")
                     ->orWhere('phone', 'like', "%{$value}%");
             };
+        })->withcount('orders')
+
+        ->when(isset($request->join_date) , function ($query) use($join_date_start, $join_date_end) {
+            $query->WhereBetween('created_at', [$join_date_start, $join_date_end]);
         })
-        ->orderBy('order_count', 'desc')->get();
+        ->when(isset($request->order_date) , function ($query) use($join_date_start, $join_date_end) {
+            $query->wherehas('orders',function ($query) use($join_date_start, $join_date_end){
+                $query->WhereBetween('created_at', [$join_date_start, $join_date_end]);
+            });
+        })
+
+        ->when(isset($zone_id) && is_numeric($zone_id) , function ($query) use($zone_id){
+            $query->where('zone_id' ,$zone_id);
+        })
+        ->when(isset($filter) && $filter == 'active' , function ($query) {
+            $query->where('status' ,1);
+        })
+        ->when(isset($filter) && $filter == 'blocked' , function ($query) {
+            $query->where('status' ,0);
+        })
+        ->when(isset($filter) && $filter == 'new' , function ($query) {
+            $query->whereDate('created_at', '>=', now()->subDays(30)->format('Y-m-d'));
+        })
+        ->when(isset($order_wise) && $order_wise == 'top' , function ($query) {
+            $query->orderBy('orders_count', 'desc');
+        })
+        ->when(isset($order_wise) && $order_wise == 'least' , function ($query) {
+            $query->orderBy('orders_count', 'asc');
+        })
+        ->when(isset($order_wise) && $order_wise == 'latest' , function ($query) {
+            $query->latest();
+        })
+        ->when(isset($order_wise) && $order_wise == 'oldest' , function ($query) {
+            $query->oldest();
+        })
+
+        ->when(isset($order_wise) && $order_wise == 'order_amount', function ($query) {
+            $query->withSum('orders as total_order_amount', 'order_amount')
+                ->orderByDesc('total_order_amount');
+        })
+        ->when(!$order_wise, function ($query) {
+            $query->orderBy('orders_count', 'desc');
+        });
+
+
+        if(isset($show_limit) && $show_limit > 0 ){
+            $customers= $customers->take($show_limit)->get();
+            } else{
+            $customers= $customers->get();
+        }
 
 
         $data = [

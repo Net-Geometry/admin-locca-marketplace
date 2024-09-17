@@ -390,7 +390,7 @@
                                         </span> --}}
                                     </label>
                                     <div class="dropdown suggestion_dropdown">
-                                        <input type="text" class="form-control" data-toggle="dropdown" name="generic_name" value="{{ isset($temp_product) && $temp_product == 1 ?  \App\Models\GenericName::where('id', json_decode($product?->generic_ids))->first()?->generic_name : $product->generic->pluck('generic_name')->first() }}" autocomplete="off">
+                                        <input type="text" class="form-control" name="generic_name" value="{{ isset($temp_product) && $temp_product == 1 ?  \App\Models\GenericName::where('id', json_decode($product?->generic_ids))->first()?->generic_name : $product->generic->pluck('generic_name')->first() }}" autocomplete="off">
                                         @if(count(\App\Models\GenericName::select(['generic_name'])->get())>0)
                                         <div class="dropdown-menu">
                                             @foreach (\App\Models\GenericName::select(['generic_name'])->get() as $generic_name)

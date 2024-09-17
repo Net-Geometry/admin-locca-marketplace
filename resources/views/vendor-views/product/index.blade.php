@@ -335,7 +335,7 @@
                                         </span> --}}
                                     </label>
                                     <div class="dropdown suggestion_dropdown">
-                                        <input type="text" class="form-control" data-toggle="dropdown" name="generic_name" autocomplete="off">
+                                        <input type="text" class="form-control"  name="generic_name" autocomplete="off">
                                         @if(count(\App\Models\GenericName::select(['generic_name'])->get())>0)
                                         <div class="dropdown-menu">
                                             @foreach (\App\Models\GenericName::select(['generic_name'])->get() as $generic_name)
@@ -737,7 +737,7 @@
             e.preventDefault(); // Prevent submission on Enter
             }
         });
-        
+
     $('#item_form').on('submit', function () {
         let formData = new FormData(this);
         $.ajaxSetup({
