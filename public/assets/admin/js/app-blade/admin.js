@@ -467,15 +467,16 @@ $(function () {
             'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
         },
         // minDate: new Date(),
-        startDate: moment().startOf('hour'),
-        endDate: moment().startOf('hour').add(10, 'day'),
+        // startDate: moment().startOf('hour'),
+        startDate: $(this).data("startDate"),
+        // endDate: moment().startOf('hour').add(10, 'day'),
+        endDate:$(this).data("endDate"),
         autoUpdateInput: false,
         locale: {
             cancelLabel: 'Clear'
         },
         "alwaysShowCalendars": true,
-        "startDate": "09/04/2024",
-        "endDate": "09/10/2024"
+
     });
 
     $('.date-range-picker').attr('placeholder', "Select date");
