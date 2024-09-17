@@ -14,6 +14,7 @@ use App\Exports\CustomerListExport;
 use App\Exports\CustomerOrderExport;
 use App\Http\Controllers\Controller;
 use Brian2694\Toastr\Facades\Toastr;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
 use Rap2hpoutre\FastExcel\FastExcel;
@@ -27,29 +28,33 @@ class CustomerController extends Controller
     }
     public function customer_list(Request $request)
     {
-
         // dd($request->all());
         $zone_id=  $request->zone_id ?? null;
         $filter=  $request->filter ?? null;
         $order_wise=  $request->order_wise ?? null;
+        $show_limit=  $request->show_limit ?? null;
         $key = [];
         if ($request->search) {
             $key = explode(' ', $request['search']);
         }
 
+        $order_date_start = null;
+        $order_date_end =null;
 
+        $join_date_start =null;
+        $join_date_end = null;
 
+        if($request?->order_date){
+            list($order_date_start, $order_date_end) = explode(' - ', $request?->order_date);
+            $order_date_start = Carbon::createFromFormat('m/d/Y', $order_date_start)->startOfDay();
+            $order_date_end = Carbon::createFromFormat('m/d/Y', $order_date_end)->endOfDay();
+        }
+        if($request?->join_date){
+            list($join_date_start, $join_date_end) = explode(' - ', $request?->join_date);
+            $join_date_start = Carbon::createFromFormat('m/d/Y', $join_date_start)->startOfDay();
+            $join_date_end = Carbon::createFromFormat('m/d/Y', $join_date_end)->endOfDay();
+        }
 
-        // list($order_date_start, $order_date_end) = explode(' - ', $request->order_date);
-        // list($join_date_start, $join_date_end) = explode(' - ', $request->join_date);
-
-
-
-        // $order_date_start = Carbon::createFromFormat('m/d/Y', $order_date_start)->startOfDay();
-        // $order_date_end = Carbon::createFromFormat('m/d/Y', $order_date_end)->endOfDay();
-
-        // $join_date_start = Carbon::createFromFormat('m/d/Y', $join_date_start)->startOfDay();
-        // $join_date_end = Carbon::createFromFormat('m/d/Y', $join_date_end)->endOfDay();
 
 
 
@@ -62,17 +67,14 @@ class CustomerController extends Controller
             };
         })->withcount('orders')
 
-
-
-        // ->when(isset($request->join_date) , function ($query) use($join_date_start, $join_date_end) {
-        //     $query->WhereBetween('created_at', [$join_date_start, $join_date_end]);
-        // })
-
-
-
-
-
-
+        ->when(isset($request->join_date) , function ($query) use($join_date_start, $join_date_end) {
+            $query->WhereBetween('created_at', [$join_date_start, $join_date_end]);
+        })
+        ->when(isset($request->order_date) , function ($query) use($join_date_start, $join_date_end) {
+            $query->wherehas('orders',function ($query) use($join_date_start, $join_date_end){
+                $query->WhereBetween('created_at', [$join_date_start, $join_date_end]);
+            });
+        })
 
         ->when(isset($zone_id) && is_numeric($zone_id) , function ($query) use($zone_id){
             $query->where('zone_id' ,$zone_id);
@@ -95,10 +97,38 @@ class CustomerController extends Controller
         ->when(isset($order_wise) && $order_wise == 'latest' , function ($query) {
             $query->latest();
         })
+        ->when(isset($order_wise) && $order_wise == 'oldest' , function ($query) {
+            $query->oldest();
+        })
+
+        ->when(isset($order_wise) && $order_wise == 'order_amount', function ($query) {
+            $query->withSum('orders as total_order_amount', 'order_amount')
+                ->orderByDesc('total_order_amount');
+        })
         ->when(!$order_wise, function ($query) {
             $query->orderBy('orders_count', 'desc');
-        })
-            ->paginate(config('default_pagination'));
+        });
+
+
+        if(isset($show_limit) && $show_limit > 0 ){
+            $customers= $customers->take($show_limit)->get();
+            $perPage = config('default_pagination');
+            $page =  $request?->page ?? 1;
+            $offset = ($page - 1) * $perPage;
+            $itemsForCurrentPage = $customers->slice($offset, $perPage);
+            $customers = new \Illuminate\Pagination\LengthAwarePaginator(
+                $itemsForCurrentPage,
+                $customers->count(),
+                $perPage,
+                $page,
+                ['path' => Paginator::resolveCurrentPath(), 'query' => request()->query()]
+            );
+
+
+        } else{
+            $customers=$customers->paginate(config('default_pagination'));
+        }
+
 
         return view('admin-views.customer.list', compact('customers'));
     }

@@ -5702,4 +5702,11 @@
   'ReCAPTCHA Status Turn OFF' => 'ReCAPTCHA Status Turn OFF',
   'generic_name' => 'Generic name',
   'Select generic_name' => 'Select generic name',
+  'Customer status' => 'Customer status',
+  'Select Customer Sorting Order' => 'Select Customer Sorting Order',
+  'Sort by order count' => 'Sort by order count',
+  'Sort by order amount' => 'Sort by order amount',
+  'Sort by oldest' => 'Sort by oldest',
+  'Sort by newest' => 'Sort by newest',
+  'Select_Status' => 'Select Status',
 );

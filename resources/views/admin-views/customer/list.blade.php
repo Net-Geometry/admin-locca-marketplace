@@ -15,7 +15,7 @@
                     <img src="{{asset('/public/assets/admin/img/people.png')}}" class="w--26" alt="">
                 </span>
                 <span>
-                     {{ translate('messages.customers') }} <span class="badge badge-soft-dark ml-2" id="count">{{ $customers->total() }}</span>
+                     {{ translate('messages.customers') }}
                 </span>
             </h1>
         </div>
@@ -39,10 +39,9 @@
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label">{{translate('Customer Joining Date')}}</label>
-                            <select name="filter" class="form-control js-select2-custom set-filter"
-                            data-filter="filter"
-                                    data-url="{{ url()->full() }}">
+                            <label class="form-label">{{translate('Customer status')}}</label>
+                            <select name="filter" data-placeholder="{{ translate('messages.Select_Status') }}" class="form-control js-select2-custom ">
+                                <option  value="" selected disabled > {{ translate('messages.Select_Status') }} </option>
                                 <option  {{ request()->get('filter')  == 'all'?'selected':''}} value="all">{{ translate('messages.All_Customers') }}</option>
                                 <option  {{ request()->get('filter')  == 'active'?'selected':''}} value="active">{{ translate('messages.Active_Customers') }}</option>
                                 <option  {{ request()->get('filter')  == 'blocked'?'selected':''}} value="blocked">{{ translate('messages.Inactive_Customers') }}</option>
@@ -50,13 +49,19 @@
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">{{translate('Sort By')}}</label>
-                            <select class="form-control js-select2-custom">
-                                <option value="">Select Customer sorting order</option>
+                            <select name="order_wise"  data-placeholder="{{ translate('messages.Select Customer Sorting Order') }}"
+
+                            class="form-control js-select2-custom">
+                                <option value="" selected disabled > {{ translate('messages.Select Customer Sorting Order') }} </option>
+                                <option  {{ request()->get('order_wise')  == 'top'?'selected':''}}  value="top">{{ translate('messages.Sort by order count') }}</option>
+                                <option {{ request()->get('order_wise')  == 'order_amount'?'selected':''}}  value="order_amount">{{ translate('messages.Sort by order amount') }}</option>
+                                <option {{ request()->get('order_wise')  == 'oldest'?'selected':''}}  value="oldest">{{ translate('messages.Sort by oldest') }}</option>
+                                <option {{ request()->get('order_wise')  == 'latest'?'selected':''}}  value="latest">{{ translate('messages.Sort by newest') }}</option>
                             </select>
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">{{translate('Choose First')}}</label>
-                            <input type="number" class="form-control" placeholder="{{translate('Ex : 100')}}">
+                            <input type="number" name="show_limit" class="form-control" value="{{ request()->get('show_limit')}}" placeholder="{{translate('Ex : 100')}}">
                         </div>
                         <div class="col-md-4">
                             <label class="d-md-block">&nbsp;</label>
@@ -72,32 +77,12 @@
         <div class="card">
             <!-- Header -->
             <div class="card-header border-0  py-2">
+                <h3>
+                    {{ translate('messages.customer_list') }} <span class="badge badge-soft-dark ml-2" id="count">{{ $customers->total() }}</span>
+                </h3>
                 <div class="search--button-wrapper justify-content-end">
 
 
-                    <div class="col-sm-auto min--240">
-                        <select name="zone_id" class="form-control js-select2-custom set-filter"
-                        data-filter="zone_id"
-                                data-url="{{ url()->full() }}">
-                            <option value="all">{{ translate('messages.All_Zones') }}</option>
-                            @foreach(\App\Models\Zone::orderBy('name')->get() as $z)
-                                <option
-                                    value="{{$z['id']}}" {{ request()->get('zone_id')  == $z['id']?'selected':''}}>
-                                    {{$z['name']}}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="col-sm-auto min--240">
-                        <select name="order_wise" class="form-control js-select2-custom set-filter"
-                        data-filter="order_wise"
-                                data-url="{{ url()->full() }}">
-                            <option  {{ request()->get('order_wise')  == 'top'?'selected':''}}  value="top">{{ translate('messages.Total_orders') }} ({{ translate('messages.High_to_Low') }})</option>
-                            <option {{ request()->get('order_wise')  == 'least'?'selected':''}}  value="least">{{ translate('messages.Total_orders') }} ({{ translate('messages.Low_to_High') }})</option>
-                            <option {{ request()->get('order_wise')  == 'latest'?'selected':''}}  value="latest">{{ translate('messages.New_Customers') }}</option>
-                        </select>
-                    </div>
                     <form class="search-form">
                         <!-- Search -->
                         <div class="input-group input--group">
@@ -157,7 +142,7 @@
                     <!-- End Unfold -->
 
                     <!-- Unfold -->
-                    <div class="hs-unfold">
+                    {{-- <div class="hs-unfold">
                         <a class="js-hs-unfold-invoker btn btn-sm btn-white min-height-40" href="javascript:;"
                             data-hs-unfold-options='{
                                     "target": "#showHideDropdown",
@@ -244,7 +229,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                     <!-- End Unfold -->
                 </div>
                 <!-- End Row -->
@@ -285,13 +270,15 @@
                                 <th class="border-0">{{ translate('messages.actions') }}</th>
                             </tr>
                         </thead>
-
+                        @php
+                            $count= 0;
+                        @endphp
                         <tbody id="set-rows">
                             @foreach ($customers as $key => $customer)
 
                                 <tr class="">
                                     <td class="">
-                                        {{ $key + $customers->firstItem() }}
+                                        {{ (request()->get('show_limit') ?  $count++ : $key  )+ $customers->firstItem() }}
                                     </td>
                                     <td class="table-column-pl-0">
                                         <div class="d-flex align-items-center gap-2">

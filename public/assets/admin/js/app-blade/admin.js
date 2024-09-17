@@ -476,14 +476,6 @@ $(function () {
         "alwaysShowCalendars": true,
         "startDate": "09/04/2024",
         "endDate": "09/10/2024"
-    }, function(start, end, label) {
-
-
-
-
-
-
-            console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
     });
 
     $('.date-range-picker').attr('placeholder', "Select date");
