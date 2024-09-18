@@ -5717,4 +5717,8 @@
   'subscribed_at' => 'Subscribed at',
   'customer_pos_order_wallet_notification' => 'Customer pos order wallet notification',
   'Sent_notification_on_wallet_payment_on_POS' => 'Sent notification on wallet payment on POS',
+  'Please' => 'Please',
+  'contact us' => 'Contact us',
+  'for any queries, we’re always happy to help.' => 'For any queries, we’re always happy to help.',
+  'Download Invoice' => 'Download Invoice',
 );

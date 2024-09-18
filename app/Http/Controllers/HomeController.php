@@ -2,23 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Zone;
+use App\Models\Order;
 use App\Models\Contact;
 use App\Models\DataSetting;
 use App\Models\AdminFeature;
-use App\Models\Zone;
-use Gregwar\Captcha\CaptchaBuilder;
 use Illuminate\Http\Request;
 use App\CentralLogics\Helpers;
 use App\Models\BusinessSetting;
 use App\Models\AdminTestimonial;
+use Gregwar\Captcha\CaptchaBuilder;
 use App\Models\AdminSpecialCriteria;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\View;
 use App\Models\AdminPromotionalBanner;
 use App\Models\SubscriptionTransaction;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\View;
 
 class HomeController extends Controller
 {
@@ -454,6 +455,20 @@ class HomeController extends Controller
         $logo=BusinessSetting::where('key', "logo")->first() ;
         $mpdf_view = View::make('subscription-invoice', compact('transaction','BusinessData','logo'));
         Helpers::gen_mpdf(view: $mpdf_view,file_prefix: 'Subscription',file_postfix: $id);
+        return back();
+    }
+    public function order_invoice($id){
+
+        $id= base64_decode($id);
+        $BusinessData= ['footer_text','email_address'];
+        $order=Order::findOrFail($id);
+
+        $BusinessData=BusinessSetting::whereIn('key', $BusinessData)->pluck('value' ,'key') ;
+        $logo=BusinessSetting::where('key', "logo")->first() ;
+        // return view('order-invoice',compact('order','BusinessData','logo'));
+
+        $mpdf_view = View::make('order-invoice', compact('order','BusinessData','logo'));
+        Helpers::gen_mpdf(view: $mpdf_view,file_prefix: 'OrderInvoice',file_postfix: $id);
         return back();
     }
 }

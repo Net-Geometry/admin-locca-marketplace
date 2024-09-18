@@ -5,6 +5,7 @@ use App\Http\Controllers\PaytmController;
 use App\Http\Controllers\LiqPayController;
 use App\Http\Controllers\PaymobController;
 use App\Http\Controllers\PaytabsController;
+use App\Http\Controllers\FirebaseController;
 use App\Http\Controllers\PaystackController;
 use App\Http\Controllers\RazorPayController;
 use App\Http\Controllers\SenangPayController;
@@ -14,8 +15,6 @@ use App\Http\Controllers\FlutterwaveV3Controller;
 use App\Http\Controllers\PaypalPaymentController;
 use App\Http\Controllers\StripePaymentController;
 use App\Http\Controllers\SslCommerzPaymentController;
-use App\Http\Controllers\FirebaseController;
-use App\CentralLogics\Helpers;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,6 +41,7 @@ Route::get('refund', 'HomeController@refund_policy')->name('refund');
 Route::get('shipping-policy', 'HomeController@shipping_policy')->name('shipping-policy');
 Route::post('newsletter/subscribe', 'NewsletterController@newsLetterSubscribe')->name('newsletter.subscribe');
 Route::get('subscription-invoice/{id}', 'HomeController@subscription_invoice')->name('subscription_invoice');
+Route::get('order-invoice/{id}', 'HomeController@order_invoice')->name('order_invoice');
 
 Route::get('login/{tab}', 'LoginController@login')->name('login');
 Route::post('external-login-from-drivemond', 'LoginController@externalLoginFromDrivemond');

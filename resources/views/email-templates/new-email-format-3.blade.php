@@ -443,6 +443,13 @@ width: 24px;
                         </tbody>
                     </table>
                     <hr>
+
+                @isset($url)
+                <div class="mb-2" >
+                    <a href="{{ $url }}" target="_blank" >{{ translate('Download Invoice') }}</a>
+                </div>
+                @endisset
+
                     <div class="mb-2" id="mail-footer">
                         {{ $footer_text??'Please contact us for any queries, we’re always happy to help. ' }}
                     </div>
