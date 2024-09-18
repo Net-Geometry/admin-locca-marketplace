@@ -7347,10 +7347,10 @@ class BusinessSettingsController extends Controller
     public function notification_setup(Request $request)
     {
 
-
         if (NotificationSetting::count() == 0) {
             Helpers::notificationDataSetup();
         }
+            Helpers::addNewAdminNotificationSetupDataSetup();
         $data = NotificationSetting::
         when($request?->type == null || $request?->type == 'admin', function ($query) {
             $query->where('type', 'admin');

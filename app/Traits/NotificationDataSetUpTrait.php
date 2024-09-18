@@ -781,6 +781,36 @@ trait NotificationDataSetUpTrait
             }
             return true;
     }
+    public static function addNewAdminNotificationSetupData(){
+
+        $data []=[
+            'title' => 'customer_pos_order_wallet_notification',
+            'key' => 'customer_pos_order_wallet_notification',
+            'type' => 'customer',
+            'mail_status' => 'disable',
+            'sms_status' => 'disable',
+            'push_notification_status' => 'active',
+            'sub_title' => 'Sent_notification_on_wallet_payment_on_POS',
+        ];
+
+
+            foreach($data as $item){
+
+                if(NotificationSetting::where('key', $item['key'])->where('type', $item['type'])->doesntExist()){
+                    $notificationsetting = NotificationSetting::firstOrNew(
+                        ['key' => $item['key'], 'type' => $item['type']]
+                    );
+                    $notificationsetting->title = $item['title'];
+                    $notificationsetting->sub_title = $item['sub_title'];
+                    $notificationsetting->mail_status = $item['mail_status'];
+                    $notificationsetting->sms_status = $item['sms_status'];
+                    $notificationsetting->push_notification_status = $item['push_notification_status'];
+                    $notificationsetting->save();
+
+                }
+            }
+            return true;
+    }
 
 
 

@@ -28,7 +28,7 @@
                 <div class="d-flex flex-wrap flex-md-nowrap justify-content-between __plan-details-top">
                     <div class="w-100">
                         <h2 class="name text--primary">{{ translate('Commission Base Plan') }}</h2>
-                        <h4 class="title mt-2"><span class="text-180">{{ $admin_commission }} %</span> {{ translate('messages.Commission_per_order') }}</h4>
+                        <h4 class="title mt-2"><span class="text-180">{{ $store->comission > 0 ?  $store->comission :  $admin_commission }} %</span> {{ translate('messages.Commission_per_order') }}</h4>
                         <div class="info-text ">
                             {{ translate('Store will pay') }} {{ $store->comission > 0 ?  $store->comission :  $admin_commission }}% {{ translate('commission to') }} <strong>{{ $business_name }}</strong> {{ translate('from each order. You will get access of all the features and options  in store panel , app and interaction with user.') }}
                         </div>
@@ -295,7 +295,7 @@
                                         @php
                                         $cash_backs= \App\CentralLogics\Helpers::calculateSubscriptionRefundAmount(store:$store ,return_data:true);
                                         @endphp
-                                        
+
                                         <button type="button" data-url="{{route('admin.business-settings.subscriptionackage.switchToCommission',$store->id)}}" data-message="{{translate('You_Want_To_Migrate_To_Commission.')}} {{ data_get($cash_backs,'back_amount') > 0  ?  translate('You will get').' '. \App\CentralLogics\Helpers::format_currency(data_get($cash_backs,'back_amount')) .' '.translate('to_your_wallet_for_remaining') .' '.data_get($cash_backs,'days').' '.translate('messages.days_subscription_plan') : '' }}"  class="btn btn--primary shift_to_commission">{{ translate('Shift in this plan') }}</button>
                                         @endif
 

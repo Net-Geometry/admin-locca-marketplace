@@ -527,6 +527,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                 Route::post('customer-store', 'POSController@customer_store')->name('customer-store');
                 Route::post('add-delivery-address', 'POSController@addDeliveryInfo')->name('add-delivery-address');
                 Route::get('data', 'POSController@extra_charge')->name('extra_charge');
+                Route::get('get-user-data', 'POSController@getUserData')->name('getUserData');
             });
         });
 

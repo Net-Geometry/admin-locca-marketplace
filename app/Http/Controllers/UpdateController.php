@@ -178,7 +178,8 @@ class UpdateController extends Controller
         if(NotificationSetting::count() == 0 ){
             Helpers::notificationDataSetup();
         }
-        Helpers::updateAdminNotificationSetupDataSetup();
+        Helpers::updateAdminNotificationSetupDataSetup();   
+        Helpers::addNewAdminNotificationSetupDataSetup();
 
         Helpers::insert_business_settings_key('country_picker_status', '1');
 

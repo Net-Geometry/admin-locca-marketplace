@@ -568,6 +568,8 @@ class POSController extends Controller
             Toastr::error(translate('messages.no_customer_selected'));
             return back();
         }
+        $customer = User::find($request->user_id);
+
         if(!$request->type){
             Toastr::error(translate('No payment method selected'));
             return back();
@@ -594,6 +596,7 @@ class POSController extends Controller
         if($request->type == 'wallet' && Helpers::get_business_settings('wallet_status', false) != 1)
         {
             Toastr::error(translate('messages.customer_wallet_disable_warning'));
+            return back()->withInput()->with('customer', $customer);
         }
 
         $distance_data = isset($address) ? $address['distance'] : 0;
@@ -603,7 +606,7 @@ class POSController extends Controller
 
         if(!$store){
             Toastr::error(translate('messages.Sorry_the_store_is_not_available'));
-            return back();
+            return back()->withInput()->with('customer', $customer);
         }
 
 
@@ -615,11 +618,11 @@ class POSController extends Controller
 
             if($store_sub->max_order != "unlimited" && $store_sub->max_order <= 0){
                 Toastr::error(translate('messages.The_store_has_reached_the_maximum_number_of_orders'));
-                return back();
+                return back()->withInput()->with('customer', $customer);
             }
         } elseif($store->store_business_model == 'unsubscribed'){
             Toastr::error(translate('messages.The_store_is_not_subscribed_or_subscription_has_expired'));
-            return back();
+            return back()->withInput()->with('customer', $customer);
         }
 
         $extra_charges = 0;
@@ -725,7 +728,7 @@ class POSController extends Controller
                             if($c['quantity']>$stock)
                             {
                                 Toastr::error(translate('messages.product_out_of_stock_warning',['item'=>$product->name]));
-                                return back();
+                                return back()->withInput()->with('customer', $customer);
                             }
 
                             $product_data[]=[
@@ -796,22 +799,39 @@ class POSController extends Controller
             $max_cod_order_amount_value=  $max_cod_order_amount ? $max_cod_order_amount->value : 0;
             if( $max_cod_order_amount_value > 0 && $order->payment_method == 'cash_on_delivery' && $order->order_amount > $max_cod_order_amount_value){
             Toastr::error(translate('messages.You can not Order more then ').$max_cod_order_amount_value .Helpers::currency_symbol().' '. translate('messages.on COD order.')  );
-            return back();
+            return back()->withInput()->with('customer', $customer);
             }
 
             if($request->type == 'wallet'){
                 if($request->user_id){
 
-                    $customer = User::find($request->user_id);
                     if($customer->wallet_balance < $order->order_amount){
                         Toastr::error(translate('messages.insufficient_wallet_balance'));
-                        return back();
+                        return back()->withInput()->with('customer', $customer);
                     }else{
                         CustomerLogic::create_wallet_transaction($order->user_id, $order->order_amount, 'order_place', $order->id);
+                        
+                        if (Helpers::getNotificationStatusData('customer','customer_pos_order_wallet_notification','push_notification_status') && $customer?->cm_firebase_token && $customer?->cm_firebase_token != '@' )  {
+                            $notification_data = [
+                                'title' => translate('Pos_Order_Notification'),
+                                'description' => translate('Order_has_sccessfully_placed_by_your_wallet'),
+                                'order_id' => $order->id,
+                                'image' => '',
+                                'type' => 'order_status',
+                            ];
+                            Helpers::send_push_notif_to_device($customer->cm_firebase_token, $notification_data);
+                            DB::table('user_notifications')->insert([
+                                'data' => json_encode($notification_data),
+                                'user_id' => $order->user_id,
+                                'created_at' => now(),
+                                'updated_at' => now()
+                            ]);
+                        }
+
                     }
                 }else{
                     Toastr::error(translate('messages.no_customer_selected'));
-                    return back();
+                    return back()->withInput()->with('customer', $customer);
                 }
             };
             $order->save();
@@ -854,7 +874,7 @@ class POSController extends Controller
             info(['Admin pos order error_____',$e]);
         }
         Toastr::warning(translate('messages.failed_to_place_order'));
-        return back();
+        return back()->withInput()->with('customer', $customer);
     }
 
 
@@ -922,4 +942,21 @@ class POSController extends Controller
         }
             return response()->json($extra_charges,200);
     }
+
+    public function getUserData(Request $request){
+        if($request->customer_id){
+            $user= User::where('id', $request->customer_id)->first();
+            if ($user) {
+                $user = [
+                    'id' => $user->id,
+                    'customer_name' => $user->f_name . ' ' . $user->l_name,
+                    'customer_phone' => $user->phone,
+                    'customer_wallet' => Helpers::format_currency($user->wallet_balance),
+                    'customer_image' => $user->image_full_url,
+                ];
+            }
+        return response()->json($user,200);
+        }
+    return response()->json([],200);
+}
 }

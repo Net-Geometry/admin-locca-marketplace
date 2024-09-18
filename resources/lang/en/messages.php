@@ -5715,4 +5715,6 @@
   'Select Mail Sorting Order' => 'Select Mail Sorting Order',
   'subscriber_list' => 'Subscriber list',
   'subscribed_at' => 'Subscribed at',
+  'customer_pos_order_wallet_notification' => 'Customer pos order wallet notification',
+  'Sent_notification_on_wallet_payment_on_POS' => 'Sent notification on wallet payment on POS',
 );

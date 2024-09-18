@@ -4147,6 +4147,10 @@ class Helpers
         self::updateAdminNotificationSetupData();
     return true;
     }
+    public static function addNewAdminNotificationSetupDataSetup(){
+        self::addNewAdminNotificationSetupData();
+    return true;
+    }
     public static function getStoreNotificationStatusData($store_id,$key,$notification_type){
         $data= StoreNotificationSetting::where('store_id',$store_id)->where('key',$key)->select($notification_type)->first();
         if(!$data){
