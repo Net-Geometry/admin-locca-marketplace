@@ -1,0 +1,2 @@
+UPDATE addon_settings SET test_values = JSON_SET( COALESCE(test_values, '{}'), '$.merchant_secret', ''), live_values = JSON_SET( COALESCE(live_values, '{}'), '$.merchant_secret', '') WHERE key_name='esewa';
+UPDATE addon_settings SET test_values = JSON_SET( COALESCE(test_values, '{}'), '$.am_merchant_code', ''), live_values = JSON_SET( COALESCE(live_values, '{}'), '$.am_merchant_code', '' ) WHERE key_name='pvit';
