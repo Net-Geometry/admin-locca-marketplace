@@ -58,7 +58,7 @@ $countryCode= strtolower($country?$country->value:'auto');
                     <a href="{{route('home')}}" class="logo">
                         <img class="onerror-image"  data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
 
-                    src="{{\App\CentralLogics\Helpers::get_full_url('business', $fav?->value?? '', $fav?->storage[0]?->value ?? 'public','favicon')}}"
+                    src="{{\App\CentralLogics\Helpers::get_full_url('business', $logo?->value?? '', $logo?->storage[0]?->value ?? 'public','favicon')}}"
 
                     alt="image">
                     </a>
@@ -437,7 +437,7 @@ $countryCode= strtolower($country?$country->value:'auto');
                 sync2.trigger("to.owl.carousel", [current, duration, true]);
             }
         }
-        
+
         let thumbs = sync2
             .owlCarousel({
                 // startPosition: 12,

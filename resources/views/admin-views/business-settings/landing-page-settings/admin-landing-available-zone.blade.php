@@ -42,13 +42,13 @@
             <div class="card-body">
                 <div class="row g-3">
                     <div class="col-sm-6">
-                        {{ translate('To view a list of all active zones on your') }} <a href="{{route('home')}}" target="_blank" class="text-primary">{{ translate('Admin Landing') }}</a> {{ translate('Page,') }} <br class="d-none d-md-inline-block"> {{ translate('Enable the `Available Zones` feature') }}
+                        {{ translate('To view a list of all active zones on your') }} <a href="{{route('home')}}" target="_blank" class="text--underline text-006AE5">{{ translate('Admin Landing') }}</a> {{ translate('Page,') }} <br class="d-none d-md-inline-block"> {{ translate('Enable the')}} <strong>{{ translate('`Available Zones`') }}</strong> {{translate('feature') }}
                     </div>
                     <div class="col-sm-6">
                         <label
                             class="toggle-switch h--45px toggle-switch-sm d-flex justify-content-between border rounded px-3 py-0 form-control">
                                             <span class="pr-1 d-flex align-items-center switch--label">
-                                                <span class="line--limit-1">
+                                                <span class="line--limit-1 text--primary">
                                                     {{translate('messages.available_zone') }}
                                                 </span>
                                             </span>
@@ -99,17 +99,21 @@
                                 <div class="form-group">
                                     <label class="input-label"
                                            for="default_title">{{ translate('messages.name') }}
-                                        ({{ translate('messages.Default') }})
+                                        ({{ translate('messages.Default') }})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_50_characters') }}">
+                                                <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
+                                            </span>
                                     </label>
-                                    <input type="text" name="available_zone_title[]" id="default_title"
+                                    <input type="text" name="available_zone_title[]" id="default_title" maxlength="50"
                                            class="form-control" placeholder="{{ translate('messages.title') }}" value="{{$available_zone_title?->getRawOriginal('value')}}"
                                     >
                                 </div>
                                 <input type="hidden" name="lang[]" value="default">
                                 <div class="form-group mb-0">
                                     <label class="input-label"
-                                           for="exampleFormControlInput1">{{ translate('messages.short_description') }} ({{ translate('messages.default') }})</label>
-                                    <textarea type="text" name="available_zone_short_description[]" placeholder="{{translate('messages.short_description')}}" class="form-control min-h-90px ckeditor">{{$available_zone_short_description?->getRawOriginal('value')}}</textarea>
+                                           for="exampleFormControlInput1">{{ translate('messages.short_description') }} ({{ translate('messages.default') }})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_short_description_within_200_characters') }}">
+                                                <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
+                                            </span></label>
+                                    <textarea type="text" name="available_zone_short_description[]" maxlength="200" placeholder="{{translate('messages.short_description')}}" class="form-control min-h-90px ckeditor">{{$available_zone_short_description?->getRawOriginal('value')}}</textarea>
                                 </div>
                             </div>
                             @foreach (json_decode($language) as $lang)
@@ -140,16 +144,20 @@
                                     <div class="form-group">
                                         <label class="input-label"
                                                for="{{ $lang }}_title">{{ translate('messages.title') }}
-                                            ({{ strtoupper($lang) }})
+                                            ({{ strtoupper($lang) }})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_50_characters') }}">
+                                                <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
+                                            </span>
                                         </label>
-                                        <input type="text" name="available_zone_title[]" id="{{ $lang }}_title"
+                                        <input type="text" name="available_zone_title[]" maxlength="50" id="{{ $lang }}_title"
                                                class="form-control" value="{{ $available_zone_title_translate[$lang]['value']??'' }}" placeholder="{{ translate('messages.title') }}">
                                     </div>
                                     <input type="hidden" name="lang[]" value="{{ $lang }}">
                                     <div class="form-group mb-0">
                                         <label class="input-label"
-                                               for="exampleFormControlInput1">{{ translate('messages.short_description') }} ({{ strtoupper($lang) }})</label>
-                                        <textarea type="text" name="available_zone_short_description[]" placeholder="{{translate('messages.short_description')}}" class="form-control min-h-90px ckeditor">{{ $available_zone_short_description_translate[$lang]['value']??'' }}</textarea>
+                                               for="exampleFormControlInput1">{{ translate('messages.short_description') }} ({{ strtoupper($lang) }})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_short_description_within_200_characters') }}">
+                                                <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
+                                            </span></label>
+                                        <textarea type="text" name="available_zone_short_description[]" maxlength="200" placeholder="{{translate('messages.short_description')}}" class="form-control min-h-90px ckeditor">{{ $available_zone_short_description_translate[$lang]['value']??'' }}</textarea>
                                     </div>
                                 </div>
                             @endforeach
@@ -179,8 +187,8 @@
                         <div>
                             <div class="d-flex justify-content-center">
                                 <label class="text-dark d-block mb-4">
-                                    Related Image
-                                    <small class="text-danger">* ( Ratio 1:1 )</small>
+                                    <strong>{{ translate('Related Image') }}</strong>
+                                    <small class="text-danger">* {{ translate('( Ratio 1:1 )') }}</small>
                                 </label>
                             </div>
                             <div class="d-flex justify-content-center">
@@ -205,9 +213,9 @@
             <div class="col-12">
                 <div class="card shadow-none border-0 bg-soft-danger">
                     <div class="card-body d-flex">
-                        <i class="tio-info-outined text-danger mr-1 mt-1"></i>
+                        <i class="mr-2 mt-3 text-danger tio-info-outined"></i>
                         <p class="fs-15 text-dark m-0">
-                            <strong>{{ translate('Note:') }}</strong> {{ translate('Customize the section by adding a title, short description, and images in the') }} <a href="{{ route('admin.business-settings.zone.home') }}" target="_blank" class="text-primary">{{ translate('Zone Setup') }}</a> {{ translate('section. All created zones will be automatically displayed on the') }} <a href="{{route('home')}}" target="_blank" class="text-primary">{{ translate('Admin Landing') }}</a> {{ translate('Page. The zones will be based on the Zone Display Name.') }}
+                            <strong>{{ translate('Note:') }}</strong> {{ translate('Customize the section by adding a title, short description, and images in the') }} <a href="{{ route('admin.business-settings.zone.home') }}" target="_blank" class="text--underline text-006AE5">{{ translate('Zone Setup') }}</a> {{ translate('section. All created zones will be automatically displayed on the') }} <a href="{{route('home')}}" target="_blank" class="text-primary">{{ translate('Admin Landing') }}</a> {{ translate('Page. The zones will be based on the Zone Display Name.') }}
                         </p>
                     </div>
                 </div>

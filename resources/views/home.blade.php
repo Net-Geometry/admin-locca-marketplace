@@ -2055,6 +2055,7 @@
                                 <div class="zone-list-wrapper mt-4">
                                     <div class="zone-list">
                                         @foreach($landing_data['available_zone_list'] as $zone)
+                                            @if(count($zone['modules']->toArray())>0)
                                             <span class="item"
                                                   data-bs-trigger="hover"
                                                   data-bs-toggle="popover"
@@ -2064,6 +2065,7 @@
                                             >
                                        {{ $zone['display_name'] }}
                                     </span>
+                                            @endif
                                         @endforeach
                                     </div>
                                 </div>
