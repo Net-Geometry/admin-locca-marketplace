@@ -264,6 +264,21 @@
                                 <th class="px-4 border-0">
                                     <h4 class="m-0 text-capitalize">{{ translate('short_description') }}</h4>
                                 </th>
+                                @if (in_array($product->module->module_type ,['food','grocery']))
+                                    <th class="px-4 border-0">
+                                        <h4 class="m-0 text-capitalize">{{ translate('Nutrition') }}</h4>
+                                    </th>
+                                    <th class="px-4 border-0">
+                                        <h4 class="m-0 text-capitalize">{{ translate('Allergy') }}</h4>
+                                    </th>
+
+                                @endif
+                                @if (in_array($product->module->module_type ,['pharmacy']))
+                                    <th class="px-4 border-0">
+                                        <h4 class="m-0 text-capitalize">{{ translate('Generic_Name') }}</h4>
+                                    </th>
+                                @endif
+
                                 <th class="px-4 border-0">
                                     <h4 class="m-0 text-capitalize">{{ translate('price') }}</h4>
                                 </th>
@@ -287,6 +302,30 @@
                                         {!! $product['description'] !!}
                                     </div>
                                 </td>
+                                @if (in_array($product->module->module_type ,['food','grocery']))
+                                    <td class="px-4">
+                                        @if ($product->nutritions)
+                                            @foreach($product->nutritions as $nutrition)
+                                                {{$nutrition->nutrition}}{{ !$loop->last ? ',' : '.'}}
+                                            @endforeach
+                                        @endif
+                                    </td>
+                                    <td class="px-4">
+                                        @if ($product->allergies)
+                                            @foreach($product->allergies as $allergy)
+                                                {{$allergy->allergy}}{{ !$loop->last ? ',' : '.'}}
+                                            @endforeach
+                                        @endif
+                                    </td>
+                                @endif
+                                @if (in_array($product->module->module_type ,['pharmacy']))
+                                    <td class="px-4">
+                                        @if ($product->generic->pluck('generic_name')->first())
+                                            {{ $product->generic->pluck('generic_name')->first() }}
+                                        @endif
+                                    </td>
+
+                                @endif
                                 <td class="px-4">
                                     <span class="d-block mb-1">
                                         <span>{{ translate('messages.price') }} : </span>
@@ -377,7 +416,7 @@
                             @if ($product->tags)
                                 <td>
                                     @foreach($product->tags as $c)
-                                        {{$c->tag.','}}
+                                        {{$c->tag}}{{ !$loop->last ? ',' : '.'}}
                                     @endforeach
                                 </td>
                             @endif
@@ -427,7 +466,7 @@
 
 
         </div>
-       
+
         <div class="table-responsive datatable-custom">
             <table id="datatable" class="table table-borderless table-thead-bordered table-nowrap card-table"
                    data-hs-datatables-options='{

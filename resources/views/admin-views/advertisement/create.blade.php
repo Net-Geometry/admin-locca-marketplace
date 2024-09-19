@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title','Advertisement Requests')
+@section('title','Advertisement Create')
 
 
 @section('advertisement')

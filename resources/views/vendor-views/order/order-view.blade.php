@@ -1081,9 +1081,11 @@
                                 @if ($proof)
 
                                 @foreach ($proof as $key => $photo)
+                                @php($photo = is_array($photo)?$photo:['img'=>$photo,'storage'=>'public'])
+
                                             <div class="spartan_item_wrapper min-w-176px max-w-176px">
                                                 <img class="img--square"
-                                                    src="{{ asset("storage/app/public/order/$photo") }}"
+                                                    src="{{\App\CentralLogics\Helpers::get_full_url('order',$photo['img'],$photo['storage']) }}"
                                                     alt="order image">
 
                                                 <div class="pen spartan_remove_row"><i class="tio-edit"></i></div>

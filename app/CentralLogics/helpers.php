@@ -211,10 +211,10 @@ class Helpers
         $data['is_basic'] =  (int) $data->pharmacy_item_details?->is_basic ?? 0;
         $data['is_prescription_required'] =  (int) $data->pharmacy_item_details?->is_prescription_required ?? 0;
         $data['halal_tag_status'] =  (int) $data->store->storeConfig?->halal_tag_status??0;
-        $data['nutritions_name']=Nutrition::whereIn('id',$data?->nutritions->pluck('id') )->pluck('nutrition');
-        $data['allergies_name']=Allergy::whereIn('id',$data?->allergies->pluck('id') )->pluck('allergy');
-        $data['generic_name']=GenericName::whereIn('id',$data?->generic->pluck('id') )->pluck('generic_name');
 
+        $data['nutritions_name']= $data?->nutritions ? Nutrition::whereIn('id',$data?->nutritions->pluck('id') )->pluck('nutrition') : null;
+        $data['allergies_name']= $data?->allergies ?Allergy::whereIn('id',$data?->allergies->pluck('id') )->pluck('allergy') : null;
+        $data['generic_name']= $data?->generic ? GenericName::whereIn('id',$data?->generic->pluck('id') )->pluck('generic_name'): null ;
 
         unset($data['nutritions']);
         unset($data['allergies']);
@@ -304,10 +304,10 @@ class Helpers
                 $item['halal_tag_status'] =  (int) $item->store->storeConfig?->halal_tag_status??0;
 
                 $item->store['self_delivery_system'] = (int) $item->store->sub_self_delivery;
-                $item['nutritions_name']=Nutrition::whereIn('id',$item?->nutritions->pluck('id') )->pluck('nutrition');
-                $item['allergies_name']=Allergy::whereIn('id',$item?->allergies->pluck('id') )->pluck('allergy');
-                $item['generic_name']=GenericName::whereIn('id',$item?->generic->pluck('id') )->pluck('generic_name');
 
+                $item['nutritions_name']= $item?->nutritions ? Nutrition::whereIn('id',$item?->nutritions->pluck('id') )->pluck('nutrition') : null;
+                $item['allergies_name']= $item?->allergies ?Allergy::whereIn('id',$item?->allergies->pluck('id') )->pluck('allergy') : null;
+                $item['generic_name']= $item?->generic ? GenericName::whereIn('id',$item?->generic->pluck('id') )->pluck('generic_name'): null ;
 
                 unset($item['nutritions']);
                 unset($item['allergies']);
@@ -383,9 +383,9 @@ class Helpers
             $data['is_prescription_required'] =  (int) $data->pharmacy_item_details?->is_prescription_required ?? 0;
             $data['halal_tag_status'] =  (int) $data->store->storeConfig?->halal_tag_status??0;
 
-            $data['nutritions_name']=Nutrition::whereIn('id',$data?->nutritions->pluck('id') )->pluck('nutrition');
-            $data['allergies_name']=Allergy::whereIn('id',$data?->allergies->pluck('id') )->pluck('allergy');
-            $data['generic_name']=GenericName::whereIn('id',$data?->generic->pluck('id') )->pluck('generic_name');
+            $data['nutritions_name']= $data?->nutritions ? Nutrition::whereIn('id',$data?->nutritions->pluck('id') )->pluck('nutrition') : null;
+            $data['allergies_name']= $data?->allergies ?Allergy::whereIn('id',$data?->allergies->pluck('id') )->pluck('allergy') : null;
+            $data['generic_name']= $data?->generic ? GenericName::whereIn('id',$data?->generic->pluck('id') )->pluck('generic_name'): null ;
 
             if($temp_product == true){
                 $data['tags']=Tag::whereIn('id',json_decode($data?->tag_ids) )->get(['tag','id']);
@@ -515,10 +515,10 @@ class Helpers
                 if (!$trans) {
                     unset($item['translations']);
                 }
-                $item['nutritions_name']=Nutrition::whereIn('id',$item?->nutritions->pluck('id') )->pluck('nutrition');
-                $item['allergies_name']=Allergy::whereIn('id',$item?->allergies->pluck('id') )->pluck('allergy');
-                $item['generic_name']=GenericName::whereIn('id',$item?->generic->pluck('id') )->pluck('generic_name');
 
+                $item['nutritions_name']= $item?->nutritions ? Nutrition::whereIn('id',$item?->nutritions->pluck('id') )->pluck('nutrition') : null;
+                $item['allergies_name']= $item?->allergies ?Allergy::whereIn('id',$item?->allergies->pluck('id') )->pluck('allergy') : null;
+                $item['generic_name']= $item?->generic ? GenericName::whereIn('id',$item?->generic->pluck('id') )->pluck('generic_name'): null ;
 
                 unset($item['nutritions']);
                 unset($item['allergies']);
@@ -628,9 +628,11 @@ class Helpers
                 }
             }
 
-            $data['nutritions_name']=Nutrition::whereIn('id',$data?->nutritions->pluck('id') )->pluck('nutrition');
-            $data['allergies_name']=Allergy::whereIn('id',$data?->allergies->pluck('id') )->pluck('allergy');
-            $data['generic_name']=GenericName::whereIn('id',$data?->generic->pluck('id') )->pluck('generic_name');
+            $data['nutritions_name']= $data?->nutritions ? Nutrition::whereIn('id',$data?->nutritions->pluck('id') )->pluck('nutrition') : null;
+            $data['allergies_name']= $data?->allergies ?Allergy::whereIn('id',$data?->allergies->pluck('id') )->pluck('allergy') : null;
+            $data['generic_name']= $data?->generic ? GenericName::whereIn('id',$data?->generic->pluck('id') )->pluck('generic_name'): null ;
+
+
             if (!$trans) {
                 unset($data['translations']);
             }
