@@ -245,7 +245,7 @@
                                     <div class="col-sm-6" id="nutrition">
                                         <label class="input-label" for="sub-categories">
                                             {{translate('Nutrition')}}
-                                            <span class="input-label-secondary" title="lorem imspu" data-toggle="tooltip">
+                                            <span class="input-label-secondary" title="{{ translate('Specify the necessary keywords relating to energy values for the item.') }}" data-toggle="tooltip">
                                                 <i class="tio-info-outined"></i>
                                             </span>
                                         </label>
@@ -261,7 +261,7 @@
                                     <div class="col-sm-6" id="allergy">
                                         <label class="input-label" for="sub-categories">
                                             {{translate('Allegren Ingredients')}}
-                                            <span class="input-label-secondary" title="lorem imspu" data-toggle="tooltip">
+                                            <span class="input-label-secondary" title="{{ translate('Specify the ingredients of the item which can make a reaction as an allergen.') }}" data-toggle="tooltip">
                                                 <i class="tio-info-outined"></i>
                                             </span>
                                         </label>
