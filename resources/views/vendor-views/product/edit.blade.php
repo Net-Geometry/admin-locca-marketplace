@@ -899,11 +899,11 @@
                 }
             });
         });
-        $('#product_form').on('keydown', function(e) {
-            if (e.key === 'Enter') {
-            e.preventDefault(); // Prevent submission on Enter
-            }
-        });
+        // $('#product_form').on('keydown', function(e) {
+        //     if (e.key === 'Enter') {
+        //     e.preventDefault(); // Prevent submission on Enter
+        //     }
+        // });
 
 
 

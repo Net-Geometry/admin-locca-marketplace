@@ -1064,11 +1064,11 @@
             });
         }
 
-        $('#item_form').on('keydown', function(e) {
-            if (e.key === 'Enter') {
-            e.preventDefault(); // Prevent submission on Enter
-            }
-        });
+        // $('#item_form').on('keydown', function(e) {
+        //     if (e.key === 'Enter') {
+        //     e.preventDefault(); // Prevent submission on Enter
+        //     }
+        // });
 
         $('#item_form').on('submit', function(e) {
             $('#submitButton').attr('disabled', true);
