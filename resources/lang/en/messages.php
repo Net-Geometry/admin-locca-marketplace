@@ -5733,4 +5733,7 @@
   'Write_the_short_description_within_200_characters' => 'Write the short description within 200 characters',
   'default_message_is_required' => 'Default message is required',
   'Automated_message_updated_successfully' => 'Automated message updated successfully',
+  'Specify the necessary keywords relating to energy values for the item.' => 'Specify the necessary keywords relating to energy values for the item.',
+  'Specify the ingredients of the item which can make a reaction as an allergen.' => 'Specify the ingredients of the item which can make a reaction as an allergen.',
+  'store_updated_successfully' => 'Store updated successfully',
 );
