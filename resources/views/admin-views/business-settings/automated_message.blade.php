@@ -30,7 +30,7 @@
                     <form action="{{ route('admin.business-settings.automated_message.store') }}" method="post">
                         @csrf
                         @if ($language)
-                        <ul class="nav nav-tabs nav--tabs d-block mt-3 nav-slider owl-theme owl-carousel mb-4">
+                        <ul class="nav nav-tabs nav--tabs d-block nav-slider owl-theme owl-carousel mb-4">
                             <li class="nav-item">
                                 <a class="nav-link lang_link1 active px-0" href="#"
                                     id="default-link1">{{ translate('Default') }}</a>
@@ -203,7 +203,7 @@
 
                                                     @php($message = \App\Models\AutomatedMessage::withoutGlobalScope('translate')->with('translations')->find($message->id))
                                                 <div class="js-nav-scroller hs-nav-scroller-horizontal mb-4">
-                                                    <ul class="nav nav-tabs nav--tabs d-block mt-3 border-0 nav-slider owl-theme owl-carousel mb-4">
+                                                    <ul class="nav nav-tabs nav--tabs d-block border-0 nav-slider owl-theme owl-carousel mb-4">
                                                         <li class="nav-item">
                                                             <a class="nav-link update-lang_link add_active active px-0"
                                                                 href="#"
