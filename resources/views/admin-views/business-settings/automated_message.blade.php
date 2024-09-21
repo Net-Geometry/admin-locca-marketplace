@@ -2,6 +2,9 @@
 
 @section('title', translate('Automated_Message'))
 
+@push('css_or_js')
+<link rel="stylesheet" href="{{asset('public/assets/admin/css/owl.min.css')}}">
+@endpush
 
 @section('content')
     <div class="content container-fluid">
@@ -27,18 +30,18 @@
                     <form action="{{ route('admin.business-settings.automated_message.store') }}" method="post">
                         @csrf
                         @if ($language)
-                            <ul class="nav nav-tabs nav--tabs mt-3 mb-3 ">
+                        <ul class="nav nav-tabs nav--tabs d-block mt-3 nav-slider owl-theme owl-carousel mb-4">
+                            <li class="nav-item">
+                                <a class="nav-link lang_link1 active px-0" href="#"
+                                    id="default-link1">{{ translate('Default') }}</a>
+                            </li>
+                            @foreach ($language as $lang)
                                 <li class="nav-item">
-                                    <a class="nav-link lang_link1 active" href="#"
-                                        id="default-link1">{{ translate('Default') }}</a>
+                                    <a class="nav-link lang_link1 px-0" href="#"
+                                        id="{{ $lang }}-link1">{{ \App\CentralLogics\Helpers::get_language_name($lang) . '(' . strtoupper($lang) . ')' }}</a>
                                 </li>
-                                @foreach ($language as $lang)
-                                    <li class="nav-item">
-                                        <a class="nav-link lang_link1" href="#"
-                                            id="{{ $lang }}-link1">{{ \App\CentralLogics\Helpers::get_language_name($lang) . '(' . strtoupper($lang) . ')' }}</a>
-                                    </li>
-                                @endforeach
-                            </ul>
+                            @endforeach
+                        </ul>
                         @endif
                         <div class="row align-items-end">
 
@@ -199,23 +202,24 @@
                                                     @method('put')
 
                                                     @php($message = \App\Models\AutomatedMessage::withoutGlobalScope('translate')->with('translations')->find($message->id))
-
-                                                    <ul class="nav nav-tabs nav--tabs mb-3 border-0">
+                                                <div class="js-nav-scroller hs-nav-scroller-horizontal mb-4">
+                                                    <ul class="nav nav-tabs nav--tabs d-block mt-3 border-0 nav-slider owl-theme owl-carousel mb-4">
                                                         <li class="nav-item">
-                                                            <a class="nav-link update-lang_link add_active active"
+                                                            <a class="nav-link update-lang_link add_active active px-0"
                                                                 href="#"
                                                                 id="default-link">{{ translate('Default') }}</a>
                                                         </li>
                                                         @if ($language)
                                                             @foreach ($language as $lang)
                                                                 <li class="nav-item">
-                                                                    <a class="nav-link update-lang_link" href="#"
+                                                                    <a class="nav-link update-lang_link px-0" href="#"
                                                                         data-reason-id="{{ $message->id }}"
                                                                         id="{{ $lang }}-link">{{ \App\CentralLogics\Helpers::get_language_name($lang) . '(' . strtoupper($lang) . ')' }}</a>
                                                                 </li>
                                                             @endforeach
                                                         @endif
                                                     </ul>
+                                                </div>
                                                     <input type="hidden" name="message_id"
                                                         value="{{ $message->id }}" />
 
@@ -300,5 +304,13 @@
 @endsection
 @push('script_2')
     <script src="{{ asset('public/assets/admin/js/view-pages/business-settings-refund-reasons-page.js') }}"></script>
-
+    <script src="{{ asset('public/assets/admin/js/owl.min.js') }}"></script>
+    <script>
+        $('.nav-slider').owlCarousel({
+            margin: 30,
+            loop: false,
+            autoWidth: true,
+            items: 4
+        })
+    </script>
 @endpush

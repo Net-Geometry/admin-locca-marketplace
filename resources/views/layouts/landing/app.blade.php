@@ -79,10 +79,9 @@ $countryCode= strtolower($country?$country->value:'auto');
                             <a href="{{route('contact-us')}}"  class="{{ Request::is('contact-us') ? 'active' : '' }}"><span>{{ translate('messages.contact_us') }}</span></a>
                         </li>
                         @if ($fixed_link &&$fixed_link['web_app_url_status'])
-                                <div class="mt-2">
-                                    <a class="cmn--btn me-xl-auto py-2"
-                                    href="{{ $fixed_link['web_app_url'] }}" target="_blank">{{ translate('messages.browse_web') }}</a>
-                                </div>
+                            <div class="me-2 d-lg-none">
+                                <a class="cmn--btn me-xl-auto py-2" href="{{ $fixed_link['web_app_url'] }}" target="_blank">{{ translate('messages.browse_web') }}</a>
+                            </div>
                         @endif
                     </ul>
                     <div class="nav-toggle d-lg-none ms-auto me-3">
@@ -94,17 +93,17 @@ $countryCode= strtolower($country?$country->value:'auto');
                     @php($lang = \App\Models\BusinessSetting::where('key', 'system_language')->first())
                     @if ($lang)
                         <div class="dropdown--btn-hover position-relative">
-                            <a class="dropdown--btn border-0 px-3 header--btn text-capitalize d-flex" href="javascript:void(0)">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" width="20">
-                                    <path d="M16.555 5.412a8.028 8.028 0 00-3.503-2.81 14.899 14.899 0 011.663 4.472 8.547 8.547 0 001.84-1.662zM13.326 7.825a13.43 13.43 0 00-2.413-5.773 8.087 8.087 0 00-1.826 0 13.43 13.43 0 00-2.413 5.773A8.473 8.473 0 0010 8.5c1.18 0 2.304-.24 3.326-.675zM6.514 9.376A9.98 9.98 0 0010 10c1.226 0 2.4-.22 3.486-.624a13.54 13.54 0 01-.351 3.759A13.54 13.54 0 0110 13.5c-1.079 0-2.128-.127-3.134-.366a13.538 13.538 0 01-.352-3.758zM5.285 7.074a14.9 14.9 0 011.663-4.471 8.028 8.028 0 00-3.503 2.81c.529.638 1.149 1.199 1.84 1.66zM17.334 6.798a7.973 7.973 0 01.614 4.115 13.47 13.47 0 01-3.178 1.72 15.093 15.093 0 00.174-3.939 10.043 10.043 0 002.39-1.896zM2.666 6.798a10.042 10.042 0 002.39 1.896 15.196 15.196 0 00.174 3.94 13.472 13.472 0 01-3.178-1.72 7.973 7.973 0 01.615-4.115zM10 15c.898 0 1.778-.079 2.633-.23a13.473 13.473 0 01-1.72 3.178 8.099 8.099 0 01-1.826 0 13.47 13.47 0 01-1.72-3.178c.855.151 1.735.23 2.633.23zM14.357 14.357a14.912 14.912 0 01-1.305 3.04 8.027 8.027 0 004.345-4.345c-.953.542-1.971.981-3.04 1.305zM6.948 17.397a8.027 8.027 0 01-4.345-4.345c.953.542 1.971.981 3.04 1.305a14.912 14.912 0 001.305 3.04z" />
-                                </svg>
+                            <a class="dropdown--btn border-0 px-3 header--btn text-capitalize d-flex align-items-center" href="javascript:void(0)">
                                 @foreach(json_decode($lang['value'],true) as $data)
                                 @if($data['code']==$local)
-                                            <span class="me-1">{{$data['code']}}</span>
-                                    @elseif(!$local &&  $data['default'] == true)
-                                            <span class="me-1">{{$data['code']}}</span>
-                                    @endif
-                                    @endforeach
+                                    <span class="me-1">{{$data['code']}}</span>
+                                @elseif(!$local &&  $data['default'] == true)
+                                    <span class="me-1">{{$data['code']}}</span>
+                                @endif
+                                @endforeach
+                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M7.24701 11.14L2.45101 5.658C1.88501 5.013 2.34501 4 3.20401 4H12.796C12.9883 3.99984 13.1765 4.05509 13.3381 4.15914C13.4998 4.26319 13.628 4.41164 13.7075 4.58669C13.7869 4.76175 13.8142 4.956 13.7861 5.14618C13.758 5.33636 13.6757 5.51441 13.549 5.659L8.75301 11.139C8.65915 11.2464 8.5434 11.3325 8.41352 11.3915C8.28364 11.4505 8.14265 11.481 8.00001 11.481C7.85737 11.481 7.71638 11.4505 7.5865 11.3915C7.45663 11.3325 7.34087 11.2464 7.24701 11.139V11.14Z" fill="#768D82"/>
+                                </svg>
                             </a>
                             <ul class="dropdown-list py-0" style="min-width:120px; top:100%">
                                 @foreach(json_decode($lang['value'],true) as $key =>$data)
@@ -120,6 +119,11 @@ $countryCode= strtolower($country?$country->value:'auto');
                                 @endif
                             @endforeach
                             </ul>
+                        </div>
+                    @endif
+                    @if ($fixed_link &&$fixed_link['web_app_url_status'])
+                        <div class="me-2 d-none d-lg-block">
+                            <a class="cmn--btn me-xl-auto py-2" href="{{ $fixed_link['web_app_url'] }}" target="_blank">{{ translate('messages.browse_web') }}</a>
                         </div>
                     @endif
                     @if (isset($toggle_dm_registration) || isset($toggle_store_registration))
