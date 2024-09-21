@@ -170,7 +170,11 @@ class DeliveryMan extends Authenticatable
     }
     public function getIdentityImageFullUrlAttribute(){
         $images = [];
-        $value = is_array($this->identity_image)?$this->identity_image:json_decode($this->identity_image,true);
+        $value = is_array($this->identity_image)
+            ? $this->identity_image
+            : (is_string($this->identity_image) && $this->isValidJson($this->identity_image)
+                ? json_decode($this->identity_image, true)
+                : []);
         if ($value){
             foreach ($value as $item){
                 $item = is_array($item)?$item:(is_object($item) && get_class($item) == 'stdClass' ? json_decode(json_encode($item), true):['img' => $item, 'storage' => 'public']);
@@ -179,6 +183,12 @@ class DeliveryMan extends Authenticatable
         }
 
         return $images;
+    }
+
+    private function isValidJson($string)
+    {
+        json_decode($string);
+        return (json_last_error() === JSON_ERROR_NONE);
     }
 
     public function storage()

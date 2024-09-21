@@ -52,7 +52,11 @@ class TempProduct extends Model
     }
     public function getImagesFullUrlAttribute(){
         $images = [];
-        $value = is_array($this->images)?$this->images:json_decode($this->images,true);
+        $value = is_array($this->images)
+            ? $this->images
+            : (is_string($this->images) && $this->isValidJson($this->images)
+                ? json_decode($this->images, true)
+                : []);
         if ($value){
             foreach ($value as $item){
                 $item = is_array($item)?$item:(is_object($item) && get_class($item) == 'stdClass' ? json_decode(json_encode($item), true):['img' => $item, 'storage' => 'public']);
@@ -62,6 +66,13 @@ class TempProduct extends Model
 
         return $images;
     }
+
+    private function isValidJson($string)
+    {
+        json_decode($string);
+        return (json_last_error() === JSON_ERROR_NONE);
+    }
+
 
     public function scopeModule($query, $module_id)
     {
