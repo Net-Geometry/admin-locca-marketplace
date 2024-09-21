@@ -172,7 +172,7 @@ class DeliveryMan extends Authenticatable
         $images = [];
         $value = is_array($this->identity_image)
             ? $this->identity_image
-            : (is_string($this->identity_image) && $this->isValidJson($this->identity_image)
+            : ($this->identity_image && is_string($this->identity_image) && $this->isValidJson($this->identity_image)
                 ? json_decode($this->identity_image, true)
                 : []);
         if ($value){

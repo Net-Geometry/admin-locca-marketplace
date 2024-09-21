@@ -34,7 +34,7 @@ class Refund extends Model
         $images = [];
         $value = is_array($this->image)
             ? $this->image
-            : (is_string($this->image) && $this->isValidJson($this->image)
+            : ($this->image && is_string($this->image) && $this->isValidJson($this->image)
                 ? json_decode($this->image, true)
                 : []);
         if ($value){

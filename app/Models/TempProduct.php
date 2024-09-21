@@ -54,7 +54,7 @@ class TempProduct extends Model
         $images = [];
         $value = is_array($this->images)
             ? $this->images
-            : (is_string($this->images) && $this->isValidJson($this->images)
+            : ($this->images && is_string($this->images) && $this->isValidJson($this->images)
                 ? json_decode($this->images, true)
                 : []);
         if ($value){

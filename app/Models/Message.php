@@ -43,7 +43,7 @@ class Message extends Model
         $images = [];
         $value = is_array($this->file)
             ? $this->file
-            : (is_string($this->file) && $this->isValidJson($this->file)
+            : ($this->file && is_string($this->file) && $this->isValidJson($this->file)
                 ? json_decode($this->file, true)
                 : []);
         if ($value){

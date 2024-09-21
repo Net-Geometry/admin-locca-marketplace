@@ -54,7 +54,7 @@ class Order extends Model
         $images = [];
         $value = is_array($this->order_attachment)
             ? $this->order_attachment
-            : (is_string($this->order_attachment) && $this->isValidJson($this->order_attachment)
+            : ($this->order_attachment && is_string($this->order_attachment) && $this->isValidJson($this->order_attachment)
                 ? json_decode($this->order_attachment, true)
                 : []);
         if ($value){
@@ -71,7 +71,7 @@ class Order extends Model
         $images = [];
         $value = is_array($this->order_proof)
             ? $this->order_proof
-            : (is_string($this->order_proof) && $this->isValidJson($this->order_proof)
+            : ($this->order_proof && is_string($this->order_proof) && $this->isValidJson($this->order_proof)
                 ? json_decode($this->order_proof, true)
                 : []);
         if ($value){
