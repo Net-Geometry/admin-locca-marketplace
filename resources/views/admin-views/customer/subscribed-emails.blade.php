@@ -12,7 +12,7 @@
                 <span class="page-header-icon">
                     <img src="{{asset('public/assets/admin/img/email.png')}}" class="w--26" alt="">
                 </span>
-                <span>{{ translate('messages.subscribed_mail_list') }}
+                <span>{{ translate('messages.Subscriber List') }}
                         <span class="badge badge-soft-dark ml-2" id="count">{{$subscribedCustomers->count() }}</span>
                 </span>
             </h1>
@@ -52,6 +52,12 @@
         <div class="card">
             <!-- Header -->
             <div class="card-header border-0 py-2">
+
+                <h4>{{ translate('messages.Mail List') }}
+                    <span class="badge badge-soft-dark ml-2" id="count">{{$subscribedCustomers->count() }}</span>
+                </h4>
+
+
                 <div class="search--button-wrapper justify-content-end">
                     <form class="search-form">
                         <div class="input-group input--group">
@@ -145,7 +151,7 @@
                                     <td>
                                         {{ $customer->email }}
                                     </td>
-                                    <td>  {{  Helpers::date_format($customer->created_at)}} </td>
+                                    <td>  {{  Helpers::time_date_format($customer->created_at)}} </td>
                                 </tr>
                             @endforeach
                         @endif
@@ -172,34 +178,4 @@
 
     </div>
 @endsection
-@push('script_2')
-    <script type="text/javascript">
-        "use strict";
-        $('#search-form').on('submit', function () {
-            let formData = new FormData(this);
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $.post({
-                url: '{{ url('admin/customer/subscriber-search') }}',
-                data: formData,
-                cache: false,
-                contentType: false,
-                processData: false,
-                beforeSend: function () {
-                    $('#loading').show();
-                },
-                success: function (data) {
-                    $('#set-rows').html(data.view);
-                    $('.card-footer').hide();
-                    $('#count').html(data.count);
-                },
-                complete: function () {
-                    $('#loading').hide();
-                },
-            });
-        });
-    </script>
-@endpush
+

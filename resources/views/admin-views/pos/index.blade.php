@@ -147,7 +147,7 @@
                                                     <h4> <span id="customer_name" class="text--primary">{{ isset($customer) ? $customer->f_name . ' ' . $customer->l_name : '' }}</span>, <small id="customer_phone">{{ isset($customer) ? $customer->phone : '' }}</small></h4>
                                                     </li>
                                                     <li>
-                                                    {{ translate('messages.Wallet') }} : <strong class="text-dark" id="customer_wallet" >{{ isset($customer) ?  Helpers::format_currency($customer->wallet_balance) : '' }}</strong>
+                                                    {{ translate('messages.Wallet') }} : <strong class="text-dark" id="customer_wallet" >{{ isset($customer) ?  \App\CentralLogics\Helpers::format_currency($customer->wallet_balance) : '' }}</strong>
                                                     </li>
                                                 </ul>
                                             </div>

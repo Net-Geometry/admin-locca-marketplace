@@ -733,10 +733,33 @@ class ItemController extends Controller
             }
             $result = $tmp;
         }
+
+        $data = [];
+        foreach ($result as $combination) {
+            $str = '';
+            foreach ($combination as $key => $item) {
+                if ($key > 0) {
+                    $str .= '-' . str_replace(' ', '', $item);
+                } else {
+                    $str .= str_replace(' ', '', $item);
+                }
+            }
+
+            $price_field = 'price_' . $str;
+            $stock_field = 'stock_' . $str;
+            $item_price = $request->input($price_field);
+            $item_stock = $request->input($stock_field);
+
+            $data[] = [
+                'name' => $str,
+                'price' => $item_price ?? $price,
+                'stock' => $item_stock ?? 1
+            ];
+        }
         $combinations = $result;
         $stock = $request->stock == 'true' ? true : false;
         return response()->json([
-            'view' => view('admin-views.product.partials._variant-combinations', compact('combinations', 'price', 'product_name', 'stock'))->render(),
+            'view' => view('admin-views.product.partials._variant-combinations', compact('combinations', 'price', 'product_name', 'stock','data'))->render(),
             'length' => count($combinations),
             'stock' => $stock,
         ]);
