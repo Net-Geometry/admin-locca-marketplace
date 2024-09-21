@@ -371,22 +371,7 @@ class CustomerController extends Controller
         }
     }
 
-    public function subscriberMailSearch(Request $request)
-    {
-        $key = explode(' ', $request['search']);
-        $customers = Newsletter::
-        where(function ($q) use ($key) {
-            foreach ($key as $value) {
-                $q->orWhere('email', 'like', "%". $value."%");
-            }
-        })
 
-        ->orderBy('id', 'desc')->get();
-        return response()->json([
-            'count' => count($customers),
-            'view' => view('admin-views.customer.partials._subscriber-email-table', compact('customers'))->render()
-        ]);
-    }
 
     public function get_customers(Request $request){
         $key = explode(' ', $request['q']);

@@ -494,7 +494,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
 
                 // Subscribed customer Routes
                 Route::get('subscribed', 'CustomerController@subscribedCustomers')->name('subscribed');
-                Route::post('subscriber-search', 'CustomerController@subscriberMailSearch')->name('subscriberMailSearch');
+                // Route::post('subscriber-search', 'CustomerController@subscriberMailSearch')->name('subscriberMailSearch');
                 Route::get('subscriber-search', 'CustomerController@subscribed_customer_export')->name('subscriber-export');
 
                 Route::get('loyalty-point/report', 'LoyaltyPointController@report')->name('loyalty-point.report');
@@ -629,7 +629,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
 
                     // Subscribed customer Routes
                     Route::get('subscribed', 'CustomerController@subscribedCustomers')->name('subscribed');
-                    Route::post('subscriber-search', 'CustomerController@subscriberMailSearch')->name('subscriberMailSearch');
+                    // Route::post('subscriber-search', 'CustomerController@subscriberMailSearch')->name('subscriberMailSearch');
                     Route::get('subscriber-search', 'CustomerController@subscribed_customer_export')->name('subscriber-export');
 
                     Route::get('loyalty-point/report', 'LoyaltyPointController@report')->name('loyalty-point.report');
