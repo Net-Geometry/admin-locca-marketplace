@@ -272,25 +272,24 @@ class CustomerController extends Controller
         $key = explode(' ', $request['search']);
 
 
-        $customers = Newsletter::orderBy('id', 'desc')
-
-        ->when(isset($key), function($query) use($key) {
+        $customers = Newsletter::when(isset($key), function($query) use($key) {
             $query->where(function ($q) use ($key) {
                 foreach ($key as $value) {
                     $q->orWhere('email', 'like', "%". $value."%");
                 }
             });
         })
-        ->when(isset($filter) && $filter == 'latest' , function ($query) {
-            $query->latest();
-        })
-        ->when(isset($filter) && $filter == 'oldest' , function ($query) {
-            $query->oldest();
-        })
+
         ->when(isset($request->join_date) , function ($query) use($join_date_start, $join_date_end) {
             $query->WhereBetween('created_at', [$join_date_start, $join_date_end]);
         });
 
+
+        if(isset($filter) && $filter == 'oldest' ){
+            $customers=$customers->oldest();
+            } else{
+                $customers=$customers->latest();
+        }
 
         if(isset($show_limit) && $show_limit > 0 ){
             $customers= $customers->take($show_limit)->get();
@@ -333,26 +332,23 @@ class CustomerController extends Controller
 
 
 
-        $customers = Newsletter::orderBy('id', 'desc')
-
-        ->when(isset($key), function($query) use($key) {
+        $customers = Newsletter::when(isset($key), function($query) use($key) {
             $query->where(function ($q) use ($key) {
                 foreach ($key as $value) {
                     $q->orWhere('email', 'like', "%". $value."%");
                 }
             });
         })
-        ->when(isset($filter) && $filter == 'latest' , function ($query) {
-            $query->latest();
-        })
-        ->when(isset($filter) && $filter == 'oldest' , function ($query) {
-            $query->oldest();
-        })
         ->when(isset($request->join_date) , function ($query) use($join_date_start, $join_date_end) {
             $query->WhereBetween('created_at', [$join_date_start, $join_date_end]);
         });
 
-
+        if(isset($filter) && $filter == 'oldest' ){
+            $customers=$customers->oldest();
+            } else{
+                $customers=$customers->latest();
+        }
+        
         if(isset($show_limit) && $show_limit > 0 ){
             $customers= $customers->take($show_limit)->get();
         } else{
