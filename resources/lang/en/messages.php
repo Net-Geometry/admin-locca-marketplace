@@ -5738,4 +5738,7 @@
   'store_updated_successfully' => 'Store updated successfully',
   'Allergy' => 'Allergy',
   'successfully updated!' => 'Successfully updated!',
+  'location recorded' => 'Location recorded',
+  'Status updated' => 'Status updated',
+  'review_reply_updated_successfully' => 'Review reply updated successfully',
 );

@@ -798,7 +798,7 @@ class Helpers
                 $item->load('storeConfig');
                 $ratings = StoreLogic::calculate_store_rating($item['rating']);
                 $item['ratings'] = $item?->rating ?? [];
-//                unset($item['rating']);
+                unset($item['rating']);
                 $item['avg_rating'] = $ratings['rating'];
                 $item['rating_count'] = $ratings['total'];
                 $item['positive_rating'] = $ratings['positive_rating'];
@@ -837,7 +837,7 @@ class Helpers
             $data['self_delivery_system'] = (int) $data->sub_self_delivery;
             $ratings = StoreLogic::calculate_store_rating($data['rating']);
             $data['ratings'] = $data?->rating ?? [];
-//            unset($data['rating']);
+            unset($data['rating']);
             $data['avg_rating'] = $ratings['rating'];
             $data['rating_count'] = $ratings['total'];
             $data['positive_rating'] = $ratings['positive_rating'];
