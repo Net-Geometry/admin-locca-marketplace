@@ -5736,4 +5736,5 @@
   'Specify the necessary keywords relating to energy values for the item.' => 'Specify the necessary keywords relating to energy values for the item.',
   'Specify the ingredients of the item which can make a reaction as an allergen.' => 'Specify the ingredients of the item which can make a reaction as an allergen.',
   'store_updated_successfully' => 'Store updated successfully',
+  'Allergy' => 'Allergy',
 );

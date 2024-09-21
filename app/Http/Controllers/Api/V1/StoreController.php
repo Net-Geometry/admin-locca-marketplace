@@ -157,7 +157,7 @@ class StoreController extends Controller
             $store['category_details'] = Category::whereIn('id',$store['category_ids'])->get();
             $store['price_range']  = Item::withoutGlobalScopes()->where('store_id', $store->id)
             ->select(DB::raw('MIN(price) AS min_price, MAX(price) AS max_price'))
-            ->get(['min_price','max_price']);
+            ->get(['min_price','max_price'])->toArray();
         }
         return response()->json($store, 200);
     }
