@@ -101,14 +101,14 @@
 
 
         {{-- Coupon Discount --}}
-        @if(true)
+        {{-- @if(true)
             <dd  class="col-6">{{translate('coupon_discount')}} :</dd>
-            <dd class="col-6 text-right"> 
+            <dd class="col-6 text-right">
             <span class="delivery--edit-icon text-primary cursor-pointer" data-toggle="modal" data-target="#couponModal">
                 <i class="tio-edit"></i>
-            </span> 
+            </span>
             - {{\App\CentralLogics\Helpers::format_currency(100)}}</dd>
-        @endif
+        @endif --}}
 
         <dd  class="col-6">{{translate('messages.discount')}} :</dd>
         <dd class="col-6 text-right">- {{\App\CentralLogics\Helpers::format_currency(round($discount_on_product,2))}}</dd>

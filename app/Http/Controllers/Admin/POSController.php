@@ -810,11 +810,11 @@ class POSController extends Controller
                         return back()->withInput()->with('customer', $customer);
                     }else{
                         CustomerLogic::create_wallet_transaction($order->user_id, $order->order_amount, 'order_place', $order->id);
-                        
+
                         if (Helpers::getNotificationStatusData('customer','customer_pos_order_wallet_notification','push_notification_status') && $customer?->cm_firebase_token && $customer?->cm_firebase_token != '@' )  {
                             $notification_data = [
-                                'title' => translate('Pos_Order_Notification'),
-                                'description' => translate('Order_has_sccessfully_placed_by_your_wallet'),
+                                'title' => Helpers::format_currency($order->order_amount).' '. translate('amount is debited'),
+                                'description' =>  Helpers::format_currency($order->order_amount).' '. translate('has been debited from your wallet balance for POS order ID') .' '.$order->id,
                                 'order_id' => $order->id,
                                 'image' => '',
                                 'type' => 'order_status',

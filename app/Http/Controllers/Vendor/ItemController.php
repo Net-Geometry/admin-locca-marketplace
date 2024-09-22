@@ -719,6 +719,16 @@ class ItemController extends Controller
         else{
             $p->image = $request->has('image') ? Helpers::update('product/', $p->image, 'png', $request->file('image')) : $p->image;
             $images = $p['images'];
+
+            foreach($p->images as $key=> $value){
+                if( in_array( is_array($value) ?   $value['img'] : $value ,explode(",", $request->removedImageKeys))) {
+                    $i[]= $value['img'];
+                    $value = is_array($value)?$value:['img' => $value, 'storage' => 'public'];
+                    Helpers::check_and_delete('product/' , $value['img']);
+                    unset($images[$key]);
+                }
+            }
+
             if ($request->has('item_images')){
                 foreach ($request->item_images as $img) {
                     $image = Helpers::upload('product/', 'png', $img);

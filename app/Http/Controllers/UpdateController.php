@@ -178,12 +178,24 @@ class UpdateController extends Controller
         if(NotificationSetting::count() == 0 ){
             Helpers::notificationDataSetup();
         }
-        Helpers::updateAdminNotificationSetupDataSetup();   
+        Helpers::updateAdminNotificationSetupDataSetup();
         Helpers::addNewAdminNotificationSetupDataSetup();
 
         Helpers::insert_business_settings_key('country_picker_status', '1');
 
         $this->firebase_message_config_file_gen();
+
+        $recaptcha= BusinessSetting::where('key','recaptcha')->first();
+        if($recaptcha?->value){
+            $recaptcha_value=  json_decode($recaptcha->value,true);
+            $recaptcha->value = json_encode([
+                'status' => null,
+                'site_key' => $recaptcha_value['site_key'],
+                'secret_key' => $recaptcha_value['secret_key']
+            ]);
+            $recaptcha->save();
+        }
+
         $data = DataSetting::where('type', 'login_admin')->pluck('value')->first();
         return redirect('/login/'.$data);
     }

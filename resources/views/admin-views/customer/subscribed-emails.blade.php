@@ -13,7 +13,7 @@
                     <img src="{{asset('public/assets/admin/img/email.png')}}" class="w--26" alt="">
                 </span>
                 <span>{{ translate('messages.Subscriber List') }}
-                        <span class="badge badge-soft-dark ml-2" id="count">{{$subscribedCustomers->count() }}</span>
+                        {{-- <span class="badge badge-soft-dark ml-2" id="count">{{$subscribedCustomers->count() }}</span> --}}
                 </span>
             </h1>
         </div>
