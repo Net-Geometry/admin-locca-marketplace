@@ -99,7 +99,7 @@
                                  id="default-form">
                                 <div class="form-group">
                                     <label class="input-label"
-                                           for="default_title">{{ translate('messages.name') }}
+                                           for="default_title">{{ translate('messages.title') }}
                                         ({{ translate('messages.Default') }})<span class="form-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Write_the_title_within_50_characters') }}">
                                                 <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
                                             </span>

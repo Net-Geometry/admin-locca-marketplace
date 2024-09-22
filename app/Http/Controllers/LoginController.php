@@ -469,10 +469,10 @@ class LoginController extends Controller
             session()->forget('subscription_renew_close_btn');
             session()->forget('subscription_cancel_close_btn');
         } else {
-            if (!auth()?->guard('admin')?->user()?->role_id == 1) {
+            if (auth()?->guard('admin')?->user()?->role_id == 1) {
+                    $user_link = Helpers::get_login_url('admin_login_url');
+                } else {
                 $user_link = Helpers::get_login_url('admin_employee_login_url');
-            } else {
-                $user_link = Helpers::get_login_url('admin_login_url');
             }
             auth()?->guard('admin')?->logout();
         }

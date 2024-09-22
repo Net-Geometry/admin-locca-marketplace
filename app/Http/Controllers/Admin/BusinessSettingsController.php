@@ -3915,11 +3915,9 @@ class BusinessSettingsController extends Controller
             if($request['available_zone_status']){
                 $request->validate([
                     'available_zone_title.0' => 'required',
-                    'available_zone_short_description.0' => 'required',
-//                    'image' => 'required',
+
                 ], [
                     'available_zone_title.0.required' => translate('default_title_is_required'),
-                    'available_zone_short_description.0.required' => translate('default_short_description_is_required'),
                 ]);
             }
             $available_zone_title = DataSetting::where('type', 'admin_landing_page')->where('key', 'available_zone_title')->first();
@@ -3944,6 +3942,13 @@ class BusinessSettingsController extends Controller
 
             $available_zone_image = DataSetting::where('type', 'admin_landing_page')->where('key', 'available_zone_image')->first();
             if ($available_zone_image == null) {
+
+                if($request['available_zone_status']){
+                    $request->validate([
+                        'image' => 'required',
+                        ]);
+                }
+
                 $available_zone_image = new DataSetting();
             }
             $available_zone_image->key = 'available_zone_image';
@@ -4501,11 +4506,9 @@ class BusinessSettingsController extends Controller
             if($request['available_zone_status']){
                 $request->validate([
                     'available_zone_title.0' => 'required',
-                    'available_zone_short_description.0' => 'required',
-//                    'image' => 'required',
+
                 ], [
                     'available_zone_title.0.required' => translate('default_title_is_required'),
-                    'available_zone_short_description.0.required' => translate('default_short_description_is_required'),
                 ]);
             }
             $available_zone_title = DataSetting::where('type', 'react_landing_page')->where('key', 'available_zone_title')->first();
@@ -4530,6 +4533,13 @@ class BusinessSettingsController extends Controller
 
             $available_zone_image = DataSetting::where('type', 'react_landing_page')->where('key', 'available_zone_image')->first();
             if ($available_zone_image == null) {
+
+                if($request['available_zone_status']){
+                    $request->validate([
+                        'image' => 'required',
+                        ]);
+                }
+
                 $available_zone_image = new DataSetting();
             }
             $available_zone_image->key = 'available_zone_image';
@@ -5707,11 +5717,9 @@ class BusinessSettingsController extends Controller
             if($request['available_zone_status']){
                 $request->validate([
                     'available_zone_title.0' => 'required',
-                    'available_zone_short_description.0' => 'required',
-//                    'image' => 'required',
+
                 ], [
                     'available_zone_title.0.required' => translate('default_title_is_required'),
-                    'available_zone_short_description.0.required' => translate('default_short_description_is_required'),
                 ]);
             }
             $available_zone_title = DataSetting::where('type', 'flutter_landing_page')->where('key', 'available_zone_title')->first();
@@ -5735,7 +5743,14 @@ class BusinessSettingsController extends Controller
             $available_zone_short_description->save();
 
             $available_zone_image = DataSetting::where('type', 'flutter_landing_page')->where('key', 'available_zone_image')->first();
+
             if ($available_zone_image == null) {
+                if($request['available_zone_status']){
+                    $request->validate([
+                        'image' => 'required',
+                        ]);
+                }
+
                 $available_zone_image = new DataSetting();
             }
             $available_zone_image->key = 'available_zone_image';

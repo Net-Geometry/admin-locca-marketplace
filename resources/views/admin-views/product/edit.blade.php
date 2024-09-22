@@ -173,13 +173,13 @@
                                                     data-onerror-image="{{ asset('public/assets/admin/img/upload-img.png') }}"
                                                     alt="Product image">
                                                     {{-- <div class="pen spartan_remove_row"><i class="tio-edit"></i></div> --}}
-                                                    @if (request()->product_gellary  == 1)
-                                                        <a href="#" data-key={{ $key }} data-photo="{{ $photo['img'] }}"
-                                                        class="spartan_remove_row function_remove_img"><i class="tio-add-to-trash"></i></a>
+                                                    <a href="#" data-key={{ $key }} data-photo="{{ $photo['img'] }}"
+                                                    class="spartan_remove_row function_remove_img"><i class="tio-add-to-trash"></i></a>
+                                                    {{-- @if (request()->product_gellary  == 1)
                                                     @else
                                                         <a href="{{ route('admin.item.remove-image', ['id' => $product['id'], 'name' => $photo['img'] ,'temp_product' => $temp_product]) }}"
                                                             class="spartan_remove_row"><i class="tio-add-to-trash"></i></a>
-                                                    @endif
+                                                    @endif --}}
                                             </div>
                                         @endforeach
                                     </div>
@@ -751,15 +751,14 @@
 
     $(document).on('click','.function_remove_img' ,function(){
     let key = $(this).data('key');
-         let photo = $(this).data('photo');
-         function_remove_img(key,photo);
+        let photo = $(this).data('photo');
+        function_remove_img(key,photo);
     });
 
         function function_remove_img(key,photo) {
         $('#product_images_' + key).addClass('d-none');
         removedImageKeys.push(photo);
         $('#removedImageKeysInput').val(removedImageKeys.join(','));
-        console.log('Removed Image Keys:', removedImageKeys);
     }
 
 

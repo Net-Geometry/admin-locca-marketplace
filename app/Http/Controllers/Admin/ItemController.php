@@ -502,6 +502,18 @@ class ItemController extends Controller
             ]);
         }
 
+
+        $images = $item['images'];
+        foreach($item->images as $key=> $value){
+            if( in_array( is_array($value) ?   $value['img'] : $value ,explode(",", $request->removedImageKeys))) {
+                $i[]= $value['img'];
+                $value = is_array($value)?$value:['img' => $value, 'storage' => 'public'];
+                Helpers::check_and_delete('product/' , $value['img']);
+                unset($images[$key]);
+            }
+        }
+
+
         $item->category_id = $request->sub_category_id ? $request->sub_category_id : $request->category_id;
         $item->category_ids = json_encode($category);
         $item->description =  $request->description[array_search('default', $request->lang)];
@@ -550,7 +562,7 @@ class ItemController extends Controller
             }
         }
         //combinations end
-        $images = $item['images'];
+
         if ($request->has('item_images')) {
             foreach ($request->item_images as $img) {
                 $image = Helpers::upload('product/', 'png', $img);

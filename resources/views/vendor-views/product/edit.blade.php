@@ -162,15 +162,8 @@
                                         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-4 col-6 spartan_item_wrapper" id="product_images_{{ $key }}">
                                             <img class="img--square onerror-image" src="{{\App\CentralLogics\Helpers::get_full_url('product',$photo['img'],$photo['storage'] ?? 'public') }}"
                                             data-onerror-image ="{{asset('/public/assets/admin/img/400x400/img2.jpg')}}" alt="Product image">
-
-
-                                        @if (request()->product_gellary  == 1)
                                             <a href="#"  data-key={{ $key }} data-photo="{{ $photo['img'] }}"
-                                            class="spartan_remove_row"><i class="tio-add-to-trash"></i></a>
-                                        @else
-                                            <a href="{{ route('vendor.item.remove-image', ['id' => $product['id'], 'name' => $photo['img'] ,'temp_product' => $temp_product]) }}"
-                                                class="spartan_remove_row"><i class="tio-add-to-trash"></i></a>
-                                        @endif
+                                             class="spartan_remove_row function_remove_img" ><i class="tio-add-to-trash"></i></a>
                                         </div>
                                     @endforeach
 
