@@ -466,10 +466,8 @@ $(function () {
             'This Month': [moment().startOf('month'), moment().endOf('month')],
             'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
         },
-        // minDate: new Date(),
-        // startDate: moment().startOf('hour'),
+        maxDate: moment(),
         startDate: $(this).data("startDate"),
-        // endDate: moment().startOf('hour').add(10, 'day'),
         endDate:$(this).data("endDate"),
         autoUpdateInput: false,
         locale: {
