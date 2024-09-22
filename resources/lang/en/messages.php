@@ -5741,4 +5741,12 @@
   'location recorded' => 'Location recorded',
   'Status updated' => 'Status updated',
   'review_reply_updated_successfully' => 'Review reply updated successfully',
+  'Customer_Status' => 'Customer Status',
+  'Sort_by' => 'Sort by',
+  'Show_Limit' => 'Show Limit',
+  'Order_Date_Range' => 'Order Date Range',
+  'Join_Date_Range' => 'Join Date Range',
+  'Subscriber List' => 'Subscriber List',
+  'Mail List' => 'Mail List',
+  'Specify the medicine`s active ingredient that makes it work' => 'Specify the medicine`s active ingredient that makes it work',
 );
