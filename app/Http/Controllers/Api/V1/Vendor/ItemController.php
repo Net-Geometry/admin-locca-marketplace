@@ -602,24 +602,7 @@ class ItemController extends Controller
         }
         //combinations end
 
-        $images = $p['images'];
 
-        foreach ($p['images'] as $img) {
-            if (!in_array($img, json_decode($request->images, true))) {
-
-                Helpers::check_and_delete('product/' , $img);
-
-                $key = array_search($img, $images);
-                unset($images[$key]);
-            }
-            }
-        $images = array_values($images);
-        if ($request->has('item_images')){
-            foreach ($request->item_images as $img) {
-                $image = Helpers::upload('product/', 'png', $img);
-                array_push($images, ['img'=>$image, 'storage'=> Helpers::getDisk()]);
-            }
-        }
 
 
 
@@ -670,7 +653,6 @@ class ItemController extends Controller
         $p->variations = json_encode($variations);
         $p->food_variations = json_encode($food_variations);
         $p->price = $request->price;
-        $p->image = $request->has('image') ? Helpers::update('product/', $p->image, 'png', $request->file('image')) : $p->image;
         $p->available_time_starts = $request->available_time_starts;
         $p->available_time_ends = $request->available_time_ends;
         $p->discount = $request->discount_type == 'amount' ? $request->discount : $request->discount;
@@ -680,7 +662,6 @@ class ItemController extends Controller
         $p->add_ons = $request->has('addon_ids') ? json_encode(explode(',',$request->addon_ids)) : json_encode([]);
         $p->stock= $request->current_stock??0;
         $p->veg = $request->veg??0;
-        $p->images = array_values($images);
         $p->unit_id = $request->unit;
         $p->organic = $request->organic??0;
         $p->is_halal =  $request->is_halal ?? 0;
@@ -694,6 +675,29 @@ class ItemController extends Controller
             $this->store_temp_data($p, $request,$tag_ids, $nutrition_ids, $allergy_ids, $generic_ids , true);
             return response()->json(['message' => translate('your_product_added_for_approval')], 200);
         }
+
+        $p->image = $request->has('image') ? Helpers::update('product/', $p->image, 'png', $request->file('image')) : $p->image;
+
+        $images = $p['images'];
+
+        foreach ($p['images'] as $img) {
+            if (!in_array($img, json_decode($request->images, true))) {
+
+                Helpers::check_and_delete('product/' , $img);
+
+                $key = array_search($img, $images);
+                unset($images[$key]);
+            }
+            }
+        $images = array_values($images);
+        if ($request->has('item_images')){
+            foreach ($request->item_images as $img) {
+                $image = Helpers::upload('product/', 'png', $img);
+                array_push($images, ['img'=>$image, 'storage'=> Helpers::getDisk()]);
+            }
+        }
+
+        $p->images = array_values($images);
 
 
         if($request['vendor']->stores[0]->module->module_type == 'pharmacy'){
@@ -1018,16 +1022,14 @@ class ItemController extends Controller
         }
 
         $images= $request?->temp_product == 1 ?   $item->images ?? [] : $data->images ?? [];
-
         if($request->removedImageKeys){
             foreach($images as $key=> $value){
-                if( in_array( is_array($value) ?   $value['img'] : $value ,explode(",", $request->removedImageKeys))) {
+                if( in_array( is_array($value) ?   $value['img'] : $value , json_decode($request->removedImageKeys,true))) {
                     unset($images[$key]);
                 }
             }
             $images = array_values($images);
         }
-
         foreach($images as $k=> $value){
                 $value = is_array($value)?$value:['img' => $value, 'storage' => 'public'];
                 $oldDisk = $value['storage'];

@@ -651,7 +651,7 @@ class ItemController extends Controller
                     $validator->getMessageBag()->add('unit_price', translate("Variation price must be greater than discount amount"));
                     return response()->json(['errors' => Helpers::error_processor($validator)]);
                 }
-                
+
                 $item['stock'] = abs($request['stock_' . str_replace('.', '_', $str)]);
                 array_push($variations, $item);
             }

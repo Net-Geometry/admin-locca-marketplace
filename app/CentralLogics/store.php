@@ -526,10 +526,35 @@ class StoreLogic
         })
         ->withCount(['items','campaigns'])->with(['discount'=>function($q){
             return $q->validate();
-        }])->weekday()->where(function ($q) use ($key) {
+        }])->weekday()
+        ->where(function ($q) use ($key) {
             foreach ($key as $value) {
                 $q->orWhere('name', 'like', "%{$value}%");
             }
+
+            $q->orWhereHas('items.nutritions',function($query)use($key){
+                $query->where(function($q)use($key){
+                    foreach ($key as $value) {
+                        $q->where('nutrition', 'like', "%{$value}%");
+                    };
+                });
+            });
+            $q->orWhereHas('items.allergies',function($query)use($key){
+                $query->where(function($q)use($key){
+                    foreach ($key as $value) {
+                        $q->where('allergy', 'like', "%{$value}%");
+                    };
+                });
+            });
+            $q->orWhereHas('items.generic',function($query)use($key){
+                $query->where(function($q)use($key){
+                    foreach ($key as $value) {
+                        $q->where('generic_name', 'like', "%{$value}%");
+                    };
+                });
+            });
+
+
         })
             ->when(config('module.current_module_data'), function($query)use($zone_id){
                 $query->module(config('module.current_module_data')['id']);
