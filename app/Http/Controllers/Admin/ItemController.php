@@ -258,6 +258,13 @@ class ItemController extends Controller
                 $temp = [];
                 $temp['type'] = $str;
                 $temp['price'] = abs($request['price_' . str_replace('.', '_', $str)]);
+
+
+                if($request->discount_type == 'amount' &&  $temp['price']  <   $request->discount){
+                    $validator->getMessageBag()->add('unit_price', translate("Variation price must be greater than discount amount"));
+                    return response()->json(['errors' => Helpers::error_processor($validator)]);
+                }
+
                 $temp['stock'] = abs($request['stock_' . str_replace('.', '_', $str)]);
                 array_push($variations, $temp);
             }
@@ -565,6 +572,11 @@ class ItemController extends Controller
                 $temp = [];
                 $temp['type'] = $str;
                 $temp['price'] = abs($request['price_' . str_replace('.', '_', $str)]);
+
+                if($request->discount_type == 'amount' &&  $temp['price']  <   $request->discount){
+                    $validator->getMessageBag()->add('unit_price', translate("Variation price must be greater than discount amount"));
+                    return response()->json(['errors' => Helpers::error_processor($validator)]);
+                }
                 $temp['stock'] = abs($request['stock_' . str_replace('.', '_', $str)]);
                 array_push($variations, $temp);
             }
@@ -614,7 +626,7 @@ class ItemController extends Controller
         $item->available_time_starts = $request->available_time_starts ?? '00:00:00';
         $item->available_time_ends = $request->available_time_ends ?? '23:59:59';
 
-        $item->discount = $request->discount_type == 'amount' ? $request->discount : $request->discount;
+        $item->discount =  $request->discount;
         $item->discount_type = $request->discount_type;
         $item->unit_id = $request->unit;
         $item->attributes = $request->has('attribute_id') ? json_encode($request->attribute_id) : json_encode([]);

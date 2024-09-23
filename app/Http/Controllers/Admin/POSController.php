@@ -35,6 +35,12 @@ class POSController extends Controller
         $store_id = $request->query('store_id', null);
         $categories = Category::active()->module(Config::get('module.current_module_id'))->get();
         $store = Store::active()->with('store_sub')->find($store_id);
+        // dd($store);
+
+        if(!$store){
+            Toastr::error(translate('messages.Store_is_not_available'));
+            return back();
+        }
         $keyword = $request->query('keyword', false);
         $key = explode(' ', $keyword);
 

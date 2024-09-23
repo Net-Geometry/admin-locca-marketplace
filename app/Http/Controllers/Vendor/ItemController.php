@@ -299,6 +299,13 @@ class ItemController extends Controller
                 $item = [];
                 $item['type'] = $str;
                 $item['price'] = abs($request['price_' . str_replace('.', '_', $str)]);
+
+
+                if($request->discount_type == 'amount' &&  $item['price']  <   $request->discount){
+                    $validator->getMessageBag()->add('unit_price', translate("Variation price must be greater than discount amount"));
+                    return response()->json(['errors' => Helpers::error_processor($validator)]);
+                }
+
                 $item['stock'] = abs($request['stock_' . str_replace('.', '_', $str)]);
                 array_push($variations, $item);
             }
@@ -639,6 +646,12 @@ class ItemController extends Controller
                 $item = [];
                 $item['type'] = $str;
                 $item['price'] = abs($request['price_' . str_replace('.', '_', $str)]);
+
+                if($request->discount_type == 'amount' &&  $item['price']  <   $request->discount){
+                    $validator->getMessageBag()->add('unit_price', translate("Variation price must be greater than discount amount"));
+                    return response()->json(['errors' => Helpers::error_processor($validator)]);
+                }
+                
                 $item['stock'] = abs($request['stock_' . str_replace('.', '_', $str)]);
                 array_push($variations, $item);
             }

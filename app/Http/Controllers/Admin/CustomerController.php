@@ -68,9 +68,9 @@ class CustomerController extends Controller
         ->when(isset($request->join_date) , function ($query) use($join_date_start, $join_date_end) {
             $query->WhereBetween('created_at', [$join_date_start, $join_date_end]);
         })
-        ->when(isset($request->order_date) , function ($query) use($join_date_start, $join_date_end) {
-            $query->wherehas('orders',function ($query) use($join_date_start, $join_date_end){
-                $query->WhereBetween('created_at', [$join_date_start, $join_date_end]);
+        ->when(isset($request->order_date) , function ($query) use($order_date_start, $order_date_end) {
+            $query->wherehas('orders',function ($query) use($order_date_start, $order_date_end){
+                $query->WhereBetween('created_at', [$order_date_start, $order_date_end]);
             });
         })
 
@@ -502,12 +502,11 @@ class CustomerController extends Controller
         ->when(isset($request->join_date) , function ($query) use($join_date_start, $join_date_end) {
             $query->WhereBetween('created_at', [$join_date_start, $join_date_end]);
         })
-        ->when(isset($request->order_date) , function ($query) use($join_date_start, $join_date_end) {
-            $query->wherehas('orders',function ($query) use($join_date_start, $join_date_end){
-                $query->WhereBetween('created_at', [$join_date_start, $join_date_end]);
+        ->when(isset($request->order_date) , function ($query) use($order_date_start, $order_date_end) {
+            $query->wherehas('orders',function ($query) use($order_date_start, $order_date_end){
+                $query->WhereBetween('created_at', [$order_date_start, $order_date_end]);
             });
         })
-
         ->when(isset($zone_id) && is_numeric($zone_id) , function ($query) use($zone_id){
             $query->where('zone_id' ,$zone_id);
         })

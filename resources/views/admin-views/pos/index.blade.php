@@ -474,6 +474,7 @@
                                         let distanceMile = distancMeter/1000;
                                         let distancMileResult = Math.round((distanceMile + Number.EPSILON) * 100) / 100;
                                         document.getElementById('distance').value = distancMileResult;
+                                        document.getElementById('address').value =response.destinationAddresses[1];
                                         <?php
                                         $module_wise_delivery_charge = $store->zone->modules()->where('modules.id', $store->module_id)->first();
                                         if($store->sub_self_delivery ){

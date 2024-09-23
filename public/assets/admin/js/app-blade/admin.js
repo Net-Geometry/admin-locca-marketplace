@@ -485,5 +485,7 @@ $(function () {
 
     $('.date-range-picker').on('cancel.daterangepicker', function(ev, picker) {
         $(this).val('');
+        picker.setStartDate(moment()); // Reset the start date
+        picker.setEndDate(moment()); 
     });
 });
