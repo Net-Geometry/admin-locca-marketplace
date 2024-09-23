@@ -5749,4 +5749,10 @@
   'Subscriber List' => 'Subscriber List',
   'Mail List' => 'Mail List',
   'Specify the medicine`s active ingredient that makes it work' => 'Specify the medicine`s active ingredient that makes it work',
+  'Seller App' => 'Seller App',
+  'google_play' => 'Google play',
+  'apple_store' => 'Apple store',
+  'Deliveryman App' => 'Deliveryman App',
+  'User App' => 'User App',
+  'zone_status_updated' => 'Zone status updated',
 );
