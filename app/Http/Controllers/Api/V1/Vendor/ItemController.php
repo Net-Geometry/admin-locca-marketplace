@@ -754,9 +754,7 @@ class ItemController extends Controller
 
         if($product->image)
         {
-
                 Helpers::check_and_delete('product/' , $product['image']);
-
         }
 
         foreach($product->images as $value){
@@ -932,13 +930,12 @@ class ItemController extends Controller
         $item = TempProduct::firstOrNew(
             ['item_id' => $data->id]
         );
+        $old_img=$item->image ?? null;
 
         $translated_data = json_decode($request->translations, true);
 
         $item->name = $translated_data[0]['value'];
         $item->description = $translated_data[1]['value'];
-        $item->image = $data->image;
-        $item->images = $data->images;
 
         $item->store_id = $data->store_id;
         $item->module_id = $data->module_id;
@@ -976,6 +973,87 @@ class ItemController extends Controller
         $item->basic =  $request->basic ?? 0;
 
 
+
+        if($request->has('image')){
+
+            if($old_img){
+                $temp_image_name =   Helpers::update('product/', $old_img, 'png', $request->file('image'));
+            }else{
+                $temp_image_name =   Helpers::upload('product/', 'png', $request->file('image'));
+            }
+            $item->image = $temp_image_name;
+        }
+        else{
+            $oldDisk = 'public';
+            if ($data->storage && count($data->storage) > 0) {
+                foreach ($data->storage as $value) {
+                    if ($value['key'] == 'image') {
+                        $oldDisk = $value['value'];
+                    }
+                }
+            }
+            $oldPath = "product/{$data->image}";
+            $newFileName = Carbon::now()->toDateString() . "-" . uniqid() . ".png";
+            $newPath = "product/{$newFileName}";
+            $dir = 'product/';
+            $newDisk = Helpers::getDisk();
+
+            if (Storage::disk($oldDisk)->exists($oldPath)) {
+                if (!Storage::disk($newDisk)->exists($dir)) {
+                    Storage::disk($newDisk)->makeDirectory($dir);
+                }
+                $fileContents = Storage::disk($oldDisk)->get($oldPath);
+                Storage::disk($newDisk)->put($newPath, $fileContents);
+            }
+            $item->image = $newFileName;
+        }
+
+        $images= $request?->temp_product == 1 ?   $item->images ?? [] : $data->images ?? [];
+
+        if($request->removedImageKeys){
+            foreach($images as $key=> $value){
+                if( in_array( is_array($value) ?   $value['img'] : $value ,explode(",", $request->removedImageKeys))) {
+                    unset($images[$key]);
+                }
+            }
+            $images = array_values($images);
+        }
+
+        foreach($images as $k=> $value){
+                $value = is_array($value)?$value:['img' => $value, 'storage' => 'public'];
+                $oldDisk = $value['storage'];
+                $oldPath = "product/{$value['img']}";
+                $newFileName = Carbon::now()->toDateString() . "-" . uniqid() . ".png";
+                $newPath = "product/{$newFileName}";
+                $dir = 'product/';
+                $newDisk = Helpers::getDisk();
+                try{
+                    if (Storage::disk($oldDisk)->exists($oldPath)) {
+                        if (!Storage::disk($newDisk)->exists($dir)) {
+                            Storage::disk($newDisk)->makeDirectory($dir);
+                        }
+                        $fileContents = Storage::disk($oldDisk)->get($oldPath);
+                        Storage::disk($newDisk)->put($newPath, $fileContents);
+                        unset($images[$k]);
+                        }
+                        } catch (\Exception $e) {
+                        }
+                        $images[]=['img'=>$newFileName, 'storage'=> Helpers::getDisk()];
+
+        }
+
+        $images = array_values($images);
+
+        if ($request->has('item_images')){
+            foreach ($request->item_images as $img) {
+                $image = Helpers::upload('product/', 'png', $img);
+                array_push($images, ['img'=>$image, 'storage'=> Helpers::getDisk()]);
+                }
+            }
+
+        $item->images = $images;
+
+
         if($update){
             $item->is_rejected = 0;
         }
@@ -1002,8 +1080,6 @@ class ItemController extends Controller
                     ]
                 );
         }
-        // Helpers::add_or_update_translations(request: $request, key_data: 'name', name_field: 'name', model_name: 'TempProduct', data_id: $item->id, data_value: $item->name);
-        // Helpers::add_or_update_translations(request: $request, key_data: 'description', name_field: 'description', model_name: 'TempProduct', data_id: $item->id, data_value: $item->description);
 
 
         foreach ($translated_data as $key=>$translated) {

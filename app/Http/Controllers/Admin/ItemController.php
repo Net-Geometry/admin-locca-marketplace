@@ -504,14 +504,22 @@ class ItemController extends Controller
 
 
         $images = $item['images'];
-        foreach($item->images as $key=> $value){
-            if( in_array( is_array($value) ?   $value['img'] : $value ,explode(",", $request->removedImageKeys))) {
-                $value = is_array($value)?$value:['img' => $value, 'storage' => 'public'];
-                Helpers::check_and_delete('product/' , $value['img']);
-                unset($images[$key]);
+        if (!$request?->temp_product) {
+            foreach($item->images as $key=> $value){
+                if( in_array( is_array($value) ?   $value['img'] : $value ,explode(",", $request->removedImageKeys))) {
+                    $value = is_array($value)?$value:['img' => $value, 'storage' => 'public'];
+                    Helpers::check_and_delete('product/' , $value['img']);
+                    unset($images[$key]);
+                }
+                }
+            $images = array_values($images);
+            if ($request->has('item_images')) {
+                foreach ($request->item_images as $img) {
+                    $image = Helpers::upload('product/', 'png', $img);
+                    array_push($images, ['img'=>$image, 'storage'=> Helpers::getDisk()]);
+                }
             }
-            }
-        $images = array_values($images);
+        }
 
 
         $item->category_id = $request->sub_category_id ? $request->sub_category_id : $request->category_id;
@@ -563,12 +571,7 @@ class ItemController extends Controller
         }
         //combinations end
 
-        if ($request->has('item_images')) {
-            foreach ($request->item_images as $img) {
-                $image = Helpers::upload('product/', 'png', $img);
-                array_push($images, ['img'=>$image, 'storage'=> Helpers::getDisk()]);
-            }
-        }
+
 
         $food_variations = [];
         if (isset($request->options)) {
@@ -625,6 +628,54 @@ class ItemController extends Controller
         $item->veg = $request->veg;
         $item->images = $images;
         if (Helpers::get_mail_status('product_approval') && $request?->temp_product) {
+
+
+            $images=$item->temp_product?->images ?? [] ;
+
+            if($request->removedImageKeys){
+                foreach($images as $key=> $value){
+                    if( in_array( is_array($value) ?   $value['img'] : $value ,explode(",", $request->removedImageKeys))) {
+                        unset($images[$key]);
+                    }
+                }
+                $images = array_values($images);
+            }
+
+            foreach($images as $k=> $value){
+                    $value = is_array($value)?$value:['img' => $value, 'storage' => 'public'];
+                    $oldDisk = $value['storage'];
+                    $oldPath = "product/{$value['img']}";
+                    $newFileName = Carbon::now()->toDateString() . "-" . uniqid() . ".png";
+                    $newPath = "product/{$newFileName}";
+                    $dir = 'product/';
+                    $newDisk = Helpers::getDisk();
+                    try{
+                        if (Storage::disk($oldDisk)->exists($oldPath)) {
+                            if (!Storage::disk($newDisk)->exists($dir)) {
+                                Storage::disk($newDisk)->makeDirectory($dir);
+                            }
+                            $fileContents = Storage::disk($oldDisk)->get($oldPath);
+                            Storage::disk($newDisk)->put($newPath, $fileContents);
+                            unset($images[$k]);
+                            }
+                            } catch (\Exception $e) {
+                            }
+                            $images[]=['img'=>$newFileName, 'storage'=> Helpers::getDisk()];
+
+            }
+
+            $images = array_values($images);
+
+            if ($request->has('item_images')){
+                foreach ($request->item_images as $img) {
+                    $image = Helpers::upload('product/', 'png', $img);
+                    array_push($images, ['img'=>$image, 'storage'=> Helpers::getDisk()]);
+                    }
+                }
+
+
+            $item->images = $images;
+
             $item->temp_product?->translations()->delete();
             $item?->pharmacy_item_details()?->delete();
             if($item->module->module_type == 'pharmacy'){

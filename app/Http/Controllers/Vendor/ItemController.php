@@ -799,7 +799,7 @@ class ItemController extends Controller
             $value = is_array($value)?$value:['img' => $value, 'storage' => 'public'];
             Helpers::check_and_delete('product/' , $value['img']);
         }
-        
+
         $product->translations()->delete();
         $product->delete();
         Toastr::success('Item removed!');
@@ -1674,7 +1674,7 @@ class ItemController extends Controller
             $temp_item->image = $newFileName;
         }
 
-        $images= $data->images ?? [];
+        $images= $request?->temp_product == 1 ?   $temp_item->images ?? [] : $data->images ?? [];
 
         if($request->removedImageKeys){
             foreach($images as $key=> $value){

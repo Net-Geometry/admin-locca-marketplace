@@ -817,7 +817,7 @@ class POSController extends Controller
                                 'description' =>  Helpers::format_currency($order->order_amount).' '. translate('has been debited from your wallet balance for POS order ID') .' '.$order->id,
                                 'order_id' => $order->id,
                                 'image' => '',
-                                'type' => 'order_status',
+                                'type' => 'add_fund',
                             ];
                             Helpers::send_push_notif_to_device($customer->cm_firebase_token, $notification_data);
                             DB::table('user_notifications')->insert([
