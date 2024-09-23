@@ -37,7 +37,7 @@ class POSController extends Controller
         $store = Store::active()->with('store_sub')->find($store_id);
         // dd($store);
 
-        if(!$store){
+        if(!$store && $request->has('store_id')){
             Toastr::error(translate('messages.Store_is_not_available'));
             return back();
         }
