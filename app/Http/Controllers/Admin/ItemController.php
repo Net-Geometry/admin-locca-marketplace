@@ -506,12 +506,12 @@ class ItemController extends Controller
         $images = $item['images'];
         foreach($item->images as $key=> $value){
             if( in_array( is_array($value) ?   $value['img'] : $value ,explode(",", $request->removedImageKeys))) {
-                $i[]= $value['img'];
                 $value = is_array($value)?$value:['img' => $value, 'storage' => 'public'];
                 Helpers::check_and_delete('product/' , $value['img']);
                 unset($images[$key]);
             }
-        }
+            }
+        $images = array_values($images);
 
 
         $item->category_id = $request->sub_category_id ? $request->sub_category_id : $request->category_id;
@@ -711,9 +711,11 @@ class ItemController extends Controller
         }
 
         if ($product->image) {
-
             Helpers::check_and_delete('product/' , $product['image']);
-
+        }
+        foreach($product->images as $value){
+            $value = is_array($value)?$value:['img' => $value, 'storage' => 'public'];
+            Helpers::check_and_delete('product/' , $value['img']);
         }
         $product?->translations()->delete();
         $product->delete();
@@ -1827,9 +1829,19 @@ class ItemController extends Controller
 
         $item->name = $data->name;
         $item->description =  $data->description;
+
+
+        if ($item->image) {
+            Helpers::check_and_delete('product/' , $item['image']);
+        }
+
+        foreach($item->images as $value){
+            $value = is_array($value)?$value:['img' => $value, 'storage' => 'public'];
+            Helpers::check_and_delete('product/' , $value['img']);
+        }
+
         $item->image = $data->image;
         $item->images = $data->images;
-
         $item->store_id = $data->store_id;
         $item->module_id = $data->module_id;
         $item->unit_id = $data->unit_id;

@@ -722,12 +722,12 @@ class ItemController extends Controller
 
             foreach($p->images as $key=> $value){
                 if( in_array( is_array($value) ?   $value['img'] : $value ,explode(",", $request->removedImageKeys))) {
-                    $i[]= $value['img'];
                     $value = is_array($value)?$value:['img' => $value, 'storage' => 'public'];
                     Helpers::check_and_delete('product/' , $value['img']);
                     unset($images[$key]);
                 }
-            }
+                }
+            $images = array_values($images);
 
             if ($request->has('item_images')){
                 foreach ($request->item_images as $img) {
@@ -792,10 +792,14 @@ class ItemController extends Controller
 
         if($product->image)
         {
-
             Helpers::check_and_delete('product/' , $product['image']);
-
         }
+
+        foreach($product->images as $value){
+            $value = is_array($value)?$value:['img' => $value, 'storage' => 'public'];
+            Helpers::check_and_delete('product/' , $value['img']);
+        }
+        
         $product->translations()->delete();
         $product->delete();
         Toastr::success('Item removed!');
@@ -1585,9 +1589,6 @@ class ItemController extends Controller
         );
 
         $old_img=$temp_item->image ?? null;
-        $old_images= $temp_item->images ?? [];
-        // $temp_item->image = $data->image;
-        // $temp_item->images = $data->images;
 
 
 
@@ -1673,10 +1674,50 @@ class ItemController extends Controller
             $temp_item->image = $newFileName;
         }
 
+        $images= $data->images ?? [];
 
+        if($request->removedImageKeys){
+            foreach($images as $key=> $value){
+                if( in_array( is_array($value) ?   $value['img'] : $value ,explode(",", $request->removedImageKeys))) {
+                    unset($images[$key]);
+                }
+            }
+            $images = array_values($images);
+        }
 
+        foreach($images as $k=> $value){
+                $value = is_array($value)?$value:['img' => $value, 'storage' => 'public'];
+                $oldDisk = $value['storage'];
+                $oldPath = "product/{$value['img']}";
+                $newFileName = Carbon::now()->toDateString() . "-" . uniqid() . ".png";
+                $newPath = "product/{$newFileName}";
+                $dir = 'product/';
+                $newDisk = Helpers::getDisk();
+                try{
+                    if (Storage::disk($oldDisk)->exists($oldPath)) {
+                        if (!Storage::disk($newDisk)->exists($dir)) {
+                            Storage::disk($newDisk)->makeDirectory($dir);
+                        }
+                        $fileContents = Storage::disk($oldDisk)->get($oldPath);
+                        Storage::disk($newDisk)->put($newPath, $fileContents);
+                        unset($images[$k]);
+                        }
+                        } catch (\Exception $e) {
+                        }
+                        $images[]=['img'=>$newFileName, 'storage'=> Helpers::getDisk()];
 
-        $temp_item->images = $data->images;
+        }
+
+        $images = array_values($images);
+
+        if ($request->has('item_images')){
+            foreach ($request->item_images as $img) {
+                $image = Helpers::upload('product/', 'png', $img);
+                array_push($images, ['img'=>$image, 'storage'=> Helpers::getDisk()]);
+                }
+            }
+
+        $temp_item->images = $images;
         if($update){
             $temp_item->is_rejected = 0;
         }

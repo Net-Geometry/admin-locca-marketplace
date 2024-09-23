@@ -150,9 +150,9 @@ class LoginController extends Controller
             'password' => 'required|min:6',
             'role' => 'required'
         ]);
-
+// dd($request->all());
         $recaptcha = Helpers::get_business_settings('recaptcha');
-        if (isset($recaptcha) && $recaptcha['status'] == 1) {
+        if (isset($recaptcha) && $recaptcha['status'] == 1 && !$request?->set_default_captcha) {
             $request->validate([
                 'g-recaptcha-response' => [
                     function ($attribute, $value, $fail) {

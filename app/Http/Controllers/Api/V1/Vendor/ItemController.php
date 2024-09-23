@@ -603,7 +603,8 @@ class ItemController extends Controller
                 $key = array_search($img, $images);
                 unset($images[$key]);
             }
-        }
+            }
+        $images = array_values($images);
         if ($request->has('item_images')){
             foreach ($request->item_images as $img) {
                 $image = Helpers::upload('product/', 'png', $img);
@@ -757,6 +758,13 @@ class ItemController extends Controller
                 Helpers::check_and_delete('product/' , $product['image']);
 
         }
+
+        foreach($product->images as $value){
+            $value = is_array($value)?$value:['img' => $value, 'storage' => 'public'];
+            Helpers::check_and_delete('product/' , $value['img']);
+        }
+
+
         $product->translations()->delete();
         $product->delete();
 
