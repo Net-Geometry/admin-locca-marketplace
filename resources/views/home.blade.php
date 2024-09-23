@@ -2037,7 +2037,7 @@
     <!-- ==== Learn Feature Section Ends Here ==== -->
 
     <!-- ==== Delivery Area Section Starts Here ==== -->
-        @if($landing_data['available_zone_status'])
+        @if($landing_data['available_zone_status'] && $landing_data['available_zone_list'])
             <section class="delivery-area-section">
                 <div class="container">
                     <div class="row text-center gy-4 flex-wrap-reverse">

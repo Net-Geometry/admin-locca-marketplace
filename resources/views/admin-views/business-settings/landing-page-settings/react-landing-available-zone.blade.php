@@ -222,7 +222,7 @@
             </div>
             <div class="col-12">
                 <div class="btn--container justify-content-end">
-                    <button class="btn btn--reset" type="reset">{{translate('reset')}}</button>
+                    <button class="btn btn--reset mb-2" type="reset">{{translate('reset')}}</button>
                     <button class="btn btn--primary" type="submit">{{translate('Save Information')}}</button>
                 </div>
             </div>
