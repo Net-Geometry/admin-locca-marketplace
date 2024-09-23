@@ -13692,3 +13692,29 @@ video#VisaChipCardVideo {
     height: 150px;
     overflow-y: auto
 }
+
+/* datepicker css */
+.daterangepicker .ranges ul {
+    min-width: 0;
+}
+
+.daterangepicker .ranges ul li {
+    font-size: 0.65rem
+}
+.daterangepicker .calendar-table th,
+.daterangepicker .calendar-table td {
+    width: 1.5rem;
+    min-width: 1.5rem;
+    height: 1.5rem;
+    font-size: 0.75rem;
+    line-height: 1.35rem;
+    min-width: 0;
+}
+
+.daterangepicker .calendar-table th{
+    font-size: 0.65rem;
+}
+
+.daterangepicker .calendar-table .month{
+    font-size: 0.75rem;
+}
