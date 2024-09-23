@@ -330,9 +330,9 @@
                                 <div class="col-sm-6" id="generic_name">
                                     <label class="input-label" for="sub-categories">
                                         {{translate('generic_name')}}
-                                        {{-- <span class="input-label-secondary" title="lorem imspu" data-toggle="tooltip">
+                                        <span class="input-label-secondary" title="{{ translate('Specify the medicine`s active ingredient that makes it work') }}" data-toggle="tooltip">
                                             <i class="tio-info-outined"></i>
-                                        </span> --}}
+                                        </span>
                                     </label>
                                     <div class="dropdown suggestion_dropdown">
                                         <input type="text" class="form-control"  name="generic_name" autocomplete="off">

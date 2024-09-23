@@ -348,7 +348,7 @@ class CustomerController extends Controller
             } else{
                 $customers=$customers->latest();
         }
-        
+
         if(isset($show_limit) && $show_limit > 0 ){
             $customers= $customers->take($show_limit)->get();
         } else{
@@ -462,7 +462,6 @@ class CustomerController extends Controller
     }
 
     public function export(Request $request){
-
         $zone_id=  $request->zone_id ?? null;
         $filter=  $request->filter ?? null;
         $order_wise=  $request->order_wise ?? null;
@@ -550,8 +549,24 @@ class CustomerController extends Controller
         }
 
 
+        if($order_wise == 'top'){
+            $order_wise = translate('messages.Sort by order count');
+        }elseif ($order_wise == 'order_amount'){
+            $order_wise = translate('messages.Sort by order amount');
+        }elseif ($order_wise == 'oldest'){
+            $order_wise = translate('messages.Sort by oldest');
+        }elseif ($order_wise == 'latest'){
+            $order_wise =  translate('messages.Sort by newest');
+        }
+
+
         $data = [
             'customers'=>$customers,
+            'filter'=>$request->filter ?? null,
+            'order_wise'=>$order_wise ?? null,
+            'show_limit'=>$request->show_limit ?? null,
+            'order_date'=>$request?->order_date,
+            'join_date'=>$request?->join_date,
             'search'=>$request->search??null,
 
         ];
