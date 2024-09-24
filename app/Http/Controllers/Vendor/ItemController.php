@@ -1688,15 +1688,14 @@ class ItemController extends Controller
         }
 
         $images= $request?->temp_product == 1 ?   $temp_item->images ?? [] : $data->images ?? [];
-
         if($request->removedImageKeys){
             foreach($images as $key=> $value){
                 if( in_array( is_array($value) ?   $value['img'] : $value ,explode(",", $request->removedImageKeys))) {
                     unset($images[$key]);
-                }
-            }
-            $images = array_values($images);
-        }
+                    }
+                    }
+                    $images = array_values($images);
+                    }
 
         foreach($images as $k=> $value){
                 $value = is_array($value)?$value:['img' => $value, 'storage' => 'public'];
@@ -1723,12 +1722,14 @@ class ItemController extends Controller
 
         $images = array_values($images);
 
-        if ($request->has('item_images')){
-            foreach ($request->item_images as $img) {
-                $image = Helpers::upload('product/', 'png', $img);
-                array_push($images, ['img'=>$image, 'storage'=> Helpers::getDisk()]);
+        if($update){
+                if ($request->has('item_images')){
+                    foreach ($request->item_images as $img) {
+                        $image = Helpers::upload('product/', 'png', $img);
+                    array_push($images, ['img'=>$image, 'storage'=> Helpers::getDisk()]);
                 }
             }
+        }
 
         $temp_item->images = $images;
         if($update){

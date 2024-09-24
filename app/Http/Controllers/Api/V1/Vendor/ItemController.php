@@ -1055,7 +1055,7 @@ class ItemController extends Controller
 
         $images = array_values($images);
 
-        if ($request->has('item_images')){
+        if ($request->has('item_images') && $update){
             foreach ($request->item_images as $img) {
                 $image = Helpers::upload('product/', 'png', $img);
                 array_push($images, ['img'=>$image, 'storage'=> Helpers::getDisk()]);
