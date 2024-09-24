@@ -65,7 +65,7 @@
                             <!-- Order Date -->
                                 <p class="text-muted mb-2 text-right text-dark"> <span class="text-muted fs-12">{{ translate('Order Placed') }}</span> <br> {{ \App\CentralLogics\Helpers::date_format($con?->order?->created_at)  }}</p>
                             </div>
-    <br />
+                            <br />
                     <div class="d-flex justify-content-betweeen align-items-center">
                         <div class="w-0 flex-grow-1">
                             <!-- Delivery Address -->
@@ -77,12 +77,14 @@
                             <p>{{ data_get($delivery_address ,'address') }}</p>
                         </div>
                             <!-- Items count -->
-                            <div class="d-flex justify-content-end">
-                                <div class="border rounded p-2 text-center">
-                                    <p class="mb-0 font-weight-bold">{{ translate('Items') }}</p>
-                                    <h5 class="mb-0"> {{ $con?->order?->details_count }}</h5>
+                            @if ($con?->order?->details_count > 0)
+                                <div class="d-flex justify-content-end">
+                                    <div class="border rounded p-2 text-center">
+                                        <p class="mb-0 font-weight-bold">{{ translate('Items') }}</p>
+                                        <h5 class="mb-0"> {{ $con?->order?->details_count }}</h5>
+                                    </div>
                                 </div>
-                            </div>
+                            @endif
                         </div>
                     </div>
                 </div>
