@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:8889
--- Generation Time: Sep 24, 2024 at 03:28 AM
+-- Generation Time: Aug 29, 2024 at 05:54 AM
 -- Server version: 5.7.39
 -- PHP Version: 8.2.0
 
@@ -326,51 +326,12 @@ CREATE TABLE `advertisements` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `allergies`
---
-
-CREATE TABLE `allergies` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `allergy` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `allergy_item`
---
-
-CREATE TABLE `allergy_item` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `item_id` bigint(20) UNSIGNED NOT NULL,
-  `allergy_id` bigint(20) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `attributes`
 --
 
 CREATE TABLE `attributes` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `name` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `automated_messages`
---
-
-CREATE TABLE `automated_messages` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `message` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1473,19 +1434,6 @@ INSERT INTO `flutter_special_criterias` (`id`, `title`, `image`, `status`, `crea
 -- --------------------------------------------------------
 
 --
--- Table structure for table `generic_names`
---
-
-CREATE TABLE `generic_names` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `generic_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `guests`
 --
 
@@ -1608,32 +1556,6 @@ CREATE TABLE `item_campaigns` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `item_generic_names`
---
-
-CREATE TABLE `item_generic_names` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `item_id` bigint(20) UNSIGNED NOT NULL,
-  `generic_name_id` bigint(20) UNSIGNED NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `item_nutrition`
---
-
-CREATE TABLE `item_nutrition` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `item_id` bigint(20) UNSIGNED NOT NULL,
-  `nutrition_id` bigint(20) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `item_tag`
 --
 
@@ -1692,8 +1614,7 @@ CREATE TABLE `messages` (
   `file` text COLLATE utf8mb4_unicode_ci,
   `is_seen` tinyint(1) NOT NULL DEFAULT '0',
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `order_id` bigint(20) UNSIGNED DEFAULT NULL
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -1873,17 +1794,7 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (160, '2024_07_10_165721_create_priority_lists_table', 49),
 (161, '2024_07_14_182931_add_package_id_col_stores_table', 49),
 (162, '2024_07_15_131402_add_replied_at_col_to_reviews_table', 49),
-(163, '2024_07_28_131816_create_external_configurations_table', 50),
-(164, '2024_09_11_094735_add_display_name_col_in_zones_table', 51),
-(165, '2024_09_11_105938_create_automated_messages_table', 51),
-(166, '2024_09_11_134421_add_ordre_id_col_to_messages_table', 51),
-(167, '2024_09_12_115801_create_nutritions_table', 51),
-(168, '2024_09_12_120019_create_allergies_table', 51),
-(169, '2024_09_12_121929_create_allergy_item_table', 51),
-(170, '2024_09_12_121941_create_item_nutrition_table', 51),
-(171, '2024_09_12_142834_add_nutrition_allergy_id_cols_to_temp_products_table', 51),
-(172, '2024_09_15_112118_create_generic_names_table', 51),
-(173, '2024_09_15_112537_create_item_generic_names_table', 51);
+(163, '2024_07_28_131816_create_external_configurations_table', 50);
 
 -- --------------------------------------------------------
 
@@ -2169,19 +2080,6 @@ INSERT INTO `notification_settings` (`id`, `title`, `sub_title`, `key`, `type`, 
 (55, 'customer_cashback', 'Sent_notification_on_customer_cashback', 'customer_cashback', 'customer', 'disable', 'disable', 'active', '2024-08-06 22:40:34', '2024-08-06 22:40:34'),
 (56, 'customer_referral_bonus_earning', 'Sent_notification_on_customer_referral_bonus_earning', 'customer_referral_bonus_earning', 'customer', 'disable', 'disable', 'active', '2024-08-06 22:40:34', '2024-08-06 22:40:34'),
 (57, 'customer_new_referral_join', 'Sent_notification_on_customer_new_referral_join', 'customer_new_referral_join', 'customer', 'disable', 'disable', 'active', '2024-08-06 22:40:34', '2024-08-06 22:40:34');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `nutritions`
---
-
-CREATE TABLE `nutritions` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `nutrition` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -3125,10 +3023,7 @@ CREATE TABLE `temp_products` (
   `updated_at` timestamp NULL DEFAULT NULL,
   `is_halal` tinyint(1) NOT NULL DEFAULT '0',
   `brand_id` tinyint(1) NOT NULL DEFAULT '0',
-  `is_prescription_required` tinyint(1) NOT NULL DEFAULT '0',
-  `nutrition_ids` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `allergy_ids` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `generic_ids` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL
+  `is_prescription_required` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -3505,16 +3400,15 @@ CREATE TABLE `zones` (
   `increased_delivery_fee` double(8,2) NOT NULL DEFAULT '0.00',
   `increased_delivery_fee_status` tinyint(1) NOT NULL DEFAULT '0',
   `increase_delivery_charge_message` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `offline_payment` tinyint(1) NOT NULL DEFAULT '0',
-  `display_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL
+  `offline_payment` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `zones`
 --
 
-INSERT INTO `zones` (`id`, `name`, `coordinates`, `status`, `created_at`, `updated_at`, `store_wise_topic`, `customer_wise_topic`, `deliveryman_wise_topic`, `cash_on_delivery`, `digital_payment`, `increased_delivery_fee`, `increased_delivery_fee_status`, `increase_delivery_charge_message`, `offline_payment`, `display_name`) VALUES
-(1, 'Demo Zone', 0x0000000001030000000100000006000000d8b95578f0965640804b97f820d6374014ba5508809556403a236f336ed2374017ba55d83696564031240701bacd3740d5b95598ce985640f47608c3f7cd374015ba55f87c995640ce86cbe863d23740d8b95578f0965640804b97f820d63740, 1, '2023-08-15 23:35:04', '2023-08-15 23:35:44', 'zone_1_store', 'zone_1_customer', 'zone_1_delivery_man', 1, 1, 0.00, 0, NULL, 0, NULL);
+INSERT INTO `zones` (`id`, `name`, `coordinates`, `status`, `created_at`, `updated_at`, `store_wise_topic`, `customer_wise_topic`, `deliveryman_wise_topic`, `cash_on_delivery`, `digital_payment`, `increased_delivery_fee`, `increased_delivery_fee_status`, `increase_delivery_charge_message`, `offline_payment`) VALUES
+(1, 'Demo Zone', 0x0000000001030000000100000006000000d8b95578f0965640804b97f820d6374014ba5508809556403a236f336ed2374017ba55d83696564031240701bacd3740d5b95598ce985640f47608c3f7cd374015ba55f87c995640ce86cbe863d23740d8b95578f0965640804b97f820d63740, 1, '2023-08-15 23:35:04', '2023-08-15 23:35:44', 'zone_1_store', 'zone_1_customer', 'zone_1_delivery_man', 1, 1, 0.00, 0, NULL, 0);
 
 --
 -- Indexes for dumped tables
@@ -3589,27 +3483,9 @@ ALTER TABLE `advertisements`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `allergies`
---
-ALTER TABLE `allergies`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `allergy_item`
---
-ALTER TABLE `allergy_item`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indexes for table `attributes`
 --
 ALTER TABLE `attributes`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `automated_messages`
---
-ALTER TABLE `automated_messages`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -3824,12 +3700,6 @@ ALTER TABLE `flutter_special_criterias`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `generic_names`
---
-ALTER TABLE `generic_names`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indexes for table `guests`
 --
 ALTER TABLE `guests`
@@ -3848,18 +3718,6 @@ ALTER TABLE `items`
 ALTER TABLE `item_campaigns`
   ADD PRIMARY KEY (`id`),
   ADD KEY `item_campaigns_module_id_foreign` (`module_id`);
-
---
--- Indexes for table `item_generic_names`
---
-ALTER TABLE `item_generic_names`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `item_nutrition`
---
-ALTER TABLE `item_nutrition`
-  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `item_tag`
@@ -3945,12 +3803,6 @@ ALTER TABLE `notification_messages`
 -- Indexes for table `notification_settings`
 --
 ALTER TABLE `notification_settings`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `nutritions`
---
-ALTER TABLE `nutritions`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -4373,27 +4225,9 @@ ALTER TABLE `advertisements`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1000000;
 
 --
--- AUTO_INCREMENT for table `allergies`
---
-ALTER TABLE `allergies`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `allergy_item`
---
-ALTER TABLE `allergy_item`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `attributes`
 --
 ALTER TABLE `attributes`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `automated_messages`
---
-ALTER TABLE `automated_messages`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
@@ -4601,12 +4435,6 @@ ALTER TABLE `flutter_special_criterias`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT for table `generic_names`
---
-ALTER TABLE `generic_names`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `guests`
 --
 ALTER TABLE `guests`
@@ -4622,18 +4450,6 @@ ALTER TABLE `items`
 -- AUTO_INCREMENT for table `item_campaigns`
 --
 ALTER TABLE `item_campaigns`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `item_generic_names`
---
-ALTER TABLE `item_generic_names`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `item_nutrition`
---
-ALTER TABLE `item_nutrition`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
@@ -4664,7 +4480,7 @@ ALTER TABLE `messages`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=174;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=164;
 
 --
 -- AUTO_INCREMENT for table `modules`
@@ -4719,12 +4535,6 @@ ALTER TABLE `notification_messages`
 --
 ALTER TABLE `notification_settings`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
-
---
--- AUTO_INCREMENT for table `nutritions`
---
-ALTER TABLE `nutritions`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `oauth_clients`
