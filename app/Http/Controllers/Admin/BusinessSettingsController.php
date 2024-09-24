@@ -3523,6 +3523,18 @@ class BusinessSettingsController extends Controller
             $earning_seller_image->type = 'admin_landing_page';
             $earning_seller_image->value = $request->has('earning_seller_image') ? Helpers::update('earning/', $earning_seller_image->value, 'png', $request->file('earning_seller_image')) : $earning_seller_image->value;
             $earning_seller_image->save();
+
+
+            if($request['playstore_url_status'] && !$request['playstore_url']){
+                Toastr::error(translate('messages.playstore download_url_is_empty'));
+                return back();
+            }
+            if($request['apple_store_url_status'] && !$request['apple_store_url']){
+                Toastr::error(translate('messages.App_store download_url_is_empty'));
+                return back();
+            }
+
+
             DB::table('data_settings')->updateOrInsert(['key' => 'seller_app_earning_links', 'type' => 'admin_landing_page'], [
                 'value' => json_encode([
                     'playstore_url_status' => $request['playstore_url_status'],
@@ -3541,6 +3553,17 @@ class BusinessSettingsController extends Controller
             $earning_delivery_image->type = 'admin_landing_page';
             $earning_delivery_image->value = $request->has('earning_delivery_image') ? Helpers::update('earning/', $earning_delivery_image->value, 'png', $request->file('earning_delivery_image')) : $earning_delivery_image->value;
             $earning_delivery_image->save();
+
+
+            if($request['playstore_url_status'] && !$request['playstore_url']){
+                Toastr::error(translate('messages.playstore download_url_is_empty'));
+                return back();
+            }
+            if($request['apple_store_url_status'] && !$request['apple_store_url']){
+                Toastr::error(translate('messages.App_store download_url_is_empty'));
+                return back();
+            }
+
             DB::table('data_settings')->updateOrInsert(['key' => 'dm_app_earning_links', 'type' => 'admin_landing_page'], [
                 'value' => json_encode([
                     'playstore_url_status' => $request['playstore_url_status'],

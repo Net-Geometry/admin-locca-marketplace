@@ -228,7 +228,7 @@
                                                 </span>
                                             </label>
                                         </div>
-                                        <input id="playstore_url" type="text" placeholder="{{translate('Ex: https://play.google.com/store/apps')}}" class="form-control h--45px" name="playstore_url" value="{{ $seller_app_links['playstore_url'] ?? ''}}">
+                                        <input id="playstore_url" type="url" placeholder="{{translate('Ex: https://play.google.com/store/apps')}}" class="form-control h--45px" name="playstore_url" value="{{ $seller_app_links['playstore_url'] ?? ''}}">
                                     </div>
                                 </div>
                             </div>
@@ -265,7 +265,7 @@
                                                 </span>
                                             </label>
                                         </div>
-                                        <input type="text" id="apple_store_url" placeholder="{{translate('Ex: https://www.apple.com/app-store/')}}" class="form-control h--45px" name="apple_store_url" value="{{ $seller_app_links['apple_store_url'] ?? ''}}">
+                                        <input type="url" id="apple_store_url" placeholder="{{translate('Ex: https://www.apple.com/app-store/')}}" class="form-control h--45px" name="apple_store_url" value="{{ $seller_app_links['apple_store_url'] ?? ''}}">
                                     </div>
                                 </div>
                             </div>
@@ -354,7 +354,7 @@
                                                 </span>
                                             </label>
                                         </div>
-                                        <input id="playstore_url_dm" type="text" placeholder="{{translate('Ex: https://play.google.com/store/apps')}}" class="form-control h--45px" name="playstore_url" value="{{ $dm_app_links['playstore_url'] ?? ''}}">
+                                        <input id="playstore_url_dm" type="url" placeholder="{{translate('Ex: https://play.google.com/store/apps')}}" class="form-control h--45px" name="playstore_url" value="{{ $dm_app_links['playstore_url'] ?? ''}}">
                                     </div>
                                 </div>
                             </div>
@@ -392,7 +392,7 @@
                                                 </span>
                                             </label>
                                         </div>
-                                        <input id="apple_store_url_dm" type="text" placeholder="{{translate('Ex: https://www.apple.com/app-store/')}}" class="form-control h--45px" name="apple_store_url" value="{{ $dm_app_links['apple_store_url']?? ''}}">
+                                        <input id="apple_store_url_dm" type="url" placeholder="{{translate('Ex: https://www.apple.com/app-store/')}}" class="form-control h--45px" name="apple_store_url" value="{{ $dm_app_links['apple_store_url']?? ''}}">
                                     </div>
                                 </div>
                             </div>

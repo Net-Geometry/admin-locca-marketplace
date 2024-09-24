@@ -2673,26 +2673,53 @@
                 <div class="earn-item-img"
                     style="background: url({{\App\CentralLogics\Helpers::get_full_url('earning',isset($landing_data['earning_seller_image']) ? $landing_data['earning_seller_image'] : null,isset($landing_data['earning_seller_image_storage']) ? $landing_data['earning_seller_image_storage'] : 'public')}}) no-repeat center center / cover;">
                     <div class="position-relative dropdown text-capitalize">
-                        <button type="button" class="cmn--btn border-0" data-bs-toggle="dropdown">
-                            {{translate("Seller App")}}
-                            <svg class="ms-2" width="12" height="7" viewBox="0 0 12 7" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M6.00224 5.46105L1.33333 0.415128C1.21002 0.290383 1 0.0787335 1 0.0787335C1 0.0787335 0.708488 -0.0458817 0.584976 0.0788632L0.191805 0.475841C0.0680976 0.600389 7.43292e-08 0.766881 7.22135e-08 0.9443C7.00978e-08 1.12172 0.0680976 1.28801 0.191805 1.41266L5.53678 6.80682C5.66068 6.93196 5.82624 7.00049 6.00224 7C6.17902 7.00049 6.34439 6.93206 6.46839 6.80682L11.8082 1.41768C11.9319 1.29303 12 1.12674 12 0.949223C12 0.771804 11.9319 0.605509 11.8082 0.480765L11.415 0.0838844C11.1591 -0.174368 10.9225 0.222512 10.6667 0.480765L6.00224 5.46105Z" fill="#ffffff"></path>
-                            </svg>
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-end p-0">
-                        @if (isset($join_as_seller['playstore_url_status']) && $join_as_seller['playstore_url_status'] == '1')
-                            <a href="{{ isset($join_as_seller['playstore_url']) ? $join_as_seller['playstore_url'] : '' }}" class="dropdown-item">
-                                <img src="{{asset('/public/assets/landing/img/google-play.png')}}" alt="">
-                                {{translate("google_play")}}
-                            </a>
-                        @endif
-                        @if (isset( $join_as_seller['apple_store_url_status']) &&  $join_as_seller['apple_store_url_status'] == '1')
-                            <a href="{{ isset($join_as_seller['apple_store_url']) ? $join_as_seller['apple_store_url'] : '' }}" class="dropdown-item">
-                                <img src="{{asset('/public/assets/landing/img/apple-store.png')}}" alt="">
-                                {{translate("apple_store")}}
-                            </a>
-                        @endif
-                        </div>
+
+
+
+
+    @if (isset($join_as_seller['playstore_url_status']) && $join_as_seller['playstore_url_status'] == '1' &&  isset( $join_as_seller['apple_store_url_status']) &&  $join_as_seller['apple_store_url_status'] == '1')
+        <button type="button" class="cmn--btn border-0" data-bs-toggle="dropdown">
+            {{translate("Seller App")}}
+            <svg class="ms-2" width="12" height="7" viewBox="0 0 12 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M6.00224 5.46105L1.33333 0.415128C1.21002 0.290383 1 0.0787335 1 0.0787335C1 0.0787335 0.708488 -0.0458817 0.584976 0.0788632L0.191805 0.475841C0.0680976 0.600389 7.43292e-08 0.766881 7.22135e-08 0.9443C7.00978e-08 1.12172 0.0680976 1.28801 0.191805 1.41266L5.53678 6.80682C5.66068 6.93196 5.82624 7.00049 6.00224 7C6.17902 7.00049 6.34439 6.93206 6.46839 6.80682L11.8082 1.41768C11.9319 1.29303 12 1.12674 12 0.949223C12 0.771804 11.9319 0.605509 11.8082 0.480765L11.415 0.0838844C11.1591 -0.174368 10.9225 0.222512 10.6667 0.480765L6.00224 5.46105Z" fill="#ffffff"></path>
+            </svg>
+        </button>
+        <div class="dropdown-menu dropdown-menu-end p-0">
+            <a href="{{ isset($join_as_seller['playstore_url']) ? $join_as_seller['playstore_url'] : '' }}" class="dropdown-item">
+                <img src="{{asset('/public/assets/landing/img/google-play.png')}}" alt="">
+                {{translate("google_play")}}
+            </a>
+            <a href="{{ isset($join_as_seller['apple_store_url']) ? $join_as_seller['apple_store_url'] : '' }}" class="dropdown-item">
+                <img src="{{asset('/public/assets/landing/img/apple-store.png')}}" alt="">
+                {{translate("apple_store")}}
+            </a>
+        </div>
+
+    @elseif(isset($join_as_seller['playstore_url_status']) && $join_as_seller['playstore_url_status'] == '1')
+
+
+    <a type="button" class="cmn--btn border-0"  href="{{ isset($join_as_seller['playstore_url']) ? $join_as_seller['playstore_url'] : '' }}">
+        {{translate("Seller App")}}
+    </a>
+
+
+    @elseif(isset( $join_as_seller['apple_store_url_status']) &&  $join_as_seller['apple_store_url_status'] == '1')
+    <a type="button" class="cmn--btn border-0"  href="{{ isset($join_as_seller['apple_store_url']) ? $join_as_seller['apple_store_url'] : '' }}">
+        {{translate("Seller App")}}
+    </a>
+    @endif
+
+
+
+
+
+
+
+
+
+
+
+
                     </div>
                 </div>
                 <div class="earn-item-cont">
@@ -2708,26 +2735,38 @@
                 <div class="earn-item-img"
                     style="background: url({{\App\CentralLogics\Helpers::get_full_url('earning',isset($landing_data['earning_delivery_image']) ? $landing_data['earning_delivery_image'] : null,isset($landing_data['earning_delivery_image_storage']) ? $landing_data['earning_delivery_image_storage'] : 'public')}}) no-repeat center center / cover;">
                     <div class="position-relative dropdown text-capitalize">
-                        <button type="button" class="cmn--btn border-0" data-bs-toggle="dropdown">
-                            {{translate("Deliveryman App")}}
-                            <svg class="ms-2" width="12" height="7" viewBox="0 0 12 7" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M6.00224 5.46105L1.33333 0.415128C1.21002 0.290383 1 0.0787335 1 0.0787335C1 0.0787335 0.708488 -0.0458817 0.584976 0.0788632L0.191805 0.475841C0.0680976 0.600389 7.43292e-08 0.766881 7.22135e-08 0.9443C7.00978e-08 1.12172 0.0680976 1.28801 0.191805 1.41266L5.53678 6.80682C5.66068 6.93196 5.82624 7.00049 6.00224 7C6.17902 7.00049 6.34439 6.93206 6.46839 6.80682L11.8082 1.41768C11.9319 1.29303 12 1.12674 12 0.949223C12 0.771804 11.9319 0.605509 11.8082 0.480765L11.415 0.0838844C11.1591 -0.174368 10.9225 0.222512 10.6667 0.480765L6.00224 5.46105Z" fill="#ffffff"></path>
-                            </svg>
-                        </button>
-                        <div class="dropdown-menu p-0">
-                            @if (isset($join_as_dm['playstore_url_status']) && $join_as_dm['playstore_url_status'] == '1')
-                                <a href="{{ isset($join_as_dm['playstore_url']) ? $join_as_dm['playstore_url'] : '' }}" class="dropdown-item">
-                                    <img src="{{asset('/public/assets/landing/img/google-play.png')}}" alt="">
-                                {{translate("google_play")}}
-                                </a>
-                            @endif
-                            @if (isset($join_as_dm['apple_store_url_status']) && $join_as_dm['apple_store_url_status'] == '1')
-                                <a href="{{ isset($join_as_dm['apple_store_url']) ? $join_as_dm['apple_store_url'] : '' }}" class="dropdown-item">
-                                    <img src="{{asset('/public/assets/landing/img/apple-store.png')}}" alt="">
-                                {{translate("apple_store")}}
-                                </a>
-                            @endif
-                        </div>
+
+                        @if (isset($join_as_dm['playstore_url_status']) && $join_as_dm['playstore_url_status'] == '1' && isset($join_as_dm['apple_store_url_status']) && $join_as_dm['apple_store_url_status'] == '1' )
+
+                                    <button type="button" class="cmn--btn border-0" data-bs-toggle="dropdown">
+                                        {{translate("Deliveryman App")}}
+                                        <svg class="ms-2" width="12" height="7" viewBox="0 0 12 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M6.00224 5.46105L1.33333 0.415128C1.21002 0.290383 1 0.0787335 1 0.0787335C1 0.0787335 0.708488 -0.0458817 0.584976 0.0788632L0.191805 0.475841C0.0680976 0.600389 7.43292e-08 0.766881 7.22135e-08 0.9443C7.00978e-08 1.12172 0.0680976 1.28801 0.191805 1.41266L5.53678 6.80682C5.66068 6.93196 5.82624 7.00049 6.00224 7C6.17902 7.00049 6.34439 6.93206 6.46839 6.80682L11.8082 1.41768C11.9319 1.29303 12 1.12674 12 0.949223C12 0.771804 11.9319 0.605509 11.8082 0.480765L11.415 0.0838844C11.1591 -0.174368 10.9225 0.222512 10.6667 0.480765L6.00224 5.46105Z" fill="#ffffff"></path>
+                                        </svg>
+                                    </button>
+
+                                    <div class="dropdown-menu p-0">
+                                        <a href="{{ isset($join_as_dm['playstore_url']) ? $join_as_dm['playstore_url'] : '' }}" class="dropdown-item">
+                                            <img src="{{asset('/public/assets/landing/img/google-play.png')}}" alt="">
+                                        {{translate("google_play")}}
+                                        </a>
+
+                                        <a href="{{ isset($join_as_dm['apple_store_url']) ? $join_as_dm['apple_store_url'] : '' }}" class="dropdown-item">
+                                            <img src="{{asset('/public/assets/landing/img/apple-store.png')}}" alt="">
+                                        {{translate("apple_store")}}
+                                        </a>
+                                    </div>
+
+                        @elseif(isset($join_as_dm['playstore_url_status']) && $join_as_dm['playstore_url_status'] == '1')
+                            <a type="button" href="{{ isset($join_as_dm['playstore_url']) ? $join_as_dm['playstore_url'] : '' }}" class="cmn--btn border-0" >
+                                {{translate("Deliveryman App")}}
+                            </a>
+                        @elseif( isset($join_as_dm['apple_store_url_status']) && $join_as_dm['apple_store_url_status'] == '1')
+                            <a type="button" href="{{ isset($join_as_dm['apple_store_url']) ? $join_as_dm['apple_store_url'] : '' }}" class="cmn--btn border-0" >
+                                {{translate("Deliveryman App")}}
+                            </a>
+                        @endif
+
                     </div>
                 </div>
                 <div class="earn-item-cont">
