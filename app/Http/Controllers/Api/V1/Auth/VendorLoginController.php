@@ -123,8 +123,6 @@ class VendorLoginController extends Controller
         $validator = Validator::make($request->all(), [
             'f_name' => 'required|max:100',
             'l_name' => 'nullable|max:100',
-            // 'name' => 'required|max:191',
-            // 'address' => 'required|max:1000',
             'latitude' => 'required',
             'longitude' => 'required',
             'email' => 'required|unique:vendors',
@@ -207,6 +205,21 @@ class VendorLoginController extends Controller
         Translation::insert($data);
 
 
+        try{
+            $admin= Admin::where('role_id', 1)->first();
+            $mail_status = Helpers::get_mail_status('registration_mail_status_store');
+            if(config('mail.status') && $mail_status == '1' &&  Helpers::getNotificationStatusData('store','store_registration','mail_status')){
+                Mail::to($request['email'])->send(new \App\Mail\VendorSelfRegistration('pending', $vendor->f_name.' '.$vendor->l_name));
+            }
+            $mail_status = Helpers::get_mail_status('store_registration_mail_status_admin');
+            if(config('mail.status') && $mail_status == '1' &&  Helpers::getNotificationStatusData('admin','store_self_registration','mail_status')){
+                Mail::to($admin['email'])->send(new \App\Mail\StoreRegistration('pending', $vendor->f_name.' '.$vendor->l_name));
+            }
+        }catch(\Exception $ex){
+            info($ex->getMessage());
+        }
+
+
         if (Helpers::subscription_check()) {
                 if ($request->business_plan == 'subscription' && $request->package_id != null ) {
                     $store->package_id = $request->package_id;
@@ -217,7 +230,6 @@ class VendorLoginController extends Controller
                         'package_id'=> $store->package_id,
                         'type'=> 'subscription',
                         'message'=>translate('messages.application_placed_successfully')],200);
-
                 }
                 elseif($request->business_plan == 'commission' ){
                     $store->store_business_model = 'commission';
@@ -241,20 +253,6 @@ class VendorLoginController extends Controller
                     'type'=> 'commission',
                     'message'=>translate('messages.application_placed_successfully')],200);
             }
-
-        try{
-            $admin= Admin::where('role_id', 1)->first();
-            $mail_status = Helpers::get_mail_status('registration_mail_status_store');
-            if(config('mail.status') && $mail_status == '1' &&  Helpers::getNotificationStatusData('store','store_registration','mail_status')){
-                Mail::to($request['email'])->send(new \App\Mail\VendorSelfRegistration('pending', $vendor->f_name.' '.$vendor->l_name));
-            }
-            $mail_status = Helpers::get_mail_status('store_registration_mail_status_admin');
-            if(config('mail.status') && $mail_status == '1' &&  Helpers::getNotificationStatusData('admin','store_self_registration','mail_status')){
-                Mail::to($admin['email'])->send(new \App\Mail\StoreRegistration('pending', $vendor->f_name.' '.$vendor->l_name));
-            }
-        }catch(\Exception $ex){
-            info($ex->getMessage());
-        }
 
         return response()->json([
             'store_id'=> $store->id,
