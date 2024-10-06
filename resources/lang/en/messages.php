@@ -5755,4 +5755,5 @@
   'Deliveryman App' => 'Deliveryman App',
   'User App' => 'User App',
   'zone_status_updated' => 'Zone status updated',
+  'Store_is_not_available' => 'Store is not available',
 );
