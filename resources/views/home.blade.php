@@ -1886,9 +1886,9 @@
             </div>
             <div class="owl-theme owl-carousel" id="sync1">
                 @foreach ($modules as $key => $item)
-                    <div class="row flex-wrap-reverse justify-content-center">
+                    <div class="row flex-wrap-reverse justify-content-center align-items-center">
                         <div class="col-lg-6 col-md-8">
-                            <div class="venture-content mt-4">
+                            <div class="venture-content mt-4 mt-lg-0">
                                 <div class="venture-content-box">
                                     {!! $item->description ?? '' !!}
                                 </div>
@@ -2013,7 +2013,7 @@
     @if ($landing_data['available_zone_status'] && $landing_data['available_zone_list'])
         <section class="delivery-area-section">
             <div class="container">
-                <div class="row text-center gy-4 flex-wrap-reverse">
+                <div class="row text-center gy-4 flex-wrap-reverse align-items-center">
                     <div class="col-lg-5 col-xl-6 text-lg-start">
                         <div class="section-header text-lg-start mb-3 wow fadeInUp">
                             <h2 class="title">
