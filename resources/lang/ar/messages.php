@@ -4960,4 +4960,13 @@
   'your_note_here' => 'Your note here',
   'Not_Now' => 'Not Now',
   'Okay' => 'Okay',
+  'test module' => 'Test module',
+  'test frewthrejktgr' => 'Test frewthrejktgr',
+  'are_available.' => 'Are available.',
+  'Seller App' => 'Seller App',
+  'Deliveryman App' => 'Deliveryman App',
+  'google_play' => 'Google play',
+  'apple_store' => 'Apple store',
+  'User App' => 'User App',
+  'Contact_Us' => 'Contact Us',
 );

@@ -1862,7 +1862,7 @@
     <!-- ==== Ecommerce Venture Section Starts Here ==== -->
     <section class="ecommerce-venture-section">
         <div class="container max-w1060">
-            <div class="section-header wow fadeInUp">
+            <div class="section-header mb-30 wow fadeInUp">
                 <h2 class="title">{{ $landing_data['fixed_module_title'] }}</h2>
                 <p>
                     {{ $landing_data['fixed_module_sub_title'] }}
@@ -1912,7 +1912,7 @@
     <!-- ==== Main Category Section Starts Here ==== -->
     @php($promotion_banner = $landing_data['promotional_banners'])
     @if ($promotion_banner && count($promotion_banner) > 0)
-        <section class="main-category overflow-hidden pt-30 pb-50">
+        <section class="main-category overflow-hidden pt-80 pb-80">
             <div class="container">
                 <div class="overflow-hidden">
                     <div class="main-category-slider owl-theme owl-carousel">
@@ -1936,7 +1936,7 @@
     <section class="learn-feature-section"
         style="background: url({{ asset('public/assets/landing/img/learn-feature-bg.svg') }}) no-repeat center center / cover">
         <div class="container position-relative">
-            <div class="row gy-5 gx-0 gx-xl-4">
+            <div class="row gy-5 gx-0 gx-xl-4 align-items-center">
                 <div class=" col-lg-6 pe-lg-5">
                     <div class="learn-feature-content wow fadeInUp">
                         <div class="section-header text-start mb-0">
@@ -2015,7 +2015,7 @@
             <div class="container">
                 <div class="row text-center gy-4 flex-wrap-reverse align-items-center">
                     <div class="col-lg-5 col-xl-6 text-lg-start">
-                        <div class="section-header text-lg-start mb-3 wow fadeInUp">
+                        <div class="section-header text-lg-start wow fadeInUp">
                             <h2 class="title">
                                 {{-- <span>Available delivery</span> <span class="text--base">areas / Zone</span> --}}
                                 <span>{{ $landing_data['available_zone_title'] }}</span>
@@ -2052,7 +2052,7 @@
     <!-- ==== Delivery Area Section Ends Here ==== -->
 
     <!-- ==== Refer Section Starts Here ==== -->
-    <section class="refer-section">
+    <section class="refer-section pb-80">
         <div class="container">
             <div class="row align-items-center text-center gy-4 flex-wrap-reverse">
                 <div class="col-lg-5 col-xl-6 text-lg-start">
@@ -3697,9 +3697,9 @@
     @if (
         (isset($landing_page_links['playstore_url_status']) && $landing_page_links['playstore_url_status'] == '1') ||
             (isset($landing_page_links['apple_store_url_status']) && $landing_page_links['apple_store_url_status'] == '1'))
-        <section class="download-app-section pb-30">
+        <section class="download-app-section">
             <div class="container">
-                <div class="row justify-content-center g-4">
+                <div class="row justify-content-center align-items-center g-4">
                     <div class="col-lg-6 col-md-9">
                         <div class="download-app-content wow fadeInUp">
                             <h2 class="title">{{ $landing_data['download_user_app_title'] }}</h2>
@@ -3749,10 +3749,10 @@
     <!-- ==== Testimonial Starts Here ==== -->
     @php($testimonial = $landing_data['testimonials'])
     @if ($testimonial && count($testimonial) > 0)
-        <section class="testimonial-section overflow-hidden position-relative">
+        <section class="testimonial-section overflow-hidden position-relative pt-80 pb-80">
             <div class="container">
-                <div class="section-header wow fadeInUp">
-                    <h2 class="title">{{ $landing_data['testimonial_title'] }}</span></h2>
+                <div class="section-header wow fadeInUp mb-0">
+                    <h2 class="title mb-0">{{ $landing_data['testimonial_title'] }}</span></h2>
                 </div>
                 <div class="testimonial-slider overflow-hidden owl-theme owl-carousel wow fadeInUp">
                     @foreach ($testimonial as $data)
