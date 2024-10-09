@@ -124,6 +124,7 @@
                             <th class="border-0">{{translate('messages.#')}}</th>
                             <th class="border-0 w-20p">{{translate('messages.name')}}</th>
                             <th class="border-0 w-20p">{{translate('messages.category')}}</th>
+                            <th class="border-0 w-20p">{{translate('messages.quantity')}}</th>
                             <th class="border-0">{{translate('messages.price')}}</th>
                             <th class="border-0 text-center">{{translate('messages.Recommended')}}</th>
                             <th class="border-0 text-center">{{translate('messages.status')}}</th>
@@ -146,6 +147,12 @@
                             </td>
                             <td>
                             {{Str::limit($item->category?$item->category->name:translate('messages.category_deleted'),20,'...')}}
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <h5 class="text-hover-primary fw-medium mb-0">75746</h5>
+                                    <span data-toggle="modal" data-target="#update-quantity" class="text-primary tio-add-circle fs-22 cursor-pointer"></span>
+                                </div>
                             </td>
                             <td>
                                 <div class="mw--85px">
@@ -212,6 +219,67 @@
         <!-- End Card -->
     </div>
 </div>
+
+{{-- Update Quantity Modal --}}
+<div class="modal fade update-quantity-modal" id="update-quantity" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body pt-0">
+                <h3 class="modal-title fs-20 mb-4">{{translate('Lays_Classic_Chips')}}</h3>
+                <form action="" method="post">
+                    @csrf
+                    <div class="form-group">
+                        <label for="total_qty" class="input-label" >
+                            {{translate('Total_Quantity')}}
+                        </label>
+                        <input id="total_qty" type="number" name="total_qty" class="form-control" value="35"  placeholder="{{translate('Total_Quantity')}}">
+                    </div>
+                    <div class="table-responsive mb-5">
+                        <table class="table table-borderless table-thead-bordered table-nowrap table-align-middle mb-0">
+                            <thead class="bg-E5F5F6">
+                                <tr>
+                                    <th class="text--title fs-20">{{translate('SL')}}</th>
+                                    <th class="text--title fs-20">{{translate('Variant')}}</th>
+                                    <th class="text--title fs-20 text-center">{{translate('Stock')}}</th>
+                                </tr>
+                                </thead>
+                                <tbody id="set-rows">
+                                    <tr>
+                                        <td class="">{{translate('1')}}</td>
+                                        <td class="">
+                                            {{translate('red-small')}}
+                                        </td>
+                                        <td class="w-200">
+                                            <input id="" type="number" name="" class="form-control" value="7"  placeholder="{{translate('Total_Stock')}}">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="">{{translate('2')}}</td>
+                                        <td class="">
+                                            {{translate('red-small')}}
+                                        </td>
+                                        <td class="w-200">
+                                            <input id="" type="number" name="" class="form-control" value="10"  placeholder="{{translate('Total_Stock')}}">
+                                        </td>
+                                    </tr>
+                                </tbody>
+                        </table>
+                    </div>
+                    <div class="btn--container justify-content-end">
+                        <button type="reset" class="btn btn--reset">{{translate('cancel')}}</button>
+                        <button type="submit" id="submit_new_customer" class="btn btn--primary">{{translate('update_stock')}}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 @push('script_2')
