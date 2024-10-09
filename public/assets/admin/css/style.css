@@ -11032,6 +11032,10 @@ body > .initial-38-1 {
     font-size: 20px !important;
 }
 
+.fs-22 {
+    font-size: 22px !important;
+}
+
 .select-product-item {
     flex: 1 0 48%;
     background-color: transparent;
@@ -11769,6 +11773,10 @@ body > .initial-38-1 {
 
 .bg-F1E8FA {
     background: #f1e8fa !important;
+}
+
+.bg-E5F5F6 {
+    background: #e5f5f6 !important;
 }
 
 .__dashboard-card.bg-F1E8FA .meter {
@@ -13690,7 +13698,7 @@ video#VisaChipCardVideo {
 .suggestion_dropdown .dropdown-menu {
     width: 100% !important;
     height: 150px;
-    overflow-y: auto
+    overflow-y: auto;
 }
 
 /* datepicker css */
@@ -13699,7 +13707,7 @@ video#VisaChipCardVideo {
 }
 
 .daterangepicker .ranges ul li {
-    font-size: 0.65rem
+    font-size: 0.65rem;
 }
 .daterangepicker .calendar-table th,
 .daterangepicker .calendar-table td {
@@ -13711,10 +13719,19 @@ video#VisaChipCardVideo {
     min-width: 0;
 }
 
-.daterangepicker .calendar-table th{
+.daterangepicker .calendar-table th {
     font-size: 0.65rem;
 }
 
-.daterangepicker .calendar-table .month{
+.daterangepicker .calendar-table .month {
     font-size: 0.75rem;
+}
+
+@media screen and (min-width: 1200px) {
+    .update-quantity-modal .modal-dialog {
+        max-width: 850px;
+    }
+    .w-200 {
+        width: 200px;
+    }
 }

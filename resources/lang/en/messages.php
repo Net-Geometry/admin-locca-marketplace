@@ -5756,4 +5756,11 @@
   'User App' => 'User App',
   'zone_status_updated' => 'Zone status updated',
   'Store_is_not_available' => 'Store is not available',
+  'Lay\'s Classic Chips' => 'Lay s Classic Chips',
+  'update_stock' => 'Update stock',
+  'Total_Quantity' => 'Total Quantity',
+  'Stock' => 'Stock',
+  'red-small' => 'Red-small',
+  'Total_Stock' => 'Total Stock',
+  'Lays_Classic_Chips' => 'Lays Classic Chips',
 );
