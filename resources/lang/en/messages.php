@@ -5763,4 +5763,7 @@
   'red-small' => 'Red-small',
   'Total_Stock' => 'Total Stock',
   'Lays_Classic_Chips' => 'Lays Classic Chips',
+  'store_temporarily_closed' => 'Store temporarily closed',
+  'store_opened' => 'Store opened',
+  'can_not_disable_both_take_away_and_delivery' => 'Can not disable both take away and delivery',
 );
