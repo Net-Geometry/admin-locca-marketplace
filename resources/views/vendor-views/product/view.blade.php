@@ -241,6 +241,11 @@
                                 </th>
 
                             @endif
+
+                            <th class="px-4 border-0">
+                                <h4 class="m-0 text-capitalize">{{ translate('Stock') }}</h4>
+                            </th>
+
                             @if (in_array($product->module->module_type ,['pharmacy']))
                             <th class="px-4 border-0">
                                 <h4 class="m-0 text-capitalize">{{ translate('Generic_Name') }}</h4>
@@ -279,6 +284,9 @@
                                         @endif
                                     </td>
                                 @endif
+
+                                <td class="px-4">23</td>
+
                                 @if (in_array($product->module->module_type ,['pharmacy']))
                                     <td class="px-4">
                                         @if ($product->generic->pluck('generic_name')->first())
