@@ -2,7 +2,7 @@
 :root {
     /* --base-1: #00e77b; */
     --base-1: #039d55;
-    --base-rgb: 0, 231, 123;
+    --base-rgb: 3, 157, 85;
     --base-2: #04f485;
     --base-rgb-2: 4, 244, 133;
     /* Test Color */
@@ -1270,7 +1270,8 @@ header.active::after {
     margin: auto;
     position: relative;
     z-index: 9;
-    padding: 30px 0;
+    padding-block-start: 60px;
+    padding-block-end: 30px;
 }
 
 .banner-content .title {
@@ -1351,8 +1352,8 @@ header.active::after {
 }
 
 .banner-section {
-    /* padding-bottom: 57px; */
-    padding-bottom: 92px;
+    padding-bottom: 30px;
+    /* padding-bottom: 92px; */
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -1366,7 +1367,7 @@ header.active::after {
 @media (max-width: 991px) {
     .banner-section {
         overflow: hidden;
-        padding-bottom: 57px;
+        /* padding-bottom: 57px; */
     }
 }
 .cloud {
@@ -2378,8 +2379,10 @@ header.active::after {
 .testimonial-section .section-header {
     position: absolute;
     inset-block-start: 0;
-    inset-inline-start: 50%;
-    transform: translateX(-50%);
+    inset-inline-start: 0;
+    inline-size: 100%;
+    block-size: 100%;
+    padding-inline: 15px;
 }
 
 .testimonial-section .container {
@@ -2391,10 +2394,13 @@ header.active::after {
 .testimonial-shape {
     position: absolute;
     /* width: 1362px; */
-    inline-size: calc(100% - 60px);
+    inline-size: 100%;
     block-size: 100%;
     inset-inline-start: 0;
+    inset-inline-end: 0;
     inset-block-start: 0;
+    inset-block-end: 0;
+    padding-inline: 30px;
 }
 
 .testimonial-item {
@@ -2445,10 +2451,13 @@ header.active::after {
     .testimonial-item .logo {
         width: 80px;
     }
+}
+@media (max-width: 991px) {
     .testimonial-shape {
-        width: calc(100% - 30px);
+        padding-inline: 15px;
     }
 }
+
 .testimonial-slider {
     position: relative;
     padding: 83px 0 33px;
@@ -2477,15 +2486,17 @@ header.active::after {
         padding-top: 178px;
     }
 }
-.download-app-content {
-    padding-top: 35px;
-}
 
 .download-app-content .title {
-    color: var(--base-1);
+    color: var(--title-clr);
     font-size: 36px;
     line-height: 1.3;
     font-weight: 800;
+}
+
+.download-app-content .title .primary-color {
+    font-size: 30px;
+    font-weight: 700;
 }
 
 .download-app-content .subtitle {
@@ -2506,6 +2517,9 @@ header.active::after {
 }
 
 @media (max-width: 991px) {
+    .download-app-content {
+        padding-top: 35px;
+    }
     .download-app-content .btn-grp {
         margin-top: 35px;
     }
@@ -3888,6 +3902,15 @@ input[type="text"] ~ .show-password .icon-1 {
 }
 .mb-30 {
     margin-block-end: 30px !important;
+}
+@media (min-width: 576px) {
+    .w-sm-50 {
+        width: 50% !important;
+    }
+}
+
+.mw-450 {
+    max-width: 450px !important;
 }
 
 /*# sourceMappingURL=main.css.map */

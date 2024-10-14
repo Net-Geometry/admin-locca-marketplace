@@ -5766,4 +5766,17 @@
   'store_temporarily_closed' => 'Store temporarily closed',
   'store_opened' => 'Store opened',
   'can_not_disable_both_take_away_and_delivery' => 'Can not disable both take away and delivery',
+  'demo' => 'Demo',
+  'co' => 'Co',
+  'color text' => 'Color text',
+  'Manage your business' => 'Manage your business',
+  'Let\'s' => 'Let s',
+  'Manage_your_business' => 'Manage your business',
+  'Let’s 
+Manage your business 
+Smartly or Earn. ' => 'Let’s 
+Manage your business 
+Smartly or Earn. ',
+  'Smartly_or_Earn' => 'Smartly or Earn',
+  'Lets' => 'Lets',
 );

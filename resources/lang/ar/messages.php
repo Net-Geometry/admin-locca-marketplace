@@ -4988,4 +4988,6 @@
   'Ad_Requests' => 'Ad Requests',
   'Ads_list' => 'Ads list',
   'Enter_a_reason' => 'Enter a reason',
+  'Call_Us' => 'Call Us',
+  'Send_Message' => 'Send Message',
 );
