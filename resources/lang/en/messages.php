@@ -5780,4 +5780,12 @@
   'Delivery Earning' => 'Delivery Earning',
   'this_month' => 'This month',
   'this_week' => 'This week',
+  'request_list' => 'Request list',
+  'Provider_Request_List' => 'Provider Request List',
+  'All_Booking' => 'All Booking',
+  'Regular_Booking' => 'Regular Booking',
+  'Repeat_Booking' => 'Repeat Booking',
+  'Pending_Request' => 'Pending Request',
+  'Rejected_Request' => 'Rejected Request',
+  'Total_Providers' => 'Total Providers',
 );
