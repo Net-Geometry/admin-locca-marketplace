@@ -5755,4 +5755,5 @@
   'Deliveryman App' => 'Deliveryman App',
   'User App' => 'User App',
   'zone_status_updated' => 'Zone status updated',
+  'car' => 'Car',
 );
