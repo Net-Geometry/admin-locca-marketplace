@@ -4960,4 +4960,11 @@
   'your_note_here' => 'Your note here',
   'Not_Now' => 'Not Now',
   'Okay' => 'Okay',
+  'provider_details' => 'Provider details',
+  'Provider_Request_List' => 'Provider Request List',
+  'cashback' => 'Cashback',
+  'advertisement' => 'Advertisement',
+  'Ad_Requests' => 'Ad Requests',
+  'Ads_list' => 'Ads list',
+  'Enter_a_reason' => 'Enter a reason',
 );
