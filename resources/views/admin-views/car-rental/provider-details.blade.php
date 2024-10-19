@@ -35,6 +35,18 @@
             </div>
         </div>
         <!-- End Page Header -->
+        <div class="radius-10 mt-4">
+            <div class="taxi-banner">
+
+            </div>
+            <div class="taxi-info-wrapper">
+                <div class="logo"></div>
+                <div class="details">
+
+                </div>
+            </div>
+        </div>
+        <!-- End Page Header -->
         <div class="card mt-4">
             <div class="card-header">
                 <div>
