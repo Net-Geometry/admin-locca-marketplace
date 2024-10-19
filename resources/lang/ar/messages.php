@@ -4967,4 +4967,13 @@
   'Ad_Requests' => 'Ad Requests',
   'Ads_list' => 'Ads list',
   'Enter_a_reason' => 'Enter a reason',
+  'edit_details' => 'Edit details',
+  'new_provider_request' => 'New provider request',
+  'reject' => 'Reject',
+  'update_&_approve' => 'Update & approve',
+  'General_Info' => 'General Info',
+  'Provider Logo & Covers' => 'Provider Logo & Covers',
+  'Auto Focus Car Service' => 'Auto Focus Car Service',
+  'House: 00, Road: 00, Test City' => 'House: 00, Road: 00, Test City',
+  'Cover' => 'Cover',
 );

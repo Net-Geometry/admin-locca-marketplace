@@ -813,7 +813,8 @@ aside .nav-link {
 }
 
 #map {
-    height: 272px !important;
+    /* height: 272px !important; */
+    height: 272px;
     border-radius: 5px;
 }
 
@@ -10623,6 +10624,17 @@ body > .initial-38-1 {
     color: #1f1f1f !important;
 }
 
+.pickup-zone-tag
+    .select2-container--default
+    .select2-selection--multiple
+    .select2-selection__choice,
+.pickup-zone-tag .bootstrap-tagsinput .tag {
+    background: rgba(51, 66, 87, 0.06) !important;
+    border-radius: 33px !important;
+    color: rgba(51, 66, 87, 0.9) !important;
+    font-weight: 500;
+}
+
 .__bg-7 th {
     background: rgba(0, 159, 170, 0.1) !important;
     border: 1px solid rgba(16, 121, 128, 0.1);
@@ -11695,10 +11707,15 @@ body > .initial-38-1 {
 .icon-file-group {
     display: flex;
     position: absolute;
-    right: 15px;
-    top: 15px;
+    inset-inline-end: 15px;
+    inset-block-start: 15px;
     z-index: 1;
     gap: 8px;
+}
+
+.icon-file-group.outside {
+    inset-inline-end: -5px;
+    inset-block-start: -5px;
 }
 
 .icon-file-group .action-btn {
