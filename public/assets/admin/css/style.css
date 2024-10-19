@@ -417,6 +417,22 @@ a[class*="btn--"]:hover {
     color: #fff !important;
 }
 
+.btn--varify {
+    box-shadow: none !important;
+    background: #77c668;
+    border-color: #77c668 !important;
+}
+
+.btn-outline-varify:not(:hover) {
+    background: transparent !important;
+    color: #77c668;
+}
+
+.btn-outline-varify:hover {
+    background: #77c668;
+    color: #fff !important;
+}
+
 .export-btn {
     display: flex;
     align-items: center;
@@ -613,6 +629,7 @@ a[class*="btn--"]:hover {
     border-radius: 0 5px 5px 0 !important;
 }
 
+.input--group .btn--primary,
 .input--group .btn--secondary {
     min-width: 40px;
     text-align: center;
@@ -629,6 +646,7 @@ a[class*="btn--"]:hover {
 @media screen and (min-width: 1200px) {
     .input--group .export-btn,
     .input--group .form-control,
+    .input--group .btn--primary,
     .input--group .btn--secondary {
         height: 40px;
     }
@@ -2359,6 +2377,18 @@ textarea.form-control[readonly] {
 
 .nav--tabs .nav-item:first-child .nav-link {
     padding-inline-start: 0;
+}
+
+.nav--tabs.dark .nav-link {
+    color: var(--title-clr);
+    font-weight: 400;
+}
+.nav--tabs.dark .nav-link.active {
+    border-color: var(--title-clr);
+    font-weight: 600;
+}
+.nav--tabs.dark .nav-item:not(:first-child) {
+    padding-inline-start: 1.5rem;
 }
 
 .text--primary {
@@ -13690,7 +13720,7 @@ video#VisaChipCardVideo {
 .suggestion_dropdown .dropdown-menu {
     width: 100% !important;
     height: 150px;
-    overflow-y: auto
+    overflow-y: auto;
 }
 
 /* datepicker css */
@@ -13699,7 +13729,7 @@ video#VisaChipCardVideo {
 }
 
 .daterangepicker .ranges ul li {
-    font-size: 0.65rem
+    font-size: 0.65rem;
 }
 .daterangepicker .calendar-table th,
 .daterangepicker .calendar-table td {
@@ -13711,10 +13741,10 @@ video#VisaChipCardVideo {
     min-width: 0;
 }
 
-.daterangepicker .calendar-table th{
+.daterangepicker .calendar-table th {
     font-size: 0.65rem;
 }
 
-.daterangepicker .calendar-table .month{
+.daterangepicker .calendar-table .month {
     font-size: 0.75rem;
 }
