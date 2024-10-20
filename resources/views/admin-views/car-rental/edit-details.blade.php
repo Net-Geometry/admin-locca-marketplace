@@ -272,7 +272,7 @@
                                             step=".01" required value="5">
                                     </div>
                                     <div class="position-relative">
-                                        <label class="input-label"
+                                        <label class="input-label font-semibold"
                                             for="tax">{{ translate('Approx. Pickup Time') }}</label>
                                         <input type="text" id="time_view"
                                             value="{{ $delivery_time_start }} to {{ $delivery_time_end }} {{ $delivery_time_type }}"
@@ -327,6 +327,35 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        {{-- new --}}
+                                        {{-- <div class="input-group multiple-input-group">
+                                            <div>
+                                                <label for="">{{ translate('messages.Min') }}:</label>
+                                                <input type="text" aria-label="Min Pickup Time" value="20"
+                                                    placeholder="{{ translate('messages.Ex :') }} 20"
+                                                    class="form-control">
+                                            </div>
+                                            <div>
+                                                <label for="">{{ translate('messages.Max') }}:</label>
+                                                <input type="text" aria-label="Max Pickup Time" value="30"
+                                                    placeholder="{{ translate('messages.Ex :') }} 30"
+                                                    class="form-control">
+                                            </div>
+                                            <div class="input-group-prepend">
+                                                <select name="delivery_time_type" id="delivery_time_type"
+                                                    class="custom-select">
+                                                    <option value="min"
+                                                        {{ $delivery_time_type == 'min' ? 'selected' : '' }}>
+                                                        {{ translate('messages.minutes') }}</option>
+                                                    <option value="hours"
+                                                        {{ $delivery_time_type == 'hours' ? 'selected' : '' }}>
+                                                        {{ translate('messages.hours') }}</option>
+                                                    <option value="days"
+                                                        {{ $delivery_time_type == 'days' ? 'selected' : '' }}>
+                                                        {{ translate('messages.days') }}</option>
+                                                </select>
+                                            </div>
+                                        </div> --}}
                                     </div>
                                 </div>
                                 <div class="col-lg-6">

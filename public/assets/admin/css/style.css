@@ -13823,3 +13823,32 @@ ul.address-info .label {
     min-width: 150px;
     display: inline-block;
 }
+
+/* Multiple input group */
+.multiple-input-group {
+    border: 0.0625rem solid #e7eaf3;
+    border-radius: 0.3125rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+.multiple-input-group:focus {
+    border-color: var(--primary-clr);
+}
+.multiple-input-group .form-control {
+    border: none !important;
+    margin-left: 40px;
+}
+.multiple-input-group .form-control:first-child {
+    border-inline-end: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+.multiple-input-group label {
+    position: absolute;
+    top: 12px;
+    left: 15px;
+}
+.multiple-input-group .custom-select {
+    border: none !important;
+    border-radius: 0;
+    background-color: #f3f4f5;
+    color: var(--title-clr);
+    font-weight: 400;
+}

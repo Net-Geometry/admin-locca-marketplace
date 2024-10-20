@@ -5862,4 +5862,5 @@
   'Type your Approval Note' => 'Type your Approval Note',
   'Are you sure, want to cancel the request?' => 'Are you sure, want to cancel the request?',
   'select_business_zone_for_map' => 'Select business zone for map',
+  'Min :' => 'Min :',
 );
