@@ -1009,6 +1009,10 @@ aside .nav-link {
     background: rgba(255, 0, 0, 0.2) !important;
 }
 
+.bg--primary {
+    background: var(--primary-clr) !important;
+}
+
 .resturant-card-2 .resturant-icon {
     max-width: 24px;
     height: 24px;
@@ -1690,6 +1694,9 @@ select.form-control {
 
 .w--22 {
     width: 22px !important;
+}
+.w--11 {
+    width: 11px !important;
 }
 
 .img--65,

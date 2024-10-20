@@ -44,7 +44,7 @@
                     <!-- Header -->
                     <div class="card-header py-2">
                         <div class="search--button-wrapper">
-                            <h5 class="card-title">{{ translate('messages.Total_Providers') }}</h5>
+                            <h5 class="card-title text--title">{{ translate('messages.Total_Providers') }}</h5>
                             <form class="search-form">
                                 <!-- Search -->
                                 <div class="input-group input--group">
@@ -52,7 +52,8 @@
                                         name="search" class="form-control"
                                         placeholder="{{ translate('Search by provider name, owner info...') }}"
                                         aria-label="{{ translate('messages.search') }}">
-                                    <button type="submit" class="btn btn--primary"><i class="tio-search"></i></button>
+                                    <button type="submit" class="btn  btn--secondary bg--primary"><i
+                                            class="tio-search"></i></button>
 
                                 </div>
                                 <!-- End Search -->
@@ -325,7 +326,7 @@
                     <!-- Header -->
                     <div class="card-header py-2">
                         <div class="search--button-wrapper">
-                            <h5 class="card-title">{{ translate('messages.Total_Providers') }}</h5>
+                            <h5 class="card-title text--title">{{ translate('messages.Total_Providers') }}</h5>
                             <form class="search-form">
                                 <!-- Search -->
                                 <div class="input-group input--group">
