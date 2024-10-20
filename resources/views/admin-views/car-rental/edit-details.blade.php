@@ -224,10 +224,10 @@
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label class="input-label font-semibold"
-                                            for="choice_zones">{{ translate('messages.pickup_zone') }}
+                                            for="choice_zones">{{ translate('messages.business_zone') }}
                                             <span class="form-label-secondary" data-toggle="tooltip"
                                                 data-placement="right"
-                                                data-original-title="{{ translate('messages.select_pickup_zone_for_map') }}">
+                                                data-original-title="{{ translate('messages.select_business_zone_for_map') }}">
                                                 <i class="tio-info text--title opacity-60"></i>
                                             </span>
                                         </label>
@@ -254,8 +254,8 @@
                                                 data-original-title="{{ translate('messages.select_pickup_zone_for_map') }}">
                                                 <i class="tio-info text--title opacity-60"></i>
                                             </span></label>
-                                        <select name="attribute_id[]" id="pickup_zones"
-                                            class="form-control js-select2-custom" multiple="multiple">
+                                        <select name="pickup_zones[]" id="pickup_zones"
+                                            class="form-control  multiple-select2" multiple="multiple">
                                             <option value="1" selected>{{ translate('messages.New_York_State') }}
                                             </option>
                                             <option value="2">{{ translate('messages.Washington') }}
