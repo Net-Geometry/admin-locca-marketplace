@@ -179,92 +179,18 @@
                                     <td>
                                         <div class="btn--container justify-content-center">
 
-                                            <a class="btn action-btn btn--varify btn-outline-varify" href="javascript:"
-                                                title="{{ translate('messages.edit_store') }}"><i class="tio-done"></i>
-                                            </a>
-                                            <a class="btn action-btn btn--danger btn-outline-danger form-alert"
-                                                href="javascript:"
-                                                data-message="{{ translate('You want to remove this store') }}"
-                                                title="{{ translate('messages.delete_store') }}"><i
-                                                    class="tio-clear"></i>
-                                            </a>
-                                            <a class="btn action-btn btn--primary btn-outline-primary" href="javascript:"
-                                                title="{{ translate('messages.view') }}"><i
-                                                    class="tio-visible-outlined"></i>
-                                            </a>
-                                        </div>
-                                        <form action="" method="post" id="">
-                                            @csrf @method('delete')
-                                        </form>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>
-                                        <div class="table-rest-info">
-                                            <img class="img--60 onerror-image"
-                                                data-onerror-image="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}"
-                                                src="{{ $store['logo_full_url'] ?? asset('public/assets/admin/img/160x160/img1.jpg') }}">
-                                            <div class="info">
-                                                <div title="Car Rental Service" class="text--title">
-                                                    {{ translate('messages.Car_Rental_Service') }}
-                                                </div>
-                                                <div>
-                                                    <span class="font-light">
-                                                        +8801721345243
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-
-                                    <td>
-                                        <div class="table-rest-info d-block">
-                                            <div class="info">
-                                                <div title="Car Rental Service" class="text--title">
-                                                    {{ translate('messages.Cameron_Williamson') }}
-                                                </div>
-                                                <div>
-                                                    <span class="font-light">
-                                                        jennings@example.com
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                    </td>
-                                    <td><span class="line-limit-2 word-break">
-                                            {{ translate('messages.4517 Washington Ave. Manchester, Kentucky 3949') }}</span>
-                                    </td>
-                                    <td>
-                                        <div class="table-rest-info d-block">
-                                            <div class="info">
-                                                <div title="Car Rental Service" class="text--title">
-                                                    {{ translate('messages.Subscription') }}
-                                                </div>
-                                                <div>
-                                                    <span class="font-light">
-                                                        {{ translate('messages.Standard') }}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-
-                                    <td>
-                                        <div class="btn--container justify-content-center">
-
-                                            <a class="btn action-btn btn--varify btn-outline-varify" href="javascript:"
-                                                title="{{ translate('messages.edit_store') }}"><i class="tio-done"></i>
-                                            </a>
-                                            <a class="btn action-btn btn--danger btn-outline-danger form-alert"
-                                                href="javascript:"
-                                                data-message="{{ translate('You want to remove this store') }}"
-                                                title="{{ translate('messages.delete_store') }}"><i
-                                                    class="tio-clear"></i>
-                                            </a>
-                                            <a class="btn action-btn btn--primary btn-outline-primary" href="javascript:"
-                                                title="{{ translate('messages.view') }}"><i
+                                            <button type="button"
+                                                class="btn action-btn btn--varify btn-outline-varify shadow-none"
+                                                data-deny="approve" data-toggle="modal"
+                                                data-target="#exampleModal--approve"><i class="tio-done"></i>
+                                            </button>
+                                            <button type="button"
+                                                class="btn action-btn btn--danger btn-outline-danger shadow-none"
+                                                data-deny="cancel" data-toggle="modal"
+                                                data-target="#exampleModal--cancel"><i class="tio-clear"></i>
+                                            </button>
+                                            <a class="btn action-btn btn--primary btn-outline-primary shadow-none"
+                                                href="javascript:" title="{{ translate('messages.view') }}"><i
                                                     class="tio-visible-outlined"></i>
                                             </a>
                                         </div>
@@ -520,6 +446,97 @@
 
 
     </div>
+
+    {{-- Approve Modal --}}
+    <div class="modal fade" id="exampleModal--approve" tabindex="-1" aria-labelledby="exampleModalLabel--approve"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body pt-5 p-md-5">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <img src="{{ asset('public/assets/admin/img/new-img/close-icon-dark.svg') }}" alt="">
+                    </button>
+
+                    <div class="d-flex justify-content-center mb-4">
+                        <img width="75" height="75" src="{{ asset('public/assets/admin/img/tick.png') }}"
+                            class="rounded-circle" alt="">
+                    </div>
+
+                    <h3 class="text--title mb-6 font-medium text-center">
+                        {{ translate('Are you sure, want to approve the request?') }}</h3>
+                    <form method="post" action="">
+                        @csrf
+                        <div class="form-floating">
+                            <label for="add-your-note"
+                                class="font-medium input-label text--title">{{ translate('Approval Note') }}<span
+                                    class="form-label-secondary" data-toggle="tooltip" data-placement="right"
+                                    data-original-title="Approval Note"><img
+                                        src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
+                                        alt="Cancellation
+                                        Note"></span></label>
+                            <div class="mb-30">
+                                <textarea class="form-control h--90" placeholder="{{ translate('Type your Approval Note') }}" name=""
+                                    id="add-your-note" required></textarea>
+                                <div>0/60</div>
+                            </div>
+                            <input type="hidden" value="deny" name="status">
+                            <div class="d-flex justify-content-end gap-3">
+                                <button type="button" data-dismiss="modal" aria-label="Close"
+                                    class="btn btn--reset">{{ translate('Cancel') }}</button>
+                                <button type="submit" class="btn btn--primary">{{ translate('Submit') }}</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Cancel modal --}}
+    <div class="modal fade" id="exampleModal--cancel" tabindex="-1" aria-labelledby="exampleModalLabel--cancel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body pt-5 p-md-5">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <img src="{{ asset('public/assets/admin/img/new-img/close-icon-dark.svg') }}" alt="">
+                    </button>
+
+                    <div class="d-flex justify-content-center mb-4">
+                        <img width="75" height="75" src="{{ asset('public/assets/admin/img/icons/delete.png') }}"
+                            class="rounded-circle" alt="">
+                    </div>
+
+                    <h3 class="text--title mb-6 font-medium text-center">
+                        {{ translate('Are you sure, want to cancel the request?') }}</h3>
+                    <form method="post" action="">
+                        @csrf
+                        <div class="form-floating">
+                            <label for="add-your-note"
+                                class="font-medium input-label text--title">{{ translate('Cancellation Note') }}<span
+                                    class="form-label-secondary" data-toggle="tooltip" data-placement="right"
+                                    data-original-title="Cancellation Note"><img
+                                        src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
+                                        alt="Cancellation
+                                        Note"></span></label>
+                            <div class="mb-30">
+                                <textarea class="form-control h--90" placeholder="{{ translate('Type your Cancellation Note') }}" name=""
+                                    id="add-your-note" required></textarea>
+                                <div>0/60</div>
+                            </div>
+                            <input type="hidden" value="deny" name="status">
+                            <div class="d-flex justify-content-end gap-3">
+                                <button type="button" data-dismiss="modal" aria-label="Close"
+                                    class="btn btn--reset">{{ translate('Cancel') }}</button>
+                                <button type="submit" class="btn btn--primary">{{ translate('Submit') }}</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
 @endsection
 
 @push('script')

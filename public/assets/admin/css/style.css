@@ -1699,6 +1699,10 @@ select.form-control {
     width: 11px !important;
 }
 
+.h--90{
+    height: 90px !important;
+}
+
 .img--65,
 .img--60,
 .img--70,
