@@ -1699,7 +1699,7 @@ select.form-control {
     width: 11px !important;
 }
 
-.h--90{
+.h--90 {
     height: 90px !important;
 }
 
@@ -4887,6 +4887,9 @@ div.scroll-down {
 
 .opacity-0 {
     opacity: 0;
+}
+.opacity-60 {
+    opacity: 0.6;
 }
 
 .bg--005555 {

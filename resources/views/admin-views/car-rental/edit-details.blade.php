@@ -224,11 +224,13 @@
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label class="input-label font-semibold"
-                                            for="choice_zones">{{ translate('messages.pickup_zone') }}<span
-                                                class="form-label-secondary" data-toggle="tooltip" data-placement="right"
-                                                data-original-title="{{ translate('messages.select_pickup_zone_for_map') }}"><img
-                                                    src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
-                                                    alt="{{ translate('messages.select_pickup_zone_for_map') }}"></span></label>
+                                            for="choice_zones">{{ translate('messages.pickup_zone') }}
+                                            <span class="form-label-secondary" data-toggle="tooltip"
+                                                data-placement="right"
+                                                data-original-title="{{ translate('messages.select_pickup_zone_for_map') }}">
+                                                <i class="tio-info text--title opacity-60"></i>
+                                            </span>
+                                        </label>
                                         <select name="zone_id" id="choice_zones" required
                                             class="form-control js-select2-custom"
                                             data-placeholder="{{ translate('messages.select_zone') }}">
@@ -249,9 +251,9 @@
                                         <label class="input-label font-semibold"
                                             for="pickup_zones">{{ translate('messages.pickup_zone') }}<span
                                                 class="form-label-secondary" data-toggle="tooltip" data-placement="right"
-                                                data-original-title="{{ translate('messages.select_pickup_zone_for_map') }}"><img
-                                                    src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
-                                                    alt="{{ translate('messages.select_zone_for_map') }}"></span></label>
+                                                data-original-title="{{ translate('messages.select_pickup_zone_for_map') }}">
+                                                <i class="tio-info text--title opacity-60"></i>
+                                            </span></label>
                                         <select name="attribute_id[]" id="pickup_zones"
                                             class="form-control js-select2-custom" multiple="multiple">
                                             <option value="1" selected>{{ translate('messages.New_York_State') }}
@@ -410,9 +412,9 @@
                                         <label class="input-label"
                                             for="signupSrPassword">{{ translate('password') }}<span
                                                 class="form-label-secondary" data-toggle="tooltip" data-placement="right"
-                                                data-original-title="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"><img
-                                                    src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
-                                                    alt="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"></span></label>
+                                                data-original-title="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}">
+                                                <i class="tio-info text--title opacity-60"></i>
+                                            </span></label>
 
                                         <div class="input-group input-group-merge">
                                             <input type="password" class="js-toggle-password form-control"

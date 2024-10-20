@@ -470,10 +470,9 @@
                             <label for="add-your-note"
                                 class="font-medium input-label text--title">{{ translate('Approval Note') }}<span
                                     class="form-label-secondary" data-toggle="tooltip" data-placement="right"
-                                    data-original-title="Approval Note"><img
-                                        src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
-                                        alt="Cancellation
-                                        Note"></span></label>
+                                    data-original-title="Approval Note">
+                                    <i class="tio-info text--title opacity-60"></i>
+                                </span></label>
                             <div class="mb-30">
                                 <textarea class="form-control h--90" placeholder="{{ translate('Type your Approval Note') }}" name=""
                                     id="add-your-note" required></textarea>
@@ -515,10 +514,9 @@
                             <label for="add-your-note"
                                 class="font-medium input-label text--title">{{ translate('Cancellation Note') }}<span
                                     class="form-label-secondary" data-toggle="tooltip" data-placement="right"
-                                    data-original-title="Cancellation Note"><img
-                                        src="{{ asset('public/assets/admin/img/info-circle.svg') }}"
-                                        alt="Cancellation
-                                        Note"></span></label>
+                                    data-original-title="Cancellation Note">
+                                    <i class="tio-info text--title opacity-60"></i>
+                                </span></label>
                             <div class="mb-30">
                                 <textarea class="form-control h--90" placeholder="{{ translate('Type your Cancellation Note') }}" name=""
                                     id="add-your-note" required></textarea>
