@@ -2810,6 +2810,7 @@ class BusinessSettingsController extends Controller
         $phone_verification_status = Helpers::get_business_settings('phone_verification_status')??0;
         $is_sms_active= Setting::where('is_active',1)->whereJsonContains('live_values->status','1')->where('settings_type', 'sms_config')
             ->exists();
+
         if(!$is_sms_active && $login_setup_status && ($request['firebase_otp_verification']==0)){
             Toastr::warning(translate('otp_login_status_is_enabled_in_login_setup._First_disable_from_login_setup.'));
             return redirect()->back();

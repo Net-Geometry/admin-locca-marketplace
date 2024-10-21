@@ -30,15 +30,14 @@ Route::group(['namespace' => 'Api\V1', 'middleware'=>'localization'], function (
         Route::post('sign-up', 'CustomerAuthController@register');
         Route::post('login', 'CustomerAuthController@login');
         Route::post('external-login', 'CustomerAuthController@customerLoginFromDrivemond');
-        Route::post('verify-phone', 'CustomerAuthController@verify_phone');
-
-        Route::post('check-email', 'CustomerAuthController@check_email');
-        Route::post('verify-email', 'CustomerAuthController@verify_email');
+        Route::post('verify-phone', 'CustomerAuthController@verify_phone_or_email');
+        Route::post('update-info', 'CustomerAuthController@update_info');
+        Route::post('firebase-verify-token', 'CustomerAuthController@firebase_auth_verify');
 
         Route::post('forgot-password', 'PasswordResetController@reset_password_request');
         Route::post('verify-token', 'PasswordResetController@verify_token');
-        Route::post('firebase-verify-token', 'CustomerAuthController@firebase_auth_verify');
         Route::put('reset-password', 'PasswordResetController@reset_password_submit');
+        Route::put('firebase-reset-password', 'PasswordResetController@firebase_auth_verify');
 
         Route::post('guest/request','CustomerAuthController@guest_request');
 
