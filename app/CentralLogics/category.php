@@ -511,9 +511,15 @@ class CategoryLogic
                     });
                 });
             })
-            ->whereHas('category',function($q){
-                return $q->where(['featured' => 1 , 'status' => 1 , 'module_id' => config('module.current_module_data')['id']]);
+            ->where(function($query){
+                $query->whereHas('category',function($q){
+                    return $q->where(['featured' => 1 , 'status' => 1 , 'module_id' => config('module.current_module_data')['id']]);
+                })
+                ->orwherehas('category.parent',function($query){
+                    $query->where(['featured' => 1 , 'status' => 1 , 'module_id' => config('module.current_module_data')['id']]);
+                });
             })
+
             ->latest()->paginate($limit, ['*'], 'page', $offset);
 
         $item_categories = Item::active()->type($type)
@@ -527,14 +533,21 @@ class CategoryLogic
                     });
                 });
             })
-            ->whereHas('category',function($q){
-                return $q->where(['featured' => 1 , 'status' => 1 , 'module_id' => config('module.current_module_data')['id']]);
+            ->where(function($query){
+                $query->whereHas('category',function($q){
+                    return $q->where(['featured' => 1 , 'status' => 1 , 'module_id' => config('module.current_module_data')['id']]);
+                })
+                ->orwherehas('category.parent',function($query){
+                    $query->where(['featured' => 1 , 'status' => 1 , 'module_id' => config('module.current_module_data')['id']]);
+                });
             })
+
+
             ->pluck('category_id')->toArray();
 
         $item_categories = array_unique($item_categories);
 
-        $categories = Category::where(['featured' => 1 , 'status' => 1])->whereIn('id',$item_categories)->get(['id','name','image']);
+        $categories = Category::where(['status' => 1])->whereIn('id',$item_categories)->get(['id','name','image']);
 
         return [
             'total_size' => $paginator->total(),

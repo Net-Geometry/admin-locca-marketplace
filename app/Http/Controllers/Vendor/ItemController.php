@@ -1429,6 +1429,13 @@ class ItemController extends Controller
         ]);
     }
 
+    public function get_stock(Request $request)
+    {
+        $product = Item::withoutGlobalScope(StoreScope::class)->find($request['id']);
+        return response()->json([
+            'view' => view('vendor-views.product.partials._get_stock_data', compact('product'))->render()
+        ]);
+    }
     public function stock_update(Request $request)
     {
         $variations = [];

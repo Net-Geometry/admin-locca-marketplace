@@ -295,8 +295,8 @@ class Helpers
                 $item['rating_count'] = (int)($item->rating ? array_sum(json_decode($item->rating, true)) : 0);
                 $item['avg_rating'] = (float)($item->avg_rating ? $item->avg_rating : 0);
                 $item['recommended'] =(int) $item->recommended;
-                $item['min_delivery_time'] =  (int) explode('-',$item->store?->delivery_time)[0] ?? 0;
-                $item['max_delivery_time'] =  (int) explode('-',$item->store?->delivery_time)[1] ?? 0;
+                $item['min_delivery_time'] =  (int) explode('-',$item?->store?->delivery_time)[0] ?? 0;
+                $item['max_delivery_time'] =  (int) explode('-',$item?->store?->delivery_time)[1] ?? 0;
                 $item['common_condition_id'] =  (int) $item->pharmacy_item_details?->common_condition_id ?? 0;
                 $item['brand_id'] =  (int) $item->ecommerce_item_details?->brand_id ?? 0;
                 $item['is_basic'] =  (int) $item->pharmacy_item_details?->is_basic ?? 0;
@@ -1473,7 +1473,7 @@ class Helpers
 
     public static function get_store_discount($store)
     {
-        if ($store->discount) {
+        if ($store?->discount) {
             if (date('Y-m-d', strtotime($store->discount->start_date)) <= now()->format('Y-m-d') && date('Y-m-d', strtotime($store->discount->end_date)) >= now()->format('Y-m-d') && date('H:i', strtotime($store->discount->start_time)) <= now()->format('H:i') && date('H:i', strtotime($store->discount->end_time)) >= now()->format('H:i')) {
                 return [
                     'discount' => $store->discount->discount,

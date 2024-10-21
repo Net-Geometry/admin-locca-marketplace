@@ -9,7 +9,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
         Route::get('/test', function () {
             return view('admin-views.login-setup.login_page');
         });
-    
+
         Route::get('drivemond-panel', 'DriveMondController@drivemondExternalLogin')->name('drivemond-panel');
         Route::get('get-all-stores', 'VendorController@get_all_stores')->name('get_all_stores');
         Route::get('lang/{locale}', 'LanguageController@lang')->name('lang');
@@ -88,6 +88,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
 
             //Mainul
             Route::get('get-variations', 'ItemController@get_variations')->name('get-variations');
+            Route::get('get-stock', 'ItemController@get_stock')->name('get_stock');
             Route::post('stock-update', 'ItemController@stock_update')->name('stock-update');
 
             //Import and export

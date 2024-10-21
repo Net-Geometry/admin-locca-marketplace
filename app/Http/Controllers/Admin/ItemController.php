@@ -1469,6 +1469,13 @@ class ItemController extends Controller
             'view' => view('admin-views.product.partials._update_stock', compact('product'))->render()
         ]);
     }
+    public function get_stock(Request $request)
+    {
+        $product = Item::withoutGlobalScope(StoreScope::class)->find($request['id']);
+        return response()->json([
+            'view' => view('admin-views.product.partials._get_stock_data', compact('product'))->render()
+        ]);
+    }
 
     public function stock_update(Request $request)
     {

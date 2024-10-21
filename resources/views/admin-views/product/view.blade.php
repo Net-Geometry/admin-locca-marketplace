@@ -16,9 +16,17 @@
                     </span>
                     <span>{{ $product['name'] }}</span>
                 </h1>
-                <a href="{{ route('admin.item.edit', [$product['id']]) }}" class="btn btn--primary">
-                    <i class="tio-edit"></i> {{ translate('messages.edit_info') }}
-                </a>
+                <div>
+                    @if (Config::get('module.current_module_type') != 'food')
+                        <a data-toggle="modal"  data-id="{{ $product->id }}"  data-target="#update-quantity" class="btn btn--primary update-quantity">
+                            {{ translate('messages.Update_Stock') }}
+                        </a>
+                    @endif
+
+                    <a href="{{ route('admin.item.edit', [$product['id']]) }}" class="btn btn--primary">
+                        <i class="tio-edit"></i> {{ translate('messages.edit_info') }}
+                    </a>
+                </div>
             </div>
         </div>
         <!-- End Page Header -->
@@ -273,10 +281,11 @@
                                     </th>
 
                                 @endif
-
+                                @if (Config::get('module.current_module_type') != 'food')
                                 <th class="px-4 border-0">
                                     <h4 class="m-0 text-capitalize">{{ translate('Stock') }}</h4>
                                 </th>
+                                @endif
 
                                 @if (in_array($product->module->module_type ,['pharmacy']))
                                     <th class="px-4 border-0">
@@ -323,9 +332,10 @@
                                         @endif
                                     </td>
                                 @endif
+                                @if (Config::get('module.current_module_type') != 'food')
+                                <td class="px-4">{{$product->stock}}</td>
 
-                                <td class="px-4">34</td>
-
+                                @endif
                                 @if (in_array($product->module->module_type ,['pharmacy']))
                                     <td class="px-4">
                                         @if ($product->generic->pluck('generic_name')->first())
@@ -581,6 +591,30 @@
     </div>
     <!-- End Card -->
 </div>
+
+    {{-- Add Quantity Modal --}}
+    <div class="modal fade update-quantity-modal" id="update-quantity" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body pt-0">
+
+                    <form action="{{route('admin.item.stock-update')}}" method="post">
+                        @csrf
+                        <div class="mt-2 rest-part w-100"></div>
+                        <div class="btn--container justify-content-end">
+                            <button type="reset" data-dismiss="modal" aria-label="Close" class="btn btn--reset">{{translate('cancel')}}</button>
+                            <button type="submit" id="submit_new_customer" class="btn btn--primary">{{translate('update_stock')}}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @push('script_2')
@@ -606,5 +640,35 @@
             }
         })
     })
+
+    $('.update-quantity').on('click', function (){
+        let val = $(this).data('id');
+        $.get({
+            url: '{{ route('admin.item.get_stock') }}',
+            data: { id: val },
+            dataType: 'json',
+            success: function (data) {
+                $('.rest-part').empty().html(data.view);
+                update_qty();
+            },
+        });
+    })
+
+    function update_qty() {
+            let total_qty = 0;
+            let qty_elements = $('input[name^="stock_"]');
+            for (let i = 0; i < qty_elements.length; i++) {
+                total_qty += parseInt(qty_elements.eq(i).val());
+            }
+            if(qty_elements.length > 0)
+            {
+
+                $('input[name="current_stock"]').attr("readonly", 'readonly');
+                $('input[name="current_stock"]').val(total_qty);
+            }
+            else{
+                $('input[name="current_stock"]').attr("readonly", false);
+            }
+        }
 </script>
 @endpush
