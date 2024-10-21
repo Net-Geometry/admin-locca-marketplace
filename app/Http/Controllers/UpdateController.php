@@ -182,6 +182,7 @@ class UpdateController extends Controller
         Helpers::addNewAdminNotificationSetupDataSetup();
 
         Helpers::insert_business_settings_key('country_picker_status', '1');
+        Helpers::insert_business_settings_key('manual_login_status', '1');
 
         $this->firebase_message_config_file_gen();
 

@@ -2603,6 +2603,11 @@ class BusinessSettingsController extends Controller
 
     public function updateSocialLogin($service, Request $request)
     {
+        $login_setup_status = Helpers::get_business_settings($service.'_login_status')??0;
+        if($login_setup_status && ($request['status']==0)){
+            Toastr::warning(translate($service.'_login_status_is_enabled_in_login_setup._First_disable_from_login_setup.'));
+            return redirect()->back();
+        }
         $socialLogin = BusinessSetting::where('key', 'social_login')->first();
         $credential_array = [];
         foreach (json_decode($socialLogin['value'], true) as $key => $data) {
@@ -2658,6 +2663,114 @@ class BusinessSettingsController extends Controller
         return redirect()->back();
     }
 
+    public function login_settings(){
+        $data = array_column(BusinessSetting::whereIn('key',['manual_login_status','otp_login_status','social_login_status','google_login_status','facebook_login_status','apple_login_status','email_verification_status','phone_verification_status'
+        ])->get(['key','value'])->toArray(), 'value', 'key');
+
+        return view('admin-views.login-setup.login_page',compact('data'));
+    }
+
+    public function login_settings_update(Request $request)
+    {
+        $social_login = [];
+        $social_login_data=Helpers::get_business_settings('social_login') ?? [];
+        foreach ($social_login_data as $social) {
+            $social_login[$social['login_medium']] = (boolean)$social['status'];
+        }
+        $social_login_data=Helpers::get_business_settings('apple_login') ?? [];
+        foreach ($social_login_data as $social) {
+            $social_login[$social['login_medium']] = (boolean)$social['status'];
+        }
+
+        $is_firebase_active=Helpers::get_business_settings('firebase_otp_verification') ?? 0;
+
+        $is_sms_active= Setting::where('is_active',1)->whereJsonContains('live_values->status','1')->where('settings_type', 'sms_config')->exists();
+
+        $is_mail_active= config('mail.status');
+
+        if(!$request['manual_login_status'] && !$request['otp_login_status'] && !$request['social_login_status']){
+            Session::flash('select-one-method', true);
+            return back();
+        }
+
+        if($request['otp_login_status'] && !$is_sms_active && !$is_firebase_active){
+            Session::flash('sms-config', true);
+            return back();
+        }
+
+        if(!$request['manual_login_status'] && !$request['otp_login_status'] && $request['social_login_status']){
+            if(!$request['google_login_status'] && !$request['facebook_login_status']){
+                Session::flash('select-one-method-android', true);
+                return back();
+            }
+        }
+        if( $request['social_login_status'] &&  !$request['google_login_status'] && !$request['facebook_login_status'] && !$request['apple_login_status']){
+            Session::flash('select-one-method-social-login', true);
+            return back();
+        }
+
+        if(($request['social_login_status'] && $request['google_login_status'] && !isset($social_login['google'])) || ($request['social_login_status'] && ($request['google_login_status'] && isset($social_login['google'])) && !$social_login['google'])){
+            Session::flash('setup-google', true);
+            return back();
+        }
+
+        if(($request['social_login_status'] && $request['facebook_login_status'] && !isset($social_login['facebook'])) || ($request['social_login_status'] && ($request['facebook_login_status'] && isset($social_login['facebook'])) && !$social_login['facebook'])){
+            Session::flash('setup-facebook', true);
+            return back();
+        }
+
+        if(($request['social_login_status'] && $request['apple_login_status'] && !isset($social_login['apple'])) || ($request['social_login_status'] && ($request['apple_login_status'] && isset($social_login['apple'])) && !$social_login['apple'])){
+            Session::flash('setup-apple', true);
+            return back();
+        }
+
+        if($request['phone_verification_status'] && !$is_sms_active && !$is_firebase_active){
+            Session::flash('sms-config-verification', true);
+            return back();
+        }
+
+        if($request['email_verification_status'] && !$is_mail_active){
+            Session::flash('mail-config-verification', true);
+            return back();
+        }
+
+
+        BusinessSetting::updateOrInsert(['key' => 'manual_login_status'], [
+            'value' => $request['manual_login_status'] ? 1 : 0
+        ]);
+
+        BusinessSetting::updateOrInsert(['key' => 'otp_login_status'], [
+            'value' => $request['otp_login_status'] ? 1 : 0
+        ]);
+
+        BusinessSetting::updateOrInsert(['key' => 'social_login_status'], [
+            'value' => $request['social_login_status'] ? 1 : 0
+        ]);
+
+        BusinessSetting::updateOrInsert(['key' => 'google_login_status'], [
+            'value' => $request['social_login_status']?($request['google_login_status'] ? 1 : 0):0
+        ]);
+
+        BusinessSetting::updateOrInsert(['key' => 'facebook_login_status'], [
+            'value' => $request['social_login_status']?($request['facebook_login_status'] ? 1 : 0):0
+        ]);
+
+        BusinessSetting::updateOrInsert(['key' => 'apple_login_status'], [
+            'value' => $request['social_login_status']?($request['apple_login_status'] ? 1 : 0):0
+        ]);
+
+        BusinessSetting::updateOrInsert(['key' => 'email_verification_status'], [
+            'value' => $request['email_verification_status'] ? 1 : 0
+        ]);
+
+        BusinessSetting::updateOrInsert(['key' => 'phone_verification_status'], [
+            'value' => $request['phone_verification_status'] ? 1 : 0
+        ]);
+
+        Toastr::success(translate('messages.login_settings_data_updated_successfully'));
+        return back();
+    }
+
     //recaptcha
     public function recaptcha_index(Request $request)
     {
@@ -2693,6 +2806,18 @@ class BusinessSettingsController extends Controller
 
     public function firebase_otp_update(Request $request)
     {
+        $login_setup_status = Helpers::get_business_settings('otp_login_status')??0;
+        $phone_verification_status = Helpers::get_business_settings('phone_verification_status')??0;
+        $is_sms_active= Setting::where('is_active',1)->whereJsonContains('live_values->status','1')->where('settings_type', 'sms_config')
+            ->exists();
+        if(!$is_sms_active && $login_setup_status && ($request['firebase_otp_verification']==0)){
+            Toastr::warning(translate('otp_login_status_is_enabled_in_login_setup._First_disable_from_login_setup.'));
+            return redirect()->back();
+        }
+        if(!$is_sms_active && $phone_verification_status && ($request['firebase_otp_verification']==0)){
+            Toastr::warning(translate('phone_verification_status_is_enabled_in_login_setup._First_disable_from_login_setup.'));
+            return redirect()->back();
+        }
         BusinessSetting::updateOrInsert(['key' => 'firebase_otp_verification'], [
             'value' => $request['firebase_otp_verification'] ?? 0
         ]);

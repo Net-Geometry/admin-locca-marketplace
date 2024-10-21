@@ -9,7 +9,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
         Route::get('/test', function () {
             return view('admin-views.login-setup.login_page');
         });
-    
+
         Route::get('drivemond-panel', 'DriveMondController@drivemondExternalLogin')->name('drivemond-panel');
         Route::get('get-all-stores', 'VendorController@get_all_stores')->name('get_all_stores');
         Route::get('lang/{locale}', 'LanguageController@lang')->name('lang');
@@ -336,11 +336,13 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::POST('landing-page-settings/{tab}', 'BusinessSettingsController@update_landing_page_settings')->name('landing-page-settings');
             Route::DELETE('landing-page-settings/{tab}/{key}', 'BusinessSettingsController@delete_landing_page_settings')->name('landing-page-settings-delete');
 
-            Route::get('login-url-setup', 'BusinessSettingsController@login_url_page')->name('login_url_page');
             // Centerlize login
+            Route::group(['prefix' => 'login-settings', 'as' => 'login-settings.'], function () {
+                Route::get('login-setup', 'BusinessSettingsController@login_settings')->name('index');
+                Route::post('login-setup/update', 'BusinessSettingsController@login_settings_update')->name('update');
+            });
 
-            Route::get('login_page', 'BusinessSettingsController@login_page')->name('login_page');
-
+            Route::get('login-url-setup', 'BusinessSettingsController@login_url_page')->name('login_url_page');
             Route::post('login-url-setup/update', 'BusinessSettingsController@login_url_page_update')->name('login_url_update');
 
             Route::get('email-setup/{type}/{tab?}', 'BusinessSettingsController@email_index')->name('email-setup');
