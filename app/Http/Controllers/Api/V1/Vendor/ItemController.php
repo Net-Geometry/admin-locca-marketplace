@@ -1192,4 +1192,29 @@ class ItemController extends Controller
         return response()->json(['message'=>translate('messages.review_reply_updated_successfully')], 200);
     }
 
+
+    public function stock_update(Request $request)
+    {
+        $variations = [];
+        $stock_count = $request['current_stock'];
+        if ($request->has('type')) {
+            foreach ($request['type'] as $key => $str) {
+                $item = [];
+                $item['type'] = $str;
+                $item['price'] = abs($request['price_' . str_replace('.', '_', $str)]);
+                $item['stock'] = abs($request['stock_' . str_replace('.', '_', $str)]);
+                array_push($variations, $item);
+            }
+        }
+
+
+        $product = Item::withoutGlobalScope(StoreScope::class)->find($request['product_id']);
+
+        $product->stock = $stock_count ?? 0;
+        $product->variations = json_encode($variations);
+        $product?->save();
+        return response()->json(['message'=>translate('messages.Stock_updated_successfully')], 200);
+
+    }
+
 }

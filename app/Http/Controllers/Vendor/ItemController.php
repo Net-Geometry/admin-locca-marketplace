@@ -1456,7 +1456,7 @@ class ItemController extends Controller
         $product->stock = $stock_count ?? 0;
         $product->variations = json_encode($variations);
         $product->save();
-        Toastr::success(translate("messages.product_updated_successfully"));
+        Toastr::success(translate("messages.Stock_updated_successfully"));
         return back();
 
 
