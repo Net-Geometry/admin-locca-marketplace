@@ -1195,6 +1195,24 @@ class ItemController extends Controller
 
     public function stock_update(Request $request)
     {
+      $validator = Validator::make($request->all(), [
+            'product_id' => 'required',
+            'current_stock' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        }
+        $product = Item::withoutGlobalScope(StoreScope::class)->find($request['product_id']);
+
+
+        if( count(json_decode($product->variations , true) ?? []) > 0  &&  !$request['type']){
+            $validator->getMessageBag()->add('type', translate("Variation types_are_required"));
+            return response()->json(['errors' => Helpers::error_processor($validator)],403);
+        }
+
+
+
         $variations = [];
         $stock_count = $request['current_stock'];
         if ($request->has('type')) {
@@ -1206,9 +1224,6 @@ class ItemController extends Controller
                 array_push($variations, $item);
             }
         }
-
-
-        $product = Item::withoutGlobalScope(StoreScope::class)->find($request['product_id']);
 
         $product->stock = $stock_count ?? 0;
         $product->variations = json_encode($variations);

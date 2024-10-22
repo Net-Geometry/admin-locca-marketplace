@@ -22,6 +22,14 @@ Route::group(['namespace' => 'Api\V1', 'middleware'=>'localization'], function (
         Route::post('/store', 'ExternalConfigurationController@updateConfiguration');
     });
 
+    Route::get('/terms-and-conditions', 'HomeController@terms_and_conditions');
+    Route::get('/about-us', 'HomeController@about_us');
+    Route::get('/privacy-policy', 'HomeController@privacy_policy');
+    Route::get('/refund-policy', 'HomeController@refund_policy');
+    Route::get('/shipping-policy', 'HomeController@shipping_policy');
+    Route::get('/cancelation', 'HomeController@cancelation');
+
+
     Route::get('zone/list', 'ZoneController@get_zones');
     Route::get('zone/check', 'ZoneController@zonesCheck');
 
