@@ -1203,7 +1203,7 @@ class ItemController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
-        $product = Item::withoutGlobalScope(StoreScope::class)->find($request['product_id']);
+        $product = Item::find($request['product_id']);
 
 
         if( count(json_decode($product->variations , true) ?? []) > 0  &&  !$request['type']){
@@ -1230,6 +1230,39 @@ class ItemController extends Controller
         $product?->save();
         return response()->json(['message'=>translate('messages.Stock_updated_successfully')], 200);
 
+    }
+    public function stock_limit_list(Request $request)
+    {
+        $limit = $request['limite']??25;
+        $offset = $request['offset']??1;
+
+        $category_id = $request->query('category_id', 'all');
+        $type = $request->query('type', 'all');
+        $items = Item::where('store_id',$request['vendor']?->stores[0]?->id)->
+        when(is_numeric($category_id), function($query)use($category_id){
+            return $query->whereHas('category',function($q)use($category_id){
+                return $q->whereId($category_id)->orWhere('parent_id', $category_id);
+            });
+        })
+        ->type($type);
+        if($request['vendor']?->stores[0]?->storeConfig->minimum_stock_for_warning > 0){
+            $items= $items->where('stock' ,'<=' ,$request['vendor']?->stores[0]?->storeConfig->minimum_stock_for_warning );
+        } else{
+            $items= $items->where('stock',0 );
+        }
+
+        $items=  $items->orderby('stock')->latest()->paginate($limit, ['*'], 'page', $offset);
+        $category =$category_id !='all'? Category::findOrFail($category_id):null;
+
+
+        $data = [
+            'total_size' => $items->total(),
+            'limit' => $limit,
+            'offset' => $offset,
+            'items' =>Helpers::product_data_formatting($items, true, false, app()->getLocale()),
+        ];
+
+        return response()->json($data,200);
     }
 
 }

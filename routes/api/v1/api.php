@@ -276,6 +276,7 @@ Route::group(['namespace' => 'Api\V1', 'middleware'=>'localization'], function (
             Route::get('pending/item/list', 'ItemController@pending_item_list');
             Route::get('requested/item/view/{id}', 'ItemController@requested_item_view');
             Route::put('stock-update', 'ItemController@stock_update');
+            Route::get('stock-limit-list', 'ItemController@stock_limit_list');
         });
 
         // POS
