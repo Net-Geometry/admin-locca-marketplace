@@ -826,6 +826,7 @@ class Helpers
         } else {
             $data->load('storeConfig');
             $data['is_recommended'] = false;
+            $data['minimum_stock_for_warning'] =   (int) $data?->storeConfig?->minimum_stock_for_warning ?? 0;
             $data['halal_tag_status'] =   (bool) $data?->storeConfig?->halal_tag_status;
             $extra_packaging_data = \App\Models\BusinessSetting::where('key', 'extra_packaging_data')->first()?->value ?? '';
             $extra_packaging_data =json_decode($extra_packaging_data , true);

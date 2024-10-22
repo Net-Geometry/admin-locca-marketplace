@@ -1216,7 +1216,7 @@ class ItemController extends Controller
         $variations = [];
         $stock_count = $request['current_stock'];
         if ($request->has('type')) {
-            foreach ($request['type'] as $key => $str) {
+            foreach (json_decode($request['type'],true) ?? [] as $key => $str) {
                 $item = [];
                 $item['type'] = $str;
                 $item['price'] = abs($request['price_' . str_replace('.', '_', $str)]);

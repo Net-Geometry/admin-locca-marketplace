@@ -5,7 +5,7 @@
     <label for="total_qty" class="input-label" >
         {{translate('Total_Quantity')}}
     </label>
-    <input type="number" min="0" class="form-control" id="total_qty" name="current_stock" value="{{$product->stock}}" id="quantity" {{count(json_decode($product['variations'],true)) > 0 ? 'readonly' : ""}}>
+    <input type="number" min="1" class="form-control" id="total_qty" name="current_stock" value="{{$product->stock}}" id="quantity" {{count(json_decode($product['variations'],true)) > 0 ? 'readonly' : ""}}>
 </div>
 
 @if (count(json_decode($product['variations'],true)) > 0)

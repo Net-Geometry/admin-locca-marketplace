@@ -59,6 +59,7 @@ class BusinessSettingsController extends Controller
             );
             $conf->extra_packaging_amount = $request->extra_packaging_amount;
             $conf->extra_packaging_status = $request->extra_packaging_status ?? 0;
+            $conf->minimum_stock_for_warning = $request->minimum_stock_for_warning ?? 0;
             $conf->save();
         }
         Toastr::success(translate('messages.store_settings_updated'));

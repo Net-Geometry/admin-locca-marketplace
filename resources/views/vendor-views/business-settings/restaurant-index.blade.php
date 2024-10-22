@@ -205,7 +205,7 @@
                         <i class="tio-settings-outlined"></i>
                     </span>
                     <span>
-                        {{translate('messages.basic_settings')}}
+                        {{translate('messages.Store Basic Settings')}}
                     </span>
                 </h5>
             </div>
@@ -267,11 +267,25 @@
                         </div>
                         @endif
 
-                        <div class="col-sm-6">
+                        @if ($store->module->module_type != 'food')
+                        <div class="col-sm-4 col-12">
+                            <div class="form-group mt-3">
+                                <label class="input-label text-capitalize" for="minimum_stock_for_warning">{{translate('messages.Minimum_stock_for_warning')}}
+                                    <span data-toggle="tooltip" data-placement="right" data-original-title="{{translate('When_the_stock_of_a_product_reaches_its_minimum_value_that_you_have_set,_you_will_receive_a_warning_to_update_the_stock._Additionally,_these_products_will_appear_in_the_Admin’s_Low_Stock_list.') }}"
+                                    class="input-label-secondary"><img
+                                        src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
+                                        alt="{{ translate('messages.Minimum_stock_for_warning') }}"></span>
+                                </label>
+                                <input type="number" id="minimum_stock_for_warning" name="minimum_stock_for_warning"  min="0" max="999999999" class="form-control" placeholder="{{ translate('messages.Ex: 5') }}" value="{{$store?->storeConfig?->minimum_stock_for_warning??''}}">
+                            </div>
+                        </div>
+                        @endif
+
+                        <div class="col-sm-{{ $store->module->module_type != 'food' ? '4' : '6' }} col-12">
                             <div class="form-group mb-0 p-2">
                                 <label class="d-flex justify-content-between switch toggle-switch-sm text-dark" for="gst_status">
                                     <span>{{translate('messages.gst')}} <span class="form-label-secondary" data-toggle="tooltip" data-placement="right"
-                                    data-original-title="{{translate('messages.gst_status')}}"><img src="{{asset('/public/assets/admin/img/info-circle.svg')}}" alt="{{translate('messages.gst_status')}}"></span></span>
+                                    data-original-title="{{translate('messages.If GST is enable, GST number will show in invoice')}}"><img src="{{asset('/public/assets/admin/img/info-circle.svg')}}" alt="{{translate('messages.gst_status')}}"></span></span>
                                     <input type="checkbox" class="toggle-switch-input" name="gst_status" id="gst_status" value="1" {{$store->gst_status?'checked':''}}>
                                     <span class="toggle-switch-label">
                                         <span class="toggle-switch-indicator"></span>
@@ -284,7 +298,7 @@
                         @php($extra_packaging_data = \App\Models\BusinessSetting::where('key', 'extra_packaging_data')->first()?->value ?? '')
                         @php($extra_packaging_data =json_decode($extra_packaging_data , true))
                         @if   ( !empty($extra_packaging_data) && $extra_packaging_data[$store->module->module_type]=='1')
-                            <div class="col-sm-6">
+                            <div class="col-sm-{{ $store->module->module_type != 'food' ? '4' : '6' }}">
                                 <div class="form-group mb-0 p-2">
                                     <label class="d-flex justify-content-between switch toggle-switch-sm text-dark" for="extra_packaging_status">
                                         <span>{{translate('messages.extra_packaging_charge_amount')}} <span class="form-label-secondary" data-toggle="tooltip" data-placement="right"

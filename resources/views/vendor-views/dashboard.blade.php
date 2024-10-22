@@ -22,7 +22,42 @@
                         <span>{{translate('messages.dashboard')}}</span>
                     </h1>
                 </div>
-                <div class="col-sm text-sm-right">
+                <div class="col-sm ">
+                    @if ( Session::get('stock_out_reminder_close_btn') !== true && isset($out_of_stock_count) &&   $out_of_stock_count  > 1 )
+                            <div class="alert __alert-4 m-0 py-1 px-2 hide-warning max-w-450px" role="alert">
+                                <div class="alert-inner">
+                                    <img class="rounded mr-1"  width="25" src="{{ asset('/public/assets/admin/img/invalid-icon.png') }}" alt="">
+                                    <div class="cont">
+                                        <h4 class="mb-2">{{ translate('Warning!') }} </h4>{{  ( $out_of_stock_count -1).'+ '.  translate('more_products_are_low_on_Stock.') }}
+                                        <br>
+                                        <a data-id="stock_out_reminder_close_btn" id="hide-warning"  class="text-primary text-underline add-to-session">{{ translate('remind_me_later') }}</a>  &nbsp; &nbsp; <a href="{{ route('vendor.item.stock-limit-list') }}" class="text-primary text-underline">{{ translate('Click_To_View') }}</a>
+                                    </div>
+                                </div>
+                                <button class="position-absolute right-0 top-0 py-2 px-2 bg-transparent border-0 outline-none shadow-none" id="hide-warning-btn"  type="button">
+                                    <i class="tio-clear fz--18"></i>
+                                </button>
+                            </div>
+
+                             @elseif ( Session::get('stock_out_reminder_close_btn') !== true && isset($out_of_stock_count)  &&  $out_of_stock_count  == 1  && isset($item))
+                             <div class="alert __alert-4 m-0 py-1 px-2 hide-warning max-w-450px" role="alert">
+                                <div class="alert-inner">
+                                    <img class="aspect-1-1 mr-1 object--contain rounded" width="100" src="{{ $item?->image_full_url ?? asset('/public/assets/admin/img/100x100/food-default-image.png') }}" alt="">
+                                    <div class="cont">
+                                        <h4 class="mb-2">{{ $item?->name }} </h4>{{  translate('This product is out of stock.') }}
+                                        <br>
+                                        <a
+                                        data-id="stock_out_reminder_close_btn" id="hide-warning"  class="text-primary text-underline add-to-session">{{ translate('remind_me_later') }}</a>  &nbsp; &nbsp; <a href="{{ route('vendor.item.stock-limit-list') }}" class="text-primary text-underline">{{ translate('Click_To_View') }}</a>
+                                    </div>
+                                </div>
+                                <button class="position-absolute right-0 top-0 py-2 px-2 bg-transparent border-0 outline-none shadow-none" id="hide-warning-btn"  type="button">
+                                    <i class="tio-clear fz--18"></i>
+                                </button>
+                            </div>
+
+                        @endif
+
+
+
 
                     <div class="promo-card-2">
                         <img src="{{asset('public/assets/admin/img/promo-arrow.png')}}" class="shapes" alt="">
@@ -294,5 +329,15 @@
             // change url page with new params
             window.history.pushState('page2', 'Title', '{{url()->current()}}?' + params);
         }
+
+
+        $(document).on('click', '#hide-warning', function () {
+                $('.hide-warning').hide();
+                });
+                $(document).on('click', '#hide-warning-btn', function () {
+                $('.hide-warning').hide();
+                });
+
+
     </script>
 @endpush

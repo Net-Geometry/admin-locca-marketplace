@@ -1406,6 +1406,7 @@ class ItemController extends Controller
 
     public function stock_limit_list(Request $request)
     {
+
         $category_id = $request->query('category_id', 'all');
         $type = $request->query('type', 'all');
         $items = Item::
@@ -1414,7 +1415,15 @@ class ItemController extends Controller
                 return $q->whereId($category_id)->orWhere('parent_id', $category_id);
             });
         })
-        ->type($type)->latest()->paginate(config('default_pagination'));
+        ->type($type);
+        if( Helpers::get_store_data()->storeConfig->minimum_stock_for_warning > 0){
+            $items= $items->where('stock' ,'<=' , Helpers::get_store_data()->storeConfig->minimum_stock_for_warning );
+        } else{
+            $items= $items->where('stock',0 );
+        }
+
+        $items=  $items->orderby('stock')
+        ->latest()->paginate(config('default_pagination'));
         $category =$category_id !='all'? Category::findOrFail($category_id):null;
         return view('vendor-views.product.stock_limit_list', compact('items', 'category', 'type'));
 
