@@ -5834,4 +5834,7 @@ Smartly or Earn. ',
   'guest_verified' => 'Guest verified',
   'nutrition' => 'Nutrition',
   'allergy' => 'Allergy',
+  'OTP_successfully_send' => 'OTP successfully send',
+  'Phone_successfully_verified' => 'Phone successfully verified',
+  'Password_successfully_updated' => 'Password successfully updated',
 );
