@@ -877,4 +877,86 @@ class StoreLogic
             'stores' => $paginator->items()
         ];
     }
+
+    public static function get_top_offer_near_me($zone_id, $limit = 50, $offset = 1, $type = 'all',$longitude=0,$latitude=0)
+    {
+
+        $top_offer_near_me_stores_default_status = BusinessSetting::where('key', 'top_offer_near_me_stores_default_status')->first()?->value ?? 1;
+        $top_offer_near_me_stores_sort_by_general = PriorityList::where('name', 'top_offer_near_me_stores_sort_by_general')->where('type','general')->first()?->value ?? '';
+        $top_offer_near_me_stores_sort_by_unavailable = PriorityList::where('name', 'top_offer_near_me_stores_sort_by_unavailable')->where('type','unavailable')->first()?->value ?? '';
+        $top_offer_near_me_stores_sort_by_temp_closed = PriorityList::where('name', 'top_offer_near_me_stores_sort_by_temp_closed')->where('type','temp_closed')->first()?->value ?? '';
+
+
+
+        $query = Store::withOpen($longitude??0,$latitude??0)
+            ->withCount(['items','campaigns','reviews'])
+            ->with('discount')
+            ->whereHas('discount' , function($q){
+                $q->validate();
+            })
+            ->when(config('module.current_module_data'), function($query)use($zone_id){
+                $query->whereHas('zone.modules', function($query){
+                    $query->where('modules.id', config('module.current_module_data')['id']);
+                })->module(config('module.current_module_data')['id']);
+                if(!config('module.current_module_data')['all_zone_service']) {
+                    $query->whereIn('zone_id', json_decode($zone_id, true));
+                }
+            })
+            ->type($type)->Active();
+
+            if($top_offer_near_me_stores_default_status== 1){
+                $query= $query->orderby('open')->orderby('distance');
+            }else{
+
+                if($top_offer_near_me_stores_sort_by_temp_closed == 'remove'){
+                    $query = $query->where('active', '>', 0);
+                }elseif($top_offer_near_me_stores_sort_by_temp_closed == 'last'){
+                    $query = $query->orderByDesc('active');
+                }
+
+                if($top_offer_near_me_stores_sort_by_unavailable == 'remove'){
+                    $query = $query->having('open', '>', 0);
+                }elseif($top_offer_near_me_stores_sort_by_unavailable == 'last'){
+                    $query = $query->orderBy('open', 'desc');
+                }
+
+                if($top_offer_near_me_stores_sort_by_general == 'rating') {
+                    $query = $query->selectSub(function ($query) {
+                        $query->selectRaw('AVG(reviews.rating)')
+                            ->from('reviews')
+                            ->join('items', 'items.id', '=', 'reviews.item_id')
+                            ->whereColumn('items.store_id', 'stores.id')
+                            ->groupBy('items.store_id');
+                    }, 'avg_rat')->orderBy('avg_rat', 'desc');
+                }elseif($top_offer_near_me_stores_sort_by_general == 'review_count') {
+                    $query = $query->orderByDesc('reviews_count');
+                }elseif($top_offer_near_me_stores_sort_by_general == 'asc_discount') {
+
+
+                    $query = $query->selectSub(function ($query) {
+                        $query->selectRaw('MAX(discounts.discount)')
+                            ->from('discounts')
+                            ->whereColumn('discounts.store_id', 'stores.id');
+                    }, 'discount')
+                    ->orderBy('discount', 'asc');
+
+                }elseif($top_offer_near_me_stores_sort_by_general == 'desc_discount') {
+                    $query = $query->selectSub(function ($query) {
+                        $query->selectRaw('MAX(discounts.discount)')
+                            ->from('discounts')
+                            ->whereColumn('discounts.store_id', 'stores.id');
+                    }, 'discount')
+                    ->orderBy('discount', 'desc');
+                }
+            }
+
+        $paginator= $query->paginate($limit??50, ['*'], 'page', $offset??1);
+
+        return [
+            'total_size' => $paginator->total(),
+            'limit' => $limit??50,
+            'offset' => $offset??1,
+            'stores' => $paginator->items()
+        ];
+    }
 }

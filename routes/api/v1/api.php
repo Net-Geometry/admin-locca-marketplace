@@ -438,6 +438,7 @@ Route::group(['namespace' => 'Api\V1', 'middleware'=>'localization'], function (
             Route::get('reviews', 'StoreController@reviews');
             Route::get('search', 'StoreController@get_searched_stores');
             Route::get('get-data', 'StoreController@get_combined_data');
+            Route::get('top-offer-near-me', 'StoreController@get_top_offer_near_me');
         });
         Route::get('get-combined-data', 'SearchController@get_combined_data');
 

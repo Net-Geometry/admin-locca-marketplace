@@ -1233,7 +1233,7 @@ class ItemController extends Controller
     }
     public function stock_limit_list(Request $request)
     {
-        $limit = $request['limite']??25;
+        $limit = $request['limit']??25;
         $offset = $request['offset']??1;
 
         $category_id = $request->query('category_id', 'all');
