@@ -68,7 +68,7 @@ class CustomerAuthController extends Controller
 
             }
 
-            if(env('APP_MODE')=='demo')
+            if(env('APP_MODE')=='test')
             {
                 if($request['otp']=="123456")
                 {
@@ -511,7 +511,7 @@ class CustomerAuthController extends Controller
                 }
 
                 $otp = rand(100000, 999999);
-                if(env('APP_MODE') == 'demo'){
+                if(env('APP_MODE') == 'test'){
                     $otp = '123456';
                 }
                 DB::table('phone_verifications')->updateOrInsert(['phone' => $request['phone']],
@@ -537,7 +537,7 @@ class CustomerAuthController extends Controller
                 }
 
                 $token = null;
-                if(env('APP_MODE') != 'demo' && $response !== 'success') {
+                if(env('APP_MODE') != 'test' && $response !== 'success') {
                     $errors = [];
                     array_push($errors, ['code' => 'otp', 'message' => translate('messages.failed_to_send_sms')]);
                     return response()->json([
@@ -549,7 +549,7 @@ class CustomerAuthController extends Controller
         }elseif (isset($login_settings['email_verification_status']) && $login_settings['email_verification_status'] == 1){
             $mail =0;
             $otp = rand(100000, 999999);
-            if(env('APP_MODE') == 'demo'){
+            if(env('APP_MODE') == 'test'){
                 $otp = '123456';
             }
             DB::table('email_verifications')->updateOrInsert(['email' => $request['email']],
@@ -572,7 +572,7 @@ class CustomerAuthController extends Controller
                 $mailResponse=null;
             }
             $token = null;
-            if(env('APP_MODE') != 'demo' && $mailResponse !== 'success') {
+            if(env('APP_MODE') != 'test' && $mailResponse !== 'success') {
                 $errors = [];
                 array_push($errors, ['code' => 'otp', 'message' => translate('messages.failed_to_send_mail')]);
                 return response()->json([
@@ -1014,7 +1014,7 @@ class CustomerAuthController extends Controller
             }
 
             $otp = rand(100000, 999999);
-            if(env('APP_MODE') == 'demo'){
+            if(env('APP_MODE') == 'test'){
                 $otp = '123456';
             }
             DB::table('phone_verifications')->updateOrInsert(['phone' => $request_data['phone']],
@@ -1040,7 +1040,7 @@ class CustomerAuthController extends Controller
                 $response = SMS_module::send($request_data['phone'],$otp);
             }
 
-            if((env('APP_MODE') != 'demo') && $response !== 'success')
+            if((env('APP_MODE') != 'test') && $response !== 'success')
             {
                 $errors = [];
                 array_push($errors, ['code' => 'otp', 'message' => translate('messages.failed_to_send_sms')]);
@@ -1162,6 +1162,11 @@ class CustomerAuthController extends Controller
             return response()->json([
                 'message' => translate('messages.user_not_found')
             ], 404);
+        }
+        if($user->f_name){
+            return response()->json([
+                'message' => translate('messages.already_exists')
+            ], 403);
         }
         $user->f_name = $firstName;
         $user->l_name = $lastName;

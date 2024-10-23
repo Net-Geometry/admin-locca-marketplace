@@ -5837,4 +5837,6 @@ Smartly or Earn. ',
   'OTP_successfully_send' => 'OTP successfully send',
   'Phone_successfully_verified' => 'Phone successfully verified',
   'Password_successfully_updated' => 'Password successfully updated',
+  'referer_code_not_found' => 'Referer code not found',
+  'already_exists' => 'Already exists',
 );

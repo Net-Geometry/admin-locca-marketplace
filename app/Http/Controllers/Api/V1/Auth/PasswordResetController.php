@@ -53,7 +53,7 @@ class PasswordResetController extends Controller
 
 
             $token = rand(100000,999999);
-            if(env('APP_MODE') == 'demo'){
+            if(env('APP_MODE') == 'test'){
                 $token = '123456';
             }
             DB::table('password_resets')->updateOrInsert(['phone' => $customer['phone']],
@@ -77,7 +77,7 @@ class PasswordResetController extends Controller
                 $response = SMS_module::send($request['phone'],$token);
             }
 
-            if($response == 'success' || env('APP_MODE') == 'demo')
+            if($response == 'success' || env('APP_MODE') == 'test')
             {
                 return response()->json(['message' => translate('messages.Otp_Successfully_Sent_To_Your_Phone')], 200);
             }
@@ -111,7 +111,7 @@ class PasswordResetController extends Controller
             ]], 404);
         }
 
-        if(env('APP_MODE')=='demo')
+        if(env('APP_MODE')=='test')
         {
             if($request['reset_token']=="123456")
             {
@@ -203,7 +203,7 @@ class PasswordResetController extends Controller
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
 
-        if(env('APP_MODE')=='demo')
+        if(env('APP_MODE')=='test')
         {
             if($request['reset_token']=="123456")
             {
