@@ -155,6 +155,12 @@
                                             value="{{ $appleLoginService['key_id'] }}">
                                     </div>
                                     <div class="form-group">
+                                        <label for="key_id"
+                                            class="form-label">{{translate('messages.redirect_url')}}</label>
+                                        <input id="redirect_url" type="url" class="form-control" name="redirect_url"
+                                            value="{{ $appleLoginService['redirect_url'] }}">
+                                    </div>
+                                    <div class="form-group">
                                         <label
                                             class="form-label">{{translate('messages.service_file')}} {{ $appleLoginService['service_file']?translate('(Already Exists)'):'' }}</label>
                                         <input type="file" accept=".p8" class="form-control" name="service_file"
