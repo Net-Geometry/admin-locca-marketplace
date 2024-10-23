@@ -5849,4 +5849,6 @@ Smartly or Earn. ',
   'store_status_updated' => 'Store status updated',
   'User_app_settings_updated' => 'User app settings updated',
   'This section sorted based on the dicount and closest to the customers location' => 'This section sorted based on the dicount and closest to the customers location',
+  'referer_code_not_found' => 'Referer code not found',
+  'already_exists' => 'Already exists',
 );
