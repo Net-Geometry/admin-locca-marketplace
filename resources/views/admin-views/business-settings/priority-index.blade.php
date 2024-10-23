@@ -2747,7 +2747,7 @@
                                                         <i class="tio-info-outined"></i>
                                                     </span>
                                                 <div class="fs-13">
-                                                    {{ translate('Currently sorting this section based on the dicount and closest to the customers location') }}
+                                                    {{ translate('This section sorted based on the dicount and closest to the customers location') }}
                                                 </div>
                                             </label>
                                         </div>

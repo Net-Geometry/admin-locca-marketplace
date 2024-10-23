@@ -5848,4 +5848,5 @@ Smartly or Earn. ',
   'Account_Activation' => 'Account Activation',
   'store_status_updated' => 'Store status updated',
   'User_app_settings_updated' => 'User app settings updated',
+  'This section sorted based on the dicount and closest to the customers location' => 'This section sorted based on the dicount and closest to the customers location',
 );
