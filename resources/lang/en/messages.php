@@ -5863,4 +5863,9 @@
   'Are you sure, want to cancel the request?' => 'Are you sure, want to cancel the request?',
   'select_business_zone_for_map' => 'Select business zone for map',
   'Min :' => 'Min :',
+  'The email must be a valid email address.' => 'The email must be a valid email address.',
+  'New Provider Request - Details' => 'New Provider Request - Details',
+  'Auto_Focus_Car_Service' => 'Auto Focus Car Service',
+  'Business_Address' => 'Business Address',
+  'VAT / TAX' => 'VAT / TAX',
 );

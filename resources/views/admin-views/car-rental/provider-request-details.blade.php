@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('messages.provider_details'))
+@section('title', translate('messages.New Provider Request - Details'))
 
 @push('css_or_js')
 @endpush
@@ -35,19 +35,57 @@
             </div>
         </div>
         <!-- End Page Header -->
-        <div class="radius-10 mt-4">
-            <div class="taxi-banner">
-
-            </div>
-            <div class="taxi-info-wrapper">
-                <div class="logo"></div>
-                <div class="details">
-
+        <div class="taxi-banner radius-10 mt-4 mb-20">
+            <div class="taxi-info-wrapper d-flex flex-wrap flex-sm-nowrap gap-30px">
+                <div class="logo">
+                    <img src="{{ asset('public/assets/admin/img/placeholder.png') }}" width="150" class="rounded-8"
+                        alt="">
+                </div>
+                <div class="taxi-info">
+                    <h3 class="fs-20 fw-bold text--title mb-20"> {{ translate('messages.Auto_Focus_Car_Service') }}</h3>
+                    <div class="details d-flex flex-wrap flex-column flex-sm-row gap-40px">
+                        <div class="details-single d-flex align-items-center gap-2">
+                            <img src="{{ asset('public/assets/admin/img/icons/zone.png') }}" width="36" height="36"
+                                class="rounded" alt="">
+                            <div>
+                                <h5 class="lh--12 mb-0 color-3C3C3C"> {{ translate('messages.Business_Address') }}
+                                </h5>
+                                <span class="fs-13 lh--12 color-484848">House: 00, Road: 00, Test City</span>
+                            </div>
+                        </div>
+                        <div class="details-single d-flex align-items-center gap-2">
+                            <img src="{{ asset('public/assets/admin/img/icons/job-type.png') }}" width="36"
+                                height="36" class="rounded" alt="">
+                            <div>
+                                <h5 class="lh--12 mb-0 color-3C3C3C"> {{ translate('messages.Business_Plan') }}
+                                </h5>
+                                <span class="fs-13 lh--12 color-484848">Commission Base</span>
+                            </div>
+                        </div>
+                        <div class="details-single d-flex align-items-center gap-2">
+                            <img src="{{ asset('public/assets/admin/img/icons/wallet.png') }}" width="36"
+                                height="36" class="rounded" alt="">
+                            <div>
+                                <h5 class="lh--12 mb-0 color-3C3C3C"> {{ translate('messages.Approx. Pickup Time') }}
+                                </h5>
+                                <span class="fs-13 lh--12 color-484848">30 Minutes</span>
+                            </div>
+                        </div>
+                        <div class="details-single d-flex align-items-center gap-2">
+                            <img src="{{ asset('public/assets/admin/img/icons/vehicle-type.png') }}" width="36"
+                                height="36" class="rounded" alt="">
+                            <div>
+                                <h5 class="lh--12 mb-0 color-3C3C3C"> {{ translate('messages.VAT / TAX') }}
+                                </h5>
+                                <span class="fs-13 lh--12 color-484848">5 %</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
         <!-- End Page Header -->
-        <div class="card mt-4">
+        <div class="card">
             <div class="card-header">
                 <div>
                     <h5 class="text-title mb-1">

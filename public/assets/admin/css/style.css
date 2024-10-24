@@ -5558,6 +5558,14 @@ div.scroll-down {
     color: #8a8a8a;
 }
 
+.color-3C3C3C {
+    color: #3c3c3c;
+}
+
+.color-484848 {
+    color: #484848;
+}
+
 .h-auto {
     height: auto;
 }
@@ -5778,6 +5786,10 @@ div.scroll-down {
 
 .lh--1 {
     line-height: 1;
+}
+
+.lh--12 {
+    line-height: 1.2;
 }
 
 .w-28p {
@@ -10145,9 +10157,16 @@ body > .initial-38-1 {
     gap: 20px;
 }
 
+.gap-30px {
+    gap: 20px;
+}
+
 @media (min-width: 768px) {
     .gap-40px {
         gap: 40px;
+    }
+    .gap-30px {
+        gap: 30px;
     }
 }
 @media (min-width: 992px) {
@@ -13851,4 +13870,19 @@ ul.address-info .label {
     background-color: #f3f4f5;
     color: var(--title-clr);
     font-weight: 400;
+}
+
+/* Taxi module provider-details */
+.taxi-banner {
+    padding-top: 180px;
+    background: url("../img/1920x400/img1.jpg") no-repeat center center/cover;
+    overflow: hidden;
+}
+.taxi-info-wrapper {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(30px);
+    padding: 30px;
+}
+.taxi-info-wrapper .logo {
+    margin-top: -70px;
 }
