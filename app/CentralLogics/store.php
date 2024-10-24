@@ -531,28 +531,49 @@ class StoreLogic
             foreach ($key as $value) {
                 $q->orWhere('name', 'like', "%{$value}%");
             }
-
-            $q->orWhereHas('items.nutritions',function($query)use($key){
-                $query->where(function($q)use($key){
-                    foreach ($key as $value) {
-                        $q->where('nutrition', 'like', "%{$value}%");
-                    };
-                });
-            });
-            $q->orWhereHas('items.allergies',function($query)use($key){
-                $query->where(function($q)use($key){
-                    foreach ($key as $value) {
-                        $q->where('allergy', 'like', "%{$value}%");
-                    };
-                });
-            });
-            $q->orWhereHas('items.generic',function($query)use($key){
-                $query->where(function($q)use($key){
-                    foreach ($key as $value) {
-                        $q->where('generic_name', 'like', "%{$value}%");
-                    };
-                });
-            });
+            $relationships = [
+                'items.nutritions' => 'nutrition',
+                'items.allergies' => 'allergy',
+                'items.generic' => 'generic_name',
+                'items.ecommerce_item_details.brand' => 'name',
+                'items.pharmacy_item_details.common_condition' => 'name'
+            ];
+            $q->applyRelationShipSearch(relationships:$relationships ,searchParameter:$key);
+            // $q->orWhereHas('items.nutritions',function($query)use($key){
+            //     $query->where(function($q)use($key){
+            //         foreach ($key as $value) {
+            //             $q->where('nutrition', 'like', "%{$value}%");
+            //         };
+            //     });
+            // });
+            // $q->orWhereHas('items.allergies',function($query)use($key){
+            //     $query->where(function($q)use($key){
+            //         foreach ($key as $value) {
+            //             $q->where('allergy', 'like', "%{$value}%");
+            //         };
+            //     });
+            // });
+            // $q->orWhereHas('items.generic',function($query)use($key){
+            //     $query->where(function($q)use($key){
+            //         foreach ($key as $value) {
+            //             $q->where('generic_name', 'like', "%{$value}%");
+            //         };
+            //     });
+            // });
+            // $q->orWhereHas('items.ecommerce_item_details.brand',function($query)use($key){
+            //     $query->where(function($q)use($key){
+            //         foreach ($key as $value) {
+            //             $q->where('name', 'like', "%{$value}%");
+            //         };
+            //     });
+            // });
+            // $q->orWhereHas('items.pharmacy_item_details.common_condition',function($query)use($key){
+            //     $query->where(function($q)use($key){
+            //         foreach ($key as $value) {
+            //             $q->where('name', 'like', "%{$value}%");
+            //         };
+            //     });
+            // });
 
 
         })

@@ -47,7 +47,7 @@ class ItemController extends Controller
             return back();
         }
         $categories = Category::where(['position' => 0])->module(Helpers::get_store_data()->module_id)->get();
-        $conditions = CommonCondition::all();
+        $conditions = CommonCondition::get(['id','name']);
         $brands = Brand::all();
         $module_data = config('module.'. Helpers::get_store_data()->module->module_type);
         return view('vendor-views.product.index', compact('categories','module_data','conditions','brands'));
@@ -449,7 +449,7 @@ class ItemController extends Controller
         $product_category = json_decode($product->category_ids);
         $categories = Category::where(['parent_id' => 0])->module(Helpers::get_store_data()->module_id)->get();
         $module_data = config('module.'. Helpers::get_store_data()->module->module_type);
-        $conditions = CommonCondition::all();
+        $conditions = CommonCondition::get(['id','name']);
         $brands = Brand::all();
         return view('vendor-views.product.edit', compact('product', 'product_category', 'categories','module_data', 'temp_product','conditions','brands'));
     }

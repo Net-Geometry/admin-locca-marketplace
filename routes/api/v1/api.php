@@ -467,6 +467,7 @@ Route::group(['namespace' => 'Api\V1', 'middleware'=>'localization'], function (
 
         Route::group(['prefix' => 'common-condition'], function () {
             Route::get('/', 'CommonConditionController@get_conditions');
+            Route::get('/list', 'CommonConditionController@getCommonConditionList');
             Route::get('items/{condition_id}', 'CommonConditionController@get_products');
         });
 
