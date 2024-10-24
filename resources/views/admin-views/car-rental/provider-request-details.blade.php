@@ -84,7 +84,6 @@
                 </div>
             </div>
         </div>
-        <!-- End Page Header -->
         <div class="card">
             <div class="card-header">
                 <div>
