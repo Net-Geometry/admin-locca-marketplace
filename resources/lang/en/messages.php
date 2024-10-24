@@ -5852,4 +5852,6 @@ Smartly or Earn. ',
   'referer_code_not_found' => 'Referer code not found',
   'already_exists' => 'Already exists',
   'redirect_url' => 'Redirect url',
+  'client_id_for_web' => 'Client id for web',
+  'client_id_for_app' => 'Client id for app',
 );

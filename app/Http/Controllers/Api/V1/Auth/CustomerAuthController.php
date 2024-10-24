@@ -715,7 +715,11 @@ class CustomerAuthController extends Controller
                         }
                         $teamId = $apple_login->team_id;
                         $keyId = $apple_login->key_id;
-                        $sub = $apple_login->client_id;
+                        if($request->platform == 'flutter_app'){
+                            $sub = $apple_login->client_id_app;
+                        }else{
+                            $sub = $apple_login->client_id;
+                        }
                         $aud = 'https://appleid.apple.com';
                         $iat = strtotime('now');
                         $exp = strtotime('+60days');
