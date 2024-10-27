@@ -5890,4 +5890,6 @@
   'item on the way' => 'Item on the way',
   'ABC Rent a Car' => 'ABC Rent a Car',
   'map_view' => 'Map view',
+  'Edit Provider - Business Basic Setup' => 'Edit Provider - Business Basic Setup',
+  'update_&_next' => 'Update & next',
 );

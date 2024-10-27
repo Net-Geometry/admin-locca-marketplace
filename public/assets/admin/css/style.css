@@ -4888,11 +4888,14 @@ div.scroll-down {
 .opacity-0 {
     opacity: 0;
 }
+.opacity-50 {
+    opacity: 0.5;
+}
 .opacity-60 {
     opacity: 0.6;
 }
-.opacity-50 {
-    opacity: 0.5;
+.opacity-70 {
+    opacity: 0.7;
 }
 
 .bg--005555 {
@@ -8647,6 +8650,9 @@ ul.delivery--information-single li:not(:last-child) {
 
 .mb-20 {
     margin-bottom: 20px;
+}
+.pb-20 {
+    padding-bottom: 20px;
 }
 
 .text-006AB4 {
@@ -13979,4 +13985,103 @@ ul.address-info .label {
 .zone-btn {
     flex-grow: 1;
     min-width: max-content;
+}
+
+.custom-group-btn {
+    border: 1px solid rgba(51, 66, 87, 0.2);
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 0;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.custom-group-btn .item:first-child::after {
+    content: "";
+    width: 1px;
+    height: 45px;
+    background-color: rgba(0, 0, 0, 0.1);
+    position: absolute;
+    inset-inline-end: 0;
+    inset-block-start: 50%;
+    transform: translateY(-50%);
+}
+
+.custom-group-btn .item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+}
+
+.custom-group-btn .floating-label {
+    position: absolute;
+    inset-block-start: 12px;
+    inset-inline-start: 16px;
+    color: var(--title-clr);
+}
+
+.custom-group-btn .form-control {
+    padding-inline-start: 55px;
+    box-shadow: none;
+    width: 100%;
+    color: var(--title-clr);
+}
+
+.custom-group-btn .form-control:focus,
+.custom-group-btn .custom-select:focus {
+    box-shadow: none;
+}
+
+.custom-group-btn .custom-select {
+    width: 100%;
+    background-color: #f3f4f5;
+    border-radius: 0;
+    color: var(--title-clr);
+}
+
+/* custom timeline */
+.custom-timeline {
+}
+.custom-timeline .single {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    color: var(--title-clr);
+    font-weight: 500;
+    opacity: 0.7;
+}
+.custom-timeline .single.checked {
+    opacity: 1;
+    font-weight: 600;
+}
+.custom-timeline .single span {
+}
+.custom-timeline .single .count {
+    font-weight: 700;
+    border: 1px solid rgba(51, 66, 87, 0.7);
+    width: 32px;
+    height: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    position: relative;
+}
+
+.custom-timeline .single.checked .count::after {
+    /* content: "\2713"; */
+    content: url("../img/icons/check.svg");
+    position: absolute;
+    inset-inline-start: 0;
+    inset-block-start: 0;
+    block-size: 100%;
+    inline-size: 100%;
+    background-color: #039d55;
+    color: #fafafa;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
 }

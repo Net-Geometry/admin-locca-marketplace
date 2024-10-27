@@ -1,32 +1,22 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('messages.edit_details'))
+@section('title', translate('messages.Edit Provider - Business Basic Setup'))
 
 
 
 @section('content')
     <div class="content container-fluid">
         <!-- Page Header -->
-        <div class="page-header">
+        <div class="page-header pb-20">
             <div class="d-flex justify-content-between flex-wrap gap-3">
                 <div>
                     <h1 class="page-header-title text-break">
                         <span class="page-header-icon">
                             <img src="{{ asset('public/assets/admin/img/store.png') }}" class="w--22" alt="">
                         </span>
-                        <span>{{ translate('messages.new_provider_request') }}
+                        <span>{{ translate('messages.Auto Focus Car Service') }}
                     </h1></span>
                     </h1>
-                </div>
-                <div class="d-flex align-items-start flex-wrap gap-2">
-                    <a class="btn btn--warning-light font-weight-bold float-right request_alert mb-0" data-url="javascript:"
-                        data-message="{{ translate('messages.you_want_to_deny_this_application') }}" href="javascript:"><i
-                            class="tio-clear font-weight-bold pr-1"></i>
-                        {{ translate('messages.reject') }}</a>
-                    <a class="btn btn--primary font-weight-bold float-right mr-2 request_alert mb-0" data-url="javascript:"
-                        data-message="{{ translate('messages.you_want_to_approve_this_application') }}"
-                        href="javascript:"><i
-                            class="tio-done font-weight-bold pr-1"></i>{{ translate('messages.update_&_approve') }}</a>
                 </div>
             </div>
         </div>
@@ -45,6 +35,13 @@
         @php($language = $language->value ?? null)
         @php($defaultLang = 'en')
         <!-- End Page Header -->
+
+        {{-- timeline --}}
+        <div class="custom-timeline d-flex flex-wrap gap-40px text-title mb-2">
+            <h4 class="single checked"><span class="count">1</span>Business Basic Setup</h4>
+            <h4 class="single"><span class="count">2</span>Business Plan Setup</h4>
+        </div>
+
         <form action="{{ route('admin.store.store') }}" method="post" enctype="multipart/form-data" class="js-validate"
             id="vendor_form">
             @csrf
@@ -540,14 +537,17 @@
                     </div>
                 </div>
                 <div class="col-lg-12">
-                    <div class="btn--container justify-content-end">
+                    <div class="btn--container justify-content-end mt-3">
                         <button type="reset" id="reset_btn"
-                            class="btn btn--reset">{{ translate('messages.reset') }}</button>
-                        <button type="submit" class="btn btn--primary">{{ translate('messages.submit') }}</button>
+                            class="btn btn--warning-light">{{ translate('messages.cancel') }}</button>
+                        <button type="submit"
+                            class="btn btn--primary">{{ translate('messages.update_&_next') }}</button>
                     </div>
                 </div>
             </div>
         </form>
+
+
     </div>
 
 @endsection
