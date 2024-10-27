@@ -199,8 +199,8 @@
 
         $(document).on('click', '.show-approve-view', function () {
             let id = $(this).data('id');
-            let url = "{{ route('admin.transactions.store.withdraw_status', ['id']) }}";
-            url = url.replace('id', id);
+            let url = "{{ route('admin.transactions.store.withdraw_status', ['data_id']) }}";
+            url = url.replace('data_id', id);
             let htmlContent = `
             <form action="${url}" method="POST">
                     @csrf
