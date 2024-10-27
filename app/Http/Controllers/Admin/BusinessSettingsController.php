@@ -2684,7 +2684,7 @@ class BusinessSettingsController extends Controller
 
         $is_firebase_active=Helpers::get_business_settings('firebase_otp_verification') ?? 0;
 
-        $is_sms_active= Setting::where('is_active',1)->whereJsonContains('live_values->status','1')->where('settings_type', 'sms_config')->exists();
+        $is_sms_active= Setting::whereJsonContains('live_values->status','1')->where('settings_type', 'sms_config')->exists();
 
         $is_mail_active= config('mail.status');
 
@@ -2798,7 +2798,7 @@ class BusinessSettingsController extends Controller
 
     public function firebase_otp_index(Request $request)
     {
-        $is_sms_active= Setting::where('is_active',1)->where('settings_type', 'sms_config')
+        $is_sms_active= Setting::whereJsonContains('live_values->status','1')->where('settings_type', 'sms_config')
         ->exists();
         $is_mail_active= config('mail.status');
         return view('admin-views.business-settings.firebase-otp-index',compact('is_sms_active','is_mail_active'));
@@ -2808,9 +2808,8 @@ class BusinessSettingsController extends Controller
     {
         $login_setup_status = Helpers::get_business_settings('otp_login_status')??0;
         $phone_verification_status = Helpers::get_business_settings('phone_verification_status')??0;
-        $is_sms_active= Setting::where('is_active',1)->whereJsonContains('live_values->status','1')->where('settings_type', 'sms_config')
+        $is_sms_active= Setting::whereJsonContains('live_values->status','1')->where('settings_type', 'sms_config')
             ->exists();
-
         if(!$is_sms_active && $login_setup_status && ($request['firebase_otp_verification']==0)){
             Toastr::warning(translate('otp_login_status_is_enabled_in_login_setup._First_disable_from_login_setup.'));
             return redirect()->back();
