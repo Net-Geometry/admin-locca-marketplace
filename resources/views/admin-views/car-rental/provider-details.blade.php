@@ -248,7 +248,7 @@
                             <div class="card-body">
                                 <h5 class="mb-10px font-bold text-title"> {{ translate('messages.General_Information') }}
                                 </h5>
-                                <div class="resturant--info-address">
+                                <div class="resturant--info-address align-items-end">
                                     <ul class="address-info p-0 text-title">
                                         <li class="d-flex align-items-start">
                                             <span class="label">{{ translate('messages.Provider Name') }}</span>
@@ -269,6 +269,12 @@
                                                 </span></span>
                                         </li>
                                     </ul>
+                                    <div class="hs-unfold mt-1">
+                                        <button
+                                            class="btn order--details-btn-sm btn--varify btn-outline-varify btn--sm font-regular d-flex align-items-center __gap-5px"
+                                            data-toggle="modal" data-target="#locationModal"><i class="tio-poi"></i>
+                                            {{ translate('messages.map_view') }}</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -387,28 +393,286 @@
                 </div>
             </div>
             <div class="card-body">
-                <div class="pdf-single">
-                    <iframe src="https://pdfobject.com/pdf/sample.pdf" height="150" frameborder="0"></iframe>
-                    <div class="overlay">
-                        <a href="https://pdfobject.com/pdf/sample.pdf" download class="download-btn">
-                            <i class="tio-download-to"></i>
-                        </a>
-                        <div class="pdf-info d-flex gap-10px">
-                            <img src="{{ asset('public/assets/admin/img/store.png') }}" class="w--22 pdf-logo"
-                                alt="PDF Logo">
-                            <p class="pdf-name text--title">Trade License Documents.pdf</p>
+                <h5 class="text-title font-bold mb-10px"> {{ translate('messages.Documents') }}</h5>
+                <div class="d-flex gap-3 flex-wrap mb-20px">
+                    <div class="pdf-single" data-pdf-url="{{ asset('public/assets/admin/img/pdf/sample.pdf') }}"
+                        onclick="openPdf(this)">
+                        <div class="pdf-frame">
+                            <iframe src="{{ asset('public/assets/admin/img/pdf/sample.pdf') }}" frameborder="0"></iframe>
                         </div>
-
+                        <div class="overlay">
+                            <a href="javascript:void(0);" class="download-btn" onclick="downloadPdf(event, this)">
+                                <i class="tio-download-to"></i>
+                            </a>
+                            <div class="pdf-info d-flex gap-10px align-items-center">
+                                <img src="{{ asset('public/assets/admin/img/pdf/pdf.png') }}" width="34"
+                                    alt="PDF Logo">
+                                <div class="fs-13 text--title d-flex flex-column">
+                                    <span>Trade License Documents.pdf</span>
+                                    <span class="opacity-50">Click to view the file</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pdf-single" data-pdf-url="{{ asset('public/assets/admin/img/pdf/sample.pdf') }}"
+                        onclick="openPdf(this)">
+                        <div class="pdf-frame">
+                            <iframe src="{{ asset('public/assets/admin/img/pdf/sample.pdf') }}" frameborder="0"></iframe>
+                        </div>
+                        <div class="overlay">
+                            <a href="javascript:void(0);" class="download-btn" onclick="downloadPdf(event, this)">
+                                <i class="tio-download-to"></i>
+                            </a>
+                            <div class="pdf-info d-flex gap-10px align-items-center">
+                                <img src="{{ asset('public/assets/admin/img/pdf/pdf.png') }}" width="34"
+                                    alt="PDF Logo">
+                                <div class="fs-13 text--title d-flex flex-column">
+                                    <span>Trade License Documents.pdf</span>
+                                    <span class="opacity-50">Click to view the file</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+                <h5 class="text-title font-bold mb-10px"> {{ translate('messages.Images') }}</h5>
+                <div class="d-flex gap-3 flex-wrap mb-20px">
+                    <div class="download-image-single">
+                        <div class="image-frame">
+                            <img src="{{ asset('public/assets/admin/img/user-2.png') }}" alt="provider image">
+                        </div>
+                        <div class="overlay">
+                            <a href="{{ asset('public/assets/admin/img/user-2.png') }}" class="download-btn"
+                                download="">
+                                <i class="tio-download-to"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="download-image-single">
+                        <div class="image-frame">
+                            <img src="{{ asset('public/assets/admin/img/user-2.png') }}" alt="provider image">
+                        </div>
+                        <div class="overlay">
+                            <a href="{{ asset('public/assets/admin/img/user-2.png') }}" class="download-btn"
+                                download="">
+                                <i class="tio-download-to"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
+        </div>
+    </div>
+    <!--Show locations on map Modal -->
+    <div class="modal fade" id="locationModal" tabindex="-1" role="dialog" aria-labelledby="locationModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title text-title font-bold" id="locationModalLabel">
+                        {{ translate('messages.ABC Rent a Car') }}</h3>
+                    <button type="button" class="close fs-24 m-0 p-0" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <div class="d-flex gap-4 mb-20">
+                        <div>
+                            <span class="text-title font-medium"> {{ translate('messages.Business Zone') }}</span>
+                            <div class="mt-10px">
+                                <button class="btn btn--reset font-medium zone-btn" data-zone="mirpur12">Mirpur
+                                    12</button>
+                            </div>
+                        </div>
+                        <div>
+                            <span class="text-title font-medium"> {{ translate('messages.Pickup Zone') }}</span>
+                            <div class="d-flex flex-wrap gap-10px mt-10px">
+                                <button class="btn btn--reset font-medium zone-btn" data-zone="mirpur12">Mirpur
+                                    12</button>
+                                <button class="btn btn--reset font-medium zone-btn" data-zone="battali">Battali</button>
+                                <button class="btn btn--reset font-medium zone-btn" data-zone="baoshila">Baoshila</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal_body_map">
+                        <div class="location-map" id="location-map">
+                            <div id="map" class="initial--25"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+    <!-- End Modal -->
 @endsection
 
-@push('script')
-@endpush
 
 @push('script_2')
+    <script
+        src="https://maps.googleapis.com/maps/api/js?key={{ \App\Models\BusinessSetting::where('key', 'map_api_key')->first()->value }}&callback=initMap&v=3.45.8">
+    </script>
+    <script>
+        "use strict";
+
+        // Define zone coordinates (use actual polygon coordinates)
+        const zones = {
+            mirpur12: [{
+                    lat: 23.8172372,
+                    lng: 90.3323452
+                },
+                {
+                    lat: 23.8202372,
+                    lng: 90.3323452
+                },
+                {
+                    lat: 23.8202372,
+                    lng: 90.3353452
+                },
+                {
+                    lat: 23.8172372,
+                    lng: 90.3353452
+                },
+                {
+                    lat: 23.8162372,
+                    lng: 90.3333452
+                }
+            ],
+            battali: [{
+                    lat: 23.8202372,
+                    lng: 90.340454
+                },
+                {
+                    lat: 23.8222372,
+                    lng: 90.340454
+                },
+                {
+                    lat: 23.8222372,
+                    lng: 90.343454
+                },
+                {
+                    lat: 23.8202372,
+                    lng: 90.343454
+                }
+            ],
+            baoshila: [{
+                    lat: 23.8152372,
+                    lng: 90.330454
+                },
+                {
+                    lat: 23.8172372,
+                    lng: 90.330454
+                },
+                {
+                    lat: 23.8172372,
+                    lng: 90.333454
+                },
+                {
+                    lat: 23.8152372,
+                    lng: 90.333454
+                }
+            ]
+        };
+
+        let map;
+        let zonePolygons = {};
+        let marker;
+
+        initMap();
+
+        function initMap() {
+            const myLatLng = {
+                lat: 23.8172372,
+                lng: 90.3323452
+            };
+            map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 15,
+                center: myLatLng,
+            });
+
+            // Create polygons for each zone
+            Object.keys(zones).forEach(zone => {
+                const polygon = new google.maps.Polygon({
+                    paths: zones[zone],
+                    strokeColor: '#BFBFBF59',
+                    strokeOpacity: 1,
+                    strokeWeight: 2,
+                    fillColor: '#BFBFBF59',
+                    fillOpacity: 0.5,
+                    map: map,
+                });
+                zonePolygons[zone] = polygon;
+            });
+
+            // Create a custom marker
+            marker = new google.maps.Marker({
+                position: myLatLng,
+                map: map,
+                icon: {
+                    url: "{{ asset('public/assets/admin/img/zone-status-on.png') }}",
+                    scaledSize: new google.maps.Size(26, 40),
+                    anchor: new google.maps.Point(15, 40)
+                }
+            });
+        }
+
+        // Function to calculate the centroid of a polygon
+        function calculateCentroid(polygon) {
+            let latSum = 0;
+            let lngSum = 0;
+            const paths = polygon.getPath().getArray();
+            const n = paths.length;
+
+            paths.forEach(latLng => {
+                latSum += latLng.lat();
+                lngSum += latLng.lng();
+            });
+
+            return {
+                lat: latSum / n,
+                lng: lngSum / n
+            };
+        }
+
+        // Event listener for zone buttons
+        document.querySelectorAll('.zone-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const selectedZone = button.getAttribute('data-zone');
+
+                // Hide all zones initially
+                Object.keys(zonePolygons).forEach(zone => {
+                    zonePolygons[zone].setMap(null);
+                });
+
+                // Show selected zone
+                zonePolygons[selectedZone].setMap(map);
+
+                // Calculate the centroid of the selected zone
+                const zoneCenter = calculateCentroid(zonePolygons[selectedZone]);
+                marker.setPosition(zoneCenter);
+                marker.setMap(map);
+            });
+        });
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            function openPdf(element) {
+                const pdfUrl = element.getAttribute("data-pdf-url");
+                window.open(pdfUrl, "_blank");
+            }
+
+            function downloadPdf(event, buttonElement) {
+                event.stopPropagation();
+
+                const pdfUrl = buttonElement.closest(".pdf-single").getAttribute("data-pdf-url");
+
+                const link = document.createElement('a');
+                link.href = pdfUrl;
+                link.download = "Trade License Documents.pdf";
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+            window.openPdf = openPdf;
+            window.downloadPdf = downloadPdf;
+        });
+    </script>
 @endpush

@@ -4891,6 +4891,9 @@ div.scroll-down {
 .opacity-60 {
     opacity: 0.6;
 }
+.opacity-50 {
+    opacity: 0.5;
+}
 
 .bg--005555 {
     background-color: #005555;
@@ -13892,17 +13895,31 @@ ul.address-info .label {
     position: relative;
     display: inline-block;
     width: 300px;
-    height: 150px;
-    border-radius: 5px;
-}
-
-.pdf-single iframe {
-    width: 100%;
     height: 100%;
-    border: none;
+    border: 1.04px solid rgba(197, 210, 210, 1);
+    border-radius: 5px;
+    overflow: hidden;
 }
 
-.pdf-single .overlay {
+.pdf-frame {
+    overflow: hidden;
+}
+
+.pdf-frame iframe {
+    width: 100%;
+    height: 150px;
+    border: none;
+    overflow: hidden;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.pdf-frame iframe::-webkit-scrollbar {
+    display: none;
+}
+
+.pdf-single .overlay,
+.download-image-single .overlay {
     position: absolute;
     top: 0;
     left: 0;
@@ -13918,7 +13935,6 @@ ul.address-info .label {
 }
 
 .pdf-info {
-    text-align: center;
     position: absolute;
     bottom: 0;
     background-color: #fff;
@@ -13927,17 +13943,8 @@ ul.address-info .label {
     width: 100%;
 }
 
-.pdf-logo {
-    width: 50px;
-    margin-bottom: 5px;
-}
-
-.pdf-name {
-    font-size: 14px;
-    margin: 0;
-}
-
-.pdf-single .download-btn {
+.pdf-single .download-btn,
+.download-image-single .download-btn {
     position: absolute;
     inset-block-start: 10px;
     inset-inline-end: 10px;
@@ -13951,7 +13958,25 @@ ul.address-info .label {
     border-radius: 3.79px;
 }
 
-.pdf-single .download-btn:hover {
-    color: #fff;
-    background: rgba(27, 90, 61, 1);
+.download-image-single {
+    position: relative;
+    display: inline-block;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    overflow: hidden;
+}
+.download-image-single .image-frame img {
+    max-width: 240px;
+    height: 120px;
+    object-fit: cover;
+}
+
+.zone-btn:focus {
+    color: #fff !important;
+    background-color: var(--primary-clr) !important;
+    box-shadow: none;
+}
+.zone-btn {
+    flex-grow: 1;
+    min-width: max-content;
 }

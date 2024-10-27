@@ -5885,4 +5885,9 @@
   'California Main Branch' => 'California Main Branch',
   'Documents_And_Images' => 'Documents And Images',
   'Here you can see all images & document for the provider' => 'Here you can see all images & document for the provider',
+  'Documents' => 'Documents',
+  'Images' => 'Images',
+  'item on the way' => 'Item on the way',
+  'ABC Rent a Car' => 'ABC Rent a Car',
+  'map_view' => 'Map view',
 );
