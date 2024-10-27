@@ -732,7 +732,13 @@ class CustomerAuthController extends Controller
                             'aud' => $aud,
                             'sub' => $sub,
                         ], $keyContent, 'ES256', $keyId);
-                        $redirect_uri = $apple_login->redirect_url??'www.example.com/apple-callback';
+
+                        if($request->platform == 'flutter_web'){
+                            $redirect_uri = $apple_login->redirect_url_flutter??'www.example.com/apple-callback';
+                        }else{
+                            $redirect_uri = $apple_login->redirect_url_react??'www.example.com/apple-callback';
+                        }
+
                         $res = Http::asForm()->post('https://appleid.apple.com/auth/token', [
                             'grant_type' => 'authorization_code',
                             'code' => $unique_id,
