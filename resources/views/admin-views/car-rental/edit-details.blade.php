@@ -155,8 +155,9 @@
                                                 {{ translate('logo') }}
                                             </label>
                                             <div class="mb-20">
-                                                <span>JPG, JPEG, PNG Less Than 1MB <strong class="font-semibold">(Ratio
-                                                        1:1)</strong></span>
+                                                <p class="fs-12 max-width-170px">JPG, JPEG, PNG Less Than 1MB <strong
+                                                        class="font-semibold">(Ratio
+                                                        1:1)</strong></p>
                                             </div>
                                             <label class="position-relative d-inline-block">
                                                 <img class="img--110 min-height-170px min-width-170px onerror-image image--border"
@@ -182,8 +183,12 @@
                                                 {{ translate('Cover') }}
                                             </label>
                                             <div class="mb-20">
-                                                <span>JPG, JPEG, PNG Less Than 1MB <strong class="font-semibold">(Ratio
-                                                        2:1)</strong></span>
+                                                <p class="fs-12">
+                                                    JPG, JPEG, PNG Less Than 1MB
+                                                    <br>
+                                                    <strong class="font-semibold">(Ratio
+                                                        2:1)</strong>
+                                                </p>
                                             </div>
                                             <label class="position-relative d-inline-block">
                                                 <img class="img--vertical min-height-170px min-width-170px onerror-image image--border"
