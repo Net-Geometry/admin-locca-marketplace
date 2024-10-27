@@ -1,6 +1,5 @@
-{{-- <div class="card-header border-0">
-    <h4 class="text-center">{{ translate('messages.stock_Update') }}</h4>
-</div> --}}
+<div class="card-header border-0 text-center">
+</div>
 <div class="card-body">
     <h3 class="text-center mb-4">{{ translate('messages.stock_Update') }}</h3>
     <input name="product_id" value="{{$product['id']}}" type="hidden" class="initial-hidden">

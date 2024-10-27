@@ -34,7 +34,7 @@
                         <!-- End Search -->
                     </form>
                     <!-- Unfold -->
-                    @if ($store_data->module->module_type == 'food' && $toggle_veg_non_veg)                    
+                    @if ($store_data->module->module_type == 'food' && $toggle_veg_non_veg)
                     <div class="col-sm-auto mb-1 mb-sm-0">
                         <select name="type" data-url="{{url()->full()}}" data-filter="type" data-placeholder="{{translate('messages.all')}}" class="form-control h--37px set-filter">
                             <option value="all" {{$type=='all'?'selected':''}}>{{translate('messages.all')}}</option>
@@ -183,7 +183,7 @@
                                 {{\App\CentralLogics\Helpers::format_currency($item['price'])}}
                             </td>
                             <td>
-                                <div class=" text-center">
+                                <div class="text-center">
                                     {{($item['stock'])}}
                                 </div>
                             </td>
@@ -230,7 +230,7 @@
                 <form action="{{route('vendor.item.stock-update')}}" method="post">
                     @csrf
                     <div class="mt-2 rest-part w-100"></div>
-                    <div class="btn--container justify-content-end">
+                    <div class="btn--container mt-2 mb-4 justify-content-end">
                         <button type="button" class="btn btn--danger" data-dismiss="modal" aria-label="Close">
                             {{translate('messages.close')}}
                         </button>

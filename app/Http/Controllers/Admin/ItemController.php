@@ -764,7 +764,7 @@ class ItemController extends Controller
     {
 
         if($request?->temp_product){
-            $product = TempProduct::find($request->id);
+            $product = TempProduct::withoutGlobalScope(StoreScope::class)->find($request->id);
         }
         else{
             $product = Item::withoutGlobalScope(StoreScope::class)->withoutGlobalScope('translate')->find($request->id);
@@ -1854,7 +1854,7 @@ class ItemController extends Controller
 
     public function deny(Request $request)
     {
-        $data = TempProduct::findOrfail($request->id);
+        $data = TempProduct::withoutGlobalScope(StoreScope::class)->findOrfail($request->id);
         $data->is_rejected = 1;
         $data->note = $request->note;
         $data->save();
@@ -1894,8 +1894,9 @@ class ItemController extends Controller
     }
     public function approved(Request $request)
     {
-        $data = TempProduct::findOrfail($request->id);
-        $item= Item::withoutGlobalScope('translate')->with('translations')->findOrfail($data->item_id);
+        $data = TempProduct::withoutGlobalScope(StoreScope::class)->findOrfail($request->id);
+
+        $item= Item::withoutGlobalScope(StoreScope::class)->withoutGlobalScope('translate')->with('translations')->findOrfail($data->item_id);
 
         $item->name = $data->name;
         $item->description =  $data->description;

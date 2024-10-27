@@ -213,7 +213,7 @@
                 <form action="{{route('vendor.business-settings.update-setup',[$store['id']])}}" method="post"
                     enctype="multipart/form-data">
                     @csrf
-                    <div class="row">
+                    <div class="row g-2">
 
                         <div class="form-group mb-0 col-md-4">
                             <label class="input-label text-capitalize" for="minimum_order">{{translate('messages.minimum_order_amount')}}<span class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('Specify_the_minimum_order_amount_required_for_customers_when_ordering_from_this_store.')}}"><img src="{{asset('/public/assets/admin/img/info-circle.svg')}}" alt="{{translate('messages.self_delivery_hint')}}"></span></label>
@@ -284,7 +284,7 @@
                         <div class="col-sm-{{ $store->module->module_type != 'food' ? '4' : '6' }} col-12">
                             <div class="form-group mb-0 p-2">
                                 <label class="d-flex justify-content-between switch toggle-switch-sm text-dark" for="gst_status">
-                                    <span>{{translate('messages.gst')}} <span class="form-label-secondary" data-toggle="tooltip" data-placement="right"
+                                    <span>{{translate('messages.GST')}} <span class="form-label-secondary" data-toggle="tooltip" data-placement="right"
                                     data-original-title="{{translate('messages.If GST is enable, GST number will show in invoice')}}"><img src="{{asset('/public/assets/admin/img/info-circle.svg')}}" alt="{{translate('messages.gst_status')}}"></span></span>
                                     <input type="checkbox" class="toggle-switch-input" name="gst_status" id="gst_status" value="1" {{$store->gst_status?'checked':''}}>
                                     <span class="toggle-switch-label">

@@ -13764,3 +13764,7 @@ video#VisaChipCardVideo {
     word-break: break-all;
     font-size: 14px;
 }
+
+.navbar-vertical-aside-mini-mode .promo-card {
+    display: none;
+}

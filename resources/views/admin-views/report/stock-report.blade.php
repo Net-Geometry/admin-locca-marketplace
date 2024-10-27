@@ -179,7 +179,7 @@
                 <form action="{{route('admin.item.stock-update')}}" method="post">
                     @csrf
                     <div class="mt-2 rest-part w-100"></div>
-                    <div class="btn--container justify-content-end">
+                    <div class="btn--container mb-4 justify-content-end">
                         <button type="button" class="btn btn--danger" data-dismiss="modal" aria-label="Close">
                             {{translate('messages.close')}}
                         </button>

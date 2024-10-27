@@ -30,7 +30,7 @@
                                     <div class="cont">
                                         <h4 class="mb-2">{{ translate('Warning!') }} </h4>{{  ( $out_of_stock_count -1).'+ '.  translate('more_products_are_low_on_Stock.') }}
                                         <br>
-                                        <a data-id="stock_out_reminder_close_btn" id="hide-warning"  class="text-primary text-underline add-to-session">{{ translate('remind_me_later') }}</a>  &nbsp; &nbsp; <a href="{{ route('vendor.item.stock-limit-list') }}" class="text-primary text-underline">{{ translate('Click_To_View') }}</a>
+                                        <a data-id="stock_out_reminder_close_btn" id="hide-warning"  class="text-primary text-underline add-to-session">{{ translate('Remind_Me_Later') }}</a>  &nbsp; &nbsp; <a href="{{ route('vendor.item.stock-limit-list') }}" class="text-primary text-underline">{{ translate('Click_To_View') }}</a>
                                     </div>
                                 </div>
                                 <button class="position-absolute right-0 top-0 py-2 px-2 bg-transparent border-0 outline-none shadow-none" id="hide-warning-btn"  type="button">
@@ -43,10 +43,10 @@
                                 <div class="alert-inner">
                                     <img class="aspect-1-1 mr-1 object--contain rounded" width="100" src="{{ $item?->image_full_url ?? asset('/public/assets/admin/img/100x100/food-default-image.png') }}" alt="">
                                     <div class="cont">
-                                        <h4 class="mb-2">{{ $item?->name }} </h4>{{  translate('This product is out of stock.') }}
+                                        <h4 class="mb-2">{{ $item?->name }} </h4>{{  translate('This product is low stock.') }}
                                         <br>
                                         <a
-                                        data-id="stock_out_reminder_close_btn" id="hide-warning"  class="text-primary text-underline add-to-session">{{ translate('remind_me_later') }}</a>  &nbsp; &nbsp; <a href="{{ route('vendor.item.stock-limit-list') }}" class="text-primary text-underline">{{ translate('Click_To_View') }}</a>
+                                        data-id="stock_out_reminder_close_btn" id="hide-warning"  class="text-primary text-underline add-to-session">{{ translate('Remind_Me_Later') }}</a>  &nbsp; &nbsp; <a href="{{ route('vendor.item.stock-limit-list') }}" class="text-primary text-underline">{{ translate('Click_To_View') }}</a>
                                     </div>
                                 </div>
                                 <button class="position-absolute right-0 top-0 py-2 px-2 bg-transparent border-0 outline-none shadow-none" id="hide-warning-btn"  type="button">
