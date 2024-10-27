@@ -138,9 +138,15 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="client_id"
-                                            class="form-label">{{translate('messages.client_id')}}</label>
+                                            class="form-label">{{translate('messages.client_id_for_web')}}</label>
                                         <input id="client_id" type="text" class="form-control" name="client_id"
                                             value="{{ $appleLoginService['client_id'] }}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="client_id_app"
+                                            class="form-label">{{translate('messages.client_id_for_app')}}</label>
+                                        <input id="client_id_app" type="text" class="form-control" name="client_id_app"
+                                            value="{{ $appleLoginService['client_id_app']??'' }}">
                                     </div>
                                     <div class="form-group">
                                         <label for="team_id"
@@ -158,7 +164,7 @@
                                         <label for="key_id"
                                             class="form-label">{{translate('messages.redirect_url')}}</label>
                                         <input id="redirect_url" type="url" class="form-control" name="redirect_url"
-                                            value="{{ $appleLoginService['redirect_url'] }}">
+                                            value="{{ $appleLoginService['redirect_url']??'' }}">
                                     </div>
                                     <div class="form-group">
                                         <label

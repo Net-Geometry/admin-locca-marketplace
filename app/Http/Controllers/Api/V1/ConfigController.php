@@ -127,6 +127,7 @@ class ConfigController extends Controller
                     'login_medium' => $apple['login_medium'],
                     'status' => (boolean)$apple['status'],
                     'client_id' => $apple['client_id'],
+                    'client_id_app' => $apple['client_id_app'],
                     'redirect_url' => $apple['redirect_url']
                 ];
                 array_push($apple_login, $config);

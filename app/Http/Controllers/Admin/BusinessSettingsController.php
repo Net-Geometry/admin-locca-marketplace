@@ -2643,6 +2643,7 @@ class BusinessSettingsController extends Controller
                 $cred = [
                     'login_medium' => $service,
                     'client_id' => $request['client_id'],
+                    'client_id_app' => $request['client_id_app'],
                     'client_secret' => $request['client_secret'],
                     'status' => $request['status'],
                     'team_id' => $request['team_id'],
