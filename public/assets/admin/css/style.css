@@ -4108,6 +4108,25 @@ td .amount--input {
     background: rgba(255, 109, 109, 0.05);
 }
 
+.badge--pending-2 {
+    color: #006ab4;
+    background: rgba(0, 224, 255, 0.1);
+}
+
+.badge--ongoing {
+    color: #e19500;
+    background: #fffcde;
+}
+
+.badge--cancel-2 {
+    color: #ff5a54;
+    background: #ffe5e5;
+}
+.badge--accepted-2 {
+    color: #008958;
+    background: #DEFFF3;
+}
+
 .action-btn i {
     font-size: 1.14rem;
 }
@@ -6114,6 +6133,11 @@ strong {
     height: 3px;
     border-radius: 4px;
     background: var(--primary-clr);
+}
+
+.page-header-tabs .nav-item .nav-link.text-title.active::before {
+    background: var(--title-clr);
+    opacity: 0.8;
 }
 
 .page-header-tabs .nav-item:first-child .nav-link.active {
@@ -13917,6 +13941,7 @@ ul.address-info .label {
     border: 1.04px solid rgba(197, 210, 210, 1);
     border-radius: 5px;
     overflow: hidden;
+    cursor: pointer;
 }
 
 .pdf-frame {
@@ -14140,4 +14165,8 @@ ul.address-info .label {
 .plan-slider.owl-carousel .owl-stage {
     display: flex;
     justify-content: center;
+}
+
+.text-end {
+    text-align: end;
 }
