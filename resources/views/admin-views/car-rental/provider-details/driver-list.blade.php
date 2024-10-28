@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('messages.trip_list'))
+@section('title', translate('messages.driver_list'))
 
 @push('css_or_js')
 @endpush
@@ -42,11 +42,11 @@
                             href="javascript:">{{ translate('messages.overview') }}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-capitalize text-title active {{ request('tab') == 'trip_list' ? 'active' : '' }}"
+                        <a class="nav-link text-capitalize text-title {{ request('tab') == 'trip_list' ? 'active' : '' }}"
                             href="javascript:" aria-disabled="true">{{ translate('messages.trip_list') }}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-capitalize text-title {{ request('tab') == 'driver_list' ? 'active' : '' }}"
+                        <a class="nav-link text-capitalize text-title active {{ request('tab') == 'driver_list' ? 'active' : '' }}"
                             href="javascript:" aria-disabled="true">{{ translate('messages.driver_list') }}</a>
                     </li>
                     <li class="nav-item">
@@ -95,62 +95,38 @@
         <div class="tab-content">
             <div class="tab-pane fade show active" id="trip">
                 <div class="row g-2 mb-20">
-                    <div class="col-sm-6 col-lg-3">
+                    <div class="col-sm-6 col-lg-4">
                         <a class="order--card h-100" href="javascript:">
                             <div class="d-flex justify-content-between align-items-center">
                                 <h6 class="card-subtitle m-0">
                                     <span>{{ translate('All') }}</span>
                                 </h6>
                                 <span class="card-title text-title">
-                                    20
+                                    260
                                 </span>
                             </div>
                         </a>
                     </div>
 
-                    <div class="col-sm-6 col-lg-3">
+                    <div class="col-sm-6 col-lg-4">
                         <a class="order--card h-100" href="javascript:">
                             <div class="d-flex justify-content-between align-items-center">
                                 <h6 class="card-subtitle m-0">
-                                    <span>{{ translate('messages.ongoing') }}</span>
+                                    <span>{{ translate('messages.Active') }}</span>
                                 </h6>
-                                <span class="card-title text--warning">
-                                    100
-                                </span>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-sm-6 col-lg-3">
-                        <a class="order--card h-100" href="javascript:">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <h6 class="card-subtitle m-0">
-                                    <span>{{ translate('messages.pending') }}</span>
-                                </h6>
-                                <span class="card-title text--info">
+                                <span class="card-title text--success">
                                     200
                                 </span>
                             </div>
                         </a>
                     </div>
-                    <div class="col-sm-6 col-lg-3">
+                    <div class="col-sm-6 col-lg-4">
                         <a class="order--card h-100" href="javascript:">
                             <div class="d-flex justify-content-between align-items-center">
                                 <h6 class="card-subtitle m-0">
-                                    <span>{{ translate('messages.completed') }}</span>
+                                    <span>{{ translate('messages.Inactive') }}</span>
                                 </h6>
-                                <span class="card-title text--success">
-                                    60
-                                </span>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-sm-6 col-lg-3">
-                        <a class="order--card h-100" href="javascript:">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <h6 class="card-subtitle m-0">
-                                    <span>{{ translate('messages.canceled') }}</span>
-                                </h6>
-                                <span class="card-title text--danger">
+                                <span class="card-title text--info">
                                     60
                                 </span>
                             </div>
@@ -215,6 +191,8 @@
                                 </div>
                             </div>
                             <!-- End Unfold -->
+                            <a class="btn btn--primary font-weight-bold float-right mr-2 mb-0"
+                                href="javascript:">{{ translate('messages.new_driver') }}</a>
                         </div>
                     </div>
                     <!-- End Header -->
@@ -224,11 +202,11 @@
                         <table id="columnSearchDatatable"
                             class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table"
                             data-hs-datatables-options='{
-                    "order": [],
-                    "orderCellsTop": true,
-                    "paging":false
+                                "order": [],
+                                "orderCellsTop": true,
+                                "paging":false
 
-                }'>
+                            }'>
                             <thead class="thead-light">
                                 <tr>
                                     <th class="border-0">{{ translate('sl') }}</th>

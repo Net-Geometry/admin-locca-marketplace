@@ -5932,4 +5932,5 @@
   'Ongoing' => 'Ongoing',
   'Brooklyn Simmons' => 'Brooklyn Simmons',
   'cruz@example.com' => 'Cruz@example.com',
+  'new_driver' => 'New driver',
 );
