@@ -313,7 +313,7 @@ class CategoryLogic
     }
 
 
-    public static function category_stores($category_ids, $zone_id, int $limit,int $offset, $type,$longitude=0,$latitude=0,$filter=null,$rating_count=null)
+    public static function category_stores($category_ids, $zone_id, int $limit,int $offset, $type,$longitude=0,$latitude=0,$filter=null,$rating_count=null,$sort_by)
     {
         $category_ids = isset($category_ids)?(is_array($category_ids)?$category_ids:json_decode($category_ids)):[];
         $paginator = Store::
@@ -357,7 +357,7 @@ class CategoryLogic
             ->when($filter && in_array('open',$filter),function ($qurey){
                 $qurey->orderBy('open', 'desc');
             })
-            ->when($filter && in_array('nearby',$filter),function ($qurey){
+            ->when(($filter && in_array('nearby',$filter)) || $sort_by == 'distance' ,function ($qurey){
                 $qurey->orderBy('distance');
             })
             ->orderBy('open', 'desc')

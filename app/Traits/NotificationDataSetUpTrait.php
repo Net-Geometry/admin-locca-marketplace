@@ -793,6 +793,16 @@ trait NotificationDataSetUpTrait
             'sub_title' => 'Sent_notification_on_wallet_payment_on_POS',
         ];
 
+        $data []=[
+            'title' => 'customer_loyalty_point_earning',
+            'key' => 'customer_loyalty_point_earning',
+            'type' => 'customer',
+            'mail_status' => 'disable',
+            'sms_status' => 'disable',
+            'push_notification_status' => 'active',
+            'sub_title' => 'Sent_notification_on_loyalty_point_earning',
+        ];
+
 
             foreach($data as $item){
 
@@ -811,10 +821,5 @@ trait NotificationDataSetUpTrait
             }
             return true;
     }
-
-
-
-
-
 
 }

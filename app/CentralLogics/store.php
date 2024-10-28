@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\DB;
 
 class StoreLogic
 {
-    public static function get_stores( $zone_id, $filter_data, $type, $store_type, $limit = 10, $offset = 1, $featured=false,$longitude=0,$latitude=0,$filter=null,$rating_count=null)
+    public static function get_stores( $zone_id, $filter_data, $type, $store_type, $limit = 10, $offset = 1, $featured=false,$longitude=0,$latitude=0,$filter=null,$rating_count=null,$sort_by=null)
     {
 
         $all_stores_default_status = \App\Models\BusinessSetting::where('key', 'all_stores_default_status')->first()?->value ?? 1;
@@ -113,7 +113,7 @@ class StoreLogic
             ->when($filter && in_array('open',$filter),function ($qurey){
                 $qurey->orderBy('open', 'desc');
             })
-            ->when($filter && in_array('nearby',$filter),function ($qurey){
+            ->when(($filter && in_array('nearby',$filter)) || $sort_by == 'distance' ,function ($qurey){
                 $qurey->orderBy('distance');
             })
             ->when($filter_data=='delivery', function($q){
@@ -355,7 +355,7 @@ class StoreLogic
         ];
     }
 
-    public static function get_discounted_stores($zone_id, $limit = 50, $offset = 1, $type = 'all',$longitude=0,$latitude=0,$filter=null,$rating_count=null)
+    public static function get_discounted_stores($zone_id, $limit = 50, $offset = 1, $type = 'all',$longitude=0,$latitude=0,$filter=null,$rating_count=null,$sort_by=null)
     {
         $paginator = Store::withOpen($longitude??0,$latitude??0)
             ->withCount(['items','campaigns'])
@@ -396,7 +396,7 @@ class StoreLogic
             ->when($filter && in_array('open',$filter),function ($qurey){
                 $qurey->orderBy('open', 'desc');
             })
-            ->when($filter && in_array('nearby',$filter),function ($qurey){
+            ->when(($filter && in_array('nearby',$filter)) || $sort_by == 'distance' ,function ($qurey){
                 $qurey->orderBy('distance');
             })
             ->orderBy('open', 'desc')
@@ -517,7 +517,7 @@ class StoreLogic
         return json_encode($store_ratings);
     }
 
-    public static function search_stores($name, $zone_id, $category_id= null,$limit = 10, $offset = 1, $type = 'all',$longitude=0,$latitude=0,$filter=null,$rating_count=null)
+    public static function search_stores($name, $zone_id, $category_id= null,$limit = 10, $offset = 1, $type = 'all',$longitude=0,$latitude=0,$filter=null,$rating_count=null,$sort_by=null)
     {
         $key = explode(' ', $name);
         $paginator = Store::withOpen($longitude??0,$latitude??0)
@@ -539,43 +539,6 @@ class StoreLogic
                 'items.pharmacy_item_details.common_condition' => 'name'
             ];
             $q->applyRelationShipSearch(relationships:$relationships ,searchParameter:$key);
-            // $q->orWhereHas('items.nutritions',function($query)use($key){
-            //     $query->where(function($q)use($key){
-            //         foreach ($key as $value) {
-            //             $q->where('nutrition', 'like', "%{$value}%");
-            //         };
-            //     });
-            // });
-            // $q->orWhereHas('items.allergies',function($query)use($key){
-            //     $query->where(function($q)use($key){
-            //         foreach ($key as $value) {
-            //             $q->where('allergy', 'like', "%{$value}%");
-            //         };
-            //     });
-            // });
-            // $q->orWhereHas('items.generic',function($query)use($key){
-            //     $query->where(function($q)use($key){
-            //         foreach ($key as $value) {
-            //             $q->where('generic_name', 'like', "%{$value}%");
-            //         };
-            //     });
-            // });
-            // $q->orWhereHas('items.ecommerce_item_details.brand',function($query)use($key){
-            //     $query->where(function($q)use($key){
-            //         foreach ($key as $value) {
-            //             $q->where('name', 'like', "%{$value}%");
-            //         };
-            //     });
-            // });
-            // $q->orWhereHas('items.pharmacy_item_details.common_condition',function($query)use($key){
-            //     $query->where(function($q)use($key){
-            //         foreach ($key as $value) {
-            //             $q->where('name', 'like', "%{$value}%");
-            //         };
-            //     });
-            // });
-
-
         })
             ->when(config('module.current_module_data'), function($query)use($zone_id){
                 $query->module(config('module.current_module_data')['id']);
@@ -615,7 +578,7 @@ class StoreLogic
             ->when($filter && in_array('open',$filter),function ($qurey){
                 $qurey->orderBy('open', 'desc');
             })
-            ->when($filter && in_array('nearby',$filter),function ($qurey){
+            ->when(($filter && in_array('nearby',$filter)) || $sort_by == 'distance' ,function ($qurey){
                 $qurey->orderBy('distance');
             })
             ->orderBy('open', 'desc')
