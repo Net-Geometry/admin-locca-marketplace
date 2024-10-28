@@ -11116,7 +11116,7 @@ body > .initial-38-1 {
 }
 
 .fs-10 {
-    font-size: 10px;
+    font-size: 10px !important;
 }
 
 .fs-12 {
@@ -11129,6 +11129,9 @@ body > .initial-38-1 {
 
 .fs-20 {
     font-size: 20px !important;
+}
+.fs-32 {
+    font-size: 32px !important;
 }
 
 .select-product-item {
@@ -12935,8 +12938,14 @@ div.dataTables_wrapper div.dataTables_length select {
     background: #fff1e6;
     color: var(--base-clr) !important;
 }
+.mt-30 {
+    margin-top: 30px;
+}
 .mb-30 {
     margin-bottom: 30px;
+}
+.mt-20 {
+    margin-top: 20px;
 }
 .mb-20 {
     margin-bottom: 20px;
@@ -14003,7 +14012,7 @@ ul.address-info .label {
 .custom-group-btn .item:first-child::after {
     content: "";
     width: 1px;
-    height: 45px;
+    height: 31px;
     background-color: rgba(0, 0, 0, 0.1);
     position: absolute;
     inset-inline-end: 0;
@@ -14066,6 +14075,7 @@ ul.address-info .label {
     border: 1px solid rgba(51, 66, 87, 0.7);
     width: 32px;
     height: 32px;
+    line-height: 1;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -14074,7 +14084,6 @@ ul.address-info .label {
 }
 
 .custom-timeline .single.checked .count::after {
-    /* content: "\2713"; */
     content: url("../img/icons/check.svg");
     position: absolute;
     inset-inline-start: 0;
@@ -14087,4 +14096,48 @@ ul.address-info .label {
     justify-content: center;
     align-items: center;
     border-radius: 50%;
+}
+
+.business-plan-card {
+    border: 0.62px solid rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    padding: 20px;
+}
+.business-plan-card.checked {
+    border: 0.62px solid #039d55;
+    background: rgba(3, 157, 85, 0.05);
+}
+
+.business-plan-card.checked .title {
+    color: #039d55 !important;
+    position: relative;
+}
+
+.business-plan-card.checked .title::after {
+    content: "";
+    position: absolute;
+    inset-inline-end: 0;
+    inset-block-end: 0;
+    block-size: 20px;
+    inline-size: 20px;
+    background: url("../img/icons/check.svg") no-repeat center center;
+    background-size: 10px 10px;
+    line-height: 1;
+    background-color: #039d55;
+    color: #ffffff;
+    border-radius: 50%;
+}
+
+.business-plan-card.checked p {
+    opacity: 0.8;
+}
+
+.plan-slider.owl-carousel .owl-item {
+    max-width: 250px !important;
+    display: inline-block;
+}
+
+.plan-slider.owl-carousel .owl-stage {
+    display: flex;
+    justify-content: center;
 }
