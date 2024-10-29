@@ -210,15 +210,11 @@
                             <thead class="thead-light">
                                 <tr>
                                     <th class="border-0">{{ translate('sl') }}</th>
-                                    <th class="border-0">{{ translate('messages.Trip ID') }}</th>
-                                    <th class="border-0">{{ translate('messages.Trip_Date') }}</th>
-                                    <th class="border-0">{{ translate('messages.Customer_Info') }}</th>
                                     <th class="border-0">{{ translate('messages.Driver_Info') }}</th>
-                                    <th class="border-0">{{ translate('messages.Vehicle_Info') }}</th>
-                                    <th class="border-0">{{ translate('messages.Trip_Type') }}</th>
-                                    <th class="text-end border-0">{{ translate('messages.Trip_Amount') }}</th>
-                                    <th class="text-center border-0">{{ translate('messages.Trip_Status') }}</th>
-                                    <th class="text-center border-0">{{ translate('messages.Action') }}</th>
+                                    <th class="border-0">{{ translate('messages.Total_Trip') }}</th>
+                                    <th class="border-0">{{ translate('messages.Complete') }}</th>
+                                    <th class="border-0">{{ translate('messages.Canceled_Trip') }}</th>
+                                    <th class="text-center border-0">{{ translate('messages.Driver_Status') }}</th>
                                 </tr>
                             </thead>
 
@@ -226,306 +222,39 @@
                                 <tr>
                                     <td>1</td>
                                     <td>
-                                        <div class="text--title font-semibold">
-                                            {{ translate('messages.1234567') }}
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="text--title">
-                                            24 August 2024
-                                            <br>
-                                            05:30 PM
-                                        </div>
-                                    </td>
-                                    <td>
                                         <div class="text--title">
                                             <div class="font-medium">
                                                 {{ translate('messages.Cameron_Williamson') }}
                                             </div>
                                             <div class="opacity-lg">
-                                                jennings@example.com
+                                                +880 1235 123654
                                             </div>
                                         </div>
                                     </td>
-                                    <td>
-                                        <div class="text--warning font-medium">
-                                            {{ translate('messages.Unassigned') }}
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="text--title">
-                                            <div class="font-medium">
-                                                {{ translate('messages.F Premio 2006') }}
-                                            </div>
-                                            <div class="opacity-lg">
-                                                {{ translate('messages.Nator Kha 21-3214') }}
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="text--title">
-                                            <div class="font-medium">
-                                                {{ translate('messages.Hourly') }}
-                                            </div>
-                                            <div class="opacity-lg">
-                                                {{ translate('messages.Instant') }}
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="text--title text-end">
-                                            <div class="font-semobold">
-                                                {{ translate('messages.$1,550.35') }}
-                                            </div>
-                                            <div class="opacity-lg font-medium text--success">
-                                                {{ translate('messages.Paid') }}
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="d-flex justify-content-center">
-                                            <label class="badge badge--pending-2">
-                                                {{ translate('messages.Pending') }}
-                                            </label>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="btn--container justify-content-center">
-                                            <a class="btn action-btn btn--primary btn-outline-primary" href="javascript:"
-                                                title="{{ translate('messages.view') }}"><i
-                                                    class="tio-visible-outlined"></i>
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
                                     <td>
                                         <div class="text--title font-semibold">
-                                            {{ translate('messages.1234567') }}
+                                            123
                                         </div>
                                     </td>
-                                    <td>
-                                        <div class="text--title">
-                                            24 August 2024
-                                            <br>
-                                            05:30 PM
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="text--title">
-                                            <div class="font-medium">
-                                                {{ translate('messages.Cameron_Williamson') }}
-                                            </div>
-                                            <div class="opacity-lg">
-                                                jennings@example.com
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="text--warning font-medium">
-                                            {{ translate('messages.Unassigned') }}
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="text--title">
-                                            <div class="font-medium">
-                                                {{ translate('messages.F Premio 2006') }}
-                                            </div>
-                                            <div class="opacity-lg">
-                                                {{ translate('messages.Nator Kha 21-3214') }}
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="text--title">
-                                            <div class="font-medium">
-                                                {{ translate('messages.Hourly') }}
-                                            </div>
-                                            <div class="opacity-lg">
-                                                {{ translate('messages.Instant') }}
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="text--title text-end">
-                                            <div class="font-semobold">
-                                                {{ translate('messages.$1,550.35') }}
-                                            </div>
-                                            <div class="opacity-lg font-medium text--success">
-                                                {{ translate('messages.Paid') }}
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="d-flex justify-content-center">
-                                            <label class="badge badge--cancel-2">
-                                                {{ translate('messages.Canceled') }}
-                                            </label>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="btn--container justify-content-center">
-                                            <a class="btn action-btn btn--primary btn-outline-primary" href="javascript:"
-                                                title="{{ translate('messages.view') }}"><i
-                                                    class="tio-visible-outlined"></i>
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>3</td>
                                     <td>
                                         <div class="text--title font-semibold">
-                                            {{ translate('messages.1234567') }}
+                                            13
                                         </div>
                                     </td>
-                                    <td>
-                                        <div class="text--title">
-                                            24 August 2024
-                                            <br>
-                                            05:30 PM
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="text--title">
-                                            <div class="font-medium">
-                                                {{ translate('messages.Cameron_Williamson') }}
-                                            </div>
-                                            <div class="opacity-lg">
-                                                jennings@example.com
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="text--title">
-                                            <div class="font-medium">
-                                                {{ translate('messages.Brooklyn Simmons') }}
-                                            </div>
-                                            <div class="opacity-lg">
-                                                {{ translate('messages.cruz@example.com') }}
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="text--title">
-                                            <div class="font-medium">
-                                                {{ translate('messages.F Premio 2006') }}
-                                            </div>
-                                            <div class="opacity-lg">
-                                                {{ translate('messages.Nator Kha 21-3214') }}
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="text--title">
-                                            <div class="font-medium">
-                                                {{ translate('messages.Hourly') }}
-                                            </div>
-                                            <div class="opacity-lg">
-                                                {{ translate('messages.Instant') }}
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="text--title text-end">
-                                            <div class="font-semobold">
-                                                {{ translate('messages.$1,550.35') }}
-                                            </div>
-                                            <div class="opacity-lg font-medium text--danger">
-                                                {{ translate('messages.Unpaid') }}
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="d-flex justify-content-center">
-                                            <label class="badge badge--ongoing">
-                                                {{ translate('messages.Ongoing') }}
-                                            </label>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="btn--container justify-content-center">
-                                            <a class="btn action-btn btn--primary btn-outline-primary" href="javascript:"
-                                                title="{{ translate('messages.view') }}"><i
-                                                    class="tio-visible-outlined"></i>
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>4</td>
                                     <td>
                                         <div class="text--title font-semibold">
-                                            {{ translate('messages.1234567') }}
+                                            110
                                         </div>
                                     </td>
                                     <td>
-                                        <div class="text--title">
-                                            24 August 2024
-                                            <br>
-                                            05:30 PM
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="text--title">
-                                            <div class="font-medium">
-                                                {{ translate('messages.Cameron_Williamson') }}
-                                            </div>
-                                            <div class="opacity-lg">
-                                                jennings@example.com
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="text--warning font-medium">
-                                            {{ translate('messages.Unassigned') }}
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="text--title">
-                                            <div class="font-medium">
-                                                {{ translate('messages.F Premio 2006') }}
-                                            </div>
-                                            <div class="opacity-lg">
-                                                {{ translate('messages.Nator Kha 21-3214') }}
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="text--title">
-                                            <div class="font-medium">
-                                                {{ translate('messages.Hourly') }}
-                                            </div>
-                                            <div class="opacity-lg">
-                                                {{ translate('messages.Instant') }}
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="text--title text-end">
-                                            <div class="font-semobold">
-                                                {{ translate('messages.$1,550.35') }}
-                                            </div>
-                                            <div class="opacity-lg font-medium text--success">
-                                                {{ translate('messages.Paid') }}
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="d-flex justify-content-center">
-                                            <label class="badge badge--accepted-2">
-                                                {{ translate('messages.Completed') }}
-                                            </label>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="btn--container justify-content-center">
-                                            <a class="btn action-btn btn--primary btn-outline-primary" href="javascript:"
-                                                title="{{ translate('messages.view') }}"><i
-                                                    class="tio-visible-outlined"></i>
-                                            </a>
-                                        </div>
+                                        <label class="toggle-switch toggle-switch-sm d-flex justify-content-center"
+                                            for="">
+                                            <input type="checkbox" class="toggle-switch-input dynamic-checkbox"
+                                                id="" checked="">
+                                            <span class="toggle-switch-label">
+                                                <span class="toggle-switch-indicator"></span>
+                                            </span>
+                                        </label>
                                     </td>
                                 </tr>
                             </tbody>
@@ -533,38 +262,16 @@
 
                     </div>
                     <div class="page-area mt-3">
-                        <nav class="d-flex justify-content-end gap-3">
-                            <div class="d-flex align-items-baseline gap-3">
-                                <span class="text-14 text--title ">1-5 of 13</span>
-                                <nav class="w-auto">
-                                    <ul class="pagination">
-                                        <li class="page-item">
-                                            <a class="page-link text--title  text-14" href="#"
-                                                aria-label="Previous">
-                                                <span aria-hidden="true">‹</span>
-                                            </a>
-                                        </li>
-                                        <li class="page-item">
-                                            <a class="page-link text--title fw-bold text-14" href="#"
-                                                aria-label="Next">
-                                                <span aria-hidden="true">›</span>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </nav>
-                            </div>
+                        <nav>
                             <ul class="pagination">
-
-                                <li class="page-item" aria-disabled="true" aria-label="« Previous">
-                                    <span class="page-link btn-light" aria-hidden="true">‹</span>
+                                <li class="page-item disabled" aria-disabled="true" aria-label="« Previous">
+                                    <span class="page-link" aria-hidden="true">‹</span>
                                 </li>
-                                <li class="page-item active" aria-current="page"><span
-                                        class="page-link btn-light">1</span></li>
-                                <li class="page-item"><a class="page-link btn-light" href="javascript:">2</a></li>
-                                <li class="page-item"><a class="page-link btn-light" href="javascript:">3</a></li>
+                                <li class="page-item active" aria-current="page"><span class="page-link">1</span></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a>
+                                </li>
                                 <li class="page-item">
-                                    <a class="page-link btn-light" href="javascript:" rel="next"
-                                        aria-label="Next »">›</a>
+                                    <a class="page-link" href="#" rel="next" aria-label="Next »">›</a>
                                 </li>
                             </ul>
                         </nav>

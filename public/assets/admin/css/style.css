@@ -418,18 +418,21 @@ a[class*="btn--"]:hover {
 }
 
 .btn--varify {
+    --success-clr: #77c668;
     box-shadow: none !important;
-    background: #77c668;
-    border-color: #77c668 !important;
+    background: var(--success-clr);
+    border-color: var(--success-clr) !important;
 }
 
 .btn-outline-varify:not(:hover) {
+    --success-clr: #77c668;
     background: transparent !important;
-    color: #77c668;
+    color: var(--success-clr);
 }
 
 .btn-outline-varify:hover {
-    background: #77c668;
+    --success-clr: #77c668;
+    background: var(--success-clr);
     color: #fff !important;
 }
 
@@ -4106,25 +4109,6 @@ td .amount--input {
 .badge--cancel {
     color: #ff6d6d;
     background: rgba(255, 109, 109, 0.05);
-}
-
-.badge--pending-2 {
-    color: #006ab4;
-    background: rgba(0, 224, 255, 0.1);
-}
-
-.badge--ongoing {
-    color: #e19500;
-    background: #fffcde;
-}
-
-.badge--cancel-2 {
-    color: #ff5a54;
-    background: #ffe5e5;
-}
-.badge--accepted-2 {
-    color: #008958;
-    background: #DEFFF3;
 }
 
 .action-btn i {
@@ -14108,6 +14092,12 @@ ul.address-info .label {
     position: relative;
 }
 
+.custom-timeline .single.checked .count {
+    background-color: var(--success-clr);
+    border-color: var(--success-clr);
+    color: transparent;
+}
+
 .custom-timeline .single.checked .count::after {
     content: url("../img/icons/check.svg");
     position: absolute;
@@ -14115,7 +14105,6 @@ ul.address-info .label {
     inset-block-start: 0;
     block-size: 100%;
     inline-size: 100%;
-    background-color: #039d55;
     color: #fafafa;
     display: flex;
     justify-content: center;
@@ -14123,22 +14112,30 @@ ul.address-info .label {
     border-radius: 50%;
 }
 
+.business-plan-card-wrapper {
+    display: block;
+}
+.business-plan-radio {
+    display: none;
+}
+
 .business-plan-card {
     border: 0.62px solid rgba(0, 0, 0, 0.1);
     border-radius: 10px;
     padding: 20px;
 }
-.business-plan-card.checked {
-    border: 0.62px solid #039d55;
-    background: rgba(3, 157, 85, 0.05);
+
+.business-plan-radio:checked + .business-plan-card {
+    border: 0.62px solid var(--success-clr);
+    background-color: color-mix(in srgb, var(--success-clr), transparent 95%);
 }
 
-.business-plan-card.checked .title {
-    color: #039d55 !important;
+.business-plan-radio:checked + .business-plan-card .title {
+    color: var(--success-clr) !important;
     position: relative;
 }
 
-.business-plan-card.checked .title::after {
+.business-plan-radio:checked + .business-plan-card .title::after {
     content: "";
     position: absolute;
     inset-inline-end: 0;
@@ -14148,12 +14145,12 @@ ul.address-info .label {
     background: url("../img/icons/check.svg") no-repeat center center;
     background-size: 10px 10px;
     line-height: 1;
-    background-color: #039d55;
+    background-color: var(--success-clr);
     color: #ffffff;
     border-radius: 50%;
 }
 
-.business-plan-card.checked p {
+.business-plan-radio:checked + .business-plan-card p {
     opacity: 0.8;
 }
 

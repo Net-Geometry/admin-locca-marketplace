@@ -5933,4 +5933,7 @@
   'Brooklyn Simmons' => 'Brooklyn Simmons',
   'cruz@example.com' => 'Cruz@example.com',
   'new_driver' => 'New driver',
+  'You have to give a certain percentage of commission to admin for every Trip request.' => 'You have to give a certain percentage of commission to admin for every Trip request.',
+  'Total_Trip' => 'Total Trip',
+  'Driver_Status' => 'Driver Status',
 );

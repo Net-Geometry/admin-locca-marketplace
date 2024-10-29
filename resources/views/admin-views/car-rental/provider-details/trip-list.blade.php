@@ -306,7 +306,7 @@
                                     </td>
                                     <td>
                                         <div class="d-flex justify-content-center">
-                                            <label class="badge badge--pending-2">
+                                            <label class="badge badge-soft-info border-0">
                                                 {{ translate('messages.Pending') }}
                                             </label>
                                         </div>
@@ -381,7 +381,7 @@
                                     </td>
                                     <td>
                                         <div class="d-flex justify-content-center">
-                                            <label class="badge badge--cancel-2">
+                                            <label class="badge badge-soft-danger border-0">
                                                 {{ translate('messages.Canceled') }}
                                             </label>
                                         </div>
@@ -461,7 +461,7 @@
                                     </td>
                                     <td>
                                         <div class="d-flex justify-content-center">
-                                            <label class="badge badge--ongoing">
+                                            <label class="badge badge-soft-warning border-0">
                                                 {{ translate('messages.Ongoing') }}
                                             </label>
                                         </div>
@@ -536,7 +536,7 @@
                                     </td>
                                     <td>
                                         <div class="d-flex justify-content-center">
-                                            <label class="badge badge--accepted-2">
+                                            <label class="badge badge-soft-success border-0">
                                                 {{ translate('messages.Completed') }}
                                             </label>
                                         </div>
@@ -555,38 +555,16 @@
 
                     </div>
                     <div class="page-area mt-3">
-                        <nav class="d-flex justify-content-end gap-3">
-                            <div class="d-flex align-items-baseline gap-3">
-                                <span class="text-14 text--title ">1-5 of 13</span>
-                                <nav class="w-auto">
-                                    <ul class="pagination">
-                                        <li class="page-item">
-                                            <a class="page-link text--title  text-14" href="#"
-                                                aria-label="Previous">
-                                                <span aria-hidden="true">‹</span>
-                                            </a>
-                                        </li>
-                                        <li class="page-item">
-                                            <a class="page-link text--title fw-bold text-14" href="#"
-                                                aria-label="Next">
-                                                <span aria-hidden="true">›</span>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </nav>
-                            </div>
+                        <nav>
                             <ul class="pagination">
-
-                                <li class="page-item" aria-disabled="true" aria-label="« Previous">
-                                    <span class="page-link btn-light" aria-hidden="true">‹</span>
+                                <li class="page-item disabled" aria-disabled="true" aria-label="« Previous">
+                                    <span class="page-link" aria-hidden="true">‹</span>
                                 </li>
-                                <li class="page-item active" aria-current="page"><span
-                                        class="page-link btn-light">1</span></li>
-                                <li class="page-item"><a class="page-link btn-light" href="javascript:">2</a></li>
-                                <li class="page-item"><a class="page-link btn-light" href="javascript:">3</a></li>
+                                <li class="page-item active" aria-current="page"><span class="page-link">1</span></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a>
+                                </li>
                                 <li class="page-item">
-                                    <a class="page-link btn-light" href="javascript:" rel="next"
-                                        aria-label="Next »">›</a>
+                                    <a class="page-link" href="#" rel="next" aria-label="Next »">›</a>
                                 </li>
                             </ul>
                         </nav>

@@ -66,25 +66,32 @@
                         <div class="card-body">
                             <div class="row g-3">
                                 <div class="col-lg-6">
-                                    <div class="business-plan-card">
-                                        <h4 class="fs-16 title text-title mb-10px opacity-70">
-                                            {{ translate('messages.Commission Base') }}
-                                        </h4>
-                                        <p class="fs-14 text-title opacity-70 mb-0">
-                                            {{ translate('messages.You have to give a certain percentage of commission to admin for every Trip  request.') }}
-                                        </p>
-                                    </div>
+                                    <label class="business-plan-card-wrapper">
+                                        <input type="radio" name="business-plan" class="business-plan-radio" />
+                                        <div class="business-plan-card">
+                                            <h4 class="fs-16 title text-title mb-10px opacity-70">
+                                                {{ translate('messages.Commission Base') }}
+                                            </h4>
+                                            <p class="fs-14 text-title opacity-70 mb-0">
+                                                {{ translate('messages.You have to give a certain percentage of commission to admin for every Trip request.') }}
+                                            </p>
+                                        </div>
+                                    </label>
                                 </div>
                                 <div class="col-lg-6">
-                                    <div class="business-plan-card checked">
-                                        <h4 class="fs-16 title text-title mb-10px opacity-70">
-                                            {{ translate('messages.Subscription Base') }}
-                                        </h4>
-                                        <p class="fs-14 text-title opacity-70 mb-0">
-                                            {{ translate('messages.You have to pay certain amount in every month/year to admin as subscription fee.') }}
-                                        </p>
-                                    </div>
+                                    <label class="business-plan-card-wrapper">
+                                        <input type="radio" name="business-plan" class="business-plan-radio" checked />
+                                        <div class="business-plan-card">
+                                            <h4 class="fs-16 title text-title mb-10px opacity-70">
+                                                {{ translate('messages.Subscription Base') }}
+                                            </h4>
+                                            <p class="fs-14 text-title opacity-70 mb-0">
+                                                {{ translate('messages.You have to pay certain amount in every month/year to admin as subscription fee.') }}
+                                            </p>
+                                        </div>
+                                    </label>
                                 </div>
+
                                 <div class="col-lg-12 mt-20">
                                     <div>
                                         <div class="text-center mb-20">
