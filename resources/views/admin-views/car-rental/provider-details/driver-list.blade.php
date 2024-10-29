@@ -247,14 +247,15 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <label class="toggle-switch toggle-switch-sm d-flex justify-content-center"
-                                            for="">
-                                            <input type="checkbox" class="toggle-switch-input dynamic-checkbox"
-                                                id="" checked="">
-                                            <span class="toggle-switch-label">
-                                                <span class="toggle-switch-indicator"></span>
-                                            </span>
-                                        </label>
+                                        <div class="d-flex justify-content-center">
+                                            <label class="toggle-switch toggle-switch-sm" for="stocksCheckbox336">
+                                                <input type="checkbox" class="toggle-switch-input redirect-url"
+                                                    data-url="" id="stocksCheckbox336" checked="">
+                                                <span class="toggle-switch-label">
+                                                    <span class="toggle-switch-indicator"></span>
+                                                </span>
+                                            </label>
+                                        </div>
                                     </td>
                                 </tr>
                             </tbody>

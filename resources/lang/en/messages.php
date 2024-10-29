@@ -5936,4 +5936,10 @@
   'You have to give a certain percentage of commission to admin for every Trip request.' => 'You have to give a certain percentage of commission to admin for every Trip request.',
   'Total_Trip' => 'Total Trip',
   'Driver_Status' => 'Driver Status',
+  'vehicale_list' => 'Vehicale list',
+  'Inctive' => 'Inctive',
+  'Pending_Approval' => 'Pending Approval',
+  'Total_Vehicles' => 'Total Vehicles',
+  'new_vehicle' => 'New vehicle',
+  'Trip Fair' => 'Trip Fair',
 );
