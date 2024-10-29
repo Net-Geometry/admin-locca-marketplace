@@ -128,7 +128,8 @@ class ConfigController extends Controller
                     'status' => (boolean)$apple['status'],
                     'client_id' => $apple['client_id'],
                     'client_id_app' => $apple['client_id_app']??'',
-                    'redirect_url' => $apple['redirect_url']
+                    'redirect_url_flutter' => $apple['redirect_url_flutter']??'',
+                    'redirect_url_react' => $apple['redirect_url_react']??'',
                 ];
                 array_push($apple_login, $config);
             }

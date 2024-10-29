@@ -2649,7 +2649,8 @@ class BusinessSettingsController extends Controller
                     'team_id' => $request['team_id'],
                     'key_id' => $request['key_id'],
                     'service_file' => isset($fileName) ? $fileName : $data['service_file'],
-                    'redirect_url' => $request['redirect_url'],
+                    'redirect_url_flutter' => $request['redirect_url_flutter'],
+                    'redirect_url_react' => $request['redirect_url_react'],
                 ];
                 array_push($credential_array, $cred);
             } else {
