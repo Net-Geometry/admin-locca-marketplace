@@ -5942,4 +5942,11 @@
   'Total_Vehicles' => 'Total Vehicles',
   'new_vehicle' => 'New vehicle',
   'Trip Fair' => 'Trip Fair',
+  'all_trips' => 'All trips',
+  'All_Trips' => 'All Trips',
+  'Search by trip ID, customer name...' => 'Search by trip ID, customer name...',
+  'Columns' => 'Columns',
+  'Booking_Date' => 'Booking Date',
+  'Schedule_At' => 'Schedule At',
+  'Provider' => 'Provider',
 );

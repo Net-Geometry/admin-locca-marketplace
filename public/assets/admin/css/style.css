@@ -4069,10 +4069,6 @@ td .amount--input {
     font-weight: 600;
 }
 
-.text--title {
-    color: var(--title-clr);
-}
-
 .order--status {
     font-size: 12px;
 }
@@ -10178,6 +10174,10 @@ body > .initial-38-1 {
     gap: 20px;
 }
 
+.gap-20px {
+    gap: 20px;
+}
+
 @media (min-width: 768px) {
     .gap-40px {
         gap: 40px;
@@ -14166,4 +14166,12 @@ ul.address-info .label {
 
 .text-end {
     text-align: end;
+}
+
+.hs-unfold.m-0 {
+    margin: 0 !important;
+}
+
+.w--150px {
+    width: 150px;
 }
