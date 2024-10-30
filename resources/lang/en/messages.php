@@ -5905,4 +5905,7 @@ Smartly or Earn. ',
   'Disbursement_method_stored.' => 'Disbursement method stored.',
   'default_method_updated' => 'Default method updated',
   'method_deleted_successfully' => 'Method deleted successfully',
+  'Test Grocery' => 'Test Grocery',
+  'Attribute and Unit Check Module' => 'Attribute and Unit Check Module',
+  'Incomplete_Profile' => 'Incomplete Profile',
 );
