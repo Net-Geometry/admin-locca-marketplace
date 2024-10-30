@@ -85,7 +85,7 @@ class StoreLogic
             $query = $query->when($filter && in_array('coupon', $filter), function ($query) {
                 return $query->has('activeCoupons');
             });
-            $query = $query->when($store_type == 'all' && !in_array('fast_delivery',$filter), function($q){
+            $query = $query->when($store_type == 'all' && $filter && !in_array('fast_delivery',$filter), function($q){
                 return $q->orderBy('open', 'desc')->orderBy('distance');
             });
             $query = $query->when($store_type == 'newly_joined', function($q){
@@ -130,7 +130,7 @@ class StoreLogic
             $query = $query->when($featured, function($query){
                 return $query->featured();
             });
-            $query = $query->when($$filter && in_array('fast_delivery',$filter) , function($q) {
+            $query = $query->when($filter && in_array('fast_delivery',$filter) , function($q) {
                 return $q->orderBy('open', 'desc')->orderBy('min_delivery_time');
             });
 
