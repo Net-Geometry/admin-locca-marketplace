@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title',translate('low_stock_report'))
+@section('title',translate('stock_Update'))
 
 @section('content')
 
@@ -12,7 +12,7 @@
                 <img src="{{asset('public/assets/admin/img/report.png')}}" class="w--22" alt="">
             </span>
             <span>
-                {{translate('low_stock_report')}}
+                {{translate('stock update')}}
             </span>
         </h1>
     </div>

@@ -67,9 +67,9 @@
                             <div class="w-100 my-2">
                                 <a href="{{route('admin.store.view', $campaign->store_id)}}" title="{{$campaign->store['name']}}">
                                     <img
-                                        class="img--70 circle onerror-image"
+                                        class="img--100 rounded-circle onerror-image"
                                         data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
-                                        src="{{$campaign?->store?->logo ?? asset('public/assets/admin/img/160x160/img1.jpg') }}"
+                                        src="{{$campaign?->store?->logo_full_url ?? asset('public/assets/admin/img/160x160/img1.jpg') }}"
                                         alt="Image Description">
                                     <h5 class="input-label mt-2">{{$campaign->store['name']}}</h5>
                                 </a>
@@ -97,9 +97,11 @@
                                         <th class="px-4 border-0 w--120px">
                                             <h4 class="m-0">{{translate('messages.variations')}}</h4>
                                         </th>
+                                        @if (in_array($campaign->module->module_type ,['food']))
                                         <th class="px-4 border-0 w--120px">
                                             <h4 class="m-0">{{ translate('Addons') }}</h4>
                                         </th>
+                                        @endif
                                         @if (in_array($campaign->module->module_type ,['food','grocery']))
                                             <th class="px-4 border-0 w--120px">
                                                 <h4 class="m-0 text-capitalize">{{ translate('nutrition') }}</h4>
@@ -186,7 +188,7 @@
                                             @endforeach
                                         @endif
                                         @endif
-
+                                        @if (in_array($campaign->module->module_type ,['food']))
                                         </td>
                                         <td class="px-4">
                                             @foreach(\App\Models\AddOn::whereIn('id',json_decode($campaign['add_ons'],true))->get() as $addon)
@@ -195,6 +197,7 @@
                                                 </small>
                                             @endforeach
                                         </td>
+                                        @endif
                                         @if (in_array($campaign->module->module_type ,['food','grocery']))
                                             <td class="px-4">
                                                 @if ($campaign->nutritions)

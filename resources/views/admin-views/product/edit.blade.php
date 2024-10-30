@@ -351,8 +351,7 @@
                                                 <i class="tio-info-outined"></i>
                                             </span>
                                         </label>
-                                        <select name="nutritions[]" class="form-control multiple-select2" multiple>
-                                            <option disabled>{{translate('Select Nutrition')}}</option>
+                                        <select name="nutritions[]" class="form-control multiple-select2" data-placeholder="{{ translate('messages.Type your content and press enter') }}" multiple>
                                             @foreach (\App\Models\Nutrition::all() as $nutrition)
                                                 <option value="{{ $nutrition->nutrition }}" {{ $product_nutritions->contains($nutrition->id) ? 'selected' : '' }}>{{ $nutrition->nutrition }}</option>
                                             @endforeach
@@ -367,8 +366,7 @@
                                                 <i class="tio-info-outined"></i>
                                             </span>
                                         </label>
-                                        <select name="allergies[]" class="form-control multiple-select2" multiple>
-                                            <option disabled>{{translate('Select Allegren Ingredients')}}</option>
+                                        <select name="allergies[]" class="form-control multiple-select2" data-placeholder="{{ translate('messages.Type your content and press enter') }}" multiple>
                                             @foreach (\App\Models\Allergy::all() as $allergy)
                                                 <option value="{{ $allergy->allergy }}" {{ $product_allergies->contains($allergy->id) ? 'selected' : '' }}>{{ $allergy->allergy }}</option>
                                             @endforeach

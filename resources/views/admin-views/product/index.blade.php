@@ -278,8 +278,8 @@
                                                 <i class="tio-info-outined"></i>
                                             </span>
                                         </label>
-                                        <select name="nutritions[]" class="form-control multiple-select2" multiple>
-                                            <option disabled>{{translate('Select Nutrition')}}</option>
+                                        <select name="nutritions[]" class="form-control multiple-select2" data-placeholder="{{ translate('messages.Type your content and press enter') }}" multiple>
+
                                             @foreach (\App\Models\Nutrition::select(['nutrition'])->get() as $nutrition)
                                                 <option value="{{ $nutrition->nutrition }}">{{ $nutrition->nutrition }}</option>
                                             @endforeach
@@ -294,8 +294,7 @@
                                                 <i class="tio-info-outined"></i>
                                             </span>
                                         </label>
-                                        <select name="allergies[]" class="form-control multiple-select2" multiple>
-                                            <option disabled>{{translate('Select Allegren Ingredients')}}</option>
+                                        <select name="allergies[]" class="form-control multiple-select2" data-placeholder="{{ translate('messages.Type your content and press enter') }}" multiple>
                                             @foreach (\App\Models\Allergy::select(['allergy'])->get() as $allergy)
                                                 <option value="{{ $allergy->allergy }}">{{ $allergy->allergy }}</option>
                                             @endforeach

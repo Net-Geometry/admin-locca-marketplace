@@ -3135,6 +3135,9 @@ class ReportController extends Controller
                     }
                 });
             })
+            ->whereHas('store.StoreConfig', function ($query) {
+                $query->whereColumn('items.stock', '<=', 'store_configs.minimum_stock_for_warning')->orwhere('items.stock', 0);
+            })
             ->orderBy('stock')
             ->paginate(config('default_pagination'))->withQueryString();
 
@@ -3171,6 +3174,9 @@ class ReportController extends Controller
                         $q->orWhere('name', 'like', "%{$value}%");
                     }
                 });
+            })
+            ->whereHas('store.StoreConfig', function ($query) {
+                $query->whereColumn('items.stock', '<=', 'store_configs.minimum_stock_for_warning')->orwhere('items.stock', 0);
             })
             ->orderBy('stock')
             ->get();

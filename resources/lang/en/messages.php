@@ -5908,4 +5908,6 @@ Smartly or Earn. ',
   'Test Grocery' => 'Test Grocery',
   'Attribute and Unit Check Module' => 'Attribute and Unit Check Module',
   'Incomplete_Profile' => 'Incomplete Profile',
+  'product_name' => 'Product name',
+  'Product_Name' => 'Product Name',
 );
