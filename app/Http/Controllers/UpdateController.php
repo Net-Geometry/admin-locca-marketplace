@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use App\Models\EmailTemplate;
 use App\CentralLogics\Helpers;
 use App\Models\BusinessSetting;
+use App\Models\Coupon;
 use App\Traits\ActivationClass;
 use Illuminate\Support\Facades\DB;
 use App\Models\NotificationSetting;
@@ -196,6 +197,12 @@ class UpdateController extends Controller
             ]);
             $recaptcha->save();
         }
+
+        Coupon::where('coupon_type', 'store_wise')
+        ->whereNull('store_id')
+        ->update([
+            'store_id' => DB::raw("JSON_UNQUOTE(JSON_EXTRACT(data, '$[0]'))")
+        ]);
 
         $data = DataSetting::where('type', 'login_admin')->pluck('value')->first();
         return redirect('/login/'.$data);

@@ -71,8 +71,15 @@ class SearchController extends Controller
             ->when($request->store_id, function ($query) use ($request) {
                 return $query->where('store_id', $request->store_id);
             })
-            ->whereHas('module.zones', function ($query) use ($zone_id) {
-                $query->whereIn('zones.id', json_decode($zone_id, true));
+            ->whereHas('module.zones', function ($query) use ($zone_id , $filter) {
+                $query->whereIn('zones.id', json_decode($zone_id, true))
+                ->when($filter&&in_array('free_delivery',$filter),function ($qurey){
+                    return $qurey->where('free_delivery',1);
+                })
+
+                ->when($filter&&in_array('coupon',$filter),function ($qurey){
+                    return $qurey->has('activeCoupons');
+                });
             })
             ->whereHas('store', function ($query) use ($zone_id) {
                 $query->when(config('module.current_module_data'), function ($query) {
