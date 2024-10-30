@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\DB;
 
 class StoreLogic
 {
-    public static function get_stores( $zone_id, $filter_data, $type, $store_type, $limit = 10, $offset = 1, $featured=false,$longitude=0,$latitude=0,$filter=null,$rating_count=null,$sort_by=null)
+    public static function get_stores( $zone_id, $filter_data, $type, $store_type, $limit = 10, $offset = 1, $featured=false,$longitude=0,$latitude=0,$filter=null,$rating_count=null)
     {
 
         $all_stores_default_status = BusinessSetting::where('key', 'all_stores_default_status')->first()?->value ?? 1;
@@ -85,7 +85,7 @@ class StoreLogic
             $query = $query->when($filter && in_array('coupon', $filter), function ($query) {
                 return $query->has('activeCoupons');
             });
-            $query = $query->when($store_type == 'all' && $sort_by != 'fast_delivery', function($q){
+            $query = $query->when($store_type == 'all' && !in_array('fast_delivery',$filter), function($q){
                 return $q->orderBy('open', 'desc')->orderBy('distance');
             });
             $query = $query->when($store_type == 'newly_joined', function($q){
@@ -117,7 +117,7 @@ class StoreLogic
             $query = $query->when($filter && in_array('open',$filter),function ($qurey){
                 return $qurey->orderBy('open', 'desc');
             });
-            $query = $query->when(($filter && in_array('nearby',$filter)) || $sort_by == 'distance' ,function ($qurey){
+            $query = $query->when(($filter && in_array('nearby',$filter))   ,function ($qurey){
                 return  $qurey->orderByDesc('distance');
             });
             $query = $query->when($filter_data=='delivery', function($q){
@@ -130,7 +130,7 @@ class StoreLogic
             $query = $query->when($featured, function($query){
                 return $query->featured();
             });
-            $query = $query->when($sort_by == 'fast_delivery', function($q) {
+            $query = $query->when($$filter && in_array('fast_delivery',$filter) , function($q) {
                 return $q->orderBy('open', 'desc')->orderBy('min_delivery_time');
             });
 
@@ -363,7 +363,7 @@ class StoreLogic
         ];
     }
 
-    public static function get_discounted_stores($zone_id, $limit = 50, $offset = 1, $type = 'all',$longitude=0,$latitude=0,$filter=null,$rating_count=null,$sort_by=null)
+    public static function get_discounted_stores($zone_id, $limit = 50, $offset = 1, $type = 'all',$longitude=0,$latitude=0,$filter=null,$rating_count=null)
     {
         $paginator = Store::WithOpenWithDeliveryTime($longitude??0,$latitude??0)
             ->withCount(['items','campaigns'])
@@ -404,16 +404,13 @@ class StoreLogic
             ->when($filter && in_array('top_rated',$filter),function ($qurey){
                 return $qurey->whereNotNull('rating')->whereRaw("LENGTH(rating) > 0");
             })
+            ->orderBy('open', 'desc')
             ->when($filter && in_array('popular',$filter),function ($qurey){
                 return $qurey->withCount('orders')->orderBy('orders_count', 'desc');
             })
-            ->when($filter && in_array('open',$filter),function ($qurey){
-                return  $qurey->orderBy('open', 'desc');
-            })
-            ->when(($filter && in_array('nearby',$filter)) || $sort_by == 'distance' ,function ($qurey){
+            ->when(($filter && in_array('nearby',$filter))   ,function ($qurey){
                 return  $qurey->orderBy('distance');
             })
-            ->orderBy('open', 'desc')
             ->when($filter && in_array('fast_delivery',$filter),function ($qurey){
                 return $qurey->orderBy('min_delivery_time');
             })
@@ -534,7 +531,7 @@ class StoreLogic
         return json_encode($store_ratings);
     }
 
-    public static function search_stores($name, $zone_id, $category_id= null,$limit = 10, $offset = 1, $type = 'all',$longitude=0,$latitude=0,$filter=null,$rating_count=null,$sort_by=null)
+    public static function search_stores($name, $zone_id, $category_id= null,$limit = 10, $offset = 1, $type = 'all',$longitude=0,$latitude=0,$filter=null,$rating_count=null)
     {
         $key = explode(' ', $name);
         $paginator = Store::WithOpenWithDeliveryTime($longitude??0,$latitude??0)
@@ -582,9 +579,6 @@ class StoreLogic
             ->when($filter && in_array('top_rated',$filter),function ($qurey){
                 return  $qurey->whereNotNull('rating')->whereRaw("LENGTH(rating) > 0");
             })
-            ->when($filter && in_array('popular',$filter),function ($qurey){
-                return $qurey->withCount('orders')->orderBy('orders_count', 'desc');
-            })
             ->when($filter && in_array('discounted',$filter),function ($qurey){
                 return  $qurey->where(function ($query) {
                     return $query->whereHas('items', function ($q) {
@@ -592,19 +586,20 @@ class StoreLogic
                     });
                 });
             })
-            ->when($filter && in_array('open',$filter),function ($qurey){
-                return $qurey->orderBy('open', 'desc');
-            })
             ->when($filter && in_array('free_delivery',$filter),function ($qurey){
                 return $qurey->where('free_delivery',1);
             })
             ->when($filter && in_array('coupon',$filter),function ($qurey){
                 return $qurey->has('activeCoupons');
             })
-            ->when(($filter && in_array('nearby',$filter)) || $sort_by == 'distance' ,function ($qurey){
+
+            ->orderBy('open', 'desc')
+            ->when($filter && in_array('popular',$filter),function ($qurey){
+                return $qurey->withCount('orders')->orderBy('orders_count', 'desc');
+            })
+            ->when(($filter && in_array('nearby',$filter))   ,function ($qurey){
                 return  $qurey->orderBy('distance');
             })
-            ->orderBy('open', 'desc')
             ->when($filter && in_array('fast_delivery',$filter),function ($qurey){
                 return $qurey->orderBy('min_delivery_time');
             })

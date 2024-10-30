@@ -179,7 +179,6 @@ class SearchController extends Controller
         $filter = $request->query('filter', '');
         $filter = $filter ? (is_array($filter) ? $filter : str_getcsv(trim($filter, "[]"), ',')) : '';
         $rating_count = $request->query('rating_count');
-        $sort_by = $request->query('sort_by','default');
 
 
         if ($request->list_type == 'item') {
@@ -242,12 +241,12 @@ class SearchController extends Controller
                     return response()->json(['errors' => Helpers::error_processor($validator)], 403);
                 }
 
-                $paginator = StoreLogic::search_stores($request?->name, $zone_id, $request->category_id, $limit, $offset, $type, $longitude, $latitude, $filter, $rating_count,$sort_by);
+                $paginator = StoreLogic::search_stores($request?->name, $zone_id, $request->category_id, $limit, $offset, $type, $longitude, $latitude, $filter, $rating_count);
                 break;
 
             case 'discounted':
 
-                $paginator = StoreLogic::get_discounted_stores($zone_id, $limit, $offset, $type, $longitude, $latitude, $filter, $rating_count,$sort_by);
+                $paginator = StoreLogic::get_discounted_stores($zone_id, $limit, $offset, $type, $longitude, $latitude, $filter, $rating_count);
                 break;
 
             case 'category':
@@ -258,14 +257,14 @@ class SearchController extends Controller
                 if ($validator->fails()) {
                     return response()->json(['errors' => Helpers::error_processor($validator)], 403);
                 }
-                $paginator = CategoryLogic::category_stores($request->category_ids, $zone_id, $limit, $offset, $type, $longitude, $latitude, $filter, $rating_count,$sort_by);
+                $paginator = CategoryLogic::category_stores($request->category_ids, $zone_id, $limit, $offset, $type, $longitude, $latitude, $filter, $rating_count);
                 break;
 
             default:
                 $filter_data = $request->query('filter_data', 'all');
                 $store_type = $request->query('store_type', 'all');
                 $featured = $request->query('featured');
-                $paginator = StoreLogic::get_stores($zone_id, $filter_data, $type, $store_type, $limit, $offset, $featured, $longitude, $latitude, $filter, $rating_count,$sort_by);
+                $paginator = StoreLogic::get_stores($zone_id, $filter_data, $type, $store_type, $limit, $offset, $featured, $longitude, $latitude, $filter, $rating_count);
                 break;
         }
 

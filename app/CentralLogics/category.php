@@ -230,7 +230,7 @@ class CategoryLogic
     }
 
 
-    public static function category_stores($category_ids, $zone_id, int $limit,int $offset, $type,$longitude=0,$latitude=0,$filter=null,$rating_count=null,$sort_by=null)
+    public static function category_stores($category_ids, $zone_id, int $limit,int $offset, $type,$longitude=0,$latitude=0,$filter=null,$rating_count=null)
     {
         $category_ids = isset($category_ids)?(is_array($category_ids)?$category_ids:json_decode($category_ids)):[];
         $paginator = Store::
@@ -269,9 +269,6 @@ class CategoryLogic
             ->when($filter && in_array('top_rated',$filter),function ($qurey){
                 return $qurey->whereNotNull('rating')->whereRaw("LENGTH(rating) > 0");
             })
-            ->when($filter && in_array('popular',$filter),function ($qurey){
-                return $qurey->withCount('orders')->orderBy('orders_count', 'desc');
-            })
             ->when($filter && in_array('discounted',$filter),function ($qurey){
                 return  $qurey->where(function ($query) {
                     return  $query->whereHas('items', function ($q) {
@@ -279,19 +276,16 @@ class CategoryLogic
                     });
                 });
             })
-            ->when($filter && in_array('open',$filter),function ($qurey){
-                return $qurey->orderBy('open', 'desc');
+            ->orderBy('open', 'desc')
+            ->when($filter && in_array('popular',$filter),function ($qurey){
+                return $qurey->withCount('orders')->orderBy('orders_count', 'desc');
             })
-            ->when(($filter && in_array('nearby',$filter)) || $sort_by == 'distance' ,function ($qurey){
+            ->when(($filter && in_array('nearby',$filter)) ,function ($qurey){
                 return $qurey->orderBy('distance');
             })
-            ->orderBy('open', 'desc')
-
             ->when($filter && in_array('fast_delivery',$filter),function ($qurey){
                 return $qurey->orderBy('min_delivery_time');
             })
-
-
             ->latest()
             ->paginate($limit, ['*'], 'page', $offset);
 
