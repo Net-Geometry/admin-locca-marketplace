@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->boolean('is_email_verified')->default(0);
+            $table->boolean('is_from_pos')->default(0);
         });
     }
 
@@ -23,6 +24,7 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('is_email_verified');
+            $table->dropColumn('is_from_pos');
         });
     }
 };

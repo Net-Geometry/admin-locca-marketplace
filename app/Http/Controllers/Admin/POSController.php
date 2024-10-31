@@ -920,7 +920,8 @@ class POSController extends Controller
             'l_name' => $request['l_name'],
             'email' => $request['email'],
             'phone' => $request['phone'],
-            'password' => bcrypt('password')
+            'password' => bcrypt('password'),
+            'is_from_pos' => 1
         ]);
 
         try {

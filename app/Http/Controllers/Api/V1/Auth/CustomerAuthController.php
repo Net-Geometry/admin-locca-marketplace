@@ -221,14 +221,14 @@ class CustomerAuthController extends Controller
             ])->first();
 
             if($data){
-                if($user && $user->is_phone_verified == 0){
+                if($user && $user->is_phone_verified == 0 && $user->is_from_pos == 0){
                     $is_exist_user = $this->exist_user($user);
                     $user_email = null;
                     if($user->email){
                         $user_email = $user->email;
                     }
                     return response()->json(['token' => $temporaryToken, 'is_phone_verified'=>1, 'is_email_verified'=>1, 'is_personal_info' => 1, 'is_exist_user' =>$is_exist_user, 'login_type' => 'otp', 'email' => $user_email], 200);
-                }elseif ($user && $user->is_phone_verified == 1){
+                }elseif (($user && $user->is_phone_verified == 1) || ($user && $user->is_phone_verified == 0 && $user->is_from_pos == 1)){
                     DB::table('phone_verifications')->where([
                         'phone' => $request['phone'],
                         'token' => $request['otp'],
@@ -350,14 +350,14 @@ class CustomerAuthController extends Controller
                     'updated_at' => now(),
                 ]);
 
-            if($user && $user->is_phone_verified == 0){
+            if($user && $user->is_phone_verified == 0 && $user->is_from_pos == 0){
                 $is_exist_user = $this->exist_user($user);
                 $user_email = null;
                 if($user->email){
                     $user_email = $user->email;
                 }
                 return response()->json(['token' => $temporaryToken, 'is_phone_verified'=>1, 'is_email_verified'=>1, 'is_personal_info' => 1, 'is_exist_user' =>$is_exist_user, 'login_type' => 'otp', 'email' => $user_email], 200);
-            }elseif ($user && $user->is_phone_verified == 1){
+            }elseif (($user && $user->is_phone_verified == 1) || ($user && $user->is_phone_verified == 0 && $user->is_from_pos == 1)){
                 DB::table('phone_verifications')->where([
                     'phone' => $request['phone'],
                     'token' => $request['otp'],
@@ -910,7 +910,7 @@ class CustomerAuthController extends Controller
         $user = User::where('email', $data['email'])->first();
         $is_exist_user = null;
 
-        if($user && $request_data['verified'] == 'default' && $user->is_email_verified == 0){
+        if($user && $request_data['verified'] == 'default' && $user->is_email_verified == 0 && $user->is_from_pos == 0){
             $is_exist_user = $this->exist_user($user);
             $temporaryToken = null;
             if($request_data['medium'] == 'apple'){
