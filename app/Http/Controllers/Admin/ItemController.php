@@ -1466,7 +1466,7 @@ class ItemController extends Controller
         $product = Item::withoutGlobalScope(StoreScope::class)->find($request['id']);
 
         return response()->json([
-            'view' => view('admin-views.product.partials._update_stock', compact('product'))->render()
+            'view' => view('admin-views.product.partials._get_stock_data', compact('product'))->render()
         ]);
     }
     public function get_stock(Request $request)
@@ -1485,8 +1485,8 @@ class ItemController extends Controller
             foreach ($request['type'] as $key => $str) {
                 $item = [];
                 $item['type'] = $str;
-                $item['price'] = abs($request['price_' . str_replace('.', '_', $str)]);
-                $item['stock'] = abs($request['stock_' . str_replace('.', '_', $str)]);
+                $item['price'] = abs($request[ 'price_'.$key.'_'. str_replace('.', '_', $str)]);
+                $item['stock'] = abs($request['stock_'.$key.'_'. str_replace('.', '_', $str)]);
                 array_push($variations, $item);
             }
         }

@@ -1205,13 +1205,10 @@ class ItemController extends Controller
         }
         $product = Item::find($request['product_id']);
 
-
         if( count(json_decode($product->variations , true) ?? []) > 0  &&  !$request['type']){
             $validator->getMessageBag()->add('type', translate("Variation types_are_required"));
             return response()->json(['errors' => Helpers::error_processor($validator)],403);
         }
-
-
 
         $variations = [];
         $stock_count = $request['current_stock'];
@@ -1219,8 +1216,8 @@ class ItemController extends Controller
             foreach (json_decode($request['type'],true) ?? [] as $key => $str) {
                 $item = [];
                 $item['type'] = $str;
-                $item['price'] = abs($request['price_' . str_replace('.', '_', $str)]);
-                $item['stock'] = abs($request['stock_' . str_replace('.', '_', $str)]);
+                $item['price'] = abs($request[ 'price_'.$key.'_'. str_replace('.', '_', $str)]);
+                $item['stock'] = abs($request['stock_'.$key.'_'. str_replace('.', '_', $str)]);
                 array_push($variations, $item);
             }
         }

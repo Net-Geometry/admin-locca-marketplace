@@ -5772,10 +5772,10 @@
   'Manage your business' => 'Manage your business',
   'Let\'s' => 'Let s',
   'Manage_your_business' => 'Manage your business',
-  'Let’s 
-Manage your business 
-Smartly or Earn. ' => 'Let’s 
-Manage your business 
+  'Let’s
+Manage your business
+Smartly or Earn. ' => 'Let’s
+Manage your business
 Smartly or Earn. ',
   'Smartly_or_Earn' => 'Smartly or Earn',
   'Lets' => 'Lets',
@@ -5910,4 +5910,12 @@ Smartly or Earn. ',
   'Incomplete_Profile' => 'Incomplete Profile',
   'product_name' => 'Product name',
   'Product_Name' => 'Product Name',
+  'stock update' => 'Stock update',
+  'Stock_Report' => 'Stock Report',
+  'Update_Stock' => 'Update Stock',
+  'Stock_Update' => 'Stock Update',
+  'Nutrition_Details' => 'Nutrition Details',
+  'Allergie_Ingredients' => 'Allergie Ingredients',
+  'Low_Stock_List' => 'Low Stock List',
+  'low_stock_list' => 'Low stock list',
 );

@@ -53,7 +53,7 @@ class DashboardController extends Controller
         $data['most_rated_items'] = $most_rated_items;
 
 
-        if( Helpers::get_store_data()->storeConfig->minimum_stock_for_warning > 0){
+        if( Helpers::get_store_data()?->storeConfig?->minimum_stock_for_warning > 0){
             $items=  Item::where('stock' ,'<=' , Helpers::get_store_data()->storeConfig->minimum_stock_for_warning );
         } else{
             $items=  Item::where('stock',0 );

@@ -366,7 +366,7 @@
 
     {{-- Add Quantity Modal --}}
     <div class="modal fade update-quantity-modal" id="update-quantity" tabindex="-1">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">

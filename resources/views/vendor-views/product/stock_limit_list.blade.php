@@ -1,7 +1,7 @@
 
 @extends('layouts.vendor.app')
 
-@section('title',translate('messages.Low_stock_list'))
+@section('title',translate('messages.Low_Stock_List'))
 
 @push('css_or_js')
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -14,7 +14,7 @@
         <div class="page-header">
             <div class="row align-items-center">
                 <div class="col-sm mb-2 mb-sm-0">
-                    <h1 class="page-header-title"><i class="tio-filter-list"></i> {{translate('messages.Low_stock_list')}}<span class="badge badge-soft-dark ml-2" id="itemCount">{{$items->total()}}</span></h1>
+                    <h1 class="page-header-title"><i class="tio-filter-list"></i> {{translate('messages.Low_Stock_List')}}<span class="badge badge-soft-dark ml-2" id="itemCount">{{$items->total()}}</span></h1>
                 </div>
             </div>
         </div>
@@ -223,18 +223,22 @@
 @endsection
 
 
-<div class="modal fade" id="update-quantity" tabindex="-1">
-    <div class="modal-dialog">
+<div class="modal fade update-quantity-modal" id="update-quantity" tabindex="-1">
+    <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
-            <div class="modal-body py-2">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body pt-0">
+
                 <form action="{{route('vendor.item.stock-update')}}" method="post">
                     @csrf
                     <div class="mt-2 rest-part w-100"></div>
-                    <div class="btn--container mt-2 mb-4 justify-content-end">
-                        <button type="button" class="btn btn--danger" data-dismiss="modal" aria-label="Close">
-                            {{translate('messages.close')}}
-                        </button>
-                        <button class="btn btn--primary" type="submit">{{translate('messages.update')}}</button>
+                    <div class="btn--container justify-content-end">
+                        <button type="reset" data-dismiss="modal" aria-label="Close" class="btn btn--reset">{{translate('cancel')}}</button>
+                        <button type="submit" id="submit_new_customer" class="btn btn--primary">{{translate('update_stock')}}</button>
                     </div>
                 </form>
             </div>

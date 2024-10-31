@@ -68,9 +68,11 @@ class POSController extends Controller
         })
         ->whereHas('store', function($query)use($store_id, $module_id){
             return $query->where(['id'=>$store_id, 'module_id'=>$module_id]);
-        })
-         ->available($time)
-        ->latest()->paginate(10);
+        });
+        if(Config::get('module.current_module_type') == 'food'){
+            $products=  $products->available($time);
+        }
+        $products=  $products->latest()->paginate(10);
         return view('admin-views.pos.index', compact('categories', 'products','category', 'keyword', 'store', 'module_id'));
     }
 
@@ -440,6 +442,7 @@ class POSController extends Controller
 
     public function single_items(Request $request)
     {
+        $time = Carbon::now()->toTimeString();
         $category = $request->category_id??0;
         $module_id = Config::get('module.current_module_id');
         $store_id = $request->store_id;
@@ -462,9 +465,13 @@ class POSController extends Controller
             })
             ->whereHas('store', function($query)use($store_id, $module_id){
                 return $query->where(['id'=>$store_id, 'module_id'=>$module_id]);
-            })
-            // ->available($time)
-            ->latest()->paginate(10);
+            });
+
+            if(Config::get('module.current_module_type') == 'food'){
+                $products=  $products->available($time);
+            }
+            $products=  $products->latest()->paginate(10);
+
         return view('admin-views.pos._single_product_list', compact('products','store'));
     }
 
