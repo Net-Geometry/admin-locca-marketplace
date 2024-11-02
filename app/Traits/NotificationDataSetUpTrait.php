@@ -402,33 +402,6 @@ trait NotificationDataSetUpTrait
             'push_notification_status' => 'disable',
             'sub_title' => 'Sent_notification_on_customer_pos_registration',
         ];
-        $data []=[
-            'title' => 'customer_registration_otp',
-            'key' => 'customer_registration_otp',
-            'type' => 'customer',
-            'mail_status' => 'active',
-            'sms_status' => 'active',
-            'push_notification_status' => 'disable',
-            'sub_title' => 'Sent_notification_on_customer_registration_otp',
-        ];
-        $data []=[
-            'title' => 'customer_login_otp',
-            'key' => 'customer_login_otp',
-            'type' => 'customer',
-            'mail_status' => 'active',
-            'sms_status' => 'active',
-            'push_notification_status' => 'disable',
-            'sub_title' => 'Sent_notification_on_customer_login_otp',
-        ];
-        $data []=[
-            'title' => 'customer_forget_password',
-            'key' => 'customer_forget_password',
-            'type' => 'customer',
-            'mail_status' => 'active',
-            'sms_status' => 'active',
-            'push_notification_status' => 'disable',
-            'sub_title' => 'Sent_notification_on_customer_forget_password',
-        ];
 
         $data []=[
             'title' => 'customer_order_notification',
@@ -733,37 +706,6 @@ trait NotificationDataSetUpTrait
 
 
     public static function updateAdminNotificationSetupData(){
-
-
-
-        $data []=[
-            'title' => 'customer_registration_otp',
-            'key' => 'customer_registration_otp',
-            'type' => 'customer',
-            'mail_status' => 'active',
-            'sms_status' => 'active',
-            'push_notification_status' => 'disable',
-            'sub_title' => 'Sent_notification_on_customer_registration_otp',
-        ];
-        $data []=[
-            'title' => 'customer_login_otp',
-            'key' => 'customer_login_otp',
-            'type' => 'customer',
-            'mail_status' => 'active',
-            'sms_status' => 'active',
-            'push_notification_status' => 'disable',
-            'sub_title' => 'Sent_notification_on_customer_login_otp',
-        ];
-        $data []=[
-            'title' => 'customer_forget_password',
-            'key' => 'customer_forget_password',
-            'type' => 'customer',
-            'mail_status' => 'active',
-            'sms_status' => 'active',
-            'push_notification_status' => 'disable',
-            'sub_title' => 'Sent_notification_on_customer_forget_password',
-        ];
-
         $data []=[
             'title' => 'deliveryman_forget_password',
             'key' => 'deliveryman_forget_password',
@@ -819,7 +761,41 @@ trait NotificationDataSetUpTrait
 
                 }
             }
+            self::deleteAdminNotificationSetupData();
             return true;
     }
-
+    public static function deleteAdminNotificationSetupData()
+    {
+        $data[] = [
+            'title' => 'customer_forget_password',
+            'key' => 'customer_forget_password',
+            'type' => 'customer',
+            'mail_status' => 'active',
+            'sms_status' => 'active',
+            'push_notification_status' => 'disable',
+            'sub_title' => 'Sent_notification_on_customer_forget_password',
+        ];
+        $data[] = [
+            'title' => 'customer_registration_otp',
+            'key' => 'customer_registration_otp',
+            'type' => 'customer',
+            'mail_status' => 'active',
+            'sms_status' => 'active',
+            'push_notification_status' => 'disable',
+            'sub_title' => 'Sent_notification_on_customer_registration_otp',
+        ];
+        $data[] = [
+            'title' => 'customer_login_otp',
+            'key' => 'customer_login_otp',
+            'type' => 'customer',
+            'mail_status' => 'active',
+            'sms_status' => 'active',
+            'push_notification_status' => 'disable',
+            'sub_title' => 'Sent_notification_on_customer_login_otp',
+        ];
+        foreach ($data as $item) {
+            NotificationSetting::where('key', $item['key'])->where('type', $item['type'])->delete();
+        }
+        return true;
+    }
 }
