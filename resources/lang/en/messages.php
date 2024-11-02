@@ -5949,4 +5949,13 @@
   'Booking_Date' => 'Booking Date',
   'Schedule_At' => 'Schedule At',
   'Provider' => 'Provider',
+  'Banners' => 'Banners',
+  'Add_New_Banner' => 'Add New Banner',
+  'Provider_Logo_&_Covers' => 'Provider Logo & Covers',
+  'Select_Provider' => 'Select Provider',
+  'Banner_Info' => 'Banner Info',
+  'Profile_Image' => 'Profile Image',
+  'Click to upload' => 'Click to upload',
+  'or drag and drop' => 'Or drag and drop',
+  'Banner_Image' => 'Banner Image',
 );

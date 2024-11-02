@@ -1564,6 +1564,9 @@ select.form-control {
     height: 45px;
     line-height: 27px;
 }
+.custom-select.p {
+    padding: 0.54688rem 0.875rem;
+}
 
 .custom-radio .custom-control-label {
     padding: 3px 0;
@@ -14174,4 +14177,51 @@ ul.address-info .label {
 
 .w--150px {
     width: 150px;
+}
+
+.m-0 {
+    margin: 0 !important;
+}
+
+.upload-file-wrapper {
+    --border-clr: #e5e5e5;
+    inline-size: 100%;
+    max-inline-size: 180px;
+    block-size: auto;
+    min-block-size: 180px;
+    border-radius: 10px;
+    background: #fafafa;
+    border: 1px dashed var(--border-clr);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.upload-file-img {
+    inline-size: 100%;
+    block-size: 100%;
+    max-inline-size: 180px;
+    max-block-size: 180px;
+    aspect-ratio: 1 / 1;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+.upload-file-textbox h6 span {
+    --info-clr: #0788ff;
+    color: var(--info-clr);
+}
+
+.upload-file-wrapper.three-one {
+    max-inline-size: 525px;
+    min-block-size: 175px;
+}
+
+.upload-file-wrapper.three-one .upload-file-img {
+    inline-size: 100%;
+    block-size: auto;
+    aspect-ratio: 3 / 1;
+    max-inline-size: 525px;
+    max-block-size: 175px;
+    object-fit: cover;
 }
