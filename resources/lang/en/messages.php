@@ -5972,4 +5972,7 @@
   'Break_System' => 'Break System',
   'Engine_Capacity' => 'Engine Capacity',
   'Engine_Power' => 'Engine Power',
+  'Identity_Info' => 'Identity Info',
+  'Fare_&_Discounts' => 'Fare & Discounts',
+  'Other_Features' => 'Other Features',
 );

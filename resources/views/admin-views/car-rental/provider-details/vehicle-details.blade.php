@@ -140,65 +140,206 @@
                 </div>
             </div>
         </div>
+        <div class="row mb-20">
+            <div class="col-lg-3 mb-20 mb-lg-0">
+                <div class="card h-100">
+                    <div class="card-body d-flex flex-column justify-content-center">
+                        <a class="resturant--information-single" href="#">
+                            <img class="img--65 rounded mx-auto mb-3 onerror-image" data-onerror-image=""
+                                src="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}" alt="Image Description">
+                            <div class="text-center text--title">
+                                <h5 class="text-capitalize font-semibold text-hover-primary d-block mb-1">
+                                    Auto Focus Car Service
+                                </h5>
+                                <span class="opacity-lg">
+                                    House:20, Road:30, Mirpur 12
+                                </span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-9">
+                <div class="card h-100">
+                    <!-- Table -->
+                    <div class="table-responsive">
+                        <table id="" class="table table-borderless table-thead-bordered table-nowrap card-table">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th class="border-0">{{ translate('messages.General_Info') }}</th>
+                                    <th class="border-0">{{ translate('messages.Fare_&_Discounts') }}</th>
+                                    <th class="border-0">{{ translate('messages.Other_Features') }}</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="set-rows">
+                                {{-- <tr>
+                                    <td>
+                                        <div class="d-flex gap-2">
+                                            <div>
+                                                <div>Brand </div>
+                                                <div>Category </div>
+                                                <div>Type </div>
+                                            </div>
+                                            <div>
+                                                <div>: <span class="font-semibold">Toyota</span></div>
+                                                <div>: <span class="font-semibold">SUV</span></div>
+                                                <div>: <span class="font-semibold">Family</span></div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex gap-2">
+                                            <div>
+                                                <div>Hourly </div>
+                                                <div>KM Wise </div>
+                                                <div>Discount </div>
+                                            </div>
+                                            <div>
+                                                <div>: <span class="font-semibold">$ 400</span></div>
+                                                <div>: <span class="font-semibold">$ 30</span></div>
+                                                <div>: <span class="font-semibold">30%</span></div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex justify-content-between gap-20px">
+                                            <div class="d-flex gap-2">
+                                                <div>
+                                                    <div>Air Condition </div>
+                                                    <div>Transmission </div>
+                                                    <div>Fuel Type </div>
+                                                </div>
+                                                <div>
+                                                    <div>: <span class="font-semibold">Yes</span></div>
+                                                    <div>: <span class="font-semibold">Manual Gear</span></div>
+                                                    <div>: <span class="font-semibold">Diesel</span></div>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex gap-2">
+                                                <div>
+                                                    <div>Engine Capacity </div>
+                                                    <div>Break System </div>
+                                                    <div>Engine Power </div>
+                                                </div>
+                                                <div>
+                                                    <div>: <span class="font-semibold">1100 cc</span></div>
+                                                    <div>: <span class="font-semibold">Hydraulic ABS</span></div>
+                                                    <div>: <span class="font-semibold">250hp</span></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr> --}}
+                                <tr>
+                                    <td>
+                                        <div>
+                                            <div class="d-flex"> <span class="min-w-110px">Brand</span><span
+                                                    class="font-semibold">: Toyota</span></div>
+                                            <div class="d-flex"><span class="min-w-110px">Category</span><span
+                                                    class="font-semibold">: SUV</span></div>
+                                            <div class="d-flex"><span class="min-w-110px">Type</span><span
+                                                    class="font-semibold">: Family</span></div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div>
+                                            <div class="d-flex"> <span class="min-w-110px">Hourly</span><span
+                                                    class="font-semibold">: $ 400</span></div>
+                                            <div class="d-flex"><span class="min-w-110px">KM Wise</span><span
+                                                    class="font-semibold">:
+                                                    $ 30</span></div>
+                                            <div class="d-flex"><span class="min-w-110px">Discount</span><span
+                                                    class="font-semibold">: 30%</span></div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex justify-content-between gap-20px">
+                                            <div>
+                                                <div class="d-flex"> <span class="min-w-110px">Air Condition</span><span
+                                                        class="font-semibold">: Yes</span></div>
+                                                <div class="d-flex"><span class="min-w-110px">Transmission</span><span
+                                                        class="font-semibold">:
+                                                        Manual Gear</span></div>
+                                                <div class="d-flex"><span class="min-w-110px">Fuel Type</span><span
+                                                        class="font-semibold">: Diesel</span></div>
+                                            </div>
+                                            <div>
+                                                <div class="d-flex"> <span class="min-w-110px">Engine Capacity</span><span
+                                                        class="font-semibold">: 1100 cc</span></div>
+                                                <div class="d-flex"><span class="min-w-110px">Break System</span><span
+                                                        class="font-semibold">:
+                                                        Hydraulic ABS</span></div>
+                                                <div class="d-flex"><span class="min-w-110px">Engine Power</span><span
+                                                        class="font-semibold">: 250hp</span></div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                    <!-- End Table -->
+                </div>
+            </div>
+        </div>
+
         <div class="card mb-20">
             <!-- Table -->
             <div class="table-responsive">
-                <table id="" class="table table-borderless table-thead-bordered table-nowrap card-table similar">
+                <table id="" class="table table-borderless table-thead-bordered table-nowrap card-table">
                     <thead class="thead-light">
                         <tr>
-                            <th class="border-0">{{ translate('messages.Price') }}</th>
-                            <th class="border-0">{{ translate('messages.Category') }}</th>
-                            <th class="border-0">{{ translate('messages.Brand') }}</th>
-                            <th class="border-0">{{ translate('messages.Type') }}</th>
-                            <th class="border-0">{{ translate('messages.VIN_Number') }}</th>
-                            <th class="border-0">{{ translate('messages.Registration_No.') }}</th>
+                            <th class="border-0">{{ translate('messages.Identity_Info') }}</th>
                         </tr>
                     </thead>
 
                     <tbody id="set-rows">
                         <tr>
                             <td>
-                                <div>
-                                    <div>Hourly : <span class="font-semibold">$ 400</span></div>
-                                    <div>Distance Wise : <span class="font-semibold">$ 30</span></div>
-                                    <div>Discount : <span class="font-semibold">30%</span></div>
+                                <div class="d-flex gap-20px">
+                                    <div class="flex-grow-1 font-semibold text--title">
+                                        <div class="opacity-70 mb-2">Vehicle 1</div>
+                                        <div class="border rounded p-3 d-flex gap-4 justify-content-between">
+                                            <div>
+                                                <div class="fs-12 opacity-60">VIN Number</div>
+                                                <div>123456123578</div>
+                                            </div>
+                                            <div>
+                                                <div class="fs-12 opacity-60">Registration No.</div>
+                                                <div>Nator Kha 21-3214</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1 font-semibold text--title">
+                                        <div class="opacity-70 mb-2">Vehicle 1</div>
+                                        <div class="border rounded p-3 d-flex gap-4 justify-content-between">
+                                            <div>
+                                                <div class="fs-12 opacity-60">VIN Number</div>
+                                                <div>123456123578</div>
+                                            </div>
+                                            <div>
+                                                <div class="fs-12 opacity-60">Registration No.</div>
+                                                <div>Nator Kha 21-3214</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1 font-semibold text--title">
+                                        <div class="opacity-70 mb-2">Vehicle 1</div>
+                                        <div class="border rounded p-3 d-flex gap-4 justify-content-between">
+                                            <div>
+                                                <div class="fs-12 opacity-60">VIN Number</div>
+                                                <div>123456123578</div>
+                                            </div>
+                                            <div>
+                                                <div class="fs-12 opacity-60">Registration No.</div>
+                                                <div>Nator Kha 21-3214</div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </td>
-                            <td>Sedan</td>
-                            <td>Toyota</td>
-                            <td>Family</td>
-                            <td>123456123578</td>
-                            <td>Nator Kha 21-3214</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-            </div>
-            <!-- End Table -->
-        </div>
-        <div class="card mb-20">
-            <!-- Table -->
-            <div class="table-responsive">
-                <table id="" class="table table-borderless table-thead-bordered table-nowrap card-table similar">
-                    <thead class="thead-light">
-                        <tr>
-                            <th class="border-0">{{ translate('messages.Air_Condition') }}</th>
-                            <th class="border-0">{{ translate('messages.Fuel_Type') }}</th>
-                            <th class="border-0">{{ translate('messages.Transmission') }}</th>
-                            <th class="border-0">{{ translate('messages.Break_System') }}</th>
-                            <th class="border-0">{{ translate('messages.Engine_Capacity') }}</th>
-                            <th class="border-0">{{ translate('messages.Engine_Power') }}</th>
-                        </tr>
-                    </thead>
-
-                    <tbody id="set-rows">
-                        <tr>
-                            <td>Yes</td>
-                            <td>Diesel</td>
-                            <td>Manual Gear</td>
-                            <td>Hydraulic ABS</td>
-                            <td>1100 cc</td>
-                            <td>250hp</td>
                         </tr>
                     </tbody>
                 </table>

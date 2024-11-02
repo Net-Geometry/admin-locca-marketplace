@@ -10706,6 +10706,10 @@ body > .initial-38-1 {
     max-width: 100px !important;
 }
 
+.max-w-100px {
+    max-width: 100px !important;
+}
+
 .spartan_item_wrapper.max-w-100px {
     border-radius: 5px;
     overflow: hidden;
@@ -14241,4 +14245,8 @@ ul.address-info .label {
 .table.similar th,
 .table.similar td {
     width: 16.66%;
+}
+
+.min-w-110px {
+    min-width: 110px;
 }
