@@ -4837,6 +4837,24 @@ class BusinessSettingsController extends Controller
 
             Toastr::success(translate('messages.earning_section_updated'));
         } elseif ($tab == 'earning-seller-link') {
+
+            if($request->join_seller_react_status !== null ){
+                $join_seller_react_status = DataSetting::where('type', 'react_landing_page')->where('key', 'join_seller_react_status')->first();
+                if ($join_seller_react_status == null) {
+                    $join_seller_react_status = new DataSetting();
+                }
+
+                $join_seller_react_status->key = 'join_seller_react_status';
+                $join_seller_react_status->type = 'react_landing_page';
+                $join_seller_react_status->value = $request->join_seller_react_status  ? 0 : 1 ;
+                $join_seller_react_status->save();
+
+            Toastr::success(translate('messages.Seller_Section_Content_status_updated'));
+            return back();
+            }
+
+
+
             $earning_seller_title = DataSetting::where('type', 'react_landing_page')->where('key', 'earning_seller_title')->first();
             if ($earning_seller_title == null) {
                 $earning_seller_title = new DataSetting();
@@ -4959,7 +4977,21 @@ class BusinessSettingsController extends Controller
             }
             Toastr::success(translate('messages.seller_links_updated'));
         } elseif ($tab == 'earning-dm-link') {
-            // dd($request->all());
+
+            if($request->join_DM_react_status !== null ){
+                $join_DM_react_status = DataSetting::where('type', 'react_landing_page')->where('key', 'join_DM_react_status')->first();
+                if ($join_DM_react_status == null) {
+                    $join_DM_react_status = new DataSetting();
+                }
+
+                $join_DM_react_status->key = 'join_DM_react_status';
+                $join_DM_react_status->type = 'react_landing_page';
+                $join_DM_react_status->value = $request->join_DM_react_status  ? 0 : 1 ;
+                $join_DM_react_status->save();
+
+            Toastr::success(translate('messages.Seller_Section_Content_status_updated'));
+            return back();
+            }
             $earning_dm_title = DataSetting::where('type', 'react_landing_page')->where('key', 'earning_dm_title')->first();
             if ($earning_dm_title == null) {
                 $earning_dm_title = new DataSetting();
@@ -6274,6 +6306,22 @@ class BusinessSettingsController extends Controller
 
             Toastr::success(translate('messages.landing_page_module_updated'));
         } elseif ($tab == 'join-seller') {
+
+            if($request->join_seller_flutter_status !== null ){
+                $join_seller_flutter_status = DataSetting::where('type', 'flutter_landing_page')->where('key', 'join_seller_flutter_status')->first();
+                if ($join_seller_flutter_status == null) {
+                    $join_seller_flutter_status = new DataSetting();
+                }
+
+                $join_seller_flutter_status->key = 'join_seller_flutter_status';
+                $join_seller_flutter_status->type = 'flutter_landing_page';
+                $join_seller_flutter_status->value = $request->join_seller_flutter_status  ? 0 : 1 ;
+                $join_seller_flutter_status->save();
+
+            Toastr::success(translate('messages.join_as_seller_section_status_updated'));
+            return back();
+            }
+
             $join_seller_title = DataSetting::where('type', 'flutter_landing_page')->where('key', 'join_seller_title')->first();
             if ($join_seller_title == null) {
                 $join_seller_title = new DataSetting();
@@ -6396,6 +6444,23 @@ class BusinessSettingsController extends Controller
 
             Toastr::success(translate('messages.join_as_seller_data_updated'));
         } elseif ($tab == 'join-delivery') {
+
+            if($request->join_DM_flutter_status !== null ){
+                $join_DM_flutter_status = DataSetting::where('type', 'flutter_landing_page')->where('key', 'join_DM_flutter_status')->first();
+                if ($join_DM_flutter_status == null) {
+                    $join_DM_flutter_status = new DataSetting();
+                }
+
+                $join_DM_flutter_status->key = 'join_DM_flutter_status';
+                $join_DM_flutter_status->type = 'flutter_landing_page';
+                $join_DM_flutter_status->value = $request->join_DM_flutter_status  ? 0 : 1 ;
+                $join_DM_flutter_status->save();
+
+            Toastr::success(translate('messages.join_as_seller_section_status_updated'));
+            return back();
+            }
+
+
             $join_delivery_man_title = DataSetting::where('type', 'flutter_landing_page')->where('key', 'join_delivery_man_title')->first();
             if ($join_delivery_man_title == null) {
                 $join_delivery_man_title = new DataSetting();

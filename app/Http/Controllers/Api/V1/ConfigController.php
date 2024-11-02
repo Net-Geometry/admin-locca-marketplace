@@ -605,6 +605,8 @@ class ConfigController extends Controller
                 'available_zone_image' => (isset($settings['available_zone_image'])) ? $settings['available_zone_image'] : null,
                 'available_zone_image_full_url' => Helpers::get_full_url('available_zone_image', (isset($settings['available_zone_image'])) ? $settings['available_zone_image'] : null, (isset($settings['available_zone_image_storage'])) ? $settings['available_zone_image_storage'] : 'public'),
                 'available_zone_list' => $zones,
+                'join_DM_react_status' => (int)((isset($settings['join_DM_react_status'])) ? $settings['join_DM_react_status'] : 0),
+                'join_seller_react_status' => (int)((isset($settings['join_seller_react_status'])) ? $settings['join_seller_react_status'] : 0),
             ]);
     }
 
@@ -692,6 +694,9 @@ class ConfigController extends Controller
                 'available_zone_image' => (isset($settings['available_zone_image'])) ? $settings['available_zone_image'] : null,
                 'available_zone_image_full_url' => Helpers::get_full_url('available_zone_image', (isset($settings['available_zone_image'])) ? $settings['available_zone_image'] : null, (isset($settings['available_zone_image_storage'])) ? $settings['available_zone_image_storage'] : 'public'),
                 'available_zone_list' => $zones,
+                'join_seller_flutter_status' => (int)((isset($settings['join_seller_flutter_status'])) ? $settings['join_seller_flutter_status'] : 0),
+                'join_DM_flutter_status' => (int)((isset($settings['join_DM_flutter_status'])) ? $settings['join_DM_flutter_status'] : 0),
+
             ]);
     }
 
