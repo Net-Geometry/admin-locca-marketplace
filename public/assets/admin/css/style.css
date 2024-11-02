@@ -2290,6 +2290,12 @@ textarea.form-control[readonly] {
     .food--media .avatar {
         width: 184px;
     }
+    .food--media .avatar.w--290 {
+        width: 290px;
+    }
+    .food--media .avatar.h--145 {
+        height: 145px;
+    }
 }
 @media screen and (max-width: 991px) and (min-width: 768px) {
     .food--media {
@@ -14224,4 +14230,15 @@ ul.address-info .label {
     max-inline-size: 525px;
     max-block-size: 175px;
     object-fit: cover;
+}
+
+.title.border-line .info {
+    border-inline-start: 1px solid #d8d8d8;
+    margin-inline-start: 10px;
+    padding-inline-start: 10px;
+}
+
+.table.similar th,
+.table.similar td {
+    width: 16.66%;
 }
