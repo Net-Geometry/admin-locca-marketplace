@@ -35,8 +35,6 @@ class POSController extends Controller
         $store_id = $request->query('store_id', null);
         $categories = Category::active()->module(Config::get('module.current_module_id'))->get();
         $store = Store::active()->with('store_sub')->find($store_id);
-        // dd($store);
-
         if(!$store && $request->has('store_id')){
             Toastr::error(translate('messages.Store_is_not_available'));
             return back();
@@ -160,9 +158,6 @@ class POSController extends Controller
         $validator = Validator::make($request->all(),[
             'contact_person_name' => 'required',
             'contact_person_number' => 'required',
-//            'floor' => 'required',
-//            'road' => 'required',
-//            'house' => 'required',
             'longitude' => 'required',
             'latitude' => 'required',
         ]);
@@ -481,7 +476,7 @@ class POSController extends Controller
         return view('admin-views.pos._cart', compact('store'));
     }
 
-    //removes from Cart
+
     public function removeFromCart(Request $request)
     {
         if ($request->session()->has('cart')) {
@@ -504,7 +499,6 @@ class POSController extends Controller
         return response()->json([],200);
     }
 
-    //updated the quantity for a cart item
     public function updateQuantity(Request $request)
     {
         $cart = $request->session()->get('cart', collect([]));
@@ -526,7 +520,6 @@ class POSController extends Controller
         return response()->json([],200);
     }
 
-    //empty Cart
     public function emptyCart(Request $request)
     {
         session()->forget('cart');
@@ -968,9 +961,9 @@ class POSController extends Controller
                     'customer_wallet' => Helpers::format_currency($user->wallet_balance),
                     'customer_image' => $user->image_full_url,
                 ];
-            }
-        return response()->json($user,200);
+                }
+            return response()->json($user,200);
         }
-    return response()->json([],200);
-}
+        return response()->json([],200);
+    }
 }
