@@ -23,10 +23,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\BusinessSetting;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
 use MatanYadaev\EloquentSpatial\Objects\Point;
@@ -367,9 +365,9 @@ class CustomerController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'email' => 'required|unique:users,email,' . $request?->user()?->id,
+            'phone' => 'required|unique:users,phone,' . $request?->user()?->id,
             'image' => 'nullable|max:2048',
             'password' => ['nullable', Password::min(8)],
-
         ]);
 
         if ($validator->fails()) {

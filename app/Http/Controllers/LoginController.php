@@ -458,7 +458,6 @@ class LoginController extends Controller
         if (auth('vendor')?->check()) {
             $user_link = Helpers::get_login_url('store_login_url');
             auth()->guard('vendor')->logout();
-            session()->forget('stock_out_reminder_close_btn');
             session()->forget('subscription_free_trial_close_btn');
             session()->forget('subscription_renew_close_btn');
             session()->forget('subscription_cancel_close_btn');
@@ -466,7 +465,6 @@ class LoginController extends Controller
         } elseif (auth('vendor_employee')?->check()) {
             $user_link = Helpers::get_login_url('store_employee_login_url');
             auth()->guard('vendor_employee')->logout();
-            session()->forget('stock_out_reminder_close_btn');
             session()->forget('subscription_free_trial_close_btn');
             session()->forget('subscription_renew_close_btn');
             session()->forget('subscription_cancel_close_btn');

@@ -45,13 +45,12 @@ class DashboardController extends Controller
         $top_sell = Item::orderBy("order_count", 'desc')
             ->take(6)
             ->get();
-        $most_rated_items = Item::
-        orderBy('rating_count','desc')
+        $most_rated_items = Item::where('avg_rating' ,'>' ,0)
+        ->orderBy('avg_rating','desc')
         ->take(6)
         ->get();
         $data['top_sell'] = $top_sell;
         $data['most_rated_items'] = $most_rated_items;
-
 
         if( Helpers::get_store_data()?->storeConfig?->minimum_stock_for_warning > 0){
             $items=  Item::where('stock' ,'<=' , Helpers::get_store_data()->storeConfig->minimum_stock_for_warning );

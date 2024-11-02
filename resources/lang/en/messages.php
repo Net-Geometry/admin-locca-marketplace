@@ -5918,4 +5918,6 @@ Smartly or Earn. ',
   'Allergie_Ingredients' => 'Allergie Ingredients',
   'Low_Stock_List' => 'Low Stock List',
   'low_stock_list' => 'Low stock list',
+  'ready for delivery' => 'Ready for delivery',
+  'Gst No' => 'Gst No',
 );
