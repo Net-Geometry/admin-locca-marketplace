@@ -801,7 +801,7 @@ class CustomerAuthController extends Controller
         }
 
         if (auth()->attempt($data)) {
-            $token = auth()->user()->createToken('RestaurantCustomerAuth')->accessToken;
+            $token = null;
             if(!auth()->user()->status)
             {
                 $errors = [];
@@ -813,9 +813,6 @@ class CustomerAuthController extends Controller
             $user = auth()->user();
 
             $this->refer_code_check($user);
-            if(isset($request_data['guest_id'])){
-                $this->check_guest_cart($user, $request_data['guest_id']);
-            }
 
             $is_personal_info = 0;
             if($user->f_name){
@@ -828,6 +825,13 @@ class CustomerAuthController extends Controller
             $user_email = null;
             if($user->email){
                 $user_email = $user->email;
+            }
+
+            if ($is_personal_info == 1 && auth()->loginUsingId($user->id)) {
+                $token = auth()->user()->createToken('RestaurantCustomerAuth')->accessToken;
+                if(isset($request_data['guest_id'])){
+                    $this->check_guest_cart($user, $request_data['guest_id']);
+                }
             }
 
             return response()->json(['token' => $token, 'is_phone_verified'=> 1, 'is_email_verified'=> 1, 'is_personal_info' => $is_personal_info, 'is_exist_user' => null, 'login_type' => 'manual', 'email' => $user_email], 200);
@@ -1099,7 +1103,7 @@ class CustomerAuthController extends Controller
     {
         $rules = [
             'name' => 'required',
-            'login_type' => 'required|in:otp,social',
+            'login_type' => 'required|in:otp,social,manual',
             'phone' => 'required|min:9|max:14',
             'email' => 'required|email',
         ];
@@ -1108,7 +1112,7 @@ class CustomerAuthController extends Controller
             $rules['phone'] .= '|unique:users,phone';
         }
 
-        if ($request->login_type == 'otp') {
+        if ($request->login_type == 'otp' || $request->login_type == 'manual') {
             $rules['email'] .= '|unique:users,email';
         }
 

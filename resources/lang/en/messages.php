@@ -5940,4 +5940,5 @@ Smartly or Earn. ',
   'If_you_enable_this,_Deliveryman_Section_Content_will_be_visible.' => 'If you enable this, Deliveryman Section Content will be visible.',
   'If_you_disable_this,_Deliveryman_Section_Content_will_not_be_visible.' => 'If you disable this, Deliveryman Section Content will not be visible.',
   'Seller_Section_Content_status_updated' => 'Seller Section Content status updated',
+  'User_credential_does_not_match' => 'User credential does not match',
 );
