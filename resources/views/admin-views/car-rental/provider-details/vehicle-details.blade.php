@@ -13,7 +13,7 @@
                 <div>
                     <h1 class="page-header-title text-break">
                         <span class="page-header-icon">
-                            <img src="{{ asset('public/assets/admin/img/store.png') }}" class="w--22" alt="">
+                            <img src="{{ asset('public/assets/admin/img/car-logo.png') }}" alt="">
                         </span>
                         <span>{{ translate('messages.F Premio 2006') }}
                     </h1></span>
@@ -27,6 +27,151 @@
             </div>
         </div>
         <!-- End Page Header -->
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-4"></div>
+                    <div class="col-lg-8">
+                        <div>
+                            <div class="d-flex flex-column-reverse flex-lg-row gap-20px gap-lg-40px">
+                                <ul class="nav nav-tabs mb-3 flex-grow-1 flex-nowrap">
+                                    <li class="nav-item">
+                                        <a class="nav-link lang_link active" href="#" id="default-link">Default</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link lang_link" href="#" id="en-link">English(EN)</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link lang_link" href="#" id="ar-link">Arabic(SA)</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link lang_link" href="#" id="ar-link">Arabic(SA)</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link lang_link" href="#" id="ar-link">Arabic(SA)</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link lang_link" href="#" id="ar-link">Arabic(SA)</a>
+                                    </li>
+                                </ul>
+                                <div class="floating-review-wrapper">
+                                    <div class="rating--review border rounded">
+                                        <h5 class="title border-line font-medium d-flex align-items-center lh--1 mb-0">
+                                            <span class="fs-14">
+                                                <span class="font-bold">4.0</span>
+                                                <span class="color-758590">/5</span>
+                                            </span>
+                                            <div class="info text--title fs-14">2 Reviews</div>
+                                        </h5>
+                                    </div>
+                                    <ul class="list-unstyled list-unstyled-py-2 mb-0 rating--review-right">
+                                        <!-- Review Ratings -->
+                                        <li class="d-flex align-items-center font-size-sm">
+                                            <span class="progress-name mr-3">Excellent</span>
+                                            <div class="progress flex-grow-1">
+                                                <div class="progress-bar" role="progressbar" style="width: 20%;"
+                                                    aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                            </div>
+                                            <span class="ml-3">20</span>
+                                        </li>
+                                        <!-- End Review Ratings -->
+
+                                        <!-- Review Ratings -->
+                                        <li class="d-flex align-items-center font-size-sm">
+                                            <span class="progress-name mr-3">Good</span>
+                                            <div class="progress flex-grow-1">
+                                                <div class="progress-bar" role="progressbar" style="width: 5%;"
+                                                    aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                            </div>
+                                            <span class="ml-3">5</span>
+                                        </li>
+                                        <!-- End Review Ratings -->
+
+                                        <!-- Review Ratings -->
+                                        <li class="d-flex align-items-center font-size-sm">
+                                            <span class="progress-name mr-3">Average</span>
+                                            <div class="progress flex-grow-1">
+                                                <div class="progress-bar" role="progressbar" style="width: 5%;"
+                                                    aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                            </div>
+                                            <span class="ml-3">5</span>
+                                        </li>
+                                        <!-- End Review Ratings -->
+
+                                        <!-- Review Ratings -->
+                                        <li class="d-flex align-items-center font-size-sm">
+                                            <span class="progress-name mr-3">Below average</span>
+                                            <div class="progress flex-grow-1">
+                                                <div class="progress-bar" role="progressbar" style="width: 2%;"
+                                                    aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                            </div>
+                                            <span class="ml-3">2</span>
+                                        </li>
+                                        <!-- End Review Ratings -->
+
+                                        <!-- Review Ratings -->
+                                        <li class="d-flex align-items-center font-size-sm">
+                                            <span class="progress-name mr-3">Poor</span>
+                                            <div class="progress flex-grow-1">
+                                                <div class="progress-bar" role="progressbar" style="width: 1%;"
+                                                    aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                            </div>
+                                            <span class="ml-3">1</span>
+                                        </li>
+                                        <!-- End Review Ratings -->
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="lang_form text--title" id="default-form">
+                                <h3 class="text--title fs-20 ont-bold mb-10px">F Premio 2006</h3>
+                                <h5 class="text--title font-semibold opacity-lg mb-10px">Description:</h5>
+                                <div class="fs-12 opacity-lg">
+                                    If you’re looking for a pie with a bit more heft, a meat pizza is a perfect and popular
+                                    choice. If you’re looking for If you’re looking for a pie with a bit more heft, a meat
+                                    pizza If you’re looking for a pie with a bit more heft, a meat pizza is a perfect and
+                                    popular choice. If you’re looking for If you’re looking for a pie with a bit more heft,
+                                    a meat pizza If you’re looking for a pie with a bit more heft, a meat pizza is a perfect
+                                    and popular choice. If you’re looking for If you’re looking for a pie with a bit more
+                                    heft, a meat pizza If you’re looking for a pie with a bit more heft, a meat pizza is a
+                                    perfect and popular choice. If you’re looking for If you’re looking for a pie with a bit
+                                    more <span class="text--primary font-medium">See more</span>
+                                </div>
+                            </div>
+                            <div class="lang_form d-none text--title" id="en-form">
+                                <h3 class="text--title fs-20 ont-bold mb-10px">F Premio 2006</h3>
+                                <h5 class="text--title font-semibold opacity-lg mb-10px">Description:</h5>
+                                <div class="fs-12 opacity-lg">
+                                    If you’re looking for a pie with a bit more heft, a meat pizza is a perfect and popular
+                                    choice. If you’re looking for If you’re looking for a pie with a bit more heft, a meat
+                                    pizza If you’re looking for a pie with a bit more heft, a meat pizza is a perfect and
+                                    popular choice. If you’re looking for If you’re looking for a pie with a bit more heft,
+                                    a meat pizza If you’re looking for a pie with a bit more heft, a meat pizza is a perfect
+                                    and popular choice. If you’re looking for If you’re looking for a pie with a bit more
+                                    heft, a meat pizza If you’re looking for a pie with a bit more heft, a meat pizza is a
+                                    perfect and popular choice. If you’re looking for If you’re looking for a pie with a bit
+                                    more <span class="text--primary font-medium">See more</span>
+                                </div>
+                            </div>
+                            <div class="lang_form d-none text--title" id="ar-form">
+                                <h3 class="text--title fs-20 ont-bold mb-10px">F Premio 2006</h3>
+                                <h5 class="text--title font-semibold opacity-lg mb-10px">Description:</h5>
+                                <div class="fs-12 opacity-lg">
+                                    If you’re looking for a pie with a bit more heft, a meat pizza is a perfect and popular
+                                    choice. If you’re looking for If you’re looking for a pie with a bit more heft, a meat
+                                    pizza If you’re looking for a pie with a bit more heft, a meat pizza is a perfect and
+                                    popular choice. If you’re looking for If you’re looking for a pie with a bit more heft,
+                                    a meat pizza If you’re looking for a pie with a bit more heft, a meat pizza is a perfect
+                                    and popular choice. If you’re looking for If you’re looking for a pie with a bit more
+                                    heft, a meat pizza If you’re looking for a pie with a bit more heft, a meat pizza is a
+                                    perfect and popular choice. If you’re looking for If you’re looking for a pie with a bit
+                                    more <span class="text--primary font-medium">See more</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="row review--information-wrapper g-2 mb-3">
             <div class="col-lg-9">
                 <div class="card h-100">
@@ -561,4 +706,107 @@
             window.downloadPdf = downloadPdf;
         });
     </script>
+    {{-- <script>
+        $(document).ready(function() {
+            var sync1 = $("#sync1");
+            var sync2 = $("#sync2");
+            var thumbnailItemClass = ".owl-item";
+            var slides = sync1
+                .owlCarousel({
+                    startPosition: 12,
+                    items: 1,
+                    loop: false,
+                    margin: 0,
+                    mouseDrag: true,
+                    touchDrag: true,
+                    pullDrag: false,
+                    scrollPerPage: true,
+                    autoplayHoverPause: false,
+                    nav: false,
+                    dots: false,
+                    rtl: themeDirection && themeDirection.toString() === "rtl",
+                })
+                .on("changed.owl.carousel", syncPosition);
+
+            function syncPosition(el) {
+                $owl_slider = $(this).data("owl.carousel");
+                var loop = $owl_slider.options.loop;
+
+                if (loop) {
+                    var count = el.item.count - 1;
+                    var current = Math.round(
+                        el.item.index - el.item.count / 2 - 0.5
+                    );
+                    if (current < 0) {
+                        current = count;
+                    }
+                    if (current > count) {
+                        current = 0;
+                    }
+                } else {
+                    var current = el.item.index;
+                }
+
+                var owl_thumbnail = sync2.data("owl.carousel");
+                var itemClass = "." + owl_thumbnail.options.itemClass;
+
+                var thumbnailCurrentItem = sync2
+                    .find(itemClass)
+                    .removeClass("synced")
+                    .eq(current);
+                thumbnailCurrentItem.addClass("synced");
+
+                if (!thumbnailCurrentItem.hasClass("active")) {
+                    var duration = 500;
+                    sync2.trigger("to.owl.carousel", [current, duration, true]);
+                }
+            }
+            var thumbs = sync2
+                .owlCarousel({
+                    startPosition: 12,
+                    items: 6,
+                    loop: false,
+                    margin: 10,
+                    autoplay: false,
+                    nav: false,
+                    dots: false,
+                    rtl: themeDirection && themeDirection.toString() === "rtl",
+                    responsive: {
+                        576: {
+                            items: 4,
+                        },
+                        768: {
+                            items: 5,
+                        },
+                        992: {
+                            items: 5,
+                        },
+                        1200: {
+                            items: 6,
+                        },
+                        1400: {
+                            items: 7,
+                        },
+                    },
+                    onInitialized: function(e) {
+                        var thumbnailCurrentItem = $(e.target)
+                            .find(thumbnailItemClass)
+                            .eq(this._current);
+                        thumbnailCurrentItem.addClass("synced");
+                    },
+                })
+                .on("click", thumbnailItemClass, function(e) {
+                    e.preventDefault();
+                    var duration = 500;
+                    var itemIndex = $(e.target).parents(thumbnailItemClass).index();
+                    sync1.trigger("to.owl.carousel", [itemIndex, duration, true]);
+                })
+                .on("changed.owl.carousel", function(el) {
+                    var number = el.item.index;
+                    $owl_slider = sync1.data("owl.carousel");
+                    $owl_slider.to(number, 500, true);
+                });
+            sync1.owlCarousel();
+        });
+    </script> --}}
 @endpush
