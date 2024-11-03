@@ -575,11 +575,14 @@ class ConfigController extends Controller
                 'earning_seller_title' => (isset($settings['earning_seller_title'])) ? $settings['earning_seller_title'] : null,
                 'earning_seller_sub_title' => (isset($settings['earning_seller_sub_title'])) ? $settings['earning_seller_sub_title'] : null,
                 'earning_seller_button_name' => (isset($settings['earning_seller_button_name'])) ? $settings['earning_seller_button_name'] : null,
-                'earning_seller_button_url' => (isset($settings['earning_seller_button_url'])) ? $settings['earning_seller_button_url'] : null,
+                'earning_seller_status' => (int)((isset($settings['join_seller_react_status'])) ? $settings['join_seller_react_status'] : 0),
+                // 'earning_seller_button_url' => (isset($settings['earning_seller_button_url'])) ? $settings['earning_seller_button_url'] : null,
                 'earning_dm_title' => (isset($settings['earning_dm_title'])) ? $settings['earning_dm_title'] : null,
                 'earning_dm_sub_title' => (isset($settings['earning_dm_sub_title'])) ? $settings['earning_dm_sub_title'] : null,
                 'earning_dm_button_name' => (isset($settings['earning_dm_button_name'])) ? $settings['earning_dm_button_name'] : null,
-                'earning_dm_button_url' => (isset($settings['earning_dm_button_url'])) ? $settings['earning_dm_button_url'] : null,
+                // 'earning_dm_button_url' => (isset($settings['earning_dm_button_url'])) ? $settings['earning_dm_button_url'] : null,
+                'earning_dm_status' => (int)((isset($settings['join_DM_react_status'])) ? $settings['join_DM_react_status'] : 0),
+
                 'business_title' => (isset($settings['business_title'])) ? $settings['business_title'] : null,
                 'business_sub_title' => (isset($settings['business_sub_title'])) ? $settings['business_sub_title'] : null,
                 'business_image' => (isset($settings['business_image'])) ? $settings['business_image'] : null,
@@ -592,21 +595,17 @@ class ConfigController extends Controller
                 'fixed_promotional_banner' => (isset($settings['fixed_promotional_banner'])) ? $settings['fixed_promotional_banner'] : null,
                 'fixed_promotional_banner_full_url' => Helpers::get_full_url('promotional_banner', (isset($settings['fixed_promotional_banner'])) ? $settings['fixed_promotional_banner'] : null, (isset($settings['fixed_promotional_banner_storage'])) ? $settings['fixed_promotional_banner_storage'] : 'public'),
 
-
                 'promotion_banners' => (isset($settings['promotion_banner'])) ? json_decode($settings['promotion_banner'], true) : null,
                 'promotion_banners_full_url' => $promotional_banners,
                 'download_user_app_links' => (isset($settings['download_user_app_links'])) ? json_decode($settings['download_user_app_links'], true) : null,
                 'download_business_app_links' => (isset($settings['download_business_app_links'])) ? json_decode($settings['download_business_app_links'], true) : null,
-                // 'dm_app_earning_links'=> (isset($settings['dm_app_earning_links']) )  ? json_decode($settings['dm_app_earning_links'], true) : null ,
-                // 'download_user_app_links'=> (isset($settings['download_app_links']) )  ? json_decode($settings['download_app_links'], true) : null ,
+
                 'available_zone_status' => (int)((isset($settings['available_zone_status'])) ? $settings['available_zone_status'] : 0),
                 'available_zone_title' => (isset($settings['available_zone_title'])) ? $settings['available_zone_title'] : null,
                 'available_zone_short_description' => (isset($settings['available_zone_short_description'])) ? $settings['available_zone_short_description'] : null,
                 'available_zone_image' => (isset($settings['available_zone_image'])) ? $settings['available_zone_image'] : null,
                 'available_zone_image_full_url' => Helpers::get_full_url('available_zone_image', (isset($settings['available_zone_image'])) ? $settings['available_zone_image'] : null, (isset($settings['available_zone_image_storage'])) ? $settings['available_zone_image_storage'] : 'public'),
                 'available_zone_list' => $zones,
-                'join_DM_react_status' => (int)((isset($settings['join_DM_react_status'])) ? $settings['join_DM_react_status'] : 0),
-                'join_seller_react_status' => (int)((isset($settings['join_seller_react_status'])) ? $settings['join_seller_react_status'] : 0),
             ]);
     }
 
@@ -674,18 +673,20 @@ class ConfigController extends Controller
                 'join_seller_title' => (isset($settings['join_seller_title'])) ? $settings['join_seller_title'] : null,
                 'join_seller_sub_title' => (isset($settings['join_seller_sub_title'])) ? $settings['join_seller_sub_title'] : null,
                 'join_seller_button_name' => (isset($settings['join_seller_button_name'])) ? $settings['join_seller_button_name'] : null,
-                'join_seller_button_url' => (isset($settings['join_seller_button_url'])) ? $settings['join_seller_button_url'] : null,
+                'join_seller_status' => (int)((isset($settings['join_seller_flutter_status'])) ? $settings['join_seller_flutter_status'] : 0),
+                // 'join_seller_button_url' => (isset($settings['join_seller_button_url'])) ? $settings['join_seller_button_url'] : null,
                 'join_delivery_man_title' => (isset($settings['join_delivery_man_title'])) ? $settings['join_delivery_man_title'] : null,
                 'join_delivery_man_sub_title' => (isset($settings['join_delivery_man_sub_title'])) ? $settings['join_delivery_man_sub_title'] : null,
                 'join_delivery_man_button_name' => (isset($settings['join_delivery_man_button_name'])) ? $settings['join_delivery_man_button_name'] : null,
-                'join_delivery_man_button_url' => (isset($settings['join_delivery_man_button_url'])) ? $settings['join_delivery_man_button_url'] : null,
+                // 'join_delivery_man_button_url' => (isset($settings['join_delivery_man_button_url'])) ? $settings['join_delivery_man_button_url'] : null,
+                'join_delivery_man_status' => (int)((isset($settings['join_DM_flutter_status'])) ? $settings['join_DM_flutter_status'] : 0),
+
                 'download_user_app_title' => (isset($settings['download_user_app_title'])) ? $settings['download_user_app_title'] : null,
                 'download_user_app_sub_title' => (isset($settings['download_user_app_sub_title'])) ? $settings['download_user_app_sub_title'] : null,
                 'download_user_app_image' => (isset($settings['download_user_app_image'])) ? $settings['download_user_app_image'] : null,
                 'download_user_app_image_full_url' => Helpers::get_full_url('download_user_app_image', (isset($settings['download_user_app_image'])) ? $settings['download_user_app_image'] : null, (isset($settings['download_user_app_image_storage'])) ? $settings['download_user_app_image_storage'] : 'public'),
 
                 'special_criterias' => (isset($criterias)) ? $criterias : null,
-
 
                 'download_user_app_links' => (isset($settings['download_user_app_links'])) ? json_decode($settings['download_user_app_links'], true) : null,
                 'available_zone_status' => (int)((isset($settings['available_zone_status'])) ? $settings['available_zone_status'] : 0),
@@ -694,9 +695,6 @@ class ConfigController extends Controller
                 'available_zone_image' => (isset($settings['available_zone_image'])) ? $settings['available_zone_image'] : null,
                 'available_zone_image_full_url' => Helpers::get_full_url('available_zone_image', (isset($settings['available_zone_image'])) ? $settings['available_zone_image'] : null, (isset($settings['available_zone_image_storage'])) ? $settings['available_zone_image_storage'] : 'public'),
                 'available_zone_list' => $zones,
-                'join_seller_flutter_status' => (int)((isset($settings['join_seller_flutter_status'])) ? $settings['join_seller_flutter_status'] : 0),
-                'join_DM_flutter_status' => (int)((isset($settings['join_DM_flutter_status'])) ? $settings['join_DM_flutter_status'] : 0),
-
             ]);
     }
 
