@@ -1703,7 +1703,7 @@ class Helpers
                         'order_type' => $order->order_type,
                         'image' => '',
                     ];
-                    if($order->zone){
+                    if($order->zone && self::getNotificationStatusData('deliveryman','deliveryman_order_notification','push_notification_status')){
                         if($order->dm_vehicle_id){
 
                             $topic = 'delivery_man_'.$order->zone_id.'_'.$order->dm_vehicle_id;
@@ -1726,7 +1726,7 @@ class Helpers
                     'order_type' => 'parcel_order',
                     'image' => '',
                 ];
-                if($order->zone){
+                if($order->zone && self::getNotificationStatusData('deliveryman','deliveryman_order_notification','push_notification_status')){
                     if($order->dm_vehicle_id){
 
                         $topic = 'delivery_man_'.$order->zone_id.'_'.$order->dm_vehicle_id;
@@ -1784,7 +1784,7 @@ class Helpers
             }
 
             if ($order->order_status == 'confirmed' && $order->order_type != 'take_away' && config('order_confirmation_model') == 'deliveryman' && $order->payment_method == 'cash_on_delivery') {
-                if ($order->store->sub_self_delivery) {
+                if ($order->store->sub_self_delivery && $push_notification_status) {
                     $data = [
                         'title' => translate('Order_Notification'),
                         'description' => translate('messages.new_order_push_description'),
@@ -1828,10 +1828,10 @@ class Helpers
                     'order_type' => $order->order_type,
                     'image' => '',
                 ];
-                if ($order->store->sub_self_delivery) {
+                if ($order->store->sub_self_delivery && $push_notification_status) {
                     self::send_push_notif_to_topic($data, "restaurant_dm_" . $order->store_id, 'order_request',null);
                 } else
-                {if($order->zone){
+                {if($order->zone && self::getNotificationStatusData('deliveryman','deliveryman_order_notification','push_notification_status')){
                     if($order->dm_vehicle_id){
 
                         $topic = 'delivery_man_'.$order->zone_id.'_'.$order->dm_vehicle_id;
