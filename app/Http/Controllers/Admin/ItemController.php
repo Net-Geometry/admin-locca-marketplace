@@ -707,7 +707,7 @@ class ItemController extends Controller
                         'description' => translate('Product_Request_Has_Been_Approved_By_Admin'),
                         'order_id' => '',
                         'image' => '',
-                        'type' => 'product',
+                        'type' => 'product_approve',
                         'order_status' => '',
                     ];
                     Helpers::send_push_notif_to_device($item?->store?->vendor?->firebase_token, $data);
@@ -1869,7 +1869,7 @@ class ItemController extends Controller
                     'description' => translate('Product_Request_Has_Been_Rejected_By_Admin'),
                     'order_id' => '',
                     'image' => '',
-                    'type' => 'product',
+                    'type' => 'product_rejected',
                     'order_status' => '',
                 ];
                 Helpers::send_push_notif_to_device($data?->store?->vendor?->firebase_token, $ndata);
@@ -1972,7 +1972,7 @@ class ItemController extends Controller
                     'description' => translate('Product_Request_Has_Been_Approved_By_Admin'),
                     'order_id' => '',
                     'image' => '',
-                    'type' => 'product',
+                    'type' => 'product_approve',
                     'order_status' => '',
                 ];
                 Helpers::send_push_notif_to_device($item?->store?->vendor?->firebase_token, $data);

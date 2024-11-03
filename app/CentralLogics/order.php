@@ -331,7 +331,7 @@ class OrderLogic
                     if($create_loyalty_point_transaction > 0) {
                         $notification_data = [
                             'title' => translate('messages.Congratulation'),
-                            'description' => translate('You have received').' '.Helpers::format_currency($create_loyalty_point_transaction).' '.translate('in_your_wallet_as_loyalty_point'),
+                            'description' => translate('You_have_received').' '.$create_loyalty_point_transaction.' '.translate('points_as_loyalty_point'),
                             'order_id' => $order->id,
                             'image' => '',
                             'type' => 'loyalty_point',
