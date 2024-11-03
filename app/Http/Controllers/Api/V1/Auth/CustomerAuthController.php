@@ -1167,7 +1167,7 @@ class CustomerAuthController extends Controller
         $firstName = $nameParts[0];
         $lastName = $nameParts[1] ?? '';
 
-        if($request->login_type == 'otp'){
+        if($request->login_type == 'otp' || $request->login_type == 'manual'){
             $user = User::where(['phone' => $request->phone])->first();
         }else{
             $user = User::where(['email' => $request->email])->first();
