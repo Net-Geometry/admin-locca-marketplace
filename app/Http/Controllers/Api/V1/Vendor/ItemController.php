@@ -1242,8 +1242,8 @@ class ItemController extends Controller
             });
         })
         ->type($type);
-        if($request['vendor']?->stores[0]?->storeConfig->minimum_stock_for_warning > 0){
-            $items= $items->where('stock' ,'<=' ,$request['vendor']?->stores[0]?->storeConfig->minimum_stock_for_warning );
+        if($request['vendor']?->stores[0]?->storeConfig?->minimum_stock_for_warning > 0){
+            $items= $items->where('stock' ,'<=' ,$request['vendor']?->stores[0]?->storeConfig?->minimum_stock_for_warning );
         } else{
             $items= $items->where('stock',0 );
         }

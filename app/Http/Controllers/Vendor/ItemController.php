@@ -1416,7 +1416,7 @@ class ItemController extends Controller
             });
         })
         ->type($type);
-        if( Helpers::get_store_data()->storeConfig->minimum_stock_for_warning > 0){
+        if( Helpers::get_store_data()->storeConfig?->minimum_stock_for_warning > 0){
             $items= $items->where('stock' ,'<=' , Helpers::get_store_data()->storeConfig->minimum_stock_for_warning );
         } else{
             $items= $items->where('stock',0 );

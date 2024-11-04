@@ -164,8 +164,8 @@ class VendorController extends Controller
                 }
 
 
-                if( $st?->storeConfig->minimum_stock_for_warning > 0){
-                    $items=  $st?->items()->where('stock' ,'<=' , $st?->storeConfig->minimum_stock_for_warning );
+                if( $st?->storeConfig?->minimum_stock_for_warning > 0){
+                    $items=  $st?->items()->where('stock' ,'<=' , $st?->storeConfig?->minimum_stock_for_warning );
                 } else{
                     $items=  $st?->items()->where('stock',0 );
                 }
