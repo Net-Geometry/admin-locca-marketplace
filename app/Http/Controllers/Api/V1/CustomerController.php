@@ -27,6 +27,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
+use Modules\Gateways\Traits\SmsGateway;
 use MatanYadaev\EloquentSpatial\Objects\Point;
 
 class CustomerController extends Controller
