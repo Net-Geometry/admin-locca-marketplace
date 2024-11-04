@@ -5944,4 +5944,6 @@ Smartly or Earn. ',
   'Select_Order_Date_Range' => 'Select Order Date Range',
   'Select_Customer_Joining_Date_Range' => 'Select Customer Joining Date Range',
   'Select_Subscription_Date_Range' => 'Select Subscription Date Range',
+  'If_you_enable_this,Deliveyman_last_location_will_be_recorded_by_websocket.' => 'If you enable this,Deliveyman last location will be recorded by websocket.',
+  'If_you_disable_this,Deliveyman_last_location_will_be_recorded_by_default_method.' => 'If you disable this,Deliveyman last location will be recorded by default method.',
 );

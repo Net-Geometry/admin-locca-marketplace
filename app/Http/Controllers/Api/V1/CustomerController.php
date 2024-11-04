@@ -150,7 +150,7 @@ class CustomerController extends Controller
 
     public function get_order_list(Request $request)
     {
-        $orders = Order::where(['user_id' => $request->user()->id])->get();
+        $orders = Order::where(['user_id' => $request->user()->id])->where('is_guest', 0)->get();
         return response()->json($orders, 200);
     }
 
@@ -191,7 +191,7 @@ class CustomerController extends Controller
 
         $data = $request->user();
         $data['userinfo'] = $data->userinfo;
-        $data['order_count'] = (integer)$request->user()->orders->count();
+        $data['order_count'] = (integer)$request->user()->orders()->count();
         $data['member_since_days'] = (integer)$request->user()->created_at->diffInDays();
         $data['selected_modules_for_interest'] = $request->user()?->module_ids ? json_decode($user?->module_ids, true) : [];
         $discount_data = Helpers::getCusromerFirstOrderDiscount(order_count: $data['order_count'], user_creation_date: $request->user()->created_at, refby: $request->user()->ref_by);
@@ -311,7 +311,7 @@ class CustomerController extends Controller
     {
         $user = $request->user();
 
-        if (Order::where('user_id', $user->id)->whereIn('order_status', ['pending', 'accepted', 'confirmed', 'processing', 'handover', 'picked_up'])->count()) {
+        if (Order::where('user_id', $user->id)->where('is_guest',0)->whereIn('order_status', ['pending', 'accepted', 'confirmed', 'processing', 'handover', 'picked_up'])->count()) {
             return response()->json(['errors' => [['code' => 'on-going', 'message' => translate('messages.Please_complete_your_ongoing_and_accepted_orders')]]], 203);
         }
         $request->user()->token()->revoke();
