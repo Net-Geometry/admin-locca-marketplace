@@ -276,6 +276,9 @@ class CategoryLogic
                     });
                 });
             })
+            ->when($filter && in_array('currently_open',$filter),function ($qurey){
+                return $qurey->having('open', '>', 0);
+            })
             ->orderBy('open', 'desc')
             ->when($filter && in_array('popular',$filter),function ($qurey){
                 return $qurey->withCount('orders')->orderBy('orders_count', 'desc');

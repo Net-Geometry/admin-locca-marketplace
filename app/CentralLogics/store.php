@@ -88,6 +88,9 @@ class StoreLogic
             $query = $query->when($store_type == 'all' && $filter && !in_array('fast_delivery',$filter), function($q){
                 return $q->orderBy('open', 'desc')->orderBy('distance');
             });
+            $query = $query->when($filter && in_array('currently_open', $filter), function ($query) {
+                return $query->having('open', '>', 0);
+            });
             $query = $query->when($store_type == 'newly_joined', function($q){
                 return $q->latest();
             });
@@ -404,6 +407,9 @@ class StoreLogic
             ->when($filter && in_array('top_rated',$filter),function ($qurey){
                 return $qurey->whereNotNull('rating')->whereRaw("LENGTH(rating) > 0");
             })
+            ->when($filter && in_array('currently_open',$filter),function ($qurey){
+                return $qurey->having('open', '>', 0);
+            })
             ->orderBy('open', 'desc')
             ->when($filter && in_array('popular',$filter),function ($qurey){
                 return $qurey->withCount('orders')->orderBy('orders_count', 'desc');
@@ -592,7 +598,9 @@ class StoreLogic
             ->when($filter && in_array('coupon',$filter),function ($qurey){
                 return $qurey->has('activeCoupons');
             })
-
+            ->when($filter && in_array('currently_open',$filter),function ($qurey){
+                return $qurey->having('open', '>', 0);
+            })
             ->orderBy('open', 'desc')
             ->when($filter && in_array('popular',$filter),function ($qurey){
                 return $qurey->withCount('orders')->orderBy('orders_count', 'desc');
