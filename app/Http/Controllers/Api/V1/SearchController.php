@@ -241,7 +241,8 @@ class SearchController extends Controller
                     return response()->json(['errors' => Helpers::error_processor($validator)], 403);
                 }
 
-                $paginator = StoreLogic::search_stores($request?->name, $zone_id, $request->category_id, $limit, $offset, $type, $longitude, $latitude, $filter, $rating_count);
+                $category_ids = $request['category_ids'] ? (is_array($request['category_ids']) ? $request['category_ids'] : json_decode($request['category_ids'],true )) : null;
+                $paginator = StoreLogic::search_stores($request?->name, $zone_id, $request->category_id, $limit, $offset, $type, $longitude, $latitude, $filter, $rating_count, $category_ids);
                 break;
 
             case 'discounted':

@@ -111,6 +111,7 @@ class CategoryLogic
         $category_ids = isset($category_ids)?(is_array($category_ids)?$category_ids:json_decode($category_ids)):[];
         $brand_ids = isset($brand_ids)?(is_array($brand_ids)?$brand_ids:json_decode($brand_ids)):[];
         $filter = $filter?(is_array($filter)?$filter:str_getcsv(trim($filter, "[]"), ',')):'';
+
         $query = Item::
             whereHas('module.zones', function($query)use($zone_id){
                 $query->whereIn('zones.id', json_decode($zone_id, true));
@@ -151,7 +152,29 @@ class CategoryLogic
             }, 'temp_available')
             ->active()->type($type);
 
-            if ($category_sub_category_item_default_status == '1'){
+            $query = $query->when($rating_count, function($query) use ($rating_count){
+                return $query->where('avg_rating', '>=' , $rating_count);
+            });
+            $query = $query->when($min && $max, function($query)use($min,$max){
+                return $query->whereBetween('price',[$min,$max]);
+            });
+            $query = $query->when($filter&&in_array('top_rated',$filter),function ($qurey){
+                return $qurey->withCount('reviews')->orderBy('reviews_count','desc');
+            });
+            $query = $query->when($filter&&in_array('popular',$filter),function ($qurey){
+                return $qurey->popular();
+            });
+            $query = $query->when($filter&&in_array('high',$filter),function ($qurey){
+                return  $qurey->orderByDesc('price');
+            });
+            $query = $query->when($filter&&in_array('low',$filter),function ($qurey){
+                return $qurey->orderBy('price', 'asc');
+            });
+            $query = $query->when($filter&&in_array('discounted',$filter),function ($qurey){
+                return $qurey->Discounted()->orderBy('discount','desc');
+            });
+
+            if ($category_sub_category_item_default_status != '1'){
                 $query = $query->latest();
             } else {
 
@@ -184,27 +207,6 @@ class CategoryLogic
 
             }
 
-            $query = $query->when($rating_count, function($query) use ($rating_count){
-                return $query->where('avg_rating', '>=' , $rating_count);
-            })
-            ->when($min && $max, function($query)use($min,$max){
-                return $query->whereBetween('price',[$min,$max]);
-            })
-            ->when($filter&&in_array('top_rated',$filter),function ($qurey){
-                return $qurey->withCount('reviews')->orderBy('reviews_count','desc');
-            })
-            ->when($filter&&in_array('popular',$filter),function ($qurey){
-                return $qurey->popular();
-            })
-            ->when($filter&&in_array('high',$filter),function ($qurey){
-                return  $qurey->orderBy('price', 'desc');
-            })
-            ->when($filter&&in_array('low',$filter),function ($qurey){
-                return $qurey->orderBy('price', 'asc');
-            })
-            ->when($filter&&in_array('discounted',$filter),function ($qurey){
-                return $qurey->Discounted()->orderBy('discount','desc');
-            });
 
             $item_categories =  $query->pluck('category_id')->toArray();
             $paginator = $query->paginate($limit, ['*'], 'page', $offset);

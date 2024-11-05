@@ -537,7 +537,7 @@ class StoreLogic
         return json_encode($store_ratings);
     }
 
-    public static function search_stores($name, $zone_id, $category_id= null,$limit = 10, $offset = 1, $type = 'all',$longitude=0,$latitude=0,$filter=null,$rating_count=null)
+    public static function search_stores($name, $zone_id, $category_id= null,$limit = 10, $offset = 1, $type = 'all',$longitude=0,$latitude=0,$filter=null,$rating_count=null,$category_ids=null)
     {
         $key = explode(' ', $name);
         $paginator = Store::WithOpenWithDeliveryTime($longitude??0,$latitude??0)
@@ -569,6 +569,11 @@ class StoreLogic
             ->when($category_id, function($query)use($category_id){
                 return $query->whereHas('items.category', function($q)use($category_id){
                     return $q->whereId($category_id)->orWhere('parent_id', $category_id);
+                });
+            })
+            ->when($category_ids && is_array($category_ids), function($query)use($category_ids){
+                return $query->whereHas('items.category', function($q)use($category_ids){
+                    return $q->whereIn('id',$category_ids)->orWhereIn('parent_id', $category_ids);
                 });
             })
             ->active()
