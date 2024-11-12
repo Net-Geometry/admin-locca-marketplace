@@ -584,10 +584,9 @@ class CustomerAuthController extends Controller
 
         try
         {
-            $notification_status= Helpers::getNotificationStatusData('customer','customer_registration','sms_status');
-
-            if($notification_status?->mail_status == 'active' && config('mail.status') && $request->email && Helpers::get_mail_status('registration_mail_status_user') == '1') {
-                Mail::to($request->email)->send(new \App\Mail\CustomerRegistration($request->name));
+            $notification_status= Helpers::getNotificationStatusData('customer','customer_registration','mail_status');
+            if($notification_status && config('mail.status') && $request->email && Helpers::get_mail_status('registration_mail_status_user') == '1') {
+                Mail::to($request->email)->send(new \App\Mail\CustomerRegistration($request?->name));
             }
         }
         catch(\Exception $ex)
