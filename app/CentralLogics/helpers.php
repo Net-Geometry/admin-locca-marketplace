@@ -265,7 +265,7 @@ class Helpers
                 $item['attributes'] = json_decode($item['attributes']);
                 $item['choice_options'] = json_decode($item['choice_options']);
                 $item['add_ons'] = self::addon_data_formatting(AddOn::whereIn('id', json_decode($item['add_ons'], true))->active()->get(), true, $trans, $local);
-                foreach (json_decode($item['variations'], true) as $var) {
+                foreach (json_decode($item['variations'], true)?? [] as $var) {
                     array_push($variations, [
                         'type' => $var['type'],
                         'price' => (float)$var['price'],

@@ -564,7 +564,6 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::post('store-summary-report-search', 'ReportController@store_summary_search')->name('store-summary-report-search');
             Route::get('store-summary-report-export', 'ReportController@store_summary_export')->name('store-summary-report-export');
             Route::get('store-wise-sales-report', 'ReportController@store_sales_report')->name('store-sales-report');
-            Route::post('store-wise-sales-report-search', 'ReportController@store_sales_search')->name('store-sales-report-search');
             Route::get('store-wise-sales-report-export', 'ReportController@store_sales_export')->name('store-sales-report-export');
             Route::get('store-wise-order-report', 'ReportController@store_order_report')->name('store-order-report');
             Route::post('store-wise-order-report-search', 'ReportController@store_order_search')->name('store-order-report-search');
@@ -696,7 +695,6 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                 Route::post('store-summary-report-search', 'ReportController@store_summary_search')->name('store-summary-report-search');
                 Route::get('store-summary-report-export', 'ReportController@store_summary_export')->name('store-summary-report-export');
                 Route::get('store-wise-sales-report', 'ReportController@store_sales_report')->name('store-sales-report');
-                Route::post('store-wise-sales-report-search', 'ReportController@store_sales_search')->name('store-sales-report-search');
                 Route::get('store-wise-sales-report-export', 'ReportController@store_sales_export')->name('store-sales-report-export');
                 Route::get('store-wise-order-report', 'ReportController@store_order_report')->name('store-order-report');
                 Route::post('store-wise-order-report-search', 'ReportController@store_order_search')->name('store-order-report-search');

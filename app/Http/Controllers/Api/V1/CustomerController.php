@@ -519,7 +519,7 @@ class CustomerController extends Controller
 
         try {
             $mailResponse = null;
-            $mail_status = Helpers::get_mail_status('profile_verification_mail_status_user');
+            $mail_status = Helpers::get_mail_status('email_verification_status');
 
             if (config('mail.status') && $mail_status == '1') {
                 Mail::to($data['email'])->send(new EmailVerification($otp, $data['name'],'profile_update' ));

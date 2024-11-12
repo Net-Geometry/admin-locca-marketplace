@@ -960,17 +960,17 @@
                                             <span
                                                 class="info">{{ isset($address['floor']) ? $address['floor'] : '' }}</span>
                                         </div>
-                                        <div class="d-flex">
-                                            <span class="name">{{ translate('Road') }}:</span>
-                                            <span
-                                                class="info">{{ isset($address['road']) ? $address['road'] : '' }}</span>
-                                        </div>
+
                                         <div class="d-flex mb-2">
                                             <span class="name">{{ translate('House') }}:</span>
                                             <span
                                                 class="info">{{ isset($address['house']) ? $address['house'] : '' }}</span>
                                         </div>
-
+                                        <div class="d-flex">
+                                            <span class="name">{{ translate('Road') }}:</span>
+                                            <span
+                                                class="info">{{ isset($address['road']) ? $address['road'] : '' }}</span>
+                                        </div>
                                         @if ($order['order_type'] != 'take_away' && isset($address['address']))
                                             @if (isset($address['latitude']) && isset($address['longitude']))
                                                 <a target="_blank"
@@ -1013,15 +1013,17 @@
                                         <span
                                             class="info">{{ isset($address['floor']) ? $address['floor'] : '' }}</span>
                                     </div>
-                                    <div class="d-flex">
-                                        <span class="name">{{ translate('Road') }}:</span>
-                                        <span
-                                            class="info">{{ isset($address['road']) ? $address['road'] : '' }}</span>
-                                    </div>
+
                                     <div class="d-flex mb-2">
                                         <span class="name">{{ translate('House') }}:</span>
                                         <span
                                             class="info">{{ isset($address['house']) ? $address['house'] : '' }}</span>
+                                    </div>
+                                    
+                                    <div class="d-flex">
+                                        <span class="name">{{ translate('Road') }}:</span>
+                                        <span
+                                            class="info">{{ isset($address['road']) ? $address['road'] : '' }}</span>
                                     </div>
 
                                     @if ($order['order_type'] != 'take_away' && isset($address['address']))

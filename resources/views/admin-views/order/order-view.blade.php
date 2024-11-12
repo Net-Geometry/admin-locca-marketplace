@@ -1385,19 +1385,19 @@
                                         <a class="deco-none info d-flex"
                                            href="tel:{{ $receiver_details['contact_person_number'] }}">
                                             {{ $receiver_details['contact_person_number'] }}</a>
-
-                                                @if (data_get($receiver_details,'floor') != '')
-                                            <span class="name">{{ translate('Floor') }}</span> <span
+                                            @if (data_get($receiver_details,'floor') != '')
+                                                <span class="name">{{ translate('Floor') }}</span> <span
                                                 class="info">{{ data_get($receiver_details,'floor', translate('messages.N/A'))  }}</span>
-                                        @endif
-                                        @if ( data_get($receiver_details,'house') != '')
-                                            <span class="name">{{ translate('House') }}</span> <span
-                                                class="info">{{data_get($receiver_details,'house', translate('messages.N/A')) }}</span>
-                                        @endif
-                                        @if ( data_get($receiver_details,'road') != '')
-                                            <span class="name">{{ translate('Road') }}</span> <span
-                                                class="info">{{ data_get($receiver_details,'road', translate('messages.N/A')) }}</span>
-                                        @endif
+                                            @endif
+                                            @if ( data_get($receiver_details,'house') != '')
+                                                    <span class="name">{{ translate('House') }}</span> <span
+                                                    class="info">{{data_get($receiver_details,'house', translate('messages.N/A')) }}</span>
+                                            @endif
+
+                                            @if ( data_get($receiver_details,'road') != '')
+                                                    <span class="name">{{ translate('Road') }}</span> <span
+                                                    class="info">{{ data_get($receiver_details,'road', translate('messages.N/A')) }}</span>
+                                            @endif
 
                                         <hr class="w-100">
 
@@ -1439,18 +1439,18 @@
                                     <span class="name">{{ translate('messages.contact') }}</span>
                                     <a class="deco-none info" href="tel:{{ data_get($address,'contact_person_number', translate('messages.N/A'))  }}">
                                         {{ data_get($address,'contact_person_number', translate('messages.N/A')) }}</a>
+                                            @if ( data_get($address,'house') != '')
+                                                <span class="name">{{ translate('House') }}</span> <span
+                                                class="info">{{data_get($address,'house', translate('messages.N/A')) }}</span>
+                                            @endif
+                                            @if (data_get($address,'floor') != '')
+                                                <span class="name">{{ translate('Floor') }}</span> <span
+                                                class="info">{{ data_get($address,'floor', translate('messages.N/A'))  }}</span>
+                                            @endif
 
-                                        @if (data_get($address,'floor') != '')
-                                            <span class="name">{{ translate('Floor') }}</span> <span
-                                            class="info">{{ data_get($address,'floor', translate('messages.N/A'))  }}</span>
-                                            @endif
-                                        @if ( data_get($address,'road') != '')
-                                        <span class="name">{{ translate('Road') }}</span> <span
-                                        class="info">{{ data_get($address,'road', translate('messages.N/A')) }}</span>
-                                            @endif
-                                        @if ( data_get($address,'house') != '')
-                                        <span class="name">{{ translate('House') }}</span> <span
-                                        class="info">{{data_get($address,'house', translate('messages.N/A')) }}</span>
+                                            @if ( data_get($address,'road') != '')
+                                                <span class="name">{{ translate('Road') }}</span> <span
+                                                class="info">{{ data_get($address,'road', translate('messages.N/A')) }}</span>
                                             @endif
 
                                     <hr class="w-100">
