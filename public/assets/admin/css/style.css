@@ -14354,3 +14354,35 @@ ul.address-info .label {
 [dir="rtl"] .cz-image-zoom-pane {
     direction: ltr;
 }
+
+.input-label {
+    color: var(--title-clr);
+}
+.opacity-80 .select2-selection__rendered span {
+    opacity: 0.8;
+}
+
+.form-check-input.single-select {
+    width: 20px;
+    height: 20px;
+    background-color: #ffffff;
+    border: 1px solid rgba(var(--title-clr), 0.5);
+    border-radius: 4px;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+.form-check-input.single-select:checked {
+    background-color: #14b19e;
+    border-color: #14b19e;
+}
+
+.form-check-input.single-select:checked::after {
+    content: "✔";
+    color: white;
+    font-size: 14px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
