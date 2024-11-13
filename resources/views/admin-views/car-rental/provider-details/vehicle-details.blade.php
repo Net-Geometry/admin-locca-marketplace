@@ -3,6 +3,8 @@
 @section('title', translate('messages.vehicle_details'))
 
 @push('css_or_js')
+    <link rel="stylesheet" href="{{ asset('/public/assets/admin/vendor/simplebar/dist/simplebar.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('/public/assets/admin/vendor/drift-zoom/dist/drift-basic.min.css') }}">
 @endpush
 
 @section('content')
@@ -27,10 +29,94 @@
             </div>
         </div>
         <!-- End Page Header -->
-        <div class="card">
+        <div class="card mb-20">
             <div class="card-body">
                 <div class="row">
-                    <div class="col-lg-4"></div>
+                    <div class="col-lg-4">
+                        <div class="cz-product-gallery mb-20 mb-lg-0">
+                            <div class="cz-preview">
+                                <div id="sync1" class="owl-carousel owl-theme product-thumbnail-slider">
+                                    <div class="owl-item active">
+                                        <div class="product-preview-item d-flex align-items-center justify-content-center active"
+                                            id="image1">
+                                            <img class="cz-image-zoom img-responsive w-100"
+                                                src="{{ asset('public/assets/admin/img/car-demo.png') }}"
+                                                data-zoom="{{ asset('public/assets/admin/img/car-demo.png') }}"
+                                                alt="Product" width="">
+                                            <div class="cz-image-zoom-pane"></div>
+                                        </div>
+                                    </div>
+                                    <div class="owl-item">
+                                        <div class="product-preview-item d-flex align-items-center justify-content-center "
+                                            id="image2">
+                                            <img class="cz-image-zoom img-responsive w-100"
+                                                src="{{ asset('public/assets/admin/img/car-demo.png') }}"
+                                                data-zoom="public/assets/admin/img/car-demo.png" alt="Product"
+                                                width="">
+                                            <div class="cz-image-zoom-pane"></div>
+                                        </div>
+                                    </div>
+                                    <div class="owl-item">
+                                        <div class="product-preview-item d-flex align-items-center justify-content-center "
+                                            id="image3">
+                                            <img class="cz-image-zoom img-responsive w-100"
+                                                src="{{ asset('public/assets/admin/img/car-demo.png') }}"
+                                                data-zoom="public/assets/admin/img/car-demo.png" alt="Product"
+                                                width="">
+                                            <div class="cz-image-zoom-pane"></div>
+                                        </div>
+                                    </div>
+                                    <div class="owl-item">
+                                        <div class="product-preview-item d-flex align-items-center justify-content-center "
+                                            id="image4">
+                                            <img class="cz-image-zoom img-responsive w-100"
+                                                src="{{ asset('public/assets/admin/img/car-demo.png') }}"
+                                                data-zoom="public/assets/admin/img/car-demo.png" alt="Product"
+                                                width="">
+                                            <div class="cz-image-zoom-pane"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="cz">
+                                <div class="table-responsive" data-simplebar>
+                                    <div class="d-flex">
+                                        <div id="sync2" class="owl-carousel owl-theme product-thumb-slider">
+                                            <div class="">
+                                                <a class="product-preview-thumb color-variants-preview-box-CD5C5C active d-flex align-items-center justify-content-center"
+                                                    id="preview-imgCD5C5C" href="#image1">
+                                                    <img alt="Product"
+                                                        src="{{ asset('public/assets/admin/img/car-demo.png') }}">
+                                                </a>
+                                            </div>
+                                            <div class="">
+                                                <a class="product-preview-thumb color-variants-preview-box-9370DB  d-flex align-items-center justify-content-center"
+                                                    id="preview-img9370DB" href="#image2">
+                                                    <img alt="Product"
+                                                        src="{{ asset('public/assets/admin/img/car-demo.png') }}">
+                                                </a>
+                                            </div>
+                                            <div class="">
+                                                <a class="product-preview-thumb color-variants-preview-box-98FB98  d-flex align-items-center justify-content-center"
+                                                    id="preview-img98FB98" href="#image3">
+                                                    <img alt="Product"
+                                                        src="{{ asset('public/assets/admin/img/car-demo.png') }}">
+                                                </a>
+                                            </div>
+                                            <div class="">
+                                                <a class="product-preview-thumb  d-flex align-items-center justify-content-center"
+                                                    id="preview-img3" href="#image4">
+                                                    <img alt="Product"
+                                                        src="{{ asset('public/assets/admin/img/car-demo.png') }}">
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="col-lg-8">
                         <div>
                             <div class="d-flex flex-column-reverse flex-lg-row gap-20px gap-lg-40px">
@@ -168,119 +254,6 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row review--information-wrapper g-2 mb-3">
-            <div class="col-lg-9">
-                <div class="card h-100">
-                    <!-- Body -->
-                    <div class="card-body">
-                        <div class="row align-items-md-center">
-                            <div class="col-lg-8 col-md-6 mb-3 mb-md-0">
-                                <div class="media food--media gap-3 align-items-center">
-                                    <img class="avatar avatar-xxl avatar-4by3 w--290 h--145 onerror-image"
-                                        src="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
-                                        alt="Image Description">
-                                    <div class="d-block">
-                                        <h4>F Premio 2006</h4>
-                                        <h5>Nator Kha 21-3214</h5>
-                                        <div class="fs-12">
-                                            If you’re looking for a pie with a bit more heft, a meat pizza is a perfect
-                                            and
-                                            popular choice. If you’re looking for If you’re looking for a pie with a bit
-                                            more heft, a meat pizza
-                                            <span class="text--primary font-medium">See more</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 mx-auto">
-                                <div class="rating--review">
-                                    <h1 class="title text--primary border-line d-flex align-items-center">
-                                        <span>4.0<span class="out-of">/5</span></span>
-                                        <div class="info font-medium">2 Reviews</div>
-                                    </h1>
-                                </div>
-                                <ul class="list-unstyled list-unstyled-py-2 mb-0 rating--review-right">
-                                    <!-- Review Ratings -->
-                                    <li class="d-flex align-items-center font-size-sm">
-                                        <span class="progress-name mr-3">Excellent</span>
-                                        <div class="progress flex-grow-1">
-                                            <div class="progress-bar" role="progressbar" style="width: 20%;"
-                                                aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-                                        </div>
-                                        <span class="ml-3">20</span>
-                                    </li>
-                                    <!-- End Review Ratings -->
-
-                                    <!-- Review Ratings -->
-                                    <li class="d-flex align-items-center font-size-sm">
-                                        <span class="progress-name mr-3">Good</span>
-                                        <div class="progress flex-grow-1">
-                                            <div class="progress-bar" role="progressbar" style="width: 5%;"
-                                                aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-                                        </div>
-                                        <span class="ml-3">5</span>
-                                    </li>
-                                    <!-- End Review Ratings -->
-
-                                    <!-- Review Ratings -->
-                                    <li class="d-flex align-items-center font-size-sm">
-                                        <span class="progress-name mr-3">Average</span>
-                                        <div class="progress flex-grow-1">
-                                            <div class="progress-bar" role="progressbar" style="width: 5%;"
-                                                aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-                                        </div>
-                                        <span class="ml-3">5</span>
-                                    </li>
-                                    <!-- End Review Ratings -->
-
-                                    <!-- Review Ratings -->
-                                    <li class="d-flex align-items-center font-size-sm">
-                                        <span class="progress-name mr-3">Below average</span>
-                                        <div class="progress flex-grow-1">
-                                            <div class="progress-bar" role="progressbar" style="width: 2%;"
-                                                aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-                                        </div>
-                                        <span class="ml-3">2</span>
-                                    </li>
-                                    <!-- End Review Ratings -->
-
-                                    <!-- Review Ratings -->
-                                    <li class="d-flex align-items-center font-size-sm">
-                                        <span class="progress-name mr-3">Poor</span>
-                                        <div class="progress flex-grow-1">
-                                            <div class="progress-bar" role="progressbar" style="width: 1%;"
-                                                aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-                                        </div>
-                                        <span class="ml-3">1</span>
-                                    </li>
-                                    <!-- End Review Ratings -->
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- End Body -->
-                </div>
-            </div>
-            <div class="col-lg-3">
-                <div class="card h-100">
-                    <div class="card-body d-flex flex-column justify-content-center">
-                        <a class="resturant--information-single"
-                            href="http://localhost/Backend-6amMart/admin/store/view/45">
-                            <img class="img--65 rounded mx-auto mb-3 onerror-image" data-onerror-image=""
-                                src="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}" alt="Image Description">
-                            <div class="text-center text--title">
-                                <h5 class="text-capitalize font-semibold text-hover-primary d-block mb-1">
-                                    Auto Focus Car Service
-                                </h5>
-                                <span class="opacity-lg">
-                                    House:20, Road:30, Mirpur 12
-                                </span>
-                            </div>
-                        </a>
                     </div>
                 </div>
             </div>
@@ -683,6 +656,8 @@
 
 
 @push('script_2')
+    <script src="{{ asset('/public/assets/admin/vendor/simplebar/dist/simplebar.min.js') }}"></script>
+    <script src="{{ asset('/public/assets/admin/vendor/drift-zoom/dist/Drift.min.js') }}"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             function openPdf(element) {
@@ -706,13 +681,30 @@
             window.downloadPdf = downloadPdf;
         });
     </script>
-    {{-- <script>
-        $(document).ready(function() {
+    <script>
+        !(function(t) {
+            var e = {
+                imageZoom: function() {
+                    let elements = document.querySelectorAll(".cz-image-zoom");
+                    for (let i = 0; i < elements.length; i++) {
+                        new Drift(elements[i], {
+                            paneContainer: elements[i].parentElement.querySelector(
+                                ".cz-image-zoom-pane"),
+                        });
+                    }
+                },
+            };
+            e.imageZoom();
+        })(jQuery);
+    </script>
+    <script>
+        const themeDirection = $("html").attr("dir");
+
+        function renderOwlCarouselSilder() {
             var sync1 = $("#sync1");
             var sync2 = $("#sync2");
             var thumbnailItemClass = ".owl-item";
-            var slides = sync1
-                .owlCarousel({
+            var slides = sync1.owlCarousel({
                     startPosition: 12,
                     items: 1,
                     loop: false,
@@ -729,23 +721,10 @@
                 .on("changed.owl.carousel", syncPosition);
 
             function syncPosition(el) {
-                $owl_slider = $(this).data("owl.carousel");
-                var loop = $owl_slider.options.loop;
+                var owl_slider = $(this).data("owl.carousel");
+                var loop = owl_slider.options.loop;
 
-                if (loop) {
-                    var count = el.item.count - 1;
-                    var current = Math.round(
-                        el.item.index - el.item.count / 2 - 0.5
-                    );
-                    if (current < 0) {
-                        current = count;
-                    }
-                    if (current > count) {
-                        current = 0;
-                    }
-                } else {
-                    var current = el.item.index;
-                }
+                var current = el.item.index;
 
                 var owl_thumbnail = sync2.data("owl.carousel");
                 var itemClass = "." + owl_thumbnail.options.itemClass;
@@ -760,11 +739,16 @@
                     var duration = 500;
                     sync2.trigger("to.owl.carousel", [current, duration, true]);
                 }
+
+                // Re-initialize image zoom on the new slide
+                setTimeout(function() {
+                    e.imageZoom();
+                }, 500); // Wait for the carousel to complete the slide change
             }
-            var thumbs = sync2
-                .owlCarousel({
+
+            var thumbs = sync2.owlCarousel({
                     startPosition: 12,
-                    items: 6,
+                    items: 4,
                     loop: false,
                     margin: 10,
                     autoplay: false,
@@ -776,16 +760,16 @@
                             items: 4,
                         },
                         768: {
-                            items: 5,
+                            items: 4,
                         },
                         992: {
-                            items: 5,
+                            items: 4,
                         },
                         1200: {
-                            items: 6,
+                            items: 5,
                         },
                         1400: {
-                            items: 7,
+                            items: 5,
                         },
                     },
                     onInitialized: function(e) {
@@ -803,10 +787,13 @@
                 })
                 .on("changed.owl.carousel", function(el) {
                     var number = el.item.index;
-                    $owl_slider = sync1.data("owl.carousel");
-                    $owl_slider.to(number, 500, true);
+                    var owl_slider = sync1.data("owl.carousel");
+                    owl_slider.to(number, 500, true);
                 });
+
             sync1.owlCarousel();
-        });
-    </script> --}}
+        }
+
+        renderOwlCarouselSilder();
+    </script>
 @endpush
