@@ -16,6 +16,7 @@ use App\CentralLogics\Helpers;
 use App\Models\BusinessSetting;
 use App\Models\OfflinePayments;
 use App\Models\ReactTestimonial;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\ExternalConfiguration;
@@ -48,32 +49,43 @@ class ConfigController extends Controller
         ];
 
         $drivemondExternalSetting = false;
-        if (Helpers::checkSelfExternalConfiguration()) {
-            $driveMondBaseUrl = ExternalConfiguration::where('key', 'drivemond_base_url')->first()?->value;
-            $driveMondToken = ExternalConfiguration::where('key', 'drivemond_token')->first()?->value;
-            $systemSelfToken = ExternalConfiguration::where('key', 'system_self_token')->first()?->value;
-            $response = Http::get($driveMondBaseUrl . '/api/get-external-configurations',
-                [
-                    'drivemond_token' => $driveMondToken,
-                    'mart_base_url' => url('/'),
-                    'mart_token' => $systemSelfToken,
-                ]);
-            if ($response->successful()) {
-                $martResponse = $response->json();
-                $drivemondExternalSetting = $martResponse['status'];
-            }
+//        if (Helpers::checkSelfExternalConfiguration()) {
+//            $driveMondBaseUrl = ExternalConfiguration::where('key', 'drivemond_base_url')->first()?->value;
+//            $driveMondToken = ExternalConfiguration::where('key', 'drivemond_token')->first()?->value;
+//            $systemSelfToken = ExternalConfiguration::where('key', 'system_self_token')->first()?->value;
+//            $response = Http::get($driveMondBaseUrl . '/api/get-external-configurations',
+//                [
+//                    'drivemond_token' => $driveMondToken,
+//                    'mart_base_url' => url('/'),
+//                    'mart_token' => $systemSelfToken,
+//                ]);
+//            if ($response->successful()) {
+//                $martResponse = $response->json();
+//                $drivemondExternalSetting = $martResponse['status'];
+//            }
+//
+//        }
 
-        }
-
-        $settings = array_column(BusinessSetting::whereIn('key', $key)->get()->toArray(), 'value', 'key');
+//        $cacheKey = 'business_settings_' . implode('_', $key);
+        $cacheKey = 'business_settings_keys';
+        $settings = Cache::rememberForever($cacheKey, function () use ($key) {
+            return array_column(BusinessSetting::whereIn('key', $key)->get()->toArray(), 'value', 'key');
+        });
         $image_key = ['logo', 'icon', 'web_app_landing_page_settings'];
         $data = [];
 
         foreach ($image_key as $value) {
-            $data[$value . '_storage'] = BusinessSetting::where('key', $value)->first()?->storage[0]?->value ?? 'public';
+            $data[$value . '_storage'] = Cache::rememberForever("business_settings_{$value}_storage", function () use ($value) {
+                return BusinessSetting::where('key', $value)->first()?->storage[0]?->value ?? 'public';
+            });
         }
 
-        $DataSetting = DataSetting::where('type', 'flutter_landing_page')->where('key', 'download_user_app_links')->pluck('value', 'key')->toArray();
+        $DataSetting = Cache::rememberForever("business_settings_flutter_landing_page", function () {
+            return DataSetting::where('type', 'flutter_landing_page')
+                ->where('key', 'download_user_app_links')
+                ->pluck('value', 'key')
+                ->toArray();
+        });
         $DataSetting = isset($DataSetting['download_user_app_links']) ? json_decode($DataSetting['download_user_app_links'], true) : [];
         $landing_page_links = isset($settings['landing_page_links']) ? json_decode($settings['landing_page_links'], true) : [];
         $landing_page_links['app_url_android_status'] = data_get($DataSetting, 'playstore_url_status', null);
@@ -89,10 +101,9 @@ class ConfigController extends Controller
         $free_delivery_over = $settings['free_delivery_over'];
         $free_delivery_over = isset($free_delivery_over) ? (float)$free_delivery_over : $free_delivery_over;
         $additional_charge = isset($settings['additional_charge']) ? (float)$settings['additional_charge'] : 0;
-        $module = null;
-        if (Module::active()->count() == 1) {
-            $module = Module::active()->first();
-        }
+        $module = Cache::rememberForever("active_module", function () {
+            return Module::active()->count() == 1 ? Module::active()->first() : null;
+        });
         $languages = Helpers::get_business_settings('language');
         $lang_array = [];
         foreach ($languages as $language) {
@@ -149,9 +160,6 @@ class ConfigController extends Controller
             'plugin_payment_gateways' => (boolean)($published_status ? true : false),
             'default_payment_gateways' => (boolean)($published_status ? false : true)
         );
-        $awsUrl = config('filesystems.disks.s3.url');
-        $awsBucket = config('filesystems.disks.s3.bucket');
-        $awsBaseURL = rtrim($awsUrl, '/') . '/' . ltrim($awsBucket . '/');
 
         if (data_get($settings, 'subscription_free_trial_type') == 'year') {
             $trial_period = data_get($settings, 'subscription_free_trial_days') > 0 ? data_get($settings, 'subscription_free_trial_days') / 365 : 0;
@@ -172,55 +180,6 @@ class ConfigController extends Controller
             'email' => $settings['email_address'],
             // 'store_location_coverage' => Branch::where(['id'=>1])->first(['longitude','latitude','coverage']),
             // 'minimum_order_value' => (float)$settings['minimum_order_value'],
-            'base_urls' => [
-                'item_image_url' => asset('storage/app/public/product'),
-                'refund_image_url' => asset('storage/app/public/refund'),
-                'customer_image_url' => asset('storage/app/public/profile'),
-                'banner_image_url' => asset('storage/app/public/banner'),
-                'category_image_url' => asset('storage/app/public/category'),
-                'brand_image_url' => asset('storage/app/public/brand'),
-                'review_image_url' => asset('storage/app/public/review'),
-                'notification_image_url' => asset('storage/app/public/notification'),
-                'store_image_url' => asset('storage/app/public/store'),
-                'vendor_image_url' => asset('storage/app/public/vendor'),
-                'store_cover_photo_url' => asset('storage/app/public/store/cover'),
-                'delivery_man_image_url' => asset('storage/app/public/delivery-man'),
-                'chat_image_url' => asset('storage/app/public/conversation'),
-                'campaign_image_url' => asset('storage/app/public/campaign'),
-                'business_logo_url' => asset('storage/app/public/business'),
-                'order_attachment_url' => asset('storage/app/public/order'),
-                'module_image_url' => asset('storage/app/public/module'),
-                'parcel_category_image_url' => asset('storage/app/public/parcel_category'),
-                'landing_page_image_url' => asset('public/assets/landing/image'),
-                'react_landing_page_images' => asset('storage/app/public/react_landing'),
-                'react_landing_page_feature_images' => asset('storage/app/public/react_landing/feature'),
-                'gateway_image_url' => asset('storage/app/public/payment_modules/gateway_image'),
-            ],
-
-            's3_base_urls' => [
-                'item_image_url' => $awsBaseURL . 'product',
-                'refund_image_url' => $awsBaseURL . 'refund',
-                'customer_image_url' => $awsBaseURL . 'profile',
-                'banner_image_url' => $awsBaseURL . 'banner',
-                'category_image_url' => $awsBaseURL . 'category',
-                'brand_image_url' => $awsBaseURL . 'brand',
-                'review_image_url' => $awsBaseURL . 'review',
-                'notification_image_url' => $awsBaseURL . 'notification',
-                'store_image_url' => $awsBaseURL . 'store',
-                'vendor_image_url' => $awsBaseURL . 'vendor',
-                'store_cover_photo_url' => $awsBaseURL . 'store/cover',
-                'delivery_man_image_url' => $awsBaseURL . 'delivery-man',
-                'chat_image_url' => $awsBaseURL . 'conversation',
-                'campaign_image_url' => $awsBaseURL . 'campaign',
-                'business_logo_url' => $awsBaseURL . 'business',
-                'order_attachment_url' => $awsBaseURL . 'order',
-                'module_image_url' => $awsBaseURL . 'module',
-                'parcel_category_image_url' => $awsBaseURL . 'parcel_category',
-                'landing_page_image_url' => $awsBaseURL . 'landing/image',
-                'react_landing_page_images' => $awsBaseURL . 'react_landing',
-                'react_landing_page_feature_images' => $awsBaseURL . 'react_landing/feature',
-                'gateway_image_url' => $awsBaseURL . 'payment_modules/gateway_image',
-            ],
             'country' => $settings['country'],
             'default_location' => ['lat' => $default_location ? $default_location['lat'] : '23.757989', 'lng' => $default_location ? $default_location['lng'] : '90.360587'],
             'currency_symbol' => $currency_symbol,

@@ -27,6 +27,7 @@ use App\Models\DataSetting;
 use App\Models\GenericName;
 use App\Models\StoreWallet;
 use App\Models\Translation;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use PayPal\Api\Transaction;
 use App\Models\ItemCampaign;
@@ -1058,15 +1059,10 @@ class Helpers
 
     public static function get_business_settings($name)
     {
-        $config = null;
-
-        $paymentmethod = BusinessSetting::where('key', $name)->first();
-
-        if ($paymentmethod) {
-            $config = json_decode($paymentmethod->value, true);
-        }
-
-        return $config;
+        return Cache::rememberForever("business_settings_{$name}", function () use ($name) {
+            $config = BusinessSetting::where('key', $name)->first();
+            return $config ? json_decode($config->value, true) : null;
+        });
     }
 
     public static function get_business_data($name)
@@ -2158,7 +2154,7 @@ class Helpers
     {
         $data =  BusinessSetting::where('key', $key)->first();
         if (!$data) {
-            DB::table('business_settings')->updateOrInsert(['key' => $key], [
+            Helpers::businessUpdateOrInsert(['key' => $key], [
                 'value' => $value,
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -3218,7 +3214,7 @@ class Helpers
                         'software_id' => env('REACT_APP_KEY'),
                         'is_active' => 1
                     ];
-                    DB::table('business_settings')->updateOrInsert(['key' => 'app_activation'], [
+                    Helpers::businessUpdateOrInsert(['key' => 'app_activation'], [
                         'value' => json_encode($previous_active)
                     ]);
                 }
@@ -3232,7 +3228,7 @@ class Helpers
                 'software_id' => env('REACT_APP_KEY'),
                 'is_active' => 1
             ];
-            DB::table('business_settings')->updateOrInsert(['key' => 'app_activation'], [
+            Helpers::businessUpdateOrInsert(['key' => 'app_activation'], [
                 'value' => json_encode($previous_active)
             ]);
 
@@ -3251,7 +3247,7 @@ class Helpers
             }elseif($data['status'] != 1){
                 $data['status']=1;
             }
-            DB::table('business_settings')->updateOrInsert(['key' => 'react_setup'], [
+            Helpers::businessUpdateOrInsert(['key' => 'react_setup'], [
                 'value' => json_encode($data)
             ]);
         }
@@ -4304,6 +4300,35 @@ class Helpers
         $driveMondToken = ExternalConfiguration::where('key', 'drivemond_token')->first()?->value;
         $systemSelfToken = ExternalConfiguration::where('key', 'system_self_token')->first()?->value;
         return $activationMode == 1 && $driveMondBaseUrl != null && $driveMondToken != null && $systemSelfToken != null;
+    }
+
+    public static function businessUpdateOrInsert($key, $value)
+    {
+        $businessSetting = BusinessSetting::where(['key' => $key['key']])->first();
+        if ($businessSetting) {
+            $businessSetting->value = $value['value'];
+            $businessSetting->save();
+        } else {
+            $businessSetting = new BusinessSetting();
+            $businessSetting->key = $key['key'];
+            $businessSetting->value = $value['value'];
+            $businessSetting->save();
+        }
+    }
+
+    public static function dataUpdateOrInsert($key, $value)
+    {
+        $businessSetting = DataSetting::where(['key' => $key['key'],'type' => $key['type']])->first();
+        if ($businessSetting) {
+            $businessSetting->value = $value['value'];
+            $businessSetting->save();
+        } else {
+            $businessSetting = new DataSetting();
+            $businessSetting->key = $key['key'];
+            $businessSetting->type = $key['type'];
+            $businessSetting->value = $value['value'];
+            $businessSetting->save();
+        }
     }
 }
 

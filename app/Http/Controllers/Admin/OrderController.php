@@ -1610,14 +1610,14 @@ class OrderController extends Controller
     {
         $refund_mode = BusinessSetting::where('key', 'refund_active_status')->first();
         if (isset($refund_mode) == false) {
-            DB::table('business_settings')->insert([
+            BusinessSetting::insert([
                 'key' => 'refund_active_status',
                 'value' => 1,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
         } else {
-            DB::table('business_settings')->where(['key' => 'refund_active_status'])->update([
+            BusinessSetting::where(['key' => 'refund_active_status'])->update([
                 'key' => 'refund_active_status',
                 'value' => $refund_mode->value == 1 ? 0 : 1,
                 'updated_at' => now(),
