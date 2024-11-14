@@ -8927,7 +8927,7 @@ body > #printableArea {
     .toggle-switch-indicator {
     transform: translate3d(-18px, 50%, 0) !important;
 } */
-[dir="rtl"] .custom-select {
+[dir="rtl"] .custom-select:not(.ltr) {
     background-position-x: 7px;
 }
 
@@ -10632,8 +10632,20 @@ body > .initial-38-1 {
     min-height: 170px;
 }
 
+.height-150px {
+    height: 150px;
+}
+
 .min-w-100px {
     min-width: 100px;
+}
+
+.min-w-120px {
+    min-width: 120px;
+}
+
+.max-w-300px {
+    max-width: 300px !important;
 }
 
 .__new-coba .file_upload {
@@ -13944,7 +13956,6 @@ ul.address-info .label {
     height: 100%;
     border: 1.04px solid rgba(197, 210, 210, 1);
     border-radius: 5px;
-    overflow: hidden;
     cursor: pointer;
 }
 
@@ -14003,6 +14014,21 @@ ul.address-info .label {
     justify-content: center;
     align-items: center;
     border-radius: 3.79px;
+}
+
+.pdf-single .remove-btn,
+.download-image-single .remove-btn {
+    position: absolute;
+    inset-block-start: -10px;
+    inset-inline-end: -10px;
+    background: #ff4949;
+    color: #fff;
+    block-size: 26px;
+    inline-size: 26px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 100px;
 }
 
 .download-image-single {
@@ -14363,26 +14389,130 @@ ul.address-info .label {
 }
 
 .form-check-input.single-select {
-    width: 20px;
-    height: 20px;
-    background-color: #ffffff;
-    border: 1px solid rgba(var(--title-clr), 0.5);
-    border-radius: 4px;
-    cursor: pointer;
-    appearance: none;
-    -webkit-appearance: none;
+    width: 22px;
+    height: 22px;
+    -webkit-accent-color: #14b19e;
+    -moz-accent-color: #14b19e;
+    accent-color: #14b19e;
+    opacity: 0.5;
 }
-
 .form-check-input.single-select:checked {
-    background-color: #14b19e;
-    border-color: #14b19e;
+    opacity: 1;
 }
 
 .form-check-input.single-select:checked::after {
     content: "✔";
     color: white;
+    background-color: #14b19e;
     font-size: 14px;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.resturant-type-group .item {
+    flex-basis: 50%;
+    white-space: nowrap;
+}
+
+.pl-unset {
+    padding-inline-start: 0.875rem !important;
+}
+
+.equal-width > * {
+    flex: 1;
+}
+
+@media screen and (max-width: 991px) {
+    .equal-width .plus-btn {
+        max-width: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        align-self: end;
+    }
+}
+
+.text-wrapper .upload-file__img {
+    --size: auto;
+    --border-clr: #e5e5e5;
+    border: 1px dashed var(--border-clr);
+    background: transparent;
+    padding: 1rem;
+    border-radius: 10px;
+}
+
+.text-wrapper .upload-file__img__img {
+    aspect-ratio: initial;
+    object-fit: cover;
+}
+.text-wrapper .upload-file__img__img.ratio-2 {
+    aspect-ratio: 2;
+}
+
+.text-info {
+    color: var(--info-clr);
+}
+
+#coba.custom .file_upload {
+    --bs-border-color: #e5e5e5;
+    padding: 0 !important;
+    border-radius: 10px !important;
+    border: 1px dashed var(--bs-border-color) !important;
+    background: #fafafa !important;
+    display: inline-block;
+    aspect-ratio: 2;
+}
+
+[theme="dark"] #coba.custom .file_upload {
+    background: transparent !important;
+}
+
+#coba.custom .spartan_image_placeholder {
+    position: relative;
+    width: 34px;
+    height: 34px;
+    margin-top: 16px !important;
+    border: none !important;
+}
+
+#coba.custom .img_ {
+    position: absolute;
+    inset-inline-start: 0;
+    inset-block-start: 0;
+}
+
+#coba.custom .spartan_remove_row {
+    z-index: 9;
+}
+
+#coba.custom .upload-file__img_banner {
+    inline-size: 100%;
+    max-inline-size: 200px;
+    block-size: auto;
+}
+
+#coba.custom .spartan_item_wrapper {
+    max-inline-size: 200px !important;
+}
+#coba.custom .spartan_item_wrapper .file_upload img.img_ {
+    aspect-ratio: 2;
+    object-fit: cover;
+}
+
+.upload-file__textbox.pdf {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+}
+
+.document-wrapper {
+    inline-size: 300px;
+    block-size: 155px;
+}
+.pdf-frame iframe img,
+.pdf-frame iframe svg {
+    margin: auto;
+    object-fit: cover;
 }
