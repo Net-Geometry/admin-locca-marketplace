@@ -3911,18 +3911,17 @@ input[type="text"] ~ .show-password .icon-1 {
     height: 110px !important;
 }
 
-.drag-over {
-    border-color: var(--base-1);
-    background-color: rgba(var(--base-rgb), 0.1);
-}
-
-.upload-file__textbox .text-info {
-    color: #0788ff !important;
-}
-
-.bg-FAFAFC {
+.upload-file__textbox {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     background: #fafafc;
+    .text-info {
+        color: #0788ff !important;
+    }
 }
+
 .max-w-110 {
     max-width: 110px !important;
 }

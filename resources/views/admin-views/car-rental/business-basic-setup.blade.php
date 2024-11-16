@@ -144,8 +144,8 @@
 
                                 </div>
                                 <div class="col-lg-6">
-                                    <div class="d-flex flex-wrap flex-sm-nowrap">
-                                        <div class="__custom-upload-img mr-lg-5">
+                                    <div class="d-flex flex-column flex-sm-row gap-4">
+                                        <div class="__custom-upload-img">
                                             @php($logo = \App\Models\BusinessSetting::where('key', 'logo')->first())
                                             @php($logo = $logo->value ?? '')
                                             <label class="form-label mb-1">
@@ -156,12 +156,23 @@
                                                         class="font-semibold">(Ratio
                                                         1:1)</strong></p>
                                             </div>
-                                            <label class="position-relative d-inline-block">
-                                                <img class="img--110 min-height-170px min-width-170px onerror-image image--border"
-                                                    id="viewer"
+                                            <label
+                                                class="position-relative d-inline-block image--border cursor-pointer w-100 h-165 max-w-165">
+                                                <img class="h-165" id="logoImageViewer"
                                                     data-onerror-image="{{ asset('public/assets/admin/img/upload.png') }}"
                                                     src="{{ asset('public/assets/admin/img/upload-img.png') }}"
-                                                    alt="logo image" />
+                                                    alt="logo image" style="display: none" />
+                                                <div class="upload-file__textbox p-2 h-100">
+                                                    <img width="34" height="34"
+                                                        src="{{ asset('public/assets/admin/img/document-upload.png') }}"
+                                                        alt="" class="svg">
+                                                    <h6 class="mt-2 text-center font-semibold fs-12">
+                                                        <span
+                                                            class="text-info">{{ translate('messages.Click to upload') }}</span>
+                                                        <br>
+                                                        {{ translate('messages.or drag and drop') }}
+                                                    </h6>
+                                                </div>
                                                 <div class="icon-file-group outside">
                                                     <div class="icon-file rounded-circle">
                                                         <i class="tio-edit"></i>
@@ -187,12 +198,23 @@
                                                         2:1)</strong>
                                                 </p>
                                             </div>
-                                            <label class="position-relative d-inline-block">
-                                                <img class="img--vertical min-height-170px min-width-170px onerror-image image--border"
-                                                    id="coverImageViewer"
+                                            <label
+                                                class="position-relative d-inline-block image--border cursor-pointer w-100 h-165 min-w-330">
+                                                <img class="img--vertical-2 h-165" id="coverImageViewer"
                                                     data-onerror-image="{{ asset('public/assets/admin/img/upload-img.png') }}"
                                                     src="{{ asset('public/assets/admin/img/upload-img.png') }}"
-                                                    alt="Fav icon" />
+                                                    alt="Fav icon" style="display: none" />
+                                                <div class="upload-file__textbox p-2 h-100">
+                                                    <img width="34" height="34"
+                                                        src="{{ asset('public/assets/admin/img/document-upload.png') }}"
+                                                        alt="" class="svg">
+                                                    <h6 class="mt-2 text-center font-semibold fs-12">
+                                                        <span
+                                                            class="text-info">{{ translate('messages.Click to upload') }}</span>
+                                                        <br>
+                                                        {{ translate('messages.or drag and drop') }}
+                                                    </h6>
+                                                </div>
                                                 <div class="icon-file-group outside">
                                                     <div class="icon-file rounded-circle">
                                                         <i class="tio-edit"></i>
@@ -591,51 +613,6 @@
             }
         }
 
-        $("#customFileEg1").change(function() {
-            readURL(this, 'viewer');
-        });
-
-        $("#coverImageUpload").change(function() {
-            readURL(this, 'coverImageViewer');
-        });
-
-        $(function() {
-            $("#coba").spartanMultiImagePicker({
-                fieldName: 'identity_image[]',
-                maxCount: 5,
-                rowHeight: '120px',
-                groupClassName: 'col-lg-2 col-md-4 col-sm-4 col-6',
-                maxFileSize: '',
-                placeholderImage: {
-                    image: '{{ asset('public/assets/admin/img/400x400/img2.jpg') }}',
-                    width: '100%'
-                },
-                dropFileLabel: "Drop Here",
-                onAddRow: function(index, file) {
-
-                },
-                onRenderedPreview: function(index) {
-
-                },
-                onRemoveRow: function(index) {
-
-                },
-                onExtensionErr: function(index, file) {
-                    toastr.error(
-                        '{{ translate('messages.please_only_input_png_or_jpg_type_file') }}', {
-                            CloseButton: true,
-                            ProgressBar: true
-                        });
-                },
-                onSizeErr: function(index, file) {
-                    toastr.error('{{ translate('messages.file_size_too_big') }}', {
-                        CloseButton: true,
-                        ProgressBar: true
-                    });
-                }
-            });
-        });
-
         @php($default_location = \App\Models\BusinessSetting::where('key', 'default_location')->first())
         @php($default_location = $default_location->value ? json_decode($default_location->value, true) : 0)
         let myLatlng = {
@@ -847,5 +824,68 @@
             $("#time_view").val(min + ' to ' + max + ' ' + type);
 
         })
+    </script>
+    <script>
+        // ---- file upload with textbox 
+        $(document).ready(function() {
+            function handleImageUpload(inputSelector, imgViewerSelector, textBoxSelector) {
+                const inputElement = $(inputSelector);
+
+                // Handle input change for file selection
+                inputElement.on('change', function() {
+                    const file = this.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            $(imgViewerSelector).attr('src', e.target.result).show();
+                            $(textBoxSelector).hide();
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+
+                // Handle drag-and-drop functionality
+                const dropZone = inputElement.closest('.image--border');
+
+                dropZone.on('dragover', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                });
+
+                dropZone.on('dragleave', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                });
+
+                dropZone.on('drop', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    const file = e.originalEvent.dataTransfer.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            $(imgViewerSelector).attr('src', e.target.result).show();
+                            $(textBoxSelector).hide();
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+
+            // Apply functionality to each upload element
+            handleImageUpload(
+                '#coverImageUpload',
+                '#coverImageViewer',
+                '#coverImageViewer ~ .upload-file__textbox'
+            );
+
+            handleImageUpload(
+                '#customFileEg1',
+                '#logoImageViewer',
+                '#logoImageViewer ~ .upload-file__textbox'
+            );
+        });
+        // ---- file upload with textbox ends
     </script>
 @endpush

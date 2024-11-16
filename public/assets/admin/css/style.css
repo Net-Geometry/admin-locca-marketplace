@@ -11781,7 +11781,7 @@ body > .initial-38-1 {
 }
 
 .image--border {
-    border: 2px dashed #e5e5e5 !important;
+    border: 1px dashed #e5e5e5 !important;
     border-radius: 6px;
 }
 
@@ -14514,5 +14514,32 @@ ul.address-info .label {
 .pdf-frame iframe img,
 .pdf-frame iframe svg {
     margin: auto;
+    object-fit: cover;
+}
+
+.upload-file__textbox {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: #fafafc;
+}
+
+.upload-file__textbox .text-info {
+    color: #0788ff !important;
+}
+.max-w-165 {
+    max-width: 165px;
+}
+.min-w-330 {
+    min-width: 330px;
+}
+.h-165 {
+    height: 165px;
+}
+.img--vertical-2 {
+    aspect-ratio: 2;
+    width: 100%;
+    -o-object-fit: cover;
     object-fit: cover;
 }

@@ -15,9 +15,9 @@
         }
 
         /* .password-feedback {
-                                                                                                                                                                                                                                                                                                                                                                                                            font-size: 14px;
-                                                                                                                                                                                                                                                                                                                                                                                                            margin-top: 5px;
-                                                                                                                                                                                                                                                                                                                                                                                                        } */
+                                                                                                                                                                                                                                                                                                                                                                                                                    font-size: 14px;
+                                                                                                                                                                                                                                                                                                                                                                                                                    margin-top: 5px;
+                                                                                                                                                                                                                                                                                                                                                                                                                } */
         .valid {
             color: green;
         }
@@ -328,8 +328,7 @@
                                                 <img class="__register-img h-110" id="coverImageViewer"
                                                     src="{{ asset('public/assets/admin/img/upload-img.png') }}"
                                                     alt="Product thumbnail" style="display: none" />
-                                                <div
-                                                    class="upload-file__textbox d-flex flex-column align-items-center justify-content-center p-2 h-100 bg-FAFAFC">
+                                                <div class="upload-file__textbox p-2 h-100">
                                                     <img width="34" height="34"
                                                         src="{{ asset('public/assets/admin/img/document-upload.png') }}"
                                                         alt="" class="svg">
@@ -365,8 +364,7 @@
                                                 <img class="__register-img h-110" id="logoImageViewer"
                                                     src="{{ asset('public/assets/admin/img/upload-img.png') }}"
                                                     alt="Product thumbnail" style="display: none" />
-                                                <div
-                                                    class="upload-file__textbox d-flex flex-column align-items-center justify-content-center p-2 h-100 bg-FAFAFC">
+                                                <div class="upload-file__textbox p-2 h-100">
                                                     <img width="34" height="34"
                                                         src="{{ asset('public/assets/admin/img/document-upload.png') }}"
                                                         alt="" class="svg">
