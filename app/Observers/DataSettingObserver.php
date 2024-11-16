@@ -50,14 +50,6 @@ class DataSettingObserver
 
     private function refreshBusinessSettingsCache()
     {
-        $cachePath = storage_path('framework/cache/data');
-
-        foreach (File::allFiles($cachePath) as $file) {
-            $key = $file->getFilename();
-
-            if (strpos($key, 'data_settings_') !== false) {
-                Cache::forget($key);
-            }
-        }
+        Cache::forget('business_settings_flutter_landing_page');
     }
 }

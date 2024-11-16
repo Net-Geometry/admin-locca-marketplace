@@ -50,14 +50,6 @@ class ModuleObserver
 
     private function refreshBusinessSettingsCache()
     {
-        $cachePath = storage_path('framework/cache/data');
-
-        foreach (File::allFiles($cachePath) as $file) {
-            $key = $file->getFilename();
-
-            if (strpos($key, 'active_module') !== false) {
-                Cache::forget($key);
-            }
-        }
+        Cache::forget('active_module');
     }
 }

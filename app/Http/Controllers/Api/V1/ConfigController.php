@@ -66,7 +66,6 @@ class ConfigController extends Controller
 //
 //        }
 
-//        $cacheKey = 'business_settings_' . implode('_', $key);
         $cacheKey = 'business_settings_keys';
         $settings = Cache::rememberForever($cacheKey, function () use ($key) {
             return array_column(BusinessSetting::whereIn('key', $key)->get()->toArray(), 'value', 'key');
@@ -93,8 +92,9 @@ class ConfigController extends Controller
         $landing_page_links['app_url_ios_status'] = data_get($DataSetting, 'apple_store_url_status', null);
         $landing_page_links['app_url_ios'] = data_get($DataSetting, 'apple_store_url', null);
 
-
-        $currency_symbol = Currency::where(['currency_code' => Helpers::currency_code()])->first()->currency_symbol;
+        $currency_symbol = Cache::rememberForever("currency_symbol", function () {
+            return Currency::where(['currency_code' => Helpers::currency_code()])->first()->currency_symbol;
+        });
         $cod = json_decode($settings['cash_on_delivery'], true);
         $digital_payment = json_decode($settings['digital_payment'], true);
         $default_location = isset($settings['default_location']) ? json_decode($settings['default_location'], true) : 0;

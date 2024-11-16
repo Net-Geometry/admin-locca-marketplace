@@ -50,13 +50,17 @@ class BusinessSettingObserver
 
     private function refreshBusinessSettingsCache()
     {
-        $cachePath = storage_path('framework/cache/data');
+        $cacheKeys = [
+            'cache_business_table_data',
+            'business_settings_keys',
+            'business_settings_logo_storage',
+            'business_settings_icon_storage',
+            'business_settings_web_app_landing_page_settings_storage',
+            'currency_symbol'
+        ];
 
-        foreach (File::allFiles($cachePath) as $file) {
-            $key = $file->getFilename();
-            if (strpos($key, 'business_settings_') !== false) {
-                Cache::forget($key);
-            }
+        foreach ($cacheKeys as $key) {
+            Cache::forget($key);
         }
     }
 }

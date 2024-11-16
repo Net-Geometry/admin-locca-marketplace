@@ -1059,10 +1059,23 @@ class Helpers
 
     public static function get_business_settings($name)
     {
-        return Cache::rememberForever("business_settings_{$name}", function () use ($name) {
-            $config = BusinessSetting::where('key', $name)->first();
-            return $config ? json_decode($config->value, true) : null;
+        // return Cache::rememberForever("business_settings_{$name}", function () use ($name) {
+        //     $config = BusinessSetting::where('key', $name)->first();
+        //     return $config ? json_decode($config->value, true) : null;
+        // });
+        $config = null;
+        $settings = Cache::rememberForever('cache_business_table_data', function () {
+            return BusinessSetting::all();
         });
+
+        $data = $settings?->firstWhere('key', $name);
+        if (isset($data)) {
+            $config = json_decode($data['value'], true);
+            if (is_null($config)) {
+                $config = $data['value'];
+            }
+        }
+        return $config;
     }
 
     public static function get_business_data($name)
