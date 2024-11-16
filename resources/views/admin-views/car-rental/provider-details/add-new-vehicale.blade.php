@@ -569,7 +569,7 @@
             input.addEventListener('change', function(event) {
                 var file = event.target.files[0];
                 var card = event.target.closest('.upload-file');
-                var textbox = card.querySelector('.upload-file__textbox.pdf');
+                var textbox = card.querySelector('.upload-file__textbox');
                 var imgElement = card.querySelector('.upload-file__img__img');
 
                 if (file) {

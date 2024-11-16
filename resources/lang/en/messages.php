@@ -6022,4 +6022,9 @@
   '(Ratio 2:1)' => '(Ratio 2:1)',
   'image_added' => 'Image added',
   'Vehicle_Documents' => 'Vehicle Documents',
+  'business_module' => 'Business module',
+  'max' => 'Max',
+  'approx_pickup_time' => 'Approx pickup time',
+  'cover' => 'Cover',
+  '(Ratio 1:1)' => '(Ratio 1:1)',
 );

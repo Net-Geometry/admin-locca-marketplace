@@ -660,6 +660,10 @@ textarea {
   padding-bottom: 50px;
 }
 
+.mb-10 {
+  margin-bottom: 10px;
+}
+
 .newsletter-content {
   max-width: 450px;
   text-align: center;
@@ -3149,7 +3153,7 @@ input::-webkit-inner-spin-button {
 }
 
 .image--border {
-  border: 2px dashed #e5e5e5 !important;
+  border: 1px dashed #e5e5e5 !important;
   border-radius: 6px;
 }
 
@@ -3199,6 +3203,10 @@ input::-webkit-inner-spin-button {
 
 .border-success-light {
   border-color: rgba(3, 157, 85, 0.4) !important;
+}
+
+.h-280 {
+  height: 280px !important;
 }
 
 .h-255 {
@@ -3310,6 +3318,24 @@ input::-webkit-inner-spin-button {
 
 .plan-check-item input:checked + .plan-check-item-inner h5 {
   color: var(--base-1);
+  position: relative;
+}
+
+.plan-check-item .plan-check-item-inner .checkmark {
+  opacity: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  font-size: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  background-color: var(--base-1);
+}
+
+.plan-check-item input:checked + .plan-check-item-inner .checkmark {
+  opacity: 1;
 }
 
 .__plan-item .info li img {
@@ -3698,4 +3724,101 @@ input[type=text] ~ .show-password .icon-1 {
 .popover-body {
   padding-top: 0;
   color: #c4c4c4;
+}
+
+.nav-tabs .nav-item.show .nav-link,
+.nav-tabs .nav-link.active {
+  background-color: transparent;
+}
+
+.custom-group-btn {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 0;
+  cursor: pointer;
+}
+
+.custom-group-btn .item:first-child::after {
+  content: "";
+  width: 1px;
+  height: 31px;
+  background-color: rgba(0, 0, 0, 0.1);
+  position: absolute;
+  inset-inline-end: 0;
+  inset-block-start: 50%;
+  transform: translateY(-50%);
+}
+
+.custom-group-btn .item {
+  position: relative;
+}
+
+.custom-group-btn .floating-label {
+  padding-inline-start: 12px;
+  font-size: 14px;
+  color: var(--title-clr);
+  opacity: 0.8;
+}
+
+.custom-group-btn .form-control {
+  box-shadow: none;
+  display: inline-block;
+  color: var(--title-clr);
+  opacity: 0.8;
+}
+
+.custom-group-btn .form-control:focus,
+.custom-group-btn .custom-select:focus {
+  box-shadow: none;
+}
+
+.custom-group-btn .custom-select {
+  height: 45px;
+  line-height: 27px;
+  width: 100%;
+  background-color: #f3f4f5;
+  border-radius: 0;
+  color: var(--title-clr);
+}
+
+.fs-12 {
+  font-size: 12px !important;
+}
+
+.mb-30 {
+  margin-bottom: 30px;
+}
+
+.h-110 {
+  height: 110px !important;
+}
+
+.drag-over {
+  border-color: var(--base-1);
+  background-color: rgba(var(--base-rgb), 0.1);
+}
+
+.upload-file__textbox .text-info {
+  color: #0788ff !important;
+}
+
+.bg-FAFAFC {
+  background: #fafafc;
+}
+
+.max-w-110 {
+  max-width: 110px !important;
+}
+
+.max-w-220 {
+  max-width: 220px !important;
+}
+
+.min-w-220 {
+  min-width: 220px !important;
+}
+
+.opacity-70 {
+  opacity: 0.7;
 }/*# sourceMappingURL=main.css.map */
