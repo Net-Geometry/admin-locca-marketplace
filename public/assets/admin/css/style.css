@@ -14017,6 +14017,7 @@ ul.address-info .label {
 }
 
 .pdf-single .remove-btn,
+.image-single .remove-btn,
 .download-image-single .remove-btn {
     position: absolute;
     inset-block-start: -10px;
@@ -14505,6 +14506,7 @@ ul.address-info .label {
     justify-content: center;
     align-items: center;
     gap: 12px;
+    text-align: center;
 }
 
 .document-wrapper {
@@ -14522,9 +14524,11 @@ ul.address-info .label {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    text-align: center;
     background: #fafafc;
+    height: 100%;
+    width: 100%;
 }
-
 .upload-file__textbox .text-info {
     color: #0788ff !important;
 }
@@ -14534,12 +14538,32 @@ ul.address-info .label {
 .min-w-330 {
     min-width: 330px;
 }
+.w--200px {
+    width: 200px;
+}
 .h-165 {
     height: 165px;
 }
+.max-w-200px {
+    max-width: 200px;
+}
+
 .img--vertical-2 {
     aspect-ratio: 2;
     width: 100%;
     -o-object-fit: cover;
     object-fit: cover;
+}
+
+#dropAreaLabel .text-info {
+    color: #0788ff !important;
+}
+
+.image-single {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    border: 1px dashed var(--border-clr);
+    border-radius: 10px;
 }

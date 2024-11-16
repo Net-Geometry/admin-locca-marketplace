@@ -6027,4 +6027,6 @@
   'approx_pickup_time' => 'Approx pickup time',
   'cover' => 'Cover',
   '(Ratio 1:1)' => '(Ratio 1:1)',
+  'You can upload a maximum of' => 'You can upload a maximum of',
+  'files.' => 'Files.',
 );

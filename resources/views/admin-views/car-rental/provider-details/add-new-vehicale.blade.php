@@ -191,7 +191,27 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <div class="d-flex flex-wrap gap-3 upload-file custom" id="coba"></div>
+                            {{-- old multiple image upload with spartanMultiImagePicker --}}
+                            {{-- <div class="d-flex flex-wrap gap-3 upload-file custom" id="coba"></div> --}}
+                            <div class="d-flex gap-3 flex-wrap" id="image_container">
+                                <div class="upload-file text-wrapper h--100px w--200px" id="image_upload_wrapper">
+                                    <input type="file" name="files[]" class="upload-file__input multiple_image_input"
+                                        accept=".jpg,.jpeg,.png" required multiple>
+                                    <div
+                                        class="upload-file__img d-flex gap-0 justify-content-center align-items-center h-100 max-w-300px p-0">
+                                        <div class="upload-file__textbox">
+                                            <img width="34" height="34"
+                                                src="{{ asset('public/assets/admin/img/document-upload.png') }}"
+                                                alt="" class="svg">
+                                            <h6 class="mt-2 font-semibold">
+                                                <span class="text-info">{{ translate('Click to upload') }}</span><br>
+                                                {{ translate('or drag and drop') }}
+                                            </h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -519,7 +539,7 @@
                                             <img width="34" height="34"
                                                 src="{{ asset('public/assets/admin/img/document-upload.png') }}"
                                                 alt="" class="svg">
-                                            <h6 class="mt-2 font-semibold">
+                                            <h6 class="font-semibold">
                                                 <span class="text-info">{{ translate('Click to upload') }}</span><br>
                                                 {{ translate('or drag and drop') }}
                                             </h6>
@@ -586,6 +606,90 @@
     </script>
 
     <script>
+        // ----- mutiple image upload 
+        document.addEventListener("DOMContentLoaded", function() {
+            const MAX_FILES = 5;
+            const ALLOWED_FILE_TYPES = ["image/jpeg", "image/jpg", "image/png"];
+            const MAX_FILE_SIZE_MB = 1; // Set maximum file size in MB
+            const imageContainer = document.getElementById("image_container");
+            const uploadWrapper = document.getElementById("image_upload_wrapper");
+
+            document.querySelector('.multiple_image_input').addEventListener('change', function(event) {
+                const files = Array.from(event.target.files);
+                const currentFiles = imageContainer.querySelectorAll(".image-single").length;
+
+                if (currentFiles + files.length > MAX_FILES) {
+                    toastr.error('{{ translate('You can upload a maximum of') }} ' + MAX_FILES +
+                        ' {{ translate('files.') }}', {
+                            CloseButton: true,
+                            ProgressBar: true
+                        });
+                    return;
+                }
+
+                files.forEach(file => {
+                    // Validate file type
+                    if (!ALLOWED_FILE_TYPES.includes(file.type)) {
+                        toastr.error(
+                            '{{ translate('please_only_input_png_or_jpg_type_file') }}', {
+                                CloseButton: true,
+                                ProgressBar: true
+                            });
+                        return;
+                    }
+
+                    // Validate file size
+                    if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
+                        toastr.error('{{ translate('file_size_too_big') }}', {
+                            CloseButton: true,
+                            ProgressBar: true
+                        });
+                        return;
+                    }
+
+                    // Create file preview
+                    const fileURL = URL.createObjectURL(file);
+
+                    const imageSingle = document.createElement("div");
+                    imageSingle.className = "image-single h-100 max-w-200px p-0";
+                    imageSingle.innerHTML = `
+                <a href="javascript:void(0);" class="remove-btn" onclick="removeImage(event, this)">
+                    <i class="tio-clear"></i>
+                </a>
+                <img class="img--vertical-2 rounded-10" width="200" height="100" loading="lazy" src="${fileURL}" alt="">
+            `;
+
+                    imageContainer.appendChild(imageSingle);
+
+                    // Success notification
+                    toastr.success('{{ translate('image_added') }}', {
+                        CloseButton: true,
+                        ProgressBar: true
+                    });
+                });
+
+                toggleUploadWrapper();
+
+                // Clear file input after upload
+                event.target.value = "";
+            });
+
+            window.removeImage = function(event, element) {
+                event.stopPropagation();
+                const imageSingle = element.closest(".image-single");
+                imageSingle.remove();
+                toggleUploadWrapper();
+            };
+
+            function toggleUploadWrapper() {
+                const currentFiles = imageContainer.querySelectorAll(".image-single").length;
+                uploadWrapper.style.display = currentFiles >= MAX_FILES ? "none" : "block";
+            }
+        });
+
+
+        // ----- mutiple image upload ends
+
         // ----- mutiple document upload 
         document.addEventListener("DOMContentLoaded", function() {
             const MAX_FILES = 5;
@@ -597,7 +701,6 @@
                 const currentFiles = pdfContainer.querySelectorAll(".pdf-single").length;
 
                 if (currentFiles + files.length > MAX_FILES) {
-                    // alert(`You can upload a maximum of ${MAX_FILES} files.`);
                     toastr.error(`You can upload a maximum of ${MAX_FILES} files.`, {
                         CloseButton: true,
                         ProgressBar: true
@@ -638,6 +741,12 @@
             `;
 
                     pdfContainer.appendChild(pdfSingle);
+
+                    // Show success notification
+                    toastr.success('File added successfully.', {
+                        CloseButton: true,
+                        ProgressBar: true
+                    });
                 });
 
                 toggleUploadWrapper();
@@ -658,6 +767,7 @@
                 uploadWrapper.style.display = currentFiles >= MAX_FILES ? "none" : "block";
             }
         });
+
         // ----- mutiple document upload ends
     </script>
 
@@ -679,84 +789,65 @@
         });
     </script>
 
-    {{-- <script>
+    <script>
         "use strict";
 
-        function readURL(input, viewer) {
-            if (input.files && input.files[0]) {
-                let reader = new FileReader();
+        // --- old multiple image upload with spartanMultiImagePicker
+        // $(function() {
+        //     $("#coba").spartanMultiImagePicker({
+        //         fieldName: 'identity_image[]',
+        //         maxCount: 5,
+        //         rowHeight: '120px',
+        //         groupClassName: 'upload-file__img upload-file__img_banner',
+        //         maxFileSize: '',
+        //         placeholderImage: {
+        //             image: "{{ asset('public/assets/admin/img/document-upload.png') }}",
+        //             width: '34px',
+        //         },
+        //         dropFileLabel: `
+    //         <h6 id="dropAreaLabel" class="mt-2 fw-semibold">
+    //             <span class="text-info">{{ translate('Click to upload') }}</span>
+    //             <br>
+    //             {{ translate('or drag and drop') }}
+    //         </h6>`,
 
-                reader.onload = function(e) {
-                    $('#' + viewer).attr('src', e.target.result);
-                }
+        //         onRenderedPreview: function(index) {
+        //             if ($(".file_upload").find(".img_").length > 0) {
+        //                 $("#dropAreaLabel").hide();
+        //             }
+        //             $(".file_upload").on("dragenter", function(e) {
+        //                 e.preventDefault();
+        //                 e.stopPropagation();
+        //                 $(this).find('#dropAreaLabel').hide();
+        //                 $(this).find('.spartan_image_placeholder').hide();
+        //             });
+        //             toastr.success('{{ translate('image_added') }}', {
+        //                 CloseButton: true,
+        //                 ProgressBar: true
+        //             });
 
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
+        //         },
 
-        $("#customFileEg1").change(function() {
-            readURL(this, 'viewer');
-        });
+        //         onRemoveRow: function(index) {
+        //             if ($(".file_upload").find(".img_").length === 0) {
+        //                 $("#dropAreaLabel").show();
+        //             }
+        //         },
 
-        $("#coverImageUpload").change(function() {
-            readURL(this, 'coverImageViewer');
-        });
+        //         onExtensionErr: function(index, file) {
+        //             toastr.error('{{ translate('please_only_input_png_or_jpg_type_file') }}', {
+        //                 CloseButton: true,
+        //                 ProgressBar: true
+        //             });
+        //         },
 
-        $(function() {
-            $("#coba").spartanMultiImagePicker({
-                fieldName: 'identity_image[]',
-                maxCount: 5,
-                rowHeight: '120px',
-                groupClassName: 'upload-file__img upload-file__img_banner',
-                maxFileSize: '',
-                placeholderImage: {
-                    image: "{{ asset('public/assets/admin/img/document-upload.png') }}",
-                    width: '34px',
-                },
-                dropFileLabel: `
-                <h6 id="dropAreaLabel" class="mt-2 fw-semibold">
-                    <span class="text-info">{{ translate('Click to upload') }}</span>
-                    <br>
-                    {{ translate('or drag and drop') }}
-                </h6>`,
-
-                onRenderedPreview: function(index) {
-                    if ($(".file_upload").find(".img_").length > 0) {
-                        $("#dropAreaLabel").hide();
-                    }
-                    $(".file_upload").on("dragenter", function(e) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        $(this).find('#dropAreaLabel').hide();
-                        $(this).find('.spartan_image_placeholder').hide();
-                    });
-                    toastr.success('{{ translate('image_added') }}', {
-                        CloseButton: true,
-                        ProgressBar: true
-                    });
-
-                },
-
-                onRemoveRow: function(index) {
-                    if ($(".file_upload").find(".img_").length === 0) {
-                        $("#dropAreaLabel").show();
-                    }
-                },
-
-                onExtensionErr: function(index, file) {
-                    toastr.error('{{ translate('please_only_input_png_or_jpg_type_file') }}', {
-                        CloseButton: true,
-                        ProgressBar: true
-                    });
-                },
-
-                onSizeErr: function(index, file) {
-                    toastr.error('{{ translate('file_size_too_big') }}', {
-                        CloseButton: true,
-                        ProgressBar: true
-                    });
-                }
-            });
-        });
-    </script> --}}
+        //         onSizeErr: function(index, file) {
+        //             toastr.error('{{ translate('file_size_too_big') }}', {
+        //                 CloseButton: true,
+        //                 ProgressBar: true
+        //             });
+        //         }
+        //     });
+        // });
+    </script>
 @endpush
