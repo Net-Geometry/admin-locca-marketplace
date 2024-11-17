@@ -5246,4 +5246,10 @@
   'google_play' => 'Google play',
   'apple_store' => 'Apple store',
   'User App' => 'User App',
+  'trips_details' => 'Trips details',
+  'trip' => 'Trip',
+  'Provider_Info' => 'Provider Info',
+  'Trip_served' => 'Trip served',
+  'Trip ID # 1000078' => 'Trip ID # 1000078',
+  'trip_setup' => 'Trip setup',
 );

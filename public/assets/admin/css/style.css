@@ -14567,3 +14567,69 @@ ul.address-info .label {
     border: 1px dashed var(--border-clr);
     border-radius: 10px;
 }
+
+.border-000-01 {
+    border-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+.form-group .input-icon {
+    position: absolute;
+    inset-inline-end: 0.5rem;
+    inset-block-start: 50%;
+    transform: translateY(-50%);
+}
+
+.rotate-45 {
+    transform: rotate(45deg);
+}
+
+.form-group.text-title
+    input[type="datetime-local" i]::-webkit-calendar-picker-indicator {
+    opacity: 0.6 !important;
+}
+
+.custom-select-arrow {
+    appearance: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    background: url("../img/arrow-down.svg") 96% / 15% no-repeat;
+    background-position: right 0.5rem center;
+    background-size: 18px 18px;
+}
+
+[dir="rtl"] .custom-select-arrow {
+    background-position: left 0.5rem center;
+}
+
+.bg--F6F6F6 {
+    background-color: #f6f6f6;
+}
+.bg--EDEDED {
+    background-color: #ededed;
+}
+
+.trip-details-address li {
+    padding-inline-start: 45px;
+    padding-inline-end: unset;
+    position: relative;
+    display: flex;
+}
+.trip-details-address li:first-child::before {
+    content: "";
+    inset-inline-start: 16px;
+    inset-block-start: 22px;
+    height: calc(100% - 20px);
+    width: 1px;
+    border-left: 2px dashed rgba(0, 0, 0, 0.3);
+    position: absolute;
+    opacity: 0.5;
+}
+.trip-details-address li .svg {
+    position: absolute;
+    inset-inline-start: 0;
+    inset-inline-end: unset;
+    inset-block-start: 0;
+}
+.trip-details-address li:not(:last-child) {
+    padding-bottom: 35px;
+}

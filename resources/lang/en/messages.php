@@ -6029,4 +6029,10 @@
   '(Ratio 1:1)' => '(Ratio 1:1)',
   'You can upload a maximum of' => 'You can upload a maximum of',
   'files.' => 'Files.',
+  'trips_details' => 'Trips details',
+  'trip_setup' => 'Trip setup',
+  'Provider_Info' => 'Provider Info',
+  'Trip_served' => 'Trip served',
+  'Trip ID # 1000078' => 'Trip ID # 1000078',
+  'Trip Details' => 'Trip Details',
 );
