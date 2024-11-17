@@ -1064,7 +1064,7 @@ class Helpers
         //     return $config ? json_decode($config->value, true) : null;
         // });
         $config = null;
-        $settings = Cache::rememberForever('cache_business_table_data', function () {
+        $settings = Cache::rememberForever("business_settings_all_data", function () {
             return BusinessSetting::all();
         });
 
@@ -4325,6 +4325,22 @@ class Helpers
             $businessSetting = new BusinessSetting();
             $businessSetting->key = $key['key'];
             $businessSetting->value = $value['value'];
+            $businessSetting->save();
+        }
+    }
+
+    public static function businessInsert($data)
+    {
+        $businessSetting = BusinessSetting::where(['key' => $data['key']])->first();
+        if ($businessSetting) {
+            $businessSetting->value = $data['value'];
+            $businessSetting->updated_at = now();
+            $businessSetting->save();
+        } else {
+            $businessSetting = new BusinessSetting();
+            $businessSetting->key = $data['key'];
+            $businessSetting->value = $data['value'];
+            $businessSetting->updated_at = now();
             $businessSetting->save();
         }
     }

@@ -509,7 +509,7 @@ class BusinessSettingsController extends Controller
             return back();
         }
 
-        BusinessSetting::query()->updateOrInsert(['key' => 'country_picker_status'], [
+        Helpers::businessUpdateOrInsert(['key' => 'country_picker_status'], [
             'value' => $request['country_picker_status'] ? $request['country_picker_status'] : 0
         ]);
 
@@ -844,7 +844,7 @@ class BusinessSettingsController extends Controller
         if ($name == 'cash_on_delivery') {
             $payment = BusinessSetting::where('key', 'cash_on_delivery')->first();
             if (isset($payment) == false) {
-                BusinessSetting::insert([
+                Helpers::businessInsert([
                     'key' => 'cash_on_delivery',
                     'value' => json_encode([
                         'status' => $request['status'],
@@ -864,7 +864,7 @@ class BusinessSettingsController extends Controller
         } elseif ($name == 'digital_payment') {
             $payment = BusinessSetting::where('key', 'digital_payment')->first();
             if (isset($payment) == false) {
-                BusinessSetting::insert([
+                Helpers::businessInsert([
                     'key' => 'digital_payment',
                     'value' => json_encode([
                         'status' => $request['status'],
@@ -884,7 +884,7 @@ class BusinessSettingsController extends Controller
         } elseif ($name == 'ssl_commerz_payment') {
             $payment = BusinessSetting::where('key', 'ssl_commerz_payment')->first();
             if (isset($payment) == false) {
-                BusinessSetting::insert([
+                Helpers::businessInsert([
                     'key' => 'ssl_commerz_payment',
                     'value' => json_encode([
                         'status' => 1,
@@ -908,7 +908,7 @@ class BusinessSettingsController extends Controller
         } elseif ($name == 'razor_pay') {
             $payment = BusinessSetting::where('key', 'razor_pay')->first();
             if (isset($payment) == false) {
-                BusinessSetting::insert([
+                Helpers::businessInsert([
                     'key' => 'razor_pay',
                     'value' => json_encode([
                         'status' => 1,
@@ -932,7 +932,7 @@ class BusinessSettingsController extends Controller
         } elseif ($name == 'paypal') {
             $payment = BusinessSetting::where('key', 'paypal')->first();
             if (isset($payment) == false) {
-                BusinessSetting::insert([
+                Helpers::businessInsert([
                     'key' => 'paypal',
                     'value' => json_encode([
                         'status' => 1,
@@ -958,7 +958,7 @@ class BusinessSettingsController extends Controller
         } elseif ($name == 'stripe') {
             $payment = BusinessSetting::where('key', 'stripe')->first();
             if (isset($payment) == false) {
-                BusinessSetting::insert([
+                Helpers::businessInsert([
                     'key' => 'stripe',
                     'value' => json_encode([
                         'status' => 1,
@@ -982,7 +982,7 @@ class BusinessSettingsController extends Controller
         } elseif ($name == 'senang_pay') {
             $payment = BusinessSetting::where('key', 'senang_pay')->first();
             if (isset($payment) == false) {
-                BusinessSetting::insert([
+                Helpers::businessInsert([
 
                     'key' => 'senang_pay',
                     'value' => json_encode([
@@ -1009,7 +1009,7 @@ class BusinessSettingsController extends Controller
         } elseif ($name == 'paystack') {
             $payment = BusinessSetting::where('key', 'paystack')->first();
             if (isset($payment) == false) {
-                BusinessSetting::insert([
+                Helpers::businessInsert([
                     'key' => 'paystack',
                     'value' => json_encode([
                         'status' => 1,
@@ -1037,7 +1037,7 @@ class BusinessSettingsController extends Controller
         } elseif ($name == 'flutterwave') {
             $payment = BusinessSetting::where('key', 'flutterwave')->first();
             if (isset($payment) == false) {
-                BusinessSetting::insert([
+                Helpers::businessInsert([
                     'key' => 'flutterwave',
                     'value' => json_encode([
                         'status' => 1,
@@ -1133,7 +1133,7 @@ class BusinessSettingsController extends Controller
     public function payment_config_update(Request $request)
     {
         if ($request->toggle_type) {
-            BusinessSetting::query()->updateOrInsert(['key' => $request->toggle_type], [
+            Helpers::businessUpdateOrInsert(['key' => $request->toggle_type], [
                 'value' => $request->toggle_type == 'offline_payment_status' ? $request?->status : json_encode(['status' => $request?->status]),
                 'updated_at' => now()
             ]);
@@ -7221,31 +7221,31 @@ class BusinessSettingsController extends Controller
                 'value' => $status
             ]);
         } else if ($tab == 'unsuspend') {
-            BusinessSetting::query()->updateOrInsert(['key' => 'unsuspend_mail_status_' . $type], [
+            Helpers::businessUpdateOrInsert(['key' => 'unsuspend_mail_status_' . $type], [
                 'value' => $status
             ]);
         } else if ($tab == 'subscription-successful') {
-            BusinessSetting::query()->updateOrInsert(['key' => 'subscription_successful_mail_status_' . $type], [
+            Helpers::businessUpdateOrInsert(['key' => 'subscription_successful_mail_status_' . $type], [
                 'value' => $status
             ]);
         } else if ($tab == 'subscription-renew') {
-            BusinessSetting::query()->updateOrInsert(['key' => 'subscription_renew_mail_status_' . $type], [
+            Helpers::businessUpdateOrInsert(['key' => 'subscription_renew_mail_status_' . $type], [
                 'value' => $status
             ]);
         } else if ($tab == 'subscription-shift') {
-            BusinessSetting::query()->updateOrInsert(['key' => 'subscription_shift_mail_status_' . $type], [
+            Helpers::businessUpdateOrInsert(['key' => 'subscription_shift_mail_status_' . $type], [
                 'value' => $status
             ]);
         } else if ($tab == 'subscription-cancel') {
-            BusinessSetting::query()->updateOrInsert(['key' => 'subscription_cancel_mail_status_' . $type], [
+            Helpers::businessUpdateOrInsert(['key' => 'subscription_cancel_mail_status_' . $type], [
                 'value' => $status
             ]);
         } else if ($tab == 'subscription-deadline') {
-            BusinessSetting::query()->updateOrInsert(['key' => 'subscription_deadline_mail_status_' . $type], [
+            Helpers::businessUpdateOrInsert(['key' => 'subscription_deadline_mail_status_' . $type], [
                 'value' => $status
             ]);
         } else if ($tab == 'subscription-plan_upadte') {
-            BusinessSetting::query()->updateOrInsert(['key' => 'subscription_plan_upadte_mail_status_' . $type], [
+            Helpers::businessUpdateOrInsert(['key' => 'subscription_plan_upadte_mail_status_' . $type], [
                 'value' => $status
             ]);
         } else if ($tab == 'new-advertisement') {

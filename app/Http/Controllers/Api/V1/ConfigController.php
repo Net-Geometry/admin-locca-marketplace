@@ -66,7 +66,7 @@ class ConfigController extends Controller
 //
 //        }
 
-        $cacheKey = 'business_settings_keys';
+        $cacheKey = 'business_settings_config_keys';
         $settings = Cache::rememberForever($cacheKey, function () use ($key) {
             return array_column(BusinessSetting::whereIn('key', $key)->get()->toArray(), 'value', 'key');
         });
@@ -74,12 +74,12 @@ class ConfigController extends Controller
         $data = [];
 
         foreach ($image_key as $value) {
-            $data[$value . '_storage'] = Cache::rememberForever("business_settings_{$value}_storage", function () use ($value) {
+            $data[$value . '_storage'] = Cache::rememberForever("business_settings_config_{$value}_storage", function () use ($value) {
                 return BusinessSetting::where('key', $value)->first()?->storage[0]?->value ?? 'public';
             });
         }
 
-        $DataSetting = Cache::rememberForever("business_settings_flutter_landing_page", function () {
+        $DataSetting = Cache::rememberForever("data_settings_flutter_landing_page", function () {
             return DataSetting::where('type', 'flutter_landing_page')
                 ->where('key', 'download_user_app_links')
                 ->pluck('value', 'key')
@@ -92,7 +92,7 @@ class ConfigController extends Controller
         $landing_page_links['app_url_ios_status'] = data_get($DataSetting, 'apple_store_url_status', null);
         $landing_page_links['app_url_ios'] = data_get($DataSetting, 'apple_store_url', null);
 
-        $currency_symbol = Cache::rememberForever("currency_symbol", function () {
+        $currency_symbol = Cache::rememberForever("business_settings_currency_symbol", function () {
             return Currency::where(['currency_code' => Helpers::currency_code()])->first()->currency_symbol;
         });
         $cod = json_decode($settings['cash_on_delivery'], true);
@@ -101,7 +101,7 @@ class ConfigController extends Controller
         $free_delivery_over = $settings['free_delivery_over'];
         $free_delivery_over = isset($free_delivery_over) ? (float)$free_delivery_over : $free_delivery_over;
         $additional_charge = isset($settings['additional_charge']) ? (float)$settings['additional_charge'] : 0;
-        $module = Cache::rememberForever("active_module", function () {
+        $module = Cache::rememberForever("module_config", function () {
             return Module::active()->count() == 1 ? Module::active()->first() : null;
         });
         $languages = Helpers::get_business_settings('language');
@@ -305,7 +305,10 @@ class ConfigController extends Controller
 
     public static function get_settings_status($name)
     {
-        $data = DataSetting::where(['key' => $name])->first()?->value;
+        $data = Cache::rememberForever('data_settings_' . $name, function () use ($name) {
+            return DataSetting::where('key', $name)->value('value');
+        });
+
         return $data ?? 0;
     }
 

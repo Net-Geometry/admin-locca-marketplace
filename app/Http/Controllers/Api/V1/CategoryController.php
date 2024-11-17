@@ -78,7 +78,6 @@ class CategoryController extends Controller
 
                     $category['products_count'] = $productCount;
                     $category['order_count'] = $orderCount;
-                    // unset($category['childes']);
                 }
                 if($category_list_default_status  != 1 &&  $category_list_sort_by_general == 'order_count'){
 

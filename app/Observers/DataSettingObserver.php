@@ -4,6 +4,7 @@ namespace App\Observers;
 
 use App\Models\DataSetting;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 
 class DataSettingObserver
@@ -50,6 +51,17 @@ class DataSettingObserver
 
     private function refreshBusinessSettingsCache()
     {
-        Cache::forget('business_settings_flutter_landing_page');
+        info('________________________');
+        $prefix = 'data_settings_';
+        $cacheKeys = DB::table('cache')
+            ->where('key', 'like', "%" . $prefix . "%")
+            ->pluck('key');
+        $sanitizedKeys = $cacheKeys->map(function ($key) {
+            $key = str_replace('laravel_cache', '', $key);
+            return $key;
+        });
+        foreach ($sanitizedKeys as $key) {
+            Cache::forget($key);
+        }
     }
 }

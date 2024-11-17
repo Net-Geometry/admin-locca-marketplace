@@ -4,7 +4,9 @@ namespace App\Observers;
 
 use App\Models\BusinessSetting;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 
 class BusinessSettingObserver
 {
@@ -50,16 +52,15 @@ class BusinessSettingObserver
 
     private function refreshBusinessSettingsCache()
     {
-        $cacheKeys = [
-            'cache_business_table_data',
-            'business_settings_keys',
-            'business_settings_logo_storage',
-            'business_settings_icon_storage',
-            'business_settings_web_app_landing_page_settings_storage',
-            'currency_symbol'
-        ];
-
-        foreach ($cacheKeys as $key) {
+        $prefix = 'business_settings_';
+        $cacheKeys = DB::table('cache')
+            ->where('key', 'like', "%" . $prefix . "%")
+            ->pluck('key');
+        $sanitizedKeys = $cacheKeys->map(function ($key) {
+            $key = str_replace('laravel_cache', '', $key);
+            return $key;
+        });
+        foreach ($sanitizedKeys as $key) {
             Cache::forget($key);
         }
     }

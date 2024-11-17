@@ -4,6 +4,7 @@ namespace App\Observers;
 
 use App\Models\Module;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 
 class ModuleObserver
@@ -50,6 +51,16 @@ class ModuleObserver
 
     private function refreshBusinessSettingsCache()
     {
-        Cache::forget('active_module');
+        $prefix = 'module_';
+        $cacheKeys = DB::table('cache')
+            ->where('key', 'like', "%" . $prefix . "%")
+            ->pluck('key');
+        $sanitizedKeys = $cacheKeys->map(function ($key) {
+            $key = str_replace('laravel_cache', '', $key);
+            return $key;
+        });
+        foreach ($sanitizedKeys as $key) {
+            Cache::forget($key);
+        }
     }
 }
