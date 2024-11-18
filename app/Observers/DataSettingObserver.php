@@ -51,7 +51,6 @@ class DataSettingObserver
 
     private function refreshBusinessSettingsCache()
     {
-        info('________________________');
         $prefix = 'data_settings_';
         $cacheKeys = DB::table('cache')
             ->where('key', 'like', "%" . $prefix . "%")
