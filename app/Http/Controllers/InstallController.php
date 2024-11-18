@@ -177,7 +177,7 @@ class InstallController extends Controller
                     DB_PASSWORD="' . $request->DB_PASSWORD . '"
 
                     BROADCAST_DRIVER=log
-                    CACHE_DRIVER=file
+                    CACHE_DRIVER=database
                     SESSION_DRIVER=file
                     SESSION_LIFETIME=120
                     QUEUE_DRIVER=sync
@@ -195,7 +195,7 @@ class InstallController extends Controller
                     BUYER_USERNAME=' . session('username') . '
                     SOFTWARE_ID=MzY3NzIxMTI=
 
-                    SOFTWARE_VERSION=2.11
+                    SOFTWARE_VERSION=2.11.1
                     REACT_APP_KEY=45370351
                     ';
             $file = fopen(base_path('.env'), 'w');
@@ -220,6 +220,8 @@ class InstallController extends Controller
         try {
             $sql_path = base_path('installation/backup/database.sql');
             DB::unprepared(file_get_contents($sql_path));
+            // version_2.11.1
+            Artisan::call('cache:table');
             return redirect()->route('step5', ['token' => bcrypt('step_5')]);
         } catch (\Exception $exception) {
             session()->flash('error', 'Your database is not clean, do you want to clean database then import?');
@@ -233,6 +235,8 @@ class InstallController extends Controller
             Artisan::call('db:wipe', ['--force' => true]);
             $sql_path = base_path('installation/backup/database.sql');
             DB::unprepared(file_get_contents($sql_path));
+            // version_2.11.1
+            Artisan::call('cache:table');
             return redirect()->route('step5', ['token' => bcrypt('step_5')]);
         } catch (\Exception $exception) {
             session()->flash('error', 'Check your database permission!');
