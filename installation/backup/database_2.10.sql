@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:8889
--- Generation Time: Nov 18, 2024 at 10:37 AM
+-- Generation Time: Sep 24, 2024 at 03:28 AM
 -- Server version: 5.7.39
 -- PHP Version: 8.2.0
 
@@ -351,18 +351,6 @@ CREATE TABLE `allergy_item` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `allergy_item_campaign`
---
-
-CREATE TABLE `allergy_item_campaign` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `item_campaign_id` bigint(20) UNSIGNED NOT NULL,
-  `allergy_id` bigint(20) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `attributes`
 --
 
@@ -590,30 +578,6 @@ INSERT INTO `business_settings` (`id`, `key`, `value`, `created_at`, `updated_at
 (147, 'subscription_usage_max_time', '80', '2024-06-05 23:24:14', '2024-06-05 23:24:14'),
 (148, 'apple_login', '[{\"login_medium\":\"apple\",\"client_id\":\"\",\"client_secret\":\"\",\"team_id\":\"\",\"key_id\":\"\",\"service_file\":\"\",\"redirect_url\":\"\",\"status\":\"\"}]', '2024-06-05 23:39:00', '2024-06-05 23:39:00'),
 (149, 'country_picker_status', '1', NULL, NULL);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `cache`
---
-
-CREATE TABLE `cache` (
-  `key` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `value` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `expiration` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `cache_locks`
---
-
-CREATE TABLE `cache_locks` (
-  `key` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `owner` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `expiration` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -1644,30 +1608,6 @@ CREATE TABLE `item_campaigns` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `item_campaign_generic_names`
---
-
-CREATE TABLE `item_campaign_generic_names` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `item_campaign_id` bigint(20) UNSIGNED NOT NULL,
-  `generic_name_id` bigint(20) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `item_campaign_nutrition`
---
-
-CREATE TABLE `item_campaign_nutrition` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `item_campaign_id` bigint(20) UNSIGNED NOT NULL,
-  `nutrition_id` bigint(20) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `item_generic_names`
 --
 
@@ -1943,14 +1883,7 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (170, '2024_09_12_121941_create_item_nutrition_table', 51),
 (171, '2024_09_12_142834_add_nutrition_allergy_id_cols_to_temp_products_table', 51),
 (172, '2024_09_15_112118_create_generic_names_table', 51),
-(173, '2024_09_15_112537_create_item_generic_names_table', 51),
-(174, '2024_10_21_153431_add_is_email_verified_col_to_users_table', 52),
-(175, '2024_10_21_153607_add_phone_col_to_password_resets_table', 52),
-(176, '2024_10_22_103402_create_item_campaign_generic_names_table', 52),
-(177, '2024_10_22_103440_create_allergy_item_campaign_table', 52),
-(178, '2024_10_22_103509_create_item_campaign_nutrition_table', 52),
-(179, '2024_10_22_133944_add_minimum_stock_for_warning_col_to_store_confg', 52),
-(180, '2024_11_17_104649_create_cache_table', 52);
+(173, '2024_09_15_112537_create_item_generic_names_table', 51);
 
 -- --------------------------------------------------------
 
@@ -2629,15 +2562,14 @@ CREATE TABLE `parcel_delivery_instructions` (
 --
 
 CREATE TABLE `password_resets` (
-  `email` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `token` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `otp_hit_count` tinyint(4) NOT NULL DEFAULT '0',
   `is_blocked` tinyint(1) NOT NULL DEFAULT '0',
   `is_temp_blocked` tinyint(1) NOT NULL DEFAULT '0',
   `temp_block_time` timestamp NULL DEFAULT NULL,
-  `created_by` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT 'user',
-  `phone` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL
+  `created_by` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT 'user'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -2970,8 +2902,7 @@ CREATE TABLE `store_configs` (
   `updated_at` timestamp NULL DEFAULT NULL,
   `halal_tag_status` tinyint(1) NOT NULL DEFAULT '0',
   `extra_packaging_status` tinyint(1) NOT NULL DEFAULT '0',
-  `extra_packaging_amount` double(23,3) NOT NULL DEFAULT '0.000',
-  `minimum_stock_for_warning` int(11) NOT NULL DEFAULT '0'
+  `extra_packaging_amount` double(23,3) NOT NULL DEFAULT '0.000'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -3326,9 +3257,7 @@ CREATE TABLE `users` (
   `current_language_key` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT 'en',
   `ref_by` bigint(20) UNSIGNED DEFAULT NULL,
   `temp_token` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `module_ids` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `is_email_verified` tinyint(1) NOT NULL DEFAULT '0',
-  `is_from_pos` tinyint(1) NOT NULL DEFAULT '0'
+  `module_ids` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -3672,12 +3601,6 @@ ALTER TABLE `allergy_item`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `allergy_item_campaign`
---
-ALTER TABLE `allergy_item_campaign`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indexes for table `attributes`
 --
 ALTER TABLE `attributes`
@@ -3707,18 +3630,6 @@ ALTER TABLE `brands`
 --
 ALTER TABLE `business_settings`
   ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `cache`
---
-ALTER TABLE `cache`
-  ADD PRIMARY KEY (`key`);
-
---
--- Indexes for table `cache_locks`
---
-ALTER TABLE `cache_locks`
-  ADD PRIMARY KEY (`key`);
 
 --
 -- Indexes for table `campaigns`
@@ -3937,18 +3848,6 @@ ALTER TABLE `items`
 ALTER TABLE `item_campaigns`
   ADD PRIMARY KEY (`id`),
   ADD KEY `item_campaigns_module_id_foreign` (`module_id`);
-
---
--- Indexes for table `item_campaign_generic_names`
---
-ALTER TABLE `item_campaign_generic_names`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `item_campaign_nutrition`
---
-ALTER TABLE `item_campaign_nutrition`
-  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `item_generic_names`
@@ -4486,12 +4385,6 @@ ALTER TABLE `allergy_item`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `allergy_item_campaign`
---
-ALTER TABLE `allergy_item_campaign`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `attributes`
 --
 ALTER TABLE `attributes`
@@ -4732,18 +4625,6 @@ ALTER TABLE `item_campaigns`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `item_campaign_generic_names`
---
-ALTER TABLE `item_campaign_generic_names`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `item_campaign_nutrition`
---
-ALTER TABLE `item_campaign_nutrition`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `item_generic_names`
 --
 ALTER TABLE `item_generic_names`
@@ -4783,7 +4664,7 @@ ALTER TABLE `messages`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=181;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=174;
 
 --
 -- AUTO_INCREMENT for table `modules`
