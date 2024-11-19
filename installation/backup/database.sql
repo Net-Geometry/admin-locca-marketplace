@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:8889
--- Generation Time: Nov 18, 2024 at 10:37 AM
+-- Generation Time: Nov 19, 2024 at 07:56 AM
 -- Server version: 5.7.39
 -- PHP Version: 8.2.0
 
@@ -172,10 +172,10 @@ CREATE TABLE `admin_features` (
 --
 
 INSERT INTO `admin_features` (`id`, `title`, `sub_title`, `image`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'Trusted', 'Trusted by customers and store owners', '2024-04-20-6623933f81d5b.png', 1, '2023-08-15 23:51:18', '2024-04-20 05:04:47'),
-(2, 'Delivery', 'Flexible delivery system', '2024-04-20-6623936914978.png', 1, '2024-04-20 05:05:29', '2024-04-20 05:05:29'),
-(3, 'Shopping', 'Best shopping experience', '2024-04-20-662393a8a1d27.png', 1, '2024-04-20 05:06:32', '2024-04-20 05:06:32'),
-(4, 'Location', 'Location tracking system', '2024-04-20-662393d85bae9.png', 1, '2024-04-20 05:07:20', '2024-04-20 05:07:20');
+(1, 'Trusted', 'Trusted by customers and store owners', '2024-11-19-673c34d94d61b.png', 1, '2023-08-15 23:51:18', '2024-11-18 18:48:57'),
+(2, 'Delivery', 'Flexible delivery system', '2024-11-19-673c32af3d693.png', 1, '2024-04-20 05:05:29', '2024-11-18 18:39:43'),
+(3, 'Shopping', 'Best shopping experience', '2024-11-19-673c32cb48c85.png', 1, '2024-04-20 05:06:32', '2024-11-18 18:40:11'),
+(4, 'Location', 'Location tracking system', '2024-11-19-673c32e23150b.png', 1, '2024-04-20 05:07:20', '2024-11-18 18:40:34');
 
 -- --------------------------------------------------------
 
@@ -198,7 +198,7 @@ CREATE TABLE `admin_promotional_banners` (
 --
 
 INSERT INTO `admin_promotional_banners` (`id`, `title`, `sub_title`, `image`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'Find', 'Your daily grocery item', '2024-04-20-66239166962bd.png', 1, '2023-08-15 23:49:59', '2024-04-20 04:56:54');
+(1, 'Find', 'Your daily grocery item', '2024-11-19-673c35a459d2a.png', 1, '2023-08-15 23:49:59', '2024-11-18 18:52:20');
 
 -- --------------------------------------------------------
 
@@ -242,11 +242,12 @@ CREATE TABLE `admin_special_criterias` (
 --
 
 INSERT INTO `admin_special_criterias` (`id`, `title`, `image`, `status`, `created_at`, `updated_at`) VALUES
-(2, 'Easy to Manage Multiple Store', '2024-04-20-6623950467b0a.png', 1, '2024-04-20 05:12:20', '2024-04-20 05:12:20'),
-(3, 'Easy to Manage E-Commerce', '2024-04-20-662395134788d.png', 1, '2024-04-20 05:12:35', '2024-04-20 05:12:35'),
-(4, 'Easy to Manage Parcel Delivery', '2024-04-20-66239522279f6.png', 1, '2024-04-20 05:12:50', '2024-04-20 05:12:50'),
-(5, 'Easy to Manage Location Tracking', '2024-04-20-6623953ab1ccb.png', 1, '2024-04-20 05:13:14', '2024-04-20 05:13:14'),
-(6, 'Easy to Manage Grocery Business', '2024-04-20-6623954d187f8.png', 1, '2024-04-20 05:13:33', '2024-04-20 05:13:33');
+(2, 'Easy to Manage Multiple Store', '2024-11-19-673c361aca20a.png', 1, '2024-04-20 05:12:20', '2024-11-18 18:54:18'),
+(3, 'Easy to Manage E-Commerce', '2024-11-19-673c3634952a9.png', 1, '2024-04-20 05:12:35', '2024-11-18 18:54:44'),
+(4, 'Easy to Manage Parcel Delivery', '2024-11-19-673c364d7fcc5.png', 1, '2024-04-20 05:12:50', '2024-11-18 18:55:09'),
+(5, 'Easy to Manage Location Tracking', '2024-11-19-673c36662d201.png', 1, '2024-04-20 05:13:14', '2024-11-18 18:55:34'),
+(6, 'Easy to Manage Grocery Business', '2024-11-19-673c367fb9d1f.png', 1, '2024-04-20 05:13:33', '2024-11-18 18:55:59'),
+(7, 'Easy to Get Help & Support', '2024-11-19-673c36d78cfda.png', 1, '2024-11-18 18:57:27', '2024-11-18 19:15:33');
 
 -- --------------------------------------------------------
 
@@ -409,6 +410,13 @@ CREATE TABLE `banners` (
   `created_by` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'admin'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `banners`
+--
+
+INSERT INTO `banners` (`id`, `title`, `type`, `image`, `status`, `data`, `created_at`, `updated_at`, `zone_id`, `module_id`, `featured`, `default_link`, `created_by`) VALUES
+(1, 'Demo Banner', 'store_wise', '2024-11-19-673c4232e5ec6.png', 1, '1', '2024-11-18 19:45:54', '2024-11-18 19:45:54', 1, 1, 0, NULL, 'admin');
+
 -- --------------------------------------------------------
 
 --
@@ -460,7 +468,7 @@ INSERT INTO `business_settings` (`id`, `key`, `value`, `created_at`, `updated_at
 (15, 'terms_and_conditions', '<p>This is a test Teams &amp; Conditions<br />\r\n<br />\r\nThese terms of use (the &quot;Terms of Use&quot;) govern your use of our website www.evaly.com.bd (the &quot;Website&quot;) and our &quot;StackFood&quot; application for mobile and handheld devices (the &quot;App&quot;). The Website and the App are jointly referred to as the &quot;Platform&quot;. Please read these Terms of Use carefully before you use the services. If you do not agree to these Terms of Use, you may not use the services on the Platform, and we request you to uninstall the App. By installing, downloading and/or even merely using the Platform, you shall be contracting with StackFood and you provide your acceptance to the Terms of Use and other StackFood policies (including but not limited to the Cancellation &amp; Refund Policy, Privacy Policy etc.) as posted on the Platform from time to time, which takes effect on the date on which you download, install or use the Services, and create a legally binding arrangement to abide by the same. The Platforms will be used by (i) natural persons who have reached 18 years of age and (ii) corporate legal entities, e.g companies. Where applicable, these Terms shall be subject to country-specific provisions as set out herein.</p>\r\n\r\n<h3>USE OF PLATFORM AND SERVICES</h3>\r\n\r\n<p>All commercial/contractual terms are offered by and agreed to between Buyers and Merchants alone. The commercial/contractual terms include without limitation to price, taxes, shipping costs, payment methods, payment terms, date, period and mode of delivery, warranties related to products and services and after sales services related to products and services. StackFood does not have any kind of control or does not determine or advise or in any way involve itself in the offering or acceptance of such commercial/contractual terms between the Buyers and Merchants. StackFood may, however, offer support services to Merchants in respect to order fulfilment, payment collection, call centre, and other services, pursuant to independent contracts executed by it with the Merchants. eFood is not responsible for any non-performance or breach of any contract entered into between Buyers and Merchants on the Platform. eFood cannot and does not guarantee that the concerned Buyers and/or Merchants shall perform any transaction concluded on the Platform. eFood is not responsible for unsatisfactory services or non-performance of services or damages or delays as a result of products which are out of stock, unavailable or back ordered.</p>\r\n\r\n<p>StackFood&nbsp;is operating an e-commerce platform and assumes and operates the role of facilitator, and does not at any point of time during any transaction between Buyer and Merchant on the Platform come into or take possession of any of the products or services offered by Merchant. At no time shall StackFood hold any right, title or interest over the products nor shall StackFood have any obligations or liabilities in respect of such contract entered into between Buyer and Merchant. You agree and acknowledge that we shall not be responsible for:</p>\r\n\r\n<ul>\r\n	<li>The goods provided by the shops or restaurants including, but not limited, serving of food orders suiting your requirements and needs;</li>\r\n	<li>The Merchant&quot;s goods not being up to your expectations or leading to any loss, harm or damage to you;</li>\r\n	<li>The availability or unavailability of certain items on the menu;</li>\r\n	<li>The Merchant serving the incorrect orders.</li>\r\n</ul>\r\n\r\n<p>The details of the menu and price list available on the Platform are based on the information provided by the Merchants and we shall not be responsible for any change or cancellation or unavailability. All Menu &amp; Food Images used on our platforms are only representative and shall/might not match with the actual Menu/Food Ordered, StackFood shall not be responsible or Liable for any discrepancies or variations on this aspect.</p>\r\n\r\n<h3>Personal Information that you provide</h3>\r\n\r\n<p>If you want to use our service, you must create an account on our Site. To establish your account, we will ask for personally identifiable information that can be used to contact or identify you, which may include your name, phone number, and e-mail address. We may also collect demographic information about you, such as your zip code, and allow you to submit additional information that will be part of your profile. Other than basic information that we need to establish your account, it will be up to you to decide how much information to share as part of your profile. We encourage you to think carefully about the information that you share and we recommend that you guard your identity and your sensitive information. Of course, you can review and revise your profile at any time.</p>\r\n\r\n<p>You understand that delivery periods quoted to you at the time of confirming the order is an approximate estimate and may vary. We shall not be responsible for any delay in the delivery of your order due to the delay at seller/merchant end for order processing or any other unavoidable circumstances.</p>\r\n\r\n<p>Your order shall be only delivered to the address designated by you at the time of placing the order on the Platform. We reserve the right to cancel the order, in our sole discretion, in the event of any change to the place of delivery and you shall not be entitled to any refund for the same. Delivery in the event of change of the delivery location shall be at our sole discretion and reserve the right to charge with additional delivery fee if required.</p>\r\n\r\n<p>You shall undertake to provide adequate directions, information and authorizations to accept delivery. In the event of any failure to accept delivery, failure to deliver within the estimated time due to your failure to provide appropriate instructions, or authorizations, then such goods shall be deemed to have been delivered to you and all risk and responsibility in relation to such goods shall pass to you and you shall not be entitled to any refund for the same. Our decision in relation to this shall be final and binding. You understand that our liability ends once your order has been delivered to you.</p>\r\n\r\n<p>You might be required to provide your credit or debit card details to the approved payment gateways while making the payment. In this regard, you agree to provide correct and accurate credit/ debit card details to the approved payment gateways for availing the Services. You shall not use the credit/ debit card which is not lawfully owned by you, i.e. in any transaction, you must use your own credit/ debit card. The information provided by you shall not be utilized or shared with any third party unless required in relation to fraud verifications or by law, regulation or court order. You shall be solely responsible for the security and confidentiality of your credit/ debit card details. We expressly disclaim all liabilities that may arise as a consequence of any unauthorized use of your credit/ debit card. You agree that the Services shall be provided by us only during the working hours of the relevant Merchants.</p>\r\n\r\n<h3>ACTIVITIES PROHIBITED ON THE PLATFORM</h3>\r\n\r\n<p>The following is a partial list of the kinds of conduct that are illegal or prohibited on the Websites. StackFood reserves the right to investigate and take appropriate legal action/s against anyone who, in StackFood sole discretion, engages in any of the prohibited activities. Prohibited activities include &mdash; but are not limited to &mdash; the following:</p>\r\n\r\n<ul>\r\n	<li>Using the Websites for any purpose in violation of laws or regulations;</li>\r\n	<li>Posting Content that infringes the intellectual property rights, privacy rights, publicity rights, trade secret rights, or any other rights of any party;</li>\r\n	<li>Posting Content that is unlawful, obscene, defamatory, threatening, harassing, abusive, slanderous, hateful, or embarrassing to any other person or entity as determined by StackFood in its sole discretion or pursuant to local community standards;</li>\r\n	<li>Posting Content that constitutes cyber-bullying, as determined by StackFood in its sole discretion;</li>\r\n	<li>Posting Content that depicts any dangerous, life-threatening, or otherwise risky behavior;</li>\r\n	<li>Posting telephone numbers, street addresses, or last names of any person;</li>\r\n	<li>Posting URLs to external websites or any form of HTML or programming code;</li>\r\n	<li>Posting anything that may be &quot;spam,&quot; as determined by StackFood in its sole discretion;</li>\r\n	<li>Impersonating another person when posting Content;</li>\r\n	<li>Harvesting or otherwise collecting information about others, including email addresses, without their consent;</li>\r\n	<li>Allowing any other person or entity to use your identification for posting or viewing comments;</li>\r\n	<li>Harassing, threatening, stalking, or abusing any person;</li>\r\n	<li>Engaging in any other conduct that restricts or inhibits any other person from using or enjoying the Websites, or which, in the sole discretion of StackFood , exposes eFood or any of its customers, suppliers, or any other parties to any liability or detriment of any type; or</li>\r\n	<li>Encouraging other people to engage in any prohibited activities as described herein.</li>\r\n</ul>\r\n\r\n<p>StackFood&nbsp;reserves the right but is not obligated to do any or all of the following:</p>\r\n\r\n<ul>\r\n	<li>Investigate an allegation that any Content posted on the Websites does not conform to these Terms of Use and determine in its sole discretion to remove or request the removal of the Content;</li>\r\n	<li>Remove Content which is abusive, illegal, or disruptive, or that otherwise fails to conform with these Terms of Use;</li>\r\n	<li>Terminate a user&#39;s access to the Websites upon any breach of these Terms of Use;</li>\r\n	<li>Monitor, edit, or disclose any Content on the Websites; and</li>\r\n	<li>Edit or delete any Content posted on the Websites, regardless of whether such Content violates these standards.</li>\r\n</ul>\r\n\r\n<h3>AMENDMENTS</h3>\r\n\r\n<p>StackFood&nbsp;reserves the right to change or modify these Terms (including our policies which are incorporated into these Terms) at any time by posting changes on the Platform. You are strongly recommended to read these Terms regularly. You will be deemed to have agreed to the amended Terms by your continued use of the Platforms following the date on which the amended Terms are posted.</p>\r\n\r\n<h3>PAYMENT</h3>\r\n\r\n<p>StackFood&nbsp;reserves the right to offer additional payment methods and/or remove existing payment methods at any time in its sole discretion. If you choose to pay using an online payment method, the payment shall be processed by our third party payment service provider(s). With your consent, your credit card / payment information will be stored with our third party payment service provider(s) for future orders. StackFood does not store your credit card or payment information. You must ensure that you have sufficient funds on your credit and debit card to fulfil payment of an Order. Insofar as required, StackFood takes responsibility for payments made on our Platforms including refunds, chargebacks, cancellations and dispute resolution, provided if reasonable and justifiable and in accordance with these Terms.</p>\r\n\r\n<h3>CANCELLATION</h3>\r\n\r\n<p>StackFood&nbsp;can cancel any order anytime due to the foods/products unavailability, out of coverage area and any other unavoidable circumstances.</p>', NULL, '2021-08-22 01:48:01'),
 (16, 'business_name', '6ammart', NULL, NULL),
 (17, 'currency', 'USD', NULL, NULL),
-(18, 'logo', '2023-08-16-64dca5f543996.png', NULL, NULL),
+(18, 'logo', '2024-11-19-673c3141e4e1c.png', NULL, '2024-11-18 18:33:37'),
 (19, 'phone', '+8801500000000', NULL, NULL),
 (20, 'email_address', 'admin@admin.com', NULL, NULL),
 (21, 'address', '28HX+JM8, Bangladesh', NULL, NULL),
@@ -536,7 +544,7 @@ INSERT INTO `business_settings` (`id`, `key`, `value`, `created_at`, `updated_at
 (93, 'paytm', '{\"status\":\"1\",\"paytm_merchant_key\":null,\"paytm_merchant_mid\":null,\"paytm_merchant_website\":null,\"paytm_refund_url\":null}', NULL, '2022-02-27 06:06:37'),
 (94, 'schedule_order_slot_duration', NULL, NULL, NULL),
 (95, 'digit_after_decimal_point', '0', NULL, NULL),
-(96, 'icon', '2023-08-16-64dca5f544de1.png', NULL, NULL),
+(96, 'icon', '2024-11-19-673c3141ec163.png', NULL, '2024-11-18 18:33:37'),
 (97, 'toggle_store_registration', '1', NULL, NULL),
 (98, 'canceled_by_store', '0', NULL, NULL),
 (99, 'parcel_per_km_shipping_charge', '0', NULL, NULL),
@@ -579,7 +587,7 @@ INSERT INTO `business_settings` (`id`, `key`, `value`, `created_at`, `updated_at
 (136, 'dm_picture_upload_status', '1', NULL, NULL),
 (137, 'offline_payment_status', NULL, NULL, '2023-10-16 20:16:58'),
 (138, 'guest_checkout_status', '0', NULL, NULL),
-(139, 'check_daily_subscription_validity_check', '2024-08-29', '2024-06-05 20:15:07', '2024-08-28 18:53:16'),
+(139, 'check_daily_subscription_validity_check', '2024-11-19', '2024-06-05 20:15:07', '2024-11-18 19:07:39'),
 (140, 'commission_business_model', '1', '2024-06-05 20:16:14', '2024-06-05 20:16:14'),
 (141, 'subscription_business_model', '0', '2024-06-05 20:16:14', '2024-06-05 20:16:14'),
 (142, 'subscription_free_trial_days', '7', '2024-06-05 23:23:50', '2024-06-05 23:23:50'),
@@ -589,7 +597,8 @@ INSERT INTO `business_settings` (`id`, `key`, `value`, `created_at`, `updated_at
 (146, 'subscription_deadline_warning_message', 'Your subscription ending soon. Please renew to continue access.', '2024-06-05 23:24:02', '2024-06-05 23:27:22'),
 (147, 'subscription_usage_max_time', '80', '2024-06-05 23:24:14', '2024-06-05 23:24:14'),
 (148, 'apple_login', '[{\"login_medium\":\"apple\",\"client_id\":\"\",\"client_secret\":\"\",\"team_id\":\"\",\"key_id\":\"\",\"service_file\":\"\",\"redirect_url\":\"\",\"status\":\"\"}]', '2024-06-05 23:39:00', '2024-06-05 23:39:00'),
-(149, 'country_picker_status', '1', NULL, NULL);
+(149, 'country_picker_status', '1', NULL, NULL),
+(150, 'manual_login_status', '1', '2024-11-18 18:24:02', '2024-11-18 18:24:02');
 
 -- --------------------------------------------------------
 
@@ -740,7 +749,7 @@ CREATE TABLE `categories` (
 --
 
 INSERT INTO `categories` (`id`, `name`, `image`, `parent_id`, `position`, `status`, `created_at`, `updated_at`, `priority`, `module_id`, `slug`, `featured`) VALUES
-(1, 'Demo category', '2023-08-16-64dca78f6ba7b.png', 0, 0, 1, '2023-08-15 23:40:15', '2023-08-15 23:40:30', 0, 1, 'demo-category', 1),
+(1, 'Demo category', '2024-11-19-673c3ffb0a6f7.png', 0, 0, 1, '2023-08-15 23:40:15', '2024-11-18 19:36:27', 0, 1, 'demo-category', 1),
 (2, 'Demo sub category', 'def.png', 1, 1, 1, '2023-08-15 23:40:51', '2023-08-15 23:40:51', 0, 1, 'demo-sub-category', 0);
 
 -- --------------------------------------------------------
@@ -1027,27 +1036,27 @@ INSERT INTO `data_settings` (`id`, `key`, `value`, `type`, `created_at`, `update
 (15, 'feature_short_description', 'Jam-packed with outstanding features to elevate your online ordering and delivery easier, and smarter than ever before. It\'s time to empower your multivendor online business with 6amMart\'s powerful features!', 'admin_landing_page', '2023-06-11 15:14:25', '2023-06-11 15:14:25'),
 (16, 'earning_title', 'Earn Money', 'admin_landing_page', '2023-06-11 15:26:01', '2023-06-11 15:26:01'),
 (17, 'earning_sub_title', 'Earn money  by using different platform', 'admin_landing_page', '2023-06-11 15:26:01', '2023-06-11 15:26:01'),
-(18, 'earning_seller_image', '2024-04-20-66239442684d3.png', 'admin_landing_page', '2023-06-11 15:27:29', '2024-04-20 05:09:06'),
-(19, 'seller_app_earning_links', '{\"playstore_url_status\":null,\"playstore_url\":null,\"apple_store_url_status\":null,\"apple_store_url\":null}', 'admin_landing_page', NULL, NULL),
-(20, 'earning_delivery_image', '2024-04-20-66239451975d2.png', 'admin_landing_page', '2023-06-11 15:28:48', '2024-04-20 05:09:21'),
-(21, 'dm_app_earning_links', '{\"playstore_url_status\":null,\"playstore_url\":null,\"apple_store_url_status\":null,\"apple_store_url\":null}', 'admin_landing_page', NULL, NULL),
+(18, 'earning_seller_image', '2024-11-19-673c331e66d9e.png', 'admin_landing_page', '2023-06-11 15:27:29', '2024-11-18 18:41:34'),
+(19, 'seller_app_earning_links', '{\"playstore_url_status\":\"1\",\"playstore_url\":\"https:\\/\\/play.google.com\\/store\\/apps\",\"apple_store_url_status\":\"1\",\"apple_store_url\":\"https:\\/\\/www.apple.com\\/app-store\\/\"}', 'admin_landing_page', NULL, NULL),
+(20, 'earning_delivery_image', '2024-11-19-673c332b98b86.png', 'admin_landing_page', '2023-06-11 15:28:48', '2024-11-18 18:41:47'),
+(21, 'dm_app_earning_links', '{\"playstore_url_status\":\"1\",\"playstore_url\":\"https:\\/\\/play.google.com\\/store\\/apps\",\"apple_store_url_status\":\"1\",\"apple_store_url\":\"https:\\/\\/www.apple.com\\/app-store\\/\"}', 'admin_landing_page', NULL, NULL),
 (22, 'why_choose_title', 'What so Special About 6amMart ?', 'admin_landing_page', '2023-06-11 15:30:30', '2023-06-11 15:32:08'),
 (23, 'counter_section', '{\"app_download_count_numbers\":\"300\",\"seller_count_numbers\":\"85\",\"deliveryman_count_numbers\":\"150\",\"customer_count_numbers\":\"10000\",\"status\":\"1\"}', 'admin_landing_page', NULL, NULL),
 (24, 'download_user_app_title', 'Let’s  Manage', 'admin_landing_page', '2023-06-11 15:38:17', '2023-06-11 15:38:17'),
 (25, 'download_user_app_sub_title', 'Your business  Smartly or Earn.', 'admin_landing_page', '2023-06-11 15:38:17', '2023-06-11 15:38:17'),
-(26, 'download_user_app_image', '2023-08-16-64dcaab460ac2.png', 'admin_landing_page', '2023-06-11 15:38:17', '2023-08-15 23:53:40'),
+(26, 'download_user_app_image', '2024-11-19-673c31bdc98e1.png', 'admin_landing_page', '2023-06-11 15:38:17', '2024-11-18 18:35:41'),
 (27, 'download_user_app_links', '{\"playstore_url_status\":\"1\",\"playstore_url\":\"https:\\/\\/play.google.com\\/store\\/apps\\/details?id=com.sixamtech.sixam_mart_store_app\",\"apple_store_url_status\":\"1\",\"apple_store_url\":\"https:\\/\\/www.apple.com\\/app-store\"}', 'admin_landing_page', NULL, NULL),
 (28, 'testimonial_title', 'People Who Shared Love with us?', 'admin_landing_page', '2023-06-11 15:42:04', '2023-06-11 15:42:04'),
 (29, 'contact_us_title', 'Contact Us', 'admin_landing_page', '2023-06-11 15:53:22', '2023-06-11 15:53:22'),
 (30, 'contact_us_sub_title', 'Any question or remarks? Just write us a message!', 'admin_landing_page', '2023-06-11 15:53:22', '2023-06-11 15:53:22'),
-(31, 'contact_us_image', '2023-08-16-64dcab0c7b434.png', 'admin_landing_page', '2023-06-11 15:53:23', '2023-08-15 23:55:08'),
+(31, 'contact_us_image', '2024-11-19-673c37402da9f.png', 'admin_landing_page', '2023-06-11 15:53:23', '2024-11-18 18:59:12'),
 (32, 'refund_policy_status', '1', 'admin_landing_page', '2023-06-11 20:10:58', '2023-06-11 20:10:58'),
 (33, 'refund_policy', NULL, 'admin_landing_page', '2023-06-11 20:10:59', '2023-06-11 20:10:59'),
 (34, 'header_title', '$Your e-Commerce!$', 'react_landing_page', '2023-06-12 16:30:53', '2023-06-12 19:41:19'),
 (35, 'header_sub_title', 'Venture Starts Here', 'react_landing_page', '2023-06-12 16:30:53', '2023-06-12 17:55:14'),
 (36, 'header_tag_line', 'More than just a reliable $eCommerce$ platform', 'react_landing_page', '2023-06-12 16:30:53', '2023-06-12 17:45:24'),
-(37, 'header_icon', '2024-04-20-66239402e2913.png', 'react_landing_page', '2023-06-12 16:30:53', '2024-04-20 05:08:02'),
-(38, 'header_banner', '2024-04-20-66239402e5470.png', 'react_landing_page', '2023-06-12 16:30:53', '2024-04-20 05:08:02'),
+(37, 'header_icon', '2024-11-19-673c3b8248344.png', 'react_landing_page', '2023-06-12 16:30:53', '2024-11-18 19:17:22'),
+(38, 'header_banner', '2024-11-19-673c3b824d615.png', 'react_landing_page', '2023-06-12 16:30:53', '2024-11-18 19:17:22'),
 (39, 'company_title', '$6amMart$', 'react_landing_page', '2023-06-12 16:35:07', '2023-06-12 17:46:19'),
 (40, 'company_sub_title', 'is Best Delivery Service Near You', 'react_landing_page', '2023-06-12 16:35:07', '2023-06-12 16:35:07'),
 (41, 'company_description', '6amMart is a one-stop shop for all your daily necessities. You can shop for groceries, and pharmacy items, order food, and send important parcels from one place to another from the comfort of your home.', 'react_landing_page', '2023-06-12 16:35:07', '2023-06-12 16:35:07'),
@@ -1067,19 +1076,19 @@ INSERT INTO `data_settings` (`id`, `key`, `value`, `type`, `created_at`, `update
 (55, 'earning_dm_sub_title', 'Register as delivery man and earn money', 'react_landing_page', '2023-06-12 16:45:55', '2023-06-12 16:45:55'),
 (56, 'earning_dm_button_name', 'Register', 'react_landing_page', '2023-06-12 16:45:55', '2023-06-12 16:45:55'),
 (57, 'earning_dm_button_url', 'https://6ammart-admin.6amtech.com/deliveryman/apply', 'react_landing_page', '2023-06-12 16:45:55', '2023-06-12 16:45:55'),
-(58, 'promotion_banner', '[{\"img\":\"2023-08-16-64dcac89cd0fa.png\"},{\"img\":\"2023-08-16-64dcac93a324a.png\"},{\"img\":\"2023-08-16-64dcad5a24940.png\"},{\"img\":\"2024-04-20-6623944c31c97.png\"}]', 'react_landing_page', NULL, '2023-08-16 00:01:02'),
+(58, 'promotion_banner', '[{\"img\":\"2024-11-19-673c3c51a41d1.png\",\"storage\":\"public\"},{\"img\":\"2024-11-19-673c3ca3312d7.png\",\"storage\":\"public\"},{\"img\":\"2024-11-19-673c3cad72699.png\",\"storage\":\"public\"}]', 'react_landing_page', NULL, '2024-11-18 19:22:21'),
 (59, 'business_title', '$Let’s$', 'react_landing_page', '2023-06-12 16:52:29', '2023-06-12 16:52:29'),
 (60, 'business_sub_title', 'Manage your business  Smartly', 'react_landing_page', '2023-06-12 16:52:29', '2023-06-12 17:54:18'),
-(61, 'business_image', '2023-08-16-64dcad66585e9.png', 'react_landing_page', '2023-06-12 16:52:29', '2023-08-16 00:05:10'),
+(61, 'business_image', '2024-11-19-673c3d394d62f.png', 'react_landing_page', '2023-06-12 16:52:29', '2024-11-18 19:24:41'),
 (62, 'download_business_app_links', '{\"seller_playstore_url_status\":\"1\",\"seller_playstore_url\":\"https:\\/\\/play.google.com\\/store\",\"seller_appstore_url_status\":\"1\",\"seller_appstore_url\":\"https:\\/\\/www.apple.com\\/app-store\\/\",\"dm_playstore_url_status\":\"1\",\"dm_playstore_url\":\"https:\\/\\/play.google.com\\/store\",\"dm_appstore_url_status\":\"1\",\"dm_appstore_url\":\"https:\\/\\/www.apple.com\\/app-store\\/\"}', 'react_landing_page', NULL, NULL),
 (63, 'testimonial_title', 'We $satisfied$ some Customer & Restaurant Owners', 'react_landing_page', '2023-06-12 16:53:04', '2023-06-12 16:53:04'),
-(64, 'fixed_promotional_banner', '2024-04-20-662394ec1e6b7.png', 'react_landing_page', '2023-06-12 17:18:24', '2024-04-20 05:11:56'),
+(64, 'fixed_promotional_banner', '2024-11-19-673c3ddb91d4d.png', 'react_landing_page', '2023-06-12 17:18:24', '2024-11-18 19:27:23'),
 (65, 'fixed_footer_description', 'Connect with our social media and other sites to keep up to date', 'react_landing_page', '2023-06-12 17:21:12', '2023-06-12 17:21:12'),
 (66, 'fixed_newsletter_title', 'Join Us!', 'react_landing_page', '2023-06-12 17:23:45', '2023-06-12 17:23:45'),
 (67, 'fixed_newsletter_sub_title', 'Subscribe to our weekly newsletter and be a part of our journey to self discovery and love.', 'react_landing_page', '2023-06-12 17:23:45', '2023-06-12 17:23:45'),
 (68, 'fixed_header_title', '6amMart', 'flutter_landing_page', '2023-06-12 17:31:35', '2023-06-12 17:31:35'),
 (69, 'fixed_header_sub_title', 'More than just reliable eCommerce platform', 'flutter_landing_page', '2023-06-12 17:31:35', '2023-06-12 17:32:30'),
-(70, 'fixed_header_image', '2024-04-20-6623929a88ded.png', 'flutter_landing_page', '2023-06-12 17:31:35', '2024-04-20 05:02:02'),
+(70, 'fixed_header_image', '2024-11-19-673c41dd9d12f.png', 'flutter_landing_page', '2023-06-12 17:31:35', '2024-11-18 19:44:29'),
 (71, 'fixed_location_title', 'Choose your location', 'flutter_landing_page', '2023-06-12 17:35:02', '2023-06-12 17:35:02'),
 (72, 'fixed_module_title', 'Your eCommerce venture starts here !', 'flutter_landing_page', '2023-06-12 17:37:29', '2023-06-12 17:37:29'),
 (73, 'fixed_module_sub_title', 'Enjoy all services in one platform', 'flutter_landing_page', '2023-06-12 17:37:29', '2023-06-12 17:37:29'),
@@ -1093,7 +1102,7 @@ INSERT INTO `data_settings` (`id`, `key`, `value`, `type`, `created_at`, `update
 (81, 'join_delivery_man_button_url', 'https://6ammart-admin.6amtech.com/deliveryman/apply', 'flutter_landing_page', '2023-06-12 18:16:03', '2023-06-12 18:16:03'),
 (82, 'download_user_app_title', 'Download app and enjoy more!', 'flutter_landing_page', '2023-06-12 18:17:56', '2023-06-12 18:17:56'),
 (83, 'download_user_app_sub_title', 'Download app from', 'flutter_landing_page', '2023-06-12 18:17:56', '2023-06-12 18:17:56'),
-(84, 'download_user_app_image', '2024-04-20-6623936184033.png', 'flutter_landing_page', '2023-06-12 18:17:56', '2024-04-20 05:05:21'),
+(84, 'download_user_app_image', '2024-11-19-673c3fa0f0e3d.png', 'flutter_landing_page', '2023-06-12 18:17:56', '2024-11-18 19:34:56'),
 (85, 'download_user_app_links', '{\"playstore_url_status\":\"1\",\"playstore_url\":\"https:\\/\\/play.google.com\\/store\\/\",\"apple_store_url_status\":\"1\",\"apple_store_url\":\"https:\\/\\/www.apple.com\\/app-store\\/\"}', 'flutter_landing_page', NULL, NULL);
 
 -- --------------------------------------------------------
@@ -1599,7 +1608,7 @@ CREATE TABLE `items` (
 --
 
 INSERT INTO `items` (`id`, `name`, `description`, `image`, `category_id`, `category_ids`, `variations`, `add_ons`, `attributes`, `choice_options`, `price`, `tax`, `tax_type`, `discount`, `discount_type`, `available_time_starts`, `available_time_ends`, `veg`, `status`, `store_id`, `created_at`, `updated_at`, `order_count`, `avg_rating`, `rating_count`, `rating`, `module_id`, `stock`, `unit_id`, `images`, `food_variations`, `slug`, `recommended`, `organic`, `maximum_cart_quantity`, `is_approved`, `is_halal`) VALUES
-(1, 'Demo Product', 'Demo Product Description', '2023-08-16-64dca91404b64.png', 2, '[{\"id\":\"1\",\"position\":1},{\"id\":\"2\",\"position\":2}]', '[]', '[]', '[]', '[]', '10.00', '0.00', 'percent', '0.00', 'percent', '00:00:00', '23:59:59', 0, 1, 1, '2023-08-15 23:46:44', '2023-08-16 00:00:05', 0, 0.00000000000000, 0, NULL, 1, 10, NULL, '[\"2023-08-16-64dca9140233e.png\",\"2023-08-16-64dcac358a7ea.png\"]', '[]', 'demo-product', 0, 1, 2, 1, 0);
+(1, 'Demo Product', 'Demo Product Description', '2024-11-19-673c408cf104a.png', 2, '[{\"id\":\"1\",\"position\":1},{\"id\":\"2\",\"position\":2}]', '[]', '[]', '[]', '[]', '10.00', '0.00', 'percent', '0.00', 'percent', '00:00:00', '23:59:59', 0, 1, 1, '2023-08-15 23:46:44', '2024-11-18 19:38:52', 0, 0.00000000000000, 0, NULL, 1, 10, NULL, '[{\"img\":\"2024-11-19-673c408cedb59.png\",\"storage\":\"public\"},{\"img\":\"2024-11-19-673c408cef130.png\",\"storage\":\"public\"}]', '[]', 'demo-product', 0, 1, 2, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -1978,7 +1987,7 @@ CREATE TABLE `modules` (
 --
 
 INSERT INTO `modules` (`id`, `module_name`, `module_type`, `thumbnail`, `status`, `stores_count`, `created_at`, `updated_at`, `icon`, `theme_id`, `description`, `all_zone_service`) VALUES
-(1, 'Demo Module', 'grocery', '2024-04-20-662398cb7f5ef.png', 1, 1, '2023-08-15 23:31:17', '2024-04-20 05:28:27', '2024-04-20-662398cb7f2e7.png', 1, '<p><strong>We make grocery shopping more interesting.</strong><br />\r\nFind the greatest deals from the grocery stores near you.<br />\r\n<br />\r\n<strong>Nature &amp; Organic Products</strong><br />\r\nBring Nature into your home.<br />\r\n<br />\r\n<strong>Stay home &amp; get your daily needs from our shop</strong><br />\r\nStart You&#39;r Daily Shopping with 6amMart</p>', 0);
+(1, 'Demo Module', 'grocery', '2024-11-19-673c37a92984b.png', 1, 1, '2023-08-15 23:31:17', '2024-11-18 19:00:57', '2024-04-20-662398cb7f2e7.png', 1, '<p><strong>We make grocery shopping more interesting.</strong><br />\r\nFind the greatest deals from the grocery stores near you.<br />\r\n<br />\r\n<strong>Nature &amp; Organic Products</strong><br />\r\nBring Nature into your home.<br />\r\n<br />\r\n<strong>Stay home &amp; get your daily needs from our shop</strong><br />\r\nStart You&#39;r Daily Shopping with 6amMart</p>', 0);
 
 -- --------------------------------------------------------
 
@@ -2758,7 +2767,7 @@ CREATE TABLE `react_testimonials` (
 --
 
 INSERT INTO `react_testimonials` (`id`, `name`, `designation`, `review`, `reviewer_image`, `company_image`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'John Doe', 'CTO', 'Very good Service.', '2024-04-20-6623949d88131.png', 'def.png', 1, '2023-08-16 00:05:42', '2024-04-20 05:10:37');
+(1, 'John Doe', 'CTO', 'Very good Service.', '2024-11-19-673c3d240ab31.png', 'def.png', 1, '2023-08-16 00:05:42', '2024-11-18 19:24:20');
 
 -- --------------------------------------------------------
 
@@ -2878,15 +2887,58 @@ CREATE TABLE `storages` (
 --
 
 INSERT INTO `storages` (`id`, `data_type`, `data_id`, `key`, `value`, `created_at`, `updated_at`) VALUES
-(1, 'App\\Models\\BusinessSetting', '18', NULL, 'public', '2024-08-06 22:40:05', '2024-08-06 22:40:05'),
-(2, 'App\\Models\\BusinessSetting', '96', NULL, 'public', '2024-08-06 22:40:05', '2024-08-06 22:40:05'),
+(1, 'App\\Models\\BusinessSetting', '18', NULL, 'public', '2024-11-18 18:33:37', '2024-11-18 18:33:37'),
+(2, 'App\\Models\\BusinessSetting', '96', NULL, 'public', '2024-11-18 18:33:37', '2024-11-18 18:33:37'),
 (3, 'App\\Models\\BusinessSetting', '142', NULL, 'public', '2024-06-05 23:23:50', '2024-06-05 23:23:50'),
 (4, 'App\\Models\\BusinessSetting', '143', NULL, 'public', '2024-06-05 23:23:50', '2024-06-05 23:23:50'),
 (5, 'App\\Models\\BusinessSetting', '144', NULL, 'public', '2024-06-05 23:23:55', '2024-06-05 23:23:55'),
 (6, 'App\\Models\\BusinessSetting', '145', NULL, 'public', '2024-06-05 23:27:22', '2024-06-05 23:27:22'),
 (7, 'App\\Models\\BusinessSetting', '146', NULL, 'public', '2024-06-05 23:27:22', '2024-06-05 23:27:22'),
 (8, 'App\\Models\\BusinessSetting', '147', NULL, 'public', '2024-06-05 23:24:14', '2024-06-05 23:24:14'),
-(9, 'App\\Models\\BusinessSetting', '139', NULL, 'public', '2024-08-28 18:53:16', '2024-08-28 18:53:16');
+(9, 'App\\Models\\BusinessSetting', '139', NULL, 'public', '2024-11-18 19:07:39', '2024-11-18 19:07:39'),
+(10, 'App\\Models\\DataSetting', '24', NULL, 'public', '2024-11-18 18:35:41', '2024-11-18 18:35:41'),
+(11, 'App\\Models\\DataSetting', '25', NULL, 'public', '2024-11-18 18:35:41', '2024-11-18 18:35:41'),
+(12, 'App\\Models\\DataSetting', '26', NULL, 'public', '2024-11-18 18:35:41', '2024-11-18 18:35:41'),
+(13, 'App\\Models\\AdminFeature', '1', 'image', 'public', '2024-11-18 18:48:57', '2024-11-18 18:48:57'),
+(14, 'App\\Models\\AdminFeature', '2', 'image', 'public', '2024-11-18 18:39:43', '2024-11-18 18:39:43'),
+(15, 'App\\Models\\AdminFeature', '3', 'image', 'public', '2024-11-18 18:40:11', '2024-11-18 18:40:11'),
+(16, 'App\\Models\\AdminFeature', '4', 'image', 'public', '2024-11-18 18:40:34', '2024-11-18 18:40:34'),
+(17, 'App\\Models\\DataSetting', '18', NULL, 'public', '2024-11-18 18:44:03', '2024-11-18 18:44:03'),
+(18, 'App\\Models\\DataSetting', '20', NULL, 'public', '2024-11-18 18:44:42', '2024-11-18 18:44:42'),
+(19, 'App\\Models\\AdminPromotionalBanner', '1', 'image', 'public', '2024-11-18 18:52:20', '2024-11-18 18:52:20'),
+(20, 'App\\Models\\AdminSpecialCriteria', '2', 'image', 'public', '2024-11-18 18:54:18', '2024-11-18 18:54:18'),
+(21, 'App\\Models\\AdminSpecialCriteria', '3', 'image', 'public', '2024-11-18 18:54:44', '2024-11-18 18:54:44'),
+(22, 'App\\Models\\AdminSpecialCriteria', '4', 'image', 'public', '2024-11-18 18:55:09', '2024-11-18 18:55:09'),
+(23, 'App\\Models\\AdminSpecialCriteria', '5', 'image', 'public', '2024-11-18 18:55:34', '2024-11-18 18:55:34'),
+(24, 'App\\Models\\AdminSpecialCriteria', '6', 'image', 'public', '2024-11-18 18:55:59', '2024-11-18 18:55:59'),
+(25, 'App\\Models\\AdminSpecialCriteria', '7', 'image', 'public', '2024-11-18 18:57:27', '2024-11-18 18:57:27'),
+(26, 'App\\Models\\DataSetting', '29', NULL, 'public', '2024-11-18 18:59:12', '2024-11-18 18:59:12'),
+(27, 'App\\Models\\DataSetting', '30', NULL, 'public', '2024-11-18 18:59:12', '2024-11-18 18:59:12'),
+(28, 'App\\Models\\DataSetting', '31', NULL, 'public', '2024-11-18 18:59:12', '2024-11-18 18:59:12'),
+(29, 'App\\Models\\Module', '1', 'thumbnail', 'public', '2024-11-18 19:00:57', '2024-11-18 19:00:57'),
+(30, 'App\\Models\\DataSetting', '34', NULL, 'public', '2024-11-18 19:17:22', '2024-11-18 19:17:22'),
+(31, 'App\\Models\\DataSetting', '35', NULL, 'public', '2024-11-18 19:17:22', '2024-11-18 19:17:22'),
+(32, 'App\\Models\\DataSetting', '36', NULL, 'public', '2024-11-18 19:17:22', '2024-11-18 19:17:22'),
+(33, 'App\\Models\\DataSetting', '37', NULL, 'public', '2024-11-18 19:17:22', '2024-11-18 19:17:22'),
+(34, 'App\\Models\\DataSetting', '38', NULL, 'public', '2024-11-18 19:17:22', '2024-11-18 19:17:22'),
+(35, 'App\\Models\\DataSetting', '58', NULL, 'public', '2024-11-18 19:22:21', '2024-11-18 19:22:21'),
+(36, 'App\\Models\\ReactTestimonial', '1', 'reviewer_image', 'public', '2024-11-18 19:24:20', '2024-11-18 19:24:20'),
+(37, 'App\\Models\\DataSetting', '59', NULL, 'public', '2024-11-18 19:24:41', '2024-11-18 19:24:41'),
+(38, 'App\\Models\\DataSetting', '60', NULL, 'public', '2024-11-18 19:24:41', '2024-11-18 19:24:41'),
+(39, 'App\\Models\\DataSetting', '61', NULL, 'public', '2024-11-18 19:24:41', '2024-11-18 19:24:41'),
+(40, 'App\\Models\\DataSetting', '64', NULL, 'public', '2024-11-18 19:27:23', '2024-11-18 19:27:23'),
+(41, 'App\\Models\\DataSetting', '68', NULL, 'public', '2024-11-18 19:44:29', '2024-11-18 19:44:29'),
+(42, 'App\\Models\\DataSetting', '69', NULL, 'public', '2024-11-18 19:44:29', '2024-11-18 19:44:29'),
+(43, 'App\\Models\\DataSetting', '70', NULL, 'public', '2024-11-18 19:44:29', '2024-11-18 19:44:29'),
+(44, 'App\\Models\\DataSetting', '82', NULL, 'public', '2024-11-18 19:34:56', '2024-11-18 19:34:56'),
+(45, 'App\\Models\\DataSetting', '83', NULL, 'public', '2024-11-18 19:34:56', '2024-11-18 19:34:56'),
+(46, 'App\\Models\\DataSetting', '84', NULL, 'public', '2024-11-18 19:34:56', '2024-11-18 19:34:56'),
+(47, 'App\\Models\\Category', '1', 'image', 'public', '2024-11-18 19:36:27', '2024-11-18 19:36:27'),
+(48, 'App\\Models\\Store', '1', 'logo', 'public', '2024-11-18 19:37:46', '2024-11-18 19:37:46'),
+(49, 'App\\Models\\Store', '1', 'cover_photo', 'public', '2024-11-18 19:37:46', '2024-11-18 19:37:46'),
+(50, 'App\\Models\\Item', '1', 'image', 'public', '2024-11-18 19:38:53', '2024-11-18 19:38:53'),
+(51, 'App\\Models\\Item', '1', 'images', 'public', '2024-11-18 19:38:53', '2024-11-18 19:38:53'),
+(52, 'App\\Models\\Banner', '1', 'image', 'public', '2024-11-18 19:45:54', '2024-11-18 19:45:54');
 
 -- --------------------------------------------------------
 
@@ -2953,7 +3005,7 @@ CREATE TABLE `stores` (
 --
 
 INSERT INTO `stores` (`id`, `name`, `phone`, `email`, `logo`, `latitude`, `longitude`, `address`, `footer_text`, `minimum_order`, `comission`, `schedule_order`, `status`, `vendor_id`, `created_at`, `updated_at`, `free_delivery`, `rating`, `cover_photo`, `delivery`, `take_away`, `item_section`, `tax`, `zone_id`, `reviews_section`, `active`, `off_day`, `gst`, `self_delivery_system`, `pos_system`, `minimum_shipping_charge`, `delivery_time`, `veg`, `non_veg`, `order_count`, `total_order`, `module_id`, `order_place_to_schedule_interval`, `featured`, `per_km_shipping_charge`, `prescription_order`, `slug`, `maximum_shipping_charge`, `cutlery`, `meta_title`, `meta_description`, `meta_image`, `announcement`, `announcement_message`, `store_business_model`, `package_id`) VALUES
-(1, 'Demo Store', '+101511111111', 'demo.store@gmail.com', '2023-08-16-64dca8ad238c4.png', '23.81695886557418', '90.36934144046135', 'House, road', NULL, '0.00', NULL, 0, 1, 1, '2023-08-15 23:45:01', '2024-08-06 22:40:05', 0, NULL, '2023-08-16-64dca8ad263f6.png', 1, 1, 1, '5.00', 1, 1, 1, ' ', NULL, 0, 0, '0.00', '30-40 min', 1, 1, 0, 0, 1, 0, 1, 0.000, 0, 'demo-store', NULL, 0, NULL, NULL, NULL, 0, NULL, 'commission', NULL);
+(1, 'Demo Store', '+101511111111', 'demo.store@gmail.com', '2024-11-19-673c404ae469c.png', '23.81695886557418', '90.36934144046135', 'House, road', NULL, '0.00', NULL, 0, 1, 1, '2023-08-15 23:45:01', '2024-11-18 19:37:46', 0, NULL, '2024-11-19-673c404ae633e.png', 1, 1, 1, '5.00', 1, 1, 1, ' ', NULL, 0, 0, '0.00', '30-40 min', 1, 1, 0, 0, 1, 0, 1, 0.000, 0, 'demo-store', NULL, 0, NULL, NULL, NULL, 0, NULL, 'commission', NULL);
 
 -- --------------------------------------------------------
 
@@ -3279,7 +3331,9 @@ INSERT INTO `translations` (`id`, `translationable_type`, `translationable_id`, 
 (39, 'App\\Models\\AdminSpecialCriteria', 5, 'en', 'title', 'Easy to Manage Location Tracking', NULL, NULL),
 (40, 'App\\Models\\AdminSpecialCriteria', 6, 'en', 'title', 'Easy to Manage Grocery Business', NULL, NULL),
 (41, 'App\\Models\\FlutterSpecialCriteria', 2, 'en', 'title', 'Excellent Shopping Experience', NULL, NULL),
-(42, 'App\\Models\\FlutterSpecialCriteria', 3, 'en', 'title', 'Thousands of stores', NULL, NULL);
+(42, 'App\\Models\\FlutterSpecialCriteria', 3, 'en', 'title', 'Thousands of stores', NULL, NULL),
+(43, 'App\\Models\\AdminSpecialCriteria', 7, 'en', 'title', 'Easy to Get Help & Support', NULL, NULL),
+(44, 'App\\Models\\Banner', 1, 'en', 'title', 'Demo Banner', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -4429,7 +4483,7 @@ ALTER TABLE `add_ons`
 -- AUTO_INCREMENT for table `admins`
 --
 ALTER TABLE `admins`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `admin_features`
@@ -4453,7 +4507,7 @@ ALTER TABLE `admin_roles`
 -- AUTO_INCREMENT for table `admin_special_criterias`
 --
 ALTER TABLE `admin_special_criterias`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `admin_testimonials`
@@ -4507,7 +4561,7 @@ ALTER TABLE `automated_messages`
 -- AUTO_INCREMENT for table `banners`
 --
 ALTER TABLE `banners`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `brands`
@@ -4519,7 +4573,7 @@ ALTER TABLE `brands`
 -- AUTO_INCREMENT for table `business_settings`
 --
 ALTER TABLE `business_settings`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=150;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=151;
 
 --
 -- AUTO_INCREMENT for table `campaigns`
@@ -4987,7 +5041,7 @@ ALTER TABLE `soft_credentials`
 -- AUTO_INCREMENT for table `storages`
 --
 ALTER TABLE `storages`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
 
 --
 -- AUTO_INCREMENT for table `stores`
@@ -5065,7 +5119,7 @@ ALTER TABLE `track_deliverymen`
 -- AUTO_INCREMENT for table `translations`
 --
 ALTER TABLE `translations`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
 -- AUTO_INCREMENT for table `units`
