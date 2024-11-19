@@ -120,7 +120,7 @@ class InstallController extends Controller
             'updated_at' => now()
         ]);
 
-        BusinessSetting::where(['key' => 'business_name'])->update([
+        DB::table('business_settings')->where(['key' => 'business_name'])->update([
             'value' => $request['business_name']
         ]);
 
