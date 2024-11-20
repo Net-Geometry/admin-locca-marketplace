@@ -285,20 +285,22 @@
                                 </div>
                             </div>
                             <button type="button" class="btn btn--primary w-100"><i class="tio-bike"></i> <span
-                                    class="ml-2">Assign Driver</span></button>
+                                class="ml-2">Assign Driver</span>
+                            </button>
                         </div>
                     </div>
                 @endif
                 <div class="card mt-2">
                     <div class="card-body">
-                        {{-- <div class="location-map" id="dmassign-map">
-                            <div class="initial--24" id="map_canvas"></div>
-                        </div> --}}
-                        <div>
-                            <iframe
-                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3651.8851558387223!2d90.37597058660192!3d23.751474433750907!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755b8ae23acb9ed%3A0x2279315d74194a6b!2s50%20Lake%20Circus%20Rd%2C%20Dhaka%201205!5e0!3m2!1sen!2sbd!4v1731840829076!5m2!1sen!2sbd"
-                                width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy"
-                                referrerpolicy="no-referrer-when-downgrade"></iframe>
+                        <div class="position-relative">
+                            <div class="map-fullscreen-btn_wrapper">
+                                <button type="button" 
+                                    data-toggle="modal" data-target="#pickupDesModal"
+                                    class="btn border-0 shadow--card-2">
+                                    <i class="tio-fullscreen-1-1"></i>
+                                </button>
+                            </div>
+                            <img class="aspect-2-1 object--cover w-100 max-h-160px rounded" src="{{ asset('public/assets/admin/img/map-road.png') }}" alt="Map road">
                         </div>
                         <hr>
                         <ul class="trip-details-address text--title px-0 pt-2">
@@ -1123,16 +1125,39 @@
     <div class="modal fade" id="locationModal" tabindex="-1" role="dialog" aria-labelledby="locationModalLabel">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header pt-4 px-4">
                     <h4 class="modal-title" id="locationModalLabel">{{ translate('messages.location_data') }}</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                    <button type="button" class="close p-0 m-0" data-dismiss="modal" aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body p-4">
                     <div class="row">
                         <div class="col-md-12 modal_body_map">
                             <div class="location-map" id="location-map">
-                                <div class="initial--25" id="location_map_canvas"></div>
+                                <div class="initial--25 rounded-8" id="location_map_canvas"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Modal -->
+
+    <!--Show Pickup/Destinaton route on map Modal -->
+    <div class="modal fade" id="pickupDesModal" tabindex="-1" role="dialog" aria-labelledby="pickupDesModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header pt-4 px-4">
+                    <h4 class="modal-title" id="pickupDesModalLabel">{{ translate('messages.Trip ID # 1000078') }}</h4>
+                    <button type="button" class="close p-0 m-0" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="row">
+                        <div class="col-md-12 modal_body_map">
+                            <div class="location-map" id="pickup_location_map">
+                                <div class="initial--25 rounded-8" id="pickup_location_map_canvas"></div>
                             </div>
                         </div>
                     </div>
@@ -1146,12 +1171,12 @@
     <div class="modal fade" id="editTripModal" tabindex="-1" role="dialog" aria-labelledby="editTripModalLabel">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="locationModalLabel">{{ translate('messages.Trip ID # 1000078') }}</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                <div class="modal-header pt-4 px-4">
+                    <h4 class="modal-title" id="editTripModalLabel">{{ translate('messages.Trip ID # 1000078') }}</h4>
+                    <button type="button" class="close p-0 m-0" data-dismiss="modal" aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body p-4">
                     <form action="">
                         <div class="row">
                             <div class="col-md-6">
@@ -1303,6 +1328,12 @@
                                 </div>
                                 <!-- End Row -->
                             </div>
+                        </div>
+                        <div class="btn--container justify-content-end mt-4">
+                            <button type="reset" id="reset_btn"
+                                class="btn btn--warning-light min-w-120px">{{ translate('messages.cancel') }}</button>
+                            <button type="submit"
+                                class="btn btn--primary min-w-120px">{{ translate('messages.update') }}</button>
                         </div>
                     </form>
                 </div>
@@ -2180,7 +2211,8 @@
                             {{ $order->store->longitude }}),
                         map: map,
                         title: "{{ Str::limit($order?->store?->name, 15, '...') }}",
-                        icon: "{{ asset('public/assets/admin/img/restaurant_map.png') }}"
+                        // icon: "{{ asset('public/assets/admin/img/restaurant_map.png') }}".
+                        icon: "{{ asset('public/assets/admin/img/icons/pickup.svg') }}",
                     });
 
                     google.maps.event.addListener(Retaurantmarker, 'click', (function(Retaurantmarker) {
@@ -2219,6 +2251,330 @@
             $('#locationModal').on('shown.bs.modal', function(event) {
                 initializegLocationMap();
             });
+
+
+            // ------- pickup destinaton map with route line starts
+
+            function addPolylineToMap(map, polylinePath) {
+                const polyline = new google.maps.Polyline({
+                    path: polylinePath,
+                    geodesic: true, // Makes the line follow the curvature of the Earth
+                    strokeColor: '#4D4D4D', // Line color
+                    strokeOpacity: 1.0,     // Line opacity
+                    strokeWeight: 3         // Line width
+                });
+
+                polyline.setMap(map); // Add the polyline to the map
+            }
+
+            
+            function initializePickupLocationMap() {
+                const map = new google.maps.Map(document.getElementById("pickup_location_map_canvas"), myOptions);
+
+                const infowindow = new google.maps.InfoWindow();
+                const polylinePath = []; // Array to store marker positions
+
+                function getDynamicMarkerSvg(dynamicColor) {
+                    return `
+                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30">
+                            <g>
+                                <g clip-path="url(#clip0_5241_7679)">
+                                    <path d="M14.7577 1C9.36898 1 5 5.3684 5 10.7577C5 14.0607 8.6658 19.7298 11.5035 23.6238C13.2959 26.0826 14.7577 27.8335 14.7577 27.8335C14.7621 27.8273 24.5154 16.1557 24.5154 10.7576C24.5154 5.3684 20.147 1 14.7577 1Z" fill="${dynamicColor}"/>
+                                    <path d="M14.7575 3.43945C10.8843 3.43945 7.74414 6.57961 7.74414 10.4528C7.74414 12.4299 8.56258 14.2162 9.87865 15.4908H19.6363C20.953 14.2162 21.7708 12.4299 21.7708 10.4528C21.7708 6.57955 18.6313 3.43945 14.7575 3.43945Z" fill="white"/>
+                                    <path d="M19.6366 15.0263V15.4904C16.917 18.1246 12.5984 18.1246 9.87891 15.4904V15.0263C9.87891 13.0052 11.517 11.3672 13.538 11.3672H15.9775C17.9985 11.3672 19.6366 13.0052 19.6366 15.0263Z" fill="white"/>
+                                    <path d="M14.7578 11.3671C16.1051 11.3671 17.1972 10.275 17.1972 8.92772C17.1972 7.58045 16.1051 6.48828 14.7578 6.48828C13.4105 6.48828 12.3184 7.58045 12.3184 8.92772C12.3184 10.275 13.4105 11.3671 14.7578 11.3671Z" fill="white"/>
+                                    <g clip-path="url(#clip1_5241_7679)">
+                                        <path d="M15.0563 14.9415C14.999 14.9415 14.941 14.9362 14.8826 14.9262C14.4166 14.8445 14.0913 14.4569 14.0913 13.9839V11.6079H11.715C11.242 11.6079 10.8546 11.2822 10.773 10.8165C10.6916 10.3515 10.944 9.91486 11.3866 9.75352L18.7673 6.93652L15.9446 14.3155C15.8056 14.6992 15.4533 14.9415 15.056 14.9415H15.0563Z" fill="#1E2124" fill-opacity="0.6"/>
+                                    </g>
+                                </g>
+                            </g>
+                            <defs>
+                                <clipPath id="clip0_5241_7679">
+                                    <rect width="30" height="30" fill="white"/>
+                                </clipPath>
+                                <clipPath id="clip1_5241_7679">
+                                    <rect width="8" height="8" fill="white" transform="translate(10.7578 6.94141)"/>
+                                </clipPath>
+                            </defs>
+                        </svg>
+                    `;
+                }
+
+                function createMarkerIconFromCssVariable(variableName) {
+                    const rootStyles = getComputedStyle(document.documentElement);
+                    const dynamicColor = rootStyles.getPropertyValue(variableName).trim();
+
+                    // Generate SVG with the dynamic color
+                    const svg = getDynamicMarkerSvg(dynamicColor);
+
+                    // Convert to Base64 for Google Maps marker
+                    const base64Svg = `data:image/svg+xml;base64,${btoa(svg)}`;
+
+                    return {
+                        url: base64Svg,
+                        scaledSize: new google.maps.Size(30, 30),
+                    };
+                }
+
+                // set icon color from css variable
+                const destinationMarkerIcon = createMarkerIconFromCssVariable("--primary-clr"); 
+
+
+                @if ($order->customer && isset($address))
+                    var marker = new google.maps.Marker({
+                        position: new google.maps.LatLng({{ $address['latitude'] }}, {{ $address['longitude'] }}),
+                        map: map,
+                        title: "{{ $order->customer->f_name }} {{ $order->customer->l_name }}",
+                        icon: destinationMarkerIcon,
+                    });
+
+                    // Dynamically style the icon (this applies if your SVG uses `currentColor`).
+                    var markerElement = document.querySelector('[src="{{ asset('public/assets/admin/img/icons/destination.svg') }}"]');
+                    if (markerElement) {
+                        markerElement.classList.add('text--primary');
+                    }
+
+
+                    google.maps.event.addListener(marker, 'click', (function(marker) {
+                        return function () {
+                            infowindow.setContent(
+                                '<div class="fs-12 font-medium">Destination</div>'
+                            );
+                            infowindow.open(map, marker);
+                        }
+                    })(marker));
+                    locationbounds.extend(marker.getPosition());
+                    polylinePath.push({ lat: {{ $address['latitude'] }}, lng: {{ $address['longitude'] }} }); // Add position
+                @endif
+
+                @if ($order->delivery_man && $order->dm_last_location)
+                    var dmmarker = new google.maps.Marker({
+                        position: new google.maps.LatLng({{ $order->dm_last_location['latitude'] }}, {{ $order->dm_last_location['longitude'] }}),
+                        map: map,
+                        title: "{{ $order->delivery_man->f_name }} {{ $order->delivery_man->l_name }}",
+                        icon: destinationIcon,
+                    });
+
+                    google.maps.event.addListener(dmmarker, 'click', (function(dmmarker) {
+                        return function () {
+                            infowindow.setContent(
+                                '<div class="fs-12 font-medium">Destination</div>'
+                                
+                            );
+                            infowindow.open(map, dmmarker);
+                        }
+                    })(dmmarker));
+                    locationbounds.extend(dmmarker.getPosition());
+                    polylinePath.push({ lat: {{ $order->dm_last_location['latitude'] }}, lng: {{ $order->dm_last_location['longitude'] }} }); // Add position
+                @endif
+
+                @if ($order->store)
+                    var Retaurantmarker = new google.maps.Marker({
+                        position: new google.maps.LatLng({{ $order->store->latitude }}, {{ $order->store->longitude }}),
+                        map: map,
+                        title: "{{ Str::limit($order?->store?->name, 15, '...') }}",
+                        icon: "{{ asset('public/assets/admin/img/icons/pickup.svg') }}"
+                    });
+
+                    google.maps.event.addListener(Retaurantmarker, 'click', (function(Retaurantmarker) {
+                        return function () {
+                            infowindow.setContent(
+                                '<div class="fs-12 font-medium">Pickup</div>'
+                            );
+                            infowindow.open(map, Retaurantmarker);
+                        }
+                    })(Retaurantmarker));
+                    locationbounds.extend(Retaurantmarker.getPosition());
+                    polylinePath.push({ lat: {{ $order->store->latitude }}, lng: {{ $order->store->longitude }} }); // Add position
+                @endif
+
+                @if ($parcel_order && isset($receiver_details))
+                    var Receivermarker = new google.maps.Marker({
+                        position: new google.maps.LatLng({{ $receiver_details['latitude'] }}, {{ $receiver_details['longitude'] }}),
+                        map: map,
+                        title: "{{ Str::limit($receiver_details['contact_person_name'], 15, '...') }}"
+                    });
+
+                    google.maps.event.addListener(Receivermarker, 'click', (function(Receivermarker) {
+                        return function () {
+                            infowindow.open(map, Receivermarker);
+                        }
+                    })(Receivermarker));
+                    locationbounds.extend(Receivermarker.getPosition());
+                    polylinePath.push({ lat: {{ $receiver_details['latitude'] }}, lng: {{ $receiver_details['longitude'] }} }); // Add position
+                @endif
+
+                google.maps.event.addListenerOnce(map, 'idle', function () {
+                    map.fitBounds(locationbounds); // Adjust map bounds
+                });
+
+                // Call the updated function with dynamic path
+                addPolylineToMap(map, polylinePath);
+            }
+
+            // function initializePickupLocationMap() {
+            //     // const map = new google.maps.Map(document.getElementById("pickup_location_map_canvas"), myOptions);
+            //     const map = new google.maps.Map(document.getElementById("pickup_location_map_canvas"), {
+            //         center: { lat: 23.749446, lng: 90.375180 },
+            //         zoom: 20,
+            //     });
+
+            //     const infowindow = new google.maps.InfoWindow();
+            //     const polylinePath = []; // Array to store marker positions
+
+            //     function getDynamicMarkerSvg(dynamicColor) {
+            //         return `
+            //             <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30">
+            //                 <g>
+            //                     <g clip-path="url(#clip0_5241_7679)">
+            //                         <path d="M14.7577 1C9.36898 1 5 5.3684 5 10.7577C5 14.0607 8.6658 19.7298 11.5035 23.6238C13.2959 26.0826 14.7577 27.8335 14.7577 27.8335C14.7621 27.8273 24.5154 16.1557 24.5154 10.7576C24.5154 5.3684 20.147 1 14.7577 1Z" fill="${dynamicColor}"/>
+            //                         <path d="M14.7575 3.43945C10.8843 3.43945 7.74414 6.57961 7.74414 10.4528C7.74414 12.4299 8.56258 14.2162 9.87865 15.4908H19.6363C20.953 14.2162 21.7708 12.4299 21.7708 10.4528C21.7708 6.57955 18.6313 3.43945 14.7575 3.43945Z" fill="white"/>
+            //                         <path d="M19.6366 15.0263V15.4904C16.917 18.1246 12.5984 18.1246 9.87891 15.4904V15.0263C9.87891 13.0052 11.517 11.3672 13.538 11.3672H15.9775C17.9985 11.3672 19.6366 13.0052 19.6366 15.0263Z" fill="white"/>
+            //                         <path d="M14.7578 11.3671C16.1051 11.3671 17.1972 10.275 17.1972 8.92772C17.1972 7.58045 16.1051 6.48828 14.7578 6.48828C13.4105 6.48828 12.3184 7.58045 12.3184 8.92772C12.3184 10.275 13.4105 11.3671 14.7578 11.3671Z" fill="white"/>
+            //                         <g clip-path="url(#clip1_5241_7679)">
+            //                             <path d="M15.0563 14.9415C14.999 14.9415 14.941 14.9362 14.8826 14.9262C14.4166 14.8445 14.0913 14.4569 14.0913 13.9839V11.6079H11.715C11.242 11.6079 10.8546 11.2822 10.773 10.8165C10.6916 10.3515 10.944 9.91486 11.3866 9.75352L18.7673 6.93652L15.9446 14.3155C15.8056 14.6992 15.4533 14.9415 15.056 14.9415H15.0563Z" fill="#1E2124" fill-opacity="0.6"/>
+            //                         </g>
+            //                     </g>
+            //                 </g>
+            //                 <defs>
+            //                     <clipPath id="clip0_5241_7679">
+            //                         <rect width="30" height="30" fill="white"/>
+            //                     </clipPath>
+            //                     <clipPath id="clip1_5241_7679">
+            //                         <rect width="8" height="8" fill="white" transform="translate(10.7578 6.94141)"/>
+            //                     </clipPath>
+            //                 </defs>
+            //             </svg>
+            //         `;
+            //     }
+
+            //     function createMarkerIconFromCssVariable(variableName) {
+            //         const rootStyles = getComputedStyle(document.documentElement);
+            //         const dynamicColor = rootStyles.getPropertyValue(variableName).trim();
+
+            //         // Generate SVG with the dynamic color
+            //         const svg = getDynamicMarkerSvg(dynamicColor);
+
+            //         // Convert to Base64 for Google Maps marker
+            //         const base64Svg = `data:image/svg+xml;base64,${btoa(svg)}`;
+
+            //         return {
+            //             url: base64Svg,
+            //             scaledSize: new google.maps.Size(30, 30),
+            //         };
+            //     }
+
+            //     // set icon color from css variable
+            //     const destinationMarkerIcon = createMarkerIconFromCssVariable("--primary-clr"); 
+
+
+            //     @if ($order->customer && isset($address))
+            //         var marker = new google.maps.Marker({
+            //             // position: new google.maps.LatLng({{ $address['latitude'] }}, {{ $address['longitude'] }}),
+            //             position: new google.maps.LatLng(23.837232, 90.373129),
+            //             map: map,
+            //             title: "{{ $order->customer->f_name }} {{ $order->customer->l_name }}",
+            //             icon: destinationMarkerIcon,
+            //         });
+
+            //         // Dynamically style the icon (this applies if your SVG uses `currentColor`).
+            //         var markerElement = document.querySelector('[src="{{ asset('public/assets/admin/img/icons/destination.svg') }}"]');
+            //         if (markerElement) {
+            //             markerElement.classList.add('text--primary');
+            //         }
+
+
+            //         google.maps.event.addListener(marker, 'click', (function(marker) {
+            //             return function () {
+            //                 infowindow.setContent(
+            //                     '<div class="fs-12 font-medium">Destination</div>'
+            //                 );
+            //                 infowindow.open(map, marker);
+            //             }
+            //         })(marker));
+            //         locationbounds.extend(marker.getPosition());
+            //         // polylinePath.push({ lat: {{ $address['latitude'] }}, lng: {{ $address['longitude'] }} }); // Add position
+            //         polylinePath.push({ lat: 23.837232, lng: 90.373129 }); // Add position
+            //     @endif
+
+            //     @if ($order->delivery_man && $order->dm_last_location)
+            //         var dmmarker = new google.maps.Marker({
+            //             position: new google.maps.LatLng(23.837232, 90.373129),
+            //             map: map,
+            //             title: "{{ $order->delivery_man->f_name }} {{ $order->delivery_man->l_name }}",
+            //             icon: destinationIcon,
+            //         });
+
+            //         google.maps.event.addListener(dmmarker, 'click', (function(dmmarker) {
+            //             return function () {
+            //                 infowindow.setContent(
+            //                     '<div class="fs-12 font-medium">Destination</div>'
+                                
+            //                 );
+            //                 infowindow.open(map, dmmarker);
+            //             }
+            //         })(dmmarker));
+            //         locationbounds.extend(dmmarker.getPosition());
+            //         polylinePath.push({ lat: 23.837232, lng: 90.373129 }); // Add position
+            //     @endif
+
+            //     @if ($order->store)
+            //         var Retaurantmarker = new google.maps.Marker({
+            //             // position: new google.maps.LatLng({{ $order->store->latitude }}, {{ $order->store->longitude }}),
+            //             position: new google.maps.LatLng(23.749446, 90.375180),
+            //             map: map,
+            //             title: "{{ Str::limit($order?->store?->name, 15, '...') }}",
+            //             icon: "{{ asset('public/assets/admin/img/icons/pickup.svg') }}"
+            //         });
+
+            //         google.maps.event.addListener(Retaurantmarker, 'click', (function(Retaurantmarker) {
+            //             return function () {
+            //                 infowindow.setContent(
+            //                     '<div class="fs-12 font-medium">Pickup</div>'
+            //                 );
+            //                 infowindow.open(map, Retaurantmarker);
+            //             }
+            //         })(Retaurantmarker));
+            //         locationbounds.extend(Retaurantmarker.getPosition());
+            //         // polylinePath.push({ lat: {{ $order->store->latitude }}, lng: {{ $order->store->longitude }} }); // Add position
+            //         polylinePath.push({ lat: 23.749446, lng: 90.375180 }); // Add position
+            //     @endif
+
+            //     @if ($parcel_order && isset($receiver_details))
+            //         var Receivermarker = new google.maps.Marker({
+            //             // position: new google.maps.LatLng({{ $receiver_details['latitude'] }}, {{ $receiver_details['longitude'] }}),
+            //             position: new google.maps.LatLng(23.837232, 90.373129),
+            //             map: map,
+            //             title: "{{ Str::limit($receiver_details['contact_person_name'], 15, '...') }}"
+            //         });
+
+            //         google.maps.event.addListener(Receivermarker, 'click', (function(Receivermarker) {
+            //             return function () {
+            //                 infowindow.open(map, Receivermarker);
+            //             }
+            //         })(Receivermarker));
+            //         locationbounds.extend(Receivermarker.getPosition());
+            //         // polylinePath.push({ lat: {{ $receiver_details['latitude'] }}, lng: {{ $receiver_details['longitude'] }} }); // Add position
+            //         polylinePath.push({ lat: 3.749446, lng: 90.373129 }); // Add position
+            //     @endif
+
+            //     google.maps.event.addListenerOnce(map, 'idle', function () {
+            //         map.fitBounds(locationbounds); // Adjust map bounds
+            //     });
+
+            //     // Call the updated function with dynamic path
+            //     addPolylineToMap(map, polylinePath);
+            // }
+
+
+            // Re-init map before show modal
+            $('#pickupDesModal').on('shown.bs.modal', function(event) {
+                initializePickupLocationMap();
+            });
+
+            // initializePickupLocationMap();
+
+            // ------- pickup destinaton map with route line ends
 
 
             $('.dm_list').on('click', function() {

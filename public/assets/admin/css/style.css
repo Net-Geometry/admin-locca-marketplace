@@ -14633,3 +14633,32 @@ ul.address-info .label {
 .trip-details-address li:not(:last-child) {
     padding-bottom: 35px;
 }
+
+#pickup_location_map_canvas .gm-ui-hover-effect > span {
+    background-color: #fff;
+}
+#pickup_location_map_canvas .gm-style .gm-style-iw-c {
+    background: rgba(0, 0, 0, 0.9) !important;
+    color: #fff;
+    padding: 0.5rem !important;
+}
+/* close btn hide */
+#pickup_location_map_canvas .gm-style-iw-chr {
+    display: none !important;
+}
+#pickup_location_map_canvas .gm-style-iw-d {
+    overflow: hidden !important;
+}
+#pickup_location_map_canvas .gm-style .gm-style-iw-tc::after {
+    background: rgba(0, 0, 0, 0.9) !important;
+}
+
+.max-h-160px {
+    max-height: 160px !important;
+}
+
+.map-fullscreen-btn_wrapper {
+    position: absolute;
+    inset-block-start: 10px;
+    inset-inline-end: 10px;
+}
