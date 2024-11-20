@@ -37,7 +37,7 @@
         <div class="container max-w1060">
             <div class="section-header mb-30 wow fadeInUp">
                 <h2 class="title">{{ $landing_data['fixed_module_title'] }}
-                    <span class="primary-color text-nowrap">color text</span>
+
                 </h2>
                 <p>
                     {{ $landing_data['fixed_module_sub_title'] }}
@@ -117,7 +117,7 @@
                         <div class="section-header text-start mb-0">
                             <h2 class="title">
                                 {{ $landing_data['feature_title'] }}
-                                <span class="primary-color text-nowrap">color text</span>
+
                             </h2>
                             <div class="text">
                                 {{ $landing_data['feature_short_description'] }}
@@ -197,7 +197,7 @@
                             <h2 class="title">
                                 {{-- <span>Available delivery</span> <span class="text--base">areas / Zone</span> --}}
                                 <span>{{ $landing_data['available_zone_title'] }}</span>
-                                <span class="primary-color text-nowrap">color text</span>
+
                             </h2>
                         </div>
                         <div class="text">
@@ -239,7 +239,7 @@
                         <h2 class="title">
                             <div>
                                 {{ $landing_data['fixed_referal_title'] }}
-                                <span class="primary-color text-nowrap">color text</span>
+
                             </div>
                             {{-- <div class="text--base">{{ isset($landing_page_text['refer_section_sub_title']) ? $landing_page_text['refer_section_sub_title'] : '' }}</div> --}}
                         </h2>
@@ -816,7 +816,7 @@
             <div class="section-header wow fadeInUp">
                 <h2 class="title">
                     {{ $landing_data['earning_title'] }}
-                    <span class="primary-color text-nowrap">color text</span>
+
                 </h2>
                 <div class="text">{{ $landing_data['earning_sub_title'] }}</div>
             </div>
@@ -1646,7 +1646,7 @@
                 <div class="section-header wow fadeInUp">
                     <h2 class="title">
                         {{ $landing_data['why_choose_title'] }}
-                        <span class="primary-color text-nowrap">color text</span>
+
                     </h2>
                 </div>
                 <div class="special-feature-wrapper wow fadeInUp">
@@ -1952,7 +1952,7 @@
                 <div class="section-header wow fadeInUp mb-0">
                     <h2 class="title mb-0">
                         {{ $landing_data['testimonial_title'] }}
-                        <span class="primary-color text-nowrap">color text</span>
+
                     </h2>
                 </div>
                 <div class="testimonial-slider overflow-hidden owl-theme owl-carousel wow fadeInUp">

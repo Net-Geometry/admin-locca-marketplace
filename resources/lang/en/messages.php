@@ -5948,4 +5948,6 @@ Smartly or Earn. ',
   'If_you_disable_this,Deliveyman_last_location_will_be_recorded_by_default_method.' => 'If you disable this,Deliveyman last location will be recorded by default method.',
   'module_status_updated' => 'Module status updated',
   'Demo Module' => 'Demo Module',
+  'redirect_url_for_flutter_web' => 'Redirect url for flutter web',
+  'redirect_url_for_react_web' => 'Redirect url for react web',
 );
