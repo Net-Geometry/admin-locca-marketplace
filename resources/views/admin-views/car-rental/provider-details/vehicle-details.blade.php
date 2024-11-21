@@ -479,39 +479,37 @@
             <div class="card-body">
                 <h5 class="text-title font-bold mb-10px"> {{ translate('messages.Documents') }}</h5>
                 <div class="d-flex gap-3 flex-wrap">
-                    <div class="pdf-single" data-pdf-url="{{ asset('public/assets/admin/img/pdf/sample.pdf') }}"
-                        onclick="openPdf(this)">
+                    <div class="pdf-single" data-pdf-url="{{ asset('public/assets/admin/img/pdf/sample.pdf') }}" onclick="openPdf(this)">
                         <div class="pdf-frame">
-                            <iframe src="{{ asset('public/assets/admin/img/pdf/sample.pdf') }}" frameborder="0"></iframe>
+                            <canvas class="pdf-preview" style="display: none;"></canvas>
+                            <img class="pdf-thumbnail" src="{{ asset('public/assets/admin/img/blank2.png') }}" alt="File Thumbnail">
                         </div>
                         <div class="overlay">
-                            <a href="javascript:void(0);" class="download-btn" onclick="downloadPdf(event, this)">
+                            <a href="javascript:void(0);" class="download-btn" onclick="downloadPdf(event, this)" title="">
                                 <i class="tio-download-to"></i>
                             </a>
                             <div class="pdf-info d-flex gap-10px align-items-center">
-                                <img src="{{ asset('public/assets/admin/img/pdf/pdf.png') }}" width="34"
-                                    alt="PDF Logo">
+                                <img src="{{ asset('public/assets/admin/img/document.svg') }}" width="34" alt="Document Logo">
                                 <div class="fs-13 text--title d-flex flex-column">
-                                    <span>Trade License Documents.pdf</span>
+                                    <span class="file-name"></span>
                                     <span class="opacity-50">Click to view the file</span>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="pdf-single" data-pdf-url="{{ asset('public/assets/admin/img/pdf/sample.pdf') }}"
-                        onclick="openPdf(this)">
+                    <div class="pdf-single" data-pdf-url="{{ asset('public/assets/admin/img/profile.jpg') }}" onclick="openPdf(this)">
                         <div class="pdf-frame">
-                            <iframe src="{{ asset('public/assets/admin/img/pdf/sample.pdf') }}" frameborder="0"></iframe>
+                            <canvas class="pdf-preview" style="display: none;"></canvas>
+                            <img class="pdf-thumbnail" src="{{ asset('public/assets/admin/img/blank2.png') }}" alt="File Thumbnail">
                         </div>
                         <div class="overlay">
-                            <a href="javascript:void(0);" class="download-btn" onclick="downloadPdf(event, this)">
+                            <a href="javascript:void(0);" class="download-btn" onclick="downloadPdf(event, this)" title="">
                                 <i class="tio-download-to"></i>
                             </a>
                             <div class="pdf-info d-flex gap-10px align-items-center">
-                                <img src="{{ asset('public/assets/admin/img/pdf/pdf.png') }}" width="34"
-                                    alt="PDF Logo">
+                                <img src="{{ asset('public/assets/admin/img/picture.svg') }}" width="34" alt="Document Logo">
                                 <div class="fs-13 text--title d-flex flex-column">
-                                    <span>Trade License Documents.pdf</span>
+                                    <span class="file-name"></span>
                                     <span class="opacity-50">Click to view the file</span>
                                 </div>
                             </div>
@@ -658,7 +656,10 @@
 @push('script_2')
     <script src="{{ asset('/public/assets/admin/vendor/simplebar/dist/simplebar.min.js') }}"></script>
     <script src="{{ asset('/public/assets/admin/vendor/drift-zoom/dist/Drift.min.js') }}"></script>
-    <script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+
+    {{-- old document view --}}
+    {{-- <script>
         document.addEventListener("DOMContentLoaded", function() {
             function openPdf(element) {
                 const pdfUrl = element.getAttribute("data-pdf-url");
@@ -680,7 +681,115 @@
             window.openPdf = openPdf;
             window.downloadPdf = downloadPdf;
         });
+    </script> --}}
+
+    <script>
+        // ----- document view from file
+        document.addEventListener("DOMContentLoaded", function () {
+
+            async function renderFileThumbnail(element) {
+                const fileUrl = element.getAttribute("data-pdf-url");
+                const canvas = element.querySelector(".pdf-preview");
+                const thumbnail = element.querySelector(".pdf-thumbnail");
+                const fileNameSpan = element.querySelector(".file-name");
+                const downloadButton = element.querySelector(".download-btn");
+
+                // Extract file name and extension
+                const fullFileName = fileUrl.split('/').pop();
+                const fileExtension = fullFileName.split('.').pop().toLowerCase();
+                const fileNameWithoutExtension = fullFileName.replace(/\.[^/.]+$/, '');
+
+                // Truncate file name if it's too long
+                const truncatedFileName =
+                    fileNameWithoutExtension.length > 20
+                        ? `${fileNameWithoutExtension.substring(0, 17)}...`
+                        : fileNameWithoutExtension;
+                const displayedFileName = `${truncatedFileName}.${fileExtension}`;
+
+                // Set the file name in the UI
+                fileNameSpan.textContent = displayedFileName;
+                downloadButton.setAttribute("title", fullFileName);
+
+                // Handle PDF thumbnail generation
+                if (fileExtension === "pdf") {
+                    const ctx = canvas.getContext("2d");
+
+                    try {
+                        // Load the PDF using PDF.js
+                        const loadingTask = pdfjsLib.getDocument(fileUrl);
+                        const pdf = await loadingTask.promise;
+                        const page = await pdf.getPage(1);
+
+                        // Set scale and dimensions for the thumbnail
+                        const viewport = page.getViewport({ scale: 0.5 });
+                        canvas.width = viewport.width;
+                        canvas.height = viewport.height;
+
+                        // Render the first PDF page into the canvas
+                        await page.render({ canvasContext: ctx, viewport }).promise;
+
+                        // Convert canvas to image URL and set as the thumbnail
+                        thumbnail.src = canvas.toDataURL();
+                    } catch (error) {
+                        console.error("Error rendering PDF thumbnail:", error);
+                        // Fallback to blank image if there's an error
+                        thumbnail.src = "{{ asset('public/assets/admin/img/blank2.png') }}";
+                    }
+                } else if (["jpg", "jpeg", "png", "gif", "bmp"].includes(fileExtension)) {
+                    // Handle image file types (JPG, PNG, GIF, etc.)
+                    thumbnail.src = fileUrl; // Set the image URL as the thumbnail
+                } else {
+                    // For non-PDF, non-image files (e.g., DOCX, XLSX, etc.)
+                    const fileIconPath = `{{ asset('public/assets/admin/img/icons') }}/${fileExtension}.png`;
+                    const fallbackIconPath = "{{ asset('public/assets/admin/img/blank2.png') }}"; // Fallback image
+
+                    // Check if a specific icon exists for the file type, otherwise use the fallback
+                    const iconExists = await checkFileIconExistence(fileIconPath);
+
+                    thumbnail.src = iconExists ? fileIconPath : fallbackIconPath;
+                }
+
+                // Show the thumbnail and hide the canvas
+                thumbnail.style.display = "block";
+                canvas.style.display = "none";
+            }
+
+            // Function to check if the icon exists
+            async function checkFileIconExistence(iconPath) {
+                return new Promise((resolve) => {
+                    const img = new Image();
+                    img.onload = () => resolve(true); // Icon exists
+                    img.onerror = () => resolve(false); // Icon doesn't exist
+                    img.src = iconPath;
+                });
+            }
+
+            // Iterate over all .pdf-single elements to render thumbnails
+            document.querySelectorAll(".pdf-single").forEach(renderFileThumbnail);
+
+            // Open the file in a new tab
+            window.openPdf = function (element) {
+                const fileUrl = element.getAttribute("data-pdf-url");
+                window.open(fileUrl, "_blank");
+            };
+
+            // Download the file on button click
+            window.downloadPdf = function (event, buttonElement) {
+                event.stopPropagation();
+
+                const fileUrl = buttonElement.closest(".pdf-single").getAttribute("data-pdf-url");
+                const link = document.createElement("a");
+                link.href = fileUrl;
+                link.download = fileUrl.split("/").pop();
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            };
+
+        });
+        // ----- document view from file ends
     </script>
+
 
     <script>
 
