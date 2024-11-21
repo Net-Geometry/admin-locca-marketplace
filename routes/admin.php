@@ -7,10 +7,9 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
 
     Route::group(['middleware' => ['admin', 'current-module']], function () {
         Route::get('/test', function () {
-            // return view('admin-views.car-rental.provider-details.vehicle-details');
-            // return view('admin-views.car-rental.provider-details.add-new-vehicale');
             // return view('admin-views.car-rental.business-basic-setup');
-            return view('admin-views.car-rental.trip-management.trip-details');
+            // return view('admin-views.car-rental.provider-details.add-new-vehicale');
+            return view('admin-views.car-rental.provider-details.vehicle-details');
         });
         Route::get('drivemond-panel', 'DriveMondController@drivemondExternalLogin')->name('drivemond-panel');
         Route::get('get-all-stores', 'VendorController@get_all_stores')->name('get_all_stores');

@@ -6035,4 +6035,6 @@
   'Trip_served' => 'Trip served',
   'Trip ID # 1000078' => 'Trip ID # 1000078',
   'Trip Details' => 'Trip Details',
+  'Pickup' => 'Pickup',
+  'Destination' => 'Destination',
 );

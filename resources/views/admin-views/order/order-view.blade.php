@@ -415,668 +415,6 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4 order-print-area-right">
-                @if ($order->order_status == 'canceled')
-
-                    <div class="card mb-3">
-
-
-                        <div class="card-body pt-2">
-
-                            <ul class="delivery--information-single mt-3">
-                                <li>
-                                    <span class=" badge badge-soft-danger "> {{ translate('messages.Cancel_Reason') }}
-                                        :</span>
-                                    <span class="info"> {{ $order->cancellation_reason }} </span>
-                                </li>
-                                <hr class="w-100">
-                                <li>
-                                    <span class="name">{{ translate('Cancel_Note') }} </span>
-                                    <span class="info"> {{ $order->cancellation_note ?? translate('messages.N/A') }}
-                                    </span>
-                                </li>
-                                <li>
-                                    <span class="name">{{ translate('Canceled_By') }} </span>
-                                    <span class="info"> {{ translate($order->canceled_by) }} </span>
-                                </li>
-                                @if ($order->payment_status == 'paid' || $order->payment_status == 'partially_paid')
-                                    @if ($order?->payments)
-                                        @php($pay_infos = $order->payments()->where('payment_status', 'paid')->get())
-                                        @foreach ($pay_infos as $pay_info)
-                                            <li>
-                                                <span class="name">{{ translate('Amount_paid_by') }}
-                                                    {{ translate($pay_info->payment_method) }} </span>
-                                                <span class="info">
-                                                    {{ \App\CentralLogics\Helpers::format_currency($pay_info->amount) }}
-                                                </span>
-                                            </li>
-                                        @endforeach
-                                    @else
-                                        <li>
-                                            <span class="name">{{ translate('Amount_paid_by') }}
-                                                {{ translate($order->payment_method) }} </span>
-                                            <span class="info ">
-                                                {{ \App\CentralLogics\Helpers::format_currency($order->order_amount) }}
-                                            </span>
-                                        </li>
-                                    @endif
-                                @endif
-
-                                @if ($order->payment_status == 'paid' || $order->payment_status == 'partially_paid')
-                                    @if ($order?->payments)
-                                        @php($amount = $order->payments()->where('payment_status', 'paid')->sum('amount'))
-                                        <li>
-                                            <span class="name">{{ translate('Amount_Returned_To_Wallet') }} </span>
-                                            <span class="info">
-                                                {{ \App\CentralLogics\Helpers::format_currency($amount) }} </span>
-                                        </li>
-                                    @else
-                                        <li>
-                                            <span class="name">{{ translate('Amount_Returned_To_Wallet') }} </span>
-                                            <span class="info">
-                                                {{ \App\CentralLogics\Helpers::format_currency($order->order_amount) }}
-                                            </span>
-                                        </li>
-                                    @endif
-                                @endif
-
-
-                            </ul>
-                        </div>
-                    </div>
-
-                @endif
-                @php($refund = \App\Models\BusinessSetting::where(['key' => 'refund_active_status'])->first())
-
-                @if (!empty($order->refund))
-                    @if (
-                        $order->order_status == 'refund_requested' ||
-                            $order->order_status == 'refunded' ||
-                            $order->order_status == 'refund_request_canceled')
-                        <div class="card mb-2">
-                            <div class="card-header border-0 d-block text-center pb-0">
-                                <h4 class="m-0">{{ translate('messages.Refund Request') }} </h4>
-                                <span>
-                                    {{ date('d M Y ' . config('timeformat'), strtotime($order->refund->created_at)) }}
-                                </span>
-
-                                @if ($order->order_status == 'refund_requested')
-                                    <span
-                                        class="badge __badge badge-primary __badge-abs">{{ translate('messages.pending') }}</span>
-                                @elseif($order->order_status == 'refunded')
-                                    <span
-                                        class="badge __badge badge-info __badge-abs">{{ translate('messages.refunded') }}</span>
-                                @elseif($order->refund->order_status == 'refund_request_canceled')
-                                    <span
-                                        class="badge __badge-pill badge-danger __badge-abs">{{ translate('messages.rejected') }}</span>
-                                @endif
-
-                            </div>
-                            <div class="card-body pt-2">
-                                <label class="input-label"
-                                    for="exampleFormControlInput1">{{ translate('messages.image') }} : </label>
-                                <div class="row g-3">
-                                    @php($data = isset($order->refund->image) ? json_decode($order->refund->image, true) : 0)
-                                    @if ($data)
-                                        @foreach ($data as $key => $img)
-                                            @php($img = is_array($img) ? $img : ['img' => $img, 'storage' => 'public'])
-                                            <div class="col-3">
-                                                <img class="img__aspect-1 rounded border w-100 onerror-image"
-                                                    data-toggle="modal" data-target="#imagemodal{{ $key }}"
-                                                    data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
-                                                    src="{{ \App\CentralLogics\Helpers::get_full_url('refund', $img['img'], $img['storage']) }}">
-                                            </div>
-                                            <div class="modal fade" id="imagemodal{{ $key }}" tabindex="-1"
-                                                role="dialog" aria-labelledby="myModalLabel{{ $key }}"
-                                                aria-hidden="true">
-                                                <div class="modal-dialog">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h4 class="modal-title" id="myModalLabel{{ $key }}">
-                                                                {{ translate('Refund Image') }}</h4>
-                                                            <button type="button" class="close"
-                                                                data-dismiss="modal"><span
-                                                                    aria-hidden="true">&times;</span><span
-                                                                    class="sr-only">{{ translate('messages.cancel') }}</span></button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <img src="{{ \App\CentralLogics\Helpers::get_full_url('refund', $img['img'], $img['storage']) }}"
-                                                                class="initial--22 w-100">
-                                                        </div>
-                                                        @php($storage = $img['storage'] ?? 'public')
-                                                        @php($file = $storage == 's3' ? base64_encode('refund/' . $img['img']) : base64_encode('public/refund/' . $img['img']))
-                                                        <div class="modal-footer">
-                                                            <a class="btn btn-primary"
-                                                                href="{{ route('admin.file-manager.download', [$file, $storage]) }}"><i
-                                                                    class="tio-download"></i>
-                                                                {{ translate('messages.download') }}
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    @else
-                                        <div class="col-3">
-                                            <img class="img__aspect-1 rounded border w-100 onerror-image"
-                                                data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
-                                                src="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}">
-                                        </div>
-                                    @endif
-                                </div>
-                                <hr>
-
-
-                                <ul class="delivery--information-single mt-3">
-                                    <li>
-                                        <span class="name">{{ translate('Reason') }} </span>
-                                        <span class="info"> {{ $order->refund->customer_reason }} </span>
-                                    </li>
-                                    <li>
-                                        <span class="name">{{ translate('amount') }} </span>
-                                        <span class="info"> {{ $order->refund->refund_amount }}</span>
-                                    </li>
-                                    <li>
-                                        <span class="name">{{ translate('Method') }} </span>
-                                        <span class="info"> {{ $order->refund->refund_method }}</span>
-                                    </li>
-                                    <li>
-                                        <span class="name"> {{ translate('Status') }} </span>
-                                        <span class="info"> {{ $order->refund->refund_status }}</span>
-                                    </li>
-                                    <li>
-                                        <span class="name"> {{ translate('Admin Note') }} </span>
-                                        <span class="info"> {{ $order->refund->admin_note ?? 'No Note' }}</span>
-                                    </li>
-                                    <li>
-                                        <span class="name"> {{ translate('Customer Note') }} </span>
-                                        <span class="info"> {{ $order->refund->customer_note ?? 'No Note' }}</span>
-                                    </li>
-                                    <hr class="w-100">
-                                </ul>
-                                @if ($order->store)
-                                    <div class="btn--container refund--btn">
-                                        @if (
-                                            (($refund && $refund->value == true) || $order->order_status == 'refund_requested') &&
-                                                $order->payment_status == 'paid' &&
-                                                $order->order_status != 'refunded')
-                                            <button class="btn btn--primary btn--sm route-alert"
-                                                data-url="{{ route('admin.order.status', ['id' => $order['id'], 'order_status' => 'refunded']) }}"
-                                                data-message="{{ translate('messages.you_want_to_refund_this_order', ['amount' => $refund_amount . ' ' . \App\CentralLogics\Helpers::currency_code()]) }}"
-                                                data-title="{{ translate('messages.are_you_sure_want_to_refund') }}"><i
-                                                    class="tio-money"></i> <span
-                                                    class="ml-1">{{ translate('messages.Refund') }}</span> </button>
-                                        @endif
-                                        @if ($order->order_status == 'refund_requested')
-                                            <button type="button" class="btn btn--danger btn-outline-danger"
-                                                data-toggle="modal" data-target="#refund_cancelation_note">
-                                                <i class="tio-money"></i> <span
-                                                    class="ml-1">{{ translate('messages.Cancel Refund') }}</span>
-                                            </button>
-                                        @endif
-                                    </div>
-
-                                @endif
-                            </div>
-                        </div>
-                    @endif
-                @endif
-                @if (
-                    !in_array($order->order_status, [
-                        'refund_requested',
-                        'refunded',
-                        'refund_request_canceled',
-                        'delivered',
-                        'canceled',
-                    ]))
-                    <div class="card">
-                        <div class="card-header justify-content-center">
-                            <h5 class="card-title">{{ translate('order_setup') }}</h5>
-                        </div>
-                        <div class="card-body">
-
-
-
-                            @if ($order?->offline_payments && !in_array($order->order_status, ['canceled']))
-                                <div class="card border-info text-center mb-2">
-                                    <div class="card-body">
-                                        <h2>
-                                            {{ $order?->offline_payments->status == 'verified' ? translate('Payment_Verified') : translate('Payment_Verification') }}
-                                        </h2>
-                                        @if ($order?->offline_payments->status == 'pending')
-                                            <p class="text-danger">
-                                                {{ translate('Please_Verify_the_payment_before_confirm_order.') }}</p>
-                                            <div class="btn--container justify-content-center">
-                                                <button type="button" class="btn btn--primary btn-sm"
-                                                    data-toggle="modal"
-                                                    data-target="#verifyViewModal">{{ translate('messages.Verify_Payment') }}</button>
-                                            </div>
-                                        @elseif($order?->offline_payments->status == 'verified')
-                                            <div class="btn--container justify-content-center">
-                                                <button type="button" class="btn btn--primary btn-sm"
-                                                    data-toggle="modal"
-                                                    data-target="#verifyViewModal">{{ translate('messages.Payment_Details') }}</button>
-                                            </div>
-                                        @elseif($order?->offline_payments->status == 'denied')
-                                            <div class="btn--container justify-content-center">
-                                                <button type="button" class="btn btn--primary btn-sm"
-                                                    data-toggle="modal"
-                                                    data-target="#verifyViewModal">{{ translate('messages.Recheck_Verification') }}</button>
-                                            </div>
-                                        @endif
-                                    </div>
-                                </div>
-                            @endif
-
-
-                            @if ($order->offline_payments == null || ($order?->offline_payments && $order?->offline_payments->status == 'verified'))
-                                @if (!in_array($order->order_status, ['refunded', 'refund_request_canceled']))
-                                    <div class="hs-unfold w-100">
-                                        <div class="dropdown">
-                                            <button
-                                                class="form-control h--45px dropdown-toggle d-flex justify-content-between align-items-center w-100"
-                                                type="button" id="dropdownMenuButton" data-toggle="dropdown"
-                                                aria-haspopup="true" aria-expanded="false">
-                                                <?php
-                                                $message = match ($order['order_status']) {
-                                                    'pending' => translate('messages.pending'),
-                                                    'confirmed' => translate('messages.confirmed'),
-                                                    'accepted' => translate('messages.accepted'),
-                                                    'processing' => translate('messages.processing'),
-                                                    'handover' => translate('messages.handover'),
-                                                    'picked_up' => translate('messages.out_for_delivery'),
-                                                    'delivered' => translate('messages.delivered'),
-                                                    'canceled' => translate('messages.canceled'),
-                                                    default => translate('messages.status'),
-                                                };
-                                                ?>
-                                                {{ $message }}
-                                            </button>
-                                            @php($order_delivery_verification = (bool) \App\Models\BusinessSetting::where(['key' => 'order_delivery_verification'])->first()->value)
-                                            <div class="dropdown-menu text-capitalize"
-                                                aria-labelledby="dropdownMenuButton">
-                                                <a class="dropdown-item {{ $order['order_status'] == 'pending' ? 'active' : '' }} route-alert"
-                                                    data-url="{{ route('admin.order.status', ['id' => $order['id'], 'order_status' => 'pending']) }}"
-                                                    data-message="{{ translate('Change status to pending ?') }}"
-                                                    href="javascript:">{{ translate('messages.pending') }}</a>
-                                                <a class="dropdown-item {{ $order['order_status'] == 'confirmed' ? 'active' : '' }} route-alert"
-                                                    data-url="{{ route('admin.order.status', ['id' => $order['id'], 'order_status' => 'confirmed']) }}"
-                                                    data-message="{{ translate('Change status to confirmed ?') }}"
-                                                    href="javascript:">{{ translate('messages.confirmed') }}</a>
-                                                @if ($order->order_type != 'parcel')
-                                                    @if ($order->store && $order->store->module->module_type == 'food')
-                                                        <a class="dropdown-item {{ $order['order_status'] == 'processing' ? 'active' : '' }} order_status_change_alert"
-                                                            data-url="{{ route('admin.order.status', ['id' => $order['id'], 'order_status' => 'processing']) }}"
-                                                            data-message="{{ translate('Change status to cooking ?') }}"
-                                                            data-processing={{ $max_processing_time }}
-                                                            href="javascript:">{{ translate('messages.processing') }}</a>
-                                                    @else
-                                                        <a class="dropdown-item {{ $order['order_status'] == 'processing' ? 'active' : '' }} route-alert"
-                                                            data-url="{{ route('admin.order.status', ['id' => $order['id'], 'order_status' => 'processing']) }}"
-                                                            data-message="{{ translate('Change status to processing ?') }}"
-                                                            href="javascript:">{{ translate('messages.processing') }}</a>
-                                                    @endif
-                                                    <a class="dropdown-item {{ $order['order_status'] == 'handover' ? 'active' : '' }} route-alert"
-                                                        data-url="{{ route('admin.order.status', ['id' => $order['id'], 'order_status' => 'handover']) }}"
-                                                        data-message="{{ translate('Change status to handover ?') }}"
-                                                        href="javascript:">{{ translate('messages.handover') }}</a>
-                                                @endif
-                                                <a class="dropdown-item {{ $order['order_status'] == 'picked_up' ? 'active' : '' }} route-alert"
-                                                    data-url="{{ route('admin.order.status', ['id' => $order['id'], 'order_status' => 'picked_up']) }}"
-                                                    data-message="{{ translate('Change status to out for delivery ?') }}"
-                                                    href="javascript:">{{ translate('messages.out_for_delivery') }}</a>
-                                                <a class="dropdown-item {{ $order['order_status'] == 'delivered' ? 'active' : '' }} route-alert"
-                                                    data-url="{{ route('admin.order.status', ['id' => $order['id'], 'order_status' => 'delivered']) }}"
-                                                    data-message="{{ translate('Change status to delivered (payment status will be paid if not)?') }}"
-                                                    href="javascript:">{{ translate('messages.delivered') }}</a>
-                                                <a
-                                                    class="dropdown-item {{ $order['order_status'] == 'canceled' ? 'active' : '' }} canceled-status">{{ translate('messages.canceled') }}</a>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                @endif
-                                @if (
-                                    !in_array($order->order_status, ['refunded', 'delivered', 'canceled']) &&
-                                        (!$order->delivery_man &&
-                                            $order['order_type'] != 'take_away' &&
-                                            (($order->store && !$order?->store?->sub_self_delivery) || $parcel_order)))
-                                    <div class="w-100 text-center mt-3">
-                                        <button type="button" class="btn btn--primary w-100" data-toggle="modal"
-                                            data-target="#myModal" data-lat='21.03' data-lng='105.85'>
-                                            {{ translate('messages.assign_delivery_man_manually') }}
-                                        </button>
-                                    </div>
-                                @endif
-                            @endif
-                        </div>
-                    </div>
-                @endif
-                @if ($parcel_order || ($order['order_type'] != 'take_away' && $order->store))
-                    @if ($order->delivery_man)
-                        <div class="card mt-2">
-                            <div class="card-body">
-                                <h5 class="card-title mb-3 d-flex flex-wrap align-items-center">
-                                    <span class="card-header-icon">
-                                        <i class="tio-user"></i>
-                                    </span>
-                                    <span>{{ translate('messages.deliveryman') }}</span>
-
-
-                                    @if ($order?->store?->sub_self_delivery)
-                                        &nbsp; ({{ translate('messages.store') }})
-                                    @endif
-
-                                    @if (!isset($order->delivered) && !$order?->store?->sub_self_delivery)
-                                        <a type="button" href="#myModal" class="text--base cursor-pointer ml-auto"
-                                            data-toggle="modal" data-target="#myModal">
-                                            {{ translate('messages.change') }}
-                                        </a>
-                                    @endif
-                                </h5>
-                                <a class="media align-items-center deco-none customer--information-single"
-                                    href="{{ !$order?->store?->sub_self_delivery ? route('admin.users.delivery-man.preview', [$order->delivery_man['id']]) : '#' }}">
-                                    <div class="avatar avatar-circle">
-                                        <img class="avatar-img onerror-image"
-                                            data-onerror-image="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}"
-                                            src="{{ $order->delivery_man?->image_full_url ?? asset('public/assets/admin/img/160x160/img1.jpg') }}"
-                                            alt="Image Description">
-                                    </div>
-                                    <div class="media-body">
-                                        <span
-                                            class="text-body d-block text-hover-primary mb-1">{{ $order->delivery_man['f_name'] . ' ' . $order->delivery_man['l_name'] }}</span>
-
-                                        <span class="text--title font-semibold d-flex align-items-center">
-                                            <i class="tio-shopping-basket-outlined mr-2"></i>
-                                            {{ $order->delivery_man->orders_count }}
-                                            {{ translate('messages.orders_delivered') }}
-                                        </span>
-
-                                        <span class="text--title font-semibold d-flex align-items-center">
-                                            <i class="tio-call-talking-quiet mr-2"></i>
-                                            {{ $order->delivery_man['phone'] }}
-                                        </span>
-
-                                        <span class="text--title font-semibold d-flex align-items-center">
-                                            <i class="tio-email-outlined mr-2"></i>
-                                            {{ $order->delivery_man['email'] }}
-                                        </span>
-
-                                    </div>
-                                </a>
-                                <hr>
-                                @php($address = $order->dm_last_location)
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <h5>{{ translate('messages.last_location') }}</h5>
-                                </div>
-                                @if (isset($address))
-                                    <span class="d-block">
-                                        <a target="_blank"
-                                            href="http://maps.google.com/maps?z=12&t=m&q=loc:{{ $address['latitude'] }}+{{ $address['longitude'] }}">
-                                            <i class="tio-map"></i> {{ $address['location'] }}<br>
-                                        </a>
-                                    </span>
-                                @else
-                                    <span class="d-block text-lowercase qcont">
-                                        {{ translate('messages.location_not_found') }}
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-                    @endif
-                @endif
-
-
-                <div class="card mt-2">
-                    <div class="card-body pt-3">
-                        @if ($order->customer && $order->is_guest == 0)
-                            <h5 class="card-title mb-3">
-                                <span class="card-header-icon">
-                                    <i class="tio-user"></i>
-                                </span>
-                                <span>{{ translate('customer_information') }}</span>
-                            </h5>
-
-                            <a class="media align-items-center deco-none customer--information-single"
-                                href="{{ route('admin.users.customer.view', [$order->customer['id']]) }}">
-                                <div class="avatar avatar-circle">
-                                    <img class="avatar-img onerror-image"
-                                        data-onerror-image="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}"
-                                        src="{{ $order->customer->image_full_url }}" alt="Image Description">
-                                </div>
-                                <div class="media-body">
-                                    <span class="fz--14px text--title font-semibold text-hover-primary d-block">
-                                        {{ $order->customer['f_name'] . ' ' . $order->customer['l_name'] }}
-                                    </span>
-                                    <span>{{ $order->customer->orders_count }} {{ translate('messages.orders') }}</span>
-                                    <span class="text--title font-semibold d-flex align-items-center">
-                                        <i class="tio-call-talking-quiet mr-2"></i>
-                                        <span>{{ $order->customer['phone'] }}</span>
-                                    </span>
-                                    <span class="text--title d-flex align-items-center">
-                                        <i class="tio-email mr-2"></i> <span>{{ $order->customer['email'] }}</span>
-                                    </span>
-                                </div>
-                            </a>
-                        @elseif($order->is_guest)
-                            <span class="badge badge-soft-success py-2 d-block qcont">
-                                {{ translate('Guest_user') }}
-                            </span>
-                        @else
-                            <span class="badge badge-soft-danger py-2 d-block qcont">
-                                {{ translate('Customer Not found!') }}
-                            </span>
-                        @endif
-                        @if ($order->receiver_details)
-                            @php($receiver_details = $order->receiver_details)
-                            <h5 class="card-title mt-3">
-                                <span class="card-header-icon">
-                                    <i class="tio-user"></i>
-                                </span>
-                                <span>{{ translate('messages.receiver_info') }}</span>
-                            </h5>
-                            @if (isset($receiver_details))
-                                <span class="delivery--information-single mt-3">
-                                    <span class="name">{{ translate('messages.name') }}</span>
-                                    <span class="info">{{ $receiver_details['contact_person_name'] }}</span>
-                                    <span class="name">{{ translate('messages.contact') }}</span>
-                                    <a class="deco-none info d-flex"
-                                        href="tel:{{ $receiver_details['contact_person_number'] }}">
-                                        {{ $receiver_details['contact_person_number'] }}</a>
-
-                                    @if (data_get($receiver_details, 'floor') != '')
-                                        <span class="name">{{ translate('Floor') }}</span> <span
-                                            class="info">{{ data_get($receiver_details, 'floor', translate('messages.N/A')) }}</span>
-                                    @endif
-                                    @if (data_get($receiver_details, 'house') != '')
-                                        <span class="name">{{ translate('House') }}</span> <span
-                                            class="info">{{ data_get($receiver_details, 'house', translate('messages.N/A')) }}</span>
-                                    @endif
-                                    @if (data_get($receiver_details, 'road') != '')
-                                        <span class="name">{{ translate('Road') }}</span> <span
-                                            class="info">{{ data_get($receiver_details, 'road', translate('messages.N/A')) }}</span>
-                                    @endif
-
-                                    <hr class="w-100">
-
-                                    @if (isset($receiver_details['address']))
-                                        @if (isset($receiver_details['latitude']) && isset($receiver_details['longitude']))
-                                            <a class="mt-2 d-flex" target="_blank"
-                                                href="http://maps.google.com/maps?z=12&t=m&q=loc:{{ $receiver_details['latitude'] }}+{{ $receiver_details['longitude'] }}">
-                                                <i class="tio-poi"></i>{{ $receiver_details['address'] }}
-                                            </a>
-                                        @else
-                                            <i class="tio-poi"></i>{{ $receiver_details['address'] }}
-                                        @endif
-                                    @endif
-                                </span>
-                            @endif
-                        @endif
-
-                        @if ($order->delivery_address)
-                            @php($address = json_decode($order->delivery_address, true))
-                            <hr>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <h5 class="card-title">
-                                    <span class="card-header-icon">
-                                        <i class="tio-user"></i>
-                                    </span>
-                                    <span>{{ translate($parcel_order ? 'messages.sender' : 'messages.delivery_info') }}</span>
-                                </h5>
-                                @if ($order->order_status != 'delivered' && $order['partially_paid_amount'] == 0)
-                                    @if (isset($address) && !$parcel_order)
-                                        <a class="link d-flex" data-toggle="modal" data-target="#shipping-address-modal"
-                                            href="javascript:"><i class="tio-edit"></i></a>
-                                    @endif
-                                @endif
-                            </div>
-                            @if (isset($address))
-                                <div class="delivery--information-single mt-3">
-                                    <span class="name">{{ translate('messages.name') }}</span>
-                                    <span
-                                        class="info">{{ data_get($address, 'contact_person_name', translate('messages.N/A')) }}</span>
-                                    <span class="name">{{ translate('messages.contact') }}</span>
-                                    <a class="deco-none info"
-                                        href="tel:{{ data_get($address, 'contact_person_number', translate('messages.N/A')) }}">
-                                        {{ data_get($address, 'contact_person_number', translate('messages.N/A')) }}</a>
-
-                                    @if (data_get($address, 'floor') != '')
-                                        <span class="name">{{ translate('Floor') }}</span> <span
-                                            class="info">{{ data_get($address, 'floor', translate('messages.N/A')) }}</span>
-                                    @endif
-                                    @if (data_get($address, 'road') != '')
-                                        <span class="name">{{ translate('Road') }}</span> <span
-                                            class="info">{{ data_get($address, 'road', translate('messages.N/A')) }}</span>
-                                    @endif
-                                    @if (data_get($address, 'house') != '')
-                                        <span class="name">{{ translate('House') }}</span> <span
-                                            class="info">{{ data_get($address, 'house', translate('messages.N/A')) }}</span>
-                                    @endif
-
-                                    <hr class="w-100">
-                                    <div>
-                                        @if (isset($address['address']))
-                                            @if (data_get($address, 'latitude', null) && data_get($address, 'longitude', null))
-                                                <a target="_blank" class="d-flex align-items-center"
-                                                    href="http://maps.google.com/maps?z=12&t=m&q=loc:{{ $address['latitude'] }}+{{ $address['longitude'] }}">
-                                                    <i class="tio-poi"></i>{{ $address['address'] }}
-                                                </a>
-                                            @else
-                                                <i class="tio-poi"></i>{{ $address['address'] }}
-                                            @endif
-                                        @endif
-                                    </div>
-                                </div>
-                            @endif
-                        @endif
-                    </div>
-                </div>
-                <!-- Customer Card -->
-                @php($data = isset($order->order_proof) ? json_decode($order->order_proof, true) : [])
-                @if (in_array($order->order_status, ['handover', 'delivered', 'picked_up']) || ($data != null && count($data) > 0))
-
-                    <!-- order proof -->
-                    <div class="card mb-2 mt-2">
-                        <div class="card-header border-0 text-center pb-0">
-                            <h4 class="m-0">{{ translate('messages.delivery_proof') }} </h4>
-                            @if (in_array($order->order_status, ['handover', 'delivered', 'picked_up']))
-                                <button class="btn btn-outline-primary btn-sm" data-toggle="modal"
-                                    data-target=".order-proof-modal"> {{ translate('messages.add') }} </button>
-                            @endif
-                        </div>
-                        <div class="card-body pt-2">
-                            @if ($data)
-                                <label class="input-label" for="order_proof">{{ translate('messages.image') }} :
-                                </label>
-                                <div class="row g-3">
-                                    @foreach ($data as $key => $img)
-                                        @php($img = is_array($img) ? $img : ['img' => $img, 'storage' => 'public'])
-                                        <div class="col-3">
-                                            <img class="img__aspect-1 rounded border w-100 onerror-image"
-                                                data-toggle="modal" data-target="#imagemodal{{ $key }}"
-                                                data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
-                                                src="{{ \App\CentralLogics\Helpers::get_full_url('order', $img['img'], $img['storage']) }}">
-                                        </div>
-                                        <div class="modal fade" id="imagemodal{{ $key }}" tabindex="-1"
-                                            role="dialog" aria-labelledby="order_proof_{{ $key }}"
-                                            aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h4 class="modal-title" id="order_proof_{{ $key }}">
-                                                            {{ translate('order_proof_image') }}</h4>
-                                                        <button type="button" class="close" data-dismiss="modal"><span
-                                                                aria-hidden="true">&times;</span><span
-                                                                class="sr-only">{{ translate('messages.cancel') }}</span></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <img src="{{ \App\CentralLogics\Helpers::get_full_url('order', $img['img'], $img['storage']) }}"
-                                                            class="initial--22 w-100">
-                                                    </div>
-                                                    @php($storage = $img['storage'] ?? 'public')
-                                                    @php($file = $storage == 's3' ? base64_encode('order/' . $img['img']) : base64_encode('public/order/' . $img['img']))
-                                                    <div class="modal-footer">
-                                                        <a class="btn btn-primary"
-                                                            href="{{ route('admin.file-manager.download', [$file, $storage]) }}"><i
-                                                                class="tio-download"></i>
-                                                            {{ translate('messages.download') }}
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    @endforeach
-                                </div>
-                            @endif
-                        </div>
-                    </div>
-                @endif
-
-                @if ($order->store)
-                    <!-- Restaurant Card -->
-                    <div class="card mt-2">
-                        <!-- Body -->
-                        <div class="card-body">
-                            <h5 class="card-title mb-3">
-                                <span class="card-header-icon">
-                                    <i class="tio-user"></i>
-                                </span>
-                                <span>{{ translate('messages.store_information') }}</span>
-                            </h5>
-                            <a class="media align-items-center deco-none resturant--information-single"
-                                href="{{ route('admin.store.view', [$order->store['id'], 'module_id' => $order->module_id]) }}">
-                                <div class="avatar avatar-circle">
-                                    <img class="avatar-img w-75px onerror-image"
-                                        data-onerror-image="{{ asset('public/assets/admin/img/100x100/1.png') }}"
-                                        src="{{ $order?->store?->logo_full_url ?? asset('public/assets/admin/img/100x100/1.png') }}"
-                                        alt="Image Description">
-                                </div>
-                                <div class="media-body">
-                                    <span class="fz--14px text--title font-semibold text-hover-primary d-block">
-                                        {{ $order->store['name'] }}
-                                    </span>
-                                    <span>{{ $order->store->orders_count }} {{ translate('messages.orders') }}</span>
-                                    <span class="text--title font-semibold d-flex align-items-center">
-                                        <i class="tio-call-talking-quiet mr-2"></i>{{ $order->store['phone'] }}
-                                    </span>
-                                    <span class="text--title d-flex align-items-center">
-                                        <i class="tio-email mr-2"></i>{{ $order->store['email'] }}
-                                    </span>
-                                </div>
-                            </a>
-                            <hr>
-                            <span class="d-block">
-                                <a target="_blank" class="d-flex align-items-center __gap-5px"
-                                    href="http://maps.google.com/maps?z=12&t=m&q=loc:{{ $order->store['latitude'] }}+{{ $order->store['longitude'] }}">
-                                    <i class="tio-poi"></i> <span>{{ $order->store['address'] }}</span><br>
-                                </a>
-                            </span>
-                        </div>
-                        <!-- End Body -->
-                    </div>
-                    <!-- End Card -->
-                @endif
-            </div>
         </div>
         <!-- End Row -->
     </div>
@@ -1157,7 +495,7 @@
                     <div class="row">
                         <div class="col-md-12 modal_body_map">
                             <div class="location-map" id="pickup_location_map">
-                                <div class="initial--25 rounded-8" id="pickup_location_map_canvas"></div>
+                                <div class="initial--25 rounded-8 custom_route_line_map_canvas" id="custom_route_line_map_canvas"></div>
                             </div>
                         </div>
                     </div>
@@ -2255,48 +1593,99 @@
 
             // ------- pickup destinaton map with route line starts
 
-            function addPolylineToMap(map, polylinePath) {
-                const polyline = new google.maps.Polyline({
-                    path: polylinePath,
-                    geodesic: true, // Makes the line follow the curvature of the Earth
-                    strokeColor: '#4D4D4D', // Line color
-                    strokeOpacity: 1.0,     // Line opacity
-                    strokeWeight: 3         // Line width
+           // drawing a route (polyline) on the map between two locations
+            function addPolylineToMap(map, pickupLocation, destinationLocation) {
+                const directionsService = new google.maps.DirectionsService();
+                const directionsRenderer = new google.maps.DirectionsRenderer({
+                    map: map,
+                    suppressMarkers: true, // Suppress default markers
+                    polylineOptions: {
+                        strokeColor: '#4D4D4D', // Line color
+                        strokeOpacity: 1.0,     // Line opacity
+                        strokeWeight: 3         // Line width
+                    },
                 });
 
-                polyline.setMap(map); // Add the polyline to the map
+                // Define request for the route
+                const request = {
+                    origin: pickupLocation,
+                    destination: destinationLocation,
+                    travelMode: google.maps.TravelMode.DRIVING, // Use DRIVING as travel mode.
+                };
+
+                // Calculate the route and render it
+                directionsService.route(request, function (response, status) {
+                    if (status === google.maps.DirectionsStatus.OK) {
+                        directionsRenderer.setDirections(response);
+                    } else {
+                        console.error("Directions request failed due to " + status);
+                    }
+                });
             }
 
-            
-            function initializePickupLocationMap() {
-                const map = new google.maps.Map(document.getElementById("pickup_location_map_canvas"), myOptions);
+
+            function initializeCustomRouteLocationMap() {
+
+                const grayStyle = [
+                    {
+                        featureType: "all",
+                        stylers: [
+                            { saturation: -100 }, // Desaturate all colors
+                            { lightness: 20 },    // Increase lightness
+                        ]
+                    },
+                    {
+                        featureType: "road",
+                        stylers: [
+                            { visibility: "on" },
+                            { lightness: 30 }
+                        ]
+                    },
+                    {
+                        featureType: "landscape",
+                        stylers: [
+                            { lightness: 10 },
+                            { saturation: -80 }
+                        ]
+                    }
+                ];
+
+                const map = new google.maps.Map(document.getElementById("custom_route_line_map_canvas"), {
+                    center: { lat: 23.766660, lng: 90.424993 },
+                    zoom: 14, // Adjusted for better overview
+                    styles: grayStyle,
+                });
 
                 const infowindow = new google.maps.InfoWindow();
-                const polylinePath = []; // Array to store marker positions
 
+                // Define pickup and destination locations
+                const pickupLocation = { lat: 23.766660, lng: 90.424993 };
+                const destinationLocation = { lat: 23.837232, lng: 90.373129 };
+
+                // get dynamic icon color
                 function getDynamicMarkerSvg(dynamicColor) {
                     return `
                         <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30">
-                            <g>
-                                <g clip-path="url(#clip0_5241_7679)">
-                                    <path d="M14.7577 1C9.36898 1 5 5.3684 5 10.7577C5 14.0607 8.6658 19.7298 11.5035 23.6238C13.2959 26.0826 14.7577 27.8335 14.7577 27.8335C14.7621 27.8273 24.5154 16.1557 24.5154 10.7576C24.5154 5.3684 20.147 1 14.7577 1Z" fill="${dynamicColor}"/>
-                                    <path d="M14.7575 3.43945C10.8843 3.43945 7.74414 6.57961 7.74414 10.4528C7.74414 12.4299 8.56258 14.2162 9.87865 15.4908H19.6363C20.953 14.2162 21.7708 12.4299 21.7708 10.4528C21.7708 6.57955 18.6313 3.43945 14.7575 3.43945Z" fill="white"/>
-                                    <path d="M19.6366 15.0263V15.4904C16.917 18.1246 12.5984 18.1246 9.87891 15.4904V15.0263C9.87891 13.0052 11.517 11.3672 13.538 11.3672H15.9775C17.9985 11.3672 19.6366 13.0052 19.6366 15.0263Z" fill="white"/>
-                                    <path d="M14.7578 11.3671C16.1051 11.3671 17.1972 10.275 17.1972 8.92772C17.1972 7.58045 16.1051 6.48828 14.7578 6.48828C13.4105 6.48828 12.3184 7.58045 12.3184 8.92772C12.3184 10.275 13.4105 11.3671 14.7578 11.3671Z" fill="white"/>
-                                    <g clip-path="url(#clip1_5241_7679)">
-                                        <path d="M15.0563 14.9415C14.999 14.9415 14.941 14.9362 14.8826 14.9262C14.4166 14.8445 14.0913 14.4569 14.0913 13.9839V11.6079H11.715C11.242 11.6079 10.8546 11.2822 10.773 10.8165C10.6916 10.3515 10.944 9.91486 11.3866 9.75352L18.7673 6.93652L15.9446 14.3155C15.8056 14.6992 15.4533 14.9415 15.056 14.9415H15.0563Z" fill="#1E2124" fill-opacity="0.6"/>
-                                    </g>
-                                </g>
-                            </g>
-                            <defs>
-                                <clipPath id="clip0_5241_7679">
-                                    <rect width="30" height="30" fill="white"/>
-                                </clipPath>
-                                <clipPath id="clip1_5241_7679">
-                                    <rect width="8" height="8" fill="white" transform="translate(10.7578 6.94141)"/>
-                                </clipPath>
-                            </defs>
-                        </svg>
+                                        <g>
+                                            <g clip-path="url(#clip0_5241_7679)">
+                                                <path d="M14.7577 1C9.36898 1 5 5.3684 5 10.7577C5 14.0607 8.6658 19.7298 11.5035 23.6238C13.2959 26.0826 14.7577 27.8335 14.7577 27.8335C14.7621 27.8273 24.5154 16.1557 24.5154 10.7576C24.5154 5.3684 20.147 1 14.7577 1Z" fill="${dynamicColor}"/>
+                                                <path d="M14.7575 3.43945C10.8843 3.43945 7.74414 6.57961 7.74414 10.4528C7.74414 12.4299 8.56258 14.2162 9.87865 15.4908H19.6363C20.953 14.2162 21.7708 12.4299 21.7708 10.4528C21.7708 6.57955 18.6313 3.43945 14.7575 3.43945Z" fill="white"/>
+                                                <path d="M19.6366 15.0263V15.4904C16.917 18.1246 12.5984 18.1246 9.87891 15.4904V15.0263C9.87891 13.0052 11.517 11.3672 13.538 11.3672H15.9775C17.9985 11.3672 19.6366 13.0052 19.6366 15.0263Z" fill="white"/>
+                                                <path d="M14.7578 11.3671C16.1051 11.3671 17.1972 10.275 17.1972 8.92772C17.1972 7.58045 16.1051 6.48828 14.7578 6.48828C13.4105 6.48828 12.3184 7.58045 12.3184 8.92772C12.3184 10.275 13.4105 11.3671 14.7578 11.3671Z" fill="white"/>
+                                                <g clip-path="url(#clip1_5241_7679)">
+                                                    <path d="M15.0563 14.9415C14.999 14.9415 14.941 14.9362 14.8826 14.9262C14.4166 14.8445 14.0913 14.4569 14.0913 13.9839V11.6079H11.715C11.242 11.6079 10.8546 11.2822 10.773 10.8165C10.6916 10.3515 10.944 9.91486 11.3866 9.75352L18.7673 6.93652L15.9446 14.3155C15.8056 14.6992 15.4533 14.9415 15.056 14.9415H15.0563Z" fill="#1E2124" fill-opacity="0.6"/>
+                                                </g>
+                                            </g>
+                                        </g>
+                                        <defs>
+                                            <clipPath id="clip0_5241_7679">
+                                                <rect width="30" height="30" fill="white"/>
+                                            </clipPath>
+                                            <clipPath id="clip1_5241_7679">
+                                                <rect width="8" height="8" fill="white" transform="translate(10.7578 6.94141)"/>
+                                            </clipPath>
+                                        </defs>
+                                    </svg>
                     `;
                 }
 
@@ -2316,263 +1705,43 @@
                     };
                 }
 
-                // set icon color from css variable
-                const destinationMarkerIcon = createMarkerIconFromCssVariable("--primary-clr"); 
+                // Set icon color from a CSS variable
+                const destinationMarkerIcon = createMarkerIconFromCssVariable("--primary-clr");
 
-
-                @if ($order->customer && isset($address))
-                    var marker = new google.maps.Marker({
-                        position: new google.maps.LatLng({{ $address['latitude'] }}, {{ $address['longitude'] }}),
-                        map: map,
-                        title: "{{ $order->customer->f_name }} {{ $order->customer->l_name }}",
-                        icon: destinationMarkerIcon,
-                    });
-
-                    // Dynamically style the icon (this applies if your SVG uses `currentColor`).
-                    var markerElement = document.querySelector('[src="{{ asset('public/assets/admin/img/icons/destination.svg') }}"]');
-                    if (markerElement) {
-                        markerElement.classList.add('text--primary');
-                    }
-
-
-                    google.maps.event.addListener(marker, 'click', (function(marker) {
-                        return function () {
-                            infowindow.setContent(
-                                '<div class="fs-12 font-medium">Destination</div>'
-                            );
-                            infowindow.open(map, marker);
-                        }
-                    })(marker));
-                    locationbounds.extend(marker.getPosition());
-                    polylinePath.push({ lat: {{ $address['latitude'] }}, lng: {{ $address['longitude'] }} }); // Add position
-                @endif
-
-                @if ($order->delivery_man && $order->dm_last_location)
-                    var dmmarker = new google.maps.Marker({
-                        position: new google.maps.LatLng({{ $order->dm_last_location['latitude'] }}, {{ $order->dm_last_location['longitude'] }}),
-                        map: map,
-                        title: "{{ $order->delivery_man->f_name }} {{ $order->delivery_man->l_name }}",
-                        icon: destinationIcon,
-                    });
-
-                    google.maps.event.addListener(dmmarker, 'click', (function(dmmarker) {
-                        return function () {
-                            infowindow.setContent(
-                                '<div class="fs-12 font-medium">Destination</div>'
-                                
-                            );
-                            infowindow.open(map, dmmarker);
-                        }
-                    })(dmmarker));
-                    locationbounds.extend(dmmarker.getPosition());
-                    polylinePath.push({ lat: {{ $order->dm_last_location['latitude'] }}, lng: {{ $order->dm_last_location['longitude'] }} }); // Add position
-                @endif
-
-                @if ($order->store)
-                    var Retaurantmarker = new google.maps.Marker({
-                        position: new google.maps.LatLng({{ $order->store->latitude }}, {{ $order->store->longitude }}),
-                        map: map,
-                        title: "{{ Str::limit($order?->store?->name, 15, '...') }}",
-                        icon: "{{ asset('public/assets/admin/img/icons/pickup.svg') }}"
-                    });
-
-                    google.maps.event.addListener(Retaurantmarker, 'click', (function(Retaurantmarker) {
-                        return function () {
-                            infowindow.setContent(
-                                '<div class="fs-12 font-medium">Pickup</div>'
-                            );
-                            infowindow.open(map, Retaurantmarker);
-                        }
-                    })(Retaurantmarker));
-                    locationbounds.extend(Retaurantmarker.getPosition());
-                    polylinePath.push({ lat: {{ $order->store->latitude }}, lng: {{ $order->store->longitude }} }); // Add position
-                @endif
-
-                @if ($parcel_order && isset($receiver_details))
-                    var Receivermarker = new google.maps.Marker({
-                        position: new google.maps.LatLng({{ $receiver_details['latitude'] }}, {{ $receiver_details['longitude'] }}),
-                        map: map,
-                        title: "{{ Str::limit($receiver_details['contact_person_name'], 15, '...') }}"
-                    });
-
-                    google.maps.event.addListener(Receivermarker, 'click', (function(Receivermarker) {
-                        return function () {
-                            infowindow.open(map, Receivermarker);
-                        }
-                    })(Receivermarker));
-                    locationbounds.extend(Receivermarker.getPosition());
-                    polylinePath.push({ lat: {{ $receiver_details['latitude'] }}, lng: {{ $receiver_details['longitude'] }} }); // Add position
-                @endif
-
-                google.maps.event.addListenerOnce(map, 'idle', function () {
-                    map.fitBounds(locationbounds); // Adjust map bounds
+                // Add a marker for the pickup location
+                const pickupMarker = new google.maps.Marker({
+                    position: pickupLocation,
+                    map: map,
+                    title: "Pickup Location",
+                    icon: "{{ asset('public/assets/admin/img/icons/pickup.svg') }}",
                 });
 
-                // Call the updated function with dynamic path
-                addPolylineToMap(map, polylinePath);
+                google.maps.event.addListener(pickupMarker, "click", function () {
+                    infowindow.setContent('<div class="fs-12 font-medium">Pickup</div>');
+                    infowindow.open(map, pickupMarker);
+                });
+
+                // Add a marker for the destination location
+                const destinationMarker = new google.maps.Marker({
+                    position: destinationLocation,
+                    map: map,
+                    title: "Destination Location",
+                    icon: destinationMarkerIcon,
+                });
+
+                google.maps.event.addListener(destinationMarker, "click", function () {
+                    infowindow.setContent('<div class="fs-12 font-medium">Destination</div>');
+                    infowindow.open(map, destinationMarker);
+                });
+
+                // Add a routed polyline between the pickup and destination locations
+                addPolylineToMap(map, pickupLocation, destinationLocation);
             }
 
-            // function initializePickupLocationMap() {
-            //     // const map = new google.maps.Map(document.getElementById("pickup_location_map_canvas"), myOptions);
-            //     const map = new google.maps.Map(document.getElementById("pickup_location_map_canvas"), {
-            //         center: { lat: 23.749446, lng: 90.375180 },
-            //         zoom: 20,
-            //     });
-
-            //     const infowindow = new google.maps.InfoWindow();
-            //     const polylinePath = []; // Array to store marker positions
-
-            //     function getDynamicMarkerSvg(dynamicColor) {
-            //         return `
-            //             <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30">
-            //                 <g>
-            //                     <g clip-path="url(#clip0_5241_7679)">
-            //                         <path d="M14.7577 1C9.36898 1 5 5.3684 5 10.7577C5 14.0607 8.6658 19.7298 11.5035 23.6238C13.2959 26.0826 14.7577 27.8335 14.7577 27.8335C14.7621 27.8273 24.5154 16.1557 24.5154 10.7576C24.5154 5.3684 20.147 1 14.7577 1Z" fill="${dynamicColor}"/>
-            //                         <path d="M14.7575 3.43945C10.8843 3.43945 7.74414 6.57961 7.74414 10.4528C7.74414 12.4299 8.56258 14.2162 9.87865 15.4908H19.6363C20.953 14.2162 21.7708 12.4299 21.7708 10.4528C21.7708 6.57955 18.6313 3.43945 14.7575 3.43945Z" fill="white"/>
-            //                         <path d="M19.6366 15.0263V15.4904C16.917 18.1246 12.5984 18.1246 9.87891 15.4904V15.0263C9.87891 13.0052 11.517 11.3672 13.538 11.3672H15.9775C17.9985 11.3672 19.6366 13.0052 19.6366 15.0263Z" fill="white"/>
-            //                         <path d="M14.7578 11.3671C16.1051 11.3671 17.1972 10.275 17.1972 8.92772C17.1972 7.58045 16.1051 6.48828 14.7578 6.48828C13.4105 6.48828 12.3184 7.58045 12.3184 8.92772C12.3184 10.275 13.4105 11.3671 14.7578 11.3671Z" fill="white"/>
-            //                         <g clip-path="url(#clip1_5241_7679)">
-            //                             <path d="M15.0563 14.9415C14.999 14.9415 14.941 14.9362 14.8826 14.9262C14.4166 14.8445 14.0913 14.4569 14.0913 13.9839V11.6079H11.715C11.242 11.6079 10.8546 11.2822 10.773 10.8165C10.6916 10.3515 10.944 9.91486 11.3866 9.75352L18.7673 6.93652L15.9446 14.3155C15.8056 14.6992 15.4533 14.9415 15.056 14.9415H15.0563Z" fill="#1E2124" fill-opacity="0.6"/>
-            //                         </g>
-            //                     </g>
-            //                 </g>
-            //                 <defs>
-            //                     <clipPath id="clip0_5241_7679">
-            //                         <rect width="30" height="30" fill="white"/>
-            //                     </clipPath>
-            //                     <clipPath id="clip1_5241_7679">
-            //                         <rect width="8" height="8" fill="white" transform="translate(10.7578 6.94141)"/>
-            //                     </clipPath>
-            //                 </defs>
-            //             </svg>
-            //         `;
-            //     }
-
-            //     function createMarkerIconFromCssVariable(variableName) {
-            //         const rootStyles = getComputedStyle(document.documentElement);
-            //         const dynamicColor = rootStyles.getPropertyValue(variableName).trim();
-
-            //         // Generate SVG with the dynamic color
-            //         const svg = getDynamicMarkerSvg(dynamicColor);
-
-            //         // Convert to Base64 for Google Maps marker
-            //         const base64Svg = `data:image/svg+xml;base64,${btoa(svg)}`;
-
-            //         return {
-            //             url: base64Svg,
-            //             scaledSize: new google.maps.Size(30, 30),
-            //         };
-            //     }
-
-            //     // set icon color from css variable
-            //     const destinationMarkerIcon = createMarkerIconFromCssVariable("--primary-clr"); 
-
-
-            //     @if ($order->customer && isset($address))
-            //         var marker = new google.maps.Marker({
-            //             // position: new google.maps.LatLng({{ $address['latitude'] }}, {{ $address['longitude'] }}),
-            //             position: new google.maps.LatLng(23.837232, 90.373129),
-            //             map: map,
-            //             title: "{{ $order->customer->f_name }} {{ $order->customer->l_name }}",
-            //             icon: destinationMarkerIcon,
-            //         });
-
-            //         // Dynamically style the icon (this applies if your SVG uses `currentColor`).
-            //         var markerElement = document.querySelector('[src="{{ asset('public/assets/admin/img/icons/destination.svg') }}"]');
-            //         if (markerElement) {
-            //             markerElement.classList.add('text--primary');
-            //         }
-
-
-            //         google.maps.event.addListener(marker, 'click', (function(marker) {
-            //             return function () {
-            //                 infowindow.setContent(
-            //                     '<div class="fs-12 font-medium">Destination</div>'
-            //                 );
-            //                 infowindow.open(map, marker);
-            //             }
-            //         })(marker));
-            //         locationbounds.extend(marker.getPosition());
-            //         // polylinePath.push({ lat: {{ $address['latitude'] }}, lng: {{ $address['longitude'] }} }); // Add position
-            //         polylinePath.push({ lat: 23.837232, lng: 90.373129 }); // Add position
-            //     @endif
-
-            //     @if ($order->delivery_man && $order->dm_last_location)
-            //         var dmmarker = new google.maps.Marker({
-            //             position: new google.maps.LatLng(23.837232, 90.373129),
-            //             map: map,
-            //             title: "{{ $order->delivery_man->f_name }} {{ $order->delivery_man->l_name }}",
-            //             icon: destinationIcon,
-            //         });
-
-            //         google.maps.event.addListener(dmmarker, 'click', (function(dmmarker) {
-            //             return function () {
-            //                 infowindow.setContent(
-            //                     '<div class="fs-12 font-medium">Destination</div>'
-                                
-            //                 );
-            //                 infowindow.open(map, dmmarker);
-            //             }
-            //         })(dmmarker));
-            //         locationbounds.extend(dmmarker.getPosition());
-            //         polylinePath.push({ lat: 23.837232, lng: 90.373129 }); // Add position
-            //     @endif
-
-            //     @if ($order->store)
-            //         var Retaurantmarker = new google.maps.Marker({
-            //             // position: new google.maps.LatLng({{ $order->store->latitude }}, {{ $order->store->longitude }}),
-            //             position: new google.maps.LatLng(23.749446, 90.375180),
-            //             map: map,
-            //             title: "{{ Str::limit($order?->store?->name, 15, '...') }}",
-            //             icon: "{{ asset('public/assets/admin/img/icons/pickup.svg') }}"
-            //         });
-
-            //         google.maps.event.addListener(Retaurantmarker, 'click', (function(Retaurantmarker) {
-            //             return function () {
-            //                 infowindow.setContent(
-            //                     '<div class="fs-12 font-medium">Pickup</div>'
-            //                 );
-            //                 infowindow.open(map, Retaurantmarker);
-            //             }
-            //         })(Retaurantmarker));
-            //         locationbounds.extend(Retaurantmarker.getPosition());
-            //         // polylinePath.push({ lat: {{ $order->store->latitude }}, lng: {{ $order->store->longitude }} }); // Add position
-            //         polylinePath.push({ lat: 23.749446, lng: 90.375180 }); // Add position
-            //     @endif
-
-            //     @if ($parcel_order && isset($receiver_details))
-            //         var Receivermarker = new google.maps.Marker({
-            //             // position: new google.maps.LatLng({{ $receiver_details['latitude'] }}, {{ $receiver_details['longitude'] }}),
-            //             position: new google.maps.LatLng(23.837232, 90.373129),
-            //             map: map,
-            //             title: "{{ Str::limit($receiver_details['contact_person_name'], 15, '...') }}"
-            //         });
-
-            //         google.maps.event.addListener(Receivermarker, 'click', (function(Receivermarker) {
-            //             return function () {
-            //                 infowindow.open(map, Receivermarker);
-            //             }
-            //         })(Receivermarker));
-            //         locationbounds.extend(Receivermarker.getPosition());
-            //         // polylinePath.push({ lat: {{ $receiver_details['latitude'] }}, lng: {{ $receiver_details['longitude'] }} }); // Add position
-            //         polylinePath.push({ lat: 3.749446, lng: 90.373129 }); // Add position
-            //     @endif
-
-            //     google.maps.event.addListenerOnce(map, 'idle', function () {
-            //         map.fitBounds(locationbounds); // Adjust map bounds
-            //     });
-
-            //     // Call the updated function with dynamic path
-            //     addPolylineToMap(map, polylinePath);
-            // }
-
-
-            // Re-init map before show modal
+            // Re-init map before showing modal
             $('#pickupDesModal').on('shown.bs.modal', function(event) {
-                initializePickupLocationMap();
+                initializeCustomRouteLocationMap();
             });
-
-            // initializePickupLocationMap();
 
             // ------- pickup destinaton map with route line ends
 
