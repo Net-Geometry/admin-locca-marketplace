@@ -14643,6 +14643,9 @@ ul.address-info .label {
     inset-block-start: 10px;
     inset-inline-end: 10px;
 }
+.map-fullscreen-btn_wrapper .shadow--card-2.btn:focus {
+    box-shadow: 0px 5px 15px rgba(51, 66, 87, 0.08) !important;
+}
 
 /* custom route line draw design */
 .custom_route_line_map_canvas .gm-ui-hover-effect > span {

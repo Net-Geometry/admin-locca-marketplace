@@ -51,7 +51,7 @@
                                             id="image2">
                                             <img class="cz-image-zoom img-responsive w-100"
                                                 src="{{ asset('public/assets/admin/img/car-demo.png') }}"
-                                                data-zoom="public/assets/admin/img/car-demo.png" alt="Product"
+                                                data-zoom="{{ asset('public/assets/admin/img/car-demo.png') }}" alt="Product"
                                                 width="">
                                             <div class="cz-image-zoom-pane"></div>
                                         </div>
@@ -61,7 +61,7 @@
                                             id="image3">
                                             <img class="cz-image-zoom img-responsive w-100"
                                                 src="{{ asset('public/assets/admin/img/car-demo.png') }}"
-                                                data-zoom="public/assets/admin/img/car-demo.png" alt="Product"
+                                                data-zoom="{{ asset('public/assets/admin/img/car-demo.png') }}" alt="Product"
                                                 width="">
                                             <div class="cz-image-zoom-pane"></div>
                                         </div>
@@ -71,7 +71,7 @@
                                             id="image4">
                                             <img class="cz-image-zoom img-responsive w-100"
                                                 src="{{ asset('public/assets/admin/img/car-demo.png') }}"
-                                                data-zoom="public/assets/admin/img/car-demo.png" alt="Product"
+                                                data-zoom="{{ asset('public/assets/admin/img/car-demo.png') }}" alt="Product"
                                                 width="">
                                             <div class="cz-image-zoom-pane"></div>
                                         </div>
@@ -681,23 +681,24 @@
             window.downloadPdf = downloadPdf;
         });
     </script>
+
     <script>
-        !(function(t) {
-            var e = {
-                imageZoom: function() {
-                    let elements = document.querySelectorAll(".cz-image-zoom");
-                    for (let i = 0; i < elements.length; i++) {
-                        new Drift(elements[i], {
-                            paneContainer: elements[i].parentElement.querySelector(
-                                ".cz-image-zoom-pane"),
-                        });
-                    }
-                },
-            };
-            e.imageZoom();
-        })(jQuery);
-    </script>
-    <script>
+
+        function imageZoom() {
+            let elements = document.querySelectorAll(".cz-image-zoom");
+            for (let i = 0; i < elements.length; i++) {
+                new Drift(elements[i], {
+                    paneContainer: elements[i].parentElement.querySelector(
+                        ".cz-image-zoom-pane"
+                    ),
+                });
+            }
+        }
+
+        // Call it initially
+        imageZoom();
+
+
         const themeDirection = $("html").attr("dir");
 
         function renderOwlCarouselSilder() {
@@ -742,7 +743,7 @@
 
                 // Re-initialize image zoom on the new slide
                 setTimeout(function() {
-                    e.imageZoom();
+                    imageZoom();
                 }, 500); // Wait for the carousel to complete the slide change
             }
 
