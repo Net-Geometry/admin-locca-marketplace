@@ -53,7 +53,7 @@
                                         </ul>
                                         <div class="lang_form" id="default-form">
                                             <div class="form-group mb-0">
-                                                <label class="input-label" for="default_title">Title
+                                                <label class="input-label font-semibold" for="default_title">Title
                                                     (Default)
                                                 </label>
                                                 <input type="text" name="title[]" id="default_title" class="form-control"
@@ -63,7 +63,7 @@
                                         </div>
                                         <div class="lang_form d-none" id="en-form">
                                             <div class="form-group mb-0">
-                                                <label class="input-label" for="en_title">Title
+                                                <label class="input-label font-semibold" for="en_title">Title
                                                     (EN)
                                                 </label>
                                                 <input type="text" name="title[]" id="en_title" class="form-control"
@@ -73,7 +73,7 @@
                                         </div>
                                         <div class="lang_form d-none" id="ar-form">
                                             <div class="form-group mb-0">
-                                                <label class="input-label" for="ar_title">Title
+                                                <label class="input-label font-semibold" for="ar_title">Title
                                                     (AR)
                                                 </label>
                                                 <input type="text" name="title[]" id="ar_title" class="form-control"

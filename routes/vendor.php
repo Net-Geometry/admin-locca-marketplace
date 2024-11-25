@@ -9,6 +9,7 @@ Route::group(['namespace' => 'Vendor', 'as' => 'vendor.'], function () {
     Route::group(['middleware' => ['vendor']], function () {
         Route::get('/test', function () { 
             // return view('vendor-views.car-rental.index');
+            // return view('vendor-views.car-rental.banner.index');
             return view('vendor-views.car-rental.banner.index');
          });
         Route::get('lang/{locale}', 'LanguageController@lang')->name('lang');
