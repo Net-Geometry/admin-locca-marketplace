@@ -1,4 +1,4 @@
-@extends('layouts.admin.app')
+@extends('layouts.vendor.app')
 
 @section('title', translate('messages.banner'))
 
@@ -37,69 +37,19 @@
                             <input type="hidden" name="_token" value="" autocomplete="off">
                             <div class="row g-3">
                                 <div class="col-lg-6">
-                                    <div class="__bg-FAFAFA p-4 radius-10 mb-4">
-                                        <ul class="nav nav-tabs mb-3 border-0">
-                                            <li class="nav-item">
-                                                <a class="nav-link lang_link active" href="#"
-                                                    id="default-link">Default</a>
-                                            </li>
-                                            <li class="nav-item">
-                                                <a class="nav-link lang_link" href="#" id="en-link">English(EN)</a>
-                                            </li>
-                                            <li class="nav-item">
-                                                <a class="nav-link lang_link" href="#" id="ar-link">Arabic -
-                                                    العربية(AR)</a>
-                                            </li>
-                                        </ul>
-                                        <div class="lang_form" id="default-form">
-                                            <div class="form-group mb-0">
-                                                <label class="input-label" for="default_title">Title
-                                                    (Default)
-                                                </label>
-                                                <input type="text" name="title[]" id="default_title" class="form-control"
-                                                    placeholder="New banner">
-                                            </div>
-                                            <input type="hidden" name="lang[]" value="default">
-                                        </div>
-                                        <div class="lang_form d-none" id="en-form">
-                                            <div class="form-group mb-0">
-                                                <label class="input-label" for="en_title">Title
-                                                    (EN)
-                                                </label>
-                                                <input type="text" name="title[]" id="en_title" class="form-control"
-                                                    placeholder="New banner">
-                                            </div>
-                                            <input type="hidden" name="lang[]" value="en">
-                                        </div>
-                                        <div class="lang_form d-none" id="ar-form">
-                                            <div class="form-group mb-0">
-                                                <label class="input-label" for="ar_title">Title
-                                                    (AR)
-                                                </label>
-                                                <input type="text" name="title[]" id="ar_title" class="form-control"
-                                                    placeholder="New banner">
-                                            </div>
-                                            <input type="hidden" name="lang[]" value="ar">
-                                        </div>
-                                    </div>
-
                                     <div class="form-group">
-                                        <label class="input-label" for="exampleFormControlInput1">Banner type</label>
-                                        <select name="banner_type" id="banner_type" class="custom-select p">
-                                            <option value="provider_wise">Provider Wise</option>
-                                            <option value="item_wise">Item wise</option>
-                                            <option value="default">Default</option>
-                                        </select>
+                                        <label class="input-label font-semibold" for="">Title
+                                            (Default)
+                                        </label>
+                                        <input type="text" name="" id="" class="form-control"
+                                            placeholder="Auto Focus Car Service">
                                     </div>
-                                    <div class="form-group mb-0">
-                                        <label class="input-label"
-                                            for="exampleFormControlSelect1">{{ translate('messages.provider') }}</label>
-                                        <select name="" id="" class="custom-select p"
-                                            title="{{ translate('messages.select_store') }}">
-                                            <option disabled selected>{{ translate('messages.Select_Provider') }}</option>
-                                            <option value="1">Provider 1</option>
-                                            <option value="2">Provider 2</option>
-                                        </select>
+                                    <div class="form-group">
+                                        <label class="input-label font-semibold" for="">
+                                            Redirection URL / Link
+                                        </label>
+                                        <input type="text" name="" id="" class="form-control"
+                                            placeholder="Enter URL">
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
@@ -122,7 +72,7 @@
                                                             alt="">
                                                         <h6 class="mt-2 font-semibold  text-center">
                                                             <span>{{ translate('Click to upload') }}</span>
-                                                            <br>
+                                                            <br class="d-block d-sm-none">
                                                             {{ translate('or drag and drop') }}
                                                         </h6>
                                                     </div>
