@@ -6055,4 +6055,5 @@
   'Type 2' => 'Type 2',
   'type 1' => 'Type 1',
   'type 2' => 'Type 2',
+  'Additional_Documents' => 'Additional Documents',
 );

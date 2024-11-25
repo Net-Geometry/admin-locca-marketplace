@@ -1,4 +1,4 @@
-@extends('layouts.admin.app')
+@extends('layouts.vendor.app')
 
 @section('title', translate('messages.vehicle_details'))
 
@@ -259,25 +259,7 @@
             </div>
         </div>
         <div class="row mb-20">
-            <div class="col-lg-3 mb-20 mb-lg-0">
-                <div class="card h-100">
-                    <div class="card-body d-flex flex-column justify-content-center">
-                        <a class="resturant--information-single" href="#">
-                            <img class="img--65 rounded mx-auto mb-3 onerror-image" data-onerror-image=""
-                                src="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}" alt="Image Description">
-                            <div class="text-center text--title">
-                                <h5 class="text-capitalize font-semibold text-hover-primary d-block mb-1">
-                                    Auto Focus Car Service
-                                </h5>
-                                <span class="opacity-lg">
-                                    House:20, Road:30, Mirpur 12
-                                </span>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-9">
+            <div class="col-lg-12">
                 <div class="card h-100">
                     <!-- Table -->
                     <div class="table-responsive">
@@ -315,7 +297,7 @@
                                     </td>
                                     <td>
                                         <div class="d-flex justify-content-between gap-20px">
-                                            <div>
+                                            <div class="flex-grow-1">
                                                 <div class="d-flex"> <span class="min-w-110px">Air Condition</span><span
                                                         class="font-semibold">: Yes</span></div>
                                                 <div class="d-flex"><span class="min-w-110px">Transmission</span><span
@@ -324,7 +306,7 @@
                                                 <div class="d-flex"><span class="min-w-110px">Fuel Type</span><span
                                                         class="font-semibold">: Diesel</span></div>
                                             </div>
-                                            <div>
+                                            <div class="flex-grow-1">
                                                 <div class="d-flex"> <span class="min-w-110px">Engine Capacity</span><span
                                                         class="font-semibold">: 1100 cc</span></div>
                                                 <div class="d-flex"><span class="min-w-110px">Break System</span><span
@@ -602,7 +584,6 @@
 @endsection
 
 
-
 @push('script_2')
     <script src="{{ asset('/public/assets/admin/vendor/simplebar/dist/simplebar.min.js') }}"></script>
     <script src="{{ asset('/public/assets/admin/vendor/drift-zoom/dist/Drift.min.js') }}"></script>
@@ -697,7 +678,7 @@
                     // For non-PDF, non-image files (e.g., DOCX, XLSX, etc.)
                     const fileIconPath = `{{ asset('public/assets/admin/img/icons') }}/${fileExtension}.png`;
                     const fallbackIconPath =
-                    "{{ asset('public/assets/admin/img/blank2.png') }}"; // Fallback image
+                        "{{ asset('public/assets/admin/img/blank2.png') }}"; // Fallback image
 
                     // Check if a specific icon exists for the file type, otherwise use the fallback
                     const iconExists = await checkFileIconExistence(fileIconPath);
