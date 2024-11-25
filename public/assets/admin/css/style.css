@@ -14719,3 +14719,7 @@ ul.address-info .label {
 }
 
 /* custom route line draw design ends */
+
+.w--100px {
+    width: 100px !important;
+}

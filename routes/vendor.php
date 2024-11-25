@@ -7,6 +7,9 @@ use App\Http\Controllers\Vendor\SubscriptionController;
 Route::group(['namespace' => 'Vendor', 'as' => 'vendor.'], function () {
 
     Route::group(['middleware' => ['vendor']], function () {
+        Route::get('/test', function () { 
+            return view('vendor-views.car-rental.index');
+         });
         Route::get('lang/{locale}', 'LanguageController@lang')->name('lang');
         Route::get('/', 'DashboardController@dashboard')->name('dashboard');
         Route::get('/get-store-data', 'DashboardController@store_data')->name('get-store-data');
