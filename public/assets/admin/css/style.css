@@ -14730,3 +14730,7 @@ ul.address-info .label {
 .radius-15 {
     border-radius: 15px !important;
 }
+
+.select-item select:valid {
+    opacity: 1;
+}

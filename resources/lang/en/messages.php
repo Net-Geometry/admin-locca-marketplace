@@ -6048,4 +6048,11 @@
   'Toyota - F Premio 2006' => 'Toyota - F Premio 2006',
   'Confirmed' => 'Confirmed',
   'ready for delivery' => 'Ready for delivery',
+  'Type your business name' => 'Type your business name',
+  'Category 1' => 'Category 1',
+  'Category 2' => 'Category 2',
+  'Type 1' => 'Type 1',
+  'Type 2' => 'Type 2',
+  'type 1' => 'Type 1',
+  'type 2' => 'Type 2',
 );

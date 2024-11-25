@@ -10,8 +10,8 @@ Route::group(['namespace' => 'Vendor', 'as' => 'vendor.'], function () {
         Route::get('/test', function () { 
             // return view('vendor-views.car-rental.index');
             // return view('vendor-views.car-rental.banner.index');
-            return view('vendor-views.car-rental.trip-management.trip-details');
-            // return view('vendor-views.car-rental.vehicle-management.vehicale-list');
+            // return view('vendor-views.car-rental.trip-management.trip-details');
+            return view('vendor-views.car-rental.vehicle-management.vehicale-list');
          });
         Route::get('lang/{locale}', 'LanguageController@lang')->name('lang');
         Route::get('/', 'DashboardController@dashboard')->name('dashboard');
