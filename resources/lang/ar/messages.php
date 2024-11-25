@@ -5271,4 +5271,5 @@
   'Mirpur_Zone' => 'Mirpur Zone',
   'Top_Vehicles' => 'Top Vehicles',
   'Toyota - F Premio 2006' => 'Toyota - F Premio 2006',
+  'Trip Details' => 'Trip Details',
 );

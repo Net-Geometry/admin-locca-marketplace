@@ -6047,4 +6047,5 @@
   'Top_Vehicles' => 'Top Vehicles',
   'Toyota - F Premio 2006' => 'Toyota - F Premio 2006',
   'Confirmed' => 'Confirmed',
+  'ready for delivery' => 'Ready for delivery',
 );

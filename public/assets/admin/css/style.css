@@ -12415,7 +12415,7 @@ label.position-relative {
 }
 
 .rounded-20 {
-    border-radius: 20px;
+    border-radius: 20px !important;
 }
 
 .subscription__plan-info-wrapper {
@@ -14667,54 +14667,54 @@ ul.address-info .label {
 }
 
 /* custom route line draw design */
-.custom_route_line_map_canvas .gm-ui-hover-effect > span {
+.custom_map_canvas .gm-ui-hover-effect > span {
     background-color: #fff;
 }
-.custom_route_line_map_canvas .gm-style .gm-style-iw-c {
+.custom_map_canvas .gm-style .gm-style-iw-c {
     background: #000 !important;
     color: #fff;
     padding: 0.5rem !important;
 }
 /* close btn hide */
-.custom_route_line_map_canvas .gm-style-iw-chr {
+.custom_map_canvas .gm-style-iw-chr {
     /* display: none !important; */
     overflow: hidden !important;
     padding-bottom: 0.5rem !important;
 }
-.custom_route_line_map_canvas .gm-style-iw-chr .gm-style-iw-ch {
+.custom_map_canvas .gm-style-iw-chr .gm-style-iw-ch {
     display: none !important;
 }
-.custom_route_line_map_canvas .gm-style-iw-chr .gm-ui-hover-effect {
+.custom_map_canvas .gm-style-iw-chr .gm-ui-hover-effect {
     position: absolute !important;
     inset-inline-end: 0;
     inset-block-start: 0;
 }
-.custom_route_line_map_canvas .gm-style-iw-chr .gm-ui-hover-effect,
-.custom_route_line_map_canvas .gm-style-iw-chr .gm-ui-hover-effect span {
+.custom_map_canvas .gm-style-iw-chr .gm-ui-hover-effect,
+.custom_map_canvas .gm-style-iw-chr .gm-ui-hover-effect span {
     width: 16px !important;
     height: 16px !important;
     margin: 0 !important;
     padding: 0 !important;
 }
-.custom_route_line_map_canvas .gm-style-iw-chr .gm-ui-hover-effect span {
+.custom_map_canvas .gm-style-iw-chr .gm-ui-hover-effect span {
     background-color: var(--danger-clr);
 }
-.custom_route_line_map_canvas .gm-style-iw-d {
+.custom_map_canvas .gm-style-iw-d {
     overflow: hidden !important;
 }
-.custom_route_line_map_canvas .gm-style .gm-style-iw-tc::after {
+.custom_map_canvas .gm-style .gm-style-iw-tc::after {
     background: rgba(0, 0, 0, 0.9) !important;
 }
-.custom_route_line_map_canvas .poi-info-window div,
+.custom_map_canvas .poi-info-window div,
 .poi-info-window a {
     background: rgba(0, 0, 0, 0.9) !important;
 }
 
-.custom_route_line_map_canvas .poi-info-window div {
+.custom_map_canvas .poi-info-window div {
     color: #fff !important;
 }
 
-.custom_route_line_map_canvas .poi-info-window a {
+.custom_map_canvas .poi-info-window a {
     color: var(--base-clr-2) !important;
 }
 
@@ -14722,4 +14722,11 @@ ul.address-info .label {
 
 .w--100px {
     width: 100px !important;
+}
+.p-5px {
+    padding: 5px !important;
+}
+
+.radius-15 {
+    border-radius: 15px !important;
 }

@@ -205,7 +205,7 @@
                                         -$ 350.25
                                     </dd>
 
-                                    <dt class="col-6 font-regular">Vat/tax:</dt>
+                                    <dt class="col-6 font-regular text-uppercase">Vat/tax:</dt>
                                     <dd class="col-6 text-right">
                                         +$ 10
                                     </dd>
@@ -285,7 +285,7 @@
                                 </div>
                             </div>
                             <button type="button" class="btn btn--primary w-100"><i class="tio-bike"></i> <span
-                                class="ml-2">Assign Driver</span>
+                                    class="ml-2">Assign Driver</span>
                             </button>
                         </div>
                     </div>
@@ -294,13 +294,13 @@
                     <div class="card-body">
                         <div class="position-relative">
                             <div class="map-fullscreen-btn_wrapper">
-                                <button type="button" 
-                                    data-toggle="modal" data-target="#pickupDesModal"
+                                <button type="button" data-toggle="modal" data-target="#pickupDesModal"
                                     class="btn border-0 shadow--card-2">
                                     <i class="tio-fullscreen-1-1"></i>
                                 </button>
                             </div>
-                            <img class="aspect-2-1 object--cover w-100 max-h-160px rounded" src="{{ asset('public/assets/admin/img/map-road.png') }}" alt="Map road">
+                            <img class="aspect-2-1 object--cover w-100 max-h-160px rounded"
+                                src="{{ asset('public/assets/admin/img/map-road.png') }}" alt="Map road">
                         </div>
                         <hr>
                         <ul class="trip-details-address text--title px-0 pt-2">
@@ -495,7 +495,8 @@
                     <div class="row">
                         <div class="col-md-12 modal_body_map">
                             <div class="location-map" id="pickup_location_map">
-                                <div class="initial--25 rounded-8 custom_route_line_map_canvas" id="custom_route_line_map_canvas"></div>
+                                <div class="initial--25 rounded-8 custom_map_canvas" id="custom_route_line_map_canvas">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -653,7 +654,7 @@
                                                 -$ 350.25
                                             </dd>
 
-                                            <dt class="col-6 font-regular">Vat/tax:</dt>
+                                            <dt class="col-6 font-regular text-uppercase">Vat/tax:</dt>
                                             <dd class="col-6 text-right">
                                                 +$ 10
                                             </dd>
@@ -1593,7 +1594,7 @@
 
             // ------- pickup destinaton map with route line starts
 
-           // drawing a route (polyline) on the map between two locations
+            // drawing a route (polyline) on the map between two locations
             function addPolylineToMap(map, pickupLocation, destinationLocation) {
                 const directionsService = new google.maps.DirectionsService();
                 const directionsRenderer = new google.maps.DirectionsRenderer({
@@ -1601,8 +1602,8 @@
                     suppressMarkers: true, // Suppress default markers
                     polylineOptions: {
                         strokeColor: '#4D4D4D', // Line color
-                        strokeOpacity: 1.0,     // Line opacity
-                        strokeWeight: 3         // Line width
+                        strokeOpacity: 1.0, // Line opacity
+                        strokeWeight: 3 // Line width
                     },
                 });
 
@@ -1614,7 +1615,7 @@
                 };
 
                 // Calculate the route and render it
-                directionsService.route(request, function (response, status) {
+                directionsService.route(request, function(response, status) {
                     if (status === google.maps.DirectionsStatus.OK) {
                         directionsRenderer.setDirections(response);
                     } else {
@@ -1626,32 +1627,43 @@
 
             function initializeCustomRouteLocationMap() {
 
-                const grayStyle = [
-                    {
+                const grayStyle = [{
                         featureType: "all",
-                        stylers: [
-                            { saturation: -100 }, // Desaturate all colors
-                            { lightness: 20 },    // Increase lightness
+                        stylers: [{
+                                saturation: -100
+                            }, // Desaturate all colors
+                            {
+                                lightness: 20
+                            }, // Increase lightness
                         ]
                     },
                     {
                         featureType: "road",
-                        stylers: [
-                            { visibility: "on" },
-                            { lightness: 30 }
+                        stylers: [{
+                                visibility: "on"
+                            },
+                            {
+                                lightness: 30
+                            }
                         ]
                     },
                     {
                         featureType: "landscape",
-                        stylers: [
-                            { lightness: 10 },
-                            { saturation: -80 }
+                        stylers: [{
+                                lightness: 10
+                            },
+                            {
+                                saturation: -80
+                            }
                         ]
                     }
                 ];
 
                 const map = new google.maps.Map(document.getElementById("custom_route_line_map_canvas"), {
-                    center: { lat: 23.766660, lng: 90.424993 },
+                    center: {
+                        lat: 23.766660,
+                        lng: 90.424993
+                    },
                     zoom: 14, // Adjusted for better overview
                     styles: grayStyle,
                 });
@@ -1659,8 +1671,14 @@
                 const infowindow = new google.maps.InfoWindow();
 
                 // Define pickup and destination locations
-                const pickupLocation = { lat: 23.766660, lng: 90.424993 };
-                const destinationLocation = { lat: 23.837232, lng: 90.373129 };
+                const pickupLocation = {
+                    lat: 23.766660,
+                    lng: 90.424993
+                };
+                const destinationLocation = {
+                    lat: 23.837232,
+                    lng: 90.373129
+                };
 
                 // get dynamic icon color
                 function getDynamicMarkerSvg(dynamicColor) {
@@ -1716,7 +1734,7 @@
                     icon: "{{ asset('public/assets/admin/img/icons/pickup.svg') }}",
                 });
 
-                google.maps.event.addListener(pickupMarker, "click", function () {
+                google.maps.event.addListener(pickupMarker, "click", function() {
                     infowindow.setContent('<div class="fs-12 font-medium">Pickup</div>');
                     infowindow.open(map, pickupMarker);
                 });
@@ -1729,7 +1747,7 @@
                     icon: destinationMarkerIcon,
                 });
 
-                google.maps.event.addListener(destinationMarker, "click", function () {
+                google.maps.event.addListener(destinationMarker, "click", function() {
                     infowindow.setContent('<div class="fs-12 font-medium">Destination</div>');
                     infowindow.open(map, destinationMarker);
                 });
