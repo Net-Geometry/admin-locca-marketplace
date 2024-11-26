@@ -450,6 +450,15 @@
                                 <div class="col-lg-4">
                                     <div class="form-group mb-0">
                                         <label class="input-label"
+                                            for="">{{ translate('messages.Hourly Wise Price ($)') }}
+                                        </label>
+                                        <input type="number" name="" class="form-control"
+                                            placeholder="Ex: 35.25" value="">
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group mb-0">
+                                        <label class="input-label"
                                             for="">{{ translate('messages.Distance Wise Price ($)') }}
                                         </label>
                                         <input type="number" name="" class="form-control"
@@ -569,18 +578,6 @@
     <script src="{{ asset('public/assets/admin/js/spartan-multi-image-picker.js') }}"></script>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
-
-    <script>
-        document.querySelectorAll('.single-select').forEach((checkbox) => {
-            checkbox.addEventListener('change', function() {
-                if (this.checked) {
-                    document.querySelectorAll('.single-select').forEach((cb) => {
-                        if (cb !== this) cb.checked = false;
-                    });
-                }
-            });
-        });
-    </script>
 
     <script>
         // Get all upload-file input elements

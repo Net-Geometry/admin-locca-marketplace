@@ -6056,4 +6056,5 @@
   'type 1' => 'Type 1',
   'type 2' => 'Type 2',
   'Additional_Documents' => 'Additional Documents',
+  'Hourly Wise Price ($)' => 'Hourly Wise Price ($)',
 );
