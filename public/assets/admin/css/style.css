@@ -14734,3 +14734,7 @@ ul.address-info .label {
 .select-item select:valid {
     opacity: 1;
 }
+
+.rounded-10 {
+    border-radius: 10px !important;
+}

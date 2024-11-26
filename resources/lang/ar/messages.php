@@ -5273,4 +5273,7 @@
   'Toyota - F Premio 2006' => 'Toyota - F Premio 2006',
   'Trip Details' => 'Trip Details',
   'Additional_Documents' => 'Additional Documents',
+  'You can upload a maximum of' => 'You can upload a maximum of',
+  'files.' => 'Files.',
+  'welcome_back_login_to_your_panel' => 'Welcome back login to your panel',
 );

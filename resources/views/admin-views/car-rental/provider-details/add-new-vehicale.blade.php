@@ -2,8 +2,6 @@
 
 @section('title', translate('messages.Provider Details - Add New Vehicale'))
 
-
-
 @section('content')
     <div class="content container-fluid">
         <!-- Page Header -->
@@ -388,7 +386,7 @@
                                     value="Same Model Multiple Vehicles" checked>
                             </label>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body d-flex flex-column gap-20px">
                             <div class="d-flex gap-20px flex-column flex-md-row equal-width" id="input-container">
                                 <div class="form-group mb-0">
                                     <label class="input-label"
@@ -546,7 +544,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <!-- Uploaded files will be appended here as pdf-single divs -->
+                                <!-- Uploaded files will be appended here as .pdf-single divs -->
                             </div>
                         </div>
                     </div>
@@ -570,6 +568,7 @@
 @push('script_2')
     <script src="{{ asset('public/assets/admin/js/spartan-multi-image-picker.js') }}"></script>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
 
     <script>
         document.querySelectorAll('.single-select').forEach((checkbox) => {
@@ -686,8 +685,6 @@
                 uploadWrapper.style.display = currentFiles >= MAX_FILES ? "none" : "block";
             }
         });
-
-
         // ----- mutiple image upload ends
 
         // ----- mutiple document upload 
@@ -703,49 +700,53 @@
                 if (currentFiles + files.length > MAX_FILES) {
                     toastr.error(`You can upload a maximum of ${MAX_FILES} files.`, {
                         CloseButton: true,
-                        ProgressBar: true
+                        ProgressBar: true,
                     });
                     return;
                 }
 
-                files.forEach(file => {
+                files.forEach((file) => {
                     const fileURL = URL.createObjectURL(file);
                     const fileName = file.name;
                     const fileType = file.type;
 
-                    // Determine icon based on file type
-                    const icon = fileType.startsWith("image/") ?
-                        "{{ asset('public/assets/admin/img/picture.svg') }}" :
-                        "{{ asset('public/assets/admin/img/document.svg') }}";
-
                     const pdfSingle = document.createElement("div");
                     pdfSingle.className = "pdf-single";
                     pdfSingle.setAttribute("data-pdf-url", fileURL);
+                    pdfSingle.setAttribute("onclick", `window.open('${fileURL}', '_blank')`);
+
+                    const iconSrc = fileType.startsWith("image/") ?
+                        "{{ asset('public/assets/admin/img/picture.svg') }}" :
+                        "{{ asset('public/assets/admin/img/document.svg') }}";
 
                     pdfSingle.innerHTML = `
-                <div class="pdf-frame">
-                    <iframe src="${fileURL}" frameborder="0"></iframe>
-                </div>
-                <div class="overlay">
-                    <a href="javascript:void(0);" class="remove-btn" onclick="removeDocument(event, this)">
-                        <i class="tio-clear"></i>
-                    </a>
-                    <div class="pdf-info d-flex gap-10px align-items-center">
-                        <img src="${icon}" width="34" alt="File Icon">
-                        <div class="fs-13 text--title d-flex flex-column">
-                            <a href="${fileURL}" target="_blank" class="text--title line--limit-2">${fileName}</a>
-                            <span class="opacity-50">Click to view in a new tab</span>
+                        <div class="pdf-frame">
+                            <canvas class="pdf-preview" style="display: none;"></canvas>
+                            <img class="pdf-thumbnail" src="{{ asset('public/assets/admin/img/blank2.png') }}" alt="File Thumbnail">
                         </div>
-                    </div>
-                </div>
-            `;
+                        <div class="overlay">
+                            <a href="javascript:void(0);" class="remove-btn" onclick="removeDocument(event, this)">
+                                <i class="tio-clear"></i>
+                            </a>
+                            <div class="pdf-info d-flex gap-10px align-items-center">
+                                <img src="${iconSrc}" width="34" alt="File Type Logo">
+                                <div class="fs-13 text--title d-flex flex-column">
+                                    <span class="file-name">${fileName}</span>
+                                    <span class="opacity-50">Click to view the file</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
 
                     pdfContainer.appendChild(pdfSingle);
 
+                    // Call thumbnail renderer
+                    renderFileThumbnail(pdfSingle, fileType);
+
                     // Show success notification
-                    toastr.success('File added successfully.', {
+                    toastr.success("File added successfully.", {
                         CloseButton: true,
-                        ProgressBar: true
+                        ProgressBar: true,
                     });
                 });
 
@@ -766,8 +767,47 @@
                 const currentFiles = pdfContainer.querySelectorAll(".pdf-single").length;
                 uploadWrapper.style.display = currentFiles >= MAX_FILES ? "none" : "block";
             }
-        });
 
+            async function renderFileThumbnail(element, fileType) {
+                const fileUrl = element.getAttribute("data-pdf-url");
+                const canvas = element.querySelector(".pdf-preview");
+                const thumbnail = element.querySelector(".pdf-thumbnail");
+
+                if (fileType.startsWith("image/")) {
+                    // For image files, directly set the thumbnail
+                    thumbnail.src = fileUrl;
+                } else if (fileType === "application/pdf") {
+                    // For PDFs, use PDF.js to render the thumbnail
+                    try {
+                        const ctx = canvas.getContext("2d");
+                        const loadingTask = pdfjsLib.getDocument(fileUrl);
+                        const pdf = await loadingTask.promise;
+                        const page = await pdf.getPage(1);
+
+                        const viewport = page.getViewport({
+                            scale: 0.5
+                        });
+                        canvas.width = viewport.width;
+                        canvas.height = viewport.height;
+
+                        await page.render({
+                            canvasContext: ctx,
+                            viewport,
+                        }).promise;
+
+                        thumbnail.src = canvas.toDataURL();
+                    } catch (error) {
+                        console.error("Error rendering PDF thumbnail:", error);
+                    }
+                } else {
+                    // Handle unsupported file types (fallback)
+                    thumbnail.src = "{{ asset('public/assets/admin/img/blank2.png') }}";
+                }
+
+                thumbnail.style.display = "block";
+                canvas.style.display = "none";
+            }
+        });
         // ----- mutiple document upload ends
     </script>
 
@@ -776,12 +816,12 @@
         $(document).on('click', '.add-btn', function() {
             let newDiv = $('#input-container').clone();
             newDiv.find('.add-btn')
-                .removeClass('add-btn')
-                .addClass('remove-btn')
-                .html('<i class="tio-remove-circle-outlined"></i>');
+                .removeClass('add-btn text--primary')
+                .addClass('remove-btn text--danger')
+                .html('<i class="tio-clear-circle-outlined"></i>');
 
             // Append the new div after the last existing input 
-            newDiv.insertAfter('.equal-width:last');
+            newDiv.insertBefore('.equal-width:last');
         });
 
         $(document).on('click', '.remove-btn', function() {

@@ -8,8 +8,8 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
     Route::group(['middleware' => ['admin', 'current-module']], function () {
         Route::get('/test', function () {
             // return view('admin-views.car-rental.business-basic-setup');
-            // return view('admin-views.car-rental.provider-details.add-new-vehicale');
-            return view('admin-views.car-rental.provider-details.vehicle-details');
+            return view('admin-views.car-rental.provider-details.add-new-vehicale');
+            // return view('admin-views.car-rental.provider-details.vehicle-details');
             // return view('admin-views.car-rental.provider-details.overview');
             // return view('admin-views.car-rental.dashboard-car');
         });
