@@ -6057,4 +6057,5 @@
   'type 2' => 'Type 2',
   'Additional_Documents' => 'Additional Documents',
   'Hourly Wise Price ($)' => 'Hourly Wise Price ($)',
+  'Vehicle List - Add New Vehicale' => 'Vehicle List - Add New Vehicale',
 );
