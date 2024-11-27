@@ -14749,3 +14749,7 @@ ul.address-info .label {
         inline-size: 200px;
     }
 }
+
+.table-layout-fixed {
+    table-layout: fixed;
+}

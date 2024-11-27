@@ -15,8 +15,7 @@
                         <span class="page-header-icon">
                             <img src="{{ asset('public/assets/admin/img/store.png') }}" class="w--22" alt="">
                         </span>
-                        <span>{{ translate('messages.Auto_Focus_Car_Service') }}
-                    </h1></span>
+                        <span>{{ translate('messages.Auto_Focus_Car_Service') }}</span>
                     </h1>
                 </div>
             </div>
