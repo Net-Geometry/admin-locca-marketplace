@@ -188,28 +188,29 @@
                                 </p>
                             </div>
                         </div>
-                        <div class="card-body">
-                            {{-- old multiple image upload with spartanMultiImagePicker --}}
-                            {{-- <div class="d-flex flex-wrap gap-3 upload-file custom" id="coba"></div> --}}
-                            <div class="d-flex gap-3 flex-wrap" id="image_container">
-                                <div class="upload-file text-wrapper h--100px w--200px" id="image_upload_wrapper">
-                                    <input type="file" name="files[]" class="upload-file__input multiple_image_input"
-                                        accept=".jpg,.jpeg,.png" required multiple>
-                                    <div
-                                        class="upload-file__img d-flex gap-0 justify-content-center align-items-center h-100 max-w-300px p-0">
-                                        <div class="upload-file__textbox">
-                                            <img width="34" height="34"
-                                                src="{{ asset('public/assets/admin/img/document-upload.png') }}"
-                                                alt="" class="svg">
-                                            <h6 class="mt-2 font-semibold">
-                                                <span class="text-info">{{ translate('Click to upload') }}</span><br>
-                                                {{ translate('or drag and drop') }}
-                                            </h6>
+                        <div class="card-body py-1">
+                            <div class="d-flex py-3 overflow-x-auto">
+                                <div class="d-flex gap-3 flex-shrink-0" id="image_container">
+                                    <div class="upload-file text-wrapper h--100px w--200px flex-shrink-0"
+                                        id="image_upload_wrapper">
+                                        <input type="file" name="files[]"
+                                            class="upload-file__input multiple_image_input" accept=".jpg,.jpeg,.png"
+                                            required multiple>
+                                        <div
+                                            class="upload-file__img d-flex gap-0 justify-content-center align-items-center h-100 max-w-300px p-0">
+                                            <div class="upload-file__textbox">
+                                                <img width="34" height="34"
+                                                    src="{{ asset('public/assets/admin/img/document-upload.png') }}"
+                                                    alt="" class="svg">
+                                                <h6 class="mt-2 font-semibold">
+                                                    <span class="text-info">{{ translate('Click to upload') }}</span><br>
+                                                    {{ translate('or drag and drop') }}
+                                                </h6>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -535,25 +536,27 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <div class="d-flex gap-3 flex-wrap" id="pdf-container">
-                                <div class="upload-file text-wrapper document-wrapper" id="upload-wrapper">
-                                    <input type="file" name="files[]"
-                                        class="upload-file__input multiple_document_input" accept="*" required
-                                        multiple>
-                                    <div
-                                        class="upload-file__img d-flex justify-content-center align-items-center h-100 max-w-300px p-0">
-                                        <div class="upload-file__textbox pdf">
-                                            <img width="34" height="34"
-                                                src="{{ asset('public/assets/admin/img/document-upload.png') }}"
-                                                alt="" class="svg">
-                                            <h6 class="font-semibold">
-                                                <span class="text-info">{{ translate('Click to upload') }}</span><br>
-                                                {{ translate('or drag and drop') }}
-                                            </h6>
+                            <div class="d-flex py-3 overflow-x-auto">
+                                <div class="d-flex gap-3 flex-shrink-0" id="pdf-container">
+                                    <div class="upload-file text-wrapper document-wrapper" id="upload-wrapper">
+                                        <input type="file" name="files[]"
+                                            class="upload-file__input multiple_document_input" accept="*" required
+                                            multiple>
+                                        <div
+                                            class="upload-file__img d-flex justify-content-center align-items-center h-100 max-w-300px p-0">
+                                            <div class="upload-file__textbox pdf">
+                                                <img width="34" height="34"
+                                                    src="{{ asset('public/assets/admin/img/document-upload.png') }}"
+                                                    alt="" class="svg">
+                                                <h6 class="font-semibold">
+                                                    <span class="text-info">{{ translate('Click to upload') }}</span><br>
+                                                    {{ translate('or drag and drop') }}
+                                                </h6>
+                                            </div>
                                         </div>
                                     </div>
+                                    <!-- Uploaded files will be appended here as .pdf-single divs -->
                                 </div>
-                                <!-- Uploaded files will be appended here as .pdf-single divs -->
                             </div>
                         </div>
                     </div>
@@ -824,67 +827,5 @@
         $(document).on('click', '.remove-btn', function() {
             $(this).closest('.equal-width').remove();
         });
-    </script>
-
-    <script>
-        "use strict";
-
-        // --- old multiple image upload with spartanMultiImagePicker
-        // $(function() {
-        //     $("#coba").spartanMultiImagePicker({
-        //         fieldName: 'identity_image[]',
-        //         maxCount: 5,
-        //         rowHeight: '120px',
-        //         groupClassName: 'upload-file__img upload-file__img_banner',
-        //         maxFileSize: '',
-        //         placeholderImage: {
-        //             image: "{{ asset('public/assets/admin/img/document-upload.png') }}",
-        //             width: '34px',
-        //         },
-        //         dropFileLabel: `
-    //         <h6 id="dropAreaLabel" class="mt-2 fw-semibold">
-    //             <span class="text-info">{{ translate('Click to upload') }}</span>
-    //             <br>
-    //             {{ translate('or drag and drop') }}
-    //         </h6>`,
-
-        //         onRenderedPreview: function(index) {
-        //             if ($(".file_upload").find(".img_").length > 0) {
-        //                 $("#dropAreaLabel").hide();
-        //             }
-        //             $(".file_upload").on("dragenter", function(e) {
-        //                 e.preventDefault();
-        //                 e.stopPropagation();
-        //                 $(this).find('#dropAreaLabel').hide();
-        //                 $(this).find('.spartan_image_placeholder').hide();
-        //             });
-        //             toastr.success('{{ translate('image_added') }}', {
-        //                 CloseButton: true,
-        //                 ProgressBar: true
-        //             });
-
-        //         },
-
-        //         onRemoveRow: function(index) {
-        //             if ($(".file_upload").find(".img_").length === 0) {
-        //                 $("#dropAreaLabel").show();
-        //             }
-        //         },
-
-        //         onExtensionErr: function(index, file) {
-        //             toastr.error('{{ translate('please_only_input_png_or_jpg_type_file') }}', {
-        //                 CloseButton: true,
-        //                 ProgressBar: true
-        //             });
-        //         },
-
-        //         onSizeErr: function(index, file) {
-        //             toastr.error('{{ translate('file_size_too_big') }}', {
-        //                 CloseButton: true,
-        //                 ProgressBar: true
-        //             });
-        //         }
-        //     });
-        // });
     </script>
 @endpush

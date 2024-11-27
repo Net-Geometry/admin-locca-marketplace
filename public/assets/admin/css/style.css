@@ -14738,3 +14738,14 @@ ul.address-info .label {
 .rounded-10 {
     border-radius: 10px !important;
 }
+
+.overflow-x-auto {
+    overflow-x: auto !important;
+}
+
+@media (max-width: 575px) {
+    #pdf-container .document-wrapper,
+    #pdf-container .pdf-single {
+        inline-size: 200px;
+    }
+}
