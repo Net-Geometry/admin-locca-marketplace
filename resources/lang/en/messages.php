@@ -6058,4 +6058,9 @@
   'Additional_Documents' => 'Additional Documents',
   'Hourly Wise Price ($)' => 'Hourly Wise Price ($)',
   'Vehicle List - Add New Vehicale' => 'Vehicle List - Add New Vehicale',
+  'brand_list' => 'Brand list',
+  'brand_id' => 'Brand id',
+  'brand_name' => 'Brand name',
+  'category id' => 'Category id',
+  'category name' => 'Category name',
 );
