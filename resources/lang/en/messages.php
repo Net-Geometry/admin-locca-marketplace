@@ -6066,4 +6066,11 @@
   'Cancel_Trip' => 'Cancel Trip',
   'Cameron Williamson' => 'Cameron Williamson',
   'Total_Requested' => 'Total Requested',
+  'Add New Driver' => 'Add New Driver',
+  'User_Info' => 'User Info',
+  'Type your first name' => 'Type your first name',
+  'Type your last name' => 'Type your last name',
+  'Type your email address' => 'Type your email address',
+  'Select Driver Identity type' => 'Select Driver Identity type',
+  'Identity_Number' => 'Identity Number',
 );

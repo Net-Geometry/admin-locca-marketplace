@@ -8667,6 +8667,9 @@ ul.delivery--information-single li:not(:last-child) {
 .pb-20 {
     padding-bottom: 20px;
 }
+.pt-20 {
+    padding-top: 20px;
+}
 
 .text-006AB4 {
     color: #006ab4;
@@ -14554,6 +14557,9 @@ ul.address-info .label {
 .max-w-165 {
     max-width: 165px;
 }
+.max-w-180 {
+    max-width: 180px;
+}
 .min-w-330 {
     min-width: 330px;
 }
@@ -14562,6 +14568,9 @@ ul.address-info .label {
 }
 .h-165 {
     height: 165px;
+}
+.h-180 {
+    height: 180px;
 }
 .max-w-200px {
     max-width: 200px;

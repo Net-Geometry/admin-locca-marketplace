@@ -10,7 +10,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             // return view('admin-views.car-rental.dashboard-car');
             // return view('admin-views.car-rental.provider-request-list');
             // return view('admin-views.car-rental.provider-list');
-            return view('admin-views.car-rental.provider-details.overview');
+            // return view('admin-views.car-rental.provider-details.overview');
             // return view('admin-views.car-rental.provider-details.trip-list');
             // return view('admin-views.car-rental.provider-details.driver-list');
             // return view('admin-views.car-rental.provider-details.add-new-vehicale');
@@ -18,9 +18,8 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             // return view('admin-views.car-rental.provider-request-details');
             // return view('admin-views.car-rental.business-basic-setup');
             // return view('admin-views.car-rental.business-plan-setup');
-            // return view('admin-views.car-rental.provider-details.add-new-vehicale');
-            // return view('admin-views.car-rental.provider-details.overview');
             // return view('admin-views.car-rental.provider-details.driver-list');
+            return view('admin-views.car-rental.provider-details.add-new-driver');
         });
         Route::get('drivemond-panel', 'DriveMondController@drivemondExternalLogin')->name('drivemond-panel');
         Route::get('get-all-stores', 'VendorController@get_all_stores')->name('get_all_stores');
