@@ -5276,4 +5276,9 @@
   'You can upload a maximum of' => 'You can upload a maximum of',
   'files.' => 'Files.',
   'welcome_back_login_to_your_panel' => 'Welcome back login to your panel',
+  'new_vehicle' => 'New vehicle',
+  'Brand' => 'Brand',
+  'Trip Fair' => 'Trip Fair',
+  'Cancel_Trip' => 'Cancel Trip',
+  'Cameron Williamson' => 'Cameron Williamson',
 );

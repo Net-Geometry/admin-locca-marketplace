@@ -6063,4 +6063,6 @@
   'brand_name' => 'Brand name',
   'category id' => 'Category id',
   'category name' => 'Category name',
+  'Cancel_Trip' => 'Cancel Trip',
+  'Cameron Williamson' => 'Cameron Williamson',
 );
