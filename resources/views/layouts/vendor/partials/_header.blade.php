@@ -88,7 +88,7 @@
                                         <span class="card-text">{{\App\CentralLogics\Helpers::get_loggedin_user()->email}}</span>
                                     </div>
                                     <div class="avatar avatar-sm avatar-circle">
-                                        <img class="avatar-img  onerror-image"  data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
+                                        <img class="avatar-img  onerror-image aspect-ratio-1"  data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
                                         src="{{ \App\CentralLogics\Helpers::get_loggedin_user()->toArray()['image_full_url'] }}"
                                             alt="Image Description">
                                         <span class="avatar-status avatar-sm-status avatar-status-success"></span>
