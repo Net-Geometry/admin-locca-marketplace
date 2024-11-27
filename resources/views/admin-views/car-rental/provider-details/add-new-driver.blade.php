@@ -263,9 +263,9 @@
                 <div class="col-lg-12">
                     <div class="btn--container justify-content-end mt-3">
                         <button type="reset" id="reset_btn"
-                            class="btn btn--reset">{{ translate('messages.reset') }}</button>
+                            class="btn btn--reset min-w-120px shadow-none">{{ translate('messages.reset') }}</button>
                         <button type="submit"
-                            class="btn btn--primary">{{ translate('messages.update_&_next') }}</button>
+                            class="btn btn--primary min-w-120px shadow-none">{{ translate('messages.submit') }}</button>
                     </div>
                 </div>
             </div>
