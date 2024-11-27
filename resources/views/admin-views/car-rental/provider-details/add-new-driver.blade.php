@@ -7,7 +7,7 @@
 @section('content')
     <div class="content container-fluid">
         <!-- Page Header -->
-        <div class="page-header pb-20">
+        <div class="page-header">
             <div class="d-flex justify-content-between flex-wrap gap-3">
                 <div>
                     <h1 class="page-header-title text-break">
@@ -26,9 +26,9 @@
             id="vendor_form">
             @csrf
 
-            <div class="row g-2">
+            <div class="row g-3">
                 <div class="col-lg-12">
-                    <div class="card mt-4">
+                    <div class="card">
                         <div class="card-header">
                             <h5 class="text-title mb-1">
                                 {{ translate('messages.User_Info') }}
