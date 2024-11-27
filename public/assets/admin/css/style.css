@@ -14762,3 +14762,15 @@ ul.address-info .label {
 .table-layout-fixed {
     table-layout: fixed;
 }
+
+.toggle-switch.dark .toggle-switch-input:checked + .toggle-switch-label {
+    background-color: color-mix(
+        in srgb,
+        var(--title-clr),
+        transparent 40%
+    ) !important;
+}
+
+.height-custom .select2-container--default .select2-selection--multiple {
+    height: 45px !important;
+}
