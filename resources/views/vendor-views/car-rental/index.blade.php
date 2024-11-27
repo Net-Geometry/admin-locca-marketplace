@@ -158,7 +158,7 @@
                                 <h6 class="card-subtitle d-flex justify-content-between m-0 align-items-center">
                                     All
                                 </h6>
-                                <span class="card-title text--title">
+                                <span class="card-title text-title">
                                     200
                                 </span>
                             </div>
