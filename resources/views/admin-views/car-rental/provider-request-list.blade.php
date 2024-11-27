@@ -44,8 +44,11 @@
                     <!-- Header -->
                     <div class="card-header py-2">
                         <div class="search--button-wrapper">
-                            <h5 class="card-title text--title">{{ translate('messages.Total_Providers') }}</h5>
-                            <form class="search-form">
+                            <h5 class="card-title text--title flex-grow-1">
+                                {{ translate('messages.Total_Requested') }}
+                                <span class="badge badge-soft-dark ml-2 rounded-circle">23</span>
+                            </h5>
+                            <form class="search-form flex-grow-1 max-w-353px">
                                 <!-- Search -->
                                 <div class="input-group input--group">
                                     <input id="datatableSearch_" type="search" value="{{ request()?->search ?? null }}"
@@ -252,8 +255,8 @@
                     <!-- Header -->
                     <div class="card-header py-2">
                         <div class="search--button-wrapper">
-                            <h5 class="card-title text--title">{{ translate('messages.Total_Providers') }}</h5>
-                            <form class="search-form">
+                            <h5 class="card-title text--title flex-grow-1">{{ translate('messages.Total_Providers') }}</h5>
+                            <form class="search-form flex-grow-1 max-w-353px">
                                 <!-- Search -->
                                 <div class="input-group input--group">
                                     <input id="datatableSearch_" type="search" value="{{ request()?->search ?? null }}"

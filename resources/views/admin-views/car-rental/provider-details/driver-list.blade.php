@@ -138,8 +138,8 @@
                     <!-- Header -->
                     <div class="card-header py-2">
                         <div class="search--button-wrapper">
-                            <h5 class="card-title text--title">{{ translate('messages.Total_Trips') }}</h5>
-                            <form class="search-form">
+                            <h5 class="card-title text--title flex-grow-1">{{ translate('messages.Total_Trips') }}</h5>
+                            <form class="search-form flex-grow-1 max-w-353px">
                                 <!-- Search -->
                                 <div class="input-group input--group">
                                     <input id="datatableSearch_" type="search" value="{{ request()?->search ?? null }}"

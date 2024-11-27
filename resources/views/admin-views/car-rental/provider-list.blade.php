@@ -65,7 +65,10 @@
             <!-- Header -->
             <div class="card-header py-2">
                 <div class="search--button-wrapper">
-                    <h5 class="card-title text--title">{{ translate('messages.Total_Providers') }}</h5>
+                    <h5 class="card-title text--title flex-grow-1">
+                        {{ translate('messages.Total_Providers') }}
+                        <span class="badge badge-soft-dark ml-2 rounded-circle">23</span>
+                    </h5>
                     @if (!isset(auth('admin')->user()->zone_id))
                         <div class="select-item min--280">
                             <select name="zone_id" class="form-control js-select2-custom set-filter"
@@ -81,7 +84,7 @@
                             </select>
                         </div>
                     @endif
-                    <form class="search-form">
+                    <form class="search-form flex-grow-1 max-w-353px">
                         <!-- Search -->
                         <div class="input-group input--group">
                             <input id="datatableSearch_" type="search" value="{{ request()?->search ?? null }}"

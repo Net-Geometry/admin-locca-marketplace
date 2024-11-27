@@ -6065,4 +6065,5 @@
   'category name' => 'Category name',
   'Cancel_Trip' => 'Cancel Trip',
   'Cameron Williamson' => 'Cameron Williamson',
+  'Total_Requested' => 'Total Requested',
 );
