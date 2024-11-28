@@ -167,7 +167,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4 col--xl-4">
+            <div class="col-lg-4">
                 <!-- Card -->
                 <div class="card h-100">
                     <!-- Header -->
@@ -335,8 +335,8 @@
         // Static data for demonstration
         const hourlyCount = 450;
         const distancWiseCount = 50;
-        const totalSell = [200, 300, 400, 500, 600,20, 30, 40, 50, 60, 100, 300];
-        const commission = [20, 30, 40, 50, 60,20, 30, 40, 50, 60, 100, 20];
+        const totalSell = [200, 300, 400, 500, 600, 20, 30, 40, 50, 60, 100, 300];
+        const commission = [20, 30, 40, 50, 60, 20, 30, 40, 50, 60, 100, 20];
         const deliveryCommission = [10, 15, 20, 25, 30, 20, 30, 40, 50, 60, 100, 30];
         const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
