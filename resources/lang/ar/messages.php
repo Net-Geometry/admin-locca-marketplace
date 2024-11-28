@@ -5339,4 +5339,5 @@
   'Cancelation Rate Limit' => 'Cancelation Rate Limit',
   'Cancelation Rate Warning' => 'Cancelation Rate Warning',
   'Hourly Wise Price ($)' => 'Hourly Wise Price ($)',
+  'Provider_Active_Time' => 'Provider Active Time',
 );

@@ -6112,4 +6112,5 @@
   'Cancelation Rate Warning' => 'Cancelation Rate Warning',
   'End time must be after the start time' => 'End time must be after the start time',
   'Provider_Active_Time' => 'Provider Active Time',
+  'schedule_overlapping_warning' => 'Schedule overlapping warning',
 );
