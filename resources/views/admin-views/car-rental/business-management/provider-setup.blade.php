@@ -12,7 +12,7 @@
         </div>
         <!-- End Page Header -->
 
-        <div class="card mb-3">
+        <div class="card mb-20">
             <div class="card-body">
                 <div class="row align-items-center g-4">
                     <div class="col-lg-6">
@@ -51,7 +51,7 @@
             </div>
         </div>
 
-        <div class="card mb-3">
+        <div class="card mb-20">
             <div class="card-header">
                 <div>
                     <h5 class="text-title mb-1">
