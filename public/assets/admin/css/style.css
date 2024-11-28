@@ -14469,6 +14469,12 @@ ul.address-info .label {
     aspect-ratio: initial;
     object-fit: cover;
 }
+
+.text-wrapper .upload-file__img__img.border--dashed {
+    --border-clr: #e5e5e5;
+    border: 1px dashed var(--border-clr);
+}
+
 .text-wrapper .upload-file__img__img.ratio-2 {
     aspect-ratio: 2;
 }
