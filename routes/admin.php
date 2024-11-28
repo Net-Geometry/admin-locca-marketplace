@@ -7,8 +7,10 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
 
     Route::group(['middleware' => ['admin', 'current-module']], function () {
         Route::get('/test', function () {
-            return view('admin-views.car-rental.dashboard-car');
+            // return view('admin-views.car-rental.dashboard-car');
             // return view('admin-views.car-rental.provider-request-list');
+            // return view('admin-views.car-rental.provider-request-details');
+            return view('admin-views.car-rental.business-basic-setup');
             // return view('admin-views.car-rental.provider-list');
             // return view('admin-views.car-rental.provider-details.overview');
             // return view('admin-views.car-rental.provider-details.trip-list');

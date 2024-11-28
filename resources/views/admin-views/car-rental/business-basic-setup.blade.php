@@ -158,7 +158,8 @@
                                             </div>
                                             <label
                                                 class="position-relative d-inline-block image--border cursor-pointer w-100 h-165 max-w-165">
-                                                <img class="h-165" id="logoImageViewer"
+                                                <img class="h-165 aspect-ratio-1 rounded-10 image--border"
+                                                    id="logoImageViewer"
                                                     data-onerror-image="{{ asset('public/assets/admin/img/upload.png') }}"
                                                     src="{{ asset('public/assets/admin/img/upload-img.png') }}"
                                                     alt="logo image" style="display: none" />
@@ -200,7 +201,8 @@
                                             </div>
                                             <label
                                                 class="position-relative d-inline-block image--border cursor-pointer w-100 h-165 min-w-330">
-                                                <img class="img--vertical-2 h-165" id="coverImageViewer"
+                                                <img class="img--vertical-2 h-165 rounded-10 image--border"
+                                                    id="coverImageViewer"
                                                     data-onerror-image="{{ asset('public/assets/admin/img/upload-img.png') }}"
                                                     src="{{ asset('public/assets/admin/img/upload-img.png') }}"
                                                     alt="Fav icon" style="display: none" />
