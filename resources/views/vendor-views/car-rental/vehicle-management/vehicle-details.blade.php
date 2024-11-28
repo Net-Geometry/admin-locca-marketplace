@@ -144,13 +144,16 @@
                                     <div class="rating--review border rounded">
                                         <h5 class="title border-line font-medium d-flex align-items-center lh--1 mb-0">
                                             <span class="fs-14">
-                                                <span class="font-bold">4.0</span>
+                                                <span class="font-bold text--warning">
+                                                    <i class="tio-star text--warning fs-16 mr-1"></i>4.0
+                                                </span>
                                                 <span class="color-758590">/5</span>
                                             </span>
                                             <div class="info text--title fs-14">2 Reviews</div>
                                         </h5>
                                     </div>
-                                    <ul class="list-unstyled list-unstyled-py-2 mb-0 rating--review-right">
+                                    <ul
+                                        class="list-unstyled list-unstyled-py-2 mb-0 rating--review-right review-color-progress">
                                         <!-- Review Ratings -->
                                         <li class="d-flex align-items-center font-size-sm">
                                             <span class="progress-name mr-3">Excellent</span>
