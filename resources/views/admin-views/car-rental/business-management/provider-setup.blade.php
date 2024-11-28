@@ -26,7 +26,8 @@
                         <div class="form-group mb-0">
                             <label
                                 class="toggle-switch dark h--45px toggle-switch-sm d-flex justify-content-between border rounded px-3 py-0 form-control">
-                                <span class="pr-1 d-flex align-items-center switch--label text--title opacity-lg">
+                                <span
+                                    class="pr-1 d-flex align-items-center switch--label text--title font-semibold opacity-lg">
                                     <span class="line--limit-1">
                                         {{ translate('messages.store_temporarily_closed') }}
                                     </span>
@@ -69,7 +70,7 @@
                             <div class="form-group mb-0">
                                 <label
                                     class="toggle-switch dark h--45px toggle-switch-sm d-flex justify-content-between border rounded px-3 py-0 form-control">
-                                    <span class="pr-1 d-flex align-items-center switch--label text--title opacity-lg">
+                                    <span class="pr-1 d-flex align-items-center switch--label text--title font-regular">
                                         <span class="line--limit-1">
                                             {{ translate('messages.manage_vehicle_setup') }}
                                         </span>
@@ -93,7 +94,7 @@
                             <div class="form-group mb-0">
                                 <label
                                     class="toggle-switch dark h--45px toggle-switch-sm d-flex justify-content-between border rounded px-3 py-0 form-control">
-                                    <span class="pr-1 d-flex align-items-center switch--label text--title opacity-lg">
+                                    <span class="pr-1 d-flex align-items-center switch--label text--title font-regular">
                                         <span class="line--limit-1">
                                             {{ translate('messages.scheduled_trip') }}
                                         </span>
@@ -116,7 +117,7 @@
                         <div class="col-lg-4 col-md-6">
                             <div class="form-group mb-0">
                                 <label class="input-label font-medium"
-                                    for="">{{ translate('messages.Minimum Trip Amount (hr)') }}
+                                    for="">{{ translate('messages.Minimum Trip Amount (Hr)') }}
                                 </label>
                                 <input type="number" name="" class="form-control" placeholder="Ex: 5 "
                                     value="">
@@ -125,8 +126,9 @@
                         <div class="col-lg-4 col-md-6">
                             <div class="form-group mb-0">
                                 <label
-                                    class="toggle-switch dark h--45px toggle-switch-sm d-flex justify-content-between border rounded px-3 py-0 form-control">
-                                    <span class="pr-1 d-flex align-items-center switch--label text--title opacity-lg">
+                                    class="toggle-switch dark h--45px toggle-switch-sm d-flex justify-content-between form-control border-0 px-0">
+                                    <span
+                                        class="pr-1 d-flex align-items-center switch--label text--title input-label font-medium">
                                         <span class="line--limit-1">
                                             {{ translate('messages.extra_service_charge') }}
                                             <span class="form-label-secondary" data-toggle="tooltip" data-placement="right"
@@ -148,6 +150,8 @@
                                         <span class="toggle-switch-indicator"></span>
                                     </span>
                                 </label>
+                                <input type="text" name="" class="form-control"
+                                    placeholder="Type name of extra service charge" value="">
                             </div>
                         </div>
                         <div class="col-lg-4 col-md-6">
@@ -161,9 +165,11 @@
                         </div>
                         <div class="col-lg-4 col-md-6">
                             <div class="form-group mb-0">
+                                <label class="input-label font-medium" for="">{{ translate('messages.gst') }}
+                                </label>
                                 <label
                                     class="toggle-switch dark h--45px toggle-switch-sm d-flex justify-content-between border rounded px-3 py-0 form-control">
-                                    <span class="pr-1 d-flex align-items-center switch--label text--title opacity-lg">
+                                    <span class="pr-1 d-flex align-items-center switch--label text--title font-regular">
                                         <span class="line--limit-1">
                                             {{ translate('messages.When ON guest user can make trip') }}
                                         </span>
@@ -187,7 +193,7 @@
                             <div class="form-group mb-0">
                                 <label
                                     class="toggle-switch h--45px toggle-switch-sm d-flex justify-content-between border rounded px-3 py-0 form-control">
-                                    <span class="pr-1 d-flex align-items-center switch--label text--title opacity-lg">
+                                    <span class="pr-1 d-flex align-items-center switch--label text--title">
                                         <span class="line--limit-1">
                                             {{ translate('messages.provider_cancelation_rate') }}
                                         </span>
