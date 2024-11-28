@@ -203,7 +203,7 @@
                             </td>
                             <td>
                                 <div class="d-flex justify-content-center">
-                                    <label class="toggle-switch toggle-switch-sm" for="stocksCheckbox336">
+                                    <label class="toggle-switch toggle-switch-sm dark" for="stocksCheckbox336">
                                         <input type="checkbox" class="toggle-switch-input redirect-url" data-url=""
                                             id="stocksCheckbox336" checked="">
                                         <span class="toggle-switch-label">
