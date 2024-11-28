@@ -474,43 +474,45 @@
                             </div>
                         </div>
                     </div>
-                    <div class="table-responsive">
-                        <h5 class="font-bold">Vehicles List</h5>
-                        <table
-                            class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table dataTable no-footer mb-0">
-                            <thead class="thead-light">
-                                <tr>
-                                    <th class="border-0">SL.</th>
-                                    <th class="border-0">VIN Number</th>
-                                    <th class="border-0">License Number</th>
-                                    <th class="border-0 text-center">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>12354687</td>
-                                    <td>Dhk-Cha-12-2342</td>
-                                    <td>
-                                        <div class="d-flex justify-content-center">
-                                            <input class="form-check-input single-select m-auto" type="checkbox"
-                                                value="hourly">
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>1</td>
-                                    <td>12354687</td>
-                                    <td>Dhk-Cha-12-2342</td>
-                                    <td>
-                                        <div class="d-flex justify-content-center">
-                                            <input class="form-check-input single-select m-auto" type="checkbox"
-                                                value="hourly" checked>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <h5 class="font-bold">Vehicles List</h5>
+                    <div class="card shadow-none">
+                        <div class="table-responsive">
+                            <table
+                                class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table dataTable no-footer mb-0">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th class="border-0">SL.</th>
+                                        <th class="border-0">VIN Number</th>
+                                        <th class="border-0">License Number</th>
+                                        <th class="border-0 text-center">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>12354687</td>
+                                        <td>Dhk-Cha-12-2342</td>
+                                        <td>
+                                            <div class="d-flex justify-content-center align-items-center">
+                                                <input class="form-check-input single-select m-auto position-relative"
+                                                    type="checkbox" value="hourly" checked>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>12354687</td>
+                                        <td>Dhk-Cha-12-2342</td>
+                                        <td>
+                                            <div class="d-flex justify-content-center align-items-center">
+                                                <input class="form-check-input single-select m-auto position-relative"
+                                                    type="checkbox" value="hourly">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                     <div class="btn--container justify-content-end mt-4">
                         <button type="reset" id="reset_btn"
