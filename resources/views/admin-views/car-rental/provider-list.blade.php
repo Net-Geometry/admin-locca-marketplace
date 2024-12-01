@@ -61,12 +61,30 @@
             </div>
         </div>
         <!-- Card -->
+        <div class="card p--10 mb-20">
+            <div class="d-flex justify-content-around align-items-center gap-2 flex-column flex-lg-row">
+                <div class="text--info font-medium">
+                    Total Transactions <span class="fs-20 font-bold">20</span>
+                </div>
+                <div class="vertical-line-separator d-none d-lg-block"></div> <!-- Separator Line -->
+                <div class="text--success font-medium">
+                    Commission Earned <span class="fs-20 font-bold">100</span>
+                </div>
+                <div class="vertical-line-separator d-none d-lg-block"></div> <!-- Separator Line -->
+                <div class="text--danger font-medium">
+                    Total Vendor Withdraws <span class="fs-20 font-bold">200</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- End Card -->
+        <!-- Card -->
         <div class="card">
             <!-- Header -->
             <div class="card-header py-2">
                 <div class="search--button-wrapper">
                     <h5 class="card-title text--title flex-grow-1">
-                        {{ translate('messages.Total_Providers') }}
+                        {{ translate('messages.Total_Vendors') }}
                         <span class="badge badge-soft-dark ml-2 rounded-circle">23</span>
                     </h5>
                     @if (!isset(auth('admin')->user()->zone_id))
@@ -89,7 +107,7 @@
                         <div class="input-group input--group">
                             <input id="datatableSearch_" type="search" value="{{ request()?->search ?? null }}"
                                 name="search" class="form-control"
-                                placeholder="{{ translate('Search by provider name, owner info...') }}"
+                                placeholder="{{ translate('Search by Vendor name, owner info...') }}"
                                 aria-label="{{ translate('messages.search') }}">
                             <button type="submit" class="btn btn--secondary bg--primary"><i
                                     class="tio-search"></i></button>
@@ -137,7 +155,7 @@
                     </div>
                     <!-- End Unfold -->
                     <a class="btn btn--primary font-weight-bold float-right mr-2 mb-0"
-                        href="javascript:">{{ translate('messages.new_provider') }}</a>
+                        href="javascript:">{{ translate('messages.new_vendor') }}</a>
                 </div>
             </div>
             <!-- End Header -->
@@ -155,12 +173,10 @@
                     <thead class="thead-light">
                         <tr>
                             <th class="border-0">{{ translate('sl') }}</th>
-                            <th class="border-0">{{ translate('messages.provider') }}</th>
+                            <th class="border-0">{{ translate('messages.vendoor') }}</th>
                             <th class="border-0">{{ translate('messages.owner_info') }}</th>
                             <th class="border-0">{{ translate('messages.total_vehicle') }}</th>
-                            <th class="border-0">{{ translate('messages.total_driver') }}</th>
                             <th class="border-0">{{ translate('messages.total_trip') }}</th>
-                            <th class="text-center border-0">{{ translate('messages.business_featured') }}</th>
                             <th class="text-center border-0">{{ translate('messages.status') }}</th>
                             <th class="text-center border-0">{{ translate('messages.action') }}</th>
                         </tr>
@@ -204,24 +220,13 @@
 
                             </td>
                             <td>21</td>
-                            <td>21</td>
                             <td>
-                                33<span class="form-label-secondary" data-toggle="tooltip" data-placement="right"
-                                    data-original-title="Total Trip"><img class="w--11"
-                                        src="http://localhost/Backend-6amMart/public/assets/admin/img/info-circle.svg"
-                                        alt="Total Trip"></span>
+                                50
+                                <span class="form-label-secondary cursor-pointer" data-toggle="tooltip" data-placement="bottom" data-html="true"
+                                    data-original-title="<div class='text-left p-3'><div>Complete : 35</div><div>Ongoing : 5</div><div>Canceled : 5</div><div class='text-danger font-bold'>Cancelation Rate : 20%</div></div>">
+                                        <i class="tio-info"></i>
+                                </span>
                             </td>
-                            <td>
-                                <label class="toggle-switch toggle-switch-sm d-flex justify-content-center"
-                                    for="featuredCheckbox">
-                                    <input type="checkbox" data-url="javascript:"
-                                        class="toggle-switch-input redirect-url" id="featuredCheckbox">
-                                    <span class="toggle-switch-label">
-                                        <span class="toggle-switch-indicator"></span>
-                                    </span>
-                                </label>
-                            </td>
-
                             <td>
                                 <label class="toggle-switch toggle-switch-sm  d-flex justify-content-center"
                                     for="stocksCheckbox">

@@ -14798,3 +14798,9 @@ ul.address-info .label {
         min-width: auto !important;
     }
 }
+
+.vertical-line-separator {
+    width: 1px;
+    height: 30px;
+    background-color: rgba(0, 0, 0, 0.3);
+}

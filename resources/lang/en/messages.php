@@ -6133,4 +6133,8 @@
   'Vendor Name' => 'Vendor Name',
   'Business Address' => 'Business Address',
   'Pickup_Zone' => 'Pickup Zone',
+  'Total_Vendors' => 'Total Vendors',
+  'Search by Vendor name, owner info...' => 'Search by Vendor name, owner info...',
+  'new_vendor' => 'New vendor',
+  'vendoor' => 'Vendoor',
 );

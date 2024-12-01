@@ -158,7 +158,7 @@
                                             </div>
                                             <label
                                                 class="position-relative d-inline-block image--border cursor-pointer w-100 h-165 max-w-165">
-                                                <img class="h-165 aspect-ratio-1 rounded-10 border--dashed"
+                                                <img class="h-165 aspect-ratio-1 rounded-10"
                                                     id="logoImageViewer"
                                                     data-onerror-image="{{ asset('public/assets/admin/img/upload.png') }}"
                                                     src="{{ asset('public/assets/admin/img/upload-img.png') }}"
