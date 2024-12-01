@@ -24,7 +24,7 @@
         </div>
         <!-- End Page Header -->
         <div class="mt-30 mb-30">
-            <ul class="nav nav--tabs nav--tabs__style2 dark">
+            <ul class="border-0 nav nav--pills nav--tabs nav-tabs">
                 <li class="nav-item">
                     <a class="nav-link active" id="pending-request-tab" data-toggle="tab" href="#pending-request"
                         role="tab" aria-controls="pending-request"
@@ -207,42 +207,19 @@
 
                     </div>
                     <div class="page-area mt-3">
-                        <nav class="d-flex justify-content-end gap-3">
-                            <div class="d-flex align-items-baseline gap-3">
-                                <span class="text-14 text--title ">1-5 of 13</span>
-                                <nav class="w-auto">
-                                    <ul class="pagination">
-                                        <li class="page-item">
-                                            <a class="page-link text--title  text-14" href="#"
-                                                aria-label="Previous">
-                                                <span aria-hidden="true">‹</span>
-                                            </a>
-                                        </li>
-                                        <li class="page-item">
-                                            <a class="page-link text--title fw-bold text-14" href="#"
-                                                aria-label="Next">
-                                                <span aria-hidden="true">›</span>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </nav>
-                            </div>
+                        <nav>
                             <ul class="pagination">
-
-                                <li class="page-item" aria-disabled="true" aria-label="« Previous">
-                                    <span class="page-link btn-light" aria-hidden="true">‹</span>
+                                <li class="page-item disabled" aria-disabled="true" aria-label="« Previous">
+                                    <span class="page-link" aria-hidden="true">‹</span>
                                 </li>
-                                <li class="page-item active" aria-current="page"><span
-                                        class="page-link btn-light">1</span></li>
-                                <li class="page-item"><a class="page-link btn-light" href="javascript:">2</a></li>
-                                <li class="page-item"><a class="page-link btn-light" href="javascript:">3</a></li>
+                                <li class="page-item active" aria-current="page"><span class="page-link">1</span></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a>
+                                </li>
                                 <li class="page-item">
-                                    <a class="page-link btn-light" href="javascript:" rel="next"
-                                        aria-label="Next »">›</a>
+                                    <a class="page-link" href="#" rel="next" aria-label="Next »">›</a>
                                 </li>
                             </ul>
                         </nav>
-
                     </div>
                     <!-- End Table -->
                 </div>
@@ -396,6 +373,9 @@
                                                 title="{{ translate('messages.view') }}"><i
                                                     class="tio-visible-outlined"></i>
                                             </a>
+                                            <button type="button"
+                                                class="btn action-btn btn--danger btn-outline-danger shadow-none"><i class="tio-delete"></i>
+                                            </button>
                                         </div>
                                     </td>
                                 </tr>
@@ -404,42 +384,19 @@
 
                     </div>
                     <div class="page-area mt-3">
-                        <nav class="d-flex justify-content-end gap-3">
-                            <div class="d-flex align-items-baseline gap-3">
-                                <span class="text-14 text--title ">1-5 of 13</span>
-                                <nav class="w-auto">
-                                    <ul class="pagination">
-                                        <li class="page-item">
-                                            <a class="page-link text--title  text-14" href="#"
-                                                aria-label="Previous">
-                                                <span aria-hidden="true">‹</span>
-                                            </a>
-                                        </li>
-                                        <li class="page-item">
-                                            <a class="page-link text--title fw-bold text-14" href="#"
-                                                aria-label="Next">
-                                                <span aria-hidden="true">›</span>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </nav>
-                            </div>
+                        <nav>
                             <ul class="pagination">
-
-                                <li class="page-item" aria-disabled="true" aria-label="« Previous">
-                                    <span class="page-link btn-light" aria-hidden="true">‹</span>
+                                <li class="page-item disabled" aria-disabled="true" aria-label="« Previous">
+                                    <span class="page-link" aria-hidden="true">‹</span>
                                 </li>
-                                <li class="page-item active" aria-current="page"><span
-                                        class="page-link btn-light">1</span></li>
-                                <li class="page-item"><a class="page-link btn-light" href="javascript:">2</a></li>
-                                <li class="page-item"><a class="page-link btn-light" href="javascript:">3</a></li>
+                                <li class="page-item active" aria-current="page"><span class="page-link">1</span></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a>
+                                </li>
                                 <li class="page-item">
-                                    <a class="page-link btn-light" href="javascript:" rel="next"
-                                        aria-label="Next »">›</a>
+                                    <a class="page-link" href="#" rel="next" aria-label="Next »">›</a>
                                 </li>
                             </ul>
                         </nav>
-
                     </div>
                     <!-- End Table -->
                 </div>
@@ -461,7 +418,7 @@
                     </button>
 
                     <div class="d-flex justify-content-center mb-4">
-                        <img width="75" height="75" src="{{ asset('public/assets/admin/img/tick.png') }}"
+                        <img width="75" height="75" src="{{ asset('public/assets/admin/img/modal/mark.png') }}"
                             class="rounded-circle" alt="">
                     </div>
 
@@ -485,7 +442,7 @@
                             <div class="d-flex justify-content-end gap-3">
                                 <button type="button" data-dismiss="modal" aria-label="Close"
                                     class="btn btn--reset">{{ translate('Cancel') }}</button>
-                                <button type="submit" class="btn btn--primary">{{ translate('Submit') }}</button>
+                                <button type="submit" class="btn btn--primary">{{ translate('Approve') }}</button>
                             </div>
                         </div>
                     </form>
@@ -529,7 +486,7 @@
                             <div class="d-flex justify-content-end gap-3">
                                 <button type="button" data-dismiss="modal" aria-label="Close"
                                     class="btn btn--reset">{{ translate('Cancel') }}</button>
-                                <button type="submit" class="btn btn--primary">{{ translate('Submit') }}</button>
+                                <button type="submit" class="btn btn--primary">{{ translate('Deny') }}</button>
                             </div>
                         </div>
                     </form>
