@@ -452,11 +452,11 @@
         aria-labelledby="assignVehicleModalLabel">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <div class="modal-header p-2 pb-0 justify-content-end">
+                <div class="modal-header p-2 pb-0 justify-content-end flex-shrink-0">
                     <button type="button" class="close p-0 m-0" data-dismiss="modal" aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
                 </div>
-                <div class="modal-body p-4 pt-0">
+                <div class="modal-body px-4 py-0">
                     <div class="media media--sm flex-wrap mb-20">
                         <a class="mr-3" href="#">
                             <img width="160" class="img-fluid rounded aspect-2-1 onerror-image"
@@ -474,7 +474,7 @@
                             </div>
                         </div>
                     </div>
-                    <h5 class="font-bold">Vehicles List</h5>
+                    <h5 class="font-bold">Vehicles List <span class="fs-12 font-regular">(Select any of 2 vehicle)</span></h5>
                     <div class="card shadow-none">
                         <div class="table-responsive">
                             <table
@@ -500,7 +500,29 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>1</td>
+                                        <td>2</td>
+                                        <td>12354687</td>
+                                        <td>Dhk-Cha-12-2342</td>
+                                        <td>
+                                            <div class="d-flex justify-content-center align-items-center">
+                                                <input class="form-check-input single-select m-auto position-relative"
+                                                    type="checkbox" value="hourly">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>3</td>
+                                        <td>12354687</td>
+                                        <td>Dhk-Cha-12-2342</td>
+                                        <td>
+                                            <div class="d-flex justify-content-center align-items-center">
+                                                <input class="form-check-input single-select m-auto position-relative"
+                                                    type="checkbox" value="hourly" checked>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>4</td>
                                         <td>12354687</td>
                                         <td>Dhk-Cha-12-2342</td>
                                         <td>
@@ -514,7 +536,9 @@
                             </table>
                         </div>
                     </div>
-                    <div class="btn--container justify-content-end mt-4">
+                </div>
+                <div class="modal-footer border-0 flex-shrink-0">
+                    <div class="btn--container justify-content-end">
                         <button type="reset" id="reset_btn"
                             class="btn btn--warning-light min-w-120px">{{ translate('messages.cancel') }}</button>
                         <button type="submit"
