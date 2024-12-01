@@ -252,7 +252,7 @@
                                             <a href="javascript:"
 
                                                data-module-id="{{ $module->id }}"
-                                               data-url="{{route('admin.dashboard')}}"
+                                               data-url="{{$module->module_type == 'rental' ? route('admin.rental.dashboard') : route('admin.dashboard')}}"
                                                data-filter="module_id"
 
                                                class="__nav-module-item set-module {{Config::get('module.current_module_id') == $module->id?'active':''}}">
