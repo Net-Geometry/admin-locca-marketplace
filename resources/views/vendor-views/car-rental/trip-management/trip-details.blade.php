@@ -327,8 +327,11 @@
 
                             </div>
                         </div>
-                        <button type="button" class="btn btn--primary w-100"><i class="tio-bike"></i> <span
-                                class="ml-2">Assign Driver</span>
+                        <button type="button" 
+                        class="btn btn--primary w-100"
+                        data-toggle="modal" data-target="#assignDriverModal">
+                            <i class="tio-bike"></i> 
+                            <span class="ml-2">Assign Driver</span>
                         </button>
                     </div>
                 </div>
@@ -446,6 +449,164 @@
         </div>
         <!-- End Row -->
     </div>
+
+    <!--Assign Driver Modal -->
+    <div class="modal fade" id="assignDriverModal" tabindex="-1" role="dialog"
+        aria-labelledby="assignDriverModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header p-2 pb-0 justify-content-end flex-shrink-0">
+                    <button type="button" class="close p-0 m-0" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body px-4 py-0">
+                    <h5 class="font-bold">Assign Driver</h5>
+                    <div class="fs-12">1 Vehicle need to assign driver</div>
+                    <div class="card shadow-none">
+                        <div class="table-responsive">
+                            <table
+                                class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table dataTable no-footer mb-0">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th class="border-0">Vehicle List</th>
+                                        <th class="border-0">Selected Driver</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <div class="media media--sm">
+                                                <a class="mr-3" href="#">
+                                                    <img width="60" height="40" class="img--ratio-2 onerror-image rounded h--40px"
+                                                        src="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
+                                                        data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
+                                                        alt="Image Description">
+                                                </a>
+                                                <div class="media-body">
+                                                    <div class="fs-12 text--title">
+                                                        <div class="font-bold">Mahindra XUV700 AX7</div>
+                                                        <div class="font-semibold opacity-60">Car No: GHA-10-2345</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                           <div class="d-flex flex-column w-100">
+                                                <select name="" id=""
+                                                    class="form-control js-select2-custom"
+                                                    data-placeholder="{{ translate('messages.select_vehicle_transmission') }}">
+                                                    <option value="" selected disabled>
+                                                    <span class="fs-12 text--title">Select Vendors</span>
+                                                    </option>
+                                                    <option value="1" selected>
+                                                    <span class="fs-12 text--title">Ellison Cardenas Trading</span>
+                                                    <br>
+                                                    <span class="fs-10 text--title opacity-70">(+416465456)</span>
+                                                    </option>
+                                                    <option value="2">
+                                                    <span class="fs-12 text--title">Ellison Cardenas Trading</span> 
+                                                    <br>
+                                                    <span class="fs-10 text--title opacity-70">(+416465456)</span>
+                                                    </option>
+                                                </select>
+                                           </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="media media--sm">
+                                                <a class="mr-3" href="#">
+                                                    <img width="60" height="40" class="img--ratio-2 onerror-image rounded h--40px"
+                                                        src="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
+                                                        data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
+                                                        alt="Image Description">
+                                                </a>
+                                                <div class="media-body">
+                                                    <div class="fs-12 text--title">
+                                                        <div class="font-bold">Mahindra XUV700 AX7</div>
+                                                        <div class="font-semibold opacity-60">Car No: GHA-10-2345</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                           <div class="d-flex flex-column w-100">
+                                                <select name="" id=""
+                                                    class="form-control js-select2-custom"
+                                                    data-placeholder="{{ translate('messages.select_vehicle_transmission') }}">
+                                                    <option value="" selected disabled>
+                                                    <span class="fs-12 text--title">Select Vendors</span>
+                                                    </option>
+                                                    <option value="1" selected>
+                                                    <span class="fs-12 text--title">Ellison Cardenas Trading</span>
+                                                    <br>
+                                                    <span class="fs-10 text--title opacity-70">(+416465456)</span>
+                                                    </option>
+                                                    <option value="2">
+                                                    <span class="fs-12 text--title">Ellison Cardenas Trading</span> 
+                                                    <br>
+                                                    <span class="fs-10 text--title opacity-70">(+416465456)</span>
+                                                    </option>
+                                                </select>
+                                           </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="media media--sm">
+                                                <a class="mr-3" href="#">
+                                                    <img width="60" height="40" class="img--ratio-2 onerror-image rounded h--40px"
+                                                        src="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
+                                                        data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
+                                                        alt="Image Description">
+                                                </a>
+                                                <div class="media-body">
+                                                    <div class="fs-12 text--title">
+                                                        <div class="font-bold">Mahindra XUV700 AX7</div>
+                                                        <div class="font-semibold opacity-60">Car No: GHA-10-2345</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                           <div class="d-flex flex-column w-100">
+                                                <select name="" id=""
+                                                    class="form-control js-select2-custom"
+                                                    data-placeholder="{{ translate('messages.select_vehicle_transmission') }}">
+                                                    <option value="" selected disabled>
+                                                    <span class="fs-12 text--title">Select Vendors</span>
+                                                    </option>
+                                                    <option value="1" selected>
+                                                    <span class="fs-12 text--title">Ellison Cardenas Trading</span>
+                                                    <br>
+                                                    <span class="fs-10 text--title opacity-70">(+416465456)</span>
+                                                    </option>
+                                                    <option value="2">
+                                                    <span class="fs-12 text--title">Ellison Cardenas Trading</span> 
+                                                    <br>
+                                                    <span class="fs-10 text--title opacity-70">(+416465456)</span>
+                                                    </option>
+                                                </select>
+                                           </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 flex-shrink-0">
+                    <div class="btn--container justify-content-end">
+                        <button type="reset" id="reset_btn"
+                            class="btn btn--warning-light min-w-120px">{{ translate('messages.cancel') }}</button>
+                        <button type="submit"
+                            class="btn btn--primary min-w-120px">{{ translate('messages.assign') }}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Modal -->
 
     <!--Assign Vehicle Modal -->
     <div class="modal fade" id="assignVehicleModal" tabindex="-1" role="dialog"
@@ -1035,6 +1196,10 @@
             });
 
             // ------- pickup destinaton map with route line ends
+
+            // ------- select2 search placeholder add 
+            $('.select2-search__field').attr("placeholder", '<i class="tio-search"></i> Search Vendor');
+            // ------- select2 search placeholder add ends 
         })
     </script>
 @endpush
