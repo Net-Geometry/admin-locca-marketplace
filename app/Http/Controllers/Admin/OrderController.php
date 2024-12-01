@@ -517,7 +517,7 @@ class OrderController extends Controller
                 Toastr::error(translate('messages.Failed_to_send_mail'));
             }
         } else if ($request->order_status == 'canceled') {
-            if (in_array($order->order_status, ['delivered', 'canceled', 'refund_requested', 'refunded', 'failed', 'picked_up']) || $order->picked_up) {
+            if (in_array($order->order_status, ['delivered', 'canceled', 'refund_requested', 'refunded', 'failed'])) {
                 Toastr::warning(translate('messages.you_can_not_cancel_a_completed_order'));
                 return back();
             }
@@ -1610,17 +1610,15 @@ class OrderController extends Controller
     {
         $refund_mode = BusinessSetting::where('key', 'refund_active_status')->first();
         if (isset($refund_mode) == false) {
-            DB::table('business_settings')->insert([
+            Helpers::businessInsert([
                 'key' => 'refund_active_status',
                 'value' => 1,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
         } else {
-            DB::table('business_settings')->where(['key' => 'refund_active_status'])->update([
-                'key' => 'refund_active_status',
-                'value' => $refund_mode->value == 1 ? 0 : 1,
-                'updated_at' => now(),
+            Helpers::businessUpdateOrInsert(['key' => 'refund_active_status'], [
+                'value' => $refund_mode->value == 1 ? 0 : 1
             ]);
         }
 

@@ -106,6 +106,8 @@ if (!$is_published) {
             Route::get('pay', [RazorPayController::class, 'index']);
             Route::post('payment', [RazorPayController::class, 'payment'])->name('payment')
                 ->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+            Route::post('callback', [RazorPayController::class, 'callback'])->name('callback')
+                ->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
         });
 
         //PAYPAL

@@ -56,11 +56,11 @@ class LanguageController extends Controller
             'status' => 0,
             'default' => false,
         ];
-        BusinessSetting::updateOrCreate(['key' => 'system_language'], [
+        Helpers::businessUpdateOrInsert(['key' => 'system_language'], [
             'value' => $lang_array
         ]);
 
-        BusinessSetting::updateOrCreate(['key' => 'language'], [
+        Helpers::businessUpdateOrInsert(['key' => 'language'], [
             'value' => json_encode($codes),
         ]);
 
@@ -407,7 +407,7 @@ class LanguageController extends Controller
         }
         array_unshift($languages, 'en');
 
-        BusinessSetting::updateOrCreate(['key' => 'language'], [
+        Helpers::businessUpdateOrInsert(['key' => 'language'], [
             'value' => json_encode($languages),
         ]);
 

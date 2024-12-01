@@ -16,6 +16,7 @@ use App\CentralLogics\Helpers;
 use App\Models\BusinessSetting;
 use App\Models\OfflinePayments;
 use App\Models\ReactTestimonial;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\ExternalConfiguration;
@@ -42,38 +43,48 @@ class ConfigController extends Controller
     public function configuration()
     {
         $key = ['currency_code', 'cash_on_delivery', 'digital_payment', 'default_location', 'free_delivery_over', 'business_name', 'logo', 'address', 'phone', 'email_address', 'country', 'currency_symbol_position', 'app_minimum_version_android', 'app_url_android', 'app_minimum_version_ios', 'app_url_ios', 'app_url_android_store', 'app_minimum_version_ios_store', 'app_url_ios_store', 'app_minimum_version_ios_deliveryman', 'app_url_ios_deliveryman', 'app_minimum_version_android_deliveryman', 'app_minimum_version_android_store', 'app_url_android_deliveryman', 'customer_verification', 'schedule_order', 'order_delivery_verification', 'per_km_shipping_charge', 'minimum_shipping_charge', 'show_dm_earning', 'canceled_by_deliveryman', 'canceled_by_store', 'timeformat', 'toggle_veg_non_veg', 'toggle_dm_registration', 'toggle_store_registration', 'schedule_order_slot_duration', 'parcel_per_km_shipping_charge', 'parcel_minimum_shipping_charge', 'web_app_landing_page_settings', 'footer_text', 'landing_page_links', 'loyalty_point_exchange_rate', 'loyalty_point_item_purchase_point', 'loyalty_point_status', 'loyalty_point_minimum_point', 'wallet_status', 'dm_tips_status', 'ref_earning_status', 'ref_earning_exchange_rate', 'refund_active_status', 'refund', 'cancelation', 'shipping_policy', 'prescription_order_status', 'tax_included', 'icon', 'cookies_text', 'home_delivery_status', 'takeaway_status', 'additional_charge', 'additional_charge_status', 'additional_charge_name', 'dm_picture_upload_status', 'partial_payment_status', 'partial_payment_method', 'add_fund_status', 'offline_payment_status', 'websocket_url', 'websocket_port', 'websocket_status', 'guest_checkout_status', 'disbursement_type', 'restaurant_disbursement_waiting_time', 'dm_disbursement_waiting_time', 'min_amount_to_pay_store', 'min_amount_to_pay_dm', 'admin_commission',
-            'new_customer_discount_status', 'new_customer_discount_amount', 'new_customer_discount_amount_type', 'new_customer_discount_amount_validity', 'new_customer_discount_validity_type', 'store_review_reply', 'subscription_business_model', 'commission_business_model', 'subscription_deadline_warning_days', 'subscription_deadline_warning_message', 'subscription_free_trial_days', 'subscription_free_trial_type', 'subscription_free_trial_status', 'country_picker_status', 'firebase_otp_verification'
+            'new_customer_discount_status', 'new_customer_discount_amount', 'new_customer_discount_amount_type', 'new_customer_discount_amount_validity', 'new_customer_discount_validity_type', 'store_review_reply', 'subscription_business_model', 'commission_business_model', 'subscription_deadline_warning_days', 'subscription_deadline_warning_message', 'subscription_free_trial_days', 'subscription_free_trial_type', 'subscription_free_trial_status', 'country_picker_status', 'firebase_otp_verification', 'manual_login_status','otp_login_status','social_login_status','google_login_status','facebook_login_status','apple_login_status','email_verification_status','phone_verification_status'
 
 
         ];
 
         $drivemondExternalSetting = false;
-        if (Helpers::checkSelfExternalConfiguration()) {
-            $driveMondBaseUrl = ExternalConfiguration::where('key', 'drivemond_base_url')->first()?->value;
-            $driveMondToken = ExternalConfiguration::where('key', 'drivemond_token')->first()?->value;
-            $systemSelfToken = ExternalConfiguration::where('key', 'system_self_token')->first()?->value;
-            $response = Http::get($driveMondBaseUrl . '/api/get-external-configurations',
-                [
-                    'drivemond_token' => $driveMondToken,
-                    'mart_base_url' => url('/'),
-                    'mart_token' => $systemSelfToken,
-                ]);
-            if ($response->successful()) {
-                $martResponse = $response->json();
-                $drivemondExternalSetting = $martResponse['status'];
-            }
+//        if (Helpers::checkSelfExternalConfiguration()) {
+//            $driveMondBaseUrl = ExternalConfiguration::where('key', 'drivemond_base_url')->first()?->value;
+//            $driveMondToken = ExternalConfiguration::where('key', 'drivemond_token')->first()?->value;
+//            $systemSelfToken = ExternalConfiguration::where('key', 'system_self_token')->first()?->value;
+//            $response = Http::get($driveMondBaseUrl . '/api/get-external-configurations',
+//                [
+//                    'drivemond_token' => $driveMondToken,
+//                    'mart_base_url' => url('/'),
+//                    'mart_token' => $systemSelfToken,
+//                ]);
+//            if ($response->successful()) {
+//                $martResponse = $response->json();
+//                $drivemondExternalSetting = $martResponse['status'];
+//            }
+//
+//        }
 
-        }
-
-        $settings = array_column(BusinessSetting::whereIn('key', $key)->get()->toArray(), 'value', 'key');
+        $cacheKey = 'business_settings_config_keys';
+        $settings = Cache::rememberForever($cacheKey, function () use ($key) {
+            return array_column(BusinessSetting::whereIn('key', $key)->get()->toArray(), 'value', 'key');
+        });
         $image_key = ['logo', 'icon', 'web_app_landing_page_settings'];
         $data = [];
 
         foreach ($image_key as $value) {
-            $data[$value . '_storage'] = BusinessSetting::where('key', $value)->first()?->storage[0]?->value ?? 'public';
+            $data[$value . '_storage'] = Cache::rememberForever("business_settings_config_{$value}_storage", function () use ($value) {
+                return BusinessSetting::where('key', $value)->first()?->storage[0]?->value ?? 'public';
+            });
         }
 
-        $DataSetting = DataSetting::where('type', 'flutter_landing_page')->where('key', 'download_user_app_links')->pluck('value', 'key')->toArray();
+        $DataSetting = Cache::rememberForever("data_settings_flutter_landing_page", function () {
+            return DataSetting::where('type', 'flutter_landing_page')
+                ->where('key', 'download_user_app_links')
+                ->pluck('value', 'key')
+                ->toArray();
+        });
         $DataSetting = isset($DataSetting['download_user_app_links']) ? json_decode($DataSetting['download_user_app_links'], true) : [];
         $landing_page_links = isset($settings['landing_page_links']) ? json_decode($settings['landing_page_links'], true) : [];
         $landing_page_links['app_url_android_status'] = data_get($DataSetting, 'playstore_url_status', null);
@@ -81,18 +92,18 @@ class ConfigController extends Controller
         $landing_page_links['app_url_ios_status'] = data_get($DataSetting, 'apple_store_url_status', null);
         $landing_page_links['app_url_ios'] = data_get($DataSetting, 'apple_store_url', null);
 
-
-        $currency_symbol = Currency::where(['currency_code' => Helpers::currency_code()])->first()->currency_symbol;
+        $currency_symbol = Cache::rememberForever("business_settings_currency_symbol", function () {
+            return Currency::where(['currency_code' => Helpers::currency_code()])->first()->currency_symbol;
+        });
         $cod = json_decode($settings['cash_on_delivery'], true);
         $digital_payment = json_decode($settings['digital_payment'], true);
         $default_location = isset($settings['default_location']) ? json_decode($settings['default_location'], true) : 0;
         $free_delivery_over = $settings['free_delivery_over'];
         $free_delivery_over = isset($free_delivery_over) ? (float)$free_delivery_over : $free_delivery_over;
         $additional_charge = isset($settings['additional_charge']) ? (float)$settings['additional_charge'] : 0;
-        $module = null;
-        if (Module::active()->count() == 1) {
-            $module = Module::active()->first();
-        }
+        $module = Cache::rememberForever("module_config", function () {
+            return Module::active()->count() == 1 ? Module::active()->first() : null;
+        });
         $languages = Helpers::get_business_settings('language');
         $lang_array = [];
         foreach ($languages as $language) {
@@ -126,7 +137,10 @@ class ConfigController extends Controller
                 $config = [
                     'login_medium' => $apple['login_medium'],
                     'status' => (boolean)$apple['status'],
-                    'client_id' => $apple['client_id']
+                    'client_id' => $apple['client_id'],
+                    'client_id_app' => $apple['client_id_app']??'',
+                    'redirect_url_flutter' => $apple['redirect_url_flutter']??'',
+                    'redirect_url_react' => $apple['redirect_url_react']??'',
                 ];
                 array_push($apple_login, $config);
             }
@@ -146,9 +160,6 @@ class ConfigController extends Controller
             'plugin_payment_gateways' => (boolean)($published_status ? true : false),
             'default_payment_gateways' => (boolean)($published_status ? false : true)
         );
-        $awsUrl = config('filesystems.disks.s3.url');
-        $awsBucket = config('filesystems.disks.s3.bucket');
-        $awsBaseURL = rtrim($awsUrl, '/') . '/' . ltrim($awsBucket . '/');
 
         if (data_get($settings, 'subscription_free_trial_type') == 'year') {
             $trial_period = data_get($settings, 'subscription_free_trial_days') > 0 ? data_get($settings, 'subscription_free_trial_days') / 365 : 0;
@@ -169,55 +180,6 @@ class ConfigController extends Controller
             'email' => $settings['email_address'],
             // 'store_location_coverage' => Branch::where(['id'=>1])->first(['longitude','latitude','coverage']),
             // 'minimum_order_value' => (float)$settings['minimum_order_value'],
-            'base_urls' => [
-                'item_image_url' => asset('storage/app/public/product'),
-                'refund_image_url' => asset('storage/app/public/refund'),
-                'customer_image_url' => asset('storage/app/public/profile'),
-                'banner_image_url' => asset('storage/app/public/banner'),
-                'category_image_url' => asset('storage/app/public/category'),
-                'brand_image_url' => asset('storage/app/public/brand'),
-                'review_image_url' => asset('storage/app/public/review'),
-                'notification_image_url' => asset('storage/app/public/notification'),
-                'store_image_url' => asset('storage/app/public/store'),
-                'vendor_image_url' => asset('storage/app/public/vendor'),
-                'store_cover_photo_url' => asset('storage/app/public/store/cover'),
-                'delivery_man_image_url' => asset('storage/app/public/delivery-man'),
-                'chat_image_url' => asset('storage/app/public/conversation'),
-                'campaign_image_url' => asset('storage/app/public/campaign'),
-                'business_logo_url' => asset('storage/app/public/business'),
-                'order_attachment_url' => asset('storage/app/public/order'),
-                'module_image_url' => asset('storage/app/public/module'),
-                'parcel_category_image_url' => asset('storage/app/public/parcel_category'),
-                'landing_page_image_url' => asset('public/assets/landing/image'),
-                'react_landing_page_images' => asset('storage/app/public/react_landing'),
-                'react_landing_page_feature_images' => asset('storage/app/public/react_landing/feature'),
-                'gateway_image_url' => asset('storage/app/public/payment_modules/gateway_image'),
-            ],
-
-            's3_base_urls' => [
-                'item_image_url' => $awsBaseURL . 'product',
-                'refund_image_url' => $awsBaseURL . 'refund',
-                'customer_image_url' => $awsBaseURL . 'profile',
-                'banner_image_url' => $awsBaseURL . 'banner',
-                'category_image_url' => $awsBaseURL . 'category',
-                'brand_image_url' => $awsBaseURL . 'brand',
-                'review_image_url' => $awsBaseURL . 'review',
-                'notification_image_url' => $awsBaseURL . 'notification',
-                'store_image_url' => $awsBaseURL . 'store',
-                'vendor_image_url' => $awsBaseURL . 'vendor',
-                'store_cover_photo_url' => $awsBaseURL . 'store/cover',
-                'delivery_man_image_url' => $awsBaseURL . 'delivery-man',
-                'chat_image_url' => $awsBaseURL . 'conversation',
-                'campaign_image_url' => $awsBaseURL . 'campaign',
-                'business_logo_url' => $awsBaseURL . 'business',
-                'order_attachment_url' => $awsBaseURL . 'order',
-                'module_image_url' => $awsBaseURL . 'module',
-                'parcel_category_image_url' => $awsBaseURL . 'parcel_category',
-                'landing_page_image_url' => $awsBaseURL . 'landing/image',
-                'react_landing_page_images' => $awsBaseURL . 'react_landing',
-                'react_landing_page_feature_images' => $awsBaseURL . 'react_landing/feature',
-                'gateway_image_url' => $awsBaseURL . 'payment_modules/gateway_image',
-            ],
             'country' => $settings['country'],
             'default_location' => ['lat' => $default_location ? $default_location['lat'] : '23.757989', 'lng' => $default_location ? $default_location['lng'] : '90.360587'],
             'currency_symbol' => $currency_symbol,
@@ -326,14 +288,27 @@ class ConfigController extends Controller
 
             'drivemond_app_url_android' => $drivemondExternalSetting ? Helpers::get_external_data('drivemond_app_url_android') : '',
             'drivemond_app_url_ios' => $drivemondExternalSetting ? Helpers::get_external_data('drivemond_app_url_ios') : '',
-            'firebase_otp_verification' => (int)(isset($settings['firebase_otp_verification']) ? $settings['firebase_otp_verification'] : 0)
+            'firebase_otp_verification' => (int)(isset($settings['firebase_otp_verification']) ? $settings['firebase_otp_verification'] : 0),
+            'centralize_login' => [
+                'manual_login_status' => (int)(isset($settings['manual_login_status']) ? $settings['manual_login_status'] : 0),
+                'otp_login_status' => (int)(isset($settings['otp_login_status']) ? $settings['otp_login_status'] : 0),
+                'social_login_status' => (int)(isset($settings['social_login_status']) ? $settings['social_login_status'] : 0),
+                'google_login_status' => (int)(isset($settings['google_login_status']) ? $settings['google_login_status'] : 0),
+                'facebook_login_status' => (int)(isset($settings['facebook_login_status']) ? $settings['facebook_login_status'] : 0),
+                'apple_login_status' => (int)(isset($settings['apple_login_status']) ? $settings['apple_login_status'] : 0),
+                'email_verification_status' => (int)(isset($settings['email_verification_status']) ? $settings['email_verification_status'] : 0),
+                'phone_verification_status' => (int)(isset($settings['phone_verification_status']) ? $settings['phone_verification_status'] : 0),
+            ],
 
         ]);
     }
 
     public static function get_settings_status($name)
     {
-        $data = DataSetting::where(['key' => $name])->first()?->value;
+        $data = Cache::rememberForever('data_settings_' . $name, function () use ($name) {
+            return DataSetting::where('key', $name)->value('value');
+        });
+
         return $data ?? 0;
     }
 
@@ -562,11 +537,14 @@ class ConfigController extends Controller
                 'earning_seller_title' => (isset($settings['earning_seller_title'])) ? $settings['earning_seller_title'] : null,
                 'earning_seller_sub_title' => (isset($settings['earning_seller_sub_title'])) ? $settings['earning_seller_sub_title'] : null,
                 'earning_seller_button_name' => (isset($settings['earning_seller_button_name'])) ? $settings['earning_seller_button_name'] : null,
-                'earning_seller_button_url' => (isset($settings['earning_seller_button_url'])) ? $settings['earning_seller_button_url'] : null,
+                'earning_seller_status' => (int)((isset($settings['join_seller_react_status'])) ? $settings['join_seller_react_status'] : 0),
+                // 'earning_seller_button_url' => (isset($settings['earning_seller_button_url'])) ? $settings['earning_seller_button_url'] : null,
                 'earning_dm_title' => (isset($settings['earning_dm_title'])) ? $settings['earning_dm_title'] : null,
                 'earning_dm_sub_title' => (isset($settings['earning_dm_sub_title'])) ? $settings['earning_dm_sub_title'] : null,
                 'earning_dm_button_name' => (isset($settings['earning_dm_button_name'])) ? $settings['earning_dm_button_name'] : null,
-                'earning_dm_button_url' => (isset($settings['earning_dm_button_url'])) ? $settings['earning_dm_button_url'] : null,
+                // 'earning_dm_button_url' => (isset($settings['earning_dm_button_url'])) ? $settings['earning_dm_button_url'] : null,
+                'earning_dm_status' => (int)((isset($settings['join_DM_react_status'])) ? $settings['join_DM_react_status'] : 0),
+
                 'business_title' => (isset($settings['business_title'])) ? $settings['business_title'] : null,
                 'business_sub_title' => (isset($settings['business_sub_title'])) ? $settings['business_sub_title'] : null,
                 'business_image' => (isset($settings['business_image'])) ? $settings['business_image'] : null,
@@ -579,13 +557,11 @@ class ConfigController extends Controller
                 'fixed_promotional_banner' => (isset($settings['fixed_promotional_banner'])) ? $settings['fixed_promotional_banner'] : null,
                 'fixed_promotional_banner_full_url' => Helpers::get_full_url('promotional_banner', (isset($settings['fixed_promotional_banner'])) ? $settings['fixed_promotional_banner'] : null, (isset($settings['fixed_promotional_banner_storage'])) ? $settings['fixed_promotional_banner_storage'] : 'public'),
 
-
                 'promotion_banners' => (isset($settings['promotion_banner'])) ? json_decode($settings['promotion_banner'], true) : null,
                 'promotion_banners_full_url' => $promotional_banners,
                 'download_user_app_links' => (isset($settings['download_user_app_links'])) ? json_decode($settings['download_user_app_links'], true) : null,
                 'download_business_app_links' => (isset($settings['download_business_app_links'])) ? json_decode($settings['download_business_app_links'], true) : null,
-                // 'dm_app_earning_links'=> (isset($settings['dm_app_earning_links']) )  ? json_decode($settings['dm_app_earning_links'], true) : null ,
-                // 'download_user_app_links'=> (isset($settings['download_app_links']) )  ? json_decode($settings['download_app_links'], true) : null ,
+
                 'available_zone_status' => (int)((isset($settings['available_zone_status'])) ? $settings['available_zone_status'] : 0),
                 'available_zone_title' => (isset($settings['available_zone_title'])) ? $settings['available_zone_title'] : null,
                 'available_zone_short_description' => (isset($settings['available_zone_short_description'])) ? $settings['available_zone_short_description'] : null,
@@ -659,18 +635,20 @@ class ConfigController extends Controller
                 'join_seller_title' => (isset($settings['join_seller_title'])) ? $settings['join_seller_title'] : null,
                 'join_seller_sub_title' => (isset($settings['join_seller_sub_title'])) ? $settings['join_seller_sub_title'] : null,
                 'join_seller_button_name' => (isset($settings['join_seller_button_name'])) ? $settings['join_seller_button_name'] : null,
-                'join_seller_button_url' => (isset($settings['join_seller_button_url'])) ? $settings['join_seller_button_url'] : null,
+                'join_seller_status' => (int)((isset($settings['join_seller_flutter_status'])) ? $settings['join_seller_flutter_status'] : 0),
+                // 'join_seller_button_url' => (isset($settings['join_seller_button_url'])) ? $settings['join_seller_button_url'] : null,
                 'join_delivery_man_title' => (isset($settings['join_delivery_man_title'])) ? $settings['join_delivery_man_title'] : null,
                 'join_delivery_man_sub_title' => (isset($settings['join_delivery_man_sub_title'])) ? $settings['join_delivery_man_sub_title'] : null,
                 'join_delivery_man_button_name' => (isset($settings['join_delivery_man_button_name'])) ? $settings['join_delivery_man_button_name'] : null,
-                'join_delivery_man_button_url' => (isset($settings['join_delivery_man_button_url'])) ? $settings['join_delivery_man_button_url'] : null,
+                // 'join_delivery_man_button_url' => (isset($settings['join_delivery_man_button_url'])) ? $settings['join_delivery_man_button_url'] : null,
+                'join_delivery_man_status' => (int)((isset($settings['join_DM_flutter_status'])) ? $settings['join_DM_flutter_status'] : 0),
+
                 'download_user_app_title' => (isset($settings['download_user_app_title'])) ? $settings['download_user_app_title'] : null,
                 'download_user_app_sub_title' => (isset($settings['download_user_app_sub_title'])) ? $settings['download_user_app_sub_title'] : null,
                 'download_user_app_image' => (isset($settings['download_user_app_image'])) ? $settings['download_user_app_image'] : null,
                 'download_user_app_image_full_url' => Helpers::get_full_url('download_user_app_image', (isset($settings['download_user_app_image'])) ? $settings['download_user_app_image'] : null, (isset($settings['download_user_app_image_storage'])) ? $settings['download_user_app_image_storage'] : 'public'),
 
                 'special_criterias' => (isset($criterias)) ? $criterias : null,
-
 
                 'download_user_app_links' => (isset($settings['download_user_app_links'])) ? json_decode($settings['download_user_app_links'], true) : null,
                 'available_zone_status' => (int)((isset($settings['available_zone_status'])) ? $settings['available_zone_status'] : 0),

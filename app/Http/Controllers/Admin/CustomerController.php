@@ -410,50 +410,50 @@ class CustomerController extends Controller
             'loyalty_point_exchange_rate'=>'nullable|numeric',
             'ref_earning_exchange_rate'=>'nullable|numeric',
         ]);
-        BusinessSetting::updateOrInsert(['key' => 'customer_verification'], [
+        Helpers::businessUpdateOrInsert(['key' => 'customer_verification'], [
             'value' => $request['customer_verification_status']??0
         ]);
-        BusinessSetting::updateOrInsert(['key' => 'wallet_status'], [
+        Helpers::businessUpdateOrInsert(['key' => 'wallet_status'], [
             'value' => $request['customer_wallet']??0
         ]);
-        BusinessSetting::updateOrInsert(['key' => 'loyalty_point_status'], [
+        Helpers::businessUpdateOrInsert(['key' => 'loyalty_point_status'], [
             'value' => $request['customer_loyalty_point']??0
         ]);
-        BusinessSetting::updateOrInsert(['key' => 'ref_earning_status'], [
+        Helpers::businessUpdateOrInsert(['key' => 'ref_earning_status'], [
             'value' => $request['ref_earning_status'] ?? 0
         ]);
-        BusinessSetting::updateOrInsert(['key' => 'wallet_add_refund'], [
+        Helpers::businessUpdateOrInsert(['key' => 'wallet_add_refund'], [
             'value' => $request['refund_to_wallet']??0
         ]);
-        BusinessSetting::updateOrInsert(['key' => 'loyalty_point_exchange_rate'], [
+        Helpers::businessUpdateOrInsert(['key' => 'loyalty_point_exchange_rate'], [
             'value' => $request['loyalty_point_exchange_rate'] ?? 0
         ]);
-        BusinessSetting::updateOrInsert(['key' => 'ref_earning_exchange_rate'], [
+        Helpers::businessUpdateOrInsert(['key' => 'ref_earning_exchange_rate'], [
             'value' => $request['ref_earning_exchange_rate'] ?? 0
         ]);
-        BusinessSetting::updateOrInsert(['key' => 'loyalty_point_item_purchase_point'], [
+        Helpers::businessUpdateOrInsert(['key' => 'loyalty_point_item_purchase_point'], [
             'value' => $request['item_purchase_point']??0
         ]);
-        BusinessSetting::updateOrInsert(['key' => 'loyalty_point_minimum_point'], [
+        Helpers::businessUpdateOrInsert(['key' => 'loyalty_point_minimum_point'], [
             'value' => $request['minimun_transfer_point']??0
         ]);
-        BusinessSetting::updateOrInsert(['key' => 'add_fund_status'], [
+        Helpers::businessUpdateOrInsert(['key' => 'add_fund_status'], [
             'value' => $request['add_fund_status']??0
         ]);
 
-        BusinessSetting::updateOrInsert(['key' => 'new_customer_discount_status'], [
+        Helpers::businessUpdateOrInsert(['key' => 'new_customer_discount_status'], [
             'value' => $request['new_customer_discount_status']??0
         ]);
-        BusinessSetting::updateOrInsert(['key' => 'new_customer_discount_amount'], [
+        Helpers::businessUpdateOrInsert(['key' => 'new_customer_discount_amount'], [
             'value' => $request['new_customer_discount_amount']??0
         ]);
-        BusinessSetting::updateOrInsert(['key' => 'new_customer_discount_amount_type'], [
+        Helpers::businessUpdateOrInsert(['key' => 'new_customer_discount_amount_type'], [
             'value' => $request['new_customer_discount_amount_type']?? 'percentage'
         ]);
-        BusinessSetting::updateOrInsert(['key' => 'new_customer_discount_amount_validity'], [
+        Helpers::businessUpdateOrInsert(['key' => 'new_customer_discount_amount_validity'], [
             'value' => $request['new_customer_discount_amount_validity']??0
         ]);
-        BusinessSetting::updateOrInsert(['key' => 'new_customer_discount_validity_type'], [
+        Helpers::businessUpdateOrInsert(['key' => 'new_customer_discount_validity_type'], [
             'value' => $request['new_customer_discount_validity_type']??'day'
         ]);
 

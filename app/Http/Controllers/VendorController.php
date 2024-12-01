@@ -226,7 +226,7 @@ class VendorController extends Controller
     }
 
     public function get_all_modules(Request $request){
-        $module_data = Module::whereHas('zones', function($query)use ($request){
+        $module_data = Module::Active()->whereHas('zones', function($query)use ($request){
             $query->where('zone_id', $request->zone_id);
         })->notParcel()
         ->where('modules.module_name', 'like', '%'.$request->q.'%')
