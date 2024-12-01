@@ -125,11 +125,11 @@
                                             <div class="resturant--info-address">
                                                 <ul class="address-info address-info-2 p-0 text-dark">
                                                     <li class="d-flex align-items-start">
-                                                        <span class="label min-w-auto">{{ translate('messages.Vendor Name') }}</span>
+                                                        <span class="label min-w-sm-auto">{{ translate('messages.Vendor Name') }}</span>
                                                         <span>: {{ translate('messages.Auto Focus Car Service') }}</span>
                                                     </li>
                                                     <li class="d-flex align-items-start">
-                                                        <span class="label min-w-auto">{{ translate('messages.Business Address') }}</span>
+                                                        <span class="label min-w-sm-auto">{{ translate('messages.Business Address') }}</span>
                                                         <span>: {{ translate('messages.House: 00, Road: 00, Test City') }}</span>
                                                     </li>
                                                 </ul>
@@ -140,11 +140,11 @@
                                                 <div class="resturant--info-address">
                                                     <ul class="address-info address-info-2 p-0 text-dark">
                                                         <li class="d-flex align-items-start">
-                                                            <span class="label min-w-auto">{{ translate('messages.Vendor Name') }}</span>
+                                                            <span class="label min-w-sm-auto">{{ translate('messages.Vendor Name') }}</span>
                                                             <span>: {{ translate('messages.Auto Focus Car Service') }}</span>
                                                         </li>
                                                         <li class="d-flex align-items-start">
-                                                            <span class="label min-w-auto">{{ translate('messages.Business Address') }}</span>
+                                                            <span class="label min-w-sm-auto">{{ translate('messages.Business Address') }}</span>
                                                             <span>: {{ translate('messages.House: 00, Road: 00, Test City') }}</span>
                                                         </li>
                                                     </ul>
@@ -156,11 +156,11 @@
                                             <div class="resturant--info-address">
                                                 <ul class="address-info address-info-2 p-0 text-dark">
                                                     <li class="d-flex align-items-start">
-                                                        <span class="label min-w-auto">{{ translate('messages.Vendor Name') }}</span>
+                                                        <span class="label min-w-sm-auto">{{ translate('messages.Vendor Name') }}</span>
                                                         <span>: {{ translate('messages.Auto Focus Car Service') }}</span>
                                                     </li>
                                                     <li class="d-flex align-items-start">
-                                                        <span class="label min-w-auto">{{ translate('messages.Business Address') }}</span>
+                                                        <span class="label min-w-sm-auto">{{ translate('messages.Business Address') }}</span>
                                                         <span>: {{ translate('messages.House: 00, Road: 00, Test City') }}</span>
                                                     </li>
                                                 </ul>
@@ -180,15 +180,15 @@
                                 <div class="resturant--info-address">
                                     <ul class="address-info address-info-2 p-0 text-dark">
                                         <li class="d-flex align-items-start">
-                                            <span class="label min-w-auto">{{ translate('messages.First Name') }}</span>
+                                            <span class="label min-w-sm-auto">{{ translate('messages.First Name') }}</span>
                                             <span>: {{ translate('messages.Jonathan') }}</span>
                                         </li>
                                         <li class="d-flex align-items-start">
-                                            <span class="label min-w-auto">{{ translate('messages.Last Zone') }}</span>
+                                            <span class="label min-w-sm-auto">{{ translate('messages.Last Zone') }}</span>
                                             <span>: {{ translate('messages.Kent') }}</span>
                                         </li>
                                         <li class="d-flex align-items-start">
-                                            <span class="label min-w-auto">{{ translate('messages.Phone') }}</span>
+                                            <span class="label min-w-sm-auto">{{ translate('messages.Phone') }}</span>
                                             <span>: {{ translate('+9155 4564545') }}</span>
                                         </li>
                                     </ul>
@@ -224,11 +224,11 @@
                                 <div class="resturant--info-address">
                                     <ul class="address-info address-info-2 p-0 text-dark">
                                         <li class="d-flex align-items-start">
-                                            <span class="label min-w-auto">{{ translate('messages.Email') }}</span>
+                                            <span class="label min-w-sm-auto">{{ translate('messages.Email') }}</span>
                                             <span>: {{ translate('messages.admin@companyname.com') }}</span>
                                         </li>
                                         <li class="d-flex align-items-start">
-                                            <span class="label min-w-auto">{{ translate('messages.Password') }}</span>
+                                            <span class="label min-w-sm-auto">{{ translate('messages.Password') }}</span>
                                             <span>: {{ translate('*************') }}</span>
                                         </li>
                                     </ul>

@@ -14793,8 +14793,12 @@ ul.address-info .label {
     transform: rotate(0deg);
 }
 
+.min-w-auto {
+    min-width: auto !important;
+}
+
 @media (max-width: 575px) {
-    .min-w-auto {
+    .min-w-sm-auto {
         min-width: auto !important;
     }
 }
