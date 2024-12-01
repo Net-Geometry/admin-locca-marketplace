@@ -5341,4 +5341,6 @@
   'Hourly Wise Price ($)' => 'Hourly Wise Price ($)',
   'Provider_Active_Time' => 'Provider Active Time',
   'Minimum Trip Amount (Hr)' => 'Minimum Trip Amount (Hr)',
+  'Edit_Vechicle' => 'Edit Vechicle',
+  'not_now' => 'Not now',
 );

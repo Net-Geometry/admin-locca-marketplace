@@ -22,8 +22,23 @@
                     </h1>
                 </div>
                 <div class="d-flex align-items-start flex-wrap gap-2">
-                    <a href="javascript:" class="btn btn--primary float-right px-5 mb-0">
-                        {{ translate('messages.edit') }}
+                    <button type="button" data-toggle="modal" data-target="#vehicleDeleteModal" class="btn btn--cancel h--45px d-flex gap-2 align-items-center">
+                        <i class="tio-delete"></i>
+                        {{ translate('messages.delete') }}
+                    </button>
+                    <a href="javascript:" class="btn btn--reset d-flex justify-content-between align-items-center gap-4 lh--1 h--45px">
+                        {{ translate('messages.status') }}
+                        <label class="toggle-switch toggle-switch-sm" for="status">
+                            <input type="checkbox" data-url="#" class="toggle-switch-input"
+                                id="status" checked="">
+                            <span class="toggle-switch-label mx-auto">
+                                <span class="toggle-switch-indicator"></span>
+                            </span>
+                        </label>
+                    </a>
+                    <a href="javascript:" class="btn btn--primary h--45px d-flex gap-2 align-items-center">
+                        <i class="tio-edit"></i>
+                        {{ translate('messages.Edit_Vechicle') }}
                     </a>
                 </div>
             </div>
@@ -552,7 +567,7 @@
                                 </div>
                             <td>
                                 <label class="toggle-switch toggle-switch-sm" for="publishCheckbox47">
-                                    <input type="checkbox" data-url="#" class="toggle-switch-input redirect-url"
+                                    <input type="checkbox" data-url="#" class="toggle-switch-input"
                                         id="publishCheckbox47" checked="">
                                     <span class="toggle-switch-label mx-auto">
                                         <span class="toggle-switch-indicator"></span>
@@ -583,6 +598,33 @@
             <!-- End Table -->
         </div>
     </div>
+
+    <!--Vehicle delete Modal -->
+    <div class="modal fade" id="vehicleDeleteModal" tabindex="-1" role="dialog"
+        aria-labelledby="vehicleDeleteModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header p-2 pb-0 justify-content-end flex-shrink-0">
+                    <button type="button" class="close p-0 m-0" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body py-6 text-center">
+                    <div class="mb-20">
+                        <img width="80" class="aspect-ratio-1" src="{{ asset('public/assets/admin/img/modal/delete-icon.png') }}" alt="">
+                    </div>
+                    <h3 class="font-medium text--title">Confirm Vehicle Deletion</h3>
+                    <div class="fs-13">Are you sure you want to delete this Vehicle & remove it permanently?</div>
+                    <div class="btn--container justify-content-center mt-5">
+                        <button type="reset" id="reset_btn"
+                            class="btn btn--cancel min-w-120px">{{ translate('messages.not_now') }}</button>
+                        <button type="submit"
+                            class="btn btn--primary min-w-120px">{{ translate('messages.yes') }}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Modal -->
 
 @endsection
 

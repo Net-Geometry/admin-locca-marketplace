@@ -6125,4 +6125,6 @@
   'Offering a delightful fusion of flavors that excite both palate and imagination. Join us for a gastronomic experience' => 'Offering a delightful fusion of flavors that excite both palate and imagination. Join us for a gastronomic experience',
   'Meta_Image' => 'Meta Image',
   'Save_Changes' => 'Save Changes',
+  'Edit_Vechicle' => 'Edit Vechicle',
+  'not_now' => 'Not now',
 );
