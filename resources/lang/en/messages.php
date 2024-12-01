@@ -6130,4 +6130,7 @@
   'category_image' => 'Category image',
   'Driver_Details' => 'Driver Details',
   'Edit_Driver' => 'Edit Driver',
+  'Vendor Name' => 'Vendor Name',
+  'Business Address' => 'Business Address',
+  'Pickup_Zone' => 'Pickup Zone',
 );

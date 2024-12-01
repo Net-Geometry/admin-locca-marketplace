@@ -96,49 +96,99 @@
                 </div>
             </div>
             <div class="card-body">
-                <div class="row g-3 align-items-center">
-                    <div class="col-lg-4">
-                        <div class="card __bg-FAFAFA border-0">
+                <div class="row g-3">
+                    <div class="col-lg-6">
+                        <div class="card __bg-FAFAFA border-0 h-100">
                             <div class="card-body">
                                 <h5 class="mb-10px font-bold"> {{ translate('messages.General_Information') }}
                                 </h5>
-                                <div class="resturant--info-address">
-                                    <ul class="address-info address-info-2 p-0 text-dark">
-                                        <li class="d-flex align-items-start">
-                                            <span class="label">{{ translate('messages.Provider Name') }}</span>
-                                            <span>: {{ translate('messages.Auto Focus Car Service') }}</span>
-                                        </li>
-                                        <li class="d-flex align-items-start">
-                                            <span class="label">{{ translate('messages.Business Zone') }}</span>
-                                            <span>: {{ translate('messages.Dhanmondi') }}</span>
-                                        </li>
-                                        <li class="d-flex align-items-start">
-                                            <span class="label">{{ translate('messages.Pickup Zone') }}</span>
-                                            <span>: {{ translate('messages.Dhanmondi, Mirpur, Uttara') }}</span>
-                                        </li>
-                                    </ul>
+                                @php($language = \App\Models\BusinessSetting::where('key', 'language')->first())
+                                @php($language = $language->value ?? null)
+                                @php($defaultLang = 'en')
+                                <div class="div">
+                                    @if ($language)
+                                        <ul class="nav nav-tabs mb-4">
+                                            <li class="nav-item">
+                                                <a class="nav-link lang_link active" href="#"
+                                                    id="default-link">{{ translate('Default') }}</a>
+                                            </li>
+                                            @foreach (json_decode($language) as $lang)
+                                                <li class="nav-item">
+                                                    <a class="nav-link lang_link" href="#"
+                                                        id="{{ $lang }}-link">{{ \App\CentralLogics\Helpers::get_language_name($lang) . '(' . strtoupper($lang) . ')' }}</a>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    @endif
+                                    @if ($language)
+                                        <div class="lang_form" id="default-form">
+                                            <div class="resturant--info-address">
+                                                <ul class="address-info address-info-2 p-0 text-dark">
+                                                    <li class="d-flex align-items-start">
+                                                        <span class="label min-w-auto">{{ translate('messages.Vendor Name') }}</span>
+                                                        <span>: {{ translate('messages.Auto Focus Car Service') }}</span>
+                                                    </li>
+                                                    <li class="d-flex align-items-start">
+                                                        <span class="label min-w-auto">{{ translate('messages.Business Address') }}</span>
+                                                        <span>: {{ translate('messages.House: 00, Road: 00, Test City') }}</span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        @foreach (json_decode($language) as $lang)
+                                            <div class="d-none lang_form" id="{{ $lang }}-form">
+                                                <div class="resturant--info-address">
+                                                    <ul class="address-info address-info-2 p-0 text-dark">
+                                                        <li class="d-flex align-items-start">
+                                                            <span class="label min-w-auto">{{ translate('messages.Vendor Name') }}</span>
+                                                            <span>: {{ translate('messages.Auto Focus Car Service') }}</span>
+                                                        </li>
+                                                        <li class="d-flex align-items-start">
+                                                            <span class="label min-w-auto">{{ translate('messages.Business Address') }}</span>
+                                                            <span>: {{ translate('messages.House: 00, Road: 00, Test City') }}</span>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    @else
+                                        <div id="default-form">
+                                            <div class="resturant--info-address">
+                                                <ul class="address-info address-info-2 p-0 text-dark">
+                                                    <li class="d-flex align-items-start">
+                                                        <span class="label min-w-auto">{{ translate('messages.Vendor Name') }}</span>
+                                                        <span>: {{ translate('messages.Auto Focus Car Service') }}</span>
+                                                    </li>
+                                                    <li class="d-flex align-items-start">
+                                                        <span class="label min-w-auto">{{ translate('messages.Business Address') }}</span>
+                                                        <span>: {{ translate('messages.House: 00, Road: 00, Test City') }}</span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
                         </div>
 
                     </div>
-                    <div class="col-lg-4">
-                        <div class="card __bg-FAFAFA border-0">
+                    <div class="col-lg-6">
+                        <div class="card __bg-FAFAFA border-0 h-100">
                             <div class="card-body">
                                 <h5 class="mb-10px font-bold"> {{ translate('messages.Owner_Information') }}
                                 </h5>
                                 <div class="resturant--info-address">
                                     <ul class="address-info address-info-2 p-0 text-dark">
                                         <li class="d-flex align-items-start">
-                                            <span class="label">{{ translate('messages.First Name') }}</span>
+                                            <span class="label min-w-auto">{{ translate('messages.First Name') }}</span>
                                             <span>: {{ translate('messages.Jonathan') }}</span>
                                         </li>
                                         <li class="d-flex align-items-start">
-                                            <span class="label">{{ translate('messages.Last Zone') }}</span>
+                                            <span class="label min-w-auto">{{ translate('messages.Last Zone') }}</span>
                                             <span>: {{ translate('messages.Kent') }}</span>
                                         </li>
                                         <li class="d-flex align-items-start">
-                                            <span class="label">{{ translate('messages.Phone') }}</span>
+                                            <span class="label min-w-auto">{{ translate('messages.Phone') }}</span>
                                             <span>: {{ translate('+9155 4564545') }}</span>
                                         </li>
                                     </ul>
@@ -147,19 +197,38 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-4">
-                        <div class="card __bg-FAFAFA border-0">
+                    <div class="col-lg-6">
+                        <div class="card __bg-FAFAFA border-0 h-100">
+                            <div class="card-body">
+                                <h5 class="mb-10px font-bold"> {{ translate('messages.Pickup_Zone') }}
+                                </h5>
+                                <div class="d-flex gap-2 gap-sm-3 flex-wrap">
+                                    <label class="badge badge-soft-dark rounded-20 p-2 m-0 font-medium">
+                                        New York State
+                                    </label>
+                                    <label class="badge badge-soft-dark rounded-20 p-2 m-0 font-medium">
+                                        Washington
+                                    </label>
+                                    <label class="badge badge-soft-dark rounded-20 p-2 m-0 font-medium">
+                                        Chicago Municipal
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="card __bg-FAFAFA border-0 h-100">
                             <div class="card-body">
                                 <h5 class="mb-10px font-bold"> {{ translate('messages.Login_Information') }}
                                 </h5>
                                 <div class="resturant--info-address">
                                     <ul class="address-info address-info-2 p-0 text-dark">
                                         <li class="d-flex align-items-start">
-                                            <span class="label">{{ translate('messages.Email') }}</span>
+                                            <span class="label min-w-auto">{{ translate('messages.Email') }}</span>
                                             <span>: {{ translate('messages.admin@companyname.com') }}</span>
                                         </li>
                                         <li class="d-flex align-items-start">
-                                            <span class="label">{{ translate('messages.Password') }}</span>
+                                            <span class="label min-w-auto">{{ translate('messages.Password') }}</span>
                                             <span>: {{ translate('*************') }}</span>
                                         </li>
                                     </ul>

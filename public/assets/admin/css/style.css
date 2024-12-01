@@ -14792,3 +14792,9 @@ ul.address-info .label {
 .driverListCollapseBtn[aria-expanded="false"] i {
     transform: rotate(0deg);
 }
+
+@media (max-width: 575px) {
+    .min-w-auto {
+        min-width: auto !important;
+    }
+}
