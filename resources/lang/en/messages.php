@@ -6127,4 +6127,5 @@
   'Save_Changes' => 'Save Changes',
   'Edit_Vechicle' => 'Edit Vechicle',
   'not_now' => 'Not now',
+  'category_image' => 'Category image',
 );

@@ -81,7 +81,7 @@
             <!-- Table -->
             <div class="table-responsive datatable-custom">
                 <table id="columnSearchDatatable"
-                    class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table table-layout-fixed text--title font-semibold"
+                    class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table text--title font-semibold"
                     data-hs-datatables-options='{
                         "order": [],
                         "orderCellsTop": true,
@@ -92,6 +92,7 @@
                         <tr>
                             <th class="border-0">{{ translate('sl') }}</th>
                             <th class="border-0">{{ translate('messages.category_id') }}</th>
+                            <th class="border-0">{{ translate('messages.category_image') }}</th>
                             <th class="border-0">{{ translate('messages.category_name') }}</th>
                         </tr>
                     </thead>
@@ -100,6 +101,11 @@
                         <tr>
                             <td>1</td>
                             <td>123</td>
+                            <td>
+                                <span class="media align-items-center">
+                                    <img class="w-auto h--50px aspect-2-1 rounded onerror-image" src="http://localhost/Backend-6amMart/public/assets/admin/img/900x400/img1.jpg" data-onerror-image="http://localhost/Backend-6amMart/public/assets/admin/img/900x400/img1.jpg" alt=" image">
+                                </span>
+                            </td>
                             <td>
                                 Auto Focus
                             </td>
