@@ -6128,4 +6128,6 @@
   'Edit_Vechicle' => 'Edit Vechicle',
   'not_now' => 'Not now',
   'category_image' => 'Category image',
+  'Driver_Details' => 'Driver Details',
+  'Edit_Driver' => 'Edit Driver',
 );

@@ -5343,4 +5343,10 @@
   'Minimum Trip Amount (Hr)' => 'Minimum Trip Amount (Hr)',
   'Edit_Vechicle' => 'Edit Vechicle',
   'not_now' => 'Not now',
+  'Driver_Details' => 'Driver Details',
+  'Edit_Driver' => 'Edit Driver',
+  'Search by trip ID, customer name...' => 'Search by trip ID, customer name...',
+  'Columns' => 'Columns',
+  'Booking_Date' => 'Booking Date',
+  'Schedule_At' => 'Schedule At',
 );
