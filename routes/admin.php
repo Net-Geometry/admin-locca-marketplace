@@ -102,6 +102,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
 
             //Mainul
             Route::get('get-variations', 'ItemController@get_variations')->name('get-variations');
+            Route::get('get-stock', 'ItemController@get_stock')->name('get_stock');
             Route::post('stock-update', 'ItemController@stock_update')->name('stock-update');
 
             //Import and export
@@ -350,11 +351,13 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::POST('landing-page-settings/{tab}', 'BusinessSettingsController@update_landing_page_settings')->name('landing-page-settings');
             Route::DELETE('landing-page-settings/{tab}/{key}', 'BusinessSettingsController@delete_landing_page_settings')->name('landing-page-settings-delete');
 
-            Route::get('login-url-setup', 'BusinessSettingsController@login_url_page')->name('login_url_page');
             // Centerlize login
+            Route::group(['prefix' => 'login-settings', 'as' => 'login-settings.'], function () {
+                Route::get('login-setup', 'BusinessSettingsController@login_settings')->name('index');
+                Route::post('login-setup/update', 'BusinessSettingsController@login_settings_update')->name('update');
+            });
 
-            Route::get('login_page', 'BusinessSettingsController@login_page')->name('login_page');
-
+            Route::get('login-url-setup', 'BusinessSettingsController@login_url_page')->name('login_url_page');
             Route::post('login-url-setup/update', 'BusinessSettingsController@login_url_page_update')->name('login_url_update');
 
             Route::get('email-setup/{type}/{tab?}', 'BusinessSettingsController@email_index')->name('email-setup');
@@ -575,7 +578,6 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::post('store-summary-report-search', 'ReportController@store_summary_search')->name('store-summary-report-search');
             Route::get('store-summary-report-export', 'ReportController@store_summary_export')->name('store-summary-report-export');
             Route::get('store-wise-sales-report', 'ReportController@store_sales_report')->name('store-sales-report');
-            Route::post('store-wise-sales-report-search', 'ReportController@store_sales_search')->name('store-sales-report-search');
             Route::get('store-wise-sales-report-export', 'ReportController@store_sales_export')->name('store-sales-report-export');
             Route::get('store-wise-order-report', 'ReportController@store_order_report')->name('store-order-report');
             Route::post('store-wise-order-report-search', 'ReportController@store_order_search')->name('store-order-report-search');
@@ -707,7 +709,6 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                 Route::post('store-summary-report-search', 'ReportController@store_summary_search')->name('store-summary-report-search');
                 Route::get('store-summary-report-export', 'ReportController@store_summary_export')->name('store-summary-report-export');
                 Route::get('store-wise-sales-report', 'ReportController@store_sales_report')->name('store-sales-report');
-                Route::post('store-wise-sales-report-search', 'ReportController@store_sales_search')->name('store-sales-report-search');
                 Route::get('store-wise-sales-report-export', 'ReportController@store_sales_export')->name('store-sales-report-export');
                 Route::get('store-wise-order-report', 'ReportController@store_order_report')->name('store-order-report');
                 Route::post('store-wise-order-report-search', 'ReportController@store_order_search')->name('store-order-report-search');

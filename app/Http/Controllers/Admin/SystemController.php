@@ -82,17 +82,15 @@ class SystemController extends Controller
     {
         $maintenance_mode = BusinessSetting::where('key', 'maintenance_mode')->first();
         if (isset($maintenance_mode) == false) {
-            DB::table('business_settings')->insert([
+            Helpers::businessInsert([
                 'key' => 'maintenance_mode',
                 'value' => 1,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
         } else {
-            DB::table('business_settings')->where(['key' => 'maintenance_mode'])->update([
-                'key' => 'maintenance_mode',
-                'value' => $maintenance_mode->value == 1 ? 0 : 1,
-                'updated_at' => now(),
+            Helpers::businessUpdateOrInsert(['key' => 'maintenance_mode'], [
+                'value' => $maintenance_mode->value == 1 ? 0 : 1
             ]);
         }
 
@@ -106,14 +104,14 @@ class SystemController extends Controller
     {
         $landing_page = BusinessSetting::where('key', 'landing_page')->first();
         if (isset($landing_page) == false) {
-            DB::table('business_settings')->insert([
+            Helpers::businessInsert([
                 'key' => 'landing_page',
                 'value' => 1,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
         } else {
-            DB::table('business_settings')->where(['key' => 'landing_page'])->update([
+            BusinessSetting::where(['key' => 'landing_page'])->update([
                 'key' => 'landing_page',
                 'value' => $landing_page->value == 1 ? 0 : 1,
                 'updated_at' => now(),

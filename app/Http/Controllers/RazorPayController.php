@@ -100,4 +100,16 @@ class RazorPayController extends Controller
         }
         return $this->payment_response($payment_data, 'fail');
     }
+    public function callback(Request $request): JsonResponse|Redirector|RedirectResponse|Application
+    {
+        $input = $request->all();
+        if (count($input) && !empty($input['razorpay_payment_id'])) {
+            $data = $this->payment::where(['transaction_id' => $request['razorpay_payment_id']])->first();
+            if (isset($data) && function_exists($data->success_hook)) {
+                call_user_func($data->success_hook, $data);
+            }
+            return $this->payment_response($data, 'success');
+        }
+        return redirect()->route('payment-fail');
+    }
 }

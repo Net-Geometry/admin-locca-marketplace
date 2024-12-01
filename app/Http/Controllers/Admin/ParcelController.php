@@ -307,9 +307,9 @@ class ParcelController extends Controller
             'parcel_minimum_shipping_charge.numeric'=>translate('validation.numeric',['attribute'=>translate('messages.minimum_shipping_charge')]),
             'parcel_minimum_shipping_charge.min'=>translate('validation.min',['attribute'=>translate('messages.minimum_shipping_charge')]),
         ]);
-        BusinessSetting::updateOrinsert(['key'=>'parcel_per_km_shipping_charge'],['value'=>$request->parcel_per_km_shipping_charge]);
-        BusinessSetting::updateOrinsert(['key'=>'parcel_minimum_shipping_charge'],['value'=>$request->parcel_minimum_shipping_charge]);
-        BusinessSetting::updateOrinsert(['key'=>'parcel_commission_dm'],['value'=>$request->parcel_commission_dm]);
+        Helpers::businessUpdateOrInsert(['key'=>'parcel_per_km_shipping_charge'],['value'=>$request->parcel_per_km_shipping_charge]);
+        Helpers::businessUpdateOrInsert(['key'=>'parcel_minimum_shipping_charge'],['value'=>$request->parcel_minimum_shipping_charge]);
+        Helpers::businessUpdateOrInsert(['key'=>'parcel_commission_dm'],['value'=>$request->parcel_commission_dm]);
 
         Toastr::success(translate('messages.parcel_settings_updated'));
         return back();

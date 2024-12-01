@@ -256,45 +256,6 @@
                 @endif
                 <!-- End Banner -->
 
-            <!-- advertisement -->
-
-            @if (\App\CentralLogics\Helpers::module_permission_check('advertisement'))
-                <li
-                    class="navbar-vertical-aside-has-menu  @yield('advertisement')">
-                    <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:"
-                        title="{{ translate('messages.advertisement') }}">
-                        <i class="tio-tv-old nav-icon"></i>
-                        <span
-                            class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('messages.advertisement') }}</span>
-                    </a>
-                    <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
-                        style="display: {{ Request::is('admin/advertisement*') ? 'block' : 'none' }}">
-
-                        <li class="nav-item @yield('advertisement_create')">
-                            <a class="nav-link " href="{{ route('admin.advertisement.create') }}"
-                                title="{{ translate('messages.New_Advertisement') }}">
-                                <span class="tio-circle nav-indicator-icon"></span>
-                                <span class="text-truncate">{{ translate('messages.New_Advertisement') }}</span>
-                            </a>
-                        </li>
-                        <li class="nav-item @yield('advertisement_request')">
-                            <a class="nav-link " href="{{ route('admin.advertisement.requestList') }}"
-                                title="{{ translate('messages.Ad_Requests') }}">
-                                <span class="tio-circle nav-indicator-icon"></span>
-                                <span class="text-truncate">{{ translate('messages.Ad_Requests') }}</span>
-                            </a>
-                        </li>
-                        <li class="nav-item @yield('advertisement_list')">
-                            <a class="nav-link " href="{{ route('admin.advertisement.index') }}"
-                                title="{{ translate('messages.Ads_list') }}">
-                                <span class="tio-circle nav-indicator-icon"></span>
-                                <span class="text-truncate">{{ translate('messages.Ads_list') }}</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-            @endif
-            <!-- End advertisement -->
                 <!-- End marketing section -->
 
                     <!-- Product Section -->
