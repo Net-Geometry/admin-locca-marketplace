@@ -14780,3 +14780,15 @@ ul.address-info .label {
 .height-custom .select2-container--default .select2-selection--multiple {
     height: 45px !important;
 }
+
+.driverListCollapseBtn i {
+    transition: transform 0.3s ease-in-out;
+}
+
+.driverListCollapseBtn[aria-expanded="true"] i {
+    transform: rotate(180deg);
+}
+
+.driverListCollapseBtn[aria-expanded="false"] i {
+    transform: rotate(0deg);
+}

@@ -336,6 +336,55 @@
                     </div>
                 </div>
                 <div class="card mt-2">
+                    <div class="card-header">
+                        <h5 class="mb-0">Driver List</h5>
+                        <a href="#" class="btn action-btn btn--primary btn-outline-primary p-0">
+                            <i class="tio-edit"></i>
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <button class="btn btn--reset font-medium w-100 d-flex justify-content-between align-items-center px-3 driverListCollapseBtn" type="button" data-toggle="collapse" data-target="#driverListCollapse" aria-expanded="false" aria-controls="driverListCollapse">
+                            4 driver Assigned <i class="tio-down-ui fs-10"></i>
+                          </button>
+                        
+                        <div class="table-responsive collapse" id="driverListCollapse">
+                            <table
+                                class="table table-nowrap table-align-middle card-table no-footer mb-0">
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex gap-4 align-items-center">
+                                                <div>1</div>
+                                                <div class="fs-12 font-semibold text--title">
+                                                    <div>
+                                                        <span>Ellison Cardenas</span>
+                                                        <span class="fs-10 opacity-70">(+416465456)</span>
+                                                    </div>
+                                                    <div class="opacity-60">Car No: GHA-10-2345</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex gap-4 align-items-center">
+                                                <div>2</div>
+                                                <div class="fs-12 font-semibold text--title">
+                                                    <div>
+                                                        <span>Ellison Cardenas</span>
+                                                        <span class="fs-10 opacity-70">(+416465456)</span>
+                                                    </div>
+                                                    <div class="opacity-60">Car No: GHA-10-2345</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="card mt-2">
                     <div class="card-body">
                         <div class="position-relative">
                             <div class="map-fullscreen-btn_wrapper">
@@ -461,7 +510,7 @@
                 </div>
                 <div class="modal-body px-4 py-0">
                     <h5 class="font-bold">Assign Driver</h5>
-                    <div class="fs-12">1 Vehicle need to assign driver</div>
+                    <div class="fs-12 mb-20">1 Vehicle need to assign driver</div>
                     <div class="card shadow-none">
                         <div class="table-responsive">
                             <table
