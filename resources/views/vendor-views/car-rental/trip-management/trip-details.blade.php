@@ -468,8 +468,11 @@
                             <div class="text--title">
                                 <div class="fs-20 font-semibold line--limit-1">
                                     F Premio 2006</div>
-                                <div><span class="font-semibold mr-2">Category :</span>SUV</div>
-                                <div><span class="font-semibold mr-2">Brand :</span>Toyota</div>
+                                <div class="mb-2"><span class="font-semibold">Vendor :</span>Auto Focus Car Service</div>
+                               <div class="d-flex flex-wrap gap-2 gap-sm-4">
+                                <div><span class="font-semibold">Category :</span>SUV</div>
+                                <div><span class="font-semibold">Brand :</span>Toyota</div>
+                               </div>
 
                             </div>
                         </div>
