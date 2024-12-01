@@ -143,8 +143,6 @@
                                                     <div class="fs-12 text--title">
                                                         <div class="fz-12 font-semibold line--limit-1">
                                                             F Premio 2006</div>
-                                                        <div><span class="font-semibold mr-2">License No. :</span>Nator Kha
-                                                            21-3214</div>
                                                         <div><span class="font-semibold mr-2">Category :</span>SUV</div>
                                                         <div><span class="font-semibold mr-2">Brand :</span>Toyota</div>
 
@@ -194,8 +192,6 @@
                                                     <div class="fs-12 text--title">
                                                         <div class="fz-12 font-semibold line--limit-1">
                                                             F Premio 2006</div>
-                                                        <div><span class="font-semibold mr-2">License No. :</span>Nator Kha
-                                                            21-3214</div>
                                                         <div><span class="font-semibold mr-2">Category :</span>SUV</div>
                                                         <div><span class="font-semibold mr-2">Brand :</span>Toyota</div>
 
@@ -644,7 +640,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer border-0 flex-shrink-0">
+                <div class="modal-footer border-0 flex-shrink-0 px-4">
                     <div class="btn--container justify-content-end">
                         <button type="reset" id="reset_btn"
                             class="btn btn--warning-light min-w-120px">{{ translate('messages.cancel') }}</button>
@@ -750,7 +746,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer border-0 flex-shrink-0">
+                <div class="modal-footer border-0 flex-shrink-0 px-4">
                     <div class="btn--container justify-content-end">
                         <button type="reset" id="reset_btn"
                             class="btn btn--warning-light min-w-120px">{{ translate('messages.cancel') }}</button>
@@ -816,13 +812,13 @@
     <div class="modal fade" id="editTripModal" tabindex="-1" role="dialog" aria-labelledby="editTripModalLabel">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
-                <div class="modal-header pt-4 px-4">
+                <div class="modal-header pt-4 px-4 flex-shrink-0">
                     <h4 class="modal-title" id="editTripModalLabel">{{ translate('messages.Trip ID # 1000078') }}</h4>
                     <button type="button" class="close p-0 m-0" data-dismiss="modal" aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
                 </div>
-                <div class="modal-body p-4">
-                    <form action="">
+                <form action="">
+                    <div class="modal-body px-4 py-0">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group text-title">
@@ -908,14 +904,15 @@
                                                             <div class="fs-12 text--title">
                                                                 <div class="fz-12 font-semibold line--limit-1">
                                                                     F Premio 2006</div>
-                                                                <div><span class="font-semibold mr-2">License No.
-                                                                        :</span>Nator Kha
-                                                                    21-3214</div>
                                                                 <div><span class="font-semibold mr-2">Category :</span>SUV
                                                                 </div>
                                                                 <div><span class="font-semibold mr-2">Brand :</span>Toyota
                                                                 </div>
-
+                                                                <div>
+                                                                    <span class="font-semibold mr-2">Assigned Vehicles :</span>
+                                                                    <br>
+                                                                    Nator Kha 21-3214
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -930,9 +927,11 @@
                                                         value="5" placeholder="EX:5">
                                                 </td>
                                                 <td class="text-right">
-                                                    <input type="text"
+                                                    <div class="d-flex justify-content-end">
+                                                        <input type="text"
                                                         class="form-control w--120px text-right fs-14 text--title"
                                                         value="$ 1,350.25" placeholder="fare">
+                                                    </div>
                                                 </td>
                                             </tr>
 
@@ -974,14 +973,16 @@
                                 <!-- End Row -->
                             </div>
                         </div>
-                        <div class="btn--container justify-content-end mt-4">
+                    </div>
+                    <div class="modal-footer border-0 flex-shrink-0 px-4">
+                        <div class="btn--container justify-content-end">
                             <button type="reset" id="reset_btn"
                                 class="btn btn--warning-light min-w-120px">{{ translate('messages.cancel') }}</button>
                             <button type="submit"
                                 class="btn btn--primary min-w-120px">{{ translate('messages.update') }}</button>
                         </div>
-                    </form>
-                </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
