@@ -35,11 +35,11 @@
             <!-- Nav -->
             <ul class="nav nav-tabs border-0 nav--tabs nav--pills mb-2">
                 <li class="nav-item">
-                    <a class="nav-link text-capitalize text-title"
+                    <a class="nav-link text-capitalize text-title active"
                         href="javascript:">{{ translate('messages.Download App') }}</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-capitalize text-title active"
+                    <a class="nav-link text-capitalize text-title"
                         href="javascript:">{{ translate('messages.Vendors Registration') }}</a>
                 </li>
             </ul>
@@ -101,18 +101,6 @@
                                     </div>
                                     
                                 </div>
-                                <div class="form-group mb-0">
-                                    <label class="input-label font-semibold"
-                                        for="exampleFormControlInput1">{{ translate('messages.button_title') }}
-                                        ({{ translate('messages.default') }})
-                                    </label>
-                                        <div class="character-count">
-                                            <textarea type="text" name="button_title[]" placeholder="{{ translate('messages.type_button_title') }}"
-                                            class="form-control character-count-field h--45px" maxlength="20"
-                                            data-max-character="20">Register as Vendor</textarea>
-                                            <span class="d-flex justify-content-end">{{ translate('18/20') }}</span>
-                                        </div>
-                                </div>
                             </div>
                             @foreach (json_decode($language) as $lang)
                                 <div class="d-none lang_form" id="{{ $lang }}-form">
@@ -140,18 +128,6 @@
                                                     class="form-control character-count-field" maxlength="110"
                                                     data-max-character="110"></textarea>
                                                 <span class="d-flex justify-content-end">{{ translate('52/110') }}</span>
-                                            </div>
-                                        
-                                    </div>
-                                    <div class="form-group mb-0">
-                                        <label class="input-label font-semibold"
-                                            for="exampleFormControlInput1">{{ translate('messages.button_title') }}
-                                            ({{ strtoupper($lang) }})</label>
-                                            <div class="character-count">
-                                                <textarea type="text" name="button_title[]" placeholder="{{ translate('messages.type_button_title') }}"
-                                                class="form-control character-count-field h--45px" maxlength="20"
-                                                data-max-character="20"></textarea>
-                                                <span class="d-flex justify-content-end">{{ translate('18/20') }}</span>
                                             </div>
                                         
                                     </div>
@@ -185,17 +161,6 @@
                                     <span class="d-flex justify-content-end">{{ translate('52/110') }}</span>
                                 </div>
                             </div>
-                            <div class="form-group mb-0">
-                                <label class="input-label font-semibold"
-                                    for="exampleFormControlInput1">{{ translate('messages.button_title') }}
-                                </label>
-                                <div class="character-count">
-                                    <textarea type="text" name="button_title[]" placeholder="{{ translate('messages.type_button_title') }}"
-                                    class="form-control character-count-field h--45px" maxlength="20"
-                                    data-max-character="20"></textarea>
-                                    <span class="d-flex justify-content-end">{{ translate('18/20') }}</span>
-                                </div>
-                            </div>
                         </div>
                         @endif
                     </div>
@@ -207,7 +172,7 @@
                                 </label>
                                 <div class="mb-20">
                                     <p class="fs-12">
-                                        JPG, JPEG, PNG Less Than 1MB <strong class="font-semibold">(Ratio 3:2)</strong>
+                                        JPG, JPEG, PNG Less Than 1MB <strong class="font-semibold">(Ratio 1:1)</strong>
                                     </p>
                                 </div>
                                 <div class="upload-file text-wrapper">
@@ -215,7 +180,7 @@
                                         class="upload-file__input single_file_input" accept=".jpg, .jpeg, .png"
                                         required>
                                     <div
-                                        class="upload-file__img d-flex justify-content-center align-items-center height-200px max-w-300px m-auto p-0">
+                                        class="upload-file__img d-flex justify-content-center align-items-center h-180 m-auto p-0">
                                         <div class="upload-file__textbox text-center">
                                             <img width="34" height="34"
                                                 src="{{ asset('public/assets/admin/img/document-upload.png') }}"
@@ -226,7 +191,7 @@
                                                 {{ translate('or drag and drop') }}
                                             </h6>
                                         </div>
-                                        <img class="upload-file__img__img border--dashed aspect-3-2" height="200"
+                                        <img class="upload-file__img__img border--dashed aspect-ratio-1" height="180" width="180"
                                             loading="lazy" style="display: none;" alt="">
                                     </div>
                                 </div>
@@ -244,6 +209,14 @@
             </div>
         </div>
     </form>
+
+    <div class="mt-4">
+        <label class="badge badge-soft-secondary fs-12 p-10px">
+            <span class="text--danger"># Note: </span>
+            <span class="font-regular opacity-lg text-title">This Section App Download buttons are appear based on footer Apps Download button</span>
+        </label>
+    </div>
+
 </div>
 @endsection
 
