@@ -6328,4 +6328,5 @@ Smartly or Earn. ',
   'Search by Vendor name, owner info...' => 'Search by Vendor name, owner info...',
   'new_vendor' => 'New vendor',
   'vendoor' => 'Vendoor',
+  'Type GST Number' => 'Type GST Number',
 );

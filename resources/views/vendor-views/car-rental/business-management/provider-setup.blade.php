@@ -69,33 +69,6 @@
                         <div class="col-lg-4 col-md-6">
                             <div class="form-group mb-0">
                                 <label class="input-label font-medium"
-                                    for="">{{ translate('messages.vehicle_new_tag') }}
-                                </label>
-                                <label
-                                    class="toggle-switch dark h--45px toggle-switch-sm d-flex justify-content-between border rounded px-3 py-0 form-control">
-                                    <span class="pr-1 d-flex align-items-center switch--label text--title font-regular">
-                                        <span class="line--limit-1">
-                                            {{ translate('messages.new_tag') }}
-                                        </span>
-                                    </span>
-                                    <input type="checkbox" data-id="vehicle_new_tag_status" data-type="toggle"
-                                        data-image-on="{{ asset('/public/assets/admin/img/modal/dm-tips-on.png') }}"
-                                        data-image-off="{{ asset('/public/assets/admin/img/modal/dm-tips-off.png') }}"
-                                        data-title-on="<strong>{{ translate('messages.Want_to_enable_vehicle_new_tag?') }}</strong>"
-                                        data-title-off="<strong>{{ translate('messages.Want_to_disable_vehicle_new_tag?') }}</strong>"
-                                        data-text-on="<p>{{ translate('messages.If_you_enable_this,_vehicle_new_tag_will_be_enabled.') }}</p>"
-                                        data-text-off="<p>{{ translate('messages.If_you_disable_this,_vehicle_new_tag_will_be_disabled.') }}</p>"
-                                        class="status toggle-switch-input dynamic-checkbox-toggle" value="1"
-                                        name="vehicle_new_tag_status" id="vehicle_new_tag_status" checked>
-                                    <span class="toggle-switch-label text">
-                                        <span class="toggle-switch-indicator"></span>
-                                    </span>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-6">
-                            <div class="form-group mb-0">
-                                <label class="input-label font-medium"
                                     for="">{{ translate('messages.scheduled_trip') }}
                                 </label>
                                 <label
@@ -122,25 +95,12 @@
                         </div>
                         <div class="col-lg-4 col-md-6">
                             <div class="form-group mb-0">
-                                <label class="input-label font-medium"
-                                    for="">{{ translate('messages.Minimum Trip Amount (Hr)') }}
-                                </label>
-                                <input type="number" name="" class="form-control" placeholder="Ex: 5 "
-                                    value="">
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-6">
-                            <div class="form-group mb-0">
                                 <label
                                     class="toggle-switch dark h--45px toggle-switch-sm d-flex justify-content-between form-control border-0 px-0">
                                     <span
                                         class="pr-1 d-flex align-items-center switch--label text--title input-label font-medium">
                                         <span class="line--limit-1">
                                             {{ translate('messages.extra_service_charge') }}
-                                            <span class="form-label-secondary" data-toggle="tooltip" data-placement="right"
-                                                data-original-title="{{ translate('messages.extra_service_charge') }}">
-                                                <i class="tio-info-outined text--title"></i>
-                                            </span>
                                         </span>
                                     </span>
                                     <input type="checkbox" data-id="extra_service_charge_status" data-type="toggle"
@@ -162,13 +122,16 @@
                         </div>
                         <div class="col-lg-4 col-md-6">
                             <div class="form-group mb-0">
-                                <label class="input-label font-medium" for="">{{ translate('messages.gst') }}
-                                </label>
                                 <label
-                                    class="toggle-switch dark h--45px toggle-switch-sm d-flex justify-content-between border rounded px-3 py-0 form-control">
-                                    <span class="pr-1 d-flex align-items-center switch--label text--title font-regular">
+                                    class="toggle-switch dark h--45px toggle-switch-sm d-flex justify-content-between form-control border-0 px-0">
+                                    <span
+                                        class="pr-1 d-flex align-items-center switch--label text--title input-label font-medium">
                                         <span class="line--limit-1">
-                                            {{ translate('messages.When ON guest user can make trip') }}
+                                            {{ translate('messages.GST') }}
+                                            <span class="form-label-secondary" data-toggle="tooltip" data-placement="right"
+                                                data-original-title="{{ translate('messages.gst') }}">
+                                                <i class="tio-info text-secondary"></i>
+                                            </span>
                                         </span>
                                     </span>
                                     <input type="checkbox" data-id="gst_status" data-type="toggle"
@@ -184,60 +147,11 @@
                                         <span class="toggle-switch-indicator"></span>
                                     </span>
                                 </label>
+                                <input type="text" name="" class="form-control"
+                                    placeholder="Type name of extra service charge" value="">
                             </div>
                         </div>
-                        <div class="col-lg-4 col-md-6">
-                            <div class="form-group mb-0">
-                                <label
-                                    class="toggle-switch h--45px toggle-switch-sm d-flex justify-content-between border rounded px-3 py-0 form-control">
-                                    <span class="pr-1 d-flex align-items-center switch--label text--title">
-                                        <span class="line--limit-1">
-                                            {{ translate('messages.provider_cancelation_rate') }}
-                                        </span>
-                                    </span>
-                                    <input type="checkbox" data-id="provider_cancelation_rate_status" data-type="toggle"
-                                        data-image-on="{{ asset('/public/assets/admin/img/modal/dm-tips-on.png') }}"
-                                        data-image-off="{{ asset('/public/assets/admin/img/modal/dm-tips-off.png') }}"
-                                        data-title-on="<strong>{{ translate('messages.Want_to_enable_provider_cancelation_rate?') }}</strong>"
-                                        data-title-off="<strong>{{ translate('messages.Want_to_disable_provider_cancelation_rate?') }}</strong>"
-                                        data-text-on="<p>{{ translate('messages.If_you_enable_this,_provider_cancelation_rate_will_be_enabled.') }}</p>"
-                                        data-text-off="<p>{{ translate('messages.If_you_disable_this,_provider_cancelation_rate_will_be_disabled.') }}</p>"
-                                        class="status toggle-switch-input dynamic-checkbox-toggle" value="1"
-                                        name="provider_cancelation_rate_status" id="provider_cancelation_rate_status"
-                                        checked>
-                                    <span class="toggle-switch-label text">
-                                        <span class="toggle-switch-indicator"></span>
-                                    </span>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-6">
-                            <div class="form-group mb-0">
-                                <label class="input-label font-medium" for="">
-                                    {{ translate('messages.Cancelation Rate Limit') }} (%)
-                                    <span class="form-label-secondary" data-toggle="tooltip" data-placement="right"
-                                        data-original-title="{{ translate('messages.Cancelation Rate Limit') }}">
-                                        <i class="tio-info-outined text--title"></i>
-                                    </span>
-                                </label>
-                                <input type="number" name="" class="form-control" placeholder="Ex: 25"
-                                    value="">
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-6">
-                            <div class="form-group mb-0">
-                                <label class="input-label font-medium" for="">
-                                    {{ translate('messages.Cancelation Rate Warning') }} (%)
-                                    <span class="form-label-secondary" data-toggle="tooltip" data-placement="right"
-                                        data-original-title="{{ translate('messages.Cancelation Rate Warning') }}">
-                                        <i class="tio-info-outined text--title"></i>
-                                    </span>
-                                </label>
-                                <input type="number" name="" class="form-control" placeholder="Ex: 20"
-                                    value="">
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-6">
+                        <div class="col-lg-6">
                             <div class="position-relative">
                                 <label class="input-label font-medium"
                                     for="tax">{{ translate('Approx. Pickup Time') }}</label>
@@ -269,13 +183,13 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-12">
+                        <div class="col-lg-6">
                             <div class="form-group mb-0 pickup-zone-tag height-custom">
                                 <label class="input-label font-medium"
                                     for="pickup_zones">{{ translate('messages.pickup_zone') }}<span
                                         class="form-label-secondary" data-toggle="tooltip" data-placement="right"
                                         data-original-title="{{ translate('messages.select_pickup_zone_for_map') }}">
-                                        <i class="tio-info-outined text--title"></i>
+                                        <i class="tio-info text-secondary"></i>
                                     </span></label>
                                 <select name="pickup_zones[]" id="pickup_zones" class="form-control  multiple-select2"
                                     multiple="multiple">
