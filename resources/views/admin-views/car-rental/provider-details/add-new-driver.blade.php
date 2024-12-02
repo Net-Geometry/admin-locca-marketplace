@@ -67,7 +67,13 @@
                                             value=""
                                             placeholder="{{ translate('messages.Type your email address') }}" required>
                                     </div>
-
+                                    <div class="form-group mb-0">
+                                        <label class="input-label"
+                                            for="phone">{{ translate('messages.phone') }}</label>
+                                        <input type="tel" id="phone" name="phone" class="form-control"
+                                            placeholder="{{ translate('messages.Ex:') }} 017********" value="123456789"
+                                            required>
+                                    </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="__custom-upload-img text-center">
@@ -167,91 +173,6 @@
                                                         </h6>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <div>
-                                <h5 class="text-title mb-1">
-                                    {{ translate('messages.account_information') }}
-                                </h5>
-                                <p class="fs-12 mb-0">
-                                    {{ translate('messages.Provider Logo & Covers') }}
-                                </p>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <div class="row g-3">
-                                <div class="col-md-4 col-sm-6">
-                                    <div class="form-group mb-0">
-                                        <label class="input-label"
-                                            for="phone">{{ translate('messages.phone') }}</label>
-                                        <input type="tel" id="phone" name="phone" class="form-control"
-                                            placeholder="{{ translate('messages.Ex:') }} 017********" value="123456789"
-                                            required>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 col-sm-6">
-                                    <div class="js-form-message form-group mb-0">
-                                        <label class="input-label"
-                                            for="signupSrPassword">{{ translate('password') }}<span
-                                                class="form-label-secondary" data-toggle="tooltip" data-placement="right"
-                                                data-original-title="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}">
-                                                <i class="tio-info text--title opacity-60"></i>
-                                            </span></label>
-
-                                        <div class="input-group input-group-merge">
-                                            <input type="password" class="js-toggle-password form-control"
-                                                name="password" id="signupSrPassword"
-                                                pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
-                                                title="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"
-                                                placeholder="{{ translate('messages.password_length_placeholder', ['length' => '8+']) }}"
-                                                aria-label="8+ characters required"
-                                                data-msg="Your password is invalid. Please try again." value="12345678"
-                                                data-hs-toggle-password-options='{
-                                            "target": [".js-toggle-password-target-1", ".js-toggle-password-target-2"],
-                                            "defaultClass": "tio-hidden-outlined",
-                                            "showClass": "tio-visible-outlined",
-                                            "classChangeTarget": ".js-toggle-passowrd-show-icon-1"
-                                            }'>
-                                            <div class="js-toggle-password-target-1 input-group-append">
-                                                <a class="input-group-text" href="javascript:;">
-                                                    <i class="js-toggle-passowrd-show-icon-1 tio-visible-outlined"></i>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 col-sm-6">
-                                    <div class="js-form-message form-group mb-0">
-                                        <label class="input-label"
-                                            for="signupSrConfirmPassword">{{ translate('messages.Confirm Password') }}</label>
-
-                                        <div class="input-group input-group-merge">
-                                            <input type="password" class="js-toggle-password form-control"
-                                                name="confirmPassword" id="signupSrConfirmPassword"
-                                                pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
-                                                title="{{ translate('messages.Must_contain_at_least_one_number_and_one_uppercase_and_lowercase_letter_and_symbol,_and_at_least_8_or_more_characters') }}"
-                                                placeholder="{{ translate('messages.password_length_placeholder', ['length' => '8+']) }}"
-                                                aria-label="8+ characters required"
-                                                data-msg="Password does not match the confirm password." value="12345678"
-                                                data-hs-toggle-password-options='{
-                                                "target": [".js-toggle-password-target-1", ".js-toggle-password-target-2"],
-                                                "defaultClass": "tio-hidden-outlined",
-                                                "showClass": "tio-visible-outlined",
-                                                "classChangeTarget": ".js-toggle-passowrd-show-icon-2"
-                                                }'>
-                                            <div class="js-toggle-password-target-2 input-group-append">
-                                                <a class="input-group-text" href="javascript:;">
-                                                    <i class="js-toggle-passowrd-show-icon-2 tio-visible-outlined"></i>
-                                                </a>
                                             </div>
                                         </div>
                                     </div>
