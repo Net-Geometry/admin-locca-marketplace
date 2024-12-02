@@ -6333,4 +6333,5 @@ Smartly or Earn. ',
   'Business Address' => 'Business Address',
   'Pickup_Zone' => 'Pickup Zone',
   'Last Name' => 'Last Name',
+  'select_vehicle_provider' => 'Select vehicle provider',
 );
