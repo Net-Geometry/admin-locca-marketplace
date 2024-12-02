@@ -349,21 +349,6 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-lg-4">
-                                    <div class="form-group mb-0">
-                                        <label class="input-label"
-                                            for="choice_break_system">{{ translate('messages.break_system') }}
-                                        </label>
-                                        <select name="" id="choice_break_system"
-                                            class="form-control js-select2-custom"
-                                            data-placeholder="{{ translate('messages.select_vehicle_break_system') }}">
-                                            <option value="" disabled>
-                                                {{ translate('messages.select_vehicle_break_system') }}</option>
-                                            <option value="1" selected>{{ translate('messages.Disc Break') }}
-                                            </option>
-                                        </select>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
