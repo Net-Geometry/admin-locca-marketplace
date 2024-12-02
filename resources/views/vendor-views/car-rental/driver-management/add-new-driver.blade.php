@@ -67,7 +67,13 @@
                                             value=""
                                             placeholder="{{ translate('messages.Type your email address') }}" required>
                                     </div>
-
+                                    <div class="form-group mb-0">
+                                        <label class="input-label"
+                                            for="phone">{{ translate('messages.phone') }}</label>
+                                        <input type="tel" id="phone" name="phone" class="form-control"
+                                            placeholder="{{ translate('messages.Ex:') }} 017********" value="123456789"
+                                            required>
+                                    </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="__custom-upload-img text-center">

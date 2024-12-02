@@ -13,12 +13,12 @@ Route::group(['namespace' => 'Vendor', 'as' => 'vendor.'], function () {
             // return view('vendor-views.car-rental.trip-management.trip-details');
             // return view('vendor-views.car-rental.vehicle-management.vehicale-list');
             // return view('vendor-views.car-rental.vehicle-management.vehicle-details');
-            return view('vendor-views.car-rental.vehicle-management.add-new-vehicale');
+            // return view('vendor-views.car-rental.vehicle-management.add-new-vehicale');
             // return view('vendor-views.car-rental.vehicle-management.category-list');
             // return view('vendor-views.car-rental.vehicle-management.brand-list');
             // return view('vendor-views.car-rental.banner.index');
             // return view('vendor-views.car-rental.driver-management.driver-list');
-            // return view('vendor-views.car-rental.driver-management.add-new-driver');
+            return view('vendor-views.car-rental.driver-management.add-new-driver');
             // return view('vendor-views.car-rental.driver-management.driver-details');
             // return view('vendor-views.car-rental.business-management.provider-setup');
          });

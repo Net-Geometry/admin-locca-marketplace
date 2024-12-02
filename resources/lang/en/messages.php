@@ -6323,4 +6323,5 @@ Smartly or Earn. ',
   'not_now' => 'Not now',
   'New_Tag' => 'New Tag',
   'Edit_Vechicle' => 'Edit Vechicle',
+  'category_image' => 'Category image',
 );
