@@ -31,7 +31,7 @@
                         </label>
                     </a>
                     <a href="javascript:" class="btn btn--primary float-right mb-0">
-                        <i class="tio-edit"></i> {{ translate('messages.edit_provider') }}
+                        <i class="tio-edit"></i> {{ translate('messages.edit_vendor') }}
                     </a>
                 </div>
             </div>
