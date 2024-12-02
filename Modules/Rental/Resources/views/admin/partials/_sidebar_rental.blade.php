@@ -377,74 +377,33 @@
 
 
                     <li class="nav-item">
-                        <small class="nav-subtitle" title="{{ translate('messages.item_section') }}">{{ translate('messages.food_management') }}</small>
+                        <small class="nav-subtitle" title="{{ translate('messages.item_section') }}">{{ translate('messages.vehicle_management') }}</small>
                         <small class="tio-more-horizontal nav-subtitle-replacer"></small>
                     </li>
 
                     <!-- Category -->
                     @if (\App\CentralLogics\Helpers::module_permission_check('category'))
-                    <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/category*') ? 'active' : '' }}">
-                            <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:" title="{{ translate('messages.categories') }}">
+                        <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/rental/category/list') ? 'active' : '' }}">
+                            <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.rental.category.list') }}" title="{{ translate('messages.category') }}">
                                 <i class="tio-category nav-icon"></i>
-                                <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('messages.categories') }}</span>
+                                <span class="text-truncate position-relative overflow-visible">
+                                    {{ translate('messages.category') }}
+                                </span>
                             </a>
-                            <ul class="js-navbar-vertical-aside-submenu nav nav-sub"  style="display:{{ Request::is('admin/category*') ? 'block' : 'none' }}">
-                                <li class="nav-item  @yield('main_category') {{ request()->input('position') == 0 && Request::is('admin/category/add') ? 'active' : '' }}">
-                                    <a class="nav-link " href="{{ route('admin.category.add',['position'=>0]) }}" title="{{ translate('messages.category') }}">
-                                        <span class="tio-circle nav-indicator-icon"></span>
-                                        <span class="text-truncate">{{ translate('messages.category') }}</span>
-                                    </a>
-                                </li>
-
-                                <li class="nav-item   @yield('sub_category') {{ request()->input('position') == 1 && Request::is('admin/category/add') ? 'active' : '' }}">
-                                    <a class="nav-link " href="{{ route('admin.category.add',['position'=>1]) }}" title="{{ translate('messages.sub_category') }}">
-                                        <span class="tio-circle nav-indicator-icon"></span>
-                                        <span class="text-truncate">{{ translate('messages.sub_category') }}</span>
-                                    </a>
-                                </li>
-
-                                <li class="nav-item {{ Request::is('admin/category/bulk-import') ? 'active' : '' }}">
-                                    <a class="nav-link " href="{{ route('admin.category.bulk-import') }}" title="{{ translate('messages.bulk_import') }}">
-                                        <span class="tio-circle nav-indicator-icon"></span>
-                                        <span class="text-truncate text-capitalize">{{ translate('messages.bulk_import') }}</span>
-                                    </a>
-                                </li>
-                                <li class="nav-item {{ Request::is('admin/category/bulk-export') ? 'active' : '' }}">
-                                    <a class="nav-link " href="{{ route('admin.category.bulk-export-index') }}" title="{{ translate('messages.bulk_export') }}">
-                                        <span class="tio-circle nav-indicator-icon"></span>
-                                        <span class="text-truncate text-capitalize">{{ translate('messages.bulk_export') }}</span>
-                                    </a>
-                                </li>
-                            </ul>
                         </li>
-                @endif
+                   @endif
+                    <!-- Category -->
+                    @if (\App\CentralLogics\Helpers::module_permission_check('brand'))
+                        <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/rental/brand/list') ? 'active' : '' }}">
+                            <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.rental.brand.list') }}" title="{{ translate('messages.brands') }}">
+                                <i class="tio-medal nav-icon"></i>
+                                <span class="text-truncate position-relative overflow-visible">
+                                    {{ translate('messages.brands') }}
+                                </span>
+                            </a>
+                        </li>
+                   @endif
                 <!-- End Category -->
-
-                <!-- Attributes -->
-                {{-- @if (\App\CentralLogics\Helpers::module_permission_check('attribute'))
-                <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/attribute*') ? 'active' : '' }}">
-                    <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.attribute.add-new') }}" title="{{ translate('messages.attributes') }}">
-                        <i class="tio-apps nav-icon"></i>
-                        <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                            {{ translate('messages.attributes') }}
-                        </span>
-                    </a>
-                </li>
-                @endif --}}
-                <!-- End Attributes -->
-
-                <!-- Unit -->
-                {{-- @if (\App\CentralLogics\Helpers::module_permission_check('unit'))
-                <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/unit*') ? 'active' : '' }}">
-                    <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.unit.index') }}" title="{{ translate('messages.units') }}">
-                        <i class="tio-ruler nav-icon"></i>
-                        <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate text-capitalize">
-                            {{ translate('messages.units') }}
-                        </span>
-                    </a>
-                </li>
-                @endif --}}
-                <!-- End Unit -->
 
                 <!-- AddOn -->
                 @if (\App\CentralLogics\Helpers::module_permission_check('addon'))
