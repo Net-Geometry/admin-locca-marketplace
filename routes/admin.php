@@ -18,13 +18,14 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             // return view('admin-views.car-rental.provider-details.driver-list');
             // return view('admin-views.car-rental.provider-details.add-new-driver');
             // return view('admin-views.car-rental.provider-details.driver-details');
-            return view('admin-views.car-rental.provider-details.vehicale-list');
+            // return view('admin-views.car-rental.provider-details.vehicale-list');
             // return view('admin-views.car-rental.provider-details.vehicle-details');
             // return view('admin-views.car-rental.provider-details.add-new-vehicale');
             // return view('admin-views.car-rental.provider-details.settings');
             // return view('admin-views.car-rental.provider-request-details');
+            // return view('admin-views.car-rental.vehicle-management.vehicale-list');
             // return view('admin-views.car-rental.business-management.provider-setup');
-            return view('admin-views.car-rental.vehicle-management.vehicale-list');
+            return view('admin-views.car-rental.business-management.vendor-setup');
         });
         Route::get('drivemond-panel', 'DriveMondController@drivemondExternalLogin')->name('drivemond-panel');
         Route::get('get-all-stores', 'VendorController@get_all_stores')->name('get_all_stores');
