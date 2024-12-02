@@ -6334,4 +6334,6 @@ Smartly or Earn. ',
   'Pickup_Zone' => 'Pickup Zone',
   'Last Name' => 'Last Name',
   'select_vehicle_provider' => 'Select vehicle provider',
+  'Vendor' => 'Vendor',
+  'Select Vendor' => 'Select Vendor',
 );

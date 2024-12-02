@@ -67,6 +67,17 @@
                                             value=""
                                             placeholder="{{ translate('messages.Type your email address') }}" required>
                                     </div>
+                                    <div class="form-group">
+                                        <label class="input-label"
+                                            for="">{{ translate('messages.Vendor') }}</label>
+                                            <select name="" id="" required
+                                            class="form-control js-select2-custom"
+                                            data-placeholder="{{ translate('messages.Select Vendor') }}">
+                                            <option value="" selected disabled>
+                                                {{ translate('messages.Select Vendor') }}</option>
+                                                <option value="test">test</option>
+                                        </select>
+                                    </div>
                                     <div class="form-group mb-0">
                                         <label class="input-label"
                                             for="phone">{{ translate('messages.phone') }}</label>
