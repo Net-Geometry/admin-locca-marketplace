@@ -200,12 +200,12 @@
                     <!-- Table -->
                     <div class="table-responsive datatable-custom">
                         <table id="columnSearchDatatable"
-                            class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table"
+                            class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table text--title font-semibold"
                             data-hs-datatables-options='{
                                 "order": [],
                                 "orderCellsTop": true,
                                 "paging":false
-
+        
                             }'>
                             <thead class="thead-light">
                                 <tr>
@@ -213,54 +213,65 @@
                                     <th class="border-0">{{ translate('messages.Driver_Info') }}</th>
                                     <th class="border-0">{{ translate('messages.Total_Trip') }}</th>
                                     <th class="border-0">{{ translate('messages.Complete') }}</th>
-                                    <th class="border-0">{{ translate('messages.Canceled_Trip') }}</th>
+                                    <th class="border-0">{{ translate('messages.Cancel_Trip') }}</th>
                                     <th class="text-center border-0">{{ translate('messages.Driver_Status') }}</th>
+                                    <th class="text-center border-0">{{ translate('messages.Action') }}</th>
                                 </tr>
                             </thead>
-
+        
                             <tbody id="set-rows">
                                 <tr>
                                     <td>1</td>
                                     <td>
                                         <div class="text--title">
                                             <div class="font-medium">
-                                                {{ translate('messages.Cameron_Williamson') }}
+                                                {{ translate('messages.Cameron Williamson') }}
                                             </div>
-                                            <div class="opacity-lg">
+                                            <div class="opacity-lg font-regular">
                                                 +880 1235 123654
                                             </div>
                                         </div>
                                     </td>
                                     <td>
-                                        <div class="text--title font-semibold">
-                                            123
-                                        </div>
+                                        123
                                     </td>
                                     <td>
-                                        <div class="text--title font-semibold">
-                                            13
-                                        </div>
+                                        13
                                     </td>
                                     <td>
-                                        <div class="text--title font-semibold">
-                                            110
-                                        </div>
+                                        110
                                     </td>
                                     <td>
                                         <div class="d-flex justify-content-center">
                                             <label class="toggle-switch toggle-switch-sm" for="stocksCheckbox336">
-                                                <input type="checkbox" class="toggle-switch-input redirect-url"
-                                                    data-url="" id="stocksCheckbox336" checked="">
+                                                <input type="checkbox" class="toggle-switch-input redirect-url" data-url=""
+                                                    id="stocksCheckbox336" checked="">
                                                 <span class="toggle-switch-label">
                                                     <span class="toggle-switch-indicator"></span>
                                                 </span>
                                             </label>
                                         </div>
                                     </td>
+                                    <td>
+                                        <div class="btn--container justify-content-center">
+                                            <a class="btn action-btn btn-outline-primary" href="javascript:"
+                                                title="{{ translate('messages.edit_store') }}"><i class="tio-edit"></i>
+                                            </a>
+                                            <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:"
+                                                data-message="{{ translate('You want to remove this store') }}"
+                                                title="{{ translate('messages.delete_store') }}"><i
+                                                    class="tio-delete-outlined"></i>
+                                            </a>
+        
+                                        </div>
+                                        <form action="" method="post" id="">
+                                            @csrf @method('delete')
+                                        </form>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
-
+        
                     </div>
                     <div class="page-area mt-3">
                         <nav>
