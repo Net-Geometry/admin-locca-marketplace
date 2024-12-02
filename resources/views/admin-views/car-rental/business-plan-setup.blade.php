@@ -42,8 +42,8 @@
 
         {{-- timeline --}}
         <div class="custom-timeline d-flex flex-wrap gap-40px text-title mb-2">
-            <h4 class="single checked"><span class="count">1</span>{{ translate('messages.Business Basic Setup') }}</h4>
-            <h4 class="single checked"><span class="count">2</span>{{ translate('messages.Business Plan Setup') }}</h4>
+            <h4 class="single text-primary checked"><span class="count">1</span>{{ translate('messages.Business Basic Setup') }}</h4>
+            <h4 class="single font-semibold"><span class="count btn-primary">2</span>{{ translate('messages.Business Plan Setup') }}</h4>
         </div>
 
         <form action="{{ route('admin.store.store') }}" method="post" enctype="multipart/form-data" class="js-validate"
@@ -129,10 +129,6 @@
                                                         </li>
 
                                                     </ul>
-                                                    <div class="text-center">
-                                                        <button type="button"
-                                                            class="btn btn--primary shift-btn package_detail">{{ translate('messages.Shift_in_this_plan') }}</button>
-                                                    </div>
 
                                                 </div>
                                             </div>
@@ -166,11 +162,6 @@
                                                         </li>
 
                                                     </ul>
-                                                    <div class="text-center">
-                                                        <button type="button"
-                                                            class="btn btn--warning text-white renew-btn package_detail">{{ translate('messages.Renew') }}</button>
-                                                    </div>
-
                                                 </div>
                                             </div>
                                             <div class="__plan-item hover">
@@ -204,10 +195,6 @@
                                                         </li>
 
                                                     </ul>
-                                                    <div class="text-center">
-                                                        <button type="button"
-                                                            class="btn btn--primary shift-btn package_detail">{{ translate('messages.Shift_in_this_plan') }}</button>
-                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

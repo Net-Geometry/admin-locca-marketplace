@@ -14148,7 +14148,7 @@ ul.address-info .label {
     align-items: center;
     color: var(--title-clr);
     font-weight: 500;
-    opacity: 0.7;
+    /* opacity: 0.7; */
 }
 .custom-timeline .single.checked {
     opacity: 1;
@@ -14170,8 +14170,8 @@ ul.address-info .label {
 }
 
 .custom-timeline .single.checked .count {
-    background-color: var(--success-clr);
-    border-color: var(--success-clr);
+    background-color: var(--primary-clr);
+    border-color: var(--primary-clr);
     color: transparent;
 }
 
@@ -14203,12 +14203,12 @@ ul.address-info .label {
 }
 
 .business-plan-radio:checked + .business-plan-card {
-    border: 0.62px solid var(--success-clr);
-    background-color: color-mix(in srgb, var(--success-clr), transparent 95%);
+    border: 0.62px solid var(--primary-clr);
+    background-color: color-mix(in srgb, var(--primary-clr), transparent 95%);
 }
 
 .business-plan-radio:checked + .business-plan-card .title {
-    color: var(--success-clr) !important;
+    color: var(--primary-clr) !important;
     position: relative;
 }
 
@@ -14222,7 +14222,7 @@ ul.address-info .label {
     background: url("../img/icons/check.svg") no-repeat center center;
     background-size: 10px 10px;
     line-height: 1;
-    background-color: var(--success-clr);
+    background-color: var(--primary-clr);
     color: #ffffff;
     border-radius: 50%;
 }

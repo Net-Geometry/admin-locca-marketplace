@@ -6329,4 +6329,7 @@ Smartly or Earn. ',
   'new_vendor' => 'New vendor',
   'vendoor' => 'Vendoor',
   'Type GST Number' => 'Type GST Number',
+  'Vendor Name' => 'Vendor Name',
+  'Business Address' => 'Business Address',
+  'Pickup_Zone' => 'Pickup Zone',
 );
