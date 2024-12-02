@@ -25,14 +25,6 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-auto min--280">
-                    <select name="zone_id" class="form-control js-select2-custom fetch_data_zone_wise">
-                        <option value="all">{{ translate('messages.All_Zones') }}</option>
-                        <option value="test">
-                            {{ translate('messages.Test') }}
-                        </option>
-                    </select>
-                </div>
             </div>
         </div>
         <!-- End Page Header -->
@@ -45,9 +37,6 @@
                         <div class="d-flex align-items-center gap-2">
                             <h3 class="page-header-title text-title fs-18 mb-0">
                                 {{ translate('messages.Delivery_Statistics') }}</h3>
-                            <label class="badge badge-soft-primary m-0">
-                                {{ translate('messages.zone') }} : {{ translate('messages.all') }}
-                            </label>
                         </div>
                     </div>
                     <div class="statistics--select">
@@ -114,6 +103,20 @@
                         <a class="order--card h-100 badge--accepted" href="#">
                             <div class="d-flex justify-content-between align-items-center">
                                 <h6 class="card-subtitle d-flex justify-content-between m-0 align-items-center">
+                                    All
+                                </h6>
+                                <span class="card-title text-title">
+                                    200
+                                </span>
+                            </div>
+                        </a>
+                        <!-- End Card -->
+                    </div>
+                    <div class="col-lg-3 col-sm-6">
+                        <!-- Card -->
+                        <a class="order--card h-100 badge--accepted" href="#">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h6 class="card-subtitle d-flex justify-content-between m-0 align-items-center">
                                     Pending
                                 </h6>
                                 <span class="card-title text--info">
@@ -142,7 +145,7 @@
                         <a class="order--card h-100 badge--accepted" href="#">
                             <div class="d-flex justify-content-between align-items-center">
                                 <h6 class="card-subtitle d-flex justify-content-between m-0 align-items-center">
-                                    Regular
+                                    Instant Booking
                                 </h6>
                                 <span class="card-title text--danger">
                                     200
@@ -151,20 +154,7 @@
                         </a>
                         <!-- End Card -->
                     </div>
-                    <div class="col-lg-3 col-sm-6">
-                        <!-- Card -->
-                        <a class="order--card h-100 badge--accepted" href="#">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <h6 class="card-subtitle d-flex justify-content-between m-0 align-items-center">
-                                    All
-                                </h6>
-                                <span class="card-title text-title">
-                                    200
-                                </span>
-                            </div>
-                        </a>
-                        <!-- End Card -->
-                    </div>
+                    
                 </div>
             </div>
         </div>
@@ -204,82 +194,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-6">
-                <!-- Card -->
-                <div class="card h-100" id="top-customer-view">
-                    <div class="card-header border-0 order-header-shadow">
-                        <h5 class="card-header-title font-bold d-flex justify-content-between">
-                            <span>{{ translate('Top_Zones') }}</span>
-                        </h5>
-                        <a href="javascript:" class="fz-12px font-semibold text-006AE5">{{ translate('view_all') }}</a>
-                    </div>
-                    <div class="card-body">
-
-                        <div class="top--selling">
-
-                            <a class="grid--card align-items-center" href="javascript:">
-                                <h5 class="mb-0 font-bold line--limit-1">{{ translate('Dhaka_Zone') }} <span class="font-semibold opacity-70"> {{ translate('(Business_Zone)') }} </span></h5>
-                                <div class="ml-auto">
-                                    <span class="badge badge-soft">{{ translate('Trips') }} : 300</span>
-                                </div>
-                            </a>
-                            <a class="grid--card align-items-center" href="javascript:">
-                                <h5 class="mb-0 font-bold line--limit-1">{{ translate('Mirpur_Zone') }}</h5>
-                                <div class="ml-auto">
-                                    <span class="badge badge-soft">{{ translate('Trips') }} : 300</span>
-                                </div>
-                            </a>
-
-                        </div>
-
-                    </div>
-                </div>
-                <!-- End Card -->
-            </div>
-            <div class="col-lg-6">
-                <!-- Card -->
-                <div class="card h-100" id="top-provider-view">
-                    <div class="card-header border-0 order-header-shadow">
-                        <h5 class="card-header-title font-bold d-flex justify-content-between">
-                            <span>{{ translate('messages.Top_Vehicles') }}</span>
-                        </h5>
-                        <a href="javascript:" class="fz-12px font-semibold text-006AE5">{{ translate('view_all') }}</a>
-                    </div>
-                    <div class="card-body">
-
-                        <div class="top--selling">
-
-                            <a class="grid--card" href="javascript:">
-                                <img class="onerror-image aspect-2-1 w--100px"
-                                    data-onerror-image="{{ asset('public/assets/admin/img/car-demo.png') }}"
-                                    src="{{ asset('public/assets/admin/img/car-demo.png') }}">
-                                <div class="cont pt-2">
-                                    <h6 class="mb-1 line--limit-1">{{ translate('Toyota - F Premio 2006') }}</h6>
-                                    <span class="line--limit-1">+Nator Kha 21-3214</span>
-                                </div>
-                                <div class="ml-auto">
-                                    <span class="badge badge-soft">{{ translate('Trips') }} : 300</span>
-                                </div>
-                            </a>
-                            <a class="grid--card" href="javascript:">
-                                <img class="onerror-image aspect-2-1 w--100px"
-                                    data-onerror-image="{{ asset('public/assets/admin/img/car-demo.png') }}"
-                                    src="{{ asset('public/assets/admin/img/car-demo.png') }}">
-                                <div class="cont pt-2">
-                                    <h6 class="mb-1 line--limit-1">{{ translate('Toyota - F Premio 2006') }}</h6>
-                                    <span class="line--limit-1">+Nator Kha 21-3214</span>
-                                </div>
-                                <div class="ml-auto">
-                                    <span class="badge badge-soft">{{ translate('Trips') }} : 300</span>
-                                </div>
-                            </a>
-
-                        </div>
-
-                    </div>
-                </div>
-                <!-- End Card -->
             </div>
         </div>
     </div>
