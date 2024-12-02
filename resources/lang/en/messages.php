@@ -6399,4 +6399,6 @@ Smartly or Earn. ',
   'Tesla_Model_3' => 'Tesla Model 3',
   'car_Assigned' => 'Car Assigned',
   'toyota_Hiace' => 'Toyota Hiace',
+  'Download App' => 'Download App',
+  'Vendors Registration' => 'Vendors Registration',
 );

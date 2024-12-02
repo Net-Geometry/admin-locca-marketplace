@@ -4,11 +4,48 @@
 
 @section('content')
 <div class="content container-fluid">
-    <!-- Page Header -->
-    <div class="page-header pb-20">
-        <h1 class="page-header-title text-break">
-            {{ translate('messages.Home_Page_Setup') }}
-        </h1>
+     <!-- Page Header -->
+     <div class="page-header">
+        <div class="d-flex justify-content-between flex-wrap gap-3 mb-3">
+            <div>
+                <h1 class="page-header-title text-break">
+                    <span class="page-header-icon">
+                        <img src="{{ asset('public/assets/admin/img/store.png') }}" class="w--22" alt="">
+                    </span>
+                    <span>{{ translate('messages.Home_Page_Setup') }}
+                </h1></span>
+                </h1>
+            </div>
+        </div>
+
+        <!-- Nav Scroller -->
+        <div class="js-nav-scroller hs-nav-scroller-horizontal">
+            <span class="hs-nav-scroller-arrow-prev d-none">
+                <a class="hs-nav-scroller-arrow-link" href="javascript:;">
+                    <i class="tio-chevron-left"></i>
+                </a>
+            </span>
+
+            <span class="hs-nav-scroller-arrow-next d-none">
+                <a class="hs-nav-scroller-arrow-link" href="javascript:;">
+                    <i class="tio-chevron-right"></i>
+                </a>
+            </span>
+
+            <!-- Nav -->
+            <ul class="nav nav-tabs border-0 nav--tabs nav--pills mb-2">
+                <li class="nav-item">
+                    <a class="nav-link text-capitalize text-title"
+                        href="javascript:">{{ translate('messages.Download App') }}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-capitalize text-title active"
+                        href="javascript:">{{ translate('messages.Vendors Registration') }}</a>
+                </li>
+            </ul>
+            <!-- End Nav -->
+        </div>
+        <!-- End Nav Scroller -->
     </div>
     <!-- End Page Header -->
 
