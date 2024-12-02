@@ -19,7 +19,7 @@
                 @php($language = \App\Models\BusinessSetting::where('key', 'language')->first())
                 @php($language = $language->value ?? null)
                 @php($defaultLang = 'en')
-                <div class="row">
+                <div class="row gy-3">
                     <div class="col-lg-6">
                         @if ($language)
                         <ul class="nav nav-tabs border-0 mb-4">
@@ -44,7 +44,7 @@
                                     </label>
                                         <div class="character-count">
                                             <input type="text" name="name[]" id="default_name"
-                                            class="form-control character-count-field"
+                                            class="form-control character-count-field h--45px"
                                             value="{{ translate('messages.Its much easier From Apps') }}"
                                             placeholder="{{ translate('messages.type_title') }}" maxlength="30"
                                             data-max-character="30" required>
@@ -71,7 +71,7 @@
                                     </label>
                                         <div class="character-count">
                                             <textarea type="text" name="button_title[]" placeholder="{{ translate('messages.type_button_title') }}"
-                                            class="form-control character-count-field" maxlength="20"
+                                            class="form-control character-count-field h--45px" maxlength="20"
                                             data-max-character="20">Register as Vendor</textarea>
                                             <span class="d-flex justify-content-end">{{ translate('18/20') }}</span>
                                         </div>
@@ -86,7 +86,7 @@
                                         </label>
                                         <div class="character-count">
                                             <input type="text" name="name[]" id="{{ $lang }}_name"
-                                                class="form-control character-count-field"
+                                                class="form-control character-count-field h--45px"
                                                 maxlength="30"
                                                 data-max-character="30"
                                                 placeholder="{{ translate('messages.type_title') }}">
@@ -112,7 +112,7 @@
                                             ({{ strtoupper($lang) }})</label>
                                             <div class="character-count">
                                                 <textarea type="text" name="button_title[]" placeholder="{{ translate('messages.type_button_title') }}"
-                                                class="form-control character-count-field" maxlength="20"
+                                                class="form-control character-count-field h--45px" maxlength="20"
                                                 data-max-character="20"></textarea>
                                                 <span class="d-flex justify-content-end">{{ translate('18/20') }}</span>
                                             </div>
@@ -129,7 +129,7 @@
                                 
                                     <div class="character-count">
                                         <input type="text" name="name[]" 
-                                        class="form-control character-count-field"
+                                        class="form-control character-count-field h--45px"
                                         maxlength="30"
                                         data-max-character="30"
                                         placeholder="{{ translate('messages.type_title') }}" required>
@@ -154,7 +154,7 @@
                                 </label>
                                 <div class="character-count">
                                     <textarea type="text" name="button_title[]" placeholder="{{ translate('messages.type_button_title') }}"
-                                    class="form-control character-count-field" maxlength="20"
+                                    class="form-control character-count-field h--45px" maxlength="20"
                                     data-max-character="20"></textarea>
                                     <span class="d-flex justify-content-end">{{ translate('18/20') }}</span>
                                 </div>
@@ -163,42 +163,44 @@
                         @endif
                     </div>
                     <div class="col-lg-6">
-                        <div class="text-center">
-                            <label class="text--title fs-16 font-semibold mb-1">
-                                {{ translate('Image') }}
-                            </label>
-                            <div class="mb-20">
-                                <p class="fs-12">
-                                    JPG, JPEG, PNG Less Than 1MB <strong class="font-semibold">(Ratio 3:2)</strong>
-                                </p>
-                            </div>
-                            <div class="upload-file text-wrapper">
-                                <input type="file" name=""
-                                    class="upload-file__input single_file_input" accept=".jpg, .jpeg, .png"
-                                    required>
-                                <div
-                                    class="upload-file__img d-flex justify-content-center align-items-center height-200px max-w-300px m-auto p-0">
-                                    <div class="upload-file__textbox text-center">
-                                        <img width="34" height="34"
-                                            src="{{ asset('public/assets/admin/img/document-upload.png') }}"
-                                            alt="" class="svg">
-                                        <h6 class="mt-2 font-semibold">
-                                            <span class="text-info">{{ translate('Click to upload') }}</span>
-                                            <br>
-                                            {{ translate('or drag and drop') }}
-                                        </h6>
-                                    </div>
-                                    <img class="upload-file__img__img border--dashed aspect-3-2" height="200"
-                                        loading="lazy" style="display: none;" alt="">
+                        <div class="d-flex flex-column justify-content-between h-100">
+                            <div class="text-center">
+                                <label class="text--title fs-16 font-semibold mb-1">
+                                    {{ translate('Image') }}
+                                </label>
+                                <div class="mb-20">
+                                    <p class="fs-12">
+                                        JPG, JPEG, PNG Less Than 1MB <strong class="font-semibold">(Ratio 3:2)</strong>
+                                    </p>
                                 </div>
+                                <div class="upload-file text-wrapper">
+                                    <input type="file" name=""
+                                        class="upload-file__input single_file_input" accept=".jpg, .jpeg, .png"
+                                        required>
+                                    <div
+                                        class="upload-file__img d-flex justify-content-center align-items-center height-200px max-w-300px m-auto p-0">
+                                        <div class="upload-file__textbox text-center">
+                                            <img width="34" height="34"
+                                                src="{{ asset('public/assets/admin/img/document-upload.png') }}"
+                                                alt="" class="svg">
+                                            <h6 class="mt-2 font-semibold">
+                                                <span class="text-info">{{ translate('Click to upload') }}</span>
+                                                <br>
+                                                {{ translate('or drag and drop') }}
+                                            </h6>
+                                        </div>
+                                        <img class="upload-file__img__img border--dashed aspect-3-2" height="200"
+                                            loading="lazy" style="display: none;" alt="">
+                                    </div>
+                                </div>
+    
                             </div>
-
-                        </div>
-                        <div class="btn--container justify-content-end mt-5">
-                            <button type="reset" id="reset_btn"
-                                class="btn btn--reset min-w-120px">{{ translate('messages.reset') }}</button>
-                            <button type="submit"
-                                class="btn btn--primary min-w-120px">{{ translate('messages.Submit') }}</button>
+                            <div class="btn--container justify-content-end mt-5">
+                                <button type="reset" id="reset_btn"
+                                    class="btn btn--reset min-w-120px">{{ translate('messages.reset') }}</button>
+                                <button type="submit"
+                                    class="btn btn--primary min-w-120px">{{ translate('messages.Submit') }}</button>
+                            </div>
                         </div>
                     </div>
                 </div>
