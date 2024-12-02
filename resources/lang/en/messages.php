@@ -6321,4 +6321,5 @@ Smartly or Earn. ',
   'Driver_Details' => 'Driver Details',
   'Edit_Driver' => 'Edit Driver',
   'not_now' => 'Not now',
+  'New_Tag' => 'New Tag',
 );

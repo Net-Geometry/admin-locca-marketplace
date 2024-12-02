@@ -156,6 +156,7 @@
                             <th class="border-0">{{ translate('messages.Brand') }}</th>
                             <th class="border-0">{{ translate('messages.Total_Trip') }}</th>
                             <th class="border-0">{{ translate('messages.Trip Fair') }}</th>
+                            <th class="text-center border-0">{{ translate('messages.New_Tag') }}</th>
                             <th class="text-center border-0">{{ translate('messages.Status') }}</th>
                             <th class="text-center border-0">{{ translate('messages.Action') }}</th>
                         </tr>
@@ -203,9 +204,20 @@
                             </td>
                             <td>
                                 <div class="d-flex justify-content-center">
-                                    <label class="toggle-switch toggle-switch-sm dark" for="stocksCheckbox336">
+                                    <label class="toggle-switch toggle-switch-sm" for="stocksCheckboxNewTag">
                                         <input type="checkbox" class="toggle-switch-input redirect-url" data-url=""
-                                            id="stocksCheckbox336" checked="">
+                                            id="stocksCheckboxNewTag">
+                                        <span class="toggle-switch-label">
+                                            <span class="toggle-switch-indicator"></span>
+                                        </span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="d-flex justify-content-center">
+                                    <label class="toggle-switch toggle-switch-sm" for="stocksCheckboxSTatus">
+                                        <input type="checkbox" class="toggle-switch-input redirect-url" data-url=""
+                                            id="stocksCheckboxSTatus" checked="">
                                         <span class="toggle-switch-label">
                                             <span class="toggle-switch-indicator"></span>
                                         </span>
