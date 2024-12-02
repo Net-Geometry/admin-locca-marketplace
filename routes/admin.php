@@ -25,7 +25,8 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             // return view('admin-views.car-rental.provider-request-details');
             // return view('admin-views.car-rental.vehicle-management.vehicale-list');
             // return view('admin-views.car-rental.business-management.provider-setup');
-            return view('admin-views.car-rental.business-management.vendor-setup');
+            // return view('admin-views.car-rental.business-management.vendor-setup');
+            return view('admin-views.car-rental.home-page-setup.vendor-registration');
         });
         Route::get('drivemond-panel', 'DriveMondController@drivemondExternalLogin')->name('drivemond-panel');
         Route::get('get-all-stores', 'VendorController@get_all_stores')->name('get_all_stores');

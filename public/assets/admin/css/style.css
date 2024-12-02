@@ -10635,6 +10635,10 @@ body > .initial-38-1 {
     min-height: 170px;
 }
 
+.height-200px {
+    height: 200px;
+}
+
 .height-150px {
     height: 150px;
 }
@@ -11088,6 +11092,10 @@ body > .initial-38-1 {
 
 .aspect-3-1 {
     aspect-ratio: 3/1;
+}
+
+.aspect-3-2 {
+    aspect-ratio: 3/2 !important;
 }
 
 .aspect-3-4 {
