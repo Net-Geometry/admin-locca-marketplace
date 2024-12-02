@@ -146,18 +146,44 @@
                                 </div>
                             </td>
                             <td>
-                                <div class="text--warning font-medium">
-                                    {{ translate('messages.Unassigned') }}
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="d-flex">
+                                        <img width="35" class="rounded-circle aspect-1-1 border border-white shadow-sm" src="{{ asset('public/assets/admin/img/admin.png') }}" alt="">
+                                        <img width="35" class="rounded-circle aspect-1-1 border border-white shadow-sm ml-n2" src="{{ asset('public/assets/admin/img/admin.png') }}" alt="">
+                                        <img width="35" class="rounded-circle aspect-1-1 border border-white shadow-sm ml-n2" src="{{ asset('public/assets/admin/img/admin.png') }}" alt="">
+                                    </div>
+                                    <span>+2</span>
+                                </div>
+                                <div class="text-muted fs-12 mt-1">
+                                    {{ translate('messages.driver_Assigned') }}
                                 </div>
                             </td>
                             <td>
-                                <div class="text--title">
-                                    <div class="font-medium">
-                                        {{ translate('messages.F Premio 2006') }}
+                                <div class="text-primary text-underline font-weight-medium" data-html="true" data-toggle="tooltip"
+                                title="<div class='d-flex flex-column p-2'>
+                                    <div class='media gap-3 border-bottom mb-2 pb-2'>
+                                        <img src='{{ asset('public/assets/admin/img/admin.png') }}' class='rounded ratio-1-1' width='40' alt='...'>
+                                        <div class='media-body'>
+                                             <h5 class='d-flex align-items-center gap-2 text-white mb-0'>{{ translate('messages.toyota_Hiace') }}: 3</h5>
+                                             <div class='d-flex align-items-center gap-2 fs-10'>{{ translate('messages.car_Assigned') }}: 04</div>
+                                        </div>
                                     </div>
-                                    <div class="opacity-lg">
-                                        {{ translate('messages.Nator Kha 21-3214') }}
+                                    <div class='media gap-3 border-bottom mb-2 pb-2'>
+                                        <img src='{{ asset('public/assets/admin/img/admin.png') }}' class='rounded ratio-1-1' width='40' alt='...'>
+                                        <div class='media-body'>
+                                             <h5 class='d-flex align-items-center gap-2 text-white mb-0'>{{ translate('messages.toyota_Hiace') }}: 3</h5>
+                                             <div class='d-flex align-items-center gap-2 fs-10'>{{ translate('messages.car_Assigned') }}: 04</div>
+                                        </div>
                                     </div>
+                                    <div class='media gap-2'>
+                                        <img src='{{ asset('public/assets/admin/img/admin.png') }}' class='rounded ratio-1-1' width='40' alt='...'>
+                                        <div class='media-body'>
+                                             <h5 class='d-flex align-items-center gap-2 text-white mb-0'>{{ translate('messages.toyota_Hiace') }}: 3</h5>
+                                             <div class='d-flex align-items-center gap-2 fs-10'>{{ translate('messages.car_Assigned') }}: 04</div>
+                                        </div>
+                                    </div>
+                                </div>">
+                                    5 {{ translate('messages.vehicles') }}
                                 </div>
                             </td>
                             <td>
@@ -190,8 +216,433 @@
                             <td>
                                 <div class="btn--container justify-content-center">
                                     <a class="btn action-btn btn--primary btn-outline-primary" href="javascript:"
-                                        title="{{ translate('messages.download') }}"><i class="tio-download-to"></i>
+                                        title="{{ translate('messages.view') }}"><i class="tio-visible-outlined"></i>
                                     </a>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>
+                                <div class="text--title font-semibold">
+                                    {{ translate('messages.1234567') }}
+                                </div>
+                            </td>
+                            <td>
+                                <div class="text--title">
+                                    24 August 2024
+                                    <br>
+                                    05:30 PM
+                                </div>
+                            </td>
+                            <td>
+                                <div class="text--title">
+                                    24 August 2024
+                                    <br>
+                                    05:30 PM
+                                </div>
+                            </td>
+                            <td>
+                                <div class="text--title">
+                                    <div class="font-medium">
+                                        {{ translate('messages.Cameron_Williamson') }}
+                                    </div>
+                                    <div class="opacity-lg">
+                                        jennings@example.com
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="d-flex">
+                                        <img width="35" class="rounded-circle aspect-1-1 border border-white shadow-sm" src="{{ asset('public/assets/admin/img/admin.png') }}" alt="">
+                                        <img width="35" class="rounded-circle aspect-1-1 border border-white shadow-sm ml-n2" src="{{ asset('public/assets/admin/img/admin.png') }}" alt="">
+                                        <img width="35" class="rounded-circle aspect-1-1 border border-white shadow-sm ml-n2" src="{{ asset('public/assets/admin/img/admin.png') }}" alt="">
+                                    </div>
+                                    <span>+2</span>
+                                </div>
+                                <div class="text-muted fs-12 mt-1">
+                                    {{ translate('messages.driver_Assigned') }}
+                                </div>
+                            </td>
+                            <td>
+                                <div class="text-primary text-underline font-weight-medium" data-html="true" data-toggle="tooltip"
+                                title="<div class='d-flex flex-column p-2'>
+                                    <div class='media gap-3 border-bottom mb-2 pb-2'>
+                                        <img src='{{ asset('public/assets/admin/img/admin.png') }}' class='rounded ratio-1-1' width='40' alt='...'>
+                                        <div class='media-body'>
+                                             <h5 class='d-flex align-items-center gap-2 text-white mb-0'>{{ translate('messages.toyota_Hiace') }}: 3</h5>
+                                             <div class='d-flex align-items-center gap-2 fs-10'>{{ translate('messages.car_Assigned') }}: 04</div>
+                                        </div>
+                                    </div>
+                                    <div class='media gap-3 border-bottom mb-2 pb-2'>
+                                        <img src='{{ asset('public/assets/admin/img/admin.png') }}' class='rounded ratio-1-1' width='40' alt='...'>
+                                        <div class='media-body'>
+                                             <h5 class='d-flex align-items-center gap-2 text-white mb-0'>{{ translate('messages.toyota_Hiace') }}: 3</h5>
+                                             <div class='d-flex align-items-center gap-2 fs-10'>{{ translate('messages.car_Assigned') }}: 04</div>
+                                        </div>
+                                    </div>
+                                    <div class='media gap-2'>
+                                        <img src='{{ asset('public/assets/admin/img/admin.png') }}' class='rounded ratio-1-1' width='40' alt='...'>
+                                        <div class='media-body'>
+                                             <h5 class='d-flex align-items-center gap-2 text-white mb-0'>{{ translate('messages.toyota_Hiace') }}: 3</h5>
+                                             <div class='d-flex align-items-center gap-2 fs-10'>{{ translate('messages.car_Assigned') }}: 04</div>
+                                        </div>
+                                    </div>
+                                </div>">
+                                    5 {{ translate('messages.vehicles') }}
+                                </div>
+                            </td>
+                            <td>
+                                <div class="text--title">
+                                    <div class="font-medium">
+                                        {{ translate('messages.Hourly') }}
+                                    </div>
+                                    <div class="opacity-lg">
+                                        {{ translate('messages.Instant') }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="text--title text-end">
+                                    <div class="font-semobold">
+                                        {{ translate('messages.$1,550.35') }}
+                                    </div>
+                                    <div class="opacity-lg font-medium text--success">
+                                        {{ translate('messages.Paid') }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="d-flex justify-content-center">
+                                    <label class="badge badge-soft-info border-0">
+                                        {{ translate('messages.Pending') }}
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="btn--container justify-content-center">
+                                    <a class="btn action-btn btn--primary btn-outline-primary" href="javascript:"
+                                        title="{{ translate('messages.view') }}"><i class="tio-visible-outlined"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>
+                                <div class="text--title font-semibold">
+                                    {{ translate('messages.1234567') }}
+                                </div>
+                            </td>
+                            <td>
+                                <div class="text--title">
+                                    24 August 2024
+                                    <br>
+                                    05:30 PM
+                                </div>
+                            </td>
+                            <td>
+                                <div class="text--title">
+                                    24 August 2024
+                                    <br>
+                                    05:30 PM
+                                </div>
+                            </td>
+                            <td>
+                                <div class="text--title">
+                                    <div class="font-medium">
+                                        {{ translate('messages.Cameron_Williamson') }}
+                                    </div>
+                                    <div class="opacity-lg">
+                                        jennings@example.com
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="d-flex">
+                                        <img width="35" class="rounded-circle aspect-1-1 border border-white shadow-sm" src="{{ asset('public/assets/admin/img/admin.png') }}" alt="">
+                                        <img width="35" class="rounded-circle aspect-1-1 border border-white shadow-sm ml-n2" src="{{ asset('public/assets/admin/img/admin.png') }}" alt="">
+                                        <img width="35" class="rounded-circle aspect-1-1 border border-white shadow-sm ml-n2" src="{{ asset('public/assets/admin/img/admin.png') }}" alt="">
+                                    </div>
+                                    <span>+2</span>
+                                </div>
+                                <div class="text-muted fs-12 mt-1">
+                                    {{ translate('messages.driver_Assigned') }}
+                                </div>
+                            </td>
+                            <td>
+                                <div class="text-primary text-underline font-weight-medium" data-html="true" data-toggle="tooltip"
+                                title="<div class='d-flex flex-column p-2'>
+                                    <div class='media gap-3 border-bottom mb-2 pb-2'>
+                                        <img src='{{ asset('public/assets/admin/img/admin.png') }}' class='rounded ratio-1-1' width='40' alt='...'>
+                                        <div class='media-body'>
+                                             <h5 class='d-flex align-items-center gap-2 text-white mb-0'>{{ translate('messages.toyota_Hiace') }}: 3</h5>
+                                             <div class='d-flex align-items-center gap-2 fs-10'>{{ translate('messages.car_Assigned') }}: 04</div>
+                                        </div>
+                                    </div>
+                                    <div class='media gap-3 border-bottom mb-2 pb-2'>
+                                        <img src='{{ asset('public/assets/admin/img/admin.png') }}' class='rounded ratio-1-1' width='40' alt='...'>
+                                        <div class='media-body'>
+                                             <h5 class='d-flex align-items-center gap-2 text-white mb-0'>{{ translate('messages.toyota_Hiace') }}: 3</h5>
+                                             <div class='d-flex align-items-center gap-2 fs-10'>{{ translate('messages.car_Assigned') }}: 04</div>
+                                        </div>
+                                    </div>
+                                    <div class='media gap-2'>
+                                        <img src='{{ asset('public/assets/admin/img/admin.png') }}' class='rounded ratio-1-1' width='40' alt='...'>
+                                        <div class='media-body'>
+                                             <h5 class='d-flex align-items-center gap-2 text-white mb-0'>{{ translate('messages.toyota_Hiace') }}: 3</h5>
+                                             <div class='d-flex align-items-center gap-2 fs-10'>{{ translate('messages.car_Assigned') }}: 04</div>
+                                        </div>
+                                    </div>
+                                </div>">
+                                    5 {{ translate('messages.vehicles') }}
+                                </div>
+                            </td>
+                            <td>
+                                <div class="text--title">
+                                    <div class="font-medium">
+                                        {{ translate('messages.Hourly') }}
+                                    </div>
+                                    <div class="opacity-lg">
+                                        {{ translate('messages.Instant') }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="text--title text-end">
+                                    <div class="font-semobold">
+                                        {{ translate('messages.$1,550.35') }}
+                                    </div>
+                                    <div class="opacity-lg font-medium text--success">
+                                        {{ translate('messages.Paid') }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="d-flex justify-content-center">
+                                    <label class="badge badge-soft-info border-0">
+                                        {{ translate('messages.Pending') }}
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="btn--container justify-content-center">
+                                    <a class="btn action-btn btn--primary btn-outline-primary" href="javascript:"
+                                        title="{{ translate('messages.view') }}"><i class="tio-visible-outlined"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>
+                                <div class="text--title font-semibold">
+                                    {{ translate('messages.1234567') }}
+                                </div>
+                            </td>
+                            <td>
+                                <div class="text--title">
+                                    24 August 2024
+                                    <br>
+                                    05:30 PM
+                                </div>
+                            </td>
+                            <td>
+                                <div class="text--title">
+                                    24 August 2024
+                                    <br>
+                                    05:30 PM
+                                </div>
+                            </td>
+                            <td>
+                                <div class="text--title">
+                                    <div class="font-medium">
+                                        {{ translate('messages.Cameron_Williamson') }}
+                                    </div>
+                                    <div class="opacity-lg">
+                                        jennings@example.com
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="d-flex">
+                                        <img width="35" class="rounded-circle aspect-1-1 border border-white shadow-sm" src="{{ asset('public/assets/admin/img/admin.png') }}" alt="">
+                                        <img width="35" class="rounded-circle aspect-1-1 border border-white shadow-sm ml-n2" src="{{ asset('public/assets/admin/img/admin.png') }}" alt="">
+                                        <img width="35" class="rounded-circle aspect-1-1 border border-white shadow-sm ml-n2" src="{{ asset('public/assets/admin/img/admin.png') }}" alt="">
+                                    </div>
+                                    <span>+2</span>
+                                </div>
+                                <div class="text-muted fs-12 mt-1">
+                                    {{ translate('messages.driver_Assigned') }}
+                                </div>
+                            </td>
+                            <td>
+                                <div class="text-primary text-underline font-weight-medium" data-html="true" data-toggle="tooltip"
+                                title="<div class='d-flex flex-column p-2'>
+                                    <div class='media gap-3 border-bottom mb-2 pb-2'>
+                                        <img src='{{ asset('public/assets/admin/img/admin.png') }}' class='rounded ratio-1-1' width='40' alt='...'>
+                                        <div class='media-body'>
+                                             <h5 class='d-flex align-items-center gap-2 text-white mb-0'>{{ translate('messages.toyota_Hiace') }}: 3</h5>
+                                             <div class='d-flex align-items-center gap-2 fs-10'>{{ translate('messages.car_Assigned') }}: 04</div>
+                                        </div>
+                                    </div>
+                                    <div class='media gap-3 border-bottom mb-2 pb-2'>
+                                        <img src='{{ asset('public/assets/admin/img/admin.png') }}' class='rounded ratio-1-1' width='40' alt='...'>
+                                        <div class='media-body'>
+                                             <h5 class='d-flex align-items-center gap-2 text-white mb-0'>{{ translate('messages.toyota_Hiace') }}: 3</h5>
+                                             <div class='d-flex align-items-center gap-2 fs-10'>{{ translate('messages.car_Assigned') }}: 04</div>
+                                        </div>
+                                    </div>
+                                    <div class='media gap-2'>
+                                        <img src='{{ asset('public/assets/admin/img/admin.png') }}' class='rounded ratio-1-1' width='40' alt='...'>
+                                        <div class='media-body'>
+                                             <h5 class='d-flex align-items-center gap-2 text-white mb-0'>{{ translate('messages.toyota_Hiace') }}: 3</h5>
+                                             <div class='d-flex align-items-center gap-2 fs-10'>{{ translate('messages.car_Assigned') }}: 04</div>
+                                        </div>
+                                    </div>
+                                </div>">
+                                    5 {{ translate('messages.vehicles') }}
+                                </div>
+                            </td>
+                            <td>
+                                <div class="text--title">
+                                    <div class="font-medium">
+                                        {{ translate('messages.Hourly') }}
+                                    </div>
+                                    <div class="opacity-lg">
+                                        {{ translate('messages.Instant') }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="text--title text-end">
+                                    <div class="font-semobold">
+                                        {{ translate('messages.$1,550.35') }}
+                                    </div>
+                                    <div class="opacity-lg font-medium text--success">
+                                        {{ translate('messages.Paid') }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="d-flex justify-content-center">
+                                    <label class="badge badge-soft-info border-0">
+                                        {{ translate('messages.Pending') }}
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="btn--container justify-content-center">
+                                    <a class="btn action-btn btn--primary btn-outline-primary" href="javascript:"
+                                        title="{{ translate('messages.view') }}"><i class="tio-visible-outlined"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>
+                                <div class="text--title font-semibold">
+                                    {{ translate('messages.1234567') }}
+                                </div>
+                            </td>
+                            <td>
+                                <div class="text--title">
+                                    24 August 2024
+                                    <br>
+                                    05:30 PM
+                                </div>
+                            </td>
+                            <td>
+                                <div class="text--title">
+                                    24 August 2024
+                                    <br>
+                                    05:30 PM
+                                </div>
+                            </td>
+                            <td>
+                                <div class="text--title">
+                                    <div class="font-medium">
+                                        {{ translate('messages.Cameron_Williamson') }}
+                                    </div>
+                                    <div class="opacity-lg">
+                                        jennings@example.com
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="d-flex">
+                                        <img width="35" class="rounded-circle aspect-1-1 border border-white shadow-sm" src="{{ asset('public/assets/admin/img/admin.png') }}" alt="">
+                                        <img width="35" class="rounded-circle aspect-1-1 border border-white shadow-sm ml-n2" src="{{ asset('public/assets/admin/img/admin.png') }}" alt="">
+                                        <img width="35" class="rounded-circle aspect-1-1 border border-white shadow-sm ml-n2" src="{{ asset('public/assets/admin/img/admin.png') }}" alt="">
+                                    </div>
+                                    <span>+2</span>
+                                </div>
+                                <div class="text-muted fs-12 mt-1">
+                                    {{ translate('messages.driver_Assigned') }}
+                                </div>
+                            </td>
+                            <td>
+                                <div class="text-primary text-underline font-weight-medium" data-html="true" data-toggle="tooltip"
+                                title="<div class='d-flex flex-column p-2'>
+                                    <div class='media gap-3 border-bottom mb-2 pb-2'>
+                                        <img src='{{ asset('public/assets/admin/img/admin.png') }}' class='rounded ratio-1-1' width='40' alt='...'>
+                                        <div class='media-body'>
+                                             <h5 class='d-flex align-items-center gap-2 text-white mb-0'>{{ translate('messages.toyota_Hiace') }}: 3</h5>
+                                             <div class='d-flex align-items-center gap-2 fs-10'>{{ translate('messages.car_Assigned') }}: 04</div>
+                                        </div>
+                                    </div>
+                                    <div class='media gap-3 border-bottom mb-2 pb-2'>
+                                        <img src='{{ asset('public/assets/admin/img/admin.png') }}' class='rounded ratio-1-1' width='40' alt='...'>
+                                        <div class='media-body'>
+                                             <h5 class='d-flex align-items-center gap-2 text-white mb-0'>{{ translate('messages.toyota_Hiace') }}: 3</h5>
+                                             <div class='d-flex align-items-center gap-2 fs-10'>{{ translate('messages.car_Assigned') }}: 04</div>
+                                        </div>
+                                    </div>
+                                    <div class='media gap-2'>
+                                        <img src='{{ asset('public/assets/admin/img/admin.png') }}' class='rounded ratio-1-1' width='40' alt='...'>
+                                        <div class='media-body'>
+                                             <h5 class='d-flex align-items-center gap-2 text-white mb-0'>{{ translate('messages.toyota_Hiace') }}: 3</h5>
+                                             <div class='d-flex align-items-center gap-2 fs-10'>{{ translate('messages.car_Assigned') }}: 04</div>
+                                        </div>
+                                    </div>
+                                </div>">
+                                    5 {{ translate('messages.vehicles') }}
+                                </div>
+                            </td>
+                            <td>
+                                <div class="text--title">
+                                    <div class="font-medium">
+                                        {{ translate('messages.Hourly') }}
+                                    </div>
+                                    <div class="opacity-lg">
+                                        {{ translate('messages.Instant') }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="text--title text-end">
+                                    <div class="font-semobold">
+                                        {{ translate('messages.$1,550.35') }}
+                                    </div>
+                                    <div class="opacity-lg font-medium text--success">
+                                        {{ translate('messages.Paid') }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="d-flex justify-content-center">
+                                    <label class="badge badge-soft-info border-0">
+                                        {{ translate('messages.Pending') }}
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="btn--container justify-content-center">
                                     <a class="btn action-btn btn--primary btn-outline-primary" href="javascript:"
                                         title="{{ translate('messages.view') }}"><i class="tio-visible-outlined"></i>
                                     </a>
