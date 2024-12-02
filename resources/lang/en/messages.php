@@ -6332,4 +6332,5 @@ Smartly or Earn. ',
   'Vendor Name' => 'Vendor Name',
   'Business Address' => 'Business Address',
   'Pickup_Zone' => 'Pickup Zone',
+  'Last Name' => 'Last Name',
 );

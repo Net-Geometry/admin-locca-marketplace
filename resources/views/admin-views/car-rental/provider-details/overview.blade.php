@@ -20,6 +20,16 @@
                     </h1>
                 </div>
                 <div class="d-flex align-items-start flex-wrap gap-2">
+                    <a href="javascript:" class="btn btn--reset d-flex justify-content-between align-items-center gap-4 lh--1 h--45px">
+                        {{ translate('messages.status') }}
+                        <label class="toggle-switch toggle-switch-sm" for="status">
+                            <input type="checkbox" data-url="#" class="toggle-switch-input"
+                                id="status" checked="">
+                            <span class="toggle-switch-label mx-auto">
+                                <span class="toggle-switch-indicator"></span>
+                            </span>
+                        </label>
+                    </a>
                     <a href="javascript:" class="btn btn--primary float-right mb-0">
                         <i class="tio-edit"></i> {{ translate('messages.edit_provider') }}
                     </a>
