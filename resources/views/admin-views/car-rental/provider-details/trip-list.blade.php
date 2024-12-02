@@ -92,75 +92,98 @@
         </div>
         <!-- End Page Header -->
 
-        <div class="row g-2 mb-20">
-            <div class="col-sm-6 col-lg-3">
-                <a class="order--card h-100" href="javascript:">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h6 class="card-subtitle m-0">
-                            <span>{{ translate('All') }}</span>
-                        </h6>
-                        <span class="card-title text-title">
-                            20
-                        </span>
+        <div class="card mb-3">
+            <div class="card-body">
+                <div class="row align-items-end g-4">
+                    <div class="col-lg-4 col-sm-6">
+                        <div class="form-group mb-0">
+                            <label class="input-label">{{ translate('messages.type') }}</label>
+                            <select name="type" id="type" class="from-control js-select2-custom">
+                                <option value="date-wise">Date Wise</option>
+                                <option value="date-wise">Date Wise</option>
+                                <option value="date-wise">Date Wise</option>
+                                <option value="date-wise">Date Wise</option>
+                                <option value="date-wise">Date Wise</option>
+                            </select>
+                        </div>
                     </div>
-                </a>
-            </div>
-
-            <div class="col-sm-6 col-lg-3">
-                <a class="order--card h-100" href="javascript:">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h6 class="card-subtitle m-0">
-                            <span>{{ translate('messages.ongoing') }}</span>
-                        </h6>
-                        <span class="card-title text--warning">
-                            100
-                        </span>
+                    <div class="col-lg-4 col-sm-6">
+                        <div class="form-group mb-0">
+                            <label class="input-label">{{ translate('messages.from_date') }}</label>
+                            <input type="date" name="from_date" class="form-control" required>
+                        </div>
                     </div>
-                </a>
-            </div>
-            <div class="col-sm-6 col-lg-3">
-                <a class="order--card h-100" href="javascript:">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h6 class="card-subtitle m-0">
-                            <span>{{ translate('messages.pending') }}</span>
-                        </h6>
-                        <span class="card-title text--info">
-                            200
-                        </span>
+                    <div class="col-lg-4 col-sm-6">
+                        <div class="form-group mb-0">
+                            <label class="input-label">{{ translate('messages.to_date') }}</label>
+                            <input type="date" name="to_date" class="form-control" required>
+                        </div>
                     </div>
-                </a>
-            </div>
-            <div class="col-sm-6 col-lg-3">
-                <a class="order--card h-100" href="javascript:">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h6 class="card-subtitle m-0">
-                            <span>{{ translate('messages.completed') }}</span>
-                        </h6>
-                        <span class="card-title text--success">
-                            60
-                        </span>
+                    <div class="col-lg-12 col-sm-6">
+                        <div class="d-flex justify-content-end gap-3">
+                            <button type="reset" id="reset_btn" class="btn btn--reset">{{ translate('messages.reset') }}</button>
+                            <button type="submit" class="btn btn--primary">{{ translate('messages.update') }}</button>
+                        </div>
                     </div>
-                </a>
-            </div>
-            <div class="col-sm-6 col-lg-3">
-                <a class="order--card h-100" href="javascript:">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h6 class="card-subtitle m-0">
-                            <span>{{ translate('messages.canceled') }}</span>
-                        </h6>
-                        <span class="card-title text--danger">
-                            60
-                        </span>
-                    </div>
-                </a>
+                </div>
             </div>
         </div>
-        <!-- Card -->
+
+        <div class="d-flex flex-wrap gap-2 mb-3">
+            <a class="order--card flex-grow-1" href="javascript:">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h6 class="card-subtitle m-0">
+                        <span>{{ translate('All') }}</span>
+                    </h6>
+                    <span class="card-title text-title">20</span>
+                </div>
+            </a>
+
+            <a class="order--card flex-grow-1" href="javascript:">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h6 class="card-subtitle m-0">
+                        <span>{{ translate('messages.ongoing') }}</span>
+                    </h6>
+                    <span class="card-title text--warning">100</span>
+                </div>
+            </a>
+
+            <a class="order--card flex-grow-1" href="javascript:">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h6 class="card-subtitle m-0">
+                        <span>{{ translate('messages.pending') }}</span>
+                    </h6>
+                    <span class="card-title text--info">200</span>
+                </div>
+            </a>
+
+            <a class="order--card flex-grow-1" href="javascript:">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h6 class="card-subtitle m-0">
+                        <span>{{ translate('messages.completed') }}</span>
+                    </h6>
+                    <span class="card-title text--success">60</span>
+                </div>
+            </a>
+
+            <a class="order--card flex-grow-1" href="javascript:">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h6 class="card-subtitle m-0">
+                        <span>{{ translate('messages.canceled') }}</span>
+                    </h6>
+                    <span class="card-title text--danger">60</span>
+                </div>
+            </a>
+        </div>
+
         <div class="card">
             <!-- Header -->
             <div class="card-header py-2">
                 <div class="search--button-wrapper">
-                    <h5 class="card-title text--title flex-grow-1">{{ translate('messages.Total_Trips') }}</h5>
+                    <h5 class="card-title text--title flex-grow-1">
+                        {{ translate('messages.Total_Trips') }}
+                        <span class="badge badge-soft-dark ml-2" id="itemCount">2</span>
+                    </h5>
                     <form class="search-form flex-grow-1 max-w-353px">
                         <!-- Search -->
                         <div class="input-group input--group">
@@ -168,9 +191,7 @@
                                 name="search" class="form-control"
                                 placeholder="{{ translate('Search by provider name, owner info...') }}"
                                 aria-label="{{ translate('messages.Search by provider name, owner info...') }}">
-                            <button type="submit" class="btn btn--secondary bg--primary"><i
-                                    class="tio-search"></i></button>
-
+                            <button type="submit" class="btn btn--secondary bg--primary"><i class="tio-search"></i></button>
                         </div>
                         <!-- End Search -->
                     </form>
@@ -179,21 +200,18 @@
                             data-url="{{ url()->full() }}">{{ translate('messages.reset') }}</button>
                     @endif
 
-
                     <!-- Unfold -->
                     <div class="hs-unfold mr-2">
                         <a class="js-hs-unfold-invoker btn btn-sm btn-white dropdown-toggle min-height-40 font-semibold"
                             href="javascript:;"
                             data-hs-unfold-options='{
-                    "target": "#usersExportDropdown",
-                    "type": "css-animation"
-                }'>
+                                "target": "#usersExportDropdown",
+                                "type": "css-animation"
+                            }'>
                             <i class="tio-download-to mr-1"></i> {{ translate('messages.export') }}
                         </a>
 
-                        <div id="usersExportDropdown"
-                            class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
-
+                        <div id="usersExportDropdown" class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
                             <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
                             <a id="export-excel" class="dropdown-item"
                                 href="{{ route('admin.store.export', ['type' => 'excel', request()->getQueryString()]) }}">
@@ -209,7 +227,6 @@
                                     alt="Image Description">
                                 .{{ translate('messages.csv') }}
                             </a>
-
                         </div>
                     </div>
                     <!-- End Unfold -->
@@ -268,18 +285,44 @@
                                 </div>
                             </td>
                             <td>
-                                <div class="text--warning font-medium">
-                                    {{ translate('messages.Unassigned') }}
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="d-flex">
+                                        <img width="35" class="rounded-circle aspect-1-1 border border-white shadow-sm" src="{{ asset('public/assets/admin/img/admin.png') }}" alt="">
+                                        <img width="35" class="rounded-circle aspect-1-1 border border-white shadow-sm ml-n2" src="{{ asset('public/assets/admin/img/admin.png') }}" alt="">
+                                        <img width="35" class="rounded-circle aspect-1-1 border border-white shadow-sm ml-n2" src="{{ asset('public/assets/admin/img/admin.png') }}" alt="">
+                                    </div>
+                                    <span>+2</span>
+                                </div>
+                                <div class="text-muted fs-12 mt-1">
+                                    {{ translate('messages.driver_Assigned') }}
                                 </div>
                             </td>
                             <td>
-                                <div class="text--title">
-                                    <div class="font-medium">
-                                        {{ translate('messages.F Premio 2006') }}
+                                <div class="text-primary text-underline font-weight-medium" data-html="true" data-toggle="tooltip"
+                                title="<div class='d-flex flex-column p-2'>
+                                    <div class='media gap-3 border-bottom mb-2 pb-2'>
+                                        <img src='{{ asset('public/assets/admin/img/admin.png') }}' class='rounded ratio-1-1' width='40' alt='...'>
+                                        <div class='media-body'>
+                                             <h5 class='d-flex align-items-center gap-2 text-white mb-0'>{{ translate('messages.toyota_Hiace') }}: 3</h5>
+                                             <div class='d-flex align-items-center gap-2 fs-10'>{{ translate('messages.car_Assigned') }}: 04</div>
+                                        </div>
                                     </div>
-                                    <div class="opacity-lg">
-                                        {{ translate('messages.Nator Kha 21-3214') }}
+                                    <div class='media gap-3 border-bottom mb-2 pb-2'>
+                                        <img src='{{ asset('public/assets/admin/img/admin.png') }}' class='rounded ratio-1-1' width='40' alt='...'>
+                                        <div class='media-body'>
+                                             <h5 class='d-flex align-items-center gap-2 text-white mb-0'>{{ translate('messages.toyota_Hiace') }}: 3</h5>
+                                             <div class='d-flex align-items-center gap-2 fs-10'>{{ translate('messages.car_Assigned') }}: 04</div>
+                                        </div>
                                     </div>
+                                    <div class='media gap-2'>
+                                        <img src='{{ asset('public/assets/admin/img/admin.png') }}' class='rounded ratio-1-1' width='40' alt='...'>
+                                        <div class='media-body'>
+                                             <h5 class='d-flex align-items-center gap-2 text-white mb-0'>{{ translate('messages.toyota_Hiace') }}: 3</h5>
+                                             <div class='d-flex align-items-center gap-2 fs-10'>{{ translate('messages.car_Assigned') }}: 04</div>
+                                        </div>
+                                    </div>
+                                </div>">
+                                    5 {{ translate('messages.vehicles') }}
                                 </div>
                             </td>
                             <td>
@@ -566,7 +609,6 @@
             </div>
             <!-- End Table -->
         </div>
-        <!-- End Card -->
     </div>
 @endsection
 

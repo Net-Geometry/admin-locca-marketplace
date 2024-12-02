@@ -5373,4 +5373,7 @@
   'Vendor_Active_Time' => 'Vendor Active Time',
   'Vendor Logo & Covers' => 'Vendor Logo & Covers',
   'Low_Stock_List' => 'Low Stock List',
+  'Low_Stock_List' => 'Low Stock List',
+  'driver_Assigned' => 'Driver Assigned',
+  'ongoing' => 'Ongoing',
 );
