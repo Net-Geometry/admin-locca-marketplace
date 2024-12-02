@@ -36,7 +36,7 @@
                 </span>
 
                 <!-- Nav -->
-                <ul class="nav nav-tabs page-header-tabs mb-2">
+                <ul class="nav nav-tabs border-0 nav--tabs nav--pills mb-2">
                     <li class="nav-item">
                         <a class="nav-link text-capitalize text-title {{ request('tab') == 'overview' ? 'active' : '' }}"
                             href="javascript:">{{ translate('messages.overview') }}</a>
@@ -135,30 +135,6 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <h6 class="card-subtitle m-0">
                             <span>{{ translate('messages.Inctive') }}</span>
-                        </h6>
-                        <span class="card-title text--danger">
-                            60
-                        </span>
-                    </div>
-                </a>
-            </div>
-            <div class="col-sm-6 col-lg-3">
-                <a class="order--card h-100" href="javascript:">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h6 class="card-subtitle m-0">
-                            <span>{{ translate('messages.Pending_Approval') }}</span>
-                        </h6>
-                        <span class="card-title text--info">
-                            60
-                        </span>
-                    </div>
-                </a>
-            </div>
-            <div class="col-sm-6 col-lg-3">
-                <a class="order--card h-100" href="javascript:">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h6 class="card-subtitle m-0">
-                            <span>{{ translate('messages.Rejected') }}</span>
                         </h6>
                         <span class="card-title text--danger">
                             60
