@@ -6402,4 +6402,5 @@ Smartly or Earn. ',
   'Download App' => 'Download App',
   'Vendors Registration' => 'Vendors Registration',
   'Search by trip ID, customer name or Vendor name' => 'Search by trip ID, customer name or Vendor name',
+  'canceled_trips' => 'Canceled trips',
 );

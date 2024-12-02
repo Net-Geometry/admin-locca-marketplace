@@ -15,7 +15,8 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             // return view('admin-views.car-rental.business-basic-setup');
             // return view('admin-views.car-rental.business-plan-setup');
             // return view('admin-views.car-rental.provider-details.trip-list');
-            return view('admin-views.car-rental.trip-management.all-trips');
+            // return view('admin-views.car-rental.trip-management.all-trips');
+            return view('admin-views.car-rental.trip-management.canceled-trips');
             // return view('admin-views.car-rental.provider-details.driver-list');
             // return view('admin-views.car-rental.provider-details.add-new-driver');
             // return view('admin-views.car-rental.provider-details.driver-details');
