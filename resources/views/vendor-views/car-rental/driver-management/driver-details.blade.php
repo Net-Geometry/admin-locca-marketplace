@@ -175,10 +175,8 @@
                             <th class="border-0">{{ translate('messages.Booking_Date') }}</th>
                             <th class="border-0">{{ translate('messages.Schedule_At') }}</th>
                             <th class="border-0">{{ translate('messages.Customer_Info') }}</th>
-                            <th class="border-0">{{ translate('messages.Driver_Info') }}</th>
                             <th class="border-0">{{ translate('messages.Vehicle_Info') }}</th>
                             <th class="border-0">{{ translate('messages.Trip_Type') }}</th>
-                            <th class="text-end border-0">{{ translate('messages.Trip_Amount') }}</th>
                             <th class="text-center border-0">{{ translate('messages.Trip_Status') }}</th>
                             <th class="text-center border-0">{{ translate('messages.Action') }}</th>
                         </tr>
@@ -217,11 +215,6 @@
                                 </div>
                             </td>
                             <td>
-                                <div class="text--warning font-medium">
-                                    {{ translate('messages.Unassigned') }}
-                                </div>
-                            </td>
-                            <td>
                                 <div class="text--title">
                                     <div class="font-medium">
                                         {{ translate('messages.F Premio 2006') }}
@@ -238,16 +231,6 @@
                                     </div>
                                     <div class="opacity-lg">
                                         {{ translate('messages.Instant') }}
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="text--title text-end">
-                                    <div class="font-semobold">
-                                        {{ translate('messages.$1,550.35') }}
-                                    </div>
-                                    <div class="opacity-lg font-medium text--success">
-                                        {{ translate('messages.Paid') }}
                                     </div>
                                 </div>
                             </td>

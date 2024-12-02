@@ -6324,4 +6324,8 @@ Smartly or Earn. ',
   'New_Tag' => 'New Tag',
   'Edit_Vechicle' => 'Edit Vechicle',
   'category_image' => 'Category image',
+  'Total_Vendors' => 'Total Vendors',
+  'Search by Vendor name, owner info...' => 'Search by Vendor name, owner info...',
+  'new_vendor' => 'New vendor',
+  'vendoor' => 'Vendoor',
 );
