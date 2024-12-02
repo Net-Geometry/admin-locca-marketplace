@@ -39,7 +39,7 @@
         {{-- timeline --}}
         <div class="custom-timeline d-flex flex-wrap gap-40px text-title mb-2">
             <h4 class="single checked"><span class="count">1</span>Business Basic Setup</h4>
-            <h4 class="single"><span class="count">2</span>Business Plan Setup</h4>
+            <h4 class="single opacity-70"><span class="count">2</span>Business Plan Setup</h4>
         </div>
 
         <form action="{{ route('admin.store.store') }}" method="post" enctype="multipart/form-data" class="js-validate"
@@ -568,9 +568,9 @@
                 <div class="col-lg-12">
                     <div class="btn--container justify-content-end mt-3">
                         <button type="reset" id="reset_btn"
-                            class="btn btn--warning-light">{{ translate('messages.cancel') }}</button>
+                            class="btn btn--warning-light min-w-100px justify-content-center">{{ translate('messages.cancel') }}</button>
                         <button type="submit"
-                            class="btn btn--primary">{{ translate('messages.update_&_next') }}</button>
+                            class="btn btn--primary min-w-100px justify-content-center">{{ translate('messages.next') }}</button>
                     </div>
                 </div>
             </div>
