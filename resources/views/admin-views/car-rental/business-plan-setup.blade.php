@@ -208,8 +208,8 @@
             <div class="col-lg-12">
                 <div class="btn--container justify-content-end mt-3">
                     <button type="reset" id="reset_btn"
-                        class="btn btn--reset px-5">{{ translate('messages.back') }}</button>
-                    <button type="submit" class="btn btn--primary">{{ translate('messages.update') }}</button>
+                        class="btn btn--reset min-w-100px justify-content-center">{{ translate('messages.back') }}</button>
+                    <button type="submit" class="btn btn--primary min-w-100px justify-content-center">{{ translate('messages.update') }}</button>
                 </div>
             </div>
     </div>
