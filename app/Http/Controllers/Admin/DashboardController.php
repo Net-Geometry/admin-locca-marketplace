@@ -239,6 +239,9 @@ class DashboardController extends Controller
         if($module_type == 'settings'){
             return redirect()->route('admin.business-settings.business-setup');
         }
+        if($module_type == 'rental'){
+            return redirect()->route('admin.rental.dashboard');
+        }
         return view("admin-views.dashboard-{$module_type}", compact('data', 'total_sell', 'commission', 'delivery_commission', 'label','params','module_type'));
 
     }

@@ -1,3 +1,6 @@
 {
-    "Gateways": true
+    "Gateways": true,
+    "Rental": true,
+    "Controller": true,
+    "DashboardController": true
 }

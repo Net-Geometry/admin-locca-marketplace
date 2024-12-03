@@ -71,7 +71,11 @@ $countryCode= strtolower($country?$country->value:'auto');
 @php($module_type = 'settings')
 @endif
 
-@include("layouts.admin.partials._sidebar_{$module_type}")
+    @if($module_type == 'rental')
+        @include("rental::admin.partials._sidebar_{$module_type}")
+    @else
+        @include("layouts.admin.partials._sidebar_{$module_type}")
+    @endif
 
 <!-- END ONLY DEV -->
 

@@ -6403,4 +6403,8 @@ Smartly or Earn. ',
   'Vendors Registration' => 'Vendors Registration',
   'Search by trip ID, customer name or Vendor name' => 'Search by trip ID, customer name or Vendor name',
   'canceled_trips' => 'Canceled trips',
+  'vehicle_management' => 'Vehicle management',
+  'brands' => 'Brands',
+  'Add new brand' => 'Add new brand',
+  'ex_:_brands' => 'Ex : brands',
 );
