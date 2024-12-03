@@ -503,10 +503,10 @@
 
                 @if (\App\CentralLogics\Helpers::module_permission_check('store'))
                 <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/store/pending-requests') ? 'active' : '' }}">
-                    <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.store.pending-requests') }}" title="{{ translate('messages.new_restaurants') }}">
+                    <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.store.pending-requests') }}" title="{{ translate('messages.new_providers_request') }}">
                         <span class="tio-calendar-note nav-icon"></span>
                         <span class="text-truncate position-relative overflow-visible">
-                            {{ translate('messages.new_restaurants') }}
+                            {{ translate('messages.new_providers_request') }}
                             @php($new_str = \App\Models\Store::whereHas('vendor', function($query){
                                 return $query->where('status', null);
                             })->module(Config::get('module.current_module_id'))->get())
@@ -518,18 +518,17 @@
                     </a>
                 </li>
                 <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/store/add') ? 'active' : '' }}">
-                    <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.store.add') }}" title="{{ translate('add new restaurant') }}">
+                    <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.rental.provider.create') }}" title="{{ translate('add new provider') }}">
                         <span class="tio-add-circle nav-icon"></span>
                         <span class="text-truncate position-relative overflow-visible">
-                            {{ translate('add new restaurant') }}
+                            {{ translate('add new provider') }}
                         </span>
                     </a>
                 </li>
                 <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/store/list') ||  Request::is('admin/store/view/*') ? 'active' : '' }}">
-                    <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.store.list') }}" title="{{ translate('messages.restaurants_list') }}">
+                    <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.store.list') }}" title="{{ translate('messages.providers_list') }}">
                         <span class="tio-layout nav-icon"></span>
-                        <span class="text-truncate">{{ translate('messages.restaurants') }}
-                            {{ translate('list') }}</span>
+                        <span class="text-truncate">{{ translate('providers list') }}</span>
                     </a>
                 </li>
 

@@ -1082,10 +1082,10 @@ class Helpers
     {
         $config = null;
 
-        $paymentmethod = BusinessSetting::where('key', $name)->first();
+        $businessData = BusinessSetting::where('key', $name)->first();
 
-        if ($paymentmethod) {
-            $config = $paymentmethod->value;
+        if ($businessData) {
+            $config = $businessData->value;
         }
 
         return $config;

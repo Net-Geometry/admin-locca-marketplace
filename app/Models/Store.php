@@ -60,6 +60,7 @@ use App\Traits\ReportFilter;
  * @property int $order_count
  * @property int $total_order
  * @property int $module_id
+ * @property string $pickup_zone_id
  * @property int $order_place_to_schedule_interval
  * @property bool $featured
  * @property float $per_km_shipping_charge
@@ -117,6 +118,7 @@ class Store extends Model
         'order_count',
         'total_order',
         'module_id',
+        'pickup_zone_id',
         'order_place_to_schedule_interval',
         'featured',
         'per_km_shipping_charge',

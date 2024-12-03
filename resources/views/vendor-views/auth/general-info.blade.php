@@ -25,6 +25,10 @@
         .invalid {
             color: red;
         }
+
+        .pickup-zone-container{
+            display: none;
+        }
     </style>
 @endpush
 @section('content')
@@ -195,28 +199,17 @@
                                             data-placeholder="{{ translate('messages.select_module') }}">
                                         </select>
                                     </div>
-                                    <div class="form-group mb-4">
-                                        <label class="input-label" for="latitude">{{ translate('messages.latitude') }}
-                                            <span class="input-label-secondary"
-                                                title="{{ translate('messages.store_lat_lng_warning') }}"><img
-                                                    src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
-                                                    alt="{{ translate('messages.store_lat_lng_warning') }}"></span></label>
-                                        <input type="text" id="latitude" name="latitude"
-                                            class="form-control __form-control"
-                                            placeholder="{{ translate('messages.Ex:') }} -94.22213"
-                                            value="{{ old('latitude') }}" required readonly>
-                                    </div>
-                                    <div class="form-group mb-4">
+                                    <div class="form-group mb-4 pickup-zone-container" id="pickup-zone-container">
                                         <label class="input-label"
-                                            title="{{ translate('messages.select_pickup_zone_for_map') }}"
-                                            for="choice_zones">{{ translate('messages.pickup_zone') }} <span
+                                               title="{{ translate('messages.select_pickup_zone_for_map') }}"
+                                               for="choice_zones">{{ translate('messages.pickup_zone') }} <span
                                                 class="form-label-secondary" data-toggle="tooltip" data-placement="right"
                                                 data-original-title="{{ translate('messages.select_pickup_zone_for_map') }}"><img
                                                     src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
                                                     alt="{{ translate('messages.select_pickup_zone_for_map') }}"></span></label>
-                                        <select name="zone_id" id="choice_zones" required
-                                            class="form-control __form-control js-select2-custom js-example-basic-single"
-                                            data-placeholder="{{ translate('messages.select_zone') }}">
+                                        <select name="pickup_zone_id[]" required
+                                                class="form-control __form-control js-select2-custom js-multi-select2 js-example-basic-single"
+                                                data-placeholder="{{ translate('messages.select_zone') }}" multiple="multiple">
                                             <option value="" selected disabled>
                                                 {{ translate('messages.select_zone') }}</option>
                                             @foreach (\App\Models\Zone::active()->get() as $zone)
@@ -230,6 +223,17 @@
                                                 @endif
                                             @endforeach
                                         </select>
+                                    </div>
+                                    <div class="form-group mb-4">
+                                        <label class="input-label" for="latitude">{{ translate('messages.latitude') }}
+                                            <span class="input-label-secondary"
+                                                title="{{ translate('messages.store_lat_lng_warning') }}"><img
+                                                    src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
+                                                    alt="{{ translate('messages.store_lat_lng_warning') }}"></span></label>
+                                        <input type="text" id="latitude" name="latitude"
+                                            class="form-control __form-control"
+                                            placeholder="{{ translate('messages.Ex:') }} -94.22213"
+                                            value="{{ old('latitude') }}" required readonly>
                                     </div>
                                     <div class="form-group mb-4">
                                         <label class="input-label" for="longitude">{{ translate('messages.longitude') }}
@@ -250,7 +254,7 @@
                                             step=".01" required value="{{ old('tax') }}">
                                     </div>
                                     <div class="form-group">
-                                        <label class="input-label"
+                                        <label class="input-label module-select-time"
                                             for="minimum_delivery_time">{{ translate('messages.approx_delivery_time') }}</label>
                                         <div class=" __form-control custom-group-btn">
                                             <div class="item flex-sm-grow-1">
@@ -870,6 +874,32 @@
                     }
                 }
             });
+
+            $('#module_id').on('change', function() {
+                var moduleId = $(this).val();
+                $.ajax({
+                    url: '{{ url('/') }}/store/get-module-type',
+                    method: 'GET',
+                    data: { id: moduleId },
+                    success: function(response) {
+                        if (response.module_type === 'rental') {
+                            $('#pickup-zone-container').show();
+                            $('.module-select-time').text('{{ translate('messages.approx_pickup_time') }}');
+                        } else {
+                            $('#pickup-zone-container').hide();
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.log("Error fetching module type:", error);
+                    }
+                });
+            });
+
+            $('.js-multi-select2').select2({
+                placeholder: '{{ translate('messages.select_zone') }}',
+                allowClear: true,
+                width: '100%'
+            });
         });
     </script>
     <script src="{{ asset('public/assets/admin/js/view-pages/vendor-registration.js') }}"></script>
@@ -1122,7 +1152,7 @@
     </script>
 
     <script>
-        // ---- file upload with textbox 
+        // ---- file upload with textbox
         $(document).ready(function() {
             function handleImageUpload(inputSelector, imgViewerSelector, textBoxSelector) {
                 const inputElement = $(inputSelector);

@@ -6407,4 +6407,8 @@ Smartly or Earn. ',
   'brands' => 'Brands',
   'Add new brand' => 'Add new brand',
   'ex_:_brands' => 'Ex : brands',
+  'new_providers_request' => 'New providers request',
+  'add new provider' => 'Add new provider',
+  'providers_list' => 'Providers list',
+  'providers list' => 'Providers list',
 );

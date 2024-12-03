@@ -200,6 +200,7 @@ Route::group(['prefix' => 'store', 'as' => 'restaurant.'], function () {
     Route::get('apply', 'VendorController@create')->name('create');
     Route::post('apply', 'VendorController@store')->name('store');
     Route::get('get-all-modules', 'VendorController@get_all_modules')->name('get-all-modules');
+    Route::get('get-module-type', 'VendorController@get_modules_type')->name('get-module-type');
 
     Route::get('back', 'VendorController@back')->name('back');
     Route::post('business-plan', 'VendorController@business_plan')->name('business_plan');

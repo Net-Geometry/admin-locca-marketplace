@@ -3,6 +3,7 @@ use Illuminate\Support\Facades\Route;
 use Modules\Rental\Http\Controllers\Web\Admin\BrandController;
 use Modules\Rental\Http\Controllers\Web\Admin\CategoryController;
 use Modules\Rental\Http\Controllers\Web\Admin\DashboardController;
+use Modules\Rental\Http\Controllers\Web\Admin\ProviderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,6 +40,19 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
             Route::get('status/{id}', [BrandController::class, 'status'])->name('status');
             Route::get('status/{id}', [BrandController::class, 'status'])->name('status');
             Route::get('export-categories', [BrandController::class, 'export'])->name('export-brands');
+
+        });
+
+        Route::group(['prefix' => 'provider', 'as' => 'provider.'], function () {
+            Route::get('list', [ProviderController::class, 'list'])->name('list');
+            Route::get('create', [ProviderController::class, 'create'])->name('create');
+            Route::post('create', [ProviderController::class, 'store']);
+            Route::get('edit/{id}', [ProviderController::class, 'edit'])->name('edit');
+            Route::post('edit/{id}', [ProviderController::class, 'update']);
+            Route::delete('delete/{id}', [ProviderController::class, 'destroy'])->name('delete');
+            Route::get('status/{id}', [ProviderController::class, 'status'])->name('status');
+            Route::get('status/{id}', [ProviderController::class, 'status'])->name('status');
+            Route::get('export-categories', [ProviderController::class, 'export'])->name('export-brands');
 
         });
     });

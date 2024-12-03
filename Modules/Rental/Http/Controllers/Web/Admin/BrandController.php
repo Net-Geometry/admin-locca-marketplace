@@ -26,7 +26,7 @@ class BrandController extends Controller
     private VehicleBrand $brand;
     private Translation $translation;
 
-    use AuthorizesRequests, FileManagerTrait;
+    use FileManagerTrait;
 
     public function __construct(VehicleBrand $brand, Translation $translation)
     {

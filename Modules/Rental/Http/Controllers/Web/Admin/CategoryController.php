@@ -25,7 +25,7 @@ class CategoryController extends Controller
     private VehicleCategory $category;
     private Translation $translation;
 
-    use AuthorizesRequests, FileManagerTrait;
+    use FileManagerTrait;
 
     public function __construct(VehicleCategory $category, Translation $translation)
     {
