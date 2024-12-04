@@ -15,6 +15,7 @@ class AddToColStoresTable extends Migration
     {
         Schema::table('stores', function (Blueprint $table) {
             $table->json('pickup_zone_id')->nullable();
+            $table->text('comment')->nullable();
         });
     }
 

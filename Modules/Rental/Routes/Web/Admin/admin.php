@@ -51,8 +51,12 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
             Route::post('edit/{id}', [ProviderController::class, 'update']);
             Route::delete('delete/{id}', [ProviderController::class, 'destroy'])->name('delete');
             Route::get('status/{id}', [ProviderController::class, 'status'])->name('status');
-            Route::get('status/{id}', [ProviderController::class, 'status'])->name('status');
+            Route::get('details/{id}', [ProviderController::class, 'details'])->name('details');
             Route::get('export-categories', [ProviderController::class, 'export'])->name('export-brands');
+            Route::get('new-requests', [ProviderController::class, 'newRequests'])->name('new-requests');
+            Route::get('new-requests-details/{id}', [ProviderController::class, 'newRequestsDetails'])->name('new-requests-details');
+            Route::get('new-requests-details/{id}', [ProviderController::class, 'newRequestsDetails'])->name('new-requests-details');
+            Route::get('approve-or-deny/{id}', [ProviderController::class, 'approveOrDeny'])->name('approve-or-deny');
 
         });
     });

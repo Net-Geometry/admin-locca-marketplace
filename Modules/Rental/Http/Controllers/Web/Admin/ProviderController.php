@@ -8,8 +8,15 @@ use App\Mail\StoreRegistration;
 use App\Mail\VendorSelfRegistration;
 use App\Models\Admin;
 use App\Models\BusinessSetting;
+use App\Models\Conversation;
+use App\Models\DisbursementDetails;
+use App\Models\Item;
+use App\Models\Order;
 use App\Models\Store;
+use App\Models\StoreWallet;
 use App\Models\SubscriptionPackage;
+use App\Models\TempProduct;
+use App\Models\UserInfo;
 use App\Models\Vendor;
 use App\Models\Zone;
 use App\Traits\FileManagerTrait;
@@ -21,10 +28,13 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 use MatanYadaev\EloquentSpatial\Objects\Point;
 
@@ -38,12 +48,20 @@ class ProviderController extends Controller
     private StoreLogic $storeLogic;
     private SubscriptionPackage $subscriptionPackage;
     private Helpers $helpers;
+    private Order $order;
+    private StoreWallet $storeWallet;
+    private TempProduct $tempProduct;
+    private Item $item;
+    private UserInfo $userInfo;
+    private Conversation $conversation;
+    private DisbursementDetails $disbursementDetails;
 
     use FileManagerTrait;
 
     /**
      * @param BusinessSetting $businessSetting
      * @param Zone $zone
+     * @param Order $order
      * @param Vendor $vendor
      * @param Store $store
      * @param Admin $admin
@@ -51,7 +69,7 @@ class ProviderController extends Controller
      * @param SubscriptionPackage $subscriptionPackage
      * @param Helpers $helpers
      */
-    public function __construct(BusinessSetting $businessSetting, Zone $zone, Vendor $vendor, Store $store, Admin $admin, StoreLogic $storeLogic, SubscriptionPackage $subscriptionPackage, Helpers $helpers)
+    public function __construct(BusinessSetting $businessSetting, StoreWallet $storeWallet, Item $item, DisbursementDetails $disbursementDetails, Conversation $conversation, UserInfo $userInfo, TempProduct $tempProduct, Zone $zone, Order $order, Vendor $vendor, Store $store, Admin $admin, StoreLogic $storeLogic, SubscriptionPackage $subscriptionPackage, Helpers $helpers)
     {
         $this->businessSetting = $businessSetting;
         $this->zone = $zone;
@@ -61,15 +79,225 @@ class ProviderController extends Controller
         $this->storeLogic = $storeLogic;
         $this->subscriptionPackage = $subscriptionPackage;
         $this->helpers = $helpers;
+        $this->order = $order;
+        $this->storeWallet = $storeWallet;
+        $this->tempProduct = $tempProduct;
+        $this->item = $item;
+        $this->userInfo = $userInfo;
+        $this->conversation = $conversation;
+        $this->disbursementDetails = $disbursementDetails;
     }
 
     /**
-     * Display a listing of the resource.
+     * @param Request $request
      * @return Renderable
      */
-    public function index()
+    public function list(Request $request): Renderable
     {
-        return view('rental::index');
+        $key = explode(' ', $request['search']);
+        $zone_id = $request->query('zone_id', 'all');
+        $type = $request->query('type', 'all');
+        $module_id = $request->query('module_id', 'all');
+
+        $stores = $this->store->with('vendor','module')->whereHas('vendor', function($query){
+            return $query->where('status', 1);
+        })
+            ->when(is_numeric($zone_id), function($query)use($zone_id){
+                return $query->where('zone_id', $zone_id);
+            })
+            ->when(is_numeric($module_id), function($query)use($request){
+                return $query->module($request->query('module_id'));
+            })
+            ->when(isset($key), function($query)use($key,$request){
+                return $query->where(function($query)use($key){
+                    $query->orWhereHas('vendor',function ($q) use ($key) {
+                        $q->where(function($q)use($key){
+                            foreach ($key as $value) {
+                                $q->orWhere('f_name', 'like', "%{$value}%")
+                                    ->orWhere('l_name', 'like', "%{$value}%")
+                                    ->orWhere('email', 'like', "%{$value}%")
+                                    ->orWhere('phone', 'like', "%{$value}%");
+                            }
+                        });
+                    })->orWhere(function ($q) use ($key) {
+                        foreach ($key as $value) {
+                            $q->orWhere('name', 'like', "%{$value}%")
+                                ->orWhere('email', 'like', "%{$value}%")
+                                ->orWhere('phone', 'like', "%{$value}%");
+                        }
+                    });
+                })->orderByRaw("FIELD(name, ?) DESC", [$request->search]);
+            })
+            ->module(Config::get('module.current_module_id'))
+            ->with('vendor','module')->type($type)
+            ->latest()->paginate(config('default_pagination'));
+
+        $zone = is_numeric($zone_id) ? $this->zone->findOrFail($zone_id) : null;
+
+        return view('rental::admin.provider.list', compact('stores', 'zone','type'));
+    }
+
+    /**
+     * @param Request $request
+     * @param $store_id
+     * @param $tab
+     * @param $sub_tab
+     * @return Factory|\Illuminate\Foundation\Application|View|Application
+     */
+    public function details(Request $request, $store_id, $tab=null, $sub_tab='cash'): Factory|\Illuminate\Foundation\Application|View|Application
+    {
+        $filter= $request?->filter;
+
+        $key = explode(' ', request()->search);
+
+        $store = $this->store->findOrFail($store_id);
+        $wallet = $store->vendor->wallet;
+
+        if(!$wallet)
+        {
+            $wallet = $this->storeWallet;
+            $wallet->vendor_id = $store->vendor->id;
+            $wallet->total_earning= 0.0;
+            $wallet->total_withdrawn=0.0;
+            $wallet->pending_withdraw=0.0;
+            $wallet->created_at=now();
+            $wallet->updated_at=now();
+            $wallet->save();
+        }
+
+        if($tab == 'settings')
+        {
+            return view('admin-views.vendor.view.settings', compact('store'));
+        }
+        else if($tab == 'order')
+        {
+            $orders = $this->order->where('store_id', $store->id)->latest()
+                ->when(isset($key ), function ($q) use ($key){
+                    $q->where(function ($q) use ($key) {
+                        foreach ($key as $value) {
+                            $q->orWhere('id', 'like', "%{$value}%");
+                        }
+                    });
+                })
+                ->when(isset($filter)  && $filter == 'scheduled_orders' , function($q){
+                    $q->Scheduled();
+                })
+                ->when(isset($filter)  && $filter == 'pending_orders' , function($q){
+                    $q->where(['order_status'=>'pending'])->OrderScheduledIn(30);
+                })
+                ->when(isset($filter)  && $filter == 'delivered_orders' , function($q){
+                    $q->where(['order_status'=>'delivered']);
+                })
+                ->when(isset($filter)  && $filter == 'canceled_orders' , function($q){
+                    $q->where(['order_status'=>'canceled']);
+                })
+                ->StoreOrder()
+                ->Notpos()->paginate(10);
+            return view('admin-views.vendor.view.order', compact('store','orders'));
+        }
+        else if($tab == 'item')
+        {
+            if($sub_tab == 'pending-items' || $sub_tab == 'rejected-items' ){
+
+                $foods = $this->tempProduct->withoutGlobalScope(\App\Scopes\StoreScope::class)->where('store_id', $store->id)
+                    ->when(isset($key) , function($q) use($key){
+                        $q->where(function ($q) use ($key) {
+                            foreach ($key as $value) {
+                                $q->where('name', 'like', "%{$value}%");
+                            }
+                        });
+                    })
+                    ->when($sub_tab == 'pending-items' , function($q){
+                        $q->where('is_rejected' , 0);
+                    })
+                    ->when($sub_tab == 'rejected-items' , function($q){
+                        $q->where('is_rejected' , 1);
+                    })
+                    ->latest()->paginate(25);
+            }
+            else{
+
+                $foods = $this->item->withoutGlobalScope(\App\Scopes\StoreScope::class)->where('store_id', $store->id)
+                    ->when(isset($key) , function($q) use($key){
+                        $q->where(function ($q) use ($key) {
+                            foreach ($key as $value) {
+                                $q->where('name', 'like', "%{$value}%");
+                            }
+                        });
+                    })
+                    ->when($sub_tab == 'active-items' , function($q){
+                        $q->where('status' , 1);
+                    })
+                    ->when($sub_tab == 'inactive-items' , function($q){
+                        $q->where('status' , 0);
+                    })
+                    ->latest()->paginate(25);
+            }
+
+            return view('admin-views.vendor.view.product', compact('store','foods','sub_tab'));
+        }
+        else if($tab == 'discount')
+        {
+            return view('admin-views.vendor.view.discount', compact('store'));
+        }
+        else if($tab == 'transaction')
+        {
+            return view('admin-views.vendor.view.transaction', compact('store', 'sub_tab'));
+        }
+
+        else if($tab == 'reviews')
+        {
+            return view('admin-views.vendor.view.review', compact('store', 'sub_tab'));
+
+        } else if ($tab == 'conversations') {
+            $user = $this->userInfo->where(['vendor_id' => $store->vendor->id])->first();
+            if ($user) {
+                $conversations = $this->conversation->with(['sender', 'receiver', 'last_message'])->WhereUser($user->id)
+                    ->paginate(8);
+            } else {
+                $conversations = [];
+            }
+            return view('admin-views.vendor.view.conversations', compact('store', 'sub_tab', 'conversations'));
+
+        } else if ($tab == 'meta-data') {
+            $store = $this->store->withoutGlobalScope('translate')->findOrFail($store_id);
+            return view('admin-views.vendor.view.meta-data', compact('store', 'sub_tab'));
+
+        } else if ($tab == 'disbursements') {
+            $disbursements = $this->disbursementDetails->where('store_id', $store->id)
+                ->when(isset($key), function ($q) use ($key){
+                    $q->where(function ($q) use ($key) {
+                        foreach ($key as $value) {
+                            $q->orWhere('disbursement_id', 'like', "%{$value}%")
+                                ->orWhere('status', 'like', "%{$value}%");
+                        }
+                    });
+                })
+                ->latest()->paginate(config('default_pagination'));
+            return view('admin-views.vendor.view.disbursement', compact('store','disbursements'));
+
+        } else if ($tab == 'business_plan') {
+
+
+            $store= $this->store->where('id',$store->id)->with([
+                'store_sub_update_application.package','vendor','store_sub_update_application.last_transcations'
+            ])->withcount('items')->first();
+
+            $packages = $this->subscriptionPackage->where('status',1)->latest()->get();
+            $admin_commission = $this->businessSetting->where('key', 'admin_commission')->first()?->value ;
+            $business_name =  $this->businessSetting->where('key', 'business_name')->first()?->value ;
+
+            try {
+                $index=  $store->store_business_model == 'commission' ? 0 : 1+ array_search($store?->store_sub_update_application?->package_id??1 ,array_column($packages->toArray() ,'id') );
+            } catch (\Throwable $th) {
+                $index= 2;
+            }
+            return view('admin-views.vendor.view.subscription',compact('store','packages','business_name','admin_commission','index'));
+
+
+
+        }
+        return view('admin-views.vendor.view.index', compact('store', 'wallet'));
     }
 
 
@@ -86,8 +314,9 @@ class ProviderController extends Controller
         $admin_commission = $this->helpers->get_business_data('admin_commission');
         $business_name = $this->helpers->get_business_data('business_name');
         $packages = $this->subscriptionPackage->ofStatus(1)->latest()->get();
+        $zones = $this->zone->active(1)->latest()->get();
 
-        return view('rental::admin.provider.business-basic-setup', compact('admin_commission','business_name', 'packages'));
+        return view('rental::admin.provider.business-basic-setup', compact('admin_commission','business_name', 'packages', 'zones'));
     }
 
 
@@ -134,6 +363,130 @@ class ProviderController extends Controller
         return $this->handleBusinessPlan($request, $store);
     }
 
+
+    /**
+     * @param Request $request
+     * @return View|Factory|RedirectResponse|Application
+     */
+    public function newRequests(Request $request): View|Factory|RedirectResponse|Application
+    {
+        $zone_id = $request->query('zone_id', 'all');
+        $search_by = $request->query('search_by');
+        $key = explode(' ', $search_by);
+        $type = $request->query('type', 'all');
+        $requestType = $request->query('request_type', 'pending_provider');
+        $module_id = $request->query('module_id', 'all');
+
+        $stores = $this->store->with('vendor','module')
+            ->whereHas('vendor', function ($query) use ($requestType) {
+                if ($requestType === 'pending_provider') {
+                    $query->where('status', null);
+                } elseif ($requestType === 'denied_provider') {
+                    $query->where('status', 0);
+                }
+            })
+            ->when(is_numeric($zone_id), function($query)use($zone_id){
+                return $query->where('zone_id', $zone_id);
+            })
+            ->when(is_numeric($module_id), function($query)use($request){
+                return $query->module($request->query('module_id'));
+            })
+            ->when($search_by, function($query)use($key){
+                return $query->where(function($query)use($key){
+                    $query->orWhereHas('vendor',function ($q) use ($key) {
+                        $q->where(function($q)use($key){
+                            foreach ($key as $value) {
+                                $q->orWhere('f_name', 'like', "%{$value}%")
+                                    ->orWhere('l_name', 'like', "%{$value}%")
+                                    ->orWhere('email', 'like', "%{$value}%")
+                                    ->orWhere('phone', 'like', "%{$value}%");
+                            }
+                        });
+                    })->orWhere(function ($q) use ($key) {
+                        foreach ($key as $value) {
+                            $q->orWhere('name', 'like', "%{$value}%")
+                                ->orWhere('email', 'like', "%{$value}%")
+                                ->orWhere('phone', 'like', "%{$value}%");
+                        }
+                    });
+                });
+            })
+            ->module(Config::get('module.current_module_id'))
+            ->type($type)->latest()->paginate(config('default_pagination'));
+        $zone = is_numeric($zone_id)?Zone::findOrFail($zone_id):null;
+        return view('rental::admin.provider.new-request', compact('stores', 'zone','type', 'search_by'));
+    }
+
+    /**
+     * @param Request $request
+     * @param $store_id
+     * @return Factory|\Illuminate\Foundation\Application|View|Application
+     */
+    public function newRequestsDetails(Request $request, $store_id): Factory|\Illuminate\Foundation\Application|View|Application
+    {
+        $store = $this->store->findOrFail($store_id);
+
+        return view('rental::admin.provider.new-request-details', compact('store'));
+    }
+
+    /**
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function approveOrDeny(Request $request): RedirectResponse
+    {
+        $store = $this->store->findOrFail($request->id);
+        $store->comment = $request->message;
+        $store->vendor->status = $request->status;
+        $store->vendor->save();
+
+        if($request->status) $store->status = 1;
+
+        $add_days = 1;
+
+        if($store?->store_sub_update_application){
+            if($store?->store_sub_update_application && $store?->store_sub_update_application->is_trial == 1){
+                $add_days = $this->businessSetting->where(['key' => 'subscription_free_trial_days'])->first()?->value ?? 1;
+            }elseif($store?->store_sub_update_application && $store?->store_sub_update_application->is_trial == 0){
+                $add_days = $store?->store_sub_update_application->validity;
+            }
+
+            $store?->store_sub_update_application->update([
+                'expiry_date'=> Carbon::now()->addDays($add_days)->format('Y-m-d'),
+                'status'=>1
+            ]);
+            $store->store_business_model= 'subscription';
+        }
+
+        $store->save();
+
+        try{
+            if($request->status == 1){
+                if ( config('mail.status') && $this->helpers->get_mail_status('approve_mail_status_store') == '1' &&  $this->helpers->getNotificationStatusData('store','store_registration_approval','mail_status')) {
+                    Mail::to($store?->vendor?->email)->send(new \App\Mail\VendorSelfRegistration('approved', $store->vendor->f_name.' '.$store->vendor->l_name));
+                }
+            }else{
+                if ( config('mail.status') &&  $this->helpers->get_mail_status('deny_mail_status_store') == '1' &&  $this->helpers->getNotificationStatusData('store','store_registration_deny','mail_status')) {
+                    Mail::to($store?->vendor?->email)->send(new \App\Mail\VendorSelfRegistration('denied', $store->vendor->f_name.' '.$store->vendor->l_name));
+                }
+            }
+        }
+        catch(\Exception $ex){
+            info($ex->getMessage());
+        }
+        Toastr::success(translate('messages.application_status_updated_successfully'));
+        return back();
+    }
+
+
+
+
+
+
+
+
+
+
     /**
      * @return bool
      */
@@ -161,10 +514,11 @@ class ProviderController extends Controller
             'maximum_delivery_time' => 'required',
             'password' => ['required', Password::min(8)->mixedCase()->letters()->numbers()->symbols()],
             'zone_id' => 'required',
-            'module_id' => 'required',
             'logo' => 'required',
             'tax' => 'required',
             'delivery_time_type' => 'required',
+            'business_plan' => 'required',
+            'package_id' => Rule::requiredIf(fn() => request('business_plan') === 'subscription-base'),
         ];
 
         $messages = [
@@ -206,7 +560,7 @@ class ProviderController extends Controller
             'email' => $request->email,
             'phone' => $request->phone,
             'password' => bcrypt($request->password),
-            'status' => null,
+            'status' => 1,
         ]);
     }
 
@@ -229,11 +583,11 @@ class ProviderController extends Controller
             'longitude' => $request->longitude,
             'vendor_id' => $vendor->id,
             'zone_id' => $request->zone_id,
-            'module_id' => $request->module_id,
+            'module_id' => config('module')['current_module_id'],
             'pickup_zone_id' => json_encode($request->pickup_zone_id ?? []),
             'tax' => $request->tax,
             'delivery_time' => "{$request->minimum_delivery_time}-{$request->maximum_delivery_time} {$request->delivery_time_type}",
-            'status' => 0,
+            'status' => 1,
             'store_business_model' => 'none',
         ]);
     }
@@ -270,9 +624,9 @@ class ProviderController extends Controller
     /**
      * @param Request $request
      * @param Store $store
-     * @return View|Factory|\Illuminate\Foundation\Application|Application
+     * @return RedirectResponse
      */
-    private function handleBusinessPlan(Request $request, Store $store): View|Factory|\Illuminate\Foundation\Application|Application
+    private function handleBusinessPlan(Request $request, Store $store): RedirectResponse
     {
         if ($this->helpers->subscription_check()){
             if ($request->business_plan == 'subscription-base' && $request->package_id != null ) {
@@ -284,7 +638,7 @@ class ProviderController extends Controller
                 $store->update(['store_business_model' => 'commission']);
 
                 Toastr::success(translate('messages.your_store_registration_is_successful'));
-                return view('vendor-views.auth.register-complete', ['type' => 'commission']);
+                return back();
 
             } else {
                 $admin_commission = $this->helpers->get_business_data('admin_commission');
@@ -292,41 +646,33 @@ class ProviderController extends Controller
                 $packages = $this->subscriptionPackage->ofStatus(1)->latest()->get();
 
                 Toastr::error(translate('messages.please_follow_the_steps_properly.'));
-                return view('vendor-views.auth.register-step-2', [
-                    'admin_commission' => $admin_commission?->value,
-                    'business_name' => $business_name?->value,
-                    'packages' => $packages,
-                    'store_id' => $store->id,
-                    'type' => $request->type
-                ]);
+                return back();
             }
         }else{
             $store->update(['store_business_model' => 'commission']);
 
-            Toastr::success(translate('messages.your_store_registration_is_successful'));
-            return view('vendor-views.auth.register-complete',['type'=>'commission']);
+            Toastr::success(translate('messages.your_provider_registration_is_successful'));
+            return back();
         }
     }
 
     /**
      * @param Request $request
      * @param Store $store
-     * @return View
+     * @return RedirectResponse
      */
-    private function handleSubscriptionPlan(Request $request, Store $store): View
+    private function handleSubscriptionPlan(Request $request, Store $store): RedirectResponse
     {
         $free_trial_settings = $this->businessSetting
             ->whereIn('key', ['subscription_free_trial_days', 'subscription_free_trial_type', 'subscription_free_trial_status'])
             ->pluck('value', 'key');
 
+        Helpers::subscription_plan_chosen(store_id:$store->id,package_id:$request->package_id,payment_method:'Manually_payment_by_admin',discount:0,reference:'Manually_payment_by_admin',type: 'new_join');
+
         $store->update(['package_id' => $request->package_id]);
 
-        return view('vendor-views.auth.register-subscription-payment', [
-            'package_id' => $request->package_id,
-            'store_id' => $store->id,
-            'free_trial_settings' => $free_trial_settings,
-            'payment_methods' => $this->helpers->getDefaultPaymentMethods(),
-        ]);
+        Toastr::success(translate('messages.your_provider_registration_is_successful'));
+        return back();
     }
 
 
