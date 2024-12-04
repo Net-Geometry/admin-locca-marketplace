@@ -2625,8 +2625,9 @@ class BusinessSettingsController extends Controller
                 array_push($credential_array, $data);
             }
         }
-        BusinessSetting::where('key', 'social_login')->update([
-            'value' => $credential_array
+
+        Helpers::businessUpdateOrInsert(['key' => 'social_login'], [
+            'value' =>$credential_array
         ]);
 
         Toastr::success(translate('messages.credential_updated', ['service' => $service]));

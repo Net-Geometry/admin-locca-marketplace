@@ -259,7 +259,7 @@ class ItemController extends Controller
         $food->category_id = $request->sub_category_id?$request->sub_category_id:$request->category_id;
         $food->category_ids = json_encode($category);
         $food->description = $request->description[array_search('default', $request->lang)];
-
+        $food->unit_id = $request?->unit;
         $choice_options = [];
         if ($request->has('choice')) {
             foreach ($request->choice_no as $key => $no) {
@@ -582,7 +582,7 @@ class ItemController extends Controller
 
         $p = Item::find($id);
         $p->name = $request->name[array_search('default', $request->lang)];
-
+        $p->unit_id = $request?->unit;
         $category = [];
         if ($request->category_id != null) {
             array_push($category, [

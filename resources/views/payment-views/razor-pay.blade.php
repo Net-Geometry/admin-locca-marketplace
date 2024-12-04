@@ -21,8 +21,9 @@
                 data-image="{{ $business_logo ?? 'default.png' }}"
                 data-prefill.name="{{$payer->name ?? ''}}"
                 data-prefill.email="{{$payer->email ?? ''}}"
-                data-callback_url="{{ route('razor-pay.callback') }}"
+                data-callback_url="{{ route('razor-pay.callback',['payment_data'=> base64_encode($data->id)]) }}"
                 data-theme.color="#ff7529">
+
         </script>
         <button class="btn btn-block" id="pay-button" type="submit" style="display:none"></button>
     </form>
