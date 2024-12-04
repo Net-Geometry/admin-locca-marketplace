@@ -1,6 +1,6 @@
 @extends('layouts.vendor.app')
 
-@section('title',Request::is('store-panel/advertisement/copy-advertisement/*') ? translate('New_Advertisement')  : translate('Advertisement_Edit'))
+@section('title',Request::is('vendor-panel/advertisement/copy-advertisement/*') ? translate('New_Advertisement')  : translate('Advertisement_Edit'))
 
 
 @section('advertisement')
@@ -25,7 +25,7 @@ active
 
     <!-- Advertisement -->
     <h1 class="page-header-title mb-3">
-        @if (Request::is('store-panel/advertisement/copy-advertisement/*'))
+        @if (Request::is('vendor-panel/advertisement/copy-advertisement/*'))
             {{  translate('New_Advertisement') }}
         @else
 
@@ -38,7 +38,7 @@ active
         <div class="card-body p-30">
             <form id="create-add-form"  method="post" enctype="multipart/form-data" >
                 @csrf
-                @if (Request::is('store-panel/advertisement/copy-advertisement/*'))
+                @if (Request::is('vendor-panel/advertisement/copy-advertisement/*'))
                     @method("POST")
                 @else
                     @method("PUT")
@@ -582,7 +582,7 @@ active
                 }
             });
             $.post({
-                url: `{{ Request::is('store-panel/advertisement/copy-advertisement/*') ? route('vendor.advertisement.copyAddPost',$advertisement?->id) : route('vendor.advertisement.update',$advertisement?->id) }}`,
+                url: `{{ Request::is('vendor-panel/advertisement/copy-advertisement/*') ? route('vendor.advertisement.copyAddPost',$advertisement?->id) : route('vendor.advertisement.update',$advertisement?->id) }}`,
                 data: $('#create-add-form').serialize(),
                 data: formData,
                 cache: false,

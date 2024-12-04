@@ -203,7 +203,7 @@
                                         <label class="input-label" for="exampleFormControlSelect1">{{translate('messages.category')}}<span
                                                 class="input-label-secondary">*</span></label>
                                         <select name="category_id" id="category-id" class="form-control js-select2-custom get-request"
-                                        data-url="{{url('/')}}/store-panel/item/get-categories?parent_id=" data-id="sub-categories"
+                                        data-url="{{url('/')}}/vendor-panel/item/get-categories?parent_id=" data-id="sub-categories"
                                                >
                                             @foreach($categories as $category)
                                                 <option
@@ -220,7 +220,7 @@
                                         <select name="sub_category_id" id="sub-categories"
                                                 data-id="{{count($product_category)>=2?$product_category[1]->id:''}}"
                                                 class="form-control js-select2-custom get-request"
-                                                data-url="{{url('/')}}/store-panel/item/get-categories?parent_id=" data-id="sub-sub-categories">
+                                                data-url="{{url('/')}}/vendor-panel/item/get-categories?parent_id=" data-id="sub-sub-categories">
 
                                         </select>
                                     </div>
@@ -760,8 +760,8 @@
                 let category = $("#category-id").val();
                 let sub_category = '{{count($product_category)>=2?$product_category[1]->id:''}}';
                 let sub_sub_category ='{{count($product_category)>=3?$product_category[2]->id:''}}';
-                getRequest('{{url('/')}}/store-panel/item/get-categories?parent_id=' + category + '&&sub_category=' + sub_category, 'sub-categories');
-                getRequest('{{url('/')}}/store-panel/item/get-categories?parent_id=' + sub_category + '&&sub_category=' + sub_sub_category, 'sub-sub-categories');
+                getRequest('{{url('/')}}/vendor-panel/item/get-categories?parent_id=' + category + '&&sub_category=' + sub_category, 'sub-categories');
+                getRequest('{{url('/')}}/vendor-panel/item/get-categories?parent_id=' + sub_category + '&&sub_category=' + sub_sub_category, 'sub-sub-categories');
             }, 1000)
         });
 

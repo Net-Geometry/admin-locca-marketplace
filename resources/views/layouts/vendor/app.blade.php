@@ -355,37 +355,6 @@ $countryCode= strtolower($country?$country->value:'auto');
     };
     firebase.initializeApp(firebaseConfig);
     const messaging = firebase.messaging();
-{{--    function startFCM() {--}}
-
-{{--messaging--}}
-{{--    .requestPermission()--}}
-{{--    .then(function () {--}}
-{{--        return messaging.getToken()--}}
-
-{{--    }).then(function (response) {--}}
-{{--        @php($store_id=\App\CentralLogics\Helpers::get_store_id())--}}
-{{--        subscribeTokenToTopic(response, "store_panel_{{$store_id}}_message");--}}
-{{--    }).catch(function (error) {--}}
-{{--        console.log(error);--}}
-{{--    });--}}
-{{--}--}}
-
-{{--@php($key = \App\Models\BusinessSetting::where('key', 'push_notification_key')->first())--}}
-{{--function subscribeTokenToTopic(token, topic) {--}}
-{{--fetch('https://iid.googleapis.com/iid/v1/' + token + '/rel/topics/' + topic, {--}}
-{{--    method: 'POST',--}}
-{{--    headers: new Headers({--}}
-{{--        'Authorization': 'key={{ $key ? $key->value : '' }}'--}}
-{{--    })--}}
-{{--}).then(response => {--}}
-{{--    if (response.status < 200 || response.status >= 400) {--}}
-{{--        throw 'Error subscribing to topic: ' + response.status + ' - ' + response.text();--}}
-{{--    }--}}
-{{--    console.log('Subscribed to "' + topic + '"');--}}
-{{--}).catch(error => {--}}
-{{--    console.error(error);--}}
-{{--})--}}
-{{--}--}}
 
     function startFCM() {
         messaging
@@ -448,7 +417,7 @@ $countryCode= strtolower($country?$country->value:'auto');
         function conversationView() {
             let conversation_id = getUrlParameter('conversation');
             let user_id = getUrlParameter('user');
-            let url= '{{url('/')}}/store-panel/message/view/'+conversation_id+'/' + user_id;
+            let url= '{{url('/')}}/vendor-panel/message/view/'+conversation_id+'/' + user_id;
             $.ajax({
                 url: url,
                 success: function(data) {
@@ -470,7 +439,7 @@ $countryCode= strtolower($country?$country->value:'auto');
                 if (window.location.href.includes('message/list?conversation')) {
                     let conversation_id = getUrlParameter('conversation');
                     let user_id = getUrlParameter('user');
-                    let url = '{{url('/')}}/store-panel/message/view/' + conversation_id + '/' + user_id;
+                    let url = '{{url('/')}}/vendor-panel/message/view/' + conversation_id + '/' + user_id;
                     $.ajax({
                         url: url,
                         success: function (data) {
@@ -513,7 +482,7 @@ $countryCode= strtolower($country?$country->value:'auto');
 
         $('.check-order').on('click',function (){
             if(order_type){
-                location.href = '{{url('/')}}/store-panel/order/list/'+order_type;
+                location.href = '{{url('/')}}/vendor-panel/order/list/'+order_type;
             }
         });
         startFCM();

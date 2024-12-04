@@ -275,7 +275,7 @@ class DeliveryManController extends Controller
 
         return response()->json(['message' => translate('messages.deliveryman_updated_successfully')], 200);
 
-        return redirect('store-panel/delivery-man/list');
+
     }
 
     public function delete(Request $request)

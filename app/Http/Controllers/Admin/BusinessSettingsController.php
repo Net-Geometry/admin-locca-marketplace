@@ -1956,7 +1956,7 @@ class BusinessSettingsController extends Controller
             "exchange_rate" => $request['exchange_rate'],
         ]);
         Toastr::success(translate('messages.currency_updated_successfully'));
-        return redirect('store-panel/business-settings/currency-add');
+        return redirect('vendor-panel/business-settings/currency-add');
     }
 
     public function currency_delete($id)
