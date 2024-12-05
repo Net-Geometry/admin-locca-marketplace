@@ -48,12 +48,18 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
             Route::get('list', [ProviderController::class, 'list'])->name('list');
             Route::get('create', [ProviderController::class, 'create'])->name('create');
             Route::post('create', [ProviderController::class, 'store']);
-            Route::get('edit/{id}', [ProviderController::class, 'edit'])->name('edit');
-            Route::post('edit/{id}', [ProviderController::class, 'update']);
+            Route::get('edit-basic-setup/{id}', [ProviderController::class, 'editBasicSetup'])->name('edit-basic-setup');
+            Route::post('edit-basic-setup/{id}', [ProviderController::class, 'updateBasicSetup']);
+            Route::get('edit-business-setup/{id}', [ProviderController::class, 'editBusinessSetup'])->name('edit-business-setup');
+            Route::post('edit-business-setup/{id}', [ProviderController::class, 'updateBusinessSetup']);
             Route::delete('delete/{id}', [ProviderController::class, 'destroy'])->name('delete');
             Route::get('status/{id}', [ProviderController::class, 'status'])->name('status');
-            Route::get('status/{id}', [ProviderController::class, 'status'])->name('status');
+            Route::get('details/{id}', [ProviderController::class, 'details'])->name('details');
             Route::get('export-categories', [ProviderController::class, 'export'])->name('export-brands');
+            Route::get('new-requests', [ProviderController::class, 'newRequests'])->name('new-requests');
+            Route::get('new-requests-details/{id}', [ProviderController::class, 'newRequestsDetails'])->name('new-requests-details');
+            Route::get('new-requests-details/{id}', [ProviderController::class, 'newRequestsDetails'])->name('new-requests-details');
+            Route::get('approve-or-deny/{id}', [ProviderController::class, 'approveOrDeny'])->name('approve-or-deny');
 
         });
 

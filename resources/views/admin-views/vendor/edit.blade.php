@@ -254,17 +254,25 @@
                                         </select>
                                     </div>
                                     <div class="form-group">
-                                        <label class="input-label" for="latitude">{{translate('messages.latitude')}}<span
+                                        <label class="input-label" for="latitude">{{translate('messages.latitude')}}
+                                            <span
                                                 class="form-label-secondary" data-toggle="tooltip" data-placement="right"
-        data-original-title="{{translate('messages.store_lat_lng_warning')}}"><img src="{{asset('/public/assets/admin/img/info-circle.svg')}}" alt="{{translate('messages.store_lat_lng_warning')}}"></span></label>
+                                                data-original-title="{{translate('messages.store_lat_lng_warning')}}">
+                                                <img src="{{asset('/public/assets/admin/img/info-circle.svg')}}" alt="{{translate('messages.store_lat_lng_warning')}}">
+                                            </span>
+                                        </label>
                                         <input type="text" id="latitude"
                                                 name="latitude" class="form-control"
                                                 placeholder="{{ translate('messages.Ex:') }} -94.22213" value="{{$store->latitude}}" required readonly>
                                     </div>
                                     <div class="form-group mb-5">
-                                        <label class="input-label" for="longitude">{{translate('messages.longitude')}}<span
+                                        <label class="input-label" for="longitude">{{translate('messages.longitude')}}
+                                            <span
                                                 class="form-label-secondary" data-toggle="tooltip" data-placement="right"
-        data-original-title="{{translate('messages.store_lat_lng_warning')}}"><img src="{{asset('/public/assets/admin/img/info-circle.svg')}}" alt="{{translate('messages.store_lat_lng_warning')}}"></span></label>
+                                                data-original-title="{{translate('messages.store_lat_lng_warning')}}">
+                                                <img src="{{asset('/public/assets/admin/img/info-circle.svg')}}" alt="{{translate('messages.store_lat_lng_warning')}}">
+                                            </span>
+                                        </label>
                                         <input type="text"
                                                 name="longitude" class="form-control"
                                                 placeholder="{{ translate('messages.Ex:') }} 103.344322" id="longitude" value="{{$store->longitude}}" required readonly>

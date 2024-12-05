@@ -51,16 +51,16 @@
                                 <input type="hidden" name="lang[]" value="default">
                                 @foreach($language as $lang)
                                         <?php
-                                        if(count($brand?->translations ?? [])){
-                                            $translate = [];
-                                            foreach($brand['translations'] as $t)
-                                            {
-                                                if($t->locale == $lang && $t->key=="name"){
-                                                    $translate[$lang]['name'] = $t->value;
+                                            if(count($brand?->translations ?? [])){
+                                                $translate = [];
+                                                foreach($brand['translations'] as $t)
+                                                {
+                                                    if($t->locale == $lang && $t->key=="name"){
+                                                        $translate[$lang]['name'] = $t->value;
+                                                    }
                                                 }
                                             }
-                                        }
-                                    ?>
+                                        ?>
                                     <div class="form-group d-none lang_form" id="{{$lang}}-form">
                                         <label class="input-label" for="exampleFormControlInput1">{{translate('messages.name')}} ({{strtoupper($lang)}})</label>
                                         <input type="text" name="name[]" class="form-control" placeholder="{{translate('messages.new_brand')}}" maxlength="191" value="{{$translate[$lang]['name']??''}}"  >

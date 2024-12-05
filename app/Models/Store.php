@@ -73,6 +73,7 @@ use App\Traits\ReportFilter;
  * @property string|null $meta_image
  * @property bool $announcement
  * @property string|null $announcement_message
+ * @property string|null $comment
  */
 
 class Store extends Model
@@ -131,6 +132,7 @@ class Store extends Model
         'meta_image',
         'announcement',
         'announcement_message',
+        'comment',
     ];
 
     /**
@@ -314,6 +316,14 @@ class Store extends Model
     }
 
     /**
+     * @return BelongsTo
+     */
+    public function package(): BelongsTo
+    {
+        return $this->belongsTo(SubscriptionPackage::class,'package_id');
+    }
+
+    /**
      * @return HasOne
      */
 
@@ -429,6 +439,12 @@ class Store extends Model
     public function zone(): BelongsTo
     {
         return $this->belongsTo(Zone::class);
+    }
+
+
+    public function pickupZone()
+    {
+        return Zone::whereIn('id', json_decode($this->pickup_zone_id));
     }
 
     /**
