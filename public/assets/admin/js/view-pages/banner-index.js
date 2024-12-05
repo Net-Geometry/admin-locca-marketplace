@@ -78,7 +78,7 @@ $('#banner_type').on('change', function () {
         $('#item_wise').hide();
         $('#default').hide();
     } else if (order_type == 'default') {
-        $('#default').show();
+        $('#default').removeClass('d-none').show();
         $('#store_wise').hide();
         $('#item_wise').hide();
     } else {

@@ -1,10 +1,11 @@
 <?php
+
 use Illuminate\Support\Facades\Route;
 use Modules\Rental\Http\Controllers\Web\Admin\BrandController;
+use Modules\Rental\Http\Controllers\Web\Admin\BannerController;
 use Modules\Rental\Http\Controllers\Web\Admin\CategoryController;
-use Modules\Rental\Http\Controllers\Web\Admin\DashboardController;
 use Modules\Rental\Http\Controllers\Web\Admin\ProviderController;
-
+use Modules\Rental\Http\Controllers\Web\Admin\DashboardController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -55,6 +56,18 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
             Route::get('export-categories', [ProviderController::class, 'export'])->name('export-brands');
 
         });
+
+        Route::group(['prefix' => 'banner', 'as' => 'banner.', 'middleware' => ['module:banner']], function () {
+            Route::get('/', [BannerController::class,'list'])->name('add-new');
+            Route::post('store', [BannerController::class,'store'])->name('store');
+            Route::get('edit/{banner}', [BannerController::class,'edit'])->name('edit');
+            Route::post('edit/{banner}', [BannerController::class,'update'])->name('update');
+            Route::delete('delete/{banner}', [BannerController::class,'destroy'])->name('delete');
+            Route::get('status/{banner}/{status}', [BannerController::class,'status'])->name('status');
+            Route::get('featured/{banner}/{status}', [BannerController::class,'updateFeatured'])->name('featured');
+            Route::get('export', [BannerController::class, 'export'])->name('export');
+        });
+
     });
 });
 

@@ -31,13 +31,13 @@ function banner_type_change(order_type) {
     }
     else if(order_type=='store_wise')
     {
-        $('#store_wise').show();
+        $('#store_wise').removeClass('d-none').show();
         $('#item_wise').hide();
         $('#default').hide();
     }
     else if(order_type=='default')
     {
-        $('#default').show();
+        $('#default').removeClass('d-none').show();
         $('#store_wise').hide();
         $('#item_wise').hide();
     }
