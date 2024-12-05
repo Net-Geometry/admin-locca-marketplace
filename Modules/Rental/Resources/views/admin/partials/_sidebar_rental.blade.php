@@ -240,16 +240,6 @@
                             </a>
                         </li>
 
-                        {{--  {{-- <li class="nav-item {{ Request::is('admin/refund/settings') ? 'active' : '' }}">
-                            <a class="nav-link " href="{{ route('admin.refund.refund_settings') }}"
-                                title="{{ translate('refund_settings') }}">
-                                <span class="tio-circle nav-indicator-icon"></span>
-                                <span class="text-truncate sidebar--badge-container">
-                                    {{ translate('refund_settings') }}
-
-                                </span>
-                            </a>
-                        </li> --}}
                     </ul>
                     </li>
                     <!-- Order refund End-->
@@ -262,45 +252,21 @@
                     <small class="nav-subtitle" title="{{ translate('Promotion Management') }}">{{ translate('Promotion Management') }}</small>
                     <small class="tio-more-horizontal nav-subtitle-replacer"></small>
                 </li>
-                <!-- Campaign -->
-                @if (\App\CentralLogics\Helpers::module_permission_check('campaign'))
-                <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/campaign') ? 'active' : '' }}">
-                    <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:" title="{{ translate('messages.campaigns') }}">
-                        <i class="tio-layers-outlined nav-icon"></i>
-                        <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('messages.campaigns') }}</span>
-                    </a>
-                    <ul class="js-navbar-vertical-aside-submenu nav nav-sub" style="display:{{ Request::is('admin/campaign*') ? 'block' : 'none' }}">
 
-                        <li class="nav-item {{ Request::is('admin/campaign/basic/*') ? 'active' : '' }}">
-                            <a class="nav-link " href="{{ route('admin.campaign.list', 'basic') }}" title="{{ translate('messages.basic_campaigns') }}">
-                                <span class="tio-circle nav-indicator-icon"></span>
-                                <span class="text-truncate">{{ translate('messages.basic_campaigns') }}</span>
-                            </a>
-                        </li>
-                        <li class="nav-item {{ Request::is('admin/campaign/item/*') ? 'active' : '' }}">
-                            <a class="nav-link " href="{{ route('admin.campaign.list', 'item') }}" title="{{ translate('messages.food_campaigns') }}">
-                                <span class="tio-circle nav-indicator-icon"></span>
-                                <span class="text-truncate">{{ translate('messages.food_campaigns') }}</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                @endif
-                <!-- End Campaign -->
                 <!-- Banner -->
                 @if (\App\CentralLogics\Helpers::module_permission_check('banner'))
-                <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/banner*') ? 'active' : '' }}">
-                    <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.banner.add-new') }}" title="{{ translate('messages.banners') }}">
+                <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/rental/banner*') ? 'active' : '' }}">
+                    <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.rental.banner.add-new') }}" title="{{ translate('messages.banners') }}">
                         <i class="tio-image nav-icon"></i>
                         <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('messages.banners') }}</span>
                     </a>
                 </li>
-                <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/promotional-banner*') ? 'active' : '' }}">
+                {{-- <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/promotional-banner*') ? 'active' : '' }}">
                     <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.promotional-banner.add-new') }}" title="{{ translate('messages.other_banners') }}">
                         <i class="tio-image nav-icon"></i>
                         <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('messages.other_banners') }}</span>
                     </a>
-                </li>
+                </li> --}}
                 @endif
                 <!-- End Banner -->
                 <!-- Coupon -->
@@ -334,44 +300,7 @@
                 @endif
                 <!-- End Notification -->
 
-            <!-- advertisement -->
 
-            @if (\App\CentralLogics\Helpers::module_permission_check('advertisement'))
-                <li
-                    class="navbar-vertical-aside-has-menu  @yield('advertisement')">
-                    <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:"
-                        title="{{ translate('messages.advertisement') }}">
-                        <i class="tio-tv-old nav-icon"></i>
-                        <span
-                            class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('messages.advertisement') }}</span>
-                    </a>
-                    <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
-                        style="display: {{ Request::is('admin/advertisement*') ? 'block' : 'none' }}">
-
-                        <li class="nav-item @yield('advertisement_create')">
-                            <a class="nav-link " href="{{ route('admin.advertisement.create') }}"
-                                title="{{ translate('messages.New_Advertisement') }}">
-                                <span class="tio-circle nav-indicator-icon"></span>
-                                <span class="text-truncate">{{ translate('messages.New_Advertisement') }}</span>
-                            </a>
-                        </li>
-                        <li class="nav-item @yield('advertisement_request')">
-                            <a class="nav-link " href="{{ route('admin.advertisement.requestList') }}"
-                                title="{{ translate('messages.Ad_Requests') }}">
-                                <span class="tio-circle nav-indicator-icon"></span>
-                                <span class="text-truncate">{{ translate('messages.Ad_Requests') }}</span>
-                            </a>
-                        </li>
-                        <li class="nav-item @yield('advertisement_list')">
-                            <a class="nav-link " href="{{ route('admin.advertisement.index') }}"
-                                title="{{ translate('messages.Ads_list') }}">
-                                <span class="tio-circle nav-indicator-icon"></span>
-                                <span class="text-truncate">{{ translate('messages.Ads_list') }}</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-            @endif
             <!-- End advertisement -->
                 <!-- End marketing section -->
 
