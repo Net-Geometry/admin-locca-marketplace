@@ -441,6 +441,12 @@ class Store extends Model
         return $this->belongsTo(Zone::class);
     }
 
+
+    public function pickupZone()
+    {
+        return Zone::whereIn('id', json_decode($this->pickup_zone_id));
+    }
+
     /**
      * @return BelongsToMany
      */

@@ -1,289 +1,337 @@
 @extends('layouts.admin.app')
 
-@section('title',$store->name)
+@section('title', translate('messages.New Provider Request - Details'))
 
 @push('css_or_js')
-    <!-- Custom styles for this page -->
-    <link href="{{asset('public/assets/admin/css/croppie.css')}}" rel="stylesheet">
 @endpush
 
 @section('content')
     <div class="content container-fluid">
-        @include('admin-views.vendor.view.partials._header',['store'=>$store])
-        <div class="card mt-4">
-            <div class="card-header">
-                <h5 class="card-title m-0 d-flex align-items-center">
-                    <span class="card-header-icon mr-2">
-                        <i class="tio-shop-outlined"></i>
-                    </span>
-                    <span class="ml-1">{{translate('messages.store_info')}}</span>
-                </h5>
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="d-flex justify-content-between flex-wrap gap-3">
+                <div>
+                    <h1 class="page-header-title text-break">
+                        <span class="page-header-icon">
+                            <img src="{{ asset('public/assets/admin/img/store.png') }}" class="w--22" alt="">
+                        </span>
+                        <span>{{ translate('messages.Provider_Details') }}
+                    </h1></span>
+                    </h1>
+                </div>
+                <div class="d-flex align-items-start flex-wrap gap-2">
+                    <a href="{{ route('admin.rental.provider.edit-basic-setup', $store->id)}}" class="btn btn--primary-light float-right mb-0">
+                        <i class="tio-edit"></i> {{ translate('messages.edit_provider') }}
+                    </a>
+                    <a class="btn btn--warning-light font-weight-bold float-right mb-0" data-deny="cancel" data-toggle="modal"
+                       data-target="#exampleModal--cancel"><i
+                            class="tio-clear font-weight-bold pr-1"></i>
+                        {{ translate('messages.reject') }}</a>
+                    <a class="btn btn--primary font-weight-bold float-right mr-2 mb-0" data-deny="approve" data-toggle="modal"
+                       data-target="#exampleModal--approve"
+                       href="javascript:"><i
+                            class="tio-done font-weight-bold pr-1"></i>{{ translate('messages.approve') }}</a>
+                </div>
             </div>
-            <div class="card-body">
-                <div class="row g-3 align-items-center">
-                    <div class="col-lg-6">
-                        <div class="resturant--info-address">
-                            <div class="logo">
-                                <img class="onerror-image" data-onerror-image="{{asset('public/assets/admin/img/100x100/1.png')}}"
-                                src="{{ $store->logo_full_url ?? asset('public/assets/admin/img/100x100/1.png') }}"
-
-                                alt="{{$store->name}} Logo">
+        </div>
+        <!-- End Page Header -->
+        <div class="taxi-banner radius-10 mt-4 mb-20"
+             style="background-image: url('{{ $store->cover_photo_full_url ?? asset('public/assets/admin/img/100x100/1.png') }}'); background-repeat: no-repeat; background-position: center; background-size: cover;">
+        <div class="taxi-info-wrapper d-flex flex-wrap flex-sm-nowrap gap-30px">
+                <div class="logo">
+                    <img data-onerror-image="{{asset('public/assets/admin/img/100x100/1.png')}}"
+                         src="{{ $store->logo_full_url ?? asset('public/assets/admin/img/100x100/1.png') }}" width="150" class="rounded-8"
+                         alt="">
+                </div>
+                <div class="taxi-info">
+                    <h3 class="fs-20 fw-bold text--title mb-20"> {{ $store->name }}</h3>
+                    <div class="details d-flex flex-wrap flex-column flex-sm-row gap-40px">
+                        <div class="details-single d-flex align-items-center gap-2">
+                            <img src="{{ asset('public/assets/admin/img/icons/zone.png') }}" width="36" height="36"
+                                 class="rounded" alt="">
+                            <div>
+                                <h5 class="lh--12 mb-0 color-3C3C3C"> {{ translate('messages.Business_Address') }}
+                                </h5>
+                                <span class="fs-13 lh--12 color-484848">{{$store->address}}</span>
                             </div>
-                            <ul class="address-info list-unstyled list-unstyled-py-3 text-dark">
-                                <li>
-                                    <h5 class="name">{{$store->name}}</h5>
-                                </li>
-                                <li>
-
-                                    <i class="tio-city nav-icon"></i>
-                                    <span>{{translate('messages.address')}}</span> <span>:</span> &nbsp; <span>
-
-                                    <a href="https://www.google.com/maps/search/?api=1&query={{ data_get($store,'latitude',0)}},{{ data_get($store,'longitude',0)}}" target="_blank">{{$store->address}}</a></span>
-
-                                </li>
-
-                                <li>
-                                    <i class="tio-call-talking nav-icon"></i>
-                                    <span>{{translate('messages.email')}}</span> <span>:</span> &nbsp; <a href="mailto:{{$store->email}}"><span>{{$store->email}}</span></a>
-                                </li>
-                                <li>
-                                    <i class="tio-email nav-icon"></i>
-                                    <span>{{translate('messages.phone')}}</span> <span>:</span> &nbsp; <a href="tel:{{$store->phone}}"><span>{{$store->phone}}</span></a>
-                                </li>
-                                <li>
-                                    <i class="tio-map nav-icon"></i>
-                                    <span>{{translate('messages.Zone')}}</span> <span>:</span> &nbsp; <span>{{$store?->zone?->name ?? translate('zone_deleted')}}</span>
-                                </li>
-                            </ul>
                         </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div id="map" class="single-page-map"></div>
+                        <div class="details-single d-flex align-items-center gap-2">
+                            <img src="{{ asset('public/assets/admin/img/icons/job-type.png') }}" width="36"
+                                 height="36" class="rounded" alt="">
+                            <div>
+                                <h5 class="lh--12 mb-0 color-3C3C3C"> {{ translate('messages.Business_Plan') }}
+                                </h5>
+                                <span class="fs-13 lh--12 color-484848">{{ ucwords($store->store_business_model) }}</span>
+                            </div>
+                        </div>
+                        <div class="details-single d-flex align-items-center gap-2">
+                            <img src="{{ asset('public/assets/admin/img/icons/wallet.png') }}" width="36"
+                                 height="36" class="rounded" alt="">
+                            <div>
+                                <h5 class="lh--12 mb-0 color-3C3C3C"> {{ translate('messages.Approx. Pickup Time') }}
+                                </h5>
+                                <span class="fs-13 lh--12 color-484848">{{ $store->delivery_time }}</span>
+                            </div>
+                        </div>
+                        <div class="details-single d-flex align-items-center gap-2">
+                            <img src="{{ asset('public/assets/admin/img/icons/vehicle-type.png') }}" width="36"
+                                 height="36" class="rounded" alt="">
+                            <div>
+                                <h5 class="lh--12 mb-0 color-3C3C3C"> {{ translate('messages.VAT / TAX') }}
+                                </h5>
+                                <span class="fs-13 lh--12 color-484848">{{ $store->tax }} %</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="row pt-3 g-3">
-            <div class="col-lg-6">
-                <div class="card h-100">
-                    <div class="card-header">
-                        <h5 class="card-title m-0 d-flex align-items-center">
-                            <span class="card-header-icon mr-2">
-                                <i class="tio-user"></i>
-                            </span>
-                            <span class="ml-1">{{translate('messages.owner_info')}}</span>
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="resturant--info-address">
-                            <div class="avatar avatar-xxl avatar-circle avatar-border-lg">
-                                <img class="avatar-img onerror-image" data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
-
-                                src="{{ $store->vendor->image ?? asset('public/assets/admin/img/160x160/img1.jpg') }}"
-                                alt="Image Description">
-                            </div>
-                            <ul class="address-info address-info-2 list-unstyled list-unstyled-py-3 text-dark">
-                                <li>
-                                    <h5 class="name">{{$store->vendor->f_name}} {{$store->vendor->l_name}}</h5>
-                                </li>
-                                <li>
-                                    <i class="tio-call-talking nav-icon"></i>
-                                    <span class="pl-1"><a href="mailto:{{$store->vendor->email}}">{{$store->vendor->email}}</a> </span>
-                                </li>
-                                <li>
-                                    <i class="tio-email nav-icon"></i>
-                                    <span class="pl-1"> <a href="tel:{{$store->vendor->phone}}"> {{$store->vendor->phone}} </a></span>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <h5 class="text-title mb-1">
+                        {{ translate('messages.Registration_Information') }}
+                    </h5>
+                    <p class="fs-12">
+                        {{ translate('messages.Here you can see all the information that provider submit during registration') }}
+                    </p>
                 </div>
             </div>
-
-            <div class="col-lg-6">
-                <div class="card h-100">
-                    <div class="card-header">
-                        <h5 class="card-title m-0 d-flex align-items-center">
-                            <span class="card-header-icon mr-2">
-                                <i class="tio-crown"></i>
-                            </span>
-                            <span class="ml-1">{{translate('messages.Business_Plan')}}</span>
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="resturant--info-address">
-                            <ul class="address-info address-info-2 list-unstyled list-unstyled-py-3 text-dark">
-
-                            @if ($store->store_business_model == 'commission')
-                            <li>
-                                <span>  <strong>{{translate('messages.Business_Plan')}}</span></strong>  <span>:</span> &nbsp; {{ translate($store->store_business_model) }}
-                            </li>
-                            @php($admin_commission = \App\Models\BusinessSetting::where(['key' => 'admin_commission'])->first()?->value)
-                            <li>
-                                <span><strong>{{translate('messages.Commission_percentage')}}</strong></span> <span>:</span> &nbsp; {{ $store->comission > 0 ?  $store->comission : $admin_commission }} %
-                            </li>
-                            @elseif ($store->store_business_model == 'subscription')
-                                <li>
-                                    <span>  <strong>{{translate('messages.Business_Plan')}}</span></strong>  <span>:</span> &nbsp; {{ translate($store->store_business_model) }} &nbsp;
-                                    @if ($store?->store_sub_update_application->is_trial == '1')
-                                    <small> <span class="badge badge-info" >{{ translate('messages.Free_trial')}}</span> </small>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-lg-6">
+                        <div class="card __bg-FAFAFA border-0 h-100">
+                            <div class="card-body">
+                                <h5 class="mb-10px font-bold"> {{ translate('messages.General_Information') }}
+                                </h5>
+                                @php($language = \App\Models\BusinessSetting::where('key', 'language')->first())
+                                @php($language = $language->value ?? null)
+                                @php($defaultLang = 'en')
+                                <div class="div">
+                                    @if ($language)
+                                        <ul class="nav nav-tabs mb-4">
+                                            <li class="nav-item">
+                                                <a class="nav-link lang_link active" href="#"
+                                                   id="default-link">{{ translate('Default') }}</a>
+                                            </li>
+                                            @foreach (json_decode($language) as $lang)
+                                                <li class="nav-item">
+                                                    <a class="nav-link lang_link" href="#"
+                                                       id="{{ $lang }}-link">{{ \App\CentralLogics\Helpers::get_language_name($lang) . '(' . strtoupper($lang) . ')' }}</a>
+                                                </li>
+                                            @endforeach
+                                        </ul>
                                     @endif
-                                </li>
-                                <li>
-                                    <span> <strong>{{translate('messages.Package_name')}}</strong></span> <span>:</span> &nbsp; {{ $store?->store_sub_update_application?->package?->package_name  ?? translate('Pacakge_not_found!!!')}}
-                                </li>
-                            @elseif ($store->store_business_model == 'unsubscribed')
-                                <li>
-                                    <span>  <strong>{{translate('messages.Business_Plan')}}</span></strong>  <span>:</span> &nbsp; {{ translate($store->store_business_model) }} &nbsp;
+                                    @if ($language)
+                                        <div class="lang_form" id="default-form">
+                                            <div class="resturant--info-address">
+                                                <ul class="address-info address-info-2 p-0 text-dark">
+                                                    <li class="d-flex align-items-start">
+                                                        <span class="label min-w-sm-auto">{{ translate('messages.Vendor Name') }}</span>
+                                                        <span>: {{$store->name}} {{$store->name}}</span>
+                                                    </li>
+                                                    <li class="d-flex align-items-start">
+                                                        <span class="label min-w-sm-auto">{{ translate('messages.Business Address') }}</span>
+                                                        <span>: {{$store->address}} </span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        @foreach (json_decode($language) as $lang)
+                                            <?php
+                                                if(count($store?->translations ?? [])){
+                                                    $translate = [];
+                                                    foreach($store['translations'] as $t)
+                                                    {
+                                                        if($t->locale == $lang && $t->key=="name"){
+                                                            $translate[$lang]['name'] = $t->value;
+                                                        }
+                                                    }
+                                                }
+                                            ?>
+                                            <div class="d-none lang_form" id="{{ $lang }}-form">
+                                                <div class="resturant--info-address">
+                                                    <ul class="address-info address-info-2 p-0 text-dark">
+                                                        <li class="d-flex align-items-start">
+                                                            <span class="label min-w-sm-auto">{{ translate('messages.Provider Name') }}</span>
+                                                            <span>: {{$translate[$lang]['name']??''}}</span>
+                                                        </li>
+                                                        <li class="d-flex align-items-start">
+                                                            <span class="label min-w-sm-auto">{{ translate('messages.Business Address') }}</span>
+                                                            <span>: {{$store->address}} </span>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    @else
+                                        <div id="default-form">
+                                            <div class="resturant--info-address">
+                                                <ul class="address-info address-info-2 p-0 text-dark">
+                                                    <li class="d-flex align-items-start">
+                                                        <span class="label min-w-sm-auto">{{ translate('messages.Provider Name') }}</span>
+                                                        <span>: {{ $store->name }} {{ $store->name }}</span>
+                                                    </li>
+                                                    <li class="d-flex align-items-start">
+                                                        <span class="label min-w-sm-auto">{{ translate('messages.Business Address') }}</span>
+                                                        <span>: {{ $store->address }}</span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
 
-                                    <small> <span class="badge badge-danger" >{{ translate('messages.Expired')}}</span> </small>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="card __bg-FAFAFA border-0 h-100">
+                            <div class="card-body">
+                                <h5 class="mb-10px font-bold"> {{ translate('messages.Owner_Information') }}
+                                </h5>
+                                <div class="resturant--info-address">
+                                    <ul class="address-info address-info-2 p-0 text-dark">
+                                        <li class="d-flex align-items-start">
+                                            <span class="label min-w-sm-auto">{{ translate('messages.First Name') }}</span>
+                                            <span>: {{$store->vendor->f_name}} </span>
+                                        </li>
+                                        <li class="d-flex align-items-start">
+                                            <span class="label min-w-sm-auto">{{ translate('messages.Last Zone') }}</span>
+                                            <span>: {{$store->vendor->l_name}}</span>
+                                        </li>
+                                        <li class="d-flex align-items-start">
+                                            <span class="label min-w-sm-auto">{{ translate('messages.Phone') }}</span>
+                                            <span>: {{$store->vendor->phone}}</span>
+                                        </li>
+                                    </ul>
 
-                                </li>
-                                <li>
-                                    <span> <strong>{{translate('messages.Package_name')}}</strong></span> <span>:</span> &nbsp; {{ $store?->store_sub_update_application?->package?->package_name  ?? translate('Pacakge_not_found!!!')}}
-                                </li>
-                                @elseif($store->store_business_model == 'none' && $store->package_id )
-                                    <li>
-                                    <span>  <strong>{{translate('messages.Business_Plan')}}</span></strong>  <span>:</span> &nbsp; {{translate('messages.Subscription')}}
-                                </li>
-                                    <li>
-                                    <span>  <strong>{{translate('messages.Package_Name')}}</span></strong>  <span>:</span> &nbsp; {{App\Models\SubscriptionPackage::where('id',$store->package_id)->first()?->package_name   }}
-                                </li>
-                                    <li>
-                                    <span>  <strong>{{translate('Payment_status')}}</span></strong>  <span>:</span> &nbsp; {{ translate('messages.payment_failed')   }}
-                                </li>
-                                @else
-                                    <li>
-                                    <span>  <strong>{{translate('messages.Business_Plan')}}</span></strong>  <span>:</span> &nbsp; {{ translate('Have_n’t_Selected_Yet.') }}
-                                </li>
-                            @endif
-                            </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="card __bg-FAFAFA border-0 h-100">
+                            <div class="card-body">
+                                <h5 class="mb-10px font-bold"> {{ translate('messages.Pickup_Zone') }}
+                                </h5>
+                                <div class="d-flex gap-2 gap-sm-3 flex-wrap">
+                                    @foreach(json_decode($store->pickup_zone_id) as $pickup)
+                                        <?php
+                                            $zoneName = $store->pickupZones[$pickup] ?? 'Unknown Zone';
+                                        ?>
+                                        <label class="badge badge-soft-dark rounded-20 p-2 m-0 font-medium">
+                                            {{ $zoneName }}
+                                        </label>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="card __bg-FAFAFA border-0 h-100">
+                            <div class="card-body">
+                                <h5 class="mb-10px font-bold"> {{ translate('messages.Login_Information') }}
+                                </h5>
+                                <div class="resturant--info-address">
+                                    <ul class="address-info address-info-2 p-0 text-dark">
+                                        <li class="d-flex align-items-start">
+                                            <span class="label min-w-sm-auto">{{ translate('messages.Email') }}</span>
+                                            <span>: {{ $store->vendor->email }}</span>
+                                        </li>
+                                        <li class="d-flex align-items-start">
+                                            <span class="label min-w-sm-auto">{{ translate('messages.Password') }}</span>
+                                            <span>: {{ translate('*************') }}</span>
+                                        </li>
+                                    </ul>
+
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-
-
         </div>
     </div>
 
+    <div class="modal fade" id="exampleModal--approve" tabindex="-1" aria-labelledby="exampleModalLabel--approve"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body pt-5 p-md-5">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <img src="{{ asset('public/assets/admin/img/new-img/close-icon-dark.svg') }}" alt="">
+                    </button>
+
+                    <div class="d-flex justify-content-center mb-4">
+                        <img width="75" height="75" src="{{ asset('public/assets/admin/img/modal/mark.png') }}"
+                             class="rounded-circle" alt="">
+                    </div>
+
+                    <h3 class="text--title mb-6 font-medium text-center">
+                        {{ translate('Are you sure, want to approve the request?') }}</h3>
+                    <form method="get" action="{{route('admin.rental.provider.approve-or-deny',[$store['id'],1])}}">
+                        @csrf
+                        <div class="form-floating">
+                            <input type="hidden" value="1" name="status">
+                            <div class="d-flex justify-content-end gap-3">
+                                <button type="button" data-dismiss="modal" aria-label="Close"
+                                        class="btn btn--reset">{{ translate('Cancel') }}</button>
+                                <button type="submit" class="btn btn--primary">{{ translate('Approve') }}</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="exampleModal--cancel" tabindex="-1" aria-labelledby="exampleModalLabel--cancel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body pt-5 p-md-5">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <img src="{{ asset('public/assets/admin/img/new-img/close-icon-dark.svg') }}" alt="">
+                    </button>
+
+                    <div class="d-flex justify-content-center mb-4">
+                        <img width="75" height="75" src="{{ asset('public/assets/admin/img/icons/delete.png') }}"
+                             class="rounded-circle" alt="">
+                    </div>
+
+                    <h3 class="text--title mb-6 font-medium text-center">
+                        {{ translate('Are you sure, want to cancel the request?') }}</h3>
+                    <form method="get" action="{{route('admin.rental.provider.approve-or-deny',[$store['id'],0])}}">
+                        @csrf
+                        <div class="form-floating">
+                            <label for="add-your-note"
+                                   class="font-medium input-label text--title">{{ translate('Cancellation Note') }}<span
+                                    class="form-label-secondary" data-toggle="tooltip" data-placement="right"
+                                    data-original-title="Cancellation Note">
+                                    <i class="tio-info text--title opacity-60"></i>
+                                </span></label>
+                            <div class="mb-30">
+                                <textarea class="form-control h--90" placeholder="{{ translate('Type your Cancellation Note') }}" name="message"
+                                          id="add-your-note" required></textarea>
+                                <div>0/60</div>
+                            </div>
+                            <input type="hidden" value="0" name="status">
+                            <div class="d-flex justify-content-end gap-3">
+                                <button type="button" data-dismiss="modal" aria-label="Close"
+                                        class="btn btn--reset">{{ translate('Cancel') }}</button>
+                                <button type="submit" class="btn btn--primary">{{ translate('Deny') }}</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
+@push('script')
+@endpush
+
 @push('script_2')
-    <script src="https://maps.googleapis.com/maps/api/js?key={{\App\Models\BusinessSetting::where('key', 'map_api_key')->first()->value}}&callback=initMap&v=3.45.8" ></script>
-    <script>
-        "use strict";
-        $(document).ready(function () {
-            $('#dataTable').DataTable();
-        });
-
-        const myLatLng = { lat: {{$store->latitude}}, lng: {{$store->longitude}} };
-        let map;
-        initMap();
-        function initMap() {
-                 map = new google.maps.Map(document.getElementById("map"), {
-                zoom: 15,
-                center: myLatLng,
-            });
-            new google.maps.Marker({
-                position: myLatLng,
-                map,
-                title: "{{$store->name}}",
-            });
-        }
-
-        $(document).on('ready', function () {
-            // INITIALIZATION OF DATATABLES
-            // =======================================================
-            let datatable = $.HSCore.components.HSDatatables.init($('#columnSearchDatatable'));
-
-            $('#column1_search').on('keyup', function () {
-                datatable
-                    .columns(1)
-                    .search(this.value)
-                    .draw();
-            });
-
-            $('#column2_search').on('keyup', function () {
-                datatable
-                    .columns(2)
-                    .search(this.value)
-                    .draw();
-            });
-
-            $('#column3_search').on('change', function () {
-                datatable
-                    .columns(3)
-                    .search(this.value)
-                    .draw();
-            });
-
-            $('#column4_search').on('keyup', function () {
-                datatable
-                    .columns(4)
-                    .search(this.value)
-                    .draw();
-            });
-
-
-            // INITIALIZATION OF SELECT2
-            // =======================================================
-            $('.js-select2-custom').each(function () {
-                let select2 = $.HSCore.components.HSSelect2.init($(this));
-            });
-        });
-
-    function request_alert(url, message) {
-        Swal.fire({
-            title: '{{translate('messages.are_you_sure')}}',
-            text: message,
-            type: 'warning',
-            showCancelButton: true,
-            cancelButtonColor: 'default',
-            confirmButtonColor: '#FC6A57',
-            cancelButtonText: '{{translate('messages.no')}}',
-            confirmButtonText: '{{translate('messages.yes')}}',
-            reverseButtons: true
-        }).then((result) => {
-            if (result.value) {
-                location.href = url;
-            }
-        })
-    }
-
-        $('#add_transaction').on('submit', function (e) {
-            e.preventDefault();
-            let formData = new FormData(this);
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $.post({
-                url: '{{route('admin.transactions.account-transaction.store')}}',
-                data: formData,
-                cache: false,
-                contentType: false,
-                processData: false,
-                success: function (data) {
-                    if (data.errors) {
-                        for (let i = 0; i < data.errors.length; i++) {
-                            toastr.error(data.errors[i].message, {
-                                CloseButton: true,
-                                ProgressBar: true
-                            });
-                        }
-                    } else {
-                        toastr.success('{{translate('messages.transaction_saved')}}', {
-                            CloseButton: true,
-                            ProgressBar: true
-                        });
-                        setTimeout(function () {
-                            location.href = '{{route('admin.store.view', $store->id)}}';
-                        }, 2000);
-                    }
-                }
-            });
-        });
-    </script>
 @endpush

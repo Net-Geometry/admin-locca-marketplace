@@ -160,6 +160,81 @@
                                 </div>
                             </td>
                         </tr>
+
+                        <div class="modal fade" id="exampleModal--approve" tabindex="-1" aria-labelledby="exampleModalLabel--approve"
+                             aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-body pt-5 p-md-5">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <img src="{{ asset('public/assets/admin/img/new-img/close-icon-dark.svg') }}" alt="">
+                                        </button>
+
+                                        <div class="d-flex justify-content-center mb-4">
+                                            <img width="75" height="75" src="{{ asset('public/assets/admin/img/modal/mark.png') }}"
+                                                 class="rounded-circle" alt="">
+                                        </div>
+
+                                        <h3 class="text--title mb-6 font-medium text-center">
+                                            {{ translate('Are you sure, want to approve the request?') }}</h3>
+                                        <form method="get" action="{{route('admin.rental.provider.approve-or-deny',[$store['id'],1])}}">
+                                            @csrf
+                                            <div class="form-floating">
+                                                <input type="hidden" value="1" name="status">
+                                                <div class="d-flex justify-content-end gap-3">
+                                                    <button type="button" data-dismiss="modal" aria-label="Close"
+                                                            class="btn btn--reset">{{ translate('Cancel') }}</button>
+                                                    <button type="submit" class="btn btn--primary">{{ translate('Approve') }}</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal fade" id="exampleModal--cancel" tabindex="-1" aria-labelledby="exampleModalLabel--cancel"
+                             aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-body pt-5 p-md-5">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <img src="{{ asset('public/assets/admin/img/new-img/close-icon-dark.svg') }}" alt="">
+                                        </button>
+
+                                        <div class="d-flex justify-content-center mb-4">
+                                            <img width="75" height="75" src="{{ asset('public/assets/admin/img/icons/delete.png') }}"
+                                                 class="rounded-circle" alt="">
+                                        </div>
+
+                                        <h3 class="text--title mb-6 font-medium text-center">
+                                            {{ translate('Are you sure, want to cancel the request?') }}</h3>
+                                        <form method="get" action="{{route('admin.rental.provider.approve-or-deny',[$store['id'],0])}}">
+                                            @csrf
+                                            <div class="form-floating">
+                                                <label for="add-your-note"
+                                                       class="font-medium input-label text--title">{{ translate('Cancellation Note') }}<span
+                                                        class="form-label-secondary" data-toggle="tooltip" data-placement="right"
+                                                        data-original-title="Cancellation Note">
+                                    <i class="tio-info text--title opacity-60"></i>
+                                </span></label>
+                                                <div class="mb-30">
+                                <textarea class="form-control h--90" placeholder="{{ translate('Type your Cancellation Note') }}" name="message"
+                                          id="add-your-note" required></textarea>
+                                                    <div>0/60</div>
+                                                </div>
+                                                <input type="hidden" value="0" name="status">
+                                                <div class="d-flex justify-content-end gap-3">
+                                                    <button type="button" data-dismiss="modal" aria-label="Close"
+                                                            class="btn btn--reset">{{ translate('Cancel') }}</button>
+                                                    <button type="submit" class="btn btn--primary">{{ translate('Deny') }}</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     @endforeach
                     </tbody>
                 </table>
@@ -180,92 +255,6 @@
                     </h5>
                 </div>
             @endif
-        </div>
-    </div>
-
-    <div class="modal fade" id="exampleModal--approve" tabindex="-1" aria-labelledby="exampleModalLabel--approve"
-         aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-body pt-5 p-md-5">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <img src="{{ asset('public/assets/admin/img/new-img/close-icon-dark.svg') }}" alt="">
-                    </button>
-
-                    <div class="d-flex justify-content-center mb-4">
-                        <img width="75" height="75" src="{{ asset('public/assets/admin/img/modal/mark.png') }}"
-                             class="rounded-circle" alt="">
-                    </div>
-
-                    <h3 class="text--title mb-6 font-medium text-center">
-                        {{ translate('Are you sure, want to approve the request?') }}</h3>
-                    <form method="get" action="{{route('admin.rental.provider.approve-or-deny',[$store['id'],1])}}">
-                        @csrf
-                        <div class="form-floating">
-                            <label for="add-your-note"
-                                   class="font-medium input-label text--title">{{ translate('Approval Note') }}<span
-                                    class="form-label-secondary" data-toggle="tooltip" data-placement="right"
-                                    data-original-title="Approval Note">
-                                    <i class="tio-info text--title opacity-60"></i>
-                                </span></label>
-                            <div class="mb-30">
-                                <textarea class="form-control h--90" placeholder="{{ translate('Type your Approval Note') }}" name="message"
-                                          id="add-your-note" required></textarea>
-                                <div>0/60</div>
-                            </div>
-                            <input type="hidden" value="1" name="status">
-                            <div class="d-flex justify-content-end gap-3">
-                                <button type="button" data-dismiss="modal" aria-label="Close"
-                                        class="btn btn--reset">{{ translate('Cancel') }}</button>
-                                <button type="submit" class="btn btn--primary">{{ translate('Approve') }}</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="exampleModal--cancel" tabindex="-1" aria-labelledby="exampleModalLabel--cancel"
-         aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-body pt-5 p-md-5">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <img src="{{ asset('public/assets/admin/img/new-img/close-icon-dark.svg') }}" alt="">
-                    </button>
-
-                    <div class="d-flex justify-content-center mb-4">
-                        <img width="75" height="75" src="{{ asset('public/assets/admin/img/icons/delete.png') }}"
-                             class="rounded-circle" alt="">
-                    </div>
-
-                    <h3 class="text--title mb-6 font-medium text-center">
-                        {{ translate('Are you sure, want to cancel the request?') }}</h3>
-                    <form method="get" action="{{route('admin.rental.provider.approve-or-deny',[$store['id'],0])}}">
-                        @csrf
-                        <div class="form-floating">
-                            <label for="add-your-note"
-                                   class="font-medium input-label text--title">{{ translate('Cancellation Note') }}<span
-                                    class="form-label-secondary" data-toggle="tooltip" data-placement="right"
-                                    data-original-title="Cancellation Note">
-                                    <i class="tio-info text--title opacity-60"></i>
-                                </span></label>
-                            <div class="mb-30">
-                                <textarea class="form-control h--90" placeholder="{{ translate('Type your Cancellation Note') }}" name="message"
-                                          id="add-your-note" required></textarea>
-                                <div>0/60</div>
-                            </div>
-                            <input type="hidden" value="0" name="status">
-                            <div class="d-flex justify-content-end gap-3">
-                                <button type="button" data-dismiss="modal" aria-label="Close"
-                                        class="btn btn--reset">{{ translate('Cancel') }}</button>
-                                <button type="submit" class="btn btn--primary">{{ translate('Deny') }}</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
         </div>
     </div>
 

@@ -13955,7 +13955,7 @@ ul.address-info .label {
 /* Taxi module provider-details */
 .taxi-banner {
     padding-top: 180px;
-    background: url("../img/1920x400/img1.jpg") no-repeat center center/cover;
+    /*background: url("../img/1920x400/img1.jpg") no-repeat center center/cover;*/
     overflow: hidden;
 }
 .taxi-info-wrapper {

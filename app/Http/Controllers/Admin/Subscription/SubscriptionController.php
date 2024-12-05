@@ -559,6 +559,7 @@ class SubscriptionController extends Controller
     }
     public function packageView($id,$store_id){
         $store_subscription= StoreSubscription::where('store_id', $store_id)->with(['package'])->latest()->first();
+//        dd($store_subscription);
         $package = SubscriptionPackage::where('status',1)->where('id',$id)->first();
         $store= Store::Where('id',$store_id)->first();
         $pending_bill= SubscriptionBillingAndRefundHistory::where(['store_id'=>$store->id,

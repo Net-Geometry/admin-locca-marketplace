@@ -425,8 +425,87 @@ class ProviderController extends Controller
     public function newRequestsDetails(Request $request, $store_id): Factory|\Illuminate\Foundation\Application|View|Application
     {
         $store = $this->store->findOrFail($store_id);
+        $store->pickupZones = Zone::whereIn('id', json_decode($store->pickup_zone_id))->pluck('name', 'id');
 
         return view('rental::admin.provider.new-request-details', compact('store'));
+    }
+
+    /**
+     * @param $id
+     * @return Factory|\Illuminate\Foundation\Application|View|RedirectResponse|Application
+     */
+    public function editBasicSetup($id): Factory|\Illuminate\Foundation\Application|View|RedirectResponse|Application
+    {
+        if(env('APP_MODE')=='demo' && $id == 2)
+        {
+            Toastr::warning(translate('messages.you_can_not_edit_this_provider_please_add_a_new_provider_to_edit'));
+            return back();
+        }
+
+        $zones = $this->zone->active(1)->latest()->get();
+        $store = Store::withoutGlobalScope('translate')->findOrFail($id);
+
+        return view('rental::admin.provider.edit-basic-setup', compact('store', 'zones'));
+    }
+
+    /**
+     * @param $id
+     * @return Factory|\Illuminate\Foundation\Application|View|RedirectResponse|Application
+     */
+    public function editBusinessSetup($id): Factory|\Illuminate\Foundation\Application|View|RedirectResponse|Application
+    {
+        if(env('APP_MODE')=='demo' && $id == 2)
+        {
+            Toastr::warning(translate('messages.you_can_not_edit_this_provider_please_add_a_new_provider_to_edit'));
+            return back();
+        }
+
+        $admin_commission = $this->helpers->get_business_data('admin_commission');
+        $business_name = $this->helpers->get_business_data('business_name');
+        $packages = $this->subscriptionPackage->ofStatus(1)->latest()->get();
+        $zones = $this->zone->active(1)->latest()->get();
+        $store = Store::withoutGlobalScope('translate')->findOrFail($id);
+
+        return view('rental::admin.provider.edit-business-setup', compact('store', 'zones', 'business_name', 'admin_commission', 'packages'));
+    }
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @return Factory|\Illuminate\Foundation\Application|View|RedirectResponse|Application
+     */
+    public function updateBasicSetup(Request $request, $id): Factory|\Illuminate\Foundation\Application|View|RedirectResponse|Application
+    {
+        $store = $this->store->find($id);
+        if (!$store) {
+            Toastr::error(translate('messages.information_not_found'));
+            return back();
+        }
+
+        if (!$this->isStoreRegistrationEnabled()) {
+            Toastr::error(translate('messages.not_found'));
+            return back();
+        }
+
+        $validator = $this->validateStoreRequest($request, $store->vendor_id);
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
+
+        if ($request->zone_id && !$this->isValidZone($request)) {
+            $validator->getMessageBag()->add('latitude', translate('messages.coordinates_out_of_zone'));
+            return back()->withErrors($validator)->withInput();
+        }
+
+
+        $this->updateVendor($request);
+        $this->updateStore($request);
+
+        $this->helpers->add_or_update_translations(request: $request, key_data: 'name', name_field: 'name', model_name: 'Store', data_id: $id, data_value: $store->name);
+        $this->helpers->add_or_update_translations(request: $request, key_data: 'address', name_field: 'address', model_name: 'Store', data_id: $id, data_value: $store->address);
+
+        Toastr::error(translate('messages.Provider_updated_successfully'));
+        return redirect()->route('admin.rental.provider.edit-business-setup', $id);
     }
 
     /**
@@ -498,9 +577,10 @@ class ProviderController extends Controller
 
     /**
      * @param Request $request
+     * @param null $id
      * @return \Illuminate\Validation\Validator
      */
-    private function validateStoreRequest(Request $request): \Illuminate\Validation\Validator
+    private function validateStoreRequest(Request $request, $id = null): \Illuminate\Validation\Validator
     {
         $rules = [
             'f_name' => 'required',
@@ -508,17 +588,26 @@ class ProviderController extends Controller
             'address' => 'required',
             'latitude' => 'required',
             'longitude' => 'required',
-            'email' => 'required|unique:vendors',
-            'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10|unique:vendors',
+            'email' => 'required|unique:vendors,id' . ($id ? ','.$id : ''),
+            'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10|unique:vendors,phone' . ($id ? ','.$id : ''),
             'minimum_delivery_time' => 'required',
             'maximum_delivery_time' => 'required',
-            'password' => ['required', Password::min(8)->mixedCase()->letters()->numbers()->symbols()],
+            'password' => [
+                $id ? 'nullable' : 'required',
+                Password::min(8)->mixedCase()->letters()->numbers()->symbols()
+                    ->uncompromised(),
+                function ($attribute, $value, $fail) {
+                    if (strpos($value, ' ') !== false) {
+                        $fail('The :attribute cannot contain white spaces.');
+                    }
+                },
+            ],
             'zone_id' => 'required',
-            'logo' => 'required',
+            'logo' => $id ? 'nullable' : 'required',
             'tax' => 'required',
             'delivery_time_type' => 'required',
-            'business_plan' => 'required',
-            'package_id' => Rule::requiredIf(fn() => request('business_plan') === 'subscription-base'),
+            'business_plan' => $id ? 'nullable' : 'required',
+            'package_id' => $id ? 'nullable' : 'required', Rule::requiredIf(fn() => request('business_plan') === 'subscription-base'),
         ];
 
         $messages = [
@@ -564,6 +653,21 @@ class ProviderController extends Controller
         ]);
     }
 
+    /**
+     * @param Request $request
+     * @return mixed
+     */
+    private function updateVendor(Request $request): mixed
+    {
+        return $this->vendor->update([
+            'f_name' => $request->f_name,
+            'l_name' => $request->l_name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'password' => bcrypt($request->password),
+        ]);
+    }
+
 
     /**
      * @param Request $request
@@ -582,6 +686,32 @@ class ProviderController extends Controller
             'latitude' => $request->latitude,
             'longitude' => $request->longitude,
             'vendor_id' => $vendor->id,
+            'zone_id' => $request->zone_id,
+            'module_id' => config('module')['current_module_id'],
+            'pickup_zone_id' => json_encode($request->pickup_zone_id ?? []),
+            'tax' => $request->tax,
+            'delivery_time' => "{$request->minimum_delivery_time}-{$request->maximum_delivery_time} {$request->delivery_time_type}",
+            'status' => 1,
+            'store_business_model' => 'none',
+        ]);
+    }
+
+    /**
+     * @param Request $request
+     * @param Vendor $vendor
+     * @return mixed
+     */
+    private function updateStore(Request $request): mixed
+    {
+        return $this->store->update([
+            'name' => $request->name[array_search('default', $request->lang)],
+            'phone' => $request->phone,
+            'email' => $request->email,
+            'logo' => $this->helpers->upload('store/', 'png', $request->file('logo')),
+            'cover_photo' => $this->helpers->upload('store/cover/', 'png', $request->file('cover_photo')),
+            'address' => $request->address[array_search('default', $request->lang)],
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude,
             'zone_id' => $request->zone_id,
             'module_id' => config('module')['current_module_id'],
             'pickup_zone_id' => json_encode($request->pickup_zone_id ?? []),

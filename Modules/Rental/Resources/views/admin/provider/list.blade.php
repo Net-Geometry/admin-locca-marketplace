@@ -252,7 +252,7 @@
                                                 class="tio-visible-outlined"></i>
                                         </a>
                                     <a class="btn action-btn btn--primary btn-outline-primary"
-                                    href="{{route('admin.store.edit',[$store['id']])}}" title="{{translate('messages.edit_store')}}"><i class="tio-edit"></i>
+                                    href="{{route('admin.rental.provider.edit-basic-setup',[$store['id']])}}" title="{{translate('messages.edit_provider')}}"><i class="tio-edit"></i>
                                     </a>
                                     <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:"
                                     data-id="vendor-{{$store['id']}}" data-message="{{translate('You want to remove this store')}}" title="{{translate('messages.delete_store')}}"><i class="tio-delete-outlined"></i>
