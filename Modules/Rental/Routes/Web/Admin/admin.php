@@ -4,8 +4,11 @@ use Illuminate\Support\Facades\Route;
 use Modules\Rental\Http\Controllers\Web\Admin\BrandController;
 use Modules\Rental\Http\Controllers\Web\Admin\BannerController;
 use Modules\Rental\Http\Controllers\Web\Admin\CategoryController;
+use Modules\Rental\Http\Controllers\Web\Admin\DriverController;
 use Modules\Rental\Http\Controllers\Web\Admin\ProviderController;
 use Modules\Rental\Http\Controllers\Web\Admin\DashboardController;
+use Modules\Rental\Http\Controllers\Web\Admin\VehicleController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -28,7 +31,6 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
             Route::post('edit/{id}', [CategoryController::class, 'update']);
             Route::delete('delete/{id}', [CategoryController::class, 'destroy'])->name('delete');
             Route::get('status/{id}', [CategoryController::class, 'status'])->name('status');
-            Route::get('status/{id}', [CategoryController::class, 'status'])->name('status');
             Route::get('export-categories', [CategoryController::class, 'export'])->name('export-categories');
         });
 
@@ -39,8 +41,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
             Route::post('edit/{id}', [BrandController::class, 'update']);
             Route::delete('delete/{id}', [BrandController::class, 'destroy'])->name('delete');
             Route::get('status/{id}', [BrandController::class, 'status'])->name('status');
-            Route::get('status/{id}', [BrandController::class, 'status'])->name('status');
-            Route::get('export-categories', [BrandController::class, 'export'])->name('export-brands');
+            Route::get('export', [BrandController::class, 'export'])->name('export-brands');
 
         });
 
@@ -54,12 +55,32 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
             Route::post('edit-business-setup/{id}', [ProviderController::class, 'updateBusinessSetup']);
             Route::delete('delete/{id}', [ProviderController::class, 'destroy'])->name('delete');
             Route::get('status/{id}', [ProviderController::class, 'status'])->name('status');
-            Route::get('details/{id}', [ProviderController::class, 'details'])->name('details');
+            Route::get('details/{id}/{tab?}/{sub_tab?}', [ProviderController::class, 'details'])->name('details');
             Route::get('export-categories', [ProviderController::class, 'export'])->name('export-brands');
             Route::get('new-requests', [ProviderController::class, 'newRequests'])->name('new-requests');
             Route::get('new-requests-details/{id}', [ProviderController::class, 'newRequestsDetails'])->name('new-requests-details');
-            Route::get('new-requests-details/{id}', [ProviderController::class, 'newRequestsDetails'])->name('new-requests-details');
             Route::get('approve-or-deny/{id}', [ProviderController::class, 'approveOrDeny'])->name('approve-or-deny');
+
+            Route::group(['prefix' => 'driver', 'as' => 'driver.'], function () {
+                Route::get('create/{provider_id}', [DriverController::class, 'create'])->name('create');
+                Route::post('create/{provider_id}', [DriverController::class, 'store']);
+                Route::get('update/{id}', [DriverController::class, 'edit'])->name('edit');
+                Route::post('update/{id}', [DriverController::class, 'update']);
+                Route::get('details/{id}', [DriverController::class, 'details'])->name('details');
+                Route::get('status/{id}', [DriverController::class, 'status'])->name('status');
+                Route::delete('delete/{id}', [DriverController::class, 'destroy'])->name('delete');
+                Route::get('export', [DriverController::class, 'export'])->name('export');
+            });
+
+            Route::group(['prefix' => 'vehicle', 'as' => 'vehicle.'], function () {
+                Route::get('create/{provider_id}', [VehicleController::class, 'create'])->name('create');
+                Route::post('create/{provider_id}', [VehicleController::class, 'store']);
+                Route::get('update/{id}', [VehicleController::class, 'edit'])->name('edit');
+                Route::post('update/{id}', [VehicleController::class, 'update']);
+                Route::get('status/{id}', [VehicleController::class, 'status'])->name('status');
+                Route::delete('delete/{id}', [VehicleController::class, 'destroy'])->name('delete');
+                Route::get('export', [VehicleController::class, 'export'])->name('export');
+            });
 
         });
 

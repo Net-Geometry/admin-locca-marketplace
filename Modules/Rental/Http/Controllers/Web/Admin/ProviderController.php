@@ -37,6 +37,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 use MatanYadaev\EloquentSpatial\Objects\Point;
+use Modules\Rental\Entities\Vehicle;
+use Modules\Rental\Entities\VehicleDriver;
 
 class ProviderController extends Controller
 {
@@ -44,6 +46,8 @@ class ProviderController extends Controller
     private Zone $zone;
     private Vendor $vendor;
     private Store $store;
+    private VehicleDriver $vehicleDriver;
+    private Vehicle $vehicle;
     private Admin $admin;
     private StoreLogic $storeLogic;
     private SubscriptionPackage $subscriptionPackage;
@@ -60,6 +64,12 @@ class ProviderController extends Controller
 
     /**
      * @param BusinessSetting $businessSetting
+     * @param StoreWallet $storeWallet
+     * @param Item $item
+     * @param DisbursementDetails $disbursementDetails
+     * @param Conversation $conversation
+     * @param UserInfo $userInfo
+     * @param TempProduct $tempProduct
      * @param Zone $zone
      * @param Order $order
      * @param Vendor $vendor
@@ -68,8 +78,9 @@ class ProviderController extends Controller
      * @param StoreLogic $storeLogic
      * @param SubscriptionPackage $subscriptionPackage
      * @param Helpers $helpers
+     * @param VehicleDriver $vehicleDriver
      */
-    public function __construct(BusinessSetting $businessSetting, StoreWallet $storeWallet, Item $item, DisbursementDetails $disbursementDetails, Conversation $conversation, UserInfo $userInfo, TempProduct $tempProduct, Zone $zone, Order $order, Vendor $vendor, Store $store, Admin $admin, StoreLogic $storeLogic, SubscriptionPackage $subscriptionPackage, Helpers $helpers)
+    public function __construct(BusinessSetting $businessSetting, StoreWallet $storeWallet, Item $item, DisbursementDetails $disbursementDetails, Conversation $conversation, UserInfo $userInfo, TempProduct $tempProduct, Zone $zone, Order $order, Vendor $vendor, Store $store, Admin $admin, StoreLogic $storeLogic, SubscriptionPackage $subscriptionPackage, Helpers $helpers, VehicleDriver $vehicleDriver, Vehicle $vehicle)
     {
         $this->businessSetting = $businessSetting;
         $this->zone = $zone;
@@ -86,6 +97,8 @@ class ProviderController extends Controller
         $this->userInfo = $userInfo;
         $this->conversation = $conversation;
         $this->disbursementDetails = $disbursementDetails;
+        $this->vehicleDriver = $vehicleDriver;
+        $this->vehicle = $vehicle;
     }
 
     /**
@@ -147,7 +160,6 @@ class ProviderController extends Controller
     public function details(Request $request, $store_id, $tab=null, $sub_tab='cash'): Factory|\Illuminate\Foundation\Application|View|Application
     {
         $filter= $request?->filter;
-
         $key = explode(' ', request()->search);
 
         $store = $this->store->findOrFail($store_id);
@@ -157,17 +169,52 @@ class ProviderController extends Controller
         {
             $wallet = $this->storeWallet;
             $wallet->vendor_id = $store->vendor->id;
-            $wallet->total_earning= 0.0;
-            $wallet->total_withdrawn=0.0;
-            $wallet->pending_withdraw=0.0;
-            $wallet->created_at=now();
-            $wallet->updated_at=now();
+            $wallet->total_earning = 0.0;
+            $wallet->total_withdrawn = 0.0;
+            $wallet->pending_withdraw = 0.0;
+            $wallet->created_at = now();
+            $wallet->updated_at = now();
             $wallet->save();
         }
 
         if($tab == 'settings')
         {
             return view('admin-views.vendor.view.settings', compact('store'));
+        }
+        else if ($tab == 'driver'){
+            $query = $this->vehicleDriver->where('provider_id', $store_id);
+            $totalDrivers = $query->count();
+            $activeDrivers = (clone $query)->ofStatus(1)->count();
+            $inactiveDrivers = (clone $query)->ofStatus(0)->count();
+
+            if (isset($key)) {
+                $query->where(function ($q) use ($key) {
+                    foreach ($key as $value) {
+                        $q->orWhere('first_name', 'like', "%{$value}%")
+                            ->orWhere('last_name', 'like', "%{$value}%");
+                    }
+                });
+            }
+
+            $drivers = $query->latest()->paginate(config('default_pagination'));
+            return view('rental::admin.provider.details.driver-list', compact('store', 'drivers', 'totalDrivers', 'activeDrivers', 'inactiveDrivers'));
+        }
+        else if ($tab == 'vehicle'){
+            $query = $this->vehicle->where('provider_id', $store_id);
+            $totalVehicles = $query->count();
+            $activeVehicles = (clone $query)->ofStatus(1)->count();
+            $inactiveVehicles = (clone $query)->ofStatus(0)->count();
+
+            if (isset($key)) {
+                $query->where(function ($q) use ($key) {
+                    foreach ($key as $value) {
+                        $q->orWhere('name', 'like', "%{$value}%");
+                    }
+                });
+            }
+
+            $vehicles = $query->latest()->paginate(config('default_pagination'));
+            return view('rental::admin.provider.details.vehicle-list', compact('store', 'vehicles', 'totalVehicles', 'activeVehicles', 'inactiveVehicles'));
         }
         else if($tab == 'order')
         {
@@ -293,11 +340,9 @@ class ProviderController extends Controller
                 $index= 2;
             }
             return view('admin-views.vendor.view.subscription',compact('store','packages','business_name','admin_commission','index'));
-
-
-
         }
-        return view('admin-views.vendor.view.index', compact('store', 'wallet'));
+
+        return view('rental::admin.provider.details.overview', compact('store', 'wallet'));
     }
 
 
@@ -316,7 +361,7 @@ class ProviderController extends Controller
         $packages = $this->subscriptionPackage->ofStatus(1)->latest()->get();
         $zones = $this->zone->active(1)->latest()->get();
 
-        return view('rental::admin.provider.business-basic-setup', compact('admin_commission','business_name', 'packages', 'zones'));
+        return view('rental::admin.provider.create', compact('admin_commission','business_name', 'packages', 'zones'));
     }
 
 
@@ -443,7 +488,7 @@ class ProviderController extends Controller
         }
 
         $zones = $this->zone->active(1)->latest()->get();
-        $store = Store::withoutGlobalScope('translate')->findOrFail($id);
+        $store = $this->store->withoutGlobalScope('translate')->findOrFail($id);
 
         return view('rental::admin.provider.edit-basic-setup', compact('store', 'zones'));
     }
@@ -464,7 +509,7 @@ class ProviderController extends Controller
         $business_name = $this->helpers->get_business_data('business_name');
         $packages = $this->subscriptionPackage->ofStatus(1)->latest()->get();
         $zones = $this->zone->active(1)->latest()->get();
-        $store = Store::withoutGlobalScope('translate')->findOrFail($id);
+        $store = $this->store->withoutGlobalScope('translate')->findOrFail($id);
 
         return view('rental::admin.provider.edit-business-setup', compact('store', 'zones', 'business_name', 'admin_commission', 'packages'));
     }
@@ -556,13 +601,6 @@ class ProviderController extends Controller
         Toastr::success(translate('messages.application_status_updated_successfully'));
         return back();
     }
-
-
-
-
-
-
-
 
 
 

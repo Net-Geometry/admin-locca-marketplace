@@ -39,6 +39,12 @@ class Vendor extends Authenticatable
 
         return Helpers::get_full_url('vendor',$value,'public');
     }
+
+    public function scopeOfStatus($query, $status): void
+    {
+        $query->where('status', '=', $status);
+    }
+
     public function order_transaction()
     {
         return $this->hasMany(OrderTransaction::class);
