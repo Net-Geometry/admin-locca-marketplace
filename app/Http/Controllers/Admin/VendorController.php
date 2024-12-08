@@ -12,6 +12,7 @@ use App\Models\Vendor;
 use App\Models\Message;
 use App\Models\UserInfo;
 use App\Scopes\StoreScope;
+use App\Models\AdminWallet;
 use App\Models\DataSetting;
 use App\Models\StoreConfig;
 use App\Models\StoreWallet;
@@ -581,12 +582,36 @@ class VendorController extends Controller
 
     public function list(Request $request)
     {
+
+        $data = Store::selectRaw("
+        SUM(CASE WHEN EXISTS (
+        SELECT 1 FROM vendors WHERE vendors.id = stores.vendor_id AND vendors.status = 1
+        ) THEN 1 ELSE 0 END) as total_store,
+
+        SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) as active_stores,
+
+        SUM(CASE WHEN status = 0 AND EXISTS (
+            SELECT 1 FROM vendors WHERE vendors.id = stores.vendor_id AND vendors.status = 1
+        ) THEN 1 ELSE 0 END) as inactive_stores,
+
+        SUM(CASE WHEN created_at >= ? AND EXISTS (
+            SELECT 1 FROM vendors WHERE vendors.id = stores.vendor_id AND vendors.status = 1
+        ) THEN 1 ELSE 0 END) as recent_stores
+        ", [now()->subDays(30)->toDateTimeString()])
+
+        ->where('module_id', Config::get('module.current_module_id'))
+        ->first();
+        $total_store = $data->total_store;
+        $active_stores = $data->active_stores;
+        $inactive_stores = $data->inactive_stores;
+        $recent_stores = $data->recent_stores;
+
         $key = explode(' ', $request['search']);
 
         $zone_id = $request->query('zone_id', 'all');
         $type = $request->query('type', 'all');
         $module_id = $request->query('module_id', 'all');
-        $stores = Store::with('vendor','module')->whereHas('vendor', function($query){
+        $stores = Store::with('vendor','module','zone')->whereHas('vendor', function($query){
             return $query->where('status', 1);
         })
         ->when(is_numeric($zone_id), function($query)use($zone_id){
@@ -618,7 +643,11 @@ class VendorController extends Controller
         ->module(Config::get('module.current_module_id'))
         ->with('vendor','module')->type($type)->latest()->paginate(config('default_pagination'));
         $zone = is_numeric($zone_id)?Zone::findOrFail($zone_id):null;
-        return view('admin-views.vendor.list', compact('stores', 'zone','type'));
+        $total_transaction= OrderTransaction::where('module_id', Config::get('module.current_module_id'))->count();
+        $comission_earned= AdminWallet::sum('total_commission_earning');
+        $store_withdraws = WithdrawRequest::where(['approved'=>1])->sum('amount');
+
+        return view('admin-views.vendor.list', compact('stores', 'zone','type','total_store','active_stores','inactive_stores','recent_stores','total_transaction' ,'comission_earned','store_withdraws'));
     }
 
     public function pending_requests(Request $request)
