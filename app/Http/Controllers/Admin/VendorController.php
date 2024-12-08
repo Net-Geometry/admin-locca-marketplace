@@ -643,9 +643,21 @@ class VendorController extends Controller
         ->module(Config::get('module.current_module_id'))
         ->with('vendor','module')->type($type)->latest()->paginate(config('default_pagination'));
         $zone = is_numeric($zone_id)?Zone::findOrFail($zone_id):null;
-        $total_transaction= OrderTransaction::where('module_id', Config::get('module.current_module_id'))->count();
-        $comission_earned= AdminWallet::sum('total_commission_earning');
-        $store_withdraws = WithdrawRequest::where(['approved'=>1])->sum('amount');
+
+        $result = OrderTransaction::where('module_id', Config::get('module.current_module_id'))
+        ->selectRaw('COUNT(*) as total_transaction, SUM(admin_commission) as commission_earned')
+        ->NotRefunded()
+        ->first();
+
+        $total_transaction = $result->total_transaction;
+        $comission_earned = $result->commission_earned;
+
+        $store_withdraws = WithdrawRequest::wherehas('store', function($query){
+            $query->where('module_id', Config::get('module.current_module_id'));
+        })
+        ->where(['approved'=>1])
+
+        ->sum('amount');
 
         return view('admin-views.vendor.list', compact('stores', 'zone','type','total_store','active_stores','inactive_stores','recent_stores','total_transaction' ,'comission_earned','store_withdraws'));
     }
