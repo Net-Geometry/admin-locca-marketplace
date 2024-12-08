@@ -2,7 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\Rental\Http\Controllers\Web\Admin\BrandController;
-use Modules\Rental\Http\Controllers\Web\Admin\BannerController;
+use Modules\Rental\Http\Controllers\Web\Admin\Promotions\BannerController;
+use Modules\Rental\Http\Controllers\Web\Admin\Promotions\CouponController;
 use Modules\Rental\Http\Controllers\Web\Admin\CategoryController;
 use Modules\Rental\Http\Controllers\Web\Admin\ProviderController;
 use Modules\Rental\Http\Controllers\Web\Admin\DashboardController;
@@ -72,6 +73,17 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
             Route::get('status/{banner}/{status}', [BannerController::class,'status'])->name('status');
             Route::get('featured/{banner}/{status}', [BannerController::class,'updateFeatured'])->name('featured');
             Route::get('export', [BannerController::class, 'export'])->name('export');
+        });
+
+        Route::group(['prefix' => 'coupon', 'as' => 'coupon.', 'middleware' => ['module:coupon']], function () {
+            Route::get('/', [CouponController::class,'list'])->name('add-new');
+            Route::post('store', [CouponController::class,'store'])->name('store');
+            Route::get('edit/{coupon}', [CouponController::class,'edit'])->name('edit');
+            Route::post('edit/{coupon}', [CouponController::class,'update'])->name('update');
+            Route::delete('delete/{coupon}', [CouponController::class,'destroy'])->name('delete');
+            Route::get('status/{coupon}', [CouponController::class,'status'])->name('status');
+            Route::get('export', [CouponController::class, 'export'])->name('export');
+
         });
 
     });

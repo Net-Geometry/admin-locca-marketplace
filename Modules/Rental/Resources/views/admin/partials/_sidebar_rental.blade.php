@@ -271,8 +271,8 @@
                 <!-- End Banner -->
                 <!-- Coupon -->
                 @if (\App\CentralLogics\Helpers::module_permission_check('coupon'))
-                <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/coupon*') ? 'active' : '' }}">
-                    <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.coupon.add-new') }}" title="{{ translate('messages.coupons') }}">
+                <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/rental/coupon*') ? 'active' : '' }}">
+                    <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.rental.coupon.add-new') }}" title="{{ translate('messages.coupons') }}">
                         <i class="tio-gift nav-icon"></i>
                         <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('messages.coupons') }}</span>
                     </a>
