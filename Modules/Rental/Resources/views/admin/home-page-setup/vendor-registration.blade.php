@@ -36,7 +36,7 @@
             <ul class="nav nav-tabs border-0 nav--tabs nav--pills mb-2">
                 <li class="nav-item">
                     <a class="nav-link text-capitalize text-title"
-                        href="javascript:">{{ translate('messages.Download App') }}</a>
+                        href="{{ route('admin.rental.settings.down_app') }}">{{ translate('messages.Download App') }}</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-capitalize text-title active"
@@ -49,13 +49,11 @@
     </div>
     <!-- End Page Header -->
 
-    <form action="" method="post" enctype="multipart/form-data">
+    <form action="{{ route('admin.rental.settings.vendors_registration_update') }}" method="post" enctype="multipart/form-data">
         @csrf
         <div class="card mb-20">
             <div class="card-body">
-                @php($language = \App\Models\BusinessSetting::where('key', 'language')->first())
-                @php($language = $language->value ?? null)
-                @php($defaultLang = 'en')
+
                 <div class="row gy-3">
                     <div class="col-lg-6">
                         @if ($language)
@@ -64,7 +62,7 @@
                                 <a class="nav-link lang_link active" href="#"
                                     id="default-link">{{ translate('Default') }}</a>
                             </li>
-                            @foreach (json_decode($language) as $lang)
+                            @foreach ($language as $lang)
                                 <li class="nav-item">
                                     <a class="nav-link lang_link" href="#"
                                         id="{{ $lang }}-link">{{ \App\CentralLogics\Helpers::get_language_name($lang) . '(' . strtoupper($lang) . ')' }}</a>
@@ -80,12 +78,12 @@
                                         ({{ translate('messages.Default') }})
                                     </label>
                                         <div class="character-count">
-                                            <input type="text" name="name[]" id="default_name"
+                                            <input type="text" name="title[]" id="default_name"
                                             class="form-control character-count-field h--45px"
-                                            value="{{ translate('messages.Its much easier From Apps') }}"
+                                            value="{{ $title_data?->getRawOriginal('value') }}"
                                             placeholder="{{ translate('messages.type_title') }}" maxlength="30"
                                             data-max-character="30" required>
-                                            <span class="d-flex justify-content-end">{{ translate('26/30') }}</span>
+                                            <span class="d-flex  text-count justify-content-end"></span>
                                         </div>
                                 </div>
                                 <input type="hidden" name="lang[]" value="default">
@@ -94,12 +92,12 @@
                                         for="exampleFormControlInput1">{{ translate('messages.subtitle') }}
                                         ({{ translate('messages.default') }})</label>
                                     <div class="character-count">
-                                        <textarea type="text" name="subtitle[]" placeholder="{{ translate('messages.type_subtitle') }}"
+                                        <textarea type="text" name="sub_title[]" placeholder="{{ translate('messages.type_subtitle') }}"
                                         class="form-control character-count-field" maxlength="110"
-                                        data-max-character="110">Enjoy Your Ride! & travel your destination everyday.</textarea>
-                                        <span class="d-flex justify-content-end">{{ translate('52/110') }}</span>
+                                        data-max-character="110">{{ $sub_title_data?->getRawOriginal('value') }}</textarea>
+                                        <span class="d-flex text-count justify-content-end"></span>
                                     </div>
-                                    
+
                                 </div>
                                 <div class="form-group mb-0">
                                     <label class="input-label font-semibold"
@@ -109,12 +107,48 @@
                                         <div class="character-count">
                                             <textarea type="text" name="button_title[]" placeholder="{{ translate('messages.type_button_title') }}"
                                             class="form-control character-count-field h--45px" maxlength="20"
-                                            data-max-character="20">Register as Vendor</textarea>
-                                            <span class="d-flex justify-content-end">{{ translate('18/20') }}</span>
+                                            data-max-character="20">{{ $button_title_data?->getRawOriginal('value') }}</textarea>
+                                            <span class="d-flex text-count justify-content-end"></span>
                                         </div>
                                 </div>
                             </div>
-                            @foreach (json_decode($language) as $lang)
+
+
+                            @foreach ($language as $lang)
+                            <?php
+                            if(isset($title_data->translations)&&count($title_data->translations)){
+                                $title_data_translate = [];
+                                foreach($title_data->translations as $t)
+                                {
+                                    if($t->locale == $lang && $t->key=='module_home_page_data_title'){
+                                        $title_data_translate[$lang]['value'] = $t->value;
+                                    }
+                                }
+
+                            }
+                        if(isset($sub_title_data->translations) && count($sub_title_data->translations)){
+                                $sub_title_data_translate = [];
+                                foreach($sub_title_data->translations as $t)
+                                {
+                                    if($t->locale == $lang && $t->key=='module_home_page_data_sub_title'){
+                                        $sub_title_data_translate[$lang]['value'] = $t->value;
+                                    }
+                                }
+
+                            }
+                        if(isset($button_title_data->translations) && count($button_title_data->translations)){
+                                $button_title_data_translate = [];
+                                foreach($button_title_data->translations as $t)
+                                {
+                                    if($t->locale == $lang && $t->key=='module_vendor_registration_data_button_title'){
+                                        $button_title_data_translate[$lang]['value'] = $t->value;
+                                    }
+                                }
+
+                            }
+                            ?>
+
+
                                 <div class="d-none lang_form" id="{{ $lang }}-form">
                                     <div class="form-group mb-20">
                                         <label class="input-label font-semibold"
@@ -126,8 +160,9 @@
                                                 class="form-control character-count-field h--45px"
                                                 maxlength="30"
                                                 data-max-character="30"
+                                                value="{{ $title_data_translate[$lang]['value']?? '' }}"
                                                 placeholder="{{ translate('messages.type_title') }}">
-                                                <span class="d-flex justify-content-end">{{ translate('26/30') }}</span>
+                                                <span class="d-flex justify-content-end"></span>
                                         </div>
                                     </div>
                                     <input type="hidden" name="lang[]" value="{{ $lang }}">
@@ -138,10 +173,10 @@
                                             <div class="character-count">
                                                 <textarea type="text" name="subtitle[]" placeholder="{{ translate('messages.type_subtitle') }}"
                                                     class="form-control character-count-field" maxlength="110"
-                                                    data-max-character="110"></textarea>
-                                                <span class="d-flex justify-content-end">{{ translate('52/110') }}</span>
+                                                    data-max-character="110">{{ $sub_title_data_translate[$lang]['value']?? '' }}</textarea>
+                                                <span class="d-flex justify-content-end"></span>
                                             </div>
-                                        
+
                                     </div>
                                     <div class="form-group mb-0">
                                         <label class="input-label font-semibold"
@@ -150,53 +185,14 @@
                                             <div class="character-count">
                                                 <textarea type="text" name="button_title[]" placeholder="{{ translate('messages.type_button_title') }}"
                                                 class="form-control character-count-field h--45px" maxlength="20"
-                                                data-max-character="20"></textarea>
-                                                <span class="d-flex justify-content-end">{{ translate('18/20') }}</span>
+                                                data-max-character="20">{{ $button_title_data_translate[$lang]['value']?? '' }}</textarea>
+                                                <span class="d-flex text-count justify-content-end"></span>
                                             </div>
-                                        
+
                                     </div>
                                 </div>
                             @endforeach
-                        @else
-                        <div id="default-form">
-                            <div class="form-group mb-20">
-                                <label class="input-label font-semibold"
-                                    for="exampleFormControlInput1">{{ translate('messages.title') }}
-                                    ({{ translate('messages.default') }})</label>
-                                
-                                    <div class="character-count">
-                                        <input type="text" name="name[]" 
-                                        class="form-control character-count-field h--45px"
-                                        maxlength="30"
-                                        data-max-character="30"
-                                        placeholder="{{ translate('messages.type_title') }}" required>
-                                        <span class="d-flex justify-content-end">{{ translate('26/30') }}</span>
-                                    </div>
-                            </div>
-                            <input type="hidden" name="lang[]" value="default">
-                            <div class="form-group mb-0">
-                                <label class="input-label font-semibold"
-                                    for="exampleFormControlInput1">{{ translate('messages.subtitle') }}
-                                </label>
-                                <div class="character-count">
-                                    <textarea type="text" name="subtitle[]" placeholder="{{ translate('messages.type_subtitle') }}"
-                                        class="form-control character-count-field" maxlength="110"
-                                        data-max-character="110"></textarea>
-                                    <span class="d-flex justify-content-end">{{ translate('52/110') }}</span>
-                                </div>
-                            </div>
-                            <div class="form-group mb-0">
-                                <label class="input-label font-semibold"
-                                    for="exampleFormControlInput1">{{ translate('messages.button_title') }}
-                                </label>
-                                <div class="character-count">
-                                    <textarea type="text" name="button_title[]" placeholder="{{ translate('messages.type_button_title') }}"
-                                    class="form-control character-count-field h--45px" maxlength="20"
-                                    data-max-character="20"></textarea>
-                                    <span class="d-flex justify-content-end">{{ translate('18/20') }}</span>
-                                </div>
-                            </div>
-                        </div>
+
                         @endif
                     </div>
                     <div class="col-lg-6">
@@ -207,18 +203,17 @@
                                 </label>
                                 <div class="mb-20">
                                     <p class="fs-12">
-                                        JPG, JPEG, PNG Less Than 1MB <strong class="font-semibold">(Ratio 3:2)</strong>
+                                        {{ translate('JPG, JPEG, PNG Less Than 1MB') }} <strong class="font-semibold">(Ratio 3:2)</strong>
                                     </p>
                                 </div>
                                 <div class="upload-file text-wrapper">
-                                    <input type="file" name=""
-                                        class="upload-file__input single_file_input" accept=".jpg, .jpeg, .png"
-                                        required>
+                                    <input type="file" name="image"
+                                        class="upload-file__input single_file_input" accept=".jpg, .jpeg, .png">
                                     <div
                                         class="upload-file__img d-flex justify-content-center align-items-center height-200px max-w-300px m-auto p-0">
                                         <div class="upload-file__textbox text-center">
                                             <img width="34" height="34"
-                                                src="{{ asset('public/assets/admin/img/document-upload.png') }}"
+                                                 src=" {{\App\CentralLogics\Helpers::get_full_url('react_landing', $image?->value?? '', $image?->storage[0]?->value ?? 'public','upload_image_4')}}"
                                                 alt="" class="svg">
                                             <h6 class="mt-2 font-semibold">
                                                 <span class="text-info">{{ translate('Click to upload') }}</span>
@@ -230,7 +225,7 @@
                                             loading="lazy" style="display: none;" alt="">
                                     </div>
                                 </div>
-    
+
                             </div>
                             <div class="btn--container justify-content-end mt-5">
                                 <button type="reset" id="reset_btn"

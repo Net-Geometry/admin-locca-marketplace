@@ -11,6 +11,7 @@ use Modules\Rental\Http\Controllers\Web\Admin\DriverController;
 use Modules\Rental\Http\Controllers\Web\Admin\ProviderController;
 use Modules\Rental\Http\Controllers\Web\Admin\DashboardController;
 use Modules\Rental\Http\Controllers\Web\Admin\VehicleController;
+use Modules\Rental\Http\Controllers\Web\Admin\SettingsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -127,6 +128,12 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
             Route::get('status/{notification}', [NotificationController::class,'status'])->name('status');
             Route::delete('delete/{notification}', [NotificationController::class,'destroy'])->name('delete');
             Route::get('export', [NotificationController::class,'export'])->name('export');
+        });
+        Route::group(['prefix' => 'settings', 'as' => 'settings.', 'middleware' => ['module:settings']], function () {
+            Route::get('/', [SettingsController::class,'homePageDownApp'])->name('down_app');
+            Route::post('/down_app_update', [SettingsController::class,'homePageDownAppUpdate'])->name('down_app_update');
+            Route::get('vendors-registration/', [SettingsController::class,'vendorsRegistration'])->name('vendors_registration');
+            Route::post('/vendors-registration-update', [SettingsController::class,'vendorsRegistrationUpdate'])->name('vendors_registration_update');
         });
 
     });

@@ -56,21 +56,6 @@
                     </li>
                     <!-- End Dashboards -->
                     <!-- Marketing section -->
-                    <li class="nav-item">
-                        <small class="nav-subtitle" title="{{ translate('messages.employee_handle') }}">{{ translate('pos section') }}</small>
-                        <small class="tio-more-horizontal nav-subtitle-replacer"></small>
-                    </li>
-                    <!-- Pos -->
-                    @if(\App\CentralLogics\Helpers::module_permission_check('pos'))
-                    <li class="navbar-vertical-aside-has-menu {{Request::is('admin/pos*')?'active':''}}">
-                        <a class="js-navbar-vertical-aside-menu-link nav-link " href="{{route('admin.pos.index')}}" title="{{translate('New Sale')}}">
-                            <i class="tio-shopping-basket-outlined nav-icon"></i>
-                            <span class="text-truncate">{{translate('New Sale')}}</span>
-                        </a>
-                    </li>
-                    @endif
-                    <!-- Pos -->
-
                                         <!-- Orders -->
                     @if (\App\CentralLogics\Helpers::module_permission_check('order'))
                     <li class="nav-item">
@@ -481,6 +466,21 @@
                 </li>
                 @endif
                 <!-- End Store -->
+
+
+                <li class="nav-item">
+                    <small class="nav-subtitle" title="{{ translate('messages.Download_Apps') }}">{{ translate('Download_Apps') }}</small>
+                    <small class="tio-more-horizontal nav-subtitle-replacer"></small>
+                </li>
+                <!-- Pos -->
+                {{-- @if(\App\CentralLogics\Helpers::module_permission_check('pos')) --}}
+                <li class="navbar-vertical-aside-has-menu {{Request::is('admin/rental/page-setup*')?'active':''}}">
+                    <a class="js-navbar-vertical-aside-menu-link nav-link " href="{{route('admin.rental.settings.down_app')}}" title="{{translate('Download_Apps')}}">
+                        <i class="tio-shopping-basket-outlined nav-icon"></i>
+                        <span class="text-truncate">{{translate('Download_Apps')}}</span>
+                    </a>
+                </li>
+                {{-- @endif --}}
 
                 <li class="nav-item py-5">
 
