@@ -5,6 +5,7 @@ use Modules\Rental\Http\Controllers\Web\Admin\BrandController;
 use Modules\Rental\Http\Controllers\Web\Admin\Promotions\BannerController;
 use Modules\Rental\Http\Controllers\Web\Admin\Promotions\CouponController;
 use Modules\Rental\Http\Controllers\Web\Admin\Promotions\CashBackController;
+use Modules\Rental\Http\Controllers\Web\Admin\Promotions\NotificationController;
 use Modules\Rental\Http\Controllers\Web\Admin\CategoryController;
 use Modules\Rental\Http\Controllers\Web\Admin\DriverController;
 use Modules\Rental\Http\Controllers\Web\Admin\ProviderController;
@@ -116,6 +117,16 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
             Route::get('status/{cashback}', [CashBackController::class,'status'])->name('status');
             // Route::get('export', [CashBackController::class, 'export'])->name('export');
 
+        });
+
+        Route::group(['prefix' => 'notification', 'as' => 'notification.', 'middleware' => ['module:notification']], function () {
+            Route::get('/', [NotificationController::class,'list'])->name('list');
+            Route::post('store', [NotificationController::class,'store'])->name('store');
+            Route::get('edit/{notification}', [NotificationController::class,'edit'])->name('edit');
+            Route::post('update/{notification}', [NotificationController::class,'update'])->name('update');
+            Route::get('status/{notification}', [NotificationController::class,'status'])->name('status');
+            Route::delete('delete/{notification}', [NotificationController::class,'destroy'])->name('delete');
+            Route::get('export', [NotificationController::class,'export'])->name('export');
         });
 
     });

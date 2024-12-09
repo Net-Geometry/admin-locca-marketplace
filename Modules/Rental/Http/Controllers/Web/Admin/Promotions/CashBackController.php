@@ -33,6 +33,7 @@ class CashBackController extends Controller
 
     public function list(Request $request)
     {
+        abort(404);
         $cashbacks = $this->getListData($request);
         $cashbacks =  $cashbacks->paginate(config('default_pagination'));
         $language = getWebConfig('language');

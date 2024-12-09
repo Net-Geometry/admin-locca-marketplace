@@ -279,18 +279,18 @@
                 </li>
                 @endif
                 <!-- End Coupon -->
-                 @if (\App\CentralLogics\Helpers::module_permission_check('cashback'))
+                 {{-- @if (\App\CentralLogics\Helpers::module_permission_check('cashback'))
                  <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/rental/cashback*') ? 'active' : '' }}">
                     <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.rental.cashback.add-new') }}" title="{{ translate('messages.cashback') }}">
                         <i class="tio-settings-back nav-icon"></i>
                         <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('messages.cashback') }}</span>
                     </a>
                 </li>
-                @endif
+                @endif --}}
                 <!-- Notification -->
                 @if (\App\CentralLogics\Helpers::module_permission_check('notification'))
-                <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/notification*') ? 'active' : '' }}">
-                    <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.notification.add-new') }}" title="{{ translate('messages.push_notification') }}">
+                <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/rental/notification*') ? 'active' : '' }}">
+                    <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.rental.notification.list') }}" title="{{ translate('messages.push_notification') }}">
                         <i class="tio-notifications nav-icon"></i>
                         <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
                             {{ translate('messages.push_notification') }}
