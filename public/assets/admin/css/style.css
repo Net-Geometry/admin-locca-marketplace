@@ -14039,6 +14039,7 @@ ul.address-info .label {
 
 .pdf-single .remove-btn,
 .image-single .remove-btn,
+.image-general .remove-btn,
 .download-image-single .remove-btn {
     position: absolute;
     inset-block-start: -10px;
@@ -14051,6 +14052,10 @@ ul.address-info .label {
     justify-content: center;
     align-items: center;
     border-radius: 100px;
+}
+
+.image-general {
+    position: relative;
 }
 
 .pdf-single .pdf-thumbnail {
@@ -14304,6 +14309,20 @@ ul.address-info .label {
     block-size: auto;
     aspect-ratio: 3 / 1;
     max-inline-size: 525px;
+    max-block-size: 175px;
+    object-fit: cover;
+}
+
+.upload-file-wrapper.fullwidth {
+    max-inline-size: 100%;
+    min-block-size: 175px;
+}
+
+.upload-file-wrapper.fullwidth .upload-file-img {
+    inline-size: 100%;
+    block-size: auto;
+    aspect-ratio: 3 / 1;
+    max-inline-size: 100%;
     max-block-size: 175px;
     object-fit: cover;
 }

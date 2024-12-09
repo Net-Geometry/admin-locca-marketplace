@@ -116,10 +116,13 @@
                                                     class="font-weight-bold">({{ translate('Ratio 3:1') }})</span>
                                             </p>
 
-                                            <div class="upload-file">
+                                            <div class="upload-file image-general">
+                                                <a href="javascript:void(0);" class="remove-btn">
+                                                    <i class="tio-clear"></i>
+                                                </a>
                                                 <input type="file" name="image" class="upload-file__input"
                                                     accept=".jpg, .jpeg, .png">
-                                                <label class="upload-file-wrapper three-one">
+                                                <label class="upload-file-wrapper fullwidth">
                                                     <div class="upload-file-textbox text-center">
                                                         <img width="34" height="34"
                                                             src="{{ asset('public/assets/admin/img/document-upload.svg') }}"
@@ -335,8 +338,9 @@
     <script>
         "use strict";
 
-        $(document).ready(function() {
-            $('.upload-file__input').on('change', function(event) {
+        $(document).ready(function () {
+            // Handle file input change
+            $('.upload-file__input').on('change', function (event) {
                 var file = event.target.files[0];
                 var $card = $(event.target).closest('.upload-file');
                 var $textbox = $card.find('.upload-file-textbox');
@@ -344,14 +348,33 @@
 
                 if (file) {
                     var reader = new FileReader();
-                    reader.onload = function(e) {
+                    reader.onload = function (e) {
                         $textbox.hide();
                         $imgElement.attr('src', e.target.result).show();
                     };
                     reader.readAsDataURL(file);
                 }
             });
+
+            // Handle remove button click
+            $('.remove-btn').click(function () {
+                var $card = $(this).closest('.upload-file');
+                $card.find('.upload-file__input').val(''); 
+                $card.find('.upload-file-textbox').show(); 
+                $card.find('.upload-file-img').hide().attr('src', ''); 
+            });
+
+            // Handle reset button click
+            $('#reset_btn').click(function () {
+                var $cards = $('.upload-file'); 
+                $cards.each(function () {
+                    $(this).find('.upload-file__input').val(''); 
+                    $(this).find('.upload-file-textbox').show(); 
+                    $(this).find('.upload-file-img').hide().attr('src', '');
+                });
+            });
         });
+
 
         var module_id = {{ Config::get('module.current_module_id') }};
 
