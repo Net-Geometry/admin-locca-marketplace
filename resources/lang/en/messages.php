@@ -6479,4 +6479,6 @@ Smartly or Earn. ',
   'Min_Purchase_Amount' => 'Min Purchase Amount',
   'Max_Discount_Amount' => 'Max Discount Amount',
   'CAR' => 'CAR',
+  'Provider is required when banner type is Provider wise' => 'Provider is required when banner type is Provider wise',
+  'Default data is required' => 'Default data is required',
 );

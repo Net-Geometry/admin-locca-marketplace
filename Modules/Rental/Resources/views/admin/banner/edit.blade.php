@@ -135,24 +135,24 @@
                                             <p class="mb-20">{{ translate('JPG, JPEG, PNG Less Than 2MB') }} <span
                                                     class="font-weight-bold">({{ translate('Ratio 3:1') }})</span>
                                             </p>
-
-                                            <div class="upload-file">
-                                                <input type="file" name="image" class="upload-file__input"
-                                                    accept=".jpg, .jpeg, .png">
-                                                <label class="upload-file-wrapper three-one">
+                                            <div class="upload-file image-general">
+                                                <a href="javascript:void(0);" class="remove-btn opacity-0 z-index-99">
+                                                    <i class="tio-clear"></i>
+                                                </a>
+                                                <input type="file" name="image" class="upload-file__input single_file_input" value="{{ $banner['image_full_url'] }}" accept=".jpg, .jpeg, .png" title="" />
+                                                <label class="upload-file-wrapper fullwidth">
                                                     <div class="upload-file-textbox text-center">
-                                                        <img width="34" height="34" src="{{ $banner['image_full_url'] }}"
-                                                            alt="">
-                                                        <h6 class="mt-2 font-semibold  text-center">
+                                                        <img width="34" height="34" src="{{ asset('public/assets/admin/img/document-upload.svg') }}" alt="">
+                                                        <h6 class="mt-2 font-semibold text-center">
                                                             <span>{{ translate('Click to upload') }}</span>
                                                             <br>
                                                             {{ translate('or drag and drop') }}
                                                         </h6>
                                                     </div>
-                                                    <img class="upload-file-img" loading="lazy" style="display: none;"
-                                                        alt="">
+                                                    <img class="upload-file-img" loading="lazy" style="display: none;" src="{{ $banner['image_full_url'] }}" alt="">
                                                 </label>
                                             </div>
+                                            
                                         </div>
                                         <div class="btn--container justify-content-end">
                                             <button type="reset" id="reset_btn"
@@ -178,26 +178,67 @@
     <script>
         "use strict";
 
-        $(document).ready(function() {
-            $('.upload-file__input').on('change', function(event) {
+        // ---- single image upload starts
+        $(document).ready(function () {
+            // Handle file input change
+            $('.single_file_input').on('change', function (event) {
                 var file = event.target.files[0];
                 var $card = $(event.target).closest('.upload-file');
                 var $textbox = $card.find('.upload-file-textbox');
                 var $imgElement = $card.find('.upload-file-img');
+                var $removeBtn = $card.find('.remove-btn');
 
                 if (file) {
                     var reader = new FileReader();
-                    reader.onload = function(e) {
+                    reader.onload = function (e) {
                         $textbox.hide();
                         $imgElement.attr('src', e.target.result).show();
+                        $removeBtn.css('opacity', 1);
                     };
                     reader.readAsDataURL(file);
                 }
             });
+
+            // Check for a valid src on load to handle pre-existing images
+            $('.upload-file').each(function () {
+                var $card = $(this);
+                var $textbox = $card.find('.upload-file-textbox');
+                var $imgElement = $card.find('.upload-file-img');
+                var $removeBtn = $card.find('.remove-btn');
+
+                // If there's already a valid image source
+                if ($imgElement.attr('src') && $imgElement.attr('src') !== window.location.href) {
+                    $textbox.hide();
+                    $imgElement.show();
+                }
+            });
+
+           // Handle remove button click
+           $('.remove-btn').click(function () {
+                var $card = $(this).closest('.upload-file');
+                $card.find('.single_file_input').val(''); 
+                // $card.find('.upload-file-textbox').show(); 
+                // $card.find('.upload-file-img').hide().attr('src', ''); 
+                $card.find('.upload-file-img').attr('src', '{{ $banner['image_full_url'] }}');
+                $(this).css('opacity', 0);
+            });
+
+            // Handle reset button click
+            $('#reset_btn').click(function () {
+                var $cards = $('.upload-file'); 
+                $cards.each(function () {
+                    $(this).find('.single_file_input').val(''); 
+                    // $(this).find('.upload-file-textbox').show(); 
+                    // $(this).find('.upload-file-img').hide().attr('src', '');
+                    $(this).find('.upload-file-img').attr('src', '{{ $banner['image_full_url'] }}');
+                    $(this).find('.remove-btn').css('opacity', 0);
+                });
+            });
         });
+        // ---- single image upload ends
+
 
         var module_id = {{ Config::get('module.current_module_id') }};
-
 
         $(document).on('ready', function() {
             banner_type_change('{{$banner->type}}');
@@ -226,11 +267,10 @@
                     }
                 }
             });
-
         });
 
         $('#reset_btn').click(function() {
             $('#store_id').val(null).trigger('change');
-        })
+        });
     </script>
 @endpush

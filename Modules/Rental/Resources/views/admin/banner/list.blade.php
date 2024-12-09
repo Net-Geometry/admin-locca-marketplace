@@ -117,10 +117,10 @@
                                             </p>
 
                                             <div class="upload-file image-general">
-                                                <a href="javascript:void(0);" class="remove-btn">
+                                                <a href="javascript:void(0);" class="remove-btn opacity-0 z-index-99">
                                                     <i class="tio-clear"></i>
                                                 </a>
-                                                <input type="file" name="image" class="upload-file__input"
+                                                <input type="file" name="image" class="upload-file__input single_file_input"
                                                     accept=".jpg, .jpeg, .png">
                                                 <label class="upload-file-wrapper fullwidth">
                                                     <div class="upload-file-textbox text-center">
@@ -338,19 +338,22 @@
     <script>
         "use strict";
 
+         // ---- single image upload starts
         $(document).ready(function () {
             // Handle file input change
-            $('.upload-file__input').on('change', function (event) {
+            $('.single_file_input').on('change', function (event) {
                 var file = event.target.files[0];
                 var $card = $(event.target).closest('.upload-file');
                 var $textbox = $card.find('.upload-file-textbox');
                 var $imgElement = $card.find('.upload-file-img');
+                var $removeBtn = $card.find('.remove-btn');
 
                 if (file) {
                     var reader = new FileReader();
                     reader.onload = function (e) {
                         $textbox.hide();
                         $imgElement.attr('src', e.target.result).show();
+                        $removeBtn.css('opacity', 1); 
                     };
                     reader.readAsDataURL(file);
                 }
@@ -359,22 +362,24 @@
             // Handle remove button click
             $('.remove-btn').click(function () {
                 var $card = $(this).closest('.upload-file');
-                $card.find('.upload-file__input').val(''); 
+                $card.find('.single_file_input').val(''); 
                 $card.find('.upload-file-textbox').show(); 
                 $card.find('.upload-file-img').hide().attr('src', ''); 
+                $(this).css('opacity', 0); 
             });
 
             // Handle reset button click
             $('#reset_btn').click(function () {
                 var $cards = $('.upload-file'); 
                 $cards.each(function () {
-                    $(this).find('.upload-file__input').val(''); 
+                    $(this).find('.single_file_input').val(''); 
                     $(this).find('.upload-file-textbox').show(); 
                     $(this).find('.upload-file-img').hide().attr('src', '');
+                    $(this).find('.remove-btn').css('opacity', 0);
                 });
             });
         });
-
+         // ---- single image upload ends
 
         var module_id = {{ Config::get('module.current_module_id') }};
 
