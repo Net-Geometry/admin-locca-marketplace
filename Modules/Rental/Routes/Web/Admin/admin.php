@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Modules\Rental\Http\Controllers\Web\Admin\BrandController;
 use Modules\Rental\Http\Controllers\Web\Admin\Promotions\BannerController;
 use Modules\Rental\Http\Controllers\Web\Admin\Promotions\CouponController;
+use Modules\Rental\Http\Controllers\Web\Admin\Promotions\CashBackController;
 use Modules\Rental\Http\Controllers\Web\Admin\CategoryController;
 use Modules\Rental\Http\Controllers\Web\Admin\ProviderController;
 use Modules\Rental\Http\Controllers\Web\Admin\DashboardController;
@@ -83,6 +84,16 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
             Route::delete('delete/{coupon}', [CouponController::class,'destroy'])->name('delete');
             Route::get('status/{coupon}', [CouponController::class,'status'])->name('status');
             Route::get('export', [CouponController::class, 'export'])->name('export');
+        });
+
+        Route::group(['prefix' => 'cashback', 'as' => 'cashback.', 'middleware' => ['module:cashback']], function () {
+            Route::get('/', [CashBackController::class,'list'])->name('add-new');
+            Route::post('store', [CashBackController::class,'store'])->name('store');
+            Route::get('edit/{cashback}', [CashBackController::class,'edit'])->name('edit');
+            Route::post('edit/{cashback}', [CashBackController::class,'update'])->name('update');
+            Route::delete('delete/{cashback}', [CashBackController::class,'destroy'])->name('delete');
+            Route::get('status/{cashback}', [CashBackController::class,'status'])->name('status');
+            // Route::get('export', [CashBackController::class, 'export'])->name('export');
 
         });
 
