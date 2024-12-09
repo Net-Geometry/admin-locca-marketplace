@@ -6481,4 +6481,6 @@ Smartly or Earn. ',
   'CAR' => 'CAR',
   'Provider is required when banner type is Provider wise' => 'Provider is required when banner type is Provider wise',
   'Default data is required' => 'Default data is required',
+  'rental' => 'Rental',
+  'car rental' => 'Car rental',
 );
