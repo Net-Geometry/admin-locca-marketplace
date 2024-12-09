@@ -75,11 +75,13 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
             });
 
             Route::group(['prefix' => 'vehicle', 'as' => 'vehicle.'], function () {
-                Route::get('create/{provider_id}', [VehicleController::class, 'create'])->name('create');
-                Route::post('create/{provider_id}', [VehicleController::class, 'store']);
+                Route::get('list', [VehicleController::class, 'index'])->name('list');
+                Route::get('create', [VehicleController::class, 'create'])->name('create');
+                Route::post('create', [VehicleController::class, 'store']);
                 Route::get('update/{id}', [VehicleController::class, 'edit'])->name('edit');
                 Route::post('update/{id}', [VehicleController::class, 'update']);
                 Route::get('status/{id}', [VehicleController::class, 'status'])->name('status');
+                Route::get('new-tag/{id}', [VehicleController::class, 'newTag'])->name('new-tag');
                 Route::delete('delete/{id}', [VehicleController::class, 'destroy'])->name('delete');
                 Route::get('export', [VehicleController::class, 'export'])->name('export');
             });

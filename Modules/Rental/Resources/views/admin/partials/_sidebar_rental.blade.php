@@ -311,6 +311,17 @@
                     </li>
 
                     <!-- Category -->
+                    @if (\App\CentralLogics\Helpers::module_permission_check('vehical'))
+                        <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/rental/provider/vehicle/list') ? 'active' : '' }}">
+                            <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.rental.provider.vehicle.list') }}" title="{{ translate('messages.Vehicle') }}">
+                                <i class="tio-car nav-icon"></i>
+                                <span class="text-truncate position-relative overflow-visible">
+                                    {{ translate('messages.vehicle') }}
+                                </span>
+                            </a>
+                        </li>
+                   @endif
+                    <!-- Category -->
                     @if (\App\CentralLogics\Helpers::module_permission_check('category'))
                         <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/rental/category/list') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('admin.rental.category.list') }}" title="{{ translate('messages.category') }}">

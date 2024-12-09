@@ -9,6 +9,7 @@ use App\Models\Translation;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Vehicle extends Model
@@ -17,7 +18,7 @@ class Vehicle extends Model
 
     protected $guarded = ['id'];
     protected $fillable = [];
-    protected $appends = ['image_full_url', 'identity_image_full_url'];
+    protected $appends = ['thumbnail_full_url', 'images_full_url', 'identity_image_full_url'];
 
     /**
      * @param $query
@@ -54,6 +55,15 @@ class Vehicle extends Model
     }
 
     /**
+     * @return HasMany
+     */
+    public function vehicleIdentities(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(VehicleIdentity::class);
+    }
+
+
+    /**
      * @return MorphMany
      */
     public function translations(): MorphMany
@@ -82,35 +92,56 @@ class Vehicle extends Model
     /**
      * @return mixed|string|null
      */
-    public function getImageFullUrlAttribute(): mixed
+    public function getThumbnailFullUrlAttribute(): mixed
     {
-        $value = $this->image;
+        $value = $this->thumbnail;
         if (count($this->storage) > 0) {
             foreach ($this->storage as $storage) {
                 if ($storage['key'] == 'image') {
-                    return Helpers::get_full_url('driver',$value,$storage['value']);
+                    return Helpers::get_full_url('vehicle',$value,$storage['value']);
                 }
             }
         }
 
-        return Helpers::get_full_url('driver',$value,'public');
+        return Helpers::get_full_url('vehicle',$value,'public');
     }
 
     /**
      * @return array
      */
-    public function getIdentityImageFullUrlAttribute(): array
+    public function getImagesFullUrlAttribute(): array
     {
         $images = [];
-        $value = is_array($this->identity_image)
-            ? $this->identity_image
-            : ($this->identity_image && is_string($this->identity_image) && $this->isValidJson($this->identity_image)
-                ? json_decode($this->identity_image, true)
+        $value = is_array($this->images)
+            ? $this->images
+            : ($this->images && is_string($this->images) && $this->isValidJson($this->images)
+                ? json_decode($this->images, true)
                 : []);
         if ($value){
             foreach ($value as $item){
                 $item = is_array($item)?$item:(is_object($item) && get_class($item) == 'stdClass' ? json_decode(json_encode($item), true):['img' => $item, 'storage' => 'public']);
-                $images[] = Helpers::get_full_url('driver',$item['img'],$item['storage']);
+                $images[] = Helpers::get_full_url('vehicle',$item['img'],$item['storage']);
+            }
+        }
+
+        return $images;
+    }
+
+    /**
+     * @return array
+     */
+    public function getDocumentsFullUrlAttribute(): array
+    {
+        $images = [];
+        $value = is_array($this->documents)
+            ? $this->documents
+            : ($this->documents && is_string($this->documents) && $this->isValidJson($this->documents)
+                ? json_decode($this->documents, true)
+                : []);
+        if ($value){
+            foreach ($value as $item){
+                $item = is_array($item)?$item:(is_object($item) && get_class($item) == 'stdClass' ? json_decode(json_encode($item), true):['img' => $item, 'storage' => 'public']);
+                $images[] = Helpers::get_full_url('vehicle',$item['img'],$item['storage']);
             }
         }
 

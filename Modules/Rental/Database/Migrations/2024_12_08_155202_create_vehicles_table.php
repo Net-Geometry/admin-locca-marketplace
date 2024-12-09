@@ -30,7 +30,9 @@ class CreateVehiclesTable extends Migration
             $table->integer('air_condition')->default(0);
             $table->string('fuel_type', 255)->nullable();
             $table->string('transmission_type', 255)->nullable();
-            $table->string('trip_type',255)->nullable();
+            $table->integer('multiple_vehicles', 1)->default(0);
+            $table->integer('trip_hourly',11)->default(0);
+            $table->integer('trip_distance',11)->default(0);
             $table->decimal('hourly_price',23,2)->default(0.00);
             $table->decimal('distance_price',23,2)->default(0.00);
             $table->string('discount_type',255)->nullable();
