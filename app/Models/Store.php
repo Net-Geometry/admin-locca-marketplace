@@ -632,7 +632,7 @@ class Store extends Model
 
         static::retrieved(function () {
             $current_date = date('Y-m-d');
-            $check_daily_subscription_validity_check= BusinessSetting::where('key', 'check_daily_subscription_validity_check')->first();
+            $check_daily_subscription_validity_check=  Helpers::getSettingsDataFromConfig(settings: 'check_daily_subscription_validity_check');
             if(!$check_daily_subscription_validity_check){
                 Helpers::insert_business_settings_key('check_daily_subscription_validity_check', $current_date);
                 $check_daily_subscription_validity_check= BusinessSetting::where('key', 'check_daily_subscription_validity_check')->first();

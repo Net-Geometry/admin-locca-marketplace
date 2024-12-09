@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Rental\Http\Controllers\Web\Admin;
+namespace Modules\Rental\Http\Controllers\Web\Admin\Promotions;
 
 use Exception;
 use App\Models\Store;

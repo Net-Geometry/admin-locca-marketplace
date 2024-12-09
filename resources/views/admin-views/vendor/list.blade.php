@@ -21,10 +21,6 @@
         <div class="row g-3 mb-3">
             <div class="col-xl-3 col-sm-6">
                 <div class="resturant-card card--bg-1">
-                    @php($total_store = \App\Models\Store::whereHas('vendor', function($query){
-                        return $query->where('status', 1);
-                    })->where('module_id', Config::get('module.current_module_id'))->count())
-                    @php($total_store = isset($total_store) ? $total_store : 0)
                     <h4 class="title">{{$total_store}}</h4>
                     <span class="subtitle">{{translate('messages.total_stores')}}</span>
                     <img class="resturant-icon" src="{{asset('/public/assets/admin/img/total-store.png')}}" alt="store">
@@ -32,8 +28,6 @@
             </div>
             <div class="col-xl-3 col-sm-6">
                 <div class="resturant-card card--bg-2">
-                    @php($active_stores = \App\Models\Store::where(['status'=>1])->where('module_id', Config::get('module.current_module_id'))->count())
-                    @php($active_stores = isset($active_stores) ? $active_stores : 0)
                     <h4 class="title">{{$active_stores}}</h4>
                     <span class="subtitle">{{translate('messages.active_stores')}}</span>
                     <img class="resturant-icon" src="{{asset('/public/assets/admin/img/active-store.png')}}" alt="store">
@@ -41,10 +35,6 @@
             </div>
             <div class="col-xl-3 col-sm-6">
                 <div class="resturant-card card--bg-3">
-                    @php($inactive_stores = \App\Models\Store::whereHas('vendor', function($query){
-                        return $query->where('status', 1);
-                    })->where(['status'=>0])->where('module_id', Config::get('module.current_module_id'))->count())
-                    @php($inactive_stores = isset($inactive_stores) ? $inactive_stores : 0)
                     <h4 class="title">{{$inactive_stores}}</h4>
                     <span class="subtitle">{{translate('messages.inactive_stores')}}</span>
                     <img class="resturant-icon" src="{{asset('/public/assets/admin/img/close-store.png')}}" alt="store">
@@ -52,8 +42,7 @@
             </div>
             <div class="col-xl-3 col-sm-6">
                 <div class="resturant-card card--bg-4">
-                    @php($data = \App\Models\Store::where('created_at', '>=', now()->subDays(30)->toDateTimeString())->where('module_id', Config::get('module.current_module_id'))->count())
-                    <h4 class="title">{{$data}}</h4>
+                    <h4 class="title">{{$recent_stores}}</h4>
                     <span class="subtitle">{{translate('messages.newly_joined_stores')}}</span>
                     <img class="resturant-icon" src="{{asset('/public/assets/admin/img/add-store.png')}}" alt="store">
                 </div>
@@ -65,26 +54,24 @@
             <li class="text--info">
                 <i class="tio-document-text-outlined"></i>
                 <div>
-                    @php($total_transaction = \App\Models\OrderTransaction::where('module_id', Config::get('module.current_module_id'))->count())
-                    @php($total_transaction = isset($total_transaction) ? $total_transaction : 0)
                     <span>{{translate('messages.total_transactions')}}</span> <strong>{{$total_transaction}}</strong>
                 </div>
             </li>
-            <li class="seperator"></li>
-            <li class="text--success">
-                <i class="tio-checkmark-circle-outlined success--icon"></i>
-                <div>
-                    @php($comission_earned = \App\Models\AdminWallet::sum('total_commission_earning'))
-                    @php($comission_earned = isset($comission_earned) ? $comission_earned : 0)
-                    <span>{{translate('messages.commission_earned')}}</span> <strong>{{\App\CentralLogics\Helpers::format_currency($comission_earned)}}</strong>
-                </div>
-            </li>
+
+            @if (auth('admin')->user()->role_id == 1)
+                <li class="seperator"></li>
+                <li class="text--success">
+                    <i class="tio-checkmark-circle-outlined success--icon"></i>
+                    <div>
+                        <span>{{translate('messages.commission_earned')}}</span> <strong>{{\App\CentralLogics\Helpers::format_currency($comission_earned)}}</strong>
+                    </div>
+                </li>
+            @endif
+
             <li class="seperator"></li>
             <li class="text--danger">
                 <i class="tio-atm"></i>
                 <div>
-                    @php($store_withdraws = \App\Models\WithdrawRequest::where(['approved'=>1])->sum('amount'))
-                    @php($store_withdraws = isset($store_withdraws) ? $store_withdraws : 0)
                     <span>{{translate('messages.total_store_withdraws')}}</span> <strong>{{\App\CentralLogics\Helpers::format_currency($store_withdraws)}}</strong>
                 </div>
             </li>
@@ -102,7 +89,7 @@
                 <div class="select-item min--280">
                     <select name="zone_id" class="form-control js-select2-custom set-filter" data-url="{{url()->full()}}" data-filter="zone_id">
                         <option value="" {{!request('zone_id')?'selected':''}}>{{ translate('messages.All_Zones') }}</option>
-                        @foreach(\App\Models\Zone::orderBy('name')->get() as $z)
+                        @foreach(\App\Models\Zone::orderBy('name')->get(['id','name']) as $z)
                             <option
                                 value="{{$z['id']}}" {{isset($zone) && $zone->id == $z['id']?'selected':''}}>
                                 {{$z['name']}}

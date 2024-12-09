@@ -4359,5 +4359,21 @@ class Helpers
             $businessSetting->save();
         }
     }
+
+    public static function getSettingsDataFromConfig($settings,$relations=[])
+    {
+        try {
+            if (!config($settings.'_conf')){
+                $data = BusinessSetting::where('key',$settings)->with($relations)->first();
+                Config::set($settings.'_conf', $data);
+            }
+            else{
+                $data = config($settings.'_conf');
+            }
+            return $data;
+        } catch (\Throwable $th) {
+            return null;
+        }
+    }
 }
 
