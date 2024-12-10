@@ -44,33 +44,16 @@ class SettingsController extends Controller
             'sub_title.*.required'=>translate('max_sub_title_length_is_120_char'),
         ]);
 
-        $title = $this->settings->where('key', 'module_home_page_data_title')->firstOrNew();
-        $title->type = 'module_home_page_data';
-        $title->key = 'module_home_page_data_title';
-        $title->value = $request->title[array_search('default', $request->lang)];
-        $title->save();
-
-        $sub_title = $this->settings->where('key', 'module_home_page_data_sub_title')->firstOrNew();
-        $sub_title->type = 'module_home_page_data';
-        $sub_title->key = 'module_home_page_data_sub_title';
-        $sub_title->value = $request->sub_title[array_search('default', $request->lang)];
-        $sub_title->save();
-            Helpers::add_or_update_translations(request: $request, key_data: 'module_home_page_data_title', name_field: 'title', model_name: 'DataSetting', data_id: $title->id, data_value: $title->value);
-
-            Helpers::add_or_update_translations(request: $request, key_data: 'module_home_page_data_sub_title', name_field: 'sub_title', model_name: 'DataSetting', data_id: $sub_title->id, data_value: $sub_title->value);
+        $type = 'module_home_page_data';
+        $fields = ['title', 'sub_title'];
+        foreach ($fields as $field) {
+            $this->updateSettingAndTranslations($request, "{$type}_{$field}", $type, $field, $request->lang, 'DataSetting');
+        }
 
         if ($request->hasFile('image')) {
-            $image = $this->settings->where('key', 'module_home_page_data_image')->firstOrNew();
-            $image->type = 'module_home_page_data';
-            $image->key = 'module_home_page_data_image';
-
-            if (empty($image->value)) {
-                $image->value  = $this->upload('react_landing/', 'png', $request->file('image'));
-            } else {
-                $image->value  = $this->updateAndUpload('react_landing/', $image->value, 'png', $request->file('image'));
-            }
-            $image->save();
+            $this->updateImageSetting($request->file('image'), 'module_home_page_data_image', 'react_landing/', $type);
         }
+
         Toastr::success(translate('messages.Download_app_section_data_updated_successfully'));
         return back();
 
@@ -105,48 +88,56 @@ class SettingsController extends Controller
             'button_title.*.required'=>translate('max_button_title_length_is_20_char'),
         ]);
 
-        $title = $this->settings->where('key', 'module_vendor_registration_data_title')->firstOrNew();
-        $title->type = 'module_vendor_registration_data';
-        $title->key = 'module_vendor_registration_data_title';
-        $title->value = $request->title[array_search('default', $request->lang)];
-        $title->save();
+        $type = 'module_vendor_registration_data';
 
-        $sub_title = $this->settings->where('key', 'module_vendor_registration_data_sub_title')->firstOrNew();
-        $sub_title->type = 'module_vendor_registration_data';
-        $sub_title->key = 'module_vendor_registration_data_sub_title';
-        $sub_title->value = $request->sub_title[array_search('default', $request->lang)];
-        $sub_title->save();
-
-        $button_title = $this->settings->where('key', 'module_vendor_registration_data_button_title')->firstOrNew();
-        $button_title->type = 'module_vendor_registration_data';
-        $button_title->key = 'module_vendor_registration_data_button_title';
-        $button_title->value = $request->button_title[array_search('default', $request->lang)];
-        $button_title->save();
-
-            Helpers::add_or_update_translations(request: $request, key_data: 'module_vendor_registration_data_title', name_field: 'title', model_name: 'DataSetting', data_id: $title->id, data_value: $title->value);
-
-            Helpers::add_or_update_translations(request: $request, key_data: 'module_vendor_registration_data_sub_title', name_field: 'sub_title', model_name: 'DataSetting', data_id: $sub_title->id, data_value: $sub_title->value);
-
-            Helpers::add_or_update_translations(request: $request, key_data: 'module_vendor_registration_data_button_title', name_field: 'button_title', model_name: 'DataSetting', data_id: $button_title->id, data_value: $button_title->value);
+        $fields = ['title', 'sub_title', 'button_title'];
+        foreach ($fields as $field) {
+            $this->updateSettingAndTranslations($request, "{$type}_{$field}", $type, $field, $request->lang, 'DataSetting');
+        }
 
         if ($request->hasFile('image')) {
-            $image = $this->settings->where('key', 'module_vendor_registration_data_image')->firstOrNew();
-            $image->type = 'module_vendor_registration_data';
-            $image->key = 'module_vendor_registration_data_image';
-
-            if (empty($image->value)) {
-                $image->value  = $this->upload('react_landing/', 'png', $request->file('image'));
-            } else {
-                $image->value  = $this->updateAndUpload('react_landing/', $image->value, 'png', $request->file('image'));
-            }
-            $image->save();
+            $this->updateImageSetting($request->file('image'), 'module_vendor_registration_data_image', 'react_landing/', $type);
         }
+
         Toastr::success(translate('messages.vendor_registration_section_data_updated_successfully'));
         return back();
 
     }
 
+    
+    private function updateSettingAndTranslations($request, $key, $type, $field, $lang, $modelName)
+    {
+        $setting = $this->settings->where('key', $key)->firstOrNew();
+        $setting->type = $type;
+        $setting->key = $key;
+        $setting->value = $request->$field[array_search('default', $lang)];
+        $setting->save();
+
+        Helpers::add_or_update_translations(
+            request: $request,
+            key_data: $key,
+            name_field: $field,
+            model_name: $modelName,
+            data_id: $setting->id,
+            data_value: $setting->value
+        );
+        return true;
+    }
 
 
+    private function updateImageSetting($imageFile, $key, $path, $type)
+    {
+        $imageSetting = $this->settings->where('key', $key)->firstOrNew();
+        $imageSetting->type = $type;
+        $imageSetting->key = $key;
+
+        if (empty($imageSetting->value)) {
+            $imageSetting->value = $this->upload($path, 'png', $imageFile);
+        } else {
+            $imageSetting->value = $this->updateAndUpload($path, $imageSetting->value, 'png', $imageFile);
+        }
+        $imageSetting->save();
+        return true;
+    }
 
 }

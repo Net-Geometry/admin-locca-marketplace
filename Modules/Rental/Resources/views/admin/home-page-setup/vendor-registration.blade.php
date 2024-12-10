@@ -120,7 +120,7 @@
                                 $title_data_translate = [];
                                 foreach($title_data->translations as $t)
                                 {
-                                    if($t->locale == $lang && $t->key=='module_home_page_data_title'){
+                                    if($t->locale == $lang && $t->key=='module_vendor_registration_data_title'){
                                         $title_data_translate[$lang]['value'] = $t->value;
                                     }
                                 }
@@ -130,7 +130,7 @@
                                 $sub_title_data_translate = [];
                                 foreach($sub_title_data->translations as $t)
                                 {
-                                    if($t->locale == $lang && $t->key=='module_home_page_data_sub_title'){
+                                    if($t->locale == $lang && $t->key=='module_vendor_registration_data_sub_title'){
                                         $sub_title_data_translate[$lang]['value'] = $t->value;
                                     }
                                 }
@@ -148,7 +148,6 @@
                             }
                             ?>
 
-
                                 <div class="d-none lang_form" id="{{ $lang }}-form">
                                     <div class="form-group mb-20">
                                         <label class="input-label font-semibold"
@@ -156,13 +155,13 @@
                                             ({{ strtoupper($lang) }})
                                         </label>
                                         <div class="character-count">
-                                            <input type="text" name="name[]" id="{{ $lang }}_name"
+                                            <input type="text" name="title[]" id="{{ $lang }}_name"
                                                 class="form-control character-count-field h--45px"
                                                 maxlength="30"
                                                 data-max-character="30"
                                                 value="{{ $title_data_translate[$lang]['value']?? '' }}"
                                                 placeholder="{{ translate('messages.type_title') }}">
-                                                <span class="d-flex justify-content-end"></span>
+                                                <span class="d-flex text-count justify-content-end"></span>
                                         </div>
                                     </div>
                                     <input type="hidden" name="lang[]" value="{{ $lang }}">
@@ -171,10 +170,10 @@
                                             for="exampleFormControlInput1">{{ translate('messages.subtitle') }}
                                             ({{ strtoupper($lang) }})</label>
                                             <div class="character-count">
-                                                <textarea type="text" name="subtitle[]" placeholder="{{ translate('messages.type_subtitle') }}"
+                                                <textarea type="text" name="sub_title[]" placeholder="{{ translate('messages.type_subtitle') }}"
                                                     class="form-control character-count-field" maxlength="110"
                                                     data-max-character="110">{{ $sub_title_data_translate[$lang]['value']?? '' }}</textarea>
-                                                <span class="d-flex justify-content-end"></span>
+                                                <span class="d-flex text-count justify-content-end"></span>
                                             </div>
 
                                     </div>
@@ -262,6 +261,23 @@
                 reader.readAsDataURL(file);
             }
         });
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const fields = document.querySelectorAll('.character-count-field');
+        fields.forEach((field) => {
+            const textCount = field.closest('.character-count').querySelector('.text-count');
+            const maxLength = field.getAttribute('maxlength');
+            updateCount(field, textCount, maxLength);
+
+            field.addEventListener('input', function () {
+                updateCount(field, textCount, maxLength);
+            });
+        });
+        function updateCount(field, textCount, maxLength) {
+            const currentLength = field.value.length;
+            textCount.textContent = `${currentLength} / ${maxLength}`;
+        }
     });
 </script>
 @endpush

@@ -236,5 +236,23 @@
                 }
             });
         });
+
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const fields = document.querySelectorAll('.character-count-field');
+        fields.forEach((field) => {
+            const textCount = field.closest('.character-count').querySelector('.text-count');
+            const maxLength = field.getAttribute('maxlength');
+            updateCount(field, textCount, maxLength);
+
+            field.addEventListener('input', function () {
+                updateCount(field, textCount, maxLength);
+            });
+        });
+        function updateCount(field, textCount, maxLength) {
+            const currentLength = field.value.length;
+            textCount.textContent = `${currentLength} / ${maxLength}`;
+        }
+    });
     </script>
 @endpush
