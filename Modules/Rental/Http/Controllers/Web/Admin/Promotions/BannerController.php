@@ -133,7 +133,7 @@ class BannerController extends Controller
     public function destroy(Banner $banner): RedirectResponse
     {
         if ($banner->image) {
-            $this->upload('banner/', $banner->image);
+            Helpers::check_and_delete('banner/' , $banner->image);
         }
         $banner->translations()->delete();
         $banner->delete();
@@ -207,7 +207,7 @@ class BannerController extends Controller
     private function updatebanner(Request $request, Banner $banner): void
     {
         if ($request->hasFile('image')) {
-            $banner->image = $this->upload('banner/', 'png', $request->file('image'), $banner->image);
+            $banner->image = $this->updateAndUpload('banner/', $banner->image ,'png', $request->file('image'));
         }
         $banner->title = $request->title[array_search('default', $request->lang)];
         $banner->type = $request->banner_type;
