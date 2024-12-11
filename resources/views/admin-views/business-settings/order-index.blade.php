@@ -269,6 +269,82 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                    @if ($module_cleck =  1)
+                                    @php($order_cancelation_rate_limit_status = App\CentralLogics\Helpers::get_business_settings('order_cancelation_rate_limit_status') ?? 0)
+
+                                    <div class="__bg-FAFAFA card shadow-none">
+                                        <div class="card-header bg-transparent">
+                                            <div>
+                                                <h5 class="text-title mb-1">
+                                                    {{ translate('messages.Vendor Cancelation Rate Setup') }}
+                                                </h5>
+                                                <p class="fs-12 mb-0">
+                                                    {{ translate('messages.This section will be applicable for vendors of car rental module') }}
+                                                </p>
+                                            </div>
+                                            <div class="col-lg-4 col-md-6">
+                                                <div class="form-group mb-0">
+                                                    <label
+                                                        class="toggle-switch h--45px toggle-switch-sm d-flex justify-content-between border rounded px-3 py-0 form-control">
+                                                        <span class="pr-1 d-flex align-items-center switch--label text--title">
+
+                                                        </span>
+                                                        <input type="checkbox" data-id="order_cancelation_rate_limit_status" data-type="toggle"
+                                                            data-image-on="{{ asset('/public/assets/admin/img/modal/dm-tips-on.png') }}"
+                                                            data-image-off="{{ asset('/public/assets/admin/img/modal/dm-tips-off.png') }}"
+                                                            data-title-on="<strong>{{ translate('messages.Want_to_enable_provider_cancelation_rate?') }}</strong>"
+                                                            data-title-off="<strong>{{ translate('messages.Want_to_disable_provider_cancelation_rate?') }}</strong>"
+                                                            data-text-on="<p>{{ translate('messages.If_you_enable_this,_provider_cancelation_rate_will_be_enabled.') }}</p>"
+                                                            data-text-off="<p>{{ translate('messages.If_you_disable_this,_provider_cancelation_rate_will_be_disabled.') }}</p>"
+                                                            class="status toggle-switch-input dynamic-checkbox-toggle" value="1"
+                                                            name="order_cancelation_rate_limit_status" id="order_cancelation_rate_limit_status"
+                                                            {{  $order_cancelation_rate_limit_status ? 'checked' : '' }}>
+                                                        <span class="toggle-switch-label text">
+                                                            <span class="toggle-switch-indicator"></span>
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-lg-6">
+                                                    @php($order_cancelation_rate_block_limit =  App\CentralLogics\Helpers::get_business_settings('order_cancelation_rate_block_limit') ?? 0)
+                                                    <div class="form-group mb-0">
+                                                        <label class="input-label font-medium" for="order_cancelation_rate_block_limit">
+                                                            {{ translate('messages.Cancelation Rate Limit') }} (%)
+                                                            <span class="form-label-secondary" data-toggle="tooltip" data-placement="right"
+                                                                data-original-title="{{ translate('messages.Cancelation Rate Limit') }}">
+                                                                <i class="tio-info-outined text--title"></i>
+                                                            </span>
+                                                        </label>
+                                                        <input type="number" max="100" min="0" id="order_cancelation_rate_block_limit" name="order_cancelation_rate_block_limit" class="form-control"  {{  $order_cancelation_rate_limit_status ? 'required' : 'readonly' }}  placeholder="{{ translate('Ex: 25') }}" value="{{ $order_cancelation_rate_block_limit }}">
+                                                    </div>
+                                                </div>
+
+                                                @php($order_cancelation_rate_warning_limit =  App\CentralLogics\Helpers::get_business_settings('order_cancelation_rate_warning_limit') ?? 0)
+
+                                                <div class="col-lg-6">
+                                                    <div class="form-group mb-0">
+                                                        <label class="input-label font-medium" for="order_cancelation_rate_warning_limit">
+                                                            {{ translate('messages.Cancelation Rate Warning') }} (%)
+                                                            <span class="form-label-secondary" data-toggle="tooltip" data-placement="right"
+                                                                data-original-title="{{ translate('messages.Cancelation Rate Warning') }}">
+                                                                <i class="tio-info-outined text--title"></i>
+                                                            </span>
+                                                        </label>
+                                                        <input type="number" {{  $order_cancelation_rate_limit_status ? 'required' : 'readonly' }} min="0" max="100" value="{{ $order_cancelation_rate_warning_limit }}" name="order_cancelation_rate_warning_limit" id="order_cancelation_rate_warning_limit" class="form-control" placeholder="{{ translate('Ex: 20') }}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    @endif
+
+
+
                                 <div class="btn--container justify-content-end mt-3">
                                     <button type="reset" class="btn btn--reset">{{ translate('messages.reset') }}</button>
                                     <button type="{{ env('APP_MODE') != 'demo' ? 'submit' : 'button' }}"
