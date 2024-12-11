@@ -81,7 +81,7 @@ class DriverController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function details($id)
+    public function details($id): Renderable
     {
         $driver = $this->driver->findOrFail($id);
         return view('rental::admin.driver.details', compact('driver'));

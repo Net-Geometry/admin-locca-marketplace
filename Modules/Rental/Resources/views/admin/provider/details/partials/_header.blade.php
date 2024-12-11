@@ -1,33 +1,31 @@
     <!-- Page Header -->
     <div class="page-header pb-0">
-        <div class="d-flex justify-content-between">
-            <div>
-                <h1 class="page-header-title text-break">
-                    <span class="page-header-icon">
-                        <img src="{{asset('public/assets/admin/img/store.png')}}" class="w--26" alt="">
-                    </span>
-                    <span>{{$store->name}}</span>
-                </h1>
-            </div>
-            <div>
-                @if(Request::is("admin/store/view/{$store->id}"))
-                    @if($store->vendor->status)
-                    <a href="{{route('admin.store.edit',[$store->id])}}" class="btn btn--primary float-right">
-                        <i class="tio-edit"></i> {{translate('messages.edit_store')}}
+        <div class="page-header">
+            <div class="d-flex justify-content-between flex-wrap gap-3">
+                <div>
+                    <h1 class="page-header-title text-break">
+                        <span class="page-header-icon">
+                            <img src="{{ asset('public/assets/admin/img/store.png') }}" class="w--22" alt="">
+                        </span>
+                        <span>{{ translate('messages.Provider_Details') }}
+                    </h1></span>
+                    </h1>
+                </div>
+                <div class="d-flex align-items-start flex-wrap gap-2">
+                    <a href="javascript:" class="btn btn--reset d-flex justify-content-between align-items-center gap-4 lh--1 h--45px">
+                        {{ translate('messages.status') }}
+                        <label class="toggle-switch toggle-switch-sm" for="stocksCheckbox{{$store->id}}">
+                            <input type="checkbox" data-url="{{route('admin.store.status',[$store['id'],$store->status?0:1])}}"
+                                   class="toggle-switch-input redirect-url" id="stocksCheckbox{{$store->id}}" {{$store->status?'checked':''}}>
+                            <span class="toggle-switch-label">
+                                <span class="toggle-switch-indicator"></span>
+                            </span>
+                        </label>
                     </a>
-                    @else
-                        @if(!isset($store->vendor->status))
-                        <a class="btn btn--danger text-capitalize font-weight-bold float-right request_alert"
-                    data-url="{{route('admin.store.application',[$store['id'],0])}}"
-                    data-message="{{translate('messages.you_want_to_deny_this_application')}}"
-                            href="javascript:"><i class="tio-clear-circle-outlined font-weight-bold pr-1"></i> {{translate('messages.deny')}}</a>
-                        @endif
-                        <a class="btn btn--primary text-capitalize font-weight-bold float-right mr-2 request_alert"
-                        data-url="{{route('admin.store.application',[$store['id'],1])}}"
-                        data-message="{{translate('messages.you_want_to_approve_this_application')}}"
-                            href="javascript:"><i class="tio-checkmark-circle-outlined font-weight-bold pr-1"></i>{{translate('messages.approve')}}</a>
-                    @endif
-                @endif
+                    <a href="{{ route('admin.rental.provider.edit-basic-setup', $store->id)}}" class="btn btn--primary font-weight-bold float-right mr-2 mb-0">
+                        <i class="tio-edit"></i> {{ translate('messages.edit_provider') }}
+                    </a>
+                </div>
             </div>
         </div>
         @if($store->vendor->status)

@@ -235,7 +235,7 @@
                             </td>
                             <td>
                                 <div class="btn--container justify-content-center">
-                                    <a class="btn action-btn btn--primary btn-outline-primary" href="javascript:"
+                                    <a class="btn action-btn btn--primary btn-outline-primary" href="{{ route('admin.rental.provider.vehicle.details', $vehicle->id)}}?vehicle_list=true"
                                        title="{{ translate('messages.view') }}"><i class="tio-visible-outlined"></i>
                                     </a>
                                     <a class="btn action-btn btn-outline-primary" href="{{ route('admin.rental.provider.vehicle.edit', $vehicle->id)}}"

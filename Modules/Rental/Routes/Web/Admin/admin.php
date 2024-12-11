@@ -80,6 +80,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
                 Route::post('create', [VehicleController::class, 'store']);
                 Route::get('update/{id}', [VehicleController::class, 'edit'])->name('edit');
                 Route::post('update/{id}', [VehicleController::class, 'update']);
+                Route::get('details/{id}', [VehicleController::class, 'details'])->name('details');
                 Route::get('status/{id}', [VehicleController::class, 'status'])->name('status');
                 Route::get('new-tag/{id}', [VehicleController::class, 'newTag'])->name('new-tag');
                 Route::delete('delete/{id}', [VehicleController::class, 'destroy'])->name('delete');

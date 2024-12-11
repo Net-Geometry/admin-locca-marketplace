@@ -329,7 +329,7 @@
                                                 data-placeholder="{{ translate('messages.select_fuel_type') }}">
                                             <option value="" selected disabled>
                                                 {{ translate('messages.select_vehicle_fuel_type') }}</option>
-                                            <option value="1" >{{ translate('messages.diesel') }}</option>
+                                            <option value="diesel" >{{ translate('messages.diesel') }}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -343,8 +343,8 @@
                                                 data-placeholder="{{ translate('messages.select_vehicle_transmission') }}">
                                             <option value="" selected disabled>
                                                 {{ translate('messages.select_vehicle_transmission') }}</option>
-                                            <option value="1">{{ translate('messages.transmission 1') }}</option>
-                                            <option value="2">{{ translate('messages.transmission 2') }}</option>
+                                            <option value="manual_gear">{{ translate('Manual Gear') }}</option>
+                                            <option value="manual_gear_2">{{ translate('Manual Gear 2') }}</option>
                                         </select>
                                     </div>
                                 </div>

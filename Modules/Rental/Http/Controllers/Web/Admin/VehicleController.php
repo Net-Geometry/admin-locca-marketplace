@@ -177,8 +177,8 @@ class VehicleController extends Controller
         $providers = $this->store->with('vendor','module')->whereHas('vendor', function($query){
             return $query->ofStatus(1);
         })
-            ->module(Config::get('module.current_module_id'))
-            ->with('vendor','module')->latest()->get();
+        ->module(Config::get('module.current_module_id'))
+        ->with('vendor','module')->latest()->get();
         $categories = $this->vehicleCategory->ofStatus(1)->latest()->get();
         $brands = $this->vehicleBrand->ofStatus(1)->latest()->get();
 
@@ -280,6 +280,22 @@ class VehicleController extends Controller
 
 
     /**
+     * Show the specified resource.
+     * @param int $id
+     * @return Renderable
+     */
+    public function details(int $id): Renderable
+    {
+        $vehicle = $this->vehicle->findOrFail($id);
+
+
+        $language = getWebConfig('language') ?? [];
+        $defaultLang = str_replace('_', '-', app()->getLocale());
+        return view('rental::admin.vehicle.details', compact('vehicle', 'language', 'defaultLang'));
+    }
+
+
+    /**
      * @param Request $request
      * @param $id
      * @return RedirectResponse
@@ -370,6 +386,13 @@ class VehicleController extends Controller
         $vehicle->delete();
 
         Toastr::success(translate('messages.vehicle_deleted_successfully'));
+
+        if ($request->vehicle_list){
+            return to_route('admin.rental.provider.vehicle.list');
+        }elseIf($request->provider_vehicle_list){
+            return to_route('admin.rental.provider.details',['id' => $request->provider_id, 'tab' => 'vehicle']);
+        }
+
         return back();
     }
 
