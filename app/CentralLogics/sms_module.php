@@ -128,7 +128,7 @@ class SMS_module
         if (isset($config) && $config['status'] == 1) {
             $receiver = str_replace("+", "", $receiver);
             $curl = curl_init();
-            $message = str_replace("#OTP#", $otp, $config['otp_template']);
+            // $message = str_replace("#OTP#", $otp, $config['otp_template']);
             curl_setopt_array($curl, array(
                 CURLOPT_URL => "https://api.msg91.com/api/v5/otp?template_id=" . $config['template_id'] . "&mobile=" . $receiver . "&authkey=" . $config['auth_key'] . "",
                 CURLOPT_RETURNTRANSFER => true,
@@ -159,8 +159,8 @@ class SMS_module
             //         "recipients" => [
             //             [
             //                 "mobiles" => $receiver,
-            //                 "VAR1" => $message,
-            //                 // "VAR2" => $var2 // Replace with your second variable value, if any
+            //                 "OTP" => $otp,
+            //                 // "VAR1" => $var // Replace with your second variable value, if any
             //             ]
             //         ]
             //     ]),
