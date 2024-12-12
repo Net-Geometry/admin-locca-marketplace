@@ -168,14 +168,14 @@
                                             {{ translate('JPG, JPEG, PNG Less Than 1MB') }} <strong class="font-semibold">({{ translate('Ratio 1:1') }})</strong>
                                         </p>
                                     </div>
-                                    <div class="upload-file image-general d-inline-block">
+                                    <div class="upload-file image-general d-inline-block w-auto">
                                         <a href="javascript:void(0);" class="remove-btn opacity-0 z-index-99">
                                             <i class="tio-clear"></i>
                                         </a>
                                         <input type="file" name="image" class="upload-file__input single_file_input" 
-                                            accept=".jpg, .jpeg, .png"  value="{{\App\CentralLogics\Helpers::get_full_url('react_landing', $image?->value?? '', $image?->storage[0]?->value ?? 'public','upload_image_4')}}">
-                                        <div
-                                            class="upload-file__img d-flex justify-content-center align-items-center h-180 m-auto p-0">
+                                            accept=".jpg, .jpeg, .png"  value="{{ $image?->value ?  \App\CentralLogics\Helpers::get_full_url('react_landing', $image?->value?? '', $image?->storage[0]?->value ?? 'public','upload_image_1' ) : '' }}">
+                                        <label
+                                            class="upload-file-wrapper w--180px">
                                             <div class="upload-file-textbox text-center">
                                                 <img width="34" height="34" src="{{ asset('public/assets/admin/img/document-upload.svg') }}" alt="">
                                                 <h6 class="mt-2 font-semibold text-center">
@@ -184,8 +184,8 @@
                                                     {{ translate('or drag and drop') }}
                                                 </h6>
                                             </div>
-                                            <img class="upload-file-img" height="180" width="180" loading="lazy" style="display: none;" src="{{\App\CentralLogics\Helpers::get_full_url('react_landing', $image?->value?? '', $image?->storage[0]?->value ?? 'public','upload_image_4')}}" alt="">
-                                        </div>
+                                            <img class="upload-file-img" height="180" width="180" loading="lazy" style="display: none;" src="{{ $image?->value ?  \App\CentralLogics\Helpers::get_full_url('react_landing', $image?->value?? '', $image?->storage[0]?->value ?? 'public','upload_image_1' ) : '' }}" alt="">
+                                        </label>
                                     </div>
 
                                 </div>
@@ -254,7 +254,7 @@
            $('.remove-btn').click(function () {
                 var $card = $(this).closest('.upload-file');
                 $card.find('.single_file_input').val(''); 
-                $card.find('.upload-file-img').attr('src', '{{\App\CentralLogics\Helpers::get_full_url('react_landing', $image?->value?? '', $image?->storage[0]?->value ?? 'public','upload_image_4')}}');
+                $card.find('.upload-file-img').attr('src', '{{ $image?->value ?  \App\CentralLogics\Helpers::get_full_url('react_landing', $image?->value?? '', $image?->storage[0]?->value ?? 'public','upload_image_1' ) : '' }}');
                 $(this).css('opacity', 0);
             });
 
@@ -263,7 +263,7 @@
                 var $cards = $('.upload-file'); 
                 $cards.each(function () {
                     $(this).find('.single_file_input').val(''); 
-                    $(this).find('.upload-file-img').attr('src', '{{\App\CentralLogics\Helpers::get_full_url('react_landing', $image?->value?? '', $image?->storage[0]?->value ?? 'public','upload_image_4')}}');
+                    $(this).find('.upload-file-img').attr('src', '{{ $image?->value ?  \App\CentralLogics\Helpers::get_full_url('react_landing', $image?->value?? '', $image?->storage[0]?->value ?? 'public','upload_image_1' ) : '' }}');
                     $(this).find('.remove-btn').css('opacity', 0);
                 });
             });

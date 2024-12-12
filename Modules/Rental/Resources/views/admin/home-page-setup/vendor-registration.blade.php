@@ -205,7 +205,7 @@
                                         {{ translate('JPG, JPEG, PNG Less Than 1MB') }} <strong class="font-semibold">(Ratio 3:2)</strong>
                                     </p>
                                 </div>
-                                <div class="upload-file text-wrapper">
+                                {{-- <div class="upload-file text-wrapper">
                                     <input type="file" name="image"
                                         class="upload-file__input single_file_input" accept=".jpg, .jpeg, .png">
                                     <div
@@ -223,6 +223,25 @@
                                         <img class="upload-file__img__img border--dashed aspect-3-2" height="200"
                                             loading="lazy" style="display: none;" alt="">
                                     </div>
+                                </div> --}}
+                                <div class="upload-file image-general d-inline-block w-auto">
+                                    <a href="javascript:void(0);" class="remove-btn opacity-0 z-index-99">
+                                        <i class="tio-clear"></i>
+                                    </a>
+                                    <input type="file" name="image" class="upload-file__input single_file_input" 
+                                        accept=".jpg, .jpeg, .png"  value="{{ $image?->value ?  \App\CentralLogics\Helpers::get_full_url('react_landing', $image?->value?? '', $image?->storage[0]?->value ?? 'public','upload_image_1' ) : '' }}">
+                                    <label
+                                        class="upload-file-wrapper aspect-3-2">
+                                        <div class="upload-file-textbox text-center w-100">
+                                            <img width="34" height="34" src="{{ asset('public/assets/admin/img/document-upload.svg') }}" alt="">
+                                            <h6 class="mt-2 font-semibold text-center">
+                                                <span>{{ translate('Click to upload') }}</span>
+                                                <br>
+                                                {{ translate('or drag and drop') }}
+                                            </h6>
+                                        </div>
+                                        <img class="upload-file-img aspect-3-2" height="200" width="264" loading="lazy" style="display: none;" src="{{ $image?->value ?  \App\CentralLogics\Helpers::get_full_url('react_landing', $image?->value?? '', $image?->storage[0]?->value ?? 'public','upload_image_1' ) : '' }}" alt="">
+                                    </label>
                                 </div>
 
                             </div>
@@ -243,25 +262,60 @@
 
 @push('script_2')
 <script>
-    // Get all upload-file input elements
-    document.querySelectorAll('.single_file_input').forEach(function(input) {
-        input.addEventListener('change', function(event) {
-            var file = event.target.files[0];
-            var card = event.target.closest('.upload-file');
-            var textbox = card.querySelector('.upload-file__textbox');
-            var imgElement = card.querySelector('.upload-file__img__img');
+    // ---- single image upload starts
+    $(document).ready(function () {
+            // Handle file input change
+            $('.single_file_input').on('change', function (event) {
+                var file = event.target.files[0];
+                var $card = $(event.target).closest('.upload-file');
+                var $textbox = $card.find('.upload-file-textbox');
+                var $imgElement = $card.find('.upload-file-img');
+                var $removeBtn = $card.find('.remove-btn');
 
-            if (file) {
-                var reader = new FileReader();
-                reader.onload = function(e) {
-                    textbox.style.display = 'none';
-                    imgElement.src = e.target.result;
-                    imgElement.style.display = 'block';
-                };
-                reader.readAsDataURL(file);
-            }
+                if (file) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $textbox.hide();
+                        $imgElement.attr('src', e.target.result).show();
+                        $removeBtn.css('opacity', 1);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // Check for a valid src on load to handle pre-existing images
+            $('.upload-file').each(function () {
+                var $card = $(this);
+                var $textbox = $card.find('.upload-file-textbox');
+                var $imgElement = $card.find('.upload-file-img');
+                var $removeBtn = $card.find('.remove-btn');
+
+                // If there's already a valid image source
+                if ($imgElement.attr('src') && $imgElement.attr('src') !== window.location.href) {
+                    $textbox.hide();
+                    $imgElement.show();
+                }
+            });
+
+           // Handle remove button click
+           $('.remove-btn').click(function () {
+                var $card = $(this).closest('.upload-file');
+                $card.find('.single_file_input').val(''); 
+                $card.find('.upload-file-img').attr('src', '{{ $image?->value ?  \App\CentralLogics\Helpers::get_full_url('react_landing', $image?->value?? '', $image?->storage[0]?->value ?? 'public','upload_image_1' ) : '' }}');
+                $(this).css('opacity', 0);
+            });
+
+            // Handle reset button click
+            $('#reset_btn').click(function () {
+                var $cards = $('.upload-file'); 
+                $cards.each(function () {
+                    $(this).find('.single_file_input').val(''); 
+                    $(this).find('.upload-file-img').attr('src', '{{ $image?->value ?  \App\CentralLogics\Helpers::get_full_url('react_landing', $image?->value?? '', $image?->storage[0]?->value ?? 'public','upload_image_1' ) : '' }}');
+                    $(this).find('.remove-btn').css('opacity', 0);
+                });
+            });
         });
-    });
+        // ---- single image upload ends
 
     document.addEventListener("DOMContentLoaded", function () {
         const fields = document.querySelectorAll('.character-count-field');

@@ -6498,4 +6498,10 @@ Smartly or Earn. ',
                     footer Apps Download button' => 'This Section App Download buttons are appear based on
                     footer Apps Download button',
   'Download_Apps' => 'Download Apps',
+  'Model' => 'Model',
+  'Manual Gear' => 'Manual Gear',
+  'Manual Gear 2' => 'Manual Gear 2',
+  'default_button_title_is_required' => 'Default button title is required',
+  'max_button_title_length_is_20_char' => 'Max button title length is 20 char',
+  'vendor_registration_section_data_updated_successfully' => 'Vendor registration section data updated successfully',
 );

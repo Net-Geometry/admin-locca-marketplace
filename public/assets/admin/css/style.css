@@ -14884,3 +14884,17 @@ ul.address-info .label {
     height: 30px;
     background-color: rgba(0, 0, 0, 0.3);
 }
+
+.w--180px {
+    width: 180px;
+}
+
+.upload-file-wrapper.aspect-3-2 {
+    max-inline-size: 264px;
+    min-block-size: 200px;
+}
+
+.upload-file-wrapper.aspect-3-2 .upload-file-img{
+    max-inline-size: 100% !important;
+    max-block-size: 100% !important;
+}
