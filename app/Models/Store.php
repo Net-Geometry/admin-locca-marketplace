@@ -639,6 +639,7 @@ class Store extends Model
             }
 
             if($check_daily_subscription_validity_check && $check_daily_subscription_validity_check?->value != $current_date){
+                Helpers::disableStoreForOrderCancellation();
                 Store::whereHas('store_subs',function ($query)use($current_date){
                     $query->where('status',1)->whereDate('expiry_date', '<=', $current_date);
                 })->update(['status' => 0,
