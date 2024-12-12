@@ -1343,52 +1343,53 @@
             $rendered.html(html);
 
             function debounce(func, wait) {
-                let timeout;
-                return function (...args) {
-                    clearTimeout(timeout);
-                    timeout = setTimeout(() => func.apply(this, args), wait);
-                };
-            }
-
-            // Attach event listener with debouncing
-            $(".select2-search input").on(
-                "input",
-                debounce(function () {
-                    const inputValue = $(this).val().toLowerCase();
-
-                    const $listItems = $(".select2-results__options li");
-
-                    $listItems.each(function () {
-                        const itemText = $(this).text().toLowerCase();
-                        $(this).toggle(itemText.includes(inputValue));
+                        let timeout;
+                        return function (...args) {
+                            clearTimeout(timeout);
+                            timeout = setTimeout(() => func.apply(this, args), wait);
+                        };
+                    }
+    
+                    $(".select2-search input").on(
+                        "input",
+                        debounce(function () {
+                            const inputValue = $(this).val().toLowerCase();
+                            const $listItems = $(".select2-results__options li");
+                            let matches = 0;
+    
+                            $listItems.each(function () {
+                                const itemText = $(this).text().toLowerCase();
+                                const isMatch = itemText.includes(inputValue);
+                                $(this).toggle(isMatch);
+                                if (isMatch) matches++;
+                            });
+    
+                            if (matches === 0) {
+                                $(".select2-results__options").append(
+                                    '<li class="no-results">No results found</li>'
+                                );
+                            } else {
+                                $(".no-results").remove();
+                            }
+                        }, 100)
+                    );
+    
+                    $(".select2-search input").on("keydown", function (e) {
+                        if (e.which === 13) {
+                            e.preventDefault();
+                            const inputValue = $(this).val().toLowerCase();
+                            const $listItems = $(".select2-results__options li:not(.no-results)");
+                            const matchedItem = $listItems.filter(function () {
+                                return $(this).text().toLowerCase() === inputValue;
+                            });
+    
+                            if (matchedItem.length > 0) {
+                                matchedItem.trigger("mouseup"); // Select the matched item
+                            }
+    
+                            $(this).val("");
+                        }
                     });
-                }, 100)
-            );
-
-            $(".select2-search input").on("keydown", function (e) {
-                if (e.which === 13) {
-                    e.preventDefault();
-
-                    const inputValue = $(this).val();
-                    if (
-                        !inputValue ||
-                        itemsToShow.find((item) => item.text === inputValue) ||
-                        selectedItems.find((item) => item.text === inputValue)
-                    ) {
-                        $(this).val("");
-                        return null;
-                    }
-
-                    if (inputValue) {
-                        $element.append(
-                            new Option(inputValue, inputValue, true, true)
-                        );
-                        $element.val([...$element.val(), inputValue]);
-                        $(this).val("");
-                        $(".multiple-select2").select2DynamicDisplay();
-                    }
-                }
-            });
         }
         return this.each(function () {
             var $this = $(this);
