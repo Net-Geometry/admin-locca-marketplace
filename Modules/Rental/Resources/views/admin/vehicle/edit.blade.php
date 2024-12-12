@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('messages.Provider Details - Add New Vehicale'))
+@section('title', translate('messages.Provider Details - update Vehicle'))
 
 @section('content')
     <div class="content container-fluid">
@@ -12,7 +12,7 @@
                         <span class="page-header-icon">
                             <img src="{{ asset('public/assets/admin/img/car-logo.png') }}" alt="">
                         </span>
-                        <span>{{ translate('messages.Add New Vehicle') }}
+                        <span>{{ translate('messages.Update Vehicle') }}
                     </h1>
                 </div>
             </div>
@@ -77,7 +77,7 @@
                                                         </label>
                                                         <input type="text" name="name[]" id="default_name"
                                                                class="form-control"
-                                                               value=""
+                                                               value="{{$vehicle?->getRawOriginal('name')}}"
                                                                placeholder="{{ translate('messages.type_vehicle_name') }}"
                                                                required>
                                                     </div>
@@ -87,10 +87,21 @@
                                                                for="exampleFormControlInput1">{{ translate('messages.short_description') }}
                                                             ({{ translate('messages.default') }})</label>
                                                         <textarea type="text" name="description[]" placeholder="{{ translate('messages.type_business_address') }}"
-                                                                  class="form-control min-h-90px ckeditor"></textarea>
+                                                                  class="form-control min-h-90px ckeditor">{{$vehicle?->getRawOriginal('description')}}</textarea>
                                                     </div>
                                                 </div>
                                                 @foreach (json_decode($language) as $lang)
+                                                    <?php
+                                                    if(count($vehicle['translations'])){
+                                                        $translate = [];
+                                                        foreach($vehicle['translations'] as $t)
+                                                        {
+                                                            if($t->locale == $lang && $t->key=="name"){
+                                                                $translate[$lang]['name'] = $t->value;
+                                                            }
+                                                        }
+                                                    }
+                                                    ?>
                                                     <div class="d-none lang_form" id="{{ $lang }}-form">
                                                         <div class="form-group mb-0">
                                                             <label class="input-label font-semibold"
@@ -98,7 +109,7 @@
                                                                 ({{ strtoupper($lang) }})
                                                             </label>
                                                             <input type="text" name="name[]"
-                                                                   id="{{ $lang }}_name" class="form-control"
+                                                                   id="{{ $lang }}_name" class="form-control" value="{{$translate[$lang]['name']??''}}"
                                                                    placeholder="{{ translate('messages.store_name') }}">
                                                         </div>
                                                         <input type="hidden" name="lang[]" value="{{ $lang }}">
@@ -107,28 +118,10 @@
                                                                    for="exampleFormControlInput1">{{ translate('messages.short_description') }}
                                                                 ({{ strtoupper($lang) }})</label>
                                                             <textarea type="text" name="description[]" placeholder="{{ translate('messages.store') }}"
-                                                                      class="form-control min-h-90px ckeditor"></textarea>
+                                                                      class="form-control min-h-90px ckeditor">{{$translate[$lang]['description']??''}}</textarea>
                                                         </div>
                                                     </div>
                                                 @endforeach
-                                            @else
-                                                <div id="default-form">
-                                                    <div class="form-group mb-0">
-                                                        <label class="input-label font-semibold"
-                                                               for="exampleFormControlInput1">{{ translate('messages.vehicle_name') }}
-                                                            ({{ translate('messages.default') }})</label>
-                                                        <input type="text" name="name[]" class="form-control"
-                                                               placeholder="{{ translate('messages.store_name') }}" required>
-                                                    </div>
-                                                    <input type="hidden" name="lang[]" value="default">
-                                                    <div class="form-group mb-0">
-                                                        <label class="input-label font-semibold"
-                                                               for="exampleFormControlInput1">{{ translate('messages.short_description') }}
-                                                        </label>
-                                                        <textarea type="text" name="description[]" placeholder="{{ translate('messages.store') }}"
-                                                                  class="form-control min-h-90px ckeditor"></textarea>
-                                                    </div>
-                                                </div>
                                             @endif
                                         </div>
                                     </div>
@@ -161,7 +154,7 @@
                                                         {{ translate('or drag and drop') }}
                                                     </h6>
                                                 </div>
-                                                <img class="upload-file__img__img ratio-2" width="300" height="150"
+                                                <img class="upload-file__img__img ratio-2" src="{{ $vehicle['thumbnail_full_url'] }}" width="300" height="150"
                                                      loading="lazy" style="display: none;" alt="">
                                             </div>
                                         </div>
@@ -175,20 +168,26 @@
                 </div>
                 <div class="col-lg-12">
                     <div class="card">
-                        <div class="card-header">
-                            <div>
-                                <h5 class="text-title mb-1">
-                                    {{ translate('messages.Images') }}
-                                </h5>
-                                <p class="fs-12 mb-0">
-                                    {{ translate('messages.JPG, JPEG, PNG Less Than 1MB') }}
-                                    <span class="font-semibold"> {{ translate('(Ratio 2:1)') }}</span>
-                                </p>
+                        <div class="row g-3">
+                            <div class="col-md-6 pb-0">
+                                <div class="row g-2">
+                                    <div class="col-12 pb-0">
+                                        <div class="form-group mb-0">
+                                            <label class="input-label" for="exampleFormControlInput1">{{translate('messages.images')}}
+                                        </div>
+                                    </div>
+                                    @foreach($vehicle['images_full_url'] as $img)
+                                        <div class="col-6 spartan_item_wrapper size--sm">
+                                            <img class="rounded border" src="{{ $img }}">
+                                        </div>
+                                    @endforeach
+                                </div>
                             </div>
-                        </div>
-                        <div class="card-body py-1">
-                            <div>
-                                <div class="row" id="multiImg"></div>
+                            <div class="col-md-6">
+                                <label class="input-label" for="exampleFormControlInput1">{{translate('messages.update_identity_image')}}</label>
+                                <div>
+                                    <div class="row g-2 mt-0" id="multiImg"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -215,7 +214,7 @@
                                                 data-placeholder="{{ translate('messages.select_vehicle_provider') }}">
                                             <option value="" selected disabled>{{ translate('messages.select_vehicle_provider') }}</option>
                                             @foreach($providers as $provider)
-                                            <option value="{{ $provider->id }}" {{ $provider->id == request()?->provider_id ? 'selected' : '' }}>{{ $provider->name }}</option>
+                                                <option value="{{ $provider->id }}" {{ $vehicle->provider_id == $provider->id ? 'selected' : '' }}>{{ $provider->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -228,7 +227,7 @@
                                                 data-placeholder="{{ translate('messages.select_vehicle_brand') }}">
                                             <option value="" selected disabled>{{ translate('messages.select_vehicle_brand') }}</option>
                                             @foreach($brands as $brand)
-                                                <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+                                                <option value="{{ $brand->id }}" {{ $vehicle->brand_id == $brand->id ? 'selected' : '' }}>{{ $brand->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -236,21 +235,12 @@
                                 <div class="col-lg-4">
                                     <div class="form-group mb-0">
                                         <label class="input-label"
-                                               for="">{{ translate('messages.Model') }}
-                                        </label>
-                                        <input type="number" name="model" class="form-control" placeholder="Model Name"
-                                               value="">
-                                    </div>
-                                </div>
-                                <div class="col-lg-4">
-                                    <div class="form-group mb-0">
-                                        <label class="input-label"
                                                for="choice_category">{{ translate('messages.category') }}
                                         </label>
-                                        <select name="category_id" id="choice_category" class="form-control js-select2-custom" data-placeholder="{{ translate('messages.select_vehicle_category') }}">
+                                        <select name="" id="choice_category" class="form-control js-select2-custom" data-placeholder="{{ translate('messages.select_vehicle_category') }}">
                                             <option value="" selected disabled>{{ translate('messages.select_vehicle_category') }}</option>
                                             @foreach($categories as $category)
-                                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                                <option value="{{ $category->id }}" {{ $vehicle->category_id == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -263,8 +253,8 @@
                                                 data-placeholder="{{ translate('messages.select_vehicle_type') }}">
                                             <option value="" selected disabled>
                                                 {{ translate('messages.select_vehicle_type') }}</option>
-                                            <option value="family">{{ translate('messages.family') }}</option>
-                                            <option value="office">{{ translate('messages.office') }}</option>
+                                            <option value="family" {{ $vehicle->type == 'family' ? 'selected' : '' }}>{{ translate('messages.family') }}</option>
+                                            <option value="office" {{ $vehicle->type == 'office' ? 'selected' : '' }}>{{ translate('messages.office') }}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -274,7 +264,7 @@
                                                for="">{{ translate('messages.Engine Capacity (cc)') }}
                                         </label>
                                         <input type="number" name="engine_capacity" class="form-control" placeholder="Ex: 450"
-                                               value="">
+                                               value="{{ $vehicle->engine_capacity }}">
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
@@ -283,7 +273,7 @@
                                                for="">{{ translate('messages.Engine Power (hp)') }}
                                         </label>
                                         <input type="number" name="engine_power" class="form-control" placeholder="Ex: 100"
-                                               value="">
+                                               value="{{ $vehicle->engine_power }}">
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
@@ -292,7 +282,7 @@
                                                for="">{{ translate('messages.Seating Capacity') }}
                                         </label>
                                         <input type="number" name="seating_capacity" class="form-control"
-                                               placeholder="Input how many person can seat" value="">
+                                               placeholder="Input how many person can seat" value="{{ $vehicle->seating_capacity }}">
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
@@ -304,14 +294,15 @@
                                             <label class="form-check form--check mr-2 mr-md-4">
                                                 <input class="form-check-input" type="radio" value="yes"
                                                        name="air_condition" id="order_confirmation_model"
-                                                       checked="">
+                                                       {{ $vehicle->air_condition == 1 ? 'checked' : ''}}>
                                                 <span class="form-check-label">
                                                     {{ translate('messages.yes') }}
                                                 </span>
                                             </label>
                                             <label class="form-check form--check mr-2 mr-md-4">
                                                 <input class="form-check-input" type="radio" value="0"
-                                                       name="air_condition" id="order_confirmation_model2">
+                                                       name="air_condition" id="order_confirmation_model2"
+                                                    {{ $vehicle->air_condition == 0 ? 'checked' : ''}}>
                                                 <span class="form-check-label">
                                                     {{ translate('messages.no') }}
                                                 </span>
@@ -329,7 +320,7 @@
                                                 data-placeholder="{{ translate('messages.select_fuel_type') }}">
                                             <option value="" selected disabled>
                                                 {{ translate('messages.select_vehicle_fuel_type') }}</option>
-                                            <option value="diesel" >{{ translate('messages.diesel') }}</option>
+                                            <option value="diesel" {{ $vehicle->fuel_type == 'diesel' ? 'selected' : '' }}>{{ translate('messages.diesel') }}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -343,8 +334,8 @@
                                                 data-placeholder="{{ translate('messages.select_vehicle_transmission') }}">
                                             <option value="" selected disabled>
                                                 {{ translate('messages.select_vehicle_transmission') }}</option>
-                                            <option value="manual_gear">{{ translate('Manual Gear') }}</option>
-                                            <option value="manual_gear_2">{{ translate('Manual Gear 2') }}</option>
+                                            <option value="transmission_1" {{ $vehicle->transmission_type == 'transmission_1' ? 'selected' : '' }}>{{ translate('messages.transmission 1') }}</option>
+                                            <option value="transmission_2" {{ $vehicle->transmission_type == 'transmission_2' ? 'selected' : '' }}>{{ translate('messages.transmission 2') }}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -367,22 +358,43 @@
                                 <span class="text--title">
                                     {{ translate('messages.Same Model Multiple Vehicles') }}
                                 </span>
-                                <input class="form-check-input single-select position-relative m-0" type="checkbox" name="multiple_vehicles" checked>
+                                <input class="form-check-input single-select position-relative m-0" type="checkbox" name="multiple_vehicles"
+                                       {{ $vehicle->multiple_vehicles == 1 ? 'checked' : '' }}>
                             </label>
                         </div>
                         <div class="card-body d-flex flex-column gap-20px">
-                            <div class="d-flex gap-20px flex-column flex-md-row equal-width" id="input-container">
+                            @foreach($vehicle->vehicleIdentities as $multi)
+                            <div class="d-flex gap-20px flex-column flex-md-row equal-width">
                                 <div class="form-group mb-0">
                                     <label class="input-label"
                                            for="">{{ translate('messages.VIN Number') }}</label>
                                     <input type="text" name="vehicle[vin_number][]" class="form-control"
-                                           placeholder="Type your business name" value="">
+                                           placeholder="Type your business name" value="{{ $multi->vin_number }}">
                                 </div>
                                 <div class="form-group mb-0">
                                     <label class="input-label"
                                            for="">{{ translate('messages.License Plate Number') }}</label>
                                     <input type="text" name="vehicle[license_plate_number][]" class="form-control"
-                                           placeholder="Type your license plate number" value="">
+                                           placeholder="Type your license plate number" value="{{ $multi->license_plate_number }}">
+                                </div>
+                                <button type="button"
+                                        class="btn plus-btn shadow-none p-0 fs-32 lh--1 text-left mt-md-4 remove-btn text--danger">
+                                    <i class="tio-clear-circle-outlined"></i>
+                                </button>
+                            </div>
+                            @endforeach
+                            <div class="d-flex gap-20px flex-column flex-md-row equal-width" id="input-container">
+                                <div class="form-group mb-0">
+                                    <label class="input-label"
+                                           for="">{{ translate('messages.VIN Number') }}</label>
+                                    <input type="text" name="vehicle[vin_number][]" class="form-control"
+                                           placeholder="Type your business name">
+                                </div>
+                                <div class="form-group mb-0">
+                                    <label class="input-label"
+                                           for="">{{ translate('messages.License Plate Number') }}</label>
+                                    <input type="text" name="vehicle[license_plate_number][]" class="form-control"
+                                           placeholder="Type your license plate number">
                                 </div>
                                 <button type="button"
                                         class="btn plus-btn shadow-none text--primary p-0 fs-32 lh--1 text-left mt-md-4 add-btn">
@@ -414,14 +426,14 @@
                                         <div class="border resturant-type-group">
                                             <label class="align-items-center d-flex form-check item">
                                                 <input class="form-check-input single-select" type="checkbox" name="trip_hourly"
-                                                       value="hourly" checked="">
+                                                       value="hourly" {{ $vehicle->trip_hourly == 1 ? 'checked' : '' }}>
                                                 <span class="form-check-label ml-2 mt-1">
                                                     {{ translate('messages.hourly') }}
                                                 </span>
                                             </label>
                                             <label class="align-items-center d-flex form-check item">
                                                 <input class="form-check-input single-select" type="checkbox" name="trip_distance"
-                                                       value="distance_wise">
+                                                       value="distance_wise" {{ $vehicle->trip_distance == 1 ? 'checked' : ''}}>
                                                 <span class="form-check-label ml-2 mt-1">
                                                     {{ translate('messages.Distance Wise') }}
                                                 </span>
@@ -436,7 +448,7 @@
                                                for="">{{ translate('messages.Hourly Wise Price ($)') }}
                                         </label>
                                         <input type="number" name="hourly_price" class="form-control"
-                                               placeholder="Ex: 35.25" value="">
+                                               placeholder="Ex: 35.25" value="{{ $vehicle->hourly_price }}">
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
@@ -445,7 +457,7 @@
                                                for="">{{ translate('messages.Distance Wise Price ($)') }}
                                         </label>
                                         <input type="number" name="distance_price" class="form-control"
-                                               placeholder="Ex: 35.25" value="">
+                                               placeholder="Ex: 35.25" value="{{ $vehicle->distance_price }}">
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
@@ -460,14 +472,15 @@
                                             <div class="flex-sm-grow-1">
                                                 <input id="min" type="number" name="discount_price"
                                                        class="form-control h--45px border-0 pl-unset"
+                                                       value="{{ $vehicle->discount_price }}"
                                                        placeholder="{{ translate('messages.Ex: 10') }} 20">
                                             </div>
                                             <div class="flex-shrink-0">
                                                 <select name="discount_type" id="" class="custom-select ltr border-0">
-                                                    <option value="percent" selected>
+                                                    <option value="percent" {{ $vehicle->discount_type == 'percent' ? 'selected' : '' }}>
                                                         %
                                                     </option>
-                                                    <option value="fixed">
+                                                    <option value="fixed" {{ $vehicle->discount_type == 'fixed' ? 'selected' : ''}}>
                                                         $
                                                     </option>
                                                 </select>
@@ -495,6 +508,11 @@
                             <div class="form-group mb-0 pickup-zone-tag">
                                 <select name="tag[]" id="pickup_zones12"
                                         class="form-control js-select2-custom select2-hidden-accessible" multiple="multiple">
+                                    @if(!empty(json_decode($vehicle->tag)))
+                                        @foreach(json_decode($vehicle->tag) as $tag)
+                                            <option value="{{ $tag }}" selected>{{ $tag }}</option>
+                                        @endforeach
+                                    @endif
                                 </select>
                             </div>
                         </div>
@@ -502,19 +520,35 @@
                 </div>
                 <div class="col-lg-12">
                     <div class="card">
-                        <div class="card-header">
-                            <div>
-                                <h5 class="text-title mb-1">
-                                    {{ translate('messages.Vehicle_Documents') }}
-                                </h5>
-                                <p class="fs-12 mb-0">
-                                    {{ translate('messages.Provider Logo & Covers') }}
-                                </p>
+                        <div class="row g-3">
+                            <div class="col-md-6 pb-0">
+                                <div class="row g-2">
+                                    <div class="col-12 pb-0">
+                                        <div class="form-group mb-0">
+                                            <div class="card-header">
+                                                <div>
+                                                    <h5 class="text-title mb-1">
+                                                        {{ translate('messages.Vehicle_Documents') }}
+                                                    </h5>
+                                                    <p class="fs-12 mb-0">
+                                                        {{ translate('messages.Provider Logo & Covers') }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @foreach($vehicle['documents_full_url'] as $img)
+                                        <div class="col-6 spartan_item_wrapper size--sm">
+                                            <img class="rounded border" src="{{ $img }}">
+                                        </div>
+                                    @endforeach
+                                </div>
                             </div>
-                        </div>
-                        <div class="card-body">
-                            <div>
-                                <div class="row" id="multiDoc"></div>
+                            <div class="col-md-6">
+                                <label class="input-label" for="exampleFormControlInput1">{{translate('messages.update_identity_image')}}</label>
+                                <div>
+                                    <div class="row g-2 mt-0" id="multiDoc"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -541,6 +575,81 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
 
     <script>
+        $(function() {
+            $("#multiImg").spartanMultiImagePicker({
+                fieldName: 'images[]',
+                maxCount: 5,
+                rowHeight: '120px',
+                groupClassName: 'col-6 spartan_item_wrapper size--md',
+                maxFileSize: '',
+                placeholderImage: {
+                    image: '{{ asset('public/assets/admin/img/document-upload.png') }}',
+                    width: '100%'
+                },
+                dropFileLabel: "Drop Here",
+                onAddRow: function(index, file) {
+
+                },
+                onRenderedPreview: function(index) {
+
+                },
+                onRemoveRow: function(index) {
+
+                },
+                onExtensionErr: function(index, file) {
+                    toastr.error(
+                        '{{ translate('messages.please_only_input_png_or_jpg_type_file') }}', {
+                            CloseButton: true,
+                            ProgressBar: true
+                        });
+                },
+                onSizeErr: function(index, file) {
+                    toastr.error('{{ translate('messages.file_size_too_big') }}', {
+                        CloseButton: true,
+                        ProgressBar: true
+                    });
+                }
+            });
+        });
+
+        $(function() {
+            $("#multiDoc").spartanMultiImagePicker({
+                fieldName: 'documents[]',
+                maxCount: 5,
+                rowHeight: '120px',
+                groupClassName: 'col-6 spartan_item_wrapper size--md',
+                maxFileSize: '',
+                placeholderImage: {
+                    image: '{{ asset('public/assets/admin/img/document-upload.png') }}',
+                    width: '100%'
+                },
+                dropFileLabel: "Drop Here",
+                onAddRow: function(index, file) {
+
+                },
+                onRenderedPreview: function(index) {
+
+                },
+                onRemoveRow: function(index) {
+
+                },
+                onExtensionErr: function(index, file) {
+                    toastr.error(
+                        '{{ translate('messages.please_only_input_png_or_jpg_type_file') }}', {
+                            CloseButton: true,
+                            ProgressBar: true
+                        });
+                },
+                onSizeErr: function(index, file) {
+                    toastr.error('{{ translate('messages.file_size_too_big') }}', {
+                        CloseButton: true,
+                        ProgressBar: true
+                    });
+                }
+            });
+        });
+
+
         // Get all upload-file input elements
         document.querySelectorAll('.single_file_input').forEach(function(input) {
             input.addEventListener('change', function(event) {
@@ -772,80 +881,6 @@
     <script>
         "use strict";
 
-        $(function() {
-            $("#multiImg").spartanMultiImagePicker({
-                fieldName: 'images[]',
-                maxCount: 5,
-                rowHeight: '120px',
-                groupClassName: 'col-6 spartan_item_wrapper size--md',
-                maxFileSize: '',
-                placeholderImage: {
-                    image: '{{ asset('public/assets/admin/img/document-upload.png') }}',
-                    width: '100%'
-                },
-                dropFileLabel: "Drop Here",
-                onAddRow: function(index, file) {
-
-                },
-                onRenderedPreview: function(index) {
-
-                },
-                onRemoveRow: function(index) {
-
-                },
-                onExtensionErr: function(index, file) {
-                    toastr.error(
-                        '{{ translate('messages.please_only_input_png_or_jpg_type_file') }}', {
-                            CloseButton: true,
-                            ProgressBar: true
-                        });
-                },
-                onSizeErr: function(index, file) {
-                    toastr.error('{{ translate('messages.file_size_too_big') }}', {
-                        CloseButton: true,
-                        ProgressBar: true
-                    });
-                }
-            });
-        });
-
-        $(function() {
-            $("#multiDoc").spartanMultiImagePicker({
-                fieldName: 'documents[]',
-                maxCount: 5,
-                rowHeight: '120px',
-                groupClassName: 'col-6 spartan_item_wrapper size--md',
-                maxFileSize: '',
-                placeholderImage: {
-                    image: '{{ asset('public/assets/admin/img/document-upload.png') }}',
-                    width: '100%'
-                },
-                dropFileLabel: "Drop Here",
-                onAddRow: function(index, file) {
-
-                },
-                onRenderedPreview: function(index) {
-
-                },
-                onRemoveRow: function(index) {
-
-                },
-                onExtensionErr: function(index, file) {
-                    toastr.error(
-                        '{{ translate('messages.please_only_input_png_or_jpg_type_file') }}', {
-                            CloseButton: true,
-                            ProgressBar: true
-                        });
-                },
-                onSizeErr: function(index, file) {
-                    toastr.error('{{ translate('messages.file_size_too_big') }}', {
-                        CloseButton: true,
-                        ProgressBar: true
-                    });
-                }
-            });
-        });
-
         $(document).ready(function () {
             toggleButton();
 
@@ -864,14 +899,16 @@
 
         $(document).on('click', '.add-btn', function() {
             let newDiv = $('#input-container').clone();
+            // newDiv.find('input').val('');
+
             newDiv.find('.add-btn')
                 .removeClass('add-btn text--primary')
                 .addClass('remove-btn text--danger')
                 .html('<i class="tio-clear-circle-outlined"></i>');
 
-            // Append the new div after the last existing input
             newDiv.insertBefore('.equal-width:last');
         });
+
 
         $(document).on('click', '.remove-btn', function() {
             $(this).closest('.equal-width').remove();

@@ -175,7 +175,6 @@ class BrandController extends Controller
         return back();
     }
 
-
     /**
      * @param Request $request
      * @return BinaryFileResponse

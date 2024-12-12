@@ -5,11 +5,13 @@ use Modules\Rental\Http\Controllers\Web\Admin\BrandController;
 use Modules\Rental\Http\Controllers\Web\Admin\Promotions\BannerController;
 use Modules\Rental\Http\Controllers\Web\Admin\Promotions\CouponController;
 use Modules\Rental\Http\Controllers\Web\Admin\Promotions\CashBackController;
+use Modules\Rental\Http\Controllers\Web\Admin\Promotions\NotificationController;
 use Modules\Rental\Http\Controllers\Web\Admin\CategoryController;
 use Modules\Rental\Http\Controllers\Web\Admin\DriverController;
 use Modules\Rental\Http\Controllers\Web\Admin\ProviderController;
 use Modules\Rental\Http\Controllers\Web\Admin\DashboardController;
 use Modules\Rental\Http\Controllers\Web\Admin\VehicleController;
+use Modules\Rental\Http\Controllers\Web\Admin\SettingsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -75,11 +77,14 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
             });
 
             Route::group(['prefix' => 'vehicle', 'as' => 'vehicle.'], function () {
-                Route::get('create/{provider_id}', [VehicleController::class, 'create'])->name('create');
-                Route::post('create/{provider_id}', [VehicleController::class, 'store']);
+                Route::get('list', [VehicleController::class, 'index'])->name('list');
+                Route::get('create', [VehicleController::class, 'create'])->name('create');
+                Route::post('create', [VehicleController::class, 'store']);
                 Route::get('update/{id}', [VehicleController::class, 'edit'])->name('edit');
                 Route::post('update/{id}', [VehicleController::class, 'update']);
+                Route::get('details/{id}', [VehicleController::class, 'details'])->name('details');
                 Route::get('status/{id}', [VehicleController::class, 'status'])->name('status');
+                Route::get('new-tag/{id}', [VehicleController::class, 'newTag'])->name('new-tag');
                 Route::delete('delete/{id}', [VehicleController::class, 'destroy'])->name('delete');
                 Route::get('export', [VehicleController::class, 'export'])->name('export');
             });
@@ -116,6 +121,22 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
             Route::get('status/{cashback}', [CashBackController::class,'status'])->name('status');
             // Route::get('export', [CashBackController::class, 'export'])->name('export');
 
+        });
+
+        Route::group(['prefix' => 'notification', 'as' => 'notification.', 'middleware' => ['module:notification']], function () {
+            Route::get('/', [NotificationController::class,'list'])->name('list');
+            Route::post('store', [NotificationController::class,'store'])->name('store');
+            Route::get('edit/{notification}', [NotificationController::class,'edit'])->name('edit');
+            Route::post('update/{notification}', [NotificationController::class,'update'])->name('update');
+            Route::get('status/{notification}', [NotificationController::class,'status'])->name('status');
+            Route::delete('delete/{notification}', [NotificationController::class,'destroy'])->name('delete');
+            Route::get('export', [NotificationController::class,'export'])->name('export');
+        });
+        Route::group(['prefix' => 'settings', 'as' => 'settings.', 'middleware' => ['module:settings']], function () {
+            Route::get('/', [SettingsController::class,'homePageDownApp'])->name('down_app');
+            Route::post('/down_app_update', [SettingsController::class,'homePageDownAppUpdate'])->name('down_app_update');
+            Route::get('vendors-registration/', [SettingsController::class,'vendorsRegistration'])->name('vendors_registration');
+            Route::post('/vendors-registration-update', [SettingsController::class,'vendorsRegistrationUpdate'])->name('vendors_registration_update');
         });
 
     });

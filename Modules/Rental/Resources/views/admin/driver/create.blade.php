@@ -153,7 +153,7 @@
                                     </div>
                                     <div class="d-flex pt-20 pb-2 overflow-x-auto">
                                         <div>
-                                            <div class="row" id="coba"></div>
+                                            <div class="row" id="multiImg"></div>
                                         </div>
 {{--                                        <div class="d-flex gap-3 flex-shrink-0" id="image_container">--}}
 {{--                                            <div class="upload-file text-wrapper h--100px w--200px flex-shrink-0"--}}
@@ -200,7 +200,7 @@
     <script src="{{ asset('public/assets/admin/js/spartan-multi-image-picker.js') }}"></script>
     <script>
         $(function() {
-            $("#coba").spartanMultiImagePicker({
+            $("#multiImg").spartanMultiImagePicker({
                 fieldName: 'identity_image[]',
                 maxCount: 5,
                 rowHeight: '120px',

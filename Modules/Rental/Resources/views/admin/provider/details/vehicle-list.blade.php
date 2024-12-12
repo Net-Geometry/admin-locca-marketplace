@@ -7,6 +7,7 @@
 
 @section('content')
     <div class="content container-fluid">
+        @include('rental::admin.provider.details.partials._header',['store'=>$store])
         <div class="row g-2 mb-20">
             <div class="col-sm-6 col-lg-3">
                 <a class="order--card h-100" href="javascript:">
@@ -120,7 +121,7 @@
                     </div>
                     <!-- End Unfold -->
                     <a class="btn btn--primary font-weight-bold float-right mr-2 mb-0"
-                       href="{{ route('admin.rental.provider.vehicle.create', request()->id) }}">{{ translate('messages.new_vehicle') }}</a>
+                       href="{{ route('admin.rental.provider.vehicle.create') }}?provider_id={{request()->id}}">{{ translate('messages.new_vehicle') }}</a>
                 </div>
             </div>
             <!-- End Header -->
@@ -165,12 +166,12 @@
                             </td>
                             <td>
                                 <div class="text--title font-medium">
-                                    {{ $vehicle->category->name }}
+                                    {{ $vehicle?->category?->name }}
                                 </div>
                             </td>
                             <td>
                                 <div class="text--title font-medium">
-                                    {{ $vehicle->brand->name }}
+                                    {{ $vehicle?->brand?->name }}
                                 </div>
                             </td>
                             <td>
@@ -180,14 +181,18 @@
                             </td>
                             <td>
                                 <div class="text--title">
-                                    <div>
-                                        <span class="opacity-lg">Hourly: </span>
-                                        <span class="font-semibold">$35.5</span>
-                                    </div>
-                                    <div>
-                                        <span class="opacity-lg">Distance Wise: </span>
-                                        <span class="font-semibold">$35.5</span>
-                                    </div>
+                                    @if($vehicle->trip_hourly)
+                                        <div>
+                                            <span class="opacity-lg">{{translate('Hourly')}}: </span>
+                                            <span class="font-semibold">{{\App\CentralLogics\Helpers::format_currency($vehicle['hourly_price'])}}</span>
+                                        </div>
+                                    @endif
+                                    @if($vehicle->trip_distance)
+                                        <div>
+                                            <span class="opacity-lg">{{translate('Distance Wise')}}: </span>
+                                            <span class="font-semibold">{{\App\CentralLogics\Helpers::format_currency($vehicle['distance_price'])}}</span>
+                                        </div>
+                                    @endif
                                 </div>
                             </td>
                             <td>
@@ -214,20 +219,19 @@
                             </td>
                             <td>
                                 <div class="btn--container justify-content-center">
-                                    <a class="btn action-btn btn--primary btn-outline-primary" href="javascript:"
+                                    <a class="btn action-btn btn--primary btn-outline-primary" href="{{ route('admin.rental.provider.vehicle.details', $vehicle->id)}}?provider_id={{$vehicle->provider_id}}&provider_vehicle_list=true"
                                        title="{{ translate('messages.view') }}"><i class="tio-visible-outlined"></i>
                                     </a>
-                                    <a class="btn action-btn btn-outline-primary" href="javascript:"
+                                    <a class="btn action-btn btn-outline-primary" href="{{ route('admin.rental.provider.vehicle.edit', $vehicle->id)}}"
                                        title="{{ translate('messages.edit_store') }}"><i class="tio-edit"></i>
                                     </a>
                                     <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:"
-                                       data-message="{{ translate('You want to remove this store') }}"
-                                       title="{{ translate('messages.delete_store') }}"><i
+                                       data-id="vehicle-{{$vehicle['id']}}" data-message="{{ translate('Want to delete this vehicle') }}" title="{{translate('messages.delete_vehicle')}}"><i
                                             class="tio-delete-outlined"></i>
                                     </a>
 
                                 </div>
-                                <form action="" method="post" id="">
+                                <form action="{{route('admin.rental.provider.vehicle.delete',[$vehicle['id']])}}" method="post" id="vehicle-{{$vehicle->id}}">
                                     @csrf @method('delete')
                                 </form>
                             </td>

@@ -79,6 +79,7 @@ class ProviderController extends Controller
      * @param SubscriptionPackage $subscriptionPackage
      * @param Helpers $helpers
      * @param VehicleDriver $vehicleDriver
+     * @param Vehicle $vehicle
      */
     public function __construct(BusinessSetting $businessSetting, StoreWallet $storeWallet, Item $item, DisbursementDetails $disbursementDetails, Conversation $conversation, UserInfo $userInfo, TempProduct $tempProduct, Zone $zone, Order $order, Vendor $vendor, Store $store, Admin $admin, StoreLogic $storeLogic, SubscriptionPackage $subscriptionPackage, Helpers $helpers, VehicleDriver $vehicleDriver, Vehicle $vehicle)
     {
@@ -179,7 +180,7 @@ class ProviderController extends Controller
 
         if($tab == 'settings')
         {
-            return view('admin-views.vendor.view.settings', compact('store'));
+            return view('rental::admin.provider.details.settings', compact('store'));
         }
         else if ($tab == 'driver'){
             $query = $this->vehicleDriver->where('provider_id', $store_id);
@@ -240,7 +241,7 @@ class ProviderController extends Controller
                 })
                 ->StoreOrder()
                 ->Notpos()->paginate(10);
-            return view('admin-views.vendor.view.order', compact('store','orders'));
+            return view('rental::admin.provider.details.order', compact('store','orders'));
         }
         else if($tab == 'item')
         {
@@ -281,20 +282,20 @@ class ProviderController extends Controller
                     ->latest()->paginate(25);
             }
 
-            return view('admin-views.vendor.view.product', compact('store','foods','sub_tab'));
+            return view('rental::admin.provider.details.product', compact('store','foods','sub_tab'));
         }
         else if($tab == 'discount')
         {
-            return view('admin-views.vendor.view.discount', compact('store'));
+            return view('rental::admin.provider.details.discount', compact('store'));
         }
         else if($tab == 'transaction')
         {
-            return view('admin-views.vendor.view.transaction', compact('store', 'sub_tab'));
+            return view('rental::admin.provider.details.transaction', compact('store', 'sub_tab'));
         }
 
         else if($tab == 'reviews')
         {
-            return view('admin-views.vendor.view.review', compact('store', 'sub_tab'));
+            return view('rental::admin.provider.details.review', compact('store', 'sub_tab'));
 
         } else if ($tab == 'conversations') {
             $user = $this->userInfo->where(['vendor_id' => $store->vendor->id])->first();
@@ -304,11 +305,11 @@ class ProviderController extends Controller
             } else {
                 $conversations = [];
             }
-            return view('admin-views.vendor.view.conversations', compact('store', 'sub_tab', 'conversations'));
+            return view('rental::admin.provider.details.conversations', compact('store', 'sub_tab', 'conversations'));
 
         } else if ($tab == 'meta-data') {
             $store = $this->store->withoutGlobalScope('translate')->findOrFail($store_id);
-            return view('admin-views.vendor.view.meta-data', compact('store', 'sub_tab'));
+            return view('rental::admin.provider.details.meta-data', compact('store', 'sub_tab'));
 
         } else if ($tab == 'disbursements') {
             $disbursements = $this->disbursementDetails->where('store_id', $store->id)
@@ -321,7 +322,7 @@ class ProviderController extends Controller
                     });
                 })
                 ->latest()->paginate(config('default_pagination'));
-            return view('admin-views.vendor.view.disbursement', compact('store','disbursements'));
+            return view('rental::admin.provider.details.disbursement', compact('store','disbursements'));
 
         } else if ($tab == 'business_plan') {
 
@@ -339,7 +340,7 @@ class ProviderController extends Controller
             } catch (\Throwable $th) {
                 $index= 2;
             }
-            return view('admin-views.vendor.view.subscription',compact('store','packages','business_name','admin_commission','index'));
+            return view('rental::admin.provider.details.subscription',compact('store','packages','business_name','admin_commission','index'));
         }
 
         return view('rental::admin.provider.details.overview', compact('store', 'wallet'));
@@ -542,14 +543,13 @@ class ProviderController extends Controller
             return back()->withErrors($validator)->withInput();
         }
 
-
-        $this->updateVendor($request);
-        $this->updateStore($request);
+        $this->updateVendor($request, $store->vendor);
+        $this->updateStore($request, $store);
 
         $this->helpers->add_or_update_translations(request: $request, key_data: 'name', name_field: 'name', model_name: 'Store', data_id: $id, data_value: $store->name);
         $this->helpers->add_or_update_translations(request: $request, key_data: 'address', name_field: 'address', model_name: 'Store', data_id: $id, data_value: $store->address);
 
-        Toastr::error(translate('messages.Provider_updated_successfully'));
+        Toastr::success(translate('messages.Provider_updated_successfully'));
         return redirect()->route('admin.rental.provider.edit-business-setup', $id);
     }
 
@@ -693,11 +693,12 @@ class ProviderController extends Controller
 
     /**
      * @param Request $request
+     * @param Vendor $vendor
      * @return mixed
      */
-    private function updateVendor(Request $request): mixed
+    private function updateVendor(Request $request, Vendor $vendor): mixed
     {
-        return $this->vendor->update([
+        return $vendor->update([
             'f_name' => $request->f_name,
             'l_name' => $request->l_name,
             'email' => $request->email,
@@ -736,12 +737,12 @@ class ProviderController extends Controller
 
     /**
      * @param Request $request
-     * @param Vendor $vendor
+     * @param Store $store
      * @return mixed
      */
-    private function updateStore(Request $request): mixed
+    private function updateStore(Request $request, Store $store): mixed
     {
-        return $this->store->update([
+        return $store->update([
             'name' => $request->name[array_search('default', $request->lang)],
             'phone' => $request->phone,
             'email' => $request->email,

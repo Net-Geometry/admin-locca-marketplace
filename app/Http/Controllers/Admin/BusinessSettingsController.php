@@ -284,22 +284,28 @@ class BusinessSettingsController extends Controller
             'home_delivery_status' => 'required_without:takeaway_status',
             'takeaway_status' => 'required_without:home_delivery_status',
         ]);
+        $key_datas=[
+            'order_cancelation_rate_limit_status' => 'order_cancelation_rate_limit_status',
+            'order_cancelation_rate_block_limit' => 'order_cancelation_rate_block_limit',
+            'order_cancelation_rate_warning_limit' => 'order_cancelation_rate_warning_limit',
+            'order_delivery_verification' => 'odc',
+            'schedule_order' => 'schedule_order',
+            'prescription_order_status' => 'prescription_order_status',
+            'home_delivery_status' => 'home_delivery_status',
+            'takeaway_status' => 'takeaway_status',
+            'schedule_order_slot_duration_time_format' => 'schedule_order_slot_duration_time_format',
+            'takeaway_status' => 'takeaway_status',
+            ];
 
-        Helpers::businessUpdateOrInsert(['key' => 'order_delivery_verification'], [
-            'value' => $request['odc']
-        ]);
-        Helpers::businessUpdateOrInsert(['key' => 'schedule_order'], [
-            'value' => $request['schedule_order']
-        ]);
-        Helpers::businessUpdateOrInsert(['key' => 'prescription_order_status'], [
-            'value' => $request['prescription_order_status']
-        ]);
-        Helpers::businessUpdateOrInsert(['key' => 'home_delivery_status'], [
-            'value' => $request['home_delivery_status']
-        ]);
-        Helpers::businessUpdateOrInsert(['key' => 'takeaway_status'], [
-            'value' => $request['takeaway_status']
-        ]);
+        if($request->order_cancelation_rate_limit_status &&  $request->order_cancelation_rate_warning_limit >  $request->order_cancelation_rate_block_limit ){
+            Toastr::error(translate('messages.Providers_will_be_blocked_with_out_warning.Warning_rate_must_be_smaller'));
+            return back();
+        }
+        foreach($key_datas as $key => $request_key){
+                Helpers::businessUpdateOrInsert(['key' => $key], [
+                    'value' => $request->{$request_key} ?? 0
+                ]);
+            }
 
         $time = $request['schedule_order_slot_duration'];
         if ($request['schedule_order_slot_duration_time_format'] == 'hour') {
@@ -308,10 +314,6 @@ class BusinessSettingsController extends Controller
         Helpers::businessUpdateOrInsert(['key' => 'schedule_order_slot_duration'], [
             'value' => $time
         ]);
-        Helpers::businessUpdateOrInsert(['key' => 'schedule_order_slot_duration_time_format'], [
-            'value' => $request['schedule_order_slot_duration_time_format']
-        ]);
-
         $values = [];
         foreach (config('module.module_type') as $key => $value) {
             $values[$value] = $request[$value] ?? 0;

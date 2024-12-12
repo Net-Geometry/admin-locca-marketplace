@@ -4375,5 +4375,33 @@ class Helpers
             return null;
         }
     }
+    public static function disableStoreForOrderCancellation()
+    {
+        if( isset($module_cleck) && self::get_business_settings('order_cancelation_rate_limit_status') && self::get_business_settings('order_cancelation_rate_block_limit') > 0){
+            $stores = Store::where('status',1)
+            ->wherehas('module',function($query){
+                $query->where('module_type','rental');
+            })
+            ->withoutGlobalScopes()->select('id')->withCount([
+                'orders as total_orders',
+                'orders as canceled_orders' => function ($query) {
+                    $query->where('order_status', 'canceled');
+                }
+            ])->get()->filter(function ($store) {
+                if ($store->canceled_orders > 0) {
+                    $cancellationRate = ($store->canceled_orders / $store->total_orders) * 100;
+                    $store['cancellation_rate']= $cancellationRate;
+                    return $cancellationRate >= self::get_business_settings('order_cancelation_rate_block_limit');
+                }
+                return false;
+            });
+            $storeIds = $stores->pluck('id');
+
+            Store::whereIn('id', $storeIds)->update(['status' => 0]);
+        }
+
+
+        return true;
+    }
 }
 
