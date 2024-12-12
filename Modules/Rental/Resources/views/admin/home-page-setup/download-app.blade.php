@@ -168,25 +168,23 @@
                                             {{ translate('JPG, JPEG, PNG Less Than 1MB') }} <strong class="font-semibold">({{ translate('Ratio 1:1') }})</strong>
                                         </p>
                                     </div>
-                                    <div class="upload-file text-wrapper">
-                                        <input type="file" name="image" class="upload-file__input single_file_input"
-                                            accept=".jpg, .jpeg, .png" >
+                                    <div class="upload-file image-general d-inline-block">
+                                        <a href="javascript:void(0);" class="remove-btn opacity-0 z-index-99">
+                                            <i class="tio-clear"></i>
+                                        </a>
+                                        <input type="file" name="image" class="upload-file__input single_file_input" 
+                                            accept=".jpg, .jpeg, .png"  value="{{\App\CentralLogics\Helpers::get_full_url('react_landing', $image?->value?? '', $image?->storage[0]?->value ?? 'public','upload_image_4')}}">
                                         <div
                                             class="upload-file__img d-flex justify-content-center align-items-center h-180 m-auto p-0">
-                                            <div class="upload-file__textbox text-center">
-                                                {{-- {{ asset('public/assets/admin/img/document-upload.png') }} --}}
-                                                <img width="34" height="34"
-                                                    src=" {{\App\CentralLogics\Helpers::get_full_url('react_landing', $image?->value?? '', $image?->storage[0]?->value ?? 'public','upload_image_4')}}"
-                                                    alt="" class="svg">
-                                                <h6 class="mt-2 font-semibold">
-                                                    <span class="text-info">{{ translate('Click to upload') }}</span>
+                                            <div class="upload-file-textbox text-center">
+                                                <img width="34" height="34" src="{{ asset('public/assets/admin/img/document-upload.svg') }}" alt="">
+                                                <h6 class="mt-2 font-semibold text-center">
+                                                    <span>{{ translate('Click to upload') }}</span>
                                                     <br>
                                                     {{ translate('or drag and drop') }}
                                                 </h6>
                                             </div>
-                                            <img class="upload-file__img__img border--dashed aspect-ratio-1"
-                                                height="180" width="180" loading="lazy" style="display: none;"
-                                                alt="">
+                                            <img class="upload-file-img" height="180" width="180" loading="lazy" style="display: none;" src="{{\App\CentralLogics\Helpers::get_full_url('react_landing', $image?->value?? '', $image?->storage[0]?->value ?? 'public','upload_image_4')}}" alt="">
                                         </div>
                                     </div>
 
@@ -217,42 +215,76 @@
 
 @push('script_2')
     <script>
-        // Get all upload-file input elements
-        document.querySelectorAll('.single_file_input').forEach(function(input) {
-            input.addEventListener('change', function(event) {
+         // ---- single image upload starts
+        $(document).ready(function () {
+            // Handle file input change
+            $('.single_file_input').on('change', function (event) {
                 var file = event.target.files[0];
-                var card = event.target.closest('.upload-file');
-                var textbox = card.querySelector('.upload-file__textbox');
-                var imgElement = card.querySelector('.upload-file__img__img');
+                var $card = $(event.target).closest('.upload-file');
+                var $textbox = $card.find('.upload-file-textbox');
+                var $imgElement = $card.find('.upload-file-img');
+                var $removeBtn = $card.find('.remove-btn');
 
                 if (file) {
                     var reader = new FileReader();
-                    reader.onload = function(e) {
-                        textbox.style.display = 'none';
-                        imgElement.src = e.target.result;
-                        imgElement.style.display = 'block';
+                    reader.onload = function (e) {
+                        $textbox.hide();
+                        $imgElement.attr('src', e.target.result).show();
+                        $removeBtn.css('opacity', 1);
                     };
                     reader.readAsDataURL(file);
                 }
             });
-        });
 
+            // Check for a valid src on load to handle pre-existing images
+            $('.upload-file').each(function () {
+                var $card = $(this);
+                var $textbox = $card.find('.upload-file-textbox');
+                var $imgElement = $card.find('.upload-file-img');
+                var $removeBtn = $card.find('.remove-btn');
 
-    document.addEventListener("DOMContentLoaded", function () {
-        const fields = document.querySelectorAll('.character-count-field');
-        fields.forEach((field) => {
-            const textCount = field.closest('.character-count').querySelector('.text-count');
-            const maxLength = field.getAttribute('maxlength');
-            updateCount(field, textCount, maxLength);
+                // If there's already a valid image source
+                if ($imgElement.attr('src') && $imgElement.attr('src') !== window.location.href) {
+                    $textbox.hide();
+                    $imgElement.show();
+                }
+            });
 
-            field.addEventListener('input', function () {
-                updateCount(field, textCount, maxLength);
+           // Handle remove button click
+           $('.remove-btn').click(function () {
+                var $card = $(this).closest('.upload-file');
+                $card.find('.single_file_input').val(''); 
+                $card.find('.upload-file-img').attr('src', '{{\App\CentralLogics\Helpers::get_full_url('react_landing', $image?->value?? '', $image?->storage[0]?->value ?? 'public','upload_image_4')}}');
+                $(this).css('opacity', 0);
+            });
+
+            // Handle reset button click
+            $('#reset_btn').click(function () {
+                var $cards = $('.upload-file'); 
+                $cards.each(function () {
+                    $(this).find('.single_file_input').val(''); 
+                    $(this).find('.upload-file-img').attr('src', '{{\App\CentralLogics\Helpers::get_full_url('react_landing', $image?->value?? '', $image?->storage[0]?->value ?? 'public','upload_image_4')}}');
+                    $(this).find('.remove-btn').css('opacity', 0);
+                });
             });
         });
-        function updateCount(field, textCount, maxLength) {
-            const currentLength = field.value.length;
-            textCount.textContent = `${currentLength} / ${maxLength}`;
-        }
-    });
+        // ---- single image upload ends
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const fields = document.querySelectorAll('.character-count-field');
+            fields.forEach((field) => {
+                const textCount = field.closest('.character-count').querySelector('.text-count');
+                const maxLength = field.getAttribute('maxlength');
+                updateCount(field, textCount, maxLength);
+
+                field.addEventListener('input', function () {
+                    updateCount(field, textCount, maxLength);
+                });
+            });
+            function updateCount(field, textCount, maxLength) {
+                const currentLength = field.value.length;
+                textCount.textContent = `${currentLength} / ${maxLength}`;
+            }
+        });
     </script>
 @endpush
