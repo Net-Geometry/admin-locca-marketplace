@@ -128,7 +128,7 @@
 
                                 </div>
                                 <div class="col-lg-6">
-                                    <div class="text-center">
+                                    {{-- <div class="text-center">
                                         <label class="text--title fs-16 font-semibold mb-1">
                                             {{ translate('Vehicle_Thumbnail') }}
                                         </label>
@@ -159,6 +159,35 @@
                                             </div>
                                         </div>
 
+                                    </div> --}}
+                                    <div class="text-center">
+                                        <label class="text--title fs-16 font-semibold mb-1">
+                                            {{ translate('Vehicle_Thumbnail') }}
+                                        </label>
+                                        <div class="mb-20">
+                                            <p class="fs-12">
+                                                {{ translate('JPG, JPEG, PNG Less Than 1MB') }} <strong class="font-semibold">({{ translate('Ratio 2:1') }})</strong>
+                                            </p>
+                                        </div>
+                                        <div class="upload-file image-general d-inline-block w-auto">
+                                            <a href="javascript:void(0);" class="remove-btn opacity-0 z-index-99">
+                                                <i class="tio-clear"></i>
+                                            </a>
+                                            <input type="file" name="image" class="upload-file__input single_file_input" 
+                                                accept=".jpg, .jpeg, .png"  value="{{ $vehicle['thumbnail_full_url'] ?? '' }}">
+                                            <label
+                                                class="upload-file-wrapper height-150px max-w-300px aspect-2-1">
+                                                <div class="upload-file-textbox text-center w-100">
+                                                    <img width="34" height="34" src="{{ asset('public/assets/admin/img/document-upload.svg') }}" alt="">
+                                                    <h6 class="mt-2 font-semibold text-center">
+                                                        <span>{{ translate('Click to upload') }}</span>
+                                                        <br>
+                                                        {{ translate('or drag and drop') }}
+                                                    </h6>
+                                                </div>
+                                                <img class="upload-file-img ratio-2" width="300" height="150" loading="lazy" style="display: none;" src="{{ $vehicle['thumbnail_full_url'] ?? '' }}" alt="">
+                                            </label>
+                                        </div>
                                     </div>
 
                                 </div>
@@ -575,6 +604,63 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
 
     <script>
+        // ---- single image upload starts
+        $(document).ready(function () {
+            // Handle file input change
+            $('.single_file_input').on('change', function (event) {
+                var file = event.target.files[0];
+                var $card = $(event.target).closest('.upload-file');
+                var $textbox = $card.find('.upload-file-textbox');
+                var $imgElement = $card.find('.upload-file-img');
+                var $removeBtn = $card.find('.remove-btn');
+
+                if (file) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $textbox.hide();
+                        $imgElement.attr('src', e.target.result).show();
+                        $removeBtn.css('opacity', 1);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // Check for a valid src on load to handle pre-existing images
+            $('.upload-file').each(function () {
+                var $card = $(this);
+                var $textbox = $card.find('.upload-file-textbox');
+                var $imgElement = $card.find('.upload-file-img');
+                var $removeBtn = $card.find('.remove-btn');
+
+                // If there's already a valid image source
+                if ($imgElement.attr('src') && $imgElement.attr('src') !== window.location.href) {
+                    $textbox.hide();
+                    $imgElement.show();
+                }
+            });
+
+           // Handle remove button click
+           $('.remove-btn').click(function () {
+                var $card = $(this).closest('.upload-file');
+                $card.find('.single_file_input').val(''); 
+                $card.find('.upload-file-img').attr('src', '{{ $vehicle['thumbnail_full_url'] ?? '' }}');
+                $(this).css('opacity', 0);
+            });
+
+            // Handle reset button click
+            $('#reset_btn').click(function () {
+                var $cards = $('.upload-file'); 
+                $cards.each(function () {
+                    $(this).find('.single_file_input').val(''); 
+                    $(this).find('.upload-file-img').attr('src', '{{ $vehicle['thumbnail_full_url'] ?? '' }}');
+                    $(this).find('.remove-btn').css('opacity', 0);
+                });
+            });
+        });
+        // ---- single image upload ends
+    </script>
+
+    <script>
         $(function() {
             $("#multiImg").spartanMultiImagePicker({
                 fieldName: 'images[]',
@@ -650,25 +736,25 @@
         });
 
 
-        // Get all upload-file input elements
-        document.querySelectorAll('.single_file_input').forEach(function(input) {
-            input.addEventListener('change', function(event) {
-                var file = event.target.files[0];
-                var card = event.target.closest('.upload-file');
-                var textbox = card.querySelector('.upload-file__textbox');
-                var imgElement = card.querySelector('.upload-file__img__img');
+        // // Get all upload-file input elements
+        // document.querySelectorAll('.single_file_input').forEach(function(input) {
+        //     input.addEventListener('change', function(event) {
+        //         var file = event.target.files[0];
+        //         var card = event.target.closest('.upload-file');
+        //         var textbox = card.querySelector('.upload-file__textbox');
+        //         var imgElement = card.querySelector('.upload-file__img__img');
 
-                if (file) {
-                    var reader = new FileReader();
-                    reader.onload = function(e) {
-                        textbox.style.display = 'none';
-                        imgElement.src = e.target.result;
-                        imgElement.style.display = 'block';
-                    };
-                    reader.readAsDataURL(file);
-                }
-            });
-        });
+        //         if (file) {
+        //             var reader = new FileReader();
+        //             reader.onload = function(e) {
+        //                 textbox.style.display = 'none';
+        //                 imgElement.src = e.target.result;
+        //                 imgElement.style.display = 'block';
+        //             };
+        //             reader.readAsDataURL(file);
+        //         }
+        //     });
+        // });
     </script>
 
     <script>

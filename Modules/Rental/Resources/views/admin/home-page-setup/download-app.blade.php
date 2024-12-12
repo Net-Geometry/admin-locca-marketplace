@@ -215,7 +215,7 @@
 
 @push('script_2')
     <script>
-         // ---- single image upload starts
+        // ---- single image upload starts
         $(document).ready(function () {
             // Handle file input change
             $('.single_file_input').on('change', function (event) {

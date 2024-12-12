@@ -14894,7 +14894,7 @@ ul.address-info .label {
     min-block-size: 200px;
 }
 
-.upload-file-wrapper.aspect-3-2 .upload-file-img{
+.upload-file-wrapper .upload-file-img {
     max-inline-size: 100% !important;
     max-block-size: 100% !important;
 }

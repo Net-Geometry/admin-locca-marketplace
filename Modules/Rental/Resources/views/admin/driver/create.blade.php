@@ -74,37 +74,35 @@
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
-                                    <div class="__custom-upload-img text-center">
-                                        <label class="form-label font-semibold mb-1">
-                                            {{ translate('Profile Image') }}
+                                    <div class="text-center">
+                                        <label class="text--title fs-16 font-semibold mb-1">
+                                            {{ translate('Profile_Image') }}
                                         </label>
-                                        <p class="fs-12 mb-20">
-                                            JPG, JPEG, PNG Less Than 1MB
-                                            <strong class="font-semibold">(Ratio 1:1)</strong>
-                                        </p>
-                                        <label
-                                            class="position-relative d-inline-block image--border cursor-pointer w-100 h-180 max-w-180">
-                                            <img  class="h-180 aspect-ratio-1 radius-10" id="logoImageViewer"
-                                                  data-onerror-image="{{ asset('public/assets/admin/img/upload.png') }}"
-                                                  src="{{ asset('public/assets/admin/img/upload-img.png') }}"
-                                                  alt="logo image" style="display: none" />
-                                            <div class="upload-file__textbox p-2 h-100">
-                                                <img width="34" height="34"
-                                                     src="{{ asset('public/assets/admin/img/document-upload.png') }}"
-                                                     alt="" class="svg">
-                                                <h6 class="mt-2 text-center font-semibold fs-12">
-                                                    <span
-                                                        class="text-info">{{ translate('messages.Click to upload') }}</span>
-                                                    <br>
-                                                    {{ translate('messages.or drag and drop') }}
-                                                </h6>
-                                            </div>
-                                            <div class="icon-file-group">
-                                                <input type="file" name="image" id="customFileEg1"
-                                                       class="custom-file-input"
-                                                       accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
-                                            </div>
-                                        </label>
+                                        <div class="mb-20">
+                                            <p class="fs-12">
+                                                {{ translate('JPG, JPEG, PNG Less Than 1MB') }} <strong class="font-semibold">({{ translate('Ratio 1:1') }})</strong>
+                                            </p>
+                                        </div>
+                                        <div class="upload-file image-general d-inline-block w-auto">
+                                            <a href="javascript:void(0);" class="remove-btn opacity-0 z-index-99">
+                                                <i class="tio-clear"></i>
+                                            </a>
+                                            <input type="file" name="image" class="upload-file__input single_file_input" 
+                                                accept=".jpg, .jpeg, .png"  value="">
+                                            <label
+                                                class="upload-file-wrapper w--180px">
+                                                <div class="upload-file-textbox text-center">
+                                                    <img width="34" height="34" src="{{ asset('public/assets/admin/img/document-upload.svg') }}" alt="">
+                                                    <h6 class="mt-2 font-semibold text-center">
+                                                        <span>{{ translate('Click to upload') }}</span>
+                                                        <br>
+                                                        {{ translate('or drag and drop') }}
+                                                    </h6>
+                                                </div>
+                                                <img class="upload-file-img" height="180" width="180" loading="lazy" style="display: none;" src="" alt="">
+                                            </label>
+                                        </div>
+    
                                     </div>
                                 </div>
                             </div>
@@ -152,28 +150,28 @@
                                         </p>
                                     </div>
                                     <div class="d-flex pt-20 pb-2 overflow-x-auto">
-                                        <div>
+                                        {{-- <div>
                                             <div class="row" id="multiImg"></div>
-                                        </div>
-{{--                                        <div class="d-flex gap-3 flex-shrink-0" id="image_container">--}}
-{{--                                            <div class="upload-file text-wrapper h--100px w--200px flex-shrink-0"--}}
-{{--                                                 id="image_upload_wrapper">--}}
-{{--                                                <input type="file" name="identity_image[]"--}}
-{{--                                                       class="upload-file__input multiple_image_input" accept=".jpg,.jpeg,.png" multiple>--}}
-{{--                                                <div--}}
-{{--                                                    class="upload-file__img d-flex gap-0 justify-content-center align-items-center h-100 max-w-300px p-0">--}}
-{{--                                                    <div class="upload-file__textbox">--}}
-{{--                                                        <img width="34" height="34"--}}
-{{--                                                             src="{{ asset('public/assets/admin/img/document-upload.png') }}"--}}
-{{--                                                             alt="" class="svg">--}}
-{{--                                                        <h6 class="mt-2 font-semibold">--}}
-{{--                                                            <span class="text-info">{{ translate('Click to upload') }}</span><br>--}}
-{{--                                                            {{ translate('or drag and drop') }}--}}
-{{--                                                        </h6>--}}
-{{--                                                    </div>--}}
-{{--                                                </div>--}}
-{{--                                            </div>--}}
-{{--                                        </div>--}}
+                                        </div> --}}
+                                       <div class="d-flex gap-3 flex-shrink-0" id="image_container">
+                                           <div class="upload-file text-wrapper h--100px w--200px flex-shrink-0"
+                                                id="image_upload_wrapper">
+                                               <input type="file" name="identity_image[]"
+                                                      class="upload-file__input multiple_image_input" accept=".jpg,.jpeg,.png" multiple>
+                                               <div
+                                                   class="upload-file__img d-flex gap-0 justify-content-center align-items-center h-100 max-w-300px p-0">
+                                                   <div class="upload-file__textbox">
+                                                       <img width="34" height="34"
+                                                            src="{{ asset('public/assets/admin/img/document-upload.png') }}"
+                                                            alt="" class="svg">
+                                                       <h6 class="mt-2 font-semibold">
+                                                           <span class="text-info">{{ translate('Click to upload') }}</span><br>
+                                                           {{ translate('or drag and drop') }}
+                                                       </h6>
+                                                   </div>
+                                               </div>
+                                           </div>
+                                       </div>
                                     </div>
                                 </div>
                             </div>
@@ -199,184 +197,166 @@
 @push('script_2')
     <script src="{{ asset('public/assets/admin/js/spartan-multi-image-picker.js') }}"></script>
     <script>
-        $(function() {
-            $("#multiImg").spartanMultiImagePicker({
-                fieldName: 'identity_image[]',
-                maxCount: 5,
-                rowHeight: '120px',
-                groupClassName: 'col-6 spartan_item_wrapper size--md',
-                maxFileSize: '',
-                placeholderImage: {
-                    image: '{{ asset('public/assets/admin/img/document-upload.png') }}',
-                    width: '100%'
-                },
-                dropFileLabel: "Drop Here",
-                onAddRow: function(index, file) {
+        // $(function() {
+        //     $("#multiImg").spartanMultiImagePicker({
+        //         fieldName: 'identity_image[]',
+        //         maxCount: 5,
+        //         rowHeight: '120px',
+        //         groupClassName: 'col-6 spartan_item_wrapper size--md',
+        //         maxFileSize: '',
+        //         placeholderImage: {
+        //             image: '{{ asset('public/assets/admin/img/document-upload.png') }}',
+        //             width: '100%'
+        //         },
+        //         dropFileLabel: "Drop Here",
+        //         onAddRow: function(index, file) {
 
-                },
-                onRenderedPreview: function(index) {
+        //         },
+        //         onRenderedPreview: function(index) {
 
-                },
-                onRemoveRow: function(index) {
+        //         },
+        //         onRemoveRow: function(index) {
 
-                },
-                onExtensionErr: function(index, file) {
-                    toastr.error(
-                        '{{ translate('messages.please_only_input_png_or_jpg_type_file') }}', {
-                            CloseButton: true,
-                            ProgressBar: true
-                        });
-                },
-                onSizeErr: function(index, file) {
-                    toastr.error('{{ translate('messages.file_size_too_big') }}', {
+        //         },
+        //         onExtensionErr: function(index, file) {
+        //             toastr.error(
+        //                 '{{ translate('messages.please_only_input_png_or_jpg_type_file') }}', {
+        //                     CloseButton: true,
+        //                     ProgressBar: true
+        //                 });
+        //         },
+        //         onSizeErr: function(index, file) {
+        //             toastr.error('{{ translate('messages.file_size_too_big') }}', {
+        //                 CloseButton: true,
+        //                 ProgressBar: true
+        //             });
+        //         }
+        //     });
+        // });
+        
+        // ---- single image upload starts
+        $(document).ready(function () {
+            // Handle file input change
+            $('.single_file_input').on('change', function (event) {
+                var file = event.target.files[0];
+                var $card = $(event.target).closest('.upload-file');
+                var $textbox = $card.find('.upload-file-textbox');
+                var $imgElement = $card.find('.upload-file-img');
+                var $removeBtn = $card.find('.remove-btn');
+
+                if (file) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $textbox.hide();
+                        $imgElement.attr('src', e.target.result).show();
+                        $removeBtn.css('opacity', 1); 
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // Handle remove button click
+            $('.remove-btn').click(function () {
+                var $card = $(this).closest('.upload-file');
+                $card.find('.single_file_input').val(''); 
+                $card.find('.upload-file-textbox').show(); 
+                $card.find('.upload-file-img').hide().attr('src', ''); 
+                $(this).css('opacity', 0); 
+            });
+
+            // Handle reset button click
+            $('#reset_btn').click(function () {
+                var $cards = $('.upload-file'); 
+                $cards.each(function () {
+                    $(this).find('.single_file_input').val(''); 
+                    $(this).find('.upload-file-textbox').show(); 
+                    $(this).find('.upload-file-img').hide().attr('src', '');
+                    $(this).find('.remove-btn').css('opacity', 0);
+                });
+            });
+        });
+         // ---- single image upload ends
+
+        // ----- mutiple image upload
+        document.addEventListener("DOMContentLoaded", function() {
+            const MAX_FILES = 5;
+            const ALLOWED_FILE_TYPES = ["image/jpeg", "image/jpg", "image/png"];
+            const MAX_FILE_SIZE_MB = 1; // Set maximum file size in MB
+            const imageContainer = document.getElementById("image_container");
+            const uploadWrapper = document.getElementById("image_upload_wrapper");
+
+            document.querySelector('.multiple_image_input').addEventListener('change', function(event) {
+                const files = Array.from(event.target.files);
+                const currentFiles = imageContainer.querySelectorAll(".image-single").length;
+
+                if (currentFiles + files.length > MAX_FILES) {
+                    toastr.error('{{ translate('You can upload a maximum of') }} ' + MAX_FILES +
+                        ' {{ translate('files.') }}', {
                         CloseButton: true,
                         ProgressBar: true
                     });
+                    return;
                 }
+
+                files.forEach(file => {
+                    // Validate file type
+                    if (!ALLOWED_FILE_TYPES.includes(file.type)) {
+                        toastr.error(
+                            '{{ translate('please_only_input_png_or_jpg_type_file') }}', {
+                                CloseButton: true,
+                                ProgressBar: true
+                            });
+                        return;
+                    }
+
+                    // Validate file size
+                    if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
+                        toastr.error('{{ translate('file_size_too_big') }}', {
+                            CloseButton: true,
+                            ProgressBar: true
+                        });
+                        return;
+                    }
+
+                    // Create file preview
+                    const fileURL = URL.createObjectURL(file);
+
+                    const imageSingle = document.createElement("div");
+                    imageSingle.className = "image-single h-100 max-w-200px p-0";
+                    imageSingle.innerHTML = `
+                        <a href="javascript:void(0);" class="remove-btn" onclick="removeImage(event, this)">
+                            <i class="tio-clear"></i>
+                        </a>
+                        <img class="img--vertical-2 rounded-10" width="200" height="100" loading="lazy" src="${fileURL}" alt="">
+                    `;
+
+                    imageContainer.appendChild(imageSingle);
+
+                    // Success notification
+                    toastr.success('{{ translate('image_added') }}', {
+                        CloseButton: true,
+                        ProgressBar: true
+                    });
+                });
+
+                toggleUploadWrapper();
+
+                // Clear file input after upload
+                event.target.value = "";
             });
-        });
-        // ---- image upload with textbox
-        $(document).ready(function() {
-            function handleImageUpload(inputSelector, imgViewerSelector, textBoxSelector) {
-                const inputElement = $(inputSelector);
 
-                // Handle input change for file selection
-                inputElement.on('change', function() {
-                    const file = this.files[0];
-                    if (file) {
-                        const reader = new FileReader();
-                        reader.onload = function(e) {
-                            $(imgViewerSelector).attr('src', e.target.result).show();
-                            $(textBoxSelector).hide();
-                        };
-                        reader.readAsDataURL(file);
-                    }
-                });
+            window.removeImage = function(event, element) {
+                event.stopPropagation();
+                const imageSingle = element.closest(".image-single");
+                imageSingle.remove();
+                toggleUploadWrapper();
+            };
 
-                // Handle drag-and-drop functionality
-                const dropZone = inputElement.closest('.image--border');
-
-                dropZone.on('dragover', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                });
-
-                dropZone.on('dragleave', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                });
-
-                dropZone.on('drop', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-
-                    const file = e.originalEvent.dataTransfer.files[0];
-                    if (file) {
-                        const reader = new FileReader();
-                        reader.onload = function(e) {
-                            $(imgViewerSelector).attr('src', e.target.result).show();
-                            $(textBoxSelector).hide();
-                        };
-                        reader.readAsDataURL(file);
-                    }
-                });
+            function toggleUploadWrapper() {
+                const currentFiles = imageContainer.querySelectorAll(".image-single").length;
+                uploadWrapper.style.display = currentFiles >= MAX_FILES ? "none" : "block";
             }
-
-            // Apply functionality to each upload element
-            handleImageUpload(
-                '#coverImageUpload',
-                '#coverImageViewer',
-                '#coverImageViewer ~ .upload-file__textbox'
-            );
-
-            handleImageUpload(
-                '#customFileEg1',
-                '#logoImageViewer',
-                '#logoImageViewer ~ .upload-file__textbox'
-            );
         });
-        // ---- image upload with textbox ends
-
-        // ----- mutiple image upload
-        {{--document.addEventListener("DOMContentLoaded", function() {--}}
-        {{--    const MAX_FILES = 5;--}}
-        {{--    const ALLOWED_FILE_TYPES = ["image/jpeg", "image/jpg", "image/png"];--}}
-        {{--    const MAX_FILE_SIZE_MB = 1; // Set maximum file size in MB--}}
-        {{--    const imageContainer = document.getElementById("image_container");--}}
-        {{--    const uploadWrapper = document.getElementById("image_upload_wrapper");--}}
-
-        {{--    document.querySelector('.multiple_image_input').addEventListener('change', function(event) {--}}
-        {{--        const files = Array.from(event.target.files);--}}
-        {{--        const currentFiles = imageContainer.querySelectorAll(".image-single").length;--}}
-
-        {{--        if (currentFiles + files.length > MAX_FILES) {--}}
-        {{--            toastr.error('{{ translate('You can upload a maximum of') }} ' + MAX_FILES +--}}
-        {{--                ' {{ translate('files.') }}', {--}}
-        {{--                CloseButton: true,--}}
-        {{--                ProgressBar: true--}}
-        {{--            });--}}
-        {{--            return;--}}
-        {{--        }--}}
-
-        {{--        files.forEach(file => {--}}
-        {{--            // Validate file type--}}
-        {{--            if (!ALLOWED_FILE_TYPES.includes(file.type)) {--}}
-        {{--                toastr.error(--}}
-        {{--                    '{{ translate('please_only_input_png_or_jpg_type_file') }}', {--}}
-        {{--                        CloseButton: true,--}}
-        {{--                        ProgressBar: true--}}
-        {{--                    });--}}
-        {{--                return;--}}
-        {{--            }--}}
-
-        {{--            // Validate file size--}}
-        {{--            if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {--}}
-        {{--                toastr.error('{{ translate('file_size_too_big') }}', {--}}
-        {{--                    CloseButton: true,--}}
-        {{--                    ProgressBar: true--}}
-        {{--                });--}}
-        {{--                return;--}}
-        {{--            }--}}
-
-        {{--            // Create file preview--}}
-        {{--            const fileURL = URL.createObjectURL(file);--}}
-
-        {{--            const imageSingle = document.createElement("div");--}}
-        {{--            imageSingle.className = "image-single h-100 max-w-200px p-0";--}}
-        {{--            imageSingle.innerHTML = `--}}
-        {{--                <a href="javascript:void(0);" class="remove-btn" onclick="removeImage(event, this)">--}}
-        {{--                    <i class="tio-clear"></i>--}}
-        {{--                </a>--}}
-        {{--                <img class="img--vertical-2 rounded-10" width="200" height="100" loading="lazy" src="${fileURL}" alt="">--}}
-        {{--            `;--}}
-
-        {{--            imageContainer.appendChild(imageSingle);--}}
-
-        {{--            // Success notification--}}
-        {{--            toastr.success('{{ translate('image_added') }}', {--}}
-        {{--                CloseButton: true,--}}
-        {{--                ProgressBar: true--}}
-        {{--            });--}}
-        {{--        });--}}
-
-        {{--        toggleUploadWrapper();--}}
-
-        {{--        // Clear file input after upload--}}
-        {{--        event.target.value = "";--}}
-        {{--    });--}}
-
-        {{--    window.removeImage = function(event, element) {--}}
-        {{--        event.stopPropagation();--}}
-        {{--        const imageSingle = element.closest(".image-single");--}}
-        {{--        imageSingle.remove();--}}
-        {{--        toggleUploadWrapper();--}}
-        {{--    };--}}
-
-        {{--    function toggleUploadWrapper() {--}}
-        {{--        const currentFiles = imageContainer.querySelectorAll(".image-single").length;--}}
-        {{--        uploadWrapper.style.display = currentFiles >= MAX_FILES ? "none" : "block";--}}
-        {{--    }--}}
-        {{--});--}}
         // ----- mutiple image upload ends
 
     </script>
