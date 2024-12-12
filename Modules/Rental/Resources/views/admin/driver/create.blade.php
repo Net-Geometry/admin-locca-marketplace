@@ -153,11 +153,14 @@
                                         {{-- <div>
                                             <div class="row" id="multiImg"></div>
                                         </div> --}}
+                                        {{-- @php
+                                            $uploadedImages = json_decode($request->input('uploaded_images'), true);
+                                        @endphp --}}
                                        <div class="d-flex gap-3 flex-shrink-0" id="image_container">
                                            <div class="upload-file text-wrapper h--100px w--200px flex-shrink-0"
                                                 id="image_upload_wrapper">
                                                <input type="file" name="identity_image[]"
-                                                      class="upload-file__input multiple_image_input" accept=".jpg,.jpeg,.png" multiple>
+                                                      class="upload-file__input multiple_image_input" accept=".jpg,.jpeg,.png" multiple required>
                                                <div
                                                    class="upload-file__img d-flex gap-0 justify-content-center align-items-center h-100 max-w-300px p-0">
                                                    <div class="upload-file__textbox">
@@ -278,14 +281,97 @@
          // ---- single image upload ends
 
         // ----- mutiple image upload
-        document.addEventListener("DOMContentLoaded", function() {
+        // document.addEventListener("DOMContentLoaded", function() {
+        //     const MAX_FILES = 5;
+        //     const ALLOWED_FILE_TYPES = ["image/jpeg", "image/jpg", "image/png"];
+        //     const MAX_FILE_SIZE_MB = 1; // Set maximum file size in MB
+        //     const imageContainer = document.getElementById("image_container");
+        //     const uploadWrapper = document.getElementById("image_upload_wrapper");
+
+        //     document.querySelector('.multiple_image_input').addEventListener('change', function(event) {
+        //         const files = Array.from(event.target.files);
+        //         const currentFiles = imageContainer.querySelectorAll(".image-single").length;
+
+        //         if (currentFiles + files.length > MAX_FILES) {
+        //             toastr.error('{{ translate('You can upload a maximum of') }} ' + MAX_FILES +
+        //                 ' {{ translate('files.') }}', {
+        //                 CloseButton: true,
+        //                 ProgressBar: true
+        //             });
+        //             return;
+        //         }
+
+        //         files.forEach(file => {
+        //             // Validate file type
+        //             if (!ALLOWED_FILE_TYPES.includes(file.type)) {
+        //                 toastr.error(
+        //                     '{{ translate('please_only_input_png_or_jpg_type_file') }}', {
+        //                         CloseButton: true,
+        //                         ProgressBar: true
+        //                     });
+        //                 return;
+        //             }
+
+        //             // Validate file size
+        //             if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
+        //                 toastr.error('{{ translate('file_size_too_big') }}', {
+        //                     CloseButton: true,
+        //                     ProgressBar: true
+        //                 });
+        //                 return;
+        //             }
+
+        //             // Create file preview
+        //             const fileURL = URL.createObjectURL(file);
+
+        //             const imageSingle = document.createElement("div");
+        //             imageSingle.className = "image-single h-100 max-w-200px p-0";
+        //             imageSingle.innerHTML = `
+        //                 <a href="javascript:void(0);" class="remove-btn" onclick="removeImage(event, this)">
+        //                     <i class="tio-clear"></i>
+        //                 </a>
+        //                 <img class="img--vertical-2 rounded-10" width="200" height="100" loading="lazy" src="${fileURL}" alt="">
+        //             `;
+
+        //             imageContainer.appendChild(imageSingle);
+
+        //             // Success notification
+        //             toastr.success('{{ translate('image_added') }}', {
+        //                 CloseButton: true,
+        //                 ProgressBar: true
+        //             });
+        //         });
+
+        //         toggleUploadWrapper();
+
+        //         // Clear file input after upload
+        //         event.target.value = "";
+        //     });
+
+        //     window.removeImage = function(event, element) {
+        //         event.stopPropagation();
+        //         const imageSingle = element.closest(".image-single");
+        //         imageSingle.remove();
+        //         toggleUploadWrapper();
+        //     };
+
+        //     function toggleUploadWrapper() {
+        //         const currentFiles = imageContainer.querySelectorAll(".image-single").length;
+        //         uploadWrapper.style.display = currentFiles >= MAX_FILES ? "none" : "block";
+        //     }
+        // });
+      
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const MAX_FILE_SIZE_MB = 1; // Maximum file size in MB
             const MAX_FILES = 5;
             const ALLOWED_FILE_TYPES = ["image/jpeg", "image/jpg", "image/png"];
-            const MAX_FILE_SIZE_MB = 1; // Set maximum file size in MB
             const imageContainer = document.getElementById("image_container");
             const uploadWrapper = document.getElementById("image_upload_wrapper");
+            const inputElement = document.querySelector('.multiple_image_input');
+            const fileSet = new Set(); // To keep track of files
 
-            document.querySelector('.multiple_image_input').addEventListener('change', function(event) {
+            inputElement.addEventListener('change', function (event) {
                 const files = Array.from(event.target.files);
                 const currentFiles = imageContainer.querySelectorAll(".image-single").length;
 
@@ -297,15 +383,13 @@
                     });
                     return;
                 }
-
                 files.forEach(file => {
                     // Validate file type
                     if (!ALLOWED_FILE_TYPES.includes(file.type)) {
-                        toastr.error(
-                            '{{ translate('please_only_input_png_or_jpg_type_file') }}', {
-                                CloseButton: true,
-                                ProgressBar: true
-                            });
+                        toastr.error('{{ translate('please_only_input_png_or_jpg_type_file') }}', {
+                            CloseButton: true,
+                            ProgressBar: true
+                        });
                         return;
                     }
 
@@ -318,45 +402,69 @@
                         return;
                     }
 
-                    // Create file preview
-                    const fileURL = URL.createObjectURL(file);
+                    // Add to the file set and create preview
+                    if (!fileSet.has(file.name)) {
+                        fileSet.add(file.name);
 
-                    const imageSingle = document.createElement("div");
-                    imageSingle.className = "image-single h-100 max-w-200px p-0";
-                    imageSingle.innerHTML = `
-                        <a href="javascript:void(0);" class="remove-btn" onclick="removeImage(event, this)">
-                            <i class="tio-clear"></i>
-                        </a>
-                        <img class="img--vertical-2 rounded-10" width="200" height="100" loading="lazy" src="${fileURL}" alt="">
-                    `;
-
-                    imageContainer.appendChild(imageSingle);
-
-                    // Success notification
-                    toastr.success('{{ translate('image_added') }}', {
-                        CloseButton: true,
-                        ProgressBar: true
-                    });
+                        const fileURL = URL.createObjectURL(file);
+                        const imageSingle = document.createElement("div");
+                        imageSingle.className = "image-single h-100 max-w-200px p-0";
+                        imageSingle.innerHTML = `
+                            <a href="javascript:void(0);" class="remove-btn" onclick="removeImage(event, this, '${file.name}')">
+                                <i class="tio-clear"></i>
+                            </a>
+                            <img class="img--vertical-2 rounded-10" width="200" height="100" loading="lazy" src="${fileURL}" alt="">
+                        `;
+                        imageContainer.appendChild(imageSingle);
+                    }
                 });
 
                 toggleUploadWrapper();
-
-                // Clear file input after upload
-                event.target.value = "";
             });
 
-            window.removeImage = function(event, element) {
+            window.removeImage = function (event, element, fileName) {
                 event.stopPropagation();
                 const imageSingle = element.closest(".image-single");
                 imageSingle.remove();
+                fileSet.delete(fileName); // Remove the file from the set
                 toggleUploadWrapper();
             };
 
             function toggleUploadWrapper() {
                 const currentFiles = imageContainer.querySelectorAll(".image-single").length;
-                uploadWrapper.style.display = currentFiles >= MAX_FILES ? "none" : "block";
+                uploadWrapper.style.display = currentFiles >= 5 ? "none" : "block";
             }
+
+            // Form submission handling
+            document.querySelector("form").addEventListener("submit", function (event) {
+                const files = inputElement.files;
+                if (files.length === 0) {
+                    event.preventDefault();
+                    toastr.error('{{ translate('Please upload at least one image') }}', {
+                        CloseButton: true,
+                        ProgressBar: true
+                    });
+                } else {
+                    // Manually add the files from fileSet to the form input
+                    const formData = new FormData();
+                    fileSet.forEach(fileName => {
+                        const file = Array.from(files).find(f => f.name === fileName);
+                        if (file) formData.append("identity_image[]", file);
+                    });
+
+                    // Proceed with form submission (e.g., using AJAX or allow default submission)
+                    // Example:
+                    // fetch('/submit', { method: 'POST', body: formData });
+
+                    toastr.success('{{ translate('Form Submitted Successfully!') }}', {
+                        CloseButton: true,
+                        ProgressBar: true
+                    });
+                }
+            });
         });
+
+
         // ----- mutiple image upload ends
 
     </script>

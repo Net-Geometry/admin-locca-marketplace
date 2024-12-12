@@ -6512,4 +6512,6 @@ Smartly or Earn. ',
   'Update Vehicle' => 'Update Vehicle',
   'images' => 'Images',
   'vehicle_updated_successfully' => 'Vehicle updated successfully',
+  'Please upload at least one image' => 'Please upload at least one image',
+  'Form Submitted Successfully!' => 'Form Submitted Successfully!',
 );
