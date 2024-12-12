@@ -6485,9 +6485,13 @@ Smartly or Earn. ',
   'car rental' => 'Car rental',
   'Attention_Please' => 'Attention Please',
   'The_Cash_in_Hand_amount_is_about_to_exceed_the_limit._Please_pay_the_due_amount._If_the_limit_exceeds,_your_account_will_be_suspended.' => 'The Cash in Hand amount is about to exceed the limit. Please pay the due amount. If the limit exceeds, your account will be suspended.',
-  'rental' => 'Rental',
   'Ex: 25' => 'Ex: 25',
   'Ex: 20' => 'Ex: 20',
   'Your_order_cancellation_rate_is_too_high_there_for_your_account_is_blocked.' => 'Your order cancellation rate is too high there for your account is blocked.',
   'Your_order_cancellation_rate_is_getting_higher.' => 'Your order cancellation rate is getting higher.',
+  'Ratio 1:1' => 'Ratio 1:1',
+  'This Section App Download buttons are appear based on
+                    footer Apps Download button' => 'This Section App Download buttons are appear based on
+                    footer Apps Download button',
+  'Download_Apps' => 'Download Apps',
 );

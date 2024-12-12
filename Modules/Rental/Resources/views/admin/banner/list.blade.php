@@ -353,7 +353,7 @@
                     reader.onload = function (e) {
                         $textbox.hide();
                         $imgElement.attr('src', e.target.result).show();
-                        $removeBtn.css('opacity', 1); 
+                        $removeBtn.css('opacity', 1);
                     };
                     reader.readAsDataURL(file);
                 }
@@ -362,18 +362,20 @@
             // Handle remove button click
             $('.remove-btn').click(function () {
                 var $card = $(this).closest('.upload-file');
-                $card.find('.single_file_input').val(''); 
-                $card.find('.upload-file-textbox').show(); 
-                $card.find('.upload-file-img').hide().attr('src', ''); 
-                $(this).css('opacity', 0); 
+                $card.find('.single_file_input').val('');
+                $card.find('.upload-file-textbox').show();
+                $card.find('.upload-file-img').hide().attr('src', '');
+                $(this).css('opacity', 0);
             });
 
             // Handle reset button click
             $('#reset_btn').click(function () {
-                var $cards = $('.upload-file'); 
+                $('#banner_type').trigger('change');
+                $('#store_id').val(null).trigger('change');
+                var $cards = $('.upload-file');
                 $cards.each(function () {
-                    $(this).find('.single_file_input').val(''); 
-                    $(this).find('.upload-file-textbox').show(); 
+                    $(this).find('.single_file_input').val('');
+                    $(this).find('.upload-file-textbox').show();
                     $(this).find('.upload-file-img').hide().attr('src', '');
                     $(this).find('.remove-btn').css('opacity', 0);
                 });
@@ -413,8 +415,6 @@
 
         });
 
-        $('#reset_btn').click(function() {
-            $('#store_id').val(null).trigger('change');
-        })
+
     </script>
 @endpush
