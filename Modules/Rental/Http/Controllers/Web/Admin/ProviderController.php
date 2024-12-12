@@ -79,6 +79,7 @@ class ProviderController extends Controller
      * @param SubscriptionPackage $subscriptionPackage
      * @param Helpers $helpers
      * @param VehicleDriver $vehicleDriver
+     * @param Vehicle $vehicle
      */
     public function __construct(BusinessSetting $businessSetting, StoreWallet $storeWallet, Item $item, DisbursementDetails $disbursementDetails, Conversation $conversation, UserInfo $userInfo, TempProduct $tempProduct, Zone $zone, Order $order, Vendor $vendor, Store $store, Admin $admin, StoreLogic $storeLogic, SubscriptionPackage $subscriptionPackage, Helpers $helpers, VehicleDriver $vehicleDriver, Vehicle $vehicle)
     {
@@ -542,14 +543,13 @@ class ProviderController extends Controller
             return back()->withErrors($validator)->withInput();
         }
 
-
-        $this->updateVendor($request);
-        $this->updateStore($request);
+        $this->updateVendor($request, $store->vendor);
+        $this->updateStore($request, $store);
 
         $this->helpers->add_or_update_translations(request: $request, key_data: 'name', name_field: 'name', model_name: 'Store', data_id: $id, data_value: $store->name);
         $this->helpers->add_or_update_translations(request: $request, key_data: 'address', name_field: 'address', model_name: 'Store', data_id: $id, data_value: $store->address);
 
-        Toastr::error(translate('messages.Provider_updated_successfully'));
+        Toastr::success(translate('messages.Provider_updated_successfully'));
         return redirect()->route('admin.rental.provider.edit-business-setup', $id);
     }
 
@@ -693,11 +693,12 @@ class ProviderController extends Controller
 
     /**
      * @param Request $request
+     * @param Vendor $vendor
      * @return mixed
      */
-    private function updateVendor(Request $request): mixed
+    private function updateVendor(Request $request, Vendor $vendor): mixed
     {
-        return $this->vendor->update([
+        return $vendor->update([
             'f_name' => $request->f_name,
             'l_name' => $request->l_name,
             'email' => $request->email,
@@ -736,12 +737,12 @@ class ProviderController extends Controller
 
     /**
      * @param Request $request
-     * @param Vendor $vendor
+     * @param Store $store
      * @return mixed
      */
-    private function updateStore(Request $request): mixed
+    private function updateStore(Request $request, Store $store): mixed
     {
-        return $this->store->update([
+        return $store->update([
             'name' => $request->name[array_search('default', $request->lang)],
             'phone' => $request->phone,
             'email' => $request->email,
