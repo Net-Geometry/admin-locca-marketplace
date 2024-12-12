@@ -15,7 +15,7 @@ active
                     <div class="d-flex align-items-start">
                         <img src="{{asset('/public/assets/admin/img/create-package-icon.png')}}" width="24" alt="img">
                         <div class="w-0 flex-grow pl-2">
-                            <h1 class="page-header-title">{{translate('Subscription Package')}}</h1>
+                            <h1 class="page-header-title">{{translate('Subscription Package')}}  <small class="ml-2"> {{ $module == 'rental' ? '('.translate('messages.Rental_Module') .')' : ''}} </small> </h1>
                             <div class="page-header-text">{{ translate('Create_Subscriptions_Packages_for_Subscription_Business_Model') }}</div>
                         </div>
                     </div>
@@ -42,7 +42,7 @@ active
     <form action="{{ route('admin.business-settings.subscriptionackage.store') }}" method="post">
         @csrf
         @method('post')
-
+                <input type="hidden" value="{{ $module }}"  name="module"  >
                 <div class="card-body">
                         @if ($language)
                         <ul class="nav nav-tabs mb-3">
@@ -147,6 +147,7 @@ active
                 </div>
                 <div class="card-body">
                     <div class="check--item-wrapper check--item-wrapper-2 mt-0">
+                        @if ($module == 'all')
                         <div class="check-item">
                             <label class="form-group form-check form--check">
                                 <input type="checkbox" class="form-check-input package-available-feature"  {{ old('pos_system') == 1 ? 'checked' : '' }} name="pos_system" value="1">
@@ -159,6 +160,8 @@ active
                                 <span class="form-check-label text-dark">{{ translate('messages.self_delivery') }}</span>
                             </label>
                         </div>
+                        @endif
+
                         <div class="check-item">
                             <label class="form-group form-check form--check">
                                 <input type="checkbox" class="form-check-input package-available-feature" {{ old('mobile_app') == 1 ? 'checked' : '' }}  name="mobile_app" value="1" >
@@ -191,7 +194,7 @@ active
                                     {{ translate('Set_limit') }}
                                 </div>
                             </h5>
-                            <div class="fz-12px">{{ translate('Set_maximum_order_&_product_limit_for_this_package') }}</div>
+                            <div class="fz-12px">{{ $module == 'rental' ?  translate('Set_maximum_trips_&_vehicle_limit_for_this_package')  : translate('Set_maximum_order_&_product_limit_for_this_package') }}</div>
                         </div>
                     </div>
                 </div>
@@ -201,7 +204,7 @@ active
                             <div class="card-body">
                                 <div class="limit-item-card">
                                     <div class="form-group mb-0">
-                                        <label class="form-label text-capitalize">{{ translate('Maximum_Order Limit') }}</label>
+                                        <label class="form-label text-capitalize">{{  $module == 'rental' ? translate('Maximum_Trip_Limit') : translate('Maximum_Order Limit') }}</label>
                                         <div class="d-flex flex-wrap items-center gap-2">
                                             <div class="resturant-type-group p-0">
                                                 <label class="form-check form--check mr-2 mr-md-4">
@@ -229,7 +232,7 @@ active
                             <div class="card-body">
                                 <div class="limit-item-card">
                                     <div class="form-group mb-0">
-                                        <label class="form-label text-capitalize">{{ translate('Maximum_Item_Limit') }}</label>
+                                        <label class="form-label text-capitalize">{{ $module == 'rental' ? translate('Maximum_Vehicle_Limit') : translate('Maximum_Item_Limit') }}</label>
                                         <div class="d-flex flex-wrap items-center gap-2">
                                             <div class="resturant-type-group p-0">
                                                 <label class="form-check form--check mr-2 mr-md-4">

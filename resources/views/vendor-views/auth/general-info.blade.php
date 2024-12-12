@@ -700,112 +700,10 @@
                                             {{ translate('Choose Subscription Package') }}
                                         </h5>
                                     </div>
-                                    <div class="plan-slider owl-theme owl-carousel owl-refresh">
+                                    <div id='show_sub_packages'>
+                                        @include('vendor-views.auth._package_data',['packages' =>$packages])
+                                    </div>
 
-                                        @forelse ($packages as $key=> $package)
-                                            <label
-                                                class="__plan-item {{ (count($packages) > 4 && $key == 2) || (count($packages) < 5 && $key == 1) ? 'active' : '' }} ">
-                                                <input type="radio" name="package_id" id="package_id"
-                                                    value="{{ $package->id }}" class="d-none">
-                                                <div class="inner-div">
-                                                    <div class="text-center">
-
-                                                        <h3 class="title">{{ $package->package_name }}</h3>
-                                                        <h2 class="price">
-                                                            {{ \App\CentralLogics\Helpers::format_currency($package->price) }}
-                                                        </h2>
-                                                        <div class="day-count">{{ $package->validity }}
-                                                            {{ translate('messages.days') }}</div>
-                                                    </div>
-                                                    <ul class="info">
-
-                                                        @if ($package->pos)
-                                                            <li>
-                                                                <img src="{{ asset('/public/assets/landing/img/check-1.svg') }}"
-                                                                    class="check" alt="">
-                                                                <img src="{{ asset('/public/assets/landing/img/check-2.svg') }}"
-                                                                    class="check-white" alt=""> <span>
-                                                                    {{ translate('messages.POS') }} </span>
-                                                            </li>
-                                                        @endif
-                                                        @if ($package->mobile_app)
-                                                            <li>
-                                                                <img src="{{ asset('/public/assets/landing/img/check-1.svg') }}"
-                                                                    class="check" alt="">
-                                                                <img src="{{ asset('/public/assets/landing/img/check-2.svg') }}"
-                                                                    class="check-white" alt=""> <span>
-                                                                    {{ translate('messages.mobile_app') }} </span>
-                                                            </li>
-                                                        @endif
-                                                        @if ($package->chat)
-                                                            <li>
-                                                                <img src="{{ asset('/public/assets/landing/img/check-1.svg') }}"
-                                                                    class="check" alt="">
-                                                                <img src="{{ asset('/public/assets/landing/img/check-2.svg') }}"
-                                                                    class="check-white" alt=""> <span>
-                                                                    {{ translate('messages.chatting_options') }} </span>
-                                                            </li>
-                                                        @endif
-                                                        @if ($package->review)
-                                                            <li>
-                                                                <img src="{{ asset('/public/assets/landing/img/check-1.svg') }}"
-                                                                    class="check" alt="">
-                                                                <img src="{{ asset('/public/assets/landing/img/check-2.svg') }}"
-                                                                    class="check-white" alt=""> <span>
-                                                                    {{ translate('messages.review_section') }} </span>
-                                                            </li>
-                                                        @endif
-                                                        @if ($package->self_delivery)
-                                                            <li>
-                                                                <img src="{{ asset('/public/assets/landing/img/check-1.svg') }}"
-                                                                    class="check" alt="">
-                                                                <img src="{{ asset('/public/assets/landing/img/check-2.svg') }}"
-                                                                    class="check-white" alt=""> <span>
-                                                                    {{ translate('messages.self_delivery') }} </span>
-                                                            </li>
-                                                        @endif
-                                                        @if ($package->max_order == 'unlimited')
-                                                            <li>
-                                                                <img src="{{ asset('/public/assets/landing/img/check-1.svg') }}"
-                                                                    class="check" alt="">
-                                                                <img src="{{ asset('/public/assets/landing/img/check-2.svg') }}"
-                                                                    class="check-white" alt=""> <span>
-                                                                    {{ translate('messages.Unlimited_Orders') }} </span>
-                                                            </li>
-                                                        @else
-                                                            <li>
-                                                                <img src="{{ asset('/public/assets/landing/img/check-1.svg') }}"
-                                                                    class="check" alt="">
-                                                                <img src="{{ asset('/public/assets/landing/img/check-2.svg') }}"
-                                                                    class="check-white" alt=""> <span>
-                                                                    {{ $package->max_order }}
-                                                                    {{ translate('messages.Orders') }} </span>
-                                                            </li>
-                                                        @endif
-                                                        @if ($package->max_product == 'unlimited')
-                                                            <li>
-                                                                <img src="{{ asset('/public/assets/landing/img/check-1.svg') }}"
-                                                                    class="check" alt="">
-                                                                <img src="{{ asset('/public/assets/landing/img/check-2.svg') }}"
-                                                                    class="check-white" alt=""> <span>
-                                                                    {{ translate('messages.Unlimited_uploads') }} </span>
-                                                            </li>
-                                                        @else
-                                                            <li>
-                                                                <img src="{{ asset('/public/assets/landing/img/check-1.svg') }}"
-                                                                    class="check" alt="">
-                                                                <img src="{{ asset('/public/assets/landing/img/check-2.svg') }}"
-                                                                    class="check-white" alt=""> <span>
-                                                                    {{ $package->max_product }}
-                                                                    {{ translate('messages.uploads') }} </span>
-                                                            </li>
-                                                        @endif
-                                                    </ul>
-                                                </div>
-                                            </label>
-
-                                        @empty
-                                        @endforelse
 
                                     </div>
                                 </div>
@@ -829,7 +727,6 @@
 @push('script_2')
 
     <script src="{{ asset('public/assets/admin/js/spartan-multi-image-picker.js') }}"></script>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
     <script
         src="https://maps.googleapis.com/maps/api/js?key={{ \App\Models\BusinessSetting::where('key', 'map_api_key')->first()->value }}&libraries=drawing,places&v=3.45.8">
     </script>
@@ -933,6 +830,7 @@
                     method: 'GET',
                     data: { id: moduleId },
                     success: function(response) {
+                        $('#show_sub_packages').empty().html(response.view);
                         if (response.module_type === 'rental') {
                             $('#pickup-zone-container').show();
                             $('.module-select-time').text('{{ translate('messages.approx_pickup_time') }}');
@@ -1125,83 +1023,7 @@
         });
     </script>
     <script src="{{ asset('public/assets/landing/js/select2.min.js') }}"></script>
-    <script>
-        $('.plan-slider').owlCarousel({
-            loop: false,
-            margin: 30,
-            responsiveClass: true,
-            nav: false,
-            dots: false,
-            items: 3,
-            // center: true,
-            // autoplay:true,
-            // autoplayTimeout:2500,
-            // autoplayHoverPause:true,
-            startPosition: 1,
-
-            responsive: {
-                0: {
-                    items: 1.1,
-                    margin: 10,
-                },
-                375: {
-                    items: 1.3,
-                    margin: 30,
-                },
-                576: {
-                    items: 1.7,
-                },
-                768: {
-                    items: 2.2,
-                    margin: 40,
-                },
-                992: {
-                    items: 3,
-                    margin: 40,
-                },
-                1200: {
-                    items: 4,
-                    margin: 40,
-                }
-            }
-        })
-    </script>
-
-    <script>
-        $(window).on('load', function() {
-            $('input[name="business_plan"]').each(function() {
-                if ($(this).is(':checked')) {
-                    if ($(this).val() == 'subscription-base') {
-                        $('#subscription-plan').show()
-                    } else {
-                        $('#subscription-plan').hide()
-                    }
-                }
-            })
-            $('input[name="package_id"]').each(function() {
-                if ($(this).is(':checked')) {
-                    $(this).closest('.__plan-item').addClass('active')
-                }
-            })
-        })
-        $('input[name="business_plan"]').on('change', function() {
-            if ($(this).val() == 'subscription-base') {
-                $('#subscription-plan').slideDown()
-            } else {
-                $('#subscription-plan').slideUp()
-            }
-        })
-        $('input[name="package_id"]').on('change', function() {
-            $('input[name="package_id"]').each(function() {
-                $(this).closest('.__plan-item').removeClass('active')
-            })
-            $(this).closest('.__plan-item').addClass('active')
-        })
-        $('#reset-btn').on('click', function() {
-            location.reload()
-        })
-    </script>
-
+    
     <script>
         // ---- file upload with textbox
         $(document).ready(function() {
@@ -1326,7 +1148,7 @@
                                         <span class="close-icon" data-id="${item.id}">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
                                                 <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
-                                            </svg>    
+                                            </svg>
                                         </span>
                                         </li>`;
             });

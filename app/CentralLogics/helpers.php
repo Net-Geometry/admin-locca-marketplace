@@ -3826,6 +3826,7 @@ class Helpers
             }
 
 
+            $store->package_id= $package->id;
             $store->reviews_section= 1;
             $store->self_delivery_system= 1;
             $store->store_business_model= 'subscription';

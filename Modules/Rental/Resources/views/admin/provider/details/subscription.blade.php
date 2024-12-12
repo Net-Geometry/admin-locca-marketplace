@@ -147,30 +147,6 @@
 
                                 <div>
                                     <div class="d-flex align-items-center gap-2">
-                                        <img src="{{asset('/public/assets/admin/img/subscription-plan/check.png')}}" alt="">
-                                        @if ( $store?->store_sub_update_application?->max_order == 'unlimited' )
-                                        <span class="form-check-label text-dark">{{ translate('messages.unlimited_orders') }}</span>
-                                        @else
-                                        <span class="form-check-label text-dark"> {{ $store?->store_sub_update_application?->package?->max_order }} {{
-                                            translate('messages.Orders') }} <small>({{ $store?->store_sub_update_application?->max_order }} {{ translate('left') }}) </small> </span>
-                                        @endif
-                                    </div>
-                                </div>
-
-
-                                <div>
-                                    <div class="d-flex align-items-center gap-2">
-                                        @if ( $store?->store_sub_update_application?->pos == 1 )
-                                        <img src="{{asset('/public/assets/admin/img/subscription-plan/check.png')}}" alt="">
-                                        @else
-                                        <img src="{{asset('/public/assets/admin/img/subscription-plan/check-1.png')}}" alt="">
-                                        @endif
-                                        <span class="form-check-label text-dark">{{ translate('messages.POS') }}</span>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <div class="d-flex align-items-center gap-2">
                                         @if ( $store?->store_sub_update_application?->mobile_app == 1 )
                                         <img src="{{asset('/public/assets/admin/img/subscription-plan/check.png')}}" alt="">
                                         @else
@@ -179,29 +155,7 @@
                                         <span class="form-check-label text-dark">{{ translate('messages.Mobile_App') }}</span>
                                     </div>
                                 </div>
-                                <div>
-                                    <div class="d-flex align-items-center gap-2">
-                                        @if ( $store?->store_sub_update_application?->self_delivery == 1 )
-                                        <img src="{{asset('/public/assets/admin/img/subscription-plan/check.png')}}" alt="">
-                                        @else
-                                        <img src="{{asset('/public/assets/admin/img/subscription-plan/check-1.png')}}" alt="">
-                                        @endif
-                                        <span class="form-check-label text-dark">{{ translate('messages.self_delivery') }}</span>
-                                    </div>
-                                </div>
 
-                                <div>
-                                    <div class="d-flex align-items-center gap-2">
-                                        <img src="{{asset('/public/assets/admin/img/subscription-plan/check.png')}}" alt="">
-                                        @if ( $store?->store_sub_update_application?->max_product == 'unlimited' )
-                                        <span class="form-check-label text-dark">{{ translate('messages.unlimited_item_Upload')
-                                            }}</span>
-                                        @else
-                                        <span class="form-check-label text-dark"> {{ $store?->store_sub_update_application?->max_product }} {{
-                                            translate('messages.product_Upload') }} <small>({{ $store?->store_sub_update_application?->max_product  - $store->items_count > 0 ? $store?->store_sub_update_application?->max_product  - $store->items_count : 0 }} {{ translate('left') }}) </small></span>
-                                        @endif
-                                    </div>
-                                </div>
 
                                 <div>
                                     <div class="d-flex align-items-center gap-2">
@@ -225,6 +179,30 @@
                                     </div>
                                 </div>
 
+                                <div>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <img src="{{asset('/public/assets/admin/img/subscription-plan/check.png')}}" alt="">
+                                        @if ( $store?->store_sub_update_application?->max_order == 'unlimited' )
+                                        <span class="form-check-label text-dark">{{ translate('messages.unlimited_trips') }}</span>
+                                        @else
+                                        <span class="form-check-label text-dark"> {{ $store?->store_sub_update_application?->package?->max_order }} {{
+                                            translate('messages.Trips') }} <small>({{ $store?->store_sub_update_application?->max_order }} {{ translate('left') }}) </small> </span>
+                                        @endif
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <img src="{{asset('/public/assets/admin/img/subscription-plan/check.png')}}" alt="">
+                                        @if ( $store?->store_sub_update_application?->max_product == 'unlimited' )
+                                        <span class="form-check-label text-dark">{{ translate('messages.unlimited_item_Upload')
+                                            }}</span>
+                                        @else
+                                        <span class="form-check-label text-dark"> {{ $store?->store_sub_update_application?->max_product }} {{
+                                            translate('messages.product_Upload') }} <small>({{ $store?->store_sub_update_application?->max_product  - $store->items_count > 0 ? $store?->store_sub_update_application?->max_product  - $store->items_count : 0 }} {{ translate('left') }}) </small></span>
+                                        @endif
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="btn--container justify-content-end mt-3">
@@ -232,9 +210,7 @@
                             <button type="button"  data-url="{{route('admin.business-settings.subscriptionackage.cancelSubscription',$store?->id)}}" data-message="{{translate('If_you_cancel_the_subscription,_after_')}} {{  Carbon\Carbon::now()->diffInDays($store?->store_sub_update_application?->expiry_date_parsed->format('Y-m-d'), false); }} {{ translate('days_the_vendor_will_no_longer_be_able_to_run_the_business_before_subscribe_a_new_plan.') }}"
                                 class="btn btn--danger text-white status_change_alert">{{ translate('Cancel Subscription') }}</button>
                             @endif
-
                             <button type="button" data-toggle="modal" data-target="#plan-modal" class="btn btn--primary">{{ translate('Change / Renew Subscription Plan') }}</button>
-
                         </div>
                     </div>
                 </div>
@@ -315,11 +291,7 @@
                                     </div>
                                     <ul class="info">
 
-                                        @if ($package->pos)
-                                        <li>
-                                            <i class="tio-checkmark-circle"></i> <span>  {{ translate('messages.POS') }} </span>
-                                        </li>
-                                        @endif
+
                                         @if ($package->mobile_app)
                                         <li>
                                             <i class="tio-checkmark-circle"></i> <span>  {{ translate('messages.mobile_app') }} </span>
@@ -335,18 +307,14 @@
                                             <i class="tio-checkmark-circle"></i> <span>  {{ translate('messages.review_section') }} </span>
                                         </li>
                                         @endif
-                                        @if ($package->self_delivery)
-                                        <li>
-                                            <i class="tio-checkmark-circle"></i> <span>  {{ translate('messages.self_delivery') }} </span>
-                                        </li>
-                                        @endif
+
                                         @if ($package->max_order == 'unlimited')
                                         <li>
-                                            <i class="tio-checkmark-circle"></i> <span>  {{ translate('messages.Unlimited_Orders') }} </span>
+                                            <i class="tio-checkmark-circle"></i> <span>  {{ translate('messages.Unlimited_Trips') }} </span>
                                         </li>
                                         @else
                                         <li>
-                                            <i class="tio-checkmark-circle"></i> <span>  {{ $package->max_order }} {{ translate('messages.Orders') }} </span>
+                                            <i class="tio-checkmark-circle"></i> <span>  {{ $package->max_order }} {{ translate('messages.Trips') }} </span>
                                         </li>
                                         @endif
                                         @if ($package->max_product == 'unlimited')

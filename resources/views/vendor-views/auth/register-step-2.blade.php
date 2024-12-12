@@ -163,7 +163,7 @@
                                                             class="check" alt="">
                                                         <img src="{{ asset('/public/assets/landing/img/check-2.svg') }}"
                                                             class="check-white" alt=""> <span>
-                                                            {{ translate('messages.Unlimited_Orders') }} </span>
+                                                            {{ isset($module) && $module == 'rental' ?  translate('messages.Unlimited_trips') :translate('messages.Unlimited_Orders') }} </span>
                                                     </li>
                                                 @else
                                                     <li>
@@ -171,7 +171,7 @@
                                                             class="check" alt="">
                                                         <img src="{{ asset('/public/assets/landing/img/check-2.svg') }}"
                                                             class="check-white" alt=""> <span>
-                                                            {{ $package->max_order }} {{ translate('messages.Orders') }}
+                                                            {{ $package->max_order }} {{ isset($module) && $module == 'rental' ?  translate('messages.trips') : translate('messages.Orders') }}
                                                         </span>
                                                     </li>
                                                 @endif

@@ -582,12 +582,7 @@
                                                                     {{ translate('messages.days') }}</div>
                                                             </div>
                                                             <ul class="info">
-                                                                @if ($package->pos)
-                                                                    <li>
-                                                                        <i class="tio-checkmark-circle"></i>
-                                                                        <span>{{ translate('messages.POS') }}</span>
-                                                                    </li>
-                                                                @endif
+
                                                                 @if ($package->mobile_app)
                                                                     <li>
                                                                         <i class="tio-checkmark-circle"></i>
@@ -606,21 +601,16 @@
                                                                         <span>{{ translate('messages.review_section') }}</span>
                                                                     </li>
                                                                 @endif
-                                                                @if ($package->self_delivery)
-                                                                    <li>
-                                                                        <i class="tio-checkmark-circle"></i>
-                                                                        <span>{{ translate('messages.self_delivery') }}</span>
-                                                                    </li>
-                                                                @endif
+
                                                                 @if ($package->max_order == 'unlimited')
                                                                     <li>
                                                                         <i class="tio-checkmark-circle"></i>
-                                                                        <span>{{ translate('messages.Unlimited_Orders') }}</span>
+                                                                        <span>{{ translate('messages.Unlimited_Trips') }}</span>
                                                                     </li>
                                                                 @else
                                                                     <li>
                                                                         <i class="tio-checkmark-circle"></i>
-                                                                        <span>{{ $package->max_order }} {{ translate('messages.Orders') }} </span>
+                                                                        <span>{{ $package->max_order }} {{ translate('messages.Trips') }} </span>
                                                                     </li>
                                                                 @endif
                                                                 @if ($package->max_product == 'unlimited')

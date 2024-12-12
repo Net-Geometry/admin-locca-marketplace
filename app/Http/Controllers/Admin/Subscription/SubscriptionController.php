@@ -40,44 +40,53 @@ class SubscriptionController extends Controller
     {
         $key = explode(' ', $request['search']);
         $filter = $request['statistics'];
+
         $packages=  SubscriptionPackage::withcount('currentSubscribers')
-        ->when(isset($key), function($q) use($key){
-            $q->where(function ($q) use ($key) {
-                foreach ($key as $value) {
-                    $q->orWhere('package_name', 'like', "%{$value}%");
-                        // ->orWhere('price', 'like', "%{$value}%")
-                        // ->orWhere('validity', 'like', "%{$value}%");
-                }
-            });
-        })
-        ->latest()->paginate(config('default_pagination'));
+            ->when($request?->module == 1, function($query){
+                $query->where('module_type', 'rental');
+            })
+            ->when($request?->module != 1, function($query){
+                $query->where('module_type', 'all');
+            })
+            ->when(isset($key), function($q) use($key){
+                $q->where(function ($q) use ($key) {
+                    foreach ($key as $value) {
+                        $q->orWhere('package_name', 'like', "%{$value}%");
+                    }
+                });
+            })
+            ->latest()->paginate(config('default_pagination'));
 
+        $package_sell_count= SubscriptionPackage::
+        when($request?->module != 1, function($query){
+            $query->where('module_type', 'all');
+        } )
+            ->when($request?->module == 1, function($query){
+                $query->where('module_type', 'rental');
+            } )-> withSum([
+                'transactions' => function ($query) use ($filter) {
+                    $query->where('is_trial',0)
+                        ->when(isset($filter) && $filter == 'this_year', function ($query) {
+                            return $query->whereYear('created_at', now()->format('Y'));
+                        })
 
-     $package_sell_count= SubscriptionPackage::
-        withSum([
-            'transactions' => function ($query) use ($filter) {
-                $query->where('is_trial',0)
-                    ->when(isset($filter) && $filter == 'this_year', function ($query) {
-                        return $query->whereYear('created_at', now()->format('Y'));
-                    })
+                        ->when(isset($filter) && $filter == 'this_month', function ($query) {
+                            return $query->whereMonth('created_at', now()->format('m'))->whereYear('created_at', now()->format('Y'));
+                        })
 
-                    ->when(isset($filter) && $filter == 'this_month', function ($query) {
-                        return $query->whereMonth('created_at', now()->format('m'))->whereYear('created_at', now()->format('Y'));
-                    })
-
-                    ->when(isset($filter) && $filter == 'this_week', function ($query) {
-                        return $query->whereBetween('created_at', [now()->startOfWeek()->format('Y-m-d H:i:s'), now()->endOfWeek()->format('Y-m-d H:i:s')]);
-                    });
-            },
-        ], 'paid_amount')->get();
+                        ->when(isset($filter) && $filter == 'this_week', function ($query) {
+                            return $query->whereBetween('created_at', [now()->startOfWeek()->format('Y-m-d H:i:s'), now()->endOfWeek()->format('Y-m-d H:i:s')]);
+                        });
+                },
+            ], 'paid_amount')->get();
 
         return view('admin-views.subscription.package.index',compact('packages','package_sell_count'));
     }
-    public function create()
+    public function create(Request $request)
     {
         $language = getWebConfig('language');
-        $defaultLang = str_replace('_', '-', app()->getLocale());
-        return view('admin-views.subscription.package.create', compact('language','defaultLang'));
+        $module= $request->module ?? 'all';
+        return view('admin-views.subscription.package.create', compact('language','module'));
     }
     public function store(Request $request)
     {
@@ -115,12 +124,13 @@ class SubscriptionController extends Controller
         $package->chat = $request->chat ?? 0;
         $package->review = $request->review ?? 0;
         $package->colour = $request?->colour;
+        $package->module_type = $request?->module ?? 'all';
         $package->save();
 
         $this->translationRepo->addByModel(request: $request, model: $package, modelPath: 'App\Models\SubscriptionPackage', attribute: 'package_name');
         $this->translationRepo->addByModel(request: $request, model: $package, modelPath: 'App\Models\SubscriptionPackage', attribute: 'text');
         Toastr::success(translate('messages.Package_successfully_Added'));
-        return redirect()->route('admin.business-settings.subscriptionackage.index');
+        return redirect()->route('admin.business-settings.subscriptionackage.index',[ 'module' => $package->module_type== 'rental' ? 1 : 'all' ]);
     }
 
     public function statusChange(SubscriptionPackage $subscriptionackage){
@@ -133,7 +143,7 @@ class SubscriptionController extends Controller
 
     public function show(SubscriptionPackage $subscriptionackage)
     {
-        $packages= SubscriptionPackage::where('status',1)->get();
+        $packages= SubscriptionPackage::where('status',1)->where('module_type', $subscriptionackage->module_type == 'rental' ? 'rental' : 'all' )->get();
         $over_view_data= $this->packageOverview($subscriptionackage);
         return view('admin-views.subscription.package.package-details', compact('subscriptionackage','over_view_data','packages'));
     }
@@ -485,10 +495,10 @@ class SubscriptionController extends Controller
     }
     public function subscriberDetail($id){
         $store= Store::where('id',$id)->with([
-            'store_sub_update_application.package','vendor','store_sub_update_application.last_transcations'
+            'store_sub_update_application.package','vendor','store_sub_update_application.last_transcations','module:id,module_type'
         ])->withcount('items')
         ->first();
-        $packages = SubscriptionPackage::where('status',1)->latest()->get();
+        $packages = SubscriptionPackage::where('status',1)->where('module_type', $store?->module?->module_type == 'rental' ? 'rental' : 'all' )->latest()->get();
         $admin_commission=BusinessSetting::where('key', 'admin_commission')->first()?->value ;
         $business_name=BusinessSetting::where('key', 'business_name')->first()?->value ;
         try {
@@ -718,12 +728,16 @@ class SubscriptionController extends Controller
         $key = explode(' ', $request['search']);
 
         $packages=  SubscriptionPackage::withcount('currentSubscribers')
+        ->when($request?->module == 1, function($query){
+            $query->where('module_type', 'rental');
+        })
+        ->when($request?->module != 1, function($query){
+            $query->where('module_type', 'all');
+        })
         ->when(isset($key), function($q) use($key){
             $q->where(function ($q) use ($key) {
                 foreach ($key as $value) {
                     $q->orWhere('package_name', 'like', "%{$value}%");
-                        // ->orWhere('price', 'like', "%{$value}%")
-                        // ->orWhere('validity', 'like', "%{$value}%");
                 }
             });
         })

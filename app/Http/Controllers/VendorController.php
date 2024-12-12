@@ -7,19 +7,16 @@ use App\Models\Admin;
 use App\Models\Store;
 use App\Models\Module;
 use App\Models\Vendor;
-use App\Models\Translation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\CentralLogics\Helpers;
 use App\Models\BusinessSetting;
 use App\CentralLogics\StoreLogic;
-use Illuminate\Support\Facades\DB;
 use App\Models\SubscriptionPackage;
 use Gregwar\Captcha\CaptchaBuilder;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
@@ -37,7 +34,7 @@ class VendorController extends Controller
         }
         $admin_commission= BusinessSetting::where('key','admin_commission')->first()?->value;
         $business_name= BusinessSetting::where('key','business_name')->first()?->value;
-        $packages= SubscriptionPackage::where('status',1)->latest()->get();
+        $packages= SubscriptionPackage::where('status',1)->where('module_type', 'all')->latest()->get();
         $custome_recaptcha = new CaptchaBuilder;
         $custome_recaptcha->build();
         Session::put('six_captcha', $custome_recaptcha->getPhrase());
@@ -210,7 +207,7 @@ class VendorController extends Controller
             else{
                 $admin_commission= BusinessSetting::where('key','admin_commission')->first();
                 $business_name= BusinessSetting::where('key','business_name')->first();
-                $packages= SubscriptionPackage::where('status',1)->get();
+                $packages= SubscriptionPackage::where('status',1)->where('module_type', 'all')->get();
                 Toastr::error(translate('messages.please_follow_the_steps_properly.'));
                 return view('vendor-views.auth.register-step-2',[
                     'admin_commission'=> $admin_commission?->value,
@@ -255,9 +252,18 @@ class VendorController extends Controller
     public function get_modules_type(Request $request): JsonResponse
     {
         $module = Module::find($request->id);
+        $packages=null;
+
 
         if ($module) {
-            return response()->json(['module_type' => $module->module_type]);
+            $packages= SubscriptionPackage::where('status',1)->where('module_type',$module?->module_type == 'rental' ? 'rental' : 'all')->latest()->get();
+
+            $module = $module->module_type;
+            return response()->json([
+                'module_type' => $module,
+                'view' => view('vendor-views.auth._package_data', compact('packages','module'))->render(),
+            ]);
+            // return response()->json(['module_type' => $module->module_type, '' => $packages ?? null]);
         }
 
         return response()->json(['module_type' => '']);
@@ -289,7 +295,7 @@ class VendorController extends Controller
         else{
             $admin_commission= BusinessSetting::where('key','admin_commission')->first();
             $business_name= BusinessSetting::where('key','business_name')->first();
-            $packages= SubscriptionPackage::where('status',1)->get();
+            $packages= SubscriptionPackage::where('status',1)->where('module_type', 'all')->get();
             Toastr::error(translate('messages.please_follow_the_steps_properly.'));
             return view('vendor-views.auth.register-step-2',[
                 'admin_commission'=> $admin_commission?->value,
@@ -326,12 +332,15 @@ class VendorController extends Controller
 public function back(Request $request){
     $admin_commission= BusinessSetting::where('key','admin_commission')->first();
     $business_name= BusinessSetting::where('key','business_name')->first();
-    $packages= SubscriptionPackage::where('status',1)->get();
+    $store=Store::where('id',$request->store_id)->with('module')->first();
+    $module=$store?->module?->module_type ?? 'all';
+    $packages= SubscriptionPackage::where('status',1)->where('module_type',  $module == 'rental' ? 'rental' : 'all')->get();
     return view('vendor-views.auth.register-step-2',[
         'admin_commission'=> $admin_commission?->value,
         'business_name'=> $business_name?->value,
         'packages'=> $packages,
-        'store_id' => $request->store_id
+        'store_id' => $request->store_id,
+        'module' => $module
         ]);
 }
 
