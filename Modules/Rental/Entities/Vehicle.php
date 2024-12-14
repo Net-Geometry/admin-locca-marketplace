@@ -18,7 +18,15 @@ class Vehicle extends Model
 
     protected $guarded = ['id'];
     protected $fillable = [];
-    protected $appends = ['thumbnail_full_url', 'images_full_url', 'identity_image_full_url'];
+    protected $appends = ['thumbnail_full_url', 'images_full_url', 'documents_full_url'];
+    protected $casts = [
+        'air_condition' => 'integer',
+        'multiple_vehicles' => 'integer',
+        'trip_hourly' => 'integer',
+        'trip_distance' => 'integer',
+        'status' => 'integer',
+        'new_tag' => 'integer',
+    ];
 
     /**
      * @param $query
