@@ -88,7 +88,7 @@
                                                 <i class="tio-clear"></i>
                                             </a>
                                             <input type="file" name="image" class="upload-file__input single_file_input" 
-                                                accept=".jpg, .jpeg, .png"  value="">
+                                                accept=".jpg, .jpeg, .png"  value="" required>
                                             <label
                                                 class="upload-file-wrapper w--180px">
                                                 <div class="upload-file-textbox text-center">
