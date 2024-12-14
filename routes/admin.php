@@ -380,6 +380,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
             Route::post('update-fcm', 'BusinessSettingsController@update_fcm')->name('update-fcm');
 
             Route::post('update-fcm-messages', 'BusinessSettingsController@update_fcm_messages')->name('update-fcm-messages');
+            Route::post('update-fcm-messages-rental', 'BusinessSettingsController@update_fcm_messages_rental')->name('update-fcm-messages-rental');
 
             Route::get('currency-add', 'BusinessSettingsController@currency_index')->name('currency-add');
             Route::post('currency-add', 'BusinessSettingsController@currency_store');

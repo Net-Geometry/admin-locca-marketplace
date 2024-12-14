@@ -2127,10 +2127,10 @@ class BusinessSettingsController extends Controller
         return back();
     }
 
-    public function fcm_index()
+    public function fcm_index(Request $request)
     {
         $fcm_credentials = Helpers::get_business_settings('fcm_credentials');
-        return view('admin-views.business-settings.fcm-index', compact('fcm_credentials'));
+        return view($request->module_type == 'rental' ?  'admin-views.business-settings.fcm-index-rental' : 'admin-views.business-settings.fcm-index', compact('fcm_credentials'));
     }
 
     public function fcm_config()
@@ -2148,10 +2148,6 @@ class BusinessSettingsController extends Controller
         Helpers::businessUpdateOrInsert(['key' => 'fcm_project_id'], [
             'value' => $request['projectId']
         ]);
-
-//        Helpers::businessUpdateOrInsert(['key' => 'push_notification_key'], [
-//            'value' => $request['push_notification_key']
-//        ]);
 
         Helpers::businessUpdateOrInsert(['key' => 'fcm_credentials'], [
             'value' => json_encode([
@@ -2542,6 +2538,46 @@ class BusinessSettingsController extends Controller
             }
         }
 
+
+        Toastr::success(translate('messages.message_updated'));
+        return back();
+    }
+    public function update_fcm_messages_rental(Request $request)
+    {
+            $messageKeys = [
+                'trip_pending_message' => 'trip_pending_message',
+                'trip_confirm_message' => 'trip_confirm_message',
+                'trip_ongoing_message' => 'trip_ongoing_message',
+                'trip_complete_message' => 'trip_complete_message',
+                'trip_cancel_message' => 'trip_cancel_message',
+            ];
+
+            foreach ($messageKeys as $requestKey => $notificationKey) {
+
+                $notification = NotificationMessage::firstOrNew([
+                    'module_type' => 'rental',
+                    'key' => $notificationKey,
+                ]);
+
+
+                $notification->message = $request[$requestKey][array_search('en', $request->lang)];
+                $notification->status = isset($request[$requestKey . '_status']) && $request[$requestKey . '_status'] == 1 ? 1 : 0;
+                $notification->save();
+
+                foreach ($request->lang as $index => $locale) {
+                    if (!empty($request[$requestKey][$index])) {
+                        Translation::updateOrInsert(
+                            [
+                                'translationable_type' => NotificationMessage::class,
+                                'translationable_id' => $notification->id,
+                                'locale' => $locale,
+                                'key' => $notificationKey,
+                            ],
+                            ['value' => $request[$requestKey][$index]]
+                        );
+                    }
+                }
+            }
 
         Toastr::success(translate('messages.message_updated'));
         return back();
