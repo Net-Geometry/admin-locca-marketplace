@@ -563,8 +563,30 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <div>
+                            {{-- <div>
                                 <div class="row" id="multiDoc"></div>
+                            </div> --}}
+                            <div class="d-flex py-3 overflow-x-auto">
+                                <div class="d-flex gap-3 flex-shrink-0" id="pdf-container">
+                                    <div class="upload-file text-wrapper document-wrapper" id="upload-wrapper">
+                                        <input type="file" name="files[]"
+                                            class="upload-file__input multiple_document_input" accept="*"
+                                            multiple>
+                                        <div
+                                            class="upload-file__img d-flex justify-content-center align-items-center h-100 max-w-300px p-0">
+                                            <div class="upload-file__textbox pdf">
+                                                <img width="34" height="34"
+                                                    src="{{ asset('public/assets/admin/img/document-upload.png') }}"
+                                                    alt="" class="svg">
+                                                <h6 class="font-semibold">
+                                                    <span class="text-info">{{ translate('Click to upload') }}</span><br>
+                                                    {{ translate('or drag and drop') }}
+                                                </h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Uploaded files will be appended here as .pdf-single divs -->
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -745,7 +767,7 @@
         });
         // ----- mutiple image upload ends
 
-        // ----- mutiple document upload
+        // ----- mutiple document upload 
         document.addEventListener("DOMContentLoaded", function() {
             const MAX_FILES = 5;
             const pdfContainer = document.getElementById("pdf-container");

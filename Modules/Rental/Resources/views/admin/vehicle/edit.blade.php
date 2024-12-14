@@ -196,8 +196,8 @@
                     </div>
                 </div>
                 <div class="col-lg-12">
-                    <div class="card">
-                        {{-- <div class="row g-3">
+                    {{-- <div class="card">
+                        <div class="row g-3">
                             <div class="col-md-6 pb-0">
                                 <div class="row g-2">
                                     <div class="col-12 pb-0">
@@ -218,33 +218,53 @@
                                     <div class="row g-2 mt-0" id="multiImg"></div>
                                 </div>
                             </div>
-                        </div> --}}
-                        <div class="d-flex pt-20 pb-2 overflow-x-auto">
-                            <div class="d-flex gap-3 flex-shrink-0" id="image_container">
+                        </div>
+                    </div> --}}
+                    <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <h5 class="text-title mb-1">
+                                    {{ translate('messages.Images') }}
+                                </h5>
+                                <p class="fs-12 mb-0">
+                                    {{ translate('messages.JPG, JPEG, PNG Less Than 1MB') }}
+                                    <span class="font-semibold"> {{ translate('(Ratio 2:1)') }}</span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="card-body py-1">
+                            <div class="d-flex pt-20 pb-2 overflow-x-auto">
+                               <div class="d-flex gap-3 flex-shrink-0" id="image_container">
                                 <!-- Existing Images dynamically loaded here -->
                                 @foreach($vehicle['images_full_url'] as $img)
-                                    <div class="image-single h-100 max-w-200px p-0" data-existing="true" data-url="{{ $img }}">
-                                        <a href="javascript:void(0);" class="remove-btn" onclick="removeImage(event, this, '{{ $img }}')">
-                                            <i class="tio-clear"></i>
-                                        </a>
-                                        <img class="img--vertical-2 rounded-10" width="200" height="100" loading="lazy" src="{{ $img }}" alt="">
-                                    </div>
+                                <div class="image-single h-100 max-w-200px p-0" data-existing="true" data-url="{{ $img }}">
+                                    <a href="javascript:void(0);" class="remove-btn" onclick="removeImage(event, this, '{{ $img }}')">
+                                        <i class="tio-clear"></i>
+                                    </a>
+                                    <img class="img--vertical-2 rounded-10" width="200" height="100" loading="lazy" src="{{ $img }}" alt="">
+                                </div>
                                 @endforeach
 
-                                
+                            
                                 <!-- Upload Wrapper for New Files -->
-                                <div class="upload-file text-wrapper h--100px w--200px flex-shrink-0" id="image_upload_wrapper">
-                                    <input type="file" name="identity_image[]" class="upload-file__input multiple_image_input" accept=".jpg,.jpeg,.png" multiple>
-                                    <div class="upload-file__img d-flex gap-0 justify-content-center align-items-center h-100 max-w-300px p-0">
-                                        <div class="upload-file__textbox">
-                                            <img width="34" height="34" src="{{ asset('public/assets/admin/img/document-upload.png') }}" alt="" class="svg">
-                                            <h6 class="mt-2 font-semibold">
-                                                <span class="text-info">{{ translate('Click to upload') }}</span><br>
-                                                {{ translate('or drag and drop') }}
-                                            </h6>
-                                        </div>
-                                    </div>
-                                </div>
+                                   <div class="upload-file text-wrapper h--100px w--200px flex-shrink-0"
+                                        id="image_upload_wrapper">
+                                       <input type="file" name="identity_image[]"
+                                              class="upload-file__input multiple_image_input" accept=".jpg,.jpeg,.png" multiple required>
+                                       <div
+                                           class="upload-file__img d-flex gap-0 justify-content-center align-items-center h-100 max-w-300px p-0">
+                                           <div class="upload-file__textbox">
+                                               <img width="34" height="34"
+                                                    src="{{ asset('public/assets/admin/img/document-upload.png') }}"
+                                                    alt="" class="svg">
+                                               <h6 class="mt-2 font-semibold">
+                                                   <span class="text-info">{{ translate('Click to upload') }}</span><br>
+                                                   {{ translate('or drag and drop') }}
+                                               </h6>
+                                           </div>
+                                       </div>
+                                   </div>
+                               </div>
                             </div>
                         </div>
                     </div>
@@ -786,7 +806,7 @@
     </script>
 
     <script>
-        // ----- mutiple image upload
+       // ----- mutiple image upload
         $(document).ready(function () {
             const MAX_FILE_SIZE_MB = 1; // Maximum file size in MB
             const MAX_FILES = 5;
@@ -881,7 +901,7 @@
                 uploadWrapper.style.display = "block";
             });
         });
-        // ----- mutiple image upload ends
+         // ----- mutiple image upload ends
 
         // ----- mutiple document upload
         document.addEventListener("DOMContentLoaded", function() {
