@@ -2120,7 +2120,6 @@ class BusinessSettingsController extends Controller
 
     public function about_us_update(Request $request)
     {
-        // dd($request->all());
         $this->update_data($request, 'about_us');
         $this->update_data($request, 'about_title');
         Toastr::success(translate('messages.about_us_updated'));
@@ -2129,8 +2128,8 @@ class BusinessSettingsController extends Controller
 
     public function fcm_index(Request $request)
     {
-        $fcm_credentials = Helpers::get_business_settings('fcm_credentials');
-        return view($request->module_type == 'rental' ?  'admin-views.business-settings.fcm-index-rental' : 'admin-views.business-settings.fcm-index', compact('fcm_credentials'));
+        abort_if(!rental_module_published_status('rental') && $request?->module_type == 'rental',404 );
+        return view($request->module_type == 'rental' ?  'admin-views.business-settings.fcm-index-rental' : 'admin-views.business-settings.fcm-index');
     }
 
     public function fcm_config()
