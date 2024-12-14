@@ -7580,16 +7580,21 @@ class BusinessSettingsController extends Controller
     public function notification_setup(Request $request)
     {
 
+        abort_if(!rental_module_published_status('rental') && $request?->module == 'rental',404 );
+
         if (NotificationSetting::count() == 0) {
             Helpers::notificationDataSetup();
         }
             Helpers::addNewAdminNotificationSetupDataSetup();
-        $data = NotificationSetting::
-        when($request?->type == null || $request?->type == 'admin', function ($query) {
+        $data = NotificationSetting::where('module_type', $request?->module == 'rental' ? 'rental'  : 'all')
+        ->when($request?->type == null || $request?->type == 'admin', function ($query) {
             $query->where('type', 'admin');
         })
             ->when($request?->type == 'store', function ($query) {
                 $query->where('type', 'store');
+            })
+            ->when($request?->type == 'provider', function ($query) {
+                $query->where('type', 'provider');
             })
             ->when($request?->type == 'customers', function ($query) {
                 $query->where('type', 'customer');
@@ -7600,7 +7605,8 @@ class BusinessSettingsController extends Controller
 
 
         $business_name = BusinessSetting::where('key', 'business_name')->first()?->value;
-        return view('admin-views.business-settings.notification_setup', compact('business_name', 'data'));
+
+        return view(  $request?->module == 'rental' ? 'admin-views.business-settings.notification_setup_rental' : 'admin-views.business-settings.notification_setup', compact('business_name', 'data'));
 
     }
 

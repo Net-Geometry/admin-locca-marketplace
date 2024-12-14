@@ -4,7 +4,7 @@
 @section('notification_setup_type')
 active
 @endsection
-@section('notification_setup')
+@section('notification_setup_rental')
 active
 @endsection
 
@@ -45,17 +45,15 @@ active
             <!-- Nav Menus -->
             <ul class="nav nav-tabs border-0 nav--tabs nav--pills mb-4">
                 <li class="nav-item">
-                    <a class="nav-link {{ request()?->type == null || request()?->type == 'admin' ?  'active' : '' }} " href="{{ route('admin.business-settings.notification_setup' ,['type' =>  'admin'])  }}">{{ translate('Admin') }}</a>
+                    <a class="nav-link {{ request()?->type == null || request()?->type == 'admin' ?  'active' : '' }} " href="{{ route('admin.business-settings.notification_setup' ,[ 'module' => 'rental', 'type' =>  'admin'])  }}">{{ translate('Admin') }}</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{  request()?->type == 'store' ?  'active' : '' }} " href="{{ route('admin.business-settings.notification_setup' ,['type' =>  'store'])  }}">{{ translate('store') }}</a>
+                    <a class="nav-link {{  request()?->type == 'provider' ?  'active' : '' }} " href="{{ route('admin.business-settings.notification_setup' ,[ 'module' => 'rental', 'type' =>  'provider'])  }}">{{ translate('provider') }}</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ request()?->type == 'customers' ?  'active' : '' }}"   href="{{ route('admin.business-settings.notification_setup' ,['type' =>  'customers'])  }}">{{ translate('Customers') }}</a>
+                    <a class="nav-link {{ request()?->type == 'customers' ?  'active' : '' }}"   href="{{ route('admin.business-settings.notification_setup' ,[ 'module' => 'rental', 'type' =>  'customers'])  }}">{{ translate('Customers') }}</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link {{ request()?->type == 'deliveryman' ?  'active' : '' }} "  href="{{ route('admin.business-settings.notification_setup' ,['type' =>  'deliveryman'])  }}">{{ translate('Deliveryman') }}</a>
-                </li>
+
             </ul>
 
 
