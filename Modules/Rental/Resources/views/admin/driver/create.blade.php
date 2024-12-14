@@ -362,7 +362,7 @@
         // });
       
 
-        document.addEventListener("DOMContentLoaded", function () {
+        $(document).ready(function () {
             const MAX_FILE_SIZE_MB = 1; // Maximum file size in MB
             const MAX_FILES = 5;
             const ALLOWED_FILE_TYPES = ["image/jpeg", "image/jpg", "image/png"];
@@ -434,34 +434,19 @@
                 const currentFiles = imageContainer.querySelectorAll(".image-single").length;
                 uploadWrapper.style.display = currentFiles >= 5 ? "none" : "block";
             }
+           // Handle reset button click 
+           $('#reset_btn').click(function () {
+                // Select and remove only the uploaded image elements
+                const uploadedImages = imageContainer.querySelectorAll(".image-single");
+                uploadedImages.forEach(image => image.remove());
 
-            // Form submission handling
-            document.querySelector("form").addEventListener("submit", function (event) {
-                const files = inputElement.files;
-                if (files.length === 0) {
-                    event.preventDefault();
-                    toastr.error('{{ translate('Please upload at least one image') }}', {
-                        CloseButton: true,
-                        ProgressBar: true
-                    });
-                } else {
-                    // Manually add the files from fileSet to the form input
-                    const formData = new FormData();
-                    fileSet.forEach(fileName => {
-                        const file = Array.from(files).find(f => f.name === fileName);
-                        if (file) formData.append("identity_image[]", file);
-                    });
+                // Clear the file set
+                fileSet.clear();
 
-                    // Proceed with form submission (e.g., using AJAX or allow default submission)
-                    // Example:
-                    // fetch('/submit', { method: 'POST', body: formData });
-
-                    toastr.success('{{ translate('Form Submitted Successfully!') }}', {
-                        CloseButton: true,
-                        ProgressBar: true
-                    });
-                }
+                // Ensure the upload wrapper is visible
+                uploadWrapper.style.display = "block";
             });
+
         });
 
 
