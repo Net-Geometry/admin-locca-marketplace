@@ -146,7 +146,7 @@
                                         </label>
                                         <p class="fs-12 mb-0">
                                             JPG, JPEG, PNG Less Than 1MB
-                                            <strong class="font-semibold">(Ratio 1:1)</strong>
+                                            <strong class="font-semibold">(Ratio 2:1)</strong>
                                         </p>
                                     </div>
                                     <div class="d-flex pt-20 pb-2 overflow-x-auto">
@@ -281,87 +281,6 @@
          // ---- single image upload ends
 
         // ----- mutiple image upload
-        // document.addEventListener("DOMContentLoaded", function() {
-        //     const MAX_FILES = 5;
-        //     const ALLOWED_FILE_TYPES = ["image/jpeg", "image/jpg", "image/png"];
-        //     const MAX_FILE_SIZE_MB = 1; // Set maximum file size in MB
-        //     const imageContainer = document.getElementById("image_container");
-        //     const uploadWrapper = document.getElementById("image_upload_wrapper");
-
-        //     document.querySelector('.multiple_image_input').addEventListener('change', function(event) {
-        //         const files = Array.from(event.target.files);
-        //         const currentFiles = imageContainer.querySelectorAll(".image-single").length;
-
-        //         if (currentFiles + files.length > MAX_FILES) {
-        //             toastr.error('{{ translate('You can upload a maximum of') }} ' + MAX_FILES +
-        //                 ' {{ translate('files.') }}', {
-        //                 CloseButton: true,
-        //                 ProgressBar: true
-        //             });
-        //             return;
-        //         }
-
-        //         files.forEach(file => {
-        //             // Validate file type
-        //             if (!ALLOWED_FILE_TYPES.includes(file.type)) {
-        //                 toastr.error(
-        //                     '{{ translate('please_only_input_png_or_jpg_type_file') }}', {
-        //                         CloseButton: true,
-        //                         ProgressBar: true
-        //                     });
-        //                 return;
-        //             }
-
-        //             // Validate file size
-        //             if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
-        //                 toastr.error('{{ translate('file_size_too_big') }}', {
-        //                     CloseButton: true,
-        //                     ProgressBar: true
-        //                 });
-        //                 return;
-        //             }
-
-        //             // Create file preview
-        //             const fileURL = URL.createObjectURL(file);
-
-        //             const imageSingle = document.createElement("div");
-        //             imageSingle.className = "image-single h-100 max-w-200px p-0";
-        //             imageSingle.innerHTML = `
-        //                 <a href="javascript:void(0);" class="remove-btn" onclick="removeImage(event, this)">
-        //                     <i class="tio-clear"></i>
-        //                 </a>
-        //                 <img class="img--vertical-2 rounded-10" width="200" height="100" loading="lazy" src="${fileURL}" alt="">
-        //             `;
-
-        //             imageContainer.appendChild(imageSingle);
-
-        //             // Success notification
-        //             toastr.success('{{ translate('image_added') }}', {
-        //                 CloseButton: true,
-        //                 ProgressBar: true
-        //             });
-        //         });
-
-        //         toggleUploadWrapper();
-
-        //         // Clear file input after upload
-        //         event.target.value = "";
-        //     });
-
-        //     window.removeImage = function(event, element) {
-        //         event.stopPropagation();
-        //         const imageSingle = element.closest(".image-single");
-        //         imageSingle.remove();
-        //         toggleUploadWrapper();
-        //     };
-
-        //     function toggleUploadWrapper() {
-        //         const currentFiles = imageContainer.querySelectorAll(".image-single").length;
-        //         uploadWrapper.style.display = currentFiles >= MAX_FILES ? "none" : "block";
-        //     }
-        // });
-      
-
         $(document).ready(function () {
             const MAX_FILE_SIZE_MB = 1; // Maximum file size in MB
             const MAX_FILES = 5;
@@ -448,8 +367,6 @@
             });
 
         });
-
-
         // ----- mutiple image upload ends
 
     </script>
