@@ -6527,4 +6527,5 @@ Smartly or Earn. ',
   'Image removed successfully.' => 'Image removed successfully.',
   'Failed to remove image.' => 'Failed to remove image.',
   'Something went wrong. Please try again.' => 'Something went wrong. Please try again.',
+  'vehicle_deleted_successfully' => 'Vehicle deleted successfully',
 );

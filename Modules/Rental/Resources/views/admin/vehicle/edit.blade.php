@@ -197,7 +197,7 @@
                 </div>
                 <div class="col-lg-12">
                     <div class="card">
-                        <div class="row g-3">
+                        {{-- <div class="row g-3">
                             <div class="col-md-6 pb-0">
                                 <div class="row g-2">
                                     <div class="col-12 pb-0">
@@ -216,6 +216,34 @@
                                 <label class="input-label" for="exampleFormControlInput1">{{translate('messages.update_identity_image')}}</label>
                                 <div>
                                     <div class="row g-2 mt-0" id="multiImg"></div>
+                                </div>
+                            </div>
+                        </div> --}}
+                        <div class="d-flex pt-20 pb-2 overflow-x-auto">
+                            <div class="d-flex gap-3 flex-shrink-0" id="image_container">
+                                <!-- Existing Images dynamically loaded here -->
+                                @foreach($vehicle['images_full_url'] as $img)
+                                    <div class="image-single h-100 max-w-200px p-0" data-existing="true" data-url="{{ $img }}">
+                                        <a href="javascript:void(0);" class="remove-btn" onclick="removeImage(event, this, '{{ $img }}')">
+                                            <i class="tio-clear"></i>
+                                        </a>
+                                        <img class="img--vertical-2 rounded-10" width="200" height="100" loading="lazy" src="{{ $img }}" alt="">
+                                    </div>
+                                @endforeach
+
+                                
+                                <!-- Upload Wrapper for New Files -->
+                                <div class="upload-file text-wrapper h--100px w--200px flex-shrink-0" id="image_upload_wrapper">
+                                    <input type="file" name="identity_image[]" class="upload-file__input multiple_image_input" accept=".jpg,.jpeg,.png" multiple>
+                                    <div class="upload-file__img d-flex gap-0 justify-content-center align-items-center h-100 max-w-300px p-0">
+                                        <div class="upload-file__textbox">
+                                            <img width="34" height="34" src="{{ asset('public/assets/admin/img/document-upload.png') }}" alt="" class="svg">
+                                            <h6 class="mt-2 font-semibold">
+                                                <span class="text-info">{{ translate('Click to upload') }}</span><br>
+                                                {{ translate('or drag and drop') }}
+                                            </h6>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -759,84 +787,99 @@
 
     <script>
         // ----- mutiple image upload
-        document.addEventListener("DOMContentLoaded", function() {
+        $(document).ready(function () {
+            const MAX_FILE_SIZE_MB = 1; // Maximum file size in MB
             const MAX_FILES = 5;
             const ALLOWED_FILE_TYPES = ["image/jpeg", "image/jpg", "image/png"];
-            const MAX_FILE_SIZE_MB = 1; // Set maximum file size in MB
             const imageContainer = document.getElementById("image_container");
             const uploadWrapper = document.getElementById("image_upload_wrapper");
-
-            document.querySelector('.multiple_image_input').addEventListener('change', function(event) {
+            const inputElement = document.querySelector('.multiple_image_input');
+            const fileSet = new Set(); // To keep track of files
+            let removedImages = []; // To track removed images
+    
+            // Handle file input change (adding new files)
+            inputElement.addEventListener('change', function (event) {
                 const files = Array.from(event.target.files);
                 const currentFiles = imageContainer.querySelectorAll(".image-single").length;
-
+    
                 if (currentFiles + files.length > MAX_FILES) {
-                    toastr.error('{{ translate('You can upload a maximum of') }} ' + MAX_FILES +
-                        ' {{ translate('files.') }}', {
+                    toastr.error('You can upload a maximum of ' + MAX_FILES + ' files.', {
                         CloseButton: true,
                         ProgressBar: true
                     });
                     return;
                 }
-
                 files.forEach(file => {
                     // Validate file type
                     if (!ALLOWED_FILE_TYPES.includes(file.type)) {
-                        toastr.error(
-                            '{{ translate('please_only_input_png_or_jpg_type_file') }}', {
-                                CloseButton: true,
-                                ProgressBar: true
-                            });
-                        return;
-                    }
-
-                    // Validate file size
-                    if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
-                        toastr.error('{{ translate('file_size_too_big') }}', {
+                        toastr.error('Please only input PNG or JPG type file.', {
                             CloseButton: true,
                             ProgressBar: true
                         });
                         return;
                     }
-
-                    // Create file preview
-                    const fileURL = URL.createObjectURL(file);
-
-                    const imageSingle = document.createElement("div");
-                    imageSingle.className = "image-single h-100 max-w-200px p-0";
-                    imageSingle.innerHTML = `
-                <a href="javascript:void(0);" class="remove-btn" onclick="removeImage(event, this)">
-                    <i class="tio-clear"></i>
-                </a>
-                <img class="img--vertical-2 rounded-10" width="200" height="100" loading="lazy" src="${fileURL}" alt="">
-            `;
-
-                    imageContainer.appendChild(imageSingle);
-
-                    // Success notification
-                    toastr.success('{{ translate('image_added') }}', {
-                        CloseButton: true,
-                        ProgressBar: true
-                    });
+    
+                    // Validate file size
+                    if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
+                        toastr.error('File size too big.', {
+                            CloseButton: true,
+                            ProgressBar: true
+                        });
+                        return;
+                    }
+    
+                    // Add to the file set and create preview
+                    if (!fileSet.has(file.name)) {
+                        fileSet.add(file.name);
+    
+                        const fileURL = URL.createObjectURL(file);
+                        const imageSingle = document.createElement("div");
+                        imageSingle.className = "image-single h-100 max-w-200px p-0";
+                        imageSingle.innerHTML = `
+                            <a href="javascript:void(0);" class="remove-btn" onclick="removeImage(event, this, '${file.name}')">
+                                <i class="tio-clear"></i>
+                            </a>
+                            <img class="img--vertical-2 rounded-10" width="200" height="100" loading="lazy" src="${fileURL}" alt="">
+                        `;
+                        imageContainer.appendChild(imageSingle);
+                    }
                 });
-
+    
                 toggleUploadWrapper();
-
-                // Clear file input after upload
-                event.target.value = "";
             });
-
-            window.removeImage = function(event, element) {
+    
+            // Remove image logic
+            window.removeImage = function (event, element, fileName) {
                 event.stopPropagation();
                 const imageSingle = element.closest(".image-single");
                 imageSingle.remove();
+                fileSet.delete(fileName); // Remove the file from the set
+    
+                // Track the removed image
+                removedImages.push(fileName); // Add to removed images array
+    
+                console.log("Updated removed images array:", removedImages);
+    
                 toggleUploadWrapper();
             };
-
+    
             function toggleUploadWrapper() {
                 const currentFiles = imageContainer.querySelectorAll(".image-single").length;
-                uploadWrapper.style.display = currentFiles >= MAX_FILES ? "none" : "block";
+                uploadWrapper.style.display = currentFiles >= 5 ? "none" : "block";
             }
+    
+            // Handle reset button click 
+            $('#reset_btn').click(function () {
+                // Select and remove only the new uploaded image elements (those without data-existing="true")
+                const uploadedImages = imageContainer.querySelectorAll(".image-single:not([data-existing='true'])");
+                uploadedImages.forEach(image => image.remove());
+    
+                // Clear the file set for new uploads
+                fileSet.clear();
+    
+                // Ensure the upload wrapper is visible
+                uploadWrapper.style.display = "block";
+            });
         });
         // ----- mutiple image upload ends
 

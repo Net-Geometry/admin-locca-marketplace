@@ -210,8 +210,6 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                             <!-- Hidden input to store removed images -->
-                                            <input type="hidden" id="removed_images" name="removed_images">
                                         </div>
                                         
                                     </div>
@@ -239,6 +237,7 @@
 @push('script_2')
     <script src="{{ asset('public/assets/admin/js/spartan-multi-image-picker.js') }}"></script>
     <script>
+         // ----- mutiple image upload
         $(document).ready(function () {
             const MAX_FILE_SIZE_MB = 1; // Maximum file size in MB
             const MAX_FILES = 5;
@@ -333,6 +332,7 @@
                 uploadWrapper.style.display = "block";
             });
         });
+         // ----- mutiple image upload ends
     </script>
     
     

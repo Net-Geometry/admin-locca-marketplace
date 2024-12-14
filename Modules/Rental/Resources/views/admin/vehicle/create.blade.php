@@ -216,8 +216,29 @@
                             </div>
                         </div>
                         <div class="card-body py-1">
-                            <div>
+                            {{-- <div>
                                 <div class="row" id="multiImg"></div>
+                            </div> --}}
+                            <div class="d-flex pt-20 pb-2 overflow-x-auto">
+                               <div class="d-flex gap-3 flex-shrink-0" id="image_container">
+                                   <div class="upload-file text-wrapper h--100px w--200px flex-shrink-0"
+                                        id="image_upload_wrapper">
+                                       <input type="file" name="identity_image[]"
+                                              class="upload-file__input multiple_image_input" accept=".jpg,.jpeg,.png" multiple required>
+                                       <div
+                                           class="upload-file__img d-flex gap-0 justify-content-center align-items-center h-100 max-w-300px p-0">
+                                           <div class="upload-file__textbox">
+                                               <img width="34" height="34"
+                                                    src="{{ asset('public/assets/admin/img/document-upload.png') }}"
+                                                    alt="" class="svg">
+                                               <h6 class="mt-2 font-semibold">
+                                                   <span class="text-info">{{ translate('Click to upload') }}</span><br>
+                                                   {{ translate('or drag and drop') }}
+                                               </h6>
+                                           </div>
+                                       </div>
+                                   </div>
+                               </div>
                             </div>
                         </div>
                     </div>
@@ -635,15 +656,17 @@
     </script>
 
     <script>
-        // ----- mutiple image upload
-        document.addEventListener("DOMContentLoaded", function() {
+         // ----- mutiple image upload
+         $(document).ready(function () {
+            const MAX_FILE_SIZE_MB = 1; // Maximum file size in MB
             const MAX_FILES = 5;
             const ALLOWED_FILE_TYPES = ["image/jpeg", "image/jpg", "image/png"];
-            const MAX_FILE_SIZE_MB = 1; // Set maximum file size in MB
             const imageContainer = document.getElementById("image_container");
             const uploadWrapper = document.getElementById("image_upload_wrapper");
+            const inputElement = document.querySelector('.multiple_image_input');
+            const fileSet = new Set(); // To keep track of files
 
-            document.querySelector('.multiple_image_input').addEventListener('change', function(event) {
+            inputElement.addEventListener('change', function (event) {
                 const files = Array.from(event.target.files);
                 const currentFiles = imageContainer.querySelectorAll(".image-single").length;
 
@@ -655,15 +678,13 @@
                     });
                     return;
                 }
-
                 files.forEach(file => {
                     // Validate file type
                     if (!ALLOWED_FILE_TYPES.includes(file.type)) {
-                        toastr.error(
-                            '{{ translate('please_only_input_png_or_jpg_type_file') }}', {
-                                CloseButton: true,
-                                ProgressBar: true
-                            });
+                        toastr.error('{{ translate('please_only_input_png_or_jpg_type_file') }}', {
+                            CloseButton: true,
+                            ProgressBar: true
+                        });
                         return;
                     }
 
@@ -676,44 +697,51 @@
                         return;
                     }
 
-                    // Create file preview
-                    const fileURL = URL.createObjectURL(file);
+                    // Add to the file set and create preview
+                    if (!fileSet.has(file.name)) {
+                        fileSet.add(file.name);
 
-                    const imageSingle = document.createElement("div");
-                    imageSingle.className = "image-single h-100 max-w-200px p-0";
-                    imageSingle.innerHTML = `
-                <a href="javascript:void(0);" class="remove-btn" onclick="removeImage(event, this)">
-                    <i class="tio-clear"></i>
-                </a>
-                <img class="img--vertical-2 rounded-10" width="200" height="100" loading="lazy" src="${fileURL}" alt="">
-            `;
-
-                    imageContainer.appendChild(imageSingle);
-
-                    // Success notification
-                    toastr.success('{{ translate('image_added') }}', {
-                        CloseButton: true,
-                        ProgressBar: true
-                    });
+                        const fileURL = URL.createObjectURL(file);
+                        const imageSingle = document.createElement("div");
+                        imageSingle.className = "image-single h-100 max-w-200px p-0";
+                        imageSingle.innerHTML = `
+                            <a href="javascript:void(0);" class="remove-btn" onclick="removeImage(event, this, '${file.name}')">
+                                <i class="tio-clear"></i>
+                            </a>
+                            <img class="img--vertical-2 rounded-10" width="200" height="100" loading="lazy" src="${fileURL}" alt="">
+                        `;
+                        imageContainer.appendChild(imageSingle);
+                    }
                 });
 
                 toggleUploadWrapper();
-
-                // Clear file input after upload
-                event.target.value = "";
             });
 
-            window.removeImage = function(event, element) {
+            window.removeImage = function (event, element, fileName) {
                 event.stopPropagation();
                 const imageSingle = element.closest(".image-single");
                 imageSingle.remove();
+                fileSet.delete(fileName); // Remove the file from the set
                 toggleUploadWrapper();
             };
 
             function toggleUploadWrapper() {
                 const currentFiles = imageContainer.querySelectorAll(".image-single").length;
-                uploadWrapper.style.display = currentFiles >= MAX_FILES ? "none" : "block";
+                uploadWrapper.style.display = currentFiles >= 5 ? "none" : "block";
             }
+           // Handle reset button click 
+           $('#reset_btn').click(function () {
+                // Select and remove only the uploaded image elements
+                const uploadedImages = imageContainer.querySelectorAll(".image-single");
+                uploadedImages.forEach(image => image.remove());
+
+                // Clear the file set
+                fileSet.clear();
+
+                // Ensure the upload wrapper is visible
+                uploadWrapper.style.display = "block";
+            });
+
         });
         // ----- mutiple image upload ends
 
