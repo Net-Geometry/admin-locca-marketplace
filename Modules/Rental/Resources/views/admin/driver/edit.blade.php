@@ -185,17 +185,6 @@
                                         </div>
                                         <div class="d-flex pt-20 pb-2 overflow-x-auto">
                                             <div class="d-flex gap-3 flex-shrink-0" id="image_container">
-                                                <!-- Existing Images dynamically loaded here -->
-                                                @foreach($driver['identity_image_full_url'] as $img)
-                                                    <div class="image-single h-100 max-w-200px p-0" data-existing="true" data-url="{{ $img }}">
-                                                        <a href="javascript:void(0);" class="remove-btn" onclick="removeImage(event, this, '{{ $img }}')">
-                                                            <i class="tio-clear"></i>
-                                                        </a>
-                                                        <img class="img--vertical-2 rounded-10" width="200" height="100" loading="lazy" src="{{ $img }}" alt="">
-                                                    </div>
-                                                @endforeach
-
-                                                
                                                 <!-- Upload Wrapper for New Files -->
                                                 <div class="upload-file text-wrapper h--100px w--200px flex-shrink-0" id="image_upload_wrapper">
                                                     <input type="file" name="identity_image[]" class="upload-file__input multiple_image_input" accept=".jpg,.jpeg,.png" multiple>
@@ -209,6 +198,15 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <!-- Existing Images dynamically loaded here -->
+                                                @foreach($driver['identity_image_full_url'] as $img)
+                                                    <div class="image-single h-100 max-w-200px p-0" data-existing="true" data-url="{{ $img }}">
+                                                        <a href="javascript:void(0);" class="remove-btn" onclick="removeImage(event, this, '{{ $img }}')">
+                                                            <i class="tio-clear"></i>
+                                                        </a>
+                                                        <img class="img--vertical-2 rounded-10" width="200" height="100" loading="lazy" src="{{ $img }}" alt="">
+                                                    </div>
+                                                @endforeach
                                             </div>
                                         </div>
                                         

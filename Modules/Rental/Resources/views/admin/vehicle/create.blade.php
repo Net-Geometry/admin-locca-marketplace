@@ -843,8 +843,6 @@
 
                 // Clear file input after upload
                 // event.target.value = "";
-                console.log("values---- ",event.target.value);
-                console.log("values all---- ",uploadedFiles);
                 
             });
 
@@ -933,79 +931,79 @@
     <script>
         "use strict";
 
-        $(function() {
-            $("#multiImg").spartanMultiImagePicker({
-                fieldName: 'images[]',
-                maxCount: 5,
-                rowHeight: '120px',
-                groupClassName: 'col-6 spartan_item_wrapper size--md',
-                maxFileSize: '',
-                placeholderImage: {
-                    image: '{{ asset('public/assets/admin/img/document-upload.png') }}',
-                    width: '100%'
-                },
-                dropFileLabel: "Drop Here",
-                onAddRow: function(index, file) {
+        // $(function() {
+        //     $("#multiImg").spartanMultiImagePicker({
+        //         fieldName: 'images[]',
+        //         maxCount: 5,
+        //         rowHeight: '120px',
+        //         groupClassName: 'col-6 spartan_item_wrapper size--md',
+        //         maxFileSize: '',
+        //         placeholderImage: {
+        //             image: '{{ asset('public/assets/admin/img/document-upload.png') }}',
+        //             width: '100%'
+        //         },
+        //         dropFileLabel: "Drop Here",
+        //         onAddRow: function(index, file) {
 
-                },
-                onRenderedPreview: function(index) {
+        //         },
+        //         onRenderedPreview: function(index) {
 
-                },
-                onRemoveRow: function(index) {
+        //         },
+        //         onRemoveRow: function(index) {
 
-                },
-                onExtensionErr: function(index, file) {
-                    toastr.error(
-                        '{{ translate('messages.please_only_input_png_or_jpg_type_file') }}', {
-                            CloseButton: true,
-                            ProgressBar: true
-                        });
-                },
-                onSizeErr: function(index, file) {
-                    toastr.error('{{ translate('messages.file_size_too_big') }}', {
-                        CloseButton: true,
-                        ProgressBar: true
-                    });
-                }
-            });
-        });
+        //         },
+        //         onExtensionErr: function(index, file) {
+        //             toastr.error(
+        //                 '{{ translate('messages.please_only_input_png_or_jpg_type_file') }}', {
+        //                     CloseButton: true,
+        //                     ProgressBar: true
+        //                 });
+        //         },
+        //         onSizeErr: function(index, file) {
+        //             toastr.error('{{ translate('messages.file_size_too_big') }}', {
+        //                 CloseButton: true,
+        //                 ProgressBar: true
+        //             });
+        //         }
+        //     });
+        // });
 
-        $(function() {
-            $("#multiDoc").spartanMultiImagePicker({
-                fieldName: 'documents[]',
-                maxCount: 5,
-                rowHeight: '120px',
-                groupClassName: 'col-6 spartan_item_wrapper size--md',
-                maxFileSize: '',
-                placeholderImage: {
-                    image: '{{ asset('public/assets/admin/img/document-upload.png') }}',
-                    width: '100%'
-                },
-                dropFileLabel: "Drop Here",
-                onAddRow: function(index, file) {
+        // $(function() {
+        //     $("#multiDoc").spartanMultiImagePicker({
+        //         fieldName: 'documents[]',
+        //         maxCount: 5,
+        //         rowHeight: '120px',
+        //         groupClassName: 'col-6 spartan_item_wrapper size--md',
+        //         maxFileSize: '',
+        //         placeholderImage: {
+        //             image: '{{ asset('public/assets/admin/img/document-upload.png') }}',
+        //             width: '100%'
+        //         },
+        //         dropFileLabel: "Drop Here",
+        //         onAddRow: function(index, file) {
 
-                },
-                onRenderedPreview: function(index) {
+        //         },
+        //         onRenderedPreview: function(index) {
 
-                },
-                onRemoveRow: function(index) {
+        //         },
+        //         onRemoveRow: function(index) {
 
-                },
-                onExtensionErr: function(index, file) {
-                    toastr.error(
-                        '{{ translate('messages.please_only_input_png_or_jpg_type_file') }}', {
-                            CloseButton: true,
-                            ProgressBar: true
-                        });
-                },
-                onSizeErr: function(index, file) {
-                    toastr.error('{{ translate('messages.file_size_too_big') }}', {
-                        CloseButton: true,
-                        ProgressBar: true
-                    });
-                }
-            });
-        });
+        //         },
+        //         onExtensionErr: function(index, file) {
+        //             toastr.error(
+        //                 '{{ translate('messages.please_only_input_png_or_jpg_type_file') }}', {
+        //                     CloseButton: true,
+        //                     ProgressBar: true
+        //                 });
+        //         },
+        //         onSizeErr: function(index, file) {
+        //             toastr.error('{{ translate('messages.file_size_too_big') }}', {
+        //                 CloseButton: true,
+        //                 ProgressBar: true
+        //             });
+        //         }
+        //     });
+        // });
 
         $(document).ready(function () {
             toggleButton();
