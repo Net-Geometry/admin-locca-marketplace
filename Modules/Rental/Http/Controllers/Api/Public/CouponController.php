@@ -1,0 +1,101 @@
+<?php
+
+namespace Modules\Rental\Http\Controllers\Api\Public;
+
+use App\Models\User;
+use App\Models\Zone;
+use App\Models\Store;
+use App\Models\Coupon;
+use Illuminate\Http\Request;
+use App\CentralLogics\Helpers;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Contracts\Support\Renderable;
+
+class CouponController extends Controller
+{
+
+
+    private User $user;
+    private Helpers $helpers;
+
+    public function __construct(private Coupon $coupon, private Store $store, User $user, Helpers $helpers)
+    {
+        $this->coupon = $coupon;
+        $this->store = $store;
+        // $this->zone = $zone;
+        // $this->user = $user;
+        // $this->helpers = $helpers;
+    }
+
+    public function list(Request $request)
+    {
+        if (!$request->hasHeader('zoneId')) {
+            $errors = [];
+            array_push($errors, ['code' => 'zoneId', 'message' => translate('messages.zone_id_required')]);
+            return response()->json([
+                'errors' => $errors
+            ], 403);
+        }
+        $customer_id=Auth::user()?->id ?? $request->customer_id ?? null;
+        $zone_id= $request->header('zoneId');
+        $data = [];
+
+
+            $coupons = $this->coupon->with('store:id,name')->active()
+            ->wherehas('module',function($query){
+                $query->where('module_type','rental');
+            })
+            ->whereDate('expire_date', '>=', date('Y-m-d'))->whereDate('start_date', '<=', date('Y-m-d'))->get();
+
+            foreach($coupons as $key=>$coupon)
+            {
+                if($coupon->coupon_type == 'store_wise')
+                {
+                    $temp = $this->store->active()
+                    ->when(config('module.current_module_data'), function($query)use($zone_id){
+                        if(!config('module.current_module_data')['all_zone_service']) {
+                            $query->whereIn('zone_id', json_decode($zone_id, true));
+                        }
+                    })
+                    ->whereIn('id', json_decode($coupon->data, true))->first();
+                    if($temp && (in_array("all", json_decode($coupon->customer_id, true)) || in_array($customer_id,json_decode($coupon->customer_id, true))))
+                    {
+                        $coupon->data = $temp->name;
+                        $coupon['store_id'] = (int)$temp->id;
+                        $data[] = $coupon;
+                    }
+                }
+                else if($coupon->coupon_type == 'zone_wise')
+                {
+                    if(count(array_intersect(json_decode($zone_id, true), json_decode($coupon->data,true))))
+                    {
+                        $data[] = $coupon;
+                    }
+                }
+                else if(isset($coupon->store_id) )
+                {
+                    $temp = $this->store->active()->when(config('module.current_module_data'), function($query)use($zone_id){
+                        if(!config('module.current_module_data')['all_zone_service']) {
+                            $query->whereIn('zone_id', json_decode($zone_id, true));
+                        }
+                    })->where('id', $coupon->store_id)->exists();
+
+                    if($temp){
+                        $data[] = $coupon;
+                    }
+
+                }
+                else{
+                    if((in_array("all", json_decode($coupon->customer_id, true)) || in_array($customer_id,json_decode($coupon->customer_id, true))) ){
+                        $data[] = $coupon;
+                    }
+                }
+            }
+
+            return response()->json($data, 200);
+    }
+
+}

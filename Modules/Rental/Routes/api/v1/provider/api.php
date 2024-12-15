@@ -1,10 +1,15 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+
 use Modules\Rental\Http\Controllers\Api\Provider\BannerController;
 use Modules\Rental\Http\Controllers\Api\Provider\DriverController;
 use Modules\Rental\Http\Controllers\Api\Provider\ProviderController;
 use Modules\Rental\Http\Controllers\Api\Provider\VehicleController;
+use Modules\Rental\Http\Controllers\Api\Public\CouponController as Coupon;
+use Modules\Rental\Http\Controllers\Api\Public\BannerController as Banner;
+use Modules\Rental\Http\Controllers\Api\Public\VehicleController as Vehicle;
+use Modules\Rental\Http\Controllers\Api\Public\VehicleCategoryController as VehicleCategory;
 
 /*
 |--------------------------------------------------------------------------
@@ -58,5 +63,18 @@ Route::group(['prefix' => 'vendor', 'namespace' => 'Provider', 'middleware'=>['v
 
         Route::get('category/list', [ProviderController::class, 'categoryList']);
         Route::get('brand/list', [ProviderController::class, 'BrandList']);
+    });
+});
+
+Route::group(['prefix' => 'rental', 'as' => 'rental.' , 'middleware'=>'localization'], function () {
+    Route::get('coupon/list', [Coupon::class, 'list']);
+
+    Route::group(['prefix' => 'banners'], function () {
+        Route::get('/', [Banner::class, 'list']);
+        Route::get('{store_id}/', [Banner::class, 'getStoreBanners']);
+    });
+    Route::group(['prefix' => 'vehicle'], function () {
+        Route::get('top-rated-vehicle-list/', [Vehicle::class, 'topRatedVehicleList']);
+        Route::get('vehicle-category/', [VehicleCategory::class, 'vehicleCategoryList']);
     });
 });

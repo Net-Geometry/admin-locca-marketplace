@@ -631,6 +631,7 @@ class Store extends Model
         });
 
         static::retrieved(function () {
+            // Helpers::disableStoreForOrderCancellation();
             $current_date = date('Y-m-d');
             $check_daily_subscription_validity_check=  Helpers::getSettingsDataFromConfig(settings: 'check_daily_subscription_validity_check');
             if(!$check_daily_subscription_validity_check){
@@ -639,7 +640,7 @@ class Store extends Model
             }
 
             if($check_daily_subscription_validity_check && $check_daily_subscription_validity_check?->value != $current_date){
-                Helpers::disableStoreForOrderCancellation();
+
                 Store::whereHas('store_subs',function ($query)use($current_date){
                     $query->where('status',1)->whereDate('expiry_date', '<=', $current_date);
                 })->update(['status' => 0,
