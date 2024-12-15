@@ -329,7 +329,7 @@
                                 <h5 class="mb-10px font-bold"> {{ translate('messages.Pickup_Zone') }}
                                 </h5>
                                 <div class="d-flex gap-2 gap-sm-3 flex-wrap">
-                                    @foreach(json_decode($store->pickup_zone_id) as $pickup)
+                                    @foreach(json_decode($store->pickup_zone_id) ?? [] as $pickup)
                                             <?php
                                             $zoneName = $store->pickupZones[$pickup] ?? 'Unknown Zone';
                                             ?>

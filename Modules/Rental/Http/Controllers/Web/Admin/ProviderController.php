@@ -603,7 +603,6 @@ class ProviderController extends Controller
     }
 
 
-
     /**
      * @return bool
      */
@@ -645,7 +644,7 @@ class ProviderController extends Controller
             'tax' => 'required',
             'delivery_time_type' => 'required',
             'business_plan' => $id ? 'nullable' : 'required',
-            'package_id' => $id ? 'nullable' : 'required', Rule::requiredIf(fn() => request('business_plan') === 'subscription-base'),
+            'package_id' => $id ? 'nullable' : 'required_if:business_plan,subscription-based',
         ];
 
         $messages = [
@@ -719,8 +718,8 @@ class ProviderController extends Controller
             'name' => $request->name[array_search('default', $request->lang)],
             'phone' => $request->phone,
             'email' => $request->email,
-            'logo' => $this->helpers->upload('store/', 'png', $request->file('logo')),
-            'cover_photo' => $this->helpers->upload('store/cover/', 'png', $request->file('cover_photo')),
+            'logo' => $this->upload('store/', 'png', $request->file('logo')),
+            'cover_photo' => $this->upload('store/cover/', 'png', $request->file('cover_photo')),
             'address' => $request->address[array_search('default', $request->lang)],
             'latitude' => $request->latitude,
             'longitude' => $request->longitude,
@@ -746,8 +745,8 @@ class ProviderController extends Controller
             'name' => $request->name[array_search('default', $request->lang)],
             'phone' => $request->phone,
             'email' => $request->email,
-            'logo' => $this->helpers->upload('store/', 'png', $request->file('logo')),
-            'cover_photo' => $this->helpers->upload('store/cover/', 'png', $request->file('cover_photo')),
+            'logo' => $this->updateAndUpload('store/', $store->logo,'png', $request->file('logo')),
+            'cover_photo' => $this->updateAndUpload('store/cover/', $store->cover_photo,'png', $request->file('cover_photo')),
             'address' => $request->address[array_search('default', $request->lang)],
             'latitude' => $request->latitude,
             'longitude' => $request->longitude,

@@ -49,11 +49,11 @@ class RouteServiceProvider extends ServiceProvider
     {
         Route::middleware('web')
             ->namespace($this->moduleNamespace)
-            ->group(module_path('Rental', '/Routes/Web/Admin/admin.php'));
+            ->group(module_path('Rental', '/Routes/web/admin/admin.php'));
 
         Route::middleware('web')
             ->namespace($this->moduleNamespace)
-            ->group(module_path('Rental', '/Routes/Web/Vendor/vendor.php'));
+            ->group(module_path('Rental', '/Routes/web/vendor/vendor.php'));
     }
 
     /**
@@ -65,9 +65,9 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapApiRoutes()
     {
-        Route::prefix('api')
+        Route::prefix('api/v1')
             ->middleware('api')
             ->namespace($this->moduleNamespace)
-            ->group(module_path('Rental', '/Routes/api.php'));
+            ->group(module_path('Rental', '/Routes/api/v1/provider/api.php'));
     }
 }
