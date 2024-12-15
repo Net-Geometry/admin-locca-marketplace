@@ -235,22 +235,11 @@
                         <div class="card-body py-1">
                             <div class="d-flex pt-20 pb-2 overflow-x-auto">
                                <div class="d-flex gap-3 flex-shrink-0" id="image_container">
-                                <!-- Existing Images dynamically loaded here -->
-                                @foreach($vehicle['images_full_url'] as $img)
-                                <div class="image-single h-100 max-w-200px p-0" data-existing="true" data-url="{{ $img }}">
-                                    <a href="javascript:void(0);" class="remove-btn" onclick="removeImage(event, this, '{{ $img }}')">
-                                        <i class="tio-clear"></i>
-                                    </a>
-                                    <img class="img--vertical-2 rounded-10" width="200" height="100" loading="lazy" src="{{ $img }}" alt="">
-                                </div>
-                                @endforeach
-
-                            
-                                <!-- Upload Wrapper for New Files -->
+                                    <!-- Upload Wrapper for New Files -->
                                    <div class="upload-file text-wrapper h--100px w--200px flex-shrink-0"
                                         id="image_upload_wrapper">
-                                       <input type="file" name="identity_image[]"
-                                              class="upload-file__input multiple_image_input" accept=".jpg,.jpeg,.png" multiple required>
+                                       <input type="file" name="images[]"
+                                              class="upload-file__input multiple_image_input" accept=".jpg,.jpeg,.png" multiple>
                                        <div
                                            class="upload-file__img d-flex gap-0 justify-content-center align-items-center h-100 max-w-300px p-0">
                                            <div class="upload-file__textbox">
@@ -264,6 +253,15 @@
                                            </div>
                                        </div>
                                    </div>
+                                   <!-- Existing Images dynamically loaded here -->
+                                    @foreach($vehicle['images_full_url'] as $img)
+                                    <div class="image-single h-100 max-w-200px p-0" data-existing="true" data-url="{{ $img }}">
+                                        <a href="javascript:void(0);" class="remove-btn" onclick="removeImage(event, this, '{{ $img }}')">
+                                            <i class="tio-clear"></i>
+                                        </a>
+                                        <img class="img--vertical-2 rounded-10" width="200" height="100" loading="lazy" src="{{ $img }}" alt="">
+                                    </div>
+                                    @endforeach
                                </div>
                             </div>
                         </div>
@@ -596,7 +594,7 @@
                     </div>
                 </div>
                 <div class="col-lg-12">
-                    <div class="card">
+                    {{-- <div class="card">
                         <div class="row g-3">
                             <div class="col-md-6 pb-0">
                                 <div class="row g-2">
@@ -625,6 +623,66 @@
                                 <label class="input-label" for="exampleFormControlInput1">{{translate('messages.update_identity_image')}}</label>
                                 <div>
                                     <div class="row g-2 mt-0" id="multiDoc"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> --}}
+                    <div class="card">
+                        <div class="card-header">
+                            <div>
+                                <h5 class="text-title mb-1">
+                                    {{ translate('messages.Vehicle_Documents') }}
+                                </h5>
+                                <p class="fs-12 mb-0">
+                                    {{ translate('messages.Provider Logo & Covers') }}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex py-3 overflow-x-auto">
+                                <div class="d-flex gap-3 flex-shrink-0" id="pdf-container">
+                                    <div class="upload-file text-wrapper document-wrapper" id="upload-wrapper">
+                                        <input type="file" name="documents[]"
+                                            class="upload-file__input multiple_document_input" accept="*"
+                                            multiple>
+                                        <div
+                                            class="upload-file__img d-flex justify-content-center align-items-center h-100 max-w-300px p-0">
+                                            <div class="upload-file__textbox pdf">
+                                                <img width="34" height="34"
+                                                    src="{{ asset('public/assets/admin/img/document-upload.png') }}"
+                                                    alt="" class="svg">
+                                                <h6 class="font-semibold">
+                                                    <span class="text-info">{{ translate('Click to upload') }}</span><br>
+                                                    {{ translate('or drag and drop') }}
+                                                </h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Uploaded files will be appended here as .pdf-single divs -->
+                                    @foreach($vehicle['documents_full_url'] as $doc)
+                                        <div class="pdf-single" data-pdf-url="{{ $doc }}" data-existing="true"
+                                            onclick="window.open('{{$doc}}', '_blank')">
+                                            <div class="pdf-frame">
+                                                <canvas class="pdf-preview" style="display: none;"></canvas>
+                                                <img class="pdf-thumbnail" src="{{ $doc }}"
+                                                    alt="File Thumbnail">
+                                            </div>
+                                            <div class="overlay">
+                                                <a href="javascript:void(0);" class="remove-btn" onclick="removeDocument(event, this)">
+                                                    <i class="tio-clear"></i>
+                                                </a>
+                                                <div class="pdf-info d-flex gap-10px align-items-center">
+                                                    <img src="{{ asset('public/assets/admin/img/document.svg') }}" width="34"
+                                                        alt="Document Logo">
+                                                    <div class="fs-13 text--title d-flex flex-column">
+                                                        <span class="file-name">demo.pdf</span>
+                                                        <span class="opacity-50">{{translate('Click to view the file')}}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
                                 </div>
                             </div>
                         </div>
@@ -709,79 +767,79 @@
     </script>
 
     <script>
-        $(function() {
-            $("#multiImg").spartanMultiImagePicker({
-                fieldName: 'images[]',
-                maxCount: 5,
-                rowHeight: '120px',
-                groupClassName: 'col-6 spartan_item_wrapper size--md',
-                maxFileSize: '',
-                placeholderImage: {
-                    image: '{{ asset('public/assets/admin/img/document-upload.png') }}',
-                    width: '100%'
-                },
-                dropFileLabel: "Drop Here",
-                onAddRow: function(index, file) {
+        // $(function() {
+        //     $("#multiImg").spartanMultiImagePicker({
+        //         fieldName: 'images[]',
+        //         maxCount: 5,
+        //         rowHeight: '120px',
+        //         groupClassName: 'col-6 spartan_item_wrapper size--md',
+        //         maxFileSize: '',
+        //         placeholderImage: {
+        //             image: '{{ asset('public/assets/admin/img/document-upload.png') }}',
+        //             width: '100%'
+        //         },
+        //         dropFileLabel: "Drop Here",
+        //         onAddRow: function(index, file) {
 
-                },
-                onRenderedPreview: function(index) {
+        //         },
+        //         onRenderedPreview: function(index) {
 
-                },
-                onRemoveRow: function(index) {
+        //         },
+        //         onRemoveRow: function(index) {
 
-                },
-                onExtensionErr: function(index, file) {
-                    toastr.error(
-                        '{{ translate('messages.please_only_input_png_or_jpg_type_file') }}', {
-                            CloseButton: true,
-                            ProgressBar: true
-                        });
-                },
-                onSizeErr: function(index, file) {
-                    toastr.error('{{ translate('messages.file_size_too_big') }}', {
-                        CloseButton: true,
-                        ProgressBar: true
-                    });
-                }
-            });
-        });
+        //         },
+        //         onExtensionErr: function(index, file) {
+        //             toastr.error(
+        //                 '{{ translate('messages.please_only_input_png_or_jpg_type_file') }}', {
+        //                     CloseButton: true,
+        //                     ProgressBar: true
+        //                 });
+        //         },
+        //         onSizeErr: function(index, file) {
+        //             toastr.error('{{ translate('messages.file_size_too_big') }}', {
+        //                 CloseButton: true,
+        //                 ProgressBar: true
+        //             });
+        //         }
+        //     });
+        // });
 
-        $(function() {
-            $("#multiDoc").spartanMultiImagePicker({
-                fieldName: 'documents[]',
-                maxCount: 5,
-                rowHeight: '120px',
-                groupClassName: 'col-6 spartan_item_wrapper size--md',
-                maxFileSize: '',
-                placeholderImage: {
-                    image: '{{ asset('public/assets/admin/img/document-upload.png') }}',
-                    width: '100%'
-                },
-                dropFileLabel: "Drop Here",
-                onAddRow: function(index, file) {
+        // $(function() {
+        //     $("#multiDoc").spartanMultiImagePicker({
+        //         fieldName: 'documents[]',
+        //         maxCount: 5,
+        //         rowHeight: '120px',
+        //         groupClassName: 'col-6 spartan_item_wrapper size--md',
+        //         maxFileSize: '',
+        //         placeholderImage: {
+        //             image: '{{ asset('public/assets/admin/img/document-upload.png') }}',
+        //             width: '100%'
+        //         },
+        //         dropFileLabel: "Drop Here",
+        //         onAddRow: function(index, file) {
 
-                },
-                onRenderedPreview: function(index) {
+        //         },
+        //         onRenderedPreview: function(index) {
 
-                },
-                onRemoveRow: function(index) {
+        //         },
+        //         onRemoveRow: function(index) {
 
-                },
-                onExtensionErr: function(index, file) {
-                    toastr.error(
-                        '{{ translate('messages.please_only_input_png_or_jpg_type_file') }}', {
-                            CloseButton: true,
-                            ProgressBar: true
-                        });
-                },
-                onSizeErr: function(index, file) {
-                    toastr.error('{{ translate('messages.file_size_too_big') }}', {
-                        CloseButton: true,
-                        ProgressBar: true
-                    });
-                }
-            });
-        });
+        //         },
+        //         onExtensionErr: function(index, file) {
+        //             toastr.error(
+        //                 '{{ translate('messages.please_only_input_png_or_jpg_type_file') }}', {
+        //                     CloseButton: true,
+        //                     ProgressBar: true
+        //                 });
+        //         },
+        //         onSizeErr: function(index, file) {
+        //             toastr.error('{{ translate('messages.file_size_too_big') }}', {
+        //                 CloseButton: true,
+        //                 ProgressBar: true
+        //             });
+        //         }
+        //     });
+        // });
 
 
         // // Get all upload-file input elements
@@ -806,29 +864,32 @@
     </script>
 
     <script>
-       // ----- mutiple image upload
+        // ----- mutiple image upload
         $(document).ready(function () {
             const MAX_FILE_SIZE_MB = 1; // Maximum file size in MB
             const MAX_FILES = 5;
             const ALLOWED_FILE_TYPES = ["image/jpeg", "image/jpg", "image/png"];
             const imageContainer = document.getElementById("image_container");
-            const uploadWrapper = document.getElementById("image_upload_wrapper");
+            const imageUploadWrapper = document.getElementById("image_upload_wrapper");
             const inputElement = document.querySelector('.multiple_image_input');
             const fileSet = new Set(); // To keep track of files
             let removedImages = []; // To track removed images
-    
+
             // Handle file input change (adding new files)
             inputElement.addEventListener('change', function (event) {
                 const files = Array.from(event.target.files);
                 const currentFiles = imageContainer.querySelectorAll(".image-single").length;
-    
+
                 if (currentFiles + files.length > MAX_FILES) {
                     toastr.error('You can upload a maximum of ' + MAX_FILES + ' files.', {
                         CloseButton: true,
                         ProgressBar: true
                     });
+                    imageUploadWrapper.style.display = "none";
+                    event.target.value = "";
                     return;
                 }
+
                 files.forEach(file => {
                     // Validate file type
                     if (!ALLOWED_FILE_TYPES.includes(file.type)) {
@@ -838,7 +899,7 @@
                         });
                         return;
                     }
-    
+
                     // Validate file size
                     if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
                         toastr.error('File size too big.', {
@@ -847,11 +908,11 @@
                         });
                         return;
                     }
-    
+
                     // Add to the file set and create preview
                     if (!fileSet.has(file.name)) {
                         fileSet.add(file.name);
-    
+
                         const fileURL = URL.createObjectURL(file);
                         const imageSingle = document.createElement("div");
                         imageSingle.className = "image-single h-100 max-w-200px p-0";
@@ -864,52 +925,100 @@
                         imageContainer.appendChild(imageSingle);
                     }
                 });
-    
+
                 toggleUploadWrapper();
             });
-    
+
             // Remove image logic
             window.removeImage = function (event, element, fileName) {
                 event.stopPropagation();
                 const imageSingle = element.closest(".image-single");
                 imageSingle.remove();
                 fileSet.delete(fileName); // Remove the file from the set
-    
+
                 // Track the removed image
                 removedImages.push(fileName); // Add to removed images array
-    
+
                 console.log("Updated removed images array:", removedImages);
-    
+
                 toggleUploadWrapper();
             };
-    
+
+            // Toggle visibility of the upload wrapper
             function toggleUploadWrapper() {
                 const currentFiles = imageContainer.querySelectorAll(".image-single").length;
-                uploadWrapper.style.display = currentFiles >= 5 ? "none" : "block";
+                imageUploadWrapper.style.display = currentFiles >= 5 ? "none" : "block";
             }
-    
-            // Handle reset button click 
+
+            // Handle form submission
+            $('form').on('submit', function (e) {
+                // Prevent form submission for demonstration
+                // e.preventDefault();
+
+                const formData = new FormData(this);
+
+                // Append new files (those that were added via the input) to FormData
+                fileSet.forEach((fileName) => {
+                    const fileInput = document.querySelector(`input[name="images[]"][data-file-name="${fileName}"]`);
+                    if (fileInput) {
+                        formData.append('images[]', fileInput.files[0]);
+                    }
+                });
+
+                // Append removed files to indicate they should be deleted
+                removedImages.forEach((fileName) => {
+                    formData.append('removed_images[]', fileName);
+                });
+
+                // Log form data (for debugging)
+                console.log("Form Data:");
+                console.log(formData);
+
+                // Example of sending the form data via AJAX (uncomment to use)
+                
+                $.ajax({
+                    url: '{{ route('admin.rental.provider.vehicle.edit', $vehicle->id)}}',  // Replace with your endpoint
+                    method: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        // Handle success response
+                        console.log("Files successfully uploaded and removed:", response);
+                    },
+                    error: function(error) {
+                        // Handle error response
+                        console.log("Error uploading files:", error);
+                    }
+                });
+            });
+
+            // Handle reset button click
             $('#reset_btn').click(function () {
                 // Select and remove only the new uploaded image elements (those without data-existing="true")
                 const uploadedImages = imageContainer.querySelectorAll(".image-single:not([data-existing='true'])");
                 uploadedImages.forEach(image => image.remove());
-    
+
                 // Clear the file set for new uploads
                 fileSet.clear();
-    
+
                 // Ensure the upload wrapper is visible
-                uploadWrapper.style.display = "block";
+                imageUploadWrapper.style.display = "block";
             });
         });
-         // ----- mutiple image upload ends
 
-        // ----- mutiple document upload
-        document.addEventListener("DOMContentLoaded", function() {
+        // ----- mutiple image upload ends
+
+         // ----- mutiple document upload 
+         $(document).ready(function () {
             const MAX_FILES = 5;
             const pdfContainer = document.getElementById("pdf-container");
-            const uploadWrapper = document.getElementById("upload-wrapper");
+            const documentUploadWrapper = document.getElementById("upload-wrapper");
+            const uploadedFiles = new Map(); // Store files with unique names as keys
+            
 
-            document.querySelector('.multiple_document_input').addEventListener('change', function(event) {
+            // Handle file selection and upload
+            document.querySelector('.multiple_document_input').addEventListener('change', function (event) {
                 const files = Array.from(event.target.files);
                 const currentFiles = pdfContainer.querySelectorAll(".pdf-single").length;
 
@@ -922,109 +1031,240 @@
                 }
 
                 files.forEach((file) => {
-                    const fileURL = URL.createObjectURL(file);
-                    const fileName = file.name;
-                    const fileType = file.type;
+                    if (!uploadedFiles.has(file.name)) {
+                        uploadedFiles.set(file.name, file); // Store the file with its name as the key
 
-                    const pdfSingle = document.createElement("div");
-                    pdfSingle.className = "pdf-single";
-                    pdfSingle.setAttribute("data-pdf-url", fileURL);
-                    pdfSingle.setAttribute("onclick", `window.open('${fileURL}', '_blank')`);
+                        const fileURL = URL.createObjectURL(file);
+                        const fileName = file.name;
+                        const fileType = file.type;
 
-                    const iconSrc = fileType.startsWith("image/") ?
-                        "{{ asset('public/assets/admin/img/picture.svg') }}" :
-                        "{{ asset('public/assets/admin/img/document.svg') }}";
+                        const pdfSingle = document.createElement("div");
+                        pdfSingle.className = "pdf-single";
+                        pdfSingle.setAttribute("data-file-name", fileName);
+                        pdfSingle.setAttribute("onclick", `window.open('${fileURL}', '_blank')`);
 
-                    pdfSingle.innerHTML = `
-                        <div class="pdf-frame">
-                            <canvas class="pdf-preview" style="display: none;"></canvas>
-                            <img class="pdf-thumbnail" src="{{ asset('public/assets/admin/img/blank2.png') }}" alt="File Thumbnail">
-                        </div>
-                        <div class="overlay">
-                            <a href="javascript:void(0);" class="remove-btn" onclick="removeDocument(event, this)">
-                                <i class="tio-clear"></i>
-                            </a>
-                            <div class="pdf-info d-flex gap-10px align-items-center">
-                                <img src="${iconSrc}" width="34" alt="File Type Logo">
-                                <div class="fs-13 text--title d-flex flex-column">
-                                    <span class="file-name">${fileName}</span>
-                                    <span class="opacity-50">Click to view the file</span>
+                        const iconSrc = fileType.startsWith("image/") ?
+                            "{{ asset('public/assets/admin/img/picture.svg') }}" :
+                            "{{ asset('public/assets/admin/img/document.svg') }}";
+
+                        pdfSingle.innerHTML = `
+                            <div class="pdf-frame">
+                                <canvas class="pdf-preview" style="display: none;"></canvas>
+                                <img class="pdf-thumbnail" src="{{ asset('public/assets/admin/img/blank2.png') }}" alt="File Thumbnail">
+                            </div>
+                            <div class="overlay">
+                                <a href="javascript:void(0);" class="remove-btn" onclick="removeDocument(event, this)">
+                                    <i class="tio-clear"></i>
+                                </a>
+                                <div class="pdf-info d-flex gap-10px align-items-center">
+                                    <img src="${iconSrc}" width="34" alt="File Type Logo">
+                                    <div class="fs-13 text--title d-flex flex-column">
+                                        <span class="file-name">${fileName}</span>
+                                        <span class="opacity-50">Click to view the file</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    `;
+                        `;
 
-                    pdfContainer.appendChild(pdfSingle);
+                        pdfContainer.appendChild(pdfSingle);
 
-                    // Call thumbnail renderer
-                    renderFileThumbnail(pdfSingle, fileType);
+                        // Log file details in the console
+                        console.log(`File added: ${fileName}, URL: ${fileURL}`);
 
-                    // Show success notification
-                    toastr.success("File added successfully.", {
-                        CloseButton: true,
-                        ProgressBar: true,
-                    });
+                        // Render the thumbnail (if applicable)
+                        renderFileThumbnail(pdfSingle, fileType);
+
+                        // Show success notification
+                        toastr.success("File added successfully.", {
+                            CloseButton: true,
+                            ProgressBar: true,
+                        });
+                    }
                 });
 
                 toggleUploadWrapper();
 
                 // Clear file input after upload
-                event.target.value = "";
+                // event.target.value = "";
+                console.log("values---- ",event.target.value);
+                console.log("values all---- ",uploadedFiles);
             });
 
-            window.removeDocument = function(event, element) {
+            // Remove document handler
+            window.removeDocument = function (event, element) {
                 event.stopPropagation();
                 const pdfSingle = element.closest(".pdf-single");
+                const fileName = pdfSingle.getAttribute("data-file-name");
+
+                // Remove file from the Map
+                uploadedFiles.delete(fileName);
+
                 pdfSingle.remove();
                 toggleUploadWrapper();
             };
 
+            // Toggle visibility of upload wrapper
             function toggleUploadWrapper() {
                 const currentFiles = pdfContainer.querySelectorAll(".pdf-single").length;
-                uploadWrapper.style.display = currentFiles >= MAX_FILES ? "none" : "block";
+                documentUploadWrapper.style.display = currentFiles >= MAX_FILES ? "none" : "block";
             }
 
+            // Render file thumbnail (image or PDF)
             async function renderFileThumbnail(element, fileType) {
-                const fileUrl = element.getAttribute("data-pdf-url");
+                const fileUrl = element.getAttribute("onclick").match(/'(.*?)'/)[1];
                 const canvas = element.querySelector(".pdf-preview");
                 const thumbnail = element.querySelector(".pdf-thumbnail");
 
                 if (fileType.startsWith("image/")) {
-                    // For image files, directly set the thumbnail
                     thumbnail.src = fileUrl;
                 } else if (fileType === "application/pdf") {
-                    // For PDFs, use PDF.js to render the thumbnail
                     try {
                         const ctx = canvas.getContext("2d");
                         const loadingTask = pdfjsLib.getDocument(fileUrl);
                         const pdf = await loadingTask.promise;
                         const page = await pdf.getPage(1);
 
-                        const viewport = page.getViewport({
-                            scale: 0.5
-                        });
+                        const viewport = page.getViewport({ scale: 0.5 });
                         canvas.width = viewport.width;
                         canvas.height = viewport.height;
 
-                        await page.render({
-                            canvasContext: ctx,
-                            viewport,
-                        }).promise;
+                        await page.render({ canvasContext: ctx, viewport }).promise;
 
                         thumbnail.src = canvas.toDataURL();
                     } catch (error) {
                         console.error("Error rendering PDF thumbnail:", error);
                     }
                 } else {
-                    // Handle unsupported file types (fallback)
                     thumbnail.src = "{{ asset('public/assets/admin/img/blank2.png') }}";
                 }
 
                 thumbnail.style.display = "block";
                 canvas.style.display = "none";
             }
+
+            // Handle form submission
+            $('form').on('submit', function (e) {
+                // e.preventDefault();
+
+                const formData = new FormData(this);
+
+                // Append all files to FormData
+                uploadedFiles.forEach((file, fileName) => {
+                    formData.append('documents[]', file, fileName);
+                });
+
+                // Log form data to the console
+                console.log('Files submitted:');
+                uploadedFiles.forEach((file, fileName) => {
+                    console.log(`${fileName}:`, file);
+                });
+            });
+
+            // Reset button handler
+            $('#reset_btn').click(function () {
+                const uploadedDocuments = pdfContainer.querySelectorAll(".pdf-single:not([data-existing='true'])");
+                uploadedDocuments.forEach((doc) => doc.remove());
+                uploadedFiles.clear();
+                documentUploadWrapper.style.display = "block";
+            });
         });
         // ----- mutiple document upload ends
+
+        // ----- document view from file
+        document.addEventListener("DOMContentLoaded", function() {
+
+            async function renderFileThumbnail(element) {
+                const fileUrl = element.getAttribute("data-pdf-url");
+                const canvas = element.querySelector(".pdf-preview");
+                const thumbnail = element.querySelector(".pdf-thumbnail");
+                const fileNameSpan = element.querySelector(".file-name");
+
+                // Extract file name and extension
+                const fullFileName = fileUrl.split('/').pop();
+                const fileExtension = fullFileName.split('.').pop().toLowerCase();
+                const fileNameWithoutExtension = fullFileName.replace(/\.[^/.]+$/, '');
+
+                // Truncate file name if it's too long
+                const truncatedFileName =
+                    fileNameWithoutExtension.length > 20 ?
+                        `${fileNameWithoutExtension.substring(0, 17)}...` :
+                        fileNameWithoutExtension;
+                const displayedFileName = `${truncatedFileName}.${fileExtension}`;
+
+                // Set the file name in the UI
+                fileNameSpan.textContent = displayedFileName;
+
+                // Handle PDF thumbnail generation
+                if (fileExtension === "pdf") {
+                    const ctx = canvas.getContext("2d");
+
+                    try {
+                        // Load the PDF using PDF.js
+                        const loadingTask = pdfjsLib.getDocument(fileUrl);
+                        const pdf = await loadingTask.promise;
+                        const page = await pdf.getPage(1);
+
+                        // Set scale and dimensions for the thumbnail
+                        const viewport = page.getViewport({
+                            scale: 0.5
+                        });
+                        canvas.width = viewport.width;
+                        canvas.height = viewport.height;
+
+                        // Render the first PDF page into the canvas
+                        await page.render({
+                            canvasContext: ctx,
+                            viewport
+                        }).promise;
+
+                        // Convert canvas to image URL and set as the thumbnail
+                        thumbnail.src = canvas.toDataURL();
+                    } catch (error) {
+                        console.error("Error rendering PDF thumbnail:", error);
+                        // Fallback to blank image if there's an error
+                        thumbnail.src = "{{ asset('public/assets/admin/img/blank2.png') }}";
+                    }
+                } else if (["jpg", "jpeg", "png", "gif", "bmp"].includes(fileExtension)) {
+                    // Handle image file types (JPG, PNG, GIF, etc.)
+                    thumbnail.src = fileUrl; // Set the image URL as the thumbnail
+                } else {
+                    // For non-PDF, non-image files (e.g., DOCX, XLSX, etc.)
+                    const fileIconPath = `{{ asset('public/assets/admin/img/icons') }}/${fileExtension}.png`;
+                    const fallbackIconPath =
+                        "{{ asset('public/assets/admin/img/blank2.png') }}"; // Fallback image
+
+                    // Check if a specific icon exists for the file type, otherwise use the fallback
+                    const iconExists = await checkFileIconExistence(fileIconPath);
+
+                    thumbnail.src = iconExists ? fileIconPath : fallbackIconPath;
+                }
+
+                // Show the thumbnail and hide the canvas
+                thumbnail.style.display = "block";
+                canvas.style.display = "none";
+            }
+
+            // Function to check if the icon exists
+            async function checkFileIconExistence(iconPath) {
+                return new Promise((resolve) => {
+                    const img = new Image();
+                    img.onload = () => resolve(true); // Icon exists
+                    img.onerror = () => resolve(false); // Icon doesn't exist
+                    img.src = iconPath;
+                });
+            }
+
+            // Iterate over all .pdf-single elements to render thumbnails
+            document.querySelectorAll(".pdf-single").forEach(renderFileThumbnail);
+
+            // Open the file in a new tab
+            window.openPdf = function(element) {
+                const fileUrl = element.getAttribute("data-pdf-url");
+                window.open(fileUrl, "_blank");
+            };
+
+        });
+        // ----- document view from file ends
     </script>
 
     <script>

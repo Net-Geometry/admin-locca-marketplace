@@ -223,7 +223,7 @@
                                <div class="d-flex gap-3 flex-shrink-0" id="image_container">
                                    <div class="upload-file text-wrapper h--100px w--200px flex-shrink-0"
                                         id="image_upload_wrapper">
-                                       <input type="file" name="identity_image[]"
+                                       <input type="file" name="images[]"
                                               class="upload-file__input multiple_image_input" accept=".jpg,.jpeg,.png" multiple required>
                                        <div
                                            class="upload-file__img d-flex gap-0 justify-content-center align-items-center h-100 max-w-300px p-0">
@@ -569,7 +569,7 @@
                             <div class="d-flex py-3 overflow-x-auto">
                                 <div class="d-flex gap-3 flex-shrink-0" id="pdf-container">
                                     <div class="upload-file text-wrapper document-wrapper" id="upload-wrapper">
-                                        <input type="file" name="files[]"
+                                        <input type="file" name="documents[]"
                                             class="upload-file__input multiple_document_input" accept="*"
                                             multiple>
                                         <div
@@ -678,13 +678,13 @@
     </script>
 
     <script>
-         // ----- mutiple image upload
-         $(document).ready(function () {
+        // ----- mutiple image upload
+        $(document).ready(function () {
             const MAX_FILE_SIZE_MB = 1; // Maximum file size in MB
             const MAX_FILES = 5;
             const ALLOWED_FILE_TYPES = ["image/jpeg", "image/jpg", "image/png"];
             const imageContainer = document.getElementById("image_container");
-            const uploadWrapper = document.getElementById("image_upload_wrapper");
+            const imageUploadWrapper = document.getElementById("image_upload_wrapper");
             const inputElement = document.querySelector('.multiple_image_input');
             const fileSet = new Set(); // To keep track of files
 
@@ -749,7 +749,7 @@
 
             function toggleUploadWrapper() {
                 const currentFiles = imageContainer.querySelectorAll(".image-single").length;
-                uploadWrapper.style.display = currentFiles >= 5 ? "none" : "block";
+                imageUploadWrapper.style.display = currentFiles >= 5 ? "none" : "block";
             }
            // Handle reset button click 
            $('#reset_btn').click(function () {
@@ -761,19 +761,21 @@
                 fileSet.clear();
 
                 // Ensure the upload wrapper is visible
-                uploadWrapper.style.display = "block";
+                imageUploadWrapper.style.display = "block";
             });
 
         });
         // ----- mutiple image upload ends
 
         // ----- mutiple document upload 
-        document.addEventListener("DOMContentLoaded", function() {
+        $(document).ready(function () {
             const MAX_FILES = 5;
             const pdfContainer = document.getElementById("pdf-container");
-            const uploadWrapper = document.getElementById("upload-wrapper");
+            const documentUploadWrapper = document.getElementById("upload-wrapper");
+            const uploadedFiles = new Map(); // Store files with unique names as keys
 
-            document.querySelector('.multiple_document_input').addEventListener('change', function(event) {
+            // Handle file selection and upload
+            document.querySelector('.multiple_document_input').addEventListener('change', function (event) {
                 const files = Array.from(event.target.files);
                 const currentFiles = pdfContainer.querySelectorAll(".pdf-single").length;
 
@@ -786,108 +788,145 @@
                 }
 
                 files.forEach((file) => {
-                    const fileURL = URL.createObjectURL(file);
-                    const fileName = file.name;
-                    const fileType = file.type;
+                    if (!uploadedFiles.has(file.name)) {
+                        uploadedFiles.set(file.name, file); // Store the file with its name as the key
 
-                    const pdfSingle = document.createElement("div");
-                    pdfSingle.className = "pdf-single";
-                    pdfSingle.setAttribute("data-pdf-url", fileURL);
-                    pdfSingle.setAttribute("onclick", `window.open('${fileURL}', '_blank')`);
+                        const fileURL = URL.createObjectURL(file);
+                        const fileName = file.name;
+                        const fileType = file.type;
 
-                    const iconSrc = fileType.startsWith("image/") ?
-                        "{{ asset('public/assets/admin/img/picture.svg') }}" :
-                        "{{ asset('public/assets/admin/img/document.svg') }}";
+                        const pdfSingle = document.createElement("div");
+                        pdfSingle.className = "pdf-single";
+                        pdfSingle.setAttribute("data-file-name", fileName);
+                        pdfSingle.setAttribute("onclick", `window.open('${fileURL}', '_blank')`);
 
-                    pdfSingle.innerHTML = `
-                        <div class="pdf-frame">
-                            <canvas class="pdf-preview" style="display: none;"></canvas>
-                            <img class="pdf-thumbnail" src="{{ asset('public/assets/admin/img/blank2.png') }}" alt="File Thumbnail">
-                        </div>
-                        <div class="overlay">
-                            <a href="javascript:void(0);" class="remove-btn" onclick="removeDocument(event, this)">
-                                <i class="tio-clear"></i>
-                            </a>
-                            <div class="pdf-info d-flex gap-10px align-items-center">
-                                <img src="${iconSrc}" width="34" alt="File Type Logo">
-                                <div class="fs-13 text--title d-flex flex-column">
-                                    <span class="file-name">${fileName}</span>
-                                    <span class="opacity-50">Click to view the file</span>
+                        const iconSrc = fileType.startsWith("image/") ?
+                            "{{ asset('public/assets/admin/img/picture.svg') }}" :
+                            "{{ asset('public/assets/admin/img/document.svg') }}";
+
+                        pdfSingle.innerHTML = `
+                            <div class="pdf-frame">
+                                <canvas class="pdf-preview" style="display: none;"></canvas>
+                                <img class="pdf-thumbnail" src="{{ asset('public/assets/admin/img/blank2.png') }}" alt="File Thumbnail">
+                            </div>
+                            <div class="overlay">
+                                <a href="javascript:void(0);" class="remove-btn" onclick="removeDocument(event, this)">
+                                    <i class="tio-clear"></i>
+                                </a>
+                                <div class="pdf-info d-flex gap-10px align-items-center">
+                                    <img src="${iconSrc}" width="34" alt="File Type Logo">
+                                    <div class="fs-13 text--title d-flex flex-column">
+                                        <span class="file-name">${fileName}</span>
+                                        <span class="opacity-50">Click to view the file</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    `;
+                        `;
 
-                    pdfContainer.appendChild(pdfSingle);
+                        pdfContainer.appendChild(pdfSingle);
 
-                    // Call thumbnail renderer
-                    renderFileThumbnail(pdfSingle, fileType);
+                        // Log file details in the console
+                        console.log(`File added: ${fileName}, URL: ${fileURL}`);
 
-                    // Show success notification
-                    toastr.success("File added successfully.", {
-                        CloseButton: true,
-                        ProgressBar: true,
-                    });
+                        // Render the thumbnail (if applicable)
+                        renderFileThumbnail(pdfSingle, fileType);
+
+                        // Show success notification
+                        toastr.success("File added successfully.", {
+                            CloseButton: true,
+                            ProgressBar: true,
+                        });
+                    }
                 });
 
                 toggleUploadWrapper();
 
                 // Clear file input after upload
-                event.target.value = "";
+                // event.target.value = "";
+                console.log("values---- ",event.target.value);
+                console.log("values all---- ",uploadedFiles);
+                
             });
 
-            window.removeDocument = function(event, element) {
+            // Remove document handler
+            window.removeDocument = function (event, element) {
                 event.stopPropagation();
                 const pdfSingle = element.closest(".pdf-single");
+                const fileName = pdfSingle.getAttribute("data-file-name");
+
+                // Remove file from the Map
+                uploadedFiles.delete(fileName);
+
                 pdfSingle.remove();
                 toggleUploadWrapper();
             };
 
+            // Toggle visibility of upload wrapper
             function toggleUploadWrapper() {
                 const currentFiles = pdfContainer.querySelectorAll(".pdf-single").length;
-                uploadWrapper.style.display = currentFiles >= MAX_FILES ? "none" : "block";
+                documentUploadWrapper.style.display = currentFiles >= MAX_FILES ? "none" : "block";
             }
 
+            // Render file thumbnail (image, PDF, or other file types)
             async function renderFileThumbnail(element, fileType) {
-                const fileUrl = element.getAttribute("data-pdf-url");
+                const fileUrl = element.getAttribute("onclick").match(/'(.*?)'/)[1];
                 const canvas = element.querySelector(".pdf-preview");
                 const thumbnail = element.querySelector(".pdf-thumbnail");
 
-                if (fileType.startsWith("image/")) {
-                    // For image files, directly set the thumbnail
-                    thumbnail.src = fileUrl;
-                } else if (fileType === "application/pdf") {
-                    // For PDFs, use PDF.js to render the thumbnail
-                    try {
+                try {
+                    if (fileType.startsWith("image/")) {
+                        thumbnail.src = fileUrl; // Directly use the image URL
+                    } else if (fileType === "application/pdf") {
                         const ctx = canvas.getContext("2d");
                         const loadingTask = pdfjsLib.getDocument(fileUrl);
                         const pdf = await loadingTask.promise;
                         const page = await pdf.getPage(1);
 
-                        const viewport = page.getViewport({
-                            scale: 0.5
-                        });
+                        const viewport = page.getViewport({ scale: 0.5 });
                         canvas.width = viewport.width;
                         canvas.height = viewport.height;
 
-                        await page.render({
-                            canvasContext: ctx,
-                            viewport,
-                        }).promise;
-
-                        thumbnail.src = canvas.toDataURL();
-                    } catch (error) {
-                        console.error("Error rendering PDF thumbnail:", error);
+                        await page.render({ canvasContext: ctx, viewport }).promise;
+                        thumbnail.src = canvas.toDataURL(); // Render PDF thumbnail
+                    } else {
+                        // Use a fallback thumbnail for unsupported file types
+                        thumbnail.src = "{{ asset('public/assets/admin/img/blank2.png') }}";
                     }
-                } else {
-                    // Handle unsupported file types (fallback)
-                    thumbnail.src = "{{ asset('public/assets/admin/img/blank2.png') }}";
-                }
 
-                thumbnail.style.display = "block";
-                canvas.style.display = "none";
+                    thumbnail.style.display = "block";
+                    canvas.style.display = "none";
+                } catch (error) {
+                    console.error("Error rendering file thumbnail:", error);
+                }
             }
+
+            // Handle form submission
+            $('form').on('submit', function (e) {
+                // e.preventDefault();
+
+                const formData = new FormData(this);
+
+                // Append all files to FormData
+                uploadedFiles.forEach((file, fileName) => {
+                    formData.append('documents[]', file, fileName);
+                });
+
+                // Log form data to the console
+                console.log('Files submitted:');
+                uploadedFiles.forEach((file, fileName) => {
+                    console.log(`${fileName}:`, file);
+                });
+            });
+
+            // Reset button handler
+            $('#reset_btn').click(function () {
+                const uploadedDocuments = pdfContainer.querySelectorAll(".pdf-single");
+                uploadedDocuments.forEach((doc) => doc.remove());
+                uploadedFiles.clear();
+                documentUploadWrapper.style.display = "block";
+            });
         });
+
         // ----- mutiple document upload ends
     </script>
 
