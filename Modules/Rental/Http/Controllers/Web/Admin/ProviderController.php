@@ -644,7 +644,7 @@ class ProviderController extends Controller
             'tax' => 'required',
             'delivery_time_type' => 'required',
             'business_plan' => $id ? 'nullable' : 'required',
-            'package_id' => $id ? 'nullable' : 'required', Rule::requiredIf(fn() => request('business_plan') === 'subscription-base'),
+            'package_id' => $id ? 'nullable' : 'required_if:business_plan,subscription-based',
         ];
 
         $messages = [

@@ -36,7 +36,11 @@ class BannerController extends Controller
         $this->banner = $banner;
     }
 
-    public function list(Request $request)
+    /**
+     * @param Request $request
+     * @return Application|View|Factory
+     */
+    public function list(Request $request): View|Factory|Application
     {
         $banners = $this->getListData($request);
         $banners =  $banners->paginate(config('default_pagination'));
@@ -54,7 +58,7 @@ class BannerController extends Controller
         $this->validateRequest($request);
         try {
             DB::beginTransaction();
-            $banner = $this->createbanner($request);
+            $banner = $this->createBanner($request);
             Helpers::add_or_update_translations(request: $request, key_data: 'title', name_field: 'title', model_name: 'Banner', data_id: $banner->id, data_value: $banner->title);
             DB::commit();
         } catch (Exception) {
@@ -67,7 +71,7 @@ class BannerController extends Controller
     }
 
     /**
-     * @param string $id
+     * @param Banner $banner
      * @return View|Factory|Application|RedirectResponse
      */
     public function edit(Banner $banner): View|Factory|Application|RedirectResponse
@@ -80,17 +84,16 @@ class BannerController extends Controller
 
     /**
      * Update the specified resource in storage.
+     * @param Banner $banner
      * @param Request $request
-     * @param string $id
      * @return RedirectResponse
-     * @throws AuthorizationException
      */
     public function update(Banner $banner, Request $request): RedirectResponse
     {
         $this->validateRequest($request, false, $banner->id);
         try {
             DB::beginTransaction();
-            $this->updatebanner($request, $banner);
+            $this->updateBanner($request, $banner);
             Helpers::add_or_update_translations(request: $request, key_data: 'title', name_field: 'title', model_name: 'Banner', data_id: $banner->id, data_value: $banner->title);
             DB::commit();
             Toastr::success(translate('messages.banner_updated_successfully'));
@@ -103,8 +106,7 @@ class BannerController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @param $id
+     * @param Banner $banner
      * @return RedirectResponse
      */
     public function status(Banner $banner): RedirectResponse
@@ -113,9 +115,9 @@ class BannerController extends Controller
         Toastr::success(translate('messages.banner_status_updated_successfully'));
         return back();
     }
+
     /**
-     * @param Request $request
-     * @param $id
+     * @param Banner $banner
      * @return RedirectResponse
      */
     public function updateFeatured(Banner $banner): RedirectResponse
@@ -126,8 +128,7 @@ class BannerController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @param $id
+     * @param Banner $banner
      * @return RedirectResponse
      */
     public function destroy(Banner $banner): RedirectResponse
@@ -165,7 +166,8 @@ class BannerController extends Controller
 
     /**
      * @param Request $request
-     * @param $id
+     * @param bool $image
+     * @param null $id
      * @return void
      */
     private function validateRequest(Request $request, $image = true, $id = null): void
@@ -189,7 +191,7 @@ class BannerController extends Controller
      * @param Request $request
      * @return Banner
      */
-    private function createbanner(Request $request): Banner
+    private function createBanner(Request $request): Banner
     {
         $banner = $this->banner;
         $banner->title = $request->title[array_search('default', $request->lang)];
@@ -199,12 +201,13 @@ class BannerController extends Controller
         $banner->data = ($request->banner_type == 'store_wise') ? $request->store_id : (($request->banner_type == 'item_wise') ? $request->item_id : '');
         $banner->module_id = Config::get('module.current_module_id');
         $banner->default_link = $request->default_link;
+        $banner->created_by = 'vendor';
         $banner->save();
 
         return $banner;
     }
 
-    private function updatebanner(Request $request, Banner $banner): void
+    private function updateBanner(Request $request, Banner $banner): void
     {
         if ($request->hasFile('image')) {
             $banner->image = $this->updateAndUpload('banner/', $banner->image ,'png', $request->file('image'));

@@ -829,10 +829,10 @@ class Helpers
             $data['is_recommended'] = false;
             $data['minimum_stock_for_warning'] =   (int) $data?->storeConfig?->minimum_stock_for_warning ?? 0;
             $data['halal_tag_status'] =   (bool) $data?->storeConfig?->halal_tag_status;
-            $extra_packaging_data = \App\Models\BusinessSetting::where('key', 'extra_packaging_data')->first()?->value ?? '';
+            $extra_packaging_data = \App\Models\BusinessSetting::where('key', 'extra_packaging_data')->first()?->value ?? [];
             $extra_packaging_data =json_decode($extra_packaging_data , true);
-            $data['extra_packaging_status'] =   (bool) (!empty($extra_packaging_data) && $extra_packaging_data[$data->module->module_type]=='1')?$data?->storeConfig?->extra_packaging_status:false;
-            $data['extra_packaging_amount'] =   (float) (!empty($extra_packaging_data) && ($extra_packaging_data[$data->module->module_type]=='1') && ($data?->storeConfig?->extra_packaging_status == '1'))?$data?->storeConfig?->extra_packaging_amount:0;
+            $data['extra_packaging_status'] =   (bool) (!empty($extra_packaging_data) && data_get($extra_packaging_data ,$data?->module?->module_type))?$data?->storeConfig?->extra_packaging_status:false;
+            $data['extra_packaging_amount'] =   (float) (!empty($extra_packaging_data) && (data_get($extra_packaging_data ,$data?->module?->module_type)) && ($data?->storeConfig?->extra_packaging_status == '1'))?$data?->storeConfig?->extra_packaging_amount:0;
             if($data->storeConfig && $data->storeConfig->is_recommended_deleted == 0 ){
                 $data['is_recommended'] = $data->storeConfig->is_recommended;
             }
@@ -4403,5 +4403,18 @@ class Helpers
 
         return true;
     }
+
+    public function preparePaginatedResponse($pagination, $limit, $offset, $key = 'data', $extraData = []): array
+    {
+        $response = [
+            'total_size' => $pagination->total(),
+            'limit' => $limit,
+            'offset' => $offset,
+            $key => $pagination->items(),
+        ];
+
+        return array_merge($response, $extraData);
+    }
+
 }
 

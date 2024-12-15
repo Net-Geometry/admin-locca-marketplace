@@ -40,8 +40,13 @@ class ProviderController extends Controller
             return response()->json(['errors' => $this->helpers->error_processor($validator)], 403);
         }
 
-        $categories = $this->category->latest()->paginate($request['limit'], ['*'], 'page', $request['offset']);
-        return response()->json($categories, 200);
+        $limit = $request['limit'];
+        $offset = $request['offset'];
+
+        $categories = $this->category->latest()->paginate($limit, ['*'], 'page', $offset);
+        $data = $this->helpers->preparePaginatedResponse(pagination:$categories, limit:$limit, offset:$offset, key:'categories', extraData:[]);
+
+        return response()->json($data, 200);
     }
 
     /**
@@ -60,8 +65,13 @@ class ProviderController extends Controller
             return response()->json(['errors' => $this->helpers->error_processor($validator)], 403);
         }
 
-        $brands = $this->brand->latest()->paginate($request['limit'], ['*'], 'page', $request['offset']);
-        return response()->json($brands, 200);
+        $limit = $request['limit'];
+        $offset = $request['offset'];
+
+        $brands = $this->brand->latest()->paginate($limit, ['*'], 'page', $offset);
+        $data = $this->helpers->preparePaginatedResponse(pagination:$brands, limit:$limit, offset:$offset, key:'brands', extraData:[]);
+
+        return response()->json($data, 200);
     }
 
     /**

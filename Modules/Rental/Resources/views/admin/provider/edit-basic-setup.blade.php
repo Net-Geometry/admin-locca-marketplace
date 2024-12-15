@@ -254,7 +254,7 @@
                                             <select name="pickup_zones[]" id="pickup_zones" class="form-control multiple-select2" multiple="multiple">
                                                 @foreach ($zones as $zone)
                                                     <?php
-                                                        $pickupZoneIds = json_decode($store->pickup_zone_id);
+                                                        $pickupZoneIds = json_decode($store->pickup_zone_id) ?? [];
                                                     ?>
 
                                                     @if (in_array($zone->id, $pickupZoneIds))

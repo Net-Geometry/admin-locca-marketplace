@@ -499,7 +499,8 @@ class Store extends Model
      */
     public function getRatingAttribute($value): array
     {
-        $ratings = json_decode($value, true);
+
+        $ratings = $value ? json_decode($value, true) : [];
         $rating5 = $ratings?$ratings[5]:0;
         $rating4 = $ratings?$ratings[4]:0;
         $rating3 = $ratings?$ratings[3]:0;

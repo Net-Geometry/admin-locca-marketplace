@@ -54,6 +54,9 @@ class VehicleController extends Controller
             return response()->json(['errors' => $this->helpers->error_processor($validator)], 403);
         }
 
+        $limit = $request['limit'];
+        $offset = $request['offset'];
+
         $vehicles = $this->vehicle
             ->when($request->filled('search'), function ($query) use ($request) {
                 $keys = explode(' ', $request->input('search'));
@@ -80,9 +83,12 @@ class VehicleController extends Controller
                 $query->where('fuel_type', $request->input('fuel_type'));
             })
             ->latest()
-            ->paginate($request->input('limit'), ['*'], 'page', $request->input('offset'));
+            ->paginate($limit, ['*'], 'page', $offset);
 
-        return response()->json($vehicles, 200);
+        $data = $this->helpers->preparePaginatedResponse(pagination:$vehicles, limit:$limit, offset:$offset, key:'vehicles', extraData:[]);
+
+
+        return response()->json($data, 200);
     }
 
     /**

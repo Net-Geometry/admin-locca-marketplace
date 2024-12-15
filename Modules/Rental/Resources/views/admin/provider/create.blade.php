@@ -573,7 +573,7 @@
                                                 @forelse ($packages as $key=> $package)
                                                     <label class="__plan-item d-block hover {{ (count($packages) > 4 && $key == 2) || (count($packages) < 5 && $key == 1) ? 'active' : '' }}">
                                                         <input type="radio" name="package_id" id="package_id"
-                                                               value="{{ $package->id }}" class="d-none">
+                                                               value="{{ $package->id }}" class="d-none" {{ (count($packages) > 4 && $key == 2) || (count($packages) < 5 && $key == 1) ? 'checked' : '' }}>
                                                         <div class="inner-div">
                                                             <div class="text-center">
                                                                 <h3 class="title">{{ $package->package_name }}</h3>

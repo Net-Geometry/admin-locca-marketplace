@@ -38,11 +38,14 @@ class DriverController extends Controller
             return response()->json(['errors' => $this->helpers->error_processor($validator)], 403);
         }
 
+        $limit = $request['limit'];
+        $offset = $request['offset'];
         $providerId = $request->vendor->id;
-        $driver = $this->driver->where('provider_id', $providerId)
-            ->latest()->paginate($request['limit'], ['*'], 'page', $request['offset']);
 
-        return response()->json($driver, 200);
+        $drivers = $this->driver->where('provider_id', $providerId)->latest()->paginate($limit, ['*'], 'page', $offset);
+        $data = $this->helpers->preparePaginatedResponse(pagination:$drivers, limit:$limit, offset:$offset, key:'drivers', extraData:[]);
+
+        return response()->json($data, 200);
     }
 
     /**
