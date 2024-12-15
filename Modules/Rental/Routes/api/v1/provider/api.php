@@ -74,7 +74,7 @@ Route::group(['prefix' => 'rental', 'as' => 'rental.' , 'middleware'=>'localizat
         Route::get('{store_id}/', [Banner::class, 'getStoreBanners']);
     });
     Route::group(['prefix' => 'vehicle'], function () {
-        Route::get('top-rated-vehicle-list/', [Vehicle::class, 'topRatedVehicleList']);
-        Route::get('vehicle-category/', [VehicleCategory::class, 'vehicleCategoryList']);
+        Route::get('top-rated/', [Vehicle::class, 'topRatedVehicleList']);
+        Route::get('category-list/', [VehicleCategory::class, 'vehicleCategoryList']);
     });
 });

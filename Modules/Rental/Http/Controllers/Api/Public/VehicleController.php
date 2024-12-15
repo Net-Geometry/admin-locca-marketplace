@@ -71,8 +71,6 @@ class VehicleController extends Controller
             ->paginate($limit, ['*'], 'page', $offset);
 
         $data = $this->helpers->preparePaginatedResponse(pagination:$vehicles, limit:$limit, offset:$offset, key:'vehicles', extraData:[]);
-
-
         return response()->json($data, 200);
     }
 
