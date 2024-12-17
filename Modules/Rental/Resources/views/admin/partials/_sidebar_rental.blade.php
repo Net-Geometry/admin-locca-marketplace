@@ -422,7 +422,7 @@
 
                 <!-- Store Store -->
                 <li class="nav-item">
-                    <small class="nav-subtitle" title="{{ translate('messages.restaurant_section') }}">{{ translate('messages.restaurant_management') }}</small>
+                    <small class="nav-subtitle" title="{{ translate('messages.provider_section') }}">{{ translate('messages.provider_management') }}</small>
                     <small class="tio-more-horizontal nav-subtitle-replacer"></small>
                 </li>
 

@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\Rental\Http\Controllers\Api\Provider\BannerController;
+use Modules\Rental\Http\Controllers\Api\Provider\ConversationController;
 use Modules\Rental\Http\Controllers\Api\Provider\CouponController;
 use Modules\Rental\Http\Controllers\Api\Provider\DriverController;
 use Modules\Rental\Http\Controllers\Api\Provider\ProviderController;
@@ -64,6 +65,13 @@ Route::group(['prefix' => 'rental', 'as' => 'rental.'], function () {
         Route::group(['prefix' => 'schedule', 'as' => 'schedule.'], function () {
             Route::get('/create', [ProviderController::class, 'scheduleStore']);
             Route::post('delete/{id}', [ProviderController::class, 'scheduleDelete']);
+        });
+
+        Route::group(['prefix' => 'cheating', 'as' => 'cheating.'], function () {
+            Route::get('list', [ConversationController::class, 'conversations']);
+            Route::get('search-list', [ConversationController::class, 'search']);
+            Route::get('details', [ConversationController::class, 'messages']);
+            Route::get('send', [ConversationController::class, 'messages_store']);
         });
 
         Route::get('category/list', [ProviderController::class, 'categoryList']);
