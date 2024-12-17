@@ -71,10 +71,13 @@ Route::group(['prefix' => 'rental', 'as' => 'rental.' , 'middleware'=>'localizat
 
     Route::group(['prefix' => 'banners'], function () {
         Route::get('/', [Banner::class, 'list']);
-        Route::get('{store_id}/', [Banner::class, 'getStoreBanners']);
+        // Route::get('{store_id}/', [Banner::class, 'getStoreBanners']);
     });
     Route::group(['prefix' => 'vehicle'], function () {
         Route::get('top-rated/', [Vehicle::class, 'topRatedVehicleList']);
+        Route::get('search/', [Vehicle::class, 'getSearchedVehicles']);
+        Route::get('search/suggestion', [Vehicle::class, 'getSearchedVehiclesSuggestion']);
+        Route::get('get-provider-vehicles', [Vehicle::class, 'getProviderWiseVehicles']);
         Route::get('category-list/', [VehicleCategory::class, 'vehicleCategoryList']);
     });
 });

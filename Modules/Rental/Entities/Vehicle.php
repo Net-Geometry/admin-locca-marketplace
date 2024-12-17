@@ -2,22 +2,22 @@
 
 namespace Modules\Rental\Entities;
 
-use App\CentralLogics\Helpers;
-use App\Models\Storage;
 use App\Models\Store;
+use App\Models\Storage;
 use App\Models\Translation;
+use App\Traits\ReportFilter;
+use App\CentralLogics\Helpers;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Vehicle extends Model
 {
-    use HasFactory;
+    use HasFactory , ReportFilter;
 
     protected $guarded = ['id'];
-    protected $fillable = [];
     protected $appends = ['thumbnail_full_url', 'images_full_url', 'documents_full_url'];
     protected $casts = [
         'air_condition' => 'integer',
@@ -26,6 +26,17 @@ class Vehicle extends Model
         'trip_distance' => 'integer',
         'status' => 'integer',
         'new_tag' => 'integer',
+        'provider_id' => 'integer',
+        'brand_id' => 'integer',
+        'brand_id' => 'integer',
+        'category_id' => 'integer',
+        'hourly_price' => 'float',
+        'distance_price' => 'float',
+        'discount_price' => 'float',
+        'status' => 'integer',
+        'total_trip' => 'integer',
+        'total_reviews' => 'integer',
+        'zone_id' => 'integer',
     ];
 
     /**
@@ -156,8 +167,4 @@ class Vehicle extends Model
         return $images;
     }
 
-    protected static function newFactory()
-    {
-        return \Modules\Rental\Database\factories\VehicleFactory::new();
-    }
 }
