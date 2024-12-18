@@ -9,13 +9,15 @@ use Illuminate\Routing\Controller;
 use Modules\Rental\Entities\Vehicle;
 use Illuminate\Support\Facades\Validator;
 use Modules\Rental\Entities\RentalCart;
+use Modules\Rental\Entities\RentalCartUserData;
 
 class CartController extends Controller
 {
-    public function __construct(private RentalCart $cart, private Helpers $helpers,private Vehicle $vehicle,)
+    public function __construct(private RentalCart $cart, private RentalCartUserData $user_data, private Helpers $helpers,private Vehicle $vehicle,)
     {
         $this->cart = $cart;
         $this->helpers = $helpers;
+        $this->user_data = $user_data;
         $this->vehicle = $vehicle;
     }
 
@@ -30,8 +32,18 @@ class CartController extends Controller
         $user_id = $request->user ? $request->user->id : $request['guest_id'];
         $is_guest = $request->user ? 0 : 1;
 
+     $user_data=   $this->user_data->where('user_id', $user_id->where('is_guest' , $is_guest))->first();
+
+
+
+
         $carts = $this->cart->where('user_id', $user_id)->where('is_guest',$is_guest)->where('module_id',$request->header('moduleId'))->with('vehicles')->get();
-        return response()->json($carts, 200);
+
+        $data =[
+            'carts' => $carts,
+            'user_data' => $user_data,
+        ];
+        return response()->json($data, 200);
     }
 
     public function addToCart(Request $request){
@@ -56,6 +68,17 @@ class CartController extends Controller
             ], 403);
         }
 
+
+        $user_data = $this->user_data->where('user_id', $user_id)->where('is_guest' , $is_guest)->firstOrNew();
+        $user_data->pickup_location = $request->pickup_location;
+        $user_data->destination_location = $request->pickup_destination_locationlocation;
+        $user_data->pickup_time = $request->pickup_time ?? now();
+        $user_data->rental_type = $request->rental_type;
+        $user_data->estimated_hours = $request->estimated_hours ?? 0;
+        $user_data->is_guest = $is_guest;
+        $user_data->save();
+
+
         $carts = $this->cart;
         $carts->user_id = $user_id;
         $carts->is_guest = $is_guest;
@@ -67,7 +90,12 @@ class CartController extends Controller
 
         $carts = $this->cart->where('user_id', $user_id)->where('is_guest',$is_guest)->where('module_id',$request->header('moduleId'))->with('vehicles')->get();
 
-        return response()->json($carts, 200);
+
+        $data =[
+            'carts' => $carts,
+            'user_data' => $user_data,
+        ];
+        return response()->json($data, 200);
     }
 
 
@@ -92,7 +120,24 @@ class CartController extends Controller
         $cart->save();
         $carts = $this->cart->where('user_id', $user_id)->where('is_guest',$is_guest)->where('module_id',$request->header('moduleId'))->with('vehicles')->get();
 
-        return response()->json($carts, 200);
+
+
+        $user_data = $this->user_data->where('user_id', $user_id)->where('is_guest' , $is_guest)->firstOrNew();
+        $user_data->pickup_location = $request->pickup_location ?? $user_data?->pickup_location ;
+        $user_data->destination_location = $request->pickup_destination_locationlocation ?? $user_data?->destination_location;
+        $user_data->pickup_time = $request->pickup_time ?? $user_data?->pickup_time ?? now();
+        $user_data->rental_type = $request->rental_type ?? $user_data?->rental_type;
+        $user_data->estimated_hours = $request->estimated_hours ??  $user_data?->estimated_hours??0 ;
+        $user_data->is_guest = $is_guest;
+        $user_data->save();
+
+
+
+        $data =[
+            'carts' => $carts,
+            'user_data' => $user_data,
+        ];
+        return response()->json($data, 200);
     }
 
 
@@ -126,6 +171,8 @@ class CartController extends Controller
         }
         $user_id = $request->user ? $request->user->id : $request['guest_id'];
         $is_guest = $request->user ? 0 : 1;
+
+        $this->user_data->where('user_id', $user_id)->where('is_guest' , $is_guest)->delete();
         $this->cart->where('user_id', $user_id)->where('is_guest',$is_guest)->delete();
         $carts = $this->cart->where('user_id', $user_id)->where('is_guest',$is_guest)->where('module_id',$request->header('moduleId'))->with('vehicles')->get();
 
