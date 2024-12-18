@@ -109,6 +109,7 @@ class VehicleController extends Controller
             $documents = json_encode([]);
         }
 
+        $providerZoneId = $this->store->where('id', $request->provider_id)->value('zone_id') ?? 0;
         $vehicles = $request->input('vehicle');
         $vinNumbers = $vehicles['vin_number'];
         $licensePlateNumbers = $vehicles['license_plate_number'];
@@ -116,6 +117,7 @@ class VehicleController extends Controller
         $vehicle = $this->vehicle;
         $vehicle->name = $request->name[array_search('default', $request->lang)];
         $vehicle->description = $request->description[array_search('default', $request->lang)];
+        $vehicle->zone_id = $providerZoneId;
         $vehicle->provider_id = $request->provider_id;
         $vehicle->brand_id = $request->brand_id;
         $vehicle->category_id = $request->category_id;
@@ -222,6 +224,7 @@ class VehicleController extends Controller
             }
         }
         $documents = json_encode($vehicleDocuments);
+        $providerZoneId = $this->store->where('id', $request->provider_id)->value('zone_id') ?? 0;
 
         $vehicles = $request->input('vehicle');
         $vinNumbers = $vehicles['vin_number'];
@@ -229,6 +232,7 @@ class VehicleController extends Controller
 
         $vehicle->name = $request->name[array_search('default', $request->lang)];
         $vehicle->description = $request->description[array_search('default', $request->lang)];
+        $vehicle->zone_id = $providerZoneId;
         $vehicle->provider_id = $request->provider_id;
         $vehicle->brand_id = $request->brand_id;
         $vehicle->category_id = $request->category_id;

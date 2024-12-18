@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Modules\Rental\Entities\Vehicle;
 use Modules\Rental\Entities\VehicleBrand;
 use Modules\Rental\Entities\VehicleCategory;
@@ -57,7 +58,7 @@ class VehicleController extends Controller
         $limit = $request['limit'];
         $offset = $request['offset'];
 
-        $vehicles = $this->vehicle
+        $vehicles = $this->vehicle->with('vehicleIdentities','provider', 'category', 'brand', 'translations')
             ->when($request->filled('search'), function ($query) use ($request) {
                 $keys = explode(' ', $request->input('search'));
                 foreach ($keys as $key) {
@@ -85,19 +86,15 @@ class VehicleController extends Controller
             ->latest()
             ->paginate($limit, ['*'], 'page', $offset);
 
+        $vehicles->transform(function ($vehicle) {
+            $vehicle->tag = json_decode($vehicle->tag, true);
+            return $vehicle;
+        });
+
         $data = $this->helpers->preparePaginatedResponse(pagination:$vehicles, limit:$limit, offset:$offset, key:'vehicles', extraData:[]);
 
 
         return response()->json($data, 200);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     * @return Renderable
-     */
-    public function create()
-    {
-        return view('rental::create');
     }
 
     /**
@@ -107,6 +104,25 @@ class VehicleController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
+        $validator = Validator::make($request->all(), [
+            'category_id' => 'required',
+            'brand_id' => 'required',
+            'translations'=>'required',
+        ], [
+            'category_id.required' => translate('messages.category_required'),
+            'brand_id.required' => translate('messages.brand_required'),
+        ]);
+
+        $data = json_decode($request->translations, true) ?? [];
+
+        if (count($data) < 1) {
+            $validator->getMessageBag()->add('translations', translate('messages.Name and description in english is required'));
+        }
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $this->helpers->error_processor($validator)], 402);
+        }
+
         if ($request->has('thumbnail')) {
             $thumbnailName = $this->upload('vehicle/', 'png', $request->file('thumbnail'));
         } else {
@@ -135,6 +151,8 @@ class VehicleController extends Controller
             $documents = json_encode([]);
         }
 
+        $providerZoneId = $this->store->where('id', $request->provider_id)->value('zone_id') ?? 0;
+
         $vehicles = $request->input('vehicle');
         $vinNumbers = $vehicles['vin_number'];
         $licensePlateNumbers = $vehicles['license_plate_number'];
@@ -143,8 +161,9 @@ class VehicleController extends Controller
             DB::beginTransaction();
 
             $vehicle = $this->vehicle;
-            $vehicle->name = $request->name[array_search('default', $request->lang)];
-            $vehicle->description = $request->description[array_search('default', $request->lang)];
+            $vehicle->name = $data[0]['value'];
+            $vehicle->description = $data[1]['value'];
+            $vehicle->zone_id = $providerZoneId;
             $vehicle->provider_id = $request->provider_id;
             $vehicle->brand_id = $request->brand_id;
             $vehicle->category_id = $request->category_id;
@@ -199,6 +218,25 @@ class VehicleController extends Controller
      */
     public function update(Request $request, $id): JsonResponse
     {
+        $validator = Validator::make($request->all(), [
+            'category_id' => 'required',
+            'brand_id' => 'required',
+            'translations'=>'required',
+        ], [
+            'category_id.required' => translate('messages.category_required'),
+            'brand_id.required' => translate('messages.brand_required'),
+        ]);
+
+        $data = json_decode($request->translations, true);
+
+        if (count($data) < 1) {
+            $validator->getMessageBag()->add('translations', translate('messages.Name and description in english is required'));
+        }
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $this->helpers->error_processor($validator)], 402);
+        }
+
         $vehicle = $this->vehicle->findOrFail($id);
         if (!$vehicle) {
             return response()->json(['message' => translate('messages.vehicle_not_found.')], 400);
@@ -226,16 +264,19 @@ class VehicleController extends Controller
                 $vehicleDocuments[] = ['img' => $document, 'storage' => $this->helpers->getDisk()];
             }
         }
-        $documents = json_encode($vehicleDocuments);
 
+        $documents = json_encode($vehicleDocuments);
+        $providerZoneId = $this->store->where('id', $request->provider_id)->value('zone_id') ?? 0;
         $vehicles = $request->input('vehicle');
         $vinNumbers = $vehicles['vin_number'];
         $licensePlateNumbers = $vehicles['license_plate_number'];
 
         try {
             DB::beginTransaction();
-            $vehicle->name = $request->name[array_search('default', $request->lang)];
-            $vehicle->description = $request->description[array_search('default', $request->lang)];
+
+            $vehicle->name = $data[0]['value'];
+            $vehicle->description = $data[1]['value'];
+            $vehicle->zone_id = $providerZoneId;
             $vehicle->provider_id = $request->provider_id;
             $vehicle->brand_id = $request->brand_id;
             $vehicle->category_id = $request->category_id;

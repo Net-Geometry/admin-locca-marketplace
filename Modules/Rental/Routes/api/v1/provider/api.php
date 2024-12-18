@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 
 use Modules\Rental\Http\Controllers\Api\Provider\BannerController;
+use Modules\Rental\Http\Controllers\Api\Provider\ConversationController;
+use Modules\Rental\Http\Controllers\Api\Provider\CouponController;
 use Modules\Rental\Http\Controllers\Api\Provider\DriverController;
 use Modules\Rental\Http\Controllers\Api\Provider\ProviderController;
 use Modules\Rental\Http\Controllers\Api\Provider\VehicleController;
@@ -23,8 +25,8 @@ use Modules\Rental\Http\Controllers\Api\Public\ProviderController as Provider;
 |
 */
 
-Route::group(['prefix' => 'vendor', 'namespace' => 'Provider', 'middleware'=>['vendor.api']], function () {
-    Route::group(['prefix' => 'rental', 'as' => 'rental.'], function () {
+Route::group(['prefix' => 'rental', 'as' => 'rental.'], function () {
+    Route::group(['prefix' => 'vendor', 'namespace' => 'Provider', 'middleware'=>['vendor.api']], function () {
         Route::group(['prefix' => 'driver', 'as' => 'driver.'], function () {
             Route::get('list', [DriverController::class, 'list']);
             Route::post('create', [DriverController::class, 'store']);
@@ -54,16 +56,32 @@ Route::group(['prefix' => 'vendor', 'namespace' => 'Provider', 'middleware'=>['v
         });
 
         Route::group(['prefix' => 'coupon', 'as' => 'coupon.'], function () {
-            Route::get('list', [BannerController::class, 'list']);
-            Route::post('create', [BannerController::class, 'store']);
-            Route::post('update/{id}', [BannerController::class, 'update']);
-            Route::get('status/{id}', [BannerController::class, 'status']);
-            Route::get('featured/{id}', [BannerController::class, 'featured']);
-            Route::delete('delete/{id}', [BannerController::class, 'destroy']);
+            Route::get('list', [CouponController::class, 'list']);
+            Route::post('create', [CouponController::class, 'store']);
+            Route::post('update/{id}', [CouponController::class, 'update']);
+            Route::get('status/{id}', [CouponController::class, 'status']);
+            Route::delete('delete/{id}', [CouponController::class, 'destroy']);
+        });
+
+        Route::group(['prefix' => 'profile', 'as' => 'profile.'], function () {
+            Route::get('/', [ProviderController::class, 'profile']);
+            Route::post('update', [ProviderController::class, 'profileUpdate']);
+        });
+
+        Route::group(['prefix' => 'schedule', 'as' => 'schedule.'], function () {
+            Route::get('/create', [ProviderController::class, 'scheduleStore']);
+            Route::post('delete/{id}', [ProviderController::class, 'scheduleDelete']);
+        });
+
+        Route::group(['prefix' => 'cheating', 'as' => 'cheating.'], function () {
+            Route::get('list', [ConversationController::class, 'conversations']);
+            Route::get('search-list', [ConversationController::class, 'search']);
+            Route::get('details', [ConversationController::class, 'messages']);
+            Route::post('send', [ConversationController::class, 'messagesStore']);
         });
 
         Route::get('category/list', [ProviderController::class, 'categoryList']);
-        Route::get('brand/list', [ProviderController::class, 'BrandList']);
+        Route::get('brand/list', [ProviderController::class, 'brandList']);
     });
 });
 

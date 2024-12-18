@@ -15,15 +15,11 @@ use Illuminate\Support\Facades\Validator;
 class CouponController extends Controller
 {
     private Coupon $coupon;
-    private Zone $zone;
-    private User $user;
     private Helpers $helpers;
 
-    public function __construct(Coupon $coupon, Zone $zone, User $user, Helpers $helpers)
+    public function __construct(Coupon $coupon, Helpers $helpers)
     {
         $this->coupon = $coupon;
-        $this->zone = $zone;
-        $this->user = $user;
         $this->helpers = $helpers;
     }
 
@@ -69,23 +65,118 @@ class CouponController extends Controller
     /**
      * Store a newly created resource in storage.
      * @param Request $request
-     * @return Renderable
+     * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'code' => 'required|unique:coupons|max:100',
+            'start_date' => 'required',
+            'expire_date' => 'required',
+            'coupon_type' => 'required|in:free_delivery,default',
+            'discount' => 'required_if:coupon_type,default'
+        ]);
+
+        $data = json_decode($request->translations, true);
+
+        if (count($data) < 1) {
+            $validator->getMessageBag()->add('translations', translate('messages.Title in english is required'));
+        }
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $this->helpers->error_processor($validator)], 403);
+        }
+
+        $customerId  = $request->customer_ids ?? ['all'];
+        $storeId = $request->vendor->stores[0]->id;
+        $moduleId = $request->vendor->stores[0]->module_id;
+
+        $coupon = $this->coupon;
+        $coupon->title = $data[0]['value'];
+        $coupon->code = $request->code;
+        $coupon->limit = $request->coupon_type == 'first_order' ? 1 : $request->limit;
+        $coupon->coupon_type = $request->coupon_type;
+        $coupon->start_date = $request->start_date;
+        $coupon->expire_date = $request->expire_date;
+        $coupon->min_purchase = $request->min_purchase ?? 0;
+        $coupon->max_discount = $request->max_discount ?? 0;
+        $coupon->discount = $request->discount ?? 0;
+        $coupon->discount_type = $request->discount_type ?? '';
+        $coupon->status = 1;
+        $coupon->created_by = 'vendor';
+        $coupon->store_id = $storeId;
+        $coupon->customer_id = json_encode($customerId);
+        $coupon->module_id = $moduleId;
+        $coupon->save();
+
+        $this->helpers->add_or_update_translations(request: $request, key_data: 'title', name_field: 'title', model_name: 'Coupon', data_id: $coupon->id, data_value: $coupon->title);
+
+        return response()->json(['message' => translate('messages.coupon_created_successfully')], 200);
     }
 
     /**
      * Update the specified resource in storage.
      * @param Request $request
      * @param int $id
-     * @return Renderable
+     * @return JsonResponse
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id): JsonResponse
     {
+        $validator = Validator::make($request->all(), [
+            'code' => 'required|max:100|unique:coupons,code,'.$id,
+            'start_date' => 'required',
+            'expire_date' => 'required',
+            'coupon_type' => 'required|in:free_delivery,default',
+            'discount' => 'required_if:coupon_type,default'
+        ]);
 
-//        $coupon->created_by = 'vendor';
+        $data = json_decode($request->translations, true);
+
+        if (count($data) < 1) {
+            $validator->getMessageBag()->add('translations', translate('messages.Title in english is required'));
+        }
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $this->helpers->error_processor($validator)], 403);
+        }
+
+        $customerId  = $request->customer_ids ?? ['all'];
+
+        $coupon = $this->coupon->findOrFail($id);
+        $coupon->title = $data[0]['value'];
+        $coupon->code = $request->code;
+        $coupon->limit = $request->coupon_type == 'first_order' ? 1 : $request->limit;
+        $coupon->coupon_type = $request->coupon_type;
+        $coupon->start_date = $request->start_date;
+        $coupon->expire_date = $request->expire_date;
+        $coupon->min_purchase = $request->min_purchase ?? 0;
+        $coupon->max_discount = $request->max_discount ?? 0;
+        $coupon->discount = $request->discount ?? 0;
+        $coupon->discount_type = $request->discount_type ?? '';
+        $coupon->customer_id = json_encode($customerId);
+        $coupon->save();
+
+        $this->helpers->add_or_update_translations(request: $request, key_data: 'title', name_field: 'title', model_name: 'Coupon', data_id: $coupon->id, data_value: $coupon->title);
+
+        return response()->json(['message' => translate('messages.coupon_updated_successfully')], 200);
+    }
+
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @return JsonResponse
+     */
+    public function status(Request $request, $id): JsonResponse
+    {
+        $coupon = $this->coupon->find($id);
+
+        if ($coupon) {
+            $coupon->update(['status' => !$coupon->status]);
+            return response()->json(['message' => translate('messages.coupon_status_updated.')], 200);
+        }
+
+        return response()->json(['message' => translate('messages.coupon_not_found.')], 400);
     }
 
     /**

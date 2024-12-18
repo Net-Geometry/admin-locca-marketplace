@@ -19,6 +19,7 @@ class CreateVehiclesTable extends Migration
             $table->text('description')->nullable();
             $table->string('thumbnail')->nullable();
             $table->text('images')->nullable();
+            $table->foreignId('zone_id')->nullable();
             $table->foreignId('provider_id')->nullable();
             $table->foreignId('brand_id')->nullable();
             $table->foreignId('category_id')->nullable();
