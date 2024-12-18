@@ -13,6 +13,7 @@ use Modules\Rental\Http\Controllers\Api\Public\BannerController as Banner;
 use Modules\Rental\Http\Controllers\Api\Public\VehicleController as Vehicle;
 use Modules\Rental\Http\Controllers\Api\Public\VehicleCategoryController as VehicleCategory;
 use Modules\Rental\Http\Controllers\Api\Public\ProviderController as Provider;
+use Modules\Rental\Http\Controllers\Api\User\CartController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,8 +26,8 @@ use Modules\Rental\Http\Controllers\Api\Public\ProviderController as Provider;
 |
 */
 
-Route::group(['prefix' => 'rental', 'as' => 'rental.'], function () {
-    Route::group(['prefix' => 'vendor', 'namespace' => 'Provider', 'middleware'=>['vendor.api']], function () {
+Route::group(['prefix' => 'rental', 'as' => 'rental.',  'middleware' =>  ['localization']], function () {
+    Route::group(['prefix' => 'vendor', 'namespace' => 'Provider', 'middleware' => ['vendor.api']], function () {
         Route::group(['prefix' => 'driver', 'as' => 'driver.'], function () {
             Route::get('list', [DriverController::class, 'list']);
             Route::post('create', [DriverController::class, 'store']);
@@ -83,14 +84,10 @@ Route::group(['prefix' => 'rental', 'as' => 'rental.'], function () {
         Route::get('category/list', [ProviderController::class, 'categoryList']);
         Route::get('brand/list', [ProviderController::class, 'brandList']);
     });
-});
 
-Route::group(['prefix' => 'rental', 'as' => 'rental.' , 'middleware'=>'localization'], function () {
     Route::get('coupon/list', [Coupon::class, 'list']);
-
     Route::group(['prefix' => 'banners'], function () {
         Route::get('/', [Banner::class, 'list']);
-        // Route::get('{store_id}/', [Banner::class, 'getStoreBanners']);
     });
     Route::group(['prefix' => 'vehicle'], function () {
         Route::get('top-rated/', [Vehicle::class, 'topRatedVehicleList']);
@@ -101,8 +98,26 @@ Route::group(['prefix' => 'rental', 'as' => 'rental.' , 'middleware'=>'localizat
 
         Route::get('category-list/', [VehicleCategory::class, 'vehicleCategoryList']);
     });
+
     Route::group(['prefix' => 'provider'], function () {
         Route::get('get-provider-details/{provider}', [Provider::class, 'getProvidereDetails']);
         Route::get('get-provider-reviews/{provider}', [Provider::class, 'getProvidereReviews']);
     });
+
+    Route::group(['prefix' => 'user' ,'middleware' => ['module-check','apiGuestCheck' ,'auth:api']], function () {
+        Route::group(['prefix' => 'cart'], function () {
+            Route::get('get-cart', [CartController::class, 'getCartList']);
+            Route::Post('add-to-cart', [CartController::class, 'addToCart']);
+            Route::Put('update-cart', [CartController::class, 'updateCart']);
+            Route::delete('remove-vehicle/{cart_id}', [CartController::class, 'removeVehicle']);
+            Route::delete('remove-cart', [CartController::class, 'removeCart']);
+
+        });
+    });
+
+
+
+
+
+
 });
