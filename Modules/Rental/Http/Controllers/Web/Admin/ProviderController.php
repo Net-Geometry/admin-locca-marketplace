@@ -331,7 +331,7 @@ class ProviderController extends Controller
                 'store_sub_update_application.package','vendor','store_sub_update_application.last_transcations'
             ])->withcount('items')->first();
 
-            $packages = $this->subscriptionPackage->where('status',1)->latest()->get();
+            $packages = $this->subscriptionPackage->where('module_type','rental')->where('status',1)->latest()->get();
             $admin_commission = $this->businessSetting->where('key', 'admin_commission')->first()?->value ;
             $business_name =  $this->businessSetting->where('key', 'business_name')->first()?->value ;
 
@@ -359,7 +359,7 @@ class ProviderController extends Controller
 
         $admin_commission = $this->helpers->get_business_data('admin_commission');
         $business_name = $this->helpers->get_business_data('business_name');
-        $packages = $this->subscriptionPackage->ofStatus(1)->latest()->get();
+        $packages = $this->subscriptionPackage->where('module_type','rental')->ofStatus(1)->latest()->get();
         $zones = $this->zone->active(1)->latest()->get();
 
         return view('rental::admin.provider.create', compact('admin_commission','business_name', 'packages', 'zones'));
@@ -508,7 +508,7 @@ class ProviderController extends Controller
 
         $admin_commission = $this->helpers->get_business_data('admin_commission');
         $business_name = $this->helpers->get_business_data('business_name');
-        $packages = $this->subscriptionPackage->ofStatus(1)->latest()->get();
+        $packages = $this->subscriptionPackage->ofStatus(1)->where('module_type','rental')->latest()->get();
         $zones = $this->zone->active(1)->latest()->get();
         $store = $this->store->withoutGlobalScope('translate')->findOrFail($id);
 
@@ -603,7 +603,6 @@ class ProviderController extends Controller
     }
 
 
-
     /**
      * @return bool
      */
@@ -645,7 +644,7 @@ class ProviderController extends Controller
             'tax' => 'required',
             'delivery_time_type' => 'required',
             'business_plan' => $id ? 'nullable' : 'required',
-            'package_id' => $id ? 'nullable' : 'required', Rule::requiredIf(fn() => request('business_plan') === 'subscription-base'),
+            'package_id' => $id ? 'nullable' : 'required_if:business_plan,subscription-based',
         ];
 
         $messages = [
@@ -719,8 +718,8 @@ class ProviderController extends Controller
             'name' => $request->name[array_search('default', $request->lang)],
             'phone' => $request->phone,
             'email' => $request->email,
-            'logo' => $this->helpers->upload('store/', 'png', $request->file('logo')),
-            'cover_photo' => $this->helpers->upload('store/cover/', 'png', $request->file('cover_photo')),
+            'logo' => $this->upload('store/', 'png', $request->file('logo')),
+            'cover_photo' => $this->upload('store/cover/', 'png', $request->file('cover_photo')),
             'address' => $request->address[array_search('default', $request->lang)],
             'latitude' => $request->latitude,
             'longitude' => $request->longitude,
@@ -746,8 +745,8 @@ class ProviderController extends Controller
             'name' => $request->name[array_search('default', $request->lang)],
             'phone' => $request->phone,
             'email' => $request->email,
-            'logo' => $this->helpers->upload('store/', 'png', $request->file('logo')),
-            'cover_photo' => $this->helpers->upload('store/cover/', 'png', $request->file('cover_photo')),
+            'logo' => $this->updateAndUpload('store/', $store->logo,'png', $request->file('logo')),
+            'cover_photo' => $this->updateAndUpload('store/cover/', $store->cover_photo,'png', $request->file('cover_photo')),
             'address' => $request->address[array_search('default', $request->lang)],
             'latitude' => $request->latitude,
             'longitude' => $request->longitude,
@@ -812,7 +811,7 @@ class ProviderController extends Controller
             } else {
                 $admin_commission = $this->helpers->get_business_data('admin_commission');
                 $business_name = $this->helpers->get_business_data('business_name');
-                $packages = $this->subscriptionPackage->ofStatus(1)->latest()->get();
+                $packages = $this->subscriptionPackage->ofStatus(1)->where('module_type','rental')->latest()->get();
 
                 Toastr::error(translate('messages.please_follow_the_steps_properly.'));
                 return back();
@@ -832,14 +831,12 @@ class ProviderController extends Controller
      */
     private function handleSubscriptionPlan(Request $request, Store $store): RedirectResponse
     {
-        $free_trial_settings = $this->businessSetting
-            ->whereIn('key', ['subscription_free_trial_days', 'subscription_free_trial_type', 'subscription_free_trial_status'])
-            ->pluck('value', 'key');
+        // $free_trial_settings = $this->businessSetting
+        //     ->whereIn('key', ['subscription_free_trial_days', 'subscription_free_trial_type', 'subscription_free_trial_status'])
+        //     ->pluck('value', 'key');
 
-        Helpers::subscription_plan_chosen(store_id:$store->id,package_id:$request->package_id,payment_method:'Manually_payment_by_admin',discount:0,reference:'Manually_payment_by_admin',type: 'new_join');
-
+        Helpers::subscription_plan_chosen(store_id:$store->id,package_id:$request->package_id,payment_method:'manual_payment_by_admin',discount:0,reference:'manual_payment_by_admin',type: 'new_join');
         $store->update(['package_id' => $request->package_id]);
-
         Toastr::success(translate('messages.your_provider_registration_is_successful'));
         return back();
     }

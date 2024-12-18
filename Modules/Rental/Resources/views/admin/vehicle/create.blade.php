@@ -262,7 +262,7 @@
                                         <label class="input-label" for="choice_provider">{{ translate('messages.provider') }}
                                         </label>
                                         <select name="provider_id" id="choice_provider" class="form-control js-select2-custom"
-                                                data-placeholder="{{ translate('messages.select_vehicle_provider') }}">
+                                                data-placeholder="{{ translate('messages.select_vehicle_provider') }}" required>
                                             <option value="" selected disabled>{{ translate('messages.select_vehicle_provider') }}</option>
                                             @foreach($providers as $provider)
                                             <option value="{{ $provider->id }}" {{ $provider->id == request()?->provider_id ? 'selected' : '' }}>{{ $provider->name }}</option>
@@ -275,7 +275,7 @@
                                         <label class="input-label" for="choice_brand">{{ translate('messages.brand') }}
                                         </label>
                                         <select name="brand_id" id="choice_brand" class="form-control js-select2-custom"
-                                                data-placeholder="{{ translate('messages.select_vehicle_brand') }}">
+                                                data-placeholder="{{ translate('messages.select_vehicle_brand') }}" required>
                                             <option value="" selected disabled>{{ translate('messages.select_vehicle_brand') }}</option>
                                             @foreach($brands as $brand)
                                                 <option value="{{ $brand->id }}">{{ $brand->name }}</option>
@@ -289,7 +289,7 @@
                                                for="">{{ translate('messages.Model') }}
                                         </label>
                                         <input type="number" name="model" class="form-control" placeholder="Model Name"
-                                               value="">
+                                               value="" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
@@ -297,7 +297,7 @@
                                         <label class="input-label"
                                                for="choice_category">{{ translate('messages.category') }}
                                         </label>
-                                        <select name="category_id" id="choice_category" class="form-control js-select2-custom" data-placeholder="{{ translate('messages.select_vehicle_category') }}">
+                                        <select name="category_id" id="choice_category" class="form-control js-select2-custom" data-placeholder="{{ translate('messages.select_vehicle_category') }}" required>
                                             <option value="" selected disabled>{{ translate('messages.select_vehicle_category') }}</option>
                                             @foreach($categories as $category)
                                                 <option value="{{ $category->id }}">{{ $category->name }}</option>
@@ -310,11 +310,15 @@
                                         <label class="input-label" for="choice_type">{{ translate('messages.type') }}
                                         </label>
                                         <select name="type" id="choice_type" class="form-control js-select2-custom"
-                                                data-placeholder="{{ translate('messages.select_vehicle_type') }}">
+                                                data-placeholder="{{ translate('messages.select_vehicle_type') }}" required>
                                             <option value="" selected disabled>
                                                 {{ translate('messages.select_vehicle_type') }}</option>
                                             <option value="family">{{ translate('messages.family') }}</option>
-                                            <option value="office">{{ translate('messages.office') }}</option>
+                                            <option value="luxury">{{ translate('messages.Luxury') }}</option>
+                                            <option value="affordable">{{ translate('messages.Affordable') }}</option>
+                                            <option value="executives">{{ translate('messages.Executives') }}</option>
+                                            <option value="compact">{{ translate('messages.Compact') }}</option>
+                                            <option value="full-size">{{ translate('messages.Full-Size') }}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -324,7 +328,7 @@
                                                for="">{{ translate('messages.Engine Capacity (cc)') }}
                                         </label>
                                         <input type="number" name="engine_capacity" class="form-control" placeholder="Ex: 450"
-                                               value="">
+                                               value="" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
@@ -333,7 +337,7 @@
                                                for="">{{ translate('messages.Engine Power (hp)') }}
                                         </label>
                                         <input type="number" name="engine_power" class="form-control" placeholder="Ex: 100"
-                                               value="">
+                                               value="" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
@@ -342,7 +346,7 @@
                                                for="">{{ translate('messages.Seating Capacity') }}
                                         </label>
                                         <input type="number" name="seating_capacity" class="form-control"
-                                               placeholder="Input how many person can seat" value="">
+                                               placeholder="Input how many person can seat" value="" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
@@ -376,10 +380,15 @@
                                         </label>
                                         <select name="fuel_type" id="choice_fuel_type"
                                                 class="form-control js-select2-custom"
-                                                data-placeholder="{{ translate('messages.select_fuel_type') }}">
+                                                data-placeholder="{{ translate('messages.select_fuel_type') }}" required>
                                             <option value="" selected disabled>
                                                 {{ translate('messages.select_vehicle_fuel_type') }}</option>
+                                            <option value="octan" >{{ translate('messages.Octan') }}</option>
                                             <option value="diesel" >{{ translate('messages.diesel') }}</option>
+                                            <option value="CNG" >{{ translate('messages.CNG') }}</option>
+                                            <option value="petrol" >{{ translate('messages.Petrol') }}</option>
+                                            <option value="electric" >{{ translate('messages.Electric') }}</option>
+                                            <option value="jet-fuel" >{{ translate('messages.Jet Fuel') }}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -390,11 +399,14 @@
                                         </label>
                                         <select name="transmission_type" id="choice_transmission_type"
                                                 class="form-control js-select2-custom"
-                                                data-placeholder="{{ translate('messages.select_vehicle_transmission') }}">
+                                                data-placeholder="{{ translate('messages.select_vehicle_transmission') }}" required>
                                             <option value="" selected disabled>
                                                 {{ translate('messages.select_vehicle_transmission') }}</option>
-                                            <option value="manual_gear">{{ translate('Manual Gear') }}</option>
-                                            <option value="manual_gear_2">{{ translate('Manual Gear 2') }}</option>
+                                            <option value="automatic">{{ translate('Automatic') }}</option>
+                                            <option value="manual">{{ translate('Manual') }}</option>
+                                            <option value="continuously-variable">{{ translate('Continuously Variable') }}</option>
+                                            <option value="dual-clutch">{{ translate('Dual-Clutch') }}</option>
+                                            <option value="semi-automatic">{{ translate('Semi-Automatic') }}</option>
                                         </select>
                                     </div>
                                 </div>

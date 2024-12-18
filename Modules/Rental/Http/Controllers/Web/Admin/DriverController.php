@@ -17,12 +17,12 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 class DriverController extends Controller
 {
     use FileManagerTrait;
-    private VehicleDriver $vehicleDriver;
+    private VehicleDriver $driver;
     private Helpers $helpers;
 
-    public function __construct(VehicleDriver $vehicleDriver, Helpers $helpers)
+    public function __construct(VehicleDriver $driver, Helpers $helpers)
     {
-        $this->driver = $vehicleDriver;
+        $this->driver = $driver;
         $this->helpers = $helpers;
     }
 

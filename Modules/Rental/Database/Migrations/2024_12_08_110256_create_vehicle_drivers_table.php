@@ -15,7 +15,7 @@ class CreateVehicleDriversTable extends Migration
     {
         Schema::create('vehicle_drivers', function (Blueprint $table) {
             $table->id();
-            $table->integer('provider_id')->nullable();
+            $table->foreignId('provider_id')->nullable();
             $table->string('first_name',255)->nullable();
             $table->string('last_name',255)->nullable();
             $table->string('email')->nullable();
@@ -24,7 +24,7 @@ class CreateVehicleDriversTable extends Migration
             $table->string('identity_type')->nullable();
             $table->string('identity_number')->nullable();
             $table->text('identity_image')->nullable();
-            $table->integer('status')->default(1);
+            $table->boolean('status')->default(1);
             $table->timestamps();
         });
     }

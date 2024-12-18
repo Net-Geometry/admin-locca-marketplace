@@ -15,8 +15,8 @@ class CreateVehicleIdentitiesTable extends Migration
     {
         Schema::create('vehicle_identities', function (Blueprint $table) {
             $table->id();
-            $table->integer('vehicle_id')->nullable();
-            $table->integer('provider_id')->nullable();
+            $table->foreignId('vehicle_id')->nullable();
+            $table->foreignId('provider_id')->nullable();
             $table->string('vin_number')->nullable();
             $table->string('license_plate_number')->nullable();
             $table->timestamps();

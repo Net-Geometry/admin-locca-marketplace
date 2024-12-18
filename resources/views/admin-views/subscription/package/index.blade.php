@@ -14,8 +14,6 @@ active
 
 
 
-
-
         <div class="content container-fluid">
             <div class="page-header">
                 <div class="row align-items-center py-2">
@@ -30,6 +28,17 @@ active
                 </div>
             </div>
 
+
+            <!-- Nav Menus -->
+            <ul class="nav nav-tabs border-0 nav--tabs nav--pills mb-4">
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->module != 1 ? 'active' : '' }}   " href="{{ route('admin.business-settings.subscriptionackage.index')  }}">{{ translate('All_Module') }}</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->module == 1 ?'active' : '' }} " href="{{ route('admin.business-settings.subscriptionackage.index',['module'=> true])  }}">{{ translate('Rental_Module') }}</a>
+                </li>
+            </ul>
 
                 @if ($packages->total() > 0 || request()->has('search'))
 
@@ -105,6 +114,7 @@ active
                             <form class="search-form">
                                 <!-- Search -->
                                 <div class="input--group input-group input-group-merge input-group-flush">
+                                    <input type="hidden" value="{{ request()->module }}"  name="module"  >
                                     <input class="form-control" value="{{ request()?->search }}" type="search" placeholder="{{ translate('Search by name') }}" name="search">
                                     <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
                                 </div>
@@ -143,7 +153,7 @@ active
 
                                 </div>
                             </div>
-                            <a href="{{ route('admin.business-settings.subscriptionackage.create') }}" class="btn btn--primary border-0"><i class="tio-add"></i> {{translate('Add Subcription Package')}}</a>
+                            <a href="{{ route('admin.business-settings.subscriptionackage.create',[ 'module' => request()->module == 1 ? 'rental' : 'all' ]) }}" class="btn btn--primary border-0"><i class="tio-add"></i> {{translate('Add Subcription Package')}}</a>
                             <!-- Static Export Button -->
                         </div>
                     </div>
@@ -227,7 +237,7 @@ active
                             <p class="mb-4">
                                 {{translate('Add new subscription packages to the list. So that Stores get more options to join the business for the growth and success.')}}<br>
                             </p>
-                            <a href="{{ route('admin.business-settings.subscriptionackage.create') }}" class="btn btn--primary border-0"><i class="tio-add"></i> {{translate('Add Subcription Package')}}</a>
+                            <a href="{{ route('admin.business-settings.subscriptionackage.create',[ 'module' => request()->module == 1 ? 'rental' : 'all' ]) }}" class="btn btn--primary border-0"><i class="tio-add"></i> {{translate('Add Subcription Package')}}</a>
                         </div>
                     </div>
                 </div>

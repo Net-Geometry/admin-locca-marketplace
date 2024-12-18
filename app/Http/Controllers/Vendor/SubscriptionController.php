@@ -27,10 +27,12 @@ class SubscriptionController extends Controller
 {
     public function subscriberDetail(){
         $store= Store::where('id',Helpers::get_store_id())->with([
-            'store_sub_update_application.package','vendor','store_sub_update_application.last_transcations'
+            'store_sub_update_application.package','vendor','store_sub_update_application.last_transcations','module:id,module_type'
         ])->withcount(['items','store_all_sub_trans'])
         ->first();
-        $packages = SubscriptionPackage::where('status',1)->latest()->get();
+        $packages = SubscriptionPackage::where('status',1)
+        ->where('module_type', $store?->module?->module_type == 'rental' ? 'rental' : 'all' )
+        ->latest()->get();
         $admin_commission=BusinessSetting::where('key', 'admin_commission')->first()?->value ;
         $business_name=BusinessSetting::where('key', 'business_name')->first()?->value ;
         try {

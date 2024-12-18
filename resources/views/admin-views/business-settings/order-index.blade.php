@@ -270,7 +270,7 @@
                                     </div>
                                 </div>
 
-                                    @if ($module_cleck =  1)
+                                    @if (rental_module_published_status('rental'))
                                     @php($order_cancelation_rate_limit_status = App\CentralLogics\Helpers::get_business_settings('order_cancelation_rate_limit_status') ?? 0)
 
                                     <div class="__bg-FAFAFA card shadow-none">

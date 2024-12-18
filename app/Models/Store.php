@@ -499,7 +499,7 @@ class Store extends Model
      */
     public function getRatingAttribute($value): array
     {
-        $ratings = json_decode($value, true);
+        $ratings = $value ? json_decode($value, true) : [];
         $rating5 = $ratings?$ratings[5]:0;
         $rating4 = $ratings?$ratings[4]:0;
         $rating3 = $ratings?$ratings[3]:0;
@@ -631,6 +631,7 @@ class Store extends Model
         });
 
         static::retrieved(function () {
+            // Helpers::disableStoreForOrderCancellation();
             $current_date = date('Y-m-d');
             $check_daily_subscription_validity_check=  Helpers::getSettingsDataFromConfig(settings: 'check_daily_subscription_validity_check');
             if(!$check_daily_subscription_validity_check){
@@ -639,7 +640,7 @@ class Store extends Model
             }
 
             if($check_daily_subscription_validity_check && $check_daily_subscription_validity_check?->value != $current_date){
-                Helpers::disableStoreForOrderCancellation();
+
                 Store::whereHas('store_subs',function ($query)use($current_date){
                     $query->where('status',1)->whereDate('expiry_date', '<=', $current_date);
                 })->update(['status' => 0,

@@ -27,9 +27,6 @@
                             <h5 class="text-title mb-1">
                                 {{ translate('messages.Update_Banner') }}
                             </h5>
-                            {{-- <p class="fs-12 mb-0">
-                                {{ translate('messages.Provider_Logo_&_Covers') }}
-                            </p> --}}
                         </div>
                     </div>
                     <div class="card-body">
@@ -152,7 +149,7 @@
                                                     <img class="upload-file-img" loading="lazy" style="display: none;" src="{{ $banner['image_full_url'] }}" alt="">
                                                 </label>
                                             </div>
-                                            
+
                                         </div>
                                         <div class="btn--container justify-content-end">
                                             <button type="reset" id="reset_btn"
@@ -174,13 +171,10 @@
 @endsection
 
 @push('script_2')
-    <script src="{{ asset('public/assets/admin/js/view-pages/banner-edit.js') }}"></script>
     <script>
         "use strict";
 
-        // ---- single image upload starts
         $(document).ready(function () {
-            // Handle file input change
             $('.single_file_input').on('change', function (event) {
                 var file = event.target.files[0];
                 var $card = $(event.target).closest('.upload-file');
@@ -199,43 +193,39 @@
                 }
             });
 
-            // Check for a valid src on load to handle pre-existing images
             $('.upload-file').each(function () {
                 var $card = $(this);
                 var $textbox = $card.find('.upload-file-textbox');
                 var $imgElement = $card.find('.upload-file-img');
                 var $removeBtn = $card.find('.remove-btn');
-
-                // If there's already a valid image source
                 if ($imgElement.attr('src') && $imgElement.attr('src') !== window.location.href) {
                     $textbox.hide();
                     $imgElement.show();
                 }
             });
 
-           // Handle remove button click
            $('.remove-btn').click(function () {
                 var $card = $(this).closest('.upload-file');
-                $card.find('.single_file_input').val(''); 
-                // $card.find('.upload-file-textbox').show(); 
-                // $card.find('.upload-file-img').hide().attr('src', ''); 
+                $card.find('.single_file_input').val('');
                 $card.find('.upload-file-img').attr('src', '{{ $banner['image_full_url'] }}');
                 $(this).css('opacity', 0);
             });
 
-            // Handle reset button click
             $('#reset_btn').click(function () {
-                var $cards = $('.upload-file'); 
+                banner_type_change('{{$banner->type}}')
+                @isset($store)
+                $('#store_id').val('{{ $store?->id }}').trigger('change')
+                @endisset
+                $('#banner_type').val('{{ $banner?->type }}').trigger('change');
+                var $cards = $('.upload-file');
                 $cards.each(function () {
-                    $(this).find('.single_file_input').val(''); 
-                    // $(this).find('.upload-file-textbox').show(); 
-                    // $(this).find('.upload-file-img').hide().attr('src', '');
+                    $(this).find('.single_file_input').val('');
                     $(this).find('.upload-file-img').attr('src', '{{ $banner['image_full_url'] }}');
                     $(this).find('.remove-btn').css('opacity', 0);
                 });
             });
         });
-        // ---- single image upload ends
+
 
 
         var module_id = {{ Config::get('module.current_module_id') }};
@@ -268,9 +258,29 @@
                 }
             });
         });
+        $("#banner_type").on("change", function () {
+            let order_type = $(this).val();
+            banner_type_change(order_type);
+        }).trigger('change');
+        function banner_type_change(order_type) {
+            if (order_type == "item_wise") {
+                $("#store_wise").hide();
+                $("#item_wise").show();
+                $("#default").hide();
+            } else if (order_type == "store_wise") {
+                $("#store_wise").removeClass("d-none").show();
+                $("#item_wise").hide();
+                $("#default").hide();
+            } else if (order_type == "default") {
+                $("#default").removeClass("d-none").show();
+                $("#store_wise").hide();
+                $("#item_wise").hide();
+            } else {
+                $("#item_wise").hide();
+                $("#store_wise").hide();
+                $("#default").hide();
+            }
+        }
 
-        $('#reset_btn').click(function() {
-            $('#store_id').val(null).trigger('change');
-        });
     </script>
 @endpush

@@ -127,7 +127,10 @@ trait PaymentGatewayTrait
             ],
             "paystack" => [
                 "NGN" => "Nigerian Naira",
-                "KES" => "Kenyan Shilling"
+                "KES" => "Kenyan Shilling",
+                "GHS" => "Ghana Cedi",
+                "ZAR" => "South African Rand",
+                "XOF" => "West African CFA Franc countries",
             ],
             "paytabs" => [
                 "AED" => "United Arab Emirates Dirham",

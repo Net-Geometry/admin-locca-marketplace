@@ -49,5 +49,5 @@ $("#customFileEg1").change(function () {
 });
 
 $("#reset_btn").click(function () {
-    // location.reload(true);
+    location.reload(true);
 });

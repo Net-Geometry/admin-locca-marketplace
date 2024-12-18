@@ -94,7 +94,7 @@
                                                             <label class="input-label font-semibold"
                                                                 for="exampleFormControlInput1">{{ translate('messages.address') }}
                                                                 ({{ translate('messages.default') }})</label>
-                                                            <textarea type="text" name="address[]" placeholder="{{ translate('messages.address') }}"
+                                                            <textarea type="text" name="address[]" id="default_address" placeholder="{{ translate('messages.address') }}"
                                                                 class="form-control min-h-90px ckeditor"></textarea>
                                                         </div>
                                                     </div>
@@ -318,7 +318,7 @@
                                             <label class="input-label font-semibold"
                                                 for="tax">{{ translate('messages.Vat/Tax') }}
                                                 (%)</label>
-                                            <input type="number" name="tax" class="form-control"
+                                            <input type="number" name="tax" class="form-control" id="tax"
                                                 placeholder="{{ translate('messages.vat/tax') }}" min="0"
                                                 step=".01" required value="{{ old('tax') }}">
                                         </div>
@@ -395,7 +395,7 @@
                                         <div class="form-group mb-0">
                                             <label class="input-label"
                                                 for="f_name">{{ translate('messages.first_name') }}</label>
-                                            <input type="text" name="f_name" class="form-control"
+                                            <input type="text" name="f_name" class="form-control" id="f_name"
                                                 placeholder="{{ translate('messages.first_name') }}" value="{{old('f_name')}}"
                                                 required>
                                         </div>
@@ -404,7 +404,7 @@
                                         <div class="form-group mb-0">
                                             <label class="input-label"
                                                 for="l_name">{{ translate('messages.last_name') }}</label>
-                                            <input type="text" name="l_name" class="form-control"
+                                            <input type="text" name="l_name" class="form-control" id="l_name"
                                                 placeholder="{{ translate('messages.last_name') }}" value="{{old('l_name')}}" required>
                                         </div>
                                     </div>
@@ -439,7 +439,7 @@
                                         <div class="form-group mb-0">
                                             <label class="input-label"
                                                 for="exampleFormControlInput1">{{ translate('messages.email') }}</label>
-                                            <input type="email" name="email" class="form-control"
+                                            <input type="email" name="email" class="form-control" id="email"
                                                 placeholder="{{ translate('messages.Ex:') }} ex@example.com"
                                                 value="{{old('email')}}" required>
                                         </div>
@@ -511,7 +511,7 @@
                             <button type="reset" id="reset_btn"
                                 class="btn btn--warning-light min-w-100px justify-content-center">{{ translate('messages.reset') }}</button>
                             <button type="button"
-                                class="btn btn--primary min-w-100px justify-content-center" id="nextStep">{{ translate('messages.next') }}</button>
+                                class="btn btn--primary min-w-100px justify-content-center show-business-plan-div" id="nextStep">{{ translate('messages.next') }}</button>
                         </div>
                     </div>
                 </div>
@@ -573,7 +573,7 @@
                                                 @forelse ($packages as $key=> $package)
                                                     <label class="__plan-item d-block hover {{ (count($packages) > 4 && $key == 2) || (count($packages) < 5 && $key == 1) ? 'active' : '' }}">
                                                         <input type="radio" name="package_id" id="package_id"
-                                                               value="{{ $package->id }}" class="d-none">
+                                                               value="{{ $package->id }}" class="d-none" {{ (count($packages) > 4 && $key == 2) || (count($packages) < 5 && $key == 1) ? 'checked' : '' }}>
                                                         <div class="inner-div">
                                                             <div class="text-center">
                                                                 <h3 class="title">{{ $package->package_name }}</h3>
@@ -582,12 +582,7 @@
                                                                     {{ translate('messages.days') }}</div>
                                                             </div>
                                                             <ul class="info">
-                                                                @if ($package->pos)
-                                                                    <li>
-                                                                        <i class="tio-checkmark-circle"></i>
-                                                                        <span>{{ translate('messages.POS') }}</span>
-                                                                    </li>
-                                                                @endif
+
                                                                 @if ($package->mobile_app)
                                                                     <li>
                                                                         <i class="tio-checkmark-circle"></i>
@@ -606,21 +601,16 @@
                                                                         <span>{{ translate('messages.review_section') }}</span>
                                                                     </li>
                                                                 @endif
-                                                                @if ($package->self_delivery)
-                                                                    <li>
-                                                                        <i class="tio-checkmark-circle"></i>
-                                                                        <span>{{ translate('messages.self_delivery') }}</span>
-                                                                    </li>
-                                                                @endif
+
                                                                 @if ($package->max_order == 'unlimited')
                                                                     <li>
                                                                         <i class="tio-checkmark-circle"></i>
-                                                                        <span>{{ translate('messages.Unlimited_Orders') }}</span>
+                                                                        <span>{{ translate('messages.Unlimited_Trips') }}</span>
                                                                     </li>
                                                                 @else
                                                                     <li>
                                                                         <i class="tio-checkmark-circle"></i>
-                                                                        <span>{{ $package->max_order }} {{ translate('messages.Orders') }} </span>
+                                                                        <span>{{ $package->max_order }} {{ translate('messages.Trips') }} </span>
                                                                     </li>
                                                                 @endif
                                                                 @if ($package->max_product == 'unlimited')
@@ -925,8 +915,60 @@
             })
 
             $('#nextStep').on('click', function () {
-                $('#businessSetup').removeClass('d-block').addClass('d-none');
-                $('#businessPlan').removeClass('d-none').addClass('d-block');
+                const fileInputs = document.querySelectorAll('input[type="file"]');
+                fileInputs.forEach(input => {
+
+                    if (input.files.length === 0) {
+                        toastr.error("{{ translate('Store_logo_&_cover_photos_are_required') }}");
+                        e.preventDefault();
+                    } else if ($('#default_name').val().length === 0) {
+                        toastr.error("{{ translate('Store_name_is_required') }}");
+                        e.preventDefault();
+                    } else if ($('#default_address').val().length === 0) {
+                        toastr.error("{{ translate('Store_address_is_required') }}");
+                        e.preventDefault();
+                    } else if (!$('#choice_zones').val()) {
+                        toastr.error("{{ translate('You_must_select_a_zone') }}");
+                        e.preventDefault();
+                    } else if ($('#latitude').val().length === 0) {
+                        toastr.error("{{ translate('Must_click_on_the_map_for_lat/long') }}");
+                        e.preventDefault();
+                    } else if ($('#longitude').val().length === 0) {
+                        toastr.error("{{ translate('Must_click_on_the_map_for_lat/long') }}");
+                        e.preventDefault();
+                    } else if ($('#tax').val().length === 0) {
+                        toastr.error("{{ translate('tax_is_required') }}");
+                        e.preventDefault();
+                    } else if ($('#min').val().length === 0) {
+                        toastr.error("{{ translate('minimum_delivery_time_is_required') }}");
+                        e.preventDefault();
+                    } else if ($('#max').val().length === 0) {
+                        toastr.error("{{ translate('max_delivery_time_is_required') }}");
+                        e.preventDefault();
+                    } else if ($('#f_name').val().length === 0) {
+                        toastr.error("{{ translate('first_name_is_required') }}");
+                        e.preventDefault();
+                    } else if ($('#l_name').val().length === 0) {
+                        toastr.error("{{ translate('last_name_is_required') }}");
+                        e.preventDefault();
+                    } else if ($('#phone').val().length < 5) {
+                        toastr.error("{{ translate('valid_phone_number_is_required') }}");
+                        e.preventDefault();
+                    } else if ($('#email').val().length === 0) {
+                        toastr.error("{{ translate('email_is_required') }}");
+                        e.preventDefault();
+                    } else if ($('#signupSrPassword').val().length === 0) {
+                        toastr.error("{{ translate('password_is_required') }}");
+                        e.preventDefault();
+                    } else if ($('#signupSrConfirmPassword').val() !== $('#signupSrPassword').val()) {
+                        toastr.error("{{ translate('confirm_password_does_not_match') }}");
+                        e.preventDefault();
+                    } else {
+                        $('#businessSetup').removeClass('d-block').addClass('d-none');
+                        $('#businessPlan').removeClass('d-none').addClass('d-block');
+                        $(window).scrollTop(0);
+                    }
+                });
             });
 
             $('#backBusinessSetup').on('click', function () {

@@ -2120,17 +2120,16 @@ class BusinessSettingsController extends Controller
 
     public function about_us_update(Request $request)
     {
-        // dd($request->all());
         $this->update_data($request, 'about_us');
         $this->update_data($request, 'about_title');
         Toastr::success(translate('messages.about_us_updated'));
         return back();
     }
 
-    public function fcm_index()
+    public function fcm_index(Request $request)
     {
-        $fcm_credentials = Helpers::get_business_settings('fcm_credentials');
-        return view('admin-views.business-settings.fcm-index', compact('fcm_credentials'));
+        abort_if(!rental_module_published_status('rental') && $request?->module_type == 'rental',404 );
+        return view($request->module_type == 'rental' ?  'admin-views.business-settings.fcm-index-rental' : 'admin-views.business-settings.fcm-index');
     }
 
     public function fcm_config()
@@ -2148,10 +2147,6 @@ class BusinessSettingsController extends Controller
         Helpers::businessUpdateOrInsert(['key' => 'fcm_project_id'], [
             'value' => $request['projectId']
         ]);
-
-//        Helpers::businessUpdateOrInsert(['key' => 'push_notification_key'], [
-//            'value' => $request['push_notification_key']
-//        ]);
 
         Helpers::businessUpdateOrInsert(['key' => 'fcm_credentials'], [
             'value' => json_encode([
@@ -2542,6 +2537,46 @@ class BusinessSettingsController extends Controller
             }
         }
 
+
+        Toastr::success(translate('messages.message_updated'));
+        return back();
+    }
+    public function update_fcm_messages_rental(Request $request)
+    {
+            $messageKeys = [
+                'trip_pending_message' => 'trip_pending_message',
+                'trip_confirm_message' => 'trip_confirm_message',
+                'trip_ongoing_message' => 'trip_ongoing_message',
+                'trip_complete_message' => 'trip_complete_message',
+                'trip_cancel_message' => 'trip_cancel_message',
+            ];
+
+            foreach ($messageKeys as $requestKey => $notificationKey) {
+
+                $notification = NotificationMessage::firstOrNew([
+                    'module_type' => 'rental',
+                    'key' => $notificationKey,
+                ]);
+
+
+                $notification->message = $request[$requestKey][array_search('en', $request->lang)];
+                $notification->status = isset($request[$requestKey . '_status']) && $request[$requestKey . '_status'] == 1 ? 1 : 0;
+                $notification->save();
+
+                foreach ($request->lang as $index => $locale) {
+                    if (!empty($request[$requestKey][$index])) {
+                        Translation::updateOrInsert(
+                            [
+                                'translationable_type' => NotificationMessage::class,
+                                'translationable_id' => $notification->id,
+                                'locale' => $locale,
+                                'key' => $notificationKey,
+                            ],
+                            ['value' => $request[$requestKey][$index]]
+                        );
+                    }
+                }
+            }
 
         Toastr::success(translate('messages.message_updated'));
         return back();
@@ -7580,16 +7615,21 @@ class BusinessSettingsController extends Controller
     public function notification_setup(Request $request)
     {
 
+        abort_if(!rental_module_published_status('rental') && $request?->module == 'rental',404 );
+
         if (NotificationSetting::count() == 0) {
             Helpers::notificationDataSetup();
         }
             Helpers::addNewAdminNotificationSetupDataSetup();
-        $data = NotificationSetting::
-        when($request?->type == null || $request?->type == 'admin', function ($query) {
+        $data = NotificationSetting::where('module_type', $request?->module == 'rental' ? 'rental'  : 'all')
+        ->when($request?->type == null || $request?->type == 'admin', function ($query) {
             $query->where('type', 'admin');
         })
             ->when($request?->type == 'store', function ($query) {
                 $query->where('type', 'store');
+            })
+            ->when($request?->type == 'provider', function ($query) {
+                $query->where('type', 'provider');
             })
             ->when($request?->type == 'customers', function ($query) {
                 $query->where('type', 'customer');
@@ -7600,7 +7640,8 @@ class BusinessSettingsController extends Controller
 
 
         $business_name = BusinessSetting::where('key', 'business_name')->first()?->value;
-        return view('admin-views.business-settings.notification_setup', compact('business_name', 'data'));
+
+        return view(  $request?->module == 'rental' ? 'admin-views.business-settings.notification_setup_rental' : 'admin-views.business-settings.notification_setup', compact('business_name', 'data'));
 
     }
 
