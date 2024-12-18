@@ -14,6 +14,7 @@ use Carbon\Carbon;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
 use Modules\Rental\Entities\VehicleDriver;
@@ -276,6 +277,12 @@ class ConversationController extends Controller
         else
         {
             $messages = [];
+            $messages = new LengthAwarePaginator(
+                $messages,
+                count($messages),
+                $limit,
+                $offset / $limit + 1
+            );
             $order = 0;
         }
 
@@ -289,7 +296,11 @@ class ConversationController extends Controller
         return response()->json($data, 200);
     }
 
-    public function messages_store(Request $request)
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function messagesStore(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
             'limit' => 'required',
@@ -303,18 +314,17 @@ class ConversationController extends Controller
         $limit = $request['limit'];
         $offset = $request['offset'];
         $conversationId = $request->conversation_id;
-        $userId = $request->user_id;
 
         if ($request->has('image')) {
-            $image_name=[];
+            $imageName = [];
             foreach($request->file('image') as $key=>$img)
             {
 
                 $name = $this->helpers->upload('conversation/', 'png', $img);
-                $image_name[] = ['img'=>$name, 'storage'=> Helpers::getDisk()];
+                $imageName[] = ['img'=>$name, 'storage'=> $this->helpers->getDisk()];
             }
         } else {
-            $image_name = null;
+            $imageName = null;
         }
 
         $vendor = $this->vendor->find($request->vendor->id);
@@ -334,7 +344,7 @@ class ConversationController extends Controller
         if($conversationId){
             $conversation = $this->conversation->find($conversationId);
 
-            if($conversation->sender_id == $sender->id)
+            if($conversation?->sender_id == $sender->id)
             {
                 $receiver_id = $conversation->receiver_id;
                 $receiver = $this->userInfo->find($receiver_id);
@@ -402,7 +412,7 @@ class ConversationController extends Controller
                 }
 
                 $receiver_id = $receiver->id;
-                $fcm_token=$delivery_man->fcm_token;
+                $fcm_token = $delivery_man->fcm_token;
             }
         }
 
@@ -428,9 +438,9 @@ class ConversationController extends Controller
         $message->sender_id = $sender->id;
         $message->message = $request->message;
 
-        if($image_name && count($image_name) > 0)
+        if($imageName && count($imageName) > 0)
         {
-            $message->file = json_encode($image_name, JSON_UNESCAPED_SLASHES);
+            $message->file = json_encode($imageName, JSON_UNESCAPED_SLASHES);
         }
 
         try {
@@ -468,6 +478,7 @@ class ConversationController extends Controller
         if($conv->sender_type == 'customer' && $conversation->sender)
         {
             $user = $this->user->find($conv->sender->user_id);
+
             $order = $this->order
                 ->where('store_id',$vendor->stores[0]->id)
                 ->where('user_id', $user->id)

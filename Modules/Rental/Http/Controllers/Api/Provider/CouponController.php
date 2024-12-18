@@ -71,15 +71,17 @@ class CouponController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'code' => 'required|unique:coupons|max:100',
-            'title.0' => 'required|max:191',
             'start_date' => 'required',
             'expire_date' => 'required',
             'coupon_type' => 'required|in:free_delivery,default',
             'discount' => 'required_if:coupon_type,default'
-        ],
-        [
-            'title.0.required'=>translate('default_title_is_required'),
         ]);
+
+        $data = json_decode($request->translations, true);
+
+        if (count($data) < 1) {
+            $validator->getMessageBag()->add('translations', translate('messages.Title in english is required'));
+        }
 
         if ($validator->fails()) {
             return response()->json(['errors' => $this->helpers->error_processor($validator)], 403);
@@ -90,7 +92,7 @@ class CouponController extends Controller
         $moduleId = $request->vendor->stores[0]->module_id;
 
         $coupon = $this->coupon;
-        $coupon->title = $request->title[array_search('default', $request->lang)];
+        $coupon->title = $data[0]['value'];
         $coupon->code = $request->code;
         $coupon->limit = $request->coupon_type == 'first_order' ? 1 : $request->limit;
         $coupon->coupon_type = $request->coupon_type;
@@ -122,15 +124,17 @@ class CouponController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'code' => 'required|max:100|unique:coupons,code,'.$id,
-            'title.0' => 'required|max:191',
             'start_date' => 'required',
             'expire_date' => 'required',
             'coupon_type' => 'required|in:free_delivery,default',
             'discount' => 'required_if:coupon_type,default'
-        ],
-        [
-            'title.0.required' => translate('default_title_is_required'),
         ]);
+
+        $data = json_decode($request->translations, true);
+
+        if (count($data) < 1) {
+            $validator->getMessageBag()->add('translations', translate('messages.Title in english is required'));
+        }
 
         if ($validator->fails()) {
             return response()->json(['errors' => $this->helpers->error_processor($validator)], 403);
@@ -139,7 +143,7 @@ class CouponController extends Controller
         $customerId  = $request->customer_ids ?? ['all'];
 
         $coupon = $this->coupon->findOrFail($id);
-        $coupon->title = $request->title[array_search('default', $request->lang)];
+        $coupon->title = $data[0]['value'];
         $coupon->code = $request->code;
         $coupon->limit = $request->coupon_type == 'first_order' ? 1 : $request->limit;
         $coupon->coupon_type = $request->coupon_type;

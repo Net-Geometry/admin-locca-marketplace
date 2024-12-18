@@ -71,7 +71,7 @@ Route::group(['prefix' => 'rental', 'as' => 'rental.'], function () {
             Route::get('list', [ConversationController::class, 'conversations']);
             Route::get('search-list', [ConversationController::class, 'search']);
             Route::get('details', [ConversationController::class, 'messages']);
-            Route::get('send', [ConversationController::class, 'messages_store']);
+            Route::post('send', [ConversationController::class, 'messagesStore']);
         });
 
         Route::get('category/list', [ProviderController::class, 'categoryList']);
