@@ -6546,4 +6546,5 @@ Smartly or Earn. ',
   'Engine Power' => 'Engine Power',
   'Registration No.' => 'Registration No.',
   'vehicle_updated_successfully' => 'Vehicle updated successfully',
+  'Your Name' => 'Your Name',
 );

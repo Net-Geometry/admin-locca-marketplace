@@ -2,19 +2,13 @@
 
 namespace Modules\Rental\Http\Controllers\Api\Public;
 
-use App\Models\User;
-use App\Models\Zone;
-use App\Models\Store;
-use App\Models\Coupon;
+
 use Illuminate\Http\Request;
 use App\CentralLogics\Helpers;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Contracts\Support\Renderable;
 use Modules\Rental\Entities\Vehicle;
-
+use App\CentralLogics\StoreLogic;
 class VehicleController extends Controller
 {
 
@@ -131,6 +125,14 @@ class VehicleController extends Controller
         return response()->json($data, 200);
     }
 
+    public function getVehicleDetails(Vehicle $vehicle){
+        $vehicle= $vehicle->load('brand:id,name,image','provider:id,name,logo,cover_photo,rating')->loadCount('vehicleIdentities');
+        $ratings = StoreLogic::calculate_store_rating($vehicle['provider']['rating']);
+        $vehicle['provider']['avg_rating'] =$ratings['rating'];
+        $vehicle['provider']['rating_count'] =$ratings['total'];
+        return response()->json($vehicle, 200);
+    }
+
     private function getVelicleListData($request)
     {
         $zone_id = $request->header('zoneId');
@@ -189,4 +191,5 @@ class VehicleController extends Controller
 
         return $vehicles;
     }
+    
 }

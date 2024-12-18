@@ -10,6 +10,7 @@ use Modules\Rental\Http\Controllers\Api\Public\CouponController as Coupon;
 use Modules\Rental\Http\Controllers\Api\Public\BannerController as Banner;
 use Modules\Rental\Http\Controllers\Api\Public\VehicleController as Vehicle;
 use Modules\Rental\Http\Controllers\Api\Public\VehicleCategoryController as VehicleCategory;
+use Modules\Rental\Http\Controllers\Api\Public\ProviderController as Provider;
 
 /*
 |--------------------------------------------------------------------------
@@ -78,6 +79,12 @@ Route::group(['prefix' => 'rental', 'as' => 'rental.' , 'middleware'=>'localizat
         Route::get('search/', [Vehicle::class, 'getSearchedVehicles']);
         Route::get('search/suggestion', [Vehicle::class, 'getSearchedVehiclesSuggestion']);
         Route::get('get-provider-vehicles', [Vehicle::class, 'getProviderWiseVehicles']);
+        Route::get('get-vehicle-details/{vehicle}', [Vehicle::class, 'getVehicleDetails']);
+
         Route::get('category-list/', [VehicleCategory::class, 'vehicleCategoryList']);
+    });
+    Route::group(['prefix' => 'provider'], function () {
+        Route::get('get-provider-details/{provider}', [Provider::class, 'getProvidereDetails']);
+        Route::get('get-provider-reviews/{provider}', [Provider::class, 'getProvidereReviews']);
     });
 });
