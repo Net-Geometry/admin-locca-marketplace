@@ -151,7 +151,7 @@
                                                     {{ translate('logo') }}
                                                 </label>
                                                 <div class="mb-20">
-                                                    <p class="fs-12 max-width-170px">JPG, JPEG, PNG Less Than 1MB <strong
+                                                    <p class="fs-12 max-width-170px">JPG, JPEG, PNG Less Than 2MB <strong
                                                             class="font-semibold">(Ratio
                                                             1:1)</strong></p>
                                                 </div>
@@ -178,7 +178,7 @@
                                                             <i class="tio-edit"></i>
                                                             <input type="file" name="logo" id="customFileEg1"
                                                                 class="custom-file-input"
-                                                                accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
+                                                                accept=".jpg, .png, .jpeg|image/*">
                                                         </div>
                                                     </div>
                                                 </label>
@@ -192,7 +192,7 @@
                                                 </label>
                                                 <div class="mb-20">
                                                     <p class="fs-12">
-                                                        JPG, JPEG, PNG Less Than 1MB
+                                                        JPG, JPEG, PNG Less Than 2MB
                                                         <br>
                                                         <strong class="font-semibold">(Ratio
                                                             2:1)</strong>

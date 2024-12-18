@@ -50,11 +50,22 @@ class VehicleController extends Controller
                     $query->orWhere('name', 'LIKE', '%' . $key . '%');
                 }
             })
+            ->when($request->filled('category_id'), function ($query) use ($request) {
+                $query->where('category_id', $request->input('category_id'));
+            })
+            ->when($request->filled('brand_id'), function ($query) use ($request) {
+                $query->where('brand_id', $request->input('brand_id'));
+            })
+            ->when($request->filled('type'), function ($query) use ($request) {
+                $query->where('type', $request->input('type'));
+            })
             ->latest()->paginate(config('default_pagination'));
+        $categories = $this->vehicleCategory->ofStatus(1)->get();
+        $brands = $this->vehicleBrand->ofStatus(1)->get();
         $language = getWebConfig('language');
         $defaultLang = str_replace('_', '-', app()->getLocale());
 
-        return view('rental::admin.vehicle.list', compact('vehicles', 'language', 'defaultLang'));
+        return view('rental::admin.vehicle.list', compact('vehicles', 'language', 'defaultLang', 'categories', 'brands'));
     }
 
     /**
@@ -81,6 +92,30 @@ class VehicleController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        $request->validate([
+            'name' => 'required|array',
+            'provider_id' => 'required|integer|exists:stores,id',
+            'brand_id' => 'required|integer|exists:brands,id',
+            'category_id' => 'required|integer|exists:categories,id',
+            'model' => 'required|string|max:255',
+            'type' => 'required|string|max:255',
+            'engine_capacity' => 'nullable|numeric|min:0',
+            'engine_power' => 'nullable|numeric|min:0',
+            'seating_capacity' => 'required|integer|min:1',
+            'fuel_type' => 'required|string|max:50',
+            'transmission_type' => 'required|string|max:50',
+            'hourly_price' => 'nullable|numeric|min:0',
+            'discount_price' => 'nullable|numeric|min:0',
+            'discount_type' => 'nullable|string|max:50',
+            'tag' => 'nullable|array',
+            'tag.*' => 'string|max:50',
+            'thumbnail' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'images' => 'nullable|array',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'documents' => 'nullable|array',
+            'documents.*' => 'max:2048',
+        ]);
+
         if ($request->has('thumbnail')) {
             $thumbnailName = $this->upload('vehicle/', 'png', $request->file('thumbnail'));
         } else {
@@ -195,6 +230,30 @@ class VehicleController extends Controller
      */
     public function update(Request $request, $id): RedirectResponse
     {
+        $request->validate([
+            'name' => 'required|array',
+            'provider_id' => 'required|integer|exists:stores,id',
+            'brand_id' => 'required|integer|exists:brands,id',
+            'category_id' => 'required|integer|exists:categories,id',
+            'model' => 'required|string|max:255',
+            'type' => 'required|string|max:255',
+            'engine_capacity' => 'nullable|numeric|min:0',
+            'engine_power' => 'nullable|numeric|min:0',
+            'seating_capacity' => 'required|integer|min:1',
+            'fuel_type' => 'required|string|max:50',
+            'transmission_type' => 'required|string|max:50',
+            'hourly_price' => 'nullable|numeric|min:0',
+            'discount_price' => 'nullable|numeric|min:0',
+            'discount_type' => 'nullable|string|max:50',
+            'tag' => 'nullable|array',
+            'tag.*' => 'string|max:50',
+            'thumbnail' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'images' => 'nullable|array',
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'documents' => 'nullable|array',
+            'documents.*' => 'max:2048',
+        ]);
+
         $vehicle = $this->vehicle->findOrFail($id);
         if (!$vehicle) {
             Toastr::success(translate('messages.vehicle_not_found_successfully'));

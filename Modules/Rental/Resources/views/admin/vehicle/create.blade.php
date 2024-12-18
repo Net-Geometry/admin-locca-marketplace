@@ -180,7 +180,7 @@
                                             <a href="javascript:void(0);" class="remove-btn opacity-0 z-index-99">
                                                 <i class="tio-clear"></i>
                                             </a>
-                                            <input type="file" name="image" class="upload-file__input single_file_input" 
+                                            <input type="file" name="thumbnail" class="upload-file__input single_file_input"
                                                 accept=".jpg, .jpeg, .png"  value="" required>
                                             <label
                                                 class="upload-file-wrapper height-150px max-w-300px aspect-2-1">
@@ -660,7 +660,7 @@
                     reader.onload = function (e) {
                         $textbox.hide();
                         $imgElement.attr('src', e.target.result).show();
-                        $removeBtn.css('opacity', 1); 
+                        $removeBtn.css('opacity', 1);
                     };
                     reader.readAsDataURL(file);
                 }
@@ -669,18 +669,18 @@
             // Handle remove button click
             $('.remove-btn').click(function () {
                 var $card = $(this).closest('.upload-file');
-                $card.find('.single_file_input').val(''); 
-                $card.find('.upload-file-textbox').show(); 
-                $card.find('.upload-file-img').hide().attr('src', ''); 
-                $(this).css('opacity', 0); 
+                $card.find('.single_file_input').val('');
+                $card.find('.upload-file-textbox').show();
+                $card.find('.upload-file-img').hide().attr('src', '');
+                $(this).css('opacity', 0);
             });
 
             // Handle reset button click
             $('#reset_btn').click(function () {
-                var $cards = $('.upload-file'); 
+                var $cards = $('.upload-file');
                 $cards.each(function () {
-                    $(this).find('.single_file_input').val(''); 
-                    $(this).find('.upload-file-textbox').show(); 
+                    $(this).find('.single_file_input').val('');
+                    $(this).find('.upload-file-textbox').show();
                     $(this).find('.upload-file-img').hide().attr('src', '');
                     $(this).find('.remove-btn').css('opacity', 0);
                 });
@@ -763,7 +763,7 @@
                 const currentFiles = imageContainer.querySelectorAll(".image-single").length;
                 imageUploadWrapper.style.display = currentFiles >= 5 ? "none" : "block";
             }
-           // Handle reset button click 
+           // Handle reset button click
            $('#reset_btn').click(function () {
                 // Select and remove only the uploaded image elements
                 const uploadedImages = imageContainer.querySelectorAll(".image-single");
@@ -779,7 +779,7 @@
         });
         // ----- mutiple image upload ends
 
-        // ----- mutiple document upload 
+        // ----- mutiple document upload
         $(document).ready(function () {
             const MAX_FILES = 5;
             const pdfContainer = document.getElementById("pdf-container");
@@ -855,7 +855,7 @@
 
                 // Clear file input after upload
                 // event.target.value = "";
-                
+
             });
 
             // Remove document handler

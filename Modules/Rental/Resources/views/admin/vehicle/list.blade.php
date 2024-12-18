@@ -24,53 +24,61 @@
 
         <div class="card">
             <div class="card-body">
-                <div class="row g-2 mb-20">
-                    <div class="col-sm-6 col-md-4">
-                        <div class="select-item">
-                            <label for="brand-select" class="input-label">{{ translate('messages.brand') }}</label>
-                            <select id="brand-select" class="js-data-example-ajax form-control set-filter opacity-70"
-                                    required>
-                                <option value="" selected disabled>{{ translate('messages.Type your business name') }}
-                                </option>
-                                <option value="1">{{ translate('messages.brand 1') }}</option>
-                                <option value="2">{{ translate('messages.brand 2') }}</option>
-                            </select>
+                <form action="" method="get">
+                    <div class="row g-2 mb-20">
+                        <div class="col-sm-6 col-md-4">
+                            <div class="select-item">
+                                <label for="brand-select" class="input-label">{{ translate('messages.brand') }}</label>
+                                <select id="brand-select" class="js-data-example-ajax form-control set-filter opacity-70"
+                                        name="brand_id">
+                                    <option value="" selected disabled>{{ translate('messages.select_vehicle_brand') }}
+                                    </option>
+                                    @foreach($brands as $brand)
+                                        <option value="{{ $brand->id }}" {{request()->brand_id == $brand->id ? 'selected' : ''}}>{{ $brand->name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4">
+                            <div class="select-item">
+                                <label for="category-select" class="input-label">{{ translate('messages.category') }}</label>
+                                <select id="category-select" class="js-data-example-ajax form-control set-filter opacity-70"
+                                        name="category_id">
+                                    <option value="" selected disabled>{{ translate('messages.select_vehicle_category') }}
+                                    </option>
+                                    @foreach($categories as $category)
+                                        <option value="{{ $category->id }}" {{request()->category_id == $category->id ? 'selected' : ''}}>{{ $category->name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4">
+                            <div class="select-item">
+                                <label for="type-select" class="input-label">{{ translate('messages.type') }}</label>
+                                <select id="type-select" class="js-data-example-ajax form-control set-filter opacity-70"
+                                        name="type">
+                                    <option value="" selected disabled>
+                                        {{ translate('messages.select_vehicle_type') }}
+                                    </option>
+                                    <option value="family" {{request()->type == 'family' ? 'selected' : ''}}>{{ translate('messages.family') }}</option>
+                                    <option value="luxury" {{request()->type == 'luxury' ? 'selected' : ''}}>{{ translate('messages.Luxury') }}</option>
+                                    <option value="affordable" {{request()->type == 'affordable' ? 'selected' : ''}}>{{ translate('messages.Affordable') }}</option>
+                                    <option value="executives" {{request()->type == 'executives' ? 'selected' : ''}}>{{ translate('messages.Executives') }}</option>
+                                    <option value="compact" {{request()->type == 'compact' ? 'selected' : ''}}>{{ translate('messages.Compact') }}</option>
+                                    <option value="full-size" {{request()->type == 'full-size' ? 'selected' : ''}}>{{ translate('messages.Full-Size') }}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="btn--container justify-content-end mt-4">
+                                <button type="reset" id="reset_btn"
+                                        class="btn btn--reset min-w-120px">{{ translate('messages.reset') }}</button>
+                                <button type="submit"
+                                        class="btn btn--primary min-w-120px">{{ translate('messages.filter') }}</button>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-sm-6 col-md-4">
-                        <div class="select-item">
-                            <label for="category-select" class="input-label">{{ translate('messages.category') }}</label>
-                            <select id="category-select" class="js-data-example-ajax form-control set-filter opacity-70"
-                                    required>
-                                <option value="" selected disabled>{{ translate('messages.Type your business name') }}
-                                </option>
-                                <option value="1">{{ translate('messages.category 1') }}</option>
-                                <option value="2">{{ translate('messages.category 2') }}</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 col-md-4">
-                        <div class="select-item">
-                            <label for="type-select" class="input-label">{{ translate('messages.type') }}</label>
-                            <select id="type-select" class="js-data-example-ajax form-control set-filter opacity-70"
-                                    required>
-                                <option value="" selected disabled>
-                                    {{ translate('messages.Type your business name') }}
-                                </option>
-                                <option value="1">{{ translate('messages.type 1') }}</option>
-                                <option value="2">{{ translate('messages.type 2') }}</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-12">
-                        <div class="btn--container justify-content-end mt-4">
-                            <button type="reset" id="reset_btn"
-                                    class="btn btn--reset min-w-120px">{{ translate('messages.reset') }}</button>
-                            <button type="submit"
-                                    class="btn btn--primary min-w-120px">{{ translate('messages.filter') }}</button>
-                        </div>
-                    </div>
-                </div>
+                </form>
             </div>
         </div>
 

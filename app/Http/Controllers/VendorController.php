@@ -88,7 +88,11 @@ class VendorController extends Controller
             'password' => ['required', Password::min(8)->mixedCase()->letters()->numbers()->symbols()],
             'zone_id' => 'required',
             'module_id' => 'required',
-            'logo' => 'required',
+            'logo' => [ 'required',
+                'image',
+                'mimes:jpg,jpeg,png',
+                'max:2048',
+            ],
             'tax' => 'required',
             'delivery_time_type'=>'required',
         ],[

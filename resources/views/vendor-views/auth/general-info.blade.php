@@ -374,7 +374,7 @@
                                             <label class="input-label pt-2 mb-2">
                                                 <div class="lh-1">{{ translate('messages.cover') }}</div>
                                                 <div class="fs-12 opacity-70">
-                                                    {{ translate('messages.JPG, JPEG, PNG Less Than 1MB') }}
+                                                    {{ translate('messages.JPG, JPEG, PNG Less Than 2MB') }}
                                                     <strong> {{ translate('(Ratio 2:1)') }}
                                                     </strong>
                                                 </div>
@@ -398,7 +398,7 @@
                                                     <div class="icon-file">
                                                         <input type="file" name="cover_photo" id="coverImageUpload"
                                                             class="form-control __form-control"
-                                                            accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
+                                                            accept=".jpg, .png, .jpeg|image/*">
                                                         <img src="{{ asset('public/assets/admin/img/pen.png') }}"
                                                             alt="">
                                                     </div>
@@ -409,7 +409,7 @@
                                             <label class="input-label pt-2 mb-2">
                                                 <div class="lh-1">{{ translate('messages.logo') }}</div>
                                                 <div class="fs-12 opacity-70">
-                                                    {{ translate('messages.JPG, JPEG, PNG Less Than 1MB') }}
+                                                    {{ translate('messages.JPG, JPEG, PNG Less Than 2MB') }}
                                                     <strong> {{ translate('(Ratio 1:1)') }}
                                                     </strong>
                                                 </div>
@@ -434,7 +434,7 @@
                                                     <div class="icon-file">
                                                         <input type="file" name="logo" id="customFileEg1"
                                                             class="form-control __form-control"
-                                                            accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*">
+                                                            accept=".jpg, .png, .jpeg|image/*">
                                                         <img src="{{ asset('public/assets/admin/img/pen.png') }}"
                                                             alt="">
                                                     </div>
@@ -1023,7 +1023,7 @@
         });
     </script>
     <script src="{{ asset('public/assets/landing/js/select2.min.js') }}"></script>
-    
+
     <script>
         // ---- file upload with textbox
         $(document).ready(function() {
@@ -1171,21 +1171,21 @@
                             timeout = setTimeout(() => func.apply(this, args), wait);
                         };
                     }
-    
+
                     $(".select2-search input").on(
                         "input",
                         debounce(function () {
                             const inputValue = $(this).val().toLowerCase();
                             const $listItems = $(".select2-results__options li");
                             let matches = 0;
-    
+
                             $listItems.each(function () {
                                 const itemText = $(this).text().toLowerCase();
                                 const isMatch = itemText.includes(inputValue);
                                 $(this).toggle(isMatch);
                                 if (isMatch) matches++;
                             });
-    
+
                             if (matches === 0) {
                                 $(".select2-results__options").append(
                                     '<li class="no-results">No results found</li>'
@@ -1195,7 +1195,7 @@
                             }
                         }, 100)
                     );
-    
+
                     $(".select2-search input").on("keydown", function (e) {
                         if (e.which === 13) {
                             e.preventDefault();
@@ -1204,11 +1204,11 @@
                             const matchedItem = $listItems.filter(function () {
                                 return $(this).text().toLowerCase() === inputValue;
                             });
-    
+
                             if (matchedItem.length > 0) {
                                 matchedItem.trigger("mouseup"); // Select the matched item
                             }
-    
+
                             $(this).val("");
                         }
                     });

@@ -173,7 +173,7 @@
                                             <a href="javascript:void(0);" class="remove-btn opacity-0 z-index-99">
                                                 <i class="tio-clear"></i>
                                             </a>
-                                            <input type="file" name="image" class="upload-file__input single_file_input" 
+                                            <input type="file" name="thumbnail" class="upload-file__input single_file_input"
                                                 accept=".jpg, .jpeg, .png"  value="{{ $vehicle['thumbnail_full_url'] ?? '' }}">
                                             <label
                                                 class="upload-file-wrapper height-150px max-w-300px aspect-2-1">
@@ -670,7 +670,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    
+
                                     <!-- Uploaded files will be appended here as .pdf-single divs -->
                                     @foreach($vehicle['documents_full_url'] as $doc)
                                         <div class="pdf-single" data-pdf-url="{{ $doc }}" data-existing="true"
@@ -760,16 +760,16 @@
            // Handle remove button click
            $('.remove-btn').click(function () {
                 var $card = $(this).closest('.upload-file');
-                $card.find('.single_file_input').val(''); 
+                $card.find('.single_file_input').val('');
                 $card.find('.upload-file-img').attr('src', '{{ $vehicle['thumbnail_full_url'] ?? '' }}');
                 $(this).css('opacity', 0);
             });
 
             // Handle reset button click
             $('#reset_btn').click(function () {
-                var $cards = $('.upload-file'); 
+                var $cards = $('.upload-file');
                 $cards.each(function () {
-                    $(this).find('.single_file_input').val(''); 
+                    $(this).find('.single_file_input').val('');
                     $(this).find('.upload-file-img').attr('src', '{{ $vehicle['thumbnail_full_url'] ?? '' }}');
                     $(this).find('.remove-btn').css('opacity', 0);
                 });
@@ -987,7 +987,7 @@
                 console.log(formData);
 
                 // Example of sending the form data via AJAX (uncomment to use)
-                
+
                 $.ajax({
                     url: '{{ route('admin.rental.provider.vehicle.edit', $vehicle->id)}}',  // Replace with your endpoint
                     method: 'POST',
@@ -1021,13 +1021,13 @@
 
         // ----- mutiple image upload ends
 
-         // ----- mutiple document upload 
+         // ----- mutiple document upload
          $(document).ready(function () {
             const MAX_FILES = 5;
             const pdfContainer = document.getElementById("pdf-container");
             const documentUploadWrapper = document.getElementById("upload-wrapper");
             const uploadedFiles = new Map(); // Store files with unique names as keys
-            
+
 
             // Handle file selection and upload
             document.querySelector('.multiple_document_input').addEventListener('change', function (event) {

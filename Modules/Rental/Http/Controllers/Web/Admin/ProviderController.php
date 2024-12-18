@@ -640,7 +640,12 @@ class ProviderController extends Controller
                 },
             ],
             'zone_id' => 'required',
-            'logo' => $id ? 'nullable' : 'required',
+            'logo' => [
+                $id ? 'nullable' : 'required',
+                'image',
+                'mimes:jpg,jpeg,png',
+                'max:2048',
+            ],
             'tax' => 'required',
             'delivery_time_type' => 'required',
             'business_plan' => $id ? 'nullable' : 'required',

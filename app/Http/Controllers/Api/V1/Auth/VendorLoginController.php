@@ -53,7 +53,7 @@ class VendorLoginController extends Controller
 
                 $vendor->auth_token = $token;
                 $vendor->save();
-                return response()->json(['token' => $token, 'zone_wise_topic'=> $vendor->stores[0]->zone->store_wise_topic], 200);
+                return response()->json(['token' => $token, 'zone_wise_topic'=> $vendor->stores[0]->zone->store_wise_topic, 'module_type' => $vendor?->stores[0]?->module?->module_type], 200);
             }  else {
                 $errors = [];
                 array_push($errors, ['code' => 'auth-001', 'message' => translate('Credential_do_not_match,_please_try_again')]);
@@ -74,7 +74,8 @@ class VendorLoginController extends Controller
                 $vendor->auth_token = $token;
                 $vendor->save();
                 $role = $vendor->role ? json_decode($vendor->role->modules):[];
-                return response()->json(['token' => $token, 'zone_wise_topic'=> $vendor->store->zone->store_wise_topic, 'role'=>$role], 200);
+                return response()->json(['token' => $token, 'zone_wise_topic'=> $vendor->store->zone->store_wise_topic, 'role'=>$role,
+                    'module_type' => $vendor?->stores[0]?->module?->module_type], 200);
             } else {
                 $errors = [];
                 array_push($errors, ['code' => 'auth-001', 'message' => translate('Credential_do_not_match,_please_try_again')]);
@@ -267,7 +268,8 @@ class VendorLoginController extends Controller
                         'token' => $token,
                         'package_id' => $store?->package_id,
                         'zone_wise_topic' => $store?->zone?->store_wise_topic,
-                        'type' => 'new_join'
+                        'type' => 'new_join',
+                        'module_type' => $store?->module?->module_type
                     ]
                 ]
             ];
@@ -327,7 +329,8 @@ class VendorLoginController extends Controller
                         'store_id' => $store?->id,
                         'token' => $token,
                         'zone_wise_topic' => $store?->zone?->store_wise_topic,
-                        'type' => 'new_join'
+                        'type' => 'new_join',
+                        'module_type' => $store?->module?->module_type
                     ]
                 ]
             ];
