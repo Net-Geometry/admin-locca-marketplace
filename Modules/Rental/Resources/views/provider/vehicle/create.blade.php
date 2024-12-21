@@ -1,6 +1,6 @@
-@extends('layouts.admin.app')
+@extends('layouts.vendor.app')
 
-@section('title', translate('messages.Provider Details - update Vehicle'))
+@section('title', translate('messages.Add New Vehicle'))
 
 @section('content')
     <div class="content container-fluid">
@@ -12,22 +12,11 @@
                         <span class="page-header-icon">
                             <img src="{{ asset('public/assets/admin/img/car-logo.png') }}" alt="">
                         </span>
-                        <span>{{ translate('messages.Update Vehicle') }}
+                        <span>{{ translate('messages.Add New Vehicle') }}
                     </h1>
                 </div>
             </div>
         </div>
-        @php
-            $delivery_time_start = preg_match('([0-9]+[\-][0-9]+\s[min|hours|days])', $store->delivery_time ?? '')
-                ? explode('-', $store->delivery_time)[0]
-                : 10;
-            $delivery_time_end = preg_match('([0-9]+[\-][0-9]+\s[min|hours|days])', $store->delivery_time ?? '')
-                ? explode(' ', explode('-', $store->delivery_time)[1])[0]
-                : 30;
-            $delivery_time_type = preg_match('([0-9]+[\-][0-9]+\s[min|hours|days])', $store->delivery_time ?? '')
-                ? explode(' ', explode('-', $store->delivery_time)[1])[1]
-                : 'min';
-        @endphp
         @php($language = \App\Models\BusinessSetting::where('key', 'language')->first())
         @php($language = $language->value ?? null)
         @php($defaultLang = 'en')
@@ -77,7 +66,7 @@
                                                         </label>
                                                         <input type="text" name="name[]" id="default_name"
                                                                class="form-control"
-                                                               value="{{$vehicle?->getRawOriginal('name')}}"
+                                                               value=""
                                                                placeholder="{{ translate('messages.type_vehicle_name') }}"
                                                                required>
                                                     </div>
@@ -87,21 +76,10 @@
                                                                for="exampleFormControlInput1">{{ translate('messages.short_description') }}
                                                             ({{ translate('messages.default') }})</label>
                                                         <textarea type="text" name="description[]" placeholder="{{ translate('messages.type_business_address') }}"
-                                                                  class="form-control min-h-90px ckeditor">{{$vehicle?->getRawOriginal('description')}}</textarea>
+                                                                  class="form-control min-h-90px ckeditor"></textarea>
                                                     </div>
                                                 </div>
                                                 @foreach (json_decode($language) as $lang)
-                                                    <?php
-                                                    if(count($vehicle['translations'])){
-                                                        $translate = [];
-                                                        foreach($vehicle['translations'] as $t)
-                                                        {
-                                                            if($t->locale == $lang && $t->key=="name"){
-                                                                $translate[$lang]['name'] = $t->value;
-                                                            }
-                                                        }
-                                                    }
-                                                    ?>
                                                     <div class="d-none lang_form" id="{{ $lang }}-form">
                                                         <div class="form-group mb-0">
                                                             <label class="input-label font-semibold"
@@ -109,7 +87,7 @@
                                                                 ({{ strtoupper($lang) }})
                                                             </label>
                                                             <input type="text" name="name[]"
-                                                                   id="{{ $lang }}_name" class="form-control" value="{{$translate[$lang]['name']??''}}"
+                                                                   id="{{ $lang }}_name" class="form-control"
                                                                    placeholder="{{ translate('messages.store_name') }}">
                                                         </div>
                                                         <input type="hidden" name="lang[]" value="{{ $lang }}">
@@ -118,48 +96,34 @@
                                                                    for="exampleFormControlInput1">{{ translate('messages.short_description') }}
                                                                 ({{ strtoupper($lang) }})</label>
                                                             <textarea type="text" name="description[]" placeholder="{{ translate('messages.store') }}"
-                                                                      class="form-control min-h-90px ckeditor">{{$translate[$lang]['description']??''}}</textarea>
+                                                                      class="form-control min-h-90px ckeditor"></textarea>
                                                         </div>
                                                     </div>
                                                 @endforeach
+                                            @else
+                                                <div id="default-form">
+                                                    <div class="form-group mb-0">
+                                                        <label class="input-label font-semibold"
+                                                               for="exampleFormControlInput1">{{ translate('messages.vehicle_name') }}
+                                                            ({{ translate('messages.default') }})</label>
+                                                        <input type="text" name="name[]" class="form-control"
+                                                               placeholder="{{ translate('messages.store_name') }}" required>
+                                                    </div>
+                                                    <input type="hidden" name="lang[]" value="default">
+                                                    <div class="form-group mb-0">
+                                                        <label class="input-label font-semibold"
+                                                               for="exampleFormControlInput1">{{ translate('messages.short_description') }}
+                                                        </label>
+                                                        <textarea type="text" name="description[]" placeholder="{{ translate('messages.store') }}"
+                                                                  class="form-control min-h-90px ckeditor"></textarea>
+                                                    </div>
+                                                </div>
                                             @endif
                                         </div>
                                     </div>
 
                                 </div>
                                 <div class="col-lg-6">
-                                    {{-- <div class="text-center">
-                                        <label class="text--title fs-16 font-semibold mb-1">
-                                            {{ translate('Vehicle_Thumbnail') }}
-                                        </label>
-                                        <div class="mb-20">
-                                            <p class="fs-12">
-                                                JPG, JPEG, PNG Less Than 1MB <strong class="font-semibold">(Ratio
-                                                    2:1)</strong>
-                                            </p>
-                                        </div>
-                                        <div class="upload-file text-wrapper">
-                                            <input type="file" name="thumbnail"
-                                                   class="upload-file__input single_file_input" accept=".jpg, .jpeg, .png"
-                                                   required>
-                                            <div
-                                                class="upload-file__img d-flex justify-content-center align-items-center height-150px max-w-300px m-auto p-0">
-                                                <div class="upload-file__textbox text-center">
-                                                    <img width="34" height="34"
-                                                         src="{{ asset('public/assets/admin/img/document-upload.png') }}"
-                                                         alt="" class="svg">
-                                                    <h6 class="mt-2 font-semibold">
-                                                        <span class="text-info">{{ translate('Click to upload') }}</span>
-                                                        <br>
-                                                        {{ translate('or drag and drop') }}
-                                                    </h6>
-                                                </div>
-                                                <img class="upload-file__img__img ratio-2" src="{{ $vehicle['thumbnail_full_url'] }}" width="300" height="150"
-                                                     loading="lazy" style="display: none;" alt="">
-                                            </div>
-                                        </div>
-
-                                    </div> --}}
                                     <div class="text-center">
                                         <label class="text--title fs-16 font-semibold mb-1">
                                             {{ translate('Vehicle_Thumbnail') }}
@@ -174,7 +138,7 @@
                                                 <i class="tio-clear"></i>
                                             </a>
                                             <input type="file" name="thumbnail" class="upload-file__input single_file_input"
-                                                accept=".jpg, .jpeg, .png"  value="{{ $vehicle['thumbnail_full_url'] ?? '' }}">
+                                                accept=".jpg, .jpeg, .png"  value="" required>
                                             <label
                                                 class="upload-file-wrapper height-150px max-w-300px aspect-2-1">
                                                 <div class="upload-file-textbox text-center w-100">
@@ -185,7 +149,7 @@
                                                         {{ translate('or drag and drop') }}
                                                     </h6>
                                                 </div>
-                                                <img class="upload-file-img ratio-2" width="300" height="150" loading="lazy" style="display: none;" src="{{ $vehicle['thumbnail_full_url'] ?? '' }}" alt="">
+                                                <img class="upload-file-img ratio-2" width="300" height="150" loading="lazy" style="display: none;" src="" alt="">
                                             </label>
                                         </div>
                                     </div>
@@ -196,30 +160,6 @@
                     </div>
                 </div>
                 <div class="col-lg-12">
-                    {{-- <div class="card">
-                        <div class="row g-3">
-                            <div class="col-md-6 pb-0">
-                                <div class="row g-2">
-                                    <div class="col-12 pb-0">
-                                        <div class="form-group mb-0">
-                                            <label class="input-label" for="exampleFormControlInput1">{{translate('messages.images')}}
-                                        </div>
-                                    </div>
-                                    @foreach($vehicle['images_full_url'] as $img)
-                                        <div class="col-6 spartan_item_wrapper size--sm">
-                                            <img class="rounded border" src="{{ $img }}">
-                                        </div>
-                                    @endforeach
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="input-label" for="exampleFormControlInput1">{{translate('messages.update_identity_image')}}</label>
-                                <div>
-                                    <div class="row g-2 mt-0" id="multiImg"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div> --}}
                     <div class="card">
                         <div class="card-header">
                             <div>
@@ -233,13 +173,15 @@
                             </div>
                         </div>
                         <div class="card-body py-1">
+                            {{-- <div>
+                                <div class="row" id="multiImg"></div>
+                            </div> --}}
                             <div class="d-flex pt-20 pb-2 overflow-x-auto">
                                <div class="d-flex gap-3 flex-shrink-0" id="image_container">
-                                    <!-- Upload Wrapper for New Files -->
                                    <div class="upload-file text-wrapper h--100px w--200px flex-shrink-0"
                                         id="image_upload_wrapper">
                                        <input type="file" name="images[]"
-                                              class="upload-file__input multiple_image_input" accept=".jpg,.jpeg,.png" multiple>
+                                              class="upload-file__input multiple_image_input" accept=".jpg,.jpeg,.png" multiple required>
                                        <div
                                            class="upload-file__img d-flex gap-0 justify-content-center align-items-center h-100 max-w-300px p-0">
                                            <div class="upload-file__textbox">
@@ -253,15 +195,6 @@
                                            </div>
                                        </div>
                                    </div>
-                                   <!-- Existing Images dynamically loaded here -->
-                                    @foreach($vehicle['images_full_url'] as $img)
-                                    <div class="image-single h-100 max-w-200px p-0" data-existing="true" data-url="{{ $img }}">
-                                        <a href="javascript:void(0);" class="remove-btn" onclick="removeImage(event, this, '{{ $img }}')">
-                                            <i class="tio-clear"></i>
-                                        </a>
-                                        <img class="img--vertical-2 rounded-10" width="200" height="100" loading="lazy" src="{{ $img }}" alt="">
-                                    </div>
-                                    @endforeach
                                </div>
                             </div>
                         </div>
@@ -283,26 +216,13 @@
                             <div class="row g-3">
                                 <div class="col-lg-4">
                                     <div class="form-group mb-0">
-                                        <label class="input-label" for="choice_provider">{{ translate('messages.provider') }}
-                                        </label>
-                                        <select name="provider_id" id="choice_provider" class="form-control js-select2-custom"
-                                                data-placeholder="{{ translate('messages.select_vehicle_provider') }}">
-                                            <option value="" selected disabled>{{ translate('messages.select_vehicle_provider') }}</option>
-                                            @foreach($providers as $provider)
-                                                <option value="{{ $provider->id }}" {{ $vehicle->provider_id == $provider->id ? 'selected' : '' }}>{{ $provider->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4">
-                                    <div class="form-group mb-0">
                                         <label class="input-label" for="choice_brand">{{ translate('messages.brand') }}
                                         </label>
                                         <select name="brand_id" id="choice_brand" class="form-control js-select2-custom"
-                                                data-placeholder="{{ translate('messages.select_vehicle_brand') }}">
+                                                data-placeholder="{{ translate('messages.select_vehicle_brand') }}" required>
                                             <option value="" selected disabled>{{ translate('messages.select_vehicle_brand') }}</option>
                                             @foreach($brands as $brand)
-                                                <option value="{{ $brand->id }}" {{ $vehicle->brand_id == $brand->id ? 'selected' : '' }}>{{ $brand->name }}</option>
+                                                <option value="{{ $brand->id }}">{{ $brand->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -313,7 +233,7 @@
                                                for="">{{ translate('messages.Model') }}
                                         </label>
                                         <input type="number" name="model" class="form-control" placeholder="Model Name"
-                                               value="{{ $vehicle->model }}" required>
+                                               value="" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
@@ -321,10 +241,10 @@
                                         <label class="input-label"
                                                for="choice_category">{{ translate('messages.category') }}
                                         </label>
-                                        <select name="category_id" id="choice_category" class="form-control js-select2-custom" data-placeholder="{{ translate('messages.select_vehicle_category') }}">
+                                        <select name="category_id" id="choice_category" class="form-control js-select2-custom" data-placeholder="{{ translate('messages.select_vehicle_category') }}" required>
                                             <option value="" selected disabled>{{ translate('messages.select_vehicle_category') }}</option>
                                             @foreach($categories as $category)
-                                                <option value="{{ $category->id }}" {{ $vehicle->category_id == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+                                                <option value="{{ $category->id }}">{{ $category->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -334,15 +254,15 @@
                                         <label class="input-label" for="choice_type">{{ translate('messages.type') }}
                                         </label>
                                         <select name="type" id="choice_type" class="form-control js-select2-custom"
-                                                data-placeholder="{{ translate('messages.select_vehicle_type') }}">
+                                                data-placeholder="{{ translate('messages.select_vehicle_type') }}" required>
                                             <option value="" selected disabled>
                                                 {{ translate('messages.select_vehicle_type') }}</option>
-                                            <option value="family" {{ $vehicle->type == 'family' ? 'selected' : '' }}>{{ translate('messages.family') }}</option>
-                                            <option value="luxury" {{ $vehicle->type == 'luxury' ? 'selected' : '' }}>{{ translate('messages.Luxury') }}</option>
-                                            <option value="affordable" {{ $vehicle->type == 'affordable' ? 'selected' : '' }}>{{ translate('messages.Affordable') }}</option>
-                                            <option value="executives" {{ $vehicle->type == 'executives' ? 'selected' : '' }}>{{ translate('messages.Executives') }}</option>
-                                            <option value="compact" {{ $vehicle->type == 'compact' ? 'selected' : '' }}>{{ translate('messages.Compact') }}</option>
-                                            <option value="full-size" {{ $vehicle->type == 'full-size' ? 'selected' : '' }}>{{ translate('messages.Full-Size') }}</option>
+                                            <option value="family">{{ translate('messages.family') }}</option>
+                                            <option value="luxury">{{ translate('messages.Luxury') }}</option>
+                                            <option value="affordable">{{ translate('messages.Affordable') }}</option>
+                                            <option value="executives">{{ translate('messages.Executives') }}</option>
+                                            <option value="compact">{{ translate('messages.Compact') }}</option>
+                                            <option value="full-size">{{ translate('messages.Full-Size') }}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -352,7 +272,7 @@
                                                for="">{{ translate('messages.Engine Capacity (cc)') }}
                                         </label>
                                         <input type="number" name="engine_capacity" class="form-control" placeholder="Ex: 450"
-                                               value="{{ $vehicle->engine_capacity }}">
+                                               value="" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
@@ -361,7 +281,7 @@
                                                for="">{{ translate('messages.Engine Power (hp)') }}
                                         </label>
                                         <input type="number" name="engine_power" class="form-control" placeholder="Ex: 100"
-                                               value="{{ $vehicle->engine_power }}">
+                                               value="" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
@@ -370,7 +290,7 @@
                                                for="">{{ translate('messages.Seating Capacity') }}
                                         </label>
                                         <input type="number" name="seating_capacity" class="form-control"
-                                               placeholder="Input how many person can seat" value="{{ $vehicle->seating_capacity }}">
+                                               placeholder="Input how many person can seat" value="" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
@@ -382,15 +302,14 @@
                                             <label class="form-check form--check mr-2 mr-md-4">
                                                 <input class="form-check-input" type="radio" value="yes"
                                                        name="air_condition" id="order_confirmation_model"
-                                                       {{ $vehicle->air_condition == 1 ? 'checked' : ''}}>
+                                                       checked="">
                                                 <span class="form-check-label">
                                                     {{ translate('messages.yes') }}
                                                 </span>
                                             </label>
                                             <label class="form-check form--check mr-2 mr-md-4">
                                                 <input class="form-check-input" type="radio" value="0"
-                                                       name="air_condition" id="order_confirmation_model2"
-                                                    {{ $vehicle->air_condition == 0 ? 'checked' : ''}}>
+                                                       name="air_condition" id="order_confirmation_model2">
                                                 <span class="form-check-label">
                                                     {{ translate('messages.no') }}
                                                 </span>
@@ -405,15 +324,15 @@
                                         </label>
                                         <select name="fuel_type" id="choice_fuel_type"
                                                 class="form-control js-select2-custom"
-                                                data-placeholder="{{ translate('messages.select_fuel_type') }}">
+                                                data-placeholder="{{ translate('messages.select_fuel_type') }}" required>
                                             <option value="" selected disabled>
                                                 {{ translate('messages.select_vehicle_fuel_type') }}</option>
-                                            <option value="octan" {{ $vehicle->fuel_type == 'octan' ? 'selected' : '' }}>{{ translate('messages.Octan') }}</option>
-                                            <option value="diesel" {{ $vehicle->fuel_type == 'diesel' ? 'selected' : '' }}>{{ translate('messages.diesel') }}</option>
-                                            <option value="CNG" {{ $vehicle->fuel_type == 'CNG' ? 'selected' : '' }}>{{ translate('messages.CNG') }}</option>
-                                            <option value="petrol" {{ $vehicle->fuel_type == 'petrol' ? 'selected' : '' }}>{{ translate('messages.Petrol') }}</option>
-                                            <option value="electric" {{ $vehicle->fuel_type == 'electric' ? 'selected' : '' }}>{{ translate('messages.Electric') }}</option>
-                                            <option value="jet-fuel" {{ $vehicle->fuel_type == 'jet-fuel' ? 'selected' : '' }}>{{ translate('messages.Jet Fuel') }}</option>
+                                            <option value="octan" >{{ translate('messages.Octan') }}</option>
+                                            <option value="diesel" >{{ translate('messages.diesel') }}</option>
+                                            <option value="CNG" >{{ translate('messages.CNG') }}</option>
+                                            <option value="petrol" >{{ translate('messages.Petrol') }}</option>
+                                            <option value="electric" >{{ translate('messages.Electric') }}</option>
+                                            <option value="jet-fuel" >{{ translate('messages.Jet Fuel') }}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -424,14 +343,14 @@
                                         </label>
                                         <select name="transmission_type" id="choice_transmission_type"
                                                 class="form-control js-select2-custom"
-                                                data-placeholder="{{ translate('messages.select_vehicle_transmission') }}">
+                                                data-placeholder="{{ translate('messages.select_vehicle_transmission') }}" required>
                                             <option value="" selected disabled>
                                                 {{ translate('messages.select_vehicle_transmission') }}</option>
-                                            <option value="automatic" {{ $vehicle->transmission_type == 'automatic' ? 'selected' : '' }}>{{ translate('Automatic') }}</option>
-                                            <option value="manual" {{ $vehicle->transmission_type == 'manual' ? 'selected' : '' }}>{{ translate('Manual') }}</option>
-                                            <option value="continuously-variable" {{ $vehicle->transmission_type == 'continuously-variable' ? 'selected' : '' }}>{{ translate('Continuously Variable') }}</option>
-                                            <option value="dual-clutch" {{ $vehicle->transmission_type == 'dual-clutch' ? 'selected' : '' }}>{{ translate('Dual-Clutch') }}</option>
-                                            <option value="semi-automatic" {{ $vehicle->transmission_type == 'semi-automatic' ? 'selected' : '' }}>{{ translate('Semi-Automatic') }}</option>
+                                            <option value="automatic">{{ translate('Automatic') }}</option>
+                                            <option value="manual">{{ translate('Manual') }}</option>
+                                            <option value="continuously-variable">{{ translate('Continuously Variable') }}</option>
+                                            <option value="dual-clutch">{{ translate('Dual-Clutch') }}</option>
+                                            <option value="semi-automatic">{{ translate('Semi-Automatic') }}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -454,43 +373,22 @@
                                 <span class="text--title">
                                     {{ translate('messages.Same Model Multiple Vehicles') }}
                                 </span>
-                                <input class="form-check-input single-select position-relative m-0" type="checkbox" name="multiple_vehicles"
-                                       {{ $vehicle->multiple_vehicles == 1 ? 'checked' : '' }}>
+                                <input class="form-check-input single-select position-relative m-0" type="checkbox" name="multiple_vehicles" checked>
                             </label>
                         </div>
                         <div class="card-body d-flex flex-column gap-20px">
-                            @foreach($vehicle->vehicleIdentities as $multi)
-                            <div class="d-flex gap-20px flex-column flex-md-row equal-width">
-                                <div class="form-group mb-0">
-                                    <label class="input-label"
-                                           for="">{{ translate('messages.VIN Number') }}</label>
-                                    <input type="text" name="vehicle[vin_number][]" class="form-control"
-                                           placeholder="Type your business name" value="{{ $multi->vin_number }}">
-                                </div>
-                                <div class="form-group mb-0">
-                                    <label class="input-label"
-                                           for="">{{ translate('messages.License Plate Number') }}</label>
-                                    <input type="text" name="vehicle[license_plate_number][]" class="form-control"
-                                           placeholder="Type your license plate number" value="{{ $multi->license_plate_number }}">
-                                </div>
-                                <button type="button"
-                                        class="btn plus-btn shadow-none p-0 fs-32 lh--1 text-left mt-md-4 remove-btn text--danger">
-                                    <i class="tio-clear-circle-outlined"></i>
-                                </button>
-                            </div>
-                            @endforeach
                             <div class="d-flex gap-20px flex-column flex-md-row equal-width" id="input-container">
                                 <div class="form-group mb-0">
                                     <label class="input-label"
                                            for="">{{ translate('messages.VIN Number') }}</label>
                                     <input type="text" name="vehicle[vin_number][]" class="form-control"
-                                           placeholder="Type your business name">
+                                           placeholder="Type your business name" value="">
                                 </div>
                                 <div class="form-group mb-0">
                                     <label class="input-label"
                                            for="">{{ translate('messages.License Plate Number') }}</label>
                                     <input type="text" name="vehicle[license_plate_number][]" class="form-control"
-                                           placeholder="Type your license plate number">
+                                           placeholder="Type your license plate number" value="">
                                 </div>
                                 <button type="button"
                                         class="btn plus-btn shadow-none text--primary p-0 fs-32 lh--1 text-left mt-md-4 add-btn">
@@ -522,14 +420,14 @@
                                         <div class="border resturant-type-group">
                                             <label class="align-items-center d-flex form-check item">
                                                 <input class="form-check-input single-select" type="checkbox" name="trip_hourly"
-                                                       value="hourly" {{ $vehicle->trip_hourly == 1 ? 'checked' : '' }}>
+                                                       value="hourly" checked="">
                                                 <span class="form-check-label ml-2 mt-1">
                                                     {{ translate('messages.hourly') }}
                                                 </span>
                                             </label>
                                             <label class="align-items-center d-flex form-check item">
                                                 <input class="form-check-input single-select" type="checkbox" name="trip_distance"
-                                                       value="distance_wise" {{ $vehicle->trip_distance == 1 ? 'checked' : ''}}>
+                                                       value="distance_wise">
                                                 <span class="form-check-label ml-2 mt-1">
                                                     {{ translate('messages.Distance Wise') }}
                                                 </span>
@@ -544,7 +442,7 @@
                                                for="">{{ translate('messages.Hourly Wise Price ($)') }}
                                         </label>
                                         <input type="number" name="hourly_price" class="form-control"
-                                               placeholder="Ex: 35.25" value="{{ $vehicle->hourly_price }}">
+                                               placeholder="Ex: 35.25" value="">
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
@@ -553,7 +451,7 @@
                                                for="">{{ translate('messages.Distance Wise Price ($)') }}
                                         </label>
                                         <input type="number" name="distance_price" class="form-control"
-                                               placeholder="Ex: 35.25" value="{{ $vehicle->distance_price }}">
+                                               placeholder="Ex: 35.25" value="">
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
@@ -568,15 +466,14 @@
                                             <div class="flex-sm-grow-1">
                                                 <input id="min" type="number" name="discount_price"
                                                        class="form-control h--45px border-0 pl-unset"
-                                                       value="{{ $vehicle->discount_price }}"
                                                        placeholder="{{ translate('messages.Ex: 10') }} 20">
                                             </div>
                                             <div class="flex-shrink-0">
                                                 <select name="discount_type" id="" class="custom-select ltr border-0">
-                                                    <option value="percent" {{ $vehicle->discount_type == 'percent' ? 'selected' : '' }}>
+                                                    <option value="percent" selected>
                                                         %
                                                     </option>
-                                                    <option value="fixed" {{ $vehicle->discount_type == 'fixed' ? 'selected' : ''}}>
+                                                    <option value="fixed">
                                                         $
                                                     </option>
                                                 </select>
@@ -604,50 +501,12 @@
                             <div class="form-group mb-0 pickup-zone-tag">
                                 <select name="tag[]" id="pickup_zones12"
                                         class="form-control js-select2-custom select2-hidden-accessible" multiple="multiple">
-                                    @if(!empty(json_decode($vehicle->tag)))
-                                        @foreach(json_decode($vehicle->tag) as $tag)
-                                            <option value="{{ $tag }}" selected>{{ $tag }}</option>
-                                        @endforeach
-                                    @endif
                                 </select>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-12">
-                    {{-- <div class="card">
-                        <div class="row g-3">
-                            <div class="col-md-6 pb-0">
-                                <div class="row g-2">
-                                    <div class="col-12 pb-0">
-                                        <div class="form-group mb-0">
-                                            <div class="card-header">
-                                                <div>
-                                                    <h5 class="text-title mb-1">
-                                                        {{ translate('messages.Vehicle_Documents') }}
-                                                    </h5>
-                                                    <p class="fs-12 mb-0">
-                                                        {{ translate('messages.Provider Logo & Covers') }}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    @foreach($vehicle['documents_full_url'] as $img)
-                                        <div class="col-6 spartan_item_wrapper size--sm">
-                                            <img class="rounded border" src="{{ $img }}">
-                                        </div>
-                                    @endforeach
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="input-label" for="exampleFormControlInput1">{{translate('messages.update_identity_image')}}</label>
-                                <div>
-                                    <div class="row g-2 mt-0" id="multiDoc"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div> --}}
                     <div class="card">
                         <div class="card-header">
                             <div>
@@ -660,6 +519,9 @@
                             </div>
                         </div>
                         <div class="card-body">
+                            {{-- <div>
+                                <div class="row" id="multiDoc"></div>
+                            </div> --}}
                             <div class="d-flex py-3 overflow-x-auto">
                                 <div class="d-flex gap-3 flex-shrink-0" id="pdf-container">
                                     <div class="upload-file text-wrapper document-wrapper" id="upload-wrapper">
@@ -679,31 +541,7 @@
                                             </div>
                                         </div>
                                     </div>
-
                                     <!-- Uploaded files will be appended here as .pdf-single divs -->
-                                    @foreach($vehicle['documents_full_url'] as $doc)
-                                        <div class="pdf-single" data-pdf-url="{{ $doc }}" data-existing="true"
-                                            onclick="window.open('{{$doc}}', '_blank')">
-                                            <div class="pdf-frame">
-                                                <canvas class="pdf-preview" style="display: none;"></canvas>
-                                                <img class="pdf-thumbnail" src="{{ $doc }}"
-                                                    alt="File Thumbnail">
-                                            </div>
-                                            <div class="overlay">
-                                                <a href="javascript:void(0);" class="remove-btn" onclick="removeDocument(event, this)">
-                                                    <i class="tio-clear"></i>
-                                                </a>
-                                                <div class="pdf-info d-flex gap-10px align-items-center">
-                                                    <img src="{{ asset('public/assets/admin/img/document.svg') }}" width="34"
-                                                        alt="Document Logo">
-                                                    <div class="fs-13 text--title d-flex flex-column">
-                                                        <span class="file-name">demo.pdf</span>
-                                                        <span class="opacity-50">{{translate('Click to view the file')}}</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    @endforeach
                                 </div>
                             </div>
                         </div>
@@ -731,6 +569,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
 
     <script>
+
         // ---- single image upload starts
         $(document).ready(function () {
             // Handle file input change
@@ -752,25 +591,12 @@
                 }
             });
 
-            // Check for a valid src on load to handle pre-existing images
-            $('.upload-file').each(function () {
-                var $card = $(this);
-                var $textbox = $card.find('.upload-file-textbox');
-                var $imgElement = $card.find('.upload-file-img');
-                var $removeBtn = $card.find('.remove-btn');
-
-                // If there's already a valid image source
-                if ($imgElement.attr('src') && $imgElement.attr('src') !== window.location.href) {
-                    $textbox.hide();
-                    $imgElement.show();
-                }
-            });
-
-           // Handle remove button click
-           $('.remove-btn').click(function () {
+            // Handle remove button click
+            $('.remove-btn').click(function () {
                 var $card = $(this).closest('.upload-file');
                 $card.find('.single_file_input').val('');
-                $card.find('.upload-file-img').attr('src', '{{ $vehicle['thumbnail_full_url'] ?? '' }}');
+                $card.find('.upload-file-textbox').show();
+                $card.find('.upload-file-img').hide().attr('src', '');
                 $(this).css('opacity', 0);
             });
 
@@ -779,109 +605,13 @@
                 var $cards = $('.upload-file');
                 $cards.each(function () {
                     $(this).find('.single_file_input').val('');
-                    $(this).find('.upload-file-img').attr('src', '{{ $vehicle['thumbnail_full_url'] ?? '' }}');
+                    $(this).find('.upload-file-textbox').show();
+                    $(this).find('.upload-file-img').hide().attr('src', '');
                     $(this).find('.remove-btn').css('opacity', 0);
                 });
             });
         });
-        // ---- single image upload ends
-    </script>
-
-    <script>
-        // $(function() {
-        //     $("#multiImg").spartanMultiImagePicker({
-        //         fieldName: 'images[]',
-        //         maxCount: 5,
-        //         rowHeight: '120px',
-        //         groupClassName: 'col-6 spartan_item_wrapper size--md',
-        //         maxFileSize: '',
-        //         placeholderImage: {
-        //             image: '{{ asset('public/assets/admin/img/document-upload.png') }}',
-        //             width: '100%'
-        //         },
-        //         dropFileLabel: "Drop Here",
-        //         onAddRow: function(index, file) {
-
-        //         },
-        //         onRenderedPreview: function(index) {
-
-        //         },
-        //         onRemoveRow: function(index) {
-
-        //         },
-        //         onExtensionErr: function(index, file) {
-        //             toastr.error(
-        //                 '{{ translate('messages.please_only_input_png_or_jpg_type_file') }}', {
-        //                     CloseButton: true,
-        //                     ProgressBar: true
-        //                 });
-        //         },
-        //         onSizeErr: function(index, file) {
-        //             toastr.error('{{ translate('messages.file_size_too_big') }}', {
-        //                 CloseButton: true,
-        //                 ProgressBar: true
-        //             });
-        //         }
-        //     });
-        // });
-
-        // $(function() {
-        //     $("#multiDoc").spartanMultiImagePicker({
-        //         fieldName: 'documents[]',
-        //         maxCount: 5,
-        //         rowHeight: '120px',
-        //         groupClassName: 'col-6 spartan_item_wrapper size--md',
-        //         maxFileSize: '',
-        //         placeholderImage: {
-        //             image: '{{ asset('public/assets/admin/img/document-upload.png') }}',
-        //             width: '100%'
-        //         },
-        //         dropFileLabel: "Drop Here",
-        //         onAddRow: function(index, file) {
-
-        //         },
-        //         onRenderedPreview: function(index) {
-
-        //         },
-        //         onRemoveRow: function(index) {
-
-        //         },
-        //         onExtensionErr: function(index, file) {
-        //             toastr.error(
-        //                 '{{ translate('messages.please_only_input_png_or_jpg_type_file') }}', {
-        //                     CloseButton: true,
-        //                     ProgressBar: true
-        //                 });
-        //         },
-        //         onSizeErr: function(index, file) {
-        //             toastr.error('{{ translate('messages.file_size_too_big') }}', {
-        //                 CloseButton: true,
-        //                 ProgressBar: true
-        //             });
-        //         }
-        //     });
-        // });
-
-
-        // // Get all upload-file input elements
-        // document.querySelectorAll('.single_file_input').forEach(function(input) {
-        //     input.addEventListener('change', function(event) {
-        //         var file = event.target.files[0];
-        //         var card = event.target.closest('.upload-file');
-        //         var textbox = card.querySelector('.upload-file__textbox');
-        //         var imgElement = card.querySelector('.upload-file__img__img');
-
-        //         if (file) {
-        //             var reader = new FileReader();
-        //             reader.onload = function(e) {
-        //                 textbox.style.display = 'none';
-        //                 imgElement.src = e.target.result;
-        //                 imgElement.style.display = 'block';
-        //             };
-        //             reader.readAsDataURL(file);
-        //         }
-        //     });
-        // });
+         // ---- single image upload ends
     </script>
 
     <script>
@@ -894,27 +624,23 @@
             const imageUploadWrapper = document.getElementById("image_upload_wrapper");
             const inputElement = document.querySelector('.multiple_image_input');
             const fileSet = new Set(); // To keep track of files
-            let removedImages = []; // To track removed images
 
-            // Handle file input change (adding new files)
             inputElement.addEventListener('change', function (event) {
                 const files = Array.from(event.target.files);
                 const currentFiles = imageContainer.querySelectorAll(".image-single").length;
 
                 if (currentFiles + files.length > MAX_FILES) {
-                    toastr.error('You can upload a maximum of ' + MAX_FILES + ' files.', {
+                    toastr.error('{{ translate('You can upload a maximum of') }} ' + MAX_FILES +
+                        ' {{ translate('files.') }}', {
                         CloseButton: true,
                         ProgressBar: true
                     });
-                    imageUploadWrapper.style.display = "none";
-                    event.target.value = "";
                     return;
                 }
-
                 files.forEach(file => {
                     // Validate file type
                     if (!ALLOWED_FILE_TYPES.includes(file.type)) {
-                        toastr.error('Please only input PNG or JPG type file.', {
+                        toastr.error('{{ translate('please_only_input_png_or_jpg_type_file') }}', {
                             CloseButton: true,
                             ProgressBar: true
                         });
@@ -923,7 +649,7 @@
 
                     // Validate file size
                     if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
-                        toastr.error('File size too big.', {
+                        toastr.error('{{ translate('file_size_too_big') }}', {
                             CloseButton: true,
                             ProgressBar: true
                         });
@@ -950,93 +676,40 @@
                 toggleUploadWrapper();
             });
 
-            // Remove image logic
             window.removeImage = function (event, element, fileName) {
                 event.stopPropagation();
                 const imageSingle = element.closest(".image-single");
                 imageSingle.remove();
                 fileSet.delete(fileName); // Remove the file from the set
-
-                // Track the removed image
-                removedImages.push(fileName); // Add to removed images array
-
-                console.log("Updated removed images array:", removedImages);
-
                 toggleUploadWrapper();
             };
 
-            // Toggle visibility of the upload wrapper
             function toggleUploadWrapper() {
                 const currentFiles = imageContainer.querySelectorAll(".image-single").length;
                 imageUploadWrapper.style.display = currentFiles >= 5 ? "none" : "block";
             }
-
-            // Handle form submission
-            $('form').on('submit', function (e) {
-                // Prevent form submission for demonstration
-                // e.preventDefault();
-
-                const formData = new FormData(this);
-
-                // Append new files (those that were added via the input) to FormData
-                fileSet.forEach((fileName) => {
-                    const fileInput = document.querySelector(`input[name="images[]"][data-file-name="${fileName}"]`);
-                    if (fileInput) {
-                        formData.append('images[]', fileInput.files[0]);
-                    }
-                });
-
-                // Append removed files to indicate they should be deleted
-                removedImages.forEach((fileName) => {
-                    formData.append('removed_images[]', fileName);
-                });
-
-                // Log form data (for debugging)
-                console.log("Form Data:");
-                console.log(formData);
-
-                // Example of sending the form data via AJAX (uncomment to use)
-
-                $.ajax({
-                    url: '{{ route('admin.rental.provider.vehicle.edit', $vehicle->id)}}',  // Replace with your endpoint
-                    method: 'POST',
-                    data: formData,
-                    contentType: false,
-                    processData: false,
-                    success: function(response) {
-                        // Handle success response
-                        console.log("Files successfully uploaded and removed:", response);
-                    },
-                    error: function(error) {
-                        // Handle error response
-                        console.log("Error uploading files:", error);
-                    }
-                });
-            });
-
-            // Handle reset button click
-            $('#reset_btn').click(function () {
-                // Select and remove only the new uploaded image elements (those without data-existing="true")
-                const uploadedImages = imageContainer.querySelectorAll(".image-single:not([data-existing='true'])");
+           // Handle reset button click
+           $('#reset_btn').click(function () {
+                // Select and remove only the uploaded image elements
+                const uploadedImages = imageContainer.querySelectorAll(".image-single");
                 uploadedImages.forEach(image => image.remove());
 
-                // Clear the file set for new uploads
+                // Clear the file set
                 fileSet.clear();
 
                 // Ensure the upload wrapper is visible
                 imageUploadWrapper.style.display = "block";
             });
-        });
 
+        });
         // ----- mutiple image upload ends
 
-         // ----- mutiple document upload
-         $(document).ready(function () {
+        // ----- mutiple document upload
+        $(document).ready(function () {
             const MAX_FILES = 5;
             const pdfContainer = document.getElementById("pdf-container");
             const documentUploadWrapper = document.getElementById("upload-wrapper");
             const uploadedFiles = new Map(); // Store files with unique names as keys
-
 
             // Handle file selection and upload
             document.querySelector('.multiple_document_input').addEventListener('change', function (event) {
@@ -1107,8 +780,7 @@
 
                 // Clear file input after upload
                 // event.target.value = "";
-                console.log("values---- ",event.target.value);
-                console.log("values all---- ",uploadedFiles);
+
             });
 
             // Remove document handler
@@ -1130,16 +802,16 @@
                 documentUploadWrapper.style.display = currentFiles >= MAX_FILES ? "none" : "block";
             }
 
-            // Render file thumbnail (image or PDF)
+            // Render file thumbnail (image, PDF, or other file types)
             async function renderFileThumbnail(element, fileType) {
                 const fileUrl = element.getAttribute("onclick").match(/'(.*?)'/)[1];
                 const canvas = element.querySelector(".pdf-preview");
                 const thumbnail = element.querySelector(".pdf-thumbnail");
 
-                if (fileType.startsWith("image/")) {
-                    thumbnail.src = fileUrl;
-                } else if (fileType === "application/pdf") {
-                    try {
+                try {
+                    if (fileType.startsWith("image/")) {
+                        thumbnail.src = fileUrl; // Directly use the image URL
+                    } else if (fileType === "application/pdf") {
                         const ctx = canvas.getContext("2d");
                         const loadingTask = pdfjsLib.getDocument(fileUrl);
                         const pdf = await loadingTask.promise;
@@ -1150,17 +822,17 @@
                         canvas.height = viewport.height;
 
                         await page.render({ canvasContext: ctx, viewport }).promise;
-
-                        thumbnail.src = canvas.toDataURL();
-                    } catch (error) {
-                        console.error("Error rendering PDF thumbnail:", error);
+                        thumbnail.src = canvas.toDataURL(); // Render PDF thumbnail
+                    } else {
+                        // Use a fallback thumbnail for unsupported file types
+                        thumbnail.src = "{{ asset('public/assets/admin/img/blank2.png') }}";
                     }
-                } else {
-                    thumbnail.src = "{{ asset('public/assets/admin/img/blank2.png') }}";
-                }
 
-                thumbnail.style.display = "block";
-                canvas.style.display = "none";
+                    thumbnail.style.display = "block";
+                    canvas.style.display = "none";
+                } catch (error) {
+                    console.error("Error rendering file thumbnail:", error);
+                }
             }
 
             // Handle form submission
@@ -1183,109 +855,14 @@
 
             // Reset button handler
             $('#reset_btn').click(function () {
-                const uploadedDocuments = pdfContainer.querySelectorAll(".pdf-single:not([data-existing='true'])");
+                const uploadedDocuments = pdfContainer.querySelectorAll(".pdf-single");
                 uploadedDocuments.forEach((doc) => doc.remove());
                 uploadedFiles.clear();
                 documentUploadWrapper.style.display = "block";
             });
         });
+
         // ----- mutiple document upload ends
-
-        // ----- document view from file
-        document.addEventListener("DOMContentLoaded", function() {
-
-            async function renderFileThumbnail(element) {
-                const fileUrl = element.getAttribute("data-pdf-url");
-                const canvas = element.querySelector(".pdf-preview");
-                const thumbnail = element.querySelector(".pdf-thumbnail");
-                const fileNameSpan = element.querySelector(".file-name");
-
-                // Extract file name and extension
-                const fullFileName = fileUrl.split('/').pop();
-                const fileExtension = fullFileName.split('.').pop().toLowerCase();
-                const fileNameWithoutExtension = fullFileName.replace(/\.[^/.]+$/, '');
-
-                // Truncate file name if it's too long
-                const truncatedFileName =
-                    fileNameWithoutExtension.length > 20 ?
-                        `${fileNameWithoutExtension.substring(0, 17)}...` :
-                        fileNameWithoutExtension;
-                const displayedFileName = `${truncatedFileName}.${fileExtension}`;
-
-                // Set the file name in the UI
-                fileNameSpan.textContent = displayedFileName;
-
-                // Handle PDF thumbnail generation
-                if (fileExtension === "pdf") {
-                    const ctx = canvas.getContext("2d");
-
-                    try {
-                        // Load the PDF using PDF.js
-                        const loadingTask = pdfjsLib.getDocument(fileUrl);
-                        const pdf = await loadingTask.promise;
-                        const page = await pdf.getPage(1);
-
-                        // Set scale and dimensions for the thumbnail
-                        const viewport = page.getViewport({
-                            scale: 0.5
-                        });
-                        canvas.width = viewport.width;
-                        canvas.height = viewport.height;
-
-                        // Render the first PDF page into the canvas
-                        await page.render({
-                            canvasContext: ctx,
-                            viewport
-                        }).promise;
-
-                        // Convert canvas to image URL and set as the thumbnail
-                        thumbnail.src = canvas.toDataURL();
-                    } catch (error) {
-                        console.error("Error rendering PDF thumbnail:", error);
-                        // Fallback to blank image if there's an error
-                        thumbnail.src = "{{ asset('public/assets/admin/img/blank2.png') }}";
-                    }
-                } else if (["jpg", "jpeg", "png", "gif", "bmp"].includes(fileExtension)) {
-                    // Handle image file types (JPG, PNG, GIF, etc.)
-                    thumbnail.src = fileUrl; // Set the image URL as the thumbnail
-                } else {
-                    // For non-PDF, non-image files (e.g., DOCX, XLSX, etc.)
-                    const fileIconPath = `{{ asset('public/assets/admin/img/icons') }}/${fileExtension}.png`;
-                    const fallbackIconPath =
-                        "{{ asset('public/assets/admin/img/blank2.png') }}"; // Fallback image
-
-                    // Check if a specific icon exists for the file type, otherwise use the fallback
-                    const iconExists = await checkFileIconExistence(fileIconPath);
-
-                    thumbnail.src = iconExists ? fileIconPath : fallbackIconPath;
-                }
-
-                // Show the thumbnail and hide the canvas
-                thumbnail.style.display = "block";
-                canvas.style.display = "none";
-            }
-
-            // Function to check if the icon exists
-            async function checkFileIconExistence(iconPath) {
-                return new Promise((resolve) => {
-                    const img = new Image();
-                    img.onload = () => resolve(true); // Icon exists
-                    img.onerror = () => resolve(false); // Icon doesn't exist
-                    img.src = iconPath;
-                });
-            }
-
-            // Iterate over all .pdf-single elements to render thumbnails
-            document.querySelectorAll(".pdf-single").forEach(renderFileThumbnail);
-
-            // Open the file in a new tab
-            window.openPdf = function(element) {
-                const fileUrl = element.getAttribute("data-pdf-url");
-                window.open(fileUrl, "_blank");
-            };
-
-        });
-        // ----- document view from file ends
     </script>
 
     <script>
@@ -1309,16 +886,14 @@
 
         $(document).on('click', '.add-btn', function() {
             let newDiv = $('#input-container').clone();
-            // newDiv.find('input').val('');
-
             newDiv.find('.add-btn')
                 .removeClass('add-btn text--primary')
                 .addClass('remove-btn text--danger')
                 .html('<i class="tio-clear-circle-outlined"></i>');
 
+            // Append the new div after the last existing input
             newDiv.insertBefore('.equal-width:last');
         });
-
 
         $(document).on('click', '.remove-btn', function() {
             $(this).closest('.equal-width').remove();

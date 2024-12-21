@@ -11,6 +11,10 @@ use App\Models\User;
 use App\Models\Wishlist;
 use App\Scopes\ZoneScope;
 use Carbon\Carbon;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Config;
@@ -24,7 +28,11 @@ class DashboardController extends Controller
         DB::statement("SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));");
     }
 
-    public function dashboard(Request $request)
+    /**
+     * @param Request $request
+     * @return View|Factory|RedirectResponse|Application
+     */
+    public function dashboard(Request $request): View|Factory|RedirectResponse|Application
     {
         $params = [
             'zone_id' => $request['zone_id'] ?? 'all',

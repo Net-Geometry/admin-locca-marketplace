@@ -6,6 +6,7 @@ use App\CentralLogics\Helpers;
 use App\Http\Controllers\Controller;
 use App\Models\Item;
 use App\Models\Order;
+use App\Models\Store;
 use App\Models\Vendor;
 use App\Models\OrderTransaction;
 use Carbon\Carbon;
@@ -60,11 +61,10 @@ class DashboardController extends Controller
 
         $out_of_stock_count=  Helpers::get_store_data()->module->module_type != 'food' ?  $items->orderby('stock')->latest()->count() : null;
 
-            $item = null;
-            if($out_of_stock_count == 1 ){
-                $item= $items->orderby('stock')->latest()->first();
-            }
-
+        $item = null;
+        if($out_of_stock_count == 1 ){
+            $item= $items->orderby('stock')->latest()->first();
+        }
 
         return view('vendor-views.dashboard', compact('data', 'earning', 'commission', 'params','out_of_stock_count','item'));
     }

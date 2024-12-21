@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Rental\Http\Controllers\Web\Admin;
+namespace Modules\Rental\Http\Controllers\Web\Provider;
 
 use App\CentralLogics\Helpers;
 use App\Models\Store;
@@ -45,7 +45,10 @@ class VehicleController extends Controller
      */
     public function index(Request $request): Renderable
     {
+        $providerId = auth('vendor')->user()->stores[0]->id;
+
         $vehicles = $this->vehicle
+            ->ofProvider($providerId)
             ->when($request->has('search'), function ($query) use ($request) {
                 $keys = explode(' ', $request['search']);
                 foreach ($keys as $key) {
@@ -68,7 +71,7 @@ class VehicleController extends Controller
         $language = getWebConfig('language');
         $defaultLang = str_replace('_', '-', app()->getLocale());
 
-        return view('rental::admin.vehicle.list', compact('vehicles', 'language', 'defaultLang', 'categories', 'brands'));
+        return view('rental::provider.vehicle.list', compact('vehicles', 'language', 'defaultLang', 'categories', 'brands'));
     }
 
     /**
@@ -77,15 +80,10 @@ class VehicleController extends Controller
      */
     public function create(): Renderable
     {
-        $providers = $this->store->with('vendor','module')->whereHas('vendor', function($query){
-            return $query->ofStatus(1);
-        })
-        ->module(Config::get('module.current_module_id'))
-        ->with('vendor','module')->latest()->get();
         $categories = $this->vehicleCategory->ofStatus(1)->latest()->get();
         $brands = $this->vehicleBrand->ofStatus(1)->latest()->get();
 
-        return view('rental::admin.vehicle.create', compact('providers', 'categories', 'brands'));
+        return view('rental::provider.vehicle.create', compact('categories', 'brands'));
     }
 
     /**
@@ -97,7 +95,6 @@ class VehicleController extends Controller
     {
         $request->validate([
             'name' => 'required|array',
-            'provider_id' => 'required|integer|exists:stores,id',
             'brand_id' => 'required|integer|exists:brands,id',
             'category_id' => 'required|integer|exists:categories,id',
             'model' => 'required|string|max:255',
@@ -147,7 +144,8 @@ class VehicleController extends Controller
             $documents = json_encode([]);
         }
 
-        $providerZoneId = $this->store->where('id', $request->provider_id)->value('zone_id') ?? 0;
+        $providerId = auth('vendor')->user()->stores[0]->id;
+        $providerZoneId = $this->store->where('id', $providerId)->value('zone_id') ?? 0;
         $vehicles = $request->input('vehicle');
         $vinNumbers = $vehicles['vin_number'];
         $licensePlateNumbers = $vehicles['license_plate_number'];
@@ -156,7 +154,7 @@ class VehicleController extends Controller
         $vehicle->name = $request->name[array_search('default', $request->lang)];
         $vehicle->description = $request->description[array_search('default', $request->lang)];
         $vehicle->zone_id = $providerZoneId;
-        $vehicle->provider_id = $request->provider_id;
+        $vehicle->provider_id = $providerId;
         $vehicle->brand_id = $request->brand_id;
         $vehicle->category_id = $request->category_id;
         $vehicle->model = $request->model;
@@ -197,32 +195,17 @@ class VehicleController extends Controller
     }
 
     /**
-     * Show the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function show($id)
-    {
-        return view('rental::show');
-    }
-
-    /**
      * Show the form for editing the specified resource.
      * @param int $id
      * @return Renderable
      */
-    public function edit($id)
+    public function edit($id): Renderable
     {
         $vehicle = $this->vehicle->findOrFail($id);
-        $providers = $this->store->with('vendor','module')->whereHas('vendor', function($query){
-            return $query->ofStatus(1);
-        })
-        ->module(Config::get('module.current_module_id'))
-        ->with('vendor','module')->latest()->get();
         $categories = $this->vehicleCategory->ofStatus(1)->latest()->get();
         $brands = $this->vehicleBrand->ofStatus(1)->latest()->get();
 
-        return view('rental::admin.vehicle.edit', compact('vehicle', 'providers', 'categories', 'brands'));
+        return view('rental::provider.vehicle.edit', compact('vehicle', 'categories', 'brands'));
     }
 
     /**
@@ -235,7 +218,6 @@ class VehicleController extends Controller
     {
         $request->validate([
             'name' => 'required|array',
-            'provider_id' => 'required|integer|exists:stores,id',
             'brand_id' => 'required|integer|exists:brands,id',
             'category_id' => 'required|integer|exists:categories,id',
             'model' => 'required|string|max:255',
@@ -250,7 +232,7 @@ class VehicleController extends Controller
             'discount_type' => 'nullable|string|max:50',
             'tag' => 'nullable|array',
             'tag.*' => 'string|max:50',
-            'thumbnail' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'images' => 'nullable|array',
             'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
             'documents' => 'nullable|array',
@@ -285,9 +267,10 @@ class VehicleController extends Controller
                 $vehicleDocuments[] = ['img' => $document, 'storage' => $this->helpers->getDisk()];
             }
         }
-        $documents = json_encode($vehicleDocuments);
-        $providerZoneId = $this->store->where('id', $request->provider_id)->value('zone_id') ?? 0;
 
+        $providerId = auth('vendor')->user()->stores[0]->id;
+        $documents = json_encode($vehicleDocuments);
+        $providerZoneId = $this->store->where('id', $providerId)->value('zone_id') ?? 0;
         $vehicles = $request->input('vehicle');
         $vinNumbers = $vehicles['vin_number'];
         $licensePlateNumbers = $vehicles['license_plate_number'];
@@ -295,7 +278,7 @@ class VehicleController extends Controller
         $vehicle->name = $request->name[array_search('default', $request->lang)];
         $vehicle->description = $request->description[array_search('default', $request->lang)];
         $vehicle->zone_id = $providerZoneId;
-        $vehicle->provider_id = $request->provider_id;
+        $vehicle->provider_id = $providerId;
         $vehicle->brand_id = $request->brand_id;
         $vehicle->category_id = $request->category_id;
         $vehicle->model = $request->model;
@@ -357,7 +340,7 @@ class VehicleController extends Controller
 
         $language = getWebConfig('language') ?? [];
         $defaultLang = str_replace('_', '-', app()->getLocale());
-        return view('rental::admin.vehicle.details', compact('vehicle', 'language', 'defaultLang'));
+        return view('rental::provider.vehicle.details', compact('vehicle', 'language', 'defaultLang'));
     }
 
 
@@ -452,13 +435,6 @@ class VehicleController extends Controller
         $vehicle->delete();
 
         Toastr::success(translate('messages.vehicle_deleted_successfully'));
-
-        if ($request->vehicle_list){
-            return to_route('admin.rental.provider.vehicle.list');
-        }elseIf($request->provider_vehicle_list){
-            return to_route('admin.rental.provider.details',['id' => $request->provider_id, 'tab' => 'vehicle']);
-        }
-
         return back();
     }
 
@@ -469,7 +445,9 @@ class VehicleController extends Controller
      */
     public function export(Request $request): \Symfony\Component\HttpFoundation\BinaryFileResponse
     {
+        $providerId = auth('vendor')->user()->stores[0]->id;
         $vehicles = $this->vehicle
+            ->ofProvider($providerId)
             ->when($request->has('search'), function ($query) use ($request) {
                 $keys = explode(' ', $request['search']);
                 foreach ($keys as $key) {

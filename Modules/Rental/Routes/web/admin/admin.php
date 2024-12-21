@@ -24,7 +24,7 @@ use Modules\Rental\Http\Controllers\Web\Admin\SettingsController;
 |
 */
 
-Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'middleware' => ['admin', 'current-module']], function () {
+Route::group(['middleware' => ['admin', 'current-module']], function () {
     Route::group(['prefix' => 'rental', 'as' => 'rental.'], function () {
         Route::get('/', [DashboardController::class, 'dashboard'])->name('dashboard');
 

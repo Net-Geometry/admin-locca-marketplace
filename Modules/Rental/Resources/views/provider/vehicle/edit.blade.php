@@ -1,6 +1,6 @@
-@extends('layouts.admin.app')
+@extends('layouts.vendor.app')
 
-@section('title', translate('messages.Provider Details - update Vehicle'))
+@section('title', translate('messages.update Vehicle'))
 
 @section('content')
     <div class="content container-fluid">
@@ -17,17 +17,6 @@
                 </div>
             </div>
         </div>
-        @php
-            $delivery_time_start = preg_match('([0-9]+[\-][0-9]+\s[min|hours|days])', $store->delivery_time ?? '')
-                ? explode('-', $store->delivery_time)[0]
-                : 10;
-            $delivery_time_end = preg_match('([0-9]+[\-][0-9]+\s[min|hours|days])', $store->delivery_time ?? '')
-                ? explode(' ', explode('-', $store->delivery_time)[1])[0]
-                : 30;
-            $delivery_time_type = preg_match('([0-9]+[\-][0-9]+\s[min|hours|days])', $store->delivery_time ?? '')
-                ? explode(' ', explode('-', $store->delivery_time)[1])[1]
-                : 'min';
-        @endphp
         @php($language = \App\Models\BusinessSetting::where('key', 'language')->first())
         @php($language = $language->value ?? null)
         @php($defaultLang = 'en')
@@ -128,38 +117,6 @@
 
                                 </div>
                                 <div class="col-lg-6">
-                                    {{-- <div class="text-center">
-                                        <label class="text--title fs-16 font-semibold mb-1">
-                                            {{ translate('Vehicle_Thumbnail') }}
-                                        </label>
-                                        <div class="mb-20">
-                                            <p class="fs-12">
-                                                JPG, JPEG, PNG Less Than 1MB <strong class="font-semibold">(Ratio
-                                                    2:1)</strong>
-                                            </p>
-                                        </div>
-                                        <div class="upload-file text-wrapper">
-                                            <input type="file" name="thumbnail"
-                                                   class="upload-file__input single_file_input" accept=".jpg, .jpeg, .png"
-                                                   required>
-                                            <div
-                                                class="upload-file__img d-flex justify-content-center align-items-center height-150px max-w-300px m-auto p-0">
-                                                <div class="upload-file__textbox text-center">
-                                                    <img width="34" height="34"
-                                                         src="{{ asset('public/assets/admin/img/document-upload.png') }}"
-                                                         alt="" class="svg">
-                                                    <h6 class="mt-2 font-semibold">
-                                                        <span class="text-info">{{ translate('Click to upload') }}</span>
-                                                        <br>
-                                                        {{ translate('or drag and drop') }}
-                                                    </h6>
-                                                </div>
-                                                <img class="upload-file__img__img ratio-2" src="{{ $vehicle['thumbnail_full_url'] }}" width="300" height="150"
-                                                     loading="lazy" style="display: none;" alt="">
-                                            </div>
-                                        </div>
-
-                                    </div> --}}
                                     <div class="text-center">
                                         <label class="text--title fs-16 font-semibold mb-1">
                                             {{ translate('Vehicle_Thumbnail') }}
@@ -174,7 +131,7 @@
                                                 <i class="tio-clear"></i>
                                             </a>
                                             <input type="file" name="thumbnail" class="upload-file__input single_file_input"
-                                                accept=".jpg, .jpeg, .png"  value="{{ $vehicle['thumbnail_full_url'] ?? '' }}">
+                                                accept=".jpg, .jpeg, .png"  value="{{ $vehicle->thumbnail ?? '' }}">
                                             <label
                                                 class="upload-file-wrapper height-150px max-w-300px aspect-2-1">
                                                 <div class="upload-file-textbox text-center w-100">
@@ -196,30 +153,6 @@
                     </div>
                 </div>
                 <div class="col-lg-12">
-                    {{-- <div class="card">
-                        <div class="row g-3">
-                            <div class="col-md-6 pb-0">
-                                <div class="row g-2">
-                                    <div class="col-12 pb-0">
-                                        <div class="form-group mb-0">
-                                            <label class="input-label" for="exampleFormControlInput1">{{translate('messages.images')}}
-                                        </div>
-                                    </div>
-                                    @foreach($vehicle['images_full_url'] as $img)
-                                        <div class="col-6 spartan_item_wrapper size--sm">
-                                            <img class="rounded border" src="{{ $img }}">
-                                        </div>
-                                    @endforeach
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="input-label" for="exampleFormControlInput1">{{translate('messages.update_identity_image')}}</label>
-                                <div>
-                                    <div class="row g-2 mt-0" id="multiImg"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div> --}}
                     <div class="card">
                         <div class="card-header">
                             <div>
@@ -283,19 +216,6 @@
                             <div class="row g-3">
                                 <div class="col-lg-4">
                                     <div class="form-group mb-0">
-                                        <label class="input-label" for="choice_provider">{{ translate('messages.provider') }}
-                                        </label>
-                                        <select name="provider_id" id="choice_provider" class="form-control js-select2-custom"
-                                                data-placeholder="{{ translate('messages.select_vehicle_provider') }}">
-                                            <option value="" selected disabled>{{ translate('messages.select_vehicle_provider') }}</option>
-                                            @foreach($providers as $provider)
-                                                <option value="{{ $provider->id }}" {{ $vehicle->provider_id == $provider->id ? 'selected' : '' }}>{{ $provider->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4">
-                                    <div class="form-group mb-0">
                                         <label class="input-label" for="choice_brand">{{ translate('messages.brand') }}
                                         </label>
                                         <select name="brand_id" id="choice_brand" class="form-control js-select2-custom"
@@ -307,6 +227,7 @@
                                         </select>
                                     </div>
                                 </div>
+
                                 <div class="col-lg-4">
                                     <div class="form-group mb-0">
                                         <label class="input-label"
@@ -615,39 +536,6 @@
                     </div>
                 </div>
                 <div class="col-lg-12">
-                    {{-- <div class="card">
-                        <div class="row g-3">
-                            <div class="col-md-6 pb-0">
-                                <div class="row g-2">
-                                    <div class="col-12 pb-0">
-                                        <div class="form-group mb-0">
-                                            <div class="card-header">
-                                                <div>
-                                                    <h5 class="text-title mb-1">
-                                                        {{ translate('messages.Vehicle_Documents') }}
-                                                    </h5>
-                                                    <p class="fs-12 mb-0">
-                                                        {{ translate('messages.Provider Logo & Covers') }}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    @foreach($vehicle['documents_full_url'] as $img)
-                                        <div class="col-6 spartan_item_wrapper size--sm">
-                                            <img class="rounded border" src="{{ $img }}">
-                                        </div>
-                                    @endforeach
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="input-label" for="exampleFormControlInput1">{{translate('messages.update_identity_image')}}</label>
-                                <div>
-                                    <div class="row g-2 mt-0" id="multiDoc"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div> --}}
                     <div class="card">
                         <div class="card-header">
                             <div>
@@ -998,7 +886,7 @@
                 // Example of sending the form data via AJAX (uncomment to use)
 
                 $.ajax({
-                    url: '{{ route('admin.rental.provider.vehicle.edit', $vehicle->id)}}',  // Replace with your endpoint
+                    url: '{{ route('vendor.vehicle.edit', $vehicle->id)}}',
                     method: 'POST',
                     data: formData,
                     contentType: false,

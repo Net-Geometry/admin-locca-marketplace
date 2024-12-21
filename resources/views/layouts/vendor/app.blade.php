@@ -6,7 +6,11 @@
         $site_direction = session()->has('vendor_site_direction')?session()->get('vendor_site_direction'):'ltr';
     }
     $country=\App\Models\BusinessSetting::where('key','country')->first();
-$countryCode= strtolower($country?$country->value:'auto');
+    $countryCode= strtolower($country?$country->value:'auto');
+
+    $storeId = \App\CentralLogics\Helpers::get_store_id();
+    $store = \App\Models\Store::findOrFail($storeId);
+    $moduleType = $store?->module?->module_type;
 ?>
 {{-- {{ dd($countryCode) }} --}}
 <html dir="{{ $site_direction }}" lang="{{ str_replace('_', '-', app()->getLocale()) }}"  class="{{ $site_direction === 'rtl'?'active':'' }}">
@@ -18,7 +22,7 @@ $countryCode= strtolower($country?$country->value:'auto');
     <!-- Title -->
     <title>@yield('title')</title>
     <!-- Favicon -->
-    @php($logo=\App\Models\BusinessSetting::where(['key'=>'icon'])->first())
+    @php($logo = \App\Models\BusinessSetting::where(['key'=>'icon'])->first())
     <link rel="shortcut icon" href="">
     <link rel="icon" type="image/x-icon" href="{{\App\CentralLogics\Helpers::get_full_url('business', $logo?->value?? '', $logo?->storage[0]?->value ?? 'public','favicon')}}">
     <!-- Font -->
@@ -65,7 +69,12 @@ $countryCode= strtolower($country?$country->value:'auto');
 
 <!-- JS Preview mode only -->
 @include('layouts.vendor.partials._header')
-@include('layouts.vendor.partials._sidebar')
+
+    @if( isset($moduleType) && $moduleType == 'rental')
+        @include("rental::provider.partials._sidebar_{$moduleType}")
+    @else
+        @include('layouts.vendor.partials._sidebar')
+    @endif
 <!-- END ONLY DEV -->
 
 <main id="content" role="main" class="main pointer-event">

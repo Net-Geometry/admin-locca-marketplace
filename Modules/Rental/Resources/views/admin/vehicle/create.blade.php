@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('messages.Provider Details - Add New Vehicale'))
+@section('title', translate('messages.Provider Details - Add New Vehicle'))
 
 @section('content')
     <div class="content container-fluid">
@@ -17,17 +17,6 @@
                 </div>
             </div>
         </div>
-        @php
-            $delivery_time_start = preg_match('([0-9]+[\-][0-9]+\s[min|hours|days])', $store->delivery_time ?? '')
-                ? explode('-', $store->delivery_time)[0]
-                : 10;
-            $delivery_time_end = preg_match('([0-9]+[\-][0-9]+\s[min|hours|days])', $store->delivery_time ?? '')
-                ? explode(' ', explode('-', $store->delivery_time)[1])[0]
-                : 30;
-            $delivery_time_type = preg_match('([0-9]+[\-][0-9]+\s[min|hours|days])', $store->delivery_time ?? '')
-                ? explode(' ', explode('-', $store->delivery_time)[1])[1]
-                : 'min';
-        @endphp
         @php($language = \App\Models\BusinessSetting::where('key', 'language')->first())
         @php($language = $language->value ?? null)
         @php($defaultLang = 'en')

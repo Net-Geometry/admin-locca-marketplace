@@ -50,6 +50,16 @@ class Vehicle extends Model
     }
 
     /**
+     * @param $query
+     * @param $providerId
+     * @return void
+     */
+    public function scopeOfProvider($query, $providerId): void
+    {
+        $query->where('provider_id', '=', $providerId);
+    }
+
+    /**
      * @return BelongsTo
      */
     public function provider(): \Illuminate\Database\Eloquent\Relations\BelongsTo
