@@ -13,7 +13,7 @@ use Modules\Rental\Entities\RentalCartUserData;
 
 class CartController extends Controller
 {
-    public function __construct(private RentalCart $cart, private RentalCartUserData $user_data, private Helpers $helpers,private Vehicle $vehicle,)
+    public function __construct(private RentalCart $cart, private RentalCartUserData $user_data, private Helpers $helpers, private Vehicle $vehicle,)
     {
         $this->cart = $cart;
         $this->helpers = $helpers;
@@ -21,7 +21,8 @@ class CartController extends Controller
         $this->vehicle = $vehicle;
     }
 
-    public function getCartList(Request $request){
+    public function getCartList(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'guest_id' => $request->user ? 'nullable' : 'required',
         ]);
@@ -32,24 +33,21 @@ class CartController extends Controller
         $user_id = $request->user ? $request->user->id : $request['guest_id'];
         $is_guest = $request->user ? 0 : 1;
 
-     $user_data=   $this->user_data->where('user_id', $user_id->where('is_guest' , $is_guest))->first();
+        $user_data =   $this->user_data->where('user_id', $user_id)->where('is_guest', $is_guest)->first() ?? [];
+        $carts = $this->cart->where('user_id', $user_id)->where('is_guest', $is_guest)->where('module_id', $request->header('moduleId'))->with('vehicles')->get();
 
-
-
-
-        $carts = $this->cart->where('user_id', $user_id)->where('is_guest',$is_guest)->where('module_id',$request->header('moduleId'))->with('vehicles')->get();
-
-        $data =[
+        $data = [
             'carts' => $carts,
             'user_data' => $user_data,
         ];
         return response()->json($data, 200);
     }
 
-    public function addToCart(Request $request){
+    public function addToCart(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'guest_id' => $request->user ? 'nullable' : 'required',
-            'vehicle_id' =>'required',
+            'vehicle_id' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -58,9 +56,9 @@ class CartController extends Controller
         $user_id = $request->user ? $request->user->id : $request['guest_id'];
         $is_guest = $request->user ? 0 : 1;
 
-        $vehicle=$this->vehicle->where('id',$request->vehicle_id)->first();
+        $vehicle = $this->vehicle->where('id', $request->vehicle_id)->first();
 
-        if($this->cart->where('vehicle_id',$request->vehicle_id)->where('user_id', $user_id)->where('is_guest',$is_guest)->where('module_id',$request->header('moduleId'))->exists()){
+        if ($this->cart->where('vehicle_id', $request->vehicle_id)->where('user_id', $user_id)->where('is_guest', $is_guest)->where('module_id', $request->header('moduleId'))->exists()) {
             return response()->json([
                 'errors' => [
                     ['code' => 'cart_item', 'message' => translate('messages.Item_already_exists')]
@@ -68,16 +66,15 @@ class CartController extends Controller
             ], 403);
         }
 
-
-        $user_data = $this->user_data->where('user_id', $user_id)->where('is_guest' , $is_guest)->firstOrNew();
-        $user_data->pickup_location = $request->pickup_location;
-        $user_data->destination_location = $request->pickup_destination_locationlocation;
-        $user_data->pickup_time = $request->pickup_time ?? now();
-        $user_data->rental_type = $request->rental_type;
-        $user_data->estimated_hours = $request->estimated_hours ?? 0;
+        $user_data = $this->user_data->where('user_id', $user_id)->where('is_guest', $is_guest)->firstOrNew();
+        $user_data->user_id = $user_id;
+        $user_data->pickup_location = $request->pickup_location ?? $user_data?->pickup_location;
+        $user_data->destination_location = $request->destination_location ?? $user_data?->destination_location;
+        $user_data->pickup_time = $request->pickup_time ?? $user_data?->pickup_time ?? now();
+        $user_data->rental_type = $request->rental_type ?? $user_data?->rental_type ?? 'hourly';
+        $user_data->estimated_hours = $user_data->rental_type == 'hourly' ? $request->estimated_hours ??  $user_data?->estimated_hours ?? 0 : 0;
         $user_data->is_guest = $is_guest;
         $user_data->save();
-
 
         $carts = $this->cart;
         $carts->user_id = $user_id;
@@ -88,10 +85,9 @@ class CartController extends Controller
         $carts->module_id = $request->header('moduleId');
         $carts->save();
 
-        $carts = $this->cart->where('user_id', $user_id)->where('is_guest',$is_guest)->where('module_id',$request->header('moduleId'))->with('vehicles')->get();
+        $carts = $this->cart->where('user_id', $user_id)->where('is_guest', $is_guest)->where('module_id', $request->header('moduleId'))->with('vehicles')->get();
 
-
-        $data =[
+        $data = [
             'carts' => $carts,
             'user_data' => $user_data,
         ];
@@ -113,27 +109,26 @@ class CartController extends Controller
         $user_id = $request->user ? $request->user->id : $request['guest_id'];
         $is_guest = $request->user ? 0 : 1;
 
-        $cart = $this->cart->where('id',$request->cart_id)->first();
+        $cart = $this->cart->where('id', $request->cart_id)->first();
+        if(!$cart){
+            return response()->json(['errors' => translate('cart_not_found')], 404);
+        }
         $cart->user_id = $user_id;
         $cart->is_guest = $is_guest;
         $cart->quantity = $request->quantity ?? 1;
         $cart->save();
-        $carts = $this->cart->where('user_id', $user_id)->where('is_guest',$is_guest)->where('module_id',$request->header('moduleId'))->with('vehicles')->get();
+        $carts = $this->cart->where('user_id', $user_id)->where('is_guest', $is_guest)->where('module_id', $request->header('moduleId'))->with('vehicles')->get();
 
-
-
-        $user_data = $this->user_data->where('user_id', $user_id)->where('is_guest' , $is_guest)->firstOrNew();
-        $user_data->pickup_location = $request->pickup_location ?? $user_data?->pickup_location ;
-        $user_data->destination_location = $request->pickup_destination_locationlocation ?? $user_data?->destination_location;
+        $user_data = $this->user_data->where('user_id', $user_id)->where('is_guest', $is_guest)->firstOrNew();
+        $user_data->pickup_location = $request->pickup_location ?? $user_data?->pickup_location;
+        $user_data->destination_location = $request->destination_location ?? $user_data?->destination_location;
         $user_data->pickup_time = $request->pickup_time ?? $user_data?->pickup_time ?? now();
         $user_data->rental_type = $request->rental_type ?? $user_data?->rental_type;
-        $user_data->estimated_hours = $request->estimated_hours ??  $user_data?->estimated_hours??0 ;
+        $user_data->estimated_hours = $user_data->rental_type == 'hourly' ? $request->estimated_hours ??  $user_data?->estimated_hours ?? 0 : 0;
         $user_data->is_guest = $is_guest;
         $user_data->save();
 
-
-
-        $data =[
+        $data = [
             'carts' => $carts,
             'user_data' => $user_data,
         ];
@@ -154,12 +149,18 @@ class CartController extends Controller
         $user_id = $request->user ? $request->user->id : $request['guest_id'];
         $is_guest = $request->user ? 0 : 1;
 
-        $this->cart->where('id',$request->cart_id)->where('user_id', $user_id)->where('is_guest',$is_guest)->delete();
+        $this->cart->where('id', $request->cart_id)->where('user_id', $user_id)->where('is_guest', $is_guest)->delete();
+        $user_data =   $this->user_data->where('user_id', $user_id)->where('is_guest', $is_guest)->first();
 
-        $carts = $this->cart->where('user_id', $user_id)->where('is_guest',$is_guest)->where('module_id',$request->header('moduleId'))->with('vehicles')->get();
+        $carts = $this->cart->where('user_id', $user_id)->where('is_guest', $is_guest)->where('module_id', $request->header('moduleId'))->with('vehicles')->get();
 
-        return response()->json($carts, 200);
+        $data = [
+            'carts' => $carts,
+            'user_data' => $user_data,
+        ];
+        return response()->json($data, 200);
     }
+
     public function removeCart(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -172,11 +173,13 @@ class CartController extends Controller
         $user_id = $request->user ? $request->user->id : $request['guest_id'];
         $is_guest = $request->user ? 0 : 1;
 
-        $this->user_data->where('user_id', $user_id)->where('is_guest' , $is_guest)->delete();
-        $this->cart->where('user_id', $user_id)->where('is_guest',$is_guest)->delete();
-        $carts = $this->cart->where('user_id', $user_id)->where('is_guest',$is_guest)->where('module_id',$request->header('moduleId'))->with('vehicles')->get();
+        $this->user_data->where('user_id', $user_id)->where('is_guest', $is_guest)->delete();
+        $this->cart->where('user_id', $user_id)->where('is_guest', $is_guest)->delete();
 
-        return response()->json($carts, 200);
+        $data = [
+            'carts' => [],
+            'user_data' => [],
+        ];
+        return response()->json($data, 200);
     }
-
 }
