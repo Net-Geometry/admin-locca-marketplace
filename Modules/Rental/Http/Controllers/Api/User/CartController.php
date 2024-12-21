@@ -150,7 +150,7 @@ class CartController extends Controller
         $is_guest = $request->user ? 0 : 1;
 
         $this->cart->where('id', $request->cart_id)->where('user_id', $user_id)->where('is_guest', $is_guest)->delete();
-        $user_data =   $this->user_data->where('user_id', $user_id)->where('is_guest', $is_guest)->first();
+        $user_data =   $this->user_data->where('user_id', $user_id)->where('is_guest', $is_guest)->first()?? [];
 
         $carts = $this->cart->where('user_id', $user_id)->where('is_guest', $is_guest)->where('module_id', $request->header('moduleId'))->with('vehicles')->get();
 
