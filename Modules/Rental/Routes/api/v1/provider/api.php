@@ -12,8 +12,10 @@ use Modules\Rental\Http\Controllers\Api\Public\CouponController as Coupon;
 use Modules\Rental\Http\Controllers\Api\Public\BannerController as Banner;
 use Modules\Rental\Http\Controllers\Api\Public\VehicleController as Vehicle;
 use Modules\Rental\Http\Controllers\Api\Public\VehicleCategoryController as VehicleCategory;
+use Modules\Rental\Http\Controllers\Api\Public\VehicleBrandController as VehicleBrand;
 use Modules\Rental\Http\Controllers\Api\Public\ProviderController as Provider;
 use Modules\Rental\Http\Controllers\Api\User\CartController;
+use Modules\Rental\Http\Controllers\Api\User\TripController;
 
 /*
 |--------------------------------------------------------------------------
@@ -97,6 +99,7 @@ Route::group(['prefix' => 'rental', 'as' => 'rental.',  'middleware' =>  ['local
         Route::get('get-vehicle-details/{vehicle}', [Vehicle::class, 'getVehicleDetails']);
 
         Route::get('category-list/', [VehicleCategory::class, 'vehicleCategoryList']);
+        Route::get('brand-list/', [VehicleBrand::class, 'vehicleBrandList']);
     });
 
     Route::group(['prefix' => 'provider'], function () {
@@ -111,7 +114,9 @@ Route::group(['prefix' => 'rental', 'as' => 'rental.',  'middleware' =>  ['local
             Route::Put('update-cart', [CartController::class, 'updateCart']);
             Route::delete('remove-vehicle/{cart_id}', [CartController::class, 'removeVehicle']);
             Route::delete('remove-cart', [CartController::class, 'removeCart']);
-
+        });
+        Route::group(['prefix' => 'trip'], function () {
+            Route::Post('trip-booking', [TripController::class, 'TripBooking']);
         });
     });
 

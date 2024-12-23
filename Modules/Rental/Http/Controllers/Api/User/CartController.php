@@ -34,7 +34,7 @@ class CartController extends Controller
         $is_guest = $request->user ? 0 : 1;
 
         $user_data =   $this->user_data->where('user_id', $user_id)->where('is_guest', $is_guest)->first() ?? [];
-        $carts = $this->cart->where('user_id', $user_id)->where('is_guest', $is_guest)->where('module_id', $request->header('moduleId'))->with('vehicles')->get();
+        $carts = $this->cart->where('user_id', $user_id)->where('is_guest', $is_guest)->where('module_id', $request->header('moduleId'))->with(['vehicles','provider:id,name'])->get();
 
         $data = [
             'carts' => $carts,
@@ -70,9 +70,10 @@ class CartController extends Controller
         $user_data->user_id = $user_id;
         $user_data->pickup_location = $request->pickup_location ?? $user_data?->pickup_location;
         $user_data->destination_location = $request->destination_location ?? $user_data?->destination_location;
-        $user_data->pickup_time = $request->pickup_time ?? $user_data?->pickup_time ?? now();
+        $user_data->pickup_time = $request->pickup_time ? \Carbon\Carbon::parse($request->pickup_time) : $user_data?->pickup_time ?? now();
         $user_data->rental_type = $request->rental_type ?? $user_data?->rental_type ?? 'hourly';
         $user_data->estimated_hours = $user_data->rental_type == 'hourly' ? $request->estimated_hours ??  $user_data?->estimated_hours ?? 0 : 0;
+        $user_data->distance = $user_data->rental_type != 'hourly' ? $request->distance ??  $user_data?->distance ?? 0 : 0;
         $user_data->is_guest = $is_guest;
         $user_data->save();
 
@@ -85,7 +86,7 @@ class CartController extends Controller
         $carts->module_id = $request->header('moduleId');
         $carts->save();
 
-        $carts = $this->cart->where('user_id', $user_id)->where('is_guest', $is_guest)->where('module_id', $request->header('moduleId'))->with('vehicles')->get();
+        $carts = $this->cart->where('user_id', $user_id)->where('is_guest', $is_guest)->where('module_id', $request->header('moduleId'))->with(['vehicles','provider:id,name'])->get();
 
         $data = [
             'carts' => $carts,
@@ -117,14 +118,15 @@ class CartController extends Controller
         $cart->is_guest = $is_guest;
         $cart->quantity = $request->quantity ?? 1;
         $cart->save();
-        $carts = $this->cart->where('user_id', $user_id)->where('is_guest', $is_guest)->where('module_id', $request->header('moduleId'))->with('vehicles')->get();
+        $carts = $this->cart->where('user_id', $user_id)->where('is_guest', $is_guest)->where('module_id', $request->header('moduleId'))->with(['vehicles','provider:id,name'])->get();
 
         $user_data = $this->user_data->where('user_id', $user_id)->where('is_guest', $is_guest)->firstOrNew();
         $user_data->pickup_location = $request->pickup_location ?? $user_data?->pickup_location;
         $user_data->destination_location = $request->destination_location ?? $user_data?->destination_location;
-        $user_data->pickup_time = $request->pickup_time ?? $user_data?->pickup_time ?? now();
+        $user_data->pickup_time = $request->pickup_time ? \Carbon\Carbon::parse($request->pickup_time) : $user_data?->pickup_time ?? now();
         $user_data->rental_type = $request->rental_type ?? $user_data?->rental_type;
         $user_data->estimated_hours = $user_data->rental_type == 'hourly' ? $request->estimated_hours ??  $user_data?->estimated_hours ?? 0 : 0;
+        $user_data->distance = $user_data->rental_type != 'hourly' ? $request->distance ??  $user_data?->distance ?? 0 : 0;
         $user_data->is_guest = $is_guest;
         $user_data->save();
 
@@ -152,7 +154,7 @@ class CartController extends Controller
         $this->cart->where('id', $request->cart_id)->where('user_id', $user_id)->where('is_guest', $is_guest)->delete();
         $user_data =   $this->user_data->where('user_id', $user_id)->where('is_guest', $is_guest)->first()?? [];
 
-        $carts = $this->cart->where('user_id', $user_id)->where('is_guest', $is_guest)->where('module_id', $request->header('moduleId'))->with('vehicles')->get();
+        $carts = $this->cart->where('user_id', $user_id)->where('is_guest', $is_guest)->where('module_id', $request->header('moduleId'))->with(['vehicles','provider:id,name'])->get();
 
         $data = [
             'carts' => $carts,

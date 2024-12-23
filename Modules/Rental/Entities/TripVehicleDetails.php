@@ -5,16 +5,15 @@ namespace Modules\Rental\Entities;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class RentalCartUserData extends Model
+class TripVehicleDetails extends Model
 {
     use HasFactory;
 
     protected $guarded = ['id'];
     protected $casts = [
-        'user_id' => 'integer',
-        'estimated_hours' => 'float',
-        'distance' => 'float',
-        'is_guest' => 'integer',
+        'trip_id' => 'integer',
+        'vehicle_id' => 'integer',
+        'vehicle_identity_id' => 'integer',
+        'vehicle_driver_id' => 'integer',
     ];
-
 }

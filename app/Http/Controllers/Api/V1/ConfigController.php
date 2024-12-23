@@ -458,7 +458,7 @@ class ConfigController extends Controller
 
     public function react_landing_page()
     {
-        $datas = DataSetting::with('translations')->where('type', 'react_landing_page')->get();
+        $datas = DataSetting::with('translations')->whereIn('type', ['react_landing_page' ,'module_home_page_data','module_vendor_registration_data'])->get();
         $data = [];
         foreach ($datas as $key => $value) {
             if (count($value->translations) > 0) {
@@ -568,6 +568,22 @@ class ConfigController extends Controller
                 'available_zone_image' => (isset($settings['available_zone_image'])) ? $settings['available_zone_image'] : null,
                 'available_zone_image_full_url' => Helpers::get_full_url('available_zone_image', (isset($settings['available_zone_image'])) ? $settings['available_zone_image'] : null, (isset($settings['available_zone_image_storage'])) ? $settings['available_zone_image_storage'] : 'public'),
                 'available_zone_list' => $zones,
+
+
+
+                'module_home_page_data_title' => (isset($settings['module_home_page_data_title'])) ? $settings['module_home_page_data_title'] : null,
+                'module_home_page_data_sub_title' => (isset($settings['module_home_page_data_sub_title'])) ? $settings['module_home_page_data_sub_title'] : null,
+                'module_home_page_data_image' => isset($settings['module_home_page_data_image'])?
+
+                Helpers::get_full_url('react_landing', $settings['module_home_page_data_image']?? '', $settings['module_home_page_data_image_storage']?? 'public','upload_image_1' ) : '',
+
+                'module_vendor_registration_data_title' => (isset($settings['module_vendor_registration_data_title'])) ? $settings['module_vendor_registration_data_title'] : null,
+                'module_vendor_registration_data_sub_title' => (isset($settings['module_vendor_registration_data_sub_title'])) ? $settings['module_vendor_registration_data_sub_title'] : null,
+                'module_vendor_registration_data_button_title' => (isset($settings['module_vendor_registration_data_button_title'])) ? $settings['module_vendor_registration_data_button_title'] : null,
+                'module_vendor_registration_data_image' =>
+                isset($settings['module_vendor_registration_data_image'])?
+                Helpers::get_full_url('react_landing', $settings['module_vendor_registration_data_image']?? '', $settings['module_vendor_registration_data_image_storage']?? 'public','upload_image_1' ) : '',
+
             ]);
     }
 
