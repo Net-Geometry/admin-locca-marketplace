@@ -17,4 +17,18 @@ class RentalCartUserData extends Model
         'is_guest' => 'integer',
     ];
 
+    public function getPickupLocationAttribute($value)
+    {
+        if ($value) {
+            return json_decode($value, true);
+        }
+        return $value;
+    }
+    public function getDestinationLocationAttribute($value)
+    {
+        if ($value) {
+            return json_decode($value, true);
+        }
+        return $value;
+    }
 }

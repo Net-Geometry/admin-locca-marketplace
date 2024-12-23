@@ -21,7 +21,6 @@ class CreateTripsTable extends Migration
             $table->foreignId('zone_id');
             $table->foreignId('module_id');
             $table->foreignId('cash_back_id')->nullable();
-            $table->foreignId('trip_details_id')->nullable();
             $table->double('trip_amount',23, 8)->default(0);
             $table->double('discount_on_trip',23, 8)->default(0);
             $table->enum('discount_on_trip_by',['admin','vendor','none'])->default('none');
@@ -29,7 +28,7 @@ class CreateTripsTable extends Migration
             $table->enum('coupon_discount_by',['admin','vendor','none'])->default('none');
             $table->string('coupon_code',100)->nullable();
             $table->enum('trip_status',['pending','confirmed','ongoing','completed','canceled','payment_failed','processing','waiting'])->default('pending');
-            $table->enum('paymet_status',['paid','unpaid','partially_paid'])->default('unpaid');
+            $table->enum('payment_status',['paid','unpaid','partially_paid'])->default('unpaid');
             $table->string('payment_method',100)->nullable();
             $table->string('transaction_reference',100)->nullable();
             $table->double('tax_amount',23, 8)->default(0);

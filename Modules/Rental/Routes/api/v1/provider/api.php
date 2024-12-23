@@ -107,16 +107,20 @@ Route::group(['prefix' => 'rental', 'as' => 'rental.',  'middleware' =>  ['local
         Route::get('get-provider-reviews/{provider}', [Provider::class, 'getProvidereReviews']);
     });
 
-    Route::group(['prefix' => 'user' ,'middleware' => ['module-check','apiGuestCheck' ,'auth:api']], function () {
+    Route::group(['prefix' => 'user' ,'middleware' => ['module-check','apiGuestCheck']], function () {
         Route::group(['prefix' => 'cart'], function () {
             Route::get('get-cart', [CartController::class, 'getCartList']);
             Route::Post('add-to-cart', [CartController::class, 'addToCart']);
             Route::Put('update-cart', [CartController::class, 'updateCart']);
+            Route::Put('update-user-data/{user_data}', [CartController::class, 'updateUserData']);
             Route::delete('remove-vehicle/{cart_id}', [CartController::class, 'removeVehicle']);
             Route::delete('remove-cart', [CartController::class, 'removeCart']);
         });
-        Route::group(['prefix' => 'trip'], function () {
-            Route::Post('trip-booking', [TripController::class, 'TripBooking']);
+        Route::group( ['middleware' => ['module-check','apiGuestCheck','auth:api']], function () {
+            Route::group(['prefix' => 'trip'], function () {
+                Route::Post('trip-booking', [TripController::class, 'TripBooking']);
+            });
+
         });
     });
 

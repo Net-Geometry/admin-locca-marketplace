@@ -754,4 +754,19 @@ class ConfigController extends Controller
         return $data;
     }
 
+    public function direction_api(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'origin_lat' => 'required',
+            'origin_lng' => 'required',
+            'destination_lat' => 'required',
+            'destination_lng' => 'required',
+        ]);
+
+        if ($validator->errors()->count() > 0) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        }
+        $response = Http::get('https://maps.googleapis.com/maps/api/directions/json?origin=' . $request['origin_lat'] . ',' . $request['origin_lng'] . '&destination=' . $request['destination_lat'] . ',' . $request['destination_lng'] . '&key=' . $this->map_api_key . '&mode=driving');
+        return $response->json();
+    }
 }
