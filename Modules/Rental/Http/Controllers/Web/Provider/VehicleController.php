@@ -435,6 +435,9 @@ class VehicleController extends Controller
         $vehicle->delete();
 
         Toastr::success(translate('messages.vehicle_deleted_successfully'));
+        if ($request->vehicle_list){
+            return to_route('vendor.vehicle.list');
+        }
         return back();
     }
 

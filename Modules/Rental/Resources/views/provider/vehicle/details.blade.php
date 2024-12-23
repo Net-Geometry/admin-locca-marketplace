@@ -27,7 +27,7 @@
                         {{ translate('messages.delete') }}
                     </a>
 
-                    <form action="{{route('vendor.vehicle.delete',[$vehicle['id']])}}" method="post" id="vehicle-{{$vehicle->id}}">
+                    <form action="{{route('vendor.vehicle.delete',[$vehicle['id']])}}?vehicle_list={{request()->vehicle_list}}" method="post" id="vehicle-{{$vehicle->id}}">
                         @csrf @method('delete')
                     </form>
                     <a href="javascript:" class="btn btn--reset d-flex justify-content-between align-items-center gap-4 lh--1 h--45px">

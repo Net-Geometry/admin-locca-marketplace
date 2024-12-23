@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\Rental\Http\Controllers\Web\Provider\ProviderController;
 use Modules\Rental\Http\Controllers\Web\Provider\VehicleController;
 
 /*
@@ -27,6 +28,17 @@ Route::group([ 'middleware' => ['vendor']], function () {
         Route::delete('delete/{id}', [VehicleController::class, 'destroy'])->name('delete');
         Route::get('export', [VehicleController::class, 'export'])->name('export');
     });
+
+    Route::group(['prefix' => 'category', 'as' => 'category.'], function () {
+        Route::get('list', [ProviderController::class, 'categoryList'])->name('list');
+        Route::get('export', [ProviderController::class, 'categoryExport'])->name('export');
+    });
+
+    Route::group(['prefix' => 'brand', 'as' => 'brand.'], function () {
+        Route::get('list', [ProviderController::class, 'brandList'])->name('list');
+        Route::get('export', [ProviderController::class, 'brandExport'])->name('export');
+    });
+
 });
 
 
