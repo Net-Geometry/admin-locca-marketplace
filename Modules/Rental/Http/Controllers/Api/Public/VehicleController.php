@@ -141,6 +141,7 @@ class VehicleController extends Controller
 
         $brand_ids = json_decode($request->brand_ids, true) ?? null;
         $category_ids = json_decode($request->category_ids, true) ?? null;
+        $seating_capacity = json_decode($request->seating_capacity, true) ?? null;
 
 
         $vehicles = $this->vehicle->whereIn('zone_id', $zone_id)
@@ -148,16 +149,16 @@ class VehicleController extends Controller
             ->when($request->provider_id, function ($query) use ($request) {
                 $query->where('provider_id', $request->provider_id);
             })
-            ->when($request->trip_typ == 'hourly', function ($query) {
+            ->when($request->trip_type == 'hourly', function ($query) {
                 $query->where('trip_hourly', 1);
             })
-            ->when($request->trip_typ == 'distance_wise', function ($query) {
+            ->when($request->trip_type == 'distance_wise', function ($query) {
                 $query->where('trip_distance', 1);
             })
-            ->when($request->trip_typ == 'distance_wise'  && $request->min_price > 0 && $request->max_price > 0, function ($query) use ($request) {
+            ->when($request->trip_type == 'distance_wise'  && $request->min_price > 0 && $request->max_price > 0, function ($query) use ($request) {
                 $query->wherebetween('distance_price', [$request->min_price, $request->max_price]);
             })
-            ->when($request->trip_typ == 'hourly'  && $request->min_price > 0 && $request->max_price > 0, function ($query) use ($request) {
+            ->when($request->trip_type == 'hourly'  && $request->min_price > 0 && $request->max_price > 0, function ($query) use ($request) {
                 $query->wherebetween('hourly_price', [$request->min_price, $request->max_price]);
             })
             ->when($request->filled('name'), function ($query) use ($request) {
@@ -172,8 +173,8 @@ class VehicleController extends Controller
             ->when($category_ids, function ($query) use ($category_ids) {
                 $query->whereIn('category_id', $category_ids);
             })
-            ->when($request->seating_capacity, function ($query) use ($request) {
-                $query->where('seating_capacity', $request->seating_capacity);
+            ->when($seating_capacity, function ($query) use ($seating_capacity) {
+                $query->whereIn('seating_capacity', $seating_capacity);
             })
             ->when($request->air_condition, function ($query) {
                 $query->where('air_condition', 1);
@@ -191,5 +192,5 @@ class VehicleController extends Controller
 
         return $vehicles;
     }
-    
+
 }

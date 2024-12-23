@@ -2,6 +2,7 @@
 
 namespace Modules\Rental\Entities;
 
+use App\Models\Store;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -20,6 +21,10 @@ class RentalCart extends Model
 
     public function vehicles()
     {
-        return $this->hasMany(Vehicle::class,'id','vehicle_id');
+        return $this->belongsTo(Vehicle::class,'vehicle_id');
+    }
+    public function provider()
+    {
+        return $this->belongsTo(Store::class,'provider_id');
     }
 }

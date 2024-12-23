@@ -4408,9 +4408,9 @@ class Helpers
     public function preparePaginatedResponse($pagination, $limit, $offset, $key = 'data', $extraData = []): array
     {
         $response = [
-            'total_size' => $pagination->total(),
-            'limit' => $limit,
-            'offset' => $offset,
+            'total_size' => (int) $pagination->total(),
+            'limit' => (int) $limit,
+            'offset' => (int) $offset,
             $key => $pagination->items(),
         ];
 
