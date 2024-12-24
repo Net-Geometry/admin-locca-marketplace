@@ -118,7 +118,9 @@ Route::group(['prefix' => 'rental', 'as' => 'rental.',  'middleware' =>  ['local
         });
         Route::group( ['middleware' => ['module-check','apiGuestCheck','auth:api']], function () {
             Route::group(['prefix' => 'trip'], function () {
-                Route::Post('trip-booking', [TripController::class, 'TripBooking']);
+                Route::Post('trip-booking', [TripController::class, 'tripBooking']);
+                Route::get('get-trip-list', [TripController::class, 'getTripList']);
+                Route::get('get-trip-details', [TripController::class, 'getTripDetails']);
             });
 
         });

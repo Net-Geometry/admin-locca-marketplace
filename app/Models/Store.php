@@ -19,6 +19,8 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use App\Traits\ReportFilter;
+use Modules\Rental\Entities\Vehicle;
+use Modules\Rental\Entities\VehicleIdentity;
 
 /**
  * Class Store
@@ -783,6 +785,24 @@ class Store extends Model
     {
         return $this->hasOne(StoreConfig::class);
     }
+
+
+    /**
+     * Get all of the comments for the Store
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
+    public function vehicle_identity(): HasManyThrough
+    {
+        return $this->hasManyThrough(
+            VehicleIdentity::class, Vehicle::class, 'provider_id','vehicle_id','id','id');
+    }
+    public function vehicles(): HasMany
+    {
+        return $this->hasMany(Vehicle::class,'provider_id');
+    }
+
+
 
         /**
      * @param $query

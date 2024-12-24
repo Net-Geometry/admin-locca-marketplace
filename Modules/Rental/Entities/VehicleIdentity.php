@@ -11,7 +11,6 @@ class VehicleIdentity extends Model
 {
     use HasFactory;
 
-    protected $fillable = [];
     protected $guarded = ['id'];
 
     /**
@@ -27,8 +26,4 @@ class VehicleIdentity extends Model
         return $this->belongsTo(Vehicle::class, 'vehicle_id', 'id');
     }
 
-    protected static function newFactory()
-    {
-        return \Modules\Rental\Database\factories\VehicleIdentityFactory::new();
-    }
 }

@@ -16,4 +16,6 @@ class TripVehicleDetails extends Model
         'vehicle_identity_id' => 'integer',
         'vehicle_driver_id' => 'integer',
     ];
+
+ 
 }

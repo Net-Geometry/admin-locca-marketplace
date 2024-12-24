@@ -21,4 +21,14 @@ class TripDetails extends Model
         'estimated_hours' => 'float',
         'distance' => 'float',
     ];
+
+    public function getVehicleDetailsAttribute($value)
+    {
+        if ($value) {
+            return json_decode($value, true);
+        }
+        return $value;
+    }
+
+
 }
