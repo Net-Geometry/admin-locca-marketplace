@@ -76,7 +76,7 @@ Route::group(['prefix' => 'rental', 'as' => 'rental.',  'middleware' =>  ['local
             Route::post('delete/{id}', [ProviderController::class, 'scheduleDelete']);
         });
 
-        Route::group(['prefix' => 'cheating', 'as' => 'cheating.'], function () {
+        Route::group(['prefix' => 'message', 'as' => 'message.'], function () {
             Route::get('list', [ConversationController::class, 'conversations']);
             Route::get('search-list', [ConversationController::class, 'search']);
             Route::get('details', [ConversationController::class, 'messages']);

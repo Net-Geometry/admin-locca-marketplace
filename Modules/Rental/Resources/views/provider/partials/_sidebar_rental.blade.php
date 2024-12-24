@@ -282,85 +282,48 @@
                             </a>
                         </li>
 
-                    <!-- DeliveryMan -->
-                    @if(\App\CentralLogics\Helpers::employee_module_permission_check('deliveryman'))
+                    <!-- driver -->
                         <li class="nav-item">
                             <small class="nav-subtitle"
-                                   title="{{translate('messages.deliveryman_section')}}">{{translate('messages.deliveryman_section')}}</small>
+                                   title="{{translate('messages.driver_section')}}">{{translate('messages.driver_section')}}</small>
                             <small class="tio-more-horizontal nav-subtitle-replacer"></small>
                         </li>
-                        <li class="navbar-vertical-aside-has-menu {{Request::is('vendor-panel/delivery-man/add')?'active':''}}">
+                        <li class="navbar-vertical-aside-has-menu {{Request::is('vendor-panel/driver*')?'active':''}}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link"
-                               href="{{route('vendor.delivery-man.add')}}"
-                               title="{{translate('messages.add_delivery_man')}}"
+                               href="{{route('vendor.driver.create')}}"
+                               title="{{translate('messages.add_driver')}}"
                             >
                                 <i class="tio-running nav-icon"></i>
                                 <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                    {{translate('messages.add_delivery_man')}}
+                                    {{translate('messages.add_driver')}}
                                 </span>
                             </a>
                         </li>
 
-                        <li class="navbar-vertical-aside-has-menu {{Request::is('vendor-panel/delivery-man/list')?'active':''}}">
+                        <li class="navbar-vertical-aside-has-menu {{Request::is('vendor-panel/driver/list')?'active':''}}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link"
-                               href="{{route('vendor.delivery-man.list')}}"
-                               title="{{translate('messages.deliveryman')}}"
+                               href="{{route('vendor.driver.list')}}"
+                               title="{{translate('messages.driver')}}"
                             >
                                 <i class="tio-filter-list nav-icon"></i>
                                 <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                    {{translate('messages.deliverymen_list')}}
+                                    {{translate('messages.driver list')}}
                                 </span>
                             </a>
                         </li>
 
-                        {{--<li class="navbar-vertical-aside-has-menu {{Request::is('vendor-panel/delivery-man/reviews/list')?'active':''}}">
-                            <a class="js-navbar-vertical-aside-menu-link nav-link"
-                               href="{{route('vendor.delivery-man.reviews.list')}}" title="{{translate('messages.reviews')}}"
-                            >
-                                <i class="tio-star-outlined nav-icon"></i>
-                                <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                    {{translate('messages.reviews')}}
-                                </span>
-                            </a>
-                        </li>--}}
-                    @endif
-                    <!-- End DeliveryMan -->
-
-                    <li class="nav-item">
-                        <small
-                            class="nav-subtitle">{{translate('messages.marketing_section')}}</small>
-                        <small class="tio-more-horizontal nav-subtitle-replacer"></small>
-                    </li>
-                    <!-- Campaign -->
-                    @if(\App\CentralLogics\Helpers::employee_module_permission_check('campaign'))
-                        <li class="navbar-vertical-aside-has-menu {{Request::is('vendor-panel/campaign*')?'active':''}}">
-                            <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:" title="{{translate('messages.campaigns')}}">
-                                <i class="tio-image nav-icon"></i>
-                                <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{translate('messages.campaigns')}}</span>
-                            </a>
-                            <ul class="js-navbar-vertical-aside-submenu nav nav-sub"  style="display: {{Request::is('vendor-panel/campaign*')?'block':'none'}}">
-                                <li class="nav-item {{Request::is('vendor-panel/campaign/list')?'active':''}}">
-                                    <a class="nav-link " href="{{route('vendor.campaign.list')}}" title="{{translate('messages.basic_campaigns')}}">
-                                        <span class="tio-circle nav-indicator-icon"></span>
-                                        <span class="text-truncate">{{translate('messages.basic_campaigns')}}</span>
-                                    </a>
-                                </li>
-                                <li class="nav-item {{Request::is('vendor-panel/campaign/item/list')?'active':''}}">
-                                    <a class="nav-link " href="{{route('vendor.campaign.itemlist')}}" title="{{translate('messages.Item Campaigns')}}">
-                                        <span class="tio-circle nav-indicator-icon"></span>
-                                        <span class="text-truncate">{{translate('messages.Item Campaigns')}}</span>
-                                    </a>
-                                </li>
-                            </ul>
+                        <li class="nav-item">
+                            <small
+                                class="nav-subtitle">{{translate('messages.marketing_section')}}</small>
+                            <small class="tio-more-horizontal nav-subtitle-replacer"></small>
                         </li>
-                    @endif
                     <!-- End Campaign -->
 
                     <!-- Coupon -->
                     @if (\App\CentralLogics\Helpers::employee_module_permission_check('coupon'))
-                        <li class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel/coupon*') ? 'active' : '' }}">
+                        <li class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel/rental-coupon*') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link"
-                               href="{{ route('vendor.coupon.add-new') }}"
+                               href="{{ route('vendor.rental_coupon.list') }}"
                                title="{{ translate('messages.coupons') }}">
                                 <i class="tio-ticket nav-icon"></i>
                                 <span
@@ -371,8 +334,8 @@
                     <!-- End Coupon -->
                     <!-- Coupon -->
                     @if (\App\CentralLogics\Helpers::employee_module_permission_check('banner'))
-                        <li class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel/banner*') ? 'active' : '' }}">
-                            <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('vendor.banner.list') }}" title="{{ translate('messages.banners') }}">
+                        <li class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel/rental-banner*') ? 'active' : '' }}">
+                            <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('vendor.rental_banner.list') }}" title="{{ translate('messages.banners') }}">
                                 <i class="tio-image nav-icon"></i>
                                 <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('messages.banners') }}</span>
                             </a>
