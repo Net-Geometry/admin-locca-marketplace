@@ -121,6 +121,7 @@ Route::group(['prefix' => 'rental', 'as' => 'rental.',  'middleware' =>  ['local
                 Route::Post('trip-booking', [TripController::class, 'tripBooking']);
                 Route::get('get-trip-list', [TripController::class, 'getTripList']);
                 Route::get('get-trip-details', [TripController::class, 'getTripDetails']);
+                Route::put('cancel-trip', [TripController::class, 'cancelTrip']);
             });
 
         });

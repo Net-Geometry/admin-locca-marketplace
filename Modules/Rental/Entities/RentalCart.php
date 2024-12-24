@@ -17,9 +17,10 @@ class RentalCart extends Model
         'module_id' => 'integer',
         'vehicle_id' => 'integer',
         'quantity' => 'integer',
+        'price' => 'float',
     ];
 
-    public function vehicles()
+    public function vehicle()
     {
         return $this->belongsTo(Vehicle::class,'vehicle_id');
     }

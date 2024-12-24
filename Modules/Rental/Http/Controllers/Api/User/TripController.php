@@ -41,7 +41,7 @@ class TripController extends Controller
     public function tripBooking(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'time' => 'required',
+            // 'destination_time' => 'required',
             'trip_amount' => 'required|numeric',
             'trip_type' => 'required|in:hourly,distance_wise',
             'provider_id' => 'required|numeric',
@@ -58,10 +58,12 @@ class TripController extends Controller
 
 
         $schedule_at = $request->schedule_at ? \Carbon\Carbon::parse($request->schedule_at) : now();
-        $estimated_trip_end_time = $schedule_at->copy()->addHours($request->time ?? 1);
 
         $user_data =  $this->user_data->where('user_id', $user_id)->where('is_guest', $is_guest)->first() ?? null;
-        $carts = $this->cart->where('user_id', $user_id)->where('is_guest', $is_guest)->where('module_id', $request->header('moduleId'))->with('vehicles')->get();
+
+
+
+        $carts = $this->cart->where('user_id', $user_id)->where('is_guest', $is_guest)->where('module_id', $request->header('moduleId'))->with('vehicle')->get();
 
         if (count($carts) == 0) {
             return response()->json([
@@ -77,6 +79,7 @@ class TripController extends Controller
                 ]
             ], 403);
         }
+        $estimated_trip_end_time = $schedule_at->copy()->addHours($user_data->rental_type == 'hourly' ? $user_data->estimated_hours ?? 1 : $user_data->destination_time ?? 1);
 
         $trip_validation_check =  $this->tripValidationCheck($request, $schedule_at);
 
@@ -349,24 +352,24 @@ class TripController extends Controller
         $details_data = [];
         foreach ($carts as $cart) {
 
-            if (!$cart->vehicles) {
+            if (!$cart->vehicle) {
                 return ['code' => 'details_data', 'message' => translate('messages.Vehicle_not_found'), 'status_code' => 404];
             }
 
-            $discount_data = $this->getDiscount(price: $user_data->rental_type == 'hourly' ? $cart->vehicles->hourly_price *  $user_data->estimated_hours : $cart->vehicles->distance_price *  $user_data->distance, discount_type: $cart->vehicles->discount_type, discount: $cart->vehicles->discount_price);
+            $discount_data = $this->getDiscount(price: $user_data->rental_type == 'hourly' ? $cart->vehicle->hourly_price *  $user_data->estimated_hours : $cart->vehicle->distance_price *  $user_data->distance, discount_type: $cart->vehicle->discount_type, discount: $cart->vehicle->discount_price);
 
             $trip_details_data = [
                 'vehicle_id' => $cart->vehicle_id,
                 'quantity' => $cart->quantity,
                 'tax_percentage' => $tax,
                 'discount_on_trip_by' => 'vendor',
-                'discount_percentage' => $cart->vehicles->discount_type == 'amount' ? 0 : $cart->vehicles->discount_price,
+                'discount_percentage' => $cart->vehicle->discount_type == 'amount' ? 0 : $cart->vehicle->discount_price,
                 'price' => round($discount_data['price'], config('round_up_to_digit')),
                 'discount_on_trip' => round($discount_data['discount'], config('round_up_to_digit')),
-                'discount_type' => $cart->vehicles->discount_type,
+                'discount_type' => $cart->vehicle->discount_type,
                 'tax_amount' => round($this->helpers->product_tax($discount_data['price'] - round($discount_data['discount'], config('round_up_to_digit')), $tax, $is_include), config('round_up_to_digit')),
                 'tax_status' => $is_include == 1 ? 'included' : 'excluded',
-                'vehicle_details' => json_encode($cart->vehicles),
+                'vehicle_details' => json_encode($cart->vehicle),
                 'rental_type' => $user_data->rental_type,
                 'estimated_hours' => $user_data->estimated_hours,
                 'distance' => $user_data->distance,
@@ -375,7 +378,7 @@ class TripController extends Controller
                 'estimated_trip_end_time' => $estimated_trip_end_time,
 
             ];
-            $cart->vehicles->increment('total_trip', $cart->quantity);
+            $cart->vehicle->increment('total_trip', $cart->quantity);
             $details_data[] = $trip_details_data;
 
             $price += $trip_details_data['price'] * $cart->quantity;
@@ -477,17 +480,85 @@ class TripController extends Controller
         $is_guest = $request->user ? 0 : 1;
 
         $trip = $this->trips->where(['user_id' => $user_id, 'is_guest' => $is_guest, 'id' => $request->trip_id])
-        ->with(['trip_details:id,trip_id,quantity,vehicle_details',
-            'provider' => function ($query) {
-                $query->select('id', 'name', 'logo', 'cover_photo', 'rating', 'phone')
+            ->with([
+                'trip_details:id,trip_id,quantity,vehicle_details',
+                'provider' => function ($query) {
+                    $query->select('id', 'name', 'logo', 'cover_photo', 'rating', 'phone')
                         ->withCount('vehicle_identity as total_vehicles');
-            }
-        ])
-        ->first();
-
-
+                }
+            ])
+            ->first();
         return response()->json($trip, 200);
     }
+
+
+    public function cancelTrip(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'guest_id' => $request->user ? 'nullable' : 'required',
+            'trip_id' => 'required',
+            'cancellation_reason' => 'nullable|max:255',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $this->helpers->error_processor($validator)], 403);
+        }
+        $user_id = $request->user ? $request->user->id : $request['guest_id'];
+        $is_guest = $request->user ? 0 : 1;
+
+        $trip = $this->trips->where(['user_id' => $user_id, 'is_guest' => $is_guest, 'id' => $request->trip_id])->first();
+
+        if(!$trip){
+            return response()->json(['errors' => translate('trip_data_not_found')], 404);
+        }
+
+        if($trip->trip_status !== 'pending'){
+            return response()->json(['errors' => translate('You_can_not_cancal_this_trip')], 403);
+        }
+
+        $trip->trip_status = 'canceled';
+        $trip->canceled_by = 'user';
+        $trip->cancellation_reason = $request->cancellation_reason;
+        $trip->canceled = now();
+        $trip->save();
+        return response()->json(['message' => translate('Trip_successfully_canceled')], 200);
+
+    }
+    public function makePayment(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'guest_id' => $request->user ? 'nullable' : 'required',
+            'trip_id' => 'required',
+            'paymet_method' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $this->helpers->error_processor($validator)], 403);
+        }
+        $user_id = $request->user ? $request->user->id : $request['guest_id'];
+        $is_guest = $request->user ? 0 : 1;
+
+        $trip = $this->trips->where(['user_id' => $user_id, 'is_guest' => $is_guest, 'id' => $request->trip_id])->first();
+
+        if(!$trip){
+            return response()->json(['errors' => translate('trip_data_not_found')], 404);
+        }
+
+
+        if($request->paymet_method == 'cash_payment' ){
+            $trip->payment_status = 'paid';
+            $trip->payment_method = 'cash_payment';
+        }
+
+        if(!$is_guest){
+            $user=  User::whereId($user_id)->first();
+
+        }
+
+        $trip->save();
+        return response()->json(['message' => translate('Trip_successfully_canceled')], 200);
+
+    }
+
+
 
 
 }
