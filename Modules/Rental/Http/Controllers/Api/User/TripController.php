@@ -21,6 +21,8 @@ use Illuminate\Support\Facades\Validator;
 use MatanYadaev\EloquentSpatial\Objects\Point;
 use Modules\Rental\Entities\RentalCartUserData;
 use Modules\Rental\Entities\TripDetails;
+use App\CentralLogics\StoreLogic;
+
 
 class TripController extends Controller
 {
@@ -488,6 +490,12 @@ class TripController extends Controller
                 }
             ])
             ->first();
+
+            $ratings = StoreLogic::calculate_store_rating($trip['provider']['rating']);
+            $trip['provider']['avg_rating'] =$ratings['rating'];
+            $trip['provider']['rating_count'] =$ratings['total'];
+
+
         return response()->json($trip, 200);
     }
 

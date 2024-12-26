@@ -62,7 +62,7 @@ class Vehicle extends Model
     /**
      * @return BelongsTo
      */
-    public function provider(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function provider(): BelongsTo
     {
         return $this->belongsTo(Store::class, 'provider_id', 'id');
     }
@@ -70,7 +70,7 @@ class Vehicle extends Model
     /**
      * @return BelongsTo
      */
-    public function category(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function category(): BelongsTo
     {
         return $this->belongsTo(VehicleCategory::class, 'category_id', 'id');
     }
@@ -78,7 +78,7 @@ class Vehicle extends Model
     /**
      * @return BelongsTo
      */
-    public function brand(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function brand(): BelongsTo
     {
         return $this->belongsTo(VehicleBrand::class, 'brand_id', 'id');
     }
@@ -86,7 +86,7 @@ class Vehicle extends Model
     /**
      * @return HasMany
      */
-    public function vehicleIdentities(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function vehicleIdentities(): HasMany
     {
         return $this->hasMany(VehicleIdentity::class);
     }
@@ -113,7 +113,7 @@ class Vehicle extends Model
     /**
      * @return MorphMany
      */
-    public function storage(): \Illuminate\Database\Eloquent\Relations\MorphMany
+    public function storage(): MorphMany
     {
         return $this->morphMany(Storage::class, 'data');
     }

@@ -6593,4 +6593,7 @@ Smartly or Earn. ',
   'The type field is required.' => 'The type field is required.',
   'The transmission type field is required.' => 'The transmission type field is required.',
   'The estimated hours field is required when rental type is hourly.' => 'The estimated hours field is required when rental type is hourly.',
+  'The provider id field is required.' => 'The provider id field is required.',
+  'Provider Details - Add New Vehicle' => 'Provider Details - Add New Vehicle',
+  'The provider id must be a number.' => 'The provider id must be a number.',
 );

@@ -16,14 +16,23 @@ class VehicleIdentity extends Model
     /**
      * @return BelongsTo
      */
-    public function provider(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function provider(): BelongsTo
     {
         return $this->belongsTo(Store::class, 'provider_id', 'id');
     }
 
-    public function vehicle(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function vehicle(): BelongsTo
     {
         return $this->belongsTo(Vehicle::class, 'vehicle_id', 'id');
+    }
+    public function vehicle_trip_details(): BelongsTo
+    {
+        return $this->belongsTo(TripVehicleDetails::class, 'id', 'vehicle_identity_id');
+    }
+
+    public function driver(): BelongsTo
+    {
+        return $this->belongsTo(VehicleDriver::class, 'vehicle_driver_id', 'id');
     }
 
 }
