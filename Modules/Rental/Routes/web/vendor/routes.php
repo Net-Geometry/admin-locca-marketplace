@@ -30,6 +30,11 @@ Route::group([ 'middleware' => ['vendor']], function () {
         Route::get('new-tag/{id}', [VehicleController::class, 'newTag'])->name('new-tag');
         Route::delete('delete/{id}', [VehicleController::class, 'destroy'])->name('delete');
         Route::get('export', [VehicleController::class, 'export'])->name('export');
+
+        Route::get('bulk-import', [VehicleController::class, 'bulkImportIndex'])->name('bulk_import');
+        Route::POST('bulk-import', [VehicleController::class, 'bulkImportData']);
+        Route::get('bulk-export', [VehicleController::class, 'bulkExportIndex'])->name('bulk-export-index');
+        Route::POST('bulk-export', [VehicleController::class, 'bulkExportData']);
     });
 
     Route::group(['prefix' => 'category', 'as' => 'category.'], function () {

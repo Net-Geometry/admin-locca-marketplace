@@ -65,6 +65,11 @@ Route::group(['middleware' => ['admin', 'current-module']], function () {
             Route::get('new-requests-details/{id}', [ProviderController::class, 'newRequestsDetails'])->name('new-requests-details');
             Route::get('approve-or-deny/{id}', [ProviderController::class, 'approveOrDeny'])->name('approve-or-deny');
 
+            Route::get('bulk-import', [ProviderController::class, 'bulkImportIndex'])->name('bulk_import');
+            Route::post('bulk-import', [ProviderController::class, 'bulkImportData']);
+            Route::get('bulk-export', [ProviderController::class, 'bulkExportIndex'])->name('bulk_export_index');
+            Route::post('bulk-export', [ProviderController::class, 'bulkExportData']);
+
             Route::group(['prefix' => 'driver', 'as' => 'driver.'], function () {
                 Route::get('create/{provider_id}', [DriverController::class, 'create'])->name('create');
                 Route::post('create/{provider_id}', [DriverController::class, 'store']);
@@ -87,6 +92,11 @@ Route::group(['middleware' => ['admin', 'current-module']], function () {
                 Route::get('new-tag/{id}', [VehicleController::class, 'newTag'])->name('new-tag');
                 Route::delete('delete/{id}', [VehicleController::class, 'destroy'])->name('delete');
                 Route::get('export', [VehicleController::class, 'export'])->name('export');
+
+                Route::get('bulk-import', [VehicleController::class, 'bulkImportIndex'])->name('bulk_import');
+                Route::POST('bulk-import', [VehicleController::class, 'bulkImportData']);
+                Route::get('bulk-export', [VehicleController::class, 'bulkExportIndex'])->name('bulk-export-index');
+                Route::POST('bulk-export', [VehicleController::class, 'bulkExportData']);
             });
 
         });
@@ -113,14 +123,12 @@ Route::group(['middleware' => ['admin', 'current-module']], function () {
         });
 
         Route::group(['prefix' => 'cashback', 'as' => 'cashback.', 'middleware' => ['module:cashback']], function () {
-            Route::get('/', [CashBackController::class,'list'])->name('add-new');
-            Route::post('store', [CashBackController::class,'store'])->name('store');
-            Route::get('edit/{cashback}', [CashBackController::class,'edit'])->name('edit');
-            Route::post('edit/{cashback}', [CashBackController::class,'update'])->name('update');
-            Route::delete('delete/{cashback}', [CashBackController::class,'destroy'])->name('delete');
-            Route::get('status/{cashback}', [CashBackController::class,'status'])->name('status');
-            // Route::get('export', [CashBackController::class, 'export'])->name('export');
-
+            Route::get('/', [CashBackController::class,'list'])->name('list');
+            Route::post('/', [CashBackController::class,'store']);
+            Route::get('edit/{id}', [CashBackController::class,'edit'])->name('edit');
+            Route::post('edit/{id}', [CashBackController::class,'update']);
+            Route::delete('delete/{id}', [CashBackController::class,'destroy'])->name('delete');
+            Route::get('status/{id}', [CashBackController::class,'status'])->name('status');
         });
 
         Route::group(['prefix' => 'notification', 'as' => 'notification.', 'middleware' => ['module:notification']], function () {

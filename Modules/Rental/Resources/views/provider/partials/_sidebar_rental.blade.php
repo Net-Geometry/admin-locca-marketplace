@@ -54,17 +54,6 @@
                             </span>
                         </a>
                     </li>
-                    <!-- End Dashboards -->
-                    @if(\App\CentralLogics\Helpers::employee_module_permission_check('pos'))
-                        <li class="navbar-vertical-aside-has-menu {{Request::is('vendor-panel/pos')?'active':''}}">
-                            <a class="js-navbar-vertical-aside-menu-link nav-link  " href="{{route('vendor.pos.index')}}"
-                               title="{{translate('messages.pos')}}">
-                                <i class="tio-shopping-basket-outlined nav-icon"></i>
-                                <span
-                                    class="text-truncate">{{translate('messages.pos')}}</span>
-                            </a>
-                        </li>
-                    @endif
                     @if(\App\CentralLogics\Helpers::employee_module_permission_check('order'))
                         <li class="nav-item">
                             <small class="nav-subtitle" title="{{translate('messages.order_section')}}">{{translate('messages.order_section')}}</small>
@@ -212,51 +201,43 @@
                         </li>
                         <!-- End Order -->
                     @endif
-
-                    @if (in_array($store_data->module->module_type , [ 'grocery', 'ecommerce'])  )
-                        <li class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel/item/flash-sale*') ? 'active' : '' }}">
-                            <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('vendor.item.flash_sale') }}" title="{{ translate('messages.flash_sales') }}">
-                                <i class="tio-apps nav-icon"></i>
-                                <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                {{ translate('messages.flash_sales') }}
-                            </span>
-                            </a>
-                        </li>
-                    @endif
-
-
                     <li class="nav-item">
                         <small
                             class="nav-subtitle">{{translate('messages.vehicle_management')}}</small>
                         <small class="tio-more-horizontal nav-subtitle-replacer"></small>
                     </li>
-
-                    <!-- AddOn -->
-                    @if(\App\CentralLogics\Helpers::employee_module_permission_check('addon'))
-                        <li class="navbar-vertical-aside-has-menu {{Request::is('vendor-panel/addon*')?'active':''}}">
-                            <a class="js-navbar-vertical-aside-menu-link nav-link"
-                               href="{{route('vendor.addon.add-new')}}" title="{{translate('messages.addons')}}"
-                            >
-                                <i class="tio-add-circle-outlined nav-icon"></i>
-                                <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                {{translate('messages.addons')}}
-                            </span>
-                            </a>
-                        </li>
-                    @endif
-                    <!-- End AddOn -->
-
-                        <li class="navbar-vertical-aside-has-menu {{Request::is('vendor-panel/vehicle*')?'active':''}}">
-                            <a class="js-navbar-vertical-aside-menu-link nav-link"
-                               href="{{route('vendor.vehicle.list')}}"
-                               title="{{translate('messages.vehicle list')}}"
-                            >
-                                <i class="tio-car nav-icon"></i>
-                                <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                    {{translate('messages.vehicle list')}}
-                                </span>
-                            </a>
-                        </li>
+                    <li class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel/vehicle*') ? 'active' : '' }}">
+                        <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:" title="{{ translate('Vehicle Setup') }}">
+                            <i class="tio-car nav-icon"></i>
+                            <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate text-capitalize">{{ translate('Vehicle Setup') }}</span>
+                        </a>
+                        <ul class="js-navbar-vertical-aside-submenu nav nav-sub" style="display:{{ Request::is('vendor-panel/vehicle*') ? 'block' : 'none' }}">
+                            <li class="nav-item {{ Request::is('vendor-panel/vehicle/create') || Request::is('vendor-panel/vehicle/edit/*')  ? 'active' : '' }}">
+                                <a class="nav-link " href="{{ route('vendor.vehicle.create') }}" title="{{ translate('messages.create_new') }}">
+                                    <span class="tio-circle nav-indicator-icon"></span>
+                                    <span class="text-truncate">{{ translate('messages.create_new') }}</span>
+                                </a>
+                            </li>
+                            <li class="nav-item {{ Request::is('vendor-panel/vehicle/list') || Request::is('vendor-panel/vehicle/edit/*')  ? 'active' : '' }}">
+                                <a class="nav-link " href="{{ route('vendor.vehicle.list') }}" title="{{ translate('messages.vehicle_list') }}">
+                                    <span class="tio-circle nav-indicator-icon"></span>
+                                    <span class="text-truncate">{{ translate('messages.list') }}</span>
+                                </a>
+                            </li>
+                            <li class="nav-item {{ Request::is('vendor-panel/vehicle/bulk-import') ? 'active' : '' }}">
+                                <a class="nav-link " href="{{ route('vendor.vehicle.bulk_import') }}" title="{{ translate('messages.bulk_import') }}">
+                                    <span class="tio-circle nav-indicator-icon"></span>
+                                    <span class="text-truncate text-capitalize">{{ translate('messages.bulk_import') }}</span>
+                                </a>
+                            </li>
+                            <li class="nav-item {{ Request::is('vendor-panel/vehicle/bulk-export') ? 'active' : '' }}">
+                                <a class="nav-link " href="{{ route('vendor.vehicle.bulk-export-index') }}" title="{{ translate('messages.bulk_export') }}">
+                                    <span class="tio-circle nav-indicator-icon"></span>
+                                    <span class="text-truncate text-capitalize">{{ translate('messages.bulk_export') }}</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
 
                         <li class="navbar-vertical-aside-has-menu {{Request::is('vendor-panel/category*')?'active':''}}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link"
@@ -288,7 +269,7 @@
                                    title="{{translate('messages.driver_section')}}">{{translate('messages.driver_section')}}</small>
                             <small class="tio-more-horizontal nav-subtitle-replacer"></small>
                         </li>
-                        <li class="navbar-vertical-aside-has-menu {{Request::is('vendor-panel/driver*')?'active':''}}">
+                        <li class="navbar-vertical-aside-has-menu {{Request::is('vendor-panel/driver/create')?'active':''}}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link"
                                href="{{route('vendor.driver.create')}}"
                                title="{{translate('messages.add_driver')}}"
@@ -343,57 +324,6 @@
                     @endif
                     <!-- End Coupon -->
 
-
-                    @if (\App\CentralLogics\Helpers::employee_module_permission_check('advertisement'))
-
-                        <li class="nav-item">
-                            <small
-                                class="nav-subtitle">{{translate('Advertisement Management')}}</small>
-                            <small class="tio-more-horizontal nav-subtitle-replacer"></small>
-                        </li>
-
-                        <li class="navbar-vertical-aside-has-menu @yield('advertisement_create')">
-                            <a class="js-navbar-vertical-aside-menu-link nav-link"
-                               href="{{ route('vendor.advertisement.create') }}"
-                               title="{{ translate('messages.New_Advertisement') }}">
-                                <i class="tio-tv-old nav-icon"></i>
-                                <span
-                                    class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{ translate('messages.New_Advertisement') }}</span>
-                            </a>
-                        </li>
-
-
-                        <li class="navbar-vertical-aside-has-menu @yield('advertisement')">
-                            <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle"
-                               href="javascript:" title="{{translate('messages.Advertisement_List')}}"
-                            >
-                                <i class="tio-format-bullets nav-icon"></i>
-                                <span
-                                    class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">{{translate('messages.Advertisement_List')}}</span>
-                            </a>
-                            <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
-                                style="display: {{ !Request::is('vendor-panel/advertisement/create*') && Request::is('vendor-panel/advertisement*')?'block':'none'}}">
-                                <li class="nav-item @yield('advertisement_pending_list')">
-                                    <a class="nav-link " href="{{route('vendor.advertisement.index',['type'=> 'pending'])}}"
-                                       title="{{translate('messages.Pending')}}">
-                                        <span class="tio-circle nav-indicator-icon"></span>
-                                        <span class="text-truncate">{{translate('messages.Pending')}}</span>
-                                    </a>
-                                </li>
-
-                                <li class="nav-item @yield('advertisement_list')">
-                                    <a class="nav-link " href="{{route('vendor.advertisement.index')}}"
-                                       title="{{translate('messages.Ad_List')}}">
-                                        <span class="tio-circle nav-indicator-icon"></span>
-                                        <span class="text-truncate">{{translate('messages.Ad_List')}}</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-
-                    @endif
-
-
                     <!-- Business Section-->
                     <li class="nav-item">
                         <small class="nav-subtitle"
@@ -403,11 +333,11 @@
 
                     @if(\App\CentralLogics\Helpers::employee_module_permission_check('store_setup'))
                         <li class="nav-item {{Request::is('vendor-panel/business-settings/store-setup')?'active':''}}">
-                            <a class="nav-link " href="{{route('vendor.business-settings.store-setup')}}" title="{{translate('messages.storeConfig')}}"
+                            <a class="nav-link " href="{{route('vendor.business-settings.store-setup')}}" title="{{translate('messages.ProviderConfig')}}"
                             >
                                 <span class="tio-settings nav-icon"></span>
                                 <span
-                                    class="text-truncate">{{translate('messages.storeConfig')}}</span>
+                                    class="text-truncate">{{translate('messages.ProviderConfig')}}</span>
                             </a>
                         </li>
                     @endif
@@ -559,20 +489,6 @@
                             </ul>
                         </li>
                     @endif
-                    <!-- End Employee -->
-
-                    <li class="nav-item px-20 pb-5">
-                        <div class="promo-card">
-                            <div class="position-relative">
-                                <img src="{{asset('public/assets/admin/img/promo-2.png')}}" class="mw-100" alt="">
-                                <h4 class="mb-2 mt-3">{{ translate('Want_to_get_highlighted?') }}</h4>
-                                <p class="mb-4">
-                                    {{ translate('Create_ads_to_get_highlighted_on_the_app_and_web_browser') }}
-                                </p>
-                                <a href="{{ route('vendor.advertisement.create') }}" class="btn btn--primary">{{ translate('Create_Ads') }}</a>
-                            </div>
-                        </div>
-                    </li>
                 </ul>
             </div>
             <!-- End Content -->

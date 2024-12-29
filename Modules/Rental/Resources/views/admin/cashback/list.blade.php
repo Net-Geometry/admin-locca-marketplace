@@ -27,39 +27,39 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body" id="form_data">
-                        <form id="cashback-submit" action="{{route('admin.cashback.store')}}" method="POST">
+                        <form id="cashback-submit" action="" method="POST">
                             @csrf
                             <div class="row">
                                 <div class="col-12">
                                     @if ($language)
-                                    <ul class="nav nav-tabs mb-3 border-0">
-                                        <li class="nav-item">
-                                            <a class="nav-link lang_link active"
-                                            href="#"
-                                            id="default-link">{{translate('messages.default')}}</a>
-                                        </li>
-                                        @foreach ($language as $lang)
+                                        <ul class="nav nav-tabs mb-3 border-0">
                                             <li class="nav-item">
-                                                <a class="nav-link lang_link"
-                                                    href="#"
-                                                    id="{{ $lang }}-link">{{ \App\CentralLogics\Helpers::get_language_name($lang) . '(' . strtoupper($lang) . ')' }}</a>
+                                                <a class="nav-link lang_link active"
+                                                href="#"
+                                                id="default-link">{{translate('messages.default')}}</a>
+                                            </li>
+                                            @foreach ($language as $lang)
+                                                <li class="nav-item">
+                                                    <a class="nav-link lang_link"
+                                                        href="#"
+                                                        id="{{ $lang }}-link">{{ \App\CentralLogics\Helpers::get_language_name($lang) . '(' . strtoupper($lang) . ')' }}</a>
                                                 </li>
-                                                @endforeach
-                                            </ul>
-                                </div>
-
-                                <div class="col-md-4 col-lg-4 col-sm-6">
-                                    <div class="lang_form" id="default-form">
-                                        <div class="form-group">
-                                            <label class="input-label"
-                                                for="default_title">{{ translate('messages.title') }}
-                                                ({{ translate('Default') }})
-                                            </label>
-                                            <input type="text" value="{{ old('title.0') }}" name="title[]" maxlength="254" id="default_title"
-                                                class="form-control" placeholder="{{ translate('messages.Eid_Dhamaka') }}" >
-                                        </div>
-                                        <input type="hidden" name="lang[]" value="default">
+                                            @endforeach
+                                        </ul>
                                     </div>
+
+                                    <div class="col-md-4 col-lg-4 col-sm-6">
+                                        <div class="lang_form" id="default-form">
+                                            <div class="form-group">
+                                                <label class="input-label"
+                                                    for="default_title">{{ translate('messages.title') }}
+                                                    ({{ translate('Default') }})
+                                                </label>
+                                                <input type="text" value="{{ old('title.0') }}" name="title[]" maxlength="254" id="default_title"
+                                                    class="form-control" placeholder="{{ translate('messages.Eid_Dhamaka') }}" >
+                                            </div>
+                                            <input type="hidden" name="lang[]" value="default">
+                                        </div>
                                         @foreach ($language as $key => $lang)
                                             <div class="d-none lang_form"
                                                 id="{{ $lang }}-form">
@@ -75,18 +75,18 @@
                                                 <input type="hidden" name="lang[]" value="{{ $lang }}">
                                             </div>
                                         @endforeach
-                                    @else
-                                        <div id="default-form">
-                                            <div class="form-group">
-                                                <label class="input-label"
-                                                    for="exampleFormControlInput1">{{ translate('messages.title') }} ({{ translate('messages.default') }})</label>
-                                                <input type="text" name="title[]" maxlength="254" class="form-control"
-                                                    placeholder="{{ translate('messages.Eid_Dhamaka') }}">
+                                        @else
+                                            <div id="default-form">
+                                                <div class="form-group">
+                                                    <label class="input-label"
+                                                        for="exampleFormControlInput1">{{ translate('messages.title') }} ({{ translate('messages.default') }})</label>
+                                                    <input type="text" name="title[]" maxlength="254" class="form-control"
+                                                        placeholder="{{ translate('messages.Eid_Dhamaka') }}">
+                                                </div>
+                                                <input type="hidden" name="lang[]" value="default">
                                             </div>
-                                            <input type="hidden" name="lang[]" value="default">
-                                        </div>
-                                    @endif
-                                </div>
+                                        @endif
+                                    </div>
 
                                 <div class="col-md-4 col-lg-4 col-sm-6" id="customer_wise">
                                     <div class="form-group">
@@ -188,7 +188,7 @@
                 <div class="card">
                     <div class="card-header py-2 border-0">
                         <div class="search--button-wrapper">
-                            <h5 class="card-title">{{translate('messages.Cashback_List')}}<span class="badge badge-soft-dark ml-2" id="itemCount">{{$cashbacks->total()}}</span></h5>
+                            <h5 class="card-title">{{translate('messages.Cashback_List')}}<span class="badge badge-soft-dark ml-2" id="itemCount">{{$cashBacks->total()}}</span></h5>
                             <form  class="search-form min--270">
                                 <!-- Search -->
                                 <div class="input-group input--group">
@@ -226,9 +226,9 @@
                             </thead>
 
                             <tbody id="set-rows">
-                            @foreach($cashbacks as $key=>$bonus)
+                            @foreach($cashBacks as $key=>$bonus)
                                 <tr>
-                                    <td>{{$key+$cashbacks->firstItem()}}</td>
+                                    <td>{{$key+$cashBacks->firstItem()}}</td>
                                     <td>
                                     <span class="d-block font-size-sm text-body" title="{{ $bonus['title'] }}">
                                     {{Str::limit($bonus['title'],25,'...')}}
@@ -243,7 +243,7 @@
                                     <td class="text-center">{{ $bonus['total_used']  }}</td>
                                     <td>
                                         <label class="toggle-switch toggle-switch-sm" for="bonusCheckbox{{$bonus->id}}">
-                                            <input type="checkbox" data-url="{{route('admin.cashback.status',[$bonus['id'],$bonus->status?0:1])}}" class="toggle-switch-input redirect-url" id="bonusCheckbox{{$bonus->id}}" {{$bonus->status?'checked':''}}>
+                                            <input type="checkbox" data-url="{{route('admin.rental.cashback.status',[$bonus['id'],$bonus->status?0:1])}}" class="toggle-switch-input redirect-url" id="bonusCheckbox{{$bonus->id}}" {{$bonus->status?'checked':''}}>
                                             <span class="toggle-switch-label">
                                                 <span class="toggle-switch-indicator"></span>
                                             </span>
@@ -252,13 +252,13 @@
                                     <td>
                                         <div class="btn--container justify-content-center">
 
-                                            <a class="btn action-btn btn--primary btn-outline-primary" href="{{route('admin.cashback.update',[$bonus['id']])}}" title="{{translate('messages.edit_cashback')}}"><i class="tio-edit"></i>
+                                            <a class="btn action-btn btn--primary btn-outline-primary" href="{{route('admin.rental.cashback.edit',[$bonus['id']])}}" title="{{translate('messages.edit_cashback')}}"><i class="tio-edit"></i>
                                             </a>
                                             {{-- <a class="btn action-btn btn--primary btn-outline-primary edit_cashback" data-id="{{$bonus['id']}}"  href="javascript:;" title="{{translate('messages.edit_cashback')}}"><i class="tio-edit"></i>
                                             </a> --}}
                                             <a class="btn action-btn btn--danger btn-outline-danger form-alert" href="javascript:" data-id="bonus-{{$bonus['id']}}" data-message="{{ translate('Want_to_delete_this_Cashback_?') }}" title="{{translate('messages.delete_bonus')}}"><i class="tio-delete-outlined"></i>
                                             </a>
-                                            <form action="{{route('admin.cashback.delete',[$bonus['id']])}}"
+                                            <form action="{{route('admin.rental.cashback.delete',[$bonus['id']])}}"
                                             method="post" id="bonus-{{$bonus['id']}}">
                                                 @csrf @method('delete')
                                             </form>
@@ -269,13 +269,13 @@
                             </tbody>
                         </table>
 
-                        @if(count($cashbacks) !== 0)
+                        @if(count($cashBacks) !== 0)
                         <hr>
                         @endif
                         <div class="page-area">
-                            {!! $cashbacks->links() !!}
+                            {!! $cashBacks->links() !!}
                         </div>
-                        @if(count($cashbacks) === 0)
+                        @if(count($cashBacks) === 0)
                         <div class="empty--data">
                             <img src="{{asset('/public/assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                             <h5>
@@ -350,7 +350,7 @@
 
 //     $('.edit_cashback').on('click', function (e) {
 
-//     let url = "{{ route('admin.cashback.update', ['id']) }}";
+//     let url = "{{ route('admin.rental.cashback.edit', ['id']) }}";
 //         url = url.replace('id', $(this).data("id"));
 //     e.preventDefault();
 //     $.ajaxSetup({

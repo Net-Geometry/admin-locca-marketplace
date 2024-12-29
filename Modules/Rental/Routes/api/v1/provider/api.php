@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 use Modules\Rental\Http\Controllers\Api\Provider\BannerController;
+use Modules\Rental\Http\Controllers\Api\Provider\BusinessSettingsController;
 use Modules\Rental\Http\Controllers\Api\Provider\ConversationController;
 use Modules\Rental\Http\Controllers\Api\Provider\CouponController;
 use Modules\Rental\Http\Controllers\Api\Provider\DriverController;
@@ -61,6 +62,7 @@ Route::group(['prefix' => 'rental', 'as' => 'rental.',  'middleware' =>  ['local
         Route::group(['prefix' => 'coupon', 'as' => 'coupon.'], function () {
             Route::get('list', [CouponController::class, 'list']);
             Route::post('create', [CouponController::class, 'store']);
+            Route::get('edit/{id}', [CouponController::class, 'edit']);
             Route::post('update/{id}', [CouponController::class, 'update']);
             Route::get('status/{id}', [CouponController::class, 'status']);
             Route::delete('delete/{id}', [CouponController::class, 'destroy']);
@@ -85,6 +87,7 @@ Route::group(['prefix' => 'rental', 'as' => 'rental.',  'middleware' =>  ['local
 
         Route::get('category/list', [ProviderController::class, 'categoryList']);
         Route::get('brand/list', [ProviderController::class, 'brandList']);
+        Route::POST('update-business-setup', [BusinessSettingsController::class, 'updateStoreSetup']);
     });
 
     Route::get('coupon/list', [Coupon::class, 'list']);

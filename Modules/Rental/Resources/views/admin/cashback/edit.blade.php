@@ -36,8 +36,8 @@
                                             href="#"
                                             id="{{ $lang }}-link">{{ \App\CentralLogics\Helpers::get_language_name($lang) . '(' . strtoupper($lang) . ')' }}</a>
                                         </li>
-                                        @endforeach
-                                    </ul>
+                                @endforeach
+                            </ul>
                         </div>
 
                         <div class="col-md-4 col-lg-4 col-sm-6">

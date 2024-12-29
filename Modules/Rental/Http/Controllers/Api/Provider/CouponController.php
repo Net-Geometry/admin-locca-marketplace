@@ -115,6 +115,26 @@ class CouponController extends Controller
     }
 
     /**
+     * @param Request $request
+     * @param $id
+     * @return JsonResponse
+     */
+    public function edit(Request $request, $id): JsonResponse
+    {
+        $coupon = $this->coupon->withoutGlobalScope('translate')->with('translations')->find($id);
+
+        if ($coupon) {
+            $coupon->load('translations');
+            $coupon['data'] = json_decode($coupon['data'],true);
+            $coupon['customer_id'] = json_decode($coupon['customer_id'],true);
+
+            return response()->json($coupon, 200);
+        }
+
+        return response()->json(['message' => translate('messages.coupon_not_found.')], 400);
+    }
+
+    /**
      * Update the specified resource in storage.
      * @param Request $request
      * @param int $id

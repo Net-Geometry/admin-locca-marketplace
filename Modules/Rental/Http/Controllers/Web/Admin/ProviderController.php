@@ -11,6 +11,7 @@ use App\Models\BusinessSetting;
 use App\Models\Conversation;
 use App\Models\DisbursementDetails;
 use App\Models\Item;
+use App\Models\Module;
 use App\Models\Order;
 use App\Models\Store;
 use App\Models\StoreWallet;
@@ -30,6 +31,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
@@ -39,6 +41,12 @@ use Illuminate\Validation\Rules\Password;
 use MatanYadaev\EloquentSpatial\Objects\Point;
 use Modules\Rental\Entities\Vehicle;
 use Modules\Rental\Entities\VehicleDriver;
+use OpenSpout\Common\Exception\InvalidArgumentException;
+use OpenSpout\Common\Exception\IOException;
+use OpenSpout\Common\Exception\UnsupportedTypeException;
+use OpenSpout\Writer\Exception\WriterNotOpenedException;
+use Rap2hpoutre\FastExcel\FastExcel;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ProviderController extends Controller
 {
@@ -602,6 +610,324 @@ class ProviderController extends Controller
         return back();
     }
 
+    /**
+     * @return View|\Illuminate\Foundation\Application|Factory|Application
+     */
+    public function bulkImportIndex(): View|\Illuminate\Foundation\Application|Factory|Application
+    {
+        return view('rental::admin.provider.bulk-import');
+    }
+
+    /**
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function bulkImportData(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'products_file'=>'required|max:2048'
+        ]);
+        try {
+            $collections = (new FastExcel)->import($request->file('products_file'));
+        } catch (\Exception $exception) {
+            Toastr::error(translate('messages.you_have_uploaded_a_wrong_format_file'));
+            return back();
+        }
+        $duplicate_phones = $collections->duplicates('phone');
+        $duplicate_emails = $collections->duplicates('email');
+
+
+        if ($duplicate_emails->isNotEmpty()) {
+            Toastr::error(translate('messages.duplicate_data_on_column', ['field' => translate('messages.email')]));
+            return back();
+        }
+
+        if ($duplicate_phones->isNotEmpty()) {
+            Toastr::error(translate('messages.duplicate_data_on_column', ['field' => translate('messages.phone')]));
+            return back();
+        }
+
+        $email= $collections->pluck('email')->toArray();
+        $phone= $collections->pluck('phone')->toArray();
+
+        if($request->button == 'import'){
+
+            if(Store::whereIn('email', $email)->orWhereIn('phone', $phone)->exists()
+            ){
+                Toastr::error(translate('messages.duplicate_email_or_phone_exists_at_the_database'));
+                return back();
+            }
+
+            $vendors = [];
+            $stores = [];
+            $vendor = Vendor::orderBy('id', 'desc')->first('id');
+            $vendor_id = $vendor?$vendor->id:0;
+            $store = Store::orderBy('id', 'desc')->first('id');
+            $store_id = $store?$store->id:0;
+            $store_ids = [];
+            foreach ($collections as $key => $collection) {
+                if ($collection['OwnerFirstName'] === "" || $collection['ProviderName'] === "" || $collection['Phone'] === ""
+                    || $collection['Email'] === "" || $collection['Latitude'] === "" || $collection['Longitude'] === ""
+                    || $collection['ZoneId'] === "" ||  $collection['PickupTime'] === ""  || $collection['Tax'] === "" || $collection['Logo'] === ""  ) {
+                    Toastr::error(translate('messages.please_fill_all_required_fields'));
+                    return back();
+                }
+                if(isset($collection['PickupTime']) && explode("-", (string)$collection['PickupTime'])[0] >  explode("-", (string)$collection['PickupTime'])[1]){
+                    Toastr::error('messages.max_delivery_time_must_be_greater_than_min_delivery_time');
+                    return back();
+                }
+                if(isset($collection['Comission']) && ($collection['Comission'] < 0 ||  $collection['Comission'] > 100) ) {
+                    Toastr::error('messages.Comission_must_be_in_0_to_100');
+                    return back();
+                }
+                if(isset($collection['Tax']) && ($collection['Tax'] < 0 ||  $collection['Tax'] > 100 )) {
+                    Toastr::error('messages.Tax_must_be_in_0_to_100');
+                    return back();
+                }
+                if(isset($collection['Latitude']) && ($collection['Latitude'] < -90 ||  $collection['Latitude'] > 90 )) {
+                    Toastr::error('messages.latitude_must_be_in_-90_to_90');
+                    return back();
+                }
+                if(isset($collection['Longitude']) && ($collection['Longitude'] < -180 ||  $collection['Longitude'] > 180 )) {
+                    Toastr::error('messages.longitude_must_be_in_-180_to_180');
+                    return back();
+                }
+
+
+
+                $vendors[] = [
+                    'id' => $vendor_id + $key + 1,
+                    'f_name' => $collection['OwnerFirstName'],
+                    'l_name' => $collection['OwnerLastName'],
+                    'password' => bcrypt(12345678),
+                    'phone' => $collection['Phone'],
+                    'email' => $collection['Email'],
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ];
+
+                $stores[] = [
+                    'name' => $collection['ProviderName'],
+                    'phone' => $collection['Phone'],
+                    'email' => $collection['Email'],
+                    'logo' => $collection['Logo'],
+                    'cover_photo' => $collection['CoverPhoto'],
+                    'latitude' => $collection['Latitude'],
+                    'longitude' => $collection['Longitude'],
+                    'address' => $collection['Address'],
+                    'zone_id' => $collection['ZoneId'],
+                    'module_id' => $collection['ModuleId'],
+                    'comission' => $collection['Comission'],
+                    'tax' => $collection['Tax'],
+                    'delivery_time' => (isset($collection['PickupTime']) && preg_match('([0-9]+[\-][0-9]+\s[min|hours|days])', $collection['PickupTime'])) ? $collection['PickupTime'] : '30-40 min',
+                    'schedule_order' => $collection['ScheduleTrip'] == 'yes' ? 1 : 0,
+                    'status' => $collection['Status'] == 'active' ? 1 : 0,
+                    'reviews_section' => $collection['ReviewsSection'] == 'active' ? 1 : 0,
+                    'active' => $collection['StoreOpen'] == 'yes' ? 1 : 0,
+                    'vendor_id' => $vendor_id + $key + 1,
+                    'pickup_zone_id' => $collection['PickupZoneId'],
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
+                if($module = Module::select('module_type')->where('id', $collection['ModuleId'])->first())
+                {
+                    if(config('module.'.$module->module_type))
+                    {
+                        $store_ids[] = $store_id+$key+1;
+                    }
+                }
+
+            }
+
+            $data = array_map(function($id){
+                return array_map(function($item)use($id){
+                    return     ['store_id'=>$id,'day'=>$item,'opening_time'=>'00:00:00','closing_time'=>'23:59:59'];
+                },[0,1,2,3,4,5,6]);
+            },$store_ids);
+
+            try{
+                DB::beginTransaction();
+
+                $chunkSize = 100;
+                $chunk_stores= array_chunk($stores,$chunkSize);
+                $chunk_vendors= array_chunk($vendors,$chunkSize);
+
+                foreach($chunk_stores as $key=> $chunk_store){
+                    DB::table('vendors')->insert($chunk_vendors[$key]);
+//                    DB::table('stores')->insert($chunk_store);
+                    foreach ($chunk_store as $store) {
+                        $insertedId = DB::table('stores')->insertGetId($store);
+                        Helpers::updateStorageTable(get_class(new Store), $insertedId, $store['logo']);
+                        Helpers::updateStorageTable(get_class(new Store), $insertedId, $store['cover_photo']);
+                    }
+                }
+                DB::table('store_schedule')->insert(array_merge(...$data));
+                DB::commit();
+            }catch(\Exception $e)
+            {
+                DB::rollBack();
+                info(["line___{$e->getLine()}",$e->getMessage()]);
+                Toastr::error(translate('messages.failed_to_import_data'));
+                return back();
+            }
+
+            Toastr::success(translate('messages.store_imported_successfully',['count'=>count($stores)]));
+            return back();
+        }
+
+        if(Store::whereIn('email', $email)->orWhereIn('phone', $phone)->doesntExist()
+        ){
+            Toastr::error(translate('messages.email_or_phone_doesnt_exist_at_the_database'));
+            return back();
+        }
+
+
+        $vendors = [];
+        $stores = [];
+        $vendor = Vendor::orderBy('id', 'desc')->first('id');
+        $vendor_id = $vendor?$vendor->id:0;
+        $store = Store::orderBy('id', 'desc')->first('id');
+        $store_id = $store?$store->id:0;
+        $store_ids = [];
+        foreach ($collections as $key => $collection) {
+            if ($collection['id'] === "" || $collection['OwnerId'] === "" || $collection['OwnerFirstName'] === "" || $collection['ProviderName'] === "" || $collection['Phone'] === ""
+                || $collection['Email'] === "" || $collection['Latitude'] === "" || $collection['Longitude'] === ""
+                || $collection['ZoneId'] === "" ||  $collection['PickupTime'] === ""  || $collection['Tax'] === "" || $collection['Logo'] === ""  ) {
+                Toastr::error(translate('messages.please_fill_all_required_fields'));
+                return back();
+            }
+            if(isset($collection['PickupTime']) && explode("-", (string)$collection['PickupTime'])[0] >  explode("-", (string)$collection['PickupTime'])[1]){
+                Toastr::error('messages.max_delivery_time_must_be_greater_than_min_delivery_time');
+                return back();
+            }
+            if(isset($collection['Comission']) && ($collection['Comission'] < 0 ||  $collection['Comission'] > 100) ) {
+                Toastr::error('messages.Comission_must_be_in_0_to_100');
+                return back();
+            }
+            if(isset($collection['Tax']) && ($collection['Tax'] < 0 ||  $collection['Tax'] > 100 )) {
+                Toastr::error('messages.Tax_must_be_in_0_to_100');
+                return back();
+            }
+            if(isset($collection['Latitude']) && ($collection['Latitude'] < -90 ||  $collection['Latitude'] > 90 )) {
+                Toastr::error('messages.latitude_must_be_in_-90_to_90');
+                return back();
+            }
+            if(isset($collection['Longitude']) && ($collection['Longitude'] < -180 ||  $collection['Longitude'] > 180 )) {
+                Toastr::error('messages.longitude_must_be_in_-180_to_180');
+                return back();
+            }
+
+            $vendors[] = [
+                'id' => $collection['OwnerId'],
+                'f_name' => $collection['OwnerFirstName'],
+                'l_name' => $collection['OwnerLastName'],
+                'password' => bcrypt(12345678),
+                'phone' => $collection['Phone'],
+                'email' => $collection['Email'],
+                'created_at' => now(),
+                'updated_at' => now()
+            ];
+
+            $stores[] = [
+                'id' => $collection['id'],
+                'name' => $collection['ProviderName'],
+                'phone' => $collection['Phone'],
+                'email' => $collection['Email'],
+                'logo' => $collection['Logo'],
+                'cover_photo' => $collection['CoverPhoto'],
+                'latitude' => $collection['Latitude'],
+                'longitude' => $collection['Longitude'],
+                'address' => $collection['Address'],
+                'zone_id' => $collection['ZoneId'],
+                'module_id' => $collection['ModuleId'],
+                'comission' => $collection['Comission'],
+                'tax' => $collection['Tax'],
+                'delivery_time' => (isset($collection['PickupTime']) && preg_match('([0-9]+[\-][0-9]+\s[min|hours|days])', $collection['PickupTime'])) ? $collection['PickupTime'] : '30-40 min',
+                'schedule_order' => $collection['ScheduleTrip'] == 'yes' ? 1 : 0,
+                'status' => $collection['Status'] == 'active' ? 1 : 0,
+                'reviews_section' => $collection['ReviewsSection'] == 'active' ? 1 : 0,
+                'active' => $collection['storeOpen'] == 'yes' ? 1 : 0,
+                'vendor_id' => $collection['id'],
+                'pickup_zone_id' => $collection['PickupZoneId'],
+                'updated_at' => now(),
+            ];
+        }
+
+        try{
+            $chunkSize = 100;
+            $chunk_stores= array_chunk($stores,$chunkSize);
+            $chunk_vendors= array_chunk($vendors,$chunkSize);
+
+
+            DB::beginTransaction();
+
+            foreach($chunk_stores as $key=> $chunk_store){
+                DB::table('vendors')->upsert($chunk_vendors[$key],['id','email','phone'],['f_name','l_name','password']);
+//                    DB::table('stores')->upsert($chunk_store,['id','email','phone','vendor_id'],['name','logo','cover_photo','latitude','longitude','address','zone_id','module_id','minimum_order','comission','tax','delivery_time','minimum_shipping_charge','per_km_shipping_charge','maximum_shipping_charge','schedule_order','status','self_delivery_system','veg','non_veg','free_delivery','take_away','delivery','reviews_section','pos_system','active','featured']);
+                foreach ($chunk_store as $store) {
+                    if (isset($store['id']) && DB::table('food')->where('id', $store['id'])->exists()) {
+                        DB::table('stores')->where('id', $store['id'])->update($store);
+                        Helpers::updateStorageTable(get_class(new Store), $store['id'], $store['logo']);
+                        Helpers::updateStorageTable(get_class(new Store), $store['id'], $store['cover_photo']);
+                    } else {
+                        $insertedId = DB::table('stores')->insertGetId($store);
+                        Helpers::updateStorageTable(get_class(new Store), $insertedId, $store['logo']);
+                        Helpers::updateStorageTable(get_class(new Store), $insertedId, $store['cover_photo']);
+                    }
+                }
+            }
+            DB::commit();
+        }catch(\Exception $e)
+        {
+            DB::rollBack();
+            info(["line___{$e->getLine()}",$e->getMessage()]);
+            Toastr::error(translate('messages.failed_to_import_data'));
+            return back();
+        }
+
+        Toastr::success(translate('messages.store_imported_successfully',['count'=>count($stores)]));
+        return back();
+    }
+
+    /**
+     * @return View|\Illuminate\Foundation\Application|Factory|Application
+     */
+    public function bulkExportIndex(): View|\Illuminate\Foundation\Application|Factory|Application
+    {
+        return view('rental::admin.provider.bulk-export');
+    }
+
+    /**
+     * @param Request $request
+     * @return StreamedResponse|string
+     * @throws IOException
+     * @throws InvalidArgumentException
+     * @throws UnsupportedTypeException
+     * @throws WriterNotOpenedException
+     */
+    public function bulkExportData(Request $request): \Symfony\Component\HttpFoundation\StreamedResponse|string
+    {
+        $request->validate([
+            'type'=>'required',
+            'start_id'=>'required_if:type,id_wise',
+            'end_id'=>'required_if:type,id_wise',
+            'from_date'=>'required_if:type,date_wise',
+            'to_date'=>'required_if:type,date_wise'
+        ]);
+        $vendors = Vendor::with('stores')
+            ->when($request['type']=='date_wise', function($query)use($request){
+                $query->whereBetween('created_at', [$request['from_date'].' 00:00:00', $request['to_date'].' 23:59:59']);
+            })
+            ->when($request['type']=='id_wise', function($query)use($request){
+                $query->whereBetween('id', [$request['start_id'], $request['end_id']]);
+            })->whereHas('stores', function ($q) use ($request) {
+                return $q->where('module_id', Config::get('module.current_module_id'));
+            })
+            ->get();
+        // Export consumes only a few MB, even with 10M+ rows.
+        return  (new FastExcel(StoreLogic::format_export_stores(Helpers::Export_generator($vendors))))->download('Providers.xlsx');
+        // return (new FastExcel(StoreLogic::format_export_stores($vendors)))->download('Stores.xlsx');
+    }
 
     /**
      * @return bool
@@ -836,10 +1162,6 @@ class ProviderController extends Controller
      */
     private function handleSubscriptionPlan(Request $request, Store $store): RedirectResponse
     {
-        // $free_trial_settings = $this->businessSetting
-        //     ->whereIn('key', ['subscription_free_trial_days', 'subscription_free_trial_type', 'subscription_free_trial_status'])
-        //     ->pluck('value', 'key');
-
         Helpers::subscription_plan_chosen(store_id:$store->id,package_id:$request->package_id,payment_method:'manual_payment_by_admin',discount:0,reference:'manual_payment_by_admin',type: 'new_join');
         $store->update(['package_id' => $request->package_id]);
         Toastr::success(translate('messages.your_provider_registration_is_successful'));

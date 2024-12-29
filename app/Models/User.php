@@ -64,6 +64,11 @@ class User extends Authenticatable
         return Helpers::get_full_url('profile',$value,'public');
     }
 
+    public function scopeOfStatus($query, $status): void
+    {
+        $query->where('status', '=', $status);
+    }
+
     public function orders()
     {
         return $this->hasMany(Order::class)->where('is_guest', 0);

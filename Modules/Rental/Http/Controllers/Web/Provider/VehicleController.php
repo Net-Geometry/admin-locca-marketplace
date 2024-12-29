@@ -3,20 +3,31 @@
 namespace Modules\Rental\Http\Controllers\Web\Provider;
 
 use App\CentralLogics\Helpers;
+use App\CentralLogics\ProductLogic;
 use App\Models\Store;
 use App\Traits\FileManagerTrait;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use Modules\Rental\Entities\Vehicle;
 use Modules\Rental\Entities\VehicleBrand;
 use Modules\Rental\Entities\VehicleCategory;
 use Modules\Rental\Entities\VehicleIdentity;
 use Modules\Rental\Exports\VehicleExport;
+use OpenSpout\Common\Exception\InvalidArgumentException;
+use OpenSpout\Common\Exception\IOException;
+use OpenSpout\Common\Exception\UnsupportedTypeException;
+use OpenSpout\Writer\Exception\WriterNotOpenedException;
+use Rap2hpoutre\FastExcel\FastExcel;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class VehicleController extends Controller
 {
@@ -327,7 +338,6 @@ class VehicleController extends Controller
         return back();
     }
 
-
     /**
      * Show the specified resource.
      * @param int $id
@@ -342,7 +352,6 @@ class VehicleController extends Controller
         $defaultLang = str_replace('_', '-', app()->getLocale());
         return view('rental::provider.vehicle.details', compact('vehicle', 'language', 'defaultLang'));
     }
-
 
     /**
      * @param Request $request
@@ -441,7 +450,6 @@ class VehicleController extends Controller
         return back();
     }
 
-
     /**
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
@@ -477,6 +485,214 @@ class VehicleController extends Controller
             return Excel::download(new VehicleExport($data), 'Vehicles.csv');
         }
         return Excel::download(new VehicleExport($data), 'Vehicles.xlsx');
+    }
+
+    /**
+     * @return View|Application|Factory
+     */
+    public function bulkImportIndex(): View|Application|Factory
+    {
+        return view('rental::provider.vehicle.bulk-import');
+    }
+
+    /**
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function bulkImportData(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'products_file' => 'required|max:2048'
+        ]);
+        $module_id = Config::get('module.current_module_id');
+        $moduleType = Config::get('module.current_module_type');
+        try {
+            $collections = (new FastExcel)->import($request->file('products_file'));
+        } catch (\Exception $exception) {
+            Toastr::error(translate('messages.you_have_uploaded_a_wrong_format_file'));
+            return back();
+        }
+        if ($request->button == 'import') {
+            $data = [];
+            try{
+                foreach ($collections as $collection) {
+                    if ($collection['Id'] === "" || $collection['Name'] === "" || $collection['CategoryId'] === "" || $collection['ProviderId'] === "" || $collection['BrandId'] === "" || $collection['ZoneId'] === "") {
+                        Toastr::error(translate('messages.please_fill_all_required_fields'));
+                        return back();
+                    }
+
+                    $data[] = [
+                        'name' => $collection['Name'],
+                        'description' => $collection['Description'] ?? null,
+                        'thumbnail' => $collection['Thumbnail'] ?? null,
+                        'images' => $collection['Images'] ?? null,
+                        'zone_id' => $collection['ZoneId'] ?? null,
+                        'provider_id' => auth('vendor')->user()->id,
+                        'brand_id' => $collection['BrandId'] ?? null,
+                        'category_id' => $collection['CategoryId'] ?? null,
+                        'model' => $collection['Model'] ?? null,
+                        'type' => $collection['Type'] ?? null,
+                        'engine_capacity' => $collection['EngineCapacity'] ?? null,
+                        'engine_power' => $collection['EnginePower'] ?? null,
+                        'seating_capacity' => $collection['SeatingCapacity'] ?? null,
+                        'air_condition' => $collection['AirCondition'] ?? 0,
+                        'fuel_type' => $collection['FuelType'] ?? null,
+                        'transmission_type' => $collection['TransmissionType'] ?? null,
+                        'multiple_vehicles' => $collection['MultipleVehicles'] ?? 0,
+                        'trip_hourly' => $collection['TripHourly'] ?? 0,
+                        'trip_distance' => $collection['TripDistance'] ?? 0,
+                        'hourly_price' => $collection['HourlyPrice'] ?? 0.00,
+                        'distance_price' => $collection['DistancePrice'] ?? 0.00,
+                        'discount_type' => $collection['DiscountType'] ?? null,
+                        'discount_price' => $collection['DiscountPrice'] ?? 0.00,
+                        'tag' => $collection['Tag'] ?? null,
+                        'documents' => $collection['Documents'] ?? null,
+                        'status' => $collection['Status'] ?? 1,
+                        'new_tag' => $collection['NewTag'] ?? 1,
+                        'created_at' => now(),
+                        'updated_at' => now()
+                    ];
+
+                }
+            }catch(\Exception $e){
+                info(["line___{$e->getLine()}",$e->getMessage()]);
+                Toastr::error(translate('messages.failed_to_import_data'));
+                return back();
+            }
+            try {
+                DB::beginTransaction();
+                $chunkSize = 100;
+                $chunk_items = array_chunk($data, $chunkSize);
+                foreach ($chunk_items as $key => $chunk_item) {
+//                    DB::table('items')->insert($chunk_item);
+                    foreach ($chunk_item as $item) {
+                        $insertedId = DB::table('vehicles')->insertGetId($item);
+                        Helpers::updateStorageTable(get_class(new Vehicle()), $insertedId, $item['thumbnail']);
+                    }
+                }
+                DB::commit();
+            } catch (\Exception $e) {
+                DB::rollBack();
+                info(["line___{$e->getLine()}", $e->getMessage()]);
+                Toastr::error(translate('messages.failed_to_import_data'));
+                return back();
+            }
+            Toastr::success(translate('messages.product_imported_successfully', ['count' => count($data)]));
+            return back();
+        }
+        $data = [];
+        try {
+            foreach ($collections as $collection) {
+                if ($collection['Id'] === "" || $collection['Name'] === "" || $collection['CategoryId'] === "" || $collection['ProviderId'] === "" || $collection['BrandId'] === "" || $collection['ZoneId'] === "") {
+                    Toastr::error(translate('messages.please_fill_all_required_fields'));
+                    return back();
+                }
+
+                $data[] = [
+                    'name' => $collection['Name'],
+                    'description' => $collection['Description'] ?? null,
+                    'thumbnail' => $collection['Thumbnail'] ?? null,
+                    'images' => $collection['Images'] ?? null,
+                    'zone_id' => $collection['ZoneId'] ?? null,
+                    'provider_id' => auth('vendor')->user()->id,
+                    'brand_id' => $collection['BrandId'] ?? null,
+                    'category_id' => $collection['CategoryId'] ?? null,
+                    'model' => $collection['Model'] ?? null,
+                    'type' => $collection['Type'] ?? null,
+                    'engine_capacity' => $collection['EngineCapacity'] ?? null,
+                    'engine_power' => $collection['EnginePower'] ?? null,
+                    'seating_capacity' => $collection['SeatingCapacity'] ?? null,
+                    'air_condition' => $collection['AirCondition'] ?? 0,
+                    'fuel_type' => $collection['FuelType'] ?? null,
+                    'transmission_type' => $collection['TransmissionType'] ?? null,
+                    'multiple_vehicles' => $collection['MultipleVehicles'] ?? 0,
+                    'trip_hourly' => $collection['TripHourly'] ?? 0,
+                    'trip_distance' => $collection['TripDistance'] ?? 0,
+                    'hourly_price' => $collection['HourlyPrice'] ?? 0.00,
+                    'distance_price' => $collection['DistancePrice'] ?? 0.00,
+                    'discount_type' => $collection['DiscountType'] ?? null,
+                    'discount_price' => $collection['DiscountPrice'] ?? 0.00,
+                    'tag' => $collection['Tag'] ?? null,
+                    'documents' => $collection['Documents'] ?? null,
+                    'status' => $collection['Status'] ?? 1,
+                    'new_tag' => $collection['NewTag'] ?? 1,
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ];
+            }
+            $id = $collections->pluck('Id')->toArray();
+            if ($this->vehicle->whereIn('id', $id)->doesntExist()) {
+                Toastr::error(translate('messages.Item_doesnt_exist_at_the_database'));
+                return back();
+            }
+        }catch(\Exception $e){
+            info(["line___{$e->getLine()}",$e->getMessage()]);
+            Toastr::error(translate('messages.failed_to_import_data'));
+            return back();
+        }
+        try {
+            DB::beginTransaction();
+            $chunkSize = 100;
+            $chunk_items = array_chunk($data, $chunkSize);
+            foreach ($chunk_items as $key => $chunk_item) {
+//                DB::table('items')->upsert($chunk_item, ['id', 'module_id'], ['name', 'description', 'image', 'images', 'category_id', 'category_ids', 'unit_id', 'stock', 'price', 'discount', 'discount_type', 'available_time_starts', 'available_time_ends','choice_options', 'variations', 'food_variations', 'add_ons', 'attributes', 'store_id', 'status', 'veg', 'recommended']);
+                foreach ($chunk_item as $item) {
+                    if (isset($item['id']) && DB::table('items')->where('id', $item['id'])->exists()) {
+                        DB::table('items')->where('id', $item['id'])->update($item);
+                        Helpers::updateStorageTable(get_class(new Item), $item['id'], $item['thumbnail']);
+                    } else {
+                        $insertedId = DB::table('items')->insertGetId($item);
+                        Helpers::updateStorageTable(get_class(new Item), $insertedId, $item['thumbnail']);
+                    }
+                }
+            }
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            info(["line___{$e->getLine()}", $e->getMessage()]);
+            Toastr::error(translate('messages.failed_to_import_data'));
+            return back();
+        }
+        Toastr::success(translate('messages.Vehicle_imported_successfully', ['count' => count($data)]));
+        return back();
+    }
+
+    /**
+     * @return View|Application|Factory|\Illuminate\Contracts\Foundation\Application
+     */
+    public function bulkExportIndex(): View|Application|Factory|\Illuminate\Contracts\Foundation\Application
+    {
+        return view('rental::provider.vehicle.bulk-export');
+    }
+
+    /**
+     * @param Request $request
+     * @return StreamedResponse|string
+     * @throws IOException
+     * @throws InvalidArgumentException
+     * @throws UnsupportedTypeException
+     * @throws WriterNotOpenedException
+     */
+    public function bulkExportData(Request $request): \Symfony\Component\HttpFoundation\StreamedResponse|string
+    {
+        $request->validate([
+            'type' => 'required',
+            'start_id' => 'required_if:type,id_wise',
+            'end_id' => 'required_if:type,id_wise',
+            'from_date' => 'required_if:type,date_wise',
+            'to_date' => 'required_if:type,date_wise'
+        ]);
+
+        $providerId = auth('vendor')->user()->id;
+        $moduleType = Config::get('module.current_module_type');
+        $vehicles = $this->vehicle->where('provider_id', $providerId)->when($request['type'] == 'date_wise', function ($query) use ($request) {
+            $query->whereBetween('created_at', [$request['from_date'] . ' 00:00:00', $request['to_date'] . ' 23:59:59']);
+        })
+            ->when($request['type'] == 'id_wise', function ($query) use ($request) {
+                $query->whereBetween('id', [$request['start_id'], $request['end_id']]);
+            })->get();
+
+        return (new FastExcel(ProductLogic::format_export_vehicles(Helpers::Export_generator($vehicles), $moduleType)))->download('Vehicles.xlsx');
     }
 
 }
