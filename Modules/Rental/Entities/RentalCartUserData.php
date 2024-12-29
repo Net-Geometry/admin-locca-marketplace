@@ -15,6 +15,21 @@ class RentalCartUserData extends Model
         'estimated_hours' => 'float',
         'distance' => 'float',
         'is_guest' => 'integer',
+        'total_cart_price' => 'float',
     ];
 
+    public function getPickupLocationAttribute($value)
+    {
+        if ($value) {
+            return json_decode($value, true);
+        }
+        return $value;
+    }
+    public function getDestinationLocationAttribute($value)
+    {
+        if ($value) {
+            return json_decode($value, true);
+        }
+        return $value;
+    }
 }

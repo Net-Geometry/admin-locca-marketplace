@@ -3,12 +3,16 @@
 namespace Modules\Rental\Http\Controllers\Api\Public;
 
 
+use App\Models\Zone;
 use Illuminate\Http\Request;
 use App\CentralLogics\Helpers;
-use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Validator;
-use Modules\Rental\Entities\Vehicle;
 use App\CentralLogics\StoreLogic;
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
+use Modules\Rental\Entities\Vehicle;
+use Illuminate\Support\Facades\Validator;
+use MatanYadaev\EloquentSpatial\Objects\Point;
+
 class VehicleController extends Controller
 {
 
@@ -55,7 +59,26 @@ class VehicleController extends Controller
         }
         $limit = $request['limit'] ?? 25;
         $offset = $request['offset'] ?? 1;
-        $vehicles = $this->getVelicleListData($request)->paginate($limit, ['*'], 'page', $offset);
+        $pick_up_location = json_decode($request->pick_up_location, true) ?? [];
+
+        $pick_up_lat = data_get($pick_up_location, 'lat') ?? null;
+        $pick_up_lng = data_get($pick_up_location, 'lng') ?? null;
+
+        if($pick_up_lat && $pick_up_lng){
+            $zones = Zone::whereContains('coordinates', new Point($pick_up_lat, $pick_up_lng, POINT_SRID))->pluck('id')->toArray();
+        }
+
+
+        if($pick_up_lat && $pick_up_lng && count($zones) == 0){
+            $errors = [];
+            array_push($errors, ['code' => 'zone', 'message' => translate('messages.Out_of_pick_up_zone')]);
+            return response()->json([
+                'errors' => $errors
+            ], 403);
+        }
+
+
+        $vehicles = $this->getVelicleListData($request,$zones??[],$pick_up_lat,$pick_up_lng)->paginate($limit, ['*'], 'page', $offset);
         $data = $this->helpers->preparePaginatedResponse(pagination: $vehicles, limit: $limit, offset: $offset, key: 'vehicles', extraData: []);
         return response()->json($data, 200);
     }
@@ -125,15 +148,16 @@ class VehicleController extends Controller
         return response()->json($data, 200);
     }
 
-    public function getVehicleDetails(Vehicle $vehicle){
-        $vehicle= $vehicle->load('brand:id,name,image','provider:id,name,logo,cover_photo,rating')->loadCount('vehicleIdentities');
+    public function getVehicleDetails(Vehicle $vehicle)
+    {
+        $vehicle = $vehicle->load('brand:id,name,image', 'provider:id,name,logo,cover_photo,rating')->loadCount('vehicleIdentities');
         $ratings = StoreLogic::calculate_store_rating($vehicle['provider']['rating']);
-        $vehicle['provider']['avg_rating'] =$ratings['rating'];
-        $vehicle['provider']['rating_count'] =$ratings['total'];
+        $vehicle['provider']['avg_rating'] = $ratings['rating'];
+        $vehicle['provider']['rating_count'] = $ratings['total'];
         return response()->json($vehicle, 200);
     }
 
-    private function getVelicleListData($request)
+    private function getVelicleListData($request,$zones=[],$pick_up_lat=null,$pick_up_lng=null)
     {
         $zone_id = $request->header('zoneId');
         $zone_id = json_decode($zone_id, true);
@@ -143,9 +167,34 @@ class VehicleController extends Controller
         $category_ids = json_decode($request->category_ids, true) ?? null;
         $seating_capacity = json_decode($request->seating_capacity, true) ?? null;
 
+        $vehicles = $this->vehicle
+        ->withcount('vehicleIdentities')
+            ->when($pick_up_lat &&  $pick_up_lng && count($zones) > 0, function ($query) use ($zones) {
+                $query->whereHas('provider', function ($query) use ($zones) {
+                    $query->where(function ($query) use ($zones) {
+                        $query->whereJsonContains('pickup_zone_id', (string) $zones[0]);
+                        for ($i = 1; $i < count($zones); $i++) {
+                            $query->orWhereJsonContains('pickup_zone_id', (string) $zones[$i]);
+                        }
+                        return $query;
+                    });
+                });
+            })
 
-        $vehicles = $this->vehicle->whereIn('zone_id', $zone_id)
-            ->with('provider:id,name')->withcount('vehicleIdentities')
+            ->with('provider:id,name')
+
+            ->withCount([
+                'vehicleIdentities as total_vehicle_count' => function ($query) {
+                    $query->where(function ($query) {
+                        $query->whereHas('vehicle_trip_details', function ($subQuery) {
+                            $subQuery->where('estimated_trip_end_time', '<', now());
+                        })
+                        ->orWhereDoesntHave('vehicle_trip_details');
+                    });
+                },
+            ])
+
+
             ->when($request->provider_id, function ($query) use ($request) {
                 $query->where('provider_id', $request->provider_id);
             })
@@ -190,7 +239,8 @@ class VehicleController extends Controller
             })
             ->latest();
 
+
+
         return $vehicles;
     }
-
 }

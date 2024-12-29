@@ -21,6 +21,7 @@ class CreateRentalCartsTable extends Migration
             $table->foreignId('module_id');
             $table->integer('quantity')->default(1);
             $table->boolean('is_guest')->default(0);
+            $table->double('price',23, 8)->default(0);
             $table->timestamps();
         });
     }

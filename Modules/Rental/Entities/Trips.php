@@ -2,6 +2,7 @@
 
 namespace Modules\Rental\Entities;
 
+use App\Models\Store;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -33,5 +34,30 @@ class Trips extends Model
         'scheduled' => 'integer',
         'quantity' => 'integer',
     ];
+
+    public function getPickupLocationAttribute($value)
+    {
+        if ($value) {
+            return json_decode($value, true);
+        }
+        return $value;
+    }
+    public function getDestinationLocationAttribute($value)
+    {
+        if ($value) {
+            return json_decode($value, true);
+        }
+        return $value;
+    }
+
+    public function provider()
+    {
+        return $this->belongsTo(Store::class,'provider_id');
+    }
+    public function trip_details()
+    {
+        return $this->hasMany(TripDetails::class,'trip_id');
+    }
+
 
 }
