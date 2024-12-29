@@ -22,6 +22,8 @@ class CreateRentalCartUserDataTable extends Migration
             $table->enum('rental_type',['hourly','distance_wise'])->default('hourly');
             $table->double('estimated_hours',23, 8)->default(0);
             $table->double('distance',23, 8)->default(0);
+            $table->double('total_cart_price',23, 8)->default(0);
+            $table->double('destination_time',23, 8)->default(0);
             $table->boolean('is_guest')->default(0);
             $table->timestamps();
         });

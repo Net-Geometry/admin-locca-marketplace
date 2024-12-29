@@ -12,6 +12,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
 use Laravel\Passport\HasApiTokens;
+use Modules\Rental\Entities\Trips;
 
 class User extends Authenticatable
 {
@@ -72,6 +73,10 @@ class User extends Authenticatable
     public function orders()
     {
         return $this->hasMany(Order::class)->where('is_guest', 0);
+    }
+    public function trips()
+    {
+        return $this->hasMany(Trips::class)->where('is_guest', 0);
     }
 
     public function addresses(){
