@@ -47,8 +47,5 @@ class VehicleBrand extends Model
         return Helpers::get_full_url('brand',$value,'public');
     }
 
-    protected static function newFactory()
-    {
-        return \Modules\Rental\Database\factories\VehicleBrandFactory::new();
-    }
+
 }

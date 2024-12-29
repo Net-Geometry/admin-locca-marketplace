@@ -7,6 +7,9 @@ use App\Models\Coupon;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\CentralLogics\CouponLogic;
+use Illuminate\Support\Facades\Validator;
+use App\CentralLogics\Helpers;
 
 
 class CouponController extends Controller
@@ -72,4 +75,67 @@ class CouponController extends Controller
         }
         return response()->json($data, 200);
     }
+
+
+
+    public function apply(Request $request)
+    {
+
+        $validator = Validator::make($request->all(), [
+            'code' => 'required',
+            'provider_id' => 'required',
+        ]);
+
+        if ($validator->errors()->count()>0) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        }
+
+        try {
+            $coupon = Coupon::active()->where(['code' => $request['code']])->wherehas('module', function ($query) {
+                $query->where('module_type', 'rental');
+            })->first();
+            if (isset($coupon)) {
+                $staus = CouponLogic::is_valide($coupon, $request->user()->id ,$request['provider_id']);
+
+                switch ($staus) {
+                case 200:
+                    return response()->json($coupon, 200);
+                case 406:
+                    return response()->json([
+                        'errors' => [
+                            ['code' => 'coupon', 'message' => translate('messages.coupon_usage_limit_over')]
+                        ]
+                    ], 406);
+                case 407:
+                    return response()->json([
+                        'errors' => [
+                            ['code' => 'coupon', 'message' => translate('messages.coupon_expire')]
+                        ]
+                    ], 407);
+                case 408:
+                    return response()->json([
+                        'errors' => [
+                            ['code' => 'coupon', 'message' => translate('messages.You_are_not_eligible_for_this_coupon')]
+                        ]
+                    ], 403);
+                default:
+                    return response()->json([
+                        'errors' => [
+                            ['code' => 'coupon', 'message' => translate('messages.not_found')]
+                        ]
+                    ], 404);
+                }
+            } else {
+                return response()->json([
+                    'errors' => [
+                        ['code' => 'coupon', 'message' => translate('messages.not_found')]
+                    ]
+                ], 404);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['errors' => $e], 403);
+        }
+    }
+
+
 }

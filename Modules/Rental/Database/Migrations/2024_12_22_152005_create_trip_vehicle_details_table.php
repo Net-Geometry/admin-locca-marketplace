@@ -17,8 +17,8 @@ class CreateTripVehicleDetailsTable extends Migration
             $table->id();
             $table->foreignId('trip_id');
             $table->foreignId('vehicle_id');
-            $table->foreignId('vehicle_identity_id');
-            $table->foreignId('vehicle_driver_id');
+            $table->foreignId('vehicle_identity_id')->nullable();
+            $table->foreignId('vehicle_driver_id')->nullable();
             $table->dateTime('estimated_trip_end_time')->nullable();
             $table->timestamps();
         });

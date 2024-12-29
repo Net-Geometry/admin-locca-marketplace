@@ -16,6 +16,7 @@ use Modules\Rental\Http\Controllers\Api\Public\VehicleBrandController as Vehicle
 use Modules\Rental\Http\Controllers\Api\Public\ProviderController as Provider;
 use Modules\Rental\Http\Controllers\Api\User\CartController;
 use Modules\Rental\Http\Controllers\Api\User\TripController;
+use Modules\Rental\Http\Controllers\Api\User\RentalWishlistController;
 
 /*
 |--------------------------------------------------------------------------
@@ -87,49 +88,56 @@ Route::group(['prefix' => 'rental', 'as' => 'rental.',  'middleware' =>  ['local
         Route::get('brand/list', [ProviderController::class, 'brandList']);
     });
 
-    Route::get('coupon/list', [Coupon::class, 'list']);
-    Route::group(['prefix' => 'banners'], function () {
-        Route::get('/', [Banner::class, 'list']);
-    });
-    Route::group(['prefix' => 'vehicle'], function () {
-        Route::get('top-rated/', [Vehicle::class, 'topRatedVehicleList']);
-        Route::get('search/', [Vehicle::class, 'getSearchedVehicles']);
-        Route::get('search/suggestion', [Vehicle::class, 'getSearchedVehiclesSuggestion']);
-        Route::get('get-provider-vehicles', [Vehicle::class, 'getProviderWiseVehicles']);
-        Route::get('get-vehicle-details/{vehicle}', [Vehicle::class, 'getVehicleDetails']);
 
-        Route::get('category-list/', [VehicleCategory::class, 'vehicleCategoryList']);
-        Route::get('brand-list/', [VehicleBrand::class, 'vehicleBrandList']);
-    });
 
-    Route::group(['prefix' => 'provider'], function () {
-        Route::get('get-provider-details/{provider}', [Provider::class, 'getProvidereDetails']);
-        Route::get('get-provider-reviews/{provider}', [Provider::class, 'getProvidereReviews']);
-    });
 
-    Route::group(['prefix' => 'user' ,'middleware' => ['module-check','apiGuestCheck']], function () {
-        Route::group(['prefix' => 'cart'], function () {
-            Route::get('get-cart', [CartController::class, 'getCartList']);
-            Route::Post('add-to-cart', [CartController::class, 'addToCart']);
-            Route::Put('update-cart', [CartController::class, 'updateCart']);
-            Route::Put('update-user-data/{user_data}', [CartController::class, 'updateUserData']);
-            Route::delete('remove-vehicle/{cart_id}', [CartController::class, 'removeVehicle']);
-            Route::delete('remove-cart', [CartController::class, 'removeCart']);
+
+    Route::group(['middleware' => 'module-check'], function () {
+
+        Route::get('coupon/list', [Coupon::class, 'list']);
+        Route::group(['prefix' => 'coupon', 'middleware' => 'auth:api'], function () {
+            Route::get('apply', [Coupon::class, 'apply']);
         });
-        Route::group( ['middleware' => ['module-check','apiGuestCheck','auth:api']], function () {
-            Route::group(['prefix' => 'trip'], function () {
-                Route::Post('trip-booking', [TripController::class, 'tripBooking']);
-                Route::get('get-trip-list', [TripController::class, 'getTripList']);
-                Route::get('get-trip-details', [TripController::class, 'getTripDetails']);
-                Route::put('cancel-trip', [TripController::class, 'cancelTrip']);
+        Route::group(['prefix' => 'banners'], function () {
+            Route::get('/', [Banner::class, 'list']);
+        });
+        Route::group(['prefix' => 'vehicle'], function () {
+            Route::get('top-rated/', [Vehicle::class, 'topRatedVehicleList']);
+            Route::get('search/', [Vehicle::class, 'getSearchedVehicles']);
+            Route::get('search/suggestion', [Vehicle::class, 'getSearchedVehiclesSuggestion']);
+            Route::get('get-provider-vehicles', [Vehicle::class, 'getProviderWiseVehicles']);
+            Route::get('get-vehicle-details/{vehicle}', [Vehicle::class, 'getVehicleDetails']);
+            Route::get('category-list/', [VehicleCategory::class, 'vehicleCategoryList']);
+            Route::get('brand-list/', [VehicleBrand::class, 'vehicleBrandList']);
+        });
+
+        Route::group(['prefix' => 'provider'], function () {
+            Route::get('get-provider-details/{provider}', [Provider::class, 'getProvidereDetails']);
+            Route::get('get-provider-reviews/{provider}', [Provider::class, 'getProvidereReviews']);
+        });
+
+        Route::group(['prefix' => 'user', 'middleware' => ['apiGuestCheck']], function () {
+            Route::group(['prefix' => 'cart'], function () {
+                Route::get('get-cart', [CartController::class, 'getCartList']);
+                Route::Post('add-to-cart', [CartController::class, 'addToCart']);
+                Route::Put('update-cart', [CartController::class, 'updateCart']);
+                Route::Put('update-user-data/{user_data}', [CartController::class, 'updateUserData']);
+                Route::delete('remove-vehicle/{cart_id}', [CartController::class, 'removeVehicle']);
+                Route::delete('remove-cart', [CartController::class, 'removeCart']);
             });
-
+            Route::group(['middleware' => ['apiGuestCheck', 'auth:api']], function () {
+                Route::group(['prefix' => 'trip'], function () {
+                    Route::Post('trip-booking', [TripController::class, 'tripBooking']);
+                    Route::get('get-trip-list/{all}', [TripController::class, 'getTripList']);
+                    Route::get('get-trip-details', [TripController::class, 'getTripDetails']);
+                    Route::put('cancel-trip', [TripController::class, 'cancelTrip']);
+                });
+                Route::group(['prefix' => 'wish-list'], function () {
+                    Route::get('/', [RentalWishlistController::class, 'wish_list']);
+                    Route::post('add',  [RentalWishlistController::class, 'add_to_wishlist']);
+                    Route::delete('remove',  [RentalWishlistController::class, 'remove_from_wishlist']);
+                });
+            });
         });
     });
-
-
-
-
-
-
 });

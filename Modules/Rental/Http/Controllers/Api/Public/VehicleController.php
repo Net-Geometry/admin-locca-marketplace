@@ -39,7 +39,7 @@ class VehicleController extends Controller
         $limit = $request['limit'] ?? 25;
         $offset = $request['offset'] ?? 1;
 
-        $vehicles = $this->vehicle->whereIn('zone_id', $zone_id)->with('provider:id,name')->withcount('vehicleIdentities')
+        $vehicles = $this->vehicle->whereIn('zone_id', $zone_id)->with('provider:id,name,address,tax','provider.discount')->withcount('vehicleIdentities as total_vehicle_count')
             ->orderBy('total_trip', 'desc')
             ->latest()
             ->paginate($limit, ['*'], 'page', $offset);
@@ -59,10 +59,10 @@ class VehicleController extends Controller
         }
         $limit = $request['limit'] ?? 25;
         $offset = $request['offset'] ?? 1;
-        $pick_up_location = json_decode($request->pick_up_location, true) ?? [];
+        $pickup_location = json_decode($request->pickup_location, true) ?? [];
 
-        $pick_up_lat = data_get($pick_up_location, 'lat') ?? null;
-        $pick_up_lng = data_get($pick_up_location, 'lng') ?? null;
+        $pick_up_lat = data_get($pickup_location, 'lat') ?? null;
+        $pick_up_lng = data_get($pickup_location, 'lng') ?? null;
 
         if($pick_up_lat && $pick_up_lng){
             $zones = Zone::whereContains('coordinates', new Point($pick_up_lat, $pick_up_lng, POINT_SRID))->pluck('id')->toArray();
@@ -168,7 +168,6 @@ class VehicleController extends Controller
         $seating_capacity = json_decode($request->seating_capacity, true) ?? null;
 
         $vehicles = $this->vehicle
-        ->withcount('vehicleIdentities')
             ->when($pick_up_lat &&  $pick_up_lng && count($zones) > 0, function ($query) use ($zones) {
                 $query->whereHas('provider', function ($query) use ($zones) {
                     $query->where(function ($query) use ($zones) {
@@ -180,22 +179,24 @@ class VehicleController extends Controller
                     });
                 });
             })
+            ->with('provider:id,name,address,tax','provider.discount');
+            if($request?->date){
+                $vehicles = $vehicles->withCount([
+                    'vehicleIdentities as total_vehicle_count' => function ($query) use($request) {
+                        $query->where(function ($query) use($request) {
+                            $query->whereHas('vehicle_trip_details', function ($subQuery) use($request) {
+                                $subQuery->where('estimated_trip_end_time', '<', $request?->date ?? now());
+                            })
+                            ->orWhereDoesntHave('vehicle_trip_details');
+                        });
+                    },
+                ])->having('total_vehicle_count' ,'>', 0);
 
-            ->with('provider:id,name')
+            } else{
+                $vehicles = $vehicles->withcount('vehicleIdentities as total_vehicle_count');
+            }
 
-            ->withCount([
-                'vehicleIdentities as total_vehicle_count' => function ($query) {
-                    $query->where(function ($query) {
-                        $query->whereHas('vehicle_trip_details', function ($subQuery) {
-                            $subQuery->where('estimated_trip_end_time', '<', now());
-                        })
-                        ->orWhereDoesntHave('vehicle_trip_details');
-                    });
-                },
-            ])
-
-
-            ->when($request->provider_id, function ($query) use ($request) {
+            $vehicles = $vehicles->when($request->provider_id, function ($query) use ($request) {
                 $query->where('provider_id', $request->provider_id);
             })
             ->when($request->trip_type == 'hourly', function ($query) {
@@ -237,6 +238,13 @@ class VehicleController extends Controller
             ->when($request->fuel_type, function ($query) use ($request) {
                 $query->where('fuel_type', $request->fuel_type);
             })
+            ->when($request->top_rated == 1, function ($query){
+                $query->orderBy('total_trip', 'desc');
+            })
+            ->when(in_array($request->sortby_price,['asc','desc']), function ($query) use ($request){
+                $query->orderBy('hourly_price', $request->sortby_price)->orderBy('distance_price', $request->sortby_price);
+            })
+
             ->latest();
 
 

@@ -4405,7 +4405,7 @@ class Helpers
         return true;
     }
 
-    public function preparePaginatedResponse($pagination, $limit, $offset, $key = 'data', $extraData = []): array
+    public static function preparePaginatedResponse($pagination, $limit, $offset, $key = 'data', $extraData = []): array
     {
         $response = [
             'total_size' => (int) $pagination->total(),
