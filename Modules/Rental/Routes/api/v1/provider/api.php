@@ -90,6 +90,10 @@ Route::group(['prefix' => 'rental', 'as' => 'rental.',  'middleware' =>  ['local
         Route::group(['prefix' => 'trip', 'as' => 'trip.'], function () {
             Route::get('list/{all}', [ProviderTripController::class, 'tripList']);
             Route::get('details', [ProviderTripController::class, 'getTripDetails']);
+            Route::get('status', [ProviderTripController::class, 'updateTripStatus']);
+            Route::get('payment', [ProviderTripController::class, 'updateTripPaymentStatus']);
+            Route::put('assign-vehicle', [ProviderTripController::class, 'assignVehicle']);
+            Route::put('assign-driver', [ProviderTripController::class, 'assignDriver']);
         });
 
         Route::get('category/list', [ProviderController::class, 'categoryList']);
