@@ -58,6 +58,7 @@ class Trips extends Model
     {
         return $this->belongsTo(Store::class,'provider_id');
     }
+
     public function trip_details()
     {
         return $this->hasMany(TripDetails::class,'trip_id');
@@ -144,6 +145,11 @@ class Trips extends Model
     public function scopeProcessing($query)
     {
         return $query->whereIn('trip_status', ['confirmed', 'processing']);
+    }
+
+    public function vehicle_identity()
+    {
+        return $this->hasMany(TripVehicleDetails::class,'trip_id');
     }
 
 

@@ -26,5 +26,14 @@ class TripVehicleDetails extends Model
         return $this->belongsTo(VehicleDriver::class, 'vehicle_driver_id', 'id');
     }
 
+    public function vehicles()
+    {
+        return $this->belongsTo(vehicle::class,'vehicle_id');
+    }
+
+    public function vehicle_identity_data()
+    {
+        return $this->belongsTo(VehicleIdentity::class,'vehicle_identity_id');
+    }
 
 }

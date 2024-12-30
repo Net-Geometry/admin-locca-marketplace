@@ -794,8 +794,7 @@ class Store extends Model
      */
     public function vehicle_identity(): HasManyThrough
     {
-        return $this->hasManyThrough(
-            VehicleIdentity::class, Vehicle::class, 'provider_id','vehicle_id','id','id');
+        return $this->hasManyThrough(VehicleIdentity::class, Vehicle::class, 'provider_id','vehicle_id','id','id');
     }
     public function vehicles(): HasMany
     {

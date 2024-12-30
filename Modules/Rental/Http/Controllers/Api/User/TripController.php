@@ -43,12 +43,9 @@ class TripController extends Controller
     public function tripBooking(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            // 'destination_time' => 'required',
             'trip_amount' => 'required|numeric',
             'trip_type' => 'required|in:hourly,distance_wise',
             'provider_id' => 'required|numeric',
-            'longitude' => 'required|numeric',
-            'latitude' => 'required|numeric',
             'guest_id' => $request->user ? 'nullable' : 'required',
         ]);
 
@@ -261,12 +258,14 @@ class TripController extends Controller
 
         // $settings =  array_column(BusinessSetting::whereIn('key', $settings_key)->get()->toArray(), 'value', 'key');
 
+        $longitude= $request->header('longitude')?? 0;
+        $latitude= $request->header('latitude')?? 0;
 
         $store = Store::with(['discount', 'store_sub'])->selectRaw('*, IF(((select count(*) from `store_schedule` where `stores`.`id` = `store_schedule`.`store_id` and `store_schedule`.`day` = ' . $schedule_at->format('w') . ' and `store_schedule`.`opening_time` < "' . $schedule_at->format('H:i:s') . '" and `store_schedule`.`closing_time` >"' . $schedule_at->format('H:i:s') . '") > 0), true, false) as open')->where('id', $request->provider_id)->first();
 
 
         $zone_id = isset($store) ? [$store->zone_id] : json_decode($request->header('zoneId'), true);
-        $zone = Zone::where('id', $zone_id)->whereContains('coordinates', new Point($request->latitude, $request->longitude, POINT_SRID))->first();
+        $zone = Zone::where('id', $zone_id)->whereContains('coordinates', new Point($latitude, $longitude, POINT_SRID))->first();
 
 
 
@@ -439,7 +438,7 @@ class TripController extends Controller
 
 
 
-    public function getTripList(Request $request)
+    public function getTripList(Request $request,$type)
     {
         $validator = Validator::make($request->all(), [
             'guest_id' => $request->user ? 'nullable' : 'required',
@@ -454,6 +453,7 @@ class TripController extends Controller
         $offset = $request['offset'] ?? 1;
         $trips = $this->trips->where(['user_id' => $user_id, 'is_guest' => $is_guest])
 
+        ->with('provider:id,name,logo,cover_photo,phone')
             ->when($request->search, function ($query) use ($request) {
                 $keys = explode(' ', $request->search);
                 $query->where(function ($query) use ($keys) {
@@ -464,6 +464,12 @@ class TripController extends Controller
             })
             ->when($request->trip_status, function ($query) use ($request) {
                 $query->where('trip_status', $request->trip_status);
+            })
+            ->when($type == 'completed', function ($query) {
+                $query->whereIn('trip_status', ['completed','canceled']);
+            })
+            ->when($type == 'running', function ($query) {
+                $query->whereIn('trip_status', ['pending','confirmed','ongoing']);
             })
             ->latest()->paginate($limit, ['*'], 'page', $offset);
         $data = $this->helpers->preparePaginatedResponse(pagination: $trips, limit: $limit, offset: $offset, key: 'trips', extraData: []);
