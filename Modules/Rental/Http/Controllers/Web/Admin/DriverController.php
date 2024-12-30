@@ -130,7 +130,6 @@ class DriverController extends Controller
             $identityImage = $driver['identity_image'];
         }
 
-        $driver->provider_id = $request->provider_id;
         $driver->first_name = $request->first_name;
         $driver->last_name = $request->last_name;
         $driver->email = $request->email;

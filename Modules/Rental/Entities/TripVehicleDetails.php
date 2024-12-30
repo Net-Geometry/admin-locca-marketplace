@@ -4,6 +4,7 @@ namespace Modules\Rental\Entities;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class TripVehicleDetails extends Model
 {
@@ -17,5 +18,13 @@ class TripVehicleDetails extends Model
         'vehicle_driver_id' => 'integer',
     ];
 
- 
+    /**
+     * @return BelongsTo
+     */
+    public function driver(): BelongsTo
+    {
+        return $this->belongsTo(VehicleDriver::class, 'vehicle_driver_id', 'id');
+    }
+
+
 }

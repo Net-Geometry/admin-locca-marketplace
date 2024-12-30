@@ -3,6 +3,11 @@
 @section('title', translate('messages.all_trips'))
 
 @push('css_or_js')
+    <style>
+        [data-toggle="tooltip"] img {
+           width: 37px;
+        }
+    </style>
 @endpush
 
 @section('content')
@@ -150,24 +155,52 @@
                                 {{ $trip->provider->name }}
                             </div>
                         </td>
+                        @php
+                            $totalVehicle = count($trip->assignedVehicle);
+                            $totalDriver = count($trip->assignedDriver);
+                            $totalTripe = count($trip->trip_details);
+                        @endphp
                         <td>
-                            <div class="d-flex align-items-center gap-2">
-                                <div class="d-flex">
-                                    <img width="35" class="rounded-circle aspect-1-1 border border-white shadow-sm" src="{{ asset('public/assets/admin/img/admin.png') }}" alt="">
-                                    <img width="35" class="rounded-circle aspect-1-1 border border-white shadow-sm ml-n2" src="{{ asset('public/assets/admin/img/admin.png') }}" alt="">
-                                    <img width="35" class="rounded-circle aspect-1-1 border border-white shadow-sm ml-n2" src="{{ asset('public/assets/admin/img/admin.png') }}" alt="">
+                            @if($totalDriver)
+                                @if($totalDriver > 1)
+                                    <div class="d-flex align-items-center gap-2" data-html="true" data-toggle="tooltip"
+                                         title="<div class='d-flex flex-column p-2'>
+                                             @foreach($trip->assignedDriver as $index => $tooltipDriver)
+                                                <div class='media gap-3 border-bottom mb-2 pb-2'>
+                                                    <img src='{{ $tooltipDriver->driver['imageFullUrl'] }}' class='rounded ratio-1-1' width='40' alt='...'>
+                                                    <div class='media-body'>
+                                                        <h5 class='d-flex align-items-center gap-2 text-white mb-0'>{{ $tooltipDriver->driver['fullName'] }}</h5>
+                                                        <div class='d-flex align-items-center gap-2 fs-10'>{{ $tooltipDriver->driver->email }}</div>
+                                                    </div>
+                                                </div>
+                                                @endforeach
+                                            </div>">
+                                        <div class="d-flex">
+                                            @foreach ($trip->assignedDriver as $assignedDriver)
+                                                <img width="35" class="rounded-circle aspect-1-1 border border-white shadow-sm" src="{{ $assignedDriver->driver['imageFullUrl'] }}" alt="">
+                                            @endforeach
+                                        </div>
+                                        <span>+2</span>
+                                    </div>
+                                @else
+                                    <div class="text--title">
+                                        @if ($trip->assignedDriver->isNotEmpty())
+                                            <div class="font-medium">
+                                                    {{ $trip->assignedDriver->first()?->driver?->fullName }}
+                                            </div>
+                                            <div class="opacity-lg">
+                                                {{ $trip->assignedDriver->first()?->driver?->email }}
+                                            </div>
+                                        @endif
+                                    </div>
+                                @endif
+                            @else
+                                <div class="text-muted fs-12 mt-1">
+                                    {{ translate('messages.Unassigned') }}
                                 </div>
-                                <span>+2</span>
-                            </div>
-                            <div class="text-muted fs-12 mt-1">
-                                {{ translate('messages.driver_Assigned') }}
-                            </div>
+                            @endif
                         </td>
                         <td>
-                            @php
-                                $totalVehicle = count($trip->assignedVehicle);
-                                $totalTripe = count($trip->trip_details);
-                            @endphp
                             @if($totalVehicle > 0)
                                 <div class="text-primary text-underline font-weight-medium" data-html="true" data-toggle="tooltip"
                                      title="<div class='d-flex flex-column p-2'>
@@ -192,27 +225,27 @@
                         <td>
                             <div class="text--title">
                                 <div class="font-medium">
-                                    {{ translate('messages.Hourly') }}
+                                    {{ $trip->trip_type }}
                                 </div>
                                 <div class="opacity-lg">
-                                    {{ translate('messages.Instant') }}
+                                    {{ $trip->scheduled ? translate('messages.Instant') : translate('messages.scheduled') }}
                                 </div>
                             </div>
                         </td>
                         <td>
                             <div class="text--title text-end">
                                 <div class="font-semobold">
-                                    {{ translate('messages.$1,550.35') }}
+                                    {{ \App\CentralLogics\Helpers::format_currency($trip->trip_amount) }}
                                 </div>
                                 <div class="opacity-lg font-medium text--success">
-                                    {{ translate('messages.Paid') }}
+                                    {{ ucwords($trip->payment_status) }}
                                 </div>
                             </div>
                         </td>
                         <td>
                             <div class="d-flex justify-content-center">
                                 <label class="badge badge-soft-info border-0">
-                                    {{ translate('messages.Pending') }}
+                                    {{ ucwords($trip->trip_status) }}
                                 </label>
                             </div>
                         </td>

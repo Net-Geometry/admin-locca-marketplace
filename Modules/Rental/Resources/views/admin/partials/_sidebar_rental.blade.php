@@ -77,7 +77,7 @@
                                     <span class="text-truncate sidebar--badge-container">
                                         {{ translate('messages.all') }}
                                         <span class="badge badge-soft-info badge-pill ml-1">
-                                            {{ \Modules\Rental\Entities\Trips::ProviderTrip()->count() }}
+                                            {{ \Modules\Rental\Entities\Trips::count() }}
                                         </span>
                                     </span>
                                 </a>
