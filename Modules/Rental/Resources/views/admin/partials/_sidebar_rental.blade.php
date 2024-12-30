@@ -56,28 +56,28 @@
                     </li>
                     <!-- End Dashboards -->
                     <!-- Marketing section -->
-                                        <!-- Orders -->
-                    @if (\App\CentralLogics\Helpers::module_permission_check('order'))
+                                        <!-- Trips -->
+                    @if (\App\CentralLogics\Helpers::module_permission_check('Trip'))
                     <li class="nav-item">
-                        <small class="nav-subtitle">{{ translate('messages.order_management') }}</small>
+                        <small class="nav-subtitle">{{ translate('messages.Trip_management') }}</small>
                         <small class="tio-more-horizontal nav-subtitle-replacer"></small>
                     </li>
 
-                    <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/order') ? 'active' : '' }}">
-                        <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:" title="{{ translate('messages.orders') }}">
+                    <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/rental/trip') ? 'active' : '' }}">
+                        <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:" title="{{ translate('messages.Trips') }}">
                             <i class="tio-shopping-cart nav-icon"></i>
                             <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                {{ translate('messages.orders') }}
+                                {{ translate('messages.Trips') }}
                             </span>
                         </a>
                         <ul class="js-navbar-vertical-aside-submenu nav nav-sub" style="display:{{ Request::is('admin/order*') ? 'block' : 'none' }}">
-                            <li class="nav-item {{ Request::is('admin/order/list/all') ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ route('admin.order.list', ['all']) }}" title="{{ translate('messages.all_orders') }}">
+                            <li class="nav-item {{ Request::is('admin/rental/trip/list/all') ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ route('admin.rental.trip.list', ['all']) }}" title="{{ translate('messages.all_trips') }}">
                                     <span class="tio-circle nav-indicator-icon"></span>
                                     <span class="text-truncate sidebar--badge-container">
                                         {{ translate('messages.all') }}
                                         <span class="badge badge-soft-info badge-pill ml-1">
-                                            {{ \App\Models\Order::StoreOrder()->module(Config::get('module.current_module_id'))->count() }}
+                                            {{ \Modules\Rental\Entities\Trips::ProviderTrip()->count() }}
                                         </span>
                                     </span>
                                 </a>

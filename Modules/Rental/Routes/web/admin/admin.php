@@ -10,6 +10,7 @@ use Modules\Rental\Http\Controllers\Web\Admin\CategoryController;
 use Modules\Rental\Http\Controllers\Web\Admin\DriverController;
 use Modules\Rental\Http\Controllers\Web\Admin\ProviderController;
 use Modules\Rental\Http\Controllers\Web\Admin\DashboardController;
+use Modules\Rental\Http\Controllers\Web\Admin\TripController;
 use Modules\Rental\Http\Controllers\Web\Admin\VehicleController;
 use Modules\Rental\Http\Controllers\Web\Admin\SettingsController;
 
@@ -98,7 +99,17 @@ Route::group(['middleware' => ['admin', 'current-module']], function () {
                 Route::get('bulk-export', [VehicleController::class, 'bulkExportIndex'])->name('bulk-export-index');
                 Route::POST('bulk-export', [VehicleController::class, 'bulkExportData']);
             });
+        });
 
+        Route::group(['prefix' => 'trip', 'as' => 'trip.'], function () {
+            Route::get('/', [TripController::class,'list'])->name('list');
+            Route::post('store', [TripController::class,'store'])->name('store');
+            Route::get('edit/{banner}', [TripController::class,'edit'])->name('edit');
+            Route::post('edit/{banner}', [TripController::class,'update'])->name('update');
+            Route::delete('delete/{banner}', [TripController::class,'destroy'])->name('delete');
+            Route::get('status/{banner}/{status}', [TripController::class,'status'])->name('status');
+            Route::get('featured/{banner}/{status}', [TripController::class,'updateFeatured'])->name('featured');
+            Route::get('export', [TripController::class, 'export'])->name('export');
         });
 
         Route::group(['prefix' => 'banner', 'as' => 'banner.', 'middleware' => ['module:banner']], function () {

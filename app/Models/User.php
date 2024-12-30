@@ -65,6 +65,11 @@ class User extends Authenticatable
         return Helpers::get_full_url('profile',$value,'public');
     }
 
+    public function getFullNameAttribute(): string
+    {
+        return $this->f_name . ' ' . $this->l_name;
+    }
+
     public function scopeOfStatus($query, $status): void
     {
         $query->where('status', '=', $status);

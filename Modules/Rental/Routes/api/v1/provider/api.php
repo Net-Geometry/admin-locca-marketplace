@@ -74,8 +74,8 @@ Route::group(['prefix' => 'rental', 'as' => 'rental.',  'middleware' =>  ['local
         });
 
         Route::group(['prefix' => 'schedule', 'as' => 'schedule.'], function () {
-            Route::get('/create', [ProviderController::class, 'scheduleStore']);
-            Route::post('delete/{id}', [ProviderController::class, 'scheduleDelete']);
+            Route::post('/create', [ProviderController::class, 'scheduleStore']);
+            Route::delete('delete/{id}', [ProviderController::class, 'scheduleDelete']);
         });
 
         Route::group(['prefix' => 'message', 'as' => 'message.'], function () {

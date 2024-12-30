@@ -2,9 +2,13 @@
 
 namespace Modules\Rental\Entities;
 
+use Carbon\Carbon;
 use App\Models\Store;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Trips extends Model
 {
@@ -57,6 +61,89 @@ class Trips extends Model
     public function trip_details()
     {
         return $this->hasMany(TripDetails::class,'trip_id');
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function customer(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function assignedVehicle(): HasMany
+    {
+        return $this->hasMany(TripVehicleDetails::class, 'trip_id')->whereNotNull('vehicle_identity_id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function assignedDriver(): HasMany
+    {
+        return $this->hasMany(TripVehicleDetails::class, 'trip_id')->whereNotNull('vehicle_driver_id');
+    }
+
+    public function scopeProviderTrip($query)
+    {
+        return $query->where(function ($q) {
+            $q->where('trip_type', 'completed');
+        });
+    }
+
+    /**
+     * @return string
+     */
+    public function getBookingDateAttribute(): string
+    {
+        return Carbon::parse($this->created_at)->format('d F Y');
+    }
+
+    /**
+     * @return string
+     */
+    public function getBookingTimeAttribute(): string
+    {
+        return Carbon::parse($this->created_at)->format('h:i A');
+    }
+
+    /**
+     * @return string
+     */
+    public function getScheduleDateAttribute(): string
+    {
+        return Carbon::parse($this->schedule_at)->format('d F Y');
+    }
+
+    /**
+     * @return string
+     */
+    public function getScheduleTimeAttribute(): string
+    {
+        return Carbon::parse($this->schedule_at)->format('h:i A');
+    }
+
+    public function scopeScheduled($query)
+    {
+        return $query->whereRaw('created_at <> schedule_at');
+    }
+
+    public function scopePending($query)
+    {
+        return $query->where('trip_status', 'pending');
+    }
+
+    public function scopeAccepted($query)
+    {
+        return $query->where('trip_status', 'accepted');
+    }
+
+    public function scopeProcessing($query)
+    {
+        return $query->whereIn('trip_status', ['confirmed', 'processing']);
     }
 
 
