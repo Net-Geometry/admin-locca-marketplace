@@ -3,6 +3,7 @@
 namespace Modules\Rental\Entities;
 
 use App\Models\Store;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -50,13 +51,24 @@ class Trips extends Model
         return $value;
     }
 
+    public function customer()
+    {
+        return $this->belongsTo(User::class,'user_id');
+    }
+
     public function provider()
     {
         return $this->belongsTo(Store::class,'provider_id');
     }
+
     public function trip_details()
     {
         return $this->hasMany(TripDetails::class,'trip_id');
+    }
+
+    public function vehicle_identity()
+    {
+        return $this->hasMany(TripVehicleDetails::class,'trip_id');
     }
 
 

@@ -10,7 +10,7 @@ use Modules\Rental\Entities\RentalWishlish;
 
 class RentalWishlistController extends Controller
 {
-    public function add_to_wishlist(Request $request)
+    public function addToWishlist(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'vehicle_id' => 'required_without:provider_id',
@@ -40,7 +40,7 @@ class RentalWishlistController extends Controller
         return response()->json(['message' => translate('messages.already_in_wishlist')], 403);
     }
 
-    public function remove_from_wishlist(Request $request)
+    public function removeFromWishlist(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'vehicle_id' => 'required_without:provider_id',
@@ -67,7 +67,7 @@ class RentalWishlistController extends Controller
         return response()->json(['message' => translate('messages.not_found')], 404);
     }
 
-    public function wish_list(Request $request)
+    public function wishlist(Request $request)
     {
         if (!$request->hasHeader('zoneId')) {
             $errors = [];

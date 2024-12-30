@@ -6613,4 +6613,7 @@ Smartly or Earn. ',
   'The vehicle id field is required when provider id is not present.' => 'The vehicle id field is required when provider id is not present.',
   'The provider id field is required when vehicle id is not present.' => 'The provider id field is required when vehicle id is not present.',
   'can_not_add_both_vehicle_and_Provider_at_same_time' => 'Can not add both vehicle and Provider at same time',
+  'The distance field is required when rental type is distance_wise.' => 'The distance field is required when rental type is distance wise.',
+  'The destination time field is required when rental type is distance_wise.' => 'The destination time field is required when rental type is distance wise.',
+  'The trip id field is required.' => 'The trip id field is required.',
 );

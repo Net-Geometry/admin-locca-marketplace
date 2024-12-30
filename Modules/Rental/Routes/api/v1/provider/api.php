@@ -8,6 +8,7 @@ use Modules\Rental\Http\Controllers\Api\Provider\CouponController;
 use Modules\Rental\Http\Controllers\Api\Provider\DriverController;
 use Modules\Rental\Http\Controllers\Api\Provider\ProviderController;
 use Modules\Rental\Http\Controllers\Api\Provider\VehicleController;
+use Modules\Rental\Http\Controllers\Api\Provider\ProviderTripController;
 use Modules\Rental\Http\Controllers\Api\Public\CouponController as Coupon;
 use Modules\Rental\Http\Controllers\Api\Public\BannerController as Banner;
 use Modules\Rental\Http\Controllers\Api\Public\VehicleController as Vehicle;
@@ -84,6 +85,11 @@ Route::group(['prefix' => 'rental', 'as' => 'rental.',  'middleware' =>  ['local
             Route::post('send', [ConversationController::class, 'messagesStore']);
         });
 
+        Route::group(['prefix' => 'trip', 'as' => 'trip.'], function () {
+            Route::get('list/{all}', [ProviderTripController::class, 'tripList']);
+            Route::get('details', [ProviderTripController::class, 'getTripDetails']);
+        });
+
         Route::get('category/list', [ProviderController::class, 'categoryList']);
         Route::get('brand/list', [ProviderController::class, 'brandList']);
     });
@@ -133,9 +139,9 @@ Route::group(['prefix' => 'rental', 'as' => 'rental.',  'middleware' =>  ['local
                     Route::put('cancel-trip', [TripController::class, 'cancelTrip']);
                 });
                 Route::group(['prefix' => 'wish-list'], function () {
-                    Route::get('/', [RentalWishlistController::class, 'wish_list']);
-                    Route::post('add',  [RentalWishlistController::class, 'add_to_wishlist']);
-                    Route::delete('remove',  [RentalWishlistController::class, 'remove_from_wishlist']);
+                    Route::get('/', [RentalWishlistController::class, 'wishlist']);
+                    Route::post('add',  [RentalWishlistController::class, 'addToWishlist']);
+                    Route::delete('remove',  [RentalWishlistController::class, 'removeFromWishlist']);
                 });
             });
         });
