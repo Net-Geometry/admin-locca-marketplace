@@ -47,8 +47,5 @@ class VehicleCategory extends Model
         return Helpers::get_full_url('category',$value,'public');
     }
 
-    protected static function newFactory()
-    {
-        return \Modules\Rental\Database\factories\VehicleCategoryFactory::new();
-    }
+
 }

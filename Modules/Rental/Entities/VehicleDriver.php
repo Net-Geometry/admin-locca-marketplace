@@ -109,8 +109,4 @@ class VehicleDriver extends Model
         return $images;
     }
 
-    protected static function newFactory()
-    {
-        return \Modules\Rental\Database\factories\VehicleDriverFactory::new();
-    }
 }
