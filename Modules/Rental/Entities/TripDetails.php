@@ -2,8 +2,10 @@
 
 namespace Modules\Rental\Entities;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class TripDetails extends Model
@@ -29,6 +31,11 @@ class TripDetails extends Model
             return json_decode($value, true);
         }
         return $value;
+    }
+
+    public function vehicle(): BelongsTo
+    {
+        return $this->belongsTo(Vehicle::class, 'vehicle_id');
     }
 
     public function matchingTripVehicles(): HasMany

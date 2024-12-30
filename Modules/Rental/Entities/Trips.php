@@ -64,6 +64,11 @@ class Trips extends Model
         return $this->hasMany(TripDetails::class,'trip_id');
     }
 
+    public function vehicle_identity()
+    {
+        return $this->hasMany(TripVehicleDetails::class,'trip_id');
+    }
+
     /**
      * @return BelongsTo
      */
@@ -137,19 +142,29 @@ class Trips extends Model
         return $query->where('trip_status', 'pending');
     }
 
-    public function scopeAccepted($query)
+    public function scopeConfirmed($query)
     {
-        return $query->where('trip_status', 'accepted');
+        return $query->where('trip_status', 'confirmed');
     }
 
-    public function scopeProcessing($query)
+    public function scopeOngoing($query)
     {
-        return $query->whereIn('trip_status', ['confirmed', 'processing']);
+        return $query->where('trip_status', 'ongoing');
     }
 
-    public function vehicle_identity()
+    public function scopeCompleted($query)
     {
-        return $this->hasMany(TripVehicleDetails::class,'trip_id');
+        return $query->where('trip_status', 'completed');
+    }
+
+    public function scopeCanceled($query)
+    {
+        return $query->where('trip_status', 'canceled');
+    }
+
+    public function scopePaymentFailed($query)
+    {
+        return $query->where('trip_status', 'payment_failed');
     }
 
 

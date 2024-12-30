@@ -156,6 +156,7 @@
                             </div>
                         </td>
                         @php
+                            $maxDisplay = 3;
                             $totalVehicle = count($trip->assignedVehicle);
                             $totalDriver = count($trip->assignedDriver);
                             $totalTripe = count($trip->trip_details);
@@ -173,14 +174,16 @@
                                                         <div class='d-flex align-items-center gap-2 fs-10'>{{ $tooltipDriver->driver->email }}</div>
                                                     </div>
                                                 </div>
-                                                @endforeach
-                                            </div>">
+                                             @endforeach
+                                         </div>">
                                         <div class="d-flex">
-                                            @foreach ($trip->assignedDriver as $assignedDriver)
-                                                <img width="35" class="rounded-circle aspect-1-1 border border-white shadow-sm" src="{{ $assignedDriver->driver['imageFullUrl'] }}" alt="">
+                                            @foreach ($trip->assignedDriver->take($maxDisplay) as $key => $assignedDriver)
+                                                <img width="35" class="rounded-circle aspect-1-1 border border-white shadow-sm {{ $key > 0 ? 'ml-n2' : '' }}" src="{{ $assignedDriver->driver['imageFullUrl'] }}" alt="">
                                             @endforeach
                                         </div>
-                                        <span>+2</span>
+                                        @if ($totalDriver > $maxDisplay)
+                                            <span>+{{ $totalDriver - $maxDisplay }}</span>
+                                        @endif
                                     </div>
                                 @else
                                     <div class="text--title">
@@ -204,15 +207,15 @@
                             @if($totalVehicle > 0)
                                 <div class="text-primary text-underline font-weight-medium" data-html="true" data-toggle="tooltip"
                                      title="<div class='d-flex flex-column p-2'>
-                                     @foreach($trip->trip_details as $detail)
-                                        <div class='media gap-3 {{ $totalTripe > 1 ? 'border-bottom mb-2 pb-2' : '' }}'>
-                                            <img src='{{ asset('public/assets/admin/img/admin.png') }}' class='rounded ratio-1-1' width='40' alt='...'>
-                                            <div class='media-body'>
-                                                <h5 class='d-flex align-items-center gap-2 text-white mb-0'>{{ $detail->vehicle_details['name'] }}</h5>
-                                                <div class='d-flex align-items-center gap-2 fs-10'>{{ translate('messages.car_Assigned') }}: {{ count($detail->matchingTripVehicles) }}</div>
+                                         @foreach($trip->trip_details as $detail)
+                                            <div class='media gap-3 {{ $totalTripe > 1 ? 'border-bottom mb-2 pb-2' : '' }}'>
+                                                <img src='{{ $detail->vehicle['thumbnailFullUrl'] }}' class='rounded ratio-1-1' width='40' alt='...'>
+                                                <div class='media-body'>
+                                                    <h5 class='d-flex align-items-center gap-2 text-white mb-0'>{{ $detail->vehicle_details['name'] }}</h5>
+                                                    <div class='d-flex align-items-center gap-2 fs-10'>{{ translate('messages.car_Assigned') }}: {{ count($detail->matchingTripVehicles) }}</div>
+                                                </div>
                                             </div>
-                                        </div>
-                                        @endforeach
+                                         @endforeach
                                     </div>">
                                     {{ $totalVehicle }} {{ translate('messages.vehicles') }}
                                 </div>
@@ -254,7 +257,7 @@
                                 <a class="btn action-btn btn--primary btn-outline-primary" href="javascript:"
                                    title="{{ translate('messages.download') }}"><i class="tio-download-to"></i>
                                 </a>
-                                <a class="btn action-btn btn--primary btn-outline-primary" href="javascript:"
+                                <a class="btn action-btn btn--primary btn-outline-primary" href="{{ route('admin.rental.trip.details', $trip->id) }}"
                                    title="{{ translate('messages.view') }}"><i class="tio-visible-outlined"></i>
                                 </a>
                             </div>

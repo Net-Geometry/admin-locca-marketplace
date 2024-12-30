@@ -103,11 +103,10 @@ Route::group(['middleware' => ['admin', 'current-module']], function () {
 
         Route::group(['prefix' => 'trip', 'as' => 'trip.'], function () {
             Route::get('/', [TripController::class,'list'])->name('list');
-            Route::post('store', [TripController::class,'store'])->name('store');
-            Route::get('edit/{banner}', [TripController::class,'edit'])->name('edit');
+            Route::get('details/{id}', [TripController::class,'details'])->name('details');
             Route::post('edit/{banner}', [TripController::class,'update'])->name('update');
-            Route::delete('delete/{banner}', [TripController::class,'destroy'])->name('delete');
-            Route::get('status/{banner}/{status}', [TripController::class,'status'])->name('status');
+            Route::get('status/{id}/{status}', [TripController::class,'status'])->name('status');
+            Route::get('payment/status/{id}/{status}', [TripController::class,'paymentStatus'])->name('payment.status');
             Route::get('featured/{banner}/{status}', [TripController::class,'updateFeatured'])->name('featured');
             Route::get('export', [TripController::class, 'export'])->name('export');
         });

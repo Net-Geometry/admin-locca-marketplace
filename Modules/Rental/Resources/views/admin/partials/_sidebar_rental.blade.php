@@ -63,16 +63,16 @@
                         <small class="tio-more-horizontal nav-subtitle-replacer"></small>
                     </li>
 
-                    <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/rental/trip') ? 'active' : '' }}">
+                    <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/rental/trip*') ? 'active' : '' }}">
                         <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:" title="{{ translate('messages.Trips') }}">
                             <i class="tio-shopping-cart nav-icon"></i>
                             <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
                                 {{ translate('messages.Trips') }}
                             </span>
                         </a>
-                        <ul class="js-navbar-vertical-aside-submenu nav nav-sub" style="display:{{ Request::is('admin/order*') ? 'block' : 'none' }}">
-                            <li class="nav-item {{ Request::is('admin/rental/trip/list/all') ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ route('admin.rental.trip.list', ['all']) }}" title="{{ translate('messages.all_trips') }}">
+                        <ul class="js-navbar-vertical-aside-submenu nav nav-sub" style="display:{{ Request::is('admin/rental/trip*') ? 'block' : 'none' }}">
+                            <li class="nav-item {{ request()->status == 'all' ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ route('admin.rental.trip.list') }}?status=all" title="{{ translate('messages.all_trips') }}">
                                     <span class="tio-circle nav-indicator-icon"></span>
                                     <span class="text-truncate sidebar--badge-container">
                                         {{ translate('messages.all') }}
@@ -82,150 +82,86 @@
                                     </span>
                                 </a>
                             </li>
-                            <li class="nav-item {{ Request::is('admin/order/list/scheduled') ? 'active' : '' }}">
-                                <a class="nav-link" href="{{ route('admin.order.list', ['scheduled']) }}" title="{{ translate('messages.scheduled_orders') }}">
+                            <li class="nav-item {{ request()->status == 'scheduled' ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ route('admin.rental.trip.list') }}?status=scheduled" title="{{ translate('messages.scheduled_trips') }}">
                                     <span class="tio-circle nav-indicator-icon"></span>
                                     <span class="text-truncate sidebar--badge-container">
                                         {{ translate('messages.scheduled') }}
                                         <span class="badge badge-soft-info badge-pill ml-1">
-                                            {{ \App\Models\Order::Scheduled()->StoreOrder()->module(Config::get('module.current_module_id'))->count() }}
+                                            {{ \Modules\Rental\Entities\Trips::Scheduled()->count() }}
                                         </span>
                                     </span>
                                 </a>
                             </li>
-                            <li class="nav-item {{ Request::is('admin/order/list/pending') ? 'active' : '' }}">
-                                <a class="nav-link " href="{{ route('admin.order.list', ['pending']) }}" title="{{ translate('messages.pending_orders') }}">
+                            <li class="nav-item {{ request()->status == 'pending' ? 'active' : '' }}">
+                                <a class="nav-link " href="{{ route('admin.rental.trip.list') }}?status=pending" title="{{ translate('messages.pending_trips') }}">
                                     <span class="tio-circle nav-indicator-icon"></span>
                                     <span class="text-truncate sidebar--badge-container">
                                         {{ translate('messages.pending') }}
                                         <span class="badge badge-soft-info badge-pill ml-1">
-                                            {{ \App\Models\Order::Pending()->OrderScheduledIn(30)->StoreOrder()->module(Config::get('module.current_module_id'))->count() }}
+                                            {{ \Modules\Rental\Entities\Trips::Pending()->count() }}
                                         </span>
                                     </span>
                                 </a>
                             </li>
 
-                            <li class="nav-item {{ Request::is('admin/order/list/accepted') ? 'active' : '' }}">
-                                <a class="nav-link " href="{{ route('admin.order.list', ['accepted']) }}" title="{{ translate('messages.accepted_orders') }}">
+                            <li class="nav-item {{ request()->status == 'confirmed' ? 'active' : '' }}">
+                                <a class="nav-link " href="{{ route('admin.rental.trip.list') }}?status=confirmed" title="{{ translate('messages.confirmed_trips') }}">
                                     <span class="tio-circle nav-indicator-icon"></span>
                                     <span class="text-truncate sidebar--badge-container">
                                         {{ translate('messages.accepted') }}
                                         <span class="badge badge-soft-success badge-pill ml-1">
-                                            {{ \App\Models\Order::AccepteByDeliveryman()->OrderScheduledIn(30)->StoreOrder()->module(Config::get('module.current_module_id'))->count() }}
+                                            {{ \Modules\Rental\Entities\Trips::Confirmed()->count() }}
                                         </span>
                                     </span>
                                 </a>
                             </li>
-                            <li class="nav-item {{ Request::is('admin/order/list/processing') ? 'active' : '' }}">
-                                <a class="nav-link " href="{{ route('admin.order.list', ['processing']) }}" title="{{ translate('messages.processing_orders') }}">
+                            <li class="nav-item {{ request()->status == 'ongoing' ? 'active' : '' }}">
+                                <a class="nav-link " href="{{ route('admin.rental.trip.list') }}?status=ongoing" title="{{ translate('messages.Ongoing_trips') }}">
                                     <span class="tio-circle nav-indicator-icon"></span>
                                     <span class="text-truncate sidebar--badge-container">
                                         {{ translate('messages.processing') }}
                                         <span class="badge badge-soft-warning badge-pill ml-1">
-                                            {{ \App\Models\Order::Preparing()->OrderScheduledIn(30)->StoreOrder()->module(Config::get('module.current_module_id'))->count() }}
+                                            {{ \Modules\Rental\Entities\Trips::Ongoing()->count() }}
                                         </span>
                                     </span>
                                 </a>
                             </li>
-                            <li class="nav-item {{ Request::is('admin/order/list/item_on_the_way') ? 'active' : '' }}">
-                                <a class="nav-link text-capitalize" href="{{ route('admin.order.list', ['item_on_the_way']) }}" title="{{ translate('messages.order_on_the_way') }}">
+                            <li class="nav-item {{ request()->status == 'completed' ? 'active' : '' }}">
+                                <a class="nav-link text-capitalize" href="{{ route('admin.rental.trip.list') }}?status=completed" title="{{ translate('messages.Completed_trips') }}">
                                     <span class="tio-circle nav-indicator-icon"></span>
                                     <span class="text-truncate sidebar--badge-container">
                                         {{ translate('messages.order_on_the_way') }}
                                         <span class="badge badge-soft-warning badge-pill ml-1">
-                                            {{ \App\Models\Order::ItemOnTheWay()->OrderScheduledIn(30)->StoreOrder()->module(Config::get('module.current_module_id'))->count() }}
+                                            {{ \Modules\Rental\Entities\Trips::Completed()->count() }}
                                         </span>
                                     </span>
                                 </a>
                             </li>
-                            <li class="nav-item {{ Request::is('admin/order/list/delivered') ? 'active' : '' }}">
-                                <a class="nav-link " href="{{ route('admin.order.list', ['delivered']) }}" title="{{ translate('messages.delivered_orders') }}">
-                                    <span class="tio-circle nav-indicator-icon"></span>
-                                    <span class="text-truncate sidebar--badge-container">
-                                        {{ translate('messages.delivered') }}
-                                        <span class="badge badge-soft-success badge-pill ml-1">
-                                            {{ \App\Models\Order::Delivered()->StoreOrder()->module(Config::get('module.current_module_id'))->count() }}
-                                        </span>
-                                    </span>
-                                </a>
-                            </li>
-                            <li class="nav-item {{ Request::is('admin/order/list/canceled') ? 'active' : '' }}">
-                                <a class="nav-link " href="{{ route('admin.order.list', ['canceled']) }}" title="{{ translate('messages.canceled_orders') }}">
+                            <li class="nav-item {{ request()->status == 'canceled' ? 'active' : '' }}">
+                                <a class="nav-link " href="{{ route('admin.rental.trip.list') }}?status=canceled" title="{{ translate('messages.canceled_trips') }}">
                                     <span class="tio-circle nav-indicator-icon"></span>
                                     <span class="text-truncate sidebar--badge-container">
                                         {{ translate('messages.canceled') }}
                                         <span class="badge badge-soft-warning bg-light badge-pill ml-1">
-                                            {{ \App\Models\Order::Canceled()->StoreOrder()->module(Config::get('module.current_module_id'))->count() }}
+                                            {{ \Modules\Rental\Entities\Trips::Canceled()->count() }}
                                         </span>
                                     </span>
                                 </a>
                             </li>
-                            <li class="nav-item {{ Request::is('admin/order/list/failed') ? 'active' : '' }}">
-                                <a class="nav-link " href="{{ route('admin.order.list', ['failed']) }}" title="{{ translate('messages.payment_failed_orders') }}">
+                            <li class="nav-item {{ request()->status == 'payment_failed' ? 'active' : '' }}">
+                                <a class="nav-link " href="{{ route('admin.rental.trip.list') }}?status=payment_failed" title="{{ translate('messages.payment_failed_trips') }}">
                                     <span class="tio-circle nav-indicator-icon"></span>
                                     <span class="text-truncate sidebar--badge-container text-capitalize">
                                         {{ translate('messages.payment_failed') }}
                                         <span class="badge badge-soft-danger bg-light badge-pill ml-1">
-                                            {{ \App\Models\Order::failed()->StoreOrder()->module(Config::get('module.current_module_id'))->count() }}
-                                        </span>
-                                    </span>
-                                </a>
-                            </li>
-                            <li class="nav-item {{ Request::is('admin/order/list/refunded') ? 'active' : '' }}">
-                                <a class="nav-link " href="{{ route('admin.order.list', ['refunded']) }}" title="{{ translate('messages.refunded_orders') }}">
-                                    <span class="tio-circle nav-indicator-icon"></span>
-                                    <span class="text-truncate sidebar--badge-container">
-                                        {{ translate('messages.refunded') }}
-                                        <span class="badge badge-soft-danger bg-light badge-pill ml-1">
-                                            {{ \App\Models\Order::Refunded()->StoreOrder()->module(Config::get('module.current_module_id'))->count() }}
-                                        </span>
-                                    </span>
-                                </a>
-                            </li>
-
-                            <li class="nav-item {{ Request::is('admin/order/offline/payment/list*') ? 'active' : '' }}">
-                                <a class="nav-link " href="{{ route('admin.order.offline_verification_list', ['all']) }}" title="{{ translate('Offline_Payments') }}">
-                                    <span class="tio-circle nav-indicator-icon"></span>
-                                    <span class="text-truncate sidebar--badge-container">
-                                        {{ translate('messages.Offline_Payments') }}
-                                        <span class="badge badge-soft-danger bg-light badge-pill ml-1">
-                                            {{ \App\Models\Order::has('offline_payments')->StoreOrder()->module(Config::get('module.current_module_id'))->count() }}
+                                            {{ \Modules\Rental\Entities\Trips::PaymentFailed()->count() }}
                                         </span>
                                     </span>
                                 </a>
                             </li>
 
                         </ul>
-                    </li>
-
-                    <!-- Order refund -->
-                    <li
-                    class="navbar-vertical-aside-has-menu {{ Request::is('admin/refund/*') ? 'active' : '' }}">
-                    <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:"
-                        title="{{ translate('Order Refunds') }}">
-                        <i class="tio-receipt nav-icon"></i>
-                        <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                            {{ translate('Order Refunds') }}
-                        </span>
-                    </a>
-                    <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
-                        style="display: {{ Request::is('admin/refund*') ? 'block' : 'none' }}">
-
-                        <li class="nav-item {{ Request::is('admin/refund/requested') ||  Request::is('admin/refund/rejected') ||Request::is('admin/refund/refunded') ? 'active' : '' }}">
-                            <a class="nav-link "
-                                href="{{ route('admin.refund.refund_attr', ['requested']) }}"
-                                title="{{ translate('Refund Requests') }} ">
-                                <span class="tio-circle nav-indicator-icon"></span>
-                                <span class="text-truncate sidebar--badge-container">
-                                    {{ translate('Refund Requests') }}
-                                    <span class="badge badge-soft-danger badge-pill ml-1">
-                                        {{ \App\Models\Order::Refund_requested()->StoreOrder()->module(Config::get('module.current_module_id'))->count() }}
-                                    </span>
-                                </span>
-                            </a>
-                        </li>
-
-                    </ul>
                     </li>
                     <!-- Order refund End-->
                     @endif
