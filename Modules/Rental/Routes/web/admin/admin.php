@@ -139,7 +139,13 @@ Route::group(['middleware' => ['admin', 'current-module']], function () {
             Route::post('/vendors-registration-update', [SettingsController::class,'vendorsRegistrationUpdate'])->name('vendors_registration_update');
         });
 
+
     });
+        Route::group(['prefix' => 'business-settings', 'as' => 'business-settings.', 'middleware' => ['module:settings', 'actch']], function () {
+            Route::get('rental-email-setup/{type}/{tab?}', [SettingsController::class,'email_index'])->name('rental-email-setup');
+            Route::POST('rental-email-setup/{type}/{tab?}', [SettingsController::class,'update_email_index'])->name('rental-email-setup');
+            Route::get('rental-email-status/{type}/{tab}/{status}', [SettingsController::class,'update_email_status'])->name('rental-email-status');
+        });
 });
 
 

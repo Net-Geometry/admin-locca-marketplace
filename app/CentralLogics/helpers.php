@@ -3161,6 +3161,7 @@ class Helpers
 
             if($store_name){
                 $data =  str_replace("{storeName}", $store_name, $data);
+                $data =  str_replace("{providerName}", $store_name, $data);
             }
 
             if($delivery_man_name){
@@ -3173,6 +3174,7 @@ class Helpers
 
             if($order_id){
                 $data =  str_replace("{orderId}", $order_id, $data);
+                $data =  str_replace("{tripId}", $order_id, $data);
             }
             if($add_id){
                 $data =  str_replace("{advertisementId}", $add_id, $data);
