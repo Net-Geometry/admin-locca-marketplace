@@ -55,13 +55,10 @@
                                     {userName}: {{ translate('the_name_of_the_user.') }}
                                 </li>
                                 <li>
-                                    {deliveryManName}: {{ translate('the_name_of_the_delivery_person.') }}
-                                </li>
-                                <li>
                                     {providerName}: {{ translate('the_name_of_the_provider.') }}
                                 </li>
                                 <li>
-                                    {orderId}: {{ translate('the_order_id.') }}
+                                    {tripId}: {{ translate('the_trip_id.') }}
                                 </li>
                                 <li>
                                     {transactionId}: {{ translate('the_transaction_id.') }}
