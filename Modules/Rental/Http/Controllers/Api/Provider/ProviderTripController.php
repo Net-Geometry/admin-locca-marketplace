@@ -3,7 +3,6 @@
 namespace Modules\Rental\Http\Controllers\Api\Provider;
 
 use App\CentralLogics\Helpers;
-use App\Models\Store;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -66,7 +65,7 @@ class ProviderTripController extends Controller
             return response()->json(['errors' => $this->helpers->error_processor($validator)], 403);
         }
 
-        $trip = $this->trips->where(['provider_id' => $request->vendor->id,'id' => $request->trip_id])->first();
+        $trip = $this->trips->where(['provider_id' => $request->vendor->id,'id' => $request->trip_id])->with('trip_details.vehicle')->first();
 
         if(!$trip){
             return response()->json(['errors' => translate('trip_data_not_found')], 404);
@@ -76,17 +75,20 @@ class ProviderTripController extends Controller
             return response()->json(['errors' => translate('You_can_not_change_this_trip_status')], 403);
         }
 
-
         $trip->trip_status = $request->trip_status;
             if($request->trip_status == 'canceled'){
                 $trip->canceled_by = 'vendor';
                 $trip->cancellation_reason = $request?->cancellation_reason;
                 $trip->canceled = now();
+
+                foreach($trip->trip_details as $detail){
+                    $detail?->vehicle?->total_trip > 0 ? $detail?->vehicle?->decrement('total_trip',$detail->quantity) : '';
+                }
             }else{
                 $trip[$request->trip_status]= now();
             }
         $trip->save();
-        return response()->json(['message' => translate('Trip_successfully_canceled')], 200);
+        return response()->json(['message' => translate('Trip_successfully_updated')], 200);
     }
 
     public function updateTripPaymentStatus(Request $request)

@@ -519,7 +519,7 @@ class TripController extends Controller
         $user_id = $request->user ? $request->user->id : $request['guest_id'];
         $is_guest = $request->user ? 0 : 1;
 
-        $trip = $this->trips->where(['user_id' => $user_id, 'is_guest' => $is_guest, 'id' => $request->trip_id])->first();
+        $trip = $this->trips->where(['user_id' => $user_id, 'is_guest' => $is_guest, 'id' => $request->trip_id])->with('trip_details.vehicle')->first();
 
         if(!$trip){
             return response()->json(['errors' => translate('trip_data_not_found')], 404);
@@ -534,6 +534,11 @@ class TripController extends Controller
         $trip->cancellation_reason = $request->cancellation_reason;
         $trip->canceled = now();
         $trip->save();
+        foreach($trip->trip_details as $detail){
+            $detail?->vehicle?->total_trip > 0 ? $detail?->vehicle?->decrement('total_trip',$detail->quantity) : '';
+        }
+
+
         return response()->json(['message' => translate('Trip_successfully_canceled')], 200);
 
     }

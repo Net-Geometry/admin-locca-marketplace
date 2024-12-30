@@ -19,6 +19,7 @@ use Modules\Rental\Http\Controllers\Api\Public\ProviderController as Provider;
 use Modules\Rental\Http\Controllers\Api\User\CartController;
 use Modules\Rental\Http\Controllers\Api\User\TripController;
 use Modules\Rental\Http\Controllers\Api\User\RentalWishlistController;
+use Modules\Rental\Http\Controllers\Api\User\VehicleReviewController;
 
 /*
 |--------------------------------------------------------------------------
@@ -149,6 +150,10 @@ Route::group(['prefix' => 'rental', 'as' => 'rental.',  'middleware' =>  ['local
                     Route::get('/', [RentalWishlistController::class, 'wishlist']);
                     Route::post('add',  [RentalWishlistController::class, 'addToWishlist']);
                     Route::delete('remove',  [RentalWishlistController::class, 'removeFromWishlist']);
+                });
+                Route::group(['prefix' => 'review'], function () {
+                    Route::post('add', [VehicleReviewController::class, 'submitVehicleReview']);
+    
                 });
             });
         });

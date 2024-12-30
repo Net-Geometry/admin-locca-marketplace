@@ -37,6 +37,11 @@ class TripDetails extends Model
             ->whereColumn('vehicle_id', 'vehicle_id');
     }
 
+    public function vehicle()
+    {
+        return $this->belongsTo(Vehicle::class, 'vehicle_id');
+    }
+
 //    public function matchingTripVehicles()
 //    {
 //        return $this->hasManyThrough(Trips::class, TripVehicleDetails::class, 'trip_id', 'id', 'vehicle_id',);

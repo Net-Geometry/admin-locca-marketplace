@@ -151,6 +151,10 @@ class Trips extends Model
     {
         return $this->hasMany(TripVehicleDetails::class,'trip_id');
     }
+    public function vehicles()
+    {
+        return $this->hasManyThrough(Vehicle::class , TripDetails::class,'trip_id','id','id','vehicle_id');
+    }
 
 
 }
