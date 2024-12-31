@@ -558,7 +558,7 @@ class TripController extends Controller
         return response()->json(['message' => translate('Trip_successfully_canceled')], 200);
 
     }
-    
+
     public function makePayment(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -566,8 +566,8 @@ class TripController extends Controller
             'trip_id' => 'required',
             'payment_method' => 'required|in:cash_payment,wallet,partial_payment,digital_payment',
             'payment_gateway' => 'required_if:payment_method,digital_payment,partial_payment',
-            'callback_url' => 'required_if:payment_method,digital_payment,partial_payment',
-            'payment_platform' => 'required_if:payment_method,digital_payment,partial_payment',
+            'callback_url' => 'required_if:payment_method,digital_payment',
+            'payment_platform' => 'required_if:payment_method,digital_payment',
         ]);
 
         if ($validator->fails()) {

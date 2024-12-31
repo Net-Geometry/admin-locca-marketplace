@@ -104,13 +104,17 @@ class RentalWishlistController extends Controller
         ->paginate($limit, ['*'], 'page', $offset);
 
         $providers = [];
+        $vehicles = [];
         foreach ($wishlists as $wishlist) {
             if ($wishlist->store) {
                 $providers[] = Helpers::store_data_formatting($wishlist->provider);
             }
+            if($wishlist->vehicle){
+                $vehicles[]=$wishlist->vehicle;
+            }
         }
 
-        $wishlists = Helpers::preparePaginatedResponse(pagination: $wishlists, limit: $limit, offset: $offset, key: 'wishlists', extraData: []);
-        return response()->json($wishlists, 200);
+        // $wishlists = Helpers::preparePaginatedResponse(pagination: $wishlists, limit: $limit, offset: $offset, key: 'wishlists', extraData: []);
+        return response()->json(['providers' => $providers, 'vehicles' =>$vehicles], 200);
     }
 }

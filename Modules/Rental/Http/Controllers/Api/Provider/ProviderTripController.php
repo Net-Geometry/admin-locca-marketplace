@@ -10,10 +10,11 @@ use Illuminate\Support\Facades\Validator;
 use Modules\Rental\Entities\Trips;
 use Modules\Rental\Entities\TripVehicleDetails;
 use Modules\Rental\Entities\Vehicle;
+use Modules\Rental\Traits\HelperTrait;
 
 class ProviderTripController extends Controller
 {
-
+    use HelperTrait;
     public function __construct(private Trips $trips, private Helpers $helpers)
     {
         $this->trips = $trips;

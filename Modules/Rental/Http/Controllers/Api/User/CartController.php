@@ -52,6 +52,7 @@ class CartController extends Controller
 
     public function addToCart(Request $request)
     {
+        info($request->all());
         $validator = Validator::make($request->all(), [
             'guest_id' => $request->user ? 'nullable' : 'required',
             'vehicle_id' => 'required',
