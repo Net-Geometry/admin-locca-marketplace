@@ -19,7 +19,9 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use App\Traits\ReportFilter;
+use Modules\Rental\Entities\Trips;
 use Modules\Rental\Entities\Vehicle;
+use Modules\Rental\Entities\VehicleDriver;
 use Modules\Rental\Entities\VehicleIdentity;
 
 /**
@@ -428,6 +430,14 @@ class Store extends Model
     }
 
     /**
+     * @return HasMany
+     */
+    public function trips(): HasMany
+    {
+        return $this->hasMany(Trips::class, 'provider_id');
+    }
+
+    /**
      * @return HasOne
      */
     public function discount(): HasOne
@@ -799,6 +809,11 @@ class Store extends Model
     public function vehicles(): HasMany
     {
         return $this->hasMany(Vehicle::class,'provider_id');
+    }
+
+    public function vehicleDriver(): HasMany
+    {
+        return $this->hasMany(VehicleDriver::class,'provider_id');
     }
 
 

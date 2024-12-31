@@ -109,7 +109,7 @@
                                 <a class="nav-link " href="{{ route('admin.rental.trip.list') }}?status=confirmed" title="{{ translate('messages.confirmed_trips') }}">
                                     <span class="tio-circle nav-indicator-icon"></span>
                                     <span class="text-truncate sidebar--badge-container">
-                                        {{ translate('messages.accepted') }}
+                                        {{ translate('messages.confirmed') }}
                                         <span class="badge badge-soft-success badge-pill ml-1">
                                             {{ \Modules\Rental\Entities\Trips::Confirmed()->count() }}
                                         </span>
@@ -120,7 +120,7 @@
                                 <a class="nav-link " href="{{ route('admin.rental.trip.list') }}?status=ongoing" title="{{ translate('messages.Ongoing_trips') }}">
                                     <span class="tio-circle nav-indicator-icon"></span>
                                     <span class="text-truncate sidebar--badge-container">
-                                        {{ translate('messages.processing') }}
+                                        {{ translate('messages.Ongoing') }}
                                         <span class="badge badge-soft-warning badge-pill ml-1">
                                             {{ \Modules\Rental\Entities\Trips::Ongoing()->count() }}
                                         </span>
@@ -131,7 +131,7 @@
                                 <a class="nav-link text-capitalize" href="{{ route('admin.rental.trip.list') }}?status=completed" title="{{ translate('messages.Completed_trips') }}">
                                     <span class="tio-circle nav-indicator-icon"></span>
                                     <span class="text-truncate sidebar--badge-container">
-                                        {{ translate('messages.order_on_the_way') }}
+                                        {{ translate('messages.Completed') }}
                                         <span class="badge badge-soft-warning badge-pill ml-1">
                                             {{ \Modules\Rental\Entities\Trips::Completed()->count() }}
                                         </span>

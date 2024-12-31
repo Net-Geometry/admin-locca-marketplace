@@ -65,14 +65,14 @@
 
                             <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
                             <a id="export-excel" class="dropdown-item"
-                               href="{{ route('admin.store.export', ['type' => 'excel', request()->getQueryString()]) }}">
+                               href="{{ route('admin.rental.trip.export', ['type' => 'excel', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                      src="{{ asset('public/assets/admin') }}/svg/components/excel.svg"
                                      alt="Image Description">
                                 {{ translate('messages.excel') }}
                             </a>
                             <a id="export-csv" class="dropdown-item"
-                               href="{{ route('admin.store.export', ['type' => 'csv', request()->getQueryString()]) }}">
+                               href="{{ route('admin.rental.trip.export', ['type' => 'csv', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                      src="{{ asset('public/assets/admin') }}/svg/components/placeholder-csv-format.svg"
                                      alt="Image Description">
@@ -84,8 +84,6 @@
                     <!-- End Unfold -->
                     <a href="#" class="text--title font-semibold"><i class="tio-filter-list"></i>
                         {{ translate('messages.Filter') }}</a>
-                    <a href="#" class="text--title font-semibold"><i class="tio-column-view-outlined"></i>
-                        {{ translate('messages.Columns') }}</a>
                 </div>
             </div>
             <!-- End Header -->
@@ -167,7 +165,7 @@
                                     <div class="d-flex align-items-center gap-2" data-html="true" data-toggle="tooltip"
                                          title="<div class='d-flex flex-column p-2'>
                                              @foreach($trip->assignedDriver as $index => $tooltipDriver)
-                                                <div class='media gap-3 border-bottom mb-2 pb-2'>
+                                                <div class='media gap-3 {{ !$loop->last ? 'border-bottom mb-2 pb-2' : '' }}'>
                                                     <img src='{{ $tooltipDriver->driver['imageFullUrl'] }}' class='rounded ratio-1-1' width='40' alt='...'>
                                                     <div class='media-body'>
                                                         <h5 class='d-flex align-items-center gap-2 text-white mb-0'>{{ $tooltipDriver->driver['fullName'] }}</h5>
@@ -189,7 +187,7 @@
                                     <div class="text--title">
                                         @if ($trip->assignedDriver->isNotEmpty())
                                             <div class="font-medium">
-                                                    {{ $trip->assignedDriver->first()?->driver?->fullName }}
+                                                {{ $trip->assignedDriver->first()?->driver?->fullName }}
                                             </div>
                                             <div class="opacity-lg">
                                                 {{ $trip->assignedDriver->first()?->driver?->email }}
@@ -203,16 +201,17 @@
                                 </div>
                             @endif
                         </td>
+
                         <td>
                             @if($totalVehicle > 0)
                                 <div class="text-primary text-underline font-weight-medium" data-html="true" data-toggle="tooltip"
                                      title="<div class='d-flex flex-column p-2'>
-                                         @foreach($trip->trip_details as $detail)
-                                            <div class='media gap-3 {{ $totalTripe > 1 ? 'border-bottom mb-2 pb-2' : '' }}'>
+                                         @foreach($trip->trip_details as $index => $detail)
+                                            <div class='media gap-3 {{ !$loop->last ? 'border-bottom mb-2 pb-2' : '' }}'>
                                                 <img src='{{ $detail->vehicle['thumbnailFullUrl'] }}' class='rounded ratio-1-1' width='40' alt='...'>
                                                 <div class='media-body'>
                                                     <h5 class='d-flex align-items-center gap-2 text-white mb-0'>{{ $detail->vehicle_details['name'] }}</h5>
-                                                    <div class='d-flex align-items-center gap-2 fs-10'>{{ translate('messages.car_Assigned') }}: {{ count($detail->matchingTripVehicles) }}</div>
+                                                    <div class='d-flex align-items-center gap-2 fs-10'>{{ translate('messages.car_Assigned') }}: {{ $detail->tripVehicleDetails->count() }}</div>
                                                 </div>
                                             </div>
                                          @endforeach
@@ -224,6 +223,7 @@
                                     {{ translate('messages.Unassigned') }}
                                 </div>
                             @endif
+
                         </td>
                         <td>
                             <div class="text--title">

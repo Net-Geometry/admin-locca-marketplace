@@ -107,7 +107,9 @@ Route::group(['middleware' => ['admin', 'current-module']], function () {
             Route::post('edit/{banner}', [TripController::class,'update'])->name('update');
             Route::get('status/{id}/{status}', [TripController::class,'status'])->name('status');
             Route::get('payment/status/{id}/{status}', [TripController::class,'paymentStatus'])->name('payment.status');
-            Route::get('featured/{banner}/{status}', [TripController::class,'updateFeatured'])->name('featured');
+            Route::post('assign/vehicle', [TripController::class,'assignVehicle'])->name('assign.vehicle');
+            Route::post('assign/driver', [TripController::class,'assignDriver'])->name('assign.driver');
+
             Route::get('export', [TripController::class, 'export'])->name('export');
         });
 

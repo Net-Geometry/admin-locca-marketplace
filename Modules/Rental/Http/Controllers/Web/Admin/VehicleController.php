@@ -314,7 +314,7 @@ class VehicleController extends Controller
         $vehicle->trip_hourly = $request->trip_hourly ? 1 : 0;
         $vehicle->trip_distance = $request->trip_distance ? 1 : 0;
         $vehicle->hourly_price = $request->hourly_price;
-        $vehicle->distance_price = $request->distance_price;
+        $vehicle->distance_price = $request->distance_price ?? 0.000;
         $vehicle->discount_price = $request->discount_price;
         $vehicle->discount_type = $request->discount_type;
         $vehicle->tag = json_encode($request->tag);

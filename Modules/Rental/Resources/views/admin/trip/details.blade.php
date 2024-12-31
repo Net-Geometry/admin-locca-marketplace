@@ -151,24 +151,64 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="mt-2">
-                                                <button
-                                                    class="btn btn--primary btn-outline-primary p-5px rounded-20 d-flex align-items-center gap-1 assign-vehicle-btn"
-                                                    type="button"
-                                                    data-toggle="modal"
-                                                    data-target="#assignVehicleModal"
-                                                    data-id = "{{ $detail->id }}"
-                                                    data-quantity = "{{ $detail->quantity }}"
-                                                    data-img = "{{ $detail->vehicle['thumbnailFullUrl'] }}"
-                                                    data-name = "{{ $detail?->vehicle_details['name'] }}"
-                                                    data-vendor = "{{ $trip?->provider->name }}"
-                                                    data-category = "{{ $detail?->vehicle?->category?->name }}"
-                                                    data-brand = "{{ $detail?->vehicle?->brand?->name }}"
-                                                >
-                                                    {{translate('Assign Vehicle')}} <span class="fs-24"><i
-                                                            class="tio-add-circle"></i></span>
-                                                </button>
-                                            </div>
+                                            @if($detail?->tripVehicleDetails->isEmpty())
+                                                <div class="mt-2">
+                                                    <button
+                                                        class="btn btn--primary btn-outline-primary p-5px rounded-20 d-flex align-items-center gap-1 assign-vehicle-btn"
+                                                        type="button"
+                                                        data-toggle="modal"
+                                                        data-target="#assignVehicleModal"
+                                                        data-details_id = "{{ $detail->id }}"
+                                                        data-trip_id = "{{ $detail->trip_id }}"
+                                                        data-vehicle_id = "{{ $detail->vehicle_id }}"
+                                                        data-quantity = "{{ $detail->quantity }}"
+                                                        data-img = "{{ $detail->vehicle['thumbnailFullUrl'] }}"
+                                                        data-name = "{{ $detail?->vehicle_details['name'] }}"
+                                                        data-vendor = "{{ $trip?->provider->name }}"
+                                                        data-category = "{{ $detail?->vehicle?->category?->name }}"
+                                                        data-brand = "{{ $detail?->vehicle?->brand?->name }}"
+                                                        data-list="{{ json_encode($detail->vehicle->vehicleIdentities) }}"
+                                                        data-trip_vehicle_details="{{ json_encode($detail->tripVehicleDetails) }}"
+                                                    >
+                                                        {{translate('Assign Vehicle')}} <span class="fs-24"><i
+                                                                class="tio-add-circle"></i></span>
+                                                    </button>
+                                                </div>
+                                            @else
+                                                <div class="mt-2 bg--F6F6F6 p-2 radius-15 mb-4 d-inline-block">
+                                                <div class="d-flex justify-content-between mb-10px text--title">
+                                                    {{translate('Assigned Vehicle')}}
+                                                    <button
+                                                        class="btn btn--primary p-5px rounded-circle d-flex align-items-center justify-content-center assign-vehicle-btn"
+                                                        type="button"
+                                                        data-toggle="modal"
+                                                        data-target="#assignVehicleModal"
+                                                        data-details_id = "{{ $detail->id }}"
+                                                        data-trip_id = "{{ $detail->trip_id }}"
+                                                        data-vehicle_id = "{{ $detail->vehicle_id }}"
+                                                        data-quantity = "{{ $detail->quantity }}"
+                                                        data-img = "{{ $detail->vehicle['thumbnailFullUrl'] }}"
+                                                        data-name = "{{ $detail?->vehicle_details['name'] }}"
+                                                        data-vendor = "{{ $trip?->provider->name }}"
+                                                        data-category = "{{ $detail?->vehicle?->category?->name }}"
+                                                        data-brand = "{{ $detail?->vehicle?->brand?->name }}"
+                                                        data-list="{{ json_encode($detail->vehicle->vehicleIdentities) }}"
+                                                        data-trip_vehicle_details="{{ json_encode($detail->tripVehicleDetails) }}"
+                                                    >
+                                                        <i class="tio-edit fs-12"></i>
+                                                    </button>
+                                                </div>
+                                                    <div class="text-wrap">
+                                                        @php
+                                                            $licensePlates = $detail->tripVehicleDetails->map(function($tripVehicleDetails) {
+                                                                return $tripVehicleDetails->vehicle_identity_data->license_plate_number;
+                                                            });
+                                                            $licensePlatesString = $licensePlates->implode(', ');
+                                                        @endphp
+                                                        {{ $licensePlatesString }}
+                                                    </div>
+                                                </div>
+                                            @endif
                                         </td>
                                         <td>
                                             <div class="fs-14 text--title">
@@ -269,7 +309,7 @@
                         @endif
 
                         <div class="hs-unfold w-100 mb-20">
-                            <label for="" class="font-semibold text-title">Payment Status</label>
+                            <label for="" class="font-semibold text-title">{{translate('Payment Status')}}</label>
                             <div class="dropdown">
                                 <button
                                     class="form-control h--45px dropdown-toggle d-flex justify-content-between align-items-center w-100"
@@ -292,63 +332,60 @@
                                 </div>
                             </div>
                         </div>
-                        <button type="button"
-                                class="btn btn--primary w-100"
-                                data-toggle="modal" data-target="#assignDriverModal">
-                            <i class="tio-bike"></i>
-                            <span class="ml-2">Assign Driver</span>
-                        </button>
+                        @php
+                            $tripDrivers = $trip?->vehicle_identity->whereNotNull('vehicle_driver_id');
+                            $tripVehicles = $trip?->vehicle_identity->whereNotNull('vehicle_identity_id')->count();
+                            $driverCount = $tripDrivers->count()
+                        @endphp
+                        @if($driverCount <= 0 && $tripVehicles > 0)
+                            <button type="button"
+                                    class="btn btn--primary w-100"
+                                    data-toggle="modal" data-target="#assignDriverModal">
+                                <i class="tio-bike"></i>
+                                <span class="ml-2">{{translate('Assign Driver')}}</span>
+                            </button>
+                        @endif
                     </div>
                 </div>
-                <div class="card mt-2">
-                    <div class="card-header">
-                        <h5 class="mb-0">Driver List</h5>
-                        <a href="#" class="btn action-btn btn--primary btn-outline-primary p-0">
-                            <i class="tio-edit"></i>
-                        </a>
-                    </div>
-                    <div class="card-body">
-                        <button class="btn btn--reset font-medium w-100 d-flex justify-content-between align-items-center px-3 driverListCollapseBtn" type="button" data-toggle="collapse" data-target="#driverListCollapse" aria-expanded="false" aria-controls="driverListCollapse">
-                            4 driver Assigned <i class="tio-down-ui fs-10"></i>
-                        </button>
+                @if($driverCount > 0)
+                    <div class="card mt-2">
+                        <div class="card-header">
+                            <h5 class="mb-0">{{translate('Driver List')}}</h5>
+                            <a href="#" class="btn action-btn btn--primary btn-outline-primary p-0 assign-driver-modal">
+                                <i class="tio-edit"></i>
+                            </a>
+                        </div>
+                        <div class="card-body">
+                            <button class="btn btn--reset font-medium w-100 d-flex justify-content-between align-items-center px-3 driverListCollapseBtn" type="button" data-toggle="collapse" data-target="#driverListCollapse" aria-expanded="false" aria-controls="driverListCollapse">
+                                {{ $driverCount }} {{translate('driver Assigned')}} <i class="tio-down-ui fs-10"></i>
+                            </button>
 
-                        <div class="table-responsive collapse" id="driverListCollapse">
-                            <table
-                                class="table table-nowrap table-align-middle card-table no-footer mb-0">
-                                <tbody>
-                                <tr>
-                                    <td>
-                                        <div class="d-flex gap-4 align-items-center">
-                                            <div>1</div>
-                                            <div class="fs-12 font-semibold text--title">
-                                                <div>
-                                                    <span>Ellison Cardenas</span>
-                                                    <span class="fs-10 opacity-70">(+416465456)</span>
+                            <div class="table-responsive collapse" id="driverListCollapse">
+                                <table
+                                    class="table table-nowrap table-align-middle card-table no-footer mb-0">
+                                    <tbody>
+                                    @foreach($tripDrivers as $driverDetails)
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex gap-4 align-items-center">
+                                                    <div>{{ $loop->iteration }}</div>
+                                                    <div class="fs-12 font-semibold text--title">
+                                                        <div>
+                                                            <span>{{ $driverDetails->driver->fullName }}</span>
+                                                            <span class="fs-10 opacity-70">({{ $driverDetails->driver->phone }})</span>
+                                                        </div>
+                                                        <div class="opacity-60">{{translate('Car No')}}: {{ $driverDetails->vehicle_identity_data->license_plate_number }}</div>
+                                                    </div>
                                                 </div>
-                                                <div class="opacity-60">Car No: GHA-10-2345</div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="d-flex gap-4 align-items-center">
-                                            <div>2</div>
-                                            <div class="fs-12 font-semibold text--title">
-                                                <div>
-                                                    <span>Ellison Cardenas</span>
-                                                    <span class="fs-10 opacity-70">(+416465456)</span>
-                                                </div>
-                                                <div class="opacity-60">Car No: GHA-10-2345</div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
-                </div>
+                @endif
                 <div class="card mt-2">
                     <div class="card-body">
                         <div class="position-relative">
@@ -358,8 +395,10 @@
                                     <i class="tio-fullscreen-1-1"></i>
                                 </button>
                             </div>
-                            <img class="aspect-2-1 object--cover w-100 max-h-160px rounded"
-                                 src="{{ asset('public/assets/admin/img/map-road.png') }}" alt="Map road">
+                            <div class="location-map" id="pickup_location_map">
+                                <div class="initial--25 rounded-8 custom_map_canvas" id="custom_route_line_map_canvas">
+                                </div>
+                            </div>
                         </div>
                         <hr>
                         <ul class="trip-details-address text--title px-0 pt-2">
@@ -369,7 +408,7 @@
                                 </span>
                                 <span class="w-0 flex-grow-1">
                                     <span class="font-medium">Home:</span>
-                                    <span class="opacity-70">Road 9/a, house - 666, Dhaka</span>
+                                    <span class="opacity-70">{{ $trip->pickup_location['location_name'] }}</span>
                                 </span>
                             </li>
                             <li>
@@ -378,7 +417,7 @@
                                             class="tio-navigate-outlined rotate-45 d-inline-block"></i></span>
                                 </span>
                                 <span class="w-0 flex-grow-1 font-medium">
-                                    50 lake circus, kolabagan, Dhanmondi
+                                    {{ $trip->destination_location['location_name'] }}
                                 </span>
                             </li>
                         </ul>
@@ -389,34 +428,33 @@
                         <h5 class="card-title mb-3 d-flex flex-wrap align-items-center">
                             <span>{{ translate('messages.Customer_Info') }}</span>
                         </h5>
-                        <a class="media align-items-center deco-none customer--information-single" href="#">
+                        <a class="media align-items-center deco-none customer--information-single" href="{{ route('admin.users.customer.view', $trip->user_id) }}">
                             <div class="avatar avatar-circle">
                                 <img class="avatar-img onerror-image"
                                      data-onerror-image="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}"
-                                     src="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}"
+                                     src="{{ $trip->customer['imageFullUrl'] }}"
                                      alt="Image Description">
                             </div>
                             <div class="media-body">
-                                <span class="text--title fs-14 font-semibold d-block text-hover-primary mb-1">Jhone
-                                    Die</span>
+                                <span class="text--title fs-14 font-semibold d-block text-hover-primary mb-1">{{ $trip->customer->fullName }}</span>
 
                                 <div class="text--title d-flex align-items-center gap-1">
                                     <span>
-                                        <span class="font-bold">12</span>
+                                        <span class="font-bold">{{ $trip->customer->orders->count() }}</span>
                                         {{ translate('messages.order') }},
                                     </span>
                                     <span>
-                                        <span class="font-bold">5</span>
+                                        <span class="font-bold">{{ $trip->customer->trips->count() }}</span>
                                         {{ translate('messages.trip') }}
                                     </span>
                                 </div>
 
                                 <div class="text--title">
-                                    +90-495-303235
+                                    {{ $trip->customer->phone }}
                                 </div>
 
                                 <div class="text--title">
-                                    doe@gmail,com
+                                    {{ $trip->customer->email }}
                                 </div>
 
                             </div>
@@ -428,31 +466,30 @@
                         <h5 class="card-title mb-3 d-flex flex-wrap align-items-center">
                             <span>{{ translate('messages.Provider_Info') }}</span>
                         </h5>
-                        <a class="media align-items-center deco-none resturant--information-single" href="#">
+                        <a class="media align-items-center deco-none resturant--information-single" href="{{ route('admin.rental.provider.details', $trip->provider_id) }}">
                             <div class="avatar avatar-circle">
                                 <img class="avatar-img w-75px border-000-01 onerror-image"
                                      data-onerror-image="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}"
-                                     src="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}"
+                                     src="{{ $trip?->provider['logoFullUrl'] }}"
                                      alt="Image Description">
                             </div>
                             <div class="media-body">
                                 <div class="text--title fs-14 font-semibold d-block text-hover-primary mb-1">
-                                    Auto Focus Car Service
+                                    {{ $trip?->provider?->name }}
                                 </div>
 
                                 <div class="text--title">
-                                    <span class="font-bold">205</span>
+                                    <span class="font-bold">{{ $trip->provider->trips->count() }}</span>
                                     {{ translate('messages.Trip_served') }}
                                 </div>
 
                                 <div class="text--title d-flex align-items-center">
-                                    +90-495-303235
+                                    {{ $trip->provider->email }}
                                 </div>
 
                                 <div class="text--title d-flex align-items-baseline">
                                     <i class="tio-poi mr-2"></i>
-                                    Șoseaua Gheorghe Ionescu Sisești nr
-                                    236, ‘București, Romania
+                                    {{ $trip->provider->address }}
                                 </div>
 
                             </div>
@@ -473,150 +510,83 @@
                     <button type="button" class="close p-0 m-0" data-dismiss="modal" aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
                 </div>
-                <div class="modal-body px-4 py-0">
-                    <h5 class="font-bold">Assign Driver</h5>
-                    <div class="fs-12 mb-20">1 Vehicle need to assign driver</div>
-                    <div class="card shadow-none">
-                        <div class="table-responsive">
-                            <table
-                                class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table dataTable no-footer mb-0">
-                                <thead class="thead-light">
-                                <tr>
-                                    <th class="border-0">Vehicle List</th>
-                                    <th class="border-0">Selected Driver</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr>
-                                    <td>
-                                        <div class="media media--sm">
-                                            <a class="mr-3" href="#">
-                                                <img width="60" height="40" class="img--ratio-2 onerror-image rounded h--40px"
-                                                     src="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
-                                                     data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
-                                                     alt="Image Description">
-                                            </a>
-                                            <div class="media-body">
-                                                <div class="fs-12 text--title">
-                                                    <div class="font-bold">Mahindra XUV700 AX7</div>
-                                                    <div class="font-semibold opacity-60">Car No: GHA-10-2345</div>
+                <form action="{{ route('admin.rental.trip.assign.driver') }}" method="post">
+                    @csrf
+                    <input type="hidden" name="trip_id" value="{{ $trip->id }}">
+                    <div class="modal-body px-4 py-0">
+                        <h5 class="font-bold">{{ translate('Assign Driver') }}</h5>
+                        <div class="fs-12 mb-20">
+                        <span id="vehicle-assign-count">
+                            {{ count($trip->vehicle_identity->filter(fn($v) => !$v->vehicle_driver_id)) }}
+                        </span>
+                            {{ translate('Vehicle need to assign driver') }}
+                        </div>
+                        <div class="card shadow-none">
+                            <div class="table-responsive">
+                                <table
+                                    class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table dataTable no-footer mb-0">
+                                    <thead class="thead-light">
+                                    <tr>
+                                        <th class="border-0">{{ translate('Vehicle List') }}</th>
+                                        <th class="border-0">{{ translate('Selected Driver') }}</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    @foreach($trip?->vehicle_identity as $vehicleDetails)
+                                        <tr>
+                                            <td>
+                                                <div class="media media--sm">
+                                                    <a class="mr-3" href="#">
+                                                        <img width="60" height="40" class="img--ratio-2 onerror-image rounded h--40px"
+                                                             src="{{ $vehicleDetails?->vehicles['thumbnailFullUrl'] }}"
+                                                             data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
+                                                             alt="Image Description">
+                                                    </a>
+                                                    <div class="media-body">
+                                                        <div class="fs-12 text--title">
+                                                            <div class="font-bold">{{ ucwords($vehicleDetails?->vehicles?->name)}}</div>
+                                                            <div class="font-semibold opacity-60">{{translate('Car No')}}: {{ $vehicleDetails?->vehicle_identity_data?->license_plate_number }}</div>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="d-flex flex-column w-100">
-                                            <select name="" id=""
-                                                    class="form-control js-select2-custom"
-                                                    data-placeholder="{{ translate('messages.select_vehicle_transmission') }}">
-                                                <option value="" selected disabled>
-                                                    <span class="fs-12 text--title">Select Vendors</span>
-                                                </option>
-                                                <option value="1" selected>
-                                                    <span class="fs-12 text--title">Ellison Cardenas Trading</span>
-                                                    <br>
-                                                    <span class="fs-10 text--title opacity-70">(+416465456)</span>
-                                                </option>
-                                                <option value="2">
-                                                    <span class="fs-12 text--title">Ellison Cardenas Trading</span>
-                                                    <br>
-                                                    <span class="fs-10 text--title opacity-70">(+416465456)</span>
-                                                </option>
-                                            </select>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="media media--sm">
-                                            <a class="mr-3" href="#">
-                                                <img width="60" height="40" class="img--ratio-2 onerror-image rounded h--40px"
-                                                     src="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
-                                                     data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
-                                                     alt="Image Description">
-                                            </a>
-                                            <div class="media-body">
-                                                <div class="fs-12 text--title">
-                                                    <div class="font-bold">Mahindra XUV700 AX7</div>
-                                                    <div class="font-semibold opacity-60">Car No: GHA-10-2345</div>
+                                            </td>
+                                            <td>
+                                                <div class="d-flex flex-column w-100">
+                                                    <select name="driver_ids[{{ $vehicleDetails->id }}]"
+                                                            class="form-control js-select2-custom driver-select"
+                                                            data-placeholder="{{ translate('messages.select_vehicle_transmission') }}"
+                                                            id="driver_{{ $vehicleDetails->id }}">
+                                                        <option value="" selected disabled>
+                                                            <span class="fs-12 text--title">Select Vendors</span>
+                                                        </option>
+                                                        @foreach($trip->provider->vehicleDriver as $providerDriver)
+                                                            <option value="{{ $providerDriver->id }}"
+                                                                    {{ $vehicleDetails->vehicle_driver_id == $providerDriver->id ? 'selected' : '' }}
+                                                                    data-driver-id="{{ $providerDriver->id }}">
+                                                                <span class="fs-12 text--title">{{ $providerDriver->fullName }}</span>
+                                                                <br>
+                                                                <span class="fs-10 text--title opacity-70">({{ $providerDriver->phone }})</span>
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
                                                 </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="d-flex flex-column w-100">
-                                            <select name="" id=""
-                                                    class="form-control js-select2-custom"
-                                                    data-placeholder="{{ translate('messages.select_vehicle_transmission') }}">
-                                                <option value="" selected disabled>
-                                                    <span class="fs-12 text--title">Select Vendors</span>
-                                                </option>
-                                                <option value="1" selected>
-                                                    <span class="fs-12 text--title">Ellison Cardenas Trading</span>
-                                                    <br>
-                                                    <span class="fs-10 text--title opacity-70">(+416465456)</span>
-                                                </option>
-                                                <option value="2">
-                                                    <span class="fs-12 text--title">Ellison Cardenas Trading</span>
-                                                    <br>
-                                                    <span class="fs-10 text--title opacity-70">(+416465456)</span>
-                                                </option>
-                                            </select>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="media media--sm">
-                                            <a class="mr-3" href="#">
-                                                <img width="60" height="40" class="img--ratio-2 onerror-image rounded h--40px"
-                                                     src="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
-                                                     data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
-                                                     alt="Image Description">
-                                            </a>
-                                            <div class="media-body">
-                                                <div class="fs-12 text--title">
-                                                    <div class="font-bold">Mahindra XUV700 AX7</div>
-                                                    <div class="font-semibold opacity-60">Car No: GHA-10-2345</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="d-flex flex-column w-100">
-                                            <select name="" id=""
-                                                    class="form-control js-select2-custom"
-                                                    data-placeholder="{{ translate('messages.select_vehicle_transmission') }}">
-                                                <option value="" selected disabled>
-                                                    <span class="fs-12 text--title">Select Vendors</span>
-                                                </option>
-                                                <option value="1" selected>
-                                                    <span class="fs-12 text--title">Ellison Cardenas Trading</span>
-                                                    <br>
-                                                    <span class="fs-10 text--title opacity-70">(+416465456)</span>
-                                                </option>
-                                                <option value="2">
-                                                    <span class="fs-12 text--title">Ellison Cardenas Trading</span>
-                                                    <br>
-                                                    <span class="fs-10 text--title opacity-70">(+416465456)</span>
-                                                </option>
-                                            </select>
-                                        </div>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer border-0 flex-shrink-0 px-4">
-                    <div class="btn--container justify-content-end">
-                        <button type="reset" id="reset_btn"
-                                class="btn btn--warning-light min-w-120px">{{ translate('messages.cancel') }}</button>
-                        <button type="submit"
-                                class="btn btn--primary min-w-120px">{{ translate('messages.assign') }}</button>
+                    <div class="modal-footer border-0 flex-shrink-0 px-4">
+                        <div class="btn--container justify-content-end">
+                            <button type="button" data-dismiss="modal" aria-label="Close"
+                                    class="btn btn--warning-light min-w-120px">{{ translate('messages.cancel') }}</button>
+                            <button type="submit"
+                                    class="btn btn--primary min-w-120px">{{ translate('messages.assign') }}</button>
+                        </div>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
     </div>
@@ -631,96 +601,55 @@
                     <button type="button" class="close p-0 m-0" data-dismiss="modal" aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
                 </div>
-                <div class="modal-body px-4 py-0">
-                    <div class="media media--sm flex-wrap mb-20">
-                        <a class="mr-3" href="#">
-                            <img width="160" class="img-fluid rounded aspect-2-1 onerror-image"
-                                 src="{{ asset('public/assets/admin/img/car-demo.png') }}"
-                                 data-onerror-image="{{ asset('public/assets/admin/img/car-demo.png') }}"
-                                 alt="Image Description">
-                        </a>
-                        <div class="media-body">
-                            <div class="text--title">
-                                <div class="fs-20 font-semibold line--limit-1" id="vehicleName">Vehicle Name</div>
-                                <div class="mb-2"><span class="font-semibold">Vendor :</span> <span id="vehicleVendor">Vendor Name</span></div>
-                                <div class="d-flex flex-wrap gap-2 gap-sm-4">
-                                    <div><span class="font-semibold">Category :</span> <span id="vehicleCategory">Category</span></div>
-                                    <div><span class="font-semibold">Brand :</span> <span id="vehicleBrand">Brand</span></div>
+                <form action="{{ route('admin.rental.trip.assign.vehicle') }}" method="post">
+                    @csrf
+                    <div class="modal-body px-4 py-0">
+                        <div class="media media--sm flex-wrap mb-20">
+                            <a class="mr-3" href="#">
+                                <img id="vehicleImage" width="160" class="img-fluid rounded aspect-2-1 onerror-image"
+                                     src="{{ asset('public/assets/admin/img/car-demo.png') }}"
+                                     data-onerror-image="{{ asset('public/assets/admin/img/car-demo.png') }}"
+                                     alt="Image Description">
+                            </a>
+                            <div class="media-body">
+                                <div class="text--title">
+                                    <div class="fs-20 font-semibold line--limit-1" id="vehicleName">Vehicle Name</div>
+                                    <div class="mb-2"><span class="font-semibold">Vendor :</span> <span id="vehicleVendor">Vendor Name</span></div>
+                                    <div class="d-flex flex-wrap gap-2 gap-sm-4">
+                                        <div><span class="font-semibold">Category :</span> <span id="vehicleCategory">Category</span></div>
+                                        <div><span class="font-semibold">Brand :</span> <span id="vehicleBrand">Brand</span></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <h5 class="font-bold">Vehicles List <span class="fs-12 font-regular">(Select any of <span id="vehicleQuantity"></span> <span> vehicle)</span></h5>
-                    <div class="card shadow-none">
-                        <div class="table-responsive">
-                            <table
-                                class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table dataTable no-footer mb-0">
-                                <thead class="thead-light">
-                                <tr>
-                                    <th class="border-0">SL.</th>
-                                    <th class="border-0">VIN Number</th>
-                                    <th class="border-0">License Number</th>
-                                    <th class="border-0 text-center">Action</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>12354687</td>
-                                    <td>Dhk-Cha-12-2342</td>
-                                    <td>
-                                        <div class="d-flex justify-content-center align-items-center">
-                                            <input class="form-check-input single-select m-auto position-relative"
-                                                   type="checkbox" value="hourly" checked>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>12354687</td>
-                                    <td>Dhk-Cha-12-2342</td>
-                                    <td>
-                                        <div class="d-flex justify-content-center align-items-center">
-                                            <input class="form-check-input single-select m-auto position-relative"
-                                                   type="checkbox" value="hourly">
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>3</td>
-                                    <td>12354687</td>
-                                    <td>Dhk-Cha-12-2342</td>
-                                    <td>
-                                        <div class="d-flex justify-content-center align-items-center">
-                                            <input class="form-check-input single-select m-auto position-relative"
-                                                   type="checkbox" value="hourly" checked>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>4</td>
-                                    <td>12354687</td>
-                                    <td>Dhk-Cha-12-2342</td>
-                                    <td>
-                                        <div class="d-flex justify-content-center align-items-center">
-                                            <input class="form-check-input single-select m-auto position-relative"
-                                                   type="checkbox" value="hourly">
-                                        </div>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
+                        <h5 class="font-bold">Vehicles List <span class="fs-12 font-regular">(Select any of <span id="vehicleQuantity"></span> vehicle)</span></h5>
+                        <div class="card shadow-none">
+                            <div class="table-responsive">
+                                <table
+                                    class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table dataTable no-footer mb-0">
+                                    <thead class="thead-light">
+                                    <tr>
+                                        <th class="border-0">SL.</th>
+                                        <th class="border-0">VIN Number</th>
+                                        <th class="border-0">License Number</th>
+                                        <th class="border-0 text-center">Action</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer border-0 flex-shrink-0 px-4">
-                    <div class="btn--container justify-content-end">
-                        <button type="reset" id="reset_btn"
-                                class="btn btn--warning-light min-w-120px">{{ translate('messages.cancel') }}</button>
-                        <button type="submit"
-                                class="btn btn--primary min-w-120px">{{ translate('messages.add') }}</button>
+                    <div class="modal-footer border-0 flex-shrink-0 px-4">
+                        <div class="btn--container justify-content-end">
+                            <button type="reset" id="reset_btn"
+                                    class="btn btn--warning-light min-w-120px">{{ translate('messages.cancel') }}</button>
+                            <button type="submit"
+                                    class="btn btn--primary min-w-120px">{{ translate('messages.add') }}</button>
+                        </div>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
     </div>
@@ -732,7 +661,7 @@
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header pt-4 px-4">
-                    <h4 class="modal-title" id="providerLocationModalLabel">{{ translate('messages.Trip ID # 1000078') }}
+                    <h4 class="modal-title" id="providerLocationModalLabel">{{ translate('messages.Trip ID #') }} {{ $trip->id }}
                     </h4>
                     <button type="button" class="close p-0 m-0" data-dismiss="modal" aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
@@ -756,17 +685,17 @@
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header pt-4 px-4">
-                    <h4 class="modal-title" id="pickupDesModalLabel">{{ translate('messages.Trip ID # 1000078') }}</h4>
+                    <h4 class="modal-title" id="pickupDesModalLabel">{{ translate('messages.Trip ID # ') }}  {{ $trip->id }}</h4>
                     <button type="button" class="close p-0 m-0" data-dismiss="modal" aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
                 </div>
                 <div class="modal-body p-4">
                     <div class="row">
                         <div class="col-md-12 modal_body_map">
-                            <div class="location-map" id="pickup_location_map">
-                                <div class="initial--25 rounded-8 custom_map_canvas" id="custom_route_line_map_canvas">
-                                </div>
-                            </div>
+{{--                            <div class="location-map" id="pickup_location_map">--}}
+{{--                                <div class="initial--25 rounded-8 custom_map_canvas" id="custom_route_line_map_canvas">--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
                         </div>
                     </div>
                 </div>
@@ -780,7 +709,7 @@
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header pt-4 px-4 flex-shrink-0">
-                    <h4 class="modal-title" id="editTripModalLabel">{{ translate('messages.Trip ID # 1000078') }}</h4>
+                    <h4 class="modal-title" id="editTripModalLabel">{{ translate('messages.Trip ID # ') }}  {{ $trip->id }}</h4>
                     <button type="button" class="close p-0 m-0" data-dismiss="modal" aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
                 </div>
@@ -958,9 +887,7 @@
 @endsection
 
 @push('script_2')
-    <script
-        src="https://maps.googleapis.com/maps/api/js?key={{ \App\Models\BusinessSetting::where('key', 'map_api_key')->first()->value }}&libraries=places&v=3.45.8">
-    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key={{ \App\Models\BusinessSetting::where('key', 'map_api_key')->first()->value }}&libraries=places&v=3.45.8"></script>
     <script>
         // INITIALIZATION OF SELECT2
         // =======================================================
@@ -976,10 +903,10 @@
                     featureType: "all",
                     stylers: [{
                         saturation: -100
-                    }, // Desaturate all colors
+                    },
                         {
                             lightness: 20
-                        }, // Increase lightness
+                        },
                     ],
                 },
                     {
@@ -1004,27 +931,24 @@
                     },
                 ];
 
-                // Initialize the map centered on the provider's location
                 const map = new google.maps.Map(
                     document.getElementById("provider_map_canvas"), {
                         center: {
-                            lat: 23.837232,
-                            lng: 90.373129
+                            lat: {{ $trip->provider->latitude }},
+                            lng: {{ $trip->provider->longitude }}
                         },
-                        zoom: 14, // Adjusted for better overview
+                        zoom: 14,
                         styles: grayStyle,
                     }
                 );
 
                 const infowindow = new google.maps.InfoWindow();
 
-                // Provider location
                 const providerLocation = {
-                    lat: 23.837232,
-                    lng: 90.373129
+                    lat: {{ $trip->provider->latitude }},
+                    lng: {{ $trip->provider->longitude }}
                 };
 
-                // Add a marker for the provider's location
                 const providerMarker = new google.maps.Marker({
                     position: providerLocation,
                     map: map,
@@ -1038,34 +962,29 @@
                 });
             }
 
-            // Re-init map before show modal
             $('#providerLocationModal').on('shown.bs.modal', function(event) {
                 providerLocationMap();
             });
 
-            // ------- pickup destinaton map with route line starts
-
-            // drawing a route (polyline) on the map between two locations
+            // pickup destination map with route line starts
             function addPolylineToMap(map, pickupLocation, destinationLocation) {
                 const directionsService = new google.maps.DirectionsService();
                 const directionsRenderer = new google.maps.DirectionsRenderer({
                     map: map,
-                    suppressMarkers: true, // Suppress default markers
+                    suppressMarkers: true,
                     polylineOptions: {
-                        strokeColor: '#4D4D4D', // Line color
-                        strokeOpacity: 1.0, // Line opacity
-                        strokeWeight: 3 // Line width
+                        strokeColor: '#4D4D4D',
+                        strokeOpacity: 1.0,
+                        strokeWeight: 3
                     },
                 });
 
-                // Define request for the route
                 const request = {
                     origin: pickupLocation,
                     destination: destinationLocation,
-                    travelMode: google.maps.TravelMode.DRIVING, // Use DRIVING as travel mode.
+                    travelMode: google.maps.TravelMode.DRIVING,
                 };
 
-                // Calculate the route and render it
                 directionsService.route(request, function(response, status) {
                     if (status === google.maps.DirectionsStatus.OK) {
                         directionsRenderer.setDirections(response);
@@ -1075,17 +994,16 @@
                 });
             }
 
-
             function initializeCustomRouteLocationMap() {
 
                 const grayStyle = [{
                     featureType: "all",
                     stylers: [{
                         saturation: -100
-                    }, // Desaturate all colors
+                    },
                         {
                             lightness: 20
-                        }, // Increase lightness
+                        },
                     ]
                 },
                     {
@@ -1115,23 +1033,20 @@
                         lat: 23.766660,
                         lng: 90.424993
                     },
-                    zoom: 14, // Adjusted for better overview
+                    zoom: 14,
                     styles: grayStyle,
                 });
 
                 const infowindow = new google.maps.InfoWindow();
-
-                // Define pickup and destination locations
                 const pickupLocation = {
-                    lat: 23.766660,
-                    lng: 90.424993
+                    lat: {{ $trip->pickup_location['lat'] }},
+                    lng: {{ $trip->pickup_location['lng'] }}
                 };
                 const destinationLocation = {
-                    lat: 23.837232,
-                    lng: 90.373129
+                    lat: {{ $trip->destination_location['lat'] }},
+                    lng: {{ $trip->destination_location['lng'] }}
                 };
 
-                // get dynamic icon color
                 function getDynamicMarkerSvg(dynamicColor) {
                     return `
                         <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30">
@@ -1161,11 +1076,7 @@
                 function createMarkerIconFromCssVariable(variableName) {
                     const rootStyles = getComputedStyle(document.documentElement);
                     const dynamicColor = rootStyles.getPropertyValue(variableName).trim();
-
-                    // Generate SVG with the dynamic color
                     const svg = getDynamicMarkerSvg(dynamicColor);
-
-                    // Convert to Base64 for Google Maps marker
                     const base64Svg = `data:image/svg+xml;base64,${btoa(svg)}`;
 
                     return {
@@ -1174,10 +1085,7 @@
                     };
                 }
 
-                // Set icon color from a CSS variable
                 const destinationMarkerIcon = createMarkerIconFromCssVariable("--primary-clr");
-
-                // Add a marker for the pickup location
                 const pickupMarker = new google.maps.Marker({
                     position: pickupLocation,
                     map: map,
@@ -1190,7 +1098,6 @@
                     infowindow.open(map, pickupMarker);
                 });
 
-                // Add a marker for the destination location
                 const destinationMarker = new google.maps.Marker({
                     position: destinationLocation,
                     map: map,
@@ -1203,41 +1110,146 @@
                     infowindow.open(map, destinationMarker);
                 });
 
-                // Add a routed polyline between the pickup and destination locations
                 addPolylineToMap(map, pickupLocation, destinationLocation);
             }
 
-            // Re-init map before showing modal
-            $('#pickupDesModal').on('shown.bs.modal', function(event) {
+            // $('#pickupDesModal').on('shown.bs.modal', function(event) {
                 initializeCustomRouteLocationMap();
-            });
+            // });
 
-            // ------- pickup destinaton map with route line ends
-
-            // ------- select2 search placeholder add
+            //select2 search placeholder add
             $('.select2-search__field').attr("placeholder", '<i class="tio-search"></i> Search Vendor');
-            // ------- select2 search placeholder add ends
+            //select2 search placeholder add ends
         })
     </script>
 
     <script>
         $(document).ready(function () {
             $('.assign-vehicle-btn').on('click', function () {
-                const vehicleId = $(this).data('id');
+                const detailsId = $(this).data('details_id');
+                const vehicleId = $(this).data('vehicle_id');
+                const tripId = $(this).data('trip_id');
                 const quantity = $(this).data('quantity');
-                const img = $(this).data('img');
+                const imgSrc = $(this).data('img');
                 const name = $(this).data('name');
                 const vendor = $(this).data('vendor');
                 const category = $(this).data('category');
                 const brand = $(this).data('brand');
+                const list = $(this).data('list');
+                const tripVehicleDetails = $(this).data('trip_vehicle_details');
 
+                $('#vehicleImage').attr('src', imgSrc);
                 $('#vehicleName').text(name);
                 $('#vehicleQuantity').text(quantity);
-                $('#vehicleImg').text(img);
                 $('#vehicleVendor').text(vendor);
                 $('#vehicleCategory').text(category);
                 $('#vehicleBrand').text(brand);
+
+                const tableBody = $('#assignVehicleModal tbody');
+                tableBody.empty();
+
+                let preCheckedIds = [];
+                try {
+                    if (typeof tripVehicleDetails === 'string') {
+                        preCheckedIds = JSON.parse(tripVehicleDetails).map(item => item.vehicle_identity_id);
+                    } else {
+                        preCheckedIds = tripVehicleDetails.map(item => item.vehicle_identity_id);
+                    }
+                } catch (error) {
+                    console.error('Error parsing trip_vehicle_details:', error);
+                }
+
+                if (list && Array.isArray(list)) {
+                    list.forEach((item, index) => {
+                        const isChecked = preCheckedIds.includes(item.id) ? 'checked' : '';
+                        const row = `
+                <tr>
+                    <td>${index + 1}</td>
+                    <td>${item.vin_number || 'N/A'}</td>
+                    <td>${item.license_plate_number || 'N/A'}</td>
+                    <td>
+                        <div class="d-flex justify-content-center align-items-center">
+                            <input class="form-check-input single-select m-auto position-relative" type="checkbox" name="vehicle_identity_ids[]" value="${item.id || ''}" ${isChecked}>
+                            <input type="hidden" name="trip_id" value="${tripId}">
+                            <input type="hidden" name="vehicle_id" value="${vehicleId}">
+                            <input type="hidden" name="details_id" value="${detailsId}">
+                        </div>
+                    </td>
+                </tr>
+                `;
+                        tableBody.append(row);
+                    });
+                } else {
+                    tableBody.append('<tr><td colspan="4" class="text-center">No data available</td></tr>');
+                }
+
+                let checkedCount = $('.single-select:checked').length;
+
+                $('.single-select').on('change', function () {
+                    if ($(this).is(':checked')) {
+                        checkedCount++;
+                    } else {
+                        checkedCount--;
+                    }
+
+                    if (checkedCount > quantity) {
+                        $(this).prop('checked', false);
+                        checkedCount--;
+                        toastr.warning(`You can select up to ${quantity} vehicles only.`, '', {
+                            closeButton: true,
+                            progressBar: true
+                        });
+                    }
+                });
             });
+
+            let selectedDrivers = {};
+
+            $('.assign-driver-modal').on('click', function() {
+                $('#assignDriverModal').modal('show');
+            });
+
+            $('.driver-select').on('change', function() {
+                let selectedDriverId = $(this).val();
+                let vehicleId = $(this).attr('name').match(/\[(.*?)\]/)[1];
+
+                if (selectedDriverId) {
+                    selectedDrivers[vehicleId] = selectedDriverId;
+                }
+
+                updateUnassignedVehicleCount();
+                disableUsedDrivers();
+            });
+
+            function disableUsedDrivers() {
+                $('.driver-select option').prop('disabled', false).css('color', '');
+
+                $('.driver-select').each(function() {
+                    let vehicleId = $(this).attr('name').match(/\[(.*?)\]/)[1];
+                    let selectedDriverId = selectedDrivers[vehicleId];
+
+                    if (selectedDriverId) {
+                        $('.driver-select').not(this).each(function() {
+                            $(this).find(`option[value="${selectedDriverId}"]`).prop('disabled', true).css('color', 'gray');
+                        });
+                    }
+                });
+            }
+
+            function updateUnassignedVehicleCount() {
+                let unassignedCount = 0;
+
+                $('.driver-select').each(function() {
+                    if (!$(this).val()) {
+                        unassignedCount++;
+                    }
+                });
+
+                $('#vehicle-assign-count').text(unassignedCount);
+            }
+
+            updateUnassignedVehicleCount();
+            disableUsedDrivers();
         });
 
     </script>
