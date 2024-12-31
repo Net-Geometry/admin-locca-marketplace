@@ -13,6 +13,7 @@ class TripVehicleDetails extends Model
     protected $casts = [
         'trip_id' => 'integer',
         'vehicle_id' => 'integer',
+        'trip_details_id' => 'integer',
         'vehicle_identity_id' => 'integer',
         'vehicle_driver_id' => 'integer',
     ];

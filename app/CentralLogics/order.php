@@ -2,23 +2,24 @@
 
 namespace App\CentralLogics;
 
-use App\Models\AccountTransaction;
-use App\Models\Admin;
-use App\Models\DeliveryMan;
-use App\Models\Order;
-use App\Models\OrderTransaction;
-use App\Models\AdminWallet;
-use App\Models\BusinessSetting;
-use App\Models\Store;
-use App\Models\StoreWallet;
-use App\Models\DeliveryManWallet;
-use App\CentralLogics\CustomerLogic;
-use App\Models\OrderPayment;
 use App\Models\User;
+use App\Models\Admin;
+use App\Models\Order;
+use App\Models\Store;
 use App\Models\Vendor;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
+use App\Models\AdminWallet;
+use App\Models\DeliveryMan;
+use App\Models\StoreWallet;
 use Illuminate\Support\Str;
+use App\Models\OrderPayment;
+use App\Models\BusinessSetting;
+use App\Models\OrderTransaction;
+use App\Models\DeliveryManWallet;
+use App\Models\AccountTransaction;
+use Illuminate\Support\Facades\DB;
+use App\CentralLogics\CustomerLogic;
+use Illuminate\Support\Facades\Mail;
+use Modules\Rental\Entities\PartialPayment;
 
 class OrderLogic
 {
@@ -575,6 +576,19 @@ class OrderLogic
         }
         return true;
 
+    }
+
+    public static function update_unpaid_trip_payment($trip_id,$payment_method)
+    {
+        $payment = PartialPayment::where('payment_status','unpaid')->where('trip_id',$trip_id)->first();
+        if($payment){
+            $payment->payment_status = 'paid';
+            if($payment_method != 'partial_payment'){
+                $payment->payment_method = $payment_method;
+            }
+            $payment->save();
+        }
+        return true;
     }
 
 

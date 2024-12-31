@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Models\SubscriptionTransaction;
 use App\Models\SubscriptionBillingAndRefundHistory;
 use Brian2694\Toastr\Facades\Toastr;
+use Modules\Rental\Entities\Trips;
 
 if (! function_exists('translate')) {
     function translate($key, $replace = [])
@@ -155,6 +156,67 @@ if (! function_exists('order_place')) {
     }
 
 }
+
+if (! function_exists('trip_payment_success')) {
+    function trip_payment_success($data) {
+        $trip = Trips::find($data->attribute_id);
+        if($trip->payment_method != 'partial_payment'){
+            $trip->payment_method=$data->payment_method;
+        }
+        $trip->transaction_reference=$data->transaction_ref;
+        $trip->payment_status='paid';
+        $trip->save();
+
+
+
+        if( $trip?->provider?->is_valid_subscription == 1 && $trip?->provider?->store_sub?->max_order != "unlimited" && $trip?->provider?->store_sub?->max_order > 0){
+            $trip?->provider?->store_sub?->decrement('max_order' , 1);
+        }
+
+
+            OrderLogic::update_unpaid_trip_payment(trip_id:$trip->id, payment_method:$data->payment_method);
+
+
+        // try {
+        //     Helpers::send_order_notification($order);
+        //     $address = json_decode($order->delivery_address, true);
+
+
+        //     if(Helpers::getNotificationStatusData('customer','customer_delivery_verification','mail_status')  && Helpers::get_mail_status('order_verification_mail_status_user') == 1 && config('mail.status')){
+
+        //         if ( config('order_delivery_verification') == 1  && $order->is_guest == 0) {
+        //             Mail::to($order->customer->email)->send(new OrderVerificationMail($order->otp,$order->customer->f_name));
+        //         }
+
+        //         if ($order->is_guest == 1   && isset($address['contact_person_email'])) {
+        //             Mail::to($address['contact_person_email'])->send(new OrderVerificationMail($order->otp,$order?->customer?->f_name));
+        //         }
+        //     }
+        // } catch (\Exception $e) {
+        //     info($e);
+        // }
+
+    }
+
+}
+
+
+
+if (! function_exists('trip_payment_fail')) {
+    function trip_payment_fail($data) {
+        $trip = Trips::find($data->attribute_id);
+        $trip->trip_status='payment_failed';
+        if($trip->payment_method != 'partial_payment'){
+            $trip->payment_method=$data->payment_method;
+        }
+        $trip->payment_failed=now();
+        $trip->save();
+        return true;
+    }
+}
+
+
+
 if (! function_exists('order_failed')) {
     function order_failed($data) {
         $order = Order::find($data->attribute_id);

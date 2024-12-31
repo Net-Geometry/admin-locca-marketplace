@@ -7,13 +7,13 @@ use App\Models\Store;
 use Illuminate\Http\Request;
 use App\CentralLogics\Helpers;
 use App\CentralLogics\StoreLogic;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Routing\Controller;
 use Modules\Rental\Entities\Trips;
-use Modules\Rental\Entities\Vehicle;
-use Modules\Rental\Entities\VehicleReview;
-use Illuminate\Support\Facades\Storage;
 use App\CentralLogics\ProductLogic;
+use Modules\Rental\Entities\Vehicle;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
+use Modules\Rental\Entities\VehicleReview;
 
 class VehicleReviewController extends Controller
 {

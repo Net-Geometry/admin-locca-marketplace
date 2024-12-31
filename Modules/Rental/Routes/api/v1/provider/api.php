@@ -144,6 +144,7 @@ Route::group(['prefix' => 'rental', 'as' => 'rental.',  'middleware' =>  ['local
                     Route::Post('trip-booking', [TripController::class, 'tripBooking']);
                     Route::get('get-trip-list/{all}', [TripController::class, 'getTripList']);
                     Route::get('get-trip-details', [TripController::class, 'getTripDetails']);
+                    Route::get('payment', [TripController::class, 'makePayment']);
                     Route::put('cancel-trip', [TripController::class, 'cancelTrip']);
                 });
                 Route::group(['prefix' => 'wish-list'], function () {
@@ -153,7 +154,7 @@ Route::group(['prefix' => 'rental', 'as' => 'rental.',  'middleware' =>  ['local
                 });
                 Route::group(['prefix' => 'review'], function () {
                     Route::post('add', [VehicleReviewController::class, 'submitVehicleReview']);
-    
+
                 });
             });
         });

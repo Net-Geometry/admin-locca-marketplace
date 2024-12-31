@@ -22,7 +22,12 @@ use MatanYadaev\EloquentSpatial\Objects\Point;
 use Modules\Rental\Entities\RentalCartUserData;
 use Modules\Rental\Entities\TripDetails;
 use App\CentralLogics\StoreLogic;
-
+use App\CentralLogics\CustomerLogic;
+use App\Library\Payer;
+use App\Traits\Payment;
+use App\Library\Receiver;
+use App\Library\Payment as PaymentInfo;
+use Modules\Rental\Entities\PartialPayment;
 
 class TripController extends Controller
 {
@@ -80,7 +85,7 @@ class TripController extends Controller
         }
         $estimated_trip_end_time = $schedule_at->copy()->addHours($user_data->rental_type == 'hourly' ? $user_data->estimated_hours ?? 1 : $user_data->destination_time ?? 1);
 
-        $trip_validation_check =  $this->tripValidationCheck($request, $schedule_at);
+        $trip_validation_check =  $this->tripValidationCheck($request, $schedule_at,$user_data);
 
         if (data_get($trip_validation_check, 'status_code') === 403) {
 
@@ -90,7 +95,8 @@ class TripController extends Controller
                 ]
             ], data_get($trip_validation_check, 'status_code'));
         } else {
-            $provider = $trip_validation_check;
+            $provider = $trip_validation_check['store'];
+            $pickup_zone = $trip_validation_check['pickup_zone'];
         }
 
         DB::beginTransaction();
@@ -157,8 +163,15 @@ class TripController extends Controller
         if ($price < 0) {
             $price = 0;
         }
+        $user_info = [
+            'contact_person_name' => $request->contact_person_name ? $request->contact_person_name : ($request->user?$request->user->f_name . ' ' . $request->user->l_name:''),
+            'contact_person_number' => $request->contact_person_number ? $request->contact_person_number : ($request->user?$request->user->phone:''),
+            'contact_person_email' => $request->contact_person_email ? $request->contact_person_email : ($request->user?$request->user->email:''),
+        ];
+
         $make_trip_data = [
             'user_id' => $user_id,
+            'pickup_zone_id' => $pickup_zone->id,
             'is_guest' => $is_guest,
             'schedule_at' => $schedule_at,
             'estimated_trip_end_time' => $estimated_trip_end_time,
@@ -183,6 +196,7 @@ class TripController extends Controller
             'quantity' => $quantity ?? 1,
             'pickup_location' => json_encode($user_data->pickup_location),
             'destination_location' => json_encode($user_data->destination_location),
+            'user_info' => json_encode($user_info),
         ];
 
 
@@ -217,6 +231,7 @@ class TripController extends Controller
         $trip->user_id = $make_trip_data['user_id'];
         $trip->provider_id = $make_trip_data['provider']['id'];
         $trip->zone_id = $make_trip_data['provider']['zone_id'];
+        $trip->pickup_zone_id = $make_trip_data['pickup_zone_id'];
         $trip->module_id =  $make_trip_data['provider']['module_id'];
         $trip->cash_back_id = $make_trip_data['cash_back_id'];
         $trip->trip_amount = $make_trip_data['trip_amount'];
@@ -245,28 +260,29 @@ class TripController extends Controller
         $trip->destination_location = $make_trip_data['destination_location'];
         $trip->pickup_location = $make_trip_data['pickup_location'];
         $trip->pending = now();
+        $trip->user_info = $make_trip_data['user_info'];;
         $trip->save();
         return $trip;
     }
 
 
 
-    private function tripValidationCheck($request, $schedule_at)
+    private function tripValidationCheck($request, $schedule_at,$user_data)
     {
 
         // $settings_key = ['dine_in_order_option'];
 
         // $settings =  array_column(BusinessSetting::whereIn('key', $settings_key)->get()->toArray(), 'value', 'key');
 
-        $longitude= $request->header('longitude')?? 0;
-        $latitude= $request->header('latitude')?? 0;
+        $longitude=  $user_data->pickup_location['lng']?? 0;
+        $latitude= $user_data->pickup_location['lat']?? 0;
 
         $store = Store::with(['discount', 'store_sub'])->selectRaw('*, IF(((select count(*) from `store_schedule` where `stores`.`id` = `store_schedule`.`store_id` and `store_schedule`.`day` = ' . $schedule_at->format('w') . ' and `store_schedule`.`opening_time` < "' . $schedule_at->format('H:i:s') . '" and `store_schedule`.`closing_time` >"' . $schedule_at->format('H:i:s') . '") > 0), true, false) as open')->where('id', $request->provider_id)->first();
 
 
         $zone_id = isset($store) ? [$store->zone_id] : json_decode($request->header('zoneId'), true);
-        $zone = Zone::where('id', $zone_id)->whereContains('coordinates', new Point($latitude, $longitude, POINT_SRID))->first();
 
+        $pickup_zone = Zone::where('id', $zone_id)->whereContains('coordinates', new Point($latitude, $longitude, POINT_SRID))->first('id');
 
 
         $response = match (true) {
@@ -275,7 +291,7 @@ class TripController extends Controller
                 'message' =>  'provider_not_found',
                 'status' => 403
             ],
-            !$zone  => [
+            !$pickup_zone  => [
                 'code' => 'Zone',
                 'message' =>  'out_of_zone',
                 'status' => 403
@@ -307,7 +323,7 @@ class TripController extends Controller
             return ['code' => $response['code'], 'message' => translate($response['message']), 'status_code' => $response['status']];
         }
 
-        return $store;
+        return ['store'=> $store , 'pickup_zone'=> $pickup_zone ];
     }
 
     private function  couponCheck($request)
@@ -542,41 +558,176 @@ class TripController extends Controller
         return response()->json(['message' => translate('Trip_successfully_canceled')], 200);
 
     }
+    
     public function makePayment(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'guest_id' => $request->user ? 'nullable' : 'required',
             'trip_id' => 'required',
-            'paymet_method' => 'required',
+            'payment_method' => 'required|in:cash_payment,wallet,partial_payment,digital_payment',
+            'payment_gateway' => 'required_if:payment_method,digital_payment,partial_payment',
+            'callback_url' => 'required_if:payment_method,digital_payment,partial_payment',
+            'payment_platform' => 'required_if:payment_method,digital_payment,partial_payment',
         ]);
+
         if ($validator->fails()) {
             return response()->json(['errors' => $this->helpers->error_processor($validator)], 403);
         }
+
         $user_id = $request->user ? $request->user->id : $request['guest_id'];
         $is_guest = $request->user ? 0 : 1;
 
-        $trip = $this->trips->where(['user_id' => $user_id, 'is_guest' => $is_guest, 'id' => $request->trip_id])->first();
+        $trip = $this->trips->where([
+            'user_id' => $user_id,
+            'is_guest' => $is_guest,
+            'id' => $request->trip_id,
+        ])->first();
 
-        if(!$trip){
+        if (!$trip) {
             return response()->json(['errors' => translate('trip_data_not_found')], 404);
         }
 
-
-        if($request->paymet_method == 'cash_payment' ){
-            $trip->payment_status = 'paid';
-            $trip->payment_method = 'cash_payment';
+        if ($is_guest && in_array($request->payment_method, ['wallet', 'partial_payment'])) {
+            return response()->json(['errors' => translate('This_payment_method_is_not_available_for_guest_users')], 403);
         }
 
-        if(!$is_guest){
-            $user=  User::whereId($user_id)->first();
+        $user = $request->user ?: $this->getGuestUserDetails($trip, $user_id);
 
+        switch ($request->payment_method) {
+            case 'cash_payment':
+                $this->processCashPayment($trip);
+                break;
+
+            case 'digital_payment':
+                return $this->processDigitalPayment($trip, $user, $request);
+
+            case 'wallet':
+                if ($user->wallet_balance < $trip->trip_amount) {
+                    return response()->json(['errors' => translate('insufficient_balance')], 403);
+                }
+                $this->processWalletPayment($trip);
+                break;
+
+            case 'partial_payment':
+                if ($user->wallet_balance > $trip->trip_amount) {
+                    return response()->json(['errors' => translate('trip_amount_must_be_greater_than_wallet_amount')], 403);
+                }
+                if ($user->wallet_balance <= 0) {
+                    return response()->json(['errors' => translate('insufficient_balance_for_partial_amount')], 403);
+                }
+                return $this->processPartialPayment($trip, $user, $request);
+
+            default:
+                return response()->json(['message' => translate('something_went_wrong')], 403);
         }
 
-        $trip->save();
-        return response()->json(['message' => translate('Trip_successfully_canceled')], 200);
-
+        return response()->json(['message' => translate('payment_successful')], 200);
     }
 
+
+
+
+    private function getGuestUserDetails($trip, $user_id)
+    {
+        $address = $trip['user_info'];
+        return collect([
+            'id' => $user_id,
+            'f_name' => $address['contact_person_name'] ?? '',
+            'l_name' => '',
+            'phone' => $address['contact_person_number'] ?? '',
+            'email' => $address['contact_person_email'] ?? '',
+        ]);
+    }
+
+    private function processCashPayment($trip)
+    {
+        $trip->update([
+            'payment_status' => 'paid',
+            'payment_method' => 'cash_payment',
+        ]);
+    }
+
+
+    private function processDigitalPayment($trip, $user, $request)
+    {
+        return response()->json($this->digitalPayment($trip,$user,$request->payment_gateway,$request->callback_url,$request->payment_platform),200);
+    }
+
+    private function processWalletPayment($trip)
+    {
+        CustomerLogic::create_wallet_transaction($trip->user_id, $trip->trip_amount, 'trip_booking', $trip->id);
+        $trip->update([
+            'payment_status' => 'paid',
+            'payment_method' => 'wallet',
+        ]);
+    }
+
+
+    private function processPartialPayment($trip, $user, $request)
+    {
+        $paid_amount = min($user->wallet_balance, $trip->trip_amount);
+        $unpaid_amount = $trip->trip_amount - $paid_amount;
+
+        $trip->update([
+            'partially_paid_amount' => $paid_amount,
+            'payment_method' => 'partial_payment',
+            'payment_status' => 'paid',
+        ]);
+
+        CustomerLogic::create_wallet_transaction($trip->user_id, $paid_amount, 'partial_payment', $trip->id);
+        $this->create_order_payment(trip_id: $trip->id, amount: $paid_amount, payment_status: 'paid', payment_method: 'wallet');
+        $this->create_order_payment(trip_id: $trip->id, amount: $unpaid_amount, payment_status: 'unpaid', payment_method: $request->payment_gateway);
+
+        if ($request->payment_gateway !== 'cash_payment') {
+            return $this->processDigitalPayment($trip, $user, $request);
+        }
+    }
+
+
+    private function create_order_payment($trip_id,$amount,$payment_status,$payment_method){
+        $payment = new PartialPayment();
+        $payment->trip_id = $trip_id;
+        $payment->amount = $amount;
+        $payment->payment_status = $payment_status;
+        $payment->payment_method = $payment_method;
+        $payment->save();
+        return true;
+    }
+
+    private function digitalPayment($trip,$user,$payment_gateway,$url,$payment_platform='web'){
+
+        $payer = new Payer(
+            $user->f_name.' '.$user->l_name ,
+            $user->email,
+            $user->phone,
+            ''
+        );
+
+        $store_logo= BusinessSetting::where(['key' => 'logo'])->first();
+        $additional_data = [
+            'business_name' => BusinessSetting::where(['key'=>'business_name'])->first()?->value,
+            'business_logo' => $this->helpers->get_full_url('business',$store_logo?->value,$store_logo?->storage[0]?->value ?? 'public')
+        ];
+
+        $payment_info = new PaymentInfo(
+            success_hook: 'trip_payment_success',
+            failure_hook: 'trip_payment_fail',
+            currency_code: Helpers::currency_code(),
+            payment_method: $payment_gateway,
+            payment_platform: $payment_platform,
+            payer_id: $user->id,
+            receiver_id:  1,
+            additional_data: $additional_data,
+            payment_amount: $trip->trip_amount- $trip->partially_paid_amount ,
+            external_redirect_link: $url,
+            attribute: 'trip_booking',
+            attribute_id: $trip->id,
+        );
+        $receiver_info = new Receiver('Admin','example.png');
+        $redirect_link = Payment::generate_link($payer, $payment_info, $receiver_info);
+
+        return $redirect_link;
+    }
 
 
 

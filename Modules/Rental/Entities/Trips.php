@@ -53,6 +53,13 @@ class Trips extends Model
         }
         return $value;
     }
+    public function getUserInfoAttribute($value)
+    {
+        if ($value) {
+            return json_decode($value, true);
+        }
+        return $value;
+    }
 
     public function provider()
     {

@@ -71,7 +71,7 @@ class ProviderTripController extends Controller
             return response()->json(['errors' => translate('trip_data_not_found')], 404);
         }
 
-        if( in_array($request->trip_status,['completed','canceled'])){
+        if( in_array($trip->trip_status,['completed','canceled'])){
             return response()->json(['errors' => translate('You_can_not_change_this_trip_status')], 403);
         }
 
@@ -157,6 +157,7 @@ class ProviderTripController extends Controller
         $validator = Validator::make($request->all(), [
             'trip_id' => 'required',
             'vehicle_identity_ids'=>'required',
+            'trip_details_id'=>'required',
             'vehicle_id'=>'required',
         ]);
         if ($validator->fails()) {
@@ -179,6 +180,7 @@ class ProviderTripController extends Controller
             $vehicle_data= TripVehicleDetails::where(['trip_id'=> $request->trip_id ,'vehicle_id' =>$request->vehicle_id ,'vehicle_identity_id' =>$identity_id])->firstOrNew();
             $vehicle_data->trip_id = $request->trip_id;
             $vehicle_data->vehicle_id = $request->vehicle_id;
+            $vehicle_data->trip_details_id = $request->trip_details_id;
             $vehicle_data->vehicle_identity_id = $identity_id;
             $vehicle_data->estimated_trip_end_time = $trip->estimated_trip_end_time;
             $vehicle_data->save();
