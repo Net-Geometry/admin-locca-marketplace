@@ -2,6 +2,27 @@
 
 @section('title', translate('Trip Details'))
 
+@push('css_or_js')
+    <style>
+        #map {
+            height: 500px;
+            width: 100%;
+        }
+
+        #search-input {
+            position: absolute;
+            top: 33px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 5;
+            width: 40%;
+            padding: 10px;
+            font-size: 16px;
+        }
+
+    </style>
+@endpush
+
 @section('content')
     <div class="content container-fluid">
         <!-- Page Header -->
@@ -52,8 +73,8 @@
                                         <span>({{ $trip->scheduled ? translate('messages.Instant') : translate('messages.scheduled') }})</span>
                                     </div>
                                     <div class="fs-14 text-title mt-2 pt-1 mb-2 d-flex align-items-center __gap-5px">
-                                        <span>{{translate('Total Hour')}}</span> <span>:</span>
-                                        <span class="font-bold">{{ $trip->estimated_hours }} {{translate('hrs')}}</span>
+                                        <span>{{translate('Total ')}} {{ $trip->trip_type == 'hourly' ? 'Hour' : 'KM' }}</span> <span>:</span>
+                                        <span class="font-bold">{{ $trip->estimated_hours }} {{ $trip->trip_type == 'hourly' ? 'hrs' : 'KM' }}</span>
                                     </div>
                                 </div>
                                 <div class="d-sm-none">
@@ -66,11 +87,12 @@
                             </div>
                             <div class="order-invoice-right mt-3 mt-sm-0">
                                 <div class="btn--container ml-auto align-items-center justify-content-end">
-
-                                    <button class="btn btn--primary btn-outline-primary font-bold" type="button"
-                                            data-toggle="modal" data-target="#editTripModal">
-                                        <i class="tio-edit mr-sm-1"></i> {{translate('Edit Trip')}}
-                                    </button>
+                                    @if($trip->trip_status == 'pending')
+                                        <button class="btn btn--primary btn-outline-primary font-bold" type="button"
+                                                data-toggle="modal" data-target="#editTripModal">
+                                            <i class="tio-edit mr-sm-1"></i> {{translate('Edit Trip')}}
+                                        </button>
+                                    @endif
                                     <a class="btn btn--primary print--btn font-bold d-none d-sm-block" href="#">
                                         <i class="tio-print mr-sm-1"></i> <span>{{translate('Print invoice')}}</span>
                                     </a>
@@ -151,63 +173,65 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            @if($detail?->tripVehicleDetails->isEmpty())
-                                                <div class="mt-2">
-                                                    <button
-                                                        class="btn btn--primary btn-outline-primary p-5px rounded-20 d-flex align-items-center gap-1 assign-vehicle-btn"
-                                                        type="button"
-                                                        data-toggle="modal"
-                                                        data-target="#assignVehicleModal"
-                                                        data-details_id = "{{ $detail->id }}"
-                                                        data-trip_id = "{{ $detail->trip_id }}"
-                                                        data-vehicle_id = "{{ $detail->vehicle_id }}"
-                                                        data-quantity = "{{ $detail->quantity }}"
-                                                        data-img = "{{ $detail->vehicle['thumbnailFullUrl'] }}"
-                                                        data-name = "{{ $detail?->vehicle_details['name'] }}"
-                                                        data-vendor = "{{ $trip?->provider->name }}"
-                                                        data-category = "{{ $detail?->vehicle?->category?->name }}"
-                                                        data-brand = "{{ $detail?->vehicle?->brand?->name }}"
-                                                        data-list="{{ json_encode($detail->vehicle->vehicleIdentities) }}"
-                                                        data-trip_vehicle_details="{{ json_encode($detail->tripVehicleDetails) }}"
-                                                    >
-                                                        {{translate('Assign Vehicle')}} <span class="fs-24"><i
-                                                                class="tio-add-circle"></i></span>
-                                                    </button>
-                                                </div>
-                                            @else
-                                                <div class="mt-2 bg--F6F6F6 p-2 radius-15 mb-4 d-inline-block">
-                                                <div class="d-flex justify-content-between mb-10px text--title">
-                                                    {{translate('Assigned Vehicle')}}
-                                                    <button
-                                                        class="btn btn--primary p-5px rounded-circle d-flex align-items-center justify-content-center assign-vehicle-btn"
-                                                        type="button"
-                                                        data-toggle="modal"
-                                                        data-target="#assignVehicleModal"
-                                                        data-details_id = "{{ $detail->id }}"
-                                                        data-trip_id = "{{ $detail->trip_id }}"
-                                                        data-vehicle_id = "{{ $detail->vehicle_id }}"
-                                                        data-quantity = "{{ $detail->quantity }}"
-                                                        data-img = "{{ $detail->vehicle['thumbnailFullUrl'] }}"
-                                                        data-name = "{{ $detail?->vehicle_details['name'] }}"
-                                                        data-vendor = "{{ $trip?->provider->name }}"
-                                                        data-category = "{{ $detail?->vehicle?->category?->name }}"
-                                                        data-brand = "{{ $detail?->vehicle?->brand?->name }}"
-                                                        data-list="{{ json_encode($detail->vehicle->vehicleIdentities) }}"
-                                                        data-trip_vehicle_details="{{ json_encode($detail->tripVehicleDetails) }}"
-                                                    >
-                                                        <i class="tio-edit fs-12"></i>
-                                                    </button>
-                                                </div>
-                                                    <div class="text-wrap">
-                                                        @php
-                                                            $licensePlates = $detail->tripVehicleDetails->map(function($tripVehicleDetails) {
-                                                                return $tripVehicleDetails->vehicle_identity_data->license_plate_number;
-                                                            });
-                                                            $licensePlatesString = $licensePlates->implode(', ');
-                                                        @endphp
-                                                        {{ $licensePlatesString }}
+                                            @if($trip->trip_status != 'pending')
+                                                @if($detail?->tripVehicleDetails->isEmpty())
+                                                    <div class="mt-2">
+                                                        <button
+                                                            class="btn btn--primary btn-outline-primary p-5px rounded-20 d-flex align-items-center gap-1 assign-vehicle-btn"
+                                                            type="button"
+                                                            data-toggle="modal"
+                                                            data-target="#assignVehicleModal"
+                                                            data-details_id = "{{ $detail->id }}"
+                                                            data-trip_id = "{{ $detail->trip_id }}"
+                                                            data-vehicle_id = "{{ $detail->vehicle_id }}"
+                                                            data-quantity = "{{ $detail->quantity }}"
+                                                            data-img = "{{ $detail->vehicle['thumbnailFullUrl'] }}"
+                                                            data-name = "{{ $detail?->vehicle_details['name'] }}"
+                                                            data-vendor = "{{ $trip?->provider->name }}"
+                                                            data-category = "{{ $detail?->vehicle?->category?->name }}"
+                                                            data-brand = "{{ $detail?->vehicle?->brand?->name }}"
+                                                            data-list="{{ json_encode($detail->vehicle->vehicleIdentities) }}"
+                                                            data-trip_vehicle_details="{{ json_encode($detail->tripVehicleDetails) }}"
+                                                        >
+                                                            {{translate('Assign Vehicle')}} <span class="fs-24"><i
+                                                                    class="tio-add-circle"></i></span>
+                                                        </button>
                                                     </div>
-                                                </div>
+                                                @else
+                                                    <div class="mt-2 bg--F6F6F6 p-2 radius-15 mb-4 d-inline-block">
+                                                    <div class="d-flex justify-content-between mb-10px text--title">
+                                                        {{translate('Assigned Vehicle')}}
+                                                        <button
+                                                            class="btn btn--primary p-5px rounded-circle d-flex align-items-center justify-content-center assign-vehicle-btn"
+                                                            type="button"
+                                                            data-toggle="modal"
+                                                            data-target="#assignVehicleModal"
+                                                            data-details_id = "{{ $detail->id }}"
+                                                            data-trip_id = "{{ $detail->trip_id }}"
+                                                            data-vehicle_id = "{{ $detail->vehicle_id }}"
+                                                            data-quantity = "{{ $detail->quantity }}"
+                                                            data-img = "{{ $detail->vehicle['thumbnailFullUrl'] }}"
+                                                            data-name = "{{ $detail?->vehicle_details['name'] }}"
+                                                            data-vendor = "{{ $trip?->provider->name }}"
+                                                            data-category = "{{ $detail?->vehicle?->category?->name }}"
+                                                            data-brand = "{{ $detail?->vehicle?->brand?->name }}"
+                                                            data-list="{{ json_encode($detail->vehicle->vehicleIdentities) }}"
+                                                            data-trip_vehicle_details="{{ json_encode($detail->tripVehicleDetails) }}"
+                                                        >
+                                                            <i class="tio-edit fs-12"></i>
+                                                        </button>
+                                                    </div>
+                                                        <div class="text-wrap">
+                                                            @php
+                                                                $licensePlates = $detail->tripVehicleDetails->map(function($tripVehicleDetails) {
+                                                                    return $tripVehicleDetails->vehicle_identity_data->license_plate_number;
+                                                                });
+                                                                $licensePlatesString = $licensePlates->implode(', ');
+                                                            @endphp
+                                                            {{ $licensePlatesString }}
+                                                        </div>
+                                                    </div>
+                                                @endif
                                             @endif
                                         </td>
                                         <td>
@@ -714,13 +738,18 @@
                             aria-hidden="true">&times;</span></button>
                 </div>
                 <form action="">
+                    <input type="hidden" id="pickup-lat" name="pickup_lat">
+                    <input type="hidden" id="pickup-lng" name="pickup_lng">
+                    <input type="hidden" id="destination-lat" name="destination_lat">
+                    <input type="hidden" id="destination-lng" name="destination_lng">
+
                     <div class="modal-body px-4 py-0">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group text-title">
                                     <label class="input-label font-semibold" for="">Pickup Location</label>
                                     <div class="position-relative w-100 d-flex align-items-center">
-                                        <input type="text" name="" id="" class="form-control pr-2"
+                                        <input type="text" name="" id="pickup-input" class="form-control pr-2"
                                                placeholder="Enter your pickup location"
                                                value="Home: Road 9/a, house - 666, Dhaka">
                                         <div class="input-icon fs-20 opacity-60">
@@ -733,7 +762,7 @@
                                 <div class="form-group text-title">
                                     <label class="input-label font-semibold" for="">Destination</label>
                                     <div class="position-relative w-100 d-flex align-items-center">
-                                        <input type="text" name="" id="" class="form-control pr-2"
+                                        <input type="text" name="" id="destination-input" class="form-control pr-2"
                                                placeholder="Enter your destination location"
                                                value="50 lake circus, kolabagan, Dhanmondi">
                                         <div class="input-icon fs-20 opacity-60">
@@ -772,42 +801,35 @@
                                         <thead class="bg--EDEDED text--title">
                                         <tr>
                                             <th class="border-0">#</th>
-                                            <th class="border-0">Vehicle Details</th>
-                                            <th class="border-0">Unite Fair</th>
-                                            <th class="border-0">Quantity</th>
-                                            <th class="text-right  border-0">Fare</th>
+                                            <th class="border-0">{{translate('Vehicle Details')}}</th>
+                                            <th class="border-0">{{translate('Unite Fair')}}</th>
+                                            <th class="border-0">{{translate('Quantity')}}</th>
+                                            <th class="text-right  border-0">{{translate('Fare')}}</th>
                                         </tr>
                                         </thead>
                                         <tbody>
-
+                                        @foreach($trip->trip_details as $editDetail)
                                         <tr>
                                             <td>
-
                                                 <div>
-                                                    1
+                                                    {{ $loop->iteration }}
                                                 </div>
-
                                             </td>
                                             <td>
                                                 <div class="media media--sm">
                                                     <a class="avatar avatar-xl mr-3" href="#">
                                                         <img class="img-fluid rounded aspect-ratio-1 onerror-image"
-                                                             src="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
+                                                             src="{{ $editDetail->vehicle['thumbnailFullUrl'] }}"
                                                              data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
                                                              alt="Image Description">
                                                     </a>
                                                     <div class="media-body">
                                                         <div class="fs-12 text--title">
                                                             <div class="fz-12 font-semibold line--limit-1">
-                                                                F Premio 2006</div>
-                                                            <div><span class="font-semibold mr-2">Category :</span>SUV
+                                                                {{ $editDetail?->vehicle_details['name'] }}</div>
+                                                            <div><span class="font-semibold mr-2">Category :</span>{{ $editDetail?->vehicle?->category?->name }}
                                                             </div>
-                                                            <div><span class="font-semibold mr-2">Brand :</span>Toyota
-                                                            </div>
-                                                            <div>
-                                                                <span class="font-semibold mr-2">Assigned Vehicles :</span>
-                                                                <br>
-                                                                Nator Kha 21-3214
+                                                            <div><span class="font-semibold mr-2">Brand :</span>{{ $editDetail?->vehicle?->brand?->name }}
                                                             </div>
                                                         </div>
                                                     </div>
@@ -815,22 +837,23 @@
                                             </td>
                                             <td>
                                                 <div class="fs-14 text--title">
-                                                    $ 45.24 hourly
+                                                    {{ \App\CentralLogics\Helpers::format_currency($editDetail->price) }}
+                                                    {{ $editDetail->rental_type }}
                                                 </div>
                                             </td>
                                             <td>
                                                 <input type="number" class="form-control fs-14 text--title w--60px"
-                                                       value="5" placeholder="EX:5">
+                                                       value="{{ $editDetail->quantity }}" placeholder="EX:5">
                                             </td>
                                             <td class="text-right">
                                                 <div class="d-flex justify-content-end">
                                                     <input type="text"
                                                            class="form-control w--120px text-right fs-14 text--title"
-                                                           value="$ 1,350.25" placeholder="fare">
+                                                           value="{{ \App\CentralLogics\Helpers::format_currency($editDetail->price * $editDetail->quantity) }}" placeholder="fare">
                                                 </div>
                                             </td>
                                         </tr>
-
+                                        @endforeach
                                         <!-- End Media -->
                                         </tbody>
                                     </table>
@@ -883,6 +906,22 @@
         </div>
     </div>
     <!-- End Modal -->
+
+    <div class="modal fade" id="mapModal" tabindex="-1" role="dialog" aria-labelledby="mapModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header pt-4 px-4 flex-shrink-0">
+                    <h4 class="modal-title">{{ translate('messages.Trip ID # ') }}  {{ $trip->id }}</h4>
+                    <button type="button" class="close p-0 m-0" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body px-4 py-4">
+                    <input id="search-input" type="text" class="form-control mb-3" placeholder="Search location...">
+                    <div id="map"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 @endsection
 
@@ -1266,5 +1305,97 @@
 
         });
 
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            let currentFieldType;
+            let map, marker, searchBox;
+
+            // Open modal on input click
+            $('#pickup-input').on('click', function () {
+                currentFieldType = 'pickup';
+                $('#mapModal').modal('show');
+                initMap();
+            });
+
+            $('#destination-input').on('click', function () {
+                currentFieldType = 'destination';
+                $('#mapModal').modal('show');
+                initMap();
+            });
+
+            function initMap() {
+                const defaultLocation = { lat: 23.8103, lng: 90.4125 }; // Default to Dhaka
+
+                // Initialize map
+                map = new google.maps.Map(document.getElementById('map'), {
+                    center: defaultLocation,
+                    zoom: 13,
+                });
+
+                // Add marker
+                marker = new google.maps.Marker({
+                    map: map,
+                    draggable: true,
+                });
+
+                // Add search box
+                const input = document.getElementById('search-input');
+                const autocomplete = new google.maps.places.Autocomplete(input);
+                autocomplete.bindTo('bounds', map);
+
+                autocomplete.addListener('place_changed', () => {
+                    const place = autocomplete.getPlace();
+
+                    if (!place.geometry) {
+                        alert('No details available for the selected location.');
+                        return;
+                    }
+
+                    // Set marker and center map
+                    map.setCenter(place.geometry.location);
+                    map.setZoom(15);
+                    marker.setPosition(place.geometry.location);
+
+                    // Get address and coordinates
+                    const address = place.formatted_address;
+                    const latLng = place.geometry.location;
+
+                    updateFields(address, latLng.lat(), latLng.lng());
+                });
+
+                // Allow clicking on map to set location
+                map.addListener('click', (event) => {
+                    const latLng = event.latLng;
+                    marker.setPosition(latLng);
+
+                    const geocoder = new google.maps.Geocoder();
+                    geocoder.geocode({ location: latLng }, (results, status) => {
+                        if (status === 'OK' && results[0]) {
+                            const address = results[0].formatted_address;
+                            updateFields(address, latLng.lat(), latLng.lng());
+                        } else {
+                            alert('Failed to fetch address: ' + status);
+                        }
+                    });
+                });
+            }
+
+            function updateFields(address, lat, lng) {
+                if (currentFieldType === 'pickup') {
+                    $('#pickup-input').val(address);
+                    $('#pickup-lat').val(lat);
+                    $('#pickup-lng').val(lng);
+                } else if (currentFieldType === 'destination') {
+                    $('#destination-input').val(address);
+                    $('#destination-lat').val(lat);
+                    $('#destination-lng').val(lng);
+                }
+
+                // Close modal
+                $('#mapModal').modal('hide');
+            }
+        });
     </script>
 @endpush
