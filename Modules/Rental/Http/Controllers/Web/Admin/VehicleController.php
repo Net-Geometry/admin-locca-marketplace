@@ -6,7 +6,6 @@ use App\CentralLogics\Helpers;
 use App\CentralLogics\ProductLogic;
 use App\Models\Item;
 use App\Models\Store;
-use App\Scopes\StoreScope;
 use App\Traits\FileManagerTrait;
 use Brian2694\Toastr\Facades\Toastr;
 use Carbon\Carbon;
@@ -183,9 +182,9 @@ class VehicleController extends Controller
         $vehicle->transmission_type = $request->transmission_type;
         $vehicle->trip_hourly = $request->trip_hourly ? 1 : 0;
         $vehicle->trip_distance = $request->trip_distance ? 1 : 0;
-        $vehicle->hourly_price = $request->hourly_price;
-        $vehicle->distance_price = $request->distance_price;
-        $vehicle->discount_price = $request->discount_price;
+        $vehicle->hourly_price = $request->hourly_price ?? 0;
+        $vehicle->distance_price = $request->distance_price ?? 0;
+        $vehicle->discount_price = $request->discount_price ?? 0;
         $vehicle->discount_type = $request->discount_type;
         $vehicle->tag = json_encode($request->tag);
         $vehicle->thumbnail = $thumbnailName;
@@ -255,7 +254,7 @@ class VehicleController extends Controller
             'discount_type' => 'nullable|string|max:50',
             'tag' => 'nullable|array',
             'tag.*' => 'string|max:50',
-            'thumbnail' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'images' => 'nullable|array',
             'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
             'documents' => 'nullable|array',
@@ -313,9 +312,9 @@ class VehicleController extends Controller
         $vehicle->transmission_type = $request->transmission_type;
         $vehicle->trip_hourly = $request->trip_hourly ? 1 : 0;
         $vehicle->trip_distance = $request->trip_distance ? 1 : 0;
-        $vehicle->hourly_price = $request->hourly_price;
-        $vehicle->distance_price = $request->distance_price ?? 0.000;
-        $vehicle->discount_price = $request->discount_price;
+        $vehicle->hourly_price = $request->hourly_price ?? 0;
+        $vehicle->distance_price = $request->distance_price ?? 0;
+        $vehicle->discount_price = $request->discount_price ?? 0;
         $vehicle->discount_type = $request->discount_type;
         $vehicle->tag = json_encode($request->tag);
         $vehicle->thumbnail = $thumbnailName;

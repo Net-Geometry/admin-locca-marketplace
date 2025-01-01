@@ -115,6 +115,10 @@ class TripController extends Controller
             return back();
         }
 
+        if ($trip->trip_status != 'pending' && $status == 'pending'){
+            $trip->vehicle_identity()->delete();
+        }
+
         $trip->trip_status = $status;
         $trip->save();
 
