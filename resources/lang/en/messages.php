@@ -6675,4 +6675,7 @@ Smartly or Earn. ',
   'vehicle_list' => 'Vehicle list',
   'The seating capacity field is required.' => 'The seating capacity field is required.',
   'The fuel type field is required.' => 'The fuel type field is required.',
+  'You_can_not_add_different_rental_type_vehicles' => 'You can not add different rental type vehicles',
+  'out_of_zone' => 'Out of zone',
+  'The cart ids field is required.' => 'The cart ids field is required.',
 );

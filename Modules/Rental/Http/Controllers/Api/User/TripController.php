@@ -6,28 +6,29 @@ namespace Modules\Rental\Http\Controllers\Api\User;
 use App\Models\User;
 use App\Models\Zone;
 use App\Models\Store;
+use App\Library\Payer;
 use App\Models\Coupon;
+use App\Traits\Payment;
+
+use App\Library\Receiver;
 use Illuminate\Http\Request;
 use App\CentralLogics\Helpers;
-
 use App\Models\BusinessSetting;
+use App\Models\CashBackHistory;
+use App\CentralLogics\StoreLogic;
 use App\CentralLogics\CouponLogic;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\Rental\Entities\Trips;
+use App\CentralLogics\CustomerLogic;
 use Modules\Rental\Entities\Vehicle;
+use App\Library\Payment as PaymentInfo;
 use Modules\Rental\Entities\RentalCart;
+use Modules\Rental\Entities\TripDetails;
 use Illuminate\Support\Facades\Validator;
+use Modules\Rental\Entities\PartialPayment;
 use MatanYadaev\EloquentSpatial\Objects\Point;
 use Modules\Rental\Entities\RentalCartUserData;
-use Modules\Rental\Entities\TripDetails;
-use App\CentralLogics\StoreLogic;
-use App\CentralLogics\CustomerLogic;
-use App\Library\Payer;
-use App\Traits\Payment;
-use App\Library\Receiver;
-use App\Library\Payment as PaymentInfo;
-use Modules\Rental\Entities\PartialPayment;
 
 class TripController extends Controller
 {
@@ -154,6 +155,7 @@ class TripController extends Controller
         }
         $orignal_tax_amount = $this->helpers->product_tax($price, $provider->tax, $tax_status == 'included');
         $tax_amount = $tax_status == 'included' ? 0 : $orignal_tax_amount;
+        $claculated_tax= $orignal_tax_amount;
 
         $additional_charge =  0;
         if (BusinessSetting::where('key', 'additional_charge_status')->first()?->value == 1) {
@@ -184,7 +186,7 @@ class TripController extends Controller
             'coupon_discount_amount' => $coupon_discount_amount ?? 0,
             'coupon_discount_by' => $coupon_discount_by ?? 'none',
             'coupon_code' => $coupon?->code ?? null,
-            'tax_amount' => $tax_amount ?? 0,
+            'tax_amount' => $claculated_tax ?? 0,
             'tax_status' => $tax_status,
             'trip_amount' => $price + $additional_charge ?? 0,
             'discount_on_trip_by' => $discount_on_trip_by ?? 'none',
@@ -204,10 +206,6 @@ class TripController extends Controller
 
         foreach ($details_data as $key => $item) {
             $details_data[$key]['trip_id'] = $trip->id;
-
-            // if($store_discount_amount <= 0 ){
-            //     $order_details[$key]['discount_on_item'] = 0;
-            // }
         }
         TripDetails::insert($details_data);
 
@@ -216,6 +214,10 @@ class TripController extends Controller
             $cart->delete();
         });
 
+        if($trip->is_guest  == 0 && $trip->user_id ){
+            $this->createCashBackHistory($trip->trip_amount, $trip->user_id,$trip->id);
+        }
+
         $user_data->delete();
 
 
@@ -223,6 +225,26 @@ class TripController extends Controller
         return response()->json($trip->id, 200);
     }
 
+    private function createCashBackHistory($trip_amount, $user_id,$trip_id){
+        $cashBack =  Helpers::getCalculatedCashBackAmount(amount:$trip_amount, customer_id:$user_id);
+        if(data_get($cashBack,'calculated_amount') > 0){
+            $CashBackHistory = new CashBackHistory();
+            $CashBackHistory->user_id = $user_id;
+            $CashBackHistory->trip_id = $trip_id;
+            $CashBackHistory->calculated_amount = data_get($cashBack,'calculated_amount');
+            $CashBackHistory->cashback_amount = data_get($cashBack,'cashback_amount');
+            $CashBackHistory->cash_back_id = data_get($cashBack,'id');
+            $CashBackHistory->cashback_type = data_get($cashBack,'cashback_type');
+            $CashBackHistory->min_purchase = data_get($cashBack,'min_purchase');
+            $CashBackHistory->max_discount = data_get($cashBack,'max_discount');
+            $CashBackHistory->save();
+
+            $CashBackHistory?->trip()->update([
+                'cash_back_id'=> $CashBackHistory->id
+            ]);
+        }
+        return true;
+    }
 
 
     private function makeTrip($request, $make_trip_data)

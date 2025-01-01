@@ -17,6 +17,7 @@ use Modules\Rental\Entities\Vehicle;
 use Modules\Rental\Entities\VehicleBrand;
 use Modules\Rental\Entities\VehicleCategory;
 use Modules\Rental\Entities\VehicleIdentity;
+use Modules\Rental\Entities\VehicleReview;
 
 class VehicleController extends Controller
 {
@@ -403,5 +404,67 @@ class VehicleController extends Controller
         }
 
         return response()->json(['message' => translate('messages.failed_to_delete_vehicle.')], 400);
+    }
+
+    public function reviews(Request $request)
+    {
+
+        $limit = $request['limit']?? 25;
+        $offset = $request['offset'] ?? 1;
+
+
+        $id = $request['vendor']->stores[0]->id;
+        $key = explode(' ', $request['search']);
+
+        $reviews = VehicleReview::with(['customer', 'vehicle'])->where('provider_id' ,$id)
+
+        ->when(isset($key), function ($query) use ($key,$request) {
+            $query->where(function($query) use($key,$request) {
+                $query->whereHas('vehicle', function ($query) use ($key) {
+                    foreach ($key as $value) {
+                        $query->where('name', 'like', "%{$value}%");
+                    }
+                })->orWhereHas('customer', function ($query) use ($key){
+                    foreach ($key as $value) {
+                        $query->where('f_name', 'like', "%{$value}%")->orwhere('l_name', 'like', "%{$value}%");
+                    }
+                })->orwhere('rating', $request['search'])->orwhere('review_id', $request['search']);
+            });
+        })
+        ->latest()
+        ->paginate($limit, ['*'], 'page', $offset);
+
+        $storage = [];
+        foreach ($reviews as $item) {
+            $item['attachment'] = json_decode($item['attachment']);
+            $item['vehicle_name'] = null;
+            $item['vehicle_image'] = null;
+            $item['customer_name'] = null;
+            if($item->vehicle)
+            {
+                $item['vehicle_name'] = $item->vehicle->name;
+                $item['vehicle_image'] = $item->vehicle->image;
+                $item['vehicle_image_full_url'] = $item->vehicle->image_full_url;
+            }
+
+            if($item->customer)
+            {
+                $item['customer_name'] = $item->customer->f_name.' '.$item->customer->l_name;
+            }
+
+            unset($item['vehicle']);
+            unset($item['customer']);
+            array_push($storage, $item);
+        }
+
+        $data = [
+            'total_size' => (int) $reviews->total(),
+            'limit' => (int) $limit,
+            'offset' => (int) $offset,
+            'reviews' => $storage,
+        ];
+
+        return response()->json($data, 200);
+
     }
 }

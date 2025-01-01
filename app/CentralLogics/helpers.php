@@ -3558,7 +3558,7 @@ class Helpers
     }
 
 
-    public static function getCalculatedCashBackAmount($amount,$customer_id){
+    public static function getCalculatedCashBackAmount($amount,$customer_id,$type=null){
         $data=[
             'calculated_amount'=> (float) 0,
             'cashback_amount'=>0,
@@ -3569,7 +3569,9 @@ class Helpers
         ];
 
         try {
-            $percent_bonus = CashBack::active()
+            $percent_bonus = CashBack::active()->when($type, function($query){
+                $query->rental();
+            })
             ->where('cashback_type', 'percentage')
             ->Running()
             ->where('min_purchase', '<=', $amount)
@@ -3588,7 +3590,9 @@ class Helpers
             ->orderBy('cashback_amount', 'desc')
             ->first();
 
-            $amount_bonus = CashBack::active()->where('cashback_type','amount')
+            $amount_bonus = CashBack::active()->where('cashback_type','amount')->when($type, function($query){
+                $query->rental();
+            })
             ->Running()
             ->where(function($query)use($customer_id){
                 $query->whereJsonContains('customer_id', [$customer_id])->orWhereJsonContains('customer_id', ['all']);

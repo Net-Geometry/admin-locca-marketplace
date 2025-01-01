@@ -60,9 +60,9 @@ trait HelperTrait
             self::expenseCreate(amount:$store_coupon_discount_subsidy,type:'coupon_discount',datetime:now(),created_by:$trip->coupon_created_by, trip_id:$trip->id,store_id:$provider->id);
         }
 
-        // if($trip?->cashback_history){
-        //     self::cashbackToWallet($order);
-        // }
+        if($trip?->cashback_history){
+            self::cashbackToWallet($trip);
+        }
 
             $comission =   $provider?->comission ??  BusinessSetting::where('key','admin_commission')->first()->value;
 
@@ -109,6 +109,7 @@ trait HelperTrait
         try{
             TripTransaction::insert([
                 'vendor_id' =>$provider->vendor->id,
+                'provider_id' =>$provider->id,
                 'trip_id' =>$trip->id,
                 'trip_amount'=>$trip->trip_amount,
                 'store_amount'=>$store_amount,
@@ -293,6 +294,36 @@ trait HelperTrait
                 $rest->save();
             }
         }
+        return true;
+    }
+
+    public static function cashbackToWallet($trip){
+
+        $refer_wallet_transaction = CustomerLogic::create_wallet_transaction($trip?->cashback_history?->user_id, $trip?->cashback_history?->calculated_amount, 'CashBack',$trip->id);
+        if($refer_wallet_transaction != false){
+            self::expenseCreate(amount:$trip?->cashback_history?->calculated_amount,type:'CashBack',datetime:now(),created_by:'admin', trip_id:$trip->id);
+            $trip?->cashback_history?->cashBack?->increment('total_used');
+
+            // $notification_data = [
+            //     'title' => translate('messages.Congratulation_you_have_received').' '.$trip?->cashback_history?->calculated_amount.' '.translate('cashback'),
+            //     'description' => translate('The_cashback_amount_successfully_added_to_your_wallet') ,
+            //     'trip_id' => $trip->id,
+            //     'image' => '',
+            //     'type' => 'cashback',
+            // ];
+
+            // if($trip->customer?->cm_firebase_token && Helpers::getNotificationStatusData('customer','customer_cashback','push_notification_status')){
+            //     Helpers::send_push_notif_to_device($trip->customer?->cm_firebase_token, $notification_data);
+            //     DB::table('user_notifications')->insert([
+            //         'data' => json_encode($notification_data),
+            //         'user_id' => $trip->customer?->id,
+            //         'created_at' => now(),
+            //         'updated_at' => now()
+            //     ]);
+            // }
+
+        }
+
         return true;
     }
 }

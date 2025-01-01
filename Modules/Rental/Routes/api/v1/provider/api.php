@@ -51,6 +51,7 @@ Route::group(['prefix' => 'rental', 'as' => 'rental.',  'middleware' =>  ['local
             Route::get('status/{id}', [VehicleController::class, 'status']);
             Route::get('new-tag/{id}', [VehicleController::class, 'newTag']);
             Route::delete('delete/{id}', [VehicleController::class, 'destroy']);
+            Route::get('reviews', [VehicleController::class, 'reviews']);
         });
 
         Route::group(['prefix' => 'banner', 'as' => 'vehicle.'], function () {
@@ -138,6 +139,7 @@ Route::group(['prefix' => 'rental', 'as' => 'rental.',  'middleware' =>  ['local
                 Route::Put('update-user-data/{user_data}', [CartController::class, 'updateUserData']);
                 Route::delete('remove-vehicle/{cart_id}', [CartController::class, 'removeVehicle']);
                 Route::delete('remove-cart', [CartController::class, 'removeCart']);
+                Route::delete('remove-multiple-cart', [CartController::class, 'removeMultipleVehicles']);
             });
             Route::group(['middleware' => ['apiGuestCheck', 'auth:api']], function () {
                 Route::group(['prefix' => 'trip'], function () {
