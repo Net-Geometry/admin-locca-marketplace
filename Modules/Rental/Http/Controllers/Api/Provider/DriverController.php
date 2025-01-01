@@ -42,7 +42,24 @@ class DriverController extends Controller
         $offset = $request['offset'];
         $providerId = $request->vendor->id;
 
-        $drivers = $this->driver->where('provider_id', $providerId)->latest()->paginate($limit, ['*'], 'page', $offset);
+        $drivers = $this->driver->where('provider_id', $providerId)
+            ->withCount([
+                'trips',
+                'completedTrips as total_trip_completed',
+                'canceledTrips as total_trip_canceled',
+                'ongoingTrips as total_trip_ongoing',
+            ])
+            ->when($request->filled('search'), function ($query) use ($request) {
+                $keys = explode(' ', $request->input('search'));
+                foreach ($keys as $key) {
+                    $query->orWhere('first_name', 'LIKE', '%' . $key . '%')
+                        ->orWhere('last_name', 'LIKE', '%' . $key . '%')
+                        ->orWhere('email', 'LIKE', '%' . $key . '%')
+                        ->orWhere('phone', 'LIKE', '%' . $key . '%');
+                }
+            })
+            ->latest()->paginate($limit, ['*'], 'page', $offset);
+
         $data = $this->helpers->preparePaginatedResponse(pagination:$drivers, limit:$limit, offset:$offset, key:'drivers', extraData:[]);
 
         return response()->json($data, 200);
@@ -182,9 +199,18 @@ class DriverController extends Controller
      */
     public function details($id): JsonResponse
     {
-        $driver = $this->driver->findOrFail($id);
+        $driver = $this->driver
+            ->withCount([
+                'trips',
+                'completedTrips as total_trip_completed',
+                'canceledTrips as total_trip_canceled',
+                'ongoingTrips as total_trip_ongoing',
+            ])
+            ->with('trips.trip')
+            ->findOrFail($id);
 
         if (isset($driver)) {
+
             return response()->json($driver, 200);
         }
 

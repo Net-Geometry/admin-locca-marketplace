@@ -1205,21 +1205,19 @@
 
             let selectedDrivers = {};
 
-            $('.assign-driver-modal').on('click', function() {
-                $('#assignDriverModal').modal('show');
-            });
+            function initializeSelectedDrivers() {
+                $('.driver-select').each(function() {
+                    let vehicleId = $(this).attr('name').match(/\[(.*?)\]/)[1];
+                    let selectedDriverId = $(this).val();
 
-            $('.driver-select').on('change', function() {
-                let selectedDriverId = $(this).val();
-                let vehicleId = $(this).attr('name').match(/\[(.*?)\]/)[1];
+                    if (selectedDriverId) {
+                        selectedDrivers[vehicleId] = selectedDriverId;
+                    }
+                });
 
-                if (selectedDriverId) {
-                    selectedDrivers[vehicleId] = selectedDriverId;
-                }
-
-                updateUnassignedVehicleCount();
                 disableUsedDrivers();
-            });
+                updateUnassignedVehicleCount();
+            }
 
             function disableUsedDrivers() {
                 $('.driver-select option').prop('disabled', false).css('color', '');
@@ -1248,8 +1246,24 @@
                 $('#vehicle-assign-count').text(unassignedCount);
             }
 
-            updateUnassignedVehicleCount();
-            disableUsedDrivers();
+            $('.assign-driver-modal').on('click', function() {
+                $('#assignDriverModal').modal('show');
+            });
+
+            $('.driver-select').on('change', function() {
+                let selectedDriverId = $(this).val();
+                let vehicleId = $(this).attr('name').match(/\[(.*?)\]/)[1];
+
+                if (selectedDriverId) {
+                    selectedDrivers[vehicleId] = selectedDriverId;
+                }
+
+                updateUnassignedVehicleCount();
+                disableUsedDrivers();
+            });
+
+            initializeSelectedDrivers();
+
         });
 
     </script>

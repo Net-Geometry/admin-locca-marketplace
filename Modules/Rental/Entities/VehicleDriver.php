@@ -6,9 +6,11 @@ use App\CentralLogics\Helpers;
 use App\Models\Storage;
 use App\Models\Store;
 use App\Models\Translation;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class VehicleDriver extends Model
@@ -40,10 +42,49 @@ class VehicleDriver extends Model
     /**
      * @return BelongsTo
      */
-    public function provider(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function provider(): BelongsTo
     {
         return $this->belongsTo(Store::class, 'provider_id', 'id');
     }
+
+    /**
+     * @return HasMany
+     */
+    public function trips(): HasMany
+    {
+        return $this->hasMany(TripVehicleDetails::class, 'vehicle_driver_id', 'id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function ongoingTrips(): HasMany
+    {
+        return $this->trips()->whereHas('trip', function ($query) {
+            $query->where('trip_status', 'ongoing');
+        });
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function completedTrips(): HasMany
+    {
+        return $this->trips()->whereHas('trip', function ($query) {
+            $query->where('trip_status', 'completed');
+        });
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function canceledTrips(): HasMany
+    {
+        return $this->trips()->whereHas('trip', function ($query) {
+            $query->where('trip_status', 'canceled');
+        });
+    }
+
 
     /**
      * @return MorphMany

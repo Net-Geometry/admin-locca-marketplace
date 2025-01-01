@@ -177,6 +177,7 @@ class VehicleController extends Controller
             $vehicle->transmission_type = $request->transmission_type;
             $vehicle->trip_hourly = $request->trip_hourly ? 1 : 0;
             $vehicle->trip_distance = $request->trip_distance ? 1 : 0;
+            $vehicle->multiple_vehicles = $request->multiple_vehicles ? 1 : 0;
             $vehicle->hourly_price = $request->hourly_price;
             $vehicle->discount_price = $request->discount_price;
             $vehicle->discount_type = $request->discount_type;
@@ -290,6 +291,7 @@ class VehicleController extends Controller
             $vehicle->transmission_type = $request->transmission_type;
             $vehicle->trip_hourly = $request->trip_hourly ? 1 : 0;
             $vehicle->trip_distance = $request->trip_distance ? 1 : 0;
+            $vehicle->multiple_vehicles = $request->multiple_vehicles ? 1 : 0;
             $vehicle->hourly_price = $request->hourly_price;
             $vehicle->discount_price = $request->discount_price;
             $vehicle->discount_type = $request->discount_type;
