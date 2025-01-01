@@ -52,6 +52,7 @@ class CartController extends Controller
 
     public function addToCart(Request $request)
     {
+        // info($request->all());
         $validator = Validator::make($request->all(), [
             'guest_id' => $request->user ? 'nullable' : 'required',
             'vehicle_id' => 'required',
@@ -66,6 +67,8 @@ class CartController extends Controller
         }
         $user_id = $request->user ? $request->user->id : $request['guest_id'];
         $is_guest = $request->user ? 0 : 1;
+
+        $user_data =   $this->user_data->where('user_id', $user_id)->where('is_guest', $is_guest)->first();
 
         $vehicle = $this->vehicle->where('id', $request->vehicle_id)->first();
         if (!$vehicle) {
@@ -98,6 +101,13 @@ class CartController extends Controller
             ], 403);
         }
 
+        if($user_data?->rental_type && $user_data?->rental_type !=$request->rental_type ){
+            return response()->json([
+                'errors' => [
+                    ['code' => 'cart_item', 'message' => $vehicle->name . ' ' . translate('messages.You_can_not_add_different_rental_type_vehicles')]
+                ]
+            ], 403);
+        }
 
         $price = $this->getDiscount(price: $request->rental_type == 'hourly' ? $vehicle->hourly_price *  $request->estimated_hours : $vehicle->distance_price *  $request->distance, discount_type: $vehicle->discount_type, discount: $vehicle->discount_price);
 
@@ -183,6 +193,31 @@ class CartController extends Controller
         ];
         return response()->json($data, 200);
     }
+    public function removeMultipleVehicles(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'guest_id' => $request->user ? 'nullable' : 'required',
+            'cart_ids' =>'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        }
+
+        $user_id = $request->user ? $request->user->id : $request['guest_id'];
+        $is_guest = $request->user ? 0 : 1;
+
+        $this->cart->whereIn('id', json_decode($request->cart_ids,true))->where('user_id', $user_id)->where('is_guest', $is_guest)->delete();
+
+        $user_data =   $this->user_data->where('user_id', $user_id)->where('is_guest', $is_guest)->first() ?? [];
+        $updated_cart_data= $this->updateCartPrice($request, $user_id, $is_guest,$user_data);
+
+        $data = [
+            'carts' => $updated_cart_data['carts'],
+            'user_data' =>  $updated_cart_data['user_data'],
+        ];
+        return response()->json($data, 200);
+    }
 
     public function removeCart(Request $request)
     {
@@ -223,6 +258,28 @@ class CartController extends Controller
         }
         $user_id = $request->user ? $request->user->id : $request['guest_id'];
         $is_guest = $request->user ? 0 : 1;
+
+
+        if($user_data->rental_type != $request->rental_type){
+
+            $carts = $this->cart->where('user_id', $user_id)->where('is_guest', $is_guest)->where('module_id', $request->header('moduleId'))->with(['vehicle'])->get();
+
+            $unsupported_vehicle_ids=[];
+            foreach($carts as $cart){
+                    if ($request->rental_type ==  'hourly' && $cart?->vehicle->trip_hourly != 1) {
+                        $unsupported_vehicle_ids[]= $cart?->vehicle?->id;
+                    }
+
+                    if ($request->rental_type ==  'distance_wise' && $cart?->vehicle->trip_distance != 1) {
+                        $unsupported_vehicle_ids[]= $cart?->vehicle?->id;
+                    }
+
+                    if(count($unsupported_vehicle_ids) > 0 ){
+                        return response()->json($unsupported_vehicle_ids, 403);
+                    }
+            }
+        }
+
         $updated_cart_data= $this->updateCartPrice($request, $user_id, $is_guest);
 
         $data = [

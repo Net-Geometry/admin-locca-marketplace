@@ -20,7 +20,7 @@ class CreateVehicleReviewsTable extends Migration
             $table->foreignId('user_id');
             $table->foreignId('trip_id');
             $table->foreignId('vehicle_id');
-            $table->foreignId('vehicle_identity')->nullable();
+            $table->foreignId('vehicle_identity_id')->nullable();
             $table->integer('rating')->nullable();
             $table->mediumText('comment')->nullable();
             $table->text('attachment')->nullable();

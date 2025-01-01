@@ -56,7 +56,7 @@ class VehicleReview extends Model
         parent::boot();
         static::saved(function ($review) {
             if($review->review_id == null){
-                $review->review_id = $review->generateReviewId($review->order_id);
+                $review->review_id = $review->generateReviewId($review->trip_id);
                 $review->save();
             }
         });

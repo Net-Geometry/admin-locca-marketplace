@@ -53,6 +53,13 @@ class Trips extends Model
         }
         return $value;
     }
+    public function getUserInfoAttribute($value)
+    {
+        if ($value) {
+            return json_decode($value, true);
+        }
+        return $value;
+    }
 
     public function provider()
     {
@@ -165,6 +172,10 @@ class Trips extends Model
     public function scopePaymentFailed($query)
     {
         return $query->where('trip_status', 'payment_failed');
+    }
+    public function vehicles()
+    {
+        return $this->hasManyThrough(Vehicle::class , TripDetails::class,'trip_id','id','id','vehicle_id');
     }
 
 

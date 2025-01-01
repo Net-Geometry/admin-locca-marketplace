@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Rental\Entities\Trips;
 
 class CashBackHistory extends Model
 {
@@ -24,6 +25,10 @@ class CashBackHistory extends Model
     public function order()
     {
         return $this->belongsTo(Order::class,'order_id');
+    }
+    public function trip()
+    {
+        return $this->belongsTo(Trips::class,'trip_id');
     }
     public function user()
     {

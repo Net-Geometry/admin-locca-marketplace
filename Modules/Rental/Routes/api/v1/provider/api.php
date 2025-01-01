@@ -19,6 +19,7 @@ use Modules\Rental\Http\Controllers\Api\Public\ProviderController as Provider;
 use Modules\Rental\Http\Controllers\Api\User\CartController;
 use Modules\Rental\Http\Controllers\Api\User\TripController;
 use Modules\Rental\Http\Controllers\Api\User\RentalWishlistController;
+use Modules\Rental\Http\Controllers\Api\User\VehicleReviewController;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,6 +51,7 @@ Route::group(['prefix' => 'rental', 'as' => 'rental.',  'middleware' =>  ['local
             Route::get('status/{id}', [VehicleController::class, 'status']);
             Route::get('new-tag/{id}', [VehicleController::class, 'newTag']);
             Route::delete('delete/{id}', [VehicleController::class, 'destroy']);
+            Route::get('reviews', [VehicleController::class, 'reviews']);
         });
 
         Route::group(['prefix' => 'banner', 'as' => 'vehicle.'], function () {
@@ -90,6 +92,10 @@ Route::group(['prefix' => 'rental', 'as' => 'rental.',  'middleware' =>  ['local
         Route::group(['prefix' => 'trip', 'as' => 'trip.'], function () {
             Route::get('list/{all}', [ProviderTripController::class, 'tripList']);
             Route::get('details', [ProviderTripController::class, 'getTripDetails']);
+            Route::get('status', [ProviderTripController::class, 'updateTripStatus']);
+            Route::get('payment', [ProviderTripController::class, 'updateTripPaymentStatus']);
+            Route::put('assign-vehicle', [ProviderTripController::class, 'assignVehicle']);
+            Route::put('assign-driver', [ProviderTripController::class, 'assignDriver']);
         });
 
         Route::get('category/list', [ProviderController::class, 'categoryList']);
@@ -133,18 +139,24 @@ Route::group(['prefix' => 'rental', 'as' => 'rental.',  'middleware' =>  ['local
                 Route::Put('update-user-data/{user_data}', [CartController::class, 'updateUserData']);
                 Route::delete('remove-vehicle/{cart_id}', [CartController::class, 'removeVehicle']);
                 Route::delete('remove-cart', [CartController::class, 'removeCart']);
+                Route::delete('remove-multiple-cart', [CartController::class, 'removeMultipleVehicles']);
             });
             Route::group(['middleware' => ['apiGuestCheck', 'auth:api']], function () {
                 Route::group(['prefix' => 'trip'], function () {
                     Route::Post('trip-booking', [TripController::class, 'tripBooking']);
                     Route::get('get-trip-list/{all}', [TripController::class, 'getTripList']);
                     Route::get('get-trip-details', [TripController::class, 'getTripDetails']);
+                    Route::get('payment', [TripController::class, 'makePayment']);
                     Route::put('cancel-trip', [TripController::class, 'cancelTrip']);
                 });
                 Route::group(['prefix' => 'wish-list'], function () {
                     Route::get('/', [RentalWishlistController::class, 'wishlist']);
                     Route::post('add',  [RentalWishlistController::class, 'addToWishlist']);
                     Route::delete('remove',  [RentalWishlistController::class, 'removeFromWishlist']);
+                });
+                Route::group(['prefix' => 'review'], function () {
+                    Route::post('add', [VehicleReviewController::class, 'submitVehicleReview']);
+
                 });
             });
         });

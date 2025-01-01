@@ -20,6 +20,7 @@ class CreateTripsTable extends Migration
             $table->foreignId('provider_id');
             $table->foreignId('zone_id');
             $table->foreignId('module_id');
+            $table->foreignId('pickup_zone_id')->nullable();
             $table->foreignId('cash_back_id')->nullable();
             $table->double('trip_amount',23, 8)->default(0);
             $table->double('discount_on_trip',23, 8)->default(0);
@@ -41,9 +42,11 @@ class CreateTripsTable extends Migration
             $table->double('estimated_hours',23, 8)->default(0);
             $table->double('ref_bonus_amount',23, 8)->default(0);
             $table->enum('canceled_by',['admin','vendor','user','none'])->default('none');
+            $table->string('attachment')->nullable();
             $table->string('cancellation_reason')->nullable();
             $table->text('pickup_location')->nullable();
             $table->text('destination_location')->nullable();
+            $table->text('user_info')->nullable();
             $table->text('trip_note')->nullable();
             $table->string('callback')->nullable();
             $table->string('otp',100)->nullable();
