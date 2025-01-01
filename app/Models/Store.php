@@ -23,6 +23,7 @@ use Modules\Rental\Entities\Trips;
 use Modules\Rental\Entities\Vehicle;
 use Modules\Rental\Entities\VehicleDriver;
 use Modules\Rental\Entities\VehicleIdentity;
+use Modules\Rental\Entities\VehicleReview;
 
 /**
  * Class Store
@@ -481,6 +482,10 @@ class Store extends Model
     public function reviews(): HasManyThrough
     {
         return $this->hasManyThrough(Review::class, Item::class);
+    }
+    public function vehicle_reviews(): HasMany
+    {
+        return $this->hasMany(VehicleReview::class,'provider_id');
     }
 
     public function reviews_comments()

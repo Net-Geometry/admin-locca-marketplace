@@ -106,7 +106,7 @@ class RentalWishlistController extends Controller
         $providers = [];
         $vehicles = [];
         foreach ($wishlists as $wishlist) {
-            if ($wishlist->store) {
+            if ($wishlist->provider) {
                 $providers[] = Helpers::store_data_formatting($wishlist->provider);
             }
             if($wishlist->vehicle){
@@ -114,7 +114,6 @@ class RentalWishlistController extends Controller
             }
         }
 
-        // $wishlists = Helpers::preparePaginatedResponse(pagination: $wishlists, limit: $limit, offset: $offset, key: 'wishlists', extraData: []);
         return response()->json(['providers' => $providers, 'vehicles' =>$vehicles], 200);
     }
 }

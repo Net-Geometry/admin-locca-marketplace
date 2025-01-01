@@ -52,6 +52,7 @@ Route::group(['prefix' => 'rental', 'as' => 'rental.',  'middleware' =>  ['local
             Route::get('new-tag/{id}', [VehicleController::class, 'newTag']);
             Route::delete('delete/{id}', [VehicleController::class, 'destroy']);
             Route::get('reviews', [VehicleController::class, 'reviews']);
+            Route::get('reply-update', [VehicleController::class, 'updateReply']);
         });
 
         Route::group(['prefix' => 'banner', 'as' => 'vehicle.'], function () {

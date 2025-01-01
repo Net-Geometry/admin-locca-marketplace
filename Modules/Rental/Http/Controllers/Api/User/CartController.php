@@ -52,7 +52,6 @@ class CartController extends Controller
 
     public function addToCart(Request $request)
     {
-        // info($request->all());
         $validator = Validator::make($request->all(), [
             'guest_id' => $request->user ? 'nullable' : 'required',
             'vehicle_id' => 'required',
@@ -101,7 +100,7 @@ class CartController extends Controller
             ], 403);
         }
 
-        if($user_data?->rental_type && $user_data?->rental_type !=$request->rental_type ){
+        if($this->cart->where('user_id', $user_id)->where('is_guest', $is_guest)->where('module_id', $request->header('moduleId'))->exists() && $user_data?->rental_type && $user_data?->rental_type !=$request->rental_type ){
             return response()->json([
                 'errors' => [
                     ['code' => 'cart_item', 'message' => $vehicle->name . ' ' . translate('messages.You_can_not_add_different_rental_type_vehicles')]

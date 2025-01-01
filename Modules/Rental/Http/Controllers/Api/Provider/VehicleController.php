@@ -467,6 +467,25 @@ class VehicleController extends Controller
         ];
 
         return response()->json($data, 200);
-
     }
+    public function updateReply(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'id' => 'required',
+            'reply' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => Helpers::error_processor($validator)], 403);
+        }
+
+        $review = VehicleReview::findOrFail($request->id);
+        $review->reply = $request->reply;
+        $review->replied_at = now();
+        $review->provider_id = $request['vendor']?->stores[0]?->id;
+        $review->save();
+
+        return response()->json(['message'=>translate('messages.review_reply_updated_successfully')], 200);
+    }
+
 }
