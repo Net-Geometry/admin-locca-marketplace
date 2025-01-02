@@ -351,7 +351,7 @@ trait HelperTrait
 
                 'discount_on_trip_by' => count($modifiedPrices) > 0 ? 'none'  : 'vendor' ,
                 'discount_type' => count($modifiedPrices) > 0 ? 0  : $tripDetail->vehicle->discount_type,
-                'tax_percentage' => $request->vendor->tax,
+                'tax_percentage' => $request->vendor->stores[0]->tax,
                 'tax_amount' => round(
                     Helpers::product_tax($price - $discountData['discount'], $tripDetail->tax_percentage, $taxIncluded),
                     config('round_up_to_digit')
@@ -371,7 +371,7 @@ trait HelperTrait
             $quantity += $quantityForVehicle;
         }
 
-        $providerDiscount = Helpers::get_store_discount($request->vendor);
+        $providerDiscount = Helpers::get_store_discount($request->vendor->stores[0]);
 
         if ($providerDiscount) {
             $discount = self::checkAdminDiscount(
@@ -405,7 +405,7 @@ trait HelperTrait
 
         $finalPrice = $totalPrice - $discount - $trip->coupon_discount_amount - $trip->ref_bonus_amount;
 
-        $calculatedTax = Helpers::product_tax($finalPrice, $request->vendor->tax, $taxIncluded);
+        $calculatedTax = Helpers::product_tax($finalPrice, $request->vendor->stores[0]->tax, $taxIncluded);
         $taxAmount = $taxIncluded ? 0 : $calculatedTax;
 
         $additionalCharge =  0;
@@ -435,7 +435,7 @@ trait HelperTrait
             'discount_on_trip_by' => $providerDiscount ? 'admin' : ( count($modifiedPrices) > 0 ? 'none' :  'vendor'),
             'tax_amount' => $calculatedTax,
             'tax_status' => $taxStatus,
-            'tax_percentage' => $request->vendor->tax,
+            'tax_percentage' => $request->vendor->stores[0]->tax,
             'additional_charge' => $additionalCharge,
             'distance' => $distance,
             'estimated_hours' => $estimatedHours,
@@ -446,9 +446,12 @@ trait HelperTrait
             'destination_location' => $destinationLocation,
             'pickup_location' => $pickupLocation,
         ])->save();
+
+        return $trip;
     }
 
-    private function getDiscount($price, $discount_type, $discount)
+
+    public static function getDiscount($price, $discount_type, $discount)
     {
         if ($price > 0 &&  $discount > 0) {
             $discount =  $discount_type == 'percent' ? ($price * $discount) / 100 :  $discount;
@@ -456,7 +459,7 @@ trait HelperTrait
         return ['price' => $price, 'discount' => $discount ?? 0];
     }
 
-    private function checkAdminDiscount($price, $discount, $max_discount, $min_purchase, $vehicle_wise_price = null)
+    public  static function checkAdminDiscount($price, $discount, $max_discount, $min_purchase, $vehicle_wise_price = null)
     {
         if ($price > 0 &&  $discount > 0) {
             $discount = ($price  * $discount) / 100;

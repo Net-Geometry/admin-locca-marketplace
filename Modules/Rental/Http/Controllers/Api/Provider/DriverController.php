@@ -40,7 +40,7 @@ class DriverController extends Controller
 
         $limit = $request['limit'];
         $offset = $request['offset'];
-        $providerId = $request->vendor->id;
+        $providerId = $request->vendor->stores[0]->id;
 
         $drivers = $this->driver->where('provider_id', $providerId)
             ->withCount([
@@ -106,7 +106,7 @@ class DriverController extends Controller
 
         try {
             $driver = $this->driver;
-            $driver->provider_id = $request->vendor->id;
+            $driver->provider_id = $request->vendor->stores[0]->id;
             $driver->first_name = $request->first_name;
             $driver->last_name = $request->last_name;
             $driver->email = $request->email;
@@ -173,7 +173,7 @@ class DriverController extends Controller
         }
 
         try {
-            $driver->provider_id = $request->vendor->id;
+            $driver->provider_id = $request->vendor->stores[0]->id;
             $driver->first_name = $request->first_name;
             $driver->last_name = $request->last_name;
             $driver->email = $request->email;

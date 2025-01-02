@@ -50,7 +50,7 @@ class BannerController extends Controller
 
         $limit = $request['limit'];
         $offset = $request['offset'];
-        $providerId = $request->vendor->id;
+        $providerId = $request->vendor->stores[0]->id;
         $moduleId = $request->vendor->stores[0]->module_id;
         $banners =  $this->banner->where('data', $providerId)->where('created_by', 'store')
             ->when($request->has('search'), function ($query) use ($request) {

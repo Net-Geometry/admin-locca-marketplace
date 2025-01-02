@@ -38,7 +38,7 @@ class ProviderTripController extends Controller
         $limit = $request['limit'] ?? 25;
         $offset = $request['offset'] ?? 1;
 
-        $providerId = $request->vendor->id;
+        $providerId = $request->vendor->stores[0]->id;
         // $moduleId = $request->vendor->stores[0]->module_id;
 
 
@@ -67,7 +67,7 @@ class ProviderTripController extends Controller
             return response()->json(['errors' => $this->helpers->error_processor($validator)], 403);
         }
 
-        $trip = $this->trips->where(['provider_id' => $request->vendor->id, 'id' => $request->trip_id])->with(['trip_details.vehicle', 'trip_transaction:id,trip_id'])->first();
+        $trip = $this->trips->where(['provider_id' => $request->vendor->stores[0]->id, 'id' => $request->trip_id])->with(['trip_details.vehicle', 'trip_transaction:id,trip_id'])->first();
 
         if (!$trip) {
             return response()->json(['errors' => translate('trip_data_not_found')], 404);
@@ -107,7 +107,7 @@ class ProviderTripController extends Controller
             return response()->json(['errors' => $this->helpers->error_processor($validator)], 403);
         }
 
-        $trip = $this->trips->where(['provider_id' => $request->vendor->id, 'id' => $request->trip_id])->with(['trip_transaction:id,trip_id'])->first();
+        $trip = $this->trips->where(['provider_id' => $request->vendor->stores[0]->id, 'id' => $request->trip_id])->with(['trip_transaction:id,trip_id'])->first();
 
         if (!$trip) {
             return response()->json(['errors' => translate('trip_data_not_found')], 404);
@@ -139,7 +139,7 @@ class ProviderTripController extends Controller
             return response()->json(['errors' => $this->helpers->error_processor($validator)], 403);
         }
 
-        $trip = $this->trips->where(['provider_id' => $request->vendor->id, 'id' => $request->trip_id])->first();
+        $trip = $this->trips->where(['provider_id' => $request->vendor->stores[0]->id, 'id' => $request->trip_id])->first();
 
         if (!$trip) {
             return response()->json(['errors' => translate('trip_data_not_found')], 404);
@@ -174,13 +174,13 @@ class ProviderTripController extends Controller
             return response()->json(['errors' => $this->helpers->error_processor($validator)], 403);
         }
 
-        $trip = $this->trips->where(['provider_id' => $request->vendor->id, 'id' => $request->trip_id])->first();
+        $trip = $this->trips->where(['provider_id' => $request->vendor->stores[0]->id, 'id' => $request->trip_id])->first();
 
         if (!$trip) {
             return response()->json(['errors' => translate('trip_data_not_found')], 404);
         }
 
-        if (Vehicle::where(['id' => $request->vehicle_id, 'provider_id' => $request->vendor->id])->doesntExist()) {
+        if (Vehicle::where(['id' => $request->vehicle_id, 'provider_id' => $request->vendor->stores[0]->id])->doesntExist()) {
             return response()->json(['errors' => translate('vehicle_not_found')], 404);
         }
 
@@ -212,7 +212,7 @@ class ProviderTripController extends Controller
             return response()->json(['errors' => $this->helpers->error_processor($validator)], 403);
         }
 
-        $trip = $this->trips->where('provider_id', $request->vendor->id)->where('id', $request->trip_id)
+        $trip = $this->trips->where('provider_id', $request->vendor->stores[0]->id)->where('id', $request->trip_id)
             ->with([
                 'customer:id,f_name,l_name,phone,email,image',
                 'trip_details',
@@ -246,7 +246,7 @@ class ProviderTripController extends Controller
             return response()->json(['errors' => $this->helpers->error_processor($validator)], 403);
         }
 
-        $trip = $this->trips->where('provider_id', $request->vendor->id)->where('id', $request->trip_id)->with(['trip_details'])->first();
+        $trip = $this->trips->where('provider_id', $request->vendor->stores[0]->id)->where('id', $request->trip_id)->with(['trip_details'])->first();
 
         if (!$trip) {
             return response()->json(['errors' => translate('Trip_not_found')], 404);
@@ -256,11 +256,11 @@ class ProviderTripController extends Controller
             return response()->json(['errors' => translate('You_can_not_edit_this')], 403);
         }
 
-        $destinationLocation = $request->destination_location ? json_encode($request->destination_location) : $trip->destination_location;
+        $destinationLocation = $request->destination_location ? json_encode($request->destination_location) :json_encode( $trip->destination_location);
 
-        $pickupLocation = $request->pickup_location  ? json_encode($request->pickup_location)  : $trip->pickup_location;
+        $pickupLocation = $request->pickup_location  ? json_encode($request->pickup_location)  : json_encode($trip->pickup_location);
 
-        $scheduleAt = $request->schedule_at ? \Carbon\Carbon::parse($request->schedule_at) : $trip->schedule_at;
+        $scheduleAt = $request->schedule_at ? \Carbon\Carbon::parse($request->schedule_at) : \Carbon\Carbon::parse($trip->schedule_at);
 
         $estimatedHours = $request->estimated_hours ?? $trip->estimated_hours;
         $distance = $request->distance ?? $trip->distance;
