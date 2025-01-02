@@ -52,7 +52,7 @@
                                     </span>
 
                                 </label>
-                                <input type="text" name="name[]"  value="{{ old('name.0') }}" class="form-control" placeholder="{{translate('messages.new_brand')}}" maxlength="191">
+                                <input type="text" name="name[]"  value="{{ old('name.0') }}" class="form-control" placeholder="{{translate('messages.new_brand')}}" maxlength="191" required>
                             </div>
                             <input type="hidden" name="lang[]" value="default">
                                 @foreach($language as $key=> $lang)
@@ -85,7 +85,7 @@
                                     <div class="icon-file-group">
                                         <div class="icon-file">
                                             <input type="file" name="image" id="customFileEg1" class="custom-file-input read-url"
-                                                accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*" >
+                                                accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*" required>
                                                 <i class="tio-edit"></i>
                                         </div>
                                     </div>

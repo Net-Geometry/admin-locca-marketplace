@@ -61,6 +61,7 @@ Route::group(['middleware' => ['admin', 'current-module']], function () {
             Route::delete('delete/{id}', [ProviderController::class, 'destroy'])->name('delete');
             Route::get('status/{id}', [ProviderController::class, 'status'])->name('status');
             Route::get('details/{id}/{tab?}/{sub_tab?}', [ProviderController::class, 'details'])->name('details');
+            Route::get('export-review', [ProviderController::class, 'exportReview'])->name('export-review');
             Route::get('export-categories', [ProviderController::class, 'export'])->name('export-brands');
             Route::get('new-requests', [ProviderController::class, 'newRequests'])->name('new-requests');
             Route::get('new-requests-details/{id}', [ProviderController::class, 'newRequestsDetails'])->name('new-requests-details');
@@ -93,6 +94,8 @@ Route::group(['middleware' => ['admin', 'current-module']], function () {
                 Route::get('new-tag/{id}', [VehicleController::class, 'newTag'])->name('new-tag');
                 Route::delete('delete/{id}', [VehicleController::class, 'destroy'])->name('delete');
                 Route::get('export', [VehicleController::class, 'export'])->name('export');
+                Route::get('review-status/{id}', [VehicleController::class, 'reviewStatus'])->name('review.status');
+                Route::get('review-export', [VehicleController::class, 'reviewExport'])->name('review.export');
 
                 Route::get('bulk-import', [VehicleController::class, 'bulkImportIndex'])->name('bulk_import');
                 Route::POST('bulk-import', [VehicleController::class, 'bulkImportData']);
@@ -109,8 +112,8 @@ Route::group(['middleware' => ['admin', 'current-module']], function () {
             Route::get('payment/status/{id}/{status}', [TripController::class,'paymentStatus'])->name('payment.status');
             Route::post('assign/vehicle', [TripController::class,'assignVehicle'])->name('assign.vehicle');
             Route::post('assign/driver', [TripController::class,'assignDriver'])->name('assign.driver');
-
             Route::get('export', [TripController::class, 'export'])->name('export');
+            Route::get('get-calculation', [TripController::class, 'getCalculation'])->name('get-calculation');
         });
 
         Route::group(['prefix' => 'banner', 'as' => 'banner.', 'middleware' => ['module:banner']], function () {

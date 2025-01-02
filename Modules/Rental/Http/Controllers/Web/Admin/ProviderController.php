@@ -38,14 +38,19 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
+use Maatwebsite\Excel\Facades\Excel;
 use MatanYadaev\EloquentSpatial\Objects\Point;
+use Modules\Rental\Entities\Trips;
 use Modules\Rental\Entities\Vehicle;
 use Modules\Rental\Entities\VehicleDriver;
+use Modules\Rental\Entities\VehicleReview;
+use Modules\Rental\Exports\VehicleReviewExport;
 use OpenSpout\Common\Exception\InvalidArgumentException;
 use OpenSpout\Common\Exception\IOException;
 use OpenSpout\Common\Exception\UnsupportedTypeException;
 use OpenSpout\Writer\Exception\WriterNotOpenedException;
 use Rap2hpoutre\FastExcel\FastExcel;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ProviderController extends Controller
@@ -67,6 +72,8 @@ class ProviderController extends Controller
     private UserInfo $userInfo;
     private Conversation $conversation;
     private DisbursementDetails $disbursementDetails;
+    private Trips $trips;
+    private VehicleReview $vehicleReview;
 
     use FileManagerTrait;
 
@@ -89,7 +96,7 @@ class ProviderController extends Controller
      * @param VehicleDriver $vehicleDriver
      * @param Vehicle $vehicle
      */
-    public function __construct(BusinessSetting $businessSetting, StoreWallet $storeWallet, Item $item, DisbursementDetails $disbursementDetails, Conversation $conversation, UserInfo $userInfo, TempProduct $tempProduct, Zone $zone, Order $order, Vendor $vendor, Store $store, Admin $admin, StoreLogic $storeLogic, SubscriptionPackage $subscriptionPackage, Helpers $helpers, VehicleDriver $vehicleDriver, Vehicle $vehicle)
+    public function __construct(BusinessSetting $businessSetting, StoreWallet $storeWallet, Item $item, DisbursementDetails $disbursementDetails, Conversation $conversation, UserInfo $userInfo, TempProduct $tempProduct, Zone $zone, Order $order, Vendor $vendor, Store $store, Admin $admin, StoreLogic $storeLogic, SubscriptionPackage $subscriptionPackage, Helpers $helpers, VehicleDriver $vehicleDriver, Vehicle $vehicle, Trips $trips,  VehicleReview $vehicleReview)
     {
         $this->businessSetting = $businessSetting;
         $this->zone = $zone;
@@ -108,6 +115,8 @@ class ProviderController extends Controller
         $this->disbursementDetails = $disbursementDetails;
         $this->vehicleDriver = $vehicleDriver;
         $this->vehicle = $vehicle;
+        $this->trips = $trips;
+        $this->vehicleReview = $vehicleReview;
     }
 
     /**
@@ -227,29 +236,15 @@ class ProviderController extends Controller
         }
         else if($tab == 'order')
         {
-            $orders = $this->order->where('store_id', $store->id)->latest()
+            $trips = $this->trips->where('provider_id', $store->id)->latest()
                 ->when(isset($key ), function ($q) use ($key){
                     $q->where(function ($q) use ($key) {
                         foreach ($key as $value) {
                             $q->orWhere('id', 'like', "%{$value}%");
                         }
                     });
-                })
-                ->when(isset($filter)  && $filter == 'scheduled_orders' , function($q){
-                    $q->Scheduled();
-                })
-                ->when(isset($filter)  && $filter == 'pending_orders' , function($q){
-                    $q->where(['order_status'=>'pending'])->OrderScheduledIn(30);
-                })
-                ->when(isset($filter)  && $filter == 'delivered_orders' , function($q){
-                    $q->where(['order_status'=>'delivered']);
-                })
-                ->when(isset($filter)  && $filter == 'canceled_orders' , function($q){
-                    $q->where(['order_status'=>'canceled']);
-                })
-                ->StoreOrder()
-                ->Notpos()->paginate(10);
-            return view('rental::admin.provider.details.order', compact('store','orders'));
+                })->latest()->paginate(config('default_pagination'));
+            return view('rental::admin.provider.details.trip', compact('store','trips'));
         }
         else if($tab == 'item')
         {
@@ -303,7 +298,17 @@ class ProviderController extends Controller
 
         else if($tab == 'reviews')
         {
-            return view('rental::admin.provider.details.review', compact('store', 'sub_tab'));
+            $avgRating = number_format($store->vehicle_reviews->avg('rating'), 1);
+            $totalRating = $store->vehicle_reviews->sum('rating');
+            $totalReviews = $store->vehicle_reviews->whereNotNull('comment')->count();
+            $excellentCount = $store->vehicle_reviews->where('rating', 5)->count();
+            $goodCount = $store->vehicle_reviews->where('rating', 4)->count();
+            $averageCount = $store->vehicle_reviews->where('rating', 3)->count();
+            $belowAverageCount = $store->vehicle_reviews->where('rating', 2)->count();
+            $poorCount = $store->vehicle_reviews->where('rating', 1)->count();
+            $tripReviews = $this->vehicleReview->where('provider_id', $store->id)->latest()->paginate(config('default_pagination'));
+
+            return view('rental::admin.provider.details.review', compact('totalRating', 'store', 'sub_tab', 'tripReviews', 'avgRating', 'totalReviews', 'excellentCount', 'goodCount', 'averageCount', 'belowAverageCount', 'poorCount'));
 
         } else if ($tab == 'conversations') {
             $user = $this->userInfo->where(['vendor_id' => $store->vendor->id])->first();
@@ -608,6 +613,25 @@ class ProviderController extends Controller
         }
         Toastr::success(translate('messages.application_status_updated_successfully'));
         return back();
+    }
+
+    /**
+     * @param Request $request
+     * @return BinaryFileResponse
+     */
+    public function exportReview(Request $request): BinaryFileResponse
+    {
+        $vehicles = $this->vehicleReview->where('provider_id', $request->provider_id)->latest()->get();
+
+        $data = [
+            'data' => $vehicles,
+            'search' => $request['search'] ?? null,
+        ];
+
+        if ($request['type'] == 'csv') {
+            return Excel::download(new VehicleReviewExport($data), 'Providers-reviews.csv');
+        }
+        return Excel::download(new VehicleReviewExport($data), 'Providers-reviews.xlsx');
     }
 
     /**

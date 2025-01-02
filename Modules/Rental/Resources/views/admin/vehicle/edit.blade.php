@@ -566,13 +566,13 @@
                                             </span></label>
                                         <div class="custom-group-btn border">
                                             <div class="flex-sm-grow-1">
-                                                <input id="min" type="number" name="discount_price"
+                                                <input id="discount_input" type="number" name="discount_price"
                                                        class="form-control h--45px border-0 pl-unset"
                                                        value="{{ $vehicle->discount_price }}"
                                                        placeholder="{{ translate('messages.Ex: 10') }} 20">
                                             </div>
                                             <div class="flex-shrink-0">
-                                                <select name="discount_type" id="" class="custom-select ltr border-0">
+                                                <select name="discount_type" id="discount_type" class="custom-select ltr border-0">
                                                     <option value="percent" {{ $vehicle->discount_type == 'percent' ? 'selected' : '' }}>
                                                         %
                                                     </option>
@@ -615,39 +615,6 @@
                     </div>
                 </div>
                 <div class="col-lg-12">
-                    {{-- <div class="card">
-                        <div class="row g-3">
-                            <div class="col-md-6 pb-0">
-                                <div class="row g-2">
-                                    <div class="col-12 pb-0">
-                                        <div class="form-group mb-0">
-                                            <div class="card-header">
-                                                <div>
-                                                    <h5 class="text-title mb-1">
-                                                        {{ translate('messages.Vehicle_Documents') }}
-                                                    </h5>
-                                                    <p class="fs-12 mb-0">
-                                                        {{ translate('messages.Provider Logo & Covers') }}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    @foreach($vehicle['documents_full_url'] as $img)
-                                        <div class="col-6 spartan_item_wrapper size--sm">
-                                            <img class="rounded border" src="{{ $img }}">
-                                        </div>
-                                    @endforeach
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="input-label" for="exampleFormControlInput1">{{translate('messages.update_identity_image')}}</label>
-                                <div>
-                                    <div class="row g-2 mt-0" id="multiDoc"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div> --}}
                     <div class="card">
                         <div class="card-header">
                             <div>
@@ -788,100 +755,25 @@
     </script>
 
     <script>
-        // $(function() {
-        //     $("#multiImg").spartanMultiImagePicker({
-        //         fieldName: 'images[]',
-        //         maxCount: 5,
-        //         rowHeight: '120px',
-        //         groupClassName: 'col-6 spartan_item_wrapper size--md',
-        //         maxFileSize: '',
-        //         placeholderImage: {
-        //             image: '{{ asset('public/assets/admin/img/document-upload.png') }}',
-        //             width: '100%'
-        //         },
-        //         dropFileLabel: "Drop Here",
-        //         onAddRow: function(index, file) {
+        $(document).ready(function () {
+            $('#discount_input').on('input', function () {
+                let discountType = $('#discount_type').val();
+                let inputValue = parseFloat($(this).val());
 
-        //         },
-        //         onRenderedPreview: function(index) {
+                if (discountType === 'percent' && inputValue > 100) {
+                    $(this).val(100);
+                }
+            });
 
-        //         },
-        //         onRemoveRow: function(index) {
+            $('#discount_type').on('change', function () {
+                let discountType = $(this).val();
+                let inputValue = parseFloat($('#discount_input').val());
 
-        //         },
-        //         onExtensionErr: function(index, file) {
-        //             toastr.error(
-        //                 '{{ translate('messages.please_only_input_png_or_jpg_type_file') }}', {
-        //                     CloseButton: true,
-        //                     ProgressBar: true
-        //                 });
-        //         },
-        //         onSizeErr: function(index, file) {
-        //             toastr.error('{{ translate('messages.file_size_too_big') }}', {
-        //                 CloseButton: true,
-        //                 ProgressBar: true
-        //             });
-        //         }
-        //     });
-        // });
-
-        // $(function() {
-        //     $("#multiDoc").spartanMultiImagePicker({
-        //         fieldName: 'documents[]',
-        //         maxCount: 5,
-        //         rowHeight: '120px',
-        //         groupClassName: 'col-6 spartan_item_wrapper size--md',
-        //         maxFileSize: '',
-        //         placeholderImage: {
-        //             image: '{{ asset('public/assets/admin/img/document-upload.png') }}',
-        //             width: '100%'
-        //         },
-        //         dropFileLabel: "Drop Here",
-        //         onAddRow: function(index, file) {
-
-        //         },
-        //         onRenderedPreview: function(index) {
-
-        //         },
-        //         onRemoveRow: function(index) {
-
-        //         },
-        //         onExtensionErr: function(index, file) {
-        //             toastr.error(
-        //                 '{{ translate('messages.please_only_input_png_or_jpg_type_file') }}', {
-        //                     CloseButton: true,
-        //                     ProgressBar: true
-        //                 });
-        //         },
-        //         onSizeErr: function(index, file) {
-        //             toastr.error('{{ translate('messages.file_size_too_big') }}', {
-        //                 CloseButton: true,
-        //                 ProgressBar: true
-        //             });
-        //         }
-        //     });
-        // });
-
-
-        // // Get all upload-file input elements
-        // document.querySelectorAll('.single_file_input').forEach(function(input) {
-        //     input.addEventListener('change', function(event) {
-        //         var file = event.target.files[0];
-        //         var card = event.target.closest('.upload-file');
-        //         var textbox = card.querySelector('.upload-file__textbox');
-        //         var imgElement = card.querySelector('.upload-file__img__img');
-
-        //         if (file) {
-        //             var reader = new FileReader();
-        //             reader.onload = function(e) {
-        //                 textbox.style.display = 'none';
-        //                 imgElement.src = e.target.result;
-        //                 imgElement.style.display = 'block';
-        //             };
-        //             reader.readAsDataURL(file);
-        //         }
-        //     });
-        // });
+                if (discountType === 'percent' && inputValue > 100) {
+                    $('#discount_input').val(100);
+                }
+            });
+        });
     </script>
 
     <script>

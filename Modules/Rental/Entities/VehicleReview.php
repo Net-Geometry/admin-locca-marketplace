@@ -4,6 +4,8 @@ namespace Modules\Rental\Entities;
 
 use App\Models\User;
 use App\Models\Store;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -31,6 +33,22 @@ class VehicleReview extends Model
         return $query->where('module_id', $module_id);
     }
 
+    /**
+     * @return string
+     */
+    public function getReviewDateAttribute(): string
+    {
+        return Carbon::parse($this->created_at)->format('d F Y');
+    }
+
+    /**
+     * @return string
+     */
+    public function getReviewTimeAttribute(): string
+    {
+        return Carbon::parse($this->created_at)->format('h:i A');
+    }
+
     public function vehicle()
     {
         return $this->belongsTo(Vehicle::class,'vehicle_id');
@@ -44,6 +62,14 @@ class VehicleReview extends Model
     public function provider()
     {
         return $this->belongsTo(Store::class, 'provider_id');
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function trip(): BelongsTo
+    {
+        return $this->belongsTo(Trips::class);
     }
 
     public function scopeActive($query)

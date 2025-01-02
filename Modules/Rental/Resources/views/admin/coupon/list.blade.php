@@ -46,7 +46,7 @@
                                                 (Default)
                                             </label>
                                             <input type="text" name="title[]" id="default_title"
-                                                class="form-control" placeholder="{{ translate('messages.new_coupon') }}" >
+                                                class="form-control" placeholder="{{ translate('messages.new_coupon') }}" required>
                                         </div>
                                         <input type="hidden" name="lang[]" value="default">
                                     </div>
@@ -80,7 +80,7 @@
                                 <div class="col-md-4 col-lg-3 col-sm-6">
                                     <div class="form-group">
                                         <label class="input-label" for="exampleFormControlInput1">{{translate('messages.coupon_type')}}</label>
-                                        <select name="coupon_type" id="coupon_type" class="form-control js-select2-custom">
+                                        <select name="coupon_type" id="coupon_type" class="form-control js-select2-custom" required>
                                             <option disabled selected>---{{translate('messages.Select_coupon_type')}}---</option>
                                             <option value="store_wise">{{translate('messages.Provider_wise')}}</option>
                                             <option value="zone_wise">{{translate('messages.zone_wise')}}</option>

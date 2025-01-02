@@ -742,12 +742,14 @@
                     <input type="hidden" id="pickup-lng" name="pickup_lng">
                     <input type="hidden" id="destination-lat" name="destination_lat">
                     <input type="hidden" id="destination-lng" name="destination_lng">
+                    <input type="hidden" id="distance-input" name="distance">
+
 
                     <div class="modal-body px-4 py-0">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group text-title">
-                                    <label class="input-label font-semibold" for="">Pickup Location</label>
+                                    <label class="input-label font-semibold" for="">{{translate('Pickup Location')}}</label>
                                     <div class="position-relative w-100 d-flex align-items-center">
                                         <input type="text" name="" id="pickup-input" class="form-control pr-2"
                                                placeholder="Enter your pickup location"
@@ -760,7 +762,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group text-title">
-                                    <label class="input-label font-semibold" for="">Destination</label>
+                                    <label class="input-label font-semibold" for="">{{translate('Destination')}}</label>
                                     <div class="position-relative w-100 d-flex align-items-center">
                                         <input type="text" name="" id="destination-input" class="form-control pr-2"
                                                placeholder="Enter your destination location"
@@ -773,19 +775,16 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group text-title">
-                                    <label class="input-label font-semibold" for="">Trip Type</label>
-                                    <select name="" id="" class="form-control custom-select-arrow">
-                                        <option value="hourly" selected>Hourly</option>
-                                        <option value="day">Day</option>
-                                    </select>
+                                    <label class="input-label font-semibold" for="">{{translate('Trip Type')}}</label>
+                                    <input type="text" class="form-control pr-2" name="trip_type" value="{{ $trip->trip_type }}" disabled>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group text-title">
-                                    <label class="input-label font-semibold" for="trip-schedule">Trip Schedule</label>
+                                    <label class="input-label font-semibold" for="trip-schedule">{{translate('Trip Schedule')}}</label>
                                     <div class="position-relative w-100 d-flex align-items-center">
-                                        <input type="datetime-local" name="trip_schedule" id="trip-schedule"
-                                               value="2022-08-14T12:45" class="form-control pr-2 opacity-lg"
+                                        <input type="datetime-local" name="schedule_at" id="trip-schedule"
+                                               value="{{ $trip->schedule_at }}" class="form-control pr-2 opacity-lg"
                                                placeholder="Enter your destination location">
                                     </div>
                                 </div>
@@ -842,13 +841,15 @@
                                                 </div>
                                             </td>
                                             <td>
-                                                <input type="number" class="form-control fs-14 text--title w--60px"
+                                                <input type="number" class="form-control fs-14 text--title w--60px quantity-input"
+                                                       data-id="{{ $editDetail->vehicle_id }}"
                                                        value="{{ $editDetail->quantity }}" placeholder="EX:5">
                                             </td>
                                             <td class="text-right">
                                                 <div class="d-flex justify-content-end">
                                                     <input type="text"
-                                                           class="form-control w--120px text-right fs-14 text--title"
+                                                           data-price="{{ $editDetail->price }}"
+                                                           class="form-control w--120px text-right fs-14 text--title fare-total"
                                                            value="{{ \App\CentralLogics\Helpers::format_currency($editDetail->price * $editDetail->quantity) }}" placeholder="fare">
                                                 </div>
                                             </td>
@@ -864,27 +865,28 @@
                                 <div class="row justify-content-md-end mb-3 mt-4 mx-0">
                                     <div class="col-md-9 col-lg-8">
                                         <dl class="row text-right text-title">
-                                            <dt class="col-6 font-regular">Trip Fare</dt>
+                                            <dt class="col-6 font-regular">{{translate('Trip Fare')}}</dt>
                                             <dd class="col-6">
-                                                $ 1,350.25</dd>
+                                                {{ \App\CentralLogics\Helpers::format_currency($trip->trip_details->sum('price') * $trip->trip_details->sum('quantity')) }}
+                                            </dd>
 
-                                            <dt class="col-6">Subtotal</dt>
+                                            <dt class="col-6">{{translate('Subtotal')}}</dt>
                                             <dd class="col-6 font-semibold">
-                                                $ 1,350.25
+                                                {{ \App\CentralLogics\Helpers::format_currency($trip->trip_details->sum('price') * $trip->trip_details->sum('quantity')) }}
                                             </dd>
 
-                                            <dt class="col-6 font-regular">Coupon discount</dt>
+                                            <dt class="col-6 font-regular">{{translate('Coupon discount')}}</dt>
                                             <dd class="col-6">
-                                                -$ 350.25
+                                                -{{ \App\CentralLogics\Helpers::format_currency($trip->coupon_discount_amount)}}
                                             </dd>
 
-                                            <dt class="col-6 font-regular text-uppercase">Vat/tax:</dt>
+                                            <dt class="col-6 font-regular text-uppercase">{{translate('Vat/tax')}}</dt>
                                             <dd class="col-6 text-right">
-                                                +$ 10
+                                                +{{ \App\CentralLogics\Helpers::format_currency($trip->tax_amount)}}
                                             </dd>
 
-                                            <dt class="col-6 font-bold">Total:</dt>
-                                            <dd class="col-6 font-bold">$ 1,010.00</dd>
+                                            <dt class="col-6 font-bold">{{translate('Total')}}</dt>
+                                            <dd class="col-6 font-bold">{{ \App\CentralLogics\Helpers::format_currency($trip->trip_amount)}}</dd>
                                         </dl>
                                         <!-- End Row -->
                                     </div>
@@ -1312,35 +1314,54 @@
             let currentFieldType;
             let map, marker, searchBox;
 
-            // Open modal on input click
+            let pickupLocation = { lat: null, lng: null };
+            let destinationLocation = { lat: null, lng: null };
+
+            const pickupInputValue = $('#pickup-input').val();
+            const destinationInputValue = $('#destination-input').val();
+
+            if (pickupInputValue) {
+                geocodeAddress(pickupInputValue, (location) => {
+                    pickupLocation = location;
+                });
+            }
+
+            if (destinationInputValue) {
+                geocodeAddress(destinationInputValue, (location) => {
+                    destinationLocation = location;
+                });
+            }
+
             $('#pickup-input').on('click', function () {
                 currentFieldType = 'pickup';
                 $('#mapModal').modal('show');
-                initMap();
+                initMap(pickupLocation);
             });
 
             $('#destination-input').on('click', function () {
                 currentFieldType = 'destination';
                 $('#mapModal').modal('show');
-                initMap();
+                initMap(destinationLocation);
             });
 
-            function initMap() {
-                const defaultLocation = { lat: 23.8103, lng: 90.4125 }; // Default to Dhaka
+            function initMap(previousLocation) {
+                const defaultLocation = { lat: 23.8103, lng: 90.4125 };
 
-                // Initialize map
+                const centerLocation = previousLocation.lat && previousLocation.lng
+                    ? previousLocation
+                    : defaultLocation;
+
                 map = new google.maps.Map(document.getElementById('map'), {
-                    center: defaultLocation,
+                    center: centerLocation,
                     zoom: 13,
                 });
 
-                // Add marker
                 marker = new google.maps.Marker({
-                    map: map,
+                    position: previousLocation.lat && previousLocation.lng ? centerLocation : null,
+                    map: previousLocation.lat && previousLocation.lng ? map : null,
                     draggable: true,
                 });
 
-                // Add search box
                 const input = document.getElementById('search-input');
                 const autocomplete = new google.maps.places.Autocomplete(input);
                 autocomplete.bindTo('bounds', map);
@@ -1353,22 +1374,20 @@
                         return;
                     }
 
-                    // Set marker and center map
                     map.setCenter(place.geometry.location);
                     map.setZoom(15);
                     marker.setPosition(place.geometry.location);
 
-                    // Get address and coordinates
                     const address = place.formatted_address;
                     const latLng = place.geometry.location;
 
                     updateFields(address, latLng.lat(), latLng.lng());
                 });
 
-                // Allow clicking on map to set location
                 map.addListener('click', (event) => {
                     const latLng = event.latLng;
                     marker.setPosition(latLng);
+                    marker.setMap(map);
 
                     const geocoder = new google.maps.Geocoder();
                     geocoder.geocode({ location: latLng }, (results, status) => {
@@ -1387,15 +1406,102 @@
                     $('#pickup-input').val(address);
                     $('#pickup-lat').val(lat);
                     $('#pickup-lng').val(lng);
+                    pickupLocation = { lat, lng };
                 } else if (currentFieldType === 'destination') {
                     $('#destination-input').val(address);
                     $('#destination-lat').val(lat);
                     $('#destination-lng').val(lng);
+                    destinationLocation = { lat, lng };
                 }
 
-                // Close modal
+                if (pickupLocation.lat && destinationLocation.lat) {
+                    calculateDistance();
+                }
+
                 $('#mapModal').modal('hide');
             }
+
+            function calculateDistance() {
+                const service = new google.maps.DistanceMatrixService();
+
+                const request = {
+                    origins: [{ lat: pickupLocation.lat, lng: pickupLocation.lng }],
+                    destinations: [{ lat: destinationLocation.lat, lng: destinationLocation.lng }],
+                    travelMode: google.maps.TravelMode.DRIVING,
+                };
+
+                service.getDistanceMatrix(request, function (response, status) {
+                    if (status === google.maps.DistanceMatrixStatus.OK) {
+                        const distance = response.rows[0].elements[0].distance.text;
+                        $('#distance-input').val(distance);
+                        console.log(distance)
+                    } else {
+                        alert('Error calculating distance: ' + status);
+                    }
+                });
+            }
+
+            function geocodeAddress(address, callback) {
+                const geocoder = new google.maps.Geocoder();
+                geocoder.geocode({ address: address }, (results, status) => {
+                    if (status === 'OK' && results[0]) {
+                        const location = results[0].geometry.location;
+                        callback({ lat: location.lat(), lng: location.lng() });
+                    } else {
+                        console.error('Geocode failed: ' + status);
+                    }
+                });
+            }
         });
+    </script>
+
+    <script>
+        $(document).on('input', '.quantity-input', function () {
+            let quantity = $(this).val();
+            let row = $(this).closest('tr');
+            let id = $(this).data('vehicle-id');
+
+            $.ajax({
+                url: "{{ route('admin.rental.trip.get-calculation') }}",
+                type: 'get',
+                data: {
+                    id: id,
+                    quantity: quantity,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(response) {
+                    let totalFare = (response.updatedPrice * quantity).toFixed(2);
+                    row.find('.fare-total').val(formatCurrency(totalFare));
+
+                    updateOverallTotal();
+                },
+                error: function(xhr, status, error) {
+                    console.log('Error:', error);
+                }
+            });
+        });
+
+        function updateOverallTotal() {
+            let overallTotal = 0;
+            $('.fare-total').each(function () {
+                let fare = parseFloat($(this).val().replace(/[^0-9.-]+/g, ""));
+                if (!isNaN(fare)) {
+                    overallTotal += fare;
+                }
+            });
+
+            let discount = parseFloat($('#coupon-discount').data('value')) || 0;
+            let tax = parseFloat($('#vat-tax').data('value')) || 0;
+
+            let subtotal = overallTotal.toFixed(2);
+            let grandTotal = (overallTotal - discount + tax).toFixed(2);
+
+            $('.subtotal').text(formatCurrency(subtotal));
+            $('.grand-total').text(formatCurrency(grandTotal));
+        }
+
+        function formatCurrency(value) {
+            return "{{ \App\CentralLogics\Helpers::currency_symbol()}}" + parseFloat(value).toFixed(2);
+        }
     </script>
 @endpush

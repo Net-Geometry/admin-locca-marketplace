@@ -56,7 +56,7 @@
                                                     ({{ translate('Default') }})
                                                 </label>
                                                 <input type="text" value="{{ old('title.0') }}" name="title[]" maxlength="254" id="default_title"
-                                                    class="form-control" placeholder="{{ translate('messages.Eid_Dhamaka') }}" >
+                                                    class="form-control" placeholder="{{ translate('messages.Eid_Dhamaka') }}" required>
                                             </div>
                                             <input type="hidden" name="lang[]" value="default">
                                         </div>
@@ -93,7 +93,7 @@
                                         <label class="input-label" for="select_customer">{{translate('messages.select_customer')}}</label>
                                         <select required name="customer_id[]" id="select_customer"
                                             class="form-control js-select2-custom"
-                                            multiple="multiple" data-placeholder="{{translate('messages.select_customer')}}">
+                                            multiple="multiple" data-placeholder="{{translate('messages.select_customer')}}" required>
                                             <option   value="all">{{translate('messages.all')}} </option>
                                         @foreach($users as $user)
                                             <option class="select_customer_option" value="{{$user->id}}" {{ (isset($customer) && is_numeric($customer) && ($customer == $user->id))?'selected':'' }}>{{$user->f_name.' '.$user->l_name}}</option>

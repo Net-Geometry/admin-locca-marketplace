@@ -33,6 +33,11 @@ class TripDetails extends Model
         return $value;
     }
 
+    public function trip(): BelongsTo
+    {
+        return $this->belongsTo(Trips::class, 'trip_id');
+    }
+
     public function vehicle(): BelongsTo
     {
         return $this->belongsTo(Vehicle::class, 'vehicle_id');

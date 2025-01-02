@@ -162,7 +162,7 @@
                                                     {{ translate('logo') }} <span class="text--primary">({{ translate('1:1') }})</span>
                                                 </label>
                                                 <label class="text-center position-relative">
-                                                    <img class="img--110 min-height-170px min-width-170px onerror-image image--border" id="viewer"
+                                                    <img class="img--110 min-height-170px min-width-170px onerror-image image--border" id="logoImageViewer"
                                                          data-onerror-image="{{ asset('public/assets/admin/img/upload-img.png') }}"
                                                          src="{{ $store->logo_full_url ?? asset('public/assets/admin/img/upload-img.png') }}"
                                                          alt="logo image" />

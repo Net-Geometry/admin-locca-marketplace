@@ -230,7 +230,7 @@ class TripController extends Controller
     public function export(Request $request): mixed
     {
         $key = explode(' ', $request['search']);
-        $status = explode(' ', $request['status']);
+        $status = $request['status'];
 
         $this->trips->where(['checked' => 0])->update(['checked' => 1]);
 
@@ -288,4 +288,50 @@ class TripController extends Controller
         }
         return Excel::download(new TripExport($data), 'Trips.xlsx');
     }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getCalculation(Request $request): JsonResponse
+    {
+        $id = $request->id;
+        $quantity = $request->quantity;
+
+        $tripDetail = $this->tripDetails->findOrFail($id);
+
+        $discount_data = $this->getDiscount(
+            price: $tripDetail->rental_type == 'hourly' ? $tripDetail->vehicle->hourly_price *  $tripDetail->estimated_hours : $tripDetail->vehicle->distance_price *  $tripDetail->distance,
+            discount_type: $tripDetail->vehicle->discount_type,
+            discount: $tripDetail->vehicle->discount_price);
+
+        if ($tripDetail) {
+
+            return response()->json([
+                'success' => true,
+                'updatedPrice' => number_format($updatedPrice, 2),
+                'updatedTotal' => number_format($updatedPrice, 2),
+                'subtotal' => number_format($subtotal, 2),
+                'discount' => number_format($discount, 2),
+                'grandTotal' => number_format($grandTotal, 2),
+            ]);
+        }
+
+        return response()->json(['success' => false], 400);
+    }
+
+    /**
+     * @param $price
+     * @param $discount_type
+     * @param $discount
+     * @return array
+     */
+    private function getDiscount($price, $discount_type, $discount): array
+    {
+        if ($price > 0 &&  $discount > 0) {
+            $discount =  $discount_type == 'percent' ? ($price * $discount) / 100 :  $discount;
+        }
+        return ['price' => $price, 'discount' => $discount ?? 0];
+    }
+
 }

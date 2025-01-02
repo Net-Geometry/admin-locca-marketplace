@@ -89,7 +89,7 @@
                 <div class="search--button-wrapper">
                     <h5 class="card-title text--title">
                         {{ translate('messages.Total_Vehicles') }}
-                        <span class="badge badge-soft-dark ml-2 rounded-circle" id="itemCount">{{ $vehicles->count() }}</span>
+                        <span class="badge badge-soft-dark ml-2 rounded-circle" id="itemCount">{{ $vehicles->total() }}</span>
                     </h5>
                     <form class="search-form flex-grow-1 max-w-353px">
                         <!-- Search -->

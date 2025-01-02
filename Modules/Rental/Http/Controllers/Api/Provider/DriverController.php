@@ -51,12 +51,14 @@ class DriverController extends Controller
             ])
             ->when($request->filled('search'), function ($query) use ($request) {
                 $keys = explode(' ', $request->input('search'));
-                foreach ($keys as $key) {
-                    $query->orWhere('first_name', 'LIKE', '%' . $key . '%')
-                        ->orWhere('last_name', 'LIKE', '%' . $key . '%')
-                        ->orWhere('email', 'LIKE', '%' . $key . '%')
-                        ->orWhere('phone', 'LIKE', '%' . $key . '%');
-                }
+                $query->where(function ($query) use ($keys) {
+                    foreach ($keys as $key) {
+                        $query->orWhere('first_name', 'LIKE', '%' . $key . '%')
+                            ->orWhere('last_name', 'LIKE', '%' . $key . '%')
+                            ->orWhere('email', 'LIKE', '%' . $key . '%')
+                            ->orWhere('phone', 'LIKE', '%' . $key . '%');
+                    }
+                });
             })
             ->latest()->paginate($limit, ['*'], 'page', $offset);
 

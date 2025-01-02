@@ -95,10 +95,10 @@
                     <a class="order--card h-100" href="#">
                         <div class="d-flex justify-content-between align-items-center">
                             <h6 class="card-subtitle d-flex justify-content-between m-0 align-items-center">
-                                All
+                                {{translate('All')}}
                             </h6>
                             <span class="card-title text--info">
-                                200
+                                {{ $store->trips->count() }}
                             </span>
                         </div>
                     </a>
@@ -109,10 +109,10 @@
                     <a class="order--card h-100" href="#">
                         <div class="d-flex justify-content-between align-items-center">
                             <h6 class="card-subtitle d-flex justify-content-between m-0 align-items-center">
-                                Completed
+                                {{translate('Completed')}}
                             </h6>
                             <span class="card-title text--success">
-                                200
+                                {{ $store->trips->where('trip_status', 'completed')->count() }}
                             </span>
                         </div>
                     </a>
@@ -123,10 +123,10 @@
                     <a class="order--card h-100" href="#">
                         <div class="d-flex justify-content-between align-items-center">
                             <h6 class="card-subtitle d-flex justify-content-between m-0 align-items-center">
-                                Cancled
+                                {{translate('Canceled')}}
                             </h6>
                             <span class="card-title text--danger">
-                                200
+                                {{ $store->trips->where('trip_status', 'canceled')->count() }}
                             </span>
                         </div>
                     </a>
@@ -137,7 +137,7 @@
                     <a class="order--card h-100" href="#">
                         <div class="d-flex justify-content-between align-items-center">
                             <h6 class="card-subtitle d-flex justify-content-between m-0 align-items-center">
-                                Cancelation rate
+                                {{translate('Cancellation rate')}}
                             </h6>
                             <span class="card-title text--warning">
                                 12%

@@ -59,7 +59,7 @@
                                                     </label>
                                                     <input type="text" name="title[]" id="default_title"
                                                         class="form-control" value="{{ old('title.0') }}"
-                                                        placeholder="{{ translate('messages.new_banner') }}">
+                                                        placeholder="{{ translate('messages.new_banner') }}" required>
                                                 </div>
                                                 <input type="hidden" name="lang[]" value="default">
                                             </div>
@@ -84,7 +84,7 @@
                                     <div class="form-group">
                                         <label class="input-label"
                                             for="exampleFormControlInput1">{{ translate('Banner_Type') }}</label>
-                                        <select name="banner_type" id="banner_type" class="custom-select js-select2-custom">
+                                        <select name="banner_type" id="banner_type" class="custom-select js-select2-custom" required>
                                             <option value="store_wise">{{ translate('Provider_Wise') }}</option>
                                             <option value="default">{{ translate('messages.default') }}</option>
                                         </select>
@@ -121,7 +121,7 @@
                                                     <i class="tio-clear"></i>
                                                 </a>
                                                 <input type="file" name="image" class="upload-file__input single_file_input"
-                                                    accept=".jpg, .jpeg, .png">
+                                                    accept=".jpg, .jpeg, .png" required>
                                                 <label class="upload-file-wrapper fullwidth">
                                                     <div class="upload-file-textbox text-center">
                                                         <img width="34" height="34"

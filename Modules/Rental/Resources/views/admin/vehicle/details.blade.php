@@ -134,73 +134,68 @@
                                         @endforeach
                                     </ul>
                                 @endif
-                                <div class="floating-review-wrapper">
-                                    <div class="rating--review border rounded">
-                                        <h5 class="title border-line font-medium d-flex align-items-center lh--1 mb-0">
-                                            <span class="fs-14">
-                                                <span class="font-bold">4.0</span>
-                                                <span class="color-758590">/5</span>
-                                            </span>
-                                            <div class="info text--title fs-14">2 Reviews</div>
-                                        </h5>
+                                    <div class="floating-review-wrapper">
+                                        <div class="rating--review border rounded">
+                                            <h5 class="title border-line font-medium d-flex align-items-center lh--1 mb-0">
+                                                <span class="fs-14">
+                                                    <span class="font-bold">{{ $avgRating }}</span>
+                                                    <span class="color-758590">/5</span>
+                                                </span>
+                                                <div class="info text--title fs-14">{{ $totalReviews }} {{ translate('Reviews') }}</div>
+                                            </h5>
+                                        </div>
+                                        <ul class="list-unstyled list-unstyled-py-2 mb-0 rating--review-right review-color-progress">
+                                            <!-- Review Ratings -->
+                                            <li class="d-flex align-items-center font-size-sm">
+                                                <span class="progress-name mr-3">{{ translate('Excellent') }}</span>
+                                                <div class="progress flex-grow-1">
+                                                    <div class="progress-bar" role="progressbar" style="width: {{ $excellentCount }}%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
+                                                <span class="ml-3">{{ $excellentCount }}</span>
+                                            </li>
+                                            <!-- End Review Ratings -->
+
+                                            <!-- Review Ratings -->
+                                            <li class="d-flex align-items-center font-size-sm">
+                                                <span class="progress-name mr-3">{{ translate('Good') }}</span>
+                                                <div class="progress flex-grow-1">
+                                                    <div class="progress-bar" role="progressbar" style="width: {{ $goodCount }}%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
+                                                <span class="ml-3">{{ $goodCount }}</span>
+                                            </li>
+                                            <!-- End Review Ratings -->
+
+                                            <!-- Review Ratings -->
+                                            <li class="d-flex align-items-center font-size-sm">
+                                                <span class="progress-name mr-3">Average</span>
+                                                <div class="progress flex-grow-1">
+                                                    <div class="progress-bar" role="progressbar" style="width: {{ $averageCount }}%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
+                                                <span class="ml-3">{{ $averageCount }}</span>
+                                            </li>
+                                            <!-- End Review Ratings -->
+
+                                            <!-- Review Ratings -->
+                                            <li class="d-flex align-items-center font-size-sm">
+                                                <span class="progress-name mr-3">Below average</span>
+                                                <div class="progress flex-grow-1">
+                                                    <div class="progress-bar" role="progressbar" style="width: {{ $belowAverageCount }}%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
+                                                <span class="ml-3">{{ $belowAverageCount }}</span>
+                                            </li>
+                                            <!-- End Review Ratings -->
+
+                                            <!-- Review Ratings -->
+                                            <li class="d-flex align-items-center font-size-sm">
+                                                <span class="progress-name mr-3">Poor</span>
+                                                <div class="progress flex-grow-1">
+                                                    <div class="progress-bar" role="progressbar" style="width: {{ $poorCount }}%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
+                                                <span class="ml-3">{{ $poorCount }}</span>
+                                            </li>
+                                            <!-- End Review Ratings -->
+                                        </ul>
                                     </div>
-                                    <ul class="list-unstyled list-unstyled-py-2 mb-0 rating--review-right review-color-progress">
-                                        <!-- Review Ratings -->
-                                        <li class="d-flex align-items-center font-size-sm">
-                                            <span class="progress-name mr-3">Excellent</span>
-                                            <div class="progress flex-grow-1">
-                                                <div class="progress-bar" role="progressbar" style="width: 20%;"
-                                                     aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-                                            </div>
-                                            <span class="ml-3">20</span>
-                                        </li>
-                                        <!-- End Review Ratings -->
-
-                                        <!-- Review Ratings -->
-                                        <li class="d-flex align-items-center font-size-sm">
-                                            <span class="progress-name mr-3">Good</span>
-                                            <div class="progress flex-grow-1">
-                                                <div class="progress-bar" role="progressbar" style="width: 5%;"
-                                                     aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-                                            </div>
-                                            <span class="ml-3">5</span>
-                                        </li>
-                                        <!-- End Review Ratings -->
-
-                                        <!-- Review Ratings -->
-                                        <li class="d-flex align-items-center font-size-sm">
-                                            <span class="progress-name mr-3">Average</span>
-                                            <div class="progress flex-grow-1">
-                                                <div class="progress-bar" role="progressbar" style="width: 5%;"
-                                                     aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-                                            </div>
-                                            <span class="ml-3">5</span>
-                                        </li>
-                                        <!-- End Review Ratings -->
-
-                                        <!-- Review Ratings -->
-                                        <li class="d-flex align-items-center font-size-sm">
-                                            <span class="progress-name mr-3">Below average</span>
-                                            <div class="progress flex-grow-1">
-                                                <div class="progress-bar" role="progressbar" style="width: 2%;"
-                                                     aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-                                            </div>
-                                            <span class="ml-3">2</span>
-                                        </li>
-                                        <!-- End Review Ratings -->
-
-                                        <!-- Review Ratings -->
-                                        <li class="d-flex align-items-center font-size-sm">
-                                            <span class="progress-name mr-3">Poor</span>
-                                            <div class="progress flex-grow-1">
-                                                <div class="progress-bar" role="progressbar" style="width: 1%;"
-                                                     aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-                                            </div>
-                                            <span class="ml-3">1</span>
-                                        </li>
-                                        <!-- End Review Ratings -->
-                                    </ul>
-                                </div>
                             </div>
                             @if ($language)
                             <div class="lang_form text--title" id="default-form">
@@ -430,14 +425,14 @@
 
                             <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
                             <a id="export-excel" class="dropdown-item"
-                               href="{{ route('admin.store.export', ['type' => 'excel', request()->getQueryString()]) }}">
+                               href="{{ route('admin.rental.provider.vehicle.review.export', ['vehicle_id' => request()->id, 'type' => 'excel', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                      src="{{ asset('public/assets/admin') }}/svg/components/excel.svg"
                                      alt="Image Description">
                                 {{ translate('messages.excel') }}
                             </a>
                             <a id="export-csv" class="dropdown-item"
-                               href="{{ route('admin.store.export', ['type' => 'csv', request()->getQueryString()]) }}">
+                               href="{{ route('admin.rental.provider.vehicle.review.export', ['vehicle_id' => request()->id, 'type' => 'csv', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                      src="{{ asset('public/assets/admin') }}/svg/components/placeholder-csv-format.svg"
                                      alt="Image Description">
@@ -468,72 +463,74 @@
                     </thead>
 
                     <tbody id="set-rows">
-                    <tr>
-                        <td>1</td>
-                        <td>#10003278</td>
+                    @foreach($vehicleReview as $review)
+                        <tr>
+                            <td>{{ $loop->iteration }}</td>
+                            <td>#{{ $review->id }}</td>
 
-                        <td>
-                            <div class="table-rest-info d-block">
-                                <div class="info">
-                                    <div title="Car Rental Service" class="text--info">
-                                        {{ translate('messages.Jhone Doe III') }}
-                                    </div>
-                                    <div>
-                                            <span class="font-light">
-                                                +98347568987
-                                            </span>
+                            <td>
+                                <div class="table-rest-info d-block">
+                                    <div class="info">
+                                        <div title="Car Rental Service" class="text--info">
+                                            {{ $review->customer->fullName }}
+                                        </div>
+                                        <div>
+                                                <span class="font-light">
+                                                    {{ $review->customer->phone }}
+                                                </span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="font-semibold text--warning">
-                                <i class="fs-13 tio-star"></i>
-                                4.5
-                            </div>
-                            <div class="line--limit-2 max-w--220px">
-                                {{ translate('messages.Gas Stove is very important in our daily life, most importantly it cooks food. So, when a gas stove breaks down it requires urgent servicing.') }}
-                            </div>
-                        </td>
-                        <td>
-                            12 Aug 2022
-                            <br>
-                            11: 55 am
-                        </td>
-                        <td>
-                            <div class="line--limit-2 max-w--220px">
-                                {{ translate('messages.Gas Stove is very important in our daily life, most importantly it cooks food. So, when a gas stove breaks down it requires urgent servicing.') }}
-                            </div>
-                        <td>
-                            <label class="toggle-switch toggle-switch-sm" for="publishCheckbox47">
-                                <input type="checkbox" data-url="#" class="toggle-switch-input redirect-url"
-                                       id="publishCheckbox47" checked="">
-                                <span class="toggle-switch-label mx-auto">
-                                        <span class="toggle-switch-indicator"></span>
-                                    </span>
-                            </label>
-                        </td>
-                    </tr>
+                            </td>
+                            <td>
+                                <div class="font-semibold text--warning">
+                                    <i class="fs-13 tio-star"></i>
+                                    {{ $review->rating }}
+                                </div>
+                                @if($review->comment)
+                                    <div class="line--limit-2 max-w--220px">
+                                        {{ $review->comment  }}
+                                    </div>
+                                @endif
+                            </td>
+                            <td>
+                                {{ $review->reviewDate }}
+                                <br>
+                                {{ $review->reviewTime }}
+                            </td>
+                            <td>
+                                <div class="line--limit-2 max-w--220px">
+                                    {{ $review->reply ? $review->reply : 'N/A' }}
+                                </div>
+                            <td>
+                                <label class="toggle-switch toggle-switch-sm" for="publishCheckbox{{$review->id}}">
+                                    <input type="checkbox" data-url="{{ route('admin.rental.provider.vehicle.review.status', $review->id) }}" class="toggle-switch-input redirect-url"
+                                           id="publishCheckbox{{$review->id}}" {{ $review->status ? 'checked' : ''}}>
+                                    <span class="toggle-switch-label mx-auto">
+                                            <span class="toggle-switch-indicator"></span>
+                                        </span>
+                                </label>
+                            </td>
+                        </tr>
+                    @endforeach
                     </tbody>
                 </table>
 
             </div>
+            @if(count($vehicleReview) !== 0)
+                <hr>
+            @endif
             <div class="page-area mt-3">
-                <nav>
-                    <ul class="pagination">
-                        <li class="page-item disabled" aria-disabled="true" aria-label="« Previous">
-                            <span class="page-link" aria-hidden="true">‹</span>
-                        </li>
-                        <li class="page-item active" aria-current="page"><span class="page-link">1</span></li>
-                        <li class="page-item"><a class="page-link" href="#">2</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="#" rel="next" aria-label="Next »">›</a>
-                        </li>
-                    </ul>
-                </nav>
-
+                {!! $vehicleReview->appends($_GET)->links() !!}
             </div>
+            @if(count($vehicleReview) === 0)
+                <div class="empty--data">
+                    <img src="{{asset('/public/assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
+                    <h5>
+                        {{translate('no_data_found')}}
+                    </h5>
+                </div>
+            @endif
             <!-- End Table -->
         </div>
     </div>

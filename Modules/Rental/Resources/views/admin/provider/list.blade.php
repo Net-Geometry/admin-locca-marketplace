@@ -10,7 +10,7 @@
     <div class="content container-fluid">
         <!-- Page Header -->
         <div class="page-header">
-            <h1 class="page-header-title"><i class="tio-filter-list"></i> {{translate('messages.stores')}} <span class="badge badge-soft-dark ml-2" id="itemCount">{{$stores->total()}}</span></h1>
+            <h1 class="page-header-title"><i class="tio-filter-list"></i> {{translate('messages.Provider')}} <span class="badge badge-soft-dark ml-2" id="itemCount">{{$stores->total()}}</span></h1>
             <div class="page-header-select-wrapper">
             </div>
         </div>
@@ -26,7 +26,7 @@
                     })->where('module_id', Config::get('module.current_module_id'))->count())
                     @php($total_store = isset($total_store) ? $total_store : 0)
                     <h4 class="title">{{$total_store}}</h4>
-                    <span class="subtitle">{{translate('messages.total_stores')}}</span>
+                    <span class="subtitle">{{translate('messages.total_providers')}}</span>
                     <img class="resturant-icon" src="{{asset('/public/assets/admin/img/total-store.png')}}" alt="store">
                 </div>
             </div>
@@ -35,7 +35,7 @@
                     @php($active_stores = \App\Models\Store::where(['status'=>1])->where('module_id', Config::get('module.current_module_id'))->count())
                     @php($active_stores = isset($active_stores) ? $active_stores : 0)
                     <h4 class="title">{{$active_stores}}</h4>
-                    <span class="subtitle">{{translate('messages.active_stores')}}</span>
+                    <span class="subtitle">{{translate('messages.active_providers')}}</span>
                     <img class="resturant-icon" src="{{asset('/public/assets/admin/img/active-store.png')}}" alt="store">
                 </div>
             </div>
@@ -46,7 +46,7 @@
                     })->where(['status'=>0])->where('module_id', Config::get('module.current_module_id'))->count())
                     @php($inactive_stores = isset($inactive_stores) ? $inactive_stores : 0)
                     <h4 class="title">{{$inactive_stores}}</h4>
-                    <span class="subtitle">{{translate('messages.inactive_stores')}}</span>
+                    <span class="subtitle">{{translate('messages.inactive_providers')}}</span>
                     <img class="resturant-icon" src="{{asset('/public/assets/admin/img/close-store.png')}}" alt="store">
                 </div>
             </div>
@@ -54,7 +54,7 @@
                 <div class="resturant-card card--bg-4">
                     @php($data = \App\Models\Store::where('created_at', '>=', now()->subDays(30)->toDateTimeString())->where('module_id', Config::get('module.current_module_id'))->count())
                     <h4 class="title">{{$data}}</h4>
-                    <span class="subtitle">{{translate('messages.newly_joined_stores')}}</span>
+                    <span class="subtitle">{{translate('messages.newly_joined_providers')}}</span>
                     <img class="resturant-icon" src="{{asset('/public/assets/admin/img/add-store.png')}}" alt="store">
                 </div>
             </div>
@@ -85,7 +85,7 @@
                 <div>
                     @php($store_withdraws = \App\Models\WithdrawRequest::where(['approved'=>1])->sum('amount'))
                     @php($store_withdraws = isset($store_withdraws) ? $store_withdraws : 0)
-                    <span>{{translate('messages.total_store_withdraws')}}</span> <strong>{{\App\CentralLogics\Helpers::format_currency($store_withdraws)}}</strong>
+                    <span>{{translate('messages.total_provider_withdraws')}}</span> <strong>{{\App\CentralLogics\Helpers::format_currency($store_withdraws)}}</strong>
                 </div>
             </li>
         </ul>
@@ -96,7 +96,7 @@
             <!-- Header -->
             <div class="card-header py-2">
                 <div class="search--button-wrapper">
-                    <h5 class="card-title">{{translate('messages.stores_list')}}</h5>
+                    <h5 class="card-title">{{translate('messages.providers_list')}}</h5>
 
                 @if(!isset(auth('admin')->user()->zone_id))
                 <div class="select-item min--280">
@@ -173,10 +173,10 @@
                     <thead class="thead-light">
                     <tr>
                         <th class="border-0">{{translate('sl')}}</th>
-                        <th class="border-0">{{translate('messages.store_information')}}</th>
-                        <th class="border-0">{{translate('messages.owner_information')}}</th>
-                        <th class="border-0">{{translate('messages.zone')}}</th>
-                        <th class="text-uppercase border-0">{{translate('messages.featured')}}</th>
+                        <th class="border-0">{{translate('messages.provider')}}</th>
+                        <th class="border-0">{{translate('messages.owner_info')}}</th>
+                        <th class="border-0">{{translate('messages.Total_vehicle')}}</th>
+                        <th class="text-uppercase border-0">{{translate('messages.total_trip')}}</th>
                         <th class="text-uppercase border-0">{{translate('messages.status')}}</th>
                         <th class="text-center border-0">{{translate('messages.action')}}</th>
                     </tr>
@@ -216,15 +216,10 @@
                                 </div>
                             </td>
                             <td>
-                                {{$store->zone?$store->zone->name:translate('messages.zone_deleted')}}
+                                {{$store->vehicles->count()}}
                             </td>
                             <td>
-                                <label class="toggle-switch toggle-switch-sm" for="featuredCheckbox{{$store->id}}">
-                                    <input type="checkbox" data-url="{{route('admin.store.featured',[$store->id,$store->featured?0:1])}}" class="toggle-switch-input redirect-url" id="featuredCheckbox{{$store->id}}" {{$store->featured?'checked':''}}>
-                                    <span class="toggle-switch-label">
-                                        <span class="toggle-switch-indicator"></span>
-                                    </span>
-                                </label>
+                                {{ $store->trips->count() }}
                             </td>
 
                             <td>

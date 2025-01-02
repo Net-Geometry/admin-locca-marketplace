@@ -23,12 +23,15 @@ use Modules\Rental\Entities\Vehicle;
 use Modules\Rental\Entities\VehicleBrand;
 use Modules\Rental\Entities\VehicleCategory;
 use Modules\Rental\Entities\VehicleIdentity;
+use Modules\Rental\Entities\VehicleReview;
 use Modules\Rental\Exports\VehicleExport;
+use Modules\Rental\Exports\VehicleReviewExport;
 use OpenSpout\Common\Exception\InvalidArgumentException;
 use OpenSpout\Common\Exception\IOException;
 use OpenSpout\Common\Exception\UnsupportedTypeException;
 use OpenSpout\Writer\Exception\WriterNotOpenedException;
 use Rap2hpoutre\FastExcel\FastExcel;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class VehicleController extends Controller
@@ -38,10 +41,11 @@ class VehicleController extends Controller
     private VehicleCategory $vehicleCategory;
     private VehicleBrand $vehicleBrand;
     private VehicleIdentity $vehicleIdentity;
+    private VehicleReview $vehicleReview;
     private Helpers $helpers;
     private Store $store;
 
-    public function __construct(Vehicle $vehicle, VehicleCategory $vehicleCategory, VehicleBrand $vehicleBrand, Helpers $helpers, Store $store, VehicleIdentity $vehicleIdentity)
+    public function __construct(Vehicle $vehicle, VehicleCategory $vehicleCategory, VehicleBrand $vehicleBrand, Helpers $helpers, Store $store, VehicleIdentity $vehicleIdentity, VehicleReview $vehicleReview)
     {
         $this->vehicle = $vehicle;
         $this->helpers = $helpers;
@@ -49,6 +53,7 @@ class VehicleController extends Controller
         $this->vehicleCategory = $vehicleCategory;
         $this->vehicleBrand = $vehicleBrand;
         $this->vehicleIdentity = $vehicleIdentity;
+        $this->vehicleReview = $vehicleReview;
     }
 
     /**
@@ -356,12 +361,21 @@ class VehicleController extends Controller
      */
     public function details(int $id): Renderable
     {
-        $vehicle = $this->vehicle->findOrFail($id);
+        $data['vehicle'] = $this->vehicle->findOrFail($id);
+        $data['vehicleReview'] = $this->vehicleReview->where('vehicle_id', $id)->latest()->paginate(config('default_pagination'));
 
+        $data['totalRating'] = $data['vehicle']->reviews->sum('rating');
+        $data['avgRating'] = number_format($data['vehicle']->reviews->avg('rating'), 1);
+        $data['totalReviews'] = $data['vehicle']->reviews->whereNotNull('comment')->count();
+        $data['excellentCount'] = $data['vehicle']->reviews->where('rating', 5)->count();
+        $data['goodCount'] = $data['vehicle']->reviews->where('rating', 4)->count();
+        $data['averageCount'] = $data['vehicle']->reviews->where('rating', 3)->count();
+        $data['belowAverageCount'] = $data['vehicle']->reviews->where('rating', 2)->count();
+        $data['poorCount'] = $data['vehicle']->reviews->where('rating', 1)->count();
 
-        $language = getWebConfig('language') ?? [];
-        $defaultLang = str_replace('_', '-', app()->getLocale());
-        return view('rental::admin.vehicle.details', compact('vehicle', 'language', 'defaultLang'));
+        $data['language'] = getWebConfig('language') ?? [];
+        $data['defaultLang'] = str_replace('_', '-', app()->getLocale());
+        return view('rental::admin.vehicle.details', $data);
     }
 
     /**
@@ -379,6 +393,26 @@ class VehicleController extends Controller
         }
 
         $vehicle->update(['status' => !$vehicle->status]);
+
+        Toastr::success(translate('messages.vehicle_status_updated_successfully'));
+        return back();
+    }
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @return RedirectResponse
+     */
+    public function reviewStatus(Request $request, $id): RedirectResponse
+    {
+        $vehicleReview = $this->vehicleReview->find($id);
+
+        if (!$vehicleReview) {
+            Toastr::error(translate('messages.vehicle_not_found'));
+            return back();
+        }
+
+        $vehicleReview->update(['status' => !$vehicleReview->status]);
 
         Toastr::success(translate('messages.vehicle_status_updated_successfully'));
         return back();
@@ -467,9 +501,9 @@ class VehicleController extends Controller
 
     /**
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     * @return BinaryFileResponse
      */
-    public function export(Request $request): \Symfony\Component\HttpFoundation\BinaryFileResponse
+    public function export(Request $request): BinaryFileResponse
     {
         $vehicles = $this->vehicle
             ->when($request->has('search'), function ($query) use ($request) {
@@ -498,6 +532,25 @@ class VehicleController extends Controller
             return Excel::download(new VehicleExport($data), 'Vehicles.csv');
         }
         return Excel::download(new VehicleExport($data), 'Vehicles.xlsx');
+    }
+
+    /**
+     * @param Request $request
+     * @return BinaryFileResponse
+     */
+    public function reviewExport(Request $request): BinaryFileResponse
+    {
+        $vehicles = $this->vehicleReview->where('vehicle_id', $request->vehicle_id)->latest()->get();
+
+        $data = [
+            'data' => $vehicles,
+            'search' => $request['search'] ?? null,
+        ];
+
+        if ($request['type'] == 'csv') {
+            return Excel::download(new VehicleReviewExport($data), 'Vehicle-reviews.csv');
+        }
+        return Excel::download(new VehicleReviewExport($data), 'Vehicle-reviews.xlsx');
     }
 
     /**

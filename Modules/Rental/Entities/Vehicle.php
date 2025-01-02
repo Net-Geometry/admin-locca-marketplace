@@ -89,6 +89,14 @@ class Vehicle extends Model
         return $this->hasMany(VehicleIdentity::class);
     }
 
+    /**
+     * @return HasMany
+     */
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(VehicleReview::class);
+    }
+
 
     /**
      * @return MorphMany

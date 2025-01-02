@@ -509,18 +509,14 @@
                                             </span></label>
                                         <div class="custom-group-btn border">
                                             <div class="flex-sm-grow-1">
-                                                <input id="min" type="number" name="discount_price"
+                                                <input id="discount_input" type="number" name="discount_price"
                                                        class="form-control h--45px border-0 pl-unset"
-                                                       placeholder="{{ translate('messages.Ex: 10') }} 20">
+                                                       placeholder="Ex: 10">
                                             </div>
                                             <div class="flex-shrink-0">
-                                                <select name="discount_type" id="" class="custom-select ltr border-0">
-                                                    <option value="percent" selected>
-                                                        %
-                                                    </option>
-                                                    <option value="fixed">
-                                                        $
-                                                    </option>
+                                                <select name="discount_type" id="discount_type" class="custom-select ltr border-0">
+                                                    <option value="percent" selected>%</option>
+                                                    <option value="fixed">$</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -614,26 +610,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
 
     <script>
-        // // Get all upload-file input elements
-        // document.querySelectorAll('.single_file_input').forEach(function(input) {
-        //     input.addEventListener('change', function(event) {
-        //         var file = event.target.files[0];
-        //         var card = event.target.closest('.upload-file');
-        //         var textbox = card.querySelector('.upload-file__textbox');
-        //         var imgElement = card.querySelector('.upload-file__img__img');
-
-        //         if (file) {
-        //             var reader = new FileReader();
-        //             reader.onload = function(e) {
-        //                 textbox.style.display = 'none';
-        //                 imgElement.src = e.target.result;
-        //                 imgElement.style.display = 'block';
-        //             };
-        //             reader.readAsDataURL(file);
-        //         }
-        //     });
-        // });
-
         // ---- single image upload starts
         $(document).ready(function () {
             // Handle file input change
@@ -932,80 +908,6 @@
     <script>
         "use strict";
 
-        // $(function() {
-        //     $("#multiImg").spartanMultiImagePicker({
-        //         fieldName: 'images[]',
-        //         maxCount: 5,
-        //         rowHeight: '120px',
-        //         groupClassName: 'col-6 spartan_item_wrapper size--md',
-        //         maxFileSize: '',
-        //         placeholderImage: {
-        //             image: '{{ asset('public/assets/admin/img/document-upload.png') }}',
-        //             width: '100%'
-        //         },
-        //         dropFileLabel: "Drop Here",
-        //         onAddRow: function(index, file) {
-
-        //         },
-        //         onRenderedPreview: function(index) {
-
-        //         },
-        //         onRemoveRow: function(index) {
-
-        //         },
-        //         onExtensionErr: function(index, file) {
-        //             toastr.error(
-        //                 '{{ translate('messages.please_only_input_png_or_jpg_type_file') }}', {
-        //                     CloseButton: true,
-        //                     ProgressBar: true
-        //                 });
-        //         },
-        //         onSizeErr: function(index, file) {
-        //             toastr.error('{{ translate('messages.file_size_too_big') }}', {
-        //                 CloseButton: true,
-        //                 ProgressBar: true
-        //             });
-        //         }
-        //     });
-        // });
-
-        // $(function() {
-        //     $("#multiDoc").spartanMultiImagePicker({
-        //         fieldName: 'documents[]',
-        //         maxCount: 5,
-        //         rowHeight: '120px',
-        //         groupClassName: 'col-6 spartan_item_wrapper size--md',
-        //         maxFileSize: '',
-        //         placeholderImage: {
-        //             image: '{{ asset('public/assets/admin/img/document-upload.png') }}',
-        //             width: '100%'
-        //         },
-        //         dropFileLabel: "Drop Here",
-        //         onAddRow: function(index, file) {
-
-        //         },
-        //         onRenderedPreview: function(index) {
-
-        //         },
-        //         onRemoveRow: function(index) {
-
-        //         },
-        //         onExtensionErr: function(index, file) {
-        //             toastr.error(
-        //                 '{{ translate('messages.please_only_input_png_or_jpg_type_file') }}', {
-        //                     CloseButton: true,
-        //                     ProgressBar: true
-        //                 });
-        //         },
-        //         onSizeErr: function(index, file) {
-        //             toastr.error('{{ translate('messages.file_size_too_big') }}', {
-        //                 CloseButton: true,
-        //                 ProgressBar: true
-        //             });
-        //         }
-        //     });
-        // });
-
         $(document).ready(function () {
             toggleButton();
 
@@ -1081,6 +983,26 @@
                 },
                 insertTag: function (data, tag) {
                     data.push(tag);
+                }
+            });
+        });
+
+        $(document).ready(function () {
+            $('#discount_input').on('input', function () {
+                let discountType = $('#discount_type').val();
+                let inputValue = parseFloat($(this).val());
+
+                if (discountType === 'percent' && inputValue > 100) {
+                    $(this).val(100);
+                }
+            });
+
+            $('#discount_type').on('change', function () {
+                let discountType = $(this).val();
+                let inputValue = parseFloat($('#discount_input').val());
+
+                if (discountType === 'percent' && inputValue > 100) {
+                    $('#discount_input').val(100);
                 }
             });
         });
