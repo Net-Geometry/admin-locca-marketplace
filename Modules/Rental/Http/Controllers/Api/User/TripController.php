@@ -130,7 +130,7 @@ class TripController extends Controller
             ], data_get($details_data, 'status_code'));
         } else {
             $price = data_get($details_data, 'price');
-            $discount_on_trip = data_get($details_data, 'discount_on_trip');
+            $discount_on_trip = data_get($details_data, 'discount');
             $quantity = data_get($details_data, 'quantity');
             $discount_on_trip_by = data_get($details_data, 'discount_on_trip_by');
             $details_data = data_get($details_data, 'details_data');
@@ -165,6 +165,9 @@ class TripController extends Controller
         if ($price < 0) {
             $price = 0;
         }
+
+        $price= $price+$tax_amount + $additional_charge;
+
         $user_info = [
             'contact_person_name' => $request->contact_person_name ? $request->contact_person_name : ($request->user?$request->user->f_name . ' ' . $request->user->l_name:''),
             'contact_person_number' => $request->contact_person_number ? $request->contact_person_number : ($request->user?$request->user->phone:''),
@@ -188,7 +191,7 @@ class TripController extends Controller
             'coupon_code' => $coupon?->code ?? null,
             'tax_amount' => $claculated_tax ?? 0,
             'tax_status' => $tax_status,
-            'trip_amount' => $price + $additional_charge ?? 0,
+            'trip_amount' => $price,
             'discount_on_trip_by' => $discount_on_trip_by ?? 'none',
             'additional_charge' => $additional_charge ?? 0,
             'distance' => $user_data->distance ?? 0,
@@ -282,7 +285,7 @@ class TripController extends Controller
         $trip->destination_location = $make_trip_data['destination_location'];
         $trip->pickup_location = $make_trip_data['pickup_location'];
         $trip->pending = now();
-        $trip->user_info = $make_trip_data['user_info'];;
+        $trip->user_info = $make_trip_data['user_info'];
         $trip->save();
         return $trip;
     }

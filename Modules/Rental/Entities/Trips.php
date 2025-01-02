@@ -65,6 +65,10 @@ class Trips extends Model
     {
         return $this->belongsTo(Store::class,'provider_id');
     }
+    public function trip_transaction()
+    {
+        return $this->belongsTo(TripTransaction::class,'trip_id');
+    }
 
     public function trip_details()
     {
