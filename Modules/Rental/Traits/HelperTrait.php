@@ -24,19 +24,14 @@ trait HelperTrait
 
 
     public static function create_transaction($trip, $received_by=false, $status = null){
-
-        $admin_subsidy = 0;
         $amount_admin = 0;
         $store_d_amount = 0;
         $admin_coupon_discount_subsidy =0;
-        $store_subsidy =0;
         $store_coupon_discount_subsidy =0;
         $discount_on_trip=0;
-
         $comission_on_store_amount=0;
         $ref_bonus_amount=0;
-        $subscription_mode = 0;
-        $commission_percentage = 0;
+
 
         $provider= $trip?->provider;
         $store_sub = $provider?->store_sub;
@@ -113,17 +108,17 @@ trait HelperTrait
                 'trip_id' =>$trip->id,
                 'trip_amount'=>$trip->trip_amount,
                 'store_amount'=>$store_amount,
-                'admin_commission'=>$comission_amount + $trip->additional_charge - $admin_subsidy - $admin_coupon_discount_subsidy - $ref_bonus_amount,
+                'admin_commission'=>$comission_amount + $trip->additional_charge - $admin_coupon_discount_subsidy - $ref_bonus_amount,
                 'tax'=>$trip->tax_amount,
                 'received_by'=> $received_by?$received_by:'admin',
                 'zone_id'=>$trip->zone_id,
                 'module_id'=>$trip->module_id,
-                'admin_expense'=>$admin_subsidy + $admin_coupon_discount_subsidy + $discount_on_trip + $amount_admin + $ref_bonus_amount,
-                'store_expense'=>$store_subsidy + $store_coupon_discount_subsidy + $store_d_amount,
+                'admin_expense'=> $admin_coupon_discount_subsidy + $discount_on_trip + $amount_admin + $ref_bonus_amount,
+                'store_expense'=>  $store_coupon_discount_subsidy + $store_d_amount,
                 'status'=> $status,
                 'created_at' => now(),
                 'updated_at' => now(),
-                'discount_amount_by_store' => $store_coupon_discount_subsidy + $store_d_amount + $store_subsidy,
+                'discount_amount_by_store' => $store_coupon_discount_subsidy + $store_d_amount ,
                 'additional_charge' => $trip->additional_charge,
                 'ref_bonus_amount' => $trip->ref_bonus_amount,
                  // for store business model
@@ -134,7 +129,7 @@ trait HelperTrait
                 ['admin_id' => Admin::where('role_id', 1)->first()->id]
             );
 
-            $adminWallet->total_commission_earning = $adminWallet->total_commission_earning + $comission_amount + $trip->additional_charge - $admin_subsidy- $admin_coupon_discount_subsidy -$discount_on_trip  - $ref_bonus_amount;
+            $adminWallet->total_commission_earning = $adminWallet->total_commission_earning + $comission_amount + $trip->additional_charge - $admin_coupon_discount_subsidy -$discount_on_trip  - $ref_bonus_amount;
 
             $vendorWallet = StoreWallet::firstOrNew(
                 ['vendor_id' => $provider->vendor->id]
@@ -160,7 +155,10 @@ trait HelperTrait
                     $store_over_flow =  true ;
                     $vendorWallet->collected_cash = $vendorWallet->collected_cash+($trip->trip_amount-$trip->partially_paid_amount);
                 }
-
+                else if($received_by==false)
+                {
+                    $adminWallet->manual_received = $adminWallet->manual_received+($trip->trip_amount-$trip->partially_paid_amount);
+                }
 
 
                 $adminWallet->save();

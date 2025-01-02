@@ -201,7 +201,7 @@ class BannerController extends Controller
         $banner->data = ($request->banner_type == 'store_wise') ? $request->store_id : (($request->banner_type == 'item_wise') ? $request->item_id : '');
         $banner->module_id = Config::get('module.current_module_id');
         $banner->default_link = $request->default_link;
-        $banner->created_by = 'vendor';
+        $banner->created_by = 'admin';
         $banner->save();
 
         return $banner;

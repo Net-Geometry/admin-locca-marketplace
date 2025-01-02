@@ -442,6 +442,7 @@ class VehicleController extends Controller
             $item['vehicle_name'] = null;
             $item['vehicle_image'] = null;
             $item['customer_name'] = null;
+            $item['customer_phone'] = null;
             if($item->vehicle)
             {
                 $item['vehicle_name'] = $item->vehicle->name;
@@ -452,6 +453,7 @@ class VehicleController extends Controller
             if($item->customer)
             {
                 $item['customer_name'] = $item->customer->f_name.' '.$item->customer->l_name;
+                $item['customer_phone'] = $item->customer->phone;
             }
 
             unset($item['vehicle']);

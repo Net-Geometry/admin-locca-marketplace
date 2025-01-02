@@ -19,6 +19,7 @@ class CreateTripDetailsTable extends Migration
             $table->foreignId('vehicle_id');
             $table->smallInteger('quantity')->default(1);
             $table->double('price',23, 8)->default(0);
+            $table->double('original_price',23, 8)->default(0);
             $table->double('discount_on_trip',23, 8)->default(0);
             $table->double('tax_amount',23, 8)->default(0);
             $table->enum('tax_status',['included','excluded'])->default('excluded');
@@ -33,6 +34,7 @@ class CreateTripDetailsTable extends Migration
             $table->boolean('scheduled')->default(0);
             $table->dateTime('schedule_at')->nullable();
             $table->dateTime('estimated_trip_end_time')->nullable();
+            $table->boolean('is_edited')->default(0);
             $table->timestamps();
         });
     }

@@ -52,7 +52,7 @@ class BannerController extends Controller
         $offset = $request['offset'];
         $providerId = $request->vendor->id;
         $moduleId = $request->vendor->stores[0]->module_id;
-        $banners =  $this->banner->where('data', $providerId)
+        $banners =  $this->banner->where('data', $providerId)->where('created_by', 'store')
             ->when($request->has('search'), function ($query) use ($request) {
                 $keys = explode(' ', $request['search']);
                 foreach ($keys as $key) {
