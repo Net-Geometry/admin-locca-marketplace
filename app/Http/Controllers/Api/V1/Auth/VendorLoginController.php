@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1\Auth;
 use App\Models\Zone;
 use App\Models\Admin;
 use App\Models\Store;
+use App\Models\Module;
 use App\Models\Vendor;
 use App\Models\Translation;
 use Illuminate\Support\Str;
@@ -148,6 +149,12 @@ class VendorLoginController extends Controller
                 return response()->json(['errors' => Helpers::error_processor($validator)], 403);
             }
         }
+        $module = Module::find($request['module_id']);
+        if ($module?->module_type == 'rental' && empty($request['pickup_zone_id'])){
+            $validator->getMessageBag()->add('pickup_zone_id', translate('messages.You_must_select_a_pickup_zone'));
+            return back()->withErrors($validator)
+                ->withInput();
+        }
 
         $data = json_decode($request->translations, true);
 
@@ -183,6 +190,7 @@ class VendorLoginController extends Controller
         $store->module_id = $request->module_id;
         $store->status = 0;
         $store->store_business_model = 'none';
+        $store->pickup_zone_id = json_encode($request['pickup_zone_id']) ?? [];
         $store->save();
         $store->module->increment('stores_count');
         if(config('module.'.$store->module->module_type)['always_open'])

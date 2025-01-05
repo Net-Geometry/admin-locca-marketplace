@@ -7,9 +7,7 @@ use App\Models\User;
 use App\Models\Zone;
 use App\Models\Store;
 use App\Library\Payer;
-use App\Models\Coupon;
 use App\Traits\Payment;
-
 use App\Library\Receiver;
 use Illuminate\Http\Request;
 use App\CentralLogics\Helpers;
@@ -29,9 +27,11 @@ use Illuminate\Support\Facades\Validator;
 use Modules\Rental\Entities\PartialPayment;
 use MatanYadaev\EloquentSpatial\Objects\Point;
 use Modules\Rental\Entities\RentalCartUserData;
+use Modules\Rental\Traits\TripLogicTrait;
 
 class TripController extends Controller
 {
+    use TripLogicTrait;
     public function __construct(
         private RentalCart $cart,
         private Trips $trips,
@@ -351,41 +351,7 @@ class TripController extends Controller
         return ['store'=> $store , 'pickup_zone'=> $pickup_zone ];
     }
 
-    private function  couponCheck($request)
-    {
 
-        $coupon = Coupon::active()->where(['code' => $request['coupon_code']])->first();
-        if (isset($coupon)) {
-
-
-            if ($request->is_guest) {
-                $staus = CouponLogic::is_valid_for_guest($coupon, $request['store_id']);
-            } else {
-                $staus = CouponLogic::is_valide($coupon, $request->user->id, $request['store_id']);
-            }
-
-            $message = match ($staus) {
-                407 => translate('messages.coupon_expire'),
-                408 => translate('messages.You_are_not_eligible_for_this_coupon'),
-                406 => translate('messages.coupon_usage_limit_over'),
-                404 => translate('messages.not_found'),
-                default => null,
-            };
-            if ($message != null) {
-                return ['code' => 'coupon', 'message' => $message, 'status_code' => $staus];
-            }
-            if ($coupon->coupon_type == 'free_delivery') {
-                return ['code' => 'coupon', 'message' => translate('messages.invalid_coupon'), 'status_code' => 403];
-            }
-
-            $coupon->increment('total_uses');
-            $coupon_created_by = $coupon->created_by;
-
-            return ['coupon' => $coupon, 'coupon_created_by' => $coupon_created_by];
-        } else {
-            return ['code' => 'coupon', 'message' => translate('messages.not_found'), 'status_code' => 404];
-        }
-    }
     private function tripDetails($request, $user_data, $carts, $schedule_at, $estimated_trip_end_time, $tax, $is_include, $provider)
     {
         $price = 0;

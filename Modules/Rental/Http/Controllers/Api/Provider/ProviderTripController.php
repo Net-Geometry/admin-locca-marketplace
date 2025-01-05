@@ -4,18 +4,17 @@ namespace Modules\Rental\Http\Controllers\Api\Provider;
 
 use Illuminate\Http\Request;
 use App\CentralLogics\Helpers;
-use App\Models\BusinessSetting;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Modules\Rental\Entities\Trips;
 use Modules\Rental\Entities\Vehicle;
-use Modules\Rental\Traits\HelperTrait;
+use Modules\Rental\Traits\TripLogicTrait;
 use Illuminate\Support\Facades\Validator;
 use Modules\Rental\Entities\TripVehicleDetails;
 
 class ProviderTripController extends Controller
 {
-    use HelperTrait;
+    use TripLogicTrait;
     public function __construct(private Trips $trips, private Helpers $helpers)
     {
         $this->trips = $trips;
@@ -283,10 +282,9 @@ class ProviderTripController extends Controller
             'estimatedTripEndTime' => $estimatedTripEndTime,
             'vehicleQuantities' => $vehicleQuantities,
             'modifiedPrices' => $modifiedPrices,
+            'taxPercentage' => $request->vendor->stores[0]->tax,
         ];
-
-    $trip=  $this->getUpdatedTrip($request,$trip,$data);
-        return response()->json($trip, 200);
+        return response()->json($this->getUpdatedTrip($request,$trip,$data), 200);
     }
 
 
