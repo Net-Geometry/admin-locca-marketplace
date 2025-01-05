@@ -96,6 +96,7 @@ Route::group(['middleware' => ['admin', 'current-module']], function () {
                 Route::get('export', [VehicleController::class, 'export'])->name('export');
                 Route::get('review-status/{id}', [VehicleController::class, 'reviewStatus'])->name('review.status');
                 Route::get('review-export', [VehicleController::class, 'reviewExport'])->name('review.export');
+                Route::get('review-list', [VehicleController::class, 'reviews'])->name('reviews');
 
                 Route::get('bulk-import', [VehicleController::class, 'bulkImportIndex'])->name('bulk_import');
                 Route::POST('bulk-import', [VehicleController::class, 'bulkImportData']);

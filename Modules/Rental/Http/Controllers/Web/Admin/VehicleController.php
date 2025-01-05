@@ -378,6 +378,30 @@ class VehicleController extends Controller
         return view('rental::admin.vehicle.details', $data);
     }
 
+    public function reviews(Request $request): Renderable
+    {
+        $vehicleReview = $this->vehicleReview
+            ->when($request->has('search'), function ($query) use ($request) {
+                $keys = explode(' ', $request['search']);
+                foreach ($keys as $key) {
+                    $query->where(function ($query) use ($key) {
+                        $query->orWhere('comment', 'LIKE', '%' . $key . '%')
+                            ->orWhere('reply', 'LIKE', '%' . $key . '%')
+                            ->orWhereHas('customer', function ($customerQuery) use ($key) {
+                                $customerQuery->where('f_name', 'LIKE', '%' . $key . '%')
+                                    ->orWhere('l_name', 'LIKE', '%' . $key . '%')
+                                    ->orWhere('phone', 'LIKE', '%' . $key . '%');
+                            })
+                            ->orWhereHas('vehicle', function ($vehicleQuery) use ($key) {
+                                $vehicleQuery->where('name', 'LIKE', '%' . $key . '%');
+                            });
+                    });
+                }
+            })
+            ->latest()->paginate(config('default_pagination'));
+        return view('rental::admin.vehicle.review-list', compact('vehicleReview'));
+    }
+
     /**
      * @param Request $request
      * @param $id
@@ -541,6 +565,28 @@ class VehicleController extends Controller
     public function reviewExport(Request $request): BinaryFileResponse
     {
         $vehicles = $this->vehicleReview->where('vehicle_id', $request->vehicle_id)->latest()->get();
+
+        if ($vehicles->isEmpty()){
+            $vehicles = $this->vehicleReview
+                ->when($request->has('search'), function ($query) use ($request) {
+                    $keys = explode(' ', $request['search']);
+                    foreach ($keys as $key) {
+                        $query->where(function ($query) use ($key) {
+                            $query->orWhere('comment', 'LIKE', '%' . $key . '%')
+                                ->orWhere('reply', 'LIKE', '%' . $key . '%')
+                                ->orWhereHas('customer', function ($customerQuery) use ($key) {
+                                    $customerQuery->where('f_name', 'LIKE', '%' . $key . '%')
+                                        ->orWhere('l_name', 'LIKE', '%' . $key . '%')
+                                        ->orWhere('phone', 'LIKE', '%' . $key . '%');
+                                })
+                                ->orWhereHas('vehicle', function ($vehicleQuery) use ($key) {
+                                    $vehicleQuery->where('name', 'LIKE', '%' . $key . '%');
+                                });
+                        });
+                    }
+                })
+                ->latest()->get();
+        }
 
         $data = [
             'data' => $vehicles,

@@ -222,7 +222,7 @@
                 <!-- End Notification -->
 
                     <li class="nav-item">
-                        <small class="nav-subtitle" title="{{ translate('messages.item_section') }}">{{ translate('messages.vehicle_management') }}</small>
+                        <small class="nav-subtitle" title="{{ translate('messages.vehicle_section') }}">{{ translate('messages.vehicle_management') }}</small>
                         <small class="tio-more-horizontal nav-subtitle-replacer"></small>
                     </li>
                     <!-- Category -->
@@ -268,8 +268,8 @@
                                 <span class="text-truncate">{{ translate('messages.list') }}</span>
                             </a>
                         </li>
-                        <li class="nav-item {{ Request::is('admin/item/reviews') ? 'active' : '' }}">
-                            <a class="nav-link " href="{{ route('admin.item.reviews') }}" title="{{ translate('messages.review_list') }}">
+                        <li class="nav-item {{ Request::is('admin/rental/provider/vehicle/review-list') ? 'active' : '' }}">
+                            <a class="nav-link " href="{{ route('admin.rental.provider.vehicle.reviews') }}" title="{{ translate('messages.review_list') }}">
                                 <span class="tio-circle nav-indicator-icon"></span>
                                 <span class="text-truncate">{{ translate('messages.review') }}</span>
                             </a>

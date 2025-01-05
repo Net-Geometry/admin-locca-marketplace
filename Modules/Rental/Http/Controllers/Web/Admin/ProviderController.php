@@ -19,6 +19,7 @@ use App\Models\SubscriptionPackage;
 use App\Models\TempProduct;
 use App\Models\UserInfo;
 use App\Models\Vendor;
+use App\Models\WithdrawRequest;
 use App\Models\Zone;
 use App\Traits\FileManagerTrait;
 use Brian2694\Toastr\Facades\Toastr;
@@ -41,6 +42,7 @@ use Illuminate\Validation\Rules\Password;
 use Maatwebsite\Excel\Facades\Excel;
 use MatanYadaev\EloquentSpatial\Objects\Point;
 use Modules\Rental\Entities\Trips;
+use Modules\Rental\Entities\TripTransaction;
 use Modules\Rental\Entities\Vehicle;
 use Modules\Rental\Entities\VehicleDriver;
 use Modules\Rental\Entities\VehicleReview;
@@ -74,6 +76,8 @@ class ProviderController extends Controller
     private DisbursementDetails $disbursementDetails;
     private Trips $trips;
     private VehicleReview $vehicleReview;
+    private TripTransaction $tripTransaction;
+    private WithdrawRequest $withdrawRequest;
 
     use FileManagerTrait;
 
@@ -95,8 +99,10 @@ class ProviderController extends Controller
      * @param Helpers $helpers
      * @param VehicleDriver $vehicleDriver
      * @param Vehicle $vehicle
+     * @param Trips $trips
+     * @param VehicleReview $vehicleReview
      */
-    public function __construct(BusinessSetting $businessSetting, StoreWallet $storeWallet, Item $item, DisbursementDetails $disbursementDetails, Conversation $conversation, UserInfo $userInfo, TempProduct $tempProduct, Zone $zone, Order $order, Vendor $vendor, Store $store, Admin $admin, StoreLogic $storeLogic, SubscriptionPackage $subscriptionPackage, Helpers $helpers, VehicleDriver $vehicleDriver, Vehicle $vehicle, Trips $trips,  VehicleReview $vehicleReview)
+    public function __construct(BusinessSetting $businessSetting, StoreWallet $storeWallet, Item $item, DisbursementDetails $disbursementDetails, Conversation $conversation, UserInfo $userInfo, TempProduct $tempProduct, Zone $zone, Order $order, Vendor $vendor, Store $store, Admin $admin, StoreLogic $storeLogic, SubscriptionPackage $subscriptionPackage, Helpers $helpers, VehicleDriver $vehicleDriver, Vehicle $vehicle, Trips $trips,  VehicleReview $vehicleReview,  TripTransaction $tripTransaction, WithdrawRequest $withdrawRequest)
     {
         $this->businessSetting = $businessSetting;
         $this->zone = $zone;
@@ -117,6 +123,8 @@ class ProviderController extends Controller
         $this->vehicle = $vehicle;
         $this->trips = $trips;
         $this->vehicleReview = $vehicleReview;
+        $this->tripTransaction = $tripTransaction;
+        $this->withdrawRequest = $withdrawRequest;
     }
 
     /**
@@ -163,9 +171,19 @@ class ProviderController extends Controller
             ->with('vendor','module')->type($type)
             ->latest()->paginate(config('default_pagination'));
 
+        $transaction = $this->tripTransaction->where('module_id', Config::get('module.current_module_id'))->get();
+        $totalTransaction = $transaction->count();
+        $comissionEarned = $transaction->whereNull('status')->sum('admin_commission');
+        $storeWithdraws = $this->withdrawRequest
+            ->wherehas('store', function($query){
+                $query->where('module_id', Config::get('module.current_module_id'));
+            })
+            ->where(['approved'=>1])
+            ->sum('amount');
+
         $zone = is_numeric($zone_id) ? $this->zone->findOrFail($zone_id) : null;
 
-        return view('rental::admin.provider.list', compact('stores', 'zone','type'));
+        return view('rental::admin.provider.list', compact('stores', 'zone', 'type', 'totalTransaction', 'comissionEarned', 'storeWithdraws'));
     }
 
     /**
@@ -214,6 +232,7 @@ class ProviderController extends Controller
                 });
             }
 
+
             $drivers = $query->latest()->paginate(config('default_pagination'));
             return view('rental::admin.provider.details.driver-list', compact('store', 'drivers', 'totalDrivers', 'activeDrivers', 'inactiveDrivers'));
         }
@@ -222,6 +241,7 @@ class ProviderController extends Controller
             $totalVehicles = $query->count();
             $activeVehicles = (clone $query)->ofStatus(1)->count();
             $inactiveVehicles = (clone $query)->ofStatus(0)->count();
+            $ongoingVehicles = $this->trips->where('provider_id', $store_id)->Ongoing()->count();
 
             if (isset($key)) {
                 $query->where(function ($q) use ($key) {
@@ -232,7 +252,7 @@ class ProviderController extends Controller
             }
 
             $vehicles = $query->latest()->paginate(config('default_pagination'));
-            return view('rental::admin.provider.details.vehicle-list', compact('store', 'vehicles', 'totalVehicles', 'activeVehicles', 'inactiveVehicles'));
+            return view('rental::admin.provider.details.vehicle-list', compact('store', 'vehicles', 'totalVehicles', 'activeVehicles', 'inactiveVehicles', 'ongoingVehicles'));
         }
         else if($tab == 'order')
         {
