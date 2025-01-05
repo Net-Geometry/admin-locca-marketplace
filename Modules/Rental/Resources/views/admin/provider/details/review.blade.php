@@ -123,23 +123,14 @@
                 </div>
                 <div class="resturant-review-right">
                     <ul class="list-unstyled list-unstyled-py-2 mb-0">
-                    @php($ratings = $store->rating)
-                    @php($five = $ratings[0])
-                    @php($four = $ratings[1])
-                    @php($three = $ratings[2])
-                    @php($two = $ratings[3])
-                    @php($one = $ratings[4])
-                    @php($total_rating = $one+$two+$three+$four+$five)
-                    @php($total_rating = $total_rating==0?1:$total_rating)
-                    <!-- Review Ratings -->
+                        <!-- Review Ratings -->
                         <li class="d-flex align-items-center font-size-sm">
-                            <span
-                                class="progress-name mr-3">{{translate('messages.excellent')}}</span>
+                            <span class="progress-name mr-3">{{translate('messages.excellent')}}</span>
                             <div class="progress flex-grow-1">
                                 <div class="progress-bar" role="progressbar"
-                                        style="width: {{($excellentCount/$totalRating)*100}}%;"
-                                        aria-valuenow="{{($excellentCount/$totalRating)*100}}"
-                                        aria-valuemin="0" aria-valuemax="100"></div>
+                                     style="width: {{ $totalRating > 0 ? ($excellentCount / $totalRating) * 100 : 0 }}%;"
+                                     aria-valuenow="{{ $totalRating > 0 ? ($excellentCount / $totalRating) * 100 : 0 }}"
+                                     aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
                             <span class="ml-3">{{$excellentCount}}</span>
                         </li>
@@ -150,9 +141,9 @@
                             <span class="progress-name mr-3">{{translate('messages.good')}}</span>
                             <div class="progress flex-grow-1">
                                 <div class="progress-bar" role="progressbar"
-                                        style="width: {{($goodCount/$totalRating)*100}}%;"
-                                        aria-valuenow="{{($goodCount/$totalRating)*100}}"
-                                        aria-valuemin="0" aria-valuemax="100"></div>
+                                     style="width: {{ $totalRating > 0 ? ($goodCount / $totalRating) * 100 : 0 }}%;"
+                                     aria-valuenow="{{ $totalRating > 0 ? ($goodCount / $totalRating) * 100 : 0 }}"
+                                     aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
                             <span class="ml-3">{{$goodCount}}</span>
                         </li>
@@ -163,9 +154,9 @@
                             <span class="progress-name mr-3">{{translate('messages.average')}}</span>
                             <div class="progress flex-grow-1">
                                 <div class="progress-bar" role="progressbar"
-                                        style="width: {{($averageCount/$totalRating)*100}}%;"
-                                        aria-valuenow="{{($averageCount/$totalRating)*100}}"
-                                        aria-valuemin="0" aria-valuemax="100"></div>
+                                     style="width: {{ $totalRating > 0 ? ($averageCount / $totalRating) * 100 : 0 }}%;"
+                                     aria-valuenow="{{ $totalRating > 0 ? ($averageCount / $totalRating) * 100 : 0 }}"
+                                     aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
                             <span class="ml-3">{{$averageCount}}</span>
                         </li>
@@ -176,9 +167,9 @@
                             <span class="progress-name mr-3">{{translate('messages.below_average')}}</span>
                             <div class="progress flex-grow-1">
                                 <div class="progress-bar" role="progressbar"
-                                        style="width: {{($belowAverageCount/$totalRating)*100}}%;"
-                                        aria-valuenow="{{($belowAverageCount/$totalRating)*100}}"
-                                        aria-valuemin="0" aria-valuemax="100"></div>
+                                     style="width: {{ $totalRating > 0 ? ($belowAverageCount / $totalRating) * 100 : 0 }}%;"
+                                     aria-valuenow="{{ $totalRating > 0 ? ($belowAverageCount / $totalRating) * 100 : 0 }}"
+                                     aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
                             <span class="ml-3">{{$belowAverageCount}}</span>
                         </li>
@@ -186,13 +177,12 @@
 
                         <!-- Review Ratings -->
                         <li class="d-flex align-items-center font-size-sm">
-
                             <span class="progress-name mr-3">{{translate('messages.poor')}}</span>
                             <div class="progress flex-grow-1">
                                 <div class="progress-bar" role="progressbar"
-                                        style="width: {{($poorCount/$totalRating)*100}}%;"
-                                        aria-valuenow="{{($poorCount/$totalRating)*100}}"
-                                        aria-valuemin="0" aria-valuemax="100"></div>
+                                     style="width: {{ $totalRating > 0 ? ($poorCount / $totalRating) * 100 : 0 }}%;"
+                                     aria-valuenow="{{ $totalRating > 0 ? ($poorCount / $totalRating) * 100 : 0 }}"
+                                     aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
                             <span class="ml-3">{{$poorCount}}</span>
                         </li>

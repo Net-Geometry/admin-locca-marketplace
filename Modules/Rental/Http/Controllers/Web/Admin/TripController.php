@@ -14,9 +14,13 @@ use Modules\Rental\Entities\TripVehicleDetails;
 use Modules\Rental\Entities\Vehicle;
 use Maatwebsite\Excel\Facades\Excel;
 use Modules\Rental\Exports\TripExport;
+use Modules\Rental\Traits\HelperTrait;
+use Illuminate\Support\Facades\DB;
 
 class TripController extends Controller
 {
+
+    use HelperTrait;
     private Trips $trips;
     private TripDetails $tripDetails;
     private TripVehicleDetails $tripVehicleDetails;
@@ -107,23 +111,45 @@ class TripController extends Controller
      * @param $status
      * @return RedirectResponse
      */
+
     public function status($id, $status): RedirectResponse
     {
-        $trip = $this->trips->findOrFail($id);
-        if (!$trip){
-            Toastr::success(translate('messages.trip_not_found'));
+        DB::beginTransaction();
+
+        try {
+            $trip = $this->trips->findOrFail($id);
+
+            if (!$trip) {
+                Toastr::success(translate('messages.trip_not_found'));
+                return back();
+            }
+
+            if ($trip->trip_status != 'pending' && $status == 'pending') {
+                $trip->vehicle_identity()->delete();
+            }
+
+            $trip->trip_status = $status;
+            $trip->save();
+
+            if ($status == 'completed' && $trip->payment_status == 'paid' && !$trip->trip_transaction) {
+                if ($this->create_transaction($trip, 'vendor') === false) {
+                    DB::rollBack();
+
+                    Toastr::error(translate('messages.Failed_to_create_Transaction'));
+                    return back();
+                }
+            }
+
+            DB::commit();
+
+            Toastr::success(translate('messages.trip_status_updated_successfully'));
+            return back();
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            Toastr::error(translate('messages.something worng'));
             return back();
         }
-
-        if ($trip->trip_status != 'pending' && $status == 'pending'){
-            $trip->vehicle_identity()->delete();
-        }
-
-        $trip->trip_status = $status;
-        $trip->save();
-
-        Toastr::success(translate('messages.trip_status_updated_successfully'));
-        return back();
     }
 
     /**
@@ -133,18 +159,40 @@ class TripController extends Controller
      */
     public function paymentStatus($id, $status): RedirectResponse
     {
-        $trip = $this->trips->findOrFail($id);
-        if (!$trip){
-            Toastr::success(translate('messages.trip_not_found'));
+        DB::beginTransaction();
+
+        try {
+            $trip = $this->trips->findOrFail($id);
+
+            if (!$trip) {
+                Toastr::success(translate('messages.trip_not_found'));
+                return back();
+            }
+
+            $trip->payment_status = $status;
+            $trip->save();
+
+            if ($trip->trip_status == 'completed' && $trip->payment_status == 'paid' && !$trip->trip_transaction) {
+                if ($this->create_transaction($trip, 'vendor') === false) {
+                    DB::rollBack();
+
+                    Toastr::error(translate('messages.Failed_to_create_Transaction'));
+                    return back();
+                }
+            }
+
+            DB::commit();
+
+            Toastr::success(translate('messages.trip_payment_status_updated_successfully'));
+            return back();
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            Toastr::error(translate('messages.something worng'));
             return back();
         }
-
-        $trip->payment_status = $status;
-        $trip->save();
-
-        Toastr::success(translate('messages.trip_payment_status_updated_successfully'));
-        return back();
     }
+
 
     /**
      * @param Request $request

@@ -17,7 +17,7 @@
         <!-- End Page Header -->
 
 
-        <!-- Resturent Card Wrapper -->
+        <!-- Provider Card Wrapper -->
         <div class="row g-3 mb-3">
             <div class="col-xl-3 col-sm-6">
                 <div class="resturant-card card--bg-1">
@@ -32,7 +32,9 @@
             </div>
             <div class="col-xl-3 col-sm-6">
                 <div class="resturant-card card--bg-2">
-                    @php($active_stores = \App\Models\Store::where(['status'=>1])->where('module_id', Config::get('module.current_module_id'))->count())
+                    @php($active_stores = \App\Models\Store::whereHas('vendor', function($query){
+                        return $query->where('status', 1);
+                    })->where(['status'=>1])->where('module_id', Config::get('module.current_module_id'))->count())
                     @php($active_stores = isset($active_stores) ? $active_stores : 0)
                     <h4 class="title">{{$active_stores}}</h4>
                     <span class="subtitle">{{translate('messages.active_providers')}}</span>
@@ -65,27 +67,21 @@
             <li class="text--info">
                 <i class="tio-document-text-outlined"></i>
                 <div>
-                    @php($total_transaction = \App\Models\OrderTransaction::where('module_id', Config::get('module.current_module_id'))->count())
-                    @php($total_transaction = isset($total_transaction) ? $total_transaction : 0)
-                    <span>{{translate('messages.total_transactions')}}</span> <strong>{{$total_transaction}}</strong>
+                    <span>{{translate('messages.total_transactions')}}</span> <strong>{{$totalTransaction}}</strong>
                 </div>
             </li>
             <li class="seperator"></li>
             <li class="text--success">
                 <i class="tio-checkmark-circle-outlined success--icon"></i>
                 <div>
-                    @php($comission_earned = \App\Models\AdminWallet::sum('total_commission_earning'))
-                    @php($comission_earned = isset($comission_earned) ? $comission_earned : 0)
-                    <span>{{translate('messages.commission_earned')}}</span> <strong>{{\App\CentralLogics\Helpers::format_currency($comission_earned)}}</strong>
+                    <span>{{translate('messages.commission_earned')}}</span> <strong>{{\App\CentralLogics\Helpers::format_currency($comissionEarned)}}</strong>
                 </div>
             </li>
             <li class="seperator"></li>
             <li class="text--danger">
                 <i class="tio-atm"></i>
                 <div>
-                    @php($store_withdraws = \App\Models\WithdrawRequest::where(['approved'=>1])->sum('amount'))
-                    @php($store_withdraws = isset($store_withdraws) ? $store_withdraws : 0)
-                    <span>{{translate('messages.total_provider_withdraws')}}</span> <strong>{{\App\CentralLogics\Helpers::format_currency($store_withdraws)}}</strong>
+                    <span>{{translate('messages.total_provider_withdraws')}}</span> <strong>{{\App\CentralLogics\Helpers::format_currency($storeWithdraws)}}</strong>
                 </div>
             </li>
         </ul>

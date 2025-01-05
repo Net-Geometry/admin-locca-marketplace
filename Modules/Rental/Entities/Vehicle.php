@@ -92,6 +92,19 @@ class Vehicle extends Model
     /**
      * @return HasMany
      */
+    public function trips(): HasMany
+    {
+        return $this->hasMany(Trips::class);
+    }
+
+    public function tripDetails(): HasMany
+    {
+        return $this->hasMany(TripDetails::class, 'vehicle_id');
+    }
+
+    /**
+     * @return HasMany
+     */
     public function reviews(): HasMany
     {
         return $this->hasMany(VehicleReview::class);

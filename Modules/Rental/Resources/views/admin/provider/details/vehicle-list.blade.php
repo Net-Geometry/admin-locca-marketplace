@@ -29,7 +29,7 @@
                             <span>{{ translate('messages.Ongoing') }}</span>
                         </h6>
                         <span class="card-title text--warning">
-                            11
+                            {{ $ongoingVehicles }}
                         </span>
                     </div>
                 </a>

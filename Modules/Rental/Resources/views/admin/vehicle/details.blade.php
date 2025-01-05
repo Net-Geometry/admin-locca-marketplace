@@ -149,7 +149,9 @@
                                             <li class="d-flex align-items-center font-size-sm">
                                                 <span class="progress-name mr-3">{{ translate('Excellent') }}</span>
                                                 <div class="progress flex-grow-1">
-                                                    <div class="progress-bar" role="progressbar" style="width: {{ $excellentCount }}%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                                    <div class="progress-bar" role="progressbar"
+                                                         style="width: {{ $totalRating > 0 ? ($excellentCount / $totalRating) * 100 : 0 }}%;"
+                                                         aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                                                 </div>
                                                 <span class="ml-3">{{ $excellentCount }}</span>
                                             </li>
@@ -159,7 +161,9 @@
                                             <li class="d-flex align-items-center font-size-sm">
                                                 <span class="progress-name mr-3">{{ translate('Good') }}</span>
                                                 <div class="progress flex-grow-1">
-                                                    <div class="progress-bar" role="progressbar" style="width: {{ $goodCount }}%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                                    <div class="progress-bar" role="progressbar"
+                                                         style="width: {{ $totalRating > 0 ? ($goodCount / $totalRating) * 100 : 0 }}%;"
+                                                         aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                                                 </div>
                                                 <span class="ml-3">{{ $goodCount }}</span>
                                             </li>
@@ -169,7 +173,9 @@
                                             <li class="d-flex align-items-center font-size-sm">
                                                 <span class="progress-name mr-3">Average</span>
                                                 <div class="progress flex-grow-1">
-                                                    <div class="progress-bar" role="progressbar" style="width: {{ $averageCount }}%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                                    <div class="progress-bar" role="progressbar"
+                                                         style="width: {{ $totalRating > 0 ? ($averageCount / $totalRating) * 100 : 0 }}%;"
+                                                         aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                                                 </div>
                                                 <span class="ml-3">{{ $averageCount }}</span>
                                             </li>
@@ -179,7 +185,9 @@
                                             <li class="d-flex align-items-center font-size-sm">
                                                 <span class="progress-name mr-3">Below average</span>
                                                 <div class="progress flex-grow-1">
-                                                    <div class="progress-bar" role="progressbar" style="width: {{ $belowAverageCount }}%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                                    <div class="progress-bar" role="progressbar"
+                                                         style="width: {{ $totalRating > 0 ? ($belowAverageCount / $totalRating) * 100 : 0 }}%;"
+                                                         aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                                                 </div>
                                                 <span class="ml-3">{{ $belowAverageCount }}</span>
                                             </li>
@@ -189,7 +197,9 @@
                                             <li class="d-flex align-items-center font-size-sm">
                                                 <span class="progress-name mr-3">Poor</span>
                                                 <div class="progress flex-grow-1">
-                                                    <div class="progress-bar" role="progressbar" style="width: {{ $poorCount }}%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                                    <div class="progress-bar" role="progressbar"
+                                                         style="width: {{ $totalRating > 0 ? ($poorCount / $totalRating) * 100 : 0 }}%;"
+                                                         aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                                                 </div>
                                                 <span class="ml-3">{{ $poorCount }}</span>
                                             </li>
@@ -235,7 +245,7 @@
             <div class="col-lg-3 mb-20 mb-lg-0">
                 <div class="card h-100">
                     <div class="card-body d-flex flex-column justify-content-center">
-                        <a class="resturant--information-single" href="#">
+                        <a class="resturant--information-single" href="{{ route('admin.rental.provider.details', $vehicle->provider_id) }}">
                             <img class="img--65 rounded mx-auto mb-3 onerror-image" data-onerror-image=""
                                  src="{{ $vehicle?->provider['logoFullUrl'] }}" alt="Image Description">
                             <div class="text-center text--title">
@@ -407,7 +417,7 @@
                 <div class="search--button-wrapper">
                     <h5 class="card-title text--title">
                         {{ translate('messages.Reviews') }}
-                        <span class="badge badge-soft-dark ml-2" id="itemCount">14</span>
+                        <span class="badge badge-soft-dark ml-2" id="itemCount">{{ $vehicleReview->total() }}</span>
                     </h5>
                     <!-- Unfold -->
                     <div class="hs-unfold mr-2">

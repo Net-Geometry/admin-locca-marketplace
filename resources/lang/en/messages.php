@@ -6740,4 +6740,7 @@ Smartly or Earn. ',
   'Customer_name' => 'Customer name',
   'Vehicle_name' => 'Vehicle name',
   'Comment' => 'Comment',
+  'vehicle_section' => 'Vehicle section',
+  'provider_reply' => 'Provider reply',
+  'trip_status_updated_successfully' => 'Trip status updated successfully',
 );

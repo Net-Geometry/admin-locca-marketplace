@@ -150,13 +150,13 @@
                                     </div>
                                 </td>
                                 <td>
-                                    123
+                                    {{ $driver->trips->count() }}
                                 </td>
                                 <td>
-                                    13
+                                    {{ count($driver->completedTrips) }}
                                 </td>
                                 <td>
-                                    110
+                                    {{ count($driver->canceledTrips) }}
                                 </td>
                                 <td>
                                     <label class="toggle-switch toggle-switch-sm" for="stocksCheckbox{{$driver->id}}">
