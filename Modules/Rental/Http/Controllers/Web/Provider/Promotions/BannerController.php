@@ -223,6 +223,7 @@ class BannerController extends Controller
                     }
                 });
             })->where('data', $providerId)
+            ->where('created_by', 'store')
             ->latest();
     }
 }

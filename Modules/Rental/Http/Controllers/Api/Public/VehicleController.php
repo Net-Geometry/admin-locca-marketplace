@@ -150,7 +150,7 @@ class VehicleController extends Controller
 
     public function getVehicleDetails(Vehicle $vehicle)
     {
-        $vehicle = $vehicle->load('brand:id,name,image', 'provider:id,name,logo,cover_photo,rating')->loadCount('vehicleIdentities');
+        $vehicle = $vehicle->load('brand:id,name,image', 'provider:id,name,logo,cover_photo,rating,address,delivery_time')->loadCount('vehicleIdentities as total_vehicles');
         $ratings = StoreLogic::calculate_store_rating($vehicle['provider']['rating']);
         $vehicle['provider']['avg_rating'] = $ratings['rating'];
         $vehicle['provider']['rating_count'] = $ratings['total'];

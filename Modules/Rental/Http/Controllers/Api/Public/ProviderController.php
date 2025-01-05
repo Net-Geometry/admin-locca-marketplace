@@ -44,7 +44,7 @@ class ProviderController extends Controller
         $limit = $request['limit'] ?? 25;
         $offset = $request['offset'] ?? 1;
         $key = explode(' ', $request['search']);
-        $provider->select(['id','name']);
+
 
         $reviews = $this->review->with(['customer', 'vehicle'])->where('provider_id', $provider->id)
             ->when(isset($key), function ($query) use ($key, $request) {
@@ -83,6 +83,15 @@ class ProviderController extends Controller
             unset($item['customer']);
             array_push($storage, $item);
         }
+
+        $ratings = StoreLogic::calculate_store_rating($provider['rating']);
+        $provider= [
+            'name' => $provider->name,
+            'ratings' => $provider->rating,
+            'avg_rating' => $ratings['rating'],
+            'rating_count' => $ratings['total'],
+        ];
+
 
         $data = [
             'total_size' => (int) $reviews->total(),

@@ -52,7 +52,7 @@ Route::group(['prefix' => 'rental', 'as' => 'rental.',  'middleware' =>  ['local
             Route::get('new-tag/{id}', [VehicleController::class, 'newTag']);
             Route::delete('delete/{id}', [VehicleController::class, 'destroy']);
             Route::get('reviews', [VehicleController::class, 'reviews']);
-            Route::get('reply-update', [VehicleController::class, 'updateReply']);
+            Route::put('reply-update', [VehicleController::class, 'updateReply']);
         });
 
         Route::group(['prefix' => 'banner', 'as' => 'vehicle.'], function () {
@@ -97,6 +97,7 @@ Route::group(['prefix' => 'rental', 'as' => 'rental.',  'middleware' =>  ['local
             Route::get('payment', [ProviderTripController::class, 'updateTripPaymentStatus']);
             Route::put('assign-vehicle', [ProviderTripController::class, 'assignVehicle']);
             Route::put('assign-driver', [ProviderTripController::class, 'assignDriver']);
+            Route::put('edit-trip', [ProviderTripController::class, 'editTrip']);
         });
 
         Route::get('category/list', [ProviderController::class, 'categoryList']);

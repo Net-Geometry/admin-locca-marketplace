@@ -266,11 +266,11 @@ class CartController extends Controller
             $unsupported_vehicle_ids=[];
             foreach($carts as $cart){
                     if ($request->rental_type ==  'hourly' && $cart?->vehicle->trip_hourly != 1) {
-                        $unsupported_vehicle_ids[]= $cart?->vehicle?->id;
+                        $unsupported_vehicle_ids[]= $cart?->id;
                     }
 
                     if ($request->rental_type ==  'distance_wise' && $cart?->vehicle->trip_distance != 1) {
-                        $unsupported_vehicle_ids[]= $cart?->vehicle?->id;
+                        $unsupported_vehicle_ids[]= $cart?->id;
                     }
 
                     if(count($unsupported_vehicle_ids) > 0 ){
@@ -297,9 +297,9 @@ class CartController extends Controller
         $user_data->destination_location = $request->destination_location ? json_encode($request->destination_location) : json_encode($user_data->destination_location);
         $user_data->pickup_time = $request->pickup_time ? \Carbon\Carbon::parse($request->pickup_time) : $user_data?->pickup_time ?? now();
         $user_data->rental_type = $request->rental_type ?? $user_data?->rental_type ?? 'hourly';
-        $user_data->estimated_hours = $user_data->rental_type == 'hourly' ? ($request->estimated_hours ??  $user_data?->estimated_hours) ?? 0 : 0;
-        $user_data->distance = $user_data->rental_type != 'hourly' ? ($request->distance ??  $user_data?->distance) ?? 0 : 0;
-        $user_data->destination_time = $user_data->rental_type != 'hourly' ? ($request->destination_time ??  $user_data?->destination_time) ?? 0 : 0;
+        $user_data->estimated_hours =$request->estimated_hours ??  $user_data?->estimated_hours ?? 0;
+        $user_data->distance = $request->distance ??  $user_data?->distance ?? 0;
+        $user_data->destination_time =$request->destination_time ??  $user_data?->destination_time?? 0;
         $user_data->is_guest = $is_guest;
         $user_data->total_cart_price = $total_cart_price;
         $user_data->save();

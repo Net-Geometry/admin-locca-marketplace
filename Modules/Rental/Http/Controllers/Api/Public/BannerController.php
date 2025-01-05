@@ -156,6 +156,6 @@ class BannerController extends Controller
                 ];
             }
         }
-        return $data;
+        return $banners;
     }
 }
