@@ -806,7 +806,9 @@ class VendorController extends Controller
 
     public function get_stores(Request $request){
         $zone_ids = isset($request->zone_ids)?(count($request->zone_ids)>0?$request->zone_ids:[]):0;
-        $data = Store::
+        $data = Store::whereHas('module', function($q)use($request){
+            $q->whereNot('module_type', 'rental');
+        })->
         // withOutGlobalScopes()
         // ->
         // join('zones', 'zones.id', '=', 'stores.zone_id')
@@ -830,6 +832,34 @@ class VendorController extends Controller
                 'text' => $store->name . ' (' . $store->zone?->name . ')',
             ];
         });
+        if(isset($request->all))
+        {
+            $data[]=(object)['id'=>'all', 'text'=>translate('messages.all')];
+        }
+        return response()->json($data);
+    }
+
+    public function get_providers(Request $request){
+        $zone_ids = isset($request->zone_ids)?(count($request->zone_ids)>0?$request->zone_ids:[]):0;
+        $data = Store::
+        when($zone_ids, function($query) use($zone_ids){
+            $query->whereIn('stores.zone_id', [$zone_ids]);
+        })
+            ->when($request->module_id, function($query)use($request){
+                $query->where('module_id', $request->module_id);
+            })
+            ->whereHas('module', function($q)use($request){
+                $q->where('module_type', 'rental');
+
+            })
+            ->where('stores.name', 'like', '%'.$request->q.'%')
+            ->limit(8)->get()
+            ->map(function ($store) {
+                return [
+                    'id' => $store->id,
+                    'text' => $store->name . ' (' . $store->zone?->name . ')',
+                ];
+            });
         if(isset($request->all))
         {
             $data[]=(object)['id'=>'all', 'text'=>translate('messages.all')];
