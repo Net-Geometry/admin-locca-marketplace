@@ -498,12 +498,27 @@ class TripController extends Controller
         $trip = $this->trips->where(['user_id' => $user_id, 'is_guest' => $is_guest, 'id' => $request->trip_id])
             ->with([
                 'trip_details:id,trip_id,quantity,vehicle_details',
+                'vehicle_identity.driver_data:id,first_name,last_name,email,phone,image',
                 'provider' => function ($query) {
                     $query->select('id', 'name', 'logo', 'cover_photo', 'rating', 'phone')
                         ->withCount('vehicle_identity as total_vehicles');
                 }
             ])
             ->first();
+
+            if(!$trip){
+                return response()->json(['errors' => translate('trip_data_not_found')], 404);
+            }
+
+            $trip->trip_details->each(function ($detail) {
+                $detail->license_plate_number = $detail->tripVehicleDetails
+                    ->pluck('vehicle_identity_data.license_plate_number')
+                    ->filter()
+                    ->values()
+                    ->toArray();
+                    unset($detail->tripVehicleDetails);
+                });
+
 
             $ratings = StoreLogic::calculate_store_rating($trip['provider']['rating']);
             $trip['provider']['avg_rating'] =$ratings['rating'];

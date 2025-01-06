@@ -7620,7 +7620,12 @@ class BusinessSettingsController extends Controller
         if (NotificationSetting::count() == 0) {
             Helpers::notificationDataSetup();
         }
-            Helpers::addNewAdminNotificationSetupDataSetup();
+        if(rental_module_published_status('rental') && $request?->module == 'rental'){
+            Helpers::getRentalAdminNotificationSetupDatasetup();
+        }
+
+        Helpers::addNewAdminNotificationSetupDataSetup();
+
         $data = NotificationSetting::where('module_type', $request?->module == 'rental' ? 'rental'  : 'all')
         ->when($request?->type == null || $request?->type == 'admin', function ($query) {
             $query->where('type', 'admin');
