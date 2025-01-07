@@ -4146,10 +4146,24 @@ class Helpers
 
         return $data;
     }
+    public static function getRentalNotificationStatusData($user_type,$key,$notification_type, $store_id= null){
+        $data= NotificationSetting::where(['type'=>$user_type,'module_type' => 'rental','key'=>$key ])->select($notification_type)->first();
+        $data= $data?->{$notification_type} === 'active' ? 1 : 0;
+
+        if($store_id && $user_type == 'store' && $data === 1){
+            $data= self::getRentalStoreNotificationStatusData(store_id:$store_id,key:$key ,notification_type: $notification_type);
+            $data= $data?->{$notification_type} === 'active' ? 1 : 0;
+        }
+
+        return $data;
+    }
+
         public static function getNotificationStatusDataAdmin($user_type,$key){
-            $data= NotificationSetting::where('type',$user_type)->where('key',$key)->select(['mail_status','push_notification_status','sms_status'])->first();
+            $data= NotificationSetting::where(['type'=>$user_type,'key'=>$key])->select(['mail_status','push_notification_status','sms_status'])->first();
             return $data ?? null ;
         }
+
+
 
     public static function notificationDataSetup(){
 
@@ -4162,18 +4176,36 @@ class Helpers
         $data = StoreNotificationSetting::upsert($data,['key','store_id'],['title','mail_status','sms_status','push_notification_status','sub_title']);
         return true;
     }
+    public static function storeRentalNotificationDataSetup($id){
+        $data=self::getRentalStoreNotificationSetupData($id);
+        $data = StoreNotificationSetting::upsert($data,['key','store_id','module_type'],['title','mail_status','sms_status','push_notification_status','sub_title']);
+        return true;
+    }
     public static function updateAdminNotificationSetupDataSetup(){
         self::updateAdminNotificationSetupData();
-    return true;
+        return true;
     }
     public static function addNewAdminNotificationSetupDataSetup(){
         self::addNewAdminNotificationSetupData();
-    return true;
+        return true;
+    }
+    public static function getRentalAdminNotificationSetupDatasetup(){
+        self::getRentalAdminNotificationSetupData();
+        return true;
     }
     public static function getStoreNotificationStatusData($store_id,$key,$notification_type){
         $data= StoreNotificationSetting::where('store_id',$store_id)->where('key',$key)->select($notification_type)->first();
         if(!$data){
             self::storeNotificationDataSetup($store_id);
+            $data= StoreNotificationSetting::where('store_id',$store_id)->where('key',$key)->select($notification_type)->first();
+        }
+        return $data ?? null ;
+    }
+
+    public static function getRentalStoreNotificationStatusData($store_id,$key,$notification_type){
+        $data= StoreNotificationSetting::where('store_id',$store_id)->where('key',$key)->select($notification_type)->first();
+        if(!$data){
+            self::storeRentalNotificationDataSetup($store_id);
             $data= StoreNotificationSetting::where('store_id',$store_id)->where('key',$key)->select($notification_type)->first();
         }
         return $data ?? null ;

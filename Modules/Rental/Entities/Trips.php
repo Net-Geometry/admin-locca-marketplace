@@ -3,12 +3,13 @@
 namespace Modules\Rental\Entities;
 
 use Carbon\Carbon;
-use App\Models\Store;
 use App\Models\User;
+use App\Models\Guest;
+use App\Models\Store;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Trips extends Model
 {
@@ -79,7 +80,10 @@ class Trips extends Model
     {
         return $this->hasMany(TripVehicleDetails::class,'trip_id');
     }
-
+    public function guest()
+    {
+        return $this->belongsTo(Guest::class, 'user_id','id');
+    }
     /**
      * @return BelongsTo
      */
