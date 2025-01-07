@@ -305,11 +305,13 @@ trait TripLogicTrait
         return true;
     }
 
-    public static function getUpdatedTrip($request, Trips $trip, array $data): Trips|array
+    public static function getUpdatedTrip($request, Trips $trip, array $data, $isUpdated=true): Trips|array
     {
         $totalPrice = 0;
         $quantity = 0;
         $discountOnTrip = 0;
+        $providerTax = $request->vendor ? $request?->vendor?->stores[0]->tax : $trip?->provider?->tax;
+        $provider = $request->vendor ? $request?->vendor?->stores[0] : $trip?->provider;
 
         foreach ($trip->trip_details as $tripDetail) {
             if (!$tripDetail->vehicle) {
@@ -324,20 +326,26 @@ trait TripLogicTrait
                 $data['modifiedPrices'],
                 $data['estimatedHours'],
                 $data['distance'],
-                $trip->rental_type,
-                $request->vendor->stores[0]->tax
+                $trip->trip_type,
+                $providerTax
             );
 
-            $totalPrice += $tripDetailData['price'] * $tripDetailData['quantity'];
-            $discountOnTrip += $tripDetailData['discount'] * $tripDetailData['quantity'];
+            if (data_get($data['modifiedPrices'],$tripDetail->vehicle_id)){
+                $totalPrice += $tripDetailData['price'];
+                $discountOnTrip += $tripDetailData['discount'];
+            }else{
+                $totalPrice += $tripDetailData['price'] * $tripDetailData['quantity'];
+                $discountOnTrip += $tripDetailData['discount'] * $tripDetailData['quantity'];
+            }
             $quantity += $tripDetailData['quantity'];
 
-            self::updateTripDetail($tripDetail, $tripDetailData, $data);
+            if ($isUpdated) {
+                self::updateTripDetail($tripDetail, $tripDetailData, $data);
+            }
         }
 
-
         $providerDiscount = self::applyProviderDiscount(
-            $request->vendor->stores[0],
+            $provider,
             $trip,
             $totalPrice,
             $data['modifiedPrices']
@@ -347,22 +355,25 @@ trait TripLogicTrait
             $trip,
             $totalPrice,
             $providerDiscount['discount'] ?? $discountOnTrip,
-            $request->vendor->stores[0]->tax
+            $providerTax
         );
 
-        self::updateCashback($trip, $finalPricing['tripAmount']);
+        if ($isUpdated) {
+            self::updateCashback($trip, $finalPricing['tripAmount']);
 
+            self::updateMainTrip(
+                $trip,
+                $data,
+                $finalPricing,
+                $quantity,
+                $providerDiscount['isAdminDiscount'] ?? false,
+                count($data['modifiedPrices']) > 0
+            );
+            return $trip;
+        }else{
+            return $finalPricing;
+        }
 
-        self::updateMainTrip(
-            $trip,
-            $data,
-            $finalPricing,
-            $quantity,
-            $providerDiscount['isAdminDiscount'] ?? false,
-            count($data['modifiedPrices']) > 0
-        );
-
-        return $trip;
     }
 
     public static function calculateTripDetailPricing($tripDetail, $vehicleQuantities, $modifiedPrices, $estimatedHours, $distance, $rentalType, $taxPercentage): array
@@ -408,6 +419,7 @@ trait TripLogicTrait
         $taxAmount = self::taxIncluded() ? 0 : $calculatedTax;
 
         return [
+            'subTotal' => $totalPrice,
             'tripAmount' => max(0, $finalPrice + $taxAmount + self::getAdditionalCharge()),
             'discount' => $discount,
             'couponDiscount' => $couponDiscount,
@@ -466,7 +478,7 @@ trait TripLogicTrait
 
         return $discount ?? 0;
     }
-    public  static function  couponCheck($request)
+    public  static function couponCheck($request)
     {
 
         $coupon = Coupon::active()->where(['code' => $request['coupon_code']])->first();

@@ -108,7 +108,7 @@ Route::group(['middleware' => ['admin', 'current-module']], function () {
         Route::group(['prefix' => 'trip', 'as' => 'trip.'], function () {
             Route::get('/', [TripController::class,'list'])->name('list');
             Route::get('details/{id}', [TripController::class,'details'])->name('details');
-            Route::post('edit/{banner}', [TripController::class,'update'])->name('update');
+            Route::post('details/{id}', [TripController::class,'update']);
             Route::get('status/{id}/{status}', [TripController::class,'status'])->name('status');
             Route::get('payment/status/{id}/{status}', [TripController::class,'paymentStatus'])->name('payment.status');
             Route::post('assign/vehicle', [TripController::class,'assignVehicle'])->name('assign.vehicle');

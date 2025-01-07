@@ -6743,4 +6743,5 @@ Smartly or Earn. ',
   'vehicle_section' => 'Vehicle section',
   'provider_reply' => 'Provider reply',
   'trip_status_updated_successfully' => 'Trip status updated successfully',
+  'updated successfully' => 'Updated successfully',
 );

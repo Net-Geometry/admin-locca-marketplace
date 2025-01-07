@@ -148,6 +148,10 @@
                                 </tr>
                                 </thead>
                                 <tbody>
+
+                                @php
+                                    $subtotal = 0;
+                                @endphp
                                 @foreach($trip->trip_details as $detail)
                                     <tr>
                                         <td>
@@ -256,6 +260,9 @@
                                             </div>
                                         </td>
                                     </tr>
+                                    @php
+                                        $subtotal += $detail->price * $detail->quantity;
+                                    @endphp
                                 @endforeach
                                 <!-- End Media -->
                                 </tbody>
@@ -269,16 +276,21 @@
                                 <dl class="row text-right text-title">
                                     <dt class="col-6 font-regular">{{translate('Trip Fare')}}</dt>
                                     <dd class="col-6">
-                                        {{ \App\CentralLogics\Helpers::format_currency($trip->trip_details->sum('price') * $trip->trip_details->sum('quantity')) }}</dd>
+                                        {{ \App\CentralLogics\Helpers::format_currency($subtotal) }}</dd>
 
                                     <dt class="col-6">Subtotal</dt>
                                     <dd class="col-6 font-semibold">
-                                        {{ \App\CentralLogics\Helpers::format_currency($trip->trip_details->sum('price') * $trip->trip_details->sum('quantity')) }}
+                                        {{ \App\CentralLogics\Helpers::format_currency($subtotal) }}
                                     </dd>
 
                                     <dt class="col-6 font-regular">{{translate('Coupon discount')}}</dt>
                                     <dd class="col-6">
                                         -{{ \App\CentralLogics\Helpers::format_currency($trip->coupon_discount_amount)}}
+                                    </dd>
+
+                                    <dt class="col-6 font-regular">{{translate('discount')}}</dt>
+                                    <dd class="col-6">
+                                        -{{ \App\CentralLogics\Helpers::format_currency($trip->discount_on_trip)}}
                                     </dd>
 
                                     <dt class="col-6 font-regular text-uppercase">{{translate('Vat/tax')}}</dt>
@@ -737,12 +749,14 @@
                     <button type="button" class="close p-0 m-0" data-dismiss="modal" aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
                 </div>
-                <form action="">
+                <form action="" method="post" id="updateForm">
+                    @csrf
                     <input type="hidden" id="pickup-lat" name="pickup_lat">
                     <input type="hidden" id="pickup-lng" name="pickup_lng">
                     <input type="hidden" id="destination-lat" name="destination_lat">
                     <input type="hidden" id="destination-lng" name="destination_lng">
                     <input type="hidden" id="distance-input" name="distance">
+                    <input type="hidden" name="trip_id" value="{{ $trip->id }}">
 
 
                     <div class="modal-body px-4 py-0">
@@ -751,7 +765,7 @@
                                 <div class="form-group text-title">
                                     <label class="input-label font-semibold" for="">{{translate('Pickup Location')}}</label>
                                     <div class="position-relative w-100 d-flex align-items-center">
-                                        <input type="text" name="" id="pickup-input" class="form-control pr-2"
+                                        <input type="text" name="pickup_location" id="pickup-input" class="form-control pr-2"
                                                placeholder="Enter your pickup location"
                                                value="Home: Road 9/a, house - 666, Dhaka">
                                         <div class="input-icon fs-20 opacity-60">
@@ -764,7 +778,7 @@
                                 <div class="form-group text-title">
                                     <label class="input-label font-semibold" for="">{{translate('Destination')}}</label>
                                     <div class="position-relative w-100 d-flex align-items-center">
-                                        <input type="text" name="" id="destination-input" class="form-control pr-2"
+                                        <input type="text" name="destination_location" id="destination-input" class="form-control pr-2"
                                                placeholder="Enter your destination location"
                                                value="50 lake circus, kolabagan, Dhanmondi">
                                         <div class="input-icon fs-20 opacity-60">
@@ -807,6 +821,9 @@
                                         </tr>
                                         </thead>
                                         <tbody>
+                                        @php
+                                        $subtotal = 0;
+                                        @endphp
                                         @foreach($trip->trip_details as $editDetail)
                                         <tr>
                                             <td>
@@ -841,19 +858,33 @@
                                                 </div>
                                             </td>
                                             <td>
-                                                <input type="number" class="form-control fs-14 text--title w--60px quantity-input"
-                                                       data-id="{{ $editDetail->vehicle_id }}"
+                                                <input type="number" name="quantity" class="form-control fs-14 text--title w--60px quantity-input"
+                                                       data-id="{{ $editDetail->id }}"
+                                                       data-vehicle_id="{{ $editDetail->vehicle_id }}"
                                                        value="{{ $editDetail->quantity }}" placeholder="EX:5">
                                             </td>
                                             <td class="text-right">
-                                                <div class="d-flex justify-content-end">
-                                                    <input type="text"
+                                                <div class="">
+                                                    <!-- Disabled input to show the old value -->
+                                                    <input type="text" class="form-control w--120px text-right fs-14 text--title fare-old-value"
+                                                           value="{{ \App\CentralLogics\Helpers::format_currency($editDetail->price * $editDetail->quantity) }}"
+                                                           readonly disabled>
+                                                    <!-- Main fare-total input -->
+                                                    <input type="text" name="price"
                                                            data-price="{{ $editDetail->price }}"
                                                            class="form-control w--120px text-right fs-14 text--title fare-total"
-                                                           value="{{ \App\CentralLogics\Helpers::format_currency($editDetail->price * $editDetail->quantity) }}" placeholder="fare">
+                                                           data-id="{{ $editDetail->id }}"
+                                                           data-vehicle_id="{{ $editDetail->vehicle_id }}"
+                                                           data-old-value="{{ $editDetail->price }}"
+                                                           data-quantity="{{ $editDetail->quantity }}"
+                                                           value="{{ \App\CentralLogics\Helpers::format_currency($editDetail->price * $editDetail->quantity) }}"
+                                                           placeholder="fare">
                                                 </div>
                                             </td>
                                         </tr>
+                                            @php
+                                            $subtotal += $editDetail->price * $editDetail->quantity;
+                                            @endphp
                                         @endforeach
                                         <!-- End Media -->
                                         </tbody>
@@ -866,18 +897,23 @@
                                     <div class="col-md-9 col-lg-8">
                                         <dl class="row text-right text-title">
                                             <dt class="col-6 font-regular">{{translate('Trip Fare')}}</dt>
-                                            <dd class="col-6">
-                                                {{ \App\CentralLogics\Helpers::format_currency($trip->trip_details->sum('price') * $trip->trip_details->sum('quantity')) }}
+                                            <dd class="col-6 total_fare">
+                                                {{ \App\CentralLogics\Helpers::format_currency($subtotal) }}
                                             </dd>
 
                                             <dt class="col-6">{{translate('Subtotal')}}</dt>
-                                            <dd class="col-6 font-semibold">
-                                                {{ \App\CentralLogics\Helpers::format_currency($trip->trip_details->sum('price') * $trip->trip_details->sum('quantity')) }}
+                                            <dd class="col-6 font-semibold subtotal">
+                                                {{ \App\CentralLogics\Helpers::format_currency($subtotal) }}
                                             </dd>
 
                                             <dt class="col-6 font-regular">{{translate('Coupon discount')}}</dt>
                                             <dd class="col-6">
                                                 -{{ \App\CentralLogics\Helpers::format_currency($trip->coupon_discount_amount)}}
+                                            </dd>
+
+                                            <dt class="col-6 font-regular">{{translate('discount')}}</dt>
+                                            <dd class="col-6">
+                                                -{{ \App\CentralLogics\Helpers::format_currency($trip->discount_on_trip)}}
                                             </dd>
 
                                             <dt class="col-6 font-regular text-uppercase">{{translate('Vat/tax')}}</dt>
@@ -886,7 +922,7 @@
                                             </dd>
 
                                             <dt class="col-6 font-bold">{{translate('Total')}}</dt>
-                                            <dd class="col-6 font-bold">{{ \App\CentralLogics\Helpers::format_currency($trip->trip_amount)}}</dd>
+                                            <dd class="col-6 font-bold grand-total">{{ \App\CentralLogics\Helpers::format_currency($trip->trip_amount)}}</dd>
                                         </dl>
                                         <!-- End Row -->
                                     </div>
@@ -1434,7 +1470,6 @@
                     if (status === google.maps.DistanceMatrixStatus.OK) {
                         const distance = response.rows[0].elements[0].distance.text;
                         $('#distance-input').val(distance);
-                        console.log(distance)
                     } else {
                         alert('Error calculating distance: ' + status);
                     }
@@ -1454,26 +1489,32 @@
             }
         });
     </script>
-
+{{--edit--}}
     <script>
         $(document).on('input', '.quantity-input', function () {
             let quantity = $(this).val();
             let row = $(this).closest('tr');
-            let id = $(this).data('vehicle-id');
+            let id = $(this).data('id');
+            let vehicleId = $(this).data('vehicle_id');
+            let distance = $('#distance-input').val();
 
             $.ajax({
                 url: "{{ route('admin.rental.trip.get-calculation') }}",
                 type: 'get',
                 data: {
                     id: id,
+                    distance: distance,
+                    vehicle_id: vehicleId,
                     quantity: quantity,
                     _token: "{{ csrf_token() }}"
                 },
                 success: function(response) {
-                    let totalFare = (response.updatedPrice * quantity).toFixed(2);
-                    row.find('.fare-total').val(formatCurrency(totalFare));
+                    let totalFare = response.calculationSingleData;
+                    let formattedFare = (totalFare * quantity).toFixed(2);
+                    row.find('.fare-total').val(formatCurrency(formattedFare));
+                    row.find('.fare-old-value').val(formatCurrency(formattedFare));
 
-                    updateOverallTotal();
+                    updateOverallTotal(response);
                 },
                 error: function(xhr, status, error) {
                     console.log('Error:', error);
@@ -1481,8 +1522,47 @@
             });
         });
 
-        function updateOverallTotal() {
+        $(document).on('input', '.fare-total', function () {
+            let currentFare = $(this).val();
+            let quantity = $('.quantity-input').val();
+            let row = $(this).closest('tr');
+            let oldValue = $(this).data('old-value');
+            let oldQuantity = $(this).data('quantity');
+
+            let id = $(this).data('id');
+            let vehicleId = $(this).data('vehicle_id');
+            let distance = $('#distance-input').val();
+
+            alert(currentFare)
+            $.ajax({
+                url: "{{ route('admin.rental.trip.get-calculation') }}",
+                type: 'get',
+                data: {
+                    id: id,
+                    distance: distance,
+                    quantity: quantity,
+                    vehicle_id: vehicleId,
+                    modified_prices: currentFare,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(response) {
+
+                    let totalFare = response.calculationSingleData;
+                    let newQuantity = response.quantity;
+                    let formattedFare = (oldValue * oldQuantity).toFixed(2);
+                    let formattedTotalFare = (response.calculationSingleData).toFixed(2);
+                    row.find('.fare-total').val(formatCurrency(formattedTotalFare));
+                    updateOverallTotal(response);
+                },
+                error: function(xhr, status, error) {
+                    console.log('Error:', error);
+                }
+            });
+        });
+
+        function updateOverallTotal(response) {
             let overallTotal = 0;
+
             $('.fare-total').each(function () {
                 let fare = parseFloat($(this).val().replace(/[^0-9.-]+/g, ""));
                 if (!isNaN(fare)) {
@@ -1493,15 +1573,57 @@
             let discount = parseFloat($('#coupon-discount').data('value')) || 0;
             let tax = parseFloat($('#vat-tax').data('value')) || 0;
 
-            let subtotal = overallTotal.toFixed(2);
-            let grandTotal = (overallTotal - discount + tax).toFixed(2);
+            let subtotal = response.subTotal;
+            let grandTotal = response.grandTotal;
 
+            $('.total_fare').text(formatCurrency(subtotal));
             $('.subtotal').text(formatCurrency(subtotal));
             $('.grand-total').text(formatCurrency(grandTotal));
         }
 
         function formatCurrency(value) {
-            return "{{ \App\CentralLogics\Helpers::currency_symbol()}}" + parseFloat(value).toFixed(2);
+            return "{{ \App\CentralLogics\Helpers::currency_symbol() }}" + value;
         }
+    </script>
+{{--//update--}}
+    <script>
+        $(document).ready(function () {
+            $('#updateForm').on('submit', function (e) {
+                e.preventDefault();
+
+                const $form = $(this);
+                const $inputs = $form.find('.quantity-input');
+                const $prices = $form.find('.fare-total');
+
+                $inputs.each(function () {
+                    const $input = $(this);
+                    const vehicleId = $input.data('vehicle_id');
+                    const value = $input.val();
+
+                    const hiddenInput = $('<input>')
+                        .attr('type', 'hidden')
+                        .attr('name', `update_quantity[${vehicleId}]`)
+                        .val(value);
+
+                    $form.append(hiddenInput);
+                });
+
+                $prices.each(function () {
+                    const $price = $(this);
+                    const vehicleId = $price.data('vehicle_id');
+                    const value = $price.val();
+
+                    const hiddenInput = $('<input>')
+                        .attr('type', 'hidden')
+                        .attr('name', `update_price[${vehicleId}]`)
+                        .val(value);
+
+                    $form.append(hiddenInput);
+                });
+
+                this.submit();
+            });
+        });
+
     </script>
 @endpush
