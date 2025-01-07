@@ -283,4 +283,27 @@ class CategoryController extends Controller
     {
         return ($locale == $defaultLanguage && !$name) || ($locale != 'default' && $name);
     }
+
+    public function getCategories(Request $request)
+    {
+        $key = explode(' ', $request['q']);
+        $cat = $this->category->when(isset($request->module_id), function ($query) use ($request) {
+            $query->where('module_id', $request->module_id);
+        })
+
+            ->when(isset($key), function ($q) use ($key) {
+                foreach ($key as $value) {
+                    $q->where('name', 'like', "%{$value}%");
+                }
+            })
+            ->get()
+            ->map(function ($category) {
+                return [
+                    'id' => $category->id,
+                    'text' => $category->name,
+                ];
+            });
+
+        return response()->json($cat);
+    }
 }

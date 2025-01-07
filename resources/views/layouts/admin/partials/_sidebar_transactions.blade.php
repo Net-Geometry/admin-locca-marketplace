@@ -192,7 +192,7 @@
                             </a>
                         </li>
 
-                        <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/transactions/rental/report/item-wise-report') ? 'active' : '' }}">
+                        <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/transactions/rental/report/vehicle-report') ? 'active' : '' }}">
                             <a class="nav-link " href="{{ route('admin.transactions.rental.report.vehicle-wise-report') }}" title="{{ translate('messages.vehicle_report') }}">
                                 <span class="tio-chart-bar-1 nav-icon"></span>
                                 <span class="text-truncate">{{ translate('messages.vehicle_report') }}</span>
@@ -200,26 +200,26 @@
                         </li>
 
                         <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/transactions/report/store*') ? 'active' : '' }}">
-                            <a class="nav-link " href="{{ route('admin.transactions.report.store-summary-report') }}" title="{{ translate('messages.store_wise_report') }}">
+                            <a class="nav-link " href="{{ route('admin.transactions.report.store-summary-report') }}" title="{{ translate('messages.provider_wise_report') }}">
                                 <span class="tio-home nav-icon"></span>
-                                <span class="text-truncate">{{ translate('messages.store_wise_report') }}</span>
+                                <span class="text-truncate">{{ translate('messages.provider_wise_report') }}</span>
                             </a>
                         </li>
 
-                        <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/transactions/report/expense-report') ? 'active' : '' }}">
-                            <a class="nav-link " href="{{ route('admin.transactions.report.expense-report') }}" title="{{ translate('messages.expense_report') }}">
-                                <span class="tio-money nav-icon"></span>
-                                <span class="text-truncate">{{ translate('messages.expense_report') }}</span>
-                            </a>
-                        </li>
+{{--                        <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/transactions/report/expense-report') ? 'active' : '' }}">--}}
+{{--                            <a class="nav-link " href="{{ route('admin.transactions.report.expense-report') }}" title="{{ translate('messages.expense_report') }}">--}}
+{{--                                <span class="tio-money nav-icon"></span>--}}
+{{--                                <span class="text-truncate">{{ translate('messages.expense_report') }}</span>--}}
+{{--                            </a>--}}
+{{--                        </li>--}}
 
-                        <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/transactions/report/disbursement-report') ? 'active' : '' }}">
-                            <a class="nav-link " href="{{ route('admin.transactions.report.disbursement_report') }}"
-                               title="{{ translate('messages.disbursement_report') }}">
-                                <span class="tio-saving nav-icon"></span>
-                                <span class="text-truncate">{{ translate('messages.disbursement_report') }}</span>
-                            </a>
-                        </li>
+{{--                        <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/transactions/report/disbursement-report') ? 'active' : '' }}">--}}
+{{--                            <a class="nav-link " href="{{ route('admin.transactions.report.disbursement_report') }}"--}}
+{{--                               title="{{ translate('messages.disbursement_report') }}">--}}
+{{--                                <span class="tio-saving nav-icon"></span>--}}
+{{--                                <span class="text-truncate">{{ translate('messages.disbursement_report') }}</span>--}}
+{{--                            </a>--}}
+{{--                        </li>--}}
 
                         {{-- <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/transactions/report/low-stock-report') ? 'active' : '' }}">
                             <a class="nav-link " href="{{ route('admin.transactions.report.low-stock-report') }}" title="{{ translate('messages.Stock_Report') }}">
@@ -229,10 +229,10 @@
                         </li> --}}
 
 
-                        <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/transactions/report/order-report') ? 'active' : '' }}">
-                            <a class="nav-link " href="{{ route('admin.transactions.report.order-report') }}" title="{{ translate('messages.order_report') }}">
+                        <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/transactions/rental/report/order-report') ? 'active' : '' }}">
+                            <a class="nav-link " href="{{ route('admin.transactions.rental.report.trip-report') }}" title="{{ translate('messages.trip_report') }}">
                                 <span class="tio-chart-bar-4 nav-icon"></span>
-                                <span class="text-truncate text-capitalize">{{ translate('messages.order_report') }}</span>
+                                <span class="text-truncate text-capitalize">{{ translate('messages.trip_report') }}</span>
                             </a>
                         </li>
                     @endif

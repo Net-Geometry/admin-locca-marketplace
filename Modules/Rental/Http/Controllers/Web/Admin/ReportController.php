@@ -5,6 +5,7 @@ namespace Modules\Rental\Http\Controllers\Web\Admin;
 use App\CentralLogics\Helpers;
 use App\Models\Item;
 use App\Models\Store;
+use App\Models\User;
 use App\Models\Zone;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
@@ -13,8 +14,13 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
+use Modules\Rental\Entities\Trips;
 use Modules\Rental\Entities\TripTransaction;
+use Modules\Rental\Entities\Vehicle;
+use Modules\Rental\Entities\VehicleCategory;
 use Modules\Rental\Exports\TransactionReportExport;
+use Modules\Rental\Exports\TripReportExport;
+use Modules\Rental\Exports\VehicleReportExport;
 use Modules\Rental\Exports\VehicleReviewExport;
 use Rap2hpoutre\FastExcel\FastExcel;
 
@@ -370,8 +376,196 @@ class ReportController extends Controller
             return Excel::download(new TransactionReportExport($data), 'TransactionReport.csv');
         }
     }
+    public function tripReport(Request $request)
+    {
+        $key = explode(' ', $request['search']);
 
-    public function item_wise_report(Request $request)
+        if (session()->has('from_date') == false) {
+            session()->put('from_date', date('Y-m-01'));
+            session()->put('to_date', date('Y-m-30'));
+        }
+        $from = session('from_date');
+        $to = session('to_date');
+        $zone_id = $request->query('zone_id', isset(auth('admin')->user()->zone_id) ? auth('admin')->user()->zone_id : 'all');
+        $zone = is_numeric($zone_id) ? Zone::findOrFail($zone_id) : null;
+        $provider_id = $request->query('provider_id', 'all');
+        $provider = is_numeric($provider_id) ? Store::findOrFail($provider_id) : null;
+        $customer_id = $request->query('customer_id', 'all');
+        $customer = is_numeric($customer_id) ? User::findOrFail($customer_id) : null;
+        $filter = $request->query('filter', 'all_time');
+
+        $trips = Trips::with(['customer', 'provider', 'trip_details', 'trip_transaction'])
+            ->when(request('module_id'), function ($query) {
+                return $query->module(request('module_id'));
+            })
+            ->when(isset($zone), function ($query) use ($zone) {
+                return $query->where('zone_id', $zone->id);
+            })
+            ->when(isset($provider), function ($query) use ($provider) {
+                return $query->where('provider_id', $provider->id);
+            })
+            ->when(isset($customer), function ($query) use ($customer) {
+                return $query->where('user_id', $customer->id);
+            })
+            ->when(isset($from) && isset($to) && $from != null && $to != null && $filter == 'custom', function ($query) use ($from, $to) {
+                return $query->whereBetween('schedule_at', [$from . " 00:00:00", $to . " 23:59:59"]);
+            })
+            ->when(isset($filter) && $filter == 'this_year', function ($query) {
+                return $query->whereYear('schedule_at', now()->format('Y'));
+            })
+            ->when(isset($filter) && $filter == 'this_month', function ($query) {
+                return $query->whereMonth('schedule_at', now()->format('m'))->whereYear('schedule_at', now()->format('Y'));
+            })
+            ->when(isset($filter) && $filter == 'this_month', function ($query) {
+                return $query->whereMonth('schedule_at', now()->format('m'))->whereYear('schedule_at', now()->format('Y'));
+            })
+            ->when(isset($filter) && $filter == 'previous_year', function ($query) {
+                return $query->whereYear('schedule_at', date('Y') - 1);
+            })
+            ->when(isset($filter) && $filter == 'this_week', function ($query) {
+                return $query->whereBetween('schedule_at', [now()->startOfWeek()->format('Y-m-d H:i:s'), now()->endOfWeek()->format('Y-m-d H:i:s')]);
+            })
+            ->when(isset($key), function ($query) use ($key) {
+                return $query->where(function ($q) use ($key) {
+                    foreach ($key as $value) {
+                        $q->orWhere('id', 'like', "%{$value}%");
+                    }
+                });
+            })
+//            ->StoreOrder()
+//            ->withSum('transaction', 'admin_commission')
+//            ->withSum('transaction', 'admin_expense')
+//            ->withSum('transaction', 'delivery_fee_comission')
+            ->orderBy('schedule_at', 'desc')->paginate(config('default_pagination'))->withQueryString();
+
+        // trip card values calculation
+        $trips_list = Trips::when(request('module_id'), function ($query) {
+            return $query->module(request('module_id'));
+        })
+            ->when(isset($zone), function ($query) use ($zone) {
+                return $query->where('zone_id', $zone->id);
+            })
+            ->when(isset($provider), function ($query) use ($provider) {
+                return $query->where('provider_id', $provider->id);
+            })
+            ->when(isset($customer), function ($query) use ($customer) {
+                return $query->where('user_id', $customer->id);
+            })
+            ->when(isset($from) && isset($to) && $from != null && $to != null && $filter == 'custom', function ($query) use ($from, $to) {
+                return $query->whereBetween('schedule_at', [$from . " 00:00:00", $to . " 23:59:59"]);
+            })
+            ->when(isset($filter) && $filter == 'this_year', function ($query) {
+                return $query->whereYear('schedule_at', now()->format('Y'));
+            })
+            ->when(isset($filter) && $filter == 'this_month', function ($query) {
+                return $query->whereMonth('schedule_at', now()->format('m'))->whereYear('schedule_at', now()->format('Y'));
+            })
+            ->when(isset($filter) && $filter == 'this_month', function ($query) {
+                return $query->whereMonth('schedule_at', now()->format('m'))->whereYear('schedule_at', now()->format('Y'));
+            })
+            ->when(isset($filter) && $filter == 'previous_year', function ($query) {
+                return $query->whereYear('schedule_at', date('Y') - 1);
+            })
+            ->when(isset($filter) && $filter == 'this_week', function ($query) {
+                return $query->whereBetween('schedule_at', [now()->startOfWeek()->format('Y-m-d H:i:s'), now()->endOfWeek()->format('Y-m-d H:i:s')]);
+            })
+            ->when(isset($key), function ($query) use ($key) {
+                return $query->where(function ($q) use ($key) {
+                    foreach ($key as $value) {
+                        $q->orWhere('id', 'like', "%{$value}%");
+                    }
+                });
+            })
+            ->orderBy('schedule_at', 'desc')->get();
+
+
+        $total_canceled_count = $trips_list->where('trip_status', 'canceled')->count();
+        $total_completed_count = $trips_list->where('trip_status', 'completed')->count();
+        $total_progress_count = $trips_list->whereIn('trip_status', ['confirmed'])->count();
+        $total_failed_count = $trips_list->where('trip_status', 'failed')->count();
+        $total_ongoing_count = $trips_list->whereIn('trip_status', ['ongoing'])->count();
+        return view('rental::admin.report.trip-report', compact('trips', 'trips_list', 'zone', 'provider', 'filter', 'customer', 'total_ongoing_count', 'total_failed_count', 'total_progress_count', 'total_canceled_count', 'total_completed_count'));
+    }
+    public function tripReportExport(Request $request)
+    {
+        $key = isset($request['search']) ? explode(' ', $request['search']) : [];
+
+        if (session()->has('from_date') == false) {
+            session()->put('from_date', date('Y-m-01'));
+            session()->put('to_date', date('Y-m-30'));
+        }
+        $from = session('from_date');
+        $to = session('to_date');
+        $zone_id = $request->query('zone_id', isset(auth('admin')->user()->zone_id) ? auth('admin')->user()->zone_id : 'all');
+        $zone = is_numeric($zone_id) ? Zone::findOrFail($zone_id) : null;
+        $provider_id = $request->query('provider_id', 'all');
+        $provider = is_numeric($provider_id) ? Store::findOrFail($provider_id) : null;
+        $customer_id = $request->query('customer_id', 'all');
+        $customer = is_numeric($customer_id) ? User::findOrFail($customer_id) : null;
+        $filter = $request->query('filter', 'all_time');
+
+        $trips = Trips::with(['customer', 'provider', 'trip_details', 'trip_transaction'])
+            ->when(request('module_id'), function ($query) {
+                return $query->module(request('module_id'));
+            })
+            ->when(isset($zone), function ($query) use ($zone) {
+                return $query->where('zone_id', $zone->id);
+            })
+            ->when(isset($provider), function ($query) use ($provider) {
+                return $query->where('provider_id', $provider->id);
+            })
+            ->when(isset($customer), function ($query) use ($customer) {
+                return $query->where('user_id', $customer->id);
+            })
+            ->when(isset($from) && isset($to) && $from != null && $to != null && $filter == 'custom', function ($query) use ($from, $to) {
+                return $query->whereBetween('schedule_at', [$from . " 00:00:00", $to . " 23:59:59"]);
+            })
+            ->when(isset($filter) && $filter == 'this_year', function ($query) {
+                return $query->whereYear('schedule_at', now()->format('Y'));
+            })
+            ->when(isset($filter) && $filter == 'this_month', function ($query) {
+                return $query->whereMonth('schedule_at', now()->format('m'))->whereYear('schedule_at', now()->format('Y'));
+            })
+            ->when(isset($filter) && $filter == 'this_month', function ($query) {
+                return $query->whereMonth('schedule_at', now()->format('m'))->whereYear('schedule_at', now()->format('Y'));
+            })
+            ->when(isset($filter) && $filter == 'previous_year', function ($query) {
+                return $query->whereYear('schedule_at', date('Y') - 1);
+            })
+            ->when(isset($filter) && $filter == 'this_week', function ($query) {
+                return $query->whereBetween('schedule_at', [now()->startOfWeek()->format('Y-m-d H:i:s'), now()->endOfWeek()->format('Y-m-d H:i:s')]);
+            })
+            ->when(isset($key), function ($query) use ($key) {
+                return $query->where(function ($q) use ($key) {
+                    foreach ($key as $value) {
+                        $q->orWhere('id', 'like', "%{$value}%");
+                    }
+                });
+            })
+//            ->StoreOrder()
+//            ->withSum('transaction', 'admin_commission')
+//            ->withSum('transaction', 'admin_expense')
+//            ->withSum('transaction', 'delivery_fee_comission')
+            ->orderBy('schedule_at', 'desc')->get();
+
+        $data = [
+            'trips'=>$trips,
+            'search'=>$request->search??null,
+            'from'=>(($filter == 'custom') && $from)?$from:null,
+            'to'=>(($filter == 'custom') && $to)?$to:null,
+            'zone'=>is_numeric($zone_id)?Helpers::get_zones_name($zone_id):null,
+            'provider'=>is_numeric($provider_id)?Helpers::get_stores_name($provider_id):null,
+            'customer'=>is_numeric($customer_id)?Helpers::get_customer_name($customer_id):null,
+            'filter'=>$filter,
+        ];
+
+        if ($request->type == 'excel') {
+            return Excel::download(new TripReportExport($data), 'TripReport.xlsx');
+        } else if ($request->type == 'csv') {
+            return Excel::download(new TripReportExport($data), 'TripReport.csv');
+        }
+    }
+    public function vehicleReport(Request $request)
     {
         $zone_id = $request->query('zone_id', isset(auth('admin')->user()->zone_id) ? auth('admin')->user()->zone_id : 'all');
         $provider_id = $request->query('provider_id', 'all');
@@ -379,12 +573,13 @@ class ReportController extends Controller
         $filter = $request->query('filter', 'all_time');
         $zone = is_numeric($zone_id) ? Zone::findOrFail($zone_id) : null;
         $provider = is_numeric($provider_id) ? Store::findOrFail($provider_id) : null;
-        $category = is_numeric($category_id) ? Category::findOrFail($category_id) : null;
-        $items = $this->get_item_data($request);
-        $items =  $items->paginate(config('default_pagination'))->withQueryString();
-        return view('rental::admin.report.item-wise-report', compact('zone', 'provider', 'category', 'items', 'filter'));
+        $category = is_numeric($category_id) ? VehicleCategory::findOrFail($category_id) : null;
+        $vehicles = $this->get_vehicle_data($request);
+        $vehicles =  $vehicles->paginate(config('default_pagination'))->withQueryString();
+//        dd($vehicles);
+        return view('rental::admin.report.vehicle-wise-report', compact('zone', 'provider', 'category', 'vehicles', 'filter'));
     }
-    public function item_wise_export(Request $request)
+    public function vehicleReportExport(Request $request)
     {
         if (session()->has('from_date') == false) {
             session()->put('from_date', now()->firstOfMonth()->format('Y-m-d'));
@@ -397,30 +592,29 @@ class ReportController extends Controller
         $provider_id = $request->query('provider_id', 'all');
         $category_id = $request->query('category_id', 'all');
         $filter = $request->query('filter', 'all_time');
-        $items = $this->get_item_data($request);
-        $items =  $items->get();
+        $vehicles = $this->get_vehicle_data($request);
+        $vehicles =  $vehicles->get();
 
         $data = [
-            'items'=>$items,
+            'vehicles'=>$vehicles,
             'search'=>$request->search??null,
             'from'=>(($filter == 'custom') && $from)?$from:null,
             'to'=>(($filter == 'custom') && $to)?$to:null,
             'zone'=>is_numeric($zone_id)?Helpers::get_zones_name($zone_id):null,
-            'provider'=>is_numeric($provider_id)?Helpers::get_providers_name($provider_id):null,
+            'provider'=>is_numeric($provider_id)?Helpers::get_stores_name($provider_id):null,
             'category'=>is_numeric($category_id)?Helpers::get_category_name($category_id):null,
             'module'=>request('module_id')?Helpers::get_module_name(request('module_id')):null,
             'filter'=>$filter,
         ];
 
         if ($request->type == 'excel') {
-            return Excel::download(new ItemReportExport($data), 'ItemReport.xlsx');
+            return Excel::download(new VehicleReportExport($data), 'VehicleReport.xlsx');
         } else if ($request->type == 'csv') {
-            return Excel::download(new ItemReportExport($data), 'ItemReport.csv');
+            return Excel::download(new VehicleReportExport($data), 'VehicleReport.csv');
         }
     }
 
-
-    private static function get_item_data($request){
+    private static function get_vehicle_data($request){
 
         $key = explode(' ', $request['search']);
         if (session()->has('from_date') == false) {
@@ -436,31 +630,30 @@ class ReportController extends Controller
         $filter = $request->query('filter', 'all_time');
         $zone = is_numeric($zone_id) ? Zone::findOrFail($zone_id) : null;
         $provider = is_numeric($provider_id) ? Store::findOrFail($provider_id) : null;
-        $category = is_numeric($category_id) ? Category::findOrFail($category_id) : null;
+        $category = is_numeric($category_id) ? VehicleCategory::findOrFail($category_id) : null;
 
-        $items =Item::withoutGlobalScope(StoreScope::class)
-            ->withCount([
-                'trips' => function ($query) use ($from, $to, $filter) {
+        $vehicles =Vehicle::withCount([
+                'tripDetails as trips_count' => function ($query) use ($from, $to, $filter) {
                     $query->whereHas('trip', function ($query) {
-                        return $query->whereIn('trip_status', ['delivered', 'refund_requested', 'refund_request_canceled']);
+                        return $query->whereIn('trip_status', ['completed']);
                     })->applyDateFilter($filter, $from, $to);
-                },
-            ])
+                }, 'vehicleIdentities'
+            ] )
             ->withSum([
-                'trips' => function ($query) use ($from, $to, $filter) {
+                'tripDetails' => function ($query) use ($from, $to, $filter) {
                     $query->whereHas('trip', function ($query) {
-                        return $query->whereIn('trip_status', ['delivered', 'refund_requested', 'refund_request_canceled']);
+                        return $query->whereIn('trip_status', ['completed']);
                     })->applyDateFilter($filter, $from, $to);
                 },
             ], 'quantity')
 
             ->addSelect([
                 'total_discount' => function ($query) use ($from, $to, $filter) {
-                    $query->selectRaw('SUM(trip_details.discount_on_item * trip_details.quantity)')
+                    $query->selectRaw('SUM(trip_details.discount_on_trip * trip_details.quantity)')
                         ->from('trip_details')
                         ->join('trips', 'trips.id', '=', 'trip_details.trip_id')
-                        ->whereColumn('trip_details.item_id', 'items.id')
-                        ->whereIn('trips.trip_status', ['delivered', 'refund_requested', 'refund_request_canceled'])
+                        ->whereColumn('trip_details.vehicle_id', 'vehicles.id')
+                        ->whereIn('trips.trip_status', ['completed'])
                         ->when(isset($from) && isset($to) && $from != null && $to != null && $filter == 'custom', function ($query) use ($from, $to) {
                             return $query->whereBetween('trip_details.created_at', [$from . " 00:00:00", $to . " 23:59:59"]);
                         })
@@ -482,8 +675,8 @@ class ReportController extends Controller
                     $query->selectRaw('SUM(trip_details.price * trip_details.quantity)')
                         ->from('trip_details')
                         ->join('trips', 'trips.id', '=', 'trip_details.trip_id')
-                        ->whereColumn('trip_details.item_id', 'items.id')
-                        ->whereIn('trips.trip_status', ['delivered', 'refund_requested', 'refund_request_canceled'])
+                        ->whereColumn('trip_details.vehicle_id', 'vehicles.id')
+                        ->whereIn('trips.trip_status', ['completed'])
                         ->when(isset($from) && isset($to) && $from != null && $to != null && $filter == 'custom', function ($query) use ($from, $to) {
                             return $query->whereBetween('trip_details.created_at', [$from . " 00:00:00", $to . " 23:59:59"]);
                         })
@@ -507,7 +700,7 @@ class ReportController extends Controller
                 return $query->module($request->query('module_id'));
             })
             ->when(isset($zone), function ($query) use ($zone) {
-                return $query->whereIn('provider_id', $zone->providers->pluck('id'));
+                return $query->whereIn('provider_id', $zone->stores->pluck('id'));
             })
             ->when(isset($provider), function ($query) use ($provider) {
                 return $query->where('provider_id', $provider->id);
@@ -522,11 +715,11 @@ class ReportController extends Controller
                     }
                 });
             })
-            ->with('module', 'provider')
+            ->with('provider')
             ->having('trips_count', '>' ,0)
             ->orderBy('trips_count', 'desc');
 
-        return $items;
+        return $vehicles;
     }
 
     public function trip_transaction()
@@ -534,7 +727,6 @@ class ReportController extends Controller
         $trip_transactions = TripTransaction::latest()->paginate(config('default_pagination'));
         return view('rental::admin.report.trip-transactions', compact('trip_transactions'));
     }
-
 
     public function set_date(Request $request)
     {
@@ -650,7 +842,7 @@ class ReportController extends Controller
                 return $query->module($request->query('module_id'));
             })
             ->when(isset($zone), function ($query) use ($zone) {
-                return $query->whereIn('provider_id', $zone->providers->pluck('id'));
+                return $query->whereIn('provider_id', $zone->stores->pluck('id'));
             })
             ->when(isset($provider), function ($query) use ($provider) {
                 return $query->where('provider_id', $provider->id);
@@ -692,7 +884,7 @@ class ReportController extends Controller
                 return $query->module($request->query('module_id'));
             })
             ->when(isset($zone), function ($query) use ($zone) {
-                return $query->whereIn('provider_id', $zone->providers->pluck('id'));
+                return $query->whereIn('provider_id', $zone->stores->pluck('id'));
             })
             ->when(isset($provider), function ($query) use ($provider) {
                 return $query->where('provider_id', $provider->id);
@@ -1044,7 +1236,7 @@ class ReportController extends Controller
             switch ($filter) {
                 case "all_time":
                     $monthly_trip = Order::StoreOrder()->Delivered()->NotRefunded()->when(isset($zone), function ($query) use ($zone) {
-                        return $query->whereIn('provider_id', $zone->providers->pluck('id'));
+                        return $query->whereIn('provider_id', $zone->stores->pluck('id'));
                     })
                         ->when(isset($provider), function ($query) use ($provider) {
                             return $query->where('provider_id', $provider->id);
@@ -1065,7 +1257,7 @@ class ReportController extends Controller
                 case "this_year":
                     for ($i = 1; $i <= 12; $i++) {
                         $monthly_trip[$i] = Order::StoreOrder()->Delivered()->NotRefunded()->when(isset($zone), function ($query) use ($zone) {
-                            return $query->whereIn('provider_id', $zone->providers->pluck('id'));
+                            return $query->whereIn('provider_id', $zone->stores->pluck('id'));
                         })
                             ->when(isset($provider), function ($query) use ($provider) {
                                 return $query->where('provider_id', $provider->id);
@@ -1078,7 +1270,7 @@ class ReportController extends Controller
                 case "previous_year":
                     for ($i = 1; $i <= 12; $i++) {
                         $monthly_trip[$i] = Order::StoreOrder()->Delivered()->NotRefunded()->when(isset($zone), function ($query) use ($zone) {
-                            return $query->whereIn('provider_id', $zone->providers->pluck('id'));
+                            return $query->whereIn('provider_id', $zone->stores->pluck('id'));
                         })
                             ->when(isset($provider), function ($query) use ($provider) {
                                 return $query->where('provider_id', $provider->id);
@@ -1092,7 +1284,7 @@ class ReportController extends Controller
                     $weekStartDate = now()->startOfWeek();
                     for ($i = 1; $i <= 7; $i++) {
                         $monthly_trip[$i] = Order::StoreOrder()->Delivered()->NotRefunded()->when(isset($zone), function ($query) use ($zone) {
-                            return $query->whereIn('provider_id', $zone->providers->pluck('id'));
+                            return $query->whereIn('provider_id', $zone->stores->pluck('id'));
                         })
                             ->when(isset($provider), function ($query) use ($provider) {
                                 return $query->where('provider_id', $provider->id);
@@ -1116,7 +1308,7 @@ class ReportController extends Controller
                     );
                     for ($i = 1; $i <= 4; $i++) {
                         $monthly_trip[$i] = Order::StoreOrder()->Delivered()->NotRefunded()->when(isset($zone), function ($query) use ($zone) {
-                            return $query->whereIn('provider_id', $zone->providers->pluck('id'));
+                            return $query->whereIn('provider_id', $zone->stores->pluck('id'));
                         })
                             ->when(isset($provider), function ($query) use ($provider) {
                                 return $query->where('provider_id', $provider->id);
@@ -1132,7 +1324,7 @@ class ReportController extends Controller
                 default:
                     for ($i = 1; $i <= 12; $i++) {
                         $monthly_trip[$i] = Order::StoreOrder()->Delivered()->NotRefunded()->when(isset($zone), function ($query) use ($zone) {
-                            return $query->whereIn('provider_id', $zone->providers->pluck('id'));
+                            return $query->whereIn('provider_id', $zone->stores->pluck('id'));
                         })
                             ->when(isset($provider), function ($query) use ($provider) {
                                 return $query->where('provider_id', $provider->id);
@@ -1155,7 +1347,7 @@ class ReportController extends Controller
 
             if ($years_count > 0) {
                 $monthly_trip = Order::StoreOrder()->Delivered()->NotRefunded()->when(isset($zone), function ($query) use ($zone) {
-                    return $query->whereIn('provider_id', $zone->providers->pluck('id'));
+                    return $query->whereIn('provider_id', $zone->stores->pluck('id'));
                 })
                     ->when(isset($provider), function ($query) use ($provider) {
                         return $query->where('provider_id', $provider->id);
@@ -1177,7 +1369,7 @@ class ReportController extends Controller
             } elseif ($months_count > 0) {
                 for ($i = (int)$from->format('m'); $i <= (int)$from->format('m') + $months_count; $i++) {
                     $monthly_trip[$i] = Order::StoreOrder()->Delivered()->NotRefunded()->when(isset($zone), function ($query) use ($zone) {
-                        return $query->whereIn('provider_id', $zone->providers->pluck('id'));
+                        return $query->whereIn('provider_id', $zone->stores->pluck('id'));
                     })
                         ->when(isset($provider), function ($query) use ($provider) {
                             return $query->where('provider_id', $provider->id);
@@ -1190,7 +1382,7 @@ class ReportController extends Controller
             } elseif ($weeks_count > 0) {
                 for ($i = (int)$from->format('d'); $i <= (int)$to->format('d'); $i++) {
                     $monthly_trip[$i] = Order::StoreOrder()->Delivered()->NotRefunded()->when(isset($zone), function ($query) use ($zone) {
-                        return $query->whereIn('provider_id', $zone->providers->pluck('id'));
+                        return $query->whereIn('provider_id', $zone->stores->pluck('id'));
                     })
                         ->when(isset($provider), function ($query) use ($provider) {
                             return $query->where('provider_id', $provider->id);
@@ -1203,7 +1395,7 @@ class ReportController extends Controller
             } elseif ($days_count >= 0) {
                 for ($i = (int)$from->format('d'); $i <= (int)$to->format('d'); $i++) {
                     $monthly_trip[$i] = Order::StoreOrder()->Delivered()->NotRefunded()->when(isset($zone), function ($query) use ($zone) {
-                        return $query->whereIn('provider_id', $zone->providers->pluck('id'));
+                        return $query->whereIn('provider_id', $zone->stores->pluck('id'));
                     })
                         ->when(isset($provider), function ($query) use ($provider) {
                             return $query->where('provider_id', $provider->id);
@@ -1331,7 +1523,7 @@ class ReportController extends Controller
                 },
             ])
             ->when(isset($zone), function ($query) use ($zone) {
-                return $query->whereIn('provider_id', $zone->providers->pluck('id'));
+                return $query->whereIn('provider_id', $zone->stores->pluck('id'));
             })
             ->when(isset($provider), function ($query) use ($provider) {
                 return $query->where('provider_id', $provider->id);
@@ -1349,7 +1541,7 @@ class ReportController extends Controller
         $trips = Order::StoreOrder()
             ->whereNotIn('trip_status', ['refunded', 'failed', 'canceled'])
             ->Delivered()->with('transaction')->when(isset($zone), function ($query) use ($zone) {
-                return $query->whereIn('provider_id', $zone->providers->pluck('id'));
+                return $query->whereIn('provider_id', $zone->stores->pluck('id'));
             })
             ->when(isset($provider), function ($query) use ($provider) {
                 return $query->where('provider_id', $provider->id);
@@ -1438,7 +1630,7 @@ class ReportController extends Controller
                 });
             })
             ->when(isset($zone), function ($query) use ($zone) {
-                return $query->whereIn('provider_id', $zone->providers->pluck('id'));
+                return $query->whereIn('provider_id', $zone->stores->pluck('id'));
             })
             ->when(isset($provider), function ($query) use ($provider) {
                 return $query->where('provider_id', $provider->id);
@@ -1470,7 +1662,7 @@ class ReportController extends Controller
         // trip card values calculation
         $trips_list = Order::with(['customer', 'provider'])
             ->when(isset($zone), function ($query) use ($zone) {
-                return $query->whereIn('provider_id', $zone->providers->pluck('id'));
+                return $query->whereIn('provider_id', $zone->stores->pluck('id'));
             })
             ->when(isset($provider), function ($query) use ($provider) {
                 return $query->where('provider_id', $provider->id);
@@ -1512,7 +1704,7 @@ class ReportController extends Controller
 
         // payment type statistics
         $trip_payment_methods = Order::when(isset($zone), function ($query) use ($zone) {
-            return $query->whereIn('provider_id', $zone->providers->pluck('id'));
+            return $query->whereIn('provider_id', $zone->stores->pluck('id'));
         })
             ->when(isset($provider), function ($query) use ($provider) {
                 return $query->where('provider_id', $provider->id);
@@ -1547,7 +1739,7 @@ class ReportController extends Controller
             switch ($filter) {
                 case "all_time":
                     $monthly_trip = Order::when(isset($zone), function ($query) use ($zone) {
-                        return $query->whereIn('provider_id', $zone->providers->pluck('id'));
+                        return $query->whereIn('provider_id', $zone->stores->pluck('id'));
                     })
                         ->when(isset($provider), function ($query) use ($provider) {
                             return $query->where('provider_id', $provider->id);
@@ -1570,7 +1762,7 @@ class ReportController extends Controller
                 case "this_year":
                     for ($i = 1; $i <= 12; $i++) {
                         $monthly_trip[$i] = Order::when(isset($zone), function ($query) use ($zone) {
-                            return $query->whereIn('provider_id', $zone->providers->pluck('id'));
+                            return $query->whereIn('provider_id', $zone->stores->pluck('id'));
                         })
                             ->when(isset($provider), function ($query) use ($provider) {
                                 return $query->where('provider_id', $provider->id);
@@ -1585,7 +1777,7 @@ class ReportController extends Controller
                 case "previous_year":
                     for ($i = 1; $i <= 12; $i++) {
                         $monthly_trip[$i] = Order::when(isset($zone), function ($query) use ($zone) {
-                            return $query->whereIn('provider_id', $zone->providers->pluck('id'));
+                            return $query->whereIn('provider_id', $zone->stores->pluck('id'));
                         })
                             ->when(isset($provider), function ($query) use ($provider) {
                                 return $query->where('provider_id', $provider->id);
@@ -1601,7 +1793,7 @@ class ReportController extends Controller
                     $weekStartDate = now()->startOfWeek();
                     for ($i = 1; $i <= 7; $i++) {
                         $monthly_trip[$i] = Order::when(isset($zone), function ($query) use ($zone) {
-                            return $query->whereIn('provider_id', $zone->providers->pluck('id'));
+                            return $query->whereIn('provider_id', $zone->stores->pluck('id'));
                         })
                             ->when(isset($provider), function ($query) use ($provider) {
                                 return $query->where('provider_id', $provider->id);
@@ -1625,7 +1817,7 @@ class ReportController extends Controller
                     );
                     for ($i = 1; $i <= 4; $i++) {
                         $monthly_trip[$i] = Order::when(isset($zone), function ($query) use ($zone) {
-                            return $query->whereIn('provider_id', $zone->providers->pluck('id'));
+                            return $query->whereIn('provider_id', $zone->stores->pluck('id'));
                         })
                             ->when(isset($provider), function ($query) use ($provider) {
                                 return $query->where('provider_id', $provider->id);
@@ -1642,7 +1834,7 @@ class ReportController extends Controller
                 default:
                     for ($i = 1; $i <= 12; $i++) {
                         $monthly_trip[$i] = Order::when(isset($zone), function ($query) use ($zone) {
-                            return $query->whereIn('provider_id', $zone->providers->pluck('id'));
+                            return $query->whereIn('provider_id', $zone->stores->pluck('id'));
                         })
                             ->when(isset($provider), function ($query) use ($provider) {
                                 return $query->where('provider_id', $provider->id);
@@ -1667,7 +1859,7 @@ class ReportController extends Controller
 
             if ($years_count > 0) {
                 $monthly_trip = Order::when(isset($zone), function ($query) use ($zone) {
-                    return $query->whereIn('provider_id', $zone->providers->pluck('id'));
+                    return $query->whereIn('provider_id', $zone->stores->pluck('id'));
                 })
                     ->when(isset($provider), function ($query) use ($provider) {
                         return $query->where('provider_id', $provider->id);
@@ -1690,7 +1882,7 @@ class ReportController extends Controller
             } elseif ($months_count > 0) {
                 for ($i = (int)$from->format('m'); $i <= (int)$from->format('m') + $months_count; $i++) {
                     $monthly_trip[$i] = Order::when(isset($zone), function ($query) use ($zone) {
-                        return $query->whereIn('provider_id', $zone->providers->pluck('id'));
+                        return $query->whereIn('provider_id', $zone->stores->pluck('id'));
                     })
                         ->when(isset($provider), function ($query) use ($provider) {
                             return $query->where('provider_id', $provider->id);
@@ -1709,7 +1901,7 @@ class ReportController extends Controller
                 // for ($i = 1; $i <= 4; $i++) {
                 //     $weeks[$i] = '"'.translate('Day').' ' . (int)$start->format('d') . '-' . ((int)$start->format('d') + 7) . '"';
                 //     $monthly_trip[$i] = Order::when(isset($zone), function ($query) use ($zone) {
-                //         return $query->whereIn('provider_id', $zone->providers->pluck('id'));
+                //         return $query->whereIn('provider_id', $zone->stores->pluck('id'));
                 //     })
                 //         ->when(isset($provider), function ($query) use ($provider) {
                 //             return $query->where('provider_id', $provider->id);
@@ -1724,7 +1916,7 @@ class ReportController extends Controller
                 // $data = $monthly_trip;
                 for ($i = (int)$from->format('d'); $i <= (int)$to->format('d'); $i++) {
                     $monthly_trip[$i] = Order::when(isset($zone), function ($query) use ($zone) {
-                        return $query->whereIn('provider_id', $zone->providers->pluck('id'));
+                        return $query->whereIn('provider_id', $zone->stores->pluck('id'));
                     })
                         ->when(isset($provider), function ($query) use ($provider) {
                             return $query->where('provider_id', $provider->id);
@@ -1739,7 +1931,7 @@ class ReportController extends Controller
             } elseif ($days_count >= 0) {
                 for ($i = (int)$from->format('d'); $i <= (int)$to->format('d'); $i++) {
                     $monthly_trip[$i] = Order::when(isset($zone), function ($query) use ($zone) {
-                        return $query->whereIn('provider_id', $zone->providers->pluck('id'));
+                        return $query->whereIn('provider_id', $zone->stores->pluck('id'));
                     })
                         ->when(isset($provider), function ($query) use ($provider) {
                             return $query->where('provider_id', $provider->id);
@@ -1772,7 +1964,7 @@ class ReportController extends Controller
 
         $trips = Order::with(['customer', 'provider'])
             ->when(isset($zone), function ($query) use ($zone) {
-                return $query->whereIn('provider_id', $zone->providers->pluck('id'));
+                return $query->whereIn('provider_id', $zone->stores->pluck('id'));
             })
             ->when(isset($provider), function ($query) use ($provider) {
                 return $query->where('provider_id', $provider->id);
@@ -1820,7 +2012,7 @@ class ReportController extends Controller
                 });
             })
             ->when(isset($zone), function ($query) use ($zone) {
-                return $query->whereIn('provider_id', $zone->providers->pluck('id'));
+                return $query->whereIn('provider_id', $zone->stores->pluck('id'));
             })
             ->when(isset($provider), function ($query) use ($provider) {
                 return $query->where('provider_id', $provider->id);
@@ -1851,7 +2043,7 @@ class ReportController extends Controller
 
         $trips_list = Order::with(['customer', 'provider'])
             ->when(isset($zone), function ($query) use ($zone) {
-                return $query->whereIn('provider_id', $zone->providers->pluck('id'));
+                return $query->whereIn('provider_id', $zone->stores->pluck('id'));
             })
             ->when(isset($provider), function ($query) use ($provider) {
                 return $query->where('provider_id', $provider->id);
@@ -2197,269 +2389,6 @@ class ReportController extends Controller
         ]);
     }
 
-    public function trip_report(Request $request)
-    {
-        $key = explode(' ', $request['search']);
-
-        if (session()->has('from_date') == false) {
-            session()->put('from_date', date('Y-m-01'));
-            session()->put('to_date', date('Y-m-30'));
-        }
-        $from = session('from_date');
-        $to = session('to_date');
-        $zone_id = $request->query('zone_id', isset(auth('admin')->user()->zone_id) ? auth('admin')->user()->zone_id : 'all');
-        $zone = is_numeric($zone_id) ? Zone::findOrFail($zone_id) : null;
-        $provider_id = $request->query('provider_id', 'all');
-        $provider = is_numeric($provider_id) ? Store::findOrFail($provider_id) : null;
-        $customer_id = $request->query('customer_id', 'all');
-        $customer = is_numeric($customer_id) ? User::findOrFail($customer_id) : null;
-        $filter = $request->query('filter', 'all_time');
-
-        $trips = Order::with(['customer', 'provider', 'details', 'transaction'])
-            ->when(request('module_id'), function ($query) {
-                return $query->module(request('module_id'));
-            })
-            ->when(isset($zone), function ($query) use ($zone) {
-                return $query->where('zone_id', $zone->id);
-            })
-            ->when(isset($provider), function ($query) use ($provider) {
-                return $query->where('provider_id', $provider->id);
-            })
-            ->when(isset($customer), function ($query) use ($customer) {
-                return $query->where('user_id', $customer->id);
-            })
-            ->when(isset($from) && isset($to) && $from != null && $to != null && $filter == 'custom', function ($query) use ($from, $to) {
-                return $query->whereBetween('schedule_at', [$from . " 00:00:00", $to . " 23:59:59"]);
-            })
-            ->when(isset($filter) && $filter == 'this_year', function ($query) {
-                return $query->whereYear('schedule_at', now()->format('Y'));
-            })
-            ->when(isset($filter) && $filter == 'this_month', function ($query) {
-                return $query->whereMonth('schedule_at', now()->format('m'))->whereYear('schedule_at', now()->format('Y'));
-            })
-            ->when(isset($filter) && $filter == 'this_month', function ($query) {
-                return $query->whereMonth('schedule_at', now()->format('m'))->whereYear('schedule_at', now()->format('Y'));
-            })
-            ->when(isset($filter) && $filter == 'previous_year', function ($query) {
-                return $query->whereYear('schedule_at', date('Y') - 1);
-            })
-            ->when(isset($filter) && $filter == 'this_week', function ($query) {
-                return $query->whereBetween('schedule_at', [now()->startOfWeek()->format('Y-m-d H:i:s'), now()->endOfWeek()->format('Y-m-d H:i:s')]);
-            })
-            ->when(isset($key), function ($query) use ($key) {
-                return $query->where(function ($q) use ($key) {
-                    foreach ($key as $value) {
-                        $q->orWhere('id', 'like', "%{$value}%");
-                    }
-                });
-            })
-            ->StoreOrder()
-            ->withSum('transaction', 'admin_commission')
-            ->withSum('transaction', 'admin_expense')
-            ->withSum('transaction', 'delivery_fee_comission')
-            ->orderBy('schedule_at', 'desc')->paginate(config('default_pagination'))->withQueryString();
-
-        // trip card values calculation
-        $trips_list = Order::when(request('module_id'), function ($query) {
-            return $query->module(request('module_id'));
-        })
-            ->when(isset($zone), function ($query) use ($zone) {
-                return $query->where('zone_id', $zone->id);
-            })
-            ->when(isset($provider), function ($query) use ($provider) {
-                return $query->where('provider_id', $provider->id);
-            })
-            ->when(isset($customer), function ($query) use ($customer) {
-                return $query->where('user_id', $customer->id);
-            })
-            ->when(isset($from) && isset($to) && $from != null && $to != null && $filter == 'custom', function ($query) use ($from, $to) {
-                return $query->whereBetween('schedule_at', [$from . " 00:00:00", $to . " 23:59:59"]);
-            })
-            ->when(isset($filter) && $filter == 'this_year', function ($query) {
-                return $query->whereYear('schedule_at', now()->format('Y'));
-            })
-            ->when(isset($filter) && $filter == 'this_month', function ($query) {
-                return $query->whereMonth('schedule_at', now()->format('m'))->whereYear('schedule_at', now()->format('Y'));
-            })
-            ->when(isset($filter) && $filter == 'this_month', function ($query) {
-                return $query->whereMonth('schedule_at', now()->format('m'))->whereYear('schedule_at', now()->format('Y'));
-            })
-            ->when(isset($filter) && $filter == 'previous_year', function ($query) {
-                return $query->whereYear('schedule_at', date('Y') - 1);
-            })
-            ->when(isset($filter) && $filter == 'this_week', function ($query) {
-                return $query->whereBetween('schedule_at', [now()->startOfWeek()->format('Y-m-d H:i:s'), now()->endOfWeek()->format('Y-m-d H:i:s')]);
-            })
-            ->when(isset($key), function ($query) use ($key) {
-                return $query->where(function ($q) use ($key) {
-                    foreach ($key as $value) {
-                        $q->orWhere('id', 'like', "%{$value}%");
-                    }
-                });
-            })
-            ->StoreOrder()
-            ->orderBy('schedule_at', 'desc')->get();
-
-        $total_trip_amount = $trips_list->sum('trip_amount');
-        $total_coupon_discount = $trips_list->sum('coupon_discount_amount');
-        $total_product_discount = $trips_list->sum('provider_discount_amount');
-
-        $total_canceled_count = $trips_list->where('trip_status', 'canceled')->count();
-        $total_delivered_count = $trips_list->where('trip_status', 'delivered')->count();
-        $total_progress_count = $trips_list->whereIn('trip_status', ['accepted', 'confirmed', 'processing', 'handover'])->count();
-        $total_failed_count = $trips_list->where('trip_status', 'failed')->count();
-        $total_refunded_count = $trips_list->where('trip_status', 'refunded')->count();
-        $total_on_the_way_count = $trips_list->whereIn('trip_status', ['picked_up'])->count();
-        return view('rental::admin.report.trip-report', compact('trips', 'trips_list', 'zone', 'provider', 'filter', 'customer', 'total_on_the_way_count', 'total_refunded_count', 'total_failed_count', 'total_progress_count', 'total_canceled_count', 'total_delivered_count'));
-    }
-
-    public function search_trip_report(Request $request)
-    {
-        $key = explode(' ', $request['search']);
-
-        if (session()->has('from_date') == false) {
-            session()->put('from_date', date('Y-m-01'));
-            session()->put('to_date', date('Y-m-30'));
-        }
-        $from = session('from_date');
-        $to = session('to_date');
-        $zone_id = $request->query('zone_id', isset(auth('admin')->user()->zone_id) ? auth('admin')->user()->zone_id : 'all');
-        $zone = is_numeric($zone_id) ? Zone::findOrFail($zone_id) : null;
-        $provider_id = $request->query('provider_id', 'all');
-        $provider = is_numeric($provider_id) ? Store::findOrFail($provider_id) : null;
-        $customer_id = $request->query('customer_id', 'all');
-        $customer = is_numeric($customer_id) ? User::findOrFail($customer_id) : null;
-        $filter = $request->query('filter', 'all_time');
-
-        $trips = Order::with(['customer', 'provider'])
-            ->when(request('module_id'), function ($query) {
-                return $query->module(request('module_id'));
-            })
-            ->when(isset($zone), function ($query) use ($zone) {
-                return $query->where('zone_id', $zone->id);
-            })
-            ->when(isset($provider), function ($query) use ($provider) {
-                return $query->where('provider_id', $provider->id);
-            })
-            ->when(isset($customer), function ($query) use ($customer) {
-                return $query->where('user_id', $customer->id);
-            })
-            ->when(isset($from) && isset($to) && $from != null && $to != null && $filter == 'custom', function ($query) use ($from, $to) {
-                return $query->whereBetween('schedule_at', [$from . " 00:00:00", $to . " 23:59:59"]);
-            })
-            ->when(isset($filter) && $filter == 'this_year', function ($query) {
-                return $query->whereYear('schedule_at', now()->format('Y'));
-            })
-            ->when(isset($filter) && $filter == 'this_month', function ($query) {
-                return $query->whereMonth('schedule_at', now()->format('m'))->whereYear('schedule_at', now()->format('Y'));
-            })
-            ->when(isset($filter) && $filter == 'this_month', function ($query) {
-                return $query->whereMonth('schedule_at', now()->format('m'))->whereYear('schedule_at', now()->format('Y'));
-            })
-            ->when(isset($filter) && $filter == 'previous_year', function ($query) {
-                return $query->whereYear('schedule_at', date('Y') - 1);
-            })
-            ->when(isset($filter) && $filter == 'this_week', function ($query) {
-                return $query->whereBetween('schedule_at', [now()->startOfWeek()->format('Y-m-d H:i:s'), now()->endOfWeek()->format('Y-m-d H:i:s')]);
-            })
-            ->where(function ($q) use ($key) {
-                foreach ($key as $value) {
-                    $q->orWhere('id', 'like', "%{$value}%");
-                }
-            })
-            ->StoreOrder()
-            ->withSum('transaction', 'admin_commission')
-            ->withSum('transaction', 'admin_expense')
-            ->withSum('transaction', 'delivery_fee_comission')
-            ->orderBy('schedule_at', 'desc')->paginate(config('default_pagination'));
-
-        return response()->json([
-            'count' => count($trips),
-            'view' => view('rental::admin.report.partials._trip_table', compact('trips'))->render()
-        ]);
-    }
-
-    public function trip_report_export(Request $request)
-    {
-        $key = isset($request['search']) ? explode(' ', $request['search']) : [];
-
-        if (session()->has('from_date') == false) {
-            session()->put('from_date', date('Y-m-01'));
-            session()->put('to_date', date('Y-m-30'));
-        }
-        $from = session('from_date');
-        $to = session('to_date');
-        $zone_id = $request->query('zone_id', isset(auth('admin')->user()->zone_id) ? auth('admin')->user()->zone_id : 'all');
-        $zone = is_numeric($zone_id) ? Zone::findOrFail($zone_id) : null;
-        $provider_id = $request->query('provider_id', 'all');
-        $provider = is_numeric($provider_id) ? Store::findOrFail($provider_id) : null;
-        $customer_id = $request->query('customer_id', 'all');
-        $customer = is_numeric($customer_id) ? User::findOrFail($customer_id) : null;
-        $filter = $request->query('filter', 'all_time');
-
-        $trips = Order::with(['customer', 'provider'])
-            ->when(request('module_id'), function ($query) {
-                return $query->module(request('module_id'));
-            })
-            ->when(isset($zone), function ($query) use ($zone) {
-                return $query->where('zone_id', $zone->id);
-            })
-            ->when(isset($provider), function ($query) use ($provider) {
-                return $query->where('provider_id', $provider->id);
-            })
-            ->when(isset($customer), function ($query) use ($customer) {
-                return $query->where('user_id', $customer->id);
-            })
-            ->when(isset($from) && isset($to) && $from != null && $to != null && $filter == 'custom', function ($query) use ($from, $to) {
-                return $query->whereBetween('schedule_at', [$from . " 00:00:00", $to . " 23:59:59"]);
-            })
-            ->when(isset($filter) && $filter == 'this_year', function ($query) {
-                return $query->whereYear('schedule_at', now()->format('Y'));
-            })
-            ->when(isset($filter) && $filter == 'this_month', function ($query) {
-                return $query->whereMonth('schedule_at', now()->format('m'))->whereYear('schedule_at', now()->format('Y'));
-            })
-            ->when(isset($filter) && $filter == 'this_month', function ($query) {
-                return $query->whereMonth('schedule_at', now()->format('m'))->whereYear('schedule_at', now()->format('Y'));
-            })
-            ->when(isset($filter) && $filter == 'previous_year', function ($query) {
-                return $query->whereYear('schedule_at', date('Y') - 1);
-            })
-            ->when(isset($filter) && $filter == 'this_week', function ($query) {
-                return $query->whereBetween('schedule_at', [now()->startOfWeek()->format('Y-m-d H:i:s'), now()->endOfWeek()->format('Y-m-d H:i:s')]);
-            })
-            ->when(isset($key), function ($query) use ($key) {
-                return $query->where(function ($q) use ($key) {
-                    foreach ($key as $value) {
-                        $q->orWhere('id', 'like', "%{$value}%");
-                    }
-                });
-            })
-            ->StoreOrder()
-            ->withSum('transaction', 'admin_commission')
-            ->withSum('transaction', 'admin_expense')
-            ->withSum('transaction', 'delivery_fee_comission')
-            ->orderBy('schedule_at', 'desc')->get();
-
-        $data = [
-            'trips'=>$trips,
-            'search'=>$request->search??null,
-            'from'=>(($filter == 'custom') && $from)?$from:null,
-            'to'=>(($filter == 'custom') && $to)?$to:null,
-            'zone'=>is_numeric($zone_id)?Helpers::get_zones_name($zone_id):null,
-            'provider'=>is_numeric($provider_id)?Helpers::get_providers_name($provider_id):null,
-            'customer'=>is_numeric($customer_id)?Helpers::get_customer_name($customer_id):null,
-            'module'=>request('module_id')?Helpers::get_module_name(request('module_id')):null,
-            'filter'=>$filter,
-        ];
-
-        if ($request->type == 'excel') {
-            return Excel::download(new OrderReportExport($data), 'OrderReport.xlsx');
-        } else if ($request->type == 'csv') {
-            return Excel::download(new OrderReportExport($data), 'OrderReport.csv');
-        }
-    }
-
     public function expense_report(Request $request)
     {
         $key = explode(' ', $request['search']);
@@ -2574,7 +2503,7 @@ class ReportController extends Controller
                 return $query->module($request->query('module_id'));
             })
             ->when(isset($zone), function ($query) use ($zone) {
-                return $query->whereIn('provider_id', $zone->providers->pluck('id'));
+                return $query->whereIn('provider_id', $zone->stores->pluck('id'));
             })
             ->when(isset($provider), function ($query) use ($provider) {
                 return $query->where('provider_id', $provider->id);
@@ -2614,7 +2543,7 @@ class ReportController extends Controller
                 return $query->module($request->query('module_id'));
             })
             ->when(isset($zone), function ($query) use ($zone) {
-                return $query->whereIn('provider_id', $zone->providers->pluck('id'));
+                return $query->whereIn('provider_id', $zone->stores->pluck('id'));
             })
             ->when(isset($provider), function ($query) use ($provider) {
                 return $query->where('provider_id', $provider->id);
@@ -2666,7 +2595,7 @@ class ReportController extends Controller
                 return $query->module($request->query('module_id'));
             })
             ->when(isset($zone), function ($query) use ($zone) {
-                return $query->whereIn('provider_id', $zone->providers->pluck('id'));
+                return $query->whereIn('provider_id', $zone->stores->pluck('id'));
             })
             ->when(isset($provider), function ($query) use ($provider) {
                 return $query->where('provider_id', $provider->id);

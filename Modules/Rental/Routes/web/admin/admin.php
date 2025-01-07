@@ -38,6 +38,7 @@ Route::group(['middleware' => ['admin', 'current-module']], function () {
             Route::delete('delete/{id}', [CategoryController::class, 'destroy'])->name('delete');
             Route::get('status/{id}', [CategoryController::class, 'status'])->name('status');
             Route::get('export-categories', [CategoryController::class, 'export'])->name('export-categories');
+            Route::get('get-categories', [CategoryController::class, 'getCategories'])->name('get-categories');
         });
 
         Route::group(['prefix' => 'brand', 'as' => 'brand.'], function () {
@@ -178,15 +179,13 @@ Route::group(['middleware' => ['admin', 'current-module']], function () {
                 Route::get('trip', 'ReportController@trip_index')->name('trip');
                 Route::get('transaction-report', [ReportController::class, 'transactionReport'])->name('transaction-report');
                 Route::get('transaction-report-export', [ReportController::class, 'transactionExport'])->name('transaction-report-export');
-                Route::get('vehicle-wise-report', 'ReportController@vehicle_wise_report')->name('vehicle-wise-report');
-                Route::get('vehicle-wise-export', 'ReportController@vehicle_wise_export')->name('vehicle-wise-export');
-                Route::post('vehicle-wise-report-search', 'ReportController@vehicle_search')->name('vehicle-wise-report-search');
+                Route::get('trip-report', [ReportController::class, 'tripReport'])->name('trip-report');
+                Route::get('trip-report-export', [ReportController::class, 'tripReportExport'])->name('trip-report-export');
+                Route::get('vehicle-report', [ReportController::class, 'vehicleReport'])->name('vehicle-wise-report');
+                Route::get('vehicle-report-export', [ReportController::class, 'vehicleReportExport'])->name('vehicle-wise-export');
                 Route::get('trip-transactions', 'ReportController@trip_transaction')->name('trip-transaction');
                 Route::get('earning', 'ReportController@earning_index')->name('earning');
                 Route::post('set-date', [ReportController::class, 'set_date'])->name('set-date');
-                Route::get('trip-report', 'ReportController@trip_report')->name('trip-report');
-                Route::post('trip-report-search', 'ReportController@search_trip_report')->name('search_trip_report');
-                Route::get('trip-report-export', 'ReportController@trip_report_export')->name('trip-report-export');
                 Route::get('provider-wise-report', 'ReportController@provider_summary_report')->name('provider-summary-report');
                 Route::post('provider-summary-report-search', 'ReportController@provider_summary_search')->name('provider-summary-report-search');
                 Route::get('provider-summary-report-export', 'ReportController@provider_summary_export')->name('provider-summary-report-export');

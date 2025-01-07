@@ -41,11 +41,11 @@
                             </select>
                         </div>
                         <div class="col-sm-6 col-md-3">
-                            <select name="store_id" data-url="{{ url()->full() }}" data-filter="store_id"
+                            <select name="provider_id" data-url="{{ url()->full() }}" data-filter="provider_id"
                                 data-placeholder="{{ translate('messages.select_provider') }}"
                                 class="js-data-example-ajax form-control set-filter">
-                                @if (isset($store))
-                                    <option value="{{ $store->id }}" selected>{{ $store->name }}</option>
+                                @if (isset($provider))
+                                    <option value="{{ $provider->id }}" selected>{{ $provider->name }}</option>
                                 @else
                                     <option value="all" selected>{{ translate('messages.all_providers') }}</option>
                                 @endif
