@@ -185,10 +185,10 @@
                             <small class="tio-more-horizontal nav-subtitle-replacer"></small>
                         </li>
 
-                        <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/transactions/rental/report/day-wise-report') ? 'active' : '' }}">
+                        <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/transactions/rental/report/transaction-report') ? 'active' : '' }}">
                             <a class="nav-link " href="{{ route('admin.transactions.rental.report.transaction-report') }}" title="{{ translate('messages.transection_report') }}">
                                 <span class="tio-chart-pie-1 nav-icon"></span>
-                                <span class="text-truncate">{{ translate('messages.transection_report') }}</span>
+                                <span class="text-truncate">{{ translate('messages.transaction_report') }}</span>
                             </a>
                         </li>
 
@@ -199,8 +199,8 @@
                             </a>
                         </li>
 
-                        <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/transactions/report/store*') ? 'active' : '' }}">
-                            <a class="nav-link " href="{{ route('admin.transactions.report.store-summary-report') }}" title="{{ translate('messages.provider_wise_report') }}">
+                        <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/transactions/rental/report/provider*') ? 'active' : '' }}">
+                            <a class="nav-link " href="{{ route('admin.transactions.rental.report.provider-summary-report') }}" title="{{ translate('messages.provider_wise_report') }}">
                                 <span class="tio-home nav-icon"></span>
                                 <span class="text-truncate">{{ translate('messages.provider_wise_report') }}</span>
                             </a>
@@ -229,7 +229,7 @@
                         </li> --}}
 
 
-                        <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/transactions/rental/report/order-report') ? 'active' : '' }}">
+                        <li class="navbar-vertical-aside-has-menu {{ Request::is('admin/transactions/rental/report/trip-report') ? 'active' : '' }}">
                             <a class="nav-link " href="{{ route('admin.transactions.rental.report.trip-report') }}" title="{{ translate('messages.trip_report') }}">
                                 <span class="tio-chart-bar-4 nav-icon"></span>
                                 <span class="text-truncate text-capitalize">{{ translate('messages.trip_report') }}</span>

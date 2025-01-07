@@ -33,7 +33,7 @@
         <div class="card mb-20">
             <div class="card-body">
                 <h4 class="">{{translate('Search Data')}}</h4>
-                <form action="{{route('admin.transactions.report.set-date')}}" method="post">
+                <form action="{{ route('admin.transactions.rental.report.set-date') }}" method="post">
                     @csrf
                 <div class="row g-3">
                     <div class="col-sm-6 col-md-3">
