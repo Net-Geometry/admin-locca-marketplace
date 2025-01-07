@@ -5,16 +5,17 @@ namespace App\Http\Controllers\Vendor;
 
 
 use App\Models\Admin;
+use App\Models\Store;
 use App\Library\Payer;
 use App\Traits\Payment;
 use App\Library\Receiver;
-use App\Models\Store;
+use App\Models\StoreWallet;
 use Illuminate\Http\Request;
 use App\CentralLogics\Helpers;
 use App\Models\BusinessSetting;
 use App\Models\WithdrawRequest;
-use App\Models\StoreWallet;
 use App\Models\WithdrawalMethod;
+use App\Mail\WithdrawRequestMail;
 use App\Models\AccountTransaction;
 use Illuminate\Support\Facades\DB;
 use App\Models\DisbursementDetails;
@@ -25,6 +26,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Library\Payment as PaymentInfo;
 use Illuminate\Support\Facades\Validator;
 use App\Exports\DisbursementHistoryExport;
+use Modules\Rental\Emails\ProviderWithdrawRequestMail;
 
 class WalletController extends Controller
 {
@@ -65,10 +67,12 @@ class WalletController extends Controller
             try
             {
                 $admin= Admin::where('role_id', 1)->first();
-                if(config('mail.status') && Helpers::get_mail_status('withdraw_request_mail_status_admin') == '1' &&   Helpers::getNotificationStatusData('admin','withdraw_request','mail_status')) {
-                    $wallet_transaction = WithdrawRequest::where('vendor_id',Helpers::get_vendor_id())->latest()->first();
-                    Mail::to($admin['email'])->send(new \App\Mail\WithdrawRequestMail('pending',$wallet_transaction));
-                }
+                $wallet_transaction = WithdrawRequest::where('vendor_id',Helpers::get_vendor_id())->latest()->first();
+                if( Helpers::get_store_data()?->module?->module_type !== 'rental' && config('mail.status') && Helpers::get_mail_status('withdraw_request_mail_status_admin') == '1' &&   Helpers::getNotificationStatusData('admin','withdraw_request','mail_status')) {
+                    Mail::to($admin['email'])->send(new WithdrawRequestMail('pending',$wallet_transaction));
+                } elseif(Helpers::get_store_data()?->module?->module_type == 'rental' && config('mail.status') && Helpers::get_mail_status('rental_withdraw_request_mail_status_admin') == '1' &&   Helpers::getNotificationStatusData('admin','provider_withdraw_request','mail_status') ){
+                    Mail::to($admin['email'])->send(new ProviderWithdrawRequestMail('pending',$wallet_transaction));
+                 }
             }
             catch(\Exception $e)
             {

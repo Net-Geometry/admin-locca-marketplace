@@ -2,58 +2,60 @@
 
 namespace Modules\Rental\Http\Controllers\Web\Admin;
 
-use App\CentralLogics\Helpers;
-use App\CentralLogics\StoreLogic;
-use App\Mail\StoreRegistration;
-use App\Mail\VendorSelfRegistration;
-use App\Models\Admin;
-use App\Models\BusinessSetting;
-use App\Models\Conversation;
-use App\Models\DisbursementDetails;
 use App\Models\Item;
-use App\Models\Module;
+use App\Models\Zone;
+use App\Models\Admin;
 use App\Models\Order;
 use App\Models\Store;
-use App\Models\StoreWallet;
-use App\Models\SubscriptionPackage;
-use App\Models\TempProduct;
-use App\Models\UserInfo;
+use App\Models\Module;
 use App\Models\Vendor;
-use App\Models\WithdrawRequest;
-use App\Models\Zone;
-use App\Traits\FileManagerTrait;
-use Brian2694\Toastr\Facades\Toastr;
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Contracts\Support\Renderable;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
-use Illuminate\Http\RedirectResponse;
+use App\Models\UserInfo;
+use App\Models\StoreWallet;
+use App\Models\TempProduct;
+use App\Models\Conversation;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
+use App\CentralLogics\Helpers;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Config;
+use App\Mail\StoreRegistration;
+use App\Models\BusinessSetting;
+use App\Models\WithdrawRequest;
+use Illuminate\Validation\Rule;
+use App\Traits\FileManagerTrait;
+use App\CentralLogics\StoreLogic;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Modules\Rental\Entities\Trips;
+use App\Models\DisbursementDetails;
+use App\Models\SubscriptionPackage;
+use Illuminate\Contracts\View\View;
+use App\Mail\VendorSelfRegistration;
+use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
+use Maatwebsite\Excel\Facades\Excel;
+use Modules\Rental\Entities\Vehicle;
+use Rap2hpoutre\FastExcel\FastExcel;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
-use Maatwebsite\Excel\Facades\Excel;
-use MatanYadaev\EloquentSpatial\Objects\Point;
-use Modules\Rental\Entities\Trips;
-use Modules\Rental\Entities\TripTransaction;
-use Modules\Rental\Entities\Vehicle;
 use Modules\Rental\Entities\VehicleDriver;
 use Modules\Rental\Entities\VehicleReview;
-use Modules\Rental\Exports\VehicleReviewExport;
-use OpenSpout\Common\Exception\InvalidArgumentException;
 use OpenSpout\Common\Exception\IOException;
+use Illuminate\Contracts\Support\Renderable;
+use Modules\Rental\Entities\TripTransaction;
+use MatanYadaev\EloquentSpatial\Objects\Point;
+use Modules\Rental\Emails\ProviderRegistration;
+use Modules\Rental\Exports\VehicleReviewExport;
+use Illuminate\Contracts\Foundation\Application;
+use Modules\Rental\Emails\ProviderSelfRegistration;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+use OpenSpout\Common\Exception\InvalidArgumentException;
 use OpenSpout\Common\Exception\UnsupportedTypeException;
 use OpenSpout\Writer\Exception\WriterNotOpenedException;
-use Rap2hpoutre\FastExcel\FastExcel;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ProviderController extends Controller
 {
@@ -619,12 +621,13 @@ class ProviderController extends Controller
 
         try{
             if($request->status == 1){
-                if ( config('mail.status') && $this->helpers->get_mail_status('approve_mail_status_store') == '1' &&  $this->helpers->getNotificationStatusData('store','store_registration_approval','mail_status')) {
-                    Mail::to($store?->vendor?->email)->send(new \App\Mail\VendorSelfRegistration('approved', $store->vendor->f_name.' '.$store->vendor->l_name));
+
+                if(config('mail.status') && Helpers::get_mail_status('rental_approve_mail_status_provider') == '1' &&  Helpers::getNotificationStatusData('provider','provider_registration_approval','mail_status') ){
+                    Mail::to($store?->vendor?->email)->send(new ProviderSelfRegistration('approved', $store->vendor->f_name.' '.$store->vendor->l_name));
                 }
             }else{
-                if ( config('mail.status') &&  $this->helpers->get_mail_status('deny_mail_status_store') == '1' &&  $this->helpers->getNotificationStatusData('store','store_registration_deny','mail_status')) {
-                    Mail::to($store?->vendor?->email)->send(new \App\Mail\VendorSelfRegistration('denied', $store->vendor->f_name.' '.$store->vendor->l_name));
+                if(config('mail.status') && Helpers::get_mail_status('rental_deny_mail_status_provider') == '1' &&  Helpers::getNotificationStatusData('provider','provider_registration_deny','mail_status') ){
+                    Mail::to($store?->vendor?->email)->send(new ProviderSelfRegistration('denied', $store->vendor->f_name.' '.$store->vendor->l_name));
                 }
             }
         }
@@ -1145,18 +1148,12 @@ class ProviderController extends Controller
         try{
             $admin = $this->admin->where('role_id', 1)->first();
 
-            if(config('mail.status') &&
-                $this->helpers->get_mail_status('registration_mail_status_store') == '1' &&
-                $this->helpers->getNotificationStatusData('store','store_registration','mail_status') ){
-
-                Mail::to($request['email'])->send(new VendorSelfRegistration('pending', $vendor->f_name.' '.$vendor->l_name));
+            if(config('mail.status') && Helpers::get_mail_status('rental_registration_mail_status_provider') == '1' &&  Helpers::getNotificationStatusData('provider','provider_registration','mail_status') ){
+                Mail::to($request['email'])->send(new ProviderSelfRegistration('pending', $vendor->f_name.' '.$vendor->l_name));
             }
 
-            if(config('mail.status') &&
-                $this->helpers->get_mail_status('store_registration_mail_status_admin') == '1' &&
-                $this->helpers->getNotificationStatusData('admin','store_self_registration','mail_status') ){
-
-                Mail::to($admin['email'])->send(new StoreRegistration('pending', $vendor->f_name.' '.$vendor->l_name));
+            if( config('mail.status') && Helpers::get_mail_status('rental_provider_registration_mail_status_admin') == '1' &&  Helpers::getNotificationStatusData('admin','provider_self_registration','mail_status') ){
+                Mail::to($admin['email'])->send(new ProviderRegistration('pending', $vendor->f_name.' '.$vendor->l_name));
             }
 
         }catch(\Exception $ex){

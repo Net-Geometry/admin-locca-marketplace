@@ -24,6 +24,7 @@ use App\Models\UserNotification;
 use App\Models\WithdrawalMethod;
 use App\CentralLogics\OrderLogic;
 use App\CentralLogics\StoreLogic;
+use App\Mail\WithdrawRequestMail;
 use App\Models\StoreSubscription;
 use App\CentralLogics\CouponLogic;
 use App\Models\AccountTransaction;
@@ -37,6 +38,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
 use App\Models\SubscriptionBillingAndRefundHistory;
+use Modules\Rental\Emails\ProviderWithdrawRequestMail;
 
 class VendorController extends Controller
 {
@@ -836,10 +838,13 @@ class VendorController extends Controller
                 DB::table('withdraw_requests')->insert($data);
                 $w?->increment('pending_withdraw', $request['amount']);
                 $mail_status = Helpers::get_mail_status('withdraw_request_mail_status_admin');
-                if(config('mail.status') && $mail_status == '1'  &&  Helpers::getNotificationStatusData('admin','withdraw_request','mail_status' )) {
-                    $wallet_transaction = WithdrawRequest::where('vendor_id',$w->vendor_id)->latest()->first();
-                    $admin= \App\Models\Admin::where('role_id', 1)->first();
-                    Mail::to($admin->email)->send(new \App\Mail\WithdrawRequestMail('admin_mail',$wallet_transaction));
+                $admin= \App\Models\Admin::where('role_id', 1)->first();
+                $wallet_transaction = WithdrawRequest::where('vendor_id',$w->vendor_id)->latest()->first();
+                if($request['vendor']?->stores[0]?->module?->module_type !== 'rental' &&  config('mail.status') && $mail_status == '1'  &&  Helpers::getNotificationStatusData('admin','withdraw_request','mail_status' )) {
+                    Mail::to($admin->email)->send(new WithdrawRequestMail('admin_mail',$wallet_transaction));
+                }
+                elseif($request['vendor']?->stores[0]?->module?->module_type == 'rental' && config('mail.status') && Helpers::get_mail_status('rental_withdraw_request_mail_status_admin') == '1' &&   Helpers::getNotificationStatusData('admin','provider_withdraw_request','mail_status') ){
+                    Mail::to($admin->email)->send(new ProviderWithdrawRequestMail('pending',$wallet_transaction));
                 }
                 return response()->json(['message'=>translate('messages.withdraw_request_placed_successfully')],200);
             }

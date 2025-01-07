@@ -7,13 +7,15 @@ use App\Models\Admin;
 use App\Models\Store;
 use App\Models\Module;
 use App\Models\Vendor;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\CentralLogics\Helpers;
+use App\Mail\StoreRegistration;
 use App\Models\BusinessSetting;
 use App\CentralLogics\StoreLogic;
+use Illuminate\Http\JsonResponse;
 use App\Models\SubscriptionPackage;
 use Gregwar\Captcha\CaptchaBuilder;
+use App\Mail\VendorSelfRegistration;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
@@ -21,6 +23,8 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
 use MatanYadaev\EloquentSpatial\Objects\Point;
+use Modules\Rental\Emails\ProviderRegistration;
+use Modules\Rental\Emails\ProviderSelfRegistration;
 
 class VendorController extends Controller
 {
@@ -170,12 +174,19 @@ class VendorController extends Controller
 
         try{
             $admin= Admin::where('role_id', 1)->first();
-            if(config('mail.status') && Helpers::get_mail_status('registration_mail_status_store') == '1' &&  Helpers::getNotificationStatusData('store','store_registration','mail_status') ){
-                Mail::to($request['email'])->send(new \App\Mail\VendorSelfRegistration('pending', $vendor->f_name.' '.$vendor->l_name));
+            if($module?->module_type != 'rental' && config('mail.status') && Helpers::get_mail_status('registration_mail_status_store') == '1' &&  Helpers::getNotificationStatusData('store','store_registration','mail_status') ){
+                Mail::to($request['email'])->send(new VendorSelfRegistration('pending', $vendor->f_name.' '.$vendor->l_name));
             }
-            if(config('mail.status') && Helpers::get_mail_status('store_registration_mail_status_admin') == '1' &&  Helpers::getNotificationStatusData('admin','store_self_registration','mail_status') ){
-                Mail::to($admin['email'])->send(new \App\Mail\StoreRegistration('pending', $vendor->f_name.' '.$vendor->l_name));
+            elseif($module?->module_type == 'rental'&& config('mail.status') && Helpers::get_mail_status('rental_registration_mail_status_provider') == '1' &&  Helpers::getNotificationStatusData('provider','provider_registration','mail_status') ){
+                Mail::to($request['email'])->send(new ProviderSelfRegistration('pending', $vendor->f_name.' '.$vendor->l_name));
             }
+
+            if($module?->module_type != 'rental' && config('mail.status') && Helpers::get_mail_status('store_registration_mail_status_admin') == '1' &&  Helpers::getNotificationStatusData('admin','store_self_registration','mail_status') ){
+                Mail::to($admin['email'])->send(new StoreRegistration('pending', $vendor->f_name.' '.$vendor->l_name));
+            } elseif($module?->module_type == 'rental'&& config('mail.status') && Helpers::get_mail_status('rental_provider_registration_mail_status_admin') == '1' &&  Helpers::getNotificationStatusData('admin','provider_self_registration','mail_status') ){
+                Mail::to($admin['email'])->send(new ProviderRegistration('pending', $vendor->f_name.' '.$vendor->l_name));
+            }
+
         }catch(\Exception $ex){
             info($ex->getMessage());
         }
