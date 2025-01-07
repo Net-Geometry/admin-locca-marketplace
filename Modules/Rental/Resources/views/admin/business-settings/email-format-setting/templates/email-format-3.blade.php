@@ -8,7 +8,7 @@ $company_name = App\Models\BusinessSetting::where('key', 'business_name')->first
                 <h2 class="mb-3" id="mail-title">{{ $data['title']?? translate('Main_Title_or_Subject_of_the_Mail') }}</h2>
                 <div class="mb-1" id="mail-body">{!! $data['body']?? translate('Hi_Sabrina,') !!}</div>
                 <span class="d-block text-center mb-3">
-                    <a href="" class="cmn-btn" id="mail-button">{{ $data['button_name']??'Track Order' }}</a>
+                    <a href="" class="cmn-btn" id="mail-button">{{ $data['button_name']??'Track Trip' }}</a>
                 </span>
                 <table class="bg-section p-10 w-100">
                     <tbody>
@@ -19,7 +19,7 @@ $company_name = App\Models\BusinessSetting::where('key', 'business_name')->first
                                     <img class="mb-2 mail-img-2 onerror-image" data-onerror-image="{{ asset('storage/app/public/business/' . $restaurant_logo) }}"
                                     src="{{ $data?->logo ? $data->logo_full_url : \App\CentralLogics\Helpers::get_full_url('business',$restaurant_logo?->value,$restaurant_logo?->storage[0]?->value ?? 'public', 'favicon') }}"
                                     id="logoViewer" alt="">
-                                    <h3 class="mb-3 mt-0">{{ translate('Order_Info') }}</h3>
+                                    <h3 class="mb-3 mt-0">{{ translate('Trip_Info') }}</h3>
                                 </span>
                             </td>
                         </tr>
@@ -29,28 +29,28 @@ $company_name = App\Models\BusinessSetting::where('key', 'business_name')->first
                                     <tbody>
                                         <tr>
                                             <td>
-                                                <h3 class="subtitle">{{ translate('Order_Summary') }}</h3>
-                                                <span class="d-block">{{ translate('Order') }}{{ translate('#_48573') }}</span>
+                                                <h3 class="subtitle">{{ translate('Trip_Summary') }}</h3>
+                                                <span class="d-block">{{ translate('Trip') }}{{ translate('#_48573') }}</span>
                                                 <span class="d-block">{{ translate('23 Jul, 2023 4:30 am') }}</span>
                                             </td>
                                             <td class="email-template-table-td-max-width">
-                                                <h3 class="subtitle">{{ translate('Delivery_Address') }}</h3>
+                                                <h3 class="subtitle">{{ translate('User_Info') }}</h3>
                                                 <span class="d-block">{{ translate('Munam_Shahariar') }}</span>
-                                                <span class="d-block" >{{ translate('4517_Washington_Ave._Manchester,_Kentucky_39495')}}</span>
+                                                <span class="d-block" >{{ translate('xyz@gami.com')}}</span>
                                             </td>
                                         </tr>
                                         <td colspan="2">
                                             <table class="w-100">
                                                 <thead class="bg-section-2">
                                                     <tr>
-                                                        <th class="text-left p-1 px-3">{{ translate('Product') }}</th>
+                                                        <th class="text-left p-1 px-3">{{ translate('Vehicle') }}</th>
                                                         <th class="text-right p-1 px-3">{{ translate('Price') }}</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     <tr>
                                                         <td class="text-left p-2 px-3">
-                                                            {{ translate('1._The_school_of_life_-_emotional_baggage_tote_bag_-_canvas_tote_bag_(navy)_x_1') }}
+                                                            {{ translate('1.ABC_x_1') }}
                                                         </td>
                                                         <td class="text-right p-2 px-3">
                                                             <h4>
@@ -60,7 +60,7 @@ $company_name = App\Models\BusinessSetting::where('key', 'business_name')->first
                                                     </tr>
                                                     <tr>
                                                         <td class="text-left p-2 px-3">
-                                                            {{ translate('2._3USB_Head_Phone_x_1') }}
+                                                            {{ translate('2.XYZ_x_1') }}
                                                         </td>
                                                         <td class="text-right p-2 px-3">
                                                             <h4>
@@ -74,14 +74,10 @@ $company_name = App\Models\BusinessSetting::where('key', 'business_name')->first
                                                             <table class="w-100">
                                                                 <tr>
                                                                     <td class="email-template-table-td-width"></td>
-                                                                    <td class="p-1 px-3">{{ translate('Item_Price') }}</td>
+                                                                    <td class="p-1 px-3">{{ translate('Price') }}</td>
                                                                     <td class="text-right p-1 px-3">{{ translate('$85') }}</td>
                                                                 </tr>
-                                                                <tr>
-                                                                    <td class="email-template-table-td-width"></td>
-                                                                    <td class="p-1 px-3">{{ translate('Addon') }}</td>
-                                                                    <td class="text-right p-1 px-3">{{ translate('$85') }}</td>
-                                                                </tr>
+
                                                                 <tr>
                                                                     <td class="email-template-table-td-width"></td>
                                                                     <td class="p-1 px-3">{{ translate('Sub_total') }}</td>
@@ -102,11 +98,7 @@ $company_name = App\Models\BusinessSetting::where('key', 'business_name')->first
                                                                     <td class="p-1 px-3">{{ translate('VAT_/_Tax') }}</td>
                                                                     <td class="text-right p-1 px-3">{{ translate('$15') }}</td>
                                                                 </tr>
-                                                                <tr>
-                                                                    <td class="email-template-table-td-width"></td>
-                                                                    <td class="p-1 px-3">{{ translate('Delivery_Charge') }}</td>
-                                                                    <td class="text-right p-1 px-3">{{ translate('$20') }}</td>
-                                                                </tr>
+
                                                                 <tr>
                                                                     <td class="email-template-table-td-width"></td>
                                                                     <td class="p-1 px-3">

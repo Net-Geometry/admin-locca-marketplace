@@ -30,7 +30,8 @@ class TripBooking extends Mailable
         $trip_id = $this->trip_id;
         $trip=Trips::where('id', $trip_id)->first();
 
-        $url=route('order_invoice',['id' => base64_encode($trip_id) ,'type' =>'trip']);
+        $url=null;
+        // $url=route('order_invoice',['id' => base64_encode($trip_id) ,'type' =>'trip']);
 
         $company_name = BusinessSetting::where('key', 'business_name')->first()->value;
         $data=RentalEmailTemplate::where('type','user')->where('email_type', 'new_order')->first();
@@ -38,10 +39,10 @@ class TripBooking extends Mailable
         $user_name = $trip->customer->f_name.' '.$trip->customer->l_name;
         $store_name = $trip->provider->name;
 
-        $title = Helpers::text_variable_data_format( value:$data['title']??'',user_name:$user_name??'',store_name:$store_name??'',delivery_man_name:$delivery_man_name??'',order_id:$trip_id??'');
-        $body = Helpers::text_variable_data_format( value:$data['body']??'',user_name:$user_name??'',store_name:$store_name??'',delivery_man_name:$delivery_man_name??'',order_id:$trip_id??'');
-        $footer_text = Helpers::text_variable_data_format( value:$data['footer_text']??'',user_name:$user_name??'',store_name:$store_name??'',delivery_man_name:$delivery_man_name??'',order_id:$trip_id??'');
-        $copyright_text = Helpers::text_variable_data_format( value:$data['copyright_text']??'',user_name:$user_name??'',store_name:$store_name??'',delivery_man_name:$delivery_man_name??'',order_id:$trip_id??'');
-        return $this->subject(translate('Trip_Booked'))->view('email-templates.new-email-format-'.$template, ['company_name'=>$company_name,'data'=>$data,'title'=>$title,'body'=>$body,'footer_text'=>$footer_text,'copyright_text'=>$copyright_text,'trip'=>$trip ,'url' => $url]);
+        $title = Helpers::text_variable_data_format( value:$data['title']??'',user_name:$user_name??'',store_name:$store_name??'',order_id:$trip_id??'');
+        $body = Helpers::text_variable_data_format( value:$data['body']??'',user_name:$user_name??'',store_name:$store_name??'',order_id:$trip_id??'');
+        $footer_text = Helpers::text_variable_data_format( value:$data['footer_text']??'',user_name:$user_name??'',store_name:$store_name??'',order_id:$trip_id??'');
+        $copyright_text = Helpers::text_variable_data_format( value:$data['copyright_text']??'',user_name:$user_name??'',store_name:$store_name??'',order_id:$trip_id??'');
+        return $this->subject(translate('Trip_Booked'))->view('rental::email-templates.new-email-format-'.$template, ['company_name'=>$company_name,'data'=>$data,'title'=>$title,'body'=>$body,'footer_text'=>$footer_text,'copyright_text'=>$copyright_text,'trip'=>$trip ,'url' => $url]);
     }
 }

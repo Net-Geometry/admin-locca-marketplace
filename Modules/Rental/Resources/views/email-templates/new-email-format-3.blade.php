@@ -296,6 +296,7 @@ $site_direction = \App\CentralLogics\Helpers::system_default_direction();
                                                     <h3 class="subtitle">{{ translate('Customer_Info') }}</h3>
 
                                                     @php($address = $trip->user_info)
+                                                    @php($subtotal = 0)
                                                     <span
                                                         class="d-block">{{ $trip->customer?->f_name . ' ' . $trip->customer?->l_name ?? $address['contact_person_name'] }}</span>
                                                     <span class="d-block">
@@ -309,7 +310,7 @@ $site_direction = \App\CentralLogics\Helpers::system_default_direction();
                                                 <table class="w-100">
                                                     <thead class="bg-section-2">
                                                         <tr>
-                                                            <th class="text-left p-1 px-3">{{ translate('Product') }}
+                                                            <th class="text-left p-1 px-3">{{ translate('Vehicle') }}
                                                             </th>
                                                             <th class="text-right p-1 px-3">{{ translate('Price') }}
                                                             </th>
@@ -317,108 +318,105 @@ $site_direction = \App\CentralLogics\Helpers::system_default_direction();
                                                     </thead>
                                                     <tbody>
 
-                                                            @foreach ($trip->details as $key => $details)
-                                                                <?php
-                                                                $subtotal = $details['price'] * $details->quantity;
-                                                                $item_details = json_decode($details->item_details, true);
-                                                                ?>
-                                                                <tr>
-                                                                    <td class="text-left p-2 px-3">
-                                                                        <span style="font-size: 14px;">
-                                                                            {{ Str::limit($item_details['name'], 40, '...') }}
-                                                                        </span>
-                                                                        <br>
+                                                        @foreach ($trip->trip_details as $key => $details)
+                                                            <?php
+                                                            $subtotal += $details['price'] * $details->quantity;
+                                                            $item_details = $details->vehicle_details;
+                                                            ?>
+                                                            <tr>
+                                                                <td class="text-left p-2 px-3">
+                                                                    <span style="font-size: 14px;">
+                                                                        {{ Str::limit($item_details['name'], 40, '...') }}
+                                                                    </span>
+                                                                    <br>
 
-                                                                        <span>x {{ $details->quantity }}</span>
-                                                                    </td>
-                                                                    <td class="text-right p-2 px-3">
-                                                                        <h4>
-                                                                            {{ \App\CentralLogics\Helpers::format_currency($subtotal) }}
-                                                                        </h4>
-                                                                    </td>
-                                                                </tr>
-                                                            @endforeach
+                                                                    <span>x {{ $details->quantity }}</span>
+                                                                </td>
+                                                                <td class="text-right p-2 px-3">
+                                                                    <h4>
+                                                                        {{ \App\CentralLogics\Helpers::format_currency($details['price'] * $details->quantity) }}
+                                                                    </h4>
+                                                                </td>
+                                                            </tr>
+                                                        @endforeach
 
                                                         <tr>
                                                             <td colspan="2">
                                                                 <hr class="mt-0">
                                                                 <table class="w-100">
-                                                                   
+                                                                    <tr>
+                                                                        <td style="width: 40%"></td>
+                                                                        <td class="p-1 px-3">
+                                                                            {{ translate('messages.price') }}
+                                                                        </td>
+                                                                        <td class="text-right p-1 px-3">
+                                                                            {{ \App\CentralLogics\Helpers::format_currency($subtotal) }}
+                                                                        </td>
+                                                                    </tr>
+
+                                                                    <tr>
+                                                                        <td style="width: 40%"></td>
+                                                                        <td class="p-1 px-3">
+                                                                            {{ translate('messages.subtotal') }}
+                                                                            @if ($trip->tax_status == 'included')
+                                                                                ({{ translate('messages.TAX_Included') }})
+                                                                            @endif
+                                                                        </td>
+                                                                        <td class="text-right p-1 px-3">
+                                                                            {{ \App\CentralLogics\Helpers::format_currency($subtotal) }}
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td style="width: 40%"></td>
+                                                                        <td class="p-1 px-3">
+                                                                            {{ translate('messages.discount') }}
+                                                                        </td>
+                                                                        <td class="text-right p-1 px-3">
+                                                                            {{ \App\CentralLogics\Helpers::format_currency($trip->discount_on_trip) }}
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td style="width: 40%"></td>
+                                                                        <td class="p-1 px-3">
+                                                                            {{ translate('messages.coupon_discount') }}
+                                                                        </td>
+                                                                        <td class="text-right p-1 px-3">
+                                                                            {{ \App\CentralLogics\Helpers::format_currency($trip->coupon_discount_amount) }}
+                                                                        </td>
+                                                                    </tr>
+                                                                    @if ($trip?->ref_bonus_amount > 0)
                                                                         <tr>
                                                                             <td style="width: 40%"></td>
                                                                             <td class="p-1 px-3">
-                                                                                {{ translate('messages.item_price') }}
+                                                                                {{ translate('messages.Referral_Discount') }}
                                                                             </td>
                                                                             <td class="text-right p-1 px-3">
-                                                                                {{ \App\CentralLogics\Helpers::format_currency($sub_total) }}
+                                                                                {{ \App\CentralLogics\Helpers::format_currency($trip->ref_bonus_amount) }}
                                                                             </td>
                                                                         </tr>
+                                                                    @endif
 
+                                                                    @if ($trip->tax_status == 'excluded' || $trip->tax_status == null)
                                                                         <tr>
                                                                             <td style="width: 40%"></td>
                                                                             <td class="p-1 px-3">
-                                                                                {{ translate('messages.subtotal') }}
-                                                                                @if ($trip->tax_status == 'included')
-                                                                                    ({{ translate('messages.TAX_Included') }})
-                                                                                @endif
+                                                                                {{ translate('messages.tax') }}
                                                                             </td>
                                                                             <td class="text-right p-1 px-3">
-                                                                                {{ \App\CentralLogics\Helpers::format_currency($sub_total ) }}
+                                                                                {{ \App\CentralLogics\Helpers::format_currency($trip->tax_amount) }}
                                                                             </td>
                                                                         </tr>
-                                                                        <tr>
+                                                                    @else
+                                                                        {{-- <tr>
                                                                             <td style="width: 40%"></td>
                                                                             <td class="p-1 px-3">
-                                                                                {{ translate('messages.discount') }}
+                                                                                {{ translate('messages.tax') }} ({{ translate('messages.included') }})
                                                                             </td>
                                                                             <td class="text-right p-1 px-3">
-                                                                                {{ \App\CentralLogics\Helpers::format_currency($trip->discount_on_trip) }}
+                                                                                {{ \App\CentralLogics\Helpers::format_currency($trip->tax_amount) }}
                                                                             </td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td style="width: 40%"></td>
-                                                                            <td class="p-1 px-3">
-                                                                                {{ translate('messages.coupon_discount') }}
-                                                                            </td>
-                                                                            <td class="text-right p-1 px-3">
-                                                                                {{ \App\CentralLogics\Helpers::format_currency($trip->coupon_discount_amount) }}
-                                                                            </td>
-                                                                        </tr>
-                                                                        @if ($trip?->ref_bonus_amount > 0)
-                                                                            <tr>
-                                                                                <td style="width: 40%"></td>
-                                                                                <td class="p-1 px-3">
-                                                                                    {{ translate('messages.Referral_Discount') }}
-                                                                                </td>
-                                                                                <td class="text-right p-1 px-3">
-                                                                                    {{ \App\CentralLogics\Helpers::format_currency($trip->ref_bonus_amount) }}
-                                                                                </td>
-                                                                            </tr>
-                                                                        @endif
-
-
-
-                                                                        @if ($trip->tax_status == 'excluded' || $trip->tax_status == null)
-                                                                            <tr>
-                                                                                <td style="width: 40%"></td>
-                                                                                <td class="p-1 px-3">
-                                                                                    {{ translate('messages.tax') }}
-                                                                                </td>
-                                                                                <td class="text-right p-1 px-3">
-                                                                                    {{ \App\CentralLogics\Helpers::format_currency($trip->total_tax_amount) }}
-                                                                                </td>
-                                                                            </tr>
-                                                                        @else
-                                                                            <tr>
-                                                                                <td style="width: 40%"></td>
-                                                                                <td class="p-1 px-3">
-                                                                                    {{ translate('messages.tax') }}
-                                                                                </td>
-                                                                                <td class="text-right p-1 px-3">
-                                                                                    {{ \App\CentralLogics\Helpers::format_currency($total_tax) }}
-                                                                                </td>
-                                                                            </tr>
-                                                                        @endif
+                                                                        </tr> --}}
+                                                                    @endif
 
                                                                     <tr>
                                                                         <td style="width: 40%"></td>
@@ -464,7 +462,7 @@ $site_direction = \App\CentralLogics\Helpers::system_default_direction();
             <tr>
                 <td>
                     <span class="privacy">
-                        @php($landing_data = \App\Models\DataSetting::where('type', 'admin_landing_page')->whereIn('key', ['shipping_policy_status', 'refund_policy_status', 'cancellation_policy_status'])->pluck('value', 'key')->toArray())
+                        @php( $landing_data = \App\Models\DataSetting::where('type', 'admin_landing_page')->whereIn('key', ['shipping_policy_status', 'refund_policy_status', 'cancellation_policy_status'])->pluck('value', 'key')->toArray())
                         <a href="{{ route('privacy-policy') }}" id="privacy-check"
                             style="{{ isset($data['privacy']) && $data['privacy'] == 1 ? '' : 'display:none;' }}">{{ translate('Privacy_Policy') }}</a>
                         @if (isset($landing_data['refund_policy_status']) && $landing_data['refund_policy_status'] == 1)
