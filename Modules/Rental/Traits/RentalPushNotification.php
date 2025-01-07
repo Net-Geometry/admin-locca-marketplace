@@ -104,7 +104,7 @@ trait RentalPushNotification
             $customer_details =$trip['user_info'];
             $value = self::getTripStatusMessage($trip->trip_status,'rental','en');
             $value = Helpers::text_variable_data_format(value:$value,store_name:$trip->provider?->name,order_id:$trip->id,user_name:$customer_details['contact_person_name']);
-            $user_fcm = $trip->guest->fcm_token;
+            $user_fcm = $trip?->guest?->fcm_token;
         }else{
             $value = self::getTripStatusMessage($trip->trip_status,'rental',$trip?->customer?->current_language_key??'en');
             $value = Helpers::text_variable_data_format(value:$value,store_name:$trip->provider?->name,order_id:$trip->id,user_name:"{$trip->customer?->f_name} {$trip->customer?->l_name}");

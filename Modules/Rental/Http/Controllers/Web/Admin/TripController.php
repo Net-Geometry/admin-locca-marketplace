@@ -354,34 +354,38 @@ class TripController extends Controller
 
         $distance = $request->distance ?? $trip->distance;
         $modifiedPrices = $request->modified_prices;
+
+
         $processedValue = preg_replace('/[^\d.]/', '', $modifiedPrices);
+
         $processedDistanceValue = preg_replace('/[^\d.]/', '', $distance);
         $vehicleId = $request->vehicle_id;
         $quantity = (int)$request->quantity;
         $estimatedHours = $request->estimated_hours ?? $trip->estimated_hours;
+        $vehicleQuantities = session()->get('vehicleQuantities', []);
 
+        $se_modifiedPrices = session()->get('modifiedPrices',[]);
         if ($quantity) {
-            $vehicleQuantities = session()->get('vehicleQuantities', []);
             $vehicleQuantities[$vehicleId] = $quantity;
+            foreach ($vehicleQuantities as $key => $value) {
+                if (array_key_exists($key, $se_modifiedPrices) && $key == $vehicleId) {
+                    unset($se_modifiedPrices[$key]);
+                    session()->put('modifiedPrices', $se_modifiedPrices);
+                    session()->save();
+                }
+            }
             session()->put('vehicleQuantities', $vehicleQuantities);
             session()->save();
-            $vehicleQuantities = session()->get('vehicleQuantities');
         }
 
         if ($modifiedPrices) {
-            $modifiedPrices = session()->get('modifiedPrices', []);
-
-            $modifiedPrices[$vehicleId] = $processedValue;
-
-            session()->put('modifiedPrices', $modifiedPrices);
+            $se_modifiedPrices[$vehicleId] = $processedValue;
+            session()->put('modifiedPrices', $se_modifiedPrices);
             session()->save();
-            $modifiedPrices = session()->get('modifiedPrices');
         }
 
-        info($vehicleQuantities);
-        info($modifiedPrices);
-        info($request->modified_prices);
-
+        $modifiedPrices = session()->get('modifiedPrices')?? [];
+        $vehicleQuantities = session()->get('vehicleQuantities')?? [];
 
         $data = [
             'distance' => $processedDistanceValue,

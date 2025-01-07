@@ -95,7 +95,7 @@ $countryCode= strtolower($country?$country->value:'auto');
                     <div class="row">
                         <div class="col-12">
                             <div class="text-center">
-                                <h2>
+                                <h2 class="update_notification_text">
                                     <i class="tio-shopping-cart-outlined"></i> {{translate('messages.You have new order, Check Please.')}}
                                 </h2>
                                 <hr>
@@ -517,37 +517,7 @@ $countryCode= strtolower($country?$country->value:'auto');
         });
     }
 
-    {{--function startFCM() {--}}
 
-    {{--    messaging--}}
-    {{--        .requestPermission()--}}
-    {{--        .then(function() {--}}
-    {{--            return messaging.getToken()--}}
-    {{--        })--}}
-    {{--        .then(function(response) {--}}
-    {{--            subscribeTokenToTopic(response, 'admin_message');--}}
-    {{--            console.log('subscribed');--}}
-    {{--        }).catch(function(error) {--}}
-    {{--            console.log(error);--}}
-    {{--        });--}}
-    {{--}--}}
-    {{--@php($key = \App\Models\BusinessSetting::where('key', 'push_notification_key')->first())--}}
-
-    {{--function subscribeTokenToTopic(token, topic) {--}}
-    {{--    fetch('https://iid.googleapis.com/iid/v1/' + token + '/rel/topics/' + topic, {--}}
-    {{--        method: 'POST',--}}
-    {{--        headers: new Headers({--}}
-    {{--            'Authorization': 'key={{ $key ? $key->value : '' }}'--}}
-    {{--        })--}}
-    {{--    }).then(response => {--}}
-    {{--        if (response.status < 200 || response.status >= 400) {--}}
-    {{--            throw 'Error subscribing to topic: ' + response.status + ' - ' + response.text();--}}
-    {{--        }--}}
-    {{--        console.log('Subscribed to "' + topic + '"');--}}
-    {{--    }).catch(error => {--}}
-    {{--        console.error(error);--}}
-    {{--    })--}}
-    {{--}--}}
 
     function conversationList() {
         $.ajax({
@@ -617,6 +587,9 @@ $countryCode= strtolower($country?$country->value:'auto');
                 new_module_id = payload.data.module_id
                 admin_zone_id = '<?php echo auth()->guard('admin')->user()->zone_id ;?>';
                 admin_role_id = '<?php echo auth()->guard('admin')->user()->role_id ;?>';
+                if(new_order_type === 'trip'){
+                    document.querySelector('.update_notification_text').textContent = "{{translate('messages.You have new trip, Check Please.')}}";
+                }
                 if(admin_role_id === '1'){
                     playAudio();
                     $('#popup-modal').appendTo("body").modal('show');
@@ -678,6 +651,10 @@ $countryCode= strtolower($country?$country->value:'auto');
         if(new_order_type === 'parcel')
         {
             location.href = '{{url('/')}}/admin/parcel/orders/all?module_id=' + new_module_id;
+        }
+        else if(new_order_type === 'trip')
+        {
+            location.href = '{{url('/')}}/admin/rental/trip?module_id=' + new_module_id;
         }
         else
         {
@@ -775,21 +752,23 @@ $(document).on('keyup', 'input[type="tel"]', function () {
     $("#generateSystemSelfToken").on("click", function () {
         generateRandomToken(64);
     });
+    if(document.getElementById('copyButton')){
 
-    document.getElementById('copyButton').addEventListener('click', function() {
-        const input = document.getElementById('systemSelfToken');
+        document.getElementById('copyButton').addEventListener('click', function() {
+            const input = document.getElementById('systemSelfToken');
 
-        // Select the input field text
-        input.select();
-        input.setSelectionRange(0, 99999); // For mobile devices
+            // Select the input field text
+            input.select();
+            input.setSelectionRange(0, 99999); // For mobile devices
 
-        // Copy the text inside the input field to the clipboard
-        navigator.clipboard.writeText(input.value).then(function() {
-            toastr.success('Text copied to clipboard: ' + input.value);
-        }).catch(function(error) {
-            toastr.error('Failed to copy text: ', error);
+            // Copy the text inside the input field to the clipboard
+            navigator.clipboard.writeText(input.value).then(function() {
+                toastr.success('Text copied to clipboard: ' + input.value);
+            }).catch(function(error) {
+                toastr.error('Failed to copy text: ', error);
+            });
         });
-    });
+    }
 
     function generateRandomToken(length) {
         const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';

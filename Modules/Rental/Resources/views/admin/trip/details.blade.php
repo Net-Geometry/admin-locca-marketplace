@@ -900,6 +900,7 @@
                                                 <input type="number" name="quantity" class="form-control fs-14 text--title w--60px quantity-input"
                                                        data-id="{{ $editDetail->id }}"
                                                        data-vehicle_id="{{ $editDetail->vehicle_id }}"
+
                                                        value="{{ $editDetail->quantity }}" placeholder="EX:5">
                                             </td>
                                             <td class="text-right">
@@ -1572,14 +1573,14 @@
             let vehicleId = $(this).data('vehicle_id');
             let distance = $('#distance-input').val();
 
-            alert(currentFare)
+
             $.ajax({
                 url: "{{ route('admin.rental.trip.get-calculation') }}",
                 type: 'get',
                 data: {
                     id: id,
                     distance: distance,
-                    quantity: quantity,
+
                     vehicle_id: vehicleId,
                     modified_prices: currentFare,
                     _token: "{{ csrf_token() }}"
