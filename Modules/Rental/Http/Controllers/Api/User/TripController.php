@@ -19,19 +19,22 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\Rental\Entities\Trips;
 use App\CentralLogics\CustomerLogic;
+use Illuminate\Support\Facades\Mail;
 use Modules\Rental\Entities\Vehicle;
 use App\Library\Payment as PaymentInfo;
 use Modules\Rental\Entities\RentalCart;
 use Modules\Rental\Entities\TripDetails;
 use Illuminate\Support\Facades\Validator;
+use Modules\Rental\Traits\TripLogicTrait;
 use Modules\Rental\Entities\PartialPayment;
 use MatanYadaev\EloquentSpatial\Objects\Point;
+use Modules\Rental\Emails\TripBooking;
 use Modules\Rental\Entities\RentalCartUserData;
-use Modules\Rental\Traits\TripLogicTrait;
+use Modules\Rental\Traits\RentalPushNotification;
 
 class TripController extends Controller
 {
-    use TripLogicTrait;
+    use TripLogicTrait , RentalPushNotification;
     public function __construct(
         private RentalCart $cart,
         private Trips $trips,
@@ -225,6 +228,8 @@ class TripController extends Controller
 
 
         DB::commit();
+
+        $this->sentTripNotification($trip);
         return response()->json($trip->id, 200);
     }
 
@@ -442,6 +447,41 @@ class TripController extends Controller
         }
 
         return $discount ?? 0;
+    }
+    private function sentTripNotification($trip)
+    {
+
+
+
+        $order_mail_status = Helpers::get_mail_status('rental_place_order_mail_status_user');
+        // $order_verification_mail_status = Helpers::get_mail_status('order_verification_mail_status_user');
+        //PlaceOrderMail
+        try {
+
+            if( $trip->provider?->is_valid_subscription == 1 && $trip->provider?->store_sub?->max_order != "unlimited" && $trip->provider?->store_sub?->max_order > 0){
+                $trip->provider?->store_sub?->decrement('max_order' , 1);
+            }
+
+if(config('mail.status') && $order_mail_status == '1' && Helpers::getNotificationStatusData('customer','customer_trip_notification','mail_status')){
+
+    if ( !$trip->is_guest && $trip->customer ) {
+                Mail::to($trip->customer->email)->send(new TripBooking($trip->id));
+            } elseif($trip->is_guest == 1  && isset($trip->user_info['contact_person_email'])){
+                Mail::to($trip->user_info['contact_person_email'])->send(new TripBooking($trip->id));
+            }
+}
+
+
+
+
+        } catch (\Exception $ex) {
+            info($ex->getMessage());
+        }
+
+
+        //
+        $this->sendTripNotificationToAll($trip);
+        return true;
     }
 
 

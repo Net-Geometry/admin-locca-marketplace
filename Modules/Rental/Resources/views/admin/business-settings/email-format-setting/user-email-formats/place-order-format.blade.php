@@ -30,8 +30,8 @@
                     <div class="card-body">
                         <div class="maintenance-mode-toggle-bar d-flex flex-wrap justify-content-between border rounded align-items-center p-2">
                             <h5 class="text-capitalize m-0 text--primary pl-2">
-                                {{translate('Send_Mail_On_‘Order_Placement’?')}}
-                        <span class="form-label-secondary text--primary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Customers_will_receive_an_automated_email_after_a_successful_order_placement.') }}">
+                                {{translate('Send_Mail_On_‘Trip_Booking’?')}}
+                        <span class="form-label-secondary text--primary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Customers_will_receive_an_automated_email_after_a_successful_Trip_Booking.') }}">
                                     <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="">
                                 </span>
                             </h5>
@@ -41,10 +41,10 @@
                                        data-type="status"
                                        data-image-on='{{asset('/public/assets/admin/img/modal')}}/place-order-on.png'
                                        data-image-off="{{asset('/public/assets/admin/img/modal')}}/place-order-off.png"
-                                       data-title-on="{{translate('Want_to_enable_Place_Order_mail?')}}"
-                                       data-title-off="{{translate('Want_to_disable_Place_Order_mail?')}}"
-                                       data-text-on="<p>{{translate('If_enabled,_customers_will_get_an_automatic_confirmation_mail_for_successful_Order_Placement_with_an_invoice')}}</p>"
-                                       data-text-off="<p>{{translate('If_disabled,_customers_will_NOT_get_any_Order_Placement_email.')}}</p>"
+                                       data-title-on="{{translate('Want_to_enable_Trip_Booking_mail?')}}"
+                                       data-title-off="{{translate('Want_to_disable_Trip_Booking_mail?')}}"
+                                       data-text-on="<p>{{translate('If_enabled,_customers_will_get_an_automatic_confirmation_mail_for_successful_Trip_Booking_with_an_invoice')}}</p>"
+                                       data-text-off="<p>{{translate('If_disabled,_customers_will_NOT_get_any_Trip_Booking_email.')}}</p>"
                                        id="mail-status" {{$mail_status == '1'?'checked':''}}>
                                 <span class="toggle-switch-label text mb-0">
                                     <span class="toggle-switch-indicator"></span>
@@ -113,7 +113,7 @@
                                         </label>
                                     </div>
                                     <div>
-                                        <h5 class="card-title mb-3">
+                                        <h5 class="card-title mt-3 mb-3">
                                             <img src="{{asset('public/assets/admin/img/pointer.png')}}" class="mr-2" alt="">
                                             {{translate('Header Content')}}
                                         </h5>
@@ -121,7 +121,7 @@
                                             <div class="__bg-F8F9FC-card default-form lang_form" id="default-form">
                                                 <div class="form-group">
                                                     <label class="form-label">{{translate('Main Title')}}({{ translate('messages.default') }})</label>
-                                                    <input type="text" name="title[]" value="{{ $data?->getRawOriginal('title') }}" data-id="mail-title" placeholder="Order has been placed successfully !" class="form-control">
+                                                    <input type="text" name="title[]" value="{{ $data?->getRawOriginal('title') }}" data-id="mail-title" placeholder="Trip has been placed successfully !" class="form-control">
                                                 </div>
                                                 <div class="form-group mb-0">
                                                     <label class="form-label">
@@ -152,7 +152,7 @@
                                                 <div class="__bg-F8F9FC-card d-none lang_form" id="{{$lang}}-form">
                                                     <div class="form-group">
                                                         <label class="form-label">{{translate('Main Title')}}({{strtoupper($lang)}})</label>
-                                                        <input type="text" name="title[]" placeholder="Order has been placed successfully !" class="form-control" value="{{$translate[$lang]['title']??''}}">
+                                                        <input type="text" name="title[]" placeholder="Trip has been placed successfully !" class="form-control" value="{{$translate[$lang]['title']??''}}">
                                                     </div>
                                                     <div class="form-group mb-0">
                                                         <label class="form-label">
@@ -170,7 +170,7 @@
                                             <div class="__bg-F8F9FC-card default-form">
                                                 <div class="form-group">
                                                     <label class="form-label">{{translate('Main Title')}}</label>
-                                                    <input type="text" name="title[]" placeholder="Order has been placed successfully !" class="form-control">
+                                                    <input type="text" name="title[]" placeholder="Trip has been placed successfully !" class="form-control">
                                                 </div>
                                                 <div class="form-group mb-0">
                                                     <label class="form-label">
@@ -201,7 +201,7 @@
                                                                 {{translate('Button Name')}}({{ translate('messages.default') }})
 
                                                             </label>
-                                                            <input type="text" data-id="mail-button" name="button_name[]"  placeholder="{{translate('Ex: Order now')}}" class="form-control h--45px" value="{{ $data?->getRawOriginal('button_name') }}">
+                                                            <input type="text" data-id="mail-button" name="button_name[]"  placeholder="{{translate('Ex: Trip now')}}" class="form-control h--45px" value="{{ $data?->getRawOriginal('button_name') }}">
                                                         </div>
                                                     @foreach(json_decode($language) as $lang)
                                                     <?php
@@ -220,7 +220,7 @@
                                                                 {{translate('Button Name')}}({{strtoupper($lang)}})
 
                                                             </label>
-                                                            <input type="text" name="button_name[]"  placeholder="{{translate('Ex: Order now')}}" class="form-control h--45px" value="{{ $translate[$lang]['button_name']??'' }}">
+                                                            <input type="text" name="button_name[]"  placeholder="{{translate('Ex: Trip now')}}" class="form-control h--45px" value="{{ $translate[$lang]['button_name']??'' }}">
                                                         </div>
                                                     @endforeach
                                                 @else
@@ -229,7 +229,7 @@
                                                         {{translate('Button Name')}}
 
                                                     </label>
-                                                    <input type="text" placeholder="{{translate('Ex: Order now')}}" class="form-control h--45px" name="button_name[]" value="">
+                                                    <input type="text" placeholder="{{translate('Ex: Trip now')}}" class="form-control h--45px" name="button_name[]" value="">
                                                 </div>
                                                 @endif
                                                 </div>

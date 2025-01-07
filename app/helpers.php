@@ -274,6 +274,9 @@ if (!function_exists('addon_published_status')) {
         }
     }
 }
+
+
+
 if (!function_exists('rental_module_published_status')) {
     function rental_module_published_status($module_name = 'rental')
     {
@@ -288,6 +291,9 @@ if (!function_exists('rental_module_published_status')) {
         // }
     }
 }
+
+
+
 
 if (!function_exists('config_settings')) {
     function config_settings($key, $settings_type)

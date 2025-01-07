@@ -105,12 +105,12 @@ trait TripLogicTrait
                 'trip_id' => $trip->id,
                 'trip_amount' => $trip->trip_amount,
                 'store_amount' => $store_amount,
-                'admin_commission' => $comission_amount + $trip->additional_charge - $admin_coupon_discount_subsidy - $ref_bonus_amount,
+                'admin_commission' => $comission_amount,
+                'admin_expense' => $admin_coupon_discount_subsidy + $discount_on_trip + $amount_admin + $ref_bonus_amount,
                 'tax' => $trip->tax_amount,
                 'received_by' => $received_by ? $received_by : 'admin',
                 'zone_id' => $trip->zone_id,
                 'module_id' => $trip->module_id,
-                'admin_expense' => $admin_coupon_discount_subsidy + $discount_on_trip + $amount_admin + $ref_bonus_amount,
                 'store_expense' =>  $store_coupon_discount_subsidy + $store_d_amount,
                 'status' => $status,
                 'created_at' => now(),
@@ -121,6 +121,7 @@ trait TripLogicTrait
                 // for store business model
                 'is_subscribed' => $subscription_mode,
                 'commission_percentage' => $commission_percentage,
+                'admin_net_income' =>$comission_amount + $trip->additional_charge -($admin_coupon_discount_subsidy - $ref_bonus_amount - $discount_on_trip - $amount_admin)
             ]);
             $adminWallet = AdminWallet::firstOrNew(
                 ['admin_id' => Admin::where('role_id', 1)->first()->id]

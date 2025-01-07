@@ -4,9 +4,9 @@
         <ul class="nav nav-tabs border-0 nav--tabs nav--pills">
             <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/rental-email-setup/user/new-order') ? 'active' : '' }}"
-                href="{{ route('admin.business-settings.rental-email-setup', ['user','new-order']) }}">{{translate('Order_Placement')}}</a>
+                href="{{ route('admin.business-settings.rental-email-setup', ['user','new-order']) }}">{{translate('Trip_Booking')}}</a>
             </li>
-            <li class="nav-item">
+            {{-- <li class="nav-item">
                 <a class="nav-link {{ Request::is('admin/business-settings/rental-email-setup/user/refund-order') ? 'active' : '' }}"
                 href="{{ route('admin.business-settings.rental-email-setup', ['user','refund-order']) }}">{{translate('messages.refund_order')}}</a>
             </li>
@@ -15,7 +15,7 @@
                 href="{{ route('admin.business-settings.rental-email-setup', ['user','refund-request-deny']) }}">
                     {{translate('Refund_Request_Rejected')}}
                 </a>
-            </li>
+            </li> --}}
         </ul>
         <!-- End Nav -->
     </div>

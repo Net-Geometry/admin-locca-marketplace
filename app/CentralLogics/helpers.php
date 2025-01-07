@@ -4146,10 +4146,24 @@ class Helpers
 
         return $data;
     }
-        public static function getNotificationStatusDataAdmin($user_type,$key,$module_type='all'){
+    public static function getRentalNotificationStatusData($user_type,$key,$notification_type, $store_id= null){
+        $data= NotificationSetting::where(['type'=>$user_type,'module_type' => 'rental','key'=>$key ])->select($notification_type)->first();
+        $data= $data?->{$notification_type} === 'active' ? 1 : 0;
+
+        if($store_id && $user_type == 'store' && $data === 1){
+            $data= self::getRentalStoreNotificationStatusData(store_id:$store_id,key:$key ,notification_type: $notification_type);
+            $data= $data?->{$notification_type} === 'active' ? 1 : 0;
+        }
+
+        return $data;
+    }
+
+        public static function getNotificationStatusDataAdmin($user_type,$key){
             $data= NotificationSetting::where(['type'=>$user_type,'key'=>$key])->select(['mail_status','push_notification_status','sms_status'])->first();
             return $data ?? null ;
         }
+
+
 
     public static function notificationDataSetup(){
 

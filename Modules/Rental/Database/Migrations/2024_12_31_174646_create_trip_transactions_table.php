@@ -33,6 +33,7 @@ class CreateTripTransactionsTable extends Migration
             $table->double('ref_bonus_amount',23, 8)->default(0);
             $table->boolean('is_subscribed')->default(0);
             $table->double('commission_percentage',23, 8)->default(0);
+            $table->double('admin_net_income',23, 8)->default(0);
             $table->timestamps();
         });
     }

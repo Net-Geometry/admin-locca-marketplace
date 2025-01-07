@@ -962,22 +962,13 @@ trait NotificationDataSetUpTrait
             'title' => 'customer_trip_notification',
             'key' => 'customer_trip_notification',
             'type' => 'customer',
-            'mail_status' => 'disable',
+            'mail_status' => 'active',
             'sms_status' => 'disable',
             'push_notification_status' => 'active',
             'sub_title' => 'Sent_notification_on_customer_trip_notification',
             'module_type' => 'rental',
         ];
-        $data []=[
-            'title' => 'customer_cashback',
-            'key' => 'customer_cashback',
-            'type' => 'customer',
-            'mail_status' => 'disable',
-            'sms_status' => 'disable',
-            'push_notification_status' => 'active',
-            'sub_title' => 'Sent_notification_on_customer_cashback',
-            'module_type' => 'rental',
-        ];
+
         self::checkAndUpdateAdminNotificationData($data);
         return true;
     }
