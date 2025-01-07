@@ -133,7 +133,7 @@ Route::group(['prefix' => 'rental', 'as' => 'rental.',  'middleware' =>  ['local
             Route::get('get-provider-reviews/{provider}', [Provider::class, 'getProvidereReviews']);
         });
 
-        Route::group(['prefix' => 'user', 'middleware' => ['apiGuestCheck']], function () {
+        Route::group(['prefix' => 'user', 'middleware' => 'apiGuestCheck'], function () {
             Route::group(['prefix' => 'cart'], function () {
                 Route::get('get-cart', [CartController::class, 'getCartList']);
                 Route::Post('add-to-cart', [CartController::class, 'addToCart']);
@@ -143,14 +143,14 @@ Route::group(['prefix' => 'rental', 'as' => 'rental.',  'middleware' =>  ['local
                 Route::delete('remove-cart', [CartController::class, 'removeCart']);
                 Route::delete('remove-multiple-cart', [CartController::class, 'removeMultipleVehicles']);
             });
-            Route::group(['middleware' => ['apiGuestCheck', 'auth:api']], function () {
-                Route::group(['prefix' => 'trip'], function () {
-                    Route::Post('trip-booking', [TripController::class, 'tripBooking']);
-                    Route::get('get-trip-list/{all}', [TripController::class, 'getTripList']);
-                    Route::get('get-trip-details', [TripController::class, 'getTripDetails']);
-                    Route::post('payment', [TripController::class, 'makePayment']);
-                    Route::put('cancel-trip', [TripController::class, 'cancelTrip']);
-                });
+            Route::group(['prefix' => 'trip'], function () {
+                Route::Post('trip-booking', [TripController::class, 'tripBooking']);
+                Route::get('get-trip-list/{all}', [TripController::class, 'getTripList']);
+                Route::get('get-trip-details', [TripController::class, 'getTripDetails']);
+                Route::post('payment', [TripController::class, 'makePayment']);
+                Route::put('cancel-trip', [TripController::class, 'cancelTrip']);
+            });
+            Route::group(['middleware' => 'auth:api'], function () {
                 Route::group(['prefix' => 'wish-list'], function () {
                     Route::get('/', [RentalWishlistController::class, 'wishlist']);
                     Route::post('add',  [RentalWishlistController::class, 'addToWishlist']);
@@ -158,7 +158,6 @@ Route::group(['prefix' => 'rental', 'as' => 'rental.',  'middleware' =>  ['local
                 });
                 Route::group(['prefix' => 'review'], function () {
                     Route::post('add', [VehicleReviewController::class, 'submitVehicleReview']);
-
                 });
             });
         });

@@ -464,37 +464,76 @@
                         <h5 class="card-title mb-3 d-flex flex-wrap align-items-center">
                             <span>{{ translate('messages.Customer_Info') }}</span>
                         </h5>
-                        <a class="media align-items-center deco-none customer--information-single" href="{{ route('admin.users.customer.view', $trip->user_id) }}">
-                            <div class="avatar avatar-circle">
-                                <img class="avatar-img onerror-image"
-                                     data-onerror-image="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}"
-                                     src="{{ $trip->customer['imageFullUrl'] }}"
-                                     alt="Image Description">
+
+                        @if ($trip->customer)
+                            <a class="media align-items-center deco-none customer--information-single" href="{{ route('admin.users.customer.view', $trip->user_id) }}">
+                                <div class="avatar avatar-circle">
+                                    <img class="avatar-img onerror-image"
+                                        data-onerror-image="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}"
+                                        src="{{ $trip->customer['imageFullUrl'] }}"
+                                        alt="Image Description">
+                                </div>
+                                <div class="media-body">
+                                    <span class="text--title fs-14 font-semibold d-block text-hover-primary mb-1">{{ $trip->customer->fullName }}</span>
+
+                                    <div class="text--title d-flex align-items-center gap-1">
+                                        <span>
+                                            <span class="font-bold">{{ $trip->customer->orders->count() }}</span>
+                                            {{ translate('messages.order') }},
+                                        </span>
+                                        <span>
+                                            <span class="font-bold">{{ $trip->customer->trips->count() }}</span>
+                                            {{ translate('messages.trip') }}
+                                        </span>
+                                    </div>
+
+                                    <div class="text--title">
+                                        {{ $trip->customer->phone }}
+                                    </div>
+
+                                    <div class="text--title">
+                                        {{ $trip->customer->email }}
+                                    </div>
+
+                                </div>
+                            </a>
+                            @elseif($trip?->user_info['contact_person_name'])
+
+                            <div class="media align-items-center deco-none customer--information-single" href="#">
+                                <div class="avatar avatar-circle">
+                                    <img class="avatar-img onerror-image"
+
+                                        src="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}"
+                                        alt="Image Description">
+                                </div>
+                                <div class="media-body">
+                                    <span class="text--title fs-14 font-semibold d-block text-hover-primary mb-1">{{ $trip?->user_info['contact_person_name'] }}</span>
+
+                                    <div class="text--title d-flex align-items-center gap-1">
+                                        <span class="font-bold">
+                                            {{ translate('Guest_user') }},
+                                        </span>
+
+                                    </div>
+
+                                    <div class="text--title">
+                                        {{ $trip?->user_info['contact_person_number'] }}
+                                    </div>
+
+                                    <div class="text--title">
+                                        {{ $trip?->user_info['contact_person_email'] }}
+                                    </div>
+
+                                </div>
                             </div>
-                            <div class="media-body">
-                                <span class="text--title fs-14 font-semibold d-block text-hover-primary mb-1">{{ $trip->customer->fullName }}</span>
 
-                                <div class="text--title d-flex align-items-center gap-1">
-                                    <span>
-                                        <span class="font-bold">{{ $trip->customer->orders->count() }}</span>
-                                        {{ translate('messages.order') }},
-                                    </span>
-                                    <span>
-                                        <span class="font-bold">{{ $trip->customer->trips->count() }}</span>
-                                        {{ translate('messages.trip') }}
-                                    </span>
-                                </div>
 
-                                <div class="text--title">
-                                    {{ $trip->customer->phone }}
-                                </div>
 
-                                <div class="text--title">
-                                    {{ $trip->customer->email }}
-                                </div>
-
+                        @else
+                            <div class="text--title">
+                                {{ translate('messages.Guest_user') }}
                             </div>
-                        </a>
+                        @endif
                     </div>
                 </div>
                 <div class="card mt-2">

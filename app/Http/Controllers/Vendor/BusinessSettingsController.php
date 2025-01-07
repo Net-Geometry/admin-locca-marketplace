@@ -251,14 +251,13 @@ class BusinessSettingsController extends Controller
 
     public function notification_index()
     {
+        $module_type=Helpers::get_store_data()->module->module_type;
         if(StoreNotificationSetting::where('store_id',Helpers::get_store_id())->count() == 0 ){
-            Helpers::storeNotificationDataSetup(Helpers::get_store_id());
+            $module_type == 'rental' ? Helpers::storeRentalNotificationDataSetup(Helpers::get_store_id()) : Helpers::storeNotificationDataSetup(Helpers::get_store_id());
         }
-        $data= StoreNotificationSetting::where('store_id',Helpers::get_store_id())->get();
-
-
+        $data= StoreNotificationSetting::where('store_id',Helpers::get_store_id())->where('module_type',  $module_type == 'rental' ?'rental':'all' )->get();
         $business_name= BusinessSetting::where('key','business_name')->first()?->value;
-        return view('vendor-views.business-settings.notification-index', compact('business_name' ,'data'));
+        return view('vendor-views.business-settings.notification-index', compact('business_name' ,'data', 'module_type'));
     }
 
     public function notification_status_change($key, $type){

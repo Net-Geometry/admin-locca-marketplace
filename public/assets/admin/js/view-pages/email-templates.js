@@ -87,13 +87,17 @@ document.getElementById('see-how-it-works').addEventListener('click', function()
     $('#email-modal').show();
 });
 
-document.getElementById('rental-mail-route-selector').addEventListener('change', function() {
-    let value = this.value;
-    location.href = baseUrl + '/admin/business-settings/rental-email-setup/' + value + '/' + (value === 'admin' ? 'provider-registration' : value === 'provider'?'registration':'new-order');
-});
-document.getElementById('mail-route-selector').addEventListener('change', function() {
-    let value = this.value;
-    location.href = baseUrl + '/admin/business-settings/email-setup/' + value + '/' + (value === 'admin' ? 'forgot-password' : 'registration');
-});
+if(document.getElementById('rental-mail-route-selector')){
+    document.getElementById('rental-mail-route-selector').addEventListener('change', function() {
+        let value = this.value;
+        location.href = baseUrl + '/admin/business-settings/rental-email-setup/' + value + '/' + (value === 'admin' ? 'provider-registration' : value === 'provider'?'registration':'new-order');
+    });
+}
+if( document.getElementById('mail-route-selector')){
+    document.getElementById('mail-route-selector').addEventListener('change', function() {
+        let value = this.value;
+        location.href = baseUrl + '/admin/business-settings/email-setup/' + value + '/' + (value === 'admin' ? 'forgot-password' : 'registration');
+    });
+}
 
 

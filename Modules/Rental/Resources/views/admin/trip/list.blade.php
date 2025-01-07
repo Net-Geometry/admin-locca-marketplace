@@ -140,12 +140,24 @@
                         </td>
                         <td>
                             <div class="text--title">
-                                <div class="font-medium">
-                                    {{ $trip->customer->fullName }}
-                                </div>
-                                <div class="opacity-lg">
-                                    {{ $trip->customer->email }}
-                                </div>
+                                @if ($trip->customer)
+                                    <div class="font-medium">
+                                        {{ $trip->customer->fullName }}
+                                    </div>
+                                    <div class="opacity-lg">
+                                        {{ $trip->customer->email }}
+                                    </div>
+
+                                @elseif($trip?->user_info['contact_person_name'])
+                                    <div class="font-medium">
+                                        {{$trip?->user_info['contact_person_name'] }}
+                                    </div>
+                                    <div class="opacity-lg">
+                                        {{ $trip?->user_info['contact_person_email'] }}
+                                    </div>
+                                @else
+                                    {{ translate('messages.Guest_user') }}
+                                @endif
                             </div>
                         </td>
                         <td>
