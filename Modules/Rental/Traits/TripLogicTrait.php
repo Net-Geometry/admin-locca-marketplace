@@ -385,7 +385,6 @@ trait TripLogicTrait
             : $tripDetail->vehicle->distance_price * $distance;
 
         $price = $modifiedPrices[$tripDetail->vehicle_id] ?? $originalPrice;
-
         $discountData = self::getDiscount(
             price: $price,
             discount_type: $tripDetail->vehicle->discount_type,

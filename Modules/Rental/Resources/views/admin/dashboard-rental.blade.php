@@ -7,7 +7,6 @@
 
 @section('content')
     <div class="content container-fluid">
-        <!-- Page Header -->
         <div class="page-header">
             <div class="row align-items-center py-2">
                 <div class="col-sm mb-2 mb-sm-0">
@@ -24,18 +23,18 @@
                     </div>
                 </div>
                 <div class="col-sm-auto min--280">
-                    <select name="zone_id" class="form-control js-select2-custom fetch_data_zone_wise">
+                    <select name="zone_id" class="form-control js-select2-custom fetch_data_zone_wise" >
                         <option value="all">{{ translate('messages.All_Zones') }}</option>
-                        <option value="test">
-                            {{ translate('messages.Test') }}
-                        </option>
+                        @foreach(\App\Models\Zone::orderBy('name')->get() as $zone)
+                            <option
+                                value="{{$zone['id']}}" {{request()->zone_id == $zone['id']?'selected':''}}>
+                                {{$zone['name']}}
+                            </option>
+                        @endforeach
                     </select>
                 </div>
             </div>
         </div>
-        <!-- End Page Header -->
-
-        <!-- Stats -->
         <div class="card mb-3">
             <div class="card-body pt-0">
                 <div class="d-flex flex-wrap align-items-center justify-content-between statistics--title-area">
@@ -44,7 +43,7 @@
                             <h3 class="page-header-title text-title fs-18 mb-0">
                                 {{ translate('messages.Delivery_Statistics') }}</h3>
                             <label class="badge badge-soft-primary m-0">
-                                {{ translate('messages.zone') }} : {{ translate('messages.all') }}
+                                {{ translate('messages.zone') }} : <span id="zoneName">{{ $zoneName }}</span>
                             </label>
                         </div>
                     </div>
@@ -53,83 +52,18 @@
                             <option value="all" selected="">
                                 {{ translate('messages.All_Time') }}
                             </option>
-                            <option value="test">
-                                {{ translate('messages.test') }}
-                            </option>
+                            <option value="this_year">{{ translate('messages.this_year') }}</option>
+                            <option value="this_month">{{ translate('messages.this_month') }}</option>
+                            <option value="this_week">{{ translate('messages.this_week') }}</option>
                         </select>
                     </div>
                 </div>
-                <div class="row g-4" id="order_stats">
-                    <div class="col-lg-3">
-                        <a class="__card-1 bg-E6F6EE h-100" href="javascript:">
-                            <img src="{{ asset('/public/assets/admin/img/report/new/total.png') }}" class="icon"
-                                 alt="report/new">
-                            <h3 class="title text-success">380</h3>
-                            <h6 class="subtitle font-regular">{{ translate('messages.total_trip') }}</h6>
-                        </a>
-                    </div>
-                    <div class="col-lg-9">
-                        <div class="row g-2">
-                            <div class="col-sm-6">
-                                <!-- Card -->
-                                <a class="resturant-card dashboard--card __dashboard-card card--bg-1" href="javascript:">
-                                    <span class="meter">
-                                        <span style="height:50%"></span>
-                                    </span>
-                                    <h4 class="title">66</h4>
-                                    <span class="subtitle font-regular">{{ translate('messages.pending_trip') }}</span>
-                                    <img src="{{ asset('/public/assets/admin/img/dashboard/1.png') }}" alt="img"
-                                         class="resturant-icon top-50px">
-                                </a>
-                                <!-- End Card -->
-                            </div>
-                            <div class="col-sm-6">
-                                <!-- Card -->
-                                <a class="resturant-card dashboard--card __dashboard-card card--bg-2" href="javascript:">
-                                    <span class="meter">
-                                        <span style="height:50%"></span>
-                                    </span>
-                                    <h4 class="title">100</h4>
-                                    <span class="subtitle font-regular"> {{ translate('messages.Ongoing_Trip') }}
-                                    </span>
-                                    <img src="{{ asset('/public/assets/admin/img/dashboard/4.png') }}" alt="img"
-                                         class="resturant-icon top-50px">
-                                </a>
-                                <!-- End Card -->
-                            </div>
-                            <div class="col-sm-6">
-                                <!-- Card -->
-                                <a class="resturant-card dashboard--card __dashboard-card bg-F1E8FA" href="javascript:">
-                                    <span class="meter">
-                                        <span style="height:70%"></span>
-                                    </span>
-                                    <h4 class="title text-success">200</h4>
-                                    <span class="subtitle font-regular"> {{ translate('messages.Completed') }}
-                                    </span>
-                                    <img src="{{ asset('/public/assets/admin/img/dashboard/2.png') }}" alt="img"
-                                         class="resturant-icon top-50px">
-                                </a>
-                                <!-- End Card -->
-                            </div>
-                            <div class="col-sm-6">
-                                <!-- Card -->
-                                <a class="resturant-card dashboard--card __dashboard-card card--bg-4" href="javascript:">
-                                    <span class="meter">
-                                        <span style="height:60%"></span>
-                                    </span>
-                                    <h4 class="title">60</h4>
-                                    <span class="subtitle font-regular"> {{ translate('messages.Canceled_Trip') }}
-                                    </span>
-                                    <img src="{{ asset('/public/assets/admin/img/dashboard/5.png') }}" alt="img"
-                                         class="resturant-icon top-50px">
-                                </a>
-                                <!-- End Card -->
-                            </div>
-                        </div>
-                    </div>
+                <div id="deliveryStatistics">
+                    @include('rental::admin.partials.delivery-statistics')
                 </div>
             </div>
         </div>
+
         <!-- End Stats -->
         <div class="row g-2">
             <div class="col-md-12">
@@ -137,7 +71,7 @@
                     <div class="card-body">
                         <div class="d-flex flex-wrap justify-content-between align-items-center __gap-12px">
                             <div class="__gross-amount" id="gross_earning">
-                                <h6>$855.8K</h6>
+                                <h6>{{ \App\CentralLogics\Helpers::format_currency(collect($total_sell)->sum()) }}</h6>
                                 <span>{{ translate('messages.Gross_Earnings') }}</span>
                             </div>
                             <div class="chart--label __chart-label p-0 move-left-100 ml-auto">
@@ -228,36 +162,25 @@
                         <h5 class="card-header-title font-bold d-flex justify-content-between">
                             <span>{{ translate('messages.top_customers') }}</span>
                         </h5>
-                        <a href="javascript:" class="fz-12px font-semibold text-006AE5">{{ translate('view_all') }}</a>
+                        <a href="{{ route('admin.users.customer.list') }}" class="fz-12px font-semibold text-006AE5">{{ translate('view_all') }}</a>
                     </div>
                     <div class="card-body">
 
                         <div class="top--selling">
-
+                            @foreach($topCustomers as $customer)
                             <a class="grid--card" href="javascript:">
                                 <img class="onerror-image"
                                      data-onerror-image="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}"
-                                     src="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}">
+                                     src="{{ $customer['image_full_url'] }}">
                                 <div class="cont pt-2">
-                                    <h6 class="mb-1">{{ translate('Ashek Elahi') }}</h6>
-                                    <span>+880123456789</span>
+                                    <h6 class="mb-1">{{ $customer->fullName }}</h6>
+                                    <span>{{ $customer->phone }}</span>
                                 </div>
                                 <div class="ml-auto">
-                                    <span class="badge badge-soft">{{ translate('Orders') }} : 300</span>
+                                    <span class="badge badge-soft">{{ translate('Orders') }} : {{ count($customer->trips) }}</span>
                                 </div>
                             </a>
-                            <a class="grid--card" href="javascript:">
-                                <img class="onerror-image"
-                                     data-onerror-image="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}"
-                                     src="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}">
-                                <div class="cont pt-2">
-                                    <h6 class="mb-1">{{ translate('Marjahan') }}</h6>
-                                    <span>+8801700000000</span>
-                                </div>
-                                <div class="ml-auto">
-                                    <span class="badge badge-soft">{{ translate('Orders') }} : 389</span>
-                                </div>
-                            </a>
+                            @endforeach
 
                         </div>
 
@@ -272,37 +195,25 @@
                         <h5 class="card-header-title font-bold d-flex justify-content-between">
                             <span>{{ translate('messages.top_providers') }}</span>
                         </h5>
-                        <a href="javascript:" class="fz-12px font-semibold text-006AE5">{{ translate('view_all') }}</a>
+                        <a href="{{ route('admin.rental.provider.list')}}" class="fz-12px font-semibold text-006AE5">{{ translate('view_all') }}</a>
                     </div>
                     <div class="card-body">
 
                         <div class="top--selling">
-
-                            <a class="grid--card" href="javascript:">
+                            @foreach($topProviders as $provider)
+                            <a class="grid--card" href="{{ route('admin.rental.provider.details', $provider->id)}}">
                                 <img class="onerror-image"
                                      data-onerror-image="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}"
-                                     src="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}">
+                                     src="{{ $provider['logo_full_url'] }}">
                                 <div class="cont pt-2">
-                                    <h6 class="mb-1">{{ translate('Ashek Elahi') }}</h6>
-                                    <span>+880123456789</span>
+                                    <h6 class="mb-1">{{ $provider->name }}</h6>
+                                    <span>+{{ $provider->phone }}</span>
                                 </div>
                                 <div class="ml-auto">
-                                    <span class="badge badge-soft">{{ translate('Orders') }} : 300</span>
+                                    <span class="badge badge-soft">{{ translate('Orders') }} : {{ count($provider->trips) }}</span>
                                 </div>
                             </a>
-                            <a class="grid--card" href="javascript:">
-                                <img class="onerror-image"
-                                     data-onerror-image="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}"
-                                     src="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}">
-                                <div class="cont pt-2">
-                                    <h6 class="mb-1">{{ translate('Marjahan') }}</h6>
-                                    <span>+8801700000000</span>
-                                </div>
-                                <div class="ml-auto">
-                                    <span class="badge badge-soft">{{ translate('Orders') }} : 389</span>
-                                </div>
-                            </a>
-
+                            @endforeach
                         </div>
 
                     </div>
@@ -316,29 +227,23 @@
 @push('script')
     <script src="{{ asset('public/assets/admin') }}/vendor/chart.js/dist/Chart.min.js"></script>
     <script src="{{ asset('public/assets/admin') }}/vendor/chart.js.extensions/chartjs-extensions.js"></script>
-    <script
-        src="{{ asset('public/assets/admin') }}/vendor/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js">
+    <script src="{{ asset('public/assets/admin') }}/vendor/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js">
     </script>
-
     <!-- Apex Charts -->
     <script src="{{ asset('/public/assets/admin/js/apex-charts/apexcharts.js') }}"></script>
     <!-- Apex Charts -->
 @endpush
 
 @push('script_2')
-    <!-- Dognut Pie Chart -->
     <script>
         "use strict";
         let options;
         let chart;
+        let ApexChart;
 
         // Static data for demonstration
         const hourlyCount = 450;
         const distancWiseCount = 50;
-        const totalSell = [200, 300, 400, 500, 600, 20, 30, 40, 50, 60, 100, 300];
-        const commission = [20, 30, 40, 50, 60, 20, 30, 40, 50, 60, 100, 20];
-        const deliveryCommission = [10, 15, 20, 25, 30, 20, 30, 40, 50, 60, 100, 30];
-        const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
         options = {
             series: [hourlyCount, distancWiseCount],
@@ -376,13 +281,13 @@
         options = {
             series: [{
                 name: 'Gross Earning',
-                data: totalSell
+                data: [{{ implode(",",$total_sell) }}]
             }, {
                 name: 'Commission Earning',
-                data: commission
+                data: [{{ implode(",",$commission) }}]
             }, {
                 name: 'Subscription Earning',
-                data: deliveryCommission
+                data: [{{ implode(",",$total_subs) }}]
             }],
             chart: {
                 height: 350,
@@ -390,23 +295,23 @@
                 toolbar: {
                     show: false
                 },
-                colors: ['#76ffcd', '#ff6d6d', '#005555'],
+                colors: ['#76ffcd','#ff6d6d', '#005555'],
             },
             dataLabels: {
                 enabled: false,
-                colors: ['#76ffcd', '#ff6d6d', '#005555'],
+                colors: ['#76ffcd','#ff6d6d', '#005555'],
             },
             stroke: {
                 curve: 'smooth',
                 width: 2,
-                colors: ['#76ffcd', '#ff6d6d', '#005555'],
+                colors: ['#76ffcd','#ff6d6d', '#005555'],
             },
             fill: {
                 type: 'gradient',
-                colors: ['#76ffcd', '#ff6d6d', '#005555'],
+                colors: ['#76ffcd','#ff6d6d', '#005555'],
             },
             xaxis: {
-                categories: labels
+                categories: @json($label)
             },
             tooltip: {
                 x: {
@@ -415,8 +320,8 @@
             },
         };
 
-        chart = new ApexCharts(document.querySelector("#grow-sale-chart"), options);
-        chart.render();
+        ApexChart = new ApexCharts(document.querySelector("#grow-sale-chart"), options);
+        ApexChart.render();
 
         // INITIALIZATION OF CHARTJS
         // =======================================================
@@ -428,66 +333,37 @@
 
         let updatingChart = $.HSCore.components.HSChartJS.init($('#updatingData'));
 
-        $('.order_stats_update').on('change', function() {
-            let type = $(this).val();
-            order_stats_update(type);
+
+        $('.fetch_data_zone_wise, .order_stats_update, .commission_overview_stats_update').on('change', function () {
+            let zone_id = $('.fetch_data_zone_wise').val();
+            let statistics_type = $('.order_stats_update').val();
+            let commission_overview = $('.commission_overview_stats_update').val();
+
+            fetch_data_zone_wise(zone_id, statistics_type, commission_overview);
         });
 
-        function order_stats_update(type) {
+        function fetch_data_zone_wise(zone_id, statistics_type, commission_overview) {
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-            $.post({
-                url: '{{ route('admin.dashboard-stats.order') }}',
-                data: {
-                    statistics_type: type
-                },
-                beforeSend: function() {
-                    $('#loading').show()
-                },
-                success: function(data) {
-                    insert_param('statistics_type', type);
-                    $('#order_stats').html(data.view)
-                },
-                complete: function() {
-                    $('#loading').hide()
-                }
-            });
-        }
-
-        $('.fetch_data_zone_wise').on('change', function() {
-            let zone_id = $(this).val();
-            fetch_data_zone_wise(zone_id);
-        });
-
-        function fetch_data_zone_wise(zone_id) {
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            $.post({
-                url: '{{ route('admin.dashboard-stats.zone') }}',
+            $.get({
+                url: '{{ route('admin.rental.dashboard') }}',
                 data: {
                     zone_id: zone_id,
+                    statistics_type: statistics_type,
+                    commission_overview: commission_overview,
                 },
                 beforeSend: function() {
                     $('#loading').show()
                 },
                 success: function(data) {
-                    insert_param('zone_id', zone_id);
-                    $('#order_stats').html(data.order_stats);
-                    $('#user-overview-board').html(data.user_overview);
-                    $('#popular-restaurants-view').html(data.popular_restaurants);
-                    $('#top-deliveryman-view').html(data.top_deliveryman);
-                    $('#top-rated-foods-view').html(data.top_rated_foods);
-                    $('#top-restaurants-view').html(data.top_restaurants);
-                    $('#top-selling-foods-view').html(data.top_selling_foods);
-                    $('#top-customer-view').html(data.top_customers);
-                    $('#stat_zone').html(data.stat_zone);
-                    commission_overview_stats_update($('.commission_overview_stats_update').val());
+                    $('#deliveryStatistics').html(data.delivery_statistics);
+
+                    insert_param('commission_overview',type);
+                    $('#commission-overview-board').html(data.sale_chart)
+                    $('#zoneName').html(data.zoneName);
                 },
                 complete: function() {
                     $('#loading').hide()

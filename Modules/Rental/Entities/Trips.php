@@ -181,6 +181,12 @@ class Trips extends Model
     {
         return $query->where('trip_status', 'payment_failed');
     }
+
+    public function scopeZone($query, $id): void
+    {
+        $query->where('zone_id', '=', $id);
+    }
+
     public function vehicles()
     {
         return $this->hasManyThrough(Vehicle::class , TripDetails::class,'trip_id','id','id','vehicle_id');

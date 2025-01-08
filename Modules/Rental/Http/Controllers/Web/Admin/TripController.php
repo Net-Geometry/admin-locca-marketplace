@@ -354,6 +354,7 @@ class TripController extends Controller
 
         $distance = $request->distance ?? $trip->distance;
         $modifiedPrices = $request->modified_prices;
+
         $processedValue = preg_replace('/[^\d.]/', '', $modifiedPrices);
         $processedDistanceValue = preg_replace('/[^\d.]/', '', $distance);
         $vehicleId = $request->vehicle_id;
@@ -378,9 +379,22 @@ class TripController extends Controller
             $modifiedPrices = session()->get('modifiedPrices');
         }
 
-        info($vehicleQuantities);
-        info($modifiedPrices);
-        info($request->modified_prices);
+//        if ($quantity && !$modifiedPrices && session()->has('modifiedPrices')){
+//            $modifiedPrices = session()->get('modifiedPrices');
+//        }
+
+//        if ($quantity && !$modifiedPrices && session()->has('modifiedPrices')){
+//            $previousQuantity = $vehicleQuantities[$vehicleId] ?? null;
+//            if ($previousQuantity !== null && $previousQuantity !== $quantity) {
+//                // If the previous value existed and is different from the updated value, remove it from modifiedPrices
+//                $modifiedPrices = session()->get('modifiedPrices', []);
+//                if (array_key_exists($vehicleId, $modifiedPrices)) {
+//                    unset($modifiedPrices[$vehicleId]); // Remove key
+//                    session()->put('modifiedPrices', $modifiedPrices);
+//                    session()->save();
+//                }
+//            }
+//        }
 
 
         $data = [
