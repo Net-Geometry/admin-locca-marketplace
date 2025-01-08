@@ -13,13 +13,14 @@ use App\Models\StoreWallet;
 use App\CentralLogics\Helpers;
 use App\Models\BusinessSetting;
 use App\CentralLogics\OrderLogic;
+use App\CentralLogics\CouponLogic;
 use App\Models\AccountTransaction;
 use Illuminate\Support\Facades\DB;
+use Modules\Rental\Entities\Trips;
 use App\CentralLogics\CustomerLogic;
+use Illuminate\Support\Facades\Mail;
 use Modules\Rental\Entities\PartialPayment;
 use Modules\Rental\Entities\TripTransaction;
-use App\CentralLogics\CouponLogic;
-use Modules\Rental\Entities\Trips;
 
 
 trait TripLogicTrait
@@ -65,11 +66,11 @@ trait TripLogicTrait
         if ($trip->discount_on_trip > 0  && $trip->discount_on_trip_by == 'vendor') {
             if ($provider->store_business_model == 'subscription' && isset($store_sub)) {
                 $store_d_amount =  $trip->discount_on_trip;
-                self::expenseCreate(amount: $store_d_amount, type: 'discount_on_trip', datetime: now(), created_by: 'vendor', trip_id: $trip->id, store_id: $trip->store->id);
+                self::expenseCreate(amount: $store_d_amount, type: 'discount_on_trip', datetime: now(), created_by: 'vendor', trip_id: $trip->id, store_id: $trip->provider->id);
             } else {
                 $amount_admin = $comission ? ($trip->discount_on_trip / 100) * $comission : 0;
                 $store_d_amount =  $trip->discount_on_trip - $amount_admin;
-                self::expenseCreate(amount: $store_d_amount, type: 'discount_on_trip', datetime: now(), created_by: 'vendor', trip_id: $trip->id, store_id: $trip->store->id);
+                self::expenseCreate(amount: $store_d_amount, type: 'discount_on_trip', datetime: now(), created_by: 'vendor', trip_id: $trip->id, store_id: $trip->provider->id);
                 self::expenseCreate(amount: $amount_admin, type: 'discount_on_trip', datetime: now(), created_by: 'admin', trip_id: $trip->id);
             }
         }
@@ -180,22 +181,22 @@ trait TripLogicTrait
                         'type' => 'referral_code',
                     ];
 
-                    // if(Helpers::getNotificationStatusData('customer','customer_referral_bonus_earning','push_notification_status') && $referar_user?->cm_firebase_token){
-                    //     Helpers::send_push_notif_to_device($referar_user?->cm_firebase_token, $notification_data);
-                    //     DB::table('user_notifications')->insert([
-                    //         'data' => json_encode($notification_data),
-                    //         'user_id' => $referar_user?->id,
-                    //         'created_at' => now(),
-                    //         'updated_at' => now()
-                    //     ]);
-                    // }
+                    if(Helpers::getNotificationStatusData('customer','customer_referral_bonus_earning','push_notification_status') && $referar_user?->cm_firebase_token){
+                        Helpers::send_push_notif_to_device($referar_user?->cm_firebase_token, $notification_data);
+                        DB::table('user_notifications')->insert([
+                            'data' => json_encode($notification_data),
+                            'user_id' => $referar_user?->id,
+                            'created_at' => now(),
+                            'updated_at' => now()
+                        ]);
+                    }
 
 
                     try {
-                        // Helpers::add_fund_push_notification($referar_user->id);
-                        // if(config('mail.status') && Helpers::get_mail_status('add_fund_mail_status_user') == '1' && Helpers::getNotificationStatusData('customer','customer_add_fund_to_wallet','mail_status') ) {
-                        //     Mail::to($referar_user->email)->send(new \App\Mail\AddFundToWallet($refer_wallet_transaction));
-                        // }
+                        Helpers::add_fund_push_notification($referar_user->id);
+                        if(config('mail.status') && Helpers::get_mail_status('add_fund_mail_status_user') == '1' && Helpers::getNotificationStatusData('customer','customer_add_fund_to_wallet','mail_status') ) {
+                            Mail::to($referar_user->email)->send(new \App\Mail\AddFundToWallet($refer_wallet_transaction));
+                        }
                     } catch (\Exception $ex) {
                         info($ex->getMessage());
                     }
@@ -211,15 +212,15 @@ trait TripLogicTrait
                         'type' => 'loyalty_point',
                     ];
 
-                    // if(Helpers::getNotificationStatusData('customer','customer_loyalty_point_earning','push_notification_status') && $trip->customer?->cm_firebase_token){
-                    //     Helpers::send_push_notif_to_device($trip->customer?->cm_firebase_token, $notification_data);
-                    //     DB::table('user_notifications')->insert([
-                    //         'data' => json_encode($notification_data),
-                    //         'user_id' => $trip->user_id,
-                    //         'created_at' => now(),
-                    //         'updated_at' => now()
-                    //     ]);
-                    // }
+                    if(Helpers::getNotificationStatusData('customer','customer_loyalty_point_earning','push_notification_status') && $trip->customer?->cm_firebase_token){
+                        Helpers::send_push_notif_to_device($trip->customer?->cm_firebase_token, $notification_data);
+                        DB::table('user_notifications')->insert([
+                            'data' => json_encode($notification_data),
+                            'user_id' => $trip->user_id,
+                            'created_at' => now(),
+                            'updated_at' => now()
+                        ]);
+                    }
 
                 }
             }
