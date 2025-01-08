@@ -278,9 +278,18 @@
                                     <dd class="col-6">
                                         {{ \App\CentralLogics\Helpers::format_currency($subtotal) }}</dd>
 
-                                    <dt class="col-6">Subtotal</dt>
+                                    <dt class="col-6">{{ translate('Subtotal') }}
+                                        @if ($trip->tax_status == 'included')
+                                        ({{ translate('messages.TAX_Included') }})
+                                        @endif
+
+                                    </dt>
                                     <dd class="col-6 font-semibold">
                                         {{ \App\CentralLogics\Helpers::format_currency($subtotal) }}
+                                    </dd>
+                                    <dt class="col-6 font-regular">{{translate('discount')}}</dt>
+                                    <dd class="col-6">
+                                        -{{ \App\CentralLogics\Helpers::format_currency($trip->discount_on_trip)}}
                                     </dd>
 
                                     <dt class="col-6 font-regular">{{translate('Coupon discount')}}</dt>
@@ -288,16 +297,23 @@
                                         -{{ \App\CentralLogics\Helpers::format_currency($trip->coupon_discount_amount)}}
                                     </dd>
 
-                                    <dt class="col-6 font-regular">{{translate('discount')}}</dt>
+                                    @if ($trip->ref_bonus_amount > 0)
+                                    <dt class="col-6 font-regular">{{translate('Referral_Discount')}}</dt>
                                     <dd class="col-6">
-                                        -{{ \App\CentralLogics\Helpers::format_currency($trip->discount_on_trip)}}
+                                        -{{ \App\CentralLogics\Helpers::format_currency($trip->ref_bonus_amount)}}
                                     </dd>
+                                    @endif
 
+
+                                    @if ($trip->tax_status == 'excluded')
                                     <dt class="col-6 font-regular text-uppercase">{{translate('Vat/tax')}}</dt>
                                     <dd class="col-6 text-right">
                                         +{{ \App\CentralLogics\Helpers::format_currency($trip->tax_amount)}}
                                     </dd>
-
+                                    @endif
+                                    <dt class="col-6 font-regular ">{{ \App\CentralLogics\Helpers::get_business_data('additional_charge_name')??\App\CentralLogics\Helpers::get_business_data('additional_charge_name')??translate('messages.additional_charge') }}</dt>
+                                    <dd class="col-6 text-right">
+                                        + {{ \App\CentralLogics\Helpers::format_currency($trip->additional_charge) }}</dd>
                                     <dt class="col-6 font-bold">{{translate('Total')}}</dt>
                                     <dd class="col-6 font-bold">{{ \App\CentralLogics\Helpers::format_currency($trip->trip_amount)}}</dd>
                                 </dl>
@@ -767,10 +783,6 @@
                 <div class="modal-body p-4">
                     <div class="row">
                         <div class="col-md-12 modal_body_map">
-{{--                            <div class="location-map" id="pickup_location_map">--}}
-{{--                                <div class="initial--25 rounded-8 custom_map_canvas" id="custom_route_line_map_canvas">--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
                         </div>
                     </div>
                 </div>
@@ -882,9 +894,9 @@
                                                         <div class="fs-12 text--title">
                                                             <div class="fz-12 font-semibold line--limit-1">
                                                                 {{ $editDetail?->vehicle_details['name'] }}</div>
-                                                            <div><span class="font-semibold mr-2">Category :</span>{{ $editDetail?->vehicle?->category?->name }}
+                                                            <div><span class="font-semibold mr-2">{{ translate('Category') }} :</span>{{ $editDetail?->vehicle?->category?->name }}
                                                             </div>
-                                                            <div><span class="font-semibold mr-2">Brand :</span>{{ $editDetail?->vehicle?->brand?->name }}
+                                                            <div><span class="font-semibold mr-2">{{ translate('Brand') }} :</span>{{ $editDetail?->vehicle?->brand?->name }}
                                                             </div>
                                                         </div>
                                                     </div>

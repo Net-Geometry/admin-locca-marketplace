@@ -679,6 +679,7 @@ class TripController extends Controller
             'payment_status' => 'paid',
             'payment_method' => 'cash_payment',
         ]);
+        return true;
     }
 
 
@@ -694,6 +695,7 @@ class TripController extends Controller
             'payment_status' => 'paid',
             'payment_method' => 'wallet',
         ]);
+        return true;
     }
 
 
@@ -715,6 +717,7 @@ class TripController extends Controller
         if ($request->payment_gateway !== 'cash_payment') {
             return $this->processDigitalPayment($trip, $user, $request);
         }
+        return true;
     }
 
 
