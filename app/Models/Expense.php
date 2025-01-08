@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Rental\Entities\Trips;
 
 class Expense extends Model
 {
@@ -38,5 +39,10 @@ class Expense extends Model
     public function getCreatedAtAttribute($value)
     {
         return date('Y-m-d H:i:s',strtotime($value));
+    }
+
+    public function trip()
+    {
+        return $this->belongsTo(Trips::class, 'trip_id');
     }
 }

@@ -128,7 +128,11 @@
                         <thead class="thead-light white--space-false">
                             <tr>
                                 <th >{{translate('sl')}}</th>
+                                @if($module_type == 'rental')
+                                <th class="text-center" >{{translate('trip_id')}}</th>
+                                @else
                                 <th class="text-center" >{{translate('messages.order_id')}}</th>
+                                @endif
                                 <th class="text-center" >{{translate('Date & Time')}}</th>
                                 <th class="text-center" >{{ translate('Expense Type') }}</th>
                                 <th class="text-center" >{{ translate('Customer Name') }}</th>
@@ -143,13 +147,23 @@
                             @foreach ($expense as $key => $exp)
                             <tr>
                                 <td scope="row">{{$key+$expense->firstItem()}}</td>
-                                <td class="text-center" >
-                                        @if (isset($exp['order_id']))
-                                        <a href="{{route('vendor.order.details',['id'=>$exp['order_id']])}}">{{$exp['order_id']}}</a>
+                                @if($module_type == 'rental')
+                                    <td class="text-center" >
+                                        @if (isset($exp['trip_id']))
+                                            <a href="{{route('vendor.order.details',['id'=>$exp['order_id']])}}">{{$exp['order_id']}}</a>
                                         @else
-                                        <label class="badge badge-danger">{{translate('messages.invalid_order_data')}}</label>
+                                            <label class="badge badge-danger">{{translate('messages.invalid_trip_data')}}</label>
                                         @endif
-                                </td>
+                                    </td>
+                                @else
+                                    <td class="text-center" >
+                                        @if (isset($exp['order_id']))
+                                            <a href="{{route('vendor.order.details',['id'=>$exp['order_id']])}}">{{$exp['order_id']}}</a>
+                                        @else
+                                            <label class="badge badge-danger">{{translate('messages.invalid_order_data')}}</label>
+                                        @endif
+                                    </td>
+                                @endif
                                 <td class="text-center">
                                     {{date('Y-m-d '.config('timeformat'),strtotime($exp->created_at))}}
                                 </td>

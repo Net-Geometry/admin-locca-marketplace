@@ -445,6 +445,13 @@
                                 <span class="text-truncate">{{ translate('messages.disbursement_report') }}</span>
                             </a>
                         </li>
+                        <li class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel/report/trip-report') ? 'active' : '' }}">
+                            <a class="nav-link " href="{{ route('vendor.report.trip-report') }}"
+                               title="{{ translate('messages.trip_report') }}">
+                                <span class="tio-chart-bar-4 nav-icon"></span>
+                                <span class="text-truncate">{{ translate('messages.trip_report') }}</span>
+                            </a>
+                        </li>
                     @endif
 
                     <!-- Employee-->

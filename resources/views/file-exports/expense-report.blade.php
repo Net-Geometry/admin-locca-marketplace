@@ -18,7 +18,7 @@
 
                     {{ translate('zone' )}} - {{ $data['zone']??translate('all') }}
                     <br>
-                    {{ translate('store' )}} - {{ $data['store']??translate('all') }}
+                    {{ (isset($data['module_type']) && $data['module_type'] == 'rental')?translate('provider'):translate('vendor')}} - {{ $data['store']??translate('all') }}
                     @if (!isset($data['type']) )
                     <br>
                     {{ translate('customer' )}} - {{ $data['customer']??translate('all') }}
@@ -44,7 +44,12 @@
                 </tr>
         <tr>
             <th>{{ translate('sl') }}</th>
-            <th>{{translate('messages.order_id')}}</th>
+            @if (isset($data['module_type']))
+            <th>{{$data['module_type'] == 'rental'? translate('trip_id') : translate('messages.order_id') }}</th>
+            @elseif(rental_module_published_status('rental'))
+                <th>{{ translate('messages.order_id') }}</th>
+                <th>{{ translate('trip_id') }}</th>
+            @endif
             <th>{{translate('Date & Time')}}</th>
             <th>{{ translate('Expense Type') }}</th>
             <th>{{ translate('Customer Name') }}</th>
@@ -54,11 +59,18 @@
         @foreach($data['expenses'] as $key => $exp)
             <tr>
                 <td>{{ $key+1}}</td>
-                <td>
-                    @if ($exp->order)
-                    {{ $exp['order_id'] }}
-                    @endif
-                </td>
+                @if (isset($data['module_type']))
+                    <td>
+                        @if ($exp->order && $data['module_type'] != 'rental')
+                            {{ $exp['order_id'] }}
+                        @elseif ($exp->trip && $data['module_type'] == 'rental')
+                            {{ $exp['trip_id'] }}
+                        @endif
+                    </td>
+                @elseif(rental_module_published_status('rental'))
+                    <td>{{ $exp['order_id'] }}</td>
+                    <td>{{ $exp['trip_id'] }}</td>
+                @endif
                 <td>
                     {{date('Y-m-d '.config('timeformat'),strtotime($exp->created_at))}}
                 </td>
