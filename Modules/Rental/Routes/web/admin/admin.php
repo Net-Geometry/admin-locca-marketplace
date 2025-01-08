@@ -29,6 +29,10 @@ use Modules\Rental\Http\Controllers\Web\Admin\SettingsController;
 Route::group(['middleware' => ['admin', 'current-module']], function () {
     Route::group(['prefix' => 'rental', 'as' => 'rental.'], function () {
         Route::get('/', [DashboardController::class, 'dashboard'])->name('dashboard');
+        Route::group(['prefix' => 'dashboard-stats', 'as' => 'dashboard-stats.'], function () {
+            Route::get('/commission-overview', [DashboardController::class, 'commissionOverview'])->name('commission_overview');
+            Route::get('/trip-by-trip-type', [DashboardController::class, 'byTripType'])->name('trip_by_trip_type');
+        });
 
         Route::group(['prefix' => 'category', 'as' => 'category.'], function () {
             Route::get('list', [CategoryController::class, 'list'])->name('list');
