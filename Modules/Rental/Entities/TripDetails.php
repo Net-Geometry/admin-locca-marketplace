@@ -3,6 +3,7 @@
 namespace Modules\Rental\Entities;
 
 use App\Models\User;
+use App\Traits\ReportFilter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -10,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class TripDetails extends Model
 {
-    use HasFactory;
+    use HasFactory, ReportFilter;
 
     protected $guarded = ['id'];
     protected $casts = [

@@ -516,4 +516,15 @@ class TripController extends Controller
         return back();
     }
 
+    public function generateInvoice($id)
+    {
+        $trip = $this->trips->findOrFail($id);
+        return view('rental::admin.trip.invoice', compact('trip'));
+    }
+    public function printInvoice($id)
+    {
+        $trip = $this->trips->findOrFail($id);
+        return view('rental::admin.trip.invoice-print', compact('trip'))->render();
+    }
+
 }

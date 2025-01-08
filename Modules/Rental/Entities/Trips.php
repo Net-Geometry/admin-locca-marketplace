@@ -68,7 +68,7 @@ class Trips extends Model
     }
     public function trip_transaction()
     {
-        return $this->belongsTo(TripTransaction::class,'trip_id');
+        return $this->hasOne(TripTransaction::class,'trip_id');
     }
 
     public function trip_details()

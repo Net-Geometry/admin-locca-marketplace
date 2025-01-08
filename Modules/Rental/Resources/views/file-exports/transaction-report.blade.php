@@ -13,7 +13,7 @@
                 <th>
                     {{ translate('zone' )}} - {{ $data['zone']??translate('all') }}
                     <br>
-                    {{ translate('provider' )}} - {{ $data['store']??translate('all') }}
+                    {{ translate('provider' )}} - {{ $data['provider']??translate('all') }}
                     @if ($data['from'])
                     <br>
                     {{ translate('from' )}} - {{ $data['from']?Carbon\Carbon::parse($data['from'])->format('d M Y'):'' }}
