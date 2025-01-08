@@ -152,7 +152,7 @@
             <div class="card-header border-0 py-2">
                 <div class="search--button-wrapper">
                     <h3 class="card-title">
-                        {{ translate('messages.tripTransactions') }} <span
+                        {{ translate('messages.trip_transactions') }} <span
                             class="badge badge-soft-secondary" id="countItems">{{ $tripTransactions->total() }}</span>
                     </h3>
                     <form>
@@ -274,7 +274,7 @@
 
 
                                     {{--admin_net_income --}}
-                                    <td class="white-space-nowrap">{{ \App\CentralLogics\Helpers::format_currency(($ot->admin_commission)) }}</td>
+                                    <td class="white-space-nowrap">{{ \App\CentralLogics\Helpers::format_currency(($ot->admin_net_income)) }}</td>
                                     {{--store_discount --}}
                                     <td class="white-space-nowrap">{{ \App\CentralLogics\Helpers::format_currency($ot->store_expense) }}</td>
                                     {{--store_net_income --}}
@@ -295,7 +295,7 @@
 
                                     <td>
                                         <div class="btn--container justify-content-center">
-                                            <a class="btn btn-outline-success square-btn btn-sm mr-1 action-btn"  href="{{route('admin.report.generate-statement',[$ot['id']])}}">
+                                            <a class="btn btn-outline-success square-btn btn-sm mr-1 action-btn"  href="{{route('admin.transactions.rental.report.generate-statement',[$ot['id']])}}">
                                                 <i class="tio-download-to"></i>
                                             </a>
                                         </div>

@@ -117,6 +117,8 @@ Route::group(['middleware' => ['admin', 'current-module']], function () {
             Route::post('assign/driver', [TripController::class,'assignDriver'])->name('assign.driver');
             Route::get('export', [TripController::class, 'export'])->name('export');
             Route::get('get-calculation', [TripController::class, 'getCalculation'])->name('get-calculation');
+            Route::get('generate-invoice/{id}', [TripController::class, 'generateInvoice'])->name('generate-invoice');
+            Route::get('print-invoice/{id}', [TripController::class, 'printInvoice'])->name('print-invoice');
         });
 
         Route::group(['prefix' => 'banner', 'as' => 'banner.', 'middleware' => ['module:banner']], function () {
@@ -175,9 +177,11 @@ Route::group(['middleware' => ['admin', 'current-module']], function () {
     Route::group(['prefix' => 'transactions', 'as' => 'transactions.'], function () {
         Route::group(['prefix' => 'rental', 'as' => 'rental.'], function () {
             Route::get('trip/details/{id}', [TripController::class,'details'])->name('trip.details');
+            Route::get('trip/generate-invoice/{id}', [TripController::class, 'generateInvoice'])->name('trip.generate-invoice');
             Route::group(['prefix' => 'report', 'as' => 'report.', 'middleware' => ['module:report']], function () {
                 Route::get('transaction-report', [ReportController::class, 'transactionReport'])->name('transaction-report');
                 Route::get('transaction-report-export', [ReportController::class, 'transactionExport'])->name('transaction-report-export');
+                Route::get('generate-statement/{id}', [ReportController::class, 'generateStatement'])->name('generate-statement');
                 Route::get('trip-report', [ReportController::class, 'tripReport'])->name('trip-report');
                 Route::get('trip-report-export', [ReportController::class, 'tripReportExport'])->name('trip-report-export');
                 Route::get('vehicle-report', [ReportController::class, 'vehicleReport'])->name('vehicle-wise-report');

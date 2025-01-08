@@ -3,15 +3,14 @@
 namespace Modules\Rental\Http\Controllers\Web\Admin;
 
 use App\CentralLogics\Helpers;
-use App\Models\Item;
+use App\Models\BusinessSetting;
 use App\Models\Store;
 use App\Models\User;
 use App\Models\Zone;
 use Carbon\Carbon;
-use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\View;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 use Modules\Rental\Entities\Trips;
@@ -24,9 +23,6 @@ use Modules\Rental\Exports\ProviderTripReportExport;
 use Modules\Rental\Exports\TransactionReportExport;
 use Modules\Rental\Exports\TripReportExport;
 use Modules\Rental\Exports\VehicleReportExport;
-use Modules\Rental\Exports\VehicleReviewExport;
-use Rap2hpoutre\FastExcel\FastExcel;
-
 class ReportController extends Controller
 {
     public function transactionReport(Request $request)
@@ -115,7 +111,7 @@ class ReportController extends Controller
             ->when(isset($filter) && $filter == 'this_week', function ($query) {
                 return $query->whereBetween('created_at', [now()->startOfWeek()->format('Y-m-d H:i:s'), now()->endOfWeek()->format('Y-m-d H:i:s')]);
             })
-            ->sum(DB::raw('admin_commission'));
+            ->sum(DB::raw('admin_net_income'));
 
         $providerEarned = TripTransaction::with('trip', 'trip.trip_details', 'trip.customer', 'trip.provider')->when(isset($zone), function ($query) use ($zone) {
             return $query->where('zone_id', $zone->id);
@@ -277,7 +273,7 @@ class ReportController extends Controller
             ->when(isset($filter) && $filter == 'this_week', function ($query) {
                 return $query->whereBetween('created_at', [now()->startOfWeek()->format('Y-m-d H:i:s'), now()->endOfWeek()->format('Y-m-d H:i:s')]);
             })
-            ->sum(DB::raw('admin_commission'));
+            ->sum(DB::raw('admin_net_income'));
 
         $providerEarned = TripTransaction::with('trip', 'trip.trip_details', 'trip.customer', 'trip.provider')->when(isset($zone), function ($query) use ($zone) {
             return $query->where('zone_id', $zone->id);
@@ -1923,7 +1919,7 @@ class ReportController extends Controller
             return Excel::download(new ProviderTripReportExport($data), 'ProviderTripReport.csv');
         }
     }
-    public function generate_statement($id)
+    public function generateStatement($id)
     {
         $company_phone = BusinessSetting::where('key', 'phone')->first()->value;
         $company_email = BusinessSetting::where('key', 'email_address')->first()->value;
@@ -1931,7 +1927,7 @@ class ReportController extends Controller
         $company_web_logo = BusinessSetting::where('key', 'logo')->first()->value;
         $footer_text = \App\Models\BusinessSetting::where(['key' => 'footer_text'])->first()->value;
 
-        $trip_transaction = TripTransaction::with('trip', 'trip.details', 'trip.customer', 'trip.provider')->where('id', $id)->first();
+        $trip_transaction = TripTransaction::with('trip', 'trip.trip_details', 'trip.customer', 'trip.provider')->where('id', $id)->first();
         $data["email"] = $trip_transaction->trip->customer != null ? $trip_transaction->trip->customer["email"] : translate('email_not_found');
         $data["client_name"] = $trip_transaction->trip->customer != null ? $trip_transaction->trip->customer["f_name"] . ' ' . $trip_transaction->trip->customer["l_name"] : translate('customer_not_found');
         $data["trip_transaction"] = $trip_transaction;

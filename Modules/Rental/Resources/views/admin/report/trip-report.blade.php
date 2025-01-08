@@ -389,7 +389,7 @@
                                                 <i class="tio-invisible"></i>
                                             </a>
                                             <a class="ml-2 btn btn-sm btn--primary btn-outline-primary action-btn"
-                                                href="{{ route('admin.transactions.order.generate-invoice', ['id' => $trip['id']]) }}">
+                                                href="{{ route('admin.transactions.rental.trip.generate-invoice', ['id' => $trip['id']]) }}">
                                                 <i class="tio-print"></i>
                                             </a>
                                         </div>
