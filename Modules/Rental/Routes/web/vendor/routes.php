@@ -5,6 +5,7 @@ use Modules\Rental\Http\Controllers\Web\Provider\DriverController;
 use Modules\Rental\Http\Controllers\Web\Provider\Promotions\BannerController;
 use Modules\Rental\Http\Controllers\Web\Provider\Promotions\CouponController;
 use Modules\Rental\Http\Controllers\Web\Provider\ProviderController;
+use Modules\Rental\Http\Controllers\Web\Provider\ReportController;
 use Modules\Rental\Http\Controllers\Web\Provider\VehicleController;
 
 /*
@@ -80,6 +81,10 @@ Route::group([ 'middleware' => ['vendor']], function () {
         Route::get('export', [DriverController::class, 'export'])->name('export');
     });
 
+    Route::group(['prefix' => 'report', 'as' => 'report.', 'middleware' => ['module:report' ,'subscription:report']], function () {
+        Route::get('trip-report', [ReportController::class, 'tripReport'])->name('trip-report');
+        Route::get('trip-report-export', [ReportController::class, 'tripReportExport'])->name('trip-report-export');
+    });
 });
 
 
