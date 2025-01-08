@@ -104,8 +104,10 @@ class TripController extends Controller
      */
     public function details($id): Renderable
     {
-        $trip = $this->trips->findOrFail($id);
-        session()->forget('vehicleQuantities');
+        $trip = $this->trips->with(['trip_details' => function($query) {
+            $query->withCount('vehicleVariations');
+        }])->findOrFail($id);
+        session()->forget('vehicleQuantities as total_vehicles');
         session()->forget('modifiedPrices');
         return view('rental::admin.trip.details', compact('trip'));
     }
@@ -416,9 +418,11 @@ class TripController extends Controller
                 'quantity' => $calculationSingleData['quantity'],
                 'subTotal' => round($calculationData['subTotal'], 2),
                 'grandTotal' => round($calculationData['tripAmount'], 2),
-                'discount' => round($calculationData['couponDiscount'], 2),
-                'couponDiscount' => round($calculationData['taxAmount'], 2),
+                'refBonus' => round($calculationData['refBonus'], 2),
+                'discount' => round($calculationData['discount'], 2),
+                'couponDiscount' => round($calculationData['couponDiscount'], 2),
                 'taxAmount' => round($calculationData['taxAmount'], 2),
+                'additionalCharge' => round($calculationData['additionalCharge'], 2),
             ]);
         }
 

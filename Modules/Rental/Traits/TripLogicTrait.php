@@ -424,7 +424,8 @@ trait TripLogicTrait
             'discount' => $discount,
             'couponDiscount' => $couponDiscount,
             'refBonus' => $refBonus,
-            'taxAmount' => $calculatedTax
+            'taxAmount' => $calculatedTax,
+            'additionalCharge' => self::getAdditionalCharge()
         ];
     }
 

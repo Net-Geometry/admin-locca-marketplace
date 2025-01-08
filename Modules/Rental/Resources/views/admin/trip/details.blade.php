@@ -69,7 +69,7 @@
                                     </div>
                                     <div class="fs-14 text-title mt-2 pt-1 mb-2 d-flex align-items-center __gap-5px">
                                         <span>{{translate('Trip Type')}}</span> <span>:</span>
-                                        <span class="font-bold">{{ ucwords($trip->trip_type) }}</span>
+                                        <span class="font-bold">{{ translate($trip->trip_type) }}</span>
                                         <span>({{ $trip->scheduled ? translate('messages.Instant') : translate('messages.scheduled') }})</span>
                                     </div>
                                     <div class="fs-14 text-title mt-2 pt-1 mb-2 d-flex align-items-center __gap-5px">
@@ -101,17 +101,17 @@
                                     <h6>
                                         <span>{{translate('Trip Status')}}</span> <span>:</span>
                                         <span class="badge badge--accepted ml-2 ml-sm-3 text-capitalize">
-                                            {{ ucwords($trip->trip_status) }}
+                                            {{ translate($trip->trip_status) }}
                                         </span>
                                     </h6>
                                     <h6>
                                         <span>{{translate('Payment status')}}</span> <span>:</span>
-                                        <strong class="text-danger">{{ ucwords($trip->payment_status) }}</strong>
+                                        <strong class="text-danger">{{ translate($trip->payment_status) }}</strong>
 
                                     </h6>
                                     <h6>
                                         <span>{{translate('Payment method')}}</span> <span>:</span>
-                                        <span class="font-semibold">{{ ucwords($trip->payment_method ?? 'cash payment') }}</span>
+                                        <span class="font-semibold">{{ translate($trip->payment_method ?? 'cash payment') }}</span>
                                     </h6>
                                     <h6>
                                         <span>{{translate('Reference Code')}} </span> <span>:</span>
@@ -314,7 +314,8 @@
                                     <dt class="col-6 font-regular ">{{ \App\CentralLogics\Helpers::get_business_data('additional_charge_name')??\App\CentralLogics\Helpers::get_business_data('additional_charge_name')??translate('messages.additional_charge') }}</dt>
                                     <dd class="col-6 text-right">
                                         + {{ \App\CentralLogics\Helpers::format_currency($trip->additional_charge) }}</dd>
-                                    <dt class="col-6 font-bold">{{translate('Total')}}</dt>
+
+                                        <dt class="col-6 font-bold">{{translate('Total')}}</dt>
                                     <dd class="col-6 font-bold">{{ \App\CentralLogics\Helpers::format_currency($trip->trip_amount)}}</dd>
                                 </dl>
                                 <!-- End Row -->
@@ -340,7 +341,7 @@
                                     <button
                                         class="form-control h--45px dropdown-toggle d-flex justify-content-between align-items-center w-100"
                                         type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        {{ ucwords($trip->trip_status) }}
+                                        {{ translate($trip->trip_status) }}
                                     </button>
                                     <div class="dropdown-menu text-capitalize" aria-labelledby="dropdownMenuButton">
                                         @php
@@ -867,7 +868,7 @@
                                             <th class="border-0">#</th>
                                             <th class="border-0">{{translate('Vehicle Details')}}</th>
                                             <th class="border-0">{{translate('Unite Fair')}}</th>
-                                            <th class="border-0">{{translate('Quantity')}}</th>
+                                            <th class="border-0 text-center">{{translate('Quantity')}}</th>
                                             <th class="text-right  border-0">{{translate('Fare')}}</th>
                                         </tr>
                                         </thead>
@@ -875,15 +876,17 @@
                                         @php
                                         $subtotal = 0;
                                         @endphp
-                                        @foreach($trip->trip_details as $editDetail)
+                                            @foreach($trip->trip_details as $editDetail)
                                         <tr>
                                             <td>
-                                                <div>
+                                                <div class="eta_amount">
+
                                                     {{ $loop->iteration }}
                                                 </div>
                                             </td>
                                             <td>
-                                                <div class="media media--sm">
+                                                <div class="media media--sm eta_amount">
+
                                                     <a class="avatar avatar-xl mr-3" href="{{ route('admin.rental.provider.vehicle.details', $editDetail->vehicle_id) }}">
                                                         <img class="img-fluid rounded aspect-ratio-1 onerror-image"
                                                              src="{{ $editDetail->vehicle['thumbnailFullUrl'] }}"
@@ -903,26 +906,29 @@
                                                 </div>
                                             </td>
                                             <td>
-                                                <div class="fs-14 text--title">
+                                                <div class="fs-14 eta_amount text--title">
+
                                                     {{ \App\CentralLogics\Helpers::format_currency($editDetail->price) }}
                                                     {{ $editDetail->rental_type }}
                                                 </div>
                                             </td>
                                             <td>
-                                                <input type="number" name="quantity" class="form-control fs-14 text--title w--60px quantity-input"
-                                                       data-id="{{ $editDetail->id }}"
+                                                <div class="d-flex flex-column gap-1 align-items-end">
+                                                    <span class="eta_amount  d-none"> </span>
+                                                <input type="number" name="quantity" class="form-control fs-14 text--title w--60px quantity-input" min="1" max="{{ $editDetail->vehicle_variations_count }}"
+                                                data-max_quantity="{{ $editDetail->vehicle_variations_count }}"
+                                                data-max_original_quantity="{{ $editDetail->quantity }}"
+                                                data-id="{{ $editDetail->id }}"
                                                        data-vehicle_id="{{ $editDetail->vehicle_id }}"
-
                                                        value="{{ $editDetail->quantity }}" placeholder="EX:5">
+                                            </div>
                                             </td>
                                             <td class="text-right">
-                                                <div class="">
-                                                    <!-- Disabled input to show the old value -->
-                                                    <input type="text" class="form-control w--120px text-right fs-14 text--title fare-old-value"
-                                                           value="{{ \App\CentralLogics\Helpers::format_currency($editDetail->price * $editDetail->quantity) }}"
-                                                           readonly disabled>
-                                                    <!-- Main fare-total input -->
-                                                    <input type="text" name="price"
+                                                <div class="d-flex flex-column gap-1 align-items-end">
+                                                    <span class="eta_amount_mt d-none "> {{ translate('*EST_Fare:') }}
+                                                        <small class="fare-old-value text--warning"> </small>
+                                                    </span>
+                                                    <input type="text" name="price" min="1" max="999999999"
                                                            data-price="{{ $editDetail->price }}"
                                                            class="form-control w--120px text-right fs-14 text--title fare-total"
                                                            data-id="{{ $editDetail->id }}"
@@ -958,20 +964,35 @@
                                                 {{ \App\CentralLogics\Helpers::format_currency($subtotal) }}
                                             </dd>
 
-                                            <dt class="col-6 font-regular">{{translate('Coupon discount')}}</dt>
-                                            <dd class="col-6">
-                                                -{{ \App\CentralLogics\Helpers::format_currency($trip->coupon_discount_amount)}}
-                                            </dd>
-
-                                            <dt class="col-6 font-regular">{{translate('discount')}}</dt>
-                                            <dd class="col-6">
+                                            <dt class="col-6 font-regular ">{{translate('discount')}}</dt>
+                                            <dd class="col-6 discount_amount">
                                                 -{{ \App\CentralLogics\Helpers::format_currency($trip->discount_on_trip)}}
                                             </dd>
 
-                                            <dt class="col-6 font-regular text-uppercase">{{translate('Vat/tax')}}</dt>
-                                            <dd class="col-6 text-right">
-                                                +{{ \App\CentralLogics\Helpers::format_currency($trip->tax_amount)}}
+                                            <dt class="col-6 font-regular ">{{translate('Coupon discount')}}</dt>
+                                            <dd class="col-6 coupon_discount_amount">
+                                                -{{ \App\CentralLogics\Helpers::format_currency($trip->coupon_discount_amount)}}
                                             </dd>
+
+
+                                            @if ($trip->ref_bonus_amount > 0)
+                                            <dt class="col-6 font-regular">{{translate('Referral_Discount')}}</dt>
+                                            <dd class="col-6 ref_bonus_amount">
+                                                -{{ \App\CentralLogics\Helpers::format_currency($trip->ref_bonus_amount)}}
+                                            </dd>
+                                            @endif
+
+                                            <dt class="col-6 font-regular">{{translate('Vat/Tax')}}
+                                                {{ \App\Models\BusinessSetting::where(['key'=>'tax_included'])->first()->value  ? translate('(Included)') : '' }}
+                                            </dt>
+
+                                            <dd class="col-6 text-right tax_amount">
+                                            {{ \App\Models\BusinessSetting::where(['key'=>'tax_included'])->first()->value  ? '': '+'}} {{ \App\CentralLogics\Helpers::format_currency($trip->tax_amount)}}
+                                            </dd>
+
+                                            <dt class="col-6 font-regular ">{{ \App\CentralLogics\Helpers::get_business_data('additional_charge_name')??\App\CentralLogics\Helpers::get_business_data('additional_charge_name')??translate('messages.additional_charge') }}</dt>
+                                            <dd class="col-6 text-right additional_charge">
+                                                + {{ \App\CentralLogics\Helpers::format_currency($trip->additional_charge) }}</dd>
 
                                             <dt class="col-6 font-bold">{{translate('Total')}}</dt>
                                             <dd class="col-6 font-bold grand-total">{{ \App\CentralLogics\Helpers::format_currency($trip->trip_amount)}}</dd>
@@ -985,7 +1006,7 @@
                     </div>
                     <div class="modal-footer border-0 flex-shrink-0 px-4">
                         <div class="btn--container justify-content-end">
-                            <button type="reset" id="reset_btn"
+                            <button type="reset" id="reset_btn" data-dismiss="modal" aria-label="Close"
                                     class="btn btn--warning-light min-w-120px">{{ translate('messages.cancel') }}</button>
                             <button type="submit"
                                     class="btn btn--primary min-w-120px">{{ translate('messages.update') }}</button>
@@ -1548,8 +1569,18 @@
             let row = $(this).closest('tr');
             let id = $(this).data('id');
             let vehicleId = $(this).data('vehicle_id');
+            let max_quantity = $(this).data('max_quantity');
+            let max_original_quantity = $(this).data('max_original_quantity');
             let distance = $('#distance-input').val();
 
+            if (quantity > max_quantity) {
+                toastr.warning(`You can select up to ${max_quantity} vehicles only.`, '', {
+                    closeButton: true,
+                    progressBar: true
+                });
+                $(this).val(max_original_quantity);
+                quantity = max_original_quantity;
+            }
             $.ajax({
                 url: "{{ route('admin.rental.trip.get-calculation') }}",
                 type: 'get',
@@ -1562,10 +1593,11 @@
                 },
                 success: function(response) {
                     let totalFare = response.calculationSingleData;
-                    let formattedFare = (totalFare * quantity).toFixed(2);
+                    let formattedFare =  (totalFare * quantity).toFixed(2);
                     row.find('.fare-total').val(formatCurrency(formattedFare));
-                    row.find('.fare-old-value').val(formatCurrency(formattedFare));
-
+                    row.find('.fare-old-value').text(formatCurrency(formattedFare));
+                    row.find('.eta_amount').removeClass('d-none').addClass('mt-3');
+                    row.find('.eta_amount_mt').removeClass('d-none');
                     updateOverallTotal(response);
                 },
                 error: function(xhr, status, error) {
@@ -1630,7 +1662,12 @@
 
             $('.total_fare').text(formatCurrency(subtotal));
             $('.subtotal').text(formatCurrency(subtotal));
-            $('.grand-total').text(formatCurrency(grandTotal));
+            $('.grand-total').text(formatCurrency(response.grandTotal));
+            $('.coupon_discount_amount').text(formatCurrency(response.couponDiscount));
+            $('.discount_amount').text(formatCurrency(response.discount));
+            $('.tax_amount').text(formatCurrency(response.taxAmount));
+            $('.ref_bonus_amount').text(formatCurrency(response.refBonus));
+            $('.additional_charge').text(formatCurrency(response.additionalCharge));
         }
 
         function formatCurrency(value) {
