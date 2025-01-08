@@ -455,7 +455,7 @@ class TripController extends Controller
             if( $trip->provider?->is_valid_subscription == 1 && $trip->provider?->store_sub?->max_order != "unlimited" && $trip->provider?->store_sub?->max_order > 0){
                 $trip->provider?->store_sub?->decrement('max_order' , 1);
             }
-            if(config('mail.status') && $order_mail_status == '1' && Helpers::getNotificationStatusData('customer','customer_trip_notification','mail_status')){
+            if(config('mail.status') && $order_mail_status == '1' && Helpers::getRentalNotificationStatusData('customer','customer_trip_notification','mail_status')){
                 if (!$trip->is_guest && $trip->customer ) {
                     Mail::to($trip->customer->email)->send(new TripBooking($trip->id));
                 }elseif($trip->is_guest == 1  && isset($trip->user_info['contact_person_email'])){

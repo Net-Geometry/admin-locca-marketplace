@@ -4150,7 +4150,7 @@ class Helpers
         $data= NotificationSetting::where(['type'=>$user_type,'module_type' => 'rental','key'=>$key ])->select($notification_type)->first();
         $data= $data?->{$notification_type} === 'active' ? 1 : 0;
 
-        if($store_id && $user_type == 'store' && $data === 1){
+        if($store_id && $user_type == 'provider' && $data === 1){
             $data= self::getRentalStoreNotificationStatusData(store_id:$store_id,key:$key ,notification_type: $notification_type);
             $data= $data?->{$notification_type} === 'active' ? 1 : 0;
         }

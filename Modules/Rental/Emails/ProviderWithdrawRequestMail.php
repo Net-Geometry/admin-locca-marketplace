@@ -37,13 +37,13 @@ class ProviderWithdrawRequestMail extends Mailable
     {
         $company_name = BusinessSetting::where('key', 'business_name')->first()->value;
         $status = $this->status;
-        // if($status == 'approved'){
-        //     $data=EmailTemplate::where('type','store')->where('email_type', 'withdraw_approve')->first();
-        // }elseif($status == 'denied'){
-        //     $data=EmailTemplate::where('type','store')->where('email_type', 'withdraw_deny')->first();
-        // }else{
-        // }
-        $data=RentalEmailTemplate::where('type','admin')->where('email_type', 'withdraw_request')->first();
+        if($status == 'approved'){
+            $data=RentalEmailTemplate::where('type','provider')->where('email_type', 'withdraw_approve')->first();
+        }elseif($status == 'denied'){
+            $data=RentalEmailTemplate::where('type','provider')->where('email_type', 'withdraw_deny')->first();
+        }else{
+            $data=RentalEmailTemplate::where('type','admin')->where('email_type', 'withdraw_request')->first();
+        }
         $template=$data?$data->email_template:6;
         $wallet = $this->wallet;
         $store_name = $wallet->vendor->f_name;

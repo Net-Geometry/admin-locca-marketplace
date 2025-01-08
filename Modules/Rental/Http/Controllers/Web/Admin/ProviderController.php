@@ -51,6 +51,7 @@ use Modules\Rental\Emails\ProviderRegistration;
 use Modules\Rental\Exports\VehicleReviewExport;
 use Illuminate\Contracts\Foundation\Application;
 use Modules\Rental\Emails\ProviderSelfRegistration;
+use Modules\Rental\Emails\ProviderStatus;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use OpenSpout\Common\Exception\InvalidArgumentException;
 use OpenSpout\Common\Exception\UnsupportedTypeException;
@@ -622,11 +623,11 @@ class ProviderController extends Controller
         try{
             if($request->status == 1){
 
-                if(config('mail.status') && Helpers::get_mail_status('rental_approve_mail_status_provider') == '1' &&  Helpers::getNotificationStatusData('provider','provider_registration_approval','mail_status') ){
+                if(config('mail.status') && Helpers::get_mail_status('rental_approve_mail_status_provider') == '1' &&  Helpers::getRentalNotificationStatusData('provider','provider_registration_approval','mail_status') ){
                     Mail::to($store?->vendor?->email)->send(new ProviderSelfRegistration('approved', $store->vendor->f_name.' '.$store->vendor->l_name));
                 }
             }else{
-                if(config('mail.status') && Helpers::get_mail_status('rental_deny_mail_status_provider') == '1' &&  Helpers::getNotificationStatusData('provider','provider_registration_deny','mail_status') ){
+                if(config('mail.status') && Helpers::get_mail_status('rental_deny_mail_status_provider') == '1' &&  Helpers::getRentalNotificationStatusData('provider','provider_registration_deny','mail_status') ){
                     Mail::to($store?->vendor?->email)->send(new ProviderSelfRegistration('denied', $store->vendor->f_name.' '.$store->vendor->l_name));
                 }
             }
@@ -1148,11 +1149,11 @@ class ProviderController extends Controller
         try{
             $admin = $this->admin->where('role_id', 1)->first();
 
-            if(config('mail.status') && Helpers::get_mail_status('rental_registration_mail_status_provider') == '1' &&  Helpers::getNotificationStatusData('provider','provider_registration','mail_status') ){
+            if(config('mail.status') && Helpers::get_mail_status('rental_registration_mail_status_provider') == '1' &&  Helpers::getRentalNotificationStatusData('provider','provider_registration','mail_status') ){
                 Mail::to($request['email'])->send(new ProviderSelfRegistration('pending', $vendor->f_name.' '.$vendor->l_name));
             }
 
-            if( config('mail.status') && Helpers::get_mail_status('rental_provider_registration_mail_status_admin') == '1' &&  Helpers::getNotificationStatusData('admin','provider_self_registration','mail_status') ){
+            if( config('mail.status') && Helpers::get_mail_status('rental_provider_registration_mail_status_admin') == '1' &&  Helpers::getRentalNotificationStatusData('admin','provider_self_registration','mail_status') ){
                 Mail::to($admin['email'])->send(new ProviderRegistration('pending', $vendor->f_name.' '.$vendor->l_name));
             }
 
@@ -1209,7 +1210,71 @@ class ProviderController extends Controller
         return back();
     }
 
+    public function status($store_id)
+    {
+        $store = $this->store->with('vendor')->findOrFail($store_id);
+        $store->status = !$store->status;
+        $store->save();
+        $vendor = $store->vendor;
+        try
+        {
+            if($store->status == 0)
+            {   $vendor->auth_token = null;
+                if(isset($vendor->firebase_token) && Helpers::getRentalNotificationStatusData('provider','provider_account_block','push_notification_status',$store?->id))
+                {
+                    $data = [
+                        'title' => translate('messages.suspended'),
+                        'description' => translate('messages.your_account_has_been_suspended'),
+                        'order_id' => '',
+                        'image' => '',
+                        'type'=> 'block'
+                    ];
+                    Helpers::send_push_notif_to_device($vendor->firebase_token, $data);
+                    DB::table('user_notifications')->insert([
+                        'data'=> json_encode($data),
+                        'vendor_id'=>$vendor->id,
+                        'created_at'=>now(),
+                        'updated_at'=>now()
+                    ]);
+                }
 
+                if ( config('mail.status') && Helpers::get_mail_status('rental_suspend_mail_status_provider') == '1' &&  Helpers::getRentalNotificationStatusData('provider','provider_account_block','mail_status',$store?->id)) {
+                    Mail::to($vendor?->email)->send(new ProviderStatus('suspended', $vendor?->f_name.' '.$vendor?->l_name));
+                }
+            } else{
+
+                if ( Helpers::getRentalNotificationStatusData('provider','provider_account_unblock','push_notification_status',$store?->id) &&  isset($vendor->firebase_token)) {
+                    $data = [
+                        'title' => translate('Account_Activation'),
+                        'description' => translate('messages.your_account_has_been_activated'),
+                        'order_id' => '',
+                        'image' => '',
+                        'type' => 'unblock'
+                    ];
+                    Helpers::send_push_notif_to_device($vendor->firebase_token, $data);
+                    DB::table('user_notifications')->insert([
+                        'data' => json_encode($data),
+                        'vendor_id' => $vendor->id,
+                        'created_at' => now(),
+                        'updated_at' => now()
+                    ]);
+                }
+
+                if ( config('mail.status') && Helpers::get_mail_status('rental_unsuspend_mail_status_provider') == '1' &&  Helpers::getNotificationStatusData('provider','provider_account_unblock','mail_status',$store?->id)) {
+                    Mail::to( $vendor?->email)->send(new ProviderStatus('unsuspended', $vendor?->f_name.' '.$vendor?->l_name));
+                }
+            }
+
+        }
+        catch (\Exception $e) {
+
+            dd($e);
+            Toastr::warning(translate('messages.push_notification_faild'));
+        }
+
+        Toastr::success(translate('messages.store_status_updated'));
+        return back();
+    }
 
 
 
