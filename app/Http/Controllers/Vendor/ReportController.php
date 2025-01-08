@@ -61,7 +61,8 @@ class ReportController extends Controller
         })
         ->orderBy('created_at', 'desc')
         ->paginate(config('default_pagination'))->withQueryString();
-        return view('vendor-views.report.expense-report', compact('expense','from','to','filter'));
+        $module_type = Helpers::get_store_data()->module->module_type;
+        return view('vendor-views.report.expense-report', compact('expense','from','to','filter','module_type'));
     }
 
 
@@ -114,6 +115,7 @@ class ReportController extends Controller
             'to'=>(($filter == 'custom') && $to)?$to:null,
             'zone'=>Helpers::get_zones_name(Helpers::get_store_data()->zone_id),
             'store'=>Helpers::get_stores_name(Helpers::get_store_id()),
+            'module_type'=>Helpers::get_store_data()->module->module_type,
             // 'customer'=>is_numeric($customer_id)?Helpers::get_customer_name($customer_id):null,
             // 'module'=>request('module_id')?Helpers::get_module_name(request('module_id')):null,
             'filter'=>$filter,

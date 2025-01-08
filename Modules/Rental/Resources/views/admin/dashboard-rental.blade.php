@@ -48,13 +48,13 @@
                         </div>
                     </div>
                     <div class="statistics--select">
-                        <select class="custom-select border-0 order_stats_update" name="statistics_type">
-                            <option value="all" selected="">
+                        <select class="custom-select border-0 trip_stats_update" name="statistics_type">
+                            <option value="all" {{ request()->statistics_type ? '' : 'selected' }}>
                                 {{ translate('messages.All_Time') }}
                             </option>
-                            <option value="this_year">{{ translate('messages.this_year') }}</option>
-                            <option value="this_month">{{ translate('messages.this_month') }}</option>
-                            <option value="this_week">{{ translate('messages.this_week') }}</option>
+                            <option value="this_year" {{ request()->statistics_type == 'this_year' ? 'selected' : '' }}>{{ translate('messages.this_year') }}</option>
+                            <option value="this_month" {{ request()->statistics_type == 'this_month' ? 'selected' : '' }}>{{ translate('messages.this_month') }}</option>
+                            <option value="this_week" {{ request()->statistics_type == 'this_week' ? 'selected' : '' }}>{{ translate('messages.this_week') }}</option>
                         </select>
                     </div>
                 </div>
@@ -71,7 +71,7 @@
                     <div class="card-body">
                         <div class="d-flex flex-wrap justify-content-between align-items-center __gap-12px">
                             <div class="__gross-amount" id="gross_earning">
-                                <h6>{{ \App\CentralLogics\Helpers::format_currency(collect($total_sell)->sum()) }}</h6>
+                                <h6 class="gross-earning">{{ \App\CentralLogics\Helpers::format_currency(collect($total_sell)->sum()) }}</h6>
                                 <span>{{ translate('messages.Gross_Earnings') }}</span>
                             </div>
                             <div class="chart--label __chart-label p-0 move-left-100 ml-auto">
@@ -83,13 +83,16 @@
                             <select
                                 class="custom-select border-0 text-center w-auto ml-auto commission_overview_stats_update"
                                 name="commission_overview">
-                                <option value="this_year" selected>
+                                <option value="all">
+                                    {{ translate('All Time') }}
+                                </option>
+                                <option value="this_year" {{ request()->commission_overview == 'this_year' ? 'selected' : '' }}>
                                     {{ translate('this_year') }}
                                 </option>
-                                <option value="this_month">
+                                <option value="this_month" {{ request()->commission_overview == 'this_month' ? 'selected' : '' }}>
                                     {{ translate('this_month') }}
                                 </option>
-                                <option value="this_week">
+                                <option value="this_week" {{ request()->commission_overview == 'this_week' ? 'selected' : '' }}>
                                     {{ translate('this_week') }}
                                 </option>
                             </select>
@@ -110,14 +113,17 @@
                             {{ translate('Trips by Trip Type') }}
                         </h5>
                         <select class="custom-select border-0 text-center w-auto user_overview_stats_update"
-                                name="user_overview">
-                            <option value="this_year" selected>
+                                name="trip_overview">
+                            <option value="all">
+                                {{ translate('All Time') }}
+                            </option>
+                            <option value="this_year" {{ request()->trip_overview == 'this_year' ? 'selected' : '' }}>
                                 {{ translate('This year') }}
                             </option>
-                            <option value="this_month">
+                            <option value="this_month" {{ request()->trip_overview == 'this_month' ? 'selected' : '' }}>
                                 {{ translate('This month') }}
                             </option>
-                            <option value="this_week">
+                            <option value="this_week" {{ request()->trip_overview == 'this_week' ? 'selected' : '' }}>
                                 {{ translate('This week') }}
                             </option>
                         </select>
@@ -125,32 +131,8 @@
                     <!-- End Header -->
 
                     <!-- Body -->
-                    <div class="card-body" id="user-overview-board">
-                        <div class="position-relative pie-chart">
-                            <div id="dognut-pie"></div>
-                            <!-- Total Orders -->
-                            <div class="total--orders">
-                                <h3 class="text-uppercase mb-xxl-2">
-                                    {{ $totalCount }}</h3>
-                                <span class="text-capitalize">{{ translate('messages.total_trip') }}</span>
-                            </div>
-                            <!-- Total Orders -->
-                        </div>
-                        <div class="d-flex flex-wrap justify-content-center mt-4">
-                            <div class="chart--label">
-                                <span class="indicator chart-bg-1"></span>
-                                <span class="info">
-                                    {{ translate('messages.Hourly_Trip') }} {{ $hourlyCount }}
-                                </span>
-                            </div>
-                            <div class="chart--label">
-                                <span class="indicator chart-bg-3"></span>
-                                <span class="info">
-                                    {{ translate('messages.Distance_Wise_Trip') }} {{ $distanceWiseCount }}
-                                </span>
-                            </div>
-                        </div>
-
+                    <div class="card-body" id="trip-overview-board">
+                        @include('rental::admin.partials.by-trip-type')
                     </div>
                     <!-- End Body -->
                 </div>
@@ -166,22 +148,8 @@
                     </div>
                     <div class="card-body">
 
-                        <div class="top--selling">
-                            @foreach($topCustomers as $customer)
-                            <a class="grid--card" href="javascript:">
-                                <img class="onerror-image"
-                                     data-onerror-image="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}"
-                                     src="{{ $customer['image_full_url'] }}">
-                                <div class="cont pt-2">
-                                    <h6 class="mb-1">{{ $customer->fullName }}</h6>
-                                    <span>{{ $customer->phone }}</span>
-                                </div>
-                                <div class="ml-auto">
-                                    <span class="badge badge-soft">{{ translate('Orders') }} : {{ count($customer->trips) }}</span>
-                                </div>
-                            </a>
-                            @endforeach
-
+                        <div class="top--selling" id="topCustomers">
+                            @include('rental::admin.partials.top-customers')
                         </div>
 
                     </div>
@@ -199,21 +167,8 @@
                     </div>
                     <div class="card-body">
 
-                        <div class="top--selling">
-                            @foreach($topProviders as $provider)
-                            <a class="grid--card" href="{{ route('admin.rental.provider.details', $provider->id)}}">
-                                <img class="onerror-image"
-                                     data-onerror-image="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}"
-                                     src="{{ $provider['logo_full_url'] }}">
-                                <div class="cont pt-2">
-                                    <h6 class="mb-1">{{ $provider->name }}</h6>
-                                    <span>+{{ $provider->phone }}</span>
-                                </div>
-                                <div class="ml-auto">
-                                    <span class="badge badge-soft">{{ translate('Orders') }} : {{ count($provider->trips) }}</span>
-                                </div>
-                            </a>
-                            @endforeach
+                        <div class="top--selling" id="topProviders">
+                            @include('rental::admin.partials.top-providers')
                         </div>
 
                     </div>
@@ -334,15 +289,48 @@
         let updatingChart = $.HSCore.components.HSChartJS.init($('#updatingData'));
 
 
-        $('.fetch_data_zone_wise, .order_stats_update, .commission_overview_stats_update').on('change', function () {
+        $('.fetch_data_zone_wise').on('change', function () {
             let zone_id = $('.fetch_data_zone_wise').val();
-            let statistics_type = $('.order_stats_update').val();
-            let commission_overview = $('.commission_overview_stats_update').val();
 
-            fetch_data_zone_wise(zone_id, statistics_type, commission_overview);
+            fetch_data_zone_wise(zone_id);
         });
 
-        function fetch_data_zone_wise(zone_id, statistics_type, commission_overview) {
+        function fetch_data_zone_wise(zone_id) {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $.get({
+                url: '{{ route('admin.rental.dashboard') }}',
+                data: {
+                    zone_id: zone_id
+                },
+                beforeSend: function() {
+                    $('#loading').show()
+                },
+                success: function(data) {
+                    $('#deliveryStatistics').html(data.delivery_statistics);
+                    $('#commission-overview-board').html(data.sale_chart)
+                    $('#topProviders').html(data.top_providers)
+                    $('#topCustomers').html(data.top_customers)
+                    $('#trip-overview-board').html(data.by_trip_type)
+                    $('#zoneName').html(data.zoneName);
+                },
+                complete: function() {
+                    $('#loading').hide()
+                }
+            });
+        }
+
+        $('.trip_stats_update').on('change', function () {
+            let zone_id = $('.fetch_data_zone_wise').val();
+            let statistics_type = $('.trip_stats_update').val();
+
+            trip_stats_update(zone_id, statistics_type);
+        });
+
+        function trip_stats_update(zone_id, statistics_type) {
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -352,16 +340,13 @@
                 url: '{{ route('admin.rental.dashboard') }}',
                 data: {
                     zone_id: zone_id,
-                    statistics_type: statistics_type,
-                    commission_overview: commission_overview,
+                    statistics_type: statistics_type
                 },
                 beforeSend: function() {
                     $('#loading').show()
                 },
                 success: function(data) {
                     $('#deliveryStatistics').html(data.delivery_statistics);
-                    $('#commission-overview-board').html(data.sale_chart)
-                    $('#zoneName').html(data.zoneName);
                 },
                 complete: function() {
                     $('#loading').hide()
@@ -371,26 +356,28 @@
 
         $('.user_overview_stats_update').on('change', function() {
             let type = $(this).val();
-            user_overview_stats_update(type);
+            let zone_id = $('.fetch_data_zone_wise').val();
+            user_overview_stats_update(type, zone_id);
         });
 
-        function user_overview_stats_update(type) {
+        function user_overview_stats_update(type, zone_id) {
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-            $.post({
-                url: '{{ route('admin.dashboard-stats.user-overview') }}',
+            $.get({
+                url: '{{ route('admin.rental.dashboard-stats.trip_by_trip_type') }}',
                 data: {
-                    user_overview: type
+                    trip_overview: type,
+                    zone_id: zone_id
                 },
                 beforeSend: function() {
                     $('#loading').show()
                 },
                 success: function(data) {
-                    insert_param('user_overview', type);
-                    $('#user-overview-board').html(data.view)
+                    insert_param('trip_overview', type);
+                    $('#trip-overview-board').html(data.view)
                 },
                 complete: function() {
                     $('#loading').hide()
@@ -400,32 +387,38 @@
 
         $('.commission_overview_stats_update').on('change', function() {
             let type = $(this).val();
-            commission_overview_stats_update(type);
+            let zone_id = $('.fetch_data_zone_wise').val();
+            commission_overview_stats_update(type, zone_id);
         });
 
-        function commission_overview_stats_update(type) {
+        function commission_overview_stats_update(type, zone_id) {
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-            $.post({
-                url: '{{ route('admin.dashboard-stats.commission-overview') }}',
+            $.get({
+                url: '{{ route('admin.rental.dashboard-stats.commission_overview') }}',
                 data: {
-                    commission_overview: type
+                    commission_overview: type,
+                    zone_id: zone_id
                 },
                 beforeSend: function() {
                     $('#loading').show()
                 },
                 success: function(data) {
+                    let grossEarningTotal = (data.grossEarning).toFixed(2)
                     insert_param('commission_overview', type);
                     $('#commission-overview-board').html(data.view);
-                    $('#gross_earning').html(data.gross_earning);
+                    $('.gross-earning').text(formatCurrency(grossEarningTotal));
                 },
                 complete: function() {
                     $('#loading').hide()
                 }
             });
+        }
+        function formatCurrency(value) {
+            return "{{ \App\CentralLogics\Helpers::currency_symbol() }}" + value;
         }
 
         function insert_param(key, value) {

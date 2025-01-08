@@ -1,5 +1,4 @@
-@extends('layouts.admin.app')
-
+@extends('layouts.vendor.app')
 @section('title', translate('Trip Details'))
 
 @push('css_or_js')
@@ -55,9 +54,9 @@
                                         {{translate('Trip ID')}} # {{ $trip->id }}
                                     </h1>
                                     <span class="mt-2 d-block d-flex align-items-center __gap-5px">
-                                        Placed on {{ $trip->BookingDate }} {{ $trip->BookingTime }}
+                                        {{ translate('Placed on') }} {{ $trip->BookingDate }} {{ $trip->BookingTime }}
                                         <br>
-                                        Schedule At {{ $trip->ScheduleDate }} {{ $trip->ScheduleTime }}
+                                        {{ translate('Schedule At') }} {{ $trip->ScheduleDate }} {{ $trip->ScheduleTime }}
                                     </span>
                                     <div class="fs-14 text-title mt-2 pt-1 mb-2 d-flex align-items-center __gap-5px">
                                         <span>{{translate('Provider')}}</span> <span>:</span>
@@ -161,7 +160,7 @@
                                         </td>
                                         <td>
                                             <div class="media media--sm">
-                                                <a class="avatar avatar-xl mr-3" href="{{ route('admin.rental.provider.vehicle.details', $detail->vehicle_id) }}">
+                                                <a class="avatar avatar-xl mr-3" href="{{ route('vendor.vehicle.details', $detail->vehicle_id) }}">
                                                     <img class="img-fluid rounded aspect-ratio-1 onerror-image"
                                                          src="{{ $detail->vehicle['thumbnailFullUrl'] }}"
                                                          data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
@@ -350,7 +349,7 @@
                                         @foreach ($statuses as $status)
                                             @if ($status !== strtolower($trip->trip_status))
                                                 <a class="dropdown-item route-alert"
-                                                   data-url="{{ route('admin.rental.trip.status', ['id' => $trip['id'], 'status' => $status]) }}"
+                                                   data-url="{{ route('vendor.trip.status', ['id' => $trip['id'], 'status' => $status]) }}"
                                                    data-message="Change status to {{ $status }}?" href="javascript:">
                                                     {{ ucfirst($status) }}
                                                 </a>
@@ -376,7 +375,7 @@
                                     @foreach ($paymentStatuses as $status)
                                         @if ($status !== strtolower($trip->payment_status))
                                             <a class="dropdown-item route-alert"
-                                               data-url="{{ route('admin.rental.trip.payment.status', ['id' => $trip['id'], 'status' => $status]) }}"
+                                               data-url="{{ route('vendor.trip.payment.status', ['id' => $trip['id'], 'status' => $status]) }}"
                                                data-message="Change status to {{ ucfirst($status) }}?" href="javascript:">
                                                 {{ ucfirst($status) }}
                                             </a>
@@ -460,7 +459,7 @@
                                     <span class="text--title bg--F6F6F6 p-10px rounded"><i class="tio-poi"></i></span>
                                 </span>
                                 <span class="w-0 flex-grow-1">
-                                    <span class="font-medium">Home:</span>
+                                    <span class="font-medium">{{ translate('Home') }}:</span>
                                     <span class="opacity-70">{{ $trip->pickup_location['location_name'] }}</span>
                                 </span>
                             </li>
@@ -553,41 +552,7 @@
                         @endif
                     </div>
                 </div>
-                <div class="card mt-2">
-                    <div class="card-body">
-                        <h5 class="card-title mb-3 d-flex flex-wrap align-items-center">
-                            <span>{{ translate('messages.Provider_Info') }}</span>
-                        </h5>
-                        <a class="media align-items-center deco-none resturant--information-single" href="{{ route('admin.rental.provider.details', $trip->provider_id) }}">
-                            <div class="avatar avatar-circle">
-                                <img class="avatar-img w-75px border-000-01 onerror-image"
-                                     data-onerror-image="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}"
-                                     src="{{ $trip?->provider['logoFullUrl'] }}"
-                                     alt="Image Description">
-                            </div>
-                            <div class="media-body">
-                                <div class="text--title fs-14 font-semibold d-block text-hover-primary mb-1">
-                                    {{ $trip?->provider?->name }}
-                                </div>
 
-                                <div class="text--title">
-                                    <span class="font-bold">{{ $trip->provider->trips->count() }}</span>
-                                    {{ translate('messages.Trip_served') }}
-                                </div>
-
-                                <div class="text--title d-flex align-items-center">
-                                    {{ $trip->provider->email }}
-                                </div>
-
-                                <div class="text--title d-flex align-items-baseline">
-                                    <i class="tio-poi mr-2"></i>
-                                    {{ $trip->provider->address }}
-                                </div>
-
-                            </div>
-                        </a>
-                    </div>
-                </div>
             </div>
         </div>
         <!-- End Row -->
@@ -602,7 +567,7 @@
                     <button type="button" class="close p-0 m-0" data-dismiss="modal" aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
                 </div>
-                <form action="{{ route('admin.rental.trip.assign.driver') }}" method="post">
+                <form action="{{ route('vendor.trip.assign.driver') }}" method="post">
                     @csrf
                     <input type="hidden" name="trip_id" value="{{ $trip->id }}">
                     <div class="modal-body px-4 py-0">
@@ -693,7 +658,7 @@
                     <button type="button" class="close p-0 m-0" data-dismiss="modal" aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
                 </div>
-                <form action="{{ route('admin.rental.trip.assign.vehicle') }}" method="post">
+                <form action="{{ route('vendor.trip.assign.vehicle') }}" method="post">
                     @csrf
                     <div class="modal-body px-4 py-0">
                         <div class="media media--sm flex-wrap mb-20">
@@ -705,26 +670,26 @@
                             </a>
                             <div class="media-body">
                                 <div class="text--title">
-                                    <div class="fs-20 font-semibold line--limit-1" id="vehicleName">Vehicle Name</div>
-                                    <div class="mb-2"><span class="font-semibold">Vendor :</span> <span id="vehicleVendor">Vendor Name</span></div>
+                                    <div class="fs-20 font-semibold line--limit-1" id="vehicleName">{{ translate('Vehicle Name') }}</div>
+                                    <div class="mb-2"><span class="font-semibold"> {{ translate('Vendor') }}:</span> <span id="vehicleVendor">{{ translate('Vehicle Name') }}</span></div>
                                     <div class="d-flex flex-wrap gap-2 gap-sm-4">
-                                        <div><span class="font-semibold">Category :</span> <span id="vehicleCategory">Category</span></div>
-                                        <div><span class="font-semibold">Brand :</span> <span id="vehicleBrand">Brand</span></div>
+                                        <div><span class="font-semibold"> {{ translate('Category') }}  :</span> <span id="vehicleCategory"> {{ translate('Category') }} </span></div>
+                                        <div><span class="font-semibold"> {{ translate('Brand') }}  :</span> <span id="vehicleBrand"> {{ translate('Brand') }} </span></div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <h5 class="font-bold">Vehicles List <span class="fs-12 font-regular">(Select any of <span id="vehicleQuantity"></span> vehicle)</span></h5>
+                        <h5 class="font-bold"> {{ translate('Vehicles List') }}<span class="fs-12 font-regular">({{ translate('Select any of') }} <span id="vehicleQuantity"></span> {{ translate('vehicle') }})</span></h5>
                         <div class="card shadow-none">
                             <div class="table-responsive">
                                 <table
                                     class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table dataTable no-footer mb-0">
                                     <thead class="thead-light">
                                     <tr>
-                                        <th class="border-0">SL.</th>
-                                        <th class="border-0">VIN Number</th>
-                                        <th class="border-0">License Number</th>
-                                        <th class="border-0 text-center">Action</th>
+                                        <th class="border-0"> {{ translate('SL.') }}</th>
+                                        <th class="border-0"> {{ translate('VIN Number') }}</th>
+                                        <th class="border-0"> {{ translate('License Number') }}</th>
+                                        <th class="border-0 text-center">{{ translate('Action') }}</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -735,7 +700,7 @@
                     </div>
                     <div class="modal-footer border-0 flex-shrink-0 px-4">
                         <div class="btn--container justify-content-end">
-                            <button type="reset" id="reset_btn"
+                            <button type="reset" id="reset_btn" data-dismiss="modal" aria-label="Close"
                                     class="btn btn--warning-light min-w-120px">{{ translate('messages.cancel') }}</button>
                             <button type="submit"
                                     class="btn btn--primary min-w-120px">{{ translate('messages.add') }}</button>
@@ -887,7 +852,7 @@
                                             <td>
                                                 <div class="media media--sm eta_amount">
 
-                                                    <a class="avatar avatar-xl mr-3" href="{{ route('admin.rental.provider.vehicle.details', $editDetail->vehicle_id) }}">
+                                                    <a class="avatar avatar-xl mr-3" href="{{ route('vendor.vehicle.details', $editDetail->vehicle_id) }}">
                                                         <img class="img-fluid rounded aspect-ratio-1 onerror-image"
                                                              src="{{ $editDetail->vehicle['thumbnailFullUrl'] }}"
                                                              data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
@@ -1582,7 +1547,7 @@
                 quantity = max_original_quantity;
             }
             $.ajax({
-                url: "{{ route('admin.rental.trip.get-calculation') }}",
+                url: "{{ route('vendor.trip.get-calculation') }}",
                 type: 'get',
                 data: {
                     id: id,
@@ -1619,7 +1584,7 @@
 
 
             $.ajax({
-                url: "{{ route('admin.rental.trip.get-calculation') }}",
+                url: "{{ route('vendor.trip.get-calculation') }}",
                 type: 'get',
                 data: {
                     id: id,
