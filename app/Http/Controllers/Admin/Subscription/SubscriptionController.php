@@ -13,21 +13,21 @@ use App\Mail\SubscriptionCancel;
 use App\Models\StoreSubscription;
 use Illuminate\Support\Facades\DB;
 use App\Models\SubscriptionPackage;
-use App\Exports\CustomerOrderExport;
 use App\Http\Controllers\Controller;
 use App\Mail\SubscriptionPlanUpdate;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\View;
 use Maatwebsite\Excel\Facades\Excel;
-use Illuminate\Support\Facades\Schema;
 use App\Models\SubscriptionTransaction;
-use Illuminate\Support\Facades\Validator;
 use App\Exports\SubscritionPackageListExport;
 use App\Exports\SubscriptionTransactionsExport;
 use App\Exports\SubscriptionSubscriberListExport;
 use App\Models\SubscriptionBillingAndRefundHistory;
+use Modules\Rental\Emails\ProviderSubscriptionCancel;
+use Modules\Rental\Emails\ProviderSubscriptionPlanUpdate;
 use App\Contracts\Repositories\TranslationRepositoryInterface;
-use Illuminate\Support\Facades\View;
+
 class SubscriptionController extends Controller
 {
 
@@ -200,26 +200,56 @@ class SubscriptionController extends Controller
 
             $subscribers= StoreSubscription::with('store.vendor')->has('store')->where(['package_id' =>  $subscriptionackage->id,'status'=> 1])->get();
             foreach ($subscribers as $subscriber){
-                if( Helpers::getNotificationStatusData('store','store_subscription_plan_update','push_notification_status',$subscriber?->store?->id)  &&  $subscriber?->store?->vendor?->firebase_token){
-                    $data = [
-                        'title' => translate('subscription_plan_updated'),
-                        'description' => translate('Your_subscription_plan_has_been_updated'),
-                        'order_id' => '',
-                        'image' => '',
-                        'type' => 'subscription',
-                        'order_status' => '',
-                    ];
-                    Helpers::send_push_notif_to_device($subscriber?->store?->vendor?->firebase_token, $data);
-                    DB::table('user_notifications')->insert([
-                        'data' => json_encode($data),
-                        'vendor_id' => $subscriber?->store?->vendor_id,
-                        'created_at' => now(),
-                        'updated_at' => now()
-                    ]);
-                }
 
-                    if(config('mail.status') && Helpers::get_mail_status('subscription_plan_upadte_mail_status_store') == '1' &&  Helpers::getNotificationStatusData('store','store_subscription_plan_update','mail_status' ,$subscriber?->store?->id)){
-                        Mail::to($subscriber?->store?->email)->send(new SubscriptionPlanUpdate($subscriber?->store?->name));
+
+                if($subscriber?->store?->module->module_type == 'rental'){
+
+
+                    if( Helpers::getRentalNotificationStatusData('provider','provider_subscription_plan_update','push_notification_status',$subscriber?->store?->id)  &&  $subscriber?->store?->vendor?->firebase_token){
+                        $data = [
+                            'title' => translate('subscription_plan_updated'),
+                            'description' => translate('Your_subscription_plan_has_been_updated'),
+                            'order_id' => '',
+                            'image' => '',
+                            'type' => 'subscription',
+                            'order_status' => '',
+                        ];
+                        Helpers::send_push_notif_to_device($subscriber?->store?->vendor?->firebase_token, $data);
+                        DB::table('user_notifications')->insert([
+                            'data' => json_encode($data),
+                            'vendor_id' => $subscriber?->store?->vendor_id,
+                            'created_at' => now(),
+                            'updated_at' => now()
+                        ]);
+                    }
+
+                        if(config('mail.status') && Helpers::get_mail_status('rental_subscription_plan_upadte_mail_status_provider') == '1' &&  Helpers::getRentalNotificationStatusData('provider','provider_subscription_plan_update','mail_status' ,$subscriber?->store?->id)){
+                            Mail::to($subscriber?->store?->email)->send(new ProviderSubscriptionPlanUpdate($subscriber?->store?->name));
+                        }
+
+                } else{
+
+                    if( Helpers::getNotificationStatusData('store','store_subscription_plan_update','push_notification_status',$subscriber?->store?->id)  &&  $subscriber?->store?->vendor?->firebase_token){
+                        $data = [
+                            'title' => translate('subscription_plan_updated'),
+                            'description' => translate('Your_subscription_plan_has_been_updated'),
+                            'order_id' => '',
+                            'image' => '',
+                            'type' => 'subscription',
+                            'order_status' => '',
+                        ];
+                        Helpers::send_push_notif_to_device($subscriber?->store?->vendor?->firebase_token, $data);
+                        DB::table('user_notifications')->insert([
+                            'data' => json_encode($data),
+                            'vendor_id' => $subscriber?->store?->vendor_id,
+                            'created_at' => now(),
+                            'updated_at' => now()
+                        ]);
+                    }
+
+                        if(config('mail.status') && Helpers::get_mail_status('subscription_plan_upadte_mail_status_store') == '1' &&  Helpers::getNotificationStatusData('store','store_subscription_plan_update','mail_status' ,$subscriber?->store?->id)){
+                            Mail::to($subscriber?->store?->email)->send(new SubscriptionPlanUpdate($subscriber?->store?->name));
+                        }
                     }
                 }
 
@@ -519,29 +549,48 @@ class SubscriptionController extends Controller
         try {
             $store=Store::where('id',$id)->first();
 
-
-
-            if( Helpers::getNotificationStatusData('store','store_subscription_cancel','push_notification_status',$store->id)  &&  $store?->vendor?->firebase_token){
-                $data = [
-                    'title' => translate('subscription_canceled'),
-                    'description' => translate('Your_subscription_has_been_canceled'),
-                    'order_id' => '',
-                    'image' => '',
-                    'type' => 'subscription',
-                    'order_status' => '',
-                ];
-                Helpers::send_push_notif_to_device($store?->vendor?->firebase_token, $data);
-                DB::table('user_notifications')->insert([
-                    'data' => json_encode($data),
-                    'vendor_id' => $store?->vendor_id,
-                    'created_at' => now(),
-                    'updated_at' => now()
-                ]);
-            }
-
-
-            if (config('mail.status') && Helpers::get_mail_status('subscription_cancel_mail_status_store') == '1' &&  Helpers::getNotificationStatusData('store','store_subscription_cancel','mail_status' ,$store?->id)) {
-                Mail::to($store->email)->send(new SubscriptionCancel($store->name));
+        if($store?->module?->module_type == 'rental'){
+                if( Helpers::getRentalNotificationStatusData('provider','provider_subscription_cancel','push_notification_status',$store->id)  &&  $store?->vendor?->firebase_token){
+                    $data = [
+                        'title' => translate('subscription_canceled'),
+                        'description' => translate('Your_subscription_has_been_canceled'),
+                        'order_id' => '',
+                        'image' => '',
+                        'type' => 'subscription',
+                        'order_status' => '',
+                    ];
+                    Helpers::send_push_notif_to_device($store?->vendor?->firebase_token, $data);
+                    DB::table('user_notifications')->insert([
+                        'data' => json_encode($data),
+                        'vendor_id' => $store?->vendor_id,
+                        'created_at' => now(),
+                        'updated_at' => now()
+                    ]);
+                }
+                if (config('mail.status') && Helpers::get_mail_status('rental_subscription_cancel_mail_status_provider') == '1' &&  Helpers::getRentalNotificationStatusData('provider','provider_subscription_cancel','mail_status' ,$store?->id)) {
+                    Mail::to($store->email)->send(new ProviderSubscriptionCancel($store->name));
+                }
+            } else{
+                if( Helpers::getNotificationStatusData('store','store_subscription_cancel','push_notification_status',$store->id)  &&  $store?->vendor?->firebase_token){
+                    $data = [
+                        'title' => translate('subscription_canceled'),
+                        'description' => translate('Your_subscription_has_been_canceled'),
+                        'order_id' => '',
+                        'image' => '',
+                        'type' => 'subscription',
+                        'order_status' => '',
+                    ];
+                    Helpers::send_push_notif_to_device($store?->vendor?->firebase_token, $data);
+                    DB::table('user_notifications')->insert([
+                        'data' => json_encode($data),
+                        'vendor_id' => $store?->vendor_id,
+                        'created_at' => now(),
+                        'updated_at' => now()
+                    ]);
+                }
+                if (config('mail.status') && Helpers::get_mail_status('subscription_cancel_mail_status_store') == '1' &&  Helpers::getNotificationStatusData('store','store_subscription_cancel','mail_status' ,$store?->id)) {
+                    Mail::to($store->email)->send(new SubscriptionCancel($store->name));
+                }
             }
         } catch (\Exception $ex) {
             info($ex->getMessage());

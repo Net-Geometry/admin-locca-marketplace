@@ -166,18 +166,21 @@ active
                 </div>
                 <div class="card-body">
                     <div class="check--item-wrapper check--item-wrapper-2 mt-0">
-                        <div class="check-item">
-                            <label class="form-group form-check form--check">
-                                <input type="checkbox" class="form-check-input package-available-feature"  {{ $subscriptionackage->pos == 1 ? 'checked' : '' }} name="pos_system" value="1">
-                                <span class="form-check-label text-dark">{{ translate('messages.pos_system') }}</span>
-                            </label>
-                        </div>
-                        <div class="check-item">
-                            <label class="form-group form-check form--check">
-                                <input type="checkbox" class="form-check-input package-available-feature" {{ $subscriptionackage->self_delivery == 1 ? 'checked' : '' }}  name="self_delivery" value="1">
-                                <span class="form-check-label text-dark">{{ translate('messages.self_delivery') }}</span>
-                            </label>
-                        </div>
+                       @if ($subscriptionackage->module_type !== 'rental')
+
+                       <div class="check-item">
+                           <label class="form-group form-check form--check">
+                               <input type="checkbox" class="form-check-input package-available-feature"  {{ $subscriptionackage->pos == 1 ? 'checked' : '' }} name="pos_system" value="1">
+                               <span class="form-check-label text-dark">{{ translate('messages.pos_system') }}</span>
+                           </label>
+                       </div>
+                       <div class="check-item">
+                           <label class="form-group form-check form--check">
+                               <input type="checkbox" class="form-check-input package-available-feature" {{ $subscriptionackage->self_delivery == 1 ? 'checked' : '' }}  name="self_delivery" value="1">
+                               <span class="form-check-label text-dark">{{ translate('messages.self_delivery') }}</span>
+                           </label>
+                       </div>
+                       @endif
                         <div class="check-item">
                             <label class="form-group form-check form--check">
                                 <input type="checkbox" class="form-check-input package-available-feature" {{ $subscriptionackage->mobile_app == 1 ? 'checked' : '' }}  name="mobile_app" value="1" >
@@ -210,7 +213,7 @@ active
                                     {{ translate('Set_limit') }}
                                 </div>
                             </h5>
-                            <div class="fz-12px">{{ translate('Set_maximum_order_&_product_limit_for_this_package') }}</div>
+                            <div class="fz-12px">{{  $subscriptionackage->module_type == 'rental' ? translate('Set_maximum_trip_&_Vehicle_limit_for_this_package') :translate('Set_maximum_order_&_product_limit_for_this_package') }}</div>
                         </div>
                     </div>
                 </div>
@@ -220,7 +223,7 @@ active
                             <div class="card-body">
                                 <div class="limit-item-card">
                                     <div class="form-group mb-0">
-                                        <label class="form-label text-capitalize">{{ translate('Maximum_Order Limit') }}</label>
+                                        <label class="form-label text-capitalize">{{$subscriptionackage->module_type == 'rental' ? translate('Maximum_Trip_Limit'):translate('Maximum_Order Limit') }}</label>
                                         <div class="d-flex flex-wrap items-center gap-2">
                                             <div class="resturant-type-group p-0">
                                                 <label class="form-check form--check mr-2 mr-md-4">
@@ -248,7 +251,7 @@ active
                             <div class="card-body">
                                 <div class="limit-item-card">
                                     <div class="form-group mb-0">
-                                        <label class="form-label text-capitalize">{{ translate('Maximum_Item_Limit') }}</label>
+                                        <label class="form-label text-capitalize">{{$subscriptionackage->module_type == 'rental' ?  translate('Maximum_Vehicle_Limit'):translate('Maximum_Item_Limit') }}</label>
                                         <div class="d-flex flex-wrap items-center gap-2">
                                             <div class="resturant-type-group p-0">
                                                 <label class="form-check form--check mr-2 mr-md-4">
