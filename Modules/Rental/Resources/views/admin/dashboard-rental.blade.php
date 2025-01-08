@@ -131,7 +131,7 @@
                             <!-- Total Orders -->
                             <div class="total--orders">
                                 <h3 class="text-uppercase mb-xxl-2">
-                                    500</h3>
+                                    {{ $totalCount }}</h3>
                                 <span class="text-capitalize">{{ translate('messages.total_trip') }}</span>
                             </div>
                             <!-- Total Orders -->
@@ -140,13 +140,13 @@
                             <div class="chart--label">
                                 <span class="indicator chart-bg-1"></span>
                                 <span class="info">
-                                    {{ translate('messages.Hourly_Trip') }} 450
+                                    {{ translate('messages.Hourly_Trip') }} {{ $hourlyCount }}
                                 </span>
                             </div>
                             <div class="chart--label">
                                 <span class="indicator chart-bg-3"></span>
                                 <span class="info">
-                                    {{ translate('messages.Distance_Wise_Trip') }} 50
+                                    {{ translate('messages.Distance_Wise_Trip') }} {{ $distanceWiseCount }}
                                 </span>
                             </div>
                         </div>
@@ -242,8 +242,8 @@
         let ApexChart;
 
         // Static data for demonstration
-        const hourlyCount = 450;
-        const distancWiseCount = 50;
+        const hourlyCount = {{ $hourlyCount }};
+        const distancWiseCount = {{ $distanceWiseCount }};
 
         options = {
             series: [hourlyCount, distancWiseCount],
@@ -360,8 +360,6 @@
                 },
                 success: function(data) {
                     $('#deliveryStatistics').html(data.delivery_statistics);
-
-                    insert_param('commission_overview',type);
                     $('#commission-overview-board').html(data.sale_chart)
                     $('#zoneName').html(data.zoneName);
                 },

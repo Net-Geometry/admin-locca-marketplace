@@ -41,10 +41,18 @@ class DashboardController extends Controller
     {
         $zone_id = $request->get('zone_id', 'all');
         $statistics_type = $request->get('statistics_type', 'all');
+        $statistics_chart_type = $request->get('statistics_chart_type', 'all');
 
         $tripQuery = Trips::when($zone_id != 'all', function ($query) use ($zone_id) {
             return $query->Zone($zone_id);
         });
+
+
+        $hourlyCountQuery = clone $tripQuery;
+        $hourlyCount = $hourlyCountQuery->where('trip_type', 'hourly')->count();
+
+        $distanceWiseCountQuery = clone $tripQuery;
+        $distanceWiseCount = $distanceWiseCountQuery->where('trip_type', 'distance_wise')->count();
 
         if ($statistics_type == 'this_year') {
             $tripQuery->whereYear('created_at', now()->year);
@@ -55,13 +63,21 @@ class DashboardController extends Controller
             $tripQuery->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()]);
         }
 
+        if ($statistics_chart_type == 'this_year') {
+            $tripQuery->whereYear('created_at', now()->year);
+        } elseif ($statistics_chart_type == 'this_month') {
+            $tripQuery->whereMonth('created_at', now()->month)
+                ->whereYear('created_at', now()->year);
+        } elseif ($statistics_chart_type == 'this_week') {
+            $tripQuery->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()]);
+        }
+
         $totalCount = $tripQuery->count();
         $pendingCount = $tripQuery->pending()->count();
         $confirmedCount = $tripQuery->confirmed()->count();
         $ongoingCount = $tripQuery->ongoing()->count();
         $completedCount = $tripQuery->completed()->count();
         $canceledCount = $tripQuery->canceled()->count();
-
         $zoneName = $zone_id == 'all' ? 'All' : Zone::where('id', $zone_id)->value('name');
 
         $module_type = Config::get('module.current_module_type');
@@ -100,7 +116,7 @@ class DashboardController extends Controller
             'canceledCount',
             'totalCount',
             'zoneName',
-            'total_sell', 'commission', 'total_subs', 'topCustomers', 'topProviders', 'label'
+            'total_sell', 'commission', 'total_subs', 'topCustomers', 'topProviders', 'label', 'distanceWiseCount', 'hourlyCount'
         ));
     }
     public function dashboard_data($request)
