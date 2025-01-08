@@ -47,13 +47,6 @@ class DashboardController extends Controller
             return $query->Zone($zone_id);
         });
 
-
-        $hourlyCountQuery = clone $tripQuery;
-        $hourlyCount = $hourlyCountQuery->where('trip_type', 'hourly')->count();
-
-        $distanceWiseCountQuery = clone $tripQuery;
-        $distanceWiseCount = $distanceWiseCountQuery->where('trip_type', 'distance_wise')->count();
-
         if ($statistics_type == 'this_year') {
             $tripQuery->whereYear('created_at', now()->year);
         } elseif ($statistics_type == 'this_month') {
@@ -71,6 +64,9 @@ class DashboardController extends Controller
         } elseif ($statistics_chart_type == 'this_week') {
             $tripQuery->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()]);
         }
+
+        $distanceWiseCount = (clone $tripQuery)->where('trip_type', 'distance_wise')->count();
+        $hourlyCount = (clone $tripQuery)->where('trip_type', 'hourly')->count();
 
         $totalCount = $tripQuery->count();
         $pendingCount = $tripQuery->pending()->count();
@@ -95,15 +91,11 @@ class DashboardController extends Controller
 
         if ($request->ajax()) {
             return response()->json([
-                'delivery_statistics' => view('rental::admin.partials.delivery-statistics', compact(
-                    'pendingCount',
-                    'confirmedCount',
-                    'ongoingCount',
-                    'completedCount',
-                    'canceledCount',
-                    'totalCount'
-                ))->render(),
+                'delivery_statistics' => view('rental::admin.partials.delivery-statistics', compact('pendingCount', 'confirmedCount', 'ongoingCount', 'completedCount', 'canceledCount', 'totalCount'))->render(),
+                'top_providers' => view('rental::admin.partials.top-providers', compact('topProviders'))->render(),
+                'top_customers' => view('rental::admin.partials.top-customers', compact('topCustomers'))->render(),
                 'sale_chart' => view('rental::admin.partials.sale-chart', compact('total_sell', 'commission', 'total_subs','label'))->render(),
+                'by_trip_type' => view('rental::admin.partials.by-trip-type', compact('hourlyCount', 'distanceWiseCount', 'totalCount'))->render(),
                 'zoneName' => $zoneName
             ], 200);
         }
@@ -118,6 +110,60 @@ class DashboardController extends Controller
             'zoneName',
             'total_sell', 'commission', 'total_subs', 'topCustomers', 'topProviders', 'label', 'distanceWiseCount', 'hourlyCount'
         ));
+    }
+
+    /**
+     * @param Request $request
+     * @return Application|Factory|View|RedirectResponse|JsonResponse
+     */
+    public function byTripType(Request $request): Application|Factory|View|RedirectResponse|JsonResponse
+    {
+        $zone_id = $request->get('zone_id', 'all');
+        $type = $request->get('trip_overview', 'all');
+
+        $tripQuery = Trips::when($zone_id != 'all', function ($query) use ($zone_id) {
+            return $query->Zone($zone_id);
+        });
+
+        if ($type == 'this_year') {
+            $tripQuery->whereYear('created_at', now()->year);
+        } elseif ($type == 'this_month') {
+            $tripQuery->whereMonth('created_at', now()->month)
+                ->whereYear('created_at', now()->year);
+        } elseif ($type == 'this_week') {
+            $tripQuery->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()]);
+        }
+
+        $totalCount = $tripQuery->count();
+        $distanceWiseCount = (clone $tripQuery)->where('trip_type', 'distance_wise')->count();
+        $hourlyCount = (clone $tripQuery)->where('trip_type', 'hourly')->count();
+
+        return response()->json([
+            'view' => view('rental::admin.partials.by-trip-type', compact('hourlyCount', 'distanceWiseCount', 'totalCount'))->render(),
+        ], 200);
+    }
+
+    /**
+     * @param Request $request
+     * @return Application|Factory|View|RedirectResponse|JsonResponse
+     */
+    public function commissionOverview(Request $request): Application|Factory|View|RedirectResponse|JsonResponse
+    {
+        $request->get('zone_id', 'all');
+        $request->get('commission_overview', 'all');
+
+        $data = self::dashboard_data($request);
+        $total_sell = $data['total_sell'];
+        $commission = $data['commission'];
+        $total_subs = $data['total_subs'];
+        $label = $data['label'];
+        $grossEarning = collect($total_sell)->sum();
+
+        return response()->json([
+            'view' => view('rental::admin.partials.sale-chart', compact('total_sell', 'commission', 'total_subs', 'label', 'grossEarning'))->render(),
+            'grossEarning' => $grossEarning
+
+        ], 200);
     }
     public function dashboard_data($request)
     {

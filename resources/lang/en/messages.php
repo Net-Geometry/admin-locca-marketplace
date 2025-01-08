@@ -6973,4 +6973,7 @@ Smartly or Earn. ',
   'SL.' => 'SL.',
   'License Number' => 'License Number',
   'Off_day' => 'Off day',
+  'custom' => 'Custom',
+  'select_vendor' => 'Select vendor',
+  'all_vendors' => 'All vendors',
 );

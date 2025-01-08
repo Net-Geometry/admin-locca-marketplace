@@ -177,7 +177,7 @@
                     </a>
                 </li>
                 @endif
-
+                    @if (rental_module_published_status('rental'))
                 <!-- Rental Report -->
                 @if (\App\CentralLogics\Helpers::module_permission_check('report'))
                         <li class="nav-item">
@@ -236,7 +236,7 @@
                             </a>
                         </li>
                     @endif
-
+                    @endif
                 <li class="nav-item py-5">
 
                 </li>
