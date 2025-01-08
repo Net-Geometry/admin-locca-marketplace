@@ -1,9 +1,6 @@
 <div id="grow-sale-chart"></div>
 <script>
     "use strict";
-    let options;
-    let ApexChart;
-
     options = {
         series: [{
             name: 'Gross Earning',
@@ -37,7 +34,7 @@
             colors: ['#76ffcd','#ff6d6d', '#005555'],
         },
         xaxis: {
-            categories: @json($label)
+            categories: [{!! implode(",",$label) !!}]
         },
         tooltip: {
             x: {
@@ -57,5 +54,5 @@
         $.HSCore.components.HSChartJS.init($(this));
     });
 
-    let updatingChart = $.HSCore.components.HSChartJS.init($('#updatingData'));
+    updatingChart = $.HSCore.components.HSChartJS.init($('#updatingData'));
 </script>

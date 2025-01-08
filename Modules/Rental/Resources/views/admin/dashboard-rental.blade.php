@@ -311,7 +311,7 @@
                 colors: ['#76ffcd','#ff6d6d', '#005555'],
             },
             xaxis: {
-                categories: @json($label)
+                categories: [{!! implode(",",$label) !!}]
             },
             tooltip: {
                 x: {
