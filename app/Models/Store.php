@@ -551,6 +551,14 @@ class Store extends Model
         return $query->where('module_id', $module_id);
     }
 
+    public function scopeWithModuleType($query, $moduleType)
+    {
+        return $query->whereHas('module', function ($q) use ($moduleType) {
+            $q->where('module_type', $moduleType);
+        });
+    }
+
+
     /**
      * @param $query
      * @return void

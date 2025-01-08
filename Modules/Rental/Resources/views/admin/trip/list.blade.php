@@ -119,10 +119,8 @@
                     @foreach($trips as $key=> $trip)
                     <tr>
                         <td>{{$key+$trips->firstItem()}}</td>
-                        <td>
-                            <div class="text--title font-semibold">
-                                {{ $trip->id }}
-                            </div>
+                        <td class="text--title font-semibold">
+                            <a href="{{ route('admin.rental.trip.details', $trip->id) }}">{{ $trip->id }}</a>
                         </td>
                         <td>
                             <div class="text--title">
@@ -266,7 +264,7 @@
                         </td>
                         <td>
                             <div class="btn--container justify-content-center">
-                                <a class="btn action-btn btn--primary btn-outline-primary" href="javascript:"
+                                <a class="btn action-btn btn--primary btn-outline-primary" href="{{route("admin.rental.trip.generate-invoice",["id" => $trip->id])}}"
                                    title="{{ translate('messages.download') }}"><i class="tio-download-to"></i>
                                 </a>
                                 <a class="btn action-btn btn--primary btn-outline-primary" href="{{ route('admin.rental.trip.details', $trip->id) }}"

@@ -355,7 +355,6 @@ class TripController extends Controller
         $distance = $request->distance ?? $trip->distance;
         $modifiedPrices = $request->modified_prices;
 
-
         $processedValue = preg_replace('/[^\d.]/', '', $modifiedPrices);
 
         $processedDistanceValue = preg_replace('/[^\d.]/', '', $distance);
@@ -504,6 +503,17 @@ class TripController extends Controller
 
         Toastr::success(translate('messages.updated successfully'));
         return back();
+    }
+
+    public function generateInvoice($id)
+    {
+        $trip = $this->trips->findOrFail($id);
+        return view('rental::admin.trip.invoice', compact('trip'));
+    }
+    public function printInvoice($id)
+    {
+        $trip = $this->trips->findOrFail($id);
+        return view('rental::admin.trip.invoice-print', compact('trip'))->render();
     }
 
 }

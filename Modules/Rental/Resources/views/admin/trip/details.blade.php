@@ -161,7 +161,7 @@
                                         </td>
                                         <td>
                                             <div class="media media--sm">
-                                                <a class="avatar avatar-xl mr-3" href="#">
+                                                <a class="avatar avatar-xl mr-3" href="{{ route('admin.rental.provider.vehicle.details', $detail->vehicle_id) }}">
                                                     <img class="img-fluid rounded aspect-ratio-1 onerror-image"
                                                          src="{{ $detail->vehicle['thumbnailFullUrl'] }}"
                                                          data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
@@ -884,7 +884,7 @@
                                             </td>
                                             <td>
                                                 <div class="media media--sm">
-                                                    <a class="avatar avatar-xl mr-3" href="#">
+                                                    <a class="avatar avatar-xl mr-3" href="{{ route('admin.rental.provider.vehicle.details', $editDetail->vehicle_id) }}">
                                                         <img class="img-fluid rounded aspect-ratio-1 onerror-image"
                                                              src="{{ $editDetail->vehicle['thumbnailFullUrl'] }}"
                                                              data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"

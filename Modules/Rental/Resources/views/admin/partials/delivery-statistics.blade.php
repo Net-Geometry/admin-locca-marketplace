@@ -1,0 +1,69 @@
+<div class="row g-4" id="order_stats">
+    <div class="col-lg-3">
+        <a class="__card-1 bg-E6F6EE h-100" href="javascript:">
+            <img src="{{ asset('/public/assets/admin/img/report/new/total.png') }}" class="icon"
+                 alt="report/new">
+            <h3 class="title text-success">{{ $totalCount }}</h3>
+            <h6 class="subtitle font-regular">{{ translate('messages.total_trip') }}</h6>
+        </a>
+    </div>
+    <div class="col-lg-9">
+        <div class="row g-2">
+            <div class="col-sm-6">
+                <!-- Card -->
+                <a class="resturant-card dashboard--card __dashboard-card card--bg-1" href="javascript:">
+                        <span class="meter">
+                            <span style="height:50%"></span>
+                        </span>
+                    <h4 class="title">{{ $pendingCount }}</h4>
+                    <span class="subtitle font-regular">{{ translate('messages.pending_trip') }}</span>
+                    <img src="{{ asset('/public/assets/admin/img/dashboard/1.png') }}" alt="img"
+                         class="resturant-icon top-50px">
+                </a>
+                <!-- End Card -->
+            </div>
+            <div class="col-sm-6">
+                <!-- Card -->
+                <a class="resturant-card dashboard--card __dashboard-card card--bg-2" href="javascript:">
+                        <span class="meter">
+                            <span style="height:50%"></span>
+                        </span>
+                    <h4 class="title">{{ $ongoingCount }}</h4>
+                    <span class="subtitle font-regular"> {{ translate('messages.Ongoing_Trip') }}
+                        </span>
+                    <img src="{{ asset('/public/assets/admin/img/dashboard/4.png') }}" alt="img"
+                         class="resturant-icon top-50px">
+                </a>
+                <!-- End Card -->
+            </div>
+            <div class="col-sm-6">
+                <!-- Card -->
+                <a class="resturant-card dashboard--card __dashboard-card bg-F1E8FA" href="javascript:">
+                        <span class="meter">
+                            <span style="height:70%"></span>
+                        </span>
+                    <h4 class="title text-success">{{ $completedCount }}</h4>
+                    <span class="subtitle font-regular"> {{ translate('messages.Completed') }}
+                        </span>
+                    <img src="{{ asset('/public/assets/admin/img/dashboard/2.png') }}" alt="img"
+                         class="resturant-icon top-50px">
+                </a>
+                <!-- End Card -->
+            </div>
+            <div class="col-sm-6">
+                <!-- Card -->
+                <a class="resturant-card dashboard--card __dashboard-card card--bg-4" href="javascript:">
+                        <span class="meter">
+                            <span style="height:60%"></span>
+                        </span>
+                    <h4 class="title">{{ $canceledCount }}</h4>
+                    <span class="subtitle font-regular"> {{ translate('messages.Canceled_Trip') }}
+                        </span>
+                    <img src="{{ asset('/public/assets/admin/img/dashboard/5.png') }}" alt="img"
+                         class="resturant-icon top-50px">
+                </a>
+                <!-- End Card -->
+            </div>
+        </div>
+    </div>
+</div>
