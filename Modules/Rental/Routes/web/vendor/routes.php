@@ -8,6 +8,7 @@ use Modules\Rental\Http\Controllers\Web\Provider\ProviderController;
 use Modules\Rental\Http\Controllers\Web\Provider\ReportController;
 use Modules\Rental\Http\Controllers\Web\Provider\VehicleController;
 use Modules\Rental\Http\Controllers\Web\Provider\TripController;
+use Modules\Rental\Http\Controllers\Web\Provider\ProviderDashBoardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,6 +22,12 @@ use Modules\Rental\Http\Controllers\Web\Provider\TripController;
 */
 
 Route::group([ 'middleware' => ['vendor']], function () {
+    Route::group(['prefix' => 'provider-dashboard',], function () {
+        Route::get('/', [ProviderDashBoardController::class, 'providerDashboard'])->name('providerDashboard');
+        Route::get('delivery-statistics', [ProviderDashBoardController::class, 'deliveryStatistics'])->name('deliveryStatistics');
+        Route::get('commission-overview', [ProviderDashBoardController::class, 'commissionOverview'])->name('commissionOverview');
+    });
+    
     Route::group(['prefix' => 'vehicle', 'as' => 'vehicle.'], function () {
         Route::get('list', [VehicleController::class, 'index'])->name('list');
         Route::get('create', [VehicleController::class, 'create'])->name('create');
@@ -39,7 +46,7 @@ Route::group([ 'middleware' => ['vendor']], function () {
         Route::POST('bulk-export', [VehicleController::class, 'bulkExportData']);
     });
 
-    Route::group(['prefix' => 'category', 'as' => 'category.'], function () {
+    Route::group(['prefix' => 'vehicle-category', 'as' => 'vehicle_category.'], function () {
         Route::get('list', [ProviderController::class, 'categoryList'])->name('list');
         Route::get('export', [ProviderController::class, 'categoryExport'])->name('export');
     });
@@ -59,7 +66,7 @@ Route::group([ 'middleware' => ['vendor']], function () {
         Route::get('print-invoice/{id}', [TripController::class, 'printInvoice'])->name('print-invoice');
     });
 
-    Route::group(['prefix' => 'brand', 'as' => 'brand.'], function () {
+    Route::group(['prefix' => 'vehicle-brand', 'as' => 'vehicle_brand.'], function () {
         Route::get('list', [ProviderController::class, 'brandList'])->name('list');
         Route::get('export', [ProviderController::class, 'brandExport'])->name('export');
     });

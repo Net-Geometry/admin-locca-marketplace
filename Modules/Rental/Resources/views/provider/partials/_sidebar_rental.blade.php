@@ -47,8 +47,8 @@
                 </form>
                 <ul class="navbar-nav navbar-nav-lg nav-tabs">
                     <!-- Dashboards -->
-                    <li class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel') ? 'active' : '' }}">
-                        <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('vendor.dashboard') }}"
+                    <li class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel/provider-dashboard*') ? 'active' : '' }}">
+                        <a class="js-navbar-vertical-aside-menu-link nav-link" href="{{ route('vendor.providerDashboard') }}"
                             title="{{ translate('messages.dashboard') }}">
                             <i class="tio-home-vs-1-outlined nav-icon"></i>
                             <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
@@ -245,9 +245,9 @@ $tripCount = Illuminate\Support\Facades\DB::select("SELECT
                     </li>
 
                     <li
-                        class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel/category*') ? 'active' : '' }}">
+                        class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel/vehicle-category*') ? 'active' : '' }}">
                         <a class="js-navbar-vertical-aside-menu-link nav-link"
-                            href="{{ route('vendor.category.list') }}"
+                            href="{{ route('vendor.vehicle_category.list') }}"
                             title="{{ translate('messages.category list') }}">
                             <i class="tio-category nav-icon"></i>
                             <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
@@ -256,9 +256,9 @@ $tripCount = Illuminate\Support\Facades\DB::select("SELECT
                         </a>
                     </li>
 
-                    <li class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel/brand*') ? 'active' : '' }}">
+                    <li class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel/vehicle-brand*') ? 'active' : '' }}">
                         <a class="js-navbar-vertical-aside-menu-link nav-link"
-                            href="{{ route('vendor.brand.list') }}" title="{{ translate('messages.Brand list') }}">
+                            href="{{ route('vendor.vehicle_brand.list') }}" title="{{ translate('messages.Brand list') }}">
                             <i class="tio-medal nav-icon"></i>
                             <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
                                 {{ translate('messages.Brands') }}

@@ -576,8 +576,8 @@
                                                     <option value="percent" {{ $vehicle->discount_type == 'percent' ? 'selected' : '' }}>
                                                         %
                                                     </option>
-                                                    <option value="fixed" {{ $vehicle->discount_type == 'fixed' ? 'selected' : ''}}>
-                                                        $
+                                                    <option value="amount" {{ $vehicle->discount_type == 'amount' ? 'selected' : ''}}>
+                                                        {{ \App\CentralLogics\Helpers::currency_symbol() }}
                                                     </option>
                                                 </select>
                                             </div>

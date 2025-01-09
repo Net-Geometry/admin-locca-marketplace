@@ -526,13 +526,14 @@ class TripController extends Controller
             ->with([
                 'trip_details:id,trip_id,quantity,vehicle_details',
                 'vehicle_identity.driver_data:id,first_name,last_name,email,phone,image',
+                'vehicle_identity.vehicle_identity_data:id,vin_number,license_plate_number',
+                'vehicle_identity.vehicles:id,name,thumbnail',
                 'provider' => function ($query) {
                     $query->select('id', 'name', 'logo', 'cover_photo', 'rating', 'phone')
                         ->withCount('vehicle_identity as total_vehicles');
                 }
             ])
             ->first();
-
             if(!$trip){
                 return response()->json(['errors' => translate('trip_data_not_found')], 404);
             }
@@ -544,6 +545,12 @@ class TripController extends Controller
                     ->values()
                     ->toArray();
                     unset($detail->tripVehicleDetails);
+                });
+            $trip->vehicle_identity->each(function ($identity) {
+                $identity->license_plate_number = $identity?->vehicle_identity_data?->license_plate_number;
+                $identity->vehicle_name = $identity?->vehicles?->name;
+                $identity->vehicle_thumbnail= $identity?->vehicles?->thumbnail_full_url;
+                    unset($detail->vehicles);
                 });
 
 

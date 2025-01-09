@@ -2,17 +2,10 @@
 
 namespace Modules\Rental\Http\Controllers\Web\Admin;
 
-use App\Models\DeliveryMan;
-use App\Models\Item;
-use App\Models\Order;
-use App\Models\OrderTransaction;
 use App\Models\Store;
 use App\Models\SubscriptionTransaction;
 use App\Models\User;
-use App\Models\Wishlist;
 use App\Models\Zone;
-use App\Scopes\ZoneScope;
-use Carbon\Carbon;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -68,12 +61,12 @@ class DashboardController extends Controller
         $distanceWiseCount = (clone $tripQuery)->where('trip_type', 'distance_wise')->count();
         $hourlyCount = (clone $tripQuery)->where('trip_type', 'hourly')->count();
 
-        $totalCount = $tripQuery->count();
-        $pendingCount = $tripQuery->pending()->count();
-        $confirmedCount = $tripQuery->confirmed()->count();
-        $ongoingCount = $tripQuery->ongoing()->count();
-        $completedCount = $tripQuery->completed()->count();
-        $canceledCount = $tripQuery->canceled()->count();
+        $totalCount = (clone $tripQuery)->count();
+        $pendingCount = (clone $tripQuery)->pending()->count();
+        $confirmedCount = (clone $tripQuery)->confirmed()->count();
+        $ongoingCount = (clone $tripQuery)->ongoing()->count();
+        $completedCount = (clone $tripQuery)->completed()->count();
+        $canceledCount = (clone $tripQuery)->canceled()->count();
         $zoneName = $zone_id == 'all' ? 'All' : Zone::where('id', $zone_id)->value('name');
 
         $module_type = Config::get('module.current_module_type');
@@ -254,7 +247,7 @@ class DashboardController extends Controller
                     ->sum('paid_amount');
                 }
                 $label = $months;
-//                dd($total_sell, 1);
+
                 break;
 
             case "this_week":
@@ -291,7 +284,7 @@ class DashboardController extends Controller
                 }
 
                 $label = $days;
-//                dd($total_sell,2);
+
                 break;
 
             case "this_month":
@@ -343,7 +336,7 @@ class DashboardController extends Controller
                 }
 
                 $label = $weeks;
-//                dd($total_sell,3);
+
                 break;
 
             default:
@@ -375,7 +368,7 @@ class DashboardController extends Controller
                     ->sum('paid_amount');
                 }
                 $label = $months;
-//                dd($total_sell,4);
+
         }
 
         $dash_data['top_providers'] = $topProvider;
@@ -384,7 +377,7 @@ class DashboardController extends Controller
         $dash_data['commission'] = $commission;
         $dash_data['total_subs'] = $total_subs;
         $dash_data['label'] = $label;
-//        dd($dash_data, 'last');
+
         return $dash_data;
     }
 

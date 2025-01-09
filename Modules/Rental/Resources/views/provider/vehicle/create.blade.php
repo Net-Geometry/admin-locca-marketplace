@@ -473,8 +473,8 @@
                                                     <option value="percent" selected>
                                                         %
                                                     </option>
-                                                    <option value="fixed">
-                                                        $
+                                                    <option value="amount">
+                                                        {{ \App\CentralLogics\Helpers::currency_symbol() }}
                                                     </option>
                                                 </select>
                                             </div>

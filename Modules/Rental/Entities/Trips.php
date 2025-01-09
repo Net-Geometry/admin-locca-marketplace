@@ -149,7 +149,11 @@ class Trips extends Model
 
     public function scopeScheduled($query)
     {
-        return $query->whereRaw('created_at <> schedule_at');
+        return $query->where('scheduled', 1);
+    }
+    public function scopeInstant($query)
+    {
+        return $query->where('scheduled', 0);
     }
 
     public function scopePending($query)

@@ -268,6 +268,10 @@ class Store extends Model
         }
         return 0;
     }
+    public function getModuleTypeAttribute(): mixed
+    {
+        return $this->module?->module_type;
+    }
     public function getProductUploaadCheckAttribute(): mixed
     {
         if( $this->store_business_model == 'subscription' && isset($this->store_sub) ){

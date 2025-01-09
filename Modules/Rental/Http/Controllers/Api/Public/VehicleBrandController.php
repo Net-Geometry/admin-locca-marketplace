@@ -32,7 +32,7 @@ class VehicleBrandController extends Controller
             ->latest()
             ->paginate($limit, ['*'], 'page', $offset);
 
-        $data = $this->helpers->preparePaginatedResponse(pagination: $brand, limit: $limit, offset: $offset, key: 'vehicles', extraData: []);
+        $data = $this->helpers->preparePaginatedResponse(pagination: $brand, limit: $limit, offset: $offset, key: 'brands', extraData: []);
 
         return response()->json($data, 200);
     }

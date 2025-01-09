@@ -516,7 +516,7 @@
                                             <div class="flex-shrink-0">
                                                 <select name="discount_type" id="discount_type" class="custom-select ltr border-0">
                                                     <option value="percent" selected>%</option>
-                                                    <option value="fixed">$</option>
+                                                    <option value="amount">{{ \App\CentralLogics\Helpers::currency_symbol() }}</option>
                                                 </select>
                                             </div>
                                         </div>
