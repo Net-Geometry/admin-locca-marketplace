@@ -35,11 +35,11 @@
                             <div class="card-header">
                                 <div>
                                     <h5 class="text-title mb-1">
-                                        {{ translate('messages.Choose Business Plan') }}
+                                        {{ translate('messages.Update Business Plan') }}
                                     </h5>
-                                    <p class="fs-12 mb-0">
+                                    {{-- <p class="fs-12 mb-0">
                                         {{ translate('messages.Provider Logo & Covers') }}
-                                    </p>
+                                    </p> --}}
                                 </div>
                             </div>
                             <div class="card-body">

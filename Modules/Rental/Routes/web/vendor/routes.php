@@ -22,12 +22,12 @@ use Modules\Rental\Http\Controllers\Web\Provider\ProviderDashBoardController;
 */
 
 Route::group([ 'middleware' => ['vendor']], function () {
-    Route::group(['prefix' => 'provider-dashboard',], function () {
+    Route::group(['prefix' => 'provider-dashboard'], function () {
         Route::get('/', [ProviderDashBoardController::class, 'providerDashboard'])->name('providerDashboard');
         Route::get('delivery-statistics', [ProviderDashBoardController::class, 'deliveryStatistics'])->name('deliveryStatistics');
         Route::get('commission-overview', [ProviderDashBoardController::class, 'commissionOverview'])->name('commissionOverview');
     });
-    
+
     Route::group(['prefix' => 'vehicle', 'as' => 'vehicle.'], function () {
         Route::get('list', [VehicleController::class, 'index'])->name('list');
         Route::get('create', [VehicleController::class, 'create'])->name('create');

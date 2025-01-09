@@ -356,7 +356,7 @@ trait TripLogicTrait
         $finalPricing = self::calculateFinalPricing(
             $trip,
             $totalPrice,
-            $providerDiscount['discount'] ?? $discountOnTrip,
+            $providerDiscount['isAdminDiscount'] == true  ? $providerDiscount['discount'] : $discountOnTrip,
             $providerTax
         );
 

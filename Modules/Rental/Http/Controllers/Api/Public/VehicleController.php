@@ -68,7 +68,7 @@ class VehicleController extends Controller
             $zones = Zone::whereContains('coordinates', new Point($pick_up_lat, $pick_up_lng, POINT_SRID))->pluck('id')->toArray();
         }
 
-
+// dd($zones);
         if($pick_up_lat && $pick_up_lng && count($zones) == 0){
             $errors = [];
             array_push($errors, ['code' => 'zone', 'message' => translate('messages.Out_of_pick_up_zone')]);
@@ -185,12 +185,13 @@ class VehicleController extends Controller
                     'vehicleIdentities as total_vehicle_count' => function ($query) use($request) {
                         $query->where(function ($query) use($request) {
                             $query->whereHas('vehicle_trip_details', function ($subQuery) use($request) {
-                                $subQuery->where('estimated_trip_end_time', '<', $request?->date ?? now());
+                                $subQuery->where('estimated_trip_end_time', '<', \Carbon\Carbon::parse($request?->date) ?? now());
                             })
                             ->orWhereDoesntHave('vehicle_trip_details');
                         });
                     },
-                ])->having('total_vehicle_count' ,'>', 0);
+                ])
+                ->having('total_vehicle_count' ,'>', 0);
 
             } else{
                 $vehicles = $vehicles->withcount('vehicleIdentities as total_vehicle_count');
