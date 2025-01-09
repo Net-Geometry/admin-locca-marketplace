@@ -1,9 +1,9 @@
-@extends('layouts.admin.app')
+@extends('layouts.admin.print')
 
 @section('title','')
 
-
 @push('css_or_js')
+
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <style type="text/css" media="print">
@@ -11,9 +11,9 @@
             size: auto;   /* auto is the initial value */
             margin: 0;  /* this affects the margin in the printer settings */
         }
+
     </style>
 @endpush
-
 
 @section('content')
 
@@ -21,11 +21,3 @@
 
 @endsection
 
-@push('script')
-    <script>
-        function printDiv(divName) {
-            window.open('{{route("admin.rental.trip.print-invoice",["id" => $trip->id])}}', '_blank');
-        }
-
-    </script>
-@endpush

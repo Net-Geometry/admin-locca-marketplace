@@ -1,18 +1,14 @@
 <?php
 
-namespace Modules\Rental\Http\Controllers\Web\Admin;
+namespace Modules\Rental\Http\Controllers\Web\Provider;
 
+use App\CentralLogics\Helpers;
 use Brian2694\Toastr\Facades\Toastr;
-use Carbon\Carbon;
 use Illuminate\Contracts\Support\Renderable;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
-use Illuminate\Foundation\Application;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Validator;
 use Modules\Rental\Entities\TripDetails;
 use Modules\Rental\Entities\Trips;
 use Modules\Rental\Entities\TripVehicleDetails;
@@ -47,9 +43,10 @@ class TripController extends Controller
         $key = explode(' ', $request['search']);
         $status = $request['status'];
 
-        $this->trips->where(['checked' => 0])->update(['checked' => 1]);
+        $this->trips->where(['checked' => 0,'provider_id' => Helpers::get_store_id()])->update(['checked' => 1]);
 
         $trips = $this->trips->with(['customer', 'provider'])
+            ->where(['provider_id' => Helpers::get_store_id()])
             ->when($status == 'scheduled', function ($query) {
                 return $query->scheduled();
             })
@@ -71,11 +68,6 @@ class TripController extends Controller
             ->when($status == 'payment_failed', function ($query) {
                 return $query->PaymentFailed();
             })
-            ->when(isset($request->vendor), function ($query) use ($request) {
-                return $query->whereHas('provider', function ($query) use ($request) {
-                    return $query->whereIn('id', $request->vendor);
-                });
-            })
             ->when(isset($request->from_date) && isset($request->to_date) && $request->from_date != null && $request->to_date != null, function ($query) use ($request) {
                 return $query->whereBetween('created_at', [$request->from_date . " 00:00:00", $request->to_date . " 23:59:59"]);
             })
@@ -96,7 +88,7 @@ class TripController extends Controller
 
         $total = $trips->total();
 
-        return view('rental::admin.trip.list', compact('trips', 'status', 'total'));
+        return view('rental::provider.trip.list', compact('trips', 'status', 'total'));
 
     }
 
@@ -107,12 +99,14 @@ class TripController extends Controller
      */
     public function details($id): Renderable
     {
-        $trip = $this->trips->with(['trip_details' => function($query) {
+        $trip = $this->trips
+        ->where(['provider_id' => Helpers::get_store_id()])
+        ->with(['trip_details' => function($query) {
             $query->withCount('vehicleVariations');
         }])->findOrFail($id);
         session()->forget('vehicleQuantities as total_vehicles');
         session()->forget('modifiedPrices');
-        return view('rental::admin.trip.details', compact('trip'));
+        return view('rental::provider.trip.details', compact('trip'));
     }
 
     /**
@@ -126,7 +120,9 @@ class TripController extends Controller
         DB::beginTransaction();
 
         try {
-            $trip = $this->trips->findOrFail($id);
+            $trip = $this->trips
+            ->where(['provider_id' => Helpers::get_store_id()])
+            ->findOrFail($id);
 
             if (!$trip) {
                 Toastr::success(translate('messages.trip_not_found'));
@@ -171,7 +167,9 @@ class TripController extends Controller
         DB::beginTransaction();
 
         try {
-            $trip = $this->trips->findOrFail($id);
+            $trip = $this->trips
+            ->where(['provider_id' => Helpers::get_store_id()])
+            ->findOrFail($id);
 
             if (!$trip) {
                 Toastr::success(translate('messages.trip_not_found'));
@@ -216,7 +214,9 @@ class TripController extends Controller
             'details_id'=>'required',
         ]);
 
-        $trip = $this->trips->find($request->trip_id);
+        $trip = $this->trips
+        ->where(['provider_id' => Helpers::get_store_id()])
+        ->find($request->trip_id);
 
         if(!$trip){
             Toastr::success(translate('messages.trip_data_not_found'));
@@ -257,7 +257,9 @@ class TripController extends Controller
             'driver_ids'=>'required',
         ]);
 
-        $trip = $this->trips->find($request->trip_id);
+        $trip = $this->trips
+        ->where(['provider_id' => Helpers::get_store_id()])
+        ->find($request->trip_id);
         if(!$trip){
             Toastr::success(translate('messages.trip_data_not_found'));
             return back();
@@ -289,9 +291,10 @@ class TripController extends Controller
         $key = explode(' ', $request['search']);
         $status = $request['status'];
 
-        $this->trips->where(['checked' => 0])->update(['checked' => 1]);
+
 
         $trips = $this->trips->with(['customer', 'provider'])
+        ->where(['provider_id' => Helpers::get_store_id()])
             ->when($status == 'scheduled', function ($query) {
                 return $query->scheduled();
             })
@@ -439,97 +442,17 @@ class TripController extends Controller
      * @return RedirectResponse
      */
 
-    public function update(Request $request, $id): RedirectResponse
+
+
+    public function generateInvoice($id)
     {
-        $request->validate([
-            'trip_id' => 'required',
-        ]);
-
-        $trip = $this->trips->findOrFail($request->trip_id);
-
-        if (!$trip) {
-            Toastr::error(translate('messages.Trip_not_found'));
-            return back();
-        }
-
-        if (in_array($trip->trip_status, ['completed', 'canceled'])) {
-            Toastr::error(translate('messages.You_can_not_edit_this'));
-            return back();
-        }
-
-        $pickup = [
-            'lat' => $request->pickup_lat,
-            'lng' => $request->pickup_lng,
-            'location_name' => $request->pickup_location,
-        ];
-
-        $destination = [
-            'lat' => $request->destination_lat,
-            'lng' => $request->destination_lng,
-            'location_name' => $request->destination_location,
-        ];
-
-        $destinationLocation = $request->destination_location ? json_encode($pickup) :json_encode( $trip->destination_location);
-        $pickupLocation = $request->pickup_location  ? json_encode($destination)  : json_encode($trip->pickup_location);
-        $scheduleAt = $request->schedule_at ? Carbon::parse($request->schedule_at) : Carbon::parse($trip->schedule_at);
-
-        $estimatedHours = $request->estimated_hours ?? $trip->estimated_hours;
-        $distance = $request->distance ?? $trip->distance;
-        $scheduled = $request->scheduled ?? $trip->scheduled;
-
-        $estimatedTripEndTime = $scheduleAt->copy()->addHours(
-            $trip->rental_type === 'hourly' ? $estimatedHours : ($request->destination_time ?? $trip->destination_time)
-        );
-
-        $vehicleQuantities = $request->update_quantity ?? [];
-        $modifiedPrices = $request->update_price ?? [];
-
-        foreach ($vehicleQuantities as $vehicle_id => $quantity) {
-            if (isset($modifiedPrices[$vehicle_id])) {
-                $cleanPrice = (float) str_replace([',', '$'], '', $modifiedPrices[$vehicle_id]);
-
-                $modifiedPrices[$vehicle_id] = $cleanPrice;
-            }
-        }
-
-        $data = [
-            'destinationLocation' => $destinationLocation,
-            'pickupLocation' => $pickupLocation,
-            'scheduleAt' => $scheduleAt,
-            'estimatedHours' => $estimatedHours,
-            'distance' => $distance,
-            'scheduled' => $scheduled,
-            'estimatedTripEndTime' => $estimatedTripEndTime,
-            'vehicleQuantities' => $vehicleQuantities,
-            'modifiedPrices' => $modifiedPrices,
-            'taxPercentage' => $trip?->provider?->tax,
-        ];
-
-
-        $this->getUpdatedTrip($request, $trip, $data);
-
-        Toastr::success(translate('messages.updated successfully'));
-        return back();
+        $trip = $this->trips->where(['provider_id' => Helpers::get_store_id()])->findOrFail($id);
+        return view('rental::provider.trip.invoice', compact('trip'));
     }
-
-    /**
-     * @param $id
-     * @return View|Application|Factory
-     */
-    public function generateInvoice($id): View|Application|Factory
+    public function printInvoice($id)
     {
-        $trip = $this->trips->findOrFail($id);
-        return view('rental::admin.trip.invoice', compact('trip'));
-    }
-
-    /**
-     * @param $id
-     * @return string
-     */
-    public function printInvoice($id): string
-    {
-        $trip = $this->trips->findOrFail($id);
-        return view('rental::admin.trip.invoice-print', compact('trip'))->render();
+        $trip = $this->trips->where(['provider_id' => Helpers::get_store_id()])->findOrFail($id);
+        return view('rental::provider.trip.invoice-print', compact('trip'))->render();
     }
 
 }

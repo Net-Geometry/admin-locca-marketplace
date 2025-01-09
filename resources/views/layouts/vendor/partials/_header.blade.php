@@ -145,29 +145,30 @@ $cash_in_hand_overflow_store_amount =  \App\Models\BusinessSetting::where('key' 
 $val= (string) ($cash_in_hand_overflow_store_amount - (($cash_in_hand_overflow_store_amount * 10)/100));
 
     $store_data=\App\CentralLogics\Helpers::get_store_data();
-    $store_data->load(['translations','orders','storage','storeConfig','module'])->loadCount([
-    'orders as total_orders',
-    'orders as canceled_orders' => function ($query) {
-        $query->where('order_status', 'canceled');
-    }
-]);
+    $store_data->load(['translations','orders','storage','storeConfig','module']);
+    // ->loadCount([
+    //     'orders as total_orders',
+    //     'orders as canceled_orders' => function ($query) {
+    //         $query->where('order_status', 'canceled');
+    //     }
+    // ]);
     $subscription_deadline_warning_days =  \App\Models\BusinessSetting::where('key','subscription_deadline_warning_days')->first()?->value ?? 7;
     $subscription_deadline_warning_message =  \App\Models\BusinessSetting::where('key','subscription_deadline_warning_message')->first()?->value ?? null;
 
 
-        if ($store_data->canceled_orders > 0 && $store_data?->module?->module_type == 'rental' ) {
-            $store_data['cancellation_rate']= (($store_data->canceled_orders / $store_data->total_orders) * 100) ;
-        }
+        // if ($store_data->canceled_orders > 0 && $store_data?->module?->module_type == 'rental' ) {
+        //     $store_data['cancellation_rate']= (($store_data->canceled_orders / $store_data->total_orders) * 100) ;
+        // }
 
 ?>
 
-@if (data_get($store_data,'cancellation_rate')  >= \App\CentralLogics\Helpers::get_business_settings('order_cancelation_rate_warning_limit') && data_get($store_data,'cancellation_rate')  <= \App\CentralLogics\Helpers::get_business_settings('order_cancelation_rate_block_limit') && $store_data?->module?->module_type == 'rental' )
+{{-- @if (data_get($store_data,'cancellation_rate')  >= \App\CentralLogics\Helpers::get_business_settings('order_cancelation_rate_warning_limit') && data_get($store_data,'cancellation_rate')  <= \App\CentralLogics\Helpers::get_business_settings('order_cancelation_rate_block_limit') && $store_data?->module?->module_type == 'rental' )
 
     <div class="alert __alert-2 alert-warning m-0 py-1 px-2" role="alert">
         <img class="rounded mr-1"  width="25" src="{{ asset('/public/assets/admin/img/header_warning.png') }}" alt="">
         <div class="cont">
-            <h4 class="m-0">{{ translate('Attention_Please') }} </h4>
-            {{ translate('Your_order_cancellation_rate_is_getting_higher.') }}
+            <h4 class="m-0">{{ translate('Attentions_!') }} </h4>
+            {{ translate('Your cancelation rate is getting higher. If cancelation rate is reach 20%, your account will automatically suspended.') }}
         </div>
     </div>
     @elseif(data_get($store_data,'cancellation_rate')  >= \App\CentralLogics\Helpers::get_business_settings('order_cancelation_rate_block_limit') && $store_data?->module?->module_type == 'rental' )
@@ -177,10 +178,10 @@ $val= (string) ($cash_in_hand_overflow_store_amount - (($cash_in_hand_overflow_s
         <img class="rounded mr-1"  width="25" src="{{ asset('/public/assets/admin/img/header_warning.png') }}" alt="">
         <div class="cont">
             <h4 class="m-0">{{ translate('Attention_Please') }} </h4>
-            {{ translate('Your_order_cancellation_rate_is_too_high_there_for_your_account_is_blocked.') }}
+            {{ translate('Your account has been suspended due to high cancelation rate. Contact with admin.') }}
         </div>
     </div>
-@endif
+@endif --}}
 
 
 @if ($Payable_Balance == 1 &&  $cash_in_hand_overflow &&  $wallet?->balance < 0 &&  $val <=  abs($wallet?->collected_cash)  )

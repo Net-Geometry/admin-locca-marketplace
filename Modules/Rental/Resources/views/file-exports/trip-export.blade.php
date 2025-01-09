@@ -31,7 +31,7 @@
             @foreach($data['data'] as $key => $trip)
                 <tr>
                     <td>{{ $loop->index+1}}</td>
-                    <td>{{ $trip->customer->fullName }}</td>
+                    <td>{{ $trip?->customer?->fullName ?? translate('messages.Guest_user') }}</td>
                     <td>{{ $trip->provider->name  }}</td>
                     <td>{{ $trip->trip_amount }}</td>
                     <td>{{ $trip?->discount_on_trip }}</td>

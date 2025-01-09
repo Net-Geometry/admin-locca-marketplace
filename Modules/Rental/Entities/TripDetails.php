@@ -43,16 +43,16 @@ class TripDetails extends Model
     {
         return $this->belongsTo(Vehicle::class, 'vehicle_id');
     }
+    public function vehicleVariations(): HasMany
+    {
+        return $this->hasMany(VehicleIdentity::class,'vehicle_id','vehicle_id');
+    }
 
     public function tripVehicleDetails(): HasMany
     {
         return $this->hasMany(TripVehicleDetails::class);
     }
 
-//    public function matchingTripVehicles()
-//    {
-//        return $this->hasManyThrough(Trips::class, TripVehicleDetails::class, 'trip_id', 'id', 'vehicle_id',);
-//    }
 
 
 }

@@ -6172,10 +6172,14 @@ strong {
     max-width: 366px;
     margin: 0 auto;
     padding: 25px 18px;
-    font-weight: 500;
+    font-weight: 400;
 }
 
 .print--invoice * {
+    font-weight: 400;
+}
+
+.print--invoice strong {
     font-weight: 500;
 }
 
@@ -6188,7 +6192,7 @@ strong {
 
 .print--invoice .store-name {
     text-transform: uppercase;
-    font-size: 18px;
+    font-size: 14px;
     line-height: 20px;
     font-weight: 700 !important;
     margin-bottom: 4px;
@@ -6196,7 +6200,7 @@ strong {
 }
 
 .print--invoice .store-name ~ div {
-    font-size: 14px;
+    font-size: 10px;
     line-height: 18px;
     color: #000000;
 }
@@ -6206,23 +6210,24 @@ strong {
     margin-bottom: 14px;
 }
 
-.print--invoice .top-info {
+.print--invoice .top-info > div {
     font-weight: 500;
     text-align: center;
     color: #000000;
-    font-size: 14px;
+    font-size: 10px;
     line-height: 18px;
+    text-transform: capitalize;
 }
 
 .print--invoice .top-info img {
-    height: 10px;
+    /* height: 10px; */
     -o-object-fit: cover;
     object-fit: cover;
 }
 
-.print--invoice .top-info .copyright {
+/* .print--invoice .top-info .copyright {
     margin-top: 10px;
-}
+} */
 
 .print--invoice .top-info .text-uppercase {
     letter-spacing: 1.04px;
@@ -6255,8 +6260,8 @@ strong {
 }
 
 .order-info-details {
-    font-size: 12px;
-    line-height: 16px;
+    font-size: 10px;
+    line-height: 18px;
     letter-spacing: -0.05em;
     color: #000000;
     text-transform: capitalize;
@@ -6268,13 +6273,17 @@ strong {
 
 .invoice--table tr th {
     border-bottom: none;
-    border-top: 1px dashed #e5e5e5;
-    padding: 13px 0 15px;
+    border-top: none;
+    padding: 10px 0;
     text-transform: capitalize;
     font-weight: 700;
-    font-size: 12px;
+    font-size: 10px;
     line-height: 16px;
     color: #000000;
+}
+
+.fs-9 {
+    font-size: 9px !important;
 }
 
 .invoice--table tr th:last-child {
@@ -6283,7 +6292,7 @@ strong {
 
 .invoice--table tr td {
     border-top: none;
-    font-size: 12px;
+    font-size: 10px;
     line-height: 16px;
     color: #000000;
     padding: 0.6rem 0.75rem;
@@ -6326,19 +6335,24 @@ strong {
 
 .checkout--info dt {
     text-align: start;
-    font-weight: 500;
-    font-size: 14px;
+    font-size: 10px;
     line-height: 18px;
     color: #000000;
     margin-bottom: 7px;
 }
 
+.checkout--info dd {
+    font-size: 10px;
+    line-height: 18px;
+    font-weight: 500;
+    margin-bottom: 7px;
+}
+
 .checkout--info .total {
     font-weight: 700;
-    font-size: 16px;
-    line-height: 21px;
+    font-size: 12px;
+    line-height: 18px;
     color: #000000;
-    margin-top: 5px;
 }
 
 .checkout--info .copyright {
@@ -6388,6 +6402,25 @@ strong {
         transform: translateX(-30px);
     }
 }
+
+@media print {
+    .print--invoice {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    /* .img-wrap svg, */
+    .img-wrap img {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        display: block !important;
+        max-width: 100% !important;
+        height: auto !important;
+        visibility: visible !important;
+        padding: 10px 0;
+    }
+}
+
 .auth-wrapper-right .auth-header {
     font-size: 22px;
     line-height: 1.4;
@@ -10058,6 +10091,10 @@ body > .initial-38-1 {
 
 .conv-txtarea .emojionearea-button {
     opacity: 1 !important;
+}
+
+.fw-medium {
+    font-weight: 500 !important;
 }
 
 .conv-txtarea .form-control {
