@@ -114,28 +114,28 @@
                         </div>
                         <div class="col-sm-4">
                             <a class="__card-3 h-100" href="#">
-                                <img src="{{ asset('/public/assets/admin/img/report/new/admin-earning.png') }}" class="icon"
+                                <img src="{{ asset('/public/assets/admin/img/report/new/trx7.png') }}" class="icon"
                                     alt="report/new">
-                                <h3 class="title text-FF5A54">{{ \App\CentralLogics\Helpers::number_format_short($adminEarned) }}
+                                <h3 class="title text-006AE5">{{ \App\CentralLogics\Helpers::number_format_short($adminEarned) }}
                                 </h3>
                                 <h6 class="subtitle">{{ translate('Admin Earning') }}</h6>
                                 <div class="info-icon" data-toggle="tooltip" data-placement="top"
                                     data-original-title="{{ translate('If the order is successfully refunded, the full order amount goes to this section without the delivery fee and delivery tips.') }}">
-                                    <img src="{{ asset('/public/assets/admin/img/report/new/info3.png') }}"
+                                    <img src="{{ asset('/public/assets/admin/img/report/new/info2.png') }}"
                                         alt="report/new">
                                 </div>
                             </a>
                         </div>
                         <div class="col-sm-4">
                             <a class="__card-3 h-100" href="#">
-                                <img src="{{ asset('/public/assets/admin/img/report/new/store-earning.png') }}" class="icon"
+                                <img src="{{ asset('/public/assets/admin/img/report/new/trx6.png') }}" class="icon"
                                     alt="report/new">
-                                <h3 class="title text-FF5A54">{{ \App\CentralLogics\Helpers::number_format_short($providerEarned) }}
+                                <h3 class="title text-success">{{ \App\CentralLogics\Helpers::number_format_short($providerEarned) }}
                                 </h3>
                                 <h6 class="subtitle">{{ translate('Provider Earning') }}</h6>
                                 <div class="info-icon" data-toggle="tooltip" data-placement="top"
                                     data-original-title="{{ translate('If the order is successfully refunded, the full order amount goes to this section without the delivery fee and delivery tips.') }}">
-                                    <img src="{{ asset('/public/assets/admin/img/report/new/info3.png') }}"
+                                    <img src="{{ asset('/public/assets/admin/img/report/new/info1.png') }}"
                                         alt="report/new">
                                 </div>
                             </a>
@@ -304,23 +304,23 @@
                             @endforeach
                         </tbody>
                     </table>
+                    <!-- End Body -->
+                    @if (count($tripTransactions) !== 0)
+                        <hr>
+                    @endif
+                    <div class="page-area">
+                        {!! $tripTransactions->links() !!}
+                    </div>
+                    @if (count($tripTransactions) === 0)
+                        <div class="empty--data">
+                            <img src="{{ asset('/public/assets/admin/svg/illustrations/sorry.svg') }}" alt="public">
+                            <h5>
+                                {{ translate('no_data_found') }}
+                            </h5>
+                        </div>
+                    @endif
                 </div>
             </div>
-            <!-- End Body -->
-            @if (count($tripTransactions) !== 0)
-                <hr>
-            @endif
-            <div class="page-area">
-                {!! $tripTransactions->links() !!}
-            </div>
-            @if (count($tripTransactions) === 0)
-                <div class="empty--data">
-                    <img src="{{ asset('/public/assets/admin/svg/illustrations/sorry.svg') }}" alt="public">
-                    <h5>
-                        {{ translate('no_data_found') }}
-                    </h5>
-                </div>
-            @endif
         </div>
         <!-- End Card -->
     </div>

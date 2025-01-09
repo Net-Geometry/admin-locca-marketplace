@@ -8,7 +8,7 @@
             <span>{{ $customer->phone }}</span>
         </div>
         <div class="ml-auto">
-            <span class="badge badge-soft">{{ translate('Orders') }} : {{ count($customer->trips) }}</span>
+            <span class="badge badge-soft">{{ translate('Trips') }} : {{ count($customer->trips) }}</span>
         </div>
     </a>
 @empty

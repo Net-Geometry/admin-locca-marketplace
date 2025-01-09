@@ -532,6 +532,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
                 Route::post('update-settings', 'CustomerController@update_settings')->name('update-settings');
                 Route::get('export', 'CustomerController@export')->name('export');
                 Route::get('order-export', 'CustomerController@customer_order_export')->name('order-export');
+                Route::get('trip-export', 'CustomerController@customer_trip_export')->name('trip-export');
             });
         });
         //Pos system
@@ -674,6 +675,7 @@ Route::group(['namespace' => 'Admin', 'as' => 'admin.'], function () {
 
             Route::group(['prefix' => 'customer', 'as' => 'customer.', 'middleware' => ['module:customer_management']], function () {
                 Route::get('list', 'CustomerController@customer_list')->name('list');
+                Route::get('rental-view/{user_id}', 'CustomerController@rentalView')->name('rental.view');
                 Route::get('view/{user_id}', 'CustomerController@view')->name('view');
                 Route::post('search', 'CustomerController@search')->name('search');
                 Route::get('status/{customer}/{status}file-manager', 'CustomerController@status')->name('status');

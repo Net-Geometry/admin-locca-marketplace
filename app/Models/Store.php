@@ -459,9 +459,9 @@ class Store extends Model
     }
 
 
-    public function pickupZone()
+    public function getPickupZones()
     {
-        return Zone::whereIn('id', json_decode($this->pickup_zone_id));
+        return Zone::whereIn('id', json_decode($this->pickup_zone_id))->get();
     }
 
     /**

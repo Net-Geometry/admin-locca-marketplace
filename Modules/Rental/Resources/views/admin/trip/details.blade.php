@@ -69,7 +69,7 @@
                                     </div>
                                     <div class="fs-14 text-title mt-2 pt-1 mb-2 d-flex align-items-center __gap-5px">
                                         <span>{{translate('Trip Type')}}</span> <span>:</span>
-                                        <span class="font-bold">{{ translate($trip->trip_type) }}</span>
+                                        <span class="font-bold">{{ ucwords($trip->trip_type) }}</span>
                                         <span>({{ $trip->scheduled ? translate('messages.Instant') : translate('messages.scheduled') }})</span>
                                     </div>
                                     <div class="fs-14 text-title mt-2 pt-1 mb-2 d-flex align-items-center __gap-5px">
@@ -93,7 +93,7 @@
                                             <i class="tio-edit mr-sm-1"></i> {{translate('Edit Trip')}}
                                         </button>
                                     @endif
-                                    <a class="btn btn--primary print--btn font-bold d-none d-sm-block" href="#">
+                                    <a class="btn btn--primary print--btn font-bold d-none d-sm-block" href="{{route('admin.rental.trip.generate-invoice',["id" => $trip->id])}}">
                                         <i class="tio-print mr-sm-1"></i> <span>{{translate('Print invoice')}}</span>
                                     </a>
                                 </div>
@@ -101,17 +101,17 @@
                                     <h6>
                                         <span>{{translate('Trip Status')}}</span> <span>:</span>
                                         <span class="badge badge--accepted ml-2 ml-sm-3 text-capitalize">
-                                            {{ translate($trip->trip_status) }}
+                                            {{ ucwords($trip->trip_status) }}
                                         </span>
                                     </h6>
                                     <h6>
                                         <span>{{translate('Payment status')}}</span> <span>:</span>
-                                        <strong class="text-danger">{{ translate($trip->payment_status) }}</strong>
+                                        <strong class="text-danger">{{ ucwords($trip->payment_status) }}</strong>
 
                                     </h6>
                                     <h6>
                                         <span>{{translate('Payment method')}}</span> <span>:</span>
-                                        <span class="font-semibold">{{ translate($trip->payment_method ?? 'cash payment') }}</span>
+                                        <span class="font-semibold">{{ ucwords($trip->payment_method ?? 'cash payment') }}</span>
                                     </h6>
                                     <h6>
                                         <span>{{translate('Reference Code')}} </span> <span>:</span>
@@ -177,8 +177,8 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            @if($trip->trip_status != 'pending')
-                                                @if($detail?->tripVehicleDetails->isEmpty())
+                                            @if($detail?->tripVehicleDetails->isEmpty())
+                                                @if(!in_array($trip->trip_status, ['pending', 'completed', 'canceled']))
                                                     <div class="mt-2">
                                                         <button
                                                             class="btn btn--primary btn-outline-primary p-5px rounded-20 d-flex align-items-center gap-1 assign-vehicle-btn"
@@ -201,41 +201,43 @@
                                                                     class="tio-add-circle"></i></span>
                                                         </button>
                                                     </div>
-                                                @else
-                                                    <div class="mt-2 bg--F6F6F6 p-2 radius-15 mb-4 d-inline-block">
+                                                @endif
+                                            @else
+                                                <div class="mt-2 bg--F6F6F6 p-2 radius-15 mb-4 d-inline-block">
                                                     <div class="d-flex justify-content-between mb-10px text--title">
                                                         {{translate('Assigned Vehicle')}}
-                                                        <button
-                                                            class="btn btn--primary p-5px rounded-circle d-flex align-items-center justify-content-center assign-vehicle-btn"
-                                                            type="button"
-                                                            data-toggle="modal"
-                                                            data-target="#assignVehicleModal"
-                                                            data-details_id = "{{ $detail->id }}"
-                                                            data-trip_id = "{{ $detail->trip_id }}"
-                                                            data-vehicle_id = "{{ $detail->vehicle_id }}"
-                                                            data-quantity = "{{ $detail->quantity }}"
-                                                            data-img = "{{ $detail->vehicle['thumbnailFullUrl'] }}"
-                                                            data-name = "{{ $detail?->vehicle_details['name'] }}"
-                                                            data-vendor = "{{ $trip?->provider->name }}"
-                                                            data-category = "{{ $detail?->vehicle?->category?->name }}"
-                                                            data-brand = "{{ $detail?->vehicle?->brand?->name }}"
-                                                            data-list="{{ json_encode($detail->vehicle->vehicleIdentities) }}"
-                                                            data-trip_vehicle_details="{{ json_encode($detail->tripVehicleDetails) }}"
-                                                        >
-                                                            <i class="tio-edit fs-12"></i>
-                                                        </button>
+                                                        @if(!in_array($trip->trip_status, ['pending', 'completed', 'canceled']))
+                                                            <button
+                                                                class="btn btn--primary p-5px rounded-circle d-flex align-items-center justify-content-center assign-vehicle-btn"
+                                                                type="button"
+                                                                data-toggle="modal"
+                                                                data-target="#assignVehicleModal"
+                                                                data-details_id = "{{ $detail->id }}"
+                                                                data-trip_id = "{{ $detail->trip_id }}"
+                                                                data-vehicle_id = "{{ $detail->vehicle_id }}"
+                                                                data-quantity = "{{ $detail->quantity }}"
+                                                                data-img = "{{ $detail->vehicle['thumbnailFullUrl'] }}"
+                                                                data-name = "{{ $detail?->vehicle_details['name'] }}"
+                                                                data-vendor = "{{ $trip?->provider->name }}"
+                                                                data-category = "{{ $detail?->vehicle?->category?->name }}"
+                                                                data-brand = "{{ $detail?->vehicle?->brand?->name }}"
+                                                                data-list="{{ json_encode($detail->vehicle->vehicleIdentities) }}"
+                                                                data-trip_vehicle_details="{{ json_encode($detail->tripVehicleDetails) }}"
+                                                            >
+                                                                <i class="tio-edit fs-12"></i>
+                                                            </button>
+                                                        @endif
                                                     </div>
-                                                        <div class="text-wrap">
-                                                            @php
-                                                                $licensePlates = $detail->tripVehicleDetails->map(function($tripVehicleDetails) {
-                                                                    return $tripVehicleDetails->vehicle_identity_data->license_plate_number;
-                                                                });
-                                                                $licensePlatesString = $licensePlates->implode(', ');
-                                                            @endphp
-                                                            {{ $licensePlatesString }}
-                                                        </div>
+                                                    <div class="text-wrap">
+                                                        @php
+                                                            $licensePlates = $detail?->tripVehicleDetails->map(function($tripVehicleDetails) {
+                                                                return $tripVehicleDetails->vehicle_identity_data->license_plate_number;
+                                                            });
+                                                            $licensePlatesString = $licensePlates->implode(', ');
+                                                        @endphp
+                                                        {{ $licensePlatesString }}
                                                     </div>
-                                                @endif
+                                                </div>
                                             @endif
                                         </td>
                                         <td>
@@ -280,7 +282,7 @@
 
                                     <dt class="col-6">{{ translate('Subtotal') }}
                                         @if ($trip->tax_status == 'included')
-                                        ({{ translate('messages.TAX_Included') }})
+                                            ({{ translate('messages.TAX_Included') }})
                                         @endif
 
                                     </dt>
@@ -298,24 +300,23 @@
                                     </dd>
 
                                     @if ($trip->ref_bonus_amount > 0)
-                                    <dt class="col-6 font-regular">{{translate('Referral_Discount')}}</dt>
-                                    <dd class="col-6">
-                                        -{{ \App\CentralLogics\Helpers::format_currency($trip->ref_bonus_amount)}}
-                                    </dd>
+                                        <dt class="col-6 font-regular">{{translate('Referral_Discount')}}</dt>
+                                        <dd class="col-6">
+                                            -{{ \App\CentralLogics\Helpers::format_currency($trip->ref_bonus_amount)}}
+                                        </dd>
                                     @endif
 
 
                                     @if ($trip->tax_status == 'excluded')
-                                    <dt class="col-6 font-regular text-uppercase">{{translate('Vat/tax')}}</dt>
-                                    <dd class="col-6 text-right">
-                                        +{{ \App\CentralLogics\Helpers::format_currency($trip->tax_amount)}}
-                                    </dd>
+                                        <dt class="col-6 font-regular text-uppercase">{{translate('Vat/tax')}}</dt>
+                                        <dd class="col-6 text-right">
+                                            +{{ \App\CentralLogics\Helpers::format_currency($trip->tax_amount)}}
+                                        </dd>
                                     @endif
                                     <dt class="col-6 font-regular ">{{ \App\CentralLogics\Helpers::get_business_data('additional_charge_name')??\App\CentralLogics\Helpers::get_business_data('additional_charge_name')??translate('messages.additional_charge') }}</dt>
                                     <dd class="col-6 text-right">
                                         + {{ \App\CentralLogics\Helpers::format_currency($trip->additional_charge) }}</dd>
-
-                                        <dt class="col-6 font-bold">{{translate('Total')}}</dt>
+                                    <dt class="col-6 font-bold">{{translate('Total')}}</dt>
                                     <dd class="col-6 font-bold">{{ \App\CentralLogics\Helpers::format_currency($trip->trip_amount)}}</dd>
                                 </dl>
                                 <!-- End Row -->
@@ -327,31 +328,62 @@
                 </div>
                 <!-- End Card -->
             </div>
-
+            @php
+                $tripDrivers = $trip?->vehicle_identity->whereNotNull('vehicle_driver_id');
+                $tripVehicles = $trip?->vehicle_identity->whereNotNull('vehicle_identity_id')->count();
+                $driverCount = $tripDrivers->count()
+            @endphp
             <div class="col-lg-4 order-print-area-right">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title">{{ translate('trip_setup') }}</h5>
-                    </div>
-                    <div class="card-body">
-                        @if($trip->trip_status != 'completed')
+                @if($trip->trip_status != 'completed' || $trip->payment_status != 'paid' )
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title">{{ translate('trip_setup') }}</h5>
+                        </div>
+                        <div class="card-body">
+                            @if($trip->trip_status != 'completed')
+                                <div class="hs-unfold w-100 mb-20">
+                                    <label for="" class="font-semibold text-title">{{ translate('Trip Status') }}</label>
+                                    <div class="dropdown">
+                                        <button
+                                            class="form-control h--45px dropdown-toggle d-flex justify-content-between align-items-center w-100"
+                                            type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            {{ ucwords($trip->trip_status) }}
+                                        </button>
+                                        <div class="dropdown-menu text-capitalize" aria-labelledby="dropdownMenuButton">
+                                            @php
+                                                $statuses = ['pending', 'confirmed', 'ongoing', 'completed', 'canceled'];
+                                            @endphp
+                                            @foreach ($statuses as $status)
+                                                @if ($status !== strtolower($trip->trip_status))
+                                                    <a class="dropdown-item route-alert"
+                                                       data-url="{{ route('admin.rental.trip.status', ['id' => $trip['id'], 'status' => $status]) }}"
+                                                       data-message="Change status to {{ $status }}?" href="javascript:">
+                                                        {{ ucfirst($status) }}
+                                                    </a>
+                                                @endif
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+
                             <div class="hs-unfold w-100 mb-20">
-                                <label for="" class="font-semibold text-title">{{ translate('Trip Status') }}</label>
+                                <label for="" class="font-semibold text-title">{{translate('Payment Status')}}</label>
                                 <div class="dropdown">
                                     <button
                                         class="form-control h--45px dropdown-toggle d-flex justify-content-between align-items-center w-100"
                                         type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        {{ translate($trip->trip_status) }}
+                                        {{ ucfirst($trip->payment_status) }}
                                     </button>
                                     <div class="dropdown-menu text-capitalize" aria-labelledby="dropdownMenuButton">
                                         @php
-                                            $statuses = ['pending', 'confirmed', 'ongoing', 'completed', 'canceled'];
+                                            $paymentStatuses = ['paid', 'unpaid'];
                                         @endphp
-                                        @foreach ($statuses as $status)
-                                            @if ($status !== strtolower($trip->trip_status))
+                                        @foreach ($paymentStatuses as $status)
+                                            @if ($status !== strtolower($trip->payment_status))
                                                 <a class="dropdown-item route-alert"
-                                                   data-url="{{ route('admin.rental.trip.status', ['id' => $trip['id'], 'status' => $status]) }}"
-                                                   data-message="Change status to {{ $status }}?" href="javascript:">
+                                                   data-url="{{ route('admin.rental.trip.payment.status', ['id' => $trip['id'], 'status' => $status]) }}"
+                                                   data-message="Change status to {{ ucfirst($status) }}?" href="javascript:">
                                                     {{ ucfirst($status) }}
                                                 </a>
                                             @endif
@@ -359,54 +391,26 @@
                                     </div>
                                 </div>
                             </div>
-                        @endif
-
-                        <div class="hs-unfold w-100 mb-20">
-                            <label for="" class="font-semibold text-title">{{translate('Payment Status')}}</label>
-                            <div class="dropdown">
-                                <button
-                                    class="form-control h--45px dropdown-toggle d-flex justify-content-between align-items-center w-100"
-                                    type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    {{ ucfirst($trip->payment_status) }}
+                            @if($driverCount <= 0 && $tripVehicles > 0)
+                                <button type="button"
+                                        class="btn btn--primary w-100"
+                                        data-toggle="modal" data-target="#assignDriverModal">
+                                    <i class="tio-bike"></i>
+                                    <span class="ml-2">{{translate('Assign Driver')}}</span>
                                 </button>
-                                <div class="dropdown-menu text-capitalize" aria-labelledby="dropdownMenuButton">
-                                    @php
-                                        $paymentStatuses = ['paid', 'unpaid'];
-                                    @endphp
-                                    @foreach ($paymentStatuses as $status)
-                                        @if ($status !== strtolower($trip->payment_status))
-                                            <a class="dropdown-item route-alert"
-                                               data-url="{{ route('admin.rental.trip.payment.status', ['id' => $trip['id'], 'status' => $status]) }}"
-                                               data-message="Change status to {{ ucfirst($status) }}?" href="javascript:">
-                                                {{ ucfirst($status) }}
-                                            </a>
-                                        @endif
-                                    @endforeach
-                                </div>
-                            </div>
+                            @endif
                         </div>
-                        @php
-                            $tripDrivers = $trip?->vehicle_identity->whereNotNull('vehicle_driver_id');
-                            $tripVehicles = $trip?->vehicle_identity->whereNotNull('vehicle_identity_id')->count();
-                            $driverCount = $tripDrivers->count()
-                        @endphp
-                        @if($driverCount <= 0 && $tripVehicles > 0)
-                            <button type="button"
-                                    class="btn btn--primary w-100"
-                                    data-toggle="modal" data-target="#assignDriverModal">
-                                <i class="tio-bike"></i>
-                                <span class="ml-2">{{translate('Assign Driver')}}</span>
-                            </button>
-                        @endif
                     </div>
-                </div>
+                @endif
                 @if($driverCount > 0)
                     <div class="card mt-2">
                         <div class="card-header">
                             <h5 class="mb-0">{{translate('Driver List')}}</h5>
-                            <a href="#" class="btn action-btn btn--primary btn-outline-primary p-0 assign-driver-modal">
-                                <i class="tio-edit"></i>
-                            </a>
+                            @if(!in_array($trip->trip_status, ['pending', 'completed', 'canceled']))
+                                <a href="#" class="btn action-btn btn--primary btn-outline-primary p-0 assign-driver-modal">
+                                    <i class="tio-edit"></i>
+                                </a>
+                            @endif
                         </div>
                         <div class="card-body">
                             <button class="btn btn--reset font-medium w-100 d-flex justify-content-between align-items-center px-3 driverListCollapseBtn" type="button" data-toggle="collapse" data-target="#driverListCollapse" aria-expanded="false" aria-controls="driverListCollapse">
@@ -460,7 +464,7 @@
                                     <span class="text--title bg--F6F6F6 p-10px rounded"><i class="tio-poi"></i></span>
                                 </span>
                                 <span class="w-0 flex-grow-1">
-                                    <span class="font-medium">Home:</span>
+                                    <span class="font-medium">{{translate('Home')}}:</span>
                                     <span class="opacity-70">{{ $trip->pickup_location['location_name'] }}</span>
                                 </span>
                             </li>
@@ -483,12 +487,12 @@
                         </h5>
 
                         @if ($trip->customer)
-                            <a class="media align-items-center deco-none customer--information-single" href="{{ route('admin.users.customer.view', $trip->user_id) }}">
+                            <a class="media align-items-center deco-none customer--information-single" href="{{ route('admin.users.customer.rental.view', $trip->user_id) }}?module=1">
                                 <div class="avatar avatar-circle">
                                     <img class="avatar-img onerror-image"
-                                        data-onerror-image="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}"
-                                        src="{{ $trip->customer['imageFullUrl'] }}"
-                                        alt="Image Description">
+                                         data-onerror-image="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}"
+                                         src="{{ $trip->customer['imageFullUrl'] }}"
+                                         alt="Image Description">
                                 </div>
                                 <div class="media-body">
                                     <span class="text--title fs-14 font-semibold d-block text-hover-primary mb-1">{{ $trip->customer->fullName }}</span>
@@ -514,14 +518,14 @@
 
                                 </div>
                             </a>
-                            @elseif($trip?->user_info['contact_person_name'])
+                        @elseif($trip?->user_info['contact_person_name'])
 
                             <div class="media align-items-center deco-none customer--information-single" href="#">
                                 <div class="avatar avatar-circle">
                                     <img class="avatar-img onerror-image"
 
-                                        src="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}"
-                                        alt="Image Description">
+                                         src="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}"
+                                         alt="Image Description">
                                 </div>
                                 <div class="media-body">
                                     <span class="text--title fs-14 font-semibold d-block text-hover-primary mb-1">{{ $trip?->user_info['contact_person_name'] }}</span>
@@ -543,8 +547,6 @@
 
                                 </div>
                             </div>
-
-
 
                         @else
                             <div class="text--title">
@@ -868,80 +870,75 @@
                                             <th class="border-0">#</th>
                                             <th class="border-0">{{translate('Vehicle Details')}}</th>
                                             <th class="border-0">{{translate('Unite Fair')}}</th>
-                                            <th class="border-0 text-center">{{translate('Quantity')}}</th>
+                                            <th class="border-0">{{translate('Quantity')}}</th>
                                             <th class="text-right  border-0">{{translate('Fare')}}</th>
                                         </tr>
                                         </thead>
                                         <tbody>
                                         @php
-                                        $subtotal = 0;
+                                            $subtotal = 0;
                                         @endphp
-                                            @foreach($trip->trip_details as $editDetail)
-                                        <tr>
-                                            <td>
-                                                <div class="eta_amount">
-
-                                                    {{ $loop->iteration }}
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="media media--sm eta_amount">
-
-                                                    <a class="avatar avatar-xl mr-3" href="{{ route('admin.rental.provider.vehicle.details', $editDetail->vehicle_id) }}">
-                                                        <img class="img-fluid rounded aspect-ratio-1 onerror-image"
-                                                             src="{{ $editDetail->vehicle['thumbnailFullUrl'] }}"
-                                                             data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
-                                                             alt="Image Description">
-                                                    </a>
-                                                    <div class="media-body">
-                                                        <div class="fs-12 text--title">
-                                                            <div class="fz-12 font-semibold line--limit-1">
-                                                                {{ $editDetail?->vehicle_details['name'] }}</div>
-                                                            <div><span class="font-semibold mr-2">{{ translate('Category') }} :</span>{{ $editDetail?->vehicle?->category?->name }}
-                                                            </div>
-                                                            <div><span class="font-semibold mr-2">{{ translate('Brand') }} :</span>{{ $editDetail?->vehicle?->brand?->name }}
+                                        @foreach($trip->trip_details as $editDetail)
+                                            <tr>
+                                                <td>
+                                                    <div>
+                                                        {{ $loop->iteration }}
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="media media--sm">
+                                                        <a class="avatar avatar-xl mr-3" href="{{ route('admin.rental.provider.vehicle.details', $editDetail->vehicle_id) }}">
+                                                            <img class="img-fluid rounded aspect-ratio-1 onerror-image"
+                                                                 src="{{ $editDetail->vehicle['thumbnailFullUrl'] }}"
+                                                                 data-onerror-image="{{ asset('public/assets/admin/img/160x160/img2.jpg') }}"
+                                                                 alt="Image Description">
+                                                        </a>
+                                                        <div class="media-body">
+                                                            <div class="fs-12 text--title">
+                                                                <div class="fz-12 font-semibold line--limit-1">
+                                                                    {{ $editDetail?->vehicle_details['name'] }}</div>
+                                                                <div><span class="font-semibold mr-2">{{ translate('Category') }} :</span>{{ $editDetail?->vehicle?->category?->name }}
+                                                                </div>
+                                                                <div><span class="font-semibold mr-2">{{ translate('Brand') }} :</span>{{ $editDetail?->vehicle?->brand?->name }}
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="fs-14 eta_amount text--title">
-
-                                                    {{ \App\CentralLogics\Helpers::format_currency($editDetail->price) }}
-                                                    {{ $editDetail->rental_type }}
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="d-flex flex-column gap-1 align-items-end">
-                                                    <span class="eta_amount  d-none"> </span>
-                                                <input type="number" name="quantity" class="form-control fs-14 text--title w--60px quantity-input" min="1" max="{{ $editDetail->vehicle_variations_count }}"
-                                                data-max_quantity="{{ $editDetail->vehicle_variations_count }}"
-                                                data-max_original_quantity="{{ $editDetail->quantity }}"
-                                                data-id="{{ $editDetail->id }}"
-                                                       data-vehicle_id="{{ $editDetail->vehicle_id }}"
-                                                       value="{{ $editDetail->quantity }}" placeholder="EX:5">
-                                            </div>
-                                            </td>
-                                            <td class="text-right">
-                                                <div class="d-flex flex-column gap-1 align-items-end">
-                                                    <span class="eta_amount_mt d-none "> {{ translate('*EST_Fare:') }}
-                                                        <small class="fare-old-value text--warning"> </small>
-                                                    </span>
-                                                    <input type="text" name="price" min="1" max="999999999"
-                                                           data-price="{{ $editDetail->price }}"
-                                                           class="form-control w--120px text-right fs-14 text--title fare-total"
+                                                </td>
+                                                <td>
+                                                    <div class="fs-14 text--title">
+                                                        {{ \App\CentralLogics\Helpers::format_currency($editDetail->price) }}
+                                                        {{ $editDetail->rental_type }}
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <input type="number" name="quantity" class="form-control fs-14 text--title w--60px quantity-input"
                                                            data-id="{{ $editDetail->id }}"
                                                            data-vehicle_id="{{ $editDetail->vehicle_id }}"
-                                                           data-old-value="{{ $editDetail->price }}"
-                                                           data-quantity="{{ $editDetail->quantity }}"
-                                                           value="{{ \App\CentralLogics\Helpers::format_currency($editDetail->price * $editDetail->quantity) }}"
-                                                           placeholder="fare">
-                                                </div>
-                                            </td>
-                                        </tr>
+
+                                                           value="{{ $editDetail->quantity }}" placeholder="EX:5">
+                                                </td>
+                                                <td class="text-right">
+                                                    <div class="">
+                                                        <!-- Disabled input to show the old value -->
+                                                        <input type="text" class="form-control w--120px text-right fs-14 text--title fare-old-value"
+                                                               value="{{ \App\CentralLogics\Helpers::format_currency($editDetail->price * $editDetail->quantity) }}"
+                                                               readonly disabled>
+                                                        <!-- Main fare-total input -->
+                                                        <input type="text" name="price"
+                                                               data-price="{{ $editDetail->price }}"
+                                                               class="form-control w--120px text-right fs-14 text--title fare-total"
+                                                               data-id="{{ $editDetail->id }}"
+                                                               data-vehicle_id="{{ $editDetail->vehicle_id }}"
+                                                               data-old-value="{{ $editDetail->price }}"
+                                                               data-quantity="{{ $editDetail->quantity }}"
+                                                               value="{{ \App\CentralLogics\Helpers::format_currency($editDetail->price * $editDetail->quantity) }}"
+                                                               placeholder="fare">
+                                                    </div>
+                                                </td>
+                                            </tr>
                                             @php
-                                            $subtotal += $editDetail->price * $editDetail->quantity;
+                                                $subtotal += $editDetail->price * $editDetail->quantity;
                                             @endphp
                                         @endforeach
                                         <!-- End Media -->
@@ -964,35 +961,20 @@
                                                 {{ \App\CentralLogics\Helpers::format_currency($subtotal) }}
                                             </dd>
 
-                                            <dt class="col-6 font-regular ">{{translate('discount')}}</dt>
-                                            <dd class="col-6 discount_amount">
-                                                -{{ \App\CentralLogics\Helpers::format_currency($trip->discount_on_trip)}}
-                                            </dd>
-
-                                            <dt class="col-6 font-regular ">{{translate('Coupon discount')}}</dt>
-                                            <dd class="col-6 coupon_discount_amount">
+                                            <dt class="col-6 font-regular">{{translate('Coupon discount')}}</dt>
+                                            <dd class="col-6">
                                                 -{{ \App\CentralLogics\Helpers::format_currency($trip->coupon_discount_amount)}}
                                             </dd>
 
-
-                                            @if ($trip->ref_bonus_amount > 0)
-                                            <dt class="col-6 font-regular">{{translate('Referral_Discount')}}</dt>
-                                            <dd class="col-6 ref_bonus_amount">
-                                                -{{ \App\CentralLogics\Helpers::format_currency($trip->ref_bonus_amount)}}
-                                            </dd>
-                                            @endif
-
-                                            <dt class="col-6 font-regular">{{translate('Vat/Tax')}}
-                                                {{ \App\Models\BusinessSetting::where(['key'=>'tax_included'])->first()->value  ? translate('(Included)') : '' }}
-                                            </dt>
-
-                                            <dd class="col-6 text-right tax_amount">
-                                            {{ \App\Models\BusinessSetting::where(['key'=>'tax_included'])->first()->value  ? '': '+'}} {{ \App\CentralLogics\Helpers::format_currency($trip->tax_amount)}}
+                                            <dt class="col-6 font-regular">{{translate('discount')}}</dt>
+                                            <dd class="col-6">
+                                                -{{ \App\CentralLogics\Helpers::format_currency($trip->discount_on_trip)}}
                                             </dd>
 
-                                            <dt class="col-6 font-regular ">{{ \App\CentralLogics\Helpers::get_business_data('additional_charge_name')??\App\CentralLogics\Helpers::get_business_data('additional_charge_name')??translate('messages.additional_charge') }}</dt>
-                                            <dd class="col-6 text-right additional_charge">
-                                                + {{ \App\CentralLogics\Helpers::format_currency($trip->additional_charge) }}</dd>
+                                            <dt class="col-6 font-regular text-uppercase">{{translate('Vat/tax')}}</dt>
+                                            <dd class="col-6 text-right">
+                                                +{{ \App\CentralLogics\Helpers::format_currency($trip->tax_amount)}}
+                                            </dd>
 
                                             <dt class="col-6 font-bold">{{translate('Total')}}</dt>
                                             <dd class="col-6 font-bold grand-total">{{ \App\CentralLogics\Helpers::format_currency($trip->trip_amount)}}</dd>
@@ -1006,7 +988,7 @@
                     </div>
                     <div class="modal-footer border-0 flex-shrink-0 px-4">
                         <div class="btn--container justify-content-end">
-                            <button type="reset" id="reset_btn" data-dismiss="modal" aria-label="Close"
+                            <button type="reset" id="reset_btn"
                                     class="btn btn--warning-light min-w-120px">{{ translate('messages.cancel') }}</button>
                             <button type="submit"
                                     class="btn btn--primary min-w-120px">{{ translate('messages.update') }}</button>
@@ -1264,7 +1246,7 @@
             }
 
             // $('#pickupDesModal').on('shown.bs.modal', function(event) {
-                initializeCustomRouteLocationMap();
+            initializeCustomRouteLocationMap();
             // });
 
             //select2 search placeholder add
@@ -1562,25 +1544,15 @@
             }
         });
     </script>
-{{--edit--}}
+    {{--edit--}}
     <script>
         $(document).on('input', '.quantity-input', function () {
             let quantity = $(this).val();
             let row = $(this).closest('tr');
             let id = $(this).data('id');
             let vehicleId = $(this).data('vehicle_id');
-            let max_quantity = $(this).data('max_quantity');
-            let max_original_quantity = $(this).data('max_original_quantity');
             let distance = $('#distance-input').val();
 
-            if (quantity > max_quantity) {
-                toastr.warning(`You can select up to ${max_quantity} vehicles only.`, '', {
-                    closeButton: true,
-                    progressBar: true
-                });
-                $(this).val(max_original_quantity);
-                quantity = max_original_quantity;
-            }
             $.ajax({
                 url: "{{ route('admin.rental.trip.get-calculation') }}",
                 type: 'get',
@@ -1593,11 +1565,10 @@
                 },
                 success: function(response) {
                     let totalFare = response.calculationSingleData;
-                    let formattedFare =  (totalFare * quantity).toFixed(2);
+                    let formattedFare = (totalFare * quantity).toFixed(2);
                     row.find('.fare-total').val(formatCurrency(formattedFare));
-                    row.find('.fare-old-value').text(formatCurrency(formattedFare));
-                    row.find('.eta_amount').removeClass('d-none').addClass('mt-3');
-                    row.find('.eta_amount_mt').removeClass('d-none');
+                    row.find('.fare-old-value').val(formatCurrency(formattedFare));
+
                     updateOverallTotal(response);
                 },
                 error: function(xhr, status, error) {
@@ -1662,19 +1633,14 @@
 
             $('.total_fare').text(formatCurrency(subtotal));
             $('.subtotal').text(formatCurrency(subtotal));
-            $('.grand-total').text(formatCurrency(response.grandTotal));
-            $('.coupon_discount_amount').text(formatCurrency(response.couponDiscount));
-            $('.discount_amount').text(formatCurrency(response.discount));
-            $('.tax_amount').text(formatCurrency(response.taxAmount));
-            $('.ref_bonus_amount').text(formatCurrency(response.refBonus));
-            $('.additional_charge').text(formatCurrency(response.additionalCharge));
+            $('.grand-total').text(formatCurrency(grandTotal));
         }
 
         function formatCurrency(value) {
             return "{{ \App\CentralLogics\Helpers::currency_symbol() }}" + value;
         }
     </script>
-{{--//update--}}
+    {{--//update--}}
     <script>
         $(document).ready(function () {
             $('#updateForm').on('submit', function (e) {

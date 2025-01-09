@@ -62,9 +62,9 @@
                                     <img class="resturant-icon w--30" src="{{asset('/public/assets/admin/img/icons/order-icon-1.png')}}" alt="">
                                 </div>
                                 <div class="d-flex flex-column align-items-center">
-                                    <h2 class="title"> {{ $orders->total() }} </h2>
+                                    <h2 class="title"> {{ $trips->total() }} </h2>
                                     <div class="subtitle">
-                                        {{ translate('total_order') }}
+                                        {{ translate('total_trip') }}
                                     </div>
                                 </div>
                             </div>
@@ -73,9 +73,9 @@
                                     <img class="resturant-icon w--30" src="{{asset('/public/assets/admin/img/icons/order-icon-2.png')}}" alt="">
                                 </div>
                                 <div class="d-flex flex-column align-items-center">
-                                    <h2 class="title"> {{ \App\CentralLogics\Helpers::format_currency($total_order_amount[0]->total_order_amount) }} </h2>
+                                    <h2 class="title"> {{ \App\CentralLogics\Helpers::format_currency($total_trips_amount[0]->total_trip_amount) }} </h2>
                                     <div class="subtitle">
-                                        {{ translate('total_order_amount') }}
+                                        {{ translate('total_trip_amount') }}
                                     </div>
                                 </div>
                             </div>
@@ -121,15 +121,15 @@
                     <div class="card-header border-0 py-2 d-flex flex-wrap gap-2">
                         <div class="search--button-wrapper">
                             <h5 class="card-title d-flex gap-2 align-items-center">
-                                {{translate('order_list')}}
-                                <span class="badge badge-soft-secondary">{{ $orders->total() }}</span>
+                                {{translate('trip_list')}}
+                                <span class="badge badge-soft-secondary">{{ $trips->total() }}</span>
                             </h5>
 
                             <div class="min--260">
                                 <form class="search-form theme-style">
                                     <div class="input-group input--group">
                                         <input  type="search" name="search" class="form-control"
-                                        placeholder="{{translate('ex_: search_by_order_id')}}" aria-label="{{translate('messages.search')}}" value="{{request()?->search}}" >
+                                        placeholder="{{translate('ex_: search_by_trip_id')}}" aria-label="{{translate('messages.search')}}" value="{{request()?->search}}" >
                                         <button type="submit" class="btn btn--secondary"><i class="tio-search"></i></button>
                                     </div>
                                 </form>
@@ -152,13 +152,13 @@
                         <div id="usersExportDropdown"
                             class="hs-unfold-content dropdown-unfold dropdown-menu dropdown-menu-sm-right">
                             <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
-                            <a id="export-excel" class="dropdown-item" href="{{route('admin.customer.order-export', ['type'=>'excel','id'=>$customer->id,request()->getQueryString()])}}">
+                            <a id="export-excel" class="dropdown-item" href="{{route('admin.customer.trip-export', ['type'=>'excel','id'=>$customer->id,request()->getQueryString()])}}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{ asset('public/assets/admin') }}/svg/components/excel.svg"
                                     alt="Image Description">
                                 {{ translate('messages.excel') }}
                             </a>
-                            <a id="export-csv" class="dropdown-item" href="{{route('admin.customer.order-export', ['type'=>'csv','id'=>$customer->id,request()->getQueryString()])}}">
+                            <a id="export-csv" class="dropdown-item" href="{{route('admin.customer.trip-export', ['type'=>'csv','id'=>$customer->id,request()->getQueryString()])}}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                     src="{{ asset('public/assets/admin') }}/svg/components/placeholder-csv-format.svg"
                                     alt="Image Description">
@@ -181,109 +181,90 @@
                             <thead class="thead-light">
                                 <tr>
                                     <th class="border-0 pl-4">{{translate('SL')}}</th>
-                                    <th class="border-0">{{translate('messages.order_ID')}}</th>
-                                    <th class="border-0">{{translate('messages.store')}}</th>
+                                    <th class="border-0">{{translate('messages.trip_ID')}}</th>
+                                    <th class="border-0">{{translate('messages.provider')}}</th>
                                     <th class="border-0 ">{{translate('messages.status')}}</th>
-                                    <th class="border-0 text-center ">{{translate('messages.total_Items')}}</th>
+                                    <th class="border-0 text-center ">{{translate('messages.total_vehicle')}}</th>
                                     <th class="border-0 ">{{translate('messages.total_amount')}}</th>
-                                    <th class="border-0 ">{{translate('messages.order_date')}}</th>
+                                    <th class="border-0 ">{{translate('messages.trip_date')}}</th>
                                     <th class="border-0 text-center">{{translate('messages.action')}}</th>
                                 </tr>
                             </thead>
 
                             <tbody>
-                                @foreach($orders as $key=>$order)
+                                @foreach($trips as $key=>$trip)
                                     <tr>
                                         <td>
                                             <div class="pl-2">
-                                                {{$key+$orders->firstItem()}}
+                                                {{$key+$trips->firstItem()}}
                                             </div>
                                         </td>
                                         <td>
-                                            <a class="text-dark" href="{{route((isset($order) && $order->order_type=='parcel')?'admin.parcel.order.details':'admin.order.details',['id'=>$order['id'],'module_id'=>$order['module_id']])}}">{{$order['id']}}</a>
+                                            <a class="text-dark" href="{{route('admin.rental.trip.details', $trip->id)}}">{{$trip['id']}}</a>
                                         </td>
                                         <th>
-                                            @if ($order->store)
-                                            <div><a  class="text--title" href="{{route('admin.store.view', $order->store_id)}}" alt="view store">{{Str::limit($order->store?$order->store->name:translate('messages.store deleted!'),20,'...')}}</a></div>
+                                            @if ($trip->provider)
+                                            <div><a  class="text--title" href="{{route('admin.rental.provider.details', $trip->provider_id)}}">{{Str::limit($trip->provider?$trip->provider->name:translate('messages.store deleted!'),20,'...')}}</a></div>
                                             @else
                                                 <div>{{Str::limit(translate('messages.not_found'),20,'...')}}</div>
                                             @endif
                                         </th>
                                         <td class="text-capitalize ">
-                                            @if($order['order_status']=='pending')
+                                            @if($trip['trip_status']=='pending')
                                                 <span class="badge badge-soft-info">
-                                      {{translate('messages.pending')}}
-                                    </span>
-                                            @elseif($order['order_status']=='confirmed')
-                                                <span class="badge badge-soft-info">
-                                      {{translate('messages.confirmed')}}
-                                    </span>
-                                            @elseif($order['order_status']=='processing')
-                                                <span class="badge badge-soft-warning">
-                                      {{translate('messages.processing')}}
-                                    </span>
-                                            @elseif($order['order_status']=='picked_up')
-                                                <span class="badge badge-soft-warning">
-                                      {{translate('messages.out_for_delivery')}}
-                                    </span>
-                                            @elseif($order['order_status']=='delivered')
-                                                <span class="badge badge-soft-success">
-                                      {{translate('messages.delivered')}}
-                                    </span>
-                                            @elseif($order['order_status']=='failed')
-                                                <span class="badge badge-soft-danger">
-                                      {{translate('messages.payment_failed')}}
-                                    </span>
-                                            @elseif($order['order_status']=='handover')
-                                                <span class="badge badge-soft-danger">
-                                      {{translate('messages.handover')}}
-                                    </span>
-                                            @elseif($order['order_status']=='canceled')
-                                                <span class="badge badge-soft-danger">
-                                      {{translate('messages.canceled')}}
-                                    </span>
-                                            @elseif($order['order_status']=='accepted')
-                                                <span class="badge badge-soft-danger">
-                                      {{translate('messages.accepted')}}
-                                    </span>
-                                            @elseif($order['order_status']=='refund_requested')
-                                                <span class="badge badge-soft-danger">
-                                      {{translate('messages.refund_requested')}}
-                                    </span>
-                                            @else
-                                                <span class="badge badge-soft-danger">
-                                      {{str_replace('_',' ',$order['order_status'])}}
-                                    </span>
+                                                  {{translate('messages.pending')}}
+                                                </span>
+                                                        @elseif($trip['trip_status']=='confirmed')
+                                                            <span class="badge badge-soft-info">
+                                                  {{translate('messages.confirmed')}}
+                                                </span>
+                                                        @elseif($trip['trip_status']=='ongoing')
+                                                            <span class="badge badge-soft-warning">
+                                                  {{translate('messages.ongoing')}}
+                                                </span>
+                                                        @elseif($trip['trip_status']=='completed')
+                                                            <span class="badge badge-soft-success">
+                                                  {{translate('messages.completed')}}
+                                                </span>
+                                                        @elseif($trip['trip_status']=='payment_failed')
+                                                            <span class="badge badge-soft-danger">
+                                                  {{translate('messages.payment_failed')}}
+                                                </span>
+                                                        @elseif($trip['trip_status']=='canceled')
+                                                            <span class="badge badge-soft-danger">
+                                                  {{translate('messages.canceled')}}
+                                                </span>
+                                                        @else
+                                                            <span class="badge badge-soft-danger">
+                                                  {{str_replace('_',' ',$trip['trip_status'])}}
+                                                </span>
                                             @endif
 
                                         </td>
                                         <td>
                                             <div class="text-center mw--85px mx-auto">
-                                                {{ $order?->details_count != 0  ?  $order?->details_count: translate('messages.N/A') }}
+                                                {{ $trip?->trip_details_count != 0  ?  $trip?->trip_details_count: translate('messages.N/A') }}
                                             </div>
                                         </td>
                                         <td>
                                             <div>
-                                                {{\App\CentralLogics\Helpers::format_currency($order['order_amount'])}}
+                                                {{\App\CentralLogics\Helpers::format_currency($trip['trip_amount'])}}
                                             </div>
                                         </td>
                                         <td>
                                             <div>
                                                 <div>
-                                                    {{ \App\CentralLogics\Helpers::date_format($order->created_at) }}
+                                                    {{ \App\CentralLogics\Helpers::date_format($trip->created_at) }}
                                                 </div>
                                                 <div class="d-block text-uppercase">
-                                                    {{ \App\CentralLogics\Helpers::time_format($order->created_at) }}
+                                                    {{ \App\CentralLogics\Helpers::time_format($trip->created_at) }}
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
                                             <div class="btn--container justify-content-center">
-                                                <a class="btn action-btn btn--warning btn-outline-warning" href="{{route((isset($order) && $order->order_type=='parcel')?'admin.parcel.order.details':'admin.order.details',['id'=>$order['id']])}}" title="{{translate('messages.view')}} "><i class="tio-visible"></i></a>
-                                                {{-- <a class="btn action-btn btn--primary btn-outline-primary" target="_blank" href="{{route('admin.order.generate-invoice',[$order['id']])}}" title="{{translate('messages.invoice')}}">
-                                                    <i class="tio-print"></i>
-                                                </a> --}}
-                                                <a class="btn action-btn btn--primary btn-outline-primary" target="_blank" href="{{route('admin.order.generate-invoice',[$order['id']])}}" title="{{translate('messages.download')}}">
+                                                <a class="btn action-btn btn--warning btn-outline-warning" href="{{route('admin.rental.trip.details', $trip->id)}}" title="{{translate('messages.view')}} "><i class="tio-visible"></i></a>
+                                                <a class="btn action-btn btn--primary btn-outline-primary" target="_blank" href="{{route('admin.rental.trip.generate-invoice',["id" => $trip->id])}}" title="{{translate('messages.download')}}">
                                                     <i class="tio-download-to"></i>
                                                 </a>
                                             </div>
@@ -293,13 +274,13 @@
                             </tbody>
                         </table>
                     </div>
-                    @if(count($orders) !== 0)
+                    @if(count($trips) !== 0)
                     <hr>
                     @endif
                     <div class="page-area">
-                        {!! $orders->links() !!}
+                        {!! $trips->links() !!}
                     </div>
-                    @if(count($orders) === 0)
+                    @if(count($trips) === 0)
                     <div class="empty--data">
                         <img src="{{asset('/public/assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
                         <h5>
@@ -321,7 +302,7 @@
                                 </span>
                                 <span class=""> {{ translate('customer_information') }}</span>
                             </div>
-                            <span class="badge badge-soft-info">{{ translate('total_order') }}: {{ $orders->total() }}</span>
+                            <span class="badge badge-soft-info">{{ translate('total_trip') }}: {{ $trips->total() }}</span>
                         </h4>
                     </div>
                     <!-- End Header -->

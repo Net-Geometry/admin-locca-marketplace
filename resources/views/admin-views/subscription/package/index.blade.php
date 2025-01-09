@@ -28,7 +28,7 @@ active
                 </div>
             </div>
 
-
+            @if (rental_module_published_status('rental'))
             <!-- Nav Menus -->
             <ul class="nav nav-tabs border-0 nav--tabs nav--pills mb-4">
                 <li class="nav-item">
@@ -39,6 +39,7 @@ active
                     <a class="nav-link {{ request()->module == 1 ?'active' : '' }} " href="{{ route('admin.business-settings.subscriptionackage.index',['module'=> true])  }}">{{ translate('Rental_Module') }}</a>
                 </li>
             </ul>
+            @endif
 
                 @if ($packages->total() > 0 || request()->has('search'))
 
