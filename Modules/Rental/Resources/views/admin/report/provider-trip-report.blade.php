@@ -435,24 +435,24 @@
                             @endforeach
                         </tbody>
                     </table>
+                    @if (count($trips) !== 0)
+                        <hr>
+                        <div class="page-area">
+                            {!! $trips->withQueryString()->links() !!}
+                        </div>
+                    @endif
+                    @if (count($trips) === 0)
+                        <div class="empty--data">
+                            <img src="{{ asset('/public/assets/admin/svg/illustrations/sorry.svg') }}" alt="public">
+                            <h5>
+                                {{ translate('no_data_found') }}
+                            </h5>
+                        </div>
+                    @endif
                 </div>
                 <!-- End Table -->
 
 
-                @if (count($trips) !== 0)
-                    <hr>
-                    <div class="page-area">
-                        {!! $trips->withQueryString()->links() !!}
-                    </div>
-                @endif
-                @if (count($trips) === 0)
-                    <div class="empty--data">
-                        <img src="{{ asset('/public/assets/admin/svg/illustrations/sorry.svg') }}" alt="public">
-                        <h5>
-                            {{ translate('no_data_found') }}
-                        </h5>
-                    </div>
-                @endif
             </div>
         </div>
 

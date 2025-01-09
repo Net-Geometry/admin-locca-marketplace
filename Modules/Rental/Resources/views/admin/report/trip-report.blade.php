@@ -398,26 +398,26 @@
                             @endforeach
                         </tbody>
                     </table>
+                    @if (count($trips) !== 0)
+                        <hr>
+                    @endif
+                    <div class="page-area">
+                        {!! $trips->links() !!}
+                    </div>
+                    @if (count($trips) === 0)
+                        <div class="empty--data">
+                            <img src="{{ asset('/public/assets/admin/svg/illustrations/sorry.svg') }}" alt="public">
+                            <h5>
+                                {{ translate('no_data_found') }}
+                            </h5>
+                        </div>
+                    @endif
                 </div>
                 <!-- End Table -->
 
 
             </div>
             <!-- End Body -->
-            @if (count($trips) !== 0)
-                <hr>
-            @endif
-            <div class="page-area">
-                {!! $trips->links() !!}
-            </div>
-            @if (count($trips) === 0)
-                <div class="empty--data">
-                    <img src="{{ asset('/public/assets/admin/svg/illustrations/sorry.svg') }}" alt="public">
-                    <h5>
-                        {{ translate('no_data_found') }}
-                    </h5>
-                </div>
-            @endif
         </div>
         <!-- End Card -->
     </div>
