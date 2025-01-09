@@ -18,6 +18,8 @@ use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\SubscriberListExport;
+use Modules\Rental\Entities\Trips;
+use Modules\Rental\Exports\TripExport;
 
 class CustomerController extends Controller
 {
@@ -236,6 +238,25 @@ class CustomerController extends Controller
         return back();
     }
 
+    public function rentalView(Request $request,$id)
+    {
+        $key = $request['search'];
+        $customer = User::find($id);
+        if (isset($customer)) {
+            $total_trips_amount = Trips::selectRaw('sum(trip_amount) as total_trip_amount')->latest()->where(['user_id' => $id])
+                ->when(isset($key), function($query) use($key){
+                    $query->Where('id', 'like', "%{$key}%");
+                })->get();
+            $trips = Trips::withcount('trip_details')->latest()->where(['user_id' => $id])
+            ->when(isset($key), function($query) use($key){
+                $query->Where('id', 'like', "%{$key}%");
+            })->paginate(config('default_pagination'));
+            return view('admin-views.customer.customer-rental-view', compact('customer', 'trips','total_trips_amount'));
+        }
+        Toastr::error(translate('messages.customer_not_found'));
+        return back();
+    }
+
     public function customer_order_export(Request $request)
     {
         $customer = User::find($request->id);
@@ -254,6 +275,32 @@ class CustomerController extends Controller
             return Excel::download(new CustomerOrderExport($data), 'CustomerOrders.xlsx');
         } else if ($request->type == 'csv') {
             return Excel::download(new CustomerOrderExport($data), 'CustomerOrders.csv');
+        }
+    }
+
+    public function customer_trip_export(Request $request)
+    {
+        $key = explode(' ', $request['search']);
+
+        $trips = Trips::latest()->where(['user_id' => $request->id])
+            ->when(isset($key), function ($query) use ($key) {
+                return $query->where(function ($q) use ($key) {
+                    foreach ($key as $value) {
+                        $q->orWhere('id', 'like', "%{$value}%");
+                    }
+                });
+            })
+            ->get();
+
+        $data = [
+            'data' => $trips,
+            'search' => $request['search'] ?? null,
+        ];
+
+        if ($request->type == 'excel') {
+            return Excel::download(new TripExport($data), 'CustomerTrips.xlsx');
+        } else if ($request->type == 'csv') {
+            return Excel::download(new TripExport($data), 'CustomerTrips.csv');
         }
     }
 

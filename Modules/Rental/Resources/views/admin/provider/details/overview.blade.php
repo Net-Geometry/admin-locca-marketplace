@@ -293,6 +293,13 @@
                                             </div>
                                         </div>
                                     @endif
+                                        <div class="hs-unfold mt-1">
+                                            <button
+                                                class="btn order--details-btn-sm btn--varify btn-outline-varify btn--sm font-regular d-flex align-items-center __gap-5px"
+                                                data-toggle="modal" data-target="#locationModal"><i
+                                                    class="tio-poi"></i>
+                                                {{ translate('messages.map_view') }}</button>
+                                        </div>
                                 </div>
                             </div>
                         </div>
@@ -329,12 +336,9 @@
                                 <h5 class="mb-10px font-bold"> {{ translate('messages.Pickup_Zone') }}
                                 </h5>
                                 <div class="d-flex gap-2 gap-sm-3 flex-wrap">
-                                    @foreach(json_decode($store->pickup_zone_id) ?? [] as $pickup)
-                                            <?php
-                                            $zoneName = $store->pickupZones[$pickup] ?? 'Unknown Zone';
-                                            ?>
+                                    @foreach($store->getPickupZones() as $pickupZone)
                                         <label class="badge badge-soft-dark rounded-20 p-2 m-0 font-medium">
-                                            {{ $zoneName }}
+                                            {{ $pickupZone->name ?? 'Unknown Zone' }}
                                         </label>
                                     @endforeach
                                 </div>
@@ -366,6 +370,46 @@
             </div>
         </div>
 
+    </div>
+
+    <div class="modal fade" id="locationModal" tabindex="-1" role="dialog" aria-labelledby="locationModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title text-title font-bold" id="locationModalLabel">
+                        {{ translate('messages.ABC Rent a Car') }}</h3>
+                    <button type="button" class="close fs-24 m-0 p-0" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <div class="d-flex gap-4 mb-20">
+                        <div>
+                            <span class="text-title font-medium"> {{ translate('messages.Business Zone') }}</span>
+                            <div class="mt-10px">
+                                <button class="btn btn--primary font-medium zone-btn" id="businessZoneButton" data-zone="business" onclick="highlightZone('business')">
+                                    {{ $store?->zone?->name }}
+                                </button>
+                            </div>
+                        </div>
+                        <div>
+                            <span class="text-title font-medium"> {{ translate('messages.Pickup Zone') }}</span>
+                            <div class="d-flex flex-wrap gap-10px mt-10px">
+                                @foreach($store->getPickupZones() as $pickupZone)
+                                    <button class="btn btn--reset font-medium zone-btn" id="pickupZoneButton{{$pickupZone->id}}" data-zone="{{$pickupZone->id}}" onclick="highlightZone('pickup', {{$pickupZone->id}})">
+                                        {{ $pickupZone->name ?? 'Unknown Zone' }}
+                                    </button>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal_body_map">
+                        <div class="location-map" id="location-map">
+                            <div id="map" class="initial--25"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="modal fade" id="collect-cash" tabindex="-1">
@@ -412,8 +456,130 @@
 
 @push('script_2')
     <!-- Page level plugins -->
-    <script
-        src="https://maps.googleapis.com/maps/api/js?key={{\App\Models\BusinessSetting::where('key', 'map_api_key')->first()->value}}&callback=initMap&v=3.45.8"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key={{\App\Models\BusinessSetting::where('key', 'map_api_key')->first()->value}}&callback=initMap&v=3.45.8"></script>
+
+    <script>
+        let map;
+        let highlightedZone = null;
+        let polygons = {};
+        let markers = {};
+
+        function initMap() {
+            map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 12,
+                center: { lat: 23.8103, lng: 90.4125 },
+            });
+
+            const bounds = new google.maps.LatLngBounds();
+
+            <?php
+                $area = json_decode($store?->zone['coordinates'][0]->toJson(),true);
+            ?>
+
+            const businessZoneCoords = [
+                    @foreach($area['coordinates'] as $coords)
+                { lat: {{$coords[1]}}, lng: {{$coords[0]}} },
+                @endforeach
+            ];
+
+            const businessZonePolygon = new google.maps.Polygon({
+                paths: businessZoneCoords,
+                strokeColor: "#aaaaaa",
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillColor: "rgba(181, 181, 181, 0.45)",
+                fillOpacity: 0.35
+            });
+
+            polygons['business'] = businessZonePolygon;
+            businessZonePolygon.setMap(map);
+
+            const businessCenter = {
+                lat: {{$store->latitude}},  // Latitude from the server
+                lng: {{$store->longitude}}  // Longitude from the server
+            };
+
+            const marker = new google.maps.Marker({
+                position: businessCenter,
+                map: map,
+                icon: {
+                    url: "{{ asset('public/assets/admin/img/zone-status-on.png') }}",
+                    scaledSize: new google.maps.Size(30, 30)
+                }
+            });
+
+            @foreach($store->getPickupZones() as $pickupZone)
+                <?php
+                    $pickupArea = json_decode($pickupZone->coordinates[0]->toJson(), true);
+                ?>
+
+                const pickupZoneCoords_{{$pickupZone->id}} = [
+                        @foreach($pickupArea['coordinates'] as $coords)
+                    { lat: {{$coords[1]}}, lng: {{$coords[0]}} },
+                    @endforeach
+                ];
+
+                const pickupZonePolygon_{{$pickupZone->id}} = new google.maps.Polygon({
+                    paths: pickupZoneCoords_{{$pickupZone->id}},
+                    strokeColor: "#aaaaaa",
+                    strokeOpacity: 0.8,
+                    strokeWeight: 2,
+                    fillColor: "rgba(181, 191, 181, 0.45)",
+                    fillOpacity: 0.35
+                });
+
+                pickupZoneCoords_{{$pickupZone->id}}.forEach(coord => {
+                    bounds.extend(new google.maps.LatLng(coord.lat, coord.lng));
+                });
+
+                polygons['pickup_{{$pickupZone->id}}'] = pickupZonePolygon_{{$pickupZone->id}};
+                pickupZonePolygon_{{$pickupZone->id}}.setMap(map);
+            @endforeach
+
+            map.fitBounds(bounds);
+        }
+
+        function highlightZone(type, id = null) {
+            if (highlightedZone) {
+                highlightedZone.setOptions({
+                    strokeColor: "#b4b2b273",
+                    fillColor: "rgba(172, 172, 172, 0.45)",
+                    fillOpacity: 0.35
+                });
+            }
+
+            if (type === 'business') {
+                highlightedZone = polygons['business'];
+                highlightPolygon(highlightedZone);
+            } else if (type === 'pickup') {
+                highlightedZone = polygons['pickup_' + id];
+                highlightPolygon(highlightedZone);
+            }
+        }
+
+        function highlightPolygon(polygon) {
+            polygon.setOptions({
+                strokeColor: "#818181",
+                fillColor: "rgba(172, 172, 172, 0.45)",
+                fillOpacity: 0.5
+            });
+        }
+
+        function getPolygonCenter(polygon) {
+            const path = polygon.getPath();
+            let latSum = 0, lngSum = 0;
+            let numCoords = path.getLength();
+            path.forEach(function (latLng) {
+                latSum += latLng.lat();
+                lngSum += latLng.lng();
+            });
+            return { lat: latSum / numCoords, lng: lngSum / numCoords };
+        }
+
+        initMap();
+    </script>
+
+
     <script>
         "use strict";
         // Call the dataTables jQuery plugin
@@ -421,21 +587,136 @@
             $('#dataTable').DataTable();
         });
 
-        const myLatLng = {lat: {{$store->latitude}}, lng: {{$store->longitude}}};
-        let map;
-        initMap();
+        {{--const zones = {--}}
+        {{--    mirpur12: [{--}}
+        {{--        lat: 23.8172372,--}}
+        {{--        lng: 90.3323452--}}
+        {{--    },--}}
+        {{--        {--}}
+        {{--            lat: 23.8202372,--}}
+        {{--            lng: 90.3323452--}}
+        {{--        },--}}
+        {{--        {--}}
+        {{--            lat: 23.8202372,--}}
+        {{--            lng: 90.3353452--}}
+        {{--        },--}}
+        {{--        {--}}
+        {{--            lat: 23.8172372,--}}
+        {{--            lng: 90.3353452--}}
+        {{--        },--}}
+        {{--        {--}}
+        {{--            lat: 23.8162372,--}}
+        {{--            lng: 90.3333452--}}
+        {{--        }--}}
+        {{--    ],--}}
+        {{--    battali: [{--}}
+        {{--        lat: 23.8202372,--}}
+        {{--        lng: 90.340454--}}
+        {{--    },--}}
+        {{--        {--}}
+        {{--            lat: 23.8222372,--}}
+        {{--            lng: 90.340454--}}
+        {{--        },--}}
+        {{--        {--}}
+        {{--            lat: 23.8222372,--}}
+        {{--            lng: 90.343454--}}
+        {{--        },--}}
+        {{--        {--}}
+        {{--            lat: 23.8202372,--}}
+        {{--            lng: 90.343454--}}
+        {{--        }--}}
+        {{--    ],--}}
+        {{--    baoshila: [{--}}
+        {{--        lat: 23.8152372,--}}
+        {{--        lng: 90.330454--}}
+        {{--    },--}}
+        {{--        {--}}
+        {{--            lat: 23.8172372,--}}
+        {{--            lng: 90.330454--}}
+        {{--        },--}}
+        {{--        {--}}
+        {{--            lat: 23.8172372,--}}
+        {{--            lng: 90.333454--}}
+        {{--        },--}}
+        {{--        {--}}
+        {{--            lat: 23.8152372,--}}
+        {{--            lng: 90.333454--}}
+        {{--        }--}}
+        {{--    ]--}}
+        {{--};--}}
 
-        function initMap() {
-            map = new google.maps.Map(document.getElementById("map"), {
-                zoom: 15,
-                center: myLatLng,
-            });
-            new google.maps.Marker({
-                position: myLatLng,
-                map,
-                title: "{{$store->name}}",
-            });
-        }
+        {{--let map;--}}
+        {{--let zonePolygons = {};--}}
+        {{--let marker;--}}
+
+        {{--initMap();--}}
+
+        {{--function initMap() {--}}
+        {{--    const myLatLng = {--}}
+        {{--        lat: 23.8172372,--}}
+        {{--        lng: 90.3323452--}}
+        {{--    };--}}
+        {{--    map = new google.maps.Map(document.getElementById("map"), {--}}
+        {{--        zoom: 15,--}}
+        {{--        center: myLatLng,--}}
+        {{--    });--}}
+
+        {{--    Object.keys(zones).forEach(zone => {--}}
+        {{--        const polygon = new google.maps.Polygon({--}}
+        {{--            paths: zones[zone],--}}
+        {{--            strokeColor: '#BFBFBF59',--}}
+        {{--            strokeOpacity: 1,--}}
+        {{--            strokeWeight: 2,--}}
+        {{--            fillColor: '#BFBFBF59',--}}
+        {{--            fillOpacity: 0.5,--}}
+        {{--            map: map,--}}
+        {{--        });--}}
+        {{--        zonePolygons[zone] = polygon;--}}
+        {{--    });--}}
+
+        {{--    marker = new google.maps.Marker({--}}
+        {{--        position: myLatLng,--}}
+        {{--        map: map,--}}
+        {{--        icon: {--}}
+        {{--            url: "{{ asset('public/assets/admin/img/zone-status-on.png') }}",--}}
+        {{--            scaledSize: new google.maps.Size(26, 40),--}}
+        {{--            anchor: new google.maps.Point(15, 40)--}}
+        {{--        }--}}
+        {{--    });--}}
+        {{--}--}}
+
+        {{--function calculateCentroid(polygon) {--}}
+        {{--    let latSum = 0;--}}
+        {{--    let lngSum = 0;--}}
+        {{--    const paths = polygon.getPath().getArray();--}}
+        {{--    const n = paths.length;--}}
+
+        {{--    paths.forEach(latLng => {--}}
+        {{--        latSum += latLng.lat();--}}
+        {{--        lngSum += latLng.lng();--}}
+        {{--    });--}}
+
+        {{--    return {--}}
+        {{--        lat: latSum / n,--}}
+        {{--        lng: lngSum / n--}}
+        {{--    };--}}
+        {{--}--}}
+
+        {{--document.querySelectorAll('.zone-btn').forEach(button => {--}}
+        {{--    button.addEventListener('click', () => {--}}
+        {{--        const selectedZone = button.getAttribute('data-zone');--}}
+
+        {{--        Object.keys(zonePolygons).forEach(zone => {--}}
+        {{--            zonePolygons[zone].setMap(null);--}}
+        {{--        });--}}
+
+        {{--        zonePolygons[selectedZone].setMap(map);--}}
+
+        {{--        const zoneCenter = calculateCentroid(zonePolygons[selectedZone]);--}}
+        {{--        marker.setPosition(zoneCenter);--}}
+        {{--        marker.setMap(map);--}}
+        {{--    });--}}
+        {{--});--}}
 
         $(document).on('ready', function () {
             // INITIALIZATION OF DATATABLES

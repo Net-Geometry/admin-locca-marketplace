@@ -5,6 +5,9 @@ namespace Modules\Rental\Http\Controllers\Web\Admin;
 use Brian2694\Toastr\Facades\Toastr;
 use Carbon\Carbon;
 use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Application;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -505,12 +508,21 @@ class TripController extends Controller
         return back();
     }
 
-    public function generateInvoice($id)
+    /**
+     * @param $id
+     * @return View|Application|Factory
+     */
+    public function generateInvoice($id): View|Application|Factory
     {
         $trip = $this->trips->findOrFail($id);
         return view('rental::admin.trip.invoice', compact('trip'));
     }
-    public function printInvoice($id)
+
+    /**
+     * @param $id
+     * @return string
+     */
+    public function printInvoice($id): string
     {
         $trip = $this->trips->findOrFail($id);
         return view('rental::admin.trip.invoice-print', compact('trip'))->render();

@@ -93,7 +93,7 @@
                                             <i class="tio-edit mr-sm-1"></i> {{translate('Edit Trip')}}
                                         </button>
                                     @endif
-                                    <a class="btn btn--primary print--btn font-bold d-none d-sm-block" href="#">
+                                    <a class="btn btn--primary print--btn font-bold d-none d-sm-block" href="{{route('admin.rental.trip.generate-invoice',["id" => $trip->id])}}">
                                         <i class="tio-print mr-sm-1"></i> <span>{{translate('Print invoice')}}</span>
                                     </a>
                                 </div>
@@ -177,57 +177,60 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            @if($trip->trip_status != 'pending')
                                                 @if($detail?->tripVehicleDetails->isEmpty())
-                                                    <div class="mt-2">
-                                                        <button
-                                                            class="btn btn--primary btn-outline-primary p-5px rounded-20 d-flex align-items-center gap-1 assign-vehicle-btn"
-                                                            type="button"
-                                                            data-toggle="modal"
-                                                            data-target="#assignVehicleModal"
-                                                            data-details_id = "{{ $detail->id }}"
-                                                            data-trip_id = "{{ $detail->trip_id }}"
-                                                            data-vehicle_id = "{{ $detail->vehicle_id }}"
-                                                            data-quantity = "{{ $detail->quantity }}"
-                                                            data-img = "{{ $detail->vehicle['thumbnailFullUrl'] }}"
-                                                            data-name = "{{ $detail?->vehicle_details['name'] }}"
-                                                            data-vendor = "{{ $trip?->provider->name }}"
-                                                            data-category = "{{ $detail?->vehicle?->category?->name }}"
-                                                            data-brand = "{{ $detail?->vehicle?->brand?->name }}"
-                                                            data-list="{{ json_encode($detail->vehicle->vehicleIdentities) }}"
-                                                            data-trip_vehicle_details="{{ json_encode($detail->tripVehicleDetails) }}"
-                                                        >
-                                                            {{translate('Assign Vehicle')}} <span class="fs-24"><i
-                                                                    class="tio-add-circle"></i></span>
-                                                        </button>
-                                                    </div>
+                                                    @if(!in_array($trip->trip_status, ['pending', 'completed', 'canceled']))
+                                                        <div class="mt-2">
+                                                            <button
+                                                                class="btn btn--primary btn-outline-primary p-5px rounded-20 d-flex align-items-center gap-1 assign-vehicle-btn"
+                                                                type="button"
+                                                                data-toggle="modal"
+                                                                data-target="#assignVehicleModal"
+                                                                data-details_id = "{{ $detail->id }}"
+                                                                data-trip_id = "{{ $detail->trip_id }}"
+                                                                data-vehicle_id = "{{ $detail->vehicle_id }}"
+                                                                data-quantity = "{{ $detail->quantity }}"
+                                                                data-img = "{{ $detail->vehicle['thumbnailFullUrl'] }}"
+                                                                data-name = "{{ $detail?->vehicle_details['name'] }}"
+                                                                data-vendor = "{{ $trip?->provider->name }}"
+                                                                data-category = "{{ $detail?->vehicle?->category?->name }}"
+                                                                data-brand = "{{ $detail?->vehicle?->brand?->name }}"
+                                                                data-list="{{ json_encode($detail->vehicle->vehicleIdentities) }}"
+                                                                data-trip_vehicle_details="{{ json_encode($detail->tripVehicleDetails) }}"
+                                                            >
+                                                                {{translate('Assign Vehicle')}} <span class="fs-24"><i
+                                                                        class="tio-add-circle"></i></span>
+                                                            </button>
+                                                        </div>
+                                                    @endif
                                                 @else
                                                     <div class="mt-2 bg--F6F6F6 p-2 radius-15 mb-4 d-inline-block">
-                                                    <div class="d-flex justify-content-between mb-10px text--title">
-                                                        {{translate('Assigned Vehicle')}}
-                                                        <button
-                                                            class="btn btn--primary p-5px rounded-circle d-flex align-items-center justify-content-center assign-vehicle-btn"
-                                                            type="button"
-                                                            data-toggle="modal"
-                                                            data-target="#assignVehicleModal"
-                                                            data-details_id = "{{ $detail->id }}"
-                                                            data-trip_id = "{{ $detail->trip_id }}"
-                                                            data-vehicle_id = "{{ $detail->vehicle_id }}"
-                                                            data-quantity = "{{ $detail->quantity }}"
-                                                            data-img = "{{ $detail->vehicle['thumbnailFullUrl'] }}"
-                                                            data-name = "{{ $detail?->vehicle_details['name'] }}"
-                                                            data-vendor = "{{ $trip?->provider->name }}"
-                                                            data-category = "{{ $detail?->vehicle?->category?->name }}"
-                                                            data-brand = "{{ $detail?->vehicle?->brand?->name }}"
-                                                            data-list="{{ json_encode($detail->vehicle->vehicleIdentities) }}"
-                                                            data-trip_vehicle_details="{{ json_encode($detail->tripVehicleDetails) }}"
-                                                        >
-                                                            <i class="tio-edit fs-12"></i>
-                                                        </button>
-                                                    </div>
+                                                        <div class="d-flex justify-content-between mb-10px text--title">
+                                                            {{translate('Assigned Vehicle')}}
+                                                            @if(!in_array($trip->trip_status, ['pending', 'completed', 'canceled']))
+                                                                <button
+                                                                    class="btn btn--primary p-5px rounded-circle d-flex align-items-center justify-content-center assign-vehicle-btn"
+                                                                    type="button"
+                                                                    data-toggle="modal"
+                                                                    data-target="#assignVehicleModal"
+                                                                    data-details_id = "{{ $detail->id }}"
+                                                                    data-trip_id = "{{ $detail->trip_id }}"
+                                                                    data-vehicle_id = "{{ $detail->vehicle_id }}"
+                                                                    data-quantity = "{{ $detail->quantity }}"
+                                                                    data-img = "{{ $detail->vehicle['thumbnailFullUrl'] }}"
+                                                                    data-name = "{{ $detail?->vehicle_details['name'] }}"
+                                                                    data-vendor = "{{ $trip?->provider->name }}"
+                                                                    data-category = "{{ $detail?->vehicle?->category?->name }}"
+                                                                    data-brand = "{{ $detail?->vehicle?->brand?->name }}"
+                                                                    data-list="{{ json_encode($detail->vehicle->vehicleIdentities) }}"
+                                                                    data-trip_vehicle_details="{{ json_encode($detail->tripVehicleDetails) }}"
+                                                                >
+                                                                    <i class="tio-edit fs-12"></i>
+                                                                </button>
+                                                            @endif
+                                                        </div>
                                                         <div class="text-wrap">
                                                             @php
-                                                                $licensePlates = $detail->tripVehicleDetails->map(function($tripVehicleDetails) {
+                                                                $licensePlates = $detail?->tripVehicleDetails->map(function($tripVehicleDetails) {
                                                                     return $tripVehicleDetails->vehicle_identity_data->license_plate_number;
                                                                 });
                                                                 $licensePlatesString = $licensePlates->implode(', ');
@@ -236,7 +239,6 @@
                                                         </div>
                                                     </div>
                                                 @endif
-                                            @endif
                                         </td>
                                         <td>
                                             <div class="fs-14 text--title">
@@ -326,31 +328,62 @@
                 </div>
                 <!-- End Card -->
             </div>
-
+            @php
+                $tripDrivers = $trip?->vehicle_identity->whereNotNull('vehicle_driver_id');
+                $tripVehicles = $trip?->vehicle_identity->whereNotNull('vehicle_identity_id')->count();
+                $driverCount = $tripDrivers->count()
+            @endphp
             <div class="col-lg-4 order-print-area-right">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title">{{ translate('trip_setup') }}</h5>
-                    </div>
-                    <div class="card-body">
-                        @if($trip->trip_status != 'completed')
+                @if($trip->trip_status != 'completed' || $trip->payment_status != 'paid' )
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title">{{ translate('trip_setup') }}</h5>
+                        </div>
+                        <div class="card-body">
+                            @if($trip->trip_status != 'completed')
+                                <div class="hs-unfold w-100 mb-20">
+                                    <label for="" class="font-semibold text-title">{{ translate('Trip Status') }}</label>
+                                    <div class="dropdown">
+                                        <button
+                                            class="form-control h--45px dropdown-toggle d-flex justify-content-between align-items-center w-100"
+                                            type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            {{ ucwords($trip->trip_status) }}
+                                        </button>
+                                        <div class="dropdown-menu text-capitalize" aria-labelledby="dropdownMenuButton">
+                                            @php
+                                                $statuses = ['pending', 'confirmed', 'ongoing', 'completed', 'canceled'];
+                                            @endphp
+                                            @foreach ($statuses as $status)
+                                                @if ($status !== strtolower($trip->trip_status))
+                                                    <a class="dropdown-item route-alert"
+                                                       data-url="{{ route('admin.rental.trip.status', ['id' => $trip['id'], 'status' => $status]) }}"
+                                                       data-message="Change status to {{ $status }}?" href="javascript:">
+                                                        {{ ucfirst($status) }}
+                                                    </a>
+                                                @endif
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+
                             <div class="hs-unfold w-100 mb-20">
-                                <label for="" class="font-semibold text-title">{{ translate('Trip Status') }}</label>
+                                <label for="" class="font-semibold text-title">{{translate('Payment Status')}}</label>
                                 <div class="dropdown">
                                     <button
                                         class="form-control h--45px dropdown-toggle d-flex justify-content-between align-items-center w-100"
                                         type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        {{ ucwords($trip->trip_status) }}
+                                        {{ ucfirst($trip->payment_status) }}
                                     </button>
                                     <div class="dropdown-menu text-capitalize" aria-labelledby="dropdownMenuButton">
                                         @php
-                                            $statuses = ['pending', 'confirmed', 'ongoing', 'completed', 'canceled'];
+                                            $paymentStatuses = ['paid', 'unpaid'];
                                         @endphp
-                                        @foreach ($statuses as $status)
-                                            @if ($status !== strtolower($trip->trip_status))
+                                        @foreach ($paymentStatuses as $status)
+                                            @if ($status !== strtolower($trip->payment_status))
                                                 <a class="dropdown-item route-alert"
-                                                   data-url="{{ route('admin.rental.trip.status', ['id' => $trip['id'], 'status' => $status]) }}"
-                                                   data-message="Change status to {{ $status }}?" href="javascript:">
+                                                   data-url="{{ route('admin.rental.trip.payment.status', ['id' => $trip['id'], 'status' => $status]) }}"
+                                                   data-message="Change status to {{ ucfirst($status) }}?" href="javascript:">
                                                     {{ ucfirst($status) }}
                                                 </a>
                                             @endif
@@ -358,54 +391,26 @@
                                     </div>
                                 </div>
                             </div>
-                        @endif
-
-                        <div class="hs-unfold w-100 mb-20">
-                            <label for="" class="font-semibold text-title">{{translate('Payment Status')}}</label>
-                            <div class="dropdown">
-                                <button
-                                    class="form-control h--45px dropdown-toggle d-flex justify-content-between align-items-center w-100"
-                                    type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    {{ ucfirst($trip->payment_status) }}
+                            @if($driverCount <= 0 && $tripVehicles > 0)
+                                <button type="button"
+                                        class="btn btn--primary w-100"
+                                        data-toggle="modal" data-target="#assignDriverModal">
+                                    <i class="tio-bike"></i>
+                                    <span class="ml-2">{{translate('Assign Driver')}}</span>
                                 </button>
-                                <div class="dropdown-menu text-capitalize" aria-labelledby="dropdownMenuButton">
-                                    @php
-                                        $paymentStatuses = ['paid', 'unpaid'];
-                                    @endphp
-                                    @foreach ($paymentStatuses as $status)
-                                        @if ($status !== strtolower($trip->payment_status))
-                                            <a class="dropdown-item route-alert"
-                                               data-url="{{ route('admin.rental.trip.payment.status', ['id' => $trip['id'], 'status' => $status]) }}"
-                                               data-message="Change status to {{ ucfirst($status) }}?" href="javascript:">
-                                                {{ ucfirst($status) }}
-                                            </a>
-                                        @endif
-                                    @endforeach
-                                </div>
-                            </div>
+                            @endif
                         </div>
-                        @php
-                            $tripDrivers = $trip?->vehicle_identity->whereNotNull('vehicle_driver_id');
-                            $tripVehicles = $trip?->vehicle_identity->whereNotNull('vehicle_identity_id')->count();
-                            $driverCount = $tripDrivers->count()
-                        @endphp
-                        @if($driverCount <= 0 && $tripVehicles > 0)
-                            <button type="button"
-                                    class="btn btn--primary w-100"
-                                    data-toggle="modal" data-target="#assignDriverModal">
-                                <i class="tio-bike"></i>
-                                <span class="ml-2">{{translate('Assign Driver')}}</span>
-                            </button>
-                        @endif
                     </div>
-                </div>
+                @endif
                 @if($driverCount > 0)
                     <div class="card mt-2">
                         <div class="card-header">
                             <h5 class="mb-0">{{translate('Driver List')}}</h5>
+                            @if(!in_array($trip->trip_status, ['pending', 'completed', 'canceled']))
                             <a href="#" class="btn action-btn btn--primary btn-outline-primary p-0 assign-driver-modal">
                                 <i class="tio-edit"></i>
                             </a>
+                            @endif
                         </div>
                         <div class="card-body">
                             <button class="btn btn--reset font-medium w-100 d-flex justify-content-between align-items-center px-3 driverListCollapseBtn" type="button" data-toggle="collapse" data-target="#driverListCollapse" aria-expanded="false" aria-controls="driverListCollapse">
@@ -459,7 +464,7 @@
                                     <span class="text--title bg--F6F6F6 p-10px rounded"><i class="tio-poi"></i></span>
                                 </span>
                                 <span class="w-0 flex-grow-1">
-                                    <span class="font-medium">Home:</span>
+                                    <span class="font-medium">{{translate('Home')}}:</span>
                                     <span class="opacity-70">{{ $trip->pickup_location['location_name'] }}</span>
                                 </span>
                             </li>
@@ -482,7 +487,7 @@
                         </h5>
 
                         @if ($trip->customer)
-                            <a class="media align-items-center deco-none customer--information-single" href="{{ route('admin.users.customer.view', $trip->user_id) }}">
+                            <a class="media align-items-center deco-none customer--information-single" href="{{ route('admin.users.customer.rental.view', $trip->user_id) }}?module=1">
                                 <div class="avatar avatar-circle">
                                     <img class="avatar-img onerror-image"
                                         data-onerror-image="{{ asset('public/assets/admin/img/160x160/img1.jpg') }}"
@@ -542,8 +547,6 @@
 
                                 </div>
                             </div>
-
-
 
                         @else
                             <div class="text--title">
