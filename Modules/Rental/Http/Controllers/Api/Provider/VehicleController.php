@@ -81,6 +81,9 @@ class VehicleController extends Controller
             ->when($request->filled('transmission_type'), function ($query) use ($request) {
                 $query->where('transmission_type', $request->input('transmission_type'));
             })
+            ->when($request->filled('vehicle_type'), function ($query) use ($request) {
+                $query->where('type', $request->input('vehicle_type'));
+            })
             ->when($request->filled('fuel_type'), function ($query) use ($request) {
                 $query->where('fuel_type', $request->input('fuel_type'));
             })

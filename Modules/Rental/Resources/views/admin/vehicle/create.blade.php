@@ -908,30 +908,36 @@
     <script>
         "use strict";
 
-        $(document).ready(function () {
+        $('input[name="multiple_vehicles"]').change(function () {
             toggleButton();
-
-            $('input[name="multiple_vehicles"]').change(function () {
-                toggleButton();
-            });
-
-            function toggleButton() {
-                if ($('input[name="multiple_vehicles"]').is(':checked')) {
-                    $('.add-btn').show();
-                } else {
-                    $('.add-btn').hide();
-                }
+            if (!$(this).is(':checked')) {
+                $('.equal-width').not('#input-container').remove();
             }
         });
 
-        $(document).on('click', '.add-btn', function() {
-            let newDiv = $('#input-container').clone();
-            newDiv.find('.add-btn')
-                .removeClass('add-btn text--primary')
-                .addClass('remove-btn text--danger')
-                .html('<i class="tio-clear-circle-outlined"></i>');
+        function toggleButton() {
+            if ($('input[name="multiple_vehicles"]').is(':checked')) {
+                $('.add-btn').show();
+            } else {
+                $('.add-btn').hide();
+            }
+        }
 
-            // Append the new div after the last existing input
+        $(document).on('click', '.add-btn', function() {
+            let newDiv = $('<div class="d-flex gap-20px flex-column flex-md-row equal-width">\
+                    <div class="form-group mb-0">\
+                        <label class="input-label" for="">{{ translate("messages.VIN Number") }}</label>\
+                        <input type="text" name="vehicle[vin_number][]" class="form-control" placeholder="Type your business name" value="">\
+                    </div>\
+                    <div class="form-group mb-0">\
+                        <label class="input-label" for="">{{ translate("messages.License Plate Number") }}</label>\
+                        <input type="text" name="vehicle[license_plate_number][]" class="form-control" placeholder="Type your license plate number" value="">\
+                    </div>\
+                    <button type="button" class="btn remove-btn shadow-none text--danger p-0 fs-32 lh--1 text-left mt-md-4">\
+                        <i class="tio-clear-circle-outlined"></i>\
+                    </button>\
+                </div>');
+
             newDiv.insertBefore('.equal-width:last');
         });
 

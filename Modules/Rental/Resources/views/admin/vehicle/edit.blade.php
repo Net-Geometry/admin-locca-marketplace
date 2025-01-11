@@ -2,6 +2,15 @@
 
 @section('title', translate('messages.Provider Details - update Vehicle'))
 
+@push('css_or_js')
+    <style>
+        .d--flex{
+            position: relative;
+            z-index: 1;
+        }
+    </style>
+@endpush
+
 @section('content')
     <div class="content container-fluid">
         <!-- Page Header -->
@@ -128,38 +137,6 @@
 
                                 </div>
                                 <div class="col-lg-6">
-                                    {{-- <div class="text-center">
-                                        <label class="text--title fs-16 font-semibold mb-1">
-                                            {{ translate('Vehicle_Thumbnail') }}
-                                        </label>
-                                        <div class="mb-20">
-                                            <p class="fs-12">
-                                                JPG, JPEG, PNG Less Than 1MB <strong class="font-semibold">(Ratio
-                                                    2:1)</strong>
-                                            </p>
-                                        </div>
-                                        <div class="upload-file text-wrapper">
-                                            <input type="file" name="thumbnail"
-                                                   class="upload-file__input single_file_input" accept=".jpg, .jpeg, .png"
-                                                   required>
-                                            <div
-                                                class="upload-file__img d-flex justify-content-center align-items-center height-150px max-w-300px m-auto p-0">
-                                                <div class="upload-file__textbox text-center">
-                                                    <img width="34" height="34"
-                                                         src="{{ asset('public/assets/admin/img/document-upload.png') }}"
-                                                         alt="" class="svg">
-                                                    <h6 class="mt-2 font-semibold">
-                                                        <span class="text-info">{{ translate('Click to upload') }}</span>
-                                                        <br>
-                                                        {{ translate('or drag and drop') }}
-                                                    </h6>
-                                                </div>
-                                                <img class="upload-file__img__img ratio-2" src="{{ $vehicle['thumbnail_full_url'] }}" width="300" height="150"
-                                                     loading="lazy" style="display: none;" alt="">
-                                            </div>
-                                        </div>
-
-                                    </div> --}}
                                     <div class="text-center">
                                         <label class="text--title fs-16 font-semibold mb-1">
                                             {{ translate('Vehicle_Thumbnail') }}
@@ -196,30 +173,6 @@
                     </div>
                 </div>
                 <div class="col-lg-12">
-                    {{-- <div class="card">
-                        <div class="row g-3">
-                            <div class="col-md-6 pb-0">
-                                <div class="row g-2">
-                                    <div class="col-12 pb-0">
-                                        <div class="form-group mb-0">
-                                            <label class="input-label" for="exampleFormControlInput1">{{translate('messages.images')}}
-                                        </div>
-                                    </div>
-                                    @foreach($vehicle['images_full_url'] as $img)
-                                        <div class="col-6 spartan_item_wrapper size--sm">
-                                            <img class="rounded border" src="{{ $img }}">
-                                        </div>
-                                    @endforeach
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="input-label" for="exampleFormControlInput1">{{translate('messages.update_identity_image')}}</label>
-                                <div>
-                                    <div class="row g-2 mt-0" id="multiImg"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div> --}}
                     <div class="card">
                         <div class="card-header">
                             <div>
@@ -238,8 +191,8 @@
                                     <!-- Upload Wrapper for New Files -->
                                    <div class="upload-file text-wrapper h--100px w--200px flex-shrink-0"
                                         id="image_upload_wrapper">
-                                       <input type="file" name="images[]"
-                                              class="upload-file__input multiple_image_input" accept=".jpg,.jpeg,.png" multiple>
+                                       <input type="file" name="images[]" class="upload-file__input multiple_image_input" accept=".jpg,.jpeg,.png" multiple>
+                                       <input type="hidden" name="removed_images" id="removed_images" value="">
                                        <div
                                            class="upload-file__img d-flex gap-0 justify-content-center align-items-center h-100 max-w-300px p-0">
                                            <div class="upload-file__textbox">
@@ -256,7 +209,7 @@
                                    <!-- Existing Images dynamically loaded here -->
                                     @foreach($vehicle['images_full_url'] as $img)
                                     <div class="image-single h-100 max-w-200px p-0" data-existing="true" data-url="{{ $img }}">
-                                        <a href="javascript:void(0);" class="remove-btn" onclick="removeImage(event, this, '{{ $img }}')">
+                                        <a href="javascript:void(0);" class="remove-btn_doc" onclick="removeImage(event, this, '{{ $img }}')">
                                             <i class="tio-clear"></i>
                                         </a>
                                         <img class="img--vertical-2 rounded-10" width="200" height="100" loading="lazy" src="{{ $img }}" alt="">
@@ -312,7 +265,7 @@
                                         <label class="input-label"
                                                for="">{{ translate('messages.Model') }}
                                         </label>
-                                        <input type="number" name="model" class="form-control" placeholder="Model Name"
+                                        <input type="text" name="model" class="form-control" placeholder="Model Name"
                                                value="{{ $vehicle->model }}" required>
                                     </div>
                                 </div>
@@ -459,27 +412,29 @@
                             </label>
                         </div>
                         <div class="card-body d-flex flex-column gap-20px">
-                            @foreach($vehicle->vehicleIdentities as $multi)
-                            <div class="d-flex gap-20px flex-column flex-md-row equal-width">
-                                <div class="form-group mb-0">
-                                    <label class="input-label"
-                                           for="">{{ translate('messages.VIN Number') }}</label>
-                                    <input type="text" name="vehicle[vin_number][]" class="form-control"
-                                           placeholder="Type your business name" value="{{ $multi->vin_number }}">
-                                </div>
-                                <div class="form-group mb-0">
-                                    <label class="input-label"
-                                           for="">{{ translate('messages.License Plate Number') }}</label>
-                                    <input type="text" name="vehicle[license_plate_number][]" class="form-control"
-                                           placeholder="Type your license plate number" value="{{ $multi->license_plate_number }}">
-                                </div>
-                                <button type="button"
-                                        class="btn plus-btn shadow-none p-0 fs-32 lh--1 text-left mt-md-4 remove-btn text--danger">
-                                    <i class="tio-clear-circle-outlined"></i>
-                                </button>
-                            </div>
-                            @endforeach
-                            <div class="d-flex gap-20px flex-column flex-md-row equal-width" id="input-container">
+                            @if($vehicle->multiple_vehicles == 1)
+                                @foreach($vehicle->vehicleIdentities as $multi)
+                                    <div class="d-flex gap-20px flex-column flex-md-row equal-width">
+                                        <div class="form-group mb-0">
+                                            <label class="input-label"
+                                                   for="">{{ translate('messages.VIN Number') }}</label>
+                                            <input type="text" name="vehicle[vin_number][]" class="form-control"
+                                                   placeholder="Type your business name" value="{{ $multi->vin_number }}">
+                                        </div>
+                                        <div class="form-group mb-0">
+                                            <label class="input-label"
+                                                   for="">{{ translate('messages.License Plate Number') }}</label>
+                                            <input type="text" name="vehicle[license_plate_number][]" class="form-control"
+                                                   placeholder="Type your license plate number" value="{{ $multi->license_plate_number }}">
+                                        </div>
+                                        <button type="button"
+                                                class="btn plus-btn shadow-none p-0 fs-32 lh--1 text-left mt-md-4 remove-btn text--danger">
+                                            <i class="tio-clear-circle-outlined"></i>
+                                        </button>
+                                    </div>
+                                @endforeach
+                            @endif
+                            <div class="d--flex gap-20px flex-column flex-md-row equal-width multiple-vehicles" id="input-container">
                                 <div class="form-group mb-0">
                                     <label class="input-label"
                                            for="">{{ translate('messages.VIN Number') }}</label>
@@ -544,7 +499,7 @@
                                                for="">{{ translate('messages.Hourly Wise Price ($)') }}
                                         </label>
                                         <input type="number" name="hourly_price" class="form-control"
-                                               placeholder="Ex: 35.25" value="{{ $vehicle->hourly_price }}">
+                                               placeholder="Ex: 35.25" value="{{ $vehicle->hourly_price }}" min="0" step="0.001">
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
@@ -553,7 +508,7 @@
                                                for="">{{ translate('messages.Distance Wise Price ($)') }}
                                         </label>
                                         <input type="number" name="distance_price" class="form-control"
-                                               placeholder="Ex: 35.25" value="{{ $vehicle->distance_price }}">
+                                               placeholder="Ex: 35.25" value="{{ $vehicle->distance_price }}" min="0" step="0.001">
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
@@ -569,7 +524,7 @@
                                                 <input id="discount_input" type="number" name="discount_price"
                                                        class="form-control h--45px border-0 pl-unset"
                                                        value="{{ $vehicle->discount_price }}"
-                                                       placeholder="{{ translate('messages.Ex: 10') }} 20">
+                                                       placeholder="{{ translate('messages.Ex: 10') }} 20" min="0" step="0.001">
                                             </div>
                                             <div class="flex-shrink-0">
                                                 <select name="discount_type" id="discount_type" class="custom-select ltr border-0">
@@ -633,6 +588,7 @@
                                         <input type="file" name="documents[]"
                                             class="upload-file__input multiple_document_input" accept="*"
                                             multiple>
+                                        <input type="hidden" name="removed_documents" id="removed_documents" value="">
                                         <div
                                             class="upload-file__img d-flex justify-content-center align-items-center h-100 max-w-300px p-0">
                                             <div class="upload-file__textbox pdf">
@@ -787,6 +743,7 @@
             const inputElement = document.querySelector('.multiple_image_input');
             const fileSet = new Set(); // To keep track of files
             let removedImages = []; // To track removed images
+            let removedDocuments = []; // To track removed images
 
             // Handle file input change (adding new files)
             inputElement.addEventListener('change', function (event) {
@@ -843,14 +800,26 @@
             });
 
             // Remove image logic
-            window.removeImage = function (event, element, fileName) {
+            window.removedImages = []; // Initialize removed images array
+
+            window.removeImage = function (event, element) {
                 event.stopPropagation();
+
+                // Get the full image URL from the data-url attribute
                 const imageSingle = element.closest(".image-single");
+                const imageUrl = imageSingle.getAttribute("data-url");
+
+                // Extract the image file name from the URL
+                const imageName = imageUrl.split('/').pop(); // This will get the last part of the URL after the last "/"
+
+                // Remove the image element from the DOM
                 imageSingle.remove();
-                fileSet.delete(fileName); // Remove the file from the set
 
                 // Track the removed image
-                removedImages.push(fileName); // Add to removed images array
+                removedImages.push(imageName); // Add to removed images array
+
+                // Update the hidden input field with the new removed images list
+                document.getElementById('removed_images').value = JSON.stringify(removedImages);
 
                 console.log("Updated removed images array:", removedImages);
 
@@ -881,6 +850,11 @@
                 // Append removed files to indicate they should be deleted
                 removedImages.forEach((fileName) => {
                     formData.append('removed_images[]', fileName);
+                });
+
+                // Append removed files to indicate they should be deleted
+                removedDocuments.forEach((fileName) => {
+                    formData.append('removed_documents[]', fileName);
                 });
 
                 // Log form data (for debugging)
@@ -1003,18 +977,31 @@
                 console.log("values all---- ",uploadedFiles);
             });
 
-            // Remove document handler
+
+            window.removedDocuments = [];
+
             window.removeDocument = function (event, element) {
                 event.stopPropagation();
-                const pdfSingle = element.closest(".pdf-single");
-                const fileName = pdfSingle.getAttribute("data-file-name");
 
-                // Remove file from the Map
-                uploadedFiles.delete(fileName);
+                const pdfSingle = element.closest(".pdf-single");
+                const fileName = pdfSingle.getAttribute("data-pdf-url");
+                const documentName = fileName.split('/').pop();
+
 
                 pdfSingle.remove();
+
+                removedDocuments.push(documentName);
+
+                document.getElementById('removed_documents').value = JSON.stringify(removedDocuments);
+
+                console.log("Updated removed images array:", removedDocuments);
                 toggleUploadWrapper();
             };
+
+
+
+
+
 
             // Toggle visibility of upload wrapper
             function toggleUploadWrapper() {
@@ -1193,28 +1180,42 @@
             function toggleButton() {
                 if ($('input[name="multiple_vehicles"]').is(':checked')) {
                     $('.add-btn').show();
+                    $('.multiple-vehicles').removeClass('d-none').addClass('d-flex');
                 } else {
+                    $('.multiple-vehicles').addClass('d-none').removeClass('d-flex');
                     $('.add-btn').hide();
+                    $('.equal-width').not('#input-container').remove();
                 }
+            }
+
+            $(document).on('click', '.add-btn', function () {
+                let newDiv = $('<div class="d-flex gap-20px flex-column flex-md-row equal-width">\
+                    <div class="form-group mb-0">\
+                        <label class="input-label" for="">{{ translate("messages.VIN Number") }}</label>\
+                        <input type="text" name="vehicle[vin_number][]" class="form-control" placeholder="Type your VIN number" value="">\
+                    </div>\
+                    <div class="form-group mb-0">\
+                        <label class="input-label" for="">{{ translate("messages.License Plate Number") }}</label>\
+                        <input type="text" name="vehicle[license_plate_number][]" class="form-control" placeholder="Type your license plate number" value="">\
+                    </div>\
+                    <button type="button" class="btn remove-btn shadow-none text--danger p-0 fs-32 lh--1 text-left mt-md-4">\
+                        <i class="tio-clear-circle-outlined"></i>\
+                    </button>\
+                </div>');
+
+                newDiv.insertBefore('.equal-width:last');
+            });
+
+            $(document).on('click', '.remove-btn', function () {
+                $(this).closest('.equal-width').remove();
+            });
+
+            if ($('input[name="multiple_vehicles"]').is(':checked')) {
+                $('.multiple-vehicles').removeClass('d-none').addClass('d-flex');
+                $('.add-btn').show();
             }
         });
 
-        $(document).on('click', '.add-btn', function() {
-            let newDiv = $('#input-container').clone();
-            // newDiv.find('input').val('');
-
-            newDiv.find('.add-btn')
-                .removeClass('add-btn text--primary')
-                .addClass('remove-btn text--danger')
-                .html('<i class="tio-clear-circle-outlined"></i>');
-
-            newDiv.insertBefore('.equal-width:last');
-        });
-
-
-        $(document).on('click', '.remove-btn', function() {
-            $(this).closest('.equal-width').remove();
-        });
 
         $(document).ready(function () {
             const $tripHourly = $('input[name="trip_hourly"]');
