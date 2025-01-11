@@ -11,22 +11,21 @@
             <hr class="non-printable">
 
             <div class="print--invoice initial-38-1">
-                @if ($trip->provider)
+                @if ($trip?->provider)
                     <div class="text-center pt-4 mb-3">
                         <img class="invoice-logo" src="{{ asset('/public/assets/admin/img/car_icon.svg') }}"
                              alt="">
                         <div class="top-info">
                             <h2 class="store-name">
-                                {{-- {{ $trip->provider->name }} --}}
-                                ABC Car Rental
+                                 {{ $trip?->provider?->name }}
                             </h2>
                             <div>
                                 <img src="{{ asset('/public/assets/admin/img/location_icon.svg') }}" alt="">
-                                {{ $trip->provider->address }}
+                                {{ $trip?->provider?->address }}
                             </div>
                             <div class="mt-1 d-flex justify-content-center">
                                 <span><img src="{{ asset('/public/assets/admin/img/phone_icon.svg') }}" alt=""></span>&nbsp;
-                                <span>{{ $trip->provider->phone }}</span>
+                                <span>{{ $trip?->provider?->phone }}</span>
                             </div>
                         </div>
                     </div>
@@ -42,14 +41,14 @@
                         <div class="d-flex justify-content-center mb-2 fs-12">
                             <span class="fw-medium">{{ translate('trip_Id') }}</span>
                             <span>:</span>
-                            <span class="fw-medium">{{ $trip['id'] }}</span>
+                            <span class="fw-medium">{{ $trip?->id }}</span>
                         </div>
                         <div>
-                            Wed, May 27, 2020 • 9:27:53 AM
+                            {{ \App\CentralLogics\Helpers::time_date_format($trip?->schedule_at) }}
                         </div>
                         <div>
                             @if ($trip->provider?->gst_status)
-                                <span>{{ translate('Gst No') }}</span> <span>:</span> <span>{{ $trip->provider->gst_code }}</span>
+                                <span>{{ translate('Gst No') }}</span> <span>:</span> <span>{{ $trip?->provider?->gst_code }}</span>
                             @endif
                         </div>
                     </div>
@@ -58,15 +57,15 @@
                             <div class="col-12">
                                 <div class="mb-1">
                                     <span class="opacity-70">{{ translate('messages.customer_name') }}</span> <span>:</span>
-                                    <span>Victor Shoaga</span>
+                                    <span>{{ $trip?->customer ? $trip?->customer?->fullName : $trip?->user_info['contact_person_name'] }}</span>
                                 </div>
                                 <div class="mb-1">
                                     <span class="opacity-70">{{ translate('messages.phone') }}</span> <span>:</span>
-                                    <span>+880154865474</span>
+                                    <span>{{ $trip?->customer ? $trip?->customer?->phone : $trip?->user_info['contact_person_number'] }}</span>
                                 </div>
                                 <div class="text-break mb-1">
-                                    <span class="opacity-70">{{ translate('messages.address') }}</span> <span>:</span>
-                                    <span>7953 Oakland St Honolulu, HI 96815</span>
+                                    <span class="opacity-70">{{ translate('messages.pickup_location') }}</span> <span>:</span>
+                                    <span>{{ $trip?->pickup_location['location_name'] }}</span>
                                 </div>
                             </div>
                         </div>
@@ -84,34 +83,38 @@
                                 </thead>
 
                                 <tbody>
-                                <tr>
-                                    <td>
-                                        <div class="d-flex gap-2">
-                                            <div>1.</div>
-                                            <div class="opacity-70">
-                                                <strong class="d-block mb-1">Toyota Harrier 2006</strong>
-                                                <span class="fs-9">$25.00/hour, 1 Vehicle, 5 Hours</span><br>
-                                                <span class="fs-9">Vehicles: Dhk-ka-21-3254</span>
+                                @php($sub_total = 0)
+                                @php($total_tax = 0)
+                                @php($total_dis_on_pro = 0)
+                                @foreach($trip->trip_details as $details)
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex gap-2">
+                                                <div>{{ $loop->iteration }}.</div>
+                                                <div class="opacity-70">
+                                                    <strong class="d-block mb-1">{{ $details?->vehicle?->name }}</strong>
+                                                    <span class="fs-9">
+                                                        {{ \App\CentralLogics\Helpers::format_currency($details['price']) }}/{{ $details?->rental_type }},
+                                                        {{ $details->quantity }} {{ translate('Vehicle') }},
+                                                        {{ $details->rental_type == 'hourly' ? $details->estimated_hours . ' Hours' : $details->distance . ' Km' }}
+                                                    </span><br>
+                                                    @php($licensePlates = $details?->tripVehicleDetails->map(function($vehicleDetails) {
+                                                            return $vehicleDetails?->vehicle_identity_data?->license_plate_number ?? translate('vehicle not found');
+                                                        })->filter()->implode(', ') ?? translate('vehicle not assign'))
+
+                                                    <span class="fs-9">@if($licensePlates) {{translate('Vehicles')}}: {{ $licensePlates }} @endif </span>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </td>
-                                    <td></td>
-                                    <td>$125.00</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="d-flex gap-2">
-                                            <div>2.</div>
-                                            <div class="opacity-70">
-                                                <strong class="d-block mb-1">Toyota HiAce 2015</strong>
-                                                <span class="fs-9">$25.00/hour, 1 Vehicle, 5 Hours</span><br>
-                                                <span class="fs-9">Vehicles: Dhk-ka-21-3254</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td></td>
-                                    <td>$6,870.00</td>
-                                </tr>
+                                        </td>
+                                        <td></td>
+                                        <td>
+                                            @php($amount = $details['price'] * $details['quantity'])
+                                            {{ \App\CentralLogics\Helpers::format_currency($amount) }}
+                                        </td>
+                                    </tr>
+                                    @php($sub_total += $amount)
+                                    @php($total_tax += $details['tax_amount'] * $details['quantity'])
+                                @endforeach
                                 </tbody>
                             </table>
                         </div>
@@ -120,20 +123,24 @@
 
                         <div class="checkout--info">
                             <dl class="row text-right">
-                                <dt class="col-6 opacity-70">{{ translate('messages.Subtotal') }}:</dt>
-                                <dd class="col-6"> $6,995.00</dd>
+                                <dt class="col-6 opacity-70">{{ translate('messages.Subtotal') }}
+                                    @if ($trip->tax_status == 'included' )
+                                        ({{ translate('messages.TAX_Included') }})
+                                    @endif
+                                    :</dt>
+                                <dd class="col-6"> {{ \App\CentralLogics\Helpers::format_currency($sub_total) }} </dd>
 
                                 <dt class="col-6 opacity-70">{{ translate('messages.Discount') }}:</dt>
-                                <dd class="col-6">  -$50.00</dd>
+                                <dd class="col-6">  - {{ \App\CentralLogics\Helpers::format_currency($trip['discount_on_trip'])}}</dd>
 
                                 <dt class="col-6 opacity-70">{{ translate('messages.Coupon_Discount') }}:</dt>
-                                <dd class="col-6"> -$10.00</dd>
+                                <dd class="col-6"> - {{ \App\CentralLogics\Helpers::format_currency($trip['coupon_discount_amount']) }}</dd>
 
                                 <dt class="col-6 opacity-70">{{ translate('messages.tax') }}:</dt>
-                                <dd class="col-6"> +$5.00</dd>
+                                <dd class="col-6"> +{{ \App\CentralLogics\Helpers::format_currency($trip['tax_amount']) }}</dd>
 
                                 <dt class="col-6 total">{{ translate('messages.total') }}:</dt>
-                                <dd class="col-6 total"> $6,940.00</dd>
+                                <dd class="col-6 total"> {{ \App\CentralLogics\Helpers::format_currency($trip->trip_amount) }}</dd>
                             </dl>
                         </div>
                     </div>
@@ -143,13 +150,13 @@
                     <div class="checkout--info">
                         <dl class="row text-right">
                             <dt class="col-6 opacity-70">{{ translate('messages.Paid_By') }}:</dt>
-                            <dd class="col-6"> Cash</dd>
+                            <dd class="col-6"> {{ translate('messages.' . $trip->payment_method) }}</dd>
 
                             <dt class="col-6 opacity-70">{{ translate('messages.Paid_Amount') }}:</dt>
-                            <dd class="col-6">  $6,940.00</dd>
+                            <dd class="col-6"> {{ $trip->payment_status == 'paid' ? \App\CentralLogics\Helpers::format_currency($trip->trip_amount) : \App\CentralLogics\Helpers::format_currency(0) }}</dd>
 
-                            <dt class="col-6 opacity-70">{{ translate('messages.Change_Return') }}:</dt>
-                            <dd class="col-6"> $0.00</dd>
+{{--                            <dt class="col-6 opacity-70">{{ translate('messages.Change_Return') }}:</dt>--}}
+{{--                            <dd class="col-6"> $0.00</dd>--}}
                         </dl>
                     </div>
 

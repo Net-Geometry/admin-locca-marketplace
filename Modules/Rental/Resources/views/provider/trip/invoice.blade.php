@@ -1,6 +1,6 @@
-@extends('layouts.admin.app')
+@extends('layouts.vendor.app')
 
-@section('title','')
+@section('title',translate('Invoice'))
 
 
 @push('css_or_js')
@@ -25,7 +25,7 @@
 @push('script')
     <script>
         function printDiv(divName) {
-            window.open('{{route("admin.rental.trip.print-invoice",["id" => $trip->id])}}', '_blank');
+            window.open('{{route("vendor.trip.print-invoice",["id" => $trip->id])}}', '_blank');
         }
 
     </script>

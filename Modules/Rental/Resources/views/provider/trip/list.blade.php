@@ -258,7 +258,7 @@
                         </td>
                         <td>
                             <div class="btn--container justify-content-center">
-                                <a class="btn action-btn btn--primary btn-outline-primary" href="{{route("admin.rental.trip.generate-invoice",["id" => $trip->id])}}"
+                                <a class="btn action-btn btn--primary btn-outline-primary" href="{{route("vendor.trip.generate-invoice",["id" => $trip->id])}}"
                                    title="{{ translate('messages.download') }}"><i class="tio-download-to"></i>
                                 </a>
                                 <a class="btn action-btn btn--primary btn-outline-primary" href="{{ route('vendor.trip.details', $trip->id) }}"

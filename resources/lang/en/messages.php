@@ -6981,4 +6981,6 @@ Smartly or Earn. ',
   'custom' => 'Custom',
   'select_vendor' => 'Select vendor',
   'all_vendors' => 'All vendors',
+  'pickup_location' => 'Pickup location',
+  'Instant_Booking' => 'Instant Booking',
 );
