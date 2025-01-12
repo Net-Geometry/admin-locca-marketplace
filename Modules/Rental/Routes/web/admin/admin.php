@@ -67,6 +67,7 @@ Route::group(['middleware' => ['admin', 'current-module']], function () {
             Route::delete('delete/{id}', [ProviderController::class, 'destroy'])->name('delete');
             Route::get('status/{id}', [ProviderController::class, 'status'])->name('status');
             Route::get('details/{id}/{tab?}/{sub_tab?}', [ProviderController::class, 'details'])->name('details');
+            Route::post('update-settings/{id}', [ProviderController::class, 'updateSettings'])->name('update_settings');
             Route::get('export-review', [ProviderController::class, 'exportReview'])->name('export-review');
             Route::get('export-categories', [ProviderController::class, 'export'])->name('export-brands');
             Route::get('new-requests', [ProviderController::class, 'newRequests'])->name('new-requests');

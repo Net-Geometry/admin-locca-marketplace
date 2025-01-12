@@ -88,6 +88,11 @@
                 </div>
             </div>
         @endif
+        @php
+            $all = $store?->trips?->count();
+            $completed = $store?->trips?->where('trip_status', 'completed')?->count();
+            $canceled = $store?->trips?->where('trip_status', 'canceled')?->count();
+        @endphp
         <div class="card mt-4 p-4">
             <div class="row g-2" id="order_stats">
                 <div class="col-lg-3 col-sm-6">
@@ -98,7 +103,7 @@
                                 {{translate('All')}}
                             </h6>
                             <span class="card-title text--info">
-                                {{ $store->trips->count() }}
+                                {{ $all }}
                             </span>
                         </div>
                     </a>
@@ -112,7 +117,7 @@
                                 {{translate('Completed')}}
                             </h6>
                             <span class="card-title text--success">
-                                {{ $store->trips->where('trip_status', 'completed')->count() }}
+                                {{ $completed }}
                             </span>
                         </div>
                     </a>
@@ -126,7 +131,7 @@
                                 {{translate('Canceled')}}
                             </h6>
                             <span class="card-title text--danger">
-                                {{ $store->trips->where('trip_status', 'canceled')->count() }}
+                                {{ $canceled }}
                             </span>
                         </div>
                     </a>
@@ -140,7 +145,7 @@
                                 {{translate('Cancellation rate')}}
                             </h6>
                             <span class="card-title text--warning">
-                                12%
+                                {{ $canceled > 0 ? ($canceled / $all) * 100 : 0 }}%
                             </span>
                         </div>
                     </a>

@@ -939,6 +939,9 @@
                     } else if ($('#tax').val().length === 0) {
                         toastr.error("{{ translate('tax_is_required') }}");
                         e.preventDefault();
+                    } else if ($('#pickup_zones').val().length === 0) {
+                        toastr.error("{{ translate('You_must_select_a_pickup_zone') }}");
+                        e.preventDefault();
                     } else if ($('#min').val().length === 0) {
                         toastr.error("{{ translate('minimum_delivery_time_is_required') }}");
                         e.preventDefault();

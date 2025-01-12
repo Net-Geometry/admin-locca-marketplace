@@ -1277,5 +1277,28 @@ class ProviderController extends Controller
     }
 
 
+    /**
+     * @param Store $store
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function updateSettings(Request $request, $id): RedirectResponse
+    {
+        $request->validate([
+            'tax'=>'required',
+            'minimum_pickup_time' => 'required|min:1|max:2',
+            'maximum_pickup_time' => 'required|min:1|max:2|gt:minimum_pickup_time',
+        ]);
+
+        $store = $this->store->findOrFail($id);
+        $store->tax = $request->tax;
+        $store->delivery_time = $request->minimum_pickup_time .'-'. $request->maximum_pickup_time.' '.$request->pickup_time_type;
+        $store->save();
+
+        Toastr::success(translate('messages.vendor_settings_updated'));
+        return back();
+    }
+
+
 
 }

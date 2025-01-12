@@ -969,7 +969,7 @@ class VendorController extends Controller
 
         $store[$request->menu] = $request->status;
         $store->save();
-        Toastr::success(translate('messages.store_settings_updated'));
+        Toastr::success(translate('messages.vendor_settings_updated'));
         return back();
     }
 
