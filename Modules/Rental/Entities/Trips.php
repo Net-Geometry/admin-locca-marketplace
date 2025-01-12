@@ -38,6 +38,7 @@ class Trips extends Model
         'checked' => 'integer',
         'scheduled' => 'integer',
         'quantity' => 'integer',
+        'avg_rating' => 'float',
     ];
 
     public function getPickupLocationAttribute($value)

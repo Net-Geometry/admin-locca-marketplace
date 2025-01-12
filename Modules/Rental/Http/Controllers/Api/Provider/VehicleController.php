@@ -66,6 +66,7 @@ class VehicleController extends Controller
                     $query->orWhere('name', 'LIKE', '%' . $key . '%');
                 }
             })
+            ->where('provider_id', $request['vendor']->store->id)
             ->when($request->filled('category_id'), function ($query) use ($request) {
                 $query->where('category_id', $request->input('category_id'));
             })

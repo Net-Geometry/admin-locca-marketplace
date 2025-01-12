@@ -341,6 +341,9 @@ trait TripLogicTrait
             }
             $quantity += $tripDetailData['quantity'];
 
+
+
+
             if ($isUpdated) {
                 self::updateTripDetail($tripDetail, $tripDetailData, $data);
             }
