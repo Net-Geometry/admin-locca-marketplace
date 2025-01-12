@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use Modules\Rental\Entities\Vehicle;
 use Modules\Rental\Entities\VehicleBrand;
@@ -174,12 +175,14 @@ class VehicleController extends Controller
         $vehicle->engine_power = $request->engine_power;
         $vehicle->seating_capacity = $request->seating_capacity;
         $vehicle->air_condition = $request->air_condition ? 1 : 0;
+        $vehicle->multiple_vehicles = $request->multiple_vehicles ? 1 : 0;
         $vehicle->fuel_type = $request->fuel_type;
         $vehicle->transmission_type = $request->transmission_type;
         $vehicle->trip_hourly = $request->trip_hourly ? 1 : 0;
         $vehicle->trip_distance = $request->trip_distance ? 1 : 0;
-        $vehicle->hourly_price = $request->hourly_price;
-        $vehicle->discount_price = $request->discount_price;
+        $vehicle->hourly_price = $request->hourly_price ?? 0.00;
+        $vehicle->discount_price = $request->discount_price ?? 0.00;
+        $vehicle->distance_price = $request->distance_price ?? 0;
         $vehicle->discount_type = $request->discount_type;
         $vehicle->tag = json_encode($request->tag);
         $vehicle->thumbnail = $thumbnailName;
@@ -187,15 +190,19 @@ class VehicleController extends Controller
         $vehicle->documents = $documents;
         $vehicle->save();
 
-        foreach ($vinNumbers as $index => $vin) {
-            $licensePlate = $licensePlateNumbers[$index];
+        if (!empty($vinNumbers[0]) && !empty($licensePlateNumbers[0])){
+            foreach ($vinNumbers as $index => $vin) {
+                $licensePlate = $licensePlateNumbers[$index];
 
-            $this->vehicleIdentity->create([
-                'vehicle_id' => $vehicle->id,
-                'provider_id' => $vehicle->provider_id,
-                'vin_number' => $vin,
-                'license_plate_number' => $licensePlate,
-            ]);
+                if (!empty($vin) && !empty($licensePlate)) {
+                    $this->vehicleIdentity->create([
+                        'vehicle_id' => $vehicle->id,
+                        'provider_id' => $vehicle->provider_id,
+                        'vin_number' => $vin,
+                        'license_plate_number' => $licensePlate,
+                    ]);
+                }
+            }
         }
 
         $this->helpers->add_or_update_translations(request: $request, key_data: 'name', name_field: 'name', model_name: 'Vehicle', data_id: $vehicle->id, data_value: $vehicle->name);
@@ -263,24 +270,55 @@ class VehicleController extends Controller
         }
 
         $imagesNames = !empty($vehicle->images) ? json_decode($vehicle->images, true) : [];
+
+        if ($request->filled('removed_images')) {
+            $removedImages = json_decode($request->input('removed_images'), true);
+
+            foreach ($removedImages as $removedImage) {
+                $imagesNames = array_filter($imagesNames, function ($image) use ($removedImage) {
+                    return $image['img'] !== $removedImage;
+                });
+
+                $imagePath = 'vehicle/' . $removedImage;
+                Storage::disk('public')->delete($imagePath);
+            }
+        }
+
         if (!empty($request->file('images'))) {
             foreach ($request->images as $img) {
                 $image = $this->updateAndUpload('vehicle/', $vehicle->images, 'png', $img);
                 $imagesNames[] = ['img' => $image, 'storage' => $this->helpers->getDisk()];
             }
         }
-        $image = json_encode($imagesNames);
 
-        $vehicleDocuments = !empty($vehicle->documents) ? json_decode($vehicle->documents, true) : []; // Decode JSON to array
-        if (!empty($request->file('documents'))) {
-            foreach ($request->documents as $doc) {
-                $document = $this->updateAndUpload('vehicle/', $vehicle->documents, 'png', $doc);
-                $vehicleDocuments[] = ['img' => $document, 'storage' => $this->helpers->getDisk()];
+        $image = json_encode(array_values($imagesNames));
+
+
+        $docNames = !empty($vehicle->documents) ? json_decode($vehicle->documents, true) : [];
+
+        if ($request->filled('removed_documents')) {
+            $removedDocs = json_decode($request->input('removed_documents'), true);
+
+            foreach ($removedDocs as $removedDoc) {
+                $docNames = array_filter($docNames, function ($image) use ($removedDoc) {
+                    return $image['img'] !== $removedDoc;
+                });
+
+                $docPath = 'vehicle/' . $removedDoc;
+                Storage::disk('public')->delete($docPath);
             }
         }
 
+        if (!empty($request->file('documents'))) {
+            foreach ($request->documents as $doc) {
+                $file= $this->updateAndUpload('vehicle/', $vehicle->images, 'png', $doc);
+                $docNames[] = ['img' => $file, 'storage' => $this->helpers->getDisk()];
+            }
+        }
+
+        $documents = json_encode(array_values($docNames));
+
         $providerId = auth('vendor')->user()->stores[0]->id;
-        $documents = json_encode($vehicleDocuments);
         $providerZoneId = $this->store->where('id', $providerId)->value('zone_id') ?? 0;
         $vehicles = $request->input('vehicle');
         $vinNumbers = $vehicles['vin_number'];
@@ -298,12 +336,14 @@ class VehicleController extends Controller
         $vehicle->engine_power = $request->engine_power;
         $vehicle->seating_capacity = $request->seating_capacity;
         $vehicle->air_condition = $request->air_condition ? 1 : 0;
+        $vehicle->multiple_vehicles = $request->multiple_vehicles ? 1 : 0;
         $vehicle->fuel_type = $request->fuel_type;
         $vehicle->transmission_type = $request->transmission_type;
         $vehicle->trip_hourly = $request->trip_hourly ? 1 : 0;
         $vehicle->trip_distance = $request->trip_distance ? 1 : 0;
-        $vehicle->hourly_price = $request->hourly_price;
-        $vehicle->discount_price = $request->discount_price;
+        $vehicle->hourly_price = $request->hourly_price ?? 0.00;
+        $vehicle->discount_price = $request->discount_price ?? 0.00;
+        $vehicle->distance_price = $request->distance_price ?? 0.00;
         $vehicle->discount_type = $request->discount_type;
         $vehicle->tag = json_encode($request->tag);
         $vehicle->thumbnail = $thumbnailName;
@@ -311,25 +351,40 @@ class VehicleController extends Controller
         $vehicle->documents = $documents;
         $vehicle->update();
 
-        $requestVinNumbers = $vinNumbers;
+        $existingRecords = $this->vehicleIdentity->where('vehicle_id', $vehicle->id)->get();
+
+        $validVinNumbers = [];
+
         foreach ($vinNumbers as $index => $vin) {
             $licensePlate = $licensePlateNumbers[$index];
 
-            $this->vehicleIdentity->updateOrCreate(
-                [
-                    'vehicle_id' => $vehicle->id,
-                    'vin_number' => $vin,
-                ],
-                [
-                    'provider_id' => $vehicle->provider_id,
-                    'license_plate_number' => $licensePlate,
-                ]
-            );
+            if (!empty($vin) && !empty($licensePlate)) {
+                $validVinNumbers[] = $vin;
+
+                $existingRecord = $this->vehicleIdentity->where('vehicle_id', $vehicle->id)
+                    ->where('vin_number', $vin)
+                    ->first();
+
+                if ($existingRecord) {
+                    $existingRecord->update([
+                        'license_plate_number' => $licensePlate,
+                    ]);
+                } else {
+                    $this->vehicleIdentity->create([
+                        'vehicle_id' => $vehicle->id,
+                        'provider_id' => $vehicle->provider_id,
+                        'vin_number' => $vin,
+                        'license_plate_number' => $licensePlate,
+                    ]);
+                }
+            }
         }
 
-        $this->vehicleIdentity->where('vehicle_id', $vehicle->id)->where('provider_id', $vehicle->provider_id)
-            ->whereNotIn('vin_number', $requestVinNumbers)
-            ->delete();
+        foreach ($existingRecords as $record) {
+            if (!in_array($record->vin_number, $validVinNumbers)) {
+                $record->delete();
+            }
+        }
 
         $this->helpers->add_or_update_translations(request: $request, key_data: 'name', name_field: 'name', model_name: 'Vehicle', data_id: $vehicle->id, data_value: $vehicle->name);
         $this->helpers->add_or_update_translations(request: $request, key_data: 'description', name_field: 'description', model_name: 'Vehicle', data_id: $vehicle->id, data_value: $vehicle->description);

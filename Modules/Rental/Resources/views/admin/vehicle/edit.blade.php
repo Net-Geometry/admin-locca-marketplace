@@ -743,7 +743,7 @@
             const inputElement = document.querySelector('.multiple_image_input');
             const fileSet = new Set(); // To keep track of files
             let removedImages = []; // To track removed images
-            let removedDocuments = []; // To track removed images
+            let removedDocuments = []; // To track removed Documents
 
             // Handle file input change (adding new files)
             inputElement.addEventListener('change', function (event) {
@@ -799,26 +799,21 @@
                 toggleUploadWrapper();
             });
 
-            // Remove image logic
-            window.removedImages = []; // Initialize removed images array
+            // Remove images logic
+            window.removedImages = [];
 
             window.removeImage = function (event, element) {
                 event.stopPropagation();
 
-                // Get the full image URL from the data-url attribute
                 const imageSingle = element.closest(".image-single");
                 const imageUrl = imageSingle.getAttribute("data-url");
 
-                // Extract the image file name from the URL
-                const imageName = imageUrl.split('/').pop(); // This will get the last part of the URL after the last "/"
+                const imageName = imageUrl.split('/').pop();
 
-                // Remove the image element from the DOM
                 imageSingle.remove();
 
-                // Track the removed image
-                removedImages.push(imageName); // Add to removed images array
+                removedImages.push(imageName);
 
-                // Update the hidden input field with the new removed images list
                 document.getElementById('removed_images').value = JSON.stringify(removedImages);
 
                 console.log("Updated removed images array:", removedImages);
@@ -997,11 +992,6 @@
                 console.log("Updated removed images array:", removedDocuments);
                 toggleUploadWrapper();
             };
-
-
-
-
-
 
             // Toggle visibility of upload wrapper
             function toggleUploadWrapper() {

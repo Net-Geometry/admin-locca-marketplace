@@ -171,8 +171,8 @@
                                     <!-- Upload Wrapper for New Files -->
                                    <div class="upload-file text-wrapper h--100px w--200px flex-shrink-0"
                                         id="image_upload_wrapper">
-                                       <input type="file" name="images[]"
-                                              class="upload-file__input multiple_image_input" accept=".jpg,.jpeg,.png" multiple>
+                                       <input type="file" name="images[]" class="upload-file__input multiple_image_input" accept=".jpg,.jpeg,.png" multiple>
+                                       <input type="hidden" name="removed_images" id="removed_images" value="">
                                        <div
                                            class="upload-file__img d-flex gap-0 justify-content-center align-items-center h-100 max-w-300px p-0">
                                            <div class="upload-file__textbox">
@@ -376,31 +376,33 @@
                                     {{ translate('messages.Same Model Multiple Vehicles') }}
                                 </span>
                                 <input class="form-check-input single-select position-relative m-0" type="checkbox" name="multiple_vehicles"
-                                       {{ $vehicle->multiple_vehicles == 1 ? 'checked' : '' }}>
+                                    {{ $vehicle->multiple_vehicles == 1 ? 'checked' : '' }}>
                             </label>
                         </div>
                         <div class="card-body d-flex flex-column gap-20px">
-                            @foreach($vehicle->vehicleIdentities as $multi)
-                            <div class="d-flex gap-20px flex-column flex-md-row equal-width">
-                                <div class="form-group mb-0">
-                                    <label class="input-label"
-                                           for="">{{ translate('messages.VIN Number') }}</label>
-                                    <input type="text" name="vehicle[vin_number][]" class="form-control"
-                                           placeholder="Type your business name" value="{{ $multi->vin_number }}">
-                                </div>
-                                <div class="form-group mb-0">
-                                    <label class="input-label"
-                                           for="">{{ translate('messages.License Plate Number') }}</label>
-                                    <input type="text" name="vehicle[license_plate_number][]" class="form-control"
-                                           placeholder="Type your license plate number" value="{{ $multi->license_plate_number }}">
-                                </div>
-                                <button type="button"
-                                        class="btn plus-btn shadow-none p-0 fs-32 lh--1 text-left mt-md-4 remove-btn text--danger">
-                                    <i class="tio-clear-circle-outlined"></i>
-                                </button>
-                            </div>
-                            @endforeach
-                            <div class="d-flex gap-20px flex-column flex-md-row equal-width" id="input-container">
+                            @if($vehicle->multiple_vehicles == 1)
+                                @foreach($vehicle->vehicleIdentities as $multi)
+                                    <div class="d-flex gap-20px flex-column flex-md-row equal-width">
+                                        <div class="form-group mb-0">
+                                            <label class="input-label"
+                                                   for="">{{ translate('messages.VIN Number') }}</label>
+                                            <input type="text" name="vehicle[vin_number][]" class="form-control"
+                                                   placeholder="Type your business name" value="{{ $multi->vin_number }}">
+                                        </div>
+                                        <div class="form-group mb-0">
+                                            <label class="input-label"
+                                                   for="">{{ translate('messages.License Plate Number') }}</label>
+                                            <input type="text" name="vehicle[license_plate_number][]" class="form-control"
+                                                   placeholder="Type your license plate number" value="{{ $multi->license_plate_number }}">
+                                        </div>
+                                        <button type="button"
+                                                class="btn plus-btn shadow-none p-0 fs-32 lh--1 text-left mt-md-4 remove-btn text--danger">
+                                            <i class="tio-clear-circle-outlined"></i>
+                                        </button>
+                                    </div>
+                                @endforeach
+                            @endif
+                            <div class="d--flex gap-20px flex-column flex-md-row equal-width multiple-vehicles" id="input-container">
                                 <div class="form-group mb-0">
                                     <label class="input-label"
                                            for="">{{ translate('messages.VIN Number') }}</label>
@@ -465,7 +467,7 @@
                                                for="">{{ translate('messages.Hourly Wise Price ($)') }}
                                         </label>
                                         <input type="number" name="hourly_price" class="form-control"
-                                               placeholder="Ex: 35.25" value="{{ $vehicle->hourly_price }}">
+                                               placeholder="Ex: 35.25" value="{{ $vehicle->hourly_price }}"  min="0" step="0.001">
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
@@ -474,7 +476,7 @@
                                                for="">{{ translate('messages.Distance Wise Price ($)') }}
                                         </label>
                                         <input type="number" name="distance_price" class="form-control"
-                                               placeholder="Ex: 35.25" value="{{ $vehicle->distance_price }}">
+                                               placeholder="Ex: 35.25" value="{{ $vehicle->distance_price }}"  min="0" step="0.001">
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
@@ -487,13 +489,13 @@
                                             </span></label>
                                         <div class="custom-group-btn border">
                                             <div class="flex-sm-grow-1">
-                                                <input id="min" type="number" name="discount_price"
+                                                <input id="discount_input" type="number" name="discount_price"
                                                        class="form-control h--45px border-0 pl-unset"
                                                        value="{{ $vehicle->discount_price }}"
-                                                       placeholder="{{ translate('messages.Ex: 10') }} 20">
+                                                       placeholder="{{ translate('messages.Ex: 10') }} 20" min="0" step="0.001">
                                             </div>
                                             <div class="flex-shrink-0">
-                                                <select name="discount_type" id="" class="custom-select ltr border-0">
+                                                <select name="discount_type" id="discount_type" class="custom-select ltr border-0">
                                                     <option value="percent" {{ $vehicle->discount_type == 'percent' ? 'selected' : '' }}>
                                                         %
                                                     </option>
@@ -554,6 +556,7 @@
                                         <input type="file" name="documents[]"
                                             class="upload-file__input multiple_document_input" accept="*"
                                             multiple>
+                                        <input type="hidden" name="removed_documents" id="removed_documents" value="">
                                         <div
                                             class="upload-file__img d-flex justify-content-center align-items-center h-100 max-w-300px p-0">
                                             <div class="upload-file__textbox pdf">
@@ -676,100 +679,25 @@
     </script>
 
     <script>
-        // $(function() {
-        //     $("#multiImg").spartanMultiImagePicker({
-        //         fieldName: 'images[]',
-        //         maxCount: 5,
-        //         rowHeight: '120px',
-        //         groupClassName: 'col-6 spartan_item_wrapper size--md',
-        //         maxFileSize: '',
-        //         placeholderImage: {
-        //             image: '{{ asset('public/assets/admin/img/document-upload.png') }}',
-        //             width: '100%'
-        //         },
-        //         dropFileLabel: "Drop Here",
-        //         onAddRow: function(index, file) {
+        $(document).ready(function () {
+            $('#discount_input').on('input', function () {
+                let discountType = $('#discount_type').val();
+                let inputValue = parseFloat($(this).val());
 
-        //         },
-        //         onRenderedPreview: function(index) {
+                if (discountType === 'percent' && inputValue > 100) {
+                    $(this).val(100);
+                }
+            });
 
-        //         },
-        //         onRemoveRow: function(index) {
+            $('#discount_type').on('change', function () {
+                let discountType = $(this).val();
+                let inputValue = parseFloat($('#discount_input').val());
 
-        //         },
-        //         onExtensionErr: function(index, file) {
-        //             toastr.error(
-        //                 '{{ translate('messages.please_only_input_png_or_jpg_type_file') }}', {
-        //                     CloseButton: true,
-        //                     ProgressBar: true
-        //                 });
-        //         },
-        //         onSizeErr: function(index, file) {
-        //             toastr.error('{{ translate('messages.file_size_too_big') }}', {
-        //                 CloseButton: true,
-        //                 ProgressBar: true
-        //             });
-        //         }
-        //     });
-        // });
-
-        // $(function() {
-        //     $("#multiDoc").spartanMultiImagePicker({
-        //         fieldName: 'documents[]',
-        //         maxCount: 5,
-        //         rowHeight: '120px',
-        //         groupClassName: 'col-6 spartan_item_wrapper size--md',
-        //         maxFileSize: '',
-        //         placeholderImage: {
-        //             image: '{{ asset('public/assets/admin/img/document-upload.png') }}',
-        //             width: '100%'
-        //         },
-        //         dropFileLabel: "Drop Here",
-        //         onAddRow: function(index, file) {
-
-        //         },
-        //         onRenderedPreview: function(index) {
-
-        //         },
-        //         onRemoveRow: function(index) {
-
-        //         },
-        //         onExtensionErr: function(index, file) {
-        //             toastr.error(
-        //                 '{{ translate('messages.please_only_input_png_or_jpg_type_file') }}', {
-        //                     CloseButton: true,
-        //                     ProgressBar: true
-        //                 });
-        //         },
-        //         onSizeErr: function(index, file) {
-        //             toastr.error('{{ translate('messages.file_size_too_big') }}', {
-        //                 CloseButton: true,
-        //                 ProgressBar: true
-        //             });
-        //         }
-        //     });
-        // });
-
-
-        // // Get all upload-file input elements
-        // document.querySelectorAll('.single_file_input').forEach(function(input) {
-        //     input.addEventListener('change', function(event) {
-        //         var file = event.target.files[0];
-        //         var card = event.target.closest('.upload-file');
-        //         var textbox = card.querySelector('.upload-file__textbox');
-        //         var imgElement = card.querySelector('.upload-file__img__img');
-
-        //         if (file) {
-        //             var reader = new FileReader();
-        //             reader.onload = function(e) {
-        //                 textbox.style.display = 'none';
-        //                 imgElement.src = e.target.result;
-        //                 imgElement.style.display = 'block';
-        //             };
-        //             reader.readAsDataURL(file);
-        //         }
-        //     });
-        // });
+                if (discountType === 'percent' && inputValue > 100) {
+                    $('#discount_input').val(100);
+                }
+            });
+        });
     </script>
 
     <script>
@@ -783,6 +711,7 @@
             const inputElement = document.querySelector('.multiple_image_input');
             const fileSet = new Set(); // To keep track of files
             let removedImages = []; // To track removed images
+            let removedDocuments = [];
 
             // Handle file input change (adding new files)
             inputElement.addEventListener('change', function (event) {
@@ -839,14 +768,21 @@
             });
 
             // Remove image logic
-            window.removeImage = function (event, element, fileName) {
-                event.stopPropagation();
-                const imageSingle = element.closest(".image-single");
-                imageSingle.remove();
-                fileSet.delete(fileName); // Remove the file from the set
+            window.removedImages = [];
 
-                // Track the removed image
-                removedImages.push(fileName); // Add to removed images array
+            window.removeImage = function (event, element) {
+                event.stopPropagation();
+
+                const imageSingle = element.closest(".image-single");
+                const imageUrl = imageSingle.getAttribute("data-url");
+
+                const imageName = imageUrl.split('/').pop();
+
+                imageSingle.remove();
+
+                removedImages.push(imageName);
+
+                document.getElementById('removed_images').value = JSON.stringify(removedImages);
 
                 console.log("Updated removed images array:", removedImages);
 
@@ -877,6 +813,12 @@
                 // Append removed files to indicate they should be deleted
                 removedImages.forEach((fileName) => {
                     formData.append('removed_images[]', fileName);
+                });
+
+
+                // Append removed files to indicate they should be deleted
+                removedDocuments.forEach((fileName) => {
+                    formData.append('removed_documents[]', fileName);
                 });
 
                 // Log form data (for debugging)
@@ -1000,17 +942,25 @@
             });
 
             // Remove document handler
-            window.removeDocument = function (event, element) {
-                event.stopPropagation();
-                const pdfSingle = element.closest(".pdf-single");
-                const fileName = pdfSingle.getAttribute("data-file-name");
+             window.removedDocuments = [];
 
-                // Remove file from the Map
-                uploadedFiles.delete(fileName);
+             window.removeDocument = function (event, element) {
+                 event.stopPropagation();
 
-                pdfSingle.remove();
-                toggleUploadWrapper();
-            };
+                 const pdfSingle = element.closest(".pdf-single");
+                 const fileName = pdfSingle.getAttribute("data-pdf-url");
+                 const documentName = fileName.split('/').pop();
+
+
+                 pdfSingle.remove();
+
+                 removedDocuments.push(documentName);
+
+                 document.getElementById('removed_documents').value = JSON.stringify(removedDocuments);
+
+                 console.log("Updated removed images array:", removedDocuments);
+                 toggleUploadWrapper();
+             };
 
             // Toggle visibility of upload wrapper
             function toggleUploadWrapper() {
@@ -1189,27 +1139,40 @@
             function toggleButton() {
                 if ($('input[name="multiple_vehicles"]').is(':checked')) {
                     $('.add-btn').show();
+                    $('.multiple-vehicles').removeClass('d-none').addClass('d-flex');
                 } else {
+                    $('.multiple-vehicles').addClass('d-none').removeClass('d-flex');
                     $('.add-btn').hide();
+                    $('.equal-width').not('#input-container').remove();
                 }
             }
-        });
 
-        $(document).on('click', '.add-btn', function() {
-            let newDiv = $('#input-container').clone();
-            // newDiv.find('input').val('');
+            $(document).on('click', '.add-btn', function () {
+                let newDiv = $('<div class="d-flex gap-20px flex-column flex-md-row equal-width">\
+                    <div class="form-group mb-0">\
+                        <label class="input-label" for="">{{ translate("messages.VIN Number") }}</label>\
+                        <input type="text" name="vehicle[vin_number][]" class="form-control" placeholder="Type your VIN number" value="">\
+                    </div>\
+                    <div class="form-group mb-0">\
+                        <label class="input-label" for="">{{ translate("messages.License Plate Number") }}</label>\
+                        <input type="text" name="vehicle[license_plate_number][]" class="form-control" placeholder="Type your license plate number" value="">\
+                    </div>\
+                    <button type="button" class="btn remove-btn shadow-none text--danger p-0 fs-32 lh--1 text-left mt-md-4">\
+                        <i class="tio-clear-circle-outlined"></i>\
+                    </button>\
+                </div>');
 
-            newDiv.find('.add-btn')
-                .removeClass('add-btn text--primary')
-                .addClass('remove-btn text--danger')
-                .html('<i class="tio-clear-circle-outlined"></i>');
+                newDiv.insertBefore('.equal-width:last');
+            });
 
-            newDiv.insertBefore('.equal-width:last');
-        });
+            $(document).on('click', '.remove-btn', function () {
+                $(this).closest('.equal-width').remove();
+            });
 
-
-        $(document).on('click', '.remove-btn', function() {
-            $(this).closest('.equal-width').remove();
+            if ($('input[name="multiple_vehicles"]').is(':checked')) {
+                $('.multiple-vehicles').removeClass('d-none').addClass('d-flex');
+                $('.add-btn').show();
+            }
         });
 
         $(document).ready(function () {
