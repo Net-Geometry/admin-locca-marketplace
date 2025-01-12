@@ -113,10 +113,10 @@
                                         <span>{{translate('Payment method')}}</span> <span>:</span>
                                         <span class="font-semibold">{{ translate($trip->payment_method ?? 'cash payment') }}</span>
                                     </h6>
-                                    <h6>
+                                    {{-- <h6>
                                         <span>{{translate('Reference Code')}} </span> <span>:</span>
                                         <span class="font-semibold">{{ $trip->transaction_reference }}</span>
-                                    </h6>
+                                    </h6> --}}
                                 </div>
                             </div>
                         </div>
@@ -243,7 +243,7 @@
                                         <td>
                                             <div class="fs-14 text--title">
                                                 {{ \App\CentralLogics\Helpers::format_currency($detail->price) }}
-                                                {{ $detail->rental_type }}
+                                                {{ translate($detail->rental_type) }}
                                             </div>
                                         </td>
                                         <td>
@@ -253,7 +253,7 @@
                                         </td>
                                         <td>
                                             <div class="fs-14 text--title">
-                                                {{ $detail->estimated_hours }} {{ $detail->rental_type }}
+                                                {{ $detail->estimated_hours }} {{ translate($detail->rental_type) }}
                                             </div>
                                         </td>
                                         <td class="text-right">

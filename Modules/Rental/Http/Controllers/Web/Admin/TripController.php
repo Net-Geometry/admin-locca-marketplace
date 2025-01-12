@@ -141,7 +141,7 @@ class TripController extends Controller
             $trip->save();
 
             if ($status == 'completed' && $trip->payment_status == 'paid' && !$trip->trip_transaction) {
-                if ($this->create_transaction($trip, 'vendor') === false) {
+                if ($this->create_transaction($trip, 'admin') === false) {
                     DB::rollBack();
 
                     Toastr::error(translate('messages.Failed_to_create_Transaction'));
@@ -178,11 +178,13 @@ class TripController extends Controller
                 return back();
             }
 
+            $trip->payment_method =  $trip->payment_method ?? 'cash_payment';
+            $trip->transaction_reference =  $trip?->transaction_reference;
             $trip->payment_status = $status;
             $trip->save();
 
             if ($trip->trip_status == 'completed' && $trip->payment_status == 'paid' && !$trip->trip_transaction) {
-                if ($this->create_transaction($trip, 'vendor') === false) {
+                if ($this->create_transaction($trip, 'admin') === false) {
                     DB::rollBack();
 
                     Toastr::error(translate('messages.Failed_to_create_Transaction'));
@@ -481,16 +483,49 @@ class TripController extends Controller
             $trip->rental_type === 'hourly' ? $estimatedHours : ($request->destination_time ?? $trip->destination_time)
         );
 
-        $vehicleQuantities = $request->update_quantity ?? [];
         $modifiedPrices = $request->update_price ?? [];
 
+        $vehicleQuantities = $request->update_quantity ?? [];
+
         foreach ($vehicleQuantities as $vehicle_id => $quantity) {
+
             if (isset($modifiedPrices[$vehicle_id])) {
                 $cleanPrice = (float) str_replace([',', '$'], '', $modifiedPrices[$vehicle_id]);
 
                 $modifiedPrices[$vehicle_id] = $cleanPrice;
             }
         }
+
+
+
+
+        // $se_modifiedPrices = session()->get('modifiedPrices',[]);
+        // if ($quantity) {
+        //     $vehicleQuantities[$vehicleId] = $quantity;
+        //     foreach ($vehicleQuantities as $key => $value) {
+        //         if (array_key_exists($key, $se_modifiedPrices) && $key == $vehicleId) {
+        //             unset($se_modifiedPrices[$key]);
+        //             session()->put('modifiedPrices', $se_modifiedPrices);
+        //             session()->save();
+        //         }
+        //     }
+        //     session()->put('vehicleQuantities', $vehicleQuantities);
+        //     session()->save();
+        // }
+
+        // if ($modifiedPrices) {
+        //     $se_modifiedPrices[$vehicleId] = $processedValue;
+        //     session()->put('modifiedPrices', $se_modifiedPrices);
+        //     session()->save();
+        // }
+
+        // $modifiedPrices = session()->get('modifiedPrices')?? [];
+        // $vehicleQuantities = session()->get('vehicleQuantities')?? [];
+
+
+
+
+
 
         $data = [
             'destinationLocation' => $destinationLocation,
@@ -504,7 +539,7 @@ class TripController extends Controller
             'modifiedPrices' => $modifiedPrices,
             'taxPercentage' => $trip?->provider?->tax,
         ];
-
+// info($data);
 
         $this->getUpdatedTrip($request, $trip, $data);
 

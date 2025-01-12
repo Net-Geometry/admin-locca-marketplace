@@ -17,6 +17,7 @@ class TripVehicleDetails extends Model
         'trip_details_id' => 'integer',
         'vehicle_identity_id' => 'integer',
         'vehicle_driver_id' => 'integer',
+        'avg_rating' => 'float',
     ];
 
     /**

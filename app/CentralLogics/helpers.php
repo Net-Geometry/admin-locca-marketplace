@@ -811,8 +811,8 @@ class Helpers
                 $item['halal_tag_status'] =   (bool) $item?->storeConfig?->halal_tag_status;
                 $extra_packaging_data = \App\Models\BusinessSetting::where('key', 'extra_packaging_data')->first()?->value ?? '';
                 $extra_packaging_data =json_decode($extra_packaging_data , true);
-                $item['extra_packaging_status'] =   (bool) (!empty($extra_packaging_data) && $extra_packaging_data[$item->module->module_type]=='1')?$item?->storeConfig?->extra_packaging_status:false;
-                $item['extra_packaging_amount'] =   (float) (!empty($extra_packaging_data) && ($extra_packaging_data[$item->module->module_type]=='1') && ($item?->storeConfig?->extra_packaging_status == '1'))?$item?->storeConfig?->extra_packaging_amount:0;
+                $item['extra_packaging_status'] =   (bool) (!empty($extra_packaging_data) && data_get($extra_packaging_data,$item->module->module_type)=='1')?$item?->storeConfig?->extra_packaging_status:false;
+                $item['extra_packaging_amount'] =   (float) (!empty($extra_packaging_data) && (data_get($extra_packaging_data,$item->module->module_type)=='1') && ($item?->storeConfig?->extra_packaging_status == '1'))?$item?->storeConfig?->extra_packaging_amount:0;
                 if($item->storeConfig && $item->storeConfig->is_recommended_deleted == 0 ){
                     $item['is_recommended'] = $item->storeConfig->is_recommended;
                 }
