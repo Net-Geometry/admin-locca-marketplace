@@ -30,6 +30,7 @@ use Modules\Rental\Entities\PartialPayment;
 use MatanYadaev\EloquentSpatial\Objects\Point;
 use Modules\Rental\Emails\TripBooking;
 use Modules\Rental\Entities\RentalCartUserData;
+use Modules\Rental\Entities\VehicleReview;
 use Modules\Rental\Traits\RentalPushNotification;
 
 class TripController extends Controller
@@ -546,13 +547,18 @@ class TripController extends Controller
                     ->toArray();
                     unset($detail->tripVehicleDetails);
                 });
+                
             $trip->vehicle_identity->each(function ($identity) {
+                $review=null;
                 $identity->license_plate_number = $identity?->vehicle_identity_data?->license_plate_number;
                 $identity->vehicle_name = $identity?->vehicles?->name;
                 $identity->vehicle_thumbnail= $identity?->vehicles?->thumbnail_full_url;
-                    unset($detail->vehicles);
+                $review=  VehicleReview::where(['vehicle_identity_id'=> $identity->vehicle_identity_data->id ,'trip_id' => $identity->trip_id])->first();
+                    $identity->rating = $review?->rating;
+                    $identity->comment = $review?->comment;
+                    $identity->reply = $review?->reply;
+                    $identity->replied_at = $review?->replied_at;
                 });
-
 
             $ratings = StoreLogic::calculate_store_rating($trip['provider']['rating']);
             $trip['provider']['avg_rating'] =$ratings['rating'];
