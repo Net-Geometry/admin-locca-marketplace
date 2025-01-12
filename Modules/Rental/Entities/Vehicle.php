@@ -30,6 +30,7 @@ class Vehicle extends Model
         'brand_id' => 'integer',
         'category_id' => 'integer',
         'hourly_price' => 'float',
+        'avg_rating' => 'float',
         'distance_price' => 'float',
         'discount_price' => 'float',
         'total_trip' => 'integer',

@@ -31,6 +31,7 @@ class TripTransaction extends Model
         'ref_bonus_amount' => 'float',
         'commission_percentage' => 'float',
         'is_subscribed' => 'integer',
+        'avg_rating' => 'float',
     ];
 
 

@@ -35,6 +35,7 @@
             <div class="card-header justify-content-between gap-3 py-2 flex-wrap">
                 <form action="" method="get" class="search-form flex-grow-1 max-w-450px">
                     <!-- Search -->
+                    <input type="hidden" value="{{request()?->status  }}" name="status" >
                     <div class="input-group input--group">
                         <input id="datatableSearch_" type="search" value="{{ request()?->search ?? null }}"
                                name="search" class="form-control"

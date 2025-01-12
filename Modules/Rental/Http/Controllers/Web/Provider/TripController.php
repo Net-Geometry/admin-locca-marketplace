@@ -50,6 +50,9 @@ class TripController extends Controller
             ->when($status == 'scheduled', function ($query) {
                 return $query->scheduled();
             })
+            ->when($status == 'instant', function ($query) {
+                return $query->instant();
+            })
             ->when($status == 'pending', function ($query) {
                 return $query->Pending();
             })
@@ -175,7 +178,8 @@ class TripController extends Controller
                 Toastr::success(translate('messages.trip_not_found'));
                 return back();
             }
-
+            $trip->payment_method =  $trip->payment_method ?? 'cash_payment';
+            $trip->transaction_reference =  $trip?->transaction_reference;
             $trip->payment_status = $status;
             $trip->save();
 
