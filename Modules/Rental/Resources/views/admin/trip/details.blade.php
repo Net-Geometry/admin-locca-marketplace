@@ -1107,12 +1107,12 @@
                 const providerMarker = new google.maps.Marker({
                     position: providerLocation,
                     map: map,
-                    title: "Provider Location",
+                    title: "{{ Str::limit($trip?->provider?->name, 15, '...') }}",
                     icon: "{{ asset('public/assets/admin/img/icons/pickup.svg') }}",
                 });
 
                 google.maps.event.addListener(providerMarker, "click", function() {
-                    infowindow.setContent('<div class="fs-12 font-medium">Provider Location</div>');
+                    infowindow.setContent("<div style='float:left'><img style='max-height:40px;wide:auto;' src='{{ $trip?->provider?->logo_full_url ?? asset('public/assets/admin/img/100x100/1.png') }}'></div> <div style='float:right; padding: 10px;'><b>{{ Str::limit($trip?->provider?->name, 15, '...') }}</b><br /> {{ $trip?->provider?->address }}</div>");
                     infowindow.open(map, providerMarker);
                 });
             }

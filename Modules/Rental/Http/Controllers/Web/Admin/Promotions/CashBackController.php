@@ -55,6 +55,7 @@ class CashBackController extends Controller
      */
      public function store(Request $request): RedirectResponse
      {
+         dd($request->all());
          $request->validate([
              'title' => 'required',
              'cashback_type' => 'required|string',

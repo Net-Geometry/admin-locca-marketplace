@@ -263,7 +263,7 @@
                                             <option value="affordable" {{ $vehicle->type == 'affordable' ? 'selected' : '' }}>{{ translate('messages.Affordable') }}</option>
                                             <option value="executives" {{ $vehicle->type == 'executives' ? 'selected' : '' }}>{{ translate('messages.Executives') }}</option>
                                             <option value="compact" {{ $vehicle->type == 'compact' ? 'selected' : '' }}>{{ translate('messages.Compact') }}</option>
-                                            <option value="full-size" {{ $vehicle->type == 'full-size' ? 'selected' : '' }}>{{ translate('messages.Full-Size') }}</option>
+                                            <option value="full_size" {{ $vehicle->type == 'full_size' ? 'selected' : '' }}>{{ translate('messages.Full-Size') }}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -334,7 +334,7 @@
                                             <option value="CNG" {{ $vehicle->fuel_type == 'CNG' ? 'selected' : '' }}>{{ translate('messages.CNG') }}</option>
                                             <option value="petrol" {{ $vehicle->fuel_type == 'petrol' ? 'selected' : '' }}>{{ translate('messages.Petrol') }}</option>
                                             <option value="electric" {{ $vehicle->fuel_type == 'electric' ? 'selected' : '' }}>{{ translate('messages.Electric') }}</option>
-                                            <option value="jet-fuel" {{ $vehicle->fuel_type == 'jet-fuel' ? 'selected' : '' }}>{{ translate('messages.Jet Fuel') }}</option>
+                                            <option value="jet_fuel" {{ $vehicle->fuel_type == 'jet_fuel' ? 'selected' : '' }}>{{ translate('messages.Jet Fuel') }}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -350,9 +350,9 @@
                                                 {{ translate('messages.select_vehicle_transmission') }}</option>
                                             <option value="automatic" {{ $vehicle->transmission_type == 'automatic' ? 'selected' : '' }}>{{ translate('Automatic') }}</option>
                                             <option value="manual" {{ $vehicle->transmission_type == 'manual' ? 'selected' : '' }}>{{ translate('Manual') }}</option>
-                                            <option value="continuously-variable" {{ $vehicle->transmission_type == 'continuously-variable' ? 'selected' : '' }}>{{ translate('Continuously Variable') }}</option>
-                                            <option value="dual-clutch" {{ $vehicle->transmission_type == 'dual-clutch' ? 'selected' : '' }}>{{ translate('Dual-Clutch') }}</option>
-                                            <option value="semi-automatic" {{ $vehicle->transmission_type == 'semi-automatic' ? 'selected' : '' }}>{{ translate('Semi-Automatic') }}</option>
+                                            <option value="continuously_variable" {{ $vehicle->transmission_type == 'continuously_variable' ? 'selected' : '' }}>{{ translate('Continuously Variable') }}</option>
+                                            <option value="dual_clutch" {{ $vehicle->transmission_type == 'dual_clutch' ? 'selected' : '' }}>{{ translate('Dual-Clutch') }}</option>
+                                            <option value="semi_automatic" {{ $vehicle->transmission_type == 'semi_automatic' ? 'selected' : '' }}>{{ translate('Semi-Automatic') }}</option>
                                         </select>
                                     </div>
                                 </div>

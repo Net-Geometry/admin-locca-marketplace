@@ -262,7 +262,7 @@
                                             <option value="affordable">{{ translate('messages.Affordable') }}</option>
                                             <option value="executives">{{ translate('messages.Executives') }}</option>
                                             <option value="compact">{{ translate('messages.Compact') }}</option>
-                                            <option value="full-size">{{ translate('messages.Full-Size') }}</option>
+                                            <option value="full_size">{{ translate('messages.Full-Size') }}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -332,7 +332,7 @@
                                             <option value="CNG" >{{ translate('messages.CNG') }}</option>
                                             <option value="petrol" >{{ translate('messages.Petrol') }}</option>
                                             <option value="electric" >{{ translate('messages.Electric') }}</option>
-                                            <option value="jet-fuel" >{{ translate('messages.Jet Fuel') }}</option>
+                                            <option value="jet_fuel" >{{ translate('messages.Jet Fuel') }}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -348,9 +348,9 @@
                                                 {{ translate('messages.select_vehicle_transmission') }}</option>
                                             <option value="automatic">{{ translate('Automatic') }}</option>
                                             <option value="manual">{{ translate('Manual') }}</option>
-                                            <option value="continuously-variable">{{ translate('Continuously Variable') }}</option>
-                                            <option value="dual-clutch">{{ translate('Dual-Clutch') }}</option>
-                                            <option value="semi-automatic">{{ translate('Semi-Automatic') }}</option>
+                                            <option value="continuously_variable">{{ translate('Continuously Variable') }}</option>
+                                            <option value="dual_clutch">{{ translate('Dual-Clutch') }}</option>
+                                            <option value="semi_automatic">{{ translate('Semi-Automatic') }}</option>
                                         </select>
                                     </div>
                                 </div>
@@ -442,7 +442,7 @@
                                                for="">{{ translate('messages.Hourly Wise Price ($)') }}
                                         </label>
                                         <input type="number" name="hourly_price" class="form-control"
-                                               placeholder="Ex: 35.25" value="">
+                                               placeholder="Ex: 35.25" value=""  min="0" step="0.001">
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
@@ -451,7 +451,7 @@
                                                for="">{{ translate('messages.Distance Wise Price ($)') }}
                                         </label>
                                         <input type="number" name="distance_price" class="form-control"
-                                               placeholder="Ex: 35.25" value="">
+                                               placeholder="Ex: 35.25" value=""  min="0" step="0.001">
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
@@ -466,7 +466,7 @@
                                             <div class="flex-sm-grow-1">
                                                 <input id="min" type="number" name="discount_price"
                                                        class="form-control h--45px border-0 pl-unset"
-                                                       placeholder="{{ translate('messages.Ex: 10') }} 20">
+                                                       placeholder="{{ translate('messages.Ex: 10') }} 20"  min="0" step="0.001">
                                             </div>
                                             <div class="flex-shrink-0">
                                                 <select name="discount_type" id="" class="custom-select ltr border-0">

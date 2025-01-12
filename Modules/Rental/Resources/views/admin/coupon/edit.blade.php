@@ -224,7 +224,7 @@
 
             $('.js-data-example-ajax').select2({
                 ajax: {
-                    url: '{{url('/')}}/admin/store/get-stores',
+                    url: '{{url('/')}}/admin/store/get-providers',
                     data: function (params) {
                         return {
                             q: params.term, // search term

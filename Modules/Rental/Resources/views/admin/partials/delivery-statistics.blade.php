@@ -1,6 +1,6 @@
 <div class="row g-4" id="order_stats">
     <div class="col-lg-3">
-        <a class="__card-1 bg-E6F6EE h-100" href="javascript:">
+        <a class="__card-1 bg-E6F6EE h-100" href="{{ route('admin.rental.trip.list') }}?status=all">
             <img src="{{ asset('/public/assets/admin/img/report/new/total.png') }}" class="icon"
                  alt="report/new">
             <h3 class="title text-success">{{ $totalCount }}</h3>
@@ -11,7 +11,7 @@
         <div class="row g-2">
             <div class="col-sm-6">
                 <!-- Card -->
-                <a class="resturant-card dashboard--card __dashboard-card card--bg-1" href="javascript:">
+                <a class="resturant-card dashboard--card __dashboard-card card--bg-1" href="{{ route('admin.rental.trip.list') }}?status=pending">
                         <span class="meter">
                             <span style="height:50%"></span>
                         </span>
@@ -24,7 +24,7 @@
             </div>
             <div class="col-sm-6">
                 <!-- Card -->
-                <a class="resturant-card dashboard--card __dashboard-card card--bg-2" href="javascript:">
+                <a class="resturant-card dashboard--card __dashboard-card card--bg-2" href="{{ route('admin.rental.trip.list') }}?status=ongoing">
                         <span class="meter">
                             <span style="height:50%"></span>
                         </span>
@@ -38,7 +38,7 @@
             </div>
             <div class="col-sm-6">
                 <!-- Card -->
-                <a class="resturant-card dashboard--card __dashboard-card bg-F1E8FA" href="javascript:">
+                <a class="resturant-card dashboard--card __dashboard-card bg-F1E8FA" href="{{ route('admin.rental.trip.list') }}?status=completed">
                         <span class="meter">
                             <span style="height:70%"></span>
                         </span>
@@ -52,7 +52,7 @@
             </div>
             <div class="col-sm-6">
                 <!-- Card -->
-                <a class="resturant-card dashboard--card __dashboard-card card--bg-4" href="javascript:">
+                <a class="resturant-card dashboard--card __dashboard-card card--bg-4" href="{{ route('admin.rental.trip.list') }}?status=canceled">
                         <span class="meter">
                             <span style="height:60%"></span>
                         </span>

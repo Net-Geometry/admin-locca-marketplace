@@ -1,4 +1,4 @@
-@extends('layouts.vendor.print')
+@extends('layouts.admin.print')
 
 @section('title','')
 
