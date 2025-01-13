@@ -1,6 +1,6 @@
 @extends('layouts.admin.app')
 
-@section('title', translate('messages.Provider Details - update Vehicle'))
+@section('title', translate('messages.update Vehicle'))
 
 @push('css_or_js')
     <style>
@@ -412,28 +412,28 @@
                             </label>
                         </div>
                         <div class="card-body d-flex flex-column gap-20px">
-                            @if($vehicle->multiple_vehicles == 1)
-                                @foreach($vehicle->vehicleIdentities as $multi)
-                                    <div class="d-flex gap-20px flex-column flex-md-row equal-width">
-                                        <div class="form-group mb-0">
-                                            <label class="input-label"
-                                                   for="">{{ translate('messages.VIN Number') }}</label>
-                                            <input type="text" name="vehicle[vin_number][]" class="form-control"
-                                                   placeholder="Type your business name" value="{{ $multi->vin_number }}">
-                                        </div>
-                                        <div class="form-group mb-0">
-                                            <label class="input-label"
-                                                   for="">{{ translate('messages.License Plate Number') }}</label>
-                                            <input type="text" name="vehicle[license_plate_number][]" class="form-control"
-                                                   placeholder="Type your license plate number" value="{{ $multi->license_plate_number }}">
-                                        </div>
+                            @foreach($vehicle->vehicleIdentities as $index => $multi)
+                                <div class="d-flex gap-20px flex-column flex-md-row equal-width {{$index > 0 ? 'new-added' : ''}}">
+                                    <div class="form-group mb-0">
+                                        <label class="input-label"
+                                               for="">{{ translate('messages.VIN Number') }}</label>
+                                        <input type="text" name="vehicle[vin_number][]" class="form-control"
+                                               placeholder="Type your business name" value="{{ $multi->vin_number }}">
+                                    </div>
+                                    <div class="form-group mb-0">
+                                        <label class="input-label"
+                                               for="">{{ translate('messages.License Plate Number') }}</label>
+                                        <input type="text" name="vehicle[license_plate_number][]" class="form-control"
+                                               placeholder="Type your license plate number" value="{{ $multi->license_plate_number }}">
+                                    </div>
+                                    @if($index > 0)
                                         <button type="button"
                                                 class="btn plus-btn shadow-none p-0 fs-32 lh--1 text-left mt-md-4 remove-btn text--danger">
                                             <i class="tio-clear-circle-outlined"></i>
                                         </button>
-                                    </div>
-                                @endforeach
-                            @endif
+                                    @endif
+                                </div>
+                            @endforeach
                             <div class="d--flex gap-20px flex-column flex-md-row equal-width multiple-vehicles" id="input-container">
                                 <div class="form-group mb-0">
                                     <label class="input-label"
@@ -1174,12 +1174,12 @@
                 } else {
                     $('.multiple-vehicles').addClass('d-none').removeClass('d-flex');
                     $('.add-btn').hide();
-                    $('.equal-width').not('#input-container').remove();
+                    $('.new-added').not('#input-container').remove();
                 }
             }
 
             $(document).on('click', '.add-btn', function () {
-                let newDiv = $('<div class="d-flex gap-20px flex-column flex-md-row equal-width">\
+                let newDiv = $('<div class="d-flex gap-20px flex-column flex-md-row equal-width new-added">\
                     <div class="form-group mb-0">\
                         <label class="input-label" for="">{{ translate("messages.VIN Number") }}</label>\
                         <input type="text" name="vehicle[vin_number][]" class="form-control" placeholder="Type your VIN number" value="">\
@@ -1199,11 +1199,6 @@
             $(document).on('click', '.remove-btn', function () {
                 $(this).closest('.equal-width').remove();
             });
-
-            if ($('input[name="multiple_vehicles"]').is(':checked')) {
-                $('.multiple-vehicles').removeClass('d-none').addClass('d-flex');
-                $('.add-btn').show();
-            }
         });
 
 

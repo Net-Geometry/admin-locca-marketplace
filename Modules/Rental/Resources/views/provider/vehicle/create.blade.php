@@ -373,7 +373,7 @@
                                 <span class="text--title">
                                     {{ translate('messages.Same Model Multiple Vehicles') }}
                                 </span>
-                                <input class="form-check-input single-select position-relative m-0" type="checkbox" name="multiple_vehicles" checked>
+                                <input class="form-check-input single-select position-relative m-0" type="checkbox" name="multiple_vehicles">
                             </label>
                         </div>
                         <div class="card-body d-flex flex-column gap-20px">
@@ -382,13 +382,13 @@
                                     <label class="input-label"
                                            for="">{{ translate('messages.VIN Number') }}</label>
                                     <input type="text" name="vehicle[vin_number][]" class="form-control"
-                                           placeholder="Type your business name" value="">
+                                           placeholder="Type your business name" value="" required>
                                 </div>
                                 <div class="form-group mb-0">
                                     <label class="input-label"
                                            for="">{{ translate('messages.License Plate Number') }}</label>
                                     <input type="text" name="vehicle[license_plate_number][]" class="form-control"
-                                           placeholder="Type your license plate number" value="">
+                                           placeholder="Type your license plate number" value="" required>
                                 </div>
                                 <button type="button"
                                         class="btn plus-btn shadow-none text--primary p-0 fs-32 lh--1 text-left mt-md-4 add-btn">
@@ -867,7 +867,7 @@
 
     <script>
         "use strict";
-
+        toggleButton();
         $('input[name="multiple_vehicles"]').change(function () {
             toggleButton();
             if (!$(this).is(':checked')) {
