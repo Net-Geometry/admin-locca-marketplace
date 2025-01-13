@@ -113,10 +113,11 @@
                                         <span>{{translate('Payment method')}}</span> <span>:</span>
                                         <span class="font-semibold">{{ translate($trip->payment_method ?? 'cash payment') }}</span>
                                     </h6>
-                                    {{-- <h6>
-                                        <span>{{translate('Reference Code')}} </span> <span>:</span>
-                                        <span class="font-semibold">{{ $trip->transaction_reference }}</span>
-                                    </h6> --}}
+                                    @if ($trip->edited)
+                                    <span class="badge badge--pending ml-2 ml-sm-3 text-capitalize">
+                                        {{ translate('messages.edited') }}
+                                    </span>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -240,14 +241,15 @@
                                                 </div>
                                             @endif
                                         </td>
+
                                         <td>
                                             <div class="fs-14 text--title">
-                                                {{ \App\CentralLogics\Helpers::format_currency($detail->price) }}
+                                                {{ \App\CentralLogics\Helpers::format_currency($detail->rental_type == 'hourly' ? $detail->vehicle_details['hourly_price'] : $detail->vehicle_details['distance_price']) }}
                                                 {{ translate($detail->rental_type) }}
                                             </div>
                                         </td>
                                         <td>
-                                            <div class="fs-14 text--title font-bold">
+                                            <div class="fs-14  text--title font-bold">
                                                 {{ $detail->quantity }}
                                             </div>
                                         </td>
@@ -258,12 +260,12 @@
                                         </td>
                                         <td class="text-right">
                                             <div class="fs-14 text--title">
-                                                {{ \App\CentralLogics\Helpers::format_currency($detail->price * $detail->quantity) }}
+                                                {{ \App\CentralLogics\Helpers::format_currency($detail->calculated_price) }}
                                             </div>
                                         </td>
                                     </tr>
                                     @php
-                                        $subtotal += $detail->price * $detail->quantity;
+                                        $subtotal += $detail->calculated_price;
                                     @endphp
                                 @endforeach
                                 <!-- End Media -->
@@ -654,7 +656,7 @@
                                                             data-placeholder="{{ translate('messages.select_vehicle_transmission') }}"
                                                             id="driver_{{ $vehicleDetails->id }}">
                                                         <option value="" selected disabled>
-                                                            <span class="fs-12 text--title">Select Vendors</span>
+                                                            <span class="fs-12 text--title">{{ translate('Select Vendors') }}</span>
                                                         </option>
                                                         @foreach($trip->provider->vehicleDriver as $providerDriver)
                                                             <option value="{{ $providerDriver->id }}"
@@ -913,7 +915,7 @@
                                             <td>
                                                 <div class="fs-14 eta_amount text--title">
 
-                                                    {{ \App\CentralLogics\Helpers::format_currency($editDetail->price) }}
+                                                    {{ \App\CentralLogics\Helpers::format_currency($editDetail->rental_type == 'hourly' ? $editDetail->vehicle_details['hourly_price'] : $editDetail->vehicle_details['distance_price']) }}
                                                     {{ $editDetail->rental_type }}
                                                 </div>
                                             </td>
@@ -930,7 +932,7 @@
                                             </td>
                                             <td class="text-right">
                                                 <div class="d-flex flex-column gap-1 align-items-end">
-                                                    <span class="eta_amount_mt d-none "> {{ translate('*EST_Fare:') }}
+                                                    <span class="eta_amount_mt d-none "> {{ translate('*System_EST_Fare:') }}
                                                         <small class="fare-old-value text--warning"> </small>
                                                     </span>
                                                     <input type="text" name="price" min="1" max="999999999"
@@ -940,13 +942,13 @@
                                                            data-vehicle_id="{{ $editDetail->vehicle_id }}"
                                                            data-old-value="{{ $editDetail->price }}"
                                                            data-quantity="{{ $editDetail->quantity }}"
-                                                           value="{{ \App\CentralLogics\Helpers::format_currency($editDetail->price * $editDetail->quantity) }}"
+                                                           value="{{ \App\CentralLogics\Helpers::format_currency($editDetail->calculated_price) }}"
                                                            placeholder="fare">
                                                 </div>
                                             </td>
                                         </tr>
                                             @php
-                                            $subtotal += $editDetail->price * $editDetail->quantity;
+                                            $subtotal += $editDetail->calculated_price;
                                             @endphp
                                         @endforeach
                                         <!-- End Media -->
@@ -1613,7 +1615,7 @@
 
         $(document).on('input', '.fare-total', function () {
             let currentFare = $(this).val();
-            let quantity = $('.quantity-input').val();
+            // let quantity = $('.quantity-input').val();
             let row = $(this).closest('tr');
             let oldValue = $(this).data('old-value');
             let oldQuantity = $(this).data('quantity');
@@ -1668,11 +1670,11 @@
             $('.total_fare').text(formatCurrency(subtotal));
             $('.subtotal').text(formatCurrency(subtotal));
             $('.grand-total').text(formatCurrency(response.grandTotal));
-            $('.coupon_discount_amount').text(formatCurrency(response.couponDiscount));
-            $('.discount_amount').text(formatCurrency(response.discount));
-            $('.tax_amount').text(formatCurrency(response.taxAmount));
-            $('.ref_bonus_amount').text(formatCurrency(response.refBonus));
-            $('.additional_charge').text(formatCurrency(response.additionalCharge));
+            $('.coupon_discount_amount').text( '-'+ formatCurrency(response.couponDiscount));
+            $('.discount_amount').text('-'+ formatCurrency(response.discount));
+            $('.tax_amount').text("{{ \App\Models\BusinessSetting::where(['key'=>'tax_included'])->first()->value ?  '': '+' }}"+ formatCurrency(response.taxAmount));
+            $('.ref_bonus_amount').text( '-'+ formatCurrency(response.refBonus));
+            $('.additional_charge').text('+'+ formatCurrency(response.additionalCharge));
         }
 
         function formatCurrency(value) {

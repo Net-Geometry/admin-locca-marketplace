@@ -7022,4 +7022,5 @@ Smartly or Earn. ',
   'The minimum pickup time field is required.' => 'The minimum pickup time field is required.',
   'The maximum pickup time field is required.' => 'The maximum pickup time field is required.',
   'driver_updated_successfully.' => 'Driver updated successfully.',
+  '*System_EST_Fare:' => '*System EST Fare:',
 );

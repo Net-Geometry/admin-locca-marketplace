@@ -24,6 +24,7 @@ class TripDetails extends Model
         'tax_amount' => 'float',
         'estimated_hours' => 'float',
         'distance' => 'float',
+        'calculated_price' => 'float',
     ];
 
     public function getVehicleDetailsAttribute($value)

@@ -487,41 +487,8 @@ class TripController extends Controller
 
         $vehicleQuantities = $request->update_quantity ?? [];
 
-        foreach ($vehicleQuantities as $vehicle_id => $quantity) {
-
-            if (isset($modifiedPrices[$vehicle_id])) {
-                $cleanPrice = (float) str_replace([',', '$'], '', $modifiedPrices[$vehicle_id]);
-
-                $modifiedPrices[$vehicle_id] = $cleanPrice;
-            }
-        }
-
-
-
-
-        // $se_modifiedPrices = session()->get('modifiedPrices',[]);
-        // if ($quantity) {
-        //     $vehicleQuantities[$vehicleId] = $quantity;
-        //     foreach ($vehicleQuantities as $key => $value) {
-        //         if (array_key_exists($key, $se_modifiedPrices) && $key == $vehicleId) {
-        //             unset($se_modifiedPrices[$key]);
-        //             session()->put('modifiedPrices', $se_modifiedPrices);
-        //             session()->save();
-        //         }
-        //     }
-        //     session()->put('vehicleQuantities', $vehicleQuantities);
-        //     session()->save();
-        // }
-
-        // if ($modifiedPrices) {
-        //     $se_modifiedPrices[$vehicleId] = $processedValue;
-        //     session()->put('modifiedPrices', $se_modifiedPrices);
-        //     session()->save();
-        // }
-
-        // $modifiedPrices = session()->get('modifiedPrices')?? [];
-        // $vehicleQuantities = session()->get('vehicleQuantities')?? [];
-
+        $modifiedPrices = session()->get('modifiedPrices')?? [];
+        $vehicleQuantities = session()->get('vehicleQuantities')?? [];
 
 
 
@@ -539,7 +506,8 @@ class TripController extends Controller
             'modifiedPrices' => $modifiedPrices,
             'taxPercentage' => $trip?->provider?->tax,
         ];
-// info($data);
+info($modifiedPrices);
+info($vehicleQuantities);
 
         $this->getUpdatedTrip($request, $trip, $data);
 
