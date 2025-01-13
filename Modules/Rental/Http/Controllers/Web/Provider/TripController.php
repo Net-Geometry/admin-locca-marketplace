@@ -136,6 +136,13 @@ class TripController extends Controller
                 $trip->vehicle_identity()->delete();
             }
 
+            $totalVehicle = count($trip->assignedVehicle);
+
+            if (in_array($status, ['ongoing', 'completed']) && $totalVehicle <= 0) {
+                Toastr::error(translate('messages.at_first_assign_a_vehicle'));
+                return back();
+            }
+
             $trip->trip_status = $status;
             $trip->save();
 
