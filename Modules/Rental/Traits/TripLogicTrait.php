@@ -388,18 +388,28 @@ trait TripLogicTrait
             ? $tripDetail->vehicle->hourly_price * $estimatedHours
             : $tripDetail->vehicle->distance_price * $distance;
 
-        $price = $modifiedPrices[$tripDetail->vehicle_id] ?? $originalPrice;
+        $price = $modifiedPrices[$tripDetail->vehicle_id] ??
+        $tripDetail->originalPrice != $tripDetail->price ? $tripDetail->calculated_price : $originalPrice;
+
+// info($vehicleQuantities);
+// info($modifiedPrices);
+// info('-----------------');
+
         $discountData = self::getDiscount(
             price: $price,
             discount_type: $tripDetail->vehicle->discount_type,
             discount: $tripDetail->vehicle->discount_price
         );
 
+        $calculatedPrice = $price == $originalPrice ? $price * $quantity : $price;
+        $discountData['discount']=  $price == $originalPrice ?  $discountData['discount'] : 0;
+
         return [
             'quantity' => $quantity,
             'price' => round($price, config('round_up_to_digit')),
             'originalPrice' => round($originalPrice, config('round_up_to_digit')),
             'discount' => $discountData['discount'],
+            'calculatedPrice' => $calculatedPrice,
             'discountPercentage' => $tripDetail->vehicle->discount_type === 'amount' ? 0 : $tripDetail->vehicle->discount_price,
             'taxAmount' => round(
                 Helpers::product_tax($price - $discountData['discount'], $taxPercentage, self::taxIncluded()),
@@ -629,6 +639,7 @@ trait TripLogicTrait
             'quantity' => $pricingData['quantity'],
             'price' => $pricingData['price'],
             'original_price' => $pricingData['originalPrice'],
+            'calculated_price' => $pricingData['calculatedPrice'],
             'discount_on_trip' => $pricingData['discount'],
             'discount_percentage' => $pricingData['discountPercentage'],
             'tax_amount' => $pricingData['taxAmount'],

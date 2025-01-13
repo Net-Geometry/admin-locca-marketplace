@@ -7000,4 +7000,5 @@ Smartly or Earn. ',
   'some_thing_wrong.' => 'Some thing wrong.',
   'vehicle_created_successfully.' => 'Vehicle created successfully.',
   'vehicle_updated_successfully.' => 'Vehicle updated successfully.',
+  '*System_EST_Fare:' => '*System EST Fare:',
 );

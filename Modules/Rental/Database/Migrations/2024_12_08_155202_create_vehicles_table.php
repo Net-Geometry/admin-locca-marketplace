@@ -43,7 +43,7 @@ class CreateVehiclesTable extends Migration
             $table->boolean('status')->default(1);
             $table->boolean('new_tag')->default(1);
             $table->integer('total_trip')->default(0);
-            $table->string('avg_rating')->default(0.00);
+            $table->decimal('avg_rating')->default(0.00);
             $table->string('rating')->nullable();
             $table->integer('total_reviews')->default(0);
             $table->timestamps();
