@@ -940,7 +940,7 @@
                                                            class="form-control w--120px text-right fs-14 text--title fare-total"
                                                            data-id="{{ $editDetail->id }}"
                                                            data-vehicle_id="{{ $editDetail->vehicle_id }}"
-                                                           data-old-value="{{ $editDetail->price }}"
+                                                           data-old-value="{{ $editDetail->calculated_price }}"
                                                            data-quantity="{{ $editDetail->quantity }}"
                                                            value="{{ \App\CentralLogics\Helpers::format_currency($editDetail->calculated_price) }}"
                                                            placeholder="fare">
@@ -1013,10 +1013,8 @@
                     </div>
                     <div class="modal-footer border-0 flex-shrink-0 px-4">
                         <div class="btn--container justify-content-end">
-                            <button type="reset" id="reset_btn" data-dismiss="modal" aria-label="Close"
-                                    class="btn btn--warning-light min-w-120px">{{ translate('messages.cancel') }}</button>
-                            <button type="submit"
-                                    class="btn btn--primary min-w-120px">{{ translate('messages.update') }}</button>
+                            <button type="reset" id="reset_btn" data-dismiss="modal" aria-label="Close"  class="btn btn--warning-light min-w-120px">{{ translate('messages.cancel') }}</button>
+                            <button id="edit-trip" type="button"  class="btn btn--primary  min-w-120px">{{ translate('messages.update') }}</button>
                         </div>
                     </div>
                 </form>
@@ -1571,86 +1569,6 @@
     </script>
 {{--edit--}}
     <script>
-        $(document).on('input', '.quantity-input', function () {
-            let quantity = $(this).val();
-            let row = $(this).closest('tr');
-            let id = $(this).data('id');
-            let vehicleId = $(this).data('vehicle_id');
-            let max_quantity = $(this).data('max_quantity');
-            let max_original_quantity = $(this).data('max_original_quantity');
-            let distance = $('#distance-input').val();
-
-            if (quantity > max_quantity) {
-                toastr.warning(`You can select up to ${max_quantity} vehicles only.`, '', {
-                    closeButton: true,
-                    progressBar: true
-                });
-                $(this).val(max_original_quantity);
-                quantity = max_original_quantity;
-            }
-            $.ajax({
-                url: "{{ route('admin.rental.trip.get-calculation') }}",
-                type: 'get',
-                data: {
-                    id: id,
-                    distance: distance,
-                    vehicle_id: vehicleId,
-                    quantity: quantity,
-                    _token: "{{ csrf_token() }}"
-                },
-                success: function(response) {
-                    let totalFare = response.calculationSingleData;
-                    let formattedFare =  (totalFare * quantity).toFixed(2);
-                    row.find('.fare-total').val(formatCurrency(formattedFare));
-                    row.find('.fare-old-value').text(formatCurrency(formattedFare));
-                    row.find('.eta_amount').removeClass('d-none').addClass('mt-3');
-                    row.find('.eta_amount_mt').removeClass('d-none');
-                    updateOverallTotal(response);
-                },
-                error: function(xhr, status, error) {
-                    console.log('Error:', error);
-                }
-            });
-        });
-
-        $(document).on('input', '.fare-total', function () {
-            let currentFare = $(this).val();
-            // let quantity = $('.quantity-input').val();
-            let row = $(this).closest('tr');
-            let oldValue = $(this).data('old-value');
-            let oldQuantity = $(this).data('quantity');
-
-            let id = $(this).data('id');
-            let vehicleId = $(this).data('vehicle_id');
-            let distance = $('#distance-input').val();
-
-
-            $.ajax({
-                url: "{{ route('admin.rental.trip.get-calculation') }}",
-                type: 'get',
-                data: {
-                    id: id,
-                    distance: distance,
-
-                    vehicle_id: vehicleId,
-                    modified_prices: currentFare,
-                    _token: "{{ csrf_token() }}"
-                },
-                success: function(response) {
-
-                    let totalFare = response.calculationSingleData;
-                    let newQuantity = response.quantity;
-                    let formattedFare = (oldValue * oldQuantity).toFixed(2);
-                    let formattedTotalFare = (response.calculationSingleData).toFixed(2);
-                    row.find('.fare-total').val(formatCurrency(formattedTotalFare));
-                    updateOverallTotal(response);
-                },
-                error: function(xhr, status, error) {
-                    console.log('Error:', error);
-                }
-            });
-        });
-
         function updateOverallTotal(response) {
             let overallTotal = 0;
 
@@ -1661,8 +1579,7 @@
                 }
             });
 
-            let discount = parseFloat($('#coupon-discount').data('value')) || 0;
-            let tax = parseFloat($('#vat-tax').data('value')) || 0;
+
 
             let subtotal = response.subTotal;
             let grandTotal = response.grandTotal;
@@ -1681,45 +1598,115 @@
             return "{{ \App\CentralLogics\Helpers::currency_symbol() }}" + value;
         }
     </script>
-{{--//update--}}
+
     <script>
-        $(document).ready(function () {
-            $('#updateForm').on('submit', function (e) {
-                e.preventDefault();
 
-                const $form = $(this);
-                const $inputs = $form.find('.quantity-input');
-                const $prices = $form.find('.fare-total');
+    $(document).ready(function() {
 
-                $inputs.each(function () {
-                    const $input = $(this);
-                    const vehicleId = $input.data('vehicle_id');
-                    const value = $input.val();
+        $('#edit-trip').on('click', function () {
 
-                    const hiddenInput = $('<input>')
-                        .attr('type', 'hidden')
-                        .attr('name', `update_quantity[${vehicleId}]`)
-                        .val(value);
-
-                    $form.append(hiddenInput);
-                });
-
-                $prices.each(function () {
-                    const $price = $(this);
-                    const vehicleId = $price.data('vehicle_id');
-                    const value = $price.val();
-
-                    const hiddenInput = $('<input>')
-                        .attr('type', 'hidden')
-                        .attr('name', `update_price[${vehicleId}]`)
-                        .val(value);
-
-                    $form.append(hiddenInput);
-                });
-
-                this.submit();
-            });
+            updateCalculations(quantityUpdate = false,upadet_data= 1);
+            $('#edit-trip').attr("disabled", true);;
         });
+        let originalValues = {};
+        $('.quantity-input, .fare-total').each(function() {
+            const id = $(this).data('id');
+            originalValues[id] = {
+                quantity: $(this).data('max_original_quantity') || $(this).val(),
+                price: $(this).data('old-value') || $(this).val()
+            };
+        });
+
+        $('.quantity-input').on('input', function() {
+            const $this = $(this);
+            const maxQuantity = parseInt($this.data('max_quantity'));
+            const tripDetailId = $this.data('id');
+            const vehicleId = $this.data('vehicle_id');
+            let quantity = parseInt($this.val());
+
+            if (quantity > maxQuantity) {
+                quantity = maxQuantity;
+                $this.val(maxQuantity);
+                toastr.warning('Maximum available quantity is ' + maxQuantity);
+            }
+
+            updateCalculations(vehicleId,false);
+        });
+
+        $('.fare-total').on('input', function() {
+            const $this = $(this);
+            const tripDetailId = $this.data('id');
+            const vehicleId = $this.data('vehicle_id');
+            const originalPrice = parseFloat($this.data('old-value'));
+
+            const $fareOld = $this.closest('td').find('.fare-old-value');
+            $fareOld.text(originalPrice.toFixed(2));
+            $this.closest('td').find('.eta_amount_mt').removeClass('d-none');
+
+            updateCalculations(quantityUpdate = false,upadet_data= false);
+        });
+
+        $('#pickup-input, #destination-input').on('change', function() {
+            updateCalculations(quantityUpdate = false,upadet_data= false);
+        });
+
+        function updateCalculations(quantityUpdate = false,upadet_data= false) {
+            const formData = new FormData($('#updateForm')[0]);
+
+            formData.append('update', upadet_data);
+
+            $('.quantity-input').each(function() {
+                formData.append('quantityUpdate', quantityUpdate);
+                formData.append('quantities[]', $(this).val());
+                formData.append('trip_detail_ids[]', $(this).data('id'));
+                formData.append('vehicle_ids[]', $(this).data('vehicle_id'));
+            });
+
+            $('.fare-total').each(function() {
+                formData.append('prices[]', $(this).val().replace(/[^0-9.]/g, ''));
+            });
+
+            $.ajax({
+                url: '{{ route("admin.rental.trip.get-calculation") }}',
+                type: 'post',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+
+                    if (response.status === 'success') {
+                        updateOverallTotal(response);
+                        if (response.details) {
+                            response.details.forEach(detail => {
+                                $(`[data-id="${detail.id}"].fare-total`).val(detail.calculated_price);
+                            });
+                        }
+                    }
+                    else if(response.status === 'updated'){
+                        toastr.success(response.message);
+                        location.reload();
+                    }
+                    else {
+                        toastr.error(response.message || 'Calculation failed');
+                    }
+                },
+                error: function(xhr) {
+                    toastr.error('Failed to update calculations');
+                    console.error(xhr);
+                }
+            });
+    }
+
+    $('#reset_btn').on('click', function() {
+        Object.keys(originalValues).forEach(id => {
+            $(`.quantity-input[data-id="${id}"]`).val(originalValues[id].quantity);
+            $(`.fare-total[data-id="${id}"]`).val(originalValues[id].price);
+        });
+        $('.eta_amount_mt').addClass('d-none');
+        $('.fare-old-value').text('');
+    });
+});
+
 
     </script>
 @endpush

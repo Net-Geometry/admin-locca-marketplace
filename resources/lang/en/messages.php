@@ -7023,4 +7023,6 @@ Smartly or Earn. ',
   'The maximum pickup time field is required.' => 'The maximum pickup time field is required.',
   'driver_updated_successfully.' => 'Driver updated successfully.',
   '*System_EST_Fare:' => '*System EST Fare:',
+  'Select Vendors' => 'Select Vendors',
+  'The selected mode is invalid.' => 'The selected mode is invalid.',
 );

@@ -369,12 +369,28 @@ class ConfigController extends Controller
             'origin_lng' => 'required',
             'destination_lat' => 'required',
             'destination_lng' => 'required',
+            'mode' => 'nullable|in:driving,walking',
         ]);
 
         if ($validator->errors()->count() > 0) {
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
-        $response = Http::get('https://maps.googleapis.com/maps/api/distancematrix/json?origins=' . $request['origin_lat'] . ',' . $request['origin_lng'] . '&destinations=' . $request['destination_lat'] . ',' . $request['destination_lng'] . '&key=' . $this->map_api_key . '&mode=walking');
+        // $response = Http::get('https://maps.googleapis.com/maps/api/distancematrix/json?origins=' . $request['origin_lat'] . ',' . $request['origin_lng'] . '&destinations=' . $request['destination_lat'] . ',' . $request['destination_lng'] . '&key=' . $this->map_api_key . '&mode=walking');
+
+        $originLat = $request['origin_lat'] ?? null;
+        $originLng = $request['origin_lng'] ?? null;
+        $destinationLat = $request['destination_lat'] ?? null;
+        $destinationLng = $request['destination_lng'] ?? null;
+        $mode = $request['mode'] ?? 'walking';
+        $apiUrl = 'https://maps.googleapis.com/maps/api/distancematrix/json';
+        $queryParams = [
+            'origins' => "$originLat,$originLng",
+            'destinations' => "$destinationLat,$destinationLng",
+            'key' => $this->map_api_key,
+            'mode' => $mode
+        ];
+
+        $response = Http::get($apiUrl, $queryParams);
         return $response->json();
     }
 

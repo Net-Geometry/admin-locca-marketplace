@@ -320,8 +320,8 @@ trait TripLogicTrait
                 return ['errors' => translate('vehicle_is_deleted'), 'code' => 403];
             }
         }
-
-        foreach ($trip->trip_details as $tripDetail) {
+        $details=[];
+        foreach ($trip->trip_details as $key=> $tripDetail) {
             $tripDetailData = self::calculateTripDetailPricing(
                 $tripDetail,
                 $data['vehicleQuantities'],
@@ -329,31 +329,31 @@ trait TripLogicTrait
                 $data['estimatedHours'],
                 $data['distance'],
                 $trip->trip_type,
-                $providerTax
+                $providerTax,
+                $data['quantityUpdate']?? false,
             );
 
-            if (data_get($data['modifiedPrices'],$tripDetail->vehicle_id)){
-                $totalPrice += $tripDetailData['price'];
-                $discountOnTrip += $tripDetailData['discount'];
-            }else{
-                $totalPrice += $tripDetailData['price'] * $tripDetailData['quantity'];
-                $discountOnTrip += $tripDetailData['discount'] * $tripDetailData['quantity'];
-            }
+            $totalPrice += $tripDetailData['calculatedPrice'];
+            $discountOnTrip += $tripDetailData['discount'] * $tripDetailData['quantity'];
             $quantity += $tripDetailData['quantity'];
 
 
-
+            $details[$key]['id'] = $tripDetail->id;
+            $details[$key]['calculated_price'] = $tripDetailData['calculatedPrice'];
+            $details[$key]['quantity'] = $tripDetailData['quantity'];
+            $details[$key]['originalPrice'] = $tripDetailData['originalPrice'];
 
             if ($isUpdated) {
                 self::updateTripDetail($tripDetail, $tripDetailData, $data);
             }
+
         }
 
         $providerDiscount = self::applyProviderDiscount(
             $provider,
             $trip,
             $totalPrice,
-            $data['modifiedPrices']
+            $isUpdated
         );
 
         $finalPricing = self::calculateFinalPricing(
@@ -376,40 +376,43 @@ trait TripLogicTrait
             );
             return $trip;
         }else{
+            $finalPricing['details']=$details;
             return $finalPricing;
         }
 
     }
 
-    public static function calculateTripDetailPricing($tripDetail, $vehicleQuantities, $modifiedPrices, $estimatedHours, $distance, $rentalType, $taxPercentage): array
+    public static function calculateTripDetailPricing($tripDetail, $vehicleQuantities, $modifiedPrices, $estimatedHours, $distance, $rentalType, $taxPercentage,$quantityUpdate=false): array
     {
         $quantity = $vehicleQuantities[$tripDetail->vehicle_id] ?? $tripDetail->quantity;
         $originalPrice = $rentalType === 'hourly'
             ? $tripDetail->vehicle->hourly_price * $estimatedHours
             : $tripDetail->vehicle->distance_price * $distance;
 
-        $price = $modifiedPrices[$tripDetail->vehicle_id] ??
-        $tripDetail->originalPrice != $tripDetail->price ? $tripDetail->calculated_price : $originalPrice;
 
-// info($vehicleQuantities);
-// info($modifiedPrices);
-// info('-----------------');
+            $price = $modifiedPrices[$tripDetail->vehicle_id] ?? $originalPrice* $quantity;
+
+            $price = $tripDetail->vehicle_id ==  $quantityUpdate ? $originalPrice *$quantity : $price;
 
         $discountData = self::getDiscount(
-            price: $price,
+            price: $originalPrice,
             discount_type: $tripDetail->vehicle->discount_type,
             discount: $tripDetail->vehicle->discount_price
         );
 
-        $calculatedPrice = $price == $originalPrice ? $price * $quantity : $price;
-        $discountData['discount']=  $price == $originalPrice ?  $discountData['discount'] : 0;
+        $calculatedPrice = $price  == $originalPrice ? $originalPrice * $quantity : $price;
+
+
+
+
+        $discountData['discount']=  ($originalPrice * $quantity) == $price ?  $discountData['discount'] : 0;
 
         return [
             'quantity' => $quantity,
             'price' => round($price, config('round_up_to_digit')),
             'originalPrice' => round($originalPrice, config('round_up_to_digit')),
-            'discount' => $discountData['discount'],
             'calculatedPrice' => $calculatedPrice,
+            'discount' => $discountData['discount'],
             'discountPercentage' => $tripDetail->vehicle->discount_type === 'amount' ? 0 : $tripDetail->vehicle->discount_price,
             'taxAmount' => round(
                 Helpers::product_tax($price - $discountData['discount'], $taxPercentage, self::taxIncluded()),
@@ -553,7 +556,7 @@ trait TripLogicTrait
     }
 
 
-    public static function applyProviderDiscount($store, Trips $trip, float $totalPrice,): array
+    public static function applyProviderDiscount($store, Trips $trip, float $totalPrice, $isUpdated): array
     {
         $providerDiscount = Helpers::get_store_discount($store);
         if (!$providerDiscount) {
@@ -577,7 +580,9 @@ trait TripLogicTrait
             ];
         }
 
-        self::updateAdminDiscountAmount($trip, $totalPrice, $providerDiscount);
+        if($isUpdated){
+            self::updateAdminDiscountAmount($trip, $totalPrice, $providerDiscount);
+        }
 
         return [
             'discount' => $adminDiscount,
@@ -637,9 +642,18 @@ trait TripLogicTrait
     {
         $tripDetail->fill([
             'quantity' => $pricingData['quantity'],
-            'price' => $pricingData['price'],
+
+            'price' => $pricingData['originalPrice'] *$pricingData['quantity'] ,
+            // unit price * hour or distacne * quantity
+
+
             'original_price' => $pricingData['originalPrice'],
+            // unit price * hour or distacne
+
+
             'calculated_price' => $pricingData['calculatedPrice'],
+            //  unit price  * hour or distacne * quantity
+
             'discount_on_trip' => $pricingData['discount'],
             'discount_percentage' => $pricingData['discountPercentage'],
             'tax_amount' => $pricingData['taxAmount'],
