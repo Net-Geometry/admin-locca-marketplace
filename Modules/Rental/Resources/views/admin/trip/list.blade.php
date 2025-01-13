@@ -83,8 +83,11 @@
                         </div>
                     </div>
                     <!-- End Unfold -->
-                    <a href="#" class="text--title font-semibold"><i class="tio-filter-list"></i>
-                        {{ translate('messages.Filter') }}</a>
+                    <div class="hs-unfold mr-2">
+                        <a class="js-hs-unfold-invoker btn btn-sm btn-white h--40px filter-button-show" href="javascript:;">
+                            <i class="tio-filter-list mr-1"></i> {{ translate('messages.filter') }} <span class="badge badge-success badge-pill ml-1" id="filter_count"></span>
+                        </a>
+                    </div>
                 </div>
             </div>
             <!-- End Header -->
@@ -297,8 +300,165 @@
         </div>
         <!-- End Card -->
     </div>
+
+    <div id="datatableFilterSidebar" class="hs-unfold-content_ sidebar sidebar-bordered sidebar-box-shadow initial-hidden">
+        <div class="card card-lg sidebar-card sidebar-footer-fixed">
+            <div class="card-header">
+                <h4 class="card-header-title">{{translate('messages.order_filter')}}</h4>
+
+                <!-- Toggle Button -->
+                <a class="js-hs-unfold-invoker_ btn btn-icon btn-sm btn-ghost-dark ml-2 filter-button-hide" href="javascript:;">
+                    <i class="tio-clear tio-lg"></i>
+                </a>
+                <!-- End Toggle Button -->
+            </div>
+            @php
+                $filterCount = 0;
+                if(isset($zone_ids) && count($zone_ids) > 0) $filterCount += 1;
+                if(isset($provider_ids) && count($provider_ids)>0) $filterCount += 1;
+
+                if($status == 'all')
+                {
+                    if(isset($tripStatus) && count($tripStatus) > 0) $filterCount += 1;
+                    if(isset($scheduled) && $scheduled == 1) $filterCount += 1;
+                }
+
+                if(isset($from_date) && isset($to_date)) $filterCount += 1;
+                if(isset($order_type)) $filterCount += 1;
+            @endphp
+                <!-- Body -->
+            <form class="card-body sidebar-body sidebar-scrollbar" action="" method="get" id="order_filter_form">
+                <input type="hidden" name="status" value="{{ request()->status }}">
+                <small class="text-cap mb-3">{{translate('messages.zone')}}</small>
+
+                <div class="mb-2 initial--21">
+                    <select name="zone_ids[]" id="zone_ids" class="form-control js-select2-custom" multiple="multiple">
+                        @foreach(\App\Models\Zone::all() as $zone)
+                            <option value="{{$zone->id}}" {{isset($zone_ids)?(in_array($zone->id, $zone_ids)?'selected':''):''}}>{{$zone->name}}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <hr class="my-4">
+                <small class="text-cap mb-3">{{translate('messages.store')}}</small>
+                <div class="mb-2 initial--21">
+                    <select name="provider_ids[]" id="provider_ids" class="form-control js-select2-custom test-class" multiple="multiple">
+                        @foreach(\App\Models\Store::all() as $store)
+                            <option value="{{$store->id}}"
+                                    @if(isset($provider_ids) && in_array($store->id, $provider_ids))
+                                        selected
+                                    @endif>
+                                {{$store->name}}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+
+                <hr class="my-4">
+                @if($status == 'all')
+                    <small class="text-cap mb-3">{{translate('messages.order_status')}}</small>
+
+                    <!-- Custom Checkbox -->
+                    <div class="custom-control custom-radio mb-2">
+                        <input type="checkbox" id="orderStatus2" name="tripStatus[]" class="custom-control-input" value="pending" {{isset($tripStatus)?(in_array('pending', $tripStatus)?'checked':''):''}}>
+                        <label class="custom-control-label" for="orderStatus2">{{translate('messages.pending')}}</label>
+                    </div>
+                    <div class="custom-control custom-radio mb-2">
+                        <input type="checkbox" id="orderStatus1" name="tripStatus[]" class="custom-control-input" value="confirmed" {{isset($tripStatus)?(in_array('confirmed', $tripStatus)?'checked':''):''}}>
+                        <label class="custom-control-label" for="orderStatus1">{{translate('messages.confirmed')}}</label>
+                    </div>
+                    <div class="custom-control custom-radio mb-2">
+                        <input type="checkbox" id="orderStatus3" name="tripStatus[]" class="custom-control-input" value="ongoing" {{isset($tripStatus)?(in_array('ongoing', $tripStatus)?'checked':''):''}}>
+                        <label class="custom-control-label" for="orderStatus3">{{translate('messages.processing')}}</label>
+                    </div>
+                    <div class="custom-control custom-radio mb-2">
+                        <input type="checkbox" id="orderStatus5" name="tripStatus[]" class="custom-control-input" value="completed" {{isset($tripStatus)?(in_array('completed', $tripStatus)?'checked':''):''}}>
+                        <label class="custom-control-label" for="orderStatus5">{{translate('messages.delivered')}}</label>
+                    </div>
+                    <div class="custom-control custom-radio mb-2">
+                        <input type="checkbox" id="orderStatus8" name="tripStatus[]" class="custom-control-input" value="canceled" {{isset($tripStatus)?(in_array('canceled', $tripStatus)?'checked':''):''}}>
+                        <label class="custom-control-label" for="orderStatus8">{{translate('messages.canceled')}}</label>
+                    </div>
+                    <div class="custom-control custom-radio mb-2">
+                        <input type="checkbox" id="orderStatus7" name="tripStatus[]" class="custom-control-input" value="payment_failed" {{isset($tripStatus)?(in_array('payment_failed', $tripStatus)?'checked':''):''}}>
+                        <label class="custom-control-label" for="orderStatus7">{{translate('messages.failed')}}</label>
+                    </div>
+                @endif
+
+                <hr class="my-4">
+
+                <small class="text-cap mb-3">{{translate('messages.date_between')}}</small>
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group m-0">
+                            <input type="date" name="from_date" class="form-control" id="date_from" value="{{isset($from_date)?$from_date:''}}">
+                        </div>
+                    </div>
+                    <div class="col-12 text-center">----{{ translate('messages.to') }}----</div>
+                    <div class="col-12">
+                        <div class="form-group">
+                            <input type="date" name="to_date" class="form-control" id="date_to" value="{{isset($to_date)?$to_date:''}}">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="card-footer sidebar-footer">
+                    <div class="row gx-2">
+                        <div class="col">
+                            <button type="reset" class="btn btn-block btn-white" id="reset">{{ translate('Clear all filters') }}</button>
+                        </div>
+                        <div class="col">
+                            <button type="submit" class="btn btn-block btn-primary">{{ translate('messages.save') }}</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Footer -->
+            </form>
+        </div>
+    </div>
 @endsection
 
 
 @push('script_2')
+    <script src="{{asset('public/assets/admin')}}/js/view-pages/order-list.js"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            @if($filterCount > 0)
+                $('#filter_count').html({{$filterCount}});
+            @endif
+
+            $('#zone_ids').on('change', function () {
+                $('#provider_ids').val(null).trigger('change');
+                $('#provider_ids').trigger('change');
+            });
+
+            $('#provider_ids').select2({
+                ajax: {
+                    url: '{{url('/')}}/admin/store/get-providers',
+                    data: function (params) {
+                        return {
+                            q: params.term,
+                            zone_ids: $('#zone_ids').val(),
+                            page: params.page
+                        };
+                    },
+                    processResults: function (data) {
+                        return {
+                            results: data
+                        };
+                    }
+                }
+            });
+
+            $('#reset').on('click', function(){
+                location.href = '{{url('/')}}/admin/rental/trip?status=all';
+            });
+        });
+
+    </script>
 @endpush

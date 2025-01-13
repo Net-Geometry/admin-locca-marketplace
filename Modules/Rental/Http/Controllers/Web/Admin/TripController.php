@@ -71,12 +71,23 @@ class TripController extends Controller
             ->when($status == 'payment_failed', function ($query) {
                 return $query->PaymentFailed();
             })
-            ->when(isset($request->vendor), function ($query) use ($request) {
+            ->when(isset($request->provider_ids) && count($request->provider_ids) > 0, function ($query) use ($request) {
                 return $query->whereHas('provider', function ($query) use ($request) {
-                    return $query->whereIn('id', $request->vendor);
+                    return $query->whereIn('id', $request->provider_ids);
                 });
             })
-            ->when(isset($request->from_date) && isset($request->to_date) && $request->from_date != null && $request->to_date != null, function ($query) use ($request) {
+            ->when(isset($request->zone_ids) && count($request->zone_ids) > 0, function ($query) use ($request) {
+                return $query->whereHas('provider', function ($query) use ($request) {
+                    return $query->whereIn('zone_id', $request->zone_ids);
+                });
+            })
+            ->when(isset($request->tripStatus) && count($request->tripStatus) > 0, function ($query) use ($request) {
+                return $query->whereIn('trip_status', $request->tripStatus);
+            })
+//            ->when(isset($request->tripScheduled) && $request->tripScheduled == 1, function ($query) {
+//                return $query->whereNotNull('scheduled');
+//            })
+            ->when(isset($request->from_date) && isset($request->to_date) && $request->from_date && $request->to_date, function ($query) use ($request) {
                 return $query->whereBetween('created_at', [$request->from_date . " 00:00:00", $request->to_date . " 23:59:59"]);
             })
             ->when(isset($key), function ($query) use ($key) {
@@ -96,8 +107,14 @@ class TripController extends Controller
 
         $total = $trips->total();
 
-        return view('rental::admin.trip.list', compact('trips', 'status', 'total'));
+        $provider_ids = $request->provider_ids ?? [];
+        $zone_ids = $request->zone_ids ?? [];
+        $from_date = $request->from_date ?? null;
+        $to_date = $request->to_date ?? null;
+        $tripStatus = $request->tripStatus ?? [];
+//        $tripScheduled = $request->tripScheduled ?? 0;
 
+        return view('rental::admin.trip.list', compact('trips', 'status', 'total', 'provider_ids', 'zone_ids', 'from_date', 'to_date', 'tripStatus'));
     }
 
     /**
