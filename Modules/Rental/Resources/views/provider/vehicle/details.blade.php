@@ -57,7 +57,6 @@
                 </div>
             </div>
         </div>
-        <!-- End Page Header -->
         <div class="card mb-20">
             <div class="card-body">
                 <div class="row">
@@ -103,13 +102,13 @@
                                                 </a>
                                             </div>
                                             @foreach($vehicle['imagesFullUrl'] as $key => $img)
-                                            <div class="">
-                                                <a class="product-preview-thumb color-variants-preview-box-CD5C5C active d-flex align-items-center justify-content-center"
-                                                   id="preview-imgCD5C5C" href="#{{$key}}1">
-                                                    <img alt="Product"
-                                                         src="{{ $img }}">
-                                                </a>
-                                            </div>
+                                                <div class="">
+                                                    <a class="product-preview-thumb color-variants-preview-box-CD5C5C active d-flex align-items-center justify-content-center"
+                                                       id="preview-imgCD5C5C" href="#{{$key}}1">
+                                                        <img alt="Product"
+                                                             src="{{ $img }}">
+                                                    </a>
+                                                </div>
                                             @endforeach
                                         </div>
                                     </div>
@@ -137,79 +136,84 @@
                                 <div class="floating-review-wrapper">
                                     <div class="rating--review border rounded">
                                         <h5 class="title border-line font-medium d-flex align-items-center lh--1 mb-0">
-                                            <span class="fs-14">
-                                                <span class="font-bold">4.0</span>
-                                                <span class="color-758590">/5</span>
-                                            </span>
-                                            <div class="info text--title fs-14">2 Reviews</div>
+                                                <span class="fs-14">
+                                                    <span class="font-bold">{{ $avgRating }}</span>
+                                                    <span class="color-758590">/5</span>
+                                                </span>
+                                            <div class="info text--title fs-14">{{ $totalReviews }} {{ translate('Reviews') }}</div>
                                         </h5>
                                     </div>
                                     <ul class="list-unstyled list-unstyled-py-2 mb-0 rating--review-right review-color-progress">
                                         <!-- Review Ratings -->
                                         <li class="d-flex align-items-center font-size-sm">
-                                            <span class="progress-name mr-3">Excellent</span>
+                                            <span class="progress-name mr-3">{{ translate('Excellent') }}</span>
                                             <div class="progress flex-grow-1">
-                                                <div class="progress-bar" role="progressbar" style="width: 20%;"
+                                                <div class="progress-bar" role="progressbar"
+                                                     style="width: {{ $totalRating > 0 ? ($excellentCount / $totalRating) * 100 : 0 }}%;"
                                                      aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                                             </div>
-                                            <span class="ml-3">20</span>
+                                            <span class="ml-3">{{ $excellentCount }}</span>
                                         </li>
                                         <!-- End Review Ratings -->
 
                                         <!-- Review Ratings -->
                                         <li class="d-flex align-items-center font-size-sm">
-                                            <span class="progress-name mr-3">Good</span>
+                                            <span class="progress-name mr-3">{{ translate('Good') }}</span>
                                             <div class="progress flex-grow-1">
-                                                <div class="progress-bar" role="progressbar" style="width: 5%;"
+                                                <div class="progress-bar" role="progressbar"
+                                                     style="width: {{ $totalRating > 0 ? ($goodCount / $totalRating) * 100 : 0 }}%;"
                                                      aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                                             </div>
-                                            <span class="ml-3">5</span>
+                                            <span class="ml-3">{{ $goodCount }}</span>
                                         </li>
                                         <!-- End Review Ratings -->
 
                                         <!-- Review Ratings -->
                                         <li class="d-flex align-items-center font-size-sm">
-                                            <span class="progress-name mr-3">Average</span>
+                                            <span class="progress-name mr-3">{{translate('Average')}}</span>
                                             <div class="progress flex-grow-1">
-                                                <div class="progress-bar" role="progressbar" style="width: 5%;"
+                                                <div class="progress-bar" role="progressbar"
+                                                     style="width: {{ $totalRating > 0 ? ($averageCount / $totalRating) * 100 : 0 }}%;"
                                                      aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                                             </div>
-                                            <span class="ml-3">5</span>
+                                            <span class="ml-3">{{ $averageCount }}</span>
                                         </li>
                                         <!-- End Review Ratings -->
 
                                         <!-- Review Ratings -->
                                         <li class="d-flex align-items-center font-size-sm">
-                                            <span class="progress-name mr-3">Below average</span>
+                                            <span class="progress-name mr-3">{{translate('Below average')}}</span>
                                             <div class="progress flex-grow-1">
-                                                <div class="progress-bar" role="progressbar" style="width: 2%;"
+                                                <div class="progress-bar" role="progressbar"
+                                                     style="width: {{ $totalRating > 0 ? ($belowAverageCount / $totalRating) * 100 : 0 }}%;"
                                                      aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                                             </div>
-                                            <span class="ml-3">2</span>
+                                            <span class="ml-3">{{ $belowAverageCount }}</span>
                                         </li>
                                         <!-- End Review Ratings -->
 
                                         <!-- Review Ratings -->
                                         <li class="d-flex align-items-center font-size-sm">
-                                            <span class="progress-name mr-3">Poor</span>
+                                            <span class="progress-name mr-3">{{translate('Poor')}}</span>
                                             <div class="progress flex-grow-1">
-                                                <div class="progress-bar" role="progressbar" style="width: 1%;"
+                                                <div class="progress-bar" role="progressbar"
+                                                     style="width: {{ $totalRating > 0 ? ($poorCount / $totalRating) * 100 : 0 }}%;"
                                                      aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                                             </div>
-                                            <span class="ml-3">1</span>
+                                            <span class="ml-3">{{ $poorCount }}</span>
                                         </li>
                                         <!-- End Review Ratings -->
                                     </ul>
                                 </div>
                             </div>
                             @if ($language)
-                            <div class="lang_form text--title" id="default-form">
-                                <h3 class="text--title fs-20 ont-bold mb-10px">{{$vehicle?->getRawOriginal('name')}}</h3>
-                                <h5 class="text--title font-semibold opacity-lg mb-10px">Description:</h5>
-                                <div class="fs-12 opacity-lg">
-                                    {{$vehicle?->getRawOriginal('description')}} <a href="#" class="text--info font-medium">See more</a>
+                                <div class="lang_form text--title" id="default-form">
+                                    <h3 class="text--title fs-20 ont-bold mb-10px">{{$vehicle?->getRawOriginal('name')}}</h3>
+                                    <h5 class="text--title font-semibold opacity-lg mb-10px">{{translate('Description')}}:</h5>
+                                    <div class="fs-12 opacity-lg">
+                                        {{$vehicle?->getRawOriginal('description')}} <a href="#" class="text--info font-medium">See more</a>
+                                    </div>
                                 </div>
-                            </div>
                                 @foreach ($language as $lang)
                                     @php
                                         if(count($vehicle['translations'])){
@@ -223,12 +227,12 @@
                                         }
                                     @endphp
                                     <div class="lang_form d-none text--title" id="{{ $lang }}-form">
-                                    <h3 class="text--title fs-20 ont-bold mb-10px">{{$translate[$lang]['name']??''}}</h3>
-                                    <h5 class="text--title font-semibold opacity-lg mb-10px">Description:</h5>
-                                    <div class="fs-12 opacity-lg">
-                                        {{$translate[$lang]['description']??''}} <span class="text--primary font-medium">See more</span>
+                                        <h3 class="text--title fs-20 ont-bold mb-10px">{{$translate[$lang]['name']??''}}</h3>
+                                        <h5 class="text--title font-semibold opacity-lg mb-10px">Description:</h5>
+                                        <div class="fs-12 opacity-lg">
+                                            {{$translate[$lang]['description']??''}} <span class="text--primary font-medium">See more</span>
+                                        </div>
                                     </div>
-                                </div>
                                 @endforeach
                             @endif
                         </div>
@@ -240,9 +244,9 @@
             <div class="col-lg-3 mb-20 mb-lg-0">
                 <div class="card h-100">
                     <div class="card-body d-flex flex-column justify-content-center">
-                        <a class="resturant--information-single" href="#">
+                        <a class="resturant--information-single" href="{{ url('vendor-panel/store/view')}}">
                             <img class="img--65 rounded mx-auto mb-3 onerror-image" data-onerror-image=""
-                                 src="{{ $vehicle?->provider?->logoFullUrl }}" alt="Image Description">
+                                 src="{{ $vehicle?->provider['logoFullUrl'] }}" alt="Image Description">
                             <div class="text-center text--title">
                                 <h5 class="text-capitalize font-semibold text-hover-primary d-block mb-1">
                                     {{ $vehicle?->provider?->name }}
@@ -288,9 +292,9 @@
                                             </div>
                                         @endif
                                         @if($vehicle->trip_distance)
-                                        <div class="d-flex"><span class="min-w-110px">{{ translate('Distance Wise')}}</span>
-                                            <span class="font-semibold">:{{\App\CentralLogics\Helpers::format_currency($vehicle['distance_price'])}}</span>
-                                        </div>
+                                            <div class="d-flex"><span class="min-w-110px">{{ translate('Distance Wise')}}</span>
+                                                <span class="font-semibold">:{{\App\CentralLogics\Helpers::format_currency($vehicle['distance_price'])}}</span>
+                                            </div>
                                         @endif
                                         <div class="d-flex"><span class="min-w-110px">{{translate('Discount')}}</span><span
                                                 class="font-semibold">: {{ $vehicle->discount_price }} {{ $vehicle->discount_type == 'percent' ? '%' : '$' }}</span></div>
@@ -343,19 +347,19 @@
                         <td>
                             <div class="d-flex gap-20px">
                                 @foreach($vehicle->vehicleIdentities as $multi)
-                                <div class="flex-grow-1 font-semibold text--title">
-                                    <div class="opacity-70 mb-2">{{translate('Vehicle')}} {{ $loop->iteration }}</div>
-                                    <div class="border rounded p-3 d-flex gap-4 justify-content-between">
-                                        <div>
-                                            <div class="fs-12 opacity-60">{{translate('VIN Number')}}</div>
-                                            <div>{{ $multi->vin_number }}</div>
-                                        </div>
-                                        <div>
-                                            <div class="fs-12 opacity-60">{{translate('Registration No.')}}</div>
-                                            <div>{{ $multi->license_plate_number }}</div>
+                                    <div class="flex-grow-1 font-semibold text--title">
+                                        <div class="opacity-70 mb-2">{{translate('Vehicle')}} {{ $loop->iteration }}</div>
+                                        <div class="border rounded p-3 d-flex gap-4 justify-content-between">
+                                            <div>
+                                                <div class="fs-12 opacity-60">{{translate('VIN Number')}}</div>
+                                                <div>{{ $multi->vin_number }}</div>
+                                            </div>
+                                            <div>
+                                                <div class="fs-12 opacity-60">{{translate('Registration No.')}}</div>
+                                                <div>{{ $multi->license_plate_number }}</div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
                                 @endforeach
                             </div>
                         </td>
@@ -380,28 +384,28 @@
             <div class="card-body">
                 <div class="d-flex gap-3 flex-wrap">
                     @foreach($vehicle['documentsFullUrl'] as $doc)
-                    <div class="pdf-single" data-pdf-url="{{ $doc }}"
-                         onclick="openPdf(this)">
-                        <div class="pdf-frame">
-                            <canvas class="pdf-preview" style="display: none;"></canvas>
-                            <img class="pdf-thumbnail" src="{{ $doc }}"
-                                 alt="File Thumbnail">
-                        </div>
-                        <div class="overlay">
-                            <a href="javascript:void(0);" class="download-btn" onclick="downloadPdf(event, this)"
-                               title="">
-                                <i class="tio-download-to"></i>
-                            </a>
-                            <div class="pdf-info d-flex gap-10px align-items-center">
-                                <img src="{{ asset('public/assets/admin/img/document.svg') }}" width="34"
-                                     alt="Document Logo">
-                                <div class="fs-13 text--title d-flex flex-column">
-                                    <span class="file-name"></span>
-                                    <span class="opacity-50">{{translate('Click to view the file')}}</span>
+                        <div class="pdf-single" data-pdf-url="{{ $doc }}"
+                             onclick="openPdf(this)">
+                            <div class="pdf-frame">
+                                <canvas class="pdf-preview" style="display: none;"></canvas>
+                                <img class="pdf-thumbnail" src="{{ $doc }}"
+                                     alt="File Thumbnail">
+                            </div>
+                            <div class="overlay">
+                                <a href="javascript:void(0);" class="download-btn" onclick="downloadPdf(event, this)"
+                                   title="">
+                                    <i class="tio-download-to"></i>
+                                </a>
+                                <div class="pdf-info d-flex gap-10px align-items-center">
+                                    <img src="{{ asset('public/assets/admin/img/document.svg') }}" width="34"
+                                         alt="Document Logo">
+                                    <div class="fs-13 text--title d-flex flex-column">
+                                        <span class="file-name"></span>
+                                        <span class="opacity-50">{{translate('Click to view the file')}}</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
                     @endforeach
                 </div>
             </div>
@@ -412,7 +416,7 @@
                 <div class="search--button-wrapper">
                     <h5 class="card-title text--title">
                         {{ translate('messages.Reviews') }}
-                        <span class="badge badge-soft-dark ml-2" id="itemCount">14</span>
+                        <span class="badge badge-soft-dark ml-2" id="itemCount">{{ $vehicleReview->total() }}</span>
                     </h5>
                     <!-- Unfold -->
                     <div class="hs-unfold mr-2">
@@ -430,14 +434,14 @@
 
                             <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
                             <a id="export-excel" class="dropdown-item"
-                               href="{{ route('admin.store.export', ['type' => 'excel', request()->getQueryString()]) }}">
+                               href="{{ route('vendor.vehicle.review.export', ['vehicle_id' => request()->id, 'type' => 'excel', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                      src="{{ asset('public/assets/admin') }}/svg/components/excel.svg"
                                      alt="Image Description">
                                 {{ translate('messages.excel') }}
                             </a>
                             <a id="export-csv" class="dropdown-item"
-                               href="{{ route('admin.store.export', ['type' => 'csv', request()->getQueryString()]) }}">
+                               href="{{ route('vendor.vehicle.review.export', ['vehicle_id' => request()->id, 'type' => 'csv', request()->getQueryString()]) }}">
                                 <img class="avatar avatar-xss avatar-4by3 mr-2"
                                      src="{{ asset('public/assets/admin') }}/svg/components/placeholder-csv-format.svg"
                                      alt="Image Description">
@@ -468,99 +472,75 @@
                     </thead>
 
                     <tbody id="set-rows">
-                    <tr>
-                        <td>1</td>
-                        <td>#10003278</td>
+                    @foreach($vehicleReview as $review)
+                        <tr>
+                            <td>{{ $loop->iteration }}</td>
+                            <td>#{{ $review->id }}</td>
 
-                        <td>
-                            <div class="table-rest-info d-block">
-                                <div class="info">
-                                    <div title="Car Rental Service" class="text--info">
-                                        {{ translate('messages.Jhone Doe III') }}
-                                    </div>
-                                    <div>
-                                            <span class="font-light">
-                                                +98347568987
-                                            </span>
+                            <td>
+                                <div class="table-rest-info d-block">
+                                    <div class="info">
+                                        <div title="Car Rental Service" class="text--info">
+                                            {{ $review->customer->fullName }}
+                                        </div>
+                                        <div>
+                                                <span class="font-light">
+                                                    {{ $review->customer->phone }}
+                                                </span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="font-semibold text--warning">
-                                <i class="fs-13 tio-star"></i>
-                                4.5
-                            </div>
-                            <div class="line--limit-2 max-w--220px">
-                                {{ translate('messages.Gas Stove is very important in our daily life, most importantly it cooks food. So, when a gas stove breaks down it requires urgent servicing.') }}
-                            </div>
-                        </td>
-                        <td>
-                            12 Aug 2022
-                            <br>
-                            11: 55 am
-                        </td>
-                        <td>
-                            <div class="line--limit-2 max-w--220px">
-                                {{ translate('messages.Gas Stove is very important in our daily life, most importantly it cooks food. So, when a gas stove breaks down it requires urgent servicing.') }}
-                            </div>
-                        <td>
-                            <label class="toggle-switch toggle-switch-sm" for="publishCheckbox47">
-                                <input type="checkbox" data-url="#" class="toggle-switch-input redirect-url"
-                                       id="publishCheckbox47" checked="">
-                                <span class="toggle-switch-label mx-auto">
-                                        <span class="toggle-switch-indicator"></span>
-                                    </span>
-                            </label>
-                        </td>
-                    </tr>
+                            </td>
+                            <td>
+                                <div class="font-semibold text--warning">
+                                    <i class="fs-13 tio-star"></i>
+                                    {{ $review->rating }}
+                                </div>
+                                @if($review->comment)
+                                    <div class="line--limit-2 max-w--220px">
+                                        {{ $review->comment  }}
+                                    </div>
+                                @endif
+                            </td>
+                            <td>
+                                {{ $review->reviewDate }}
+                                <br>
+                                {{ $review->reviewTime }}
+                            </td>
+                            <td>
+                                <div class="line--limit-2 max-w--220px">
+                                    {{ $review->reply ? $review->reply : 'N/A' }}
+                                </div>
+                            <td>
+                                <label class="toggle-switch toggle-switch-sm" for="publishCheckbox{{$review->id}}">
+                                    <input type="checkbox" data-url="{{ route('vendor.vehicle.review.status', $review->id) }}" class="toggle-switch-input redirect-url"
+                                           id="publishCheckbox{{$review->id}}" {{ $review->status ? 'checked' : ''}}>
+                                    <span class="toggle-switch-label mx-auto">
+                                            <span class="toggle-switch-indicator"></span>
+                                        </span>
+                                </label>
+                            </td>
+                        </tr>
+                    @endforeach
                     </tbody>
                 </table>
 
             </div>
+            @if(count($vehicleReview) !== 0)
+                <hr>
+            @endif
             <div class="page-area mt-3">
-                <nav>
-                    <ul class="pagination">
-                        <li class="page-item disabled" aria-disabled="true" aria-label="« Previous">
-                            <span class="page-link" aria-hidden="true">‹</span>
-                        </li>
-                        <li class="page-item active" aria-current="page"><span class="page-link">1</span></li>
-                        <li class="page-item"><a class="page-link" href="#">2</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="#" rel="next" aria-label="Next »">›</a>
-                        </li>
-                    </ul>
-                </nav>
-
+                {!! $vehicleReview->appends($_GET)->links() !!}
             </div>
+            @if(count($vehicleReview) === 0)
+                <div class="empty--data">
+                    <img src="{{asset('/public/assets/admin/svg/illustrations/sorry.svg')}}" alt="public">
+                    <h5>
+                        {{translate('no_data_found')}}
+                    </h5>
+                </div>
+            @endif
             <!-- End Table -->
-        </div>
-    </div>
-
-    <!--Vehicle delete Modal -->
-    <div class="modal fade" id="vehicleDeleteModal" tabindex="-1" role="dialog"
-         aria-labelledby="vehicleDeleteModalLabel">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header p-2 pb-0 justify-content-end flex-shrink-0">
-                    <button type="button" class="close p-0 m-0" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
-                </div>
-                <div class="modal-body py-6 text-center">
-                    <div class="mb-20">
-                        <img width="80" class="aspect-ratio-1" src="{{ asset('public/assets/admin/img/modal/delete-icon.png') }}" alt="">
-                    </div>
-                    <h3 class="font-medium text--title">Confirm Vehicle Deletion</h3>
-                    <div class="fs-13">Are you sure you want to delete this Vehicle & remove it permanently?</div>
-                    <div class="btn--container justify-content-center mt-5">
-                        <button type="reset" id="reset_btn"
-                                class="btn btn--cancel min-w-120px">{{ translate('messages.not_now') }}</button>
-                        <button type="submit"
-                                class="btn btn--primary min-w-120px">{{ translate('messages.yes') }}</button>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
     <!-- End Modal -->

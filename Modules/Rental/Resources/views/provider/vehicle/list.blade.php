@@ -200,7 +200,7 @@
                             </td>
                             <td>
                                 <div class="text--title font-medium">
-                                    110
+                                    {{ count($vehicle->tripDetails) }}
                                 </div>
                             </td>
                             <td>

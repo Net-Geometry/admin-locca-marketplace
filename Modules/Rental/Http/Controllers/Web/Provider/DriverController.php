@@ -221,6 +221,7 @@ class DriverController extends Controller
     public function export(Request $request): BinaryFileResponse
     {
         $drivers = $this->driver
+            ->where('provider_id', auth('vendor')->user()->stores[0]->id)
             ->when($request->has('search'), function ($query) use ($request) {
                 $keys = explode(' ', $request['search']);
                 foreach ($keys as $key) {

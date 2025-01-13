@@ -464,7 +464,7 @@
                                 <div class="col-lg-4">
                                     <div class="form-group mb-0">
                                         <label class="input-label"
-                                               for="">{{ translate('messages.Hourly Wise Price ($)') }}
+                                               for="">{{ translate('messages.Hourly Wise Price') }} ({{ \App\CentralLogics\Helpers::currency_symbol() }})
                                         </label>
                                         <input type="number" name="hourly_price" class="form-control"
                                                placeholder="Ex: 35.25" value="{{ $vehicle->hourly_price }}"  min="0" step="0.001">
@@ -473,7 +473,7 @@
                                 <div class="col-lg-4">
                                     <div class="form-group mb-0">
                                         <label class="input-label"
-                                               for="">{{ translate('messages.Distance Wise Price ($)') }}
+                                               for="">{{ translate('messages.Distance Wise Price') }} ({{ \App\CentralLogics\Helpers::currency_symbol() }})
                                         </label>
                                         <input type="number" name="distance_price" class="form-control"
                                                placeholder="Ex: 35.25" value="{{ $vehicle->distance_price }}"  min="0" step="0.001">

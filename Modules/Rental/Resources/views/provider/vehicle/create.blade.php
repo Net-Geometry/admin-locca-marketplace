@@ -439,19 +439,19 @@
                                 <div class="col-lg-4">
                                     <div class="form-group mb-0">
                                         <label class="input-label"
-                                               for="">{{ translate('messages.Hourly Wise Price ($)') }}
+                                               for="">{{ translate('messages.Hourly Wise Price') }} ({{ \App\CentralLogics\Helpers::currency_symbol() }})
                                         </label>
                                         <input type="number" name="hourly_price" class="form-control"
-                                               placeholder="Ex: 35.25" value=""  min="0" step="0.001">
+                                               placeholder="Ex: 35.25" value="" min="0" step="0.001">
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="form-group mb-0">
                                         <label class="input-label"
-                                               for="">{{ translate('messages.Distance Wise Price ($)') }}
+                                               for="">{{ translate('messages.Distance Wise Price') }} ({{ \App\CentralLogics\Helpers::currency_symbol() }})
                                         </label>
                                         <input type="number" name="distance_price" class="form-control"
-                                               placeholder="Ex: 35.25" value=""  min="0" step="0.001">
+                                               placeholder="Ex: 35.25" value="" min="0" step="0.001">
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
@@ -464,18 +464,14 @@
                                             </span></label>
                                         <div class="custom-group-btn border">
                                             <div class="flex-sm-grow-1">
-                                                <input id="min" type="number" name="discount_price"
+                                                <input id="discount_input" type="number" name="discount_price"
                                                        class="form-control h--45px border-0 pl-unset"
-                                                       placeholder="{{ translate('messages.Ex: 10') }} 20"  min="0" step="0.001">
+                                                       placeholder="Ex: 10" min="0" step="0.001">
                                             </div>
                                             <div class="flex-shrink-0">
-                                                <select name="discount_type" id="" class="custom-select ltr border-0">
-                                                    <option value="percent" selected>
-                                                        %
-                                                    </option>
-                                                    <option value="amount">
-                                                        {{ \App\CentralLogics\Helpers::currency_symbol() }}
-                                                    </option>
+                                                <select name="discount_type" id="discount_type" class="custom-select ltr border-0">
+                                                    <option value="percent" selected>%</option>
+                                                    <option value="amount">{{ \App\CentralLogics\Helpers::currency_symbol() }}</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -557,8 +553,6 @@
                 </div>
             </div>
         </form>
-
-
     </div>
 
 @endsection
@@ -567,6 +561,28 @@
     <script src="{{ asset('public/assets/admin/js/spartan-multi-image-picker.js') }}"></script>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#discount_input').on('input', function () {
+                let discountType = $('#discount_type').val();
+                let inputValue = parseFloat($(this).val());
+
+                if (discountType === 'percent' && inputValue > 100) {
+                    $(this).val(100);
+                }
+            });
+
+            $('#discount_type').on('change', function () {
+                let discountType = $(this).val();
+                let inputValue = parseFloat($('#discount_input').val());
+
+                if (discountType === 'percent' && inputValue > 100) {
+                    $('#discount_input').val(100);
+                }
+            });
+        });
+    </script>
 
     <script>
 

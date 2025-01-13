@@ -1,6 +1,6 @@
 
 <div class="row">
-    <div class="col-lg-12 text-center "><h1 > {{translate('Brand_List')}}
+    <div class="col-lg-12 text-center "><h1 > {{translate('Driver_List')}}
     </h1></div>
     <div class="col-lg-12">
 

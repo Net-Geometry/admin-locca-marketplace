@@ -198,7 +198,7 @@ $tripCount = Illuminate\Support\Facades\DB::select("SELECT
                         <small class="tio-more-horizontal nav-subtitle-replacer"></small>
                     </li>
                     <li
-                        class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel/vehicle*') ? 'active' : '' }}">
+                        class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel/vehicle/*') ? 'active' : '' }}">
                         <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle" href="javascript:"
                             title="{{ translate('Vehicle Setup') }}">
                             <i class="tio-car nav-icon"></i>
@@ -206,7 +206,7 @@ $tripCount = Illuminate\Support\Facades\DB::select("SELECT
                                 class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate text-capitalize">{{ translate('Vehicle Setup') }}</span>
                         </a>
                         <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
-                            style="display:{{ Request::is('vendor-panel/vehicle*') ? 'block' : 'none' }}">
+                            style="display:{{ Request::is('vendor-panel/vehicle/*') ? 'block' : 'none' }}">
                             <li
                                 class="nav-item {{ Request::is('vendor-panel/vehicle/create') || Request::is('vendor-panel/vehicle/edit/*') ? 'active' : '' }}">
                                 <a class="nav-link " href="{{ route('vendor.vehicle.create') }}"

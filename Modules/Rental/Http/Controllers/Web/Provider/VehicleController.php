@@ -22,12 +22,15 @@ use Modules\Rental\Entities\Vehicle;
 use Modules\Rental\Entities\VehicleBrand;
 use Modules\Rental\Entities\VehicleCategory;
 use Modules\Rental\Entities\VehicleIdentity;
+use Modules\Rental\Entities\VehicleReview;
 use Modules\Rental\Exports\VehicleExport;
+use Modules\Rental\Exports\VehicleReviewExport;
 use OpenSpout\Common\Exception\InvalidArgumentException;
 use OpenSpout\Common\Exception\IOException;
 use OpenSpout\Common\Exception\UnsupportedTypeException;
 use OpenSpout\Writer\Exception\WriterNotOpenedException;
 use Rap2hpoutre\FastExcel\FastExcel;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class VehicleController extends Controller
@@ -37,10 +40,11 @@ class VehicleController extends Controller
     private VehicleCategory $vehicleCategory;
     private VehicleBrand $vehicleBrand;
     private VehicleIdentity $vehicleIdentity;
+    private VehicleReview $vehicleReview;
     private Helpers $helpers;
     private Store $store;
 
-    public function __construct(Vehicle $vehicle, VehicleCategory $vehicleCategory, VehicleBrand $vehicleBrand, Helpers $helpers, Store $store, VehicleIdentity $vehicleIdentity)
+    public function __construct(Vehicle $vehicle, VehicleCategory $vehicleCategory, VehicleBrand $vehicleBrand, Helpers $helpers, Store $store, VehicleIdentity $vehicleIdentity, VehicleReview $vehicleReview)
     {
         $this->vehicle = $vehicle;
         $this->helpers = $helpers;
@@ -48,6 +52,7 @@ class VehicleController extends Controller
         $this->vehicleCategory = $vehicleCategory;
         $this->vehicleBrand = $vehicleBrand;
         $this->vehicleIdentity = $vehicleIdentity;
+        $this->vehicleReview = $vehicleReview;
     }
 
     /**
@@ -400,12 +405,22 @@ class VehicleController extends Controller
      */
     public function details(int $id): Renderable
     {
-        $vehicle = $this->vehicle->findOrFail($id);
 
+        $data['vehicle'] = $this->vehicle->findOrFail($id);
+        $data['vehicleReview'] = $this->vehicleReview->where('vehicle_id', $id)->latest()->paginate(config('default_pagination'));
 
-        $language = getWebConfig('language') ?? [];
-        $defaultLang = str_replace('_', '-', app()->getLocale());
-        return view('rental::provider.vehicle.details', compact('vehicle', 'language', 'defaultLang'));
+        $data['totalRating'] = $data['vehicle']->reviews->sum('rating');
+        $data['avgRating'] = number_format($data['vehicle']->reviews->avg('rating'), 1);
+        $data['totalReviews'] = $data['vehicle']->reviews->whereNotNull('comment')->count();
+        $data['excellentCount'] = $data['vehicle']->reviews->where('rating', 5)->count();
+        $data['goodCount'] = $data['vehicle']->reviews->where('rating', 4)->count();
+        $data['averageCount'] = $data['vehicle']->reviews->where('rating', 3)->count();
+        $data['belowAverageCount'] = $data['vehicle']->reviews->where('rating', 2)->count();
+        $data['poorCount'] = $data['vehicle']->reviews->where('rating', 1)->count();
+
+        $data['language'] = getWebConfig('language') ?? [];
+        $data['defaultLang'] = str_replace('_', '-', app()->getLocale());
+        return view('rental::provider.vehicle.details', $data);
     }
 
     /**
@@ -423,6 +438,26 @@ class VehicleController extends Controller
         }
 
         $vehicle->update(['status' => !$vehicle->status]);
+
+        Toastr::success(translate('messages.vehicle_status_updated_successfully'));
+        return back();
+    }
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @return RedirectResponse
+     */
+    public function reviewStatus(Request $request, $id): RedirectResponse
+    {
+        $vehicleReview = $this->vehicleReview->find($id);
+
+        if (!$vehicleReview) {
+            Toastr::error(translate('messages.vehicle_not_found'));
+            return back();
+        }
+
+        $vehicleReview->update(['status' => !$vehicleReview->status]);
 
         Toastr::success(translate('messages.vehicle_status_updated_successfully'));
         return back();
@@ -540,6 +575,82 @@ class VehicleController extends Controller
             return Excel::download(new VehicleExport($data), 'Vehicles.csv');
         }
         return Excel::download(new VehicleExport($data), 'Vehicles.xlsx');
+    }
+
+
+
+    /**
+     * @param Request $request
+     * @return BinaryFileResponse
+     */
+    public function reviewExport(Request $request): BinaryFileResponse
+    {
+        $providerId = auth('vendor')->user()->stores[0]->id;
+
+        $vehicles = $this->vehicleReview->where('provider_id', $providerId)->where('vehicle_id', $request->vehicle_id)->latest()->get();
+
+        if ($vehicles->isEmpty()){
+            $vehicles = $this->vehicleReview
+                ->where('provider_id', $providerId)
+                ->when($request->has('search'), function ($query) use ($request) {
+                    $keys = explode(' ', $request['search']);
+                    foreach ($keys as $key) {
+                        $query->where(function ($query) use ($key) {
+                            $query->orWhere('comment', 'LIKE', '%' . $key . '%')
+                                ->orWhere('reply', 'LIKE', '%' . $key . '%')
+                                ->orWhereHas('customer', function ($customerQuery) use ($key) {
+                                    $customerQuery->where('f_name', 'LIKE', '%' . $key . '%')
+                                        ->orWhere('l_name', 'LIKE', '%' . $key . '%')
+                                        ->orWhere('phone', 'LIKE', '%' . $key . '%');
+                                })
+                                ->orWhereHas('vehicle', function ($vehicleQuery) use ($key) {
+                                    $vehicleQuery->where('name', 'LIKE', '%' . $key . '%');
+                                });
+                        });
+                    }
+                })
+                ->latest()->get();
+        }
+
+        $data = [
+            'data' => $vehicles,
+            'search' => $request['search'] ?? null,
+        ];
+
+        if ($request['type'] == 'csv') {
+            return Excel::download(new VehicleReviewExport($data), 'Vehicle-reviews.csv');
+        }
+        return Excel::download(new VehicleReviewExport($data), 'Vehicle-reviews.xlsx');
+    }
+
+    /**
+     * @param Request $request
+     * @return Renderable
+     */
+    public function reviews(Request $request): Renderable
+    {
+        $providerId = auth('vendor')->user()->stores[0]->id;
+        $vehicleReview = $this->vehicleReview
+            ->where('provider_id', $providerId)
+            ->when($request->has('search'), function ($query) use ($request) {
+                $keys = explode(' ', $request['search']);
+                foreach ($keys as $key) {
+                    $query->where(function ($query) use ($key) {
+                        $query->orWhere('comment', 'LIKE', '%' . $key . '%')
+                            ->orWhere('reply', 'LIKE', '%' . $key . '%')
+                            ->orWhereHas('customer', function ($customerQuery) use ($key) {
+                                $customerQuery->where('f_name', 'LIKE', '%' . $key . '%')
+                                    ->orWhere('l_name', 'LIKE', '%' . $key . '%')
+                                    ->orWhere('phone', 'LIKE', '%' . $key . '%');
+                            })
+                            ->orWhereHas('vehicle', function ($vehicleQuery) use ($key) {
+                                $vehicleQuery->where('name', 'LIKE', '%' . $key . '%');
+                            });
+                    });
+                }
+            })
+            ->latest()->paginate(config('default_pagination'));
+        return view('rental::provider.vehicle.review-list', compact('vehicleReview'));
     }
 
     /**
@@ -690,7 +801,6 @@ class VehicleController extends Controller
             $chunkSize = 100;
             $chunk_items = array_chunk($data, $chunkSize);
             foreach ($chunk_items as $key => $chunk_item) {
-//                DB::table('items')->upsert($chunk_item, ['id', 'module_id'], ['name', 'description', 'image', 'images', 'category_id', 'category_ids', 'unit_id', 'stock', 'price', 'discount', 'discount_type', 'available_time_starts', 'available_time_ends','choice_options', 'variations', 'food_variations', 'add_ons', 'attributes', 'store_id', 'status', 'veg', 'recommended']);
                 foreach ($chunk_item as $item) {
                     if (isset($item['id']) && DB::table('items')->where('id', $item['id'])->exists()) {
                         DB::table('items')->where('id', $item['id'])->update($item);

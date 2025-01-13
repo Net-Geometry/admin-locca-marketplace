@@ -1,6 +1,6 @@
 @extends('layouts.vendor.app')
 
-@section('title', translate('messages.banner'))
+@section('title', translate('messages.driver'))
 
 @push('css_or_js')
 @endpush
@@ -24,15 +24,15 @@
                 <div class="card">
                     <div class="card-header py-2">
                         <div class="search--button-wrapper gap-20px">
-                            <h5 class="card-title text--title flex-grow-1">{{ translate('messages.Banner_List') }}<span class="badge badge-soft-dark ml-2" id="itemCount">{{$drivers->count()}}</span></h5>
+                            <h5 class="card-title text--title flex-grow-1">{{ translate('messages.Driver_List') }}<span class="badge badge-soft-dark ml-2" id="itemCount">{{$drivers->count()}}</span></h5>
 
                             <form class="search-form m-0 flex-grow-1 max-w-353px" method="get" action="">
                                 <!-- Search -->
                                 <div class="input-group input--group">
                                     <input id="datatableSearch_" type="search" value="{{ request()?->search ?? null }}"
                                            name="search" class="form-control"
-                                           placeholder="{{ translate('Search by banner title...') }}"
-                                           aria-label="{{ translate('messages.Search by banner title...') }}">
+                                           placeholder="{{ translate('Search by driver name...') }}"
+                                           aria-label="{{ translate('messages.Search by driver name...') }}">
                                     <button type="submit" class="btn btn--secondary bg--primary"><i
                                             class="tio-search"></i></button>
 
@@ -59,14 +59,14 @@
 
                                     <span class="dropdown-header">{{ translate('messages.download_options') }}</span>
                                     <a id="export-excel" class="dropdown-item"
-                                       href="{{ route('vendor.rental_banner.export', ['type' => 'excel', request()->getQueryString()]) }}">
+                                       href="{{ route('vendor.driver.export', ['type' => 'excel', request()->getQueryString()]) }}">
                                         <img class="avatar avatar-xss avatar-4by3 mr-2"
                                              src="{{ asset('public/assets/admin') }}/svg/components/excel.svg"
                                              alt="Image Description">
                                         {{ translate('messages.excel') }}
                                     </a>
                                     <a id="export-csv" class="dropdown-item"
-                                       href="{{ route('vendor.rental_banner.export', ['type' => 'csv', request()->getQueryString()]) }}">
+                                       href="{{ route('vendor.driver.export', ['type' => 'csv', request()->getQueryString()]) }}">
                                         <img class="avatar avatar-xss avatar-4by3 mr-2"
                                              src="{{ asset('public/assets/admin') }}/svg/components/placeholder-csv-format.svg"
                                              alt="Image Description">
