@@ -161,7 +161,7 @@
                         <div class="btn--container justify-content-end mt-3">
                             <a href="{{ route('admin.rental.provider.edit-basic-setup', $store->id ) }}" class="btn btn--reset min-w-100px justify-content-center">{{ translate('messages.back') }}</a>
                             <div id="subscriptionBtn">
-                                <button data-id="{{ $package?->id }}"
+                                <button data-id="{{ $store?->package?->id }}"
                                     data-target="#package_detail" id="package_detail" type="button" class="btn btn--primary shift-btn package_detail">{{ translate('messages.update') }}</button>
                             </div>
                             <?php
