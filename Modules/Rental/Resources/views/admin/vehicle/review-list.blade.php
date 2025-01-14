@@ -15,7 +15,7 @@
                     <img src="{{asset('public/assets/admin/img/items.png')}}" class="w--22" alt="">
                 </span>
                 <span>
-                    {{translate('messages.item_reviews')}}
+                    {{translate('messages.vehicle_reviews')}}
                 </span>
             </h1>
         </div>

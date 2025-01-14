@@ -1,3 +1,6 @@
+@php
+    $title = auth('vendor')?->user()?->store?->module_type == 'rental' ? 'Provider' : 'Store';
+@endphp
 @extends('layouts.vendor.app')
 @section('title',translate('messages.store_view'))
 @push('css_or_js')
@@ -11,11 +14,11 @@
             <h2 class="page-header-title text-capitalize my-2">
                 <img class="w--26" src="{{asset('/public/assets/admin/img/store.png')}}" alt="public">
                 <span>
-                    {{translate('messages.my_store_info')}}
+                    {{translate('messages.my_'.$title.'_info')}}
                 </span>
             </h2>
             <div class="my-2">
-                <a class="btn btn--primary" href="{{route('vendor.shop.edit')}}"><i class="tio-edit"></i>{{translate('messages.edit_store_information')}}</a>
+                <a class="btn btn--primary" href="{{route('vendor.shop.edit')}}"><i class="tio-edit"></i>{{translate('messages.edit_'.$title.'_information')}}</a>
             </div>
         </div>
     </div>
@@ -76,7 +79,7 @@
         <div class="card-header">
             <h5 class="card-title toggle-switch toggle-switch-sm d-flex justify-content-between">
                 <span class="card-header-icon mr-1"><i class="tio-dashboard"></i></span>
-                <span>{{translate('Announcement')}}</span><span class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('This_feature_is_for_sharing_important_information_or_announcements_related_to_the_store.')}}"><img src="{{asset('/public/assets/admin/img/info-circle.svg')}}" alt="{{translate('messages.This_feature_is_for_sharing_important_information_or_announcements_related_to_the_store')}}"></span>
+                <span>{{translate('Announcement')}}</span><span class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('This_feature_is_for_sharing_important_information_or_announcements_related_to_the_'.$title.'.')}}"><img src="{{asset('/public/assets/admin/img/info-circle.svg')}}" alt="{{translate('messages.This_feature_is_for_sharing_important_information_or_announcements_related_to_the_'.$title)}}"></span>
             </h5>
             <label class="toggle-switch toggle-switch-sm" for="announcement_status">
                 <input class="toggle-switch-input dynamic-checkbox" type="checkbox" id="announcement_status"

@@ -1,3 +1,6 @@
+@php
+    $title = auth('vendor')?->user()?->store?->module_type == 'rental' ? 'Provider' : 'Store';
+@endphp
 <div class="footer">
     <div class="row justify-content-between align-items-center">
         <div class="col">
@@ -11,7 +14,7 @@
                 <!-- List Dot -->
                 <ul class="list-inline list-separator">
                     <li class="list-inline-item">
-                        <a class="list-separator-link" href="{{route('vendor.business-settings.store-setup')}}">{{translate('messages.store_settings')}}</a>
+                        <a class="list-separator-link" href="{{route('vendor.business-settings.store-setup')}}">{{translate('messages.'.$title.'_settings')}}</a>
                     </li>
 
                     <li class="list-inline-item">

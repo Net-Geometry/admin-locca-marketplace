@@ -6,6 +6,11 @@
 @endpush
 
 @section('content')
+    @php
+        $vendor = auth('vendor')?->user()?->store?->module_type;
+        $title = $vendor == 'rental' ? 'Provider' : 'Store';
+        $orderOrTrip = $vendor == 'rental' ? 'trip' : 'order';
+    @endphp
     <div class="content container-fluid">
         <!-- Page Header -->
         <div class="page-header">
@@ -97,7 +102,7 @@
                         <div class="col-sm-6 col-md-6">
                             <a class="__card-2 __bg-1" href="#">
                             <h4 class="title">{{$total_progress_count}}</h4>
-                            <span class="subtitle">{{translate('messages.in_progress_trips')}} <span data-toggle="tooltip" data-placement="right" data-original-title="{{translate('Including accepted and processing orders')}}"><img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="{{translate('messages.in_progress_trips')}}"></span></span>
+                            <span class="subtitle">{{translate('messages.in_progress_trips')}} <span data-toggle="tooltip" data-placement="right" data-original-title="{{translate('Including accepted and processing '.$orderOrTrip)}}"><img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="{{translate('messages.in_progress_trips')}}"></span></span>
                             <img src="{{asset('/public/assets/admin/img/report/new/progress-report.png')}}" alt="report/new" class="card-icon">
                             </a>
                         </div>

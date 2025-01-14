@@ -6,6 +6,12 @@
 @endpush
 
 @section('content')
+    @php
+        $vendor = auth('vendor')?->user()?->store?->module_type;
+        $title = $vendor == 'rental' ? 'Provider' : 'Store';
+        $orderOrTrip = $vendor == 'rental' ? 'trip' : 'order';
+        $type = $vendor == 'rental' ? 'vehicle' : 'item';
+    @endphp
     <div class="content container-fluid">
         <!-- Page Header -->
         <div class="page-header">
@@ -18,7 +24,7 @@
                 </span>
             </h1>
             <div class="__page-header-txt mt-3">
-                {{ translate('This report will show all the orders in which the store discount has been used. The store discounts are: Free delivery, Coupon discount & item discounts(partial according to order commission).') }}
+                {{ translate('This report will show all the '.$orderOrTrip.' in which the '.$title.' discount has been used. The '.$title.' discounts are: Free delivery, Coupon discount & '.$type.' discounts(partial according to '.$orderOrTrip.' commission).') }}
             </div>
 
         </div>
@@ -174,10 +180,10 @@
 
 
                                     <td class="text-center">
-                                    @if (isset($exp->order->customer))
-                                    {{ $exp->order->customer->f_name.' '.$exp->order->customer->l_name }}
-                                    @elseif($exp->order->is_guest)
-                                        @php($customer_details = json_decode($exp->order['delivery_address'],true))
+                                    @if (isset($exp?->order?->customer))
+                                    {{ $exp?->order?->fullName }}
+                                    @elseif($exp?->order?->is_guest)
+                                        @php($customer_details = json_decode($exp?->order['delivery_address'],true))
                                         {{$customer_details['contact_person_name']}}
                                     @else
                                     <label class="badge badge-danger">{{translate('messages.invalid_customer_data')}}</label>

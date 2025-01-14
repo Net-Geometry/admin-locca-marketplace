@@ -7,6 +7,12 @@
 @endpush
 
 @section('content')
+    @php
+        $vendor = auth('vendor')?->user()?->store?->module_type;
+        $title = $vendor == 'rental' ? 'Provider' : 'Store';
+        $orderOrTrip = $vendor == 'rental' ? 'trip' : 'order';
+        $approxTime = $vendor == 'rental' ? 'Pickup' : 'Delivery';
+    @endphp
     <div class="content container-fluid config-inline-remove-class">
         <!-- Page Heading -->
         <div class="page-header">
@@ -15,7 +21,7 @@
                     <img src="{{asset('public/assets/admin/img/config.png')}}" class="w--30" alt="">
                 </span>
                 <span>
-                    {{translate('messages.store_setup')}}
+                    {{translate('messages.'.$title.'_setup')}}
                 </span>
             </h1>
         </div>
@@ -25,7 +31,7 @@
                 <div class="d-flex flex-row justify-content-between align-items-center">
                     <h4 class="card-title align-items-center d-flex">
                         <img src="{{asset('public/assets/admin/img/store.png')}}" class="w--20 mr-1" alt="">
-                        <span>{{translate('messages.store_temporarily_closed_title')}}</span>
+                        <span>{{translate('messages.'.$title.'_temporarily_closed_title')}}</span>
                     </h4>
                     <label class="switch toggle-switch-lg m-0">
                         <input type="checkbox" class="toggle-switch-input restaurant-open-status"
@@ -44,7 +50,7 @@
                         <i class="tio-settings-outlined"></i>
                     </span>
                     <span>
-                        {{translate('messages.store_settings')}}
+                        {{translate('messages.'.$title.'_settings')}}
                     </span>
                 </h5>
             </div>
@@ -53,7 +59,7 @@
                     <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-12">
                         <div class="">
                             <label class="toggle-switch toggle-switch-sm d-flex justify-content-between border border-secondary rounded px-4 form-control" for="schedule_order">
-                                <span class="pr-2">{{translate('messages.scheduled_order')}}<span class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('When_enabled,_store_owner_can_take_scheduled_orders_from_customers.')}}"><img src="{{asset('/public/assets/admin/img/info-circle.svg')}}" alt="{{translate('messages.scheduled_order_hint')}}"></span></span>
+                                <span class="pr-2">{{translate('messages.scheduled_'.$orderOrTrip)}}<span class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('When_enabled,_store_owner_can_take_scheduled_orders_from_customers.')}}"><img src="{{asset('/public/assets/admin/img/info-circle.svg')}}" alt="{{translate('messages.scheduled_order_hint')}}"></span></span>
                                 <input type="checkbox" class="toggle-switch-input redirect-url " data-url="{{route('vendor.business-settings.toggle-settings',[$store->id,$store->schedule_order?0:1, 'schedule_order'])}}" id="schedule_order" {{$store->schedule_order?'checked':''}}>
                                 <span class="toggle-switch-label">
                                     <span class="toggle-switch-indicator"></span>
@@ -61,139 +67,141 @@
                             </label>
                         </div>
                     </div>
-                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-12">
-                        <div class="">
-                            <label class="toggle-switch toggle-switch-sm d-flex justify-content-between border border-secondary rounded px-4 form-control" for="delivery">
-                                <span class="pr-2">{{translate('messages.delivery')}}<span class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('When_enabled,_customers_can_make_home_delivery_orders_from_this_store.')}}"><img src="{{asset('/public/assets/admin/img/info-circle.svg')}}" alt="{{translate('messages.home_delivery_hint')}}"></span></span>
-                                <input type="checkbox" name="delivery" class="toggle-switch-input redirect-url " data-url="{{route('vendor.business-settings.toggle-settings',[$store->id,$store->delivery?0:1, 'delivery'])}}" id="delivery" {{$store->delivery?'checked':''}}>
-                                <span class="toggle-switch-label">
-                                    <span class="toggle-switch-indicator"></span>
-                                </span>
-                            </label>
+                    @if($vendor != 'rental')
+                        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-12">
+                            <div class="">
+                                <label class="toggle-switch toggle-switch-sm d-flex justify-content-between border border-secondary rounded px-4 form-control" for="delivery">
+                                    <span class="pr-2">{{translate('messages.delivery')}}<span class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('When_enabled,_customers_can_make_home_delivery_orders_from_this_store.')}}"><img src="{{asset('/public/assets/admin/img/info-circle.svg')}}" alt="{{translate('messages.home_delivery_hint')}}"></span></span>
+                                    <input type="checkbox" name="delivery" class="toggle-switch-input redirect-url " data-url="{{route('vendor.business-settings.toggle-settings',[$store->id,$store->delivery?0:1, 'delivery'])}}" id="delivery" {{$store->delivery?'checked':''}}>
+                                    <span class="toggle-switch-label">
+                                        <span class="toggle-switch-indicator"></span>
+                                    </span>
+                                </label>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-12">
-                        <div class="">
-                            <label class="toggle-switch toggle-switch-sm d-flex justify-content-between border border-secondary rounded px-4 form-control" for="take_away">
-                                <span class="pr-2 text-capitalize">{{translate('messages.take_away')}}<span class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('When_enabled,_customers_can_place_takeaway_orders_from_this_store.')}}"><img src="{{asset('/public/assets/admin/img/info-circle.svg')}}" alt="{{translate('messages.take_away_hint')}}"></span></span>
-                                <input type="checkbox" class="toggle-switch-input redirect-url " data-url="{{route('vendor.business-settings.toggle-settings',[$store->id,$store->take_away?0:1, 'take_away'])}}" id="take_away" {{$store->take_away?'checked':''}}>
-                                <span class="toggle-switch-label">
-                                    <span class="toggle-switch-indicator"></span>
-                                </span>
-                            </label>
+                        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-12">
+                            <div class="">
+                                <label class="toggle-switch toggle-switch-sm d-flex justify-content-between border border-secondary rounded px-4 form-control" for="take_away">
+                                    <span class="pr-2 text-capitalize">{{translate('messages.take_away')}}<span class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('When_enabled,_customers_can_place_takeaway_orders_from_this_store.')}}"><img src="{{asset('/public/assets/admin/img/info-circle.svg')}}" alt="{{translate('messages.take_away_hint')}}"></span></span>
+                                    <input type="checkbox" class="toggle-switch-input redirect-url " data-url="{{route('vendor.business-settings.toggle-settings',[$store->id,$store->take_away?0:1, 'take_away'])}}" id="take_away" {{$store->take_away?'checked':''}}>
+                                    <span class="toggle-switch-label">
+                                        <span class="toggle-switch-indicator"></span>
+                                    </span>
+                                </label>
+                            </div>
                         </div>
-                    </div>
 
-                    @if ($store->module->module_type == 'pharmacy')
-                    @php($prescription_order_status = \App\Models\BusinessSetting::where('key', 'prescription_order_status')->first())
-                    @php($prescription_order_status = $prescription_order_status ? $prescription_order_status->value : 0)
-                        @if ($prescription_order_status)
-                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-12">
+                        @if ($store->module->module_type == 'pharmacy')
+                        @php($prescription_order_status = \App\Models\BusinessSetting::where('key', 'prescription_order_status')->first())
+                        @php($prescription_order_status = $prescription_order_status ? $prescription_order_status->value : 0)
+                            @if ($prescription_order_status)
+                                <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-12">
+                                    <div class="">
+                                        <label class="toggle-switch toggle-switch-sm d-flex justify-content-between border border-secondary rounded px-4 form-control" for="prescription_order">
+                                            <span class="pr-2 text-capitalize">{{translate('messages.prescription_order')}}:</span>
+                                            <input type="checkbox" class="toggle-switch-input redirect-url" data-url="{{route('vendor.business-settings.toggle-settings',[$store->id,$store->prescription_order?0:1, 'prescription_order'])}}" id="prescription_order" {{$store->prescription_order?'checked':''}}>
+                                            <span class="toggle-switch-label">
+                                                <span class="toggle-switch-indicator"></span>
+                                            </span>
+                                        </label>
+                                    </div>
+                                </div>
+                            @endif
+                        @endif
+                        @if ($store->sub_self_delivery == 1)
+                        <div class="col-lg-4 col-sm-6">
+                            <div class="  m-0">
+                                <label class="toggle-switch toggle-switch-sm d-flex justify-content-between border rounded px-3 form-control" for="free_delivery">
+                                    <span class="pr-2">
+                                        {{translate('messages.free_delivery')}}
+                                        <span data-toggle="tooltip" data-placement="right" data-original-title="{{translate('If this option is on, customers will get free delivery')}}" class="input-label-secondary"><img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="i"></span>
+                                    </span>
+                                    <input type="checkbox" name="free_delivery" class="toggle-switch-input redirect-url" data-url="{{route('vendor.business-settings.toggle-settings',[$store->id,$store->free_delivery?0:1, 'free_delivery'])}}" id="free_delivery" {{$store->free_delivery?'checked':''}}>
+                                    <span class="toggle-switch-label">
+                                        <span class="toggle-switch-indicator"></span>
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                        @endif
+                        @if ($toggle_veg_non_veg && config('module.'.$store->module->module_type)['veg_non_veg'])
+                        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-12">
+                            <div class="">
+                                <label class="toggle-switch toggle-switch-sm d-flex justify-content-between border border-secondary rounded px-4 form-control" for="veg">
+                                    <span class="pr-2 text-capitalize">{{translate('messages.veg')}}</span>
+                                    <input type="checkbox" class="toggle-switch-input redirect-url" data-url="{{route('vendor.business-settings.toggle-settings',[$store->id,$store->veg?0:1, 'veg'])}}" id="veg" {{$store->veg?'checked':''}}>
+                                    <span class="toggle-switch-label">
+                                        <span class="toggle-switch-indicator"></span>
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-12">
+                            <div class="">
+                                <label class="toggle-switch toggle-switch-sm d-flex justify-content-between border border-secondary rounded px-4 form-control" for="non_veg">
+                                    <span class="pr-2 text-capitalize">{{translate('messages.non_veg')}}</span>
+                                    <input type="checkbox" class="toggle-switch-input redirect-url" data-url="{{route('vendor.business-settings.toggle-settings',[$store->id,$store->non_veg?0:1, 'non_veg'])}}" id="non_veg" {{$store->non_veg?'checked':''}}>
+                                    <span class="toggle-switch-label">
+                                        <span class="toggle-switch-indicator"></span>
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                        @endif
+                        @if (config('module.'.$store->module->module_type)['cutlery'])
+                        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-12">
+                            <div class="">
+                                <label class="toggle-switch toggle-switch-sm d-flex justify-content-between border border-secondary rounded px-4 form-control" for="cutlery">
+                                    <span class="pr-2 text-capitalize">{{translate('messages.cutlery')}}</span>
+                                    <input type="checkbox" class="toggle-switch-input redirect-url"
+                                           data-url="{{route('vendor.business-settings.toggle-settings',[$store->id,$store->cutlery?0:1, 'cutlery'])}}"
+                                           id="cutlery" {{$store->cutlery?'checked':''}}>
+                                    <span class="toggle-switch-label">
+                                        <span class="toggle-switch-indicator"></span>
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                        @endif
+                        @if (config('module.'.$store->module->module_type)['halal'])
+                            <div class="col-xl-4 col-md-4 col-sm-6">
                                 <div class="">
-                                    <label class="toggle-switch toggle-switch-sm d-flex justify-content-between border border-secondary rounded px-4 form-control" for="prescription_order">
-                                        <span class="pr-2 text-capitalize">{{translate('messages.prescription_order')}}:</span>
-                                        <input type="checkbox" class="toggle-switch-input redirect-url" data-url="{{route('vendor.business-settings.toggle-settings',[$store->id,$store->prescription_order?0:1, 'prescription_order'])}}" id="prescription_order" {{$store->prescription_order?'checked':''}}>
-                                        <span class="toggle-switch-label">
-                                            <span class="toggle-switch-indicator"></span>
+                                    <label
+                                        class="toggle-switch toggle-switch-sm d-flex justify-content-between border  rounded px-3 form-control"
+                                        for="halal_tag_status">
+                                    <span class="pr-2 d-flex">
+                                        <span class="line--limit-1">
+                                            {{translate('messages.halal_tag_status')}}
                                         </span>
+                                        <span data-toggle="tooltip" data-placement="right"
+                                              data-original-title='{{translate("If_enabled,_customers_can_see_halal_tag_on_product")}}'
+                                              class="input-label-secondary">
+                                            <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="i">
+                                        </span>
+                                    </span>
+                                        <input type="checkbox"
+                                               data-id="halal_tag_status"
+                                               data-type="status"
+                                               data-image-on="{{ asset('/public/assets/admin/img/modal/schedule-on.png') }}"
+                                               data-image-off="{{ asset('/public/assets/admin/img/modal/schedule-off.png') }}"
+                                               data-title-on="{{ translate('Want_to_enable_halal_tag_status_for_this_restaurant?') }}"
+                                               data-title-off="{{ translate('Want_to_disable_halal_tag_status_for_this_restaurant?') }}"
+                                               data-text-on="<p>{{ translate('If_enabled,_customers_can_see_halal_tag_on_product') }}"
+                                               data-text-off="<p>{{ translate('If_disabled,_customers_can_not_see_halal_tag_on_product.') }}</p>"
+                                               class="toggle-switch-input dynamic-checkbox"
+                                               id="halal_tag_status" {{$store->storeConfig?->halal_tag_status == 1?'checked':''}}>
+                                        <span class="toggle-switch-label">
+                                        <span class="toggle-switch-indicator"></span>
+                                    </span>
                                     </label>
+                                    <form
+                                        action="{{route('vendor.business-settings.toggle-settings',[$store->id,$store->storeConfig?->halal_tag_status?0:1, 'halal_tag_status'])}}"
+                                        method="get" id="halal_tag_status_form">
+                                    </form>
                                 </div>
                             </div>
                         @endif
-                    @endif
-                    @if ($store->sub_self_delivery == 1)
-                    <div class="col-lg-4 col-sm-6">
-                        <div class="  m-0">
-                            <label class="toggle-switch toggle-switch-sm d-flex justify-content-between border rounded px-3 form-control" for="free_delivery">
-                                <span class="pr-2">
-                                    {{translate('messages.free_delivery')}}
-                                    <span data-toggle="tooltip" data-placement="right" data-original-title="{{translate('If this option is on, customers will get free delivery')}}" class="input-label-secondary"><img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="i"></span>
-                                </span>
-                                <input type="checkbox" name="free_delivery" class="toggle-switch-input redirect-url" data-url="{{route('vendor.business-settings.toggle-settings',[$store->id,$store->free_delivery?0:1, 'free_delivery'])}}" id="free_delivery" {{$store->free_delivery?'checked':''}}>
-                                <span class="toggle-switch-label">
-                                    <span class="toggle-switch-indicator"></span>
-                                </span>
-                            </label>
-                        </div>
-                    </div>
-                    @endif
-                    @if ($toggle_veg_non_veg && config('module.'.$store->module->module_type)['veg_non_veg'])
-                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-12">
-                        <div class="">
-                            <label class="toggle-switch toggle-switch-sm d-flex justify-content-between border border-secondary rounded px-4 form-control" for="veg">
-                                <span class="pr-2 text-capitalize">{{translate('messages.veg')}}</span>
-                                <input type="checkbox" class="toggle-switch-input redirect-url" data-url="{{route('vendor.business-settings.toggle-settings',[$store->id,$store->veg?0:1, 'veg'])}}" id="veg" {{$store->veg?'checked':''}}>
-                                <span class="toggle-switch-label">
-                                    <span class="toggle-switch-indicator"></span>
-                                </span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-12">
-                        <div class="">
-                            <label class="toggle-switch toggle-switch-sm d-flex justify-content-between border border-secondary rounded px-4 form-control" for="non_veg">
-                                <span class="pr-2 text-capitalize">{{translate('messages.non_veg')}}</span>
-                                <input type="checkbox" class="toggle-switch-input redirect-url" data-url="{{route('vendor.business-settings.toggle-settings',[$store->id,$store->non_veg?0:1, 'non_veg'])}}" id="non_veg" {{$store->non_veg?'checked':''}}>
-                                <span class="toggle-switch-label">
-                                    <span class="toggle-switch-indicator"></span>
-                                </span>
-                            </label>
-                        </div>
-                    </div>
-                    @endif
-                    @if (config('module.'.$store->module->module_type)['cutlery'])
-                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-12">
-                        <div class="">
-                            <label class="toggle-switch toggle-switch-sm d-flex justify-content-between border border-secondary rounded px-4 form-control" for="cutlery">
-                                <span class="pr-2 text-capitalize">{{translate('messages.cutlery')}}</span>
-                                <input type="checkbox" class="toggle-switch-input redirect-url"
-                                       data-url="{{route('vendor.business-settings.toggle-settings',[$store->id,$store->cutlery?0:1, 'cutlery'])}}"
-                                       id="cutlery" {{$store->cutlery?'checked':''}}>
-                                <span class="toggle-switch-label">
-                                    <span class="toggle-switch-indicator"></span>
-                                </span>
-                            </label>
-                        </div>
-                    </div>
-                    @endif
-                    @if (config('module.'.$store->module->module_type)['halal'])
-                        <div class="col-xl-4 col-md-4 col-sm-6">
-                            <div class="">
-                                <label
-                                    class="toggle-switch toggle-switch-sm d-flex justify-content-between border  rounded px-3 form-control"
-                                    for="halal_tag_status">
-                                <span class="pr-2 d-flex">
-                                    <span class="line--limit-1">
-                                        {{translate('messages.halal_tag_status')}}
-                                    </span>
-                                    <span data-toggle="tooltip" data-placement="right"
-                                          data-original-title='{{translate("If_enabled,_customers_can_see_halal_tag_on_product")}}'
-                                          class="input-label-secondary">
-                                        <img src="{{asset('public/assets/admin/img/info-circle.svg')}}" alt="i">
-                                    </span>
-                                </span>
-                                    <input type="checkbox"
-                                           data-id="halal_tag_status"
-                                           data-type="status"
-                                           data-image-on="{{ asset('/public/assets/admin/img/modal/schedule-on.png') }}"
-                                           data-image-off="{{ asset('/public/assets/admin/img/modal/schedule-off.png') }}"
-                                           data-title-on="{{ translate('Want_to_enable_halal_tag_status_for_this_restaurant?') }}"
-                                           data-title-off="{{ translate('Want_to_disable_halal_tag_status_for_this_restaurant?') }}"
-                                           data-text-on="<p>{{ translate('If_enabled,_customers_can_see_halal_tag_on_product') }}"
-                                           data-text-off="<p>{{ translate('If_disabled,_customers_can_not_see_halal_tag_on_product.') }}</p>"
-                                           class="toggle-switch-input dynamic-checkbox"
-                                           id="halal_tag_status" {{$store->storeConfig?->halal_tag_status == 1?'checked':''}}>
-                                    <span class="toggle-switch-label">
-                                    <span class="toggle-switch-indicator"></span>
-                                </span>
-                                </label>
-                                <form
-                                    action="{{route('vendor.business-settings.toggle-settings',[$store->id,$store->storeConfig?->halal_tag_status?0:1, 'halal_tag_status'])}}"
-                                    method="get" id="halal_tag_status_form">
-                                </form>
-                            </div>
-                        </div>
                     @endif
                 </div>
             </div>
@@ -205,7 +213,7 @@
                         <i class="tio-settings-outlined"></i>
                     </span>
                     <span>
-                        {{translate('messages.Store Basic Settings')}}
+                        {{translate('messages.'.$title.' Basic Settings')}}
                     </span>
                 </h5>
             </div>
@@ -214,20 +222,21 @@
                     enctype="multipart/form-data">
                     @csrf
                     <div class="row align-items-end g-2">
-
-                        <div class=" col-md-4">
-                            <label class="input-label text-capitalize" for="minimum_order">{{translate('messages.minimum_order_amount')}}<span class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('Specify_the_minimum_order_amount_required_for_customers_when_ordering_from_this_store.')}}"><img src="{{asset('/public/assets/admin/img/info-circle.svg')}}" alt="{{translate('messages.self_delivery_hint')}}"></span></label>
-                            <input type="number" id="minimum_order" name="minimum_order" step="0.01" min="0" max="100000" class="form-control" placeholder="100" value="{{$store->minimum_order>0?$store->minimum_order :''}}">
-                        </div>
-                        @if (config('module.'.$store->module->module_type)['order_place_to_schedule_interval'])
-                        <div class=" col-md-4">
-                            <label class="input-label text-capitalize" for="order_place_to_schedule_interval">{{translate('messages.minimum_processing_time')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right"
-            data-original-title="{{translate('messages.minimum_processing_time_warning')}}"><img src="{{asset('/public/assets/admin/img/info-circle.svg')}}" alt="{{translate('messages.minimum_processing_time_warning')}}"></span></label>
-                            <input type="text" id="order_place_to_schedule_interval" name="order_place_to_schedule_interval" class="form-control" value="{{$store->order_place_to_schedule_interval}}">
-                        </div>
+                        @if($vendor != 'rental')
+                            <div class=" col-md-4">
+                                <label class="input-label text-capitalize" for="minimum_order">{{translate('messages.minimum_order_amount')}}<span class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('Specify_the_minimum_order_amount_required_for_customers_when_ordering_from_this_store.')}}"><img src="{{asset('/public/assets/admin/img/info-circle.svg')}}" alt="{{translate('messages.self_delivery_hint')}}"></span></label>
+                                <input type="number" id="minimum_order" name="minimum_order" step="0.01" min="0" max="100000" class="form-control" placeholder="100" value="{{$store->minimum_order>0?$store->minimum_order :''}}">
+                            </div>
+                            @if (config('module.'.$store->module->module_type)['order_place_to_schedule_interval'])
+                            <div class=" col-md-4">
+                                <label class="input-label text-capitalize" for="order_place_to_schedule_interval">{{translate('messages.minimum_processing_time')}}<span class="form-label-secondary" data-toggle="tooltip" data-placement="right"
+                                data-original-title="{{translate('messages.minimum_processing_time_warning')}}"><img src="{{asset('/public/assets/admin/img/info-circle.svg')}}" alt="{{translate('messages.minimum_processing_time_warning')}}"></span></label>
+                                <input type="text" id="order_place_to_schedule_interval" name="order_place_to_schedule_interval" class="form-control" value="{{$store->order_place_to_schedule_interval}}">
+                            </div>
+                            @endif
                         @endif
                         <div class=" col-md-4">
-                            <label class="input-label text-capitalize" for="minimum_delivery_time">{{translate('messages.approx_delivery_time')}}<span class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{translate('Set_the_total_time_to_deliver_products.')}}"><img src="{{asset('/public/assets/admin/img/info-circle.svg')}}" alt="{{translate('Set_the_total_time_to_deliver_products.')}}"></span></label>
+                            <label class="input-label text-capitalize" for="minimum_delivery_time">{{translate('messages.approx_'.$approxTime.'_time')}}<span class="input-label-secondary" data-toggle="tooltip" data-placement="right" data-original-title="{{ translate('Set_the_total_time_to_' . ($vendor == 'rental' ? 'pickup' : 'deliver_products')) }}"><img src="{{asset('/public/assets/admin/img/info-circle.svg')}}" alt="{{translate('Set_the_total_time_to_deliver_products.')}}"></span></label>
                             <div class="input-group">
                                 <input type="number" id="minimum_delivery_time" name="minimum_delivery_time" class="form-control" placeholder="Min: 10" value="{{explode('-',$store->delivery_time)[0]}}" title="{{translate('messages.minimum_delivery_time')}}">
                                 <input type="number" name="maximum_delivery_time" class="form-control" placeholder="Max: 20" value="{{explode(' ',explode('-',$store->delivery_time)[1])[0]}}" title="{{translate('messages.maximum_delivery_time')}}">
@@ -238,47 +247,48 @@
                                 </select>
                             </div>
                         </div>
+                        @if($vendor != 'rental')
+                            @if($store->sub_self_delivery)
+                            <div class="col-sm-4 col-12">
+                                <div class=" ">
+                                    <label class="input-label text-capitalize" for="minimum_shipping_charge">{{translate('messages.minimum_shipping_charge')}} ({{\App\CentralLogics\Helpers::currency_symbol()}})
+                                    </label>
+                                    <input type="number" id="minimum_shipping_charge" min="0" max="99999999.99" step="0.01" name="minimum_delivery_charge" class="form-control shipping_input" value="{{$store?->minimum_shipping_charge ?? ''}}">
+                                </div>
+                            </div>
 
-                        @if($store->sub_self_delivery)
-                        <div class="col-sm-4 col-12">
-                            <div class=" ">
-                                <label class="input-label text-capitalize" for="minimum_shipping_charge">{{translate('messages.minimum_shipping_charge')}} ({{\App\CentralLogics\Helpers::currency_symbol()}})
-                                </label>
-                                <input type="number" id="minimum_shipping_charge" min="0" max="99999999.99" step="0.01" name="minimum_delivery_charge" class="form-control shipping_input" value="{{$store?->minimum_shipping_charge ?? ''}}">
+                            <div class="col-sm-4 col-12">
+                                <div class="">
+                                    <label class="input-label text-capitalize" for="per_km_delivery_charge">{{translate('messages.delivery_charge_per_km')}} ({{\App\CentralLogics\Helpers::currency_symbol()}})</label>
+                                    <input type="number"  id="per_km_delivery_charge" name="per_km_delivery_charge" step="0.01" min="0" max="100000" class="form-control" placeholder="100" value="{{$store->per_km_shipping_charge??'0'}}">
+                                </div>
                             </div>
-                        </div>
+                            <div class="col-sm-4 col-12">
+                                <div class="">
+                                    <label class="input-label text-capitalize" for="maximum_shipping_charge">{{translate('messages.maximum_delivery_charge')}} ({{\App\CentralLogics\Helpers::currency_symbol()}})
+                                        <span data-toggle="tooltip" data-placement="right" data-original-title="{{translate('It will add a limite on total delivery charge.') }}"
+                                        class="input-label-secondary"><img
+                                            src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
+                                            alt="{{ translate('messages.maximum_delivery_charge') }}"></span>
+                                    </label>
+                                    <input type="number" id="maximum_shipping_charge" name="maximum_shipping_charge" step="0.01" min="0" max="999999999" class="form-control" placeholder="10000" value="{{$store->maximum_shipping_charge??''}}">
+                                </div>
+                            </div>
+                            @endif
 
-                        <div class="col-sm-4 col-12">
-                            <div class="">
-                                <label class="input-label text-capitalize" for="per_km_delivery_charge">{{translate('messages.delivery_charge_per_km')}} ({{\App\CentralLogics\Helpers::currency_symbol()}})</label>
-                                <input type="number"  id="per_km_delivery_charge" name="per_km_delivery_charge" step="0.01" min="0" max="100000" class="form-control" placeholder="100" value="{{$store->per_km_shipping_charge??'0'}}">
+                            @if ($store->module->module_type != 'food')
+                            <div class="col-sm-4 col-12">
+                                <div class="">
+                                    <label class="input-label text-capitalize" for="minimum_stock_for_warning">{{translate('messages.Minimum_stock_for_warning')}}
+                                        <span data-toggle="tooltip" data-placement="right" data-original-title="{{translate('When_the_stock_of_a_product_reaches_its_minimum_value_that_you_have_set,_you_will_receive_a_warning_to_update_the_stock._Additionally,_these_products_will_appear_in_the_Admin’s_Low_Stock_list.') }}"
+                                        class="input-label-secondary"><img
+                                            src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
+                                            alt="{{ translate('messages.Minimum_stock_for_warning') }}"></span>
+                                    </label>
+                                    <input type="number" id="minimum_stock_for_warning" name="minimum_stock_for_warning"  min="0" max="999999999" class="form-control" placeholder="{{ translate('messages.Ex: 5') }}" value="{{$store?->storeConfig?->minimum_stock_for_warning??''}}">
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-sm-4 col-12">
-                            <div class="">
-                                <label class="input-label text-capitalize" for="maximum_shipping_charge">{{translate('messages.maximum_delivery_charge')}} ({{\App\CentralLogics\Helpers::currency_symbol()}})
-                                    <span data-toggle="tooltip" data-placement="right" data-original-title="{{translate('It will add a limite on total delivery charge.') }}"
-                                    class="input-label-secondary"><img
-                                        src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
-                                        alt="{{ translate('messages.maximum_delivery_charge') }}"></span>
-                                </label>
-                                <input type="number" id="maximum_shipping_charge" name="maximum_shipping_charge" step="0.01" min="0" max="999999999" class="form-control" placeholder="10000" value="{{$store->maximum_shipping_charge??''}}">
-                            </div>
-                        </div>
-                        @endif
-
-                        @if ($store->module->module_type != 'food')
-                        <div class="col-sm-4 col-12">
-                            <div class="">
-                                <label class="input-label text-capitalize" for="minimum_stock_for_warning">{{translate('messages.Minimum_stock_for_warning')}}
-                                    <span data-toggle="tooltip" data-placement="right" data-original-title="{{translate('When_the_stock_of_a_product_reaches_its_minimum_value_that_you_have_set,_you_will_receive_a_warning_to_update_the_stock._Additionally,_these_products_will_appear_in_the_Admin’s_Low_Stock_list.') }}"
-                                    class="input-label-secondary"><img
-                                        src="{{ asset('/public/assets/admin/img/info-circle.svg') }}"
-                                        alt="{{ translate('messages.Minimum_stock_for_warning') }}"></span>
-                                </label>
-                                <input type="number" id="minimum_stock_for_warning" name="minimum_stock_for_warning"  min="0" max="999999999" class="form-control" placeholder="{{ translate('messages.Ex: 5') }}" value="{{$store?->storeConfig?->minimum_stock_for_warning??''}}">
-                            </div>
-                        </div>
+                            @endif
                         @endif
 
                         <div class="col-sm-{{ $store->module->module_type != 'food' ? '4' : '6' }} col-12">
@@ -297,7 +307,7 @@
 
                         @php($extra_packaging_data = \App\Models\BusinessSetting::where('key', 'extra_packaging_data')->first()?->value ?? '')
                         @php($extra_packaging_data =json_decode($extra_packaging_data , true))
-                        @if   ( !empty($extra_packaging_data) && $extra_packaging_data[$store->module->module_type]=='1')
+                        @if (data_get($extra_packaging_data,$store?->module_type)=='1')
                             <div class="col-sm-{{ $store->module->module_type != 'food' ? '4' : '6' }}">
                                 <div class="">
                                     <label class="d-flex justify-content-between switch toggle-switch-sm text-dark" for="extra_packaging_status">
@@ -342,7 +352,7 @@
                     <span class="card-header-icon">
                         <img class="w--22" src="{{asset('public/assets/admin/img/store.png')}}" alt="">
                     </span>
-                    <span class="p-md-1"> {{translate('messages.store_meta_data')}}</span>
+                    <span class="p-md-1"> {{translate('messages.'.$title.'_meta_data')}}</span>
                 </h5>
             </div>
             @php($language=\App\Models\BusinessSetting::where('key','language')->first())
@@ -448,7 +458,7 @@
                                 <div class="card-header">
                                     <h5 class="card-title">
                                         <span class="card-header-icon mr-1"><i class="tio-dashboard"></i></span>
-                                        <span>{{translate('store_meta_image')}}</span>
+                                        <span>{{translate($title.'_meta_image')}}</span>
                                     </h5>
                                 </div>
                                 <div class="card-body">

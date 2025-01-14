@@ -1,10 +1,9 @@
+@php
+    $title = auth('vendor')?->user()?->store?->module_type == 'rental' ? 'Provider' : 'Store';
+@endphp
+
 @extends('layouts.vendor.app')
-
-@section('title',translate('messages.store_wallet'))
-
-@push('css_or_js')
-
-@endpush
+@section('title', translate('messages.' . $title . '_wallet'))
 
 @section('content')
     <div class="content container-fluid">
@@ -17,7 +16,7 @@
                             <img src="{{asset('/public/assets/admin/img/image_90.png')}}" alt="public">
                         </div>
                         <span>
-                            {{translate('messages.store_wallet')}}
+                            {{translate('messages.' . $title . '_wallet')}}
                         </span>
                     </h2>
                 </div>

@@ -444,7 +444,7 @@ $tripCount = Illuminate\Support\Facades\DB::select("SELECT
 
                     @if (\App\CentralLogics\Helpers::employee_module_permission_check('report'))
                         <li
-                            class="navbar-vertical-aside-has-menu {{ Request::is('vendor/report/expense-report') ? 'active' : '' }}">
+                            class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel/report/expense-report') ? 'active' : '' }}">
                             <a class="nav-link " href="{{ route('vendor.report.expense-report') }}"
                                 title="{{ translate('messages.expense_report') }}">
                                 <span class="tio-money nav-icon"></span>
