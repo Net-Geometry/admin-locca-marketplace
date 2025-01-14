@@ -624,36 +624,6 @@ class VehicleController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @return Renderable
-     */
-    public function reviews(Request $request): Renderable
-    {
-        $providerId = auth('vendor')->user()->stores[0]->id;
-        $vehicleReview = $this->vehicleReview
-            ->where('provider_id', $providerId)
-            ->when($request->has('search'), function ($query) use ($request) {
-                $keys = explode(' ', $request['search']);
-                foreach ($keys as $key) {
-                    $query->where(function ($query) use ($key) {
-                        $query->orWhere('comment', 'LIKE', '%' . $key . '%')
-                            ->orWhere('reply', 'LIKE', '%' . $key . '%')
-                            ->orWhereHas('customer', function ($customerQuery) use ($key) {
-                                $customerQuery->where('f_name', 'LIKE', '%' . $key . '%')
-                                    ->orWhere('l_name', 'LIKE', '%' . $key . '%')
-                                    ->orWhere('phone', 'LIKE', '%' . $key . '%');
-                            })
-                            ->orWhereHas('vehicle', function ($vehicleQuery) use ($key) {
-                                $vehicleQuery->where('name', 'LIKE', '%' . $key . '%');
-                            });
-                    });
-                }
-            })
-            ->latest()->paginate(config('default_pagination'));
-        return view('rental::provider.vehicle.review-list', compact('vehicleReview'));
-    }
-
-    /**
      * @return View|Application|Factory
      */
     public function bulkImportIndex(): View|Application|Factory

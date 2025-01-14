@@ -7,11 +7,14 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application;
+use Brian2694\Toastr\Facades\Toastr;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Maatwebsite\Excel\Facades\Excel;
 use Modules\Rental\Entities\VehicleBrand;
 use Modules\Rental\Entities\VehicleCategory;
+use Modules\Rental\Entities\VehicleReview;
 use Modules\Rental\Exports\VehicleBrandExport;
 use Modules\Rental\Exports\VehicleCategoryExport;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -20,11 +23,12 @@ class ProviderController extends Controller
 {
     private VehicleCategory $category;
     private VehicleBrand $brand;
-
-    public function __construct(VehicleCategory $category, VehicleBrand $brand)
+    private VehicleReview $vehicleReview;
+    public function __construct(VehicleCategory $category, VehicleBrand $brand, VehicleReview $vehicleReview)
     {
         $this->category = $category;
         $this->brand = $brand;
+        $this->vehicleReview = $vehicleReview;
     }
 
     /**
@@ -127,5 +131,55 @@ class ProviderController extends Controller
             return Excel::download(new VehicleBrandExport($data), 'Brands.csv');
         }
         return Excel::download(new VehicleBrandExport($data), 'Brands.xlsx');
+    }
+
+    /**
+     * @param Request $request
+     * @return Renderable
+     */
+    public function reviews(Request $request): Renderable
+    {
+        $providerId = auth('vendor')->user()->stores[0]->id;
+        $reviews = $this->vehicleReview
+            ->where('provider_id', $providerId)
+            ->when($request->has('search'), function ($query) use ($request) {
+                $keys = explode(' ', $request['search']);
+                foreach ($keys as $key) {
+                    $query->where(function ($query) use ($key) {
+                        $query->orWhere('comment', 'LIKE', '%' . $key . '%')
+                            ->orWhere('reply', 'LIKE', '%' . $key . '%')
+                            ->orWhereHas('customer', function ($customerQuery) use ($key) {
+                                $customerQuery->where('f_name', 'LIKE', '%' . $key . '%')
+                                    ->orWhere('l_name', 'LIKE', '%' . $key . '%')
+                                    ->orWhere('phone', 'LIKE', '%' . $key . '%');
+                            })
+                            ->orWhereHas('vehicle', function ($vehicleQuery) use ($key) {
+                                $vehicleQuery->where('name', 'LIKE', '%' . $key . '%');
+                            });
+                    });
+                }
+            })
+            ->latest()->paginate(config('default_pagination'));
+        return view('rental::provider.review.list', compact('reviews'));
+    }
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @return RedirectResponse
+     */
+    public function reviewReply(Request $request, $id): \Illuminate\Http\RedirectResponse
+    {
+        $request->validate([
+            'reply' => 'required|max:65000',
+        ]);
+
+        $review = $this->vehicleReview->findOrFail($id);
+        $review->reply = $request->reply;
+        $review->replied_at = now();
+        $review->save();
+
+        Toastr::success(translate('messages.review_reply_updated'));
+        return back();
     }
 }

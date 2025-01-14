@@ -41,7 +41,6 @@ Route::group([ 'middleware' => ['vendor']], function () {
         Route::get('export', [VehicleController::class, 'export'])->name('export');
         Route::get('review-status/{id}', [VehicleController::class, 'reviewStatus'])->name('review.status');
         Route::get('review-export', [VehicleController::class, 'reviewExport'])->name('review.export');
-        Route::get('review-list', [VehicleController::class, 'reviews'])->name('reviews');
 
         Route::get('bulk-import', [VehicleController::class, 'bulkImportIndex'])->name('bulk_import');
         Route::POST('bulk-import', [VehicleController::class, 'bulkImportData']);
@@ -111,6 +110,10 @@ Route::group([ 'middleware' => ['vendor']], function () {
         Route::get('trip-report', [ReportController::class, 'tripReport'])->name('trip-report');
         Route::get('trip-report-export', [ReportController::class, 'tripReportExport'])->name('trip-report-export');
     });
+
+
+    Route::get('rental-reviews', [ProviderController::class, 'reviews'])->name('rental.reviews');
+    Route::post('rental-review/{id}', [ProviderController::class, 'reviewReply'])->name('rental.review.reply');
 });
 
 

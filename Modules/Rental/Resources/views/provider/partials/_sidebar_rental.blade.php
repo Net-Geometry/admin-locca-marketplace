@@ -411,9 +411,9 @@ $tripCount = Illuminate\Support\Facades\DB::select("SELECT
                     <!-- End StoreWallet -->
                     @if (\App\CentralLogics\Helpers::employee_module_permission_check('reviews'))
                         <li
-                            class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel/reviews') ? 'active' : '' }}">
+                            class="navbar-vertical-aside-has-menu {{ Request::is('vendor-panel/rental-reviews') ? 'active' : '' }}">
                             <a class="js-navbar-vertical-aside-menu-link nav-link"
-                                href="{{ route('vendor.reviews') }}" title="{{ translate('messages.reviews') }}">
+                                href="{{ route('vendor.rental.reviews') }}" title="{{ translate('messages.reviews') }}">
                                 <i class="tio-star-outlined nav-icon"></i>
                                 <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
                                     {{ translate('messages.reviews') }}

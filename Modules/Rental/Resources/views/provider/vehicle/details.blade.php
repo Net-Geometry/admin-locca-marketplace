@@ -454,72 +454,238 @@
                 </div>
             </div>
             <!-- End Header -->
-
+            @php($store_review_reply = App\Models\BusinessSetting::where('key' , 'store_review_reply')->first()->value ?? 0)
             <!-- Table -->
             <div class="table-responsive datatable-custom">
                 <table id="columnSearchDatatable"
-                       class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
+                       class="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table"
+                       data-hs-datatables-options='{
+                            "order": [],
+                            "orderCellsTop": true,
+                            "paging": false
+                        }'>
                     <thead class="thead-light">
                     <tr>
-                        <th class="border-0">{{ translate('sl') }}</th>
-                        <th class="border-0">{{ translate('messages.Review_ID') }}</th>
-                        <th class="border-0">{{ translate('messages.Customer') }}</th>
-                        <th class="border-0">{{ translate('messages.Review') }}</th>
-                        <th class="border-0">{{ translate('messages.Date') }}</th>
-                        <th class="border-0">{{ translate('messages.Provider_Reply') }}</th>
-                        <th class="text-center border-0">{{ translate('messages.Status') }}</th>
+                        <th class="border-0">{{translate('messages.#')}}</th>
+                        <th class="border-0">{{translate('messages.Review_Id')}}</th>
+                        <th class="border-0">{{translate('messages.Vehicle')}}</th>
+                        <th class="border-0">{{translate('messages.reviewer')}}</th>
+                        <th class="border-0">{{translate('messages.review')}}</th>
+                        <th class="border-0">{{translate('messages.date')}}</th>
+                        <th class="border-0">{{translate('messages.Reply_date')}}</th>
+                        @if($store_review_reply == '1')
+                            <th class="text-center">{{translate('messages.action')}}</th>
+                        @endif
                     </tr>
                     </thead>
 
-                    <tbody id="set-rows">
-                    @foreach($vehicleReview as $review)
+                    <tbody>
+                    @foreach($vehicleReview as $key=>$review)
                         <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            <td>#{{ $review->id }}</td>
-
+                            <td>{{$key+$vehicleReview->firstItem()}}</td>
+                            <td>{{$review->review_id}}</td>
                             <td>
-                                <div class="table-rest-info d-block">
-                                    <div class="info">
-                                        <div title="Car Rental Service" class="text--info">
-                                            {{ $review->customer->fullName }}
-                                        </div>
-                                        <div>
-                                                <span class="font-light">
-                                                    {{ $review->customer->phone }}
-                                                </span>
+                                @if ($review->vehicle)
+                                    <div class="position-relative media align-items-center">
+                                        <a class=" text-hover-primary absolute--link" href="{{route('vendor.vehicle.details',$review->vehicle_id)}}">
+                                            <img class="avatar avatar-lg mr-3  onerror-image"  data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
+                                                 src="{{ $review->vehicle->thumbnail_full_url }}" alt="{{$review?->vehicle?->name}} image">
+                                        </a>
+                                        <div class="media-body">
+                                            <h5 class="text-hover-primary important--link mb-0">{{Str::limit($review?->vehicle?->name,10)}}</h5>
+                                            <!-- Static -->
+                                            <a href="{{route('vendor.trip.details',$review->trip_id)}}"  class="fz--12 text-body important--link">{{ translate('Trip ID') }} #{{$review->trip_id}}</a>
+                                            <!-- Static -->
                                         </div>
                                     </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="font-semibold text--warning">
-                                    <i class="fs-13 tio-star"></i>
-                                    {{ $review->rating }}
-                                </div>
-                                @if($review->comment)
-                                    <div class="line--limit-2 max-w--220px">
-                                        {{ $review->comment  }}
-                                    </div>
+                                @else
+                                    {{translate('messages.Food_deleted!')}}
                                 @endif
                             </td>
                             <td>
-                                {{ $review->reviewDate }}
-                                <br>
-                                {{ $review->reviewTime }}
+                                @if($review->customer)
+                                    <div>
+                                        <h5 class="d-block text-hover-primary mb-1">{{Str::limit($review->customer['f_name']." ".$review->customer['l_name'])}} <i
+                                                class="tio-verified text-primary" data-toggle="tooltip" data-placement="top"
+                                                title="Verified Customer"></i></h5>
+                                        <span class="d-block font-size-sm text-body">{{Str::limit($review->customer->phone)}}</span>
+                                    </div>
+                                @else
+                                    {{translate('messages.customer_not_found')}}
+                                @endif
                             </td>
                             <td>
-                                <div class="line--limit-2 max-w--220px">
-                                    {{ $review->reply ? $review->reply : 'N/A' }}
+                                <div class="text-wrap w-18rem">
+                                    <label class="rating">
+                                        <i class="tio-star"></i>
+                                        <span>{{$review->rating}}</span>
+                                    </label>
+                                    <p data-toggle="tooltip" data-placement="bottom"
+                                       data-original-title="{{ $review?->comment }}" >
+                                        {{Str::limit($review['comment'], 80)}}
+                                    </p>
                                 </div>
-                            <td>
-                                <label class="toggle-switch toggle-switch-sm" for="publishCheckbox{{$review->id}}">
-                                    <input type="checkbox" data-url="{{ route('vendor.vehicle.review.status', $review->id) }}" class="toggle-switch-input redirect-url"
-                                           id="publishCheckbox{{$review->id}}" {{ $review->status ? 'checked' : ''}}>
-                                    <span class="toggle-switch-label mx-auto">
-                                            <span class="toggle-switch-indicator"></span>
-                                        </span>
-                                </label>
                             </td>
+                            <td>
+                                <span class="d-block">
+                                    {{ \App\CentralLogics\Helpers::date_format($review->created_at)  }}
+                                </span>
+                                <span class="d-block"> {{ \App\CentralLogics\Helpers::time_format($review->created_at)  }}</span>
+                            </td>
+                            <td>
+                                <p class="text-wrap" data-toggle="tooltip" data-placement="top"
+                                   data-original-title="{{ $review?->reply }}">{!! $review->reply?Str::limit($review->reply, 50, '...'): translate('messages.Not_replied_Yet') !!}</p>
+                            </td>
+                            @if($store_review_reply == '1')
+                                <td>
+                                    <div class="btn--container justify-content-center">
+                                        <a  class="btn btn-sm btn--primary {{ $review->reply ? 'btn-outline-primary' : ''}}" data-toggle="modal" data-target="#reply-{{$review->id}}" title="View Details">
+                                            {{ $review->reply ? translate('view_reply') : translate('give_reply')}}
+                                        </a>
+                                    </div>
+                                </td>
+                            @endif
+                            <div class="modal fade" id="reply-{{$review->id}}">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header pb-4">
+                                            <button type="button" class="payment-modal-close btn-close border-0 outline-0 bg-transparent" data-dismiss="modal">
+                                                <i class="tio-clear"></i>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="position-relative media align-items-center">
+                                                <a class="absolute--link" href="{{route('vendor.vehicle.details',$review->vehicle_id)}}">
+                                                </a>
+                                                <img class="avatar avatar-lg mr-3  onerror-image"  data-onerror-image="{{asset('public/assets/admin/img/160x160/img1.jpg')}}"
+                                                     src="{{ $review?->vehicle?->thumbnail_full_url }}" alt="{{$review?->vehicle?->name}} image">
+                                                <div>
+                                                    <h5 class="text-hover-primary mb-0">{{ $review?->vehicle?->name }}</h5>
+                                                    @if ($review?->vehicle?->avg_rating == 5)
+                                                        <div class="rating">
+                                                            <span><i class="tio-star"></i></span>
+                                                            <span><i class="tio-star"></i></span>
+                                                            <span><i class="tio-star"></i></span>
+                                                            <span><i class="tio-star"></i></span>
+                                                            <span><i class="tio-star"></i></span>
+                                                        </div>
+                                                    @elseif ($review?->vehicle?->avg_rating < 5 && $review?->vehicle?->avg_rating >= 4.5)
+                                                        <div class="rating">
+                                                            <span><i class="tio-star"></i></span>
+                                                            <span><i class="tio-star"></i></span>
+                                                            <span><i class="tio-star"></i></span>
+                                                            <span><i class="tio-star"></i></span>
+                                                            <span><i class="tio-star-half"></i></span>
+                                                        </div>
+                                                    @elseif ($review?->vehicle?->avg_rating < 4.5 && $review?->vehicle?->avg_rating >= 4)
+                                                        <div class="rating">
+                                                            <span><i class="tio-star"></i></span>
+                                                            <span><i class="tio-star"></i></span>
+                                                            <span><i class="tio-star"></i></span>
+                                                            <span><i class="tio-star"></i></span>
+                                                            <span><i class="tio-star-outlined"></i></span>
+                                                        </div>
+                                                    @elseif ($review?->vehicle?->avg_rating < 4 && $review?->vehicle?->avg_rating >= 3.5)
+                                                        <div class="rating">
+                                                            <span><i class="tio-star"></i></span>
+                                                            <span><i class="tio-star"></i></span>
+                                                            <span><i class="tio-star"></i></span>
+                                                            <span><i class="tio-star-half"></i></span>
+                                                            <span><i class="tio-star-outlined"></i></span>
+                                                        </div>
+                                                    @elseif ($review?->vehicle?->avg_rating < 3.5 && $review?->vehicle?->avg_rating >= 3)
+                                                        <div class="rating">
+                                                            <span><i class="tio-star"></i></span>
+                                                            <span><i class="tio-star"></i></span>
+                                                            <span><i class="tio-star"></i></span>
+                                                            <span><i class="tio-star-outlined"></i></span>
+                                                            <span><i class="tio-star-outlined"></i></span>
+                                                        </div>
+                                                    @elseif ($review?->vehicle?->avg_rating < 3 && $review?->vehicle?->avg_rating >= 2.5)
+                                                        <div class="rating">
+                                                            <span><i class="tio-star"></i></span>
+                                                            <span><i class="tio-star"></i></span>
+                                                            <span><i class="tio-star-half"></i></span>
+                                                            <span><i class="tio-star-outlined"></i></span>
+                                                            <span><i class="tio-star-outlined"></i></span>
+                                                        </div>
+                                                    @elseif ($review?->vehicle?->avg_rating < 2.5 && $review?->vehicle?->avg_rating > 2)
+                                                        <div class="rating">
+                                                            <span><i class="tio-star"></i></span>
+                                                            <span><i class="tio-star"></i></span>
+                                                            <span><i class="tio-star-outlined"></i></span>
+                                                            <span><i class="tio-star-outlined"></i></span>
+                                                            <span><i class="tio-star-outlined"></i></span>
+                                                        </div>
+                                                    @elseif ($review?->vehicle?->avg_rating < 2 && $review?->vehicle?->avg_rating >= 1.5)
+                                                        <div class="rating">
+                                                            <span><i class="tio-star"></i></span>
+                                                            <span><i class="tio-star-half"></i></span>
+                                                            <span><i class="tio-star-outlined"></i></span>
+                                                            <span><i class="tio-star-outlined"></i></span>
+                                                            <span><i class="tio-star-outlined"></i></span>
+                                                        </div>
+                                                    @elseif ($review?->vehicle?->avg_rating < 1.5 && $review?->vehicle?->avg_rating > 1)
+                                                        <div class="rating">
+                                                            <span><i class="tio-star"></i></span>
+                                                            <span><i class="tio-star-outlined"></i></span>
+                                                            <span><i class="tio-star-outlined"></i></span>
+                                                            <span><i class="tio-star-outlined"></i></span>
+                                                            <span><i class="tio-star-outlined"></i></span>
+                                                        </div>
+                                                    @elseif ($review?->vehicle?->avg_rating < 1 && $review?->vehicle?->avg_rating > 0)
+                                                        <div class="rating">
+                                                            <span><i class="tio-star-half"></i></span>
+                                                            <span><i class="tio-star-outlined"></i></span>
+                                                            <span><i class="tio-star-outlined"></i></span>
+                                                            <span><i class="tio-star-outlined"></i></span>
+                                                            <span><i class="tio-star-outlined"></i></span>
+                                                        </div>
+                                                    @elseif ($review?->vehicle?->avg_rating == 1)
+                                                        <div class="rating">
+                                                            <span><i class="tio-star"></i></span>
+                                                            <span><i class="tio-star-outlined"></i></span>
+                                                            <span><i class="tio-star-outlined"></i></span>
+                                                            <span><i class="tio-star-outlined"></i></span>
+                                                            <span><i class="tio-star-outlined"></i></span>
+                                                        </div>
+                                                    @elseif ($review?->vehicle?->avg_rating == 0)
+                                                        <div class="rating">
+                                                            <span><i class="tio-star-outlined"></i></span>
+                                                            <span><i class="tio-star-outlined"></i></span>
+                                                            <span><i class="tio-star-outlined"></i></span>
+                                                            <span><i class="tio-star-outlined"></i></span>
+                                                            <span><i class="tio-star-outlined"></i></span>
+                                                        </div>
+                                                    @endif
+                                                </div>
+                                            </div>
+
+                                            <div class="mt-2">
+                                                @if($review->customer)
+                                                    <div>
+                                                        <h5 class="d-block text-hover-primary mb-1">{{Str::limit($review?->customer?->fullName)}} <i
+                                                                class="tio-verified text-primary" data-toggle="tooltip" data-placement="top"
+                                                                title="Verified Customer"></i></h5>
+                                                        <span class="d-block font-size-sm text-body">{{$review->comment}}</span>
+                                                    </div>
+                                                @else
+                                                    {{translate('messages.customer_not_found')}}
+                                                @endif
+                                            </div>
+                                            <div class="mt-3">
+                                                <form action="{{route('vendor.rental.review.reply', $review->id)}}" method="POST">
+                                                    @csrf
+                                                    <textarea id="reply" name="reply" required class="form-control" cols="30" rows="3" placeholder="{{ translate('Write_your_reply_here') }}">{{ $review->reply ?? '' }}</textarea>
+                                                    <div class="mt-3 btn--container justify-content-end">
+                                                        <button class="btn btn-primary">{{ $review->reply ? translate('update_reply') : translate('send_reply')}}</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </tr>
                     @endforeach
                     </tbody>

@@ -99,7 +99,7 @@
                         @foreach($vehicleReview as $key=>$review)
                             <tr>
                                 <td>{{$key+$vehicleReview->firstItem()}}</td>
-                                <td>{{$review->id}}</td>
+                                <td>{{$review->review_id}}</td>
 
                                 <td class="d-flex">
                                     @if ($review->vehicle)
