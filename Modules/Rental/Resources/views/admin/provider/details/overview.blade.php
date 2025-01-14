@@ -145,7 +145,7 @@
                                 {{translate('Cancellation rate')}}
                             </h6>
                             <span class="card-title text--warning">
-                                {{ $canceled > 0 ? ($canceled / $all) * 100 : 0 }}%
+                                {{ number_format($canceled > 0 ? ($canceled / $all) * 100 : 0) }}%
                             </span>
                         </div>
                     </a>
