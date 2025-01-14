@@ -112,10 +112,39 @@ class VehicleController extends Controller
         $validator = Validator::make($request->all(), [
             'category_id' => 'required',
             'brand_id' => 'required',
-            'translations'=>'required',
+            'translations' => 'required',
+            'discount_price' => [
+                'nullable',
+                'numeric',
+                function ($attribute, $value, $fail) use ($request) {
+                    $hourlyPrice = floatval($request->hourly_price ?? 0);
+                    $distancePrice = floatval($request->distance_price ?? 0);
+                    $applicablePrice = 0;
+
+                    if ($request->trip_hourly && $request->trip_distance) {
+                        $applicablePrice = min($hourlyPrice, $distancePrice);
+                    } elseif ($request->trip_hourly) {
+                        $applicablePrice = $hourlyPrice;
+                    } elseif ($request->trip_distance) {
+                        $applicablePrice = $distancePrice;
+                    }
+
+                    if ($request->discount_type === 'percent' && $value > 100) {
+                        $fail(translate('messages.discount_cannot_exceed_100_percent'));
+                    }
+
+                    if ($request->discount_type === 'amount' && $value > $applicablePrice) {
+                        $fail(translate('messages.discount_cannot_exceed_price'));
+                    }
+                },
+            ],
+            'discount_type' => 'required|in:percent,amount',
         ], [
             'category_id.required' => translate('messages.category_required'),
             'brand_id.required' => translate('messages.brand_required'),
+            'discount_price.numeric' => translate('messages.discount_must_be_numeric'),
+            'discount_type.required' => translate('messages.discount_type_required'),
+            'discount_type.in' => translate('messages.discount_type_invalid'),
         ]);
 
         $data = json_decode($request->translations, true) ?? [];
@@ -229,10 +258,39 @@ class VehicleController extends Controller
         $validator = Validator::make($request->all(), [
             'category_id' => 'required',
             'brand_id' => 'required',
-            'translations'=>'required',
+            'translations' => 'required',
+            'discount_price' => [
+                'nullable',
+                'numeric',
+                function ($attribute, $value, $fail) use ($request) {
+                    $hourlyPrice = floatval($request->hourly_price ?? 0);
+                    $distancePrice = floatval($request->distance_price ?? 0);
+                    $applicablePrice = 0;
+
+                    if ($request->trip_hourly && $request->trip_distance) {
+                        $applicablePrice = min($hourlyPrice, $distancePrice);
+                    } elseif ($request->trip_hourly) {
+                        $applicablePrice = $hourlyPrice;
+                    } elseif ($request->trip_distance) {
+                        $applicablePrice = $distancePrice;
+                    }
+
+                    if ($request->discount_type === 'percent' && $value > 100) {
+                        $fail(translate('messages.discount_cannot_exceed_100_percent'));
+                    }
+
+                    if ($request->discount_type === 'amount' && $value > $applicablePrice) {
+                        $fail(translate('messages.discount_cannot_exceed_price'));
+                    }
+                },
+            ],
+            'discount_type' => 'required|in:percent,amount',
         ], [
             'category_id.required' => translate('messages.category_required'),
             'brand_id.required' => translate('messages.brand_required'),
+            'discount_price.numeric' => translate('messages.discount_must_be_numeric'),
+            'discount_type.required' => translate('messages.discount_type_required'),
+            'discount_type.in' => translate('messages.discount_type_invalid'),
         ]);
 
         $data = json_decode($request->translations, true);

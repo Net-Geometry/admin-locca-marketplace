@@ -7058,4 +7058,8 @@ Smartly or Earn. ',
   'Driver_List' => 'Driver List',
   'Search by driver name...' => 'Search by driver name...',
   'category image' => 'Category image',
+  'discount_must_be_numeric' => 'Discount must be numeric',
+  'discount_type_required' => 'Discount type required',
+  'discount_type_invalid' => 'Discount type invalid',
+  'Discount type invalid' => 'Discount type invalid',
 );
