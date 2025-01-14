@@ -5,6 +5,23 @@
 @push('css_or_js')
     <link rel="stylesheet" href="{{ asset('/public/assets/admin/vendor/simplebar/dist/simplebar.min.css') }}">
     <link rel="stylesheet" href="{{ asset('/public/assets/admin/vendor/drift-zoom/dist/drift-basic.min.css') }}">
+
+    <style>
+        .description-text {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .full-description {
+            display: none;
+        }
+
+        .see-more {
+            color: #1a73e8;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+    </style>
 @endpush
 
 @section('content')
@@ -208,13 +225,16 @@
                                     </div>
                             </div>
                             @if ($language)
-                            <div class="lang_form text--title" id="default-form">
-                                <h3 class="text--title fs-20 ont-bold mb-10px">{{$vehicle?->getRawOriginal('name')}}</h3>
-                                <h5 class="text--title font-semibold opacity-lg mb-10px">Description:</h5>
-                                <div class="fs-12 opacity-lg">
-                                    {{$vehicle?->getRawOriginal('description')}} <a href="#" class="text--info font-medium">See more</a>
+                                <div class="lang_form text--title" id="default-form">
+                                    <h3 class="text--title fs-20 ont-bold mb-10px">{{$vehicle?->getRawOriginal('name')}}</h3>
+                                    <h5 class="text--title font-semibold opacity-lg mb-10px">Description:</h5>
+                                    <div class="fs-12 opacity-lg description-text">
+                                        <span class="short-description">{{ Str::limit($vehicle?->getRawOriginal('description'), 2100) }}</span>
+                                        <span class="full-description" style="display: none;">{{$vehicle?->getRawOriginal('description')}}</span>
+                                        <a href="#" class="text--info font-medium see-more">See more</a>
+                                    </div>
                                 </div>
-                            </div>
+
                                 @foreach ($language as $lang)
                                     @php
                                         if(count($vehicle['translations'])){
@@ -228,12 +248,14 @@
                                         }
                                     @endphp
                                     <div class="lang_form d-none text--title" id="{{ $lang }}-form">
-                                    <h3 class="text--title fs-20 ont-bold mb-10px">{{$translate[$lang]['name']??''}}</h3>
-                                    <h5 class="text--title font-semibold opacity-lg mb-10px">Description:</h5>
-                                    <div class="fs-12 opacity-lg">
-                                        {{$translate[$lang]['description']??''}} <span class="text--primary font-medium">See more</span>
+                                        <h3 class="text--title fs-20 ont-bold mb-10px">{{$translate[$lang]['name']??''}}</h3>
+                                        <h5 class="text--title font-semibold opacity-lg mb-10px">Description:</h5>
+                                        <div class="fs-12 opacity-lg description-text">
+                                            <span class="short-description">{{ Str::limit($translate[$lang]['description'] ?? '', 2100) }}</span>
+                                            <span class="full-description" style="display: none;">{{$translate[$lang]['description'] ?? ''}}</span>
+                                            <a href="#" class="text--info font-medium see-more">See more</a>
+                                        </div>
                                     </div>
-                                </div>
                                 @endforeach
                             @endif
                         </div>
@@ -580,30 +602,27 @@
     <script src="{{ asset('/public/assets/admin/vendor/drift-zoom/dist/Drift.min.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
 
-    {{-- old document view --}}
-    {{-- <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            function openPdf(element) {
-                const pdfUrl = element.getAttribute("data-pdf-url");
-                window.open(pdfUrl, "_blank");
-            }
+    <script>
+        $(document).ready(function () {
+            $('.see-more').on('click', function (e) {
+                e.preventDefault();
 
-            function downloadPdf(event, buttonElement) {
-                event.stopPropagation();
+                const $descriptionText = $(this).closest('.description-text');
+                const $shortDescription = $descriptionText.find('.short-description');
+                const $fullDescription = $descriptionText.find('.full-description');
 
-                const pdfUrl = buttonElement.closest(".pdf-single").getAttribute("data-pdf-url");
+                $shortDescription.toggle();
+                $fullDescription.toggle();
 
-                const link = document.createElement('a');
-                link.href = pdfUrl;
-                link.download = "Trade License Documents.pdf";
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            }
-            window.openPdf = openPdf;
-            window.downloadPdf = downloadPdf;
+                if ($fullDescription.is(':visible')) {
+                    $(this).text('See less');
+                } else {
+                    $(this).text('See more');
+                }
+            });
         });
-    </script> --}}
+
+    </script>
 
     <script>
         // ----- document view from file
