@@ -378,9 +378,11 @@ class TripController extends Controller
                 'tax_percentage' => $tax,
                 'discount_on_trip_by' => 'vendor',
                 'discount_percentage' => $cart->vehicle->discount_type == 'amount' ? 0 : $cart->vehicle->discount_price,
-                'price' => round($discount_data['price'], config('round_up_to_digit')),
+
+                'price' => round($discount_data['price'], config('round_up_to_digit')) *  $cart->quantity,
                 'original_price' => round($discount_data['price'], config('round_up_to_digit')),
                 'calculated_price' => round($discount_data['price'], config('round_up_to_digit')) *  $cart->quantity,
+
                 'discount_on_trip' => round($discount_data['discount'], config('round_up_to_digit')),
                 'discount_type' => $cart->vehicle->discount_type,
                 'tax_amount' => round($this->helpers->product_tax($discount_data['price'] - round($discount_data['discount'], config('round_up_to_digit')), $tax, $is_include), config('round_up_to_digit')),

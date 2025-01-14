@@ -913,7 +913,7 @@ class ProviderController extends Controller
                 DB::table('vendors')->upsert($chunk_vendors[$key],['id','email','phone'],['f_name','l_name','password']);
 //                    DB::table('stores')->upsert($chunk_store,['id','email','phone','vendor_id'],['name','logo','cover_photo','latitude','longitude','address','zone_id','module_id','minimum_order','comission','tax','delivery_time','minimum_shipping_charge','per_km_shipping_charge','maximum_shipping_charge','schedule_order','status','self_delivery_system','veg','non_veg','free_delivery','take_away','delivery','reviews_section','pos_system','active','featured']);
                 foreach ($chunk_store as $store) {
-                    if (isset($store['id']) && DB::table('food')->where('id', $store['id'])->exists()) {
+                    if (isset($store['id']) && DB::table('vehicles')->where('id', $store['id'])->exists()) {
                         DB::table('stores')->where('id', $store['id'])->update($store);
                         Helpers::updateStorageTable(get_class(new Store), $store['id'], $store['logo']);
                         Helpers::updateStorageTable(get_class(new Store), $store['id'], $store['cover_photo']);

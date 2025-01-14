@@ -374,98 +374,11 @@ class TripController extends Controller
 
     /**
      * @param Request $request
-     * @return JsonResponse
-     */
-    public function getCalculation(Request $request): JsonResponse
-    {
-        $id = $request->id;
-
-        $tripDetail = $this->tripDetails->findOrFail($id);
-        $trip = $this->trips->findOrFail($tripDetail->trip_id);
-
-        $distance = $request->distance ?? $trip->distance;
-        $modifiedPrices = $request->modified_prices;
-
-        $processedValue = preg_replace('/[^\d.]/', '', $modifiedPrices);
-
-        $processedDistanceValue = preg_replace('/[^\d.]/', '', $distance);
-        $vehicleId = $request->vehicle_id;
-        $quantity = (int)$request->quantity;
-        $estimatedHours = $request->estimated_hours ?? $trip->estimated_hours;
-        $vehicleQuantities = session()->get('vehicleQuantities', []);
-
-        $se_modifiedPrices = session()->get('modifiedPrices',[]);
-        if ($quantity) {
-            $vehicleQuantities[$vehicleId] = $quantity;
-            foreach ($vehicleQuantities as $key => $value) {
-                if (array_key_exists($key, $se_modifiedPrices) && $key == $vehicleId) {
-                    unset($se_modifiedPrices[$key]);
-                    session()->put('modifiedPrices', $se_modifiedPrices);
-                    session()->save();
-                }
-            }
-            session()->put('vehicleQuantities', $vehicleQuantities);
-            session()->save();
-        }
-
-        if ($modifiedPrices) {
-            $se_modifiedPrices[$vehicleId] = $processedValue;
-            session()->put('modifiedPrices', $se_modifiedPrices);
-            session()->save();
-        }
-
-        $modifiedPrices = session()->get('modifiedPrices')?? [];
-        $vehicleQuantities = session()->get('vehicleQuantities')?? [];
-
-        $data = [
-            'distance' => $processedDistanceValue,
-            'vehicleQuantities' => $vehicleQuantities ?? [],
-            'modifiedPrices' => $modifiedPrices ?? [],
-            'taxPercentage' => $trip?->provider?->tax,
-            'estimatedHours' => $estimatedHours,
-        ];
-
-        $providerTax = $request->vendor ? $request?->vendor?->stores[0]->tax : $trip?->provider?->tax;
-
-        $calculationSingleData = $this->calculateTripDetailPricing(
-            $tripDetail,
-            $data['vehicleQuantities'],
-            $data['modifiedPrices'],
-            $data['estimatedHours'],
-            $data['distance'],
-            $trip->trip_type,
-            $providerTax
-        );
-
-        $calculationData = $this->getUpdatedTrip($request, $trip, $data, false);
-
-        if ($calculationData) {
-            return response()->json([
-                'success' => true,
-                'originalPrice' => round($calculationSingleData['originalPrice'], 2),
-                'calculationSingleData' => round($calculationSingleData['price'], 2),
-                'quantity' => $calculationSingleData['quantity'],
-                'subTotal' => round($calculationData['subTotal'], 2),
-                'grandTotal' => round($calculationData['tripAmount'], 2),
-                'refBonus' => round($calculationData['refBonus'], 2),
-                'discount' => round($calculationData['discount'], 2),
-                'couponDiscount' => round($calculationData['couponDiscount'], 2),
-                'taxAmount' => round($calculationData['taxAmount'], 2),
-                'additionalCharge' => round($calculationData['additionalCharge'], 2),
-            ]);
-        }
-
-        return response()->json(['success' => false], 400);
-    }
-
-
-    /**
-     * @param Request $request
      * @param $id
      * @return RedirectResponse
      */
 
-    public function update(Request $request, $id): RedirectResponse
+    public function update(Request $request)
     {
         $request->validate([
             'trip_id' => 'required',
@@ -474,28 +387,28 @@ class TripController extends Controller
         $trip = $this->trips->findOrFail($request->trip_id);
 
         if (!$trip) {
-            Toastr::error(translate('messages.Trip_not_found'));
-            return back();
+            return response()->json(['success' => false,
+            'message' => translate('messages.trip_data_not_found')], 400);
         }
 
         if (in_array($trip->trip_status, ['completed', 'canceled'])) {
-            Toastr::error(translate('messages.You_can_not_edit_this'));
-            return back();
+            return response()->json(['success' => false,
+            'message' => translate('messages.You_can_not_edit_this')], 400);
         }
 
         $pickup = [
-            'lat' => $request->pickup_lat,
-            'lng' => $request->pickup_lng,
-            'location_name' => $request->pickup_location,
+            'lat' => $request->pickup_lat ?? $trip ? $trip->pickup_location['lat'] : null,
+            'lng' => $request->pickup_lng ?? $trip ? $trip->pickup_location['lng'] : null,
+            'location_name' => $request->pickup_location ?? $trip ? $trip->pickup_location['location_name'] : null,
         ];
 
         $destination = [
-            'lat' => $request->destination_lat,
-            'lng' => $request->destination_lng,
-            'location_name' => $request->destination_location,
+            'lat' => $request->destination_lat ?? $trip ? $trip->destination_location['lat'] : null,
+            'lng' => $request->destination_lng ?? $trip ? $trip->destination_location['lng'] : null,
+            'location_name' => $request->destination_location ?? $trip ? $trip->destination_location['location_name'] : null,
         ];
 
-        $destinationLocation = $request->destination_location ? json_encode($pickup) :json_encode( $trip->destination_location);
+        $destinationLocation = $request->destination_location ? json_encode($pickup) :json_encode($trip->destination_location);
         $pickupLocation = $request->pickup_location  ? json_encode($destination)  : json_encode($trip->pickup_location);
         $scheduleAt = $request->schedule_at ? Carbon::parse($request->schedule_at) : Carbon::parse($trip->schedule_at);
 
@@ -507,16 +420,8 @@ class TripController extends Controller
             $trip->rental_type === 'hourly' ? $estimatedHours : ($request->destination_time ?? $trip->destination_time)
         );
 
-        $modifiedPrices = $request->update_price ?? [];
-
-        $vehicleQuantities = $request->update_quantity ?? [];
-
-        $modifiedPrices = session()->get('modifiedPrices')?? [];
-        $vehicleQuantities = session()->get('vehicleQuantities')?? [];
-
-
-
-
+        $vehicleQuantities = array_combine($request->vehicle_ids, $request->quantities);
+        $modifiedPrices = array_combine($request->vehicle_ids, $request->prices);
 
         $data = [
             'destinationLocation' => $destinationLocation,
@@ -529,14 +434,27 @@ class TripController extends Controller
             'vehicleQuantities' => $vehicleQuantities,
             'modifiedPrices' => $modifiedPrices,
             'taxPercentage' => $trip?->provider?->tax,
+            'quantityUpdate' => $request->quantityUpdate,
         ];
-info($modifiedPrices);
-info($vehicleQuantities);
 
-        $this->getUpdatedTrip($request, $trip, $data);
-
-        Toastr::success(translate('messages.updated successfully'));
-        return back();
+            $calculationData = $this->getUpdatedTrip($request, $trip, $data, $request->update == 1 ? true : false);
+            if ($request->update == 1) {
+                return response()->json(['status' => 'updated',  'message' =>translate('messages.Trip_successfully_updated'), ], 200);
+            } else{
+                return response()->json([
+                    'success' => true,
+                    'status' => 'success',
+                    'details' =>$calculationData['details'],
+                    'subTotal' => round($calculationData['subTotal'], config('round_up_to_digit')),
+                    'grandTotal' => round($calculationData['tripAmount'], config('round_up_to_digit')),
+                    'refBonus' => round($calculationData['refBonus'], config('round_up_to_digit')),
+                    'discount' => round($calculationData['discount'], config('round_up_to_digit')),
+                    'couponDiscount' => round($calculationData['couponDiscount'], config('round_up_to_digit')),
+                    'taxAmount' => round($calculationData['taxAmount'], config('round_up_to_digit')),
+                    'additionalCharge' => round($calculationData['additionalCharge'], config('round_up_to_digit')),
+                ]);
+            }
+            return response()->json(['success' => false], 400);
     }
 
     /**

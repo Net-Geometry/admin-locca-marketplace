@@ -473,7 +473,7 @@ class DeliverymanController extends Controller
             ], 403);
         }
 
-        if(Config::get('order_delivery_verification')==1 && $order->payment_method=='cash_on_delivery' && $order->charge_payer=='sender' && $request['status']=='picked_up' && $order->otp != $request['otp'])
+        if(Config::get('order_delivery_verification')==1  && $order->charge_payer=='sender' && $request['status']=='picked_up' && $order->otp != $request['otp'])
         {
             return response()->json([
                 'errors' => [
@@ -482,11 +482,11 @@ class DeliverymanController extends Controller
             ], 406);
         }
 
-        if(Config::get('order_delivery_verification')==1 && $order->payment_method=='cash_on_delivery' &&  $request['status']=='delivered' && $order->otp != $request['otp'])
+        if(Config::get('order_delivery_verification')==1 &&  $request['status']=='delivered' && $order->otp != $request['otp'])
         {
             return response()->json([
                 'errors' => [
-                    ['code' => 'otp', 'message' => translate('Not matched')]
+                    ['code' => 'otp', 'message' => translate('Otp Not matched')]
                 ]
             ], 406);
         }
