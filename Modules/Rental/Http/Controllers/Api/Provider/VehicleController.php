@@ -148,7 +148,8 @@ class VehicleController extends Controller
         $vehicleDocuments = [];
         if (!empty($request->file('documents'))) {
             foreach ($request->documents as $img) {
-                $documents = $this->upload('vehicle/', 'png', $img);
+                $extension = $img->getClientOriginalExtension();
+                $documents = $this->upload('vehicle/', $extension, $img);
                 $vehicleDocuments[] = ['img' => $documents, 'storage' => $this->helpers->getDisk()];
             }
             $documents = json_encode($vehicleDocuments);
@@ -257,18 +258,50 @@ class VehicleController extends Controller
 
         $imagesNames = !empty($vehicle->images) ? json_decode($vehicle->images, true) : [];
         if (!empty($request->file('images'))) {
+            if (!empty($imagesNames)) {
+                foreach ($imagesNames as $oldImage) {
+                    if (file_exists(public_path($oldImage['img']))) {
+                        $this->helpers->check_and_delete('vehicle/', $oldImage['img']);
+                    }
+                }
+            }
+
+            $imagesNames = [];
+
             foreach ($request->images as $img) {
                 $image = $this->updateAndUpload('vehicle/', $vehicle->images, 'png', $img);
-                $imagesNames[] = ['img' => $image, 'storage' => $this->helpers->getDisk()];
+
+                $imagesNames[] = [
+                    'img' => $image,
+                    'storage' => $this->helpers->getDisk()
+                ];
             }
         }
+
         $image = json_encode($imagesNames);
 
         $vehicleDocuments = !empty($vehicle->documents) ? json_decode($vehicle->documents, true) : [];
+
         if (!empty($request->file('documents'))) {
+            if (!empty($vehicleDocuments)) {
+                foreach ($vehicleDocuments as $oldDocument) {
+                    if (file_exists(public_path($oldDocument['img']))) {
+                        $this->helpers->check_and_delete('vehicle/', $oldDocument['img']);
+                    }
+                }
+            }
+
+            $vehicleDocuments = [];
+
             foreach ($request->documents as $doc) {
-                $document = $this->updateAndUpload('vehicle/', $vehicle->documents, 'png', $doc);
-                $vehicleDocuments[] = ['img' => $document, 'storage' => $this->helpers->getDisk()];
+                $extension = $doc->getClientOriginalExtension();
+
+                $document = $this->updateAndUpload('vehicle/', $vehicle->documents, $extension, $doc);
+
+                $vehicleDocuments[] = [
+                    'img' => $document,
+                    'storage' => $this->helpers->getDisk()
+                ];
             }
         }
 

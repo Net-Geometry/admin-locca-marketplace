@@ -158,7 +158,8 @@ class VehicleController extends Controller
         $vehicleDocuments = [];
         if (!empty($request->file('documents'))) {
             foreach ($request->documents as $img) {
-                $documents = $this->upload('vehicle/', 'png', $img);
+                $extension = $img->getClientOriginalExtension();
+                $documents = $this->upload('vehicle/', $extension, $img);
                 $vehicleDocuments[] = ['img' => $documents, 'storage' => $this->helpers->getDisk()];
             }
             $documents = json_encode($vehicleDocuments);
@@ -327,7 +328,8 @@ class VehicleController extends Controller
 
         if (!empty($request->file('documents'))) {
             foreach ($request->documents as $doc) {
-                $file= $this->updateAndUpload('vehicle/', $vehicle->images, 'png', $doc);
+                $extension = $img->getClientOriginalExtension();
+                $file= $this->updateAndUpload('vehicle/', $vehicle->images, $extension, $doc);
                 $docNames[] = ['img' => $file, 'storage' => $this->helpers->getDisk()];
             }
         }
