@@ -53,11 +53,18 @@
                                 <div>
                                     <h1 class="page-header-title d-flex align-items-center __gap-5px">
                                         {{translate('Trip ID')}} # {{ $trip->id }}
+                                        @if ($trip->edited)
+                                        <span class="badge badge--pending text-capitalize">
+                                            {{ translate('messages.edited') }}
+                                        </span>
+                                        @endif
                                     </h1>
                                     <span class="mt-2 d-block d-flex align-items-center __gap-5px">
                                         {{ translate('Placed on') }} {{ $trip->BookingDate }} {{ $trip->BookingTime }}
+                                        @if ($trip->scheduled)
                                         <br>
                                         {{ translate('Schedule At') }} {{ $trip->ScheduleDate }} {{ $trip->ScheduleTime }}
+                                        @endif
                                     </span>
                                     <div class="fs-14 text-title mt-2 pt-1 mb-2 d-flex align-items-center __gap-5px">
                                         <span>{{translate('Provider')}}</span> <span>:</span>
@@ -70,7 +77,7 @@
                                     <div class="fs-14 text-title mt-2 pt-1 mb-2 d-flex align-items-center __gap-5px">
                                         <span>{{translate('Trip Type')}}</span> <span>:</span>
                                         <span class="font-bold">{{ translate($trip->trip_type) }}</span>
-                                        <span>({{ $trip->scheduled ? translate('messages.Instant') : translate('messages.scheduled') }})</span>
+                                        <span>({{ !$trip->scheduled ? translate('messages.Instant_Booking') : translate('messages.scheduled') }})</span>
                                     </div>
                                     <div class="fs-14 text-title mt-2 pt-1 mb-2 d-flex align-items-center __gap-5px">
                                         <span>{{translate('Total ')}} {{ $trip->trip_type == 'hourly' ? 'Hour' : 'KM' }}</span> <span>:</span>
@@ -106,18 +113,16 @@
                                     </h6>
                                     <h6>
                                         <span>{{translate('Payment status')}}</span> <span>:</span>
-                                        <strong class="text-danger">{{ translate($trip->payment_status) }}</strong>
+                                        <strong class="{{ $trip->payment_status  == 'paid' ? 'text-success' :'text-danger' }}">{{ translate($trip->payment_status) }}</strong>
 
                                     </h6>
+                                    @if ($trip->payment_method)
                                     <h6>
                                         <span>{{translate('Payment method')}}</span> <span>:</span>
                                         <span class="font-semibold">{{ translate($trip->payment_method ?? 'cash payment') }}</span>
                                     </h6>
-                                    @if ($trip->edited)
-                                    <span class="badge badge--pending ml-2 ml-sm-3 text-capitalize">
-                                        {{ translate('messages.edited') }}
-                                    </span>
                                     @endif
+
                                 </div>
                             </div>
                         </div>
@@ -826,7 +831,7 @@
                                     <div class="position-relative w-100 d-flex align-items-center">
                                         <input type="text" name="pickup_location" id="pickup-input" class="form-control pr-2"
                                                placeholder="Enter your pickup location"
-                                               value="Home: Road 9/a, house - 666, Dhaka">
+                                               value="{{ $trip?->pickup_location['location_name'] }}">
                                         <div class="input-icon fs-20 opacity-60">
                                             <i class="tio-poi"></i>
                                         </div>
@@ -839,7 +844,7 @@
                                     <div class="position-relative w-100 d-flex align-items-center">
                                         <input type="text" name="destination_location" id="destination-input" class="form-control pr-2"
                                                placeholder="Enter your destination location"
-                                               value="50 lake circus, kolabagan, Dhanmondi">
+                                               value="{{ $trip?->destination_location['location_name'] }}">
                                         <div class="input-icon fs-20 opacity-60">
                                             <i class="tio-navigate-outlined rotate-45 d-block"></i>
                                         </div>
@@ -1606,7 +1611,7 @@
         $('#edit-trip').on('click', function () {
 
             updateCalculations(quantityUpdate = false,upadet_data= 1);
-            $('#edit-trip').attr("disabled", true);;
+            $('#edit-trip').attr("disabled", true);
         });
         let originalValues = {};
         $('.quantity-input, .fare-total').each(function() {
@@ -1623,11 +1628,13 @@
             const tripDetailId = $this.data('id');
             const vehicleId = $this.data('vehicle_id');
             let quantity = parseInt($this.val());
+            $this.closest('tr').find('.eta_amount_mt').addClass('d-none');
+            $this.closest('tr').find('.eta_amount').removeClass('mt-3');
 
             if (quantity > maxQuantity) {
                 quantity = maxQuantity;
                 $this.val(maxQuantity);
-                toastr.warning('Maximum available quantity is ' + maxQuantity);
+                toastr.warning('{{ translate('Maximum available quantity is') }} ' + maxQuantity);
             }
 
             updateCalculations(vehicleId,false);
@@ -1641,8 +1648,8 @@
 
             const $fareOld = $this.closest('td').find('.fare-old-value');
             $fareOld.text(originalPrice.toFixed(2));
+            $this.closest('tr').find('.eta_amount').removeClass('d-none').addClass('mt-3');
             $this.closest('td').find('.eta_amount_mt').removeClass('d-none');
-
             updateCalculations(quantityUpdate = false,upadet_data= false);
         });
 
@@ -1688,11 +1695,13 @@
                     }
                     else {
                         toastr.error(response.message || 'Calculation failed');
+                        $('#edit-trip').attr("disabled", false);
                     }
                 },
                 error: function(xhr) {
                     toastr.error('Failed to update calculations');
                     console.error(xhr);
+                    $('#edit-trip').attr("disabled", false);
                 }
             });
     }

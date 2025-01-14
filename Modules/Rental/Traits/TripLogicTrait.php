@@ -226,7 +226,7 @@ trait TripLogicTrait
             }
         } catch (\Exception $e) {
             DB::rollBack();
-            info($e->getMessage());
+            info($e);
             return false;
         }
         return true;
@@ -284,23 +284,23 @@ trait TripLogicTrait
             self::expenseCreate(amount: $trip?->cashback_history?->calculated_amount, type: 'CashBack', datetime: now(), created_by: 'admin', trip_id: $trip->id);
             $trip?->cashback_history?->cashBack?->increment('total_used');
 
-            // $notification_data = [
-            //     'title' => translate('messages.Congratulation_you_have_received').' '.$trip?->cashback_history?->calculated_amount.' '.translate('cashback'),
-            //     'description' => translate('The_cashback_amount_successfully_added_to_your_wallet') ,
-            //     'trip_id' => $trip->id,
-            //     'image' => '',
-            //     'type' => 'cashback',
-            // ];
+            $notification_data = [
+                'title' => translate('messages.Congratulation_you_have_received').' '.$trip?->cashback_history?->calculated_amount.' '.translate('cashback'),
+                'description' => translate('The_cashback_amount_successfully_added_to_your_wallet') ,
+                'trip_id' => $trip->id,
+                'image' => '',
+                'type' => 'cashback',
+            ];
 
-            // if($trip->customer?->cm_firebase_token && Helpers::getNotificationStatusData('customer','customer_cashback','push_notification_status')){
-            //     Helpers::send_push_notif_to_device($trip->customer?->cm_firebase_token, $notification_data);
-            //     DB::table('user_notifications')->insert([
-            //         'data' => json_encode($notification_data),
-            //         'user_id' => $trip->customer?->id,
-            //         'created_at' => now(),
-            //         'updated_at' => now()
-            //     ]);
-            // }
+            if($trip->customer?->cm_firebase_token && Helpers::getNotificationStatusData('customer','customer_cashback','push_notification_status')){
+                Helpers::send_push_notif_to_device($trip->customer?->cm_firebase_token, $notification_data);
+                DB::table('user_notifications')->insert([
+                    'data' => json_encode($notification_data),
+                    'user_id' => $trip->customer?->id,
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ]);
+            }
 
         }
 

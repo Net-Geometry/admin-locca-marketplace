@@ -7025,4 +7025,6 @@ Smartly or Earn. ',
   '*System_EST_Fare:' => '*System EST Fare:',
   'Select Vendors' => 'Select Vendors',
   'The selected mode is invalid.' => 'The selected mode is invalid.',
+  'Maximum available quantity is' => 'Maximum available quantity is',
+  'Failed_to_create_Transaction' => 'Failed to create Transaction',
 );
