@@ -331,6 +331,7 @@ trait TripLogicTrait
                 $trip->trip_type,
                 $providerTax,
                 $data['quantityUpdate']?? false,
+                $data['updateDistance']?? false,
             );
 
             $totalPrice += $tripDetailData['calculatedPrice'];
@@ -339,9 +340,9 @@ trait TripLogicTrait
 
 
             $details[$key]['id'] = $tripDetail->id;
-            $details[$key]['calculated_price'] = $tripDetailData['calculatedPrice'];
-            $details[$key]['quantity'] = $tripDetailData['quantity'];
-            $details[$key]['originalPrice'] = $tripDetailData['originalPrice'];
+            $details[$key]['calculated_price'] = round($tripDetailData['calculatedPrice'], config('round_up_to_digit'));
+            $details[$key]['quantity'] = round($tripDetailData['quantity'], config('round_up_to_digit'));
+            $details[$key]['originalPrice'] =  round($tripDetailData['originalPrice'], config('round_up_to_digit'));
 
             if ($isUpdated) {
                 self::updateTripDetail($tripDetail, $tripDetailData, $data);
@@ -382,26 +383,34 @@ trait TripLogicTrait
 
     }
 
-    public static function calculateTripDetailPricing($tripDetail, $vehicleQuantities, $modifiedPrices, $estimatedHours, $distance, $rentalType, $taxPercentage,$quantityUpdate=false): array
+    public static function calculateTripDetailPricing($tripDetail, $vehicleQuantities, $modifiedPrices, $estimatedHours, $distance, $rentalType, $taxPercentage,$quantityUpdate=false,$updateDistance=false): array
     {
         $quantity = $vehicleQuantities[$tripDetail->vehicle_id] ?? $tripDetail->quantity;
         $originalPrice = $rentalType === 'hourly'
             ? $tripDetail->vehicle->hourly_price * $estimatedHours
             : $tripDetail->vehicle->distance_price * $distance;
 
-
-            $price = $modifiedPrices[$tripDetail->vehicle_id] ?? $originalPrice* $quantity;
-
-            $price = $tripDetail->vehicle_id ==  $quantityUpdate ? $originalPrice *$quantity : $price;
+            if($updateDistance == 1){
+                $price = $originalPrice* $quantity;
+            } else{
+                $price = $modifiedPrices[$tripDetail->vehicle_id] ?? $originalPrice* $quantity;
+                $price = ($tripDetail->vehicle_id ==  $quantityUpdate) ? $originalPrice *$quantity : $price;
+                    if($rentalType != 'hourly' &&  $tripDetail->distance != $distance){
+                        if($modifiedPrices[$tripDetail->vehicle_id] ==  $originalPrice* $quantity){
+                            $price = $originalPrice* $quantity;
+                        } else{
+                            $price =$price;
+                        }
+                    }
+            }
 
         $discountData = self::getDiscount(
-            price: $originalPrice,
-            discount_type: $tripDetail->vehicle->discount_type,
-            discount: $tripDetail->vehicle->discount_price
-        );
+                    price: $originalPrice,
+                    discount_type: $tripDetail->vehicle->discount_type,
+                    discount: $tripDetail->vehicle->discount_price
+                );
 
         $calculatedPrice = $price  == $originalPrice ? $originalPrice * $quantity : $price;
-
 
 
 
@@ -504,16 +513,16 @@ trait TripLogicTrait
 
 
             if ($request->is_guest) {
-                $staus = CouponLogic::is_valid_for_guest($coupon, $request['store_id']);
+                $staus = CouponLogic::is_valid_for_guest($coupon, $request['provider_id']);
             } else {
-                $staus = CouponLogic::is_valide($coupon, $request->user->id, $request['store_id']);
+                $staus = CouponLogic::is_valide($coupon, $request->user->id, $request['provider_id']);
             }
 
             $message = match ($staus) {
                 407 => translate('messages.coupon_expire'),
                 408 => translate('messages.You_are_not_eligible_for_this_coupon'),
                 406 => translate('messages.coupon_usage_limit_over'),
-                404 => translate('messages.not_found'),
+                404 => translate('messages.coupon_not_found'),
                 default => null,
             };
             if ($message != null) {

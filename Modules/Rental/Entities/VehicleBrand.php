@@ -7,6 +7,7 @@ use App\Models\Storage;
 use App\Models\Translation;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class VehicleBrand extends Model
@@ -14,8 +15,6 @@ class VehicleBrand extends Model
     use HasFactory;
 
     protected $guarded = ['id'];
-
-    protected $fillable = [];
 
     protected $appends = ['image_full_url'];
 
@@ -27,6 +26,10 @@ class VehicleBrand extends Model
     public function translations(): MorphMany
     {
         return $this->morphMany(Translation::class, 'translationable');
+    }
+    public function vehicles():HasMany
+    {
+        return $this->hasMany(Vehicle::class, 'brand_id');
     }
 
     public function storage(): MorphMany

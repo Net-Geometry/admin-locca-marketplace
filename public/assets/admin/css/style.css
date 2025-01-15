@@ -5949,11 +5949,11 @@ textarea.form-control.h--45 {
         width: unset;
         font-size: 11px;
     }
-    .order-invoice-right .btn-outline-primary {
+    /* .order-invoice-right .btn-outline-primary {
         padding: 5px 10px;
         width: unset;
         font-size: 11px;
-    }
+    } */
     .max-sm-flex-grow-1 {
         flex-grow: 1;
     }
@@ -5962,11 +5962,11 @@ textarea.form-control.h--45 {
         max-width: 5rem;
     }
 }
-.order-invoice-right .btn-outline-primary {
+/* .order-invoice-right .btn-outline-primary {
     padding: 5px 10px;
     width: unset;
     font-size: 11px;
-}
+} */
 
 .page-area nav {
     overflow-x: auto;
