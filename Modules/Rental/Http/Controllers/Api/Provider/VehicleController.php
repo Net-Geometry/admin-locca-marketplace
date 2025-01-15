@@ -440,8 +440,8 @@ class VehicleController extends Controller
     public function details($id): JsonResponse
     {
         $vehicle = $this->vehicle->with('provider', 'category', 'brand', 'vehicleIdentities')->findOrFail($id);
-
         if (isset($vehicle)) {
+            $vehicle['tag'] = json_decode($vehicle['tag']);
             return response()->json($vehicle, 200);
         }
 
