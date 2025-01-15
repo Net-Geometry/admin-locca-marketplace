@@ -75,18 +75,24 @@
                                         </button>
                                     </div>
                                     <div class="fs-14 text-title mt-2 pt-1 mb-2 d-flex align-items-center __gap-5px">
-                                        <span>{{translate('Trip Type')}}</span> <span>:</span>
+                                    <span>{{translate('Trip Type')}}</span> <span>:</span>
                                         <span class="font-bold">{{ translate($trip->trip_type) }}</span>
                                         <span>({{ !$trip->scheduled ? translate('messages.Instant_Booking') : translate('messages.scheduled') }})</span>
                                     </div>
                                     <div class="fs-14 text-title mt-2 pt-1 mb-2 d-flex align-items-center __gap-5px">
-                                        <span>{{translate('Total ')}} {{ $trip->trip_type == 'hourly' ? 'Hour' : 'KM' }}</span> <span>:</span>
-                                        <span class="font-bold">{{ $trip->estimated_hours }} {{ $trip->trip_type == 'hourly' ? 'hrs' : 'KM' }}</span>
+
+                                        @if ($trip->trip_type == 'hourly')
+                                        <span>{{translate('Total ')}} {{ translate('Hour')}}</span> <span>:</span>
+                                        <span class="font-bold">{{ $trip->estimated_hours }} {{ translate('hrs') }}</span>
+                                        @else
+                                        <span>{{translate('Total ')}} {{ translate('KM') }}</span> <span>:</span>
+                                        <span class="font-bold">{{ $trip->distance }} {{  translate('KM')  }}</span>
+                                        @endif
                                     </div>
                                 </div>
                                 <div class="d-sm-none">
                                     <a class="btn btn--primary print--btn font-regular d-flex align-items-center __gap-5px"
-                                       href="#">
+                                       href="{{route('admin.rental.trip.generate-invoice',["id" => $trip->id])}}">
                                         <i class="tio-print mr-sm-1"></i>
                                         <span>{{ translate('messages.print_invoice') }}</span>
                                     </a>
@@ -107,7 +113,7 @@
                                 <div class="text-right mt-3 order-invoice-right-contents text-capitalize">
                                     <h6>
                                         <span>{{translate('Trip Status')}}</span> <span>:</span>
-                                        <span class="badge badge--accepted ml-2 ml-sm-3 text-capitalize">
+                                        <span class="{{ $trip->trip_status  !== 'canceled' ? 'badge--accepted' :'badge--cancel' }} badge  ml-2 ml-sm-3 text-capitalize">
                                             {{ translate($trip->trip_status) }}
                                         </span>
                                     </h6>
@@ -250,7 +256,7 @@
                                         <td>
                                             <div class="fs-14 text--title">
                                                 {{ \App\CentralLogics\Helpers::format_currency($detail->rental_type == 'hourly' ? $detail->vehicle_details['hourly_price'] : $detail->vehicle_details['distance_price']) }}
-                                                {{ translate($detail->rental_type) }}
+                                                ({{ translate($detail->rental_type) }})
                                             </div>
                                         </td>
                                         <td>
@@ -260,7 +266,11 @@
                                         </td>
                                         <td>
                                             <div class="fs-14 text--title">
-                                                {{ $detail->estimated_hours }} {{ translate($detail->rental_type) }}
+                                                @if ($trip->trip_type == 'hourly')
+                                                {{ $trip->estimated_hours }} {{ translate('hrs') }}
+                                                @else
+                                                {{ $trip->distance }} {{  translate('KM')  }}
+                                                @endif
                                             </div>
                                         </td>
                                         <td class="text-right">
