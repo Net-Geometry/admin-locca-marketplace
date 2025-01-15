@@ -33,8 +33,10 @@ class BannerController extends Controller
 
         $vendor = $request['vendor'];
 
+        $defaultLangKey = array_search('default', $request->lang ?? []);
+
         $banner = new Banner;
-        $banner->title = $request->title;
+        $banner->title = $request->title[$defaultLangKey] ?? 'Default Title';
         $banner->type = 'store_wise';
         $banner->zone_id = $vendor->stores[0]->zone_id;
         $banner->image = Helpers::upload('banner/', 'png', $request->file('image'));
@@ -43,6 +45,8 @@ class BannerController extends Controller
         $banner->default_link = $request->default_link;
         $banner->created_by = 'store';
         $banner->save();
+
+        Helpers::add_or_update_translations(request: $request, key_data: 'title', name_field: 'title', model_name: 'Banner', data_id: $banner->id, data_value: $banner->title);
 
         return response()->json(['message' => translate('messages.banner_added_successfully')], 200);
     }
@@ -60,12 +64,16 @@ class BannerController extends Controller
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
 
+        $defaultLangKey = array_search('default', $request->lang ?? []);
+
         $vendor = $request['vendor'];
         $banner = Banner::find($request->id);
-        $banner->title = $request->title;
+        $banner->title = $request->title[$defaultLangKey] ?? 'Default Title';
         $banner->image = $request->has('image') ? Helpers::update('banner/', $banner->image, 'png', $request->file('image')) : $banner->image;
         $banner->default_link = $request->default_link;
         $banner->save();
+
+        Helpers::add_or_update_translations(request: $request, key_data: 'title', name_field: 'title', model_name: 'Banner', data_id: $banner->id, data_value: $banner->title);
 
         return response()->json(['message' => translate('messages.banner_updated_successfully')], 200);
     }
@@ -80,9 +88,9 @@ class BannerController extends Controller
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
         $banner = Banner::findOrFail($request->id);
-   
+
         Helpers::check_and_delete('banner/' , $banner['image']);
-        
+
         $banner->translations()->delete();
         $banner->delete();
 
